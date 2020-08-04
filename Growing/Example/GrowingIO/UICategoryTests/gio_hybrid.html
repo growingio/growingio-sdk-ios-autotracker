@@ -1,0 +1,532 @@
+<!-- saved from url=(0044)file:///Users/liz/Desktop/gio_hybrid(2).html -->
+<html>
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <title>
+        Hybrid 打点事件测试 Demo
+    </title>
+    <meta content="" name="description">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <style>
+        .elem-list * {
+          border: 1px solid #ddd;
+          margin: 20px;
+        }
+        /* Basic Grey */
+        .basic-grey {
+        margin-left:auto;
+        margin-right:auto;
+        max-width: 500px;
+        background: #F7F7F7;
+        padding: 25px 15px 25px 10px;
+        font: 12px Georgia, "Times New Roman", Times, serif;
+        color: #888;
+        text-shadow: 1px 1px 1px #FFF;
+        border:1px solid #E4E4E4;
+        }
+        .basic-grey h1 {
+        font-size: 25px;
+        padding: 0px 20px 10px 40px;
+        display: block;
+        border-bottom:1px solid #E4E4E4;
+        margin: 0px -15px 30px -10px;;
+        color: #888;
+        }
+        .basic-grey h1>span {
+        display: block;
+        font-size: 11px;
+        }
+        .basic-grey label {
+        display: block;
+        margin: 0px;
+        }
+        .basic-grey label>span {
+        float: left;
+        width: 20%;
+        text-align: right;
+        padding-right: 10px;
+        margin-top: 10px;
+        color: #888;
+        }
+        .basic-grey input[type="text"], .basic-grey input[type="email"], .basic-grey textarea, .basic-grey select {
+        border: 1px solid #DADADA;
+        color: #888;
+        height: 30px;
+        margin-bottom: 16px;
+        margin-right: 6px;
+        margin-top: 2px;
+        outline: 0 none;
+        padding: 3px 3px 3px 5px;
+        width: 70%;
+        font-size: 12px;
+        line-height:15px;
+        box-shadow: inset 0px 1px 4px #ECECEC;
+        -moz-box-shadow: inset 0px 1px 4px #ECECEC;
+        -webkit-box-shadow: inset 0px 1px 4px #ECECEC;
+        }
+        .basic-grey textarea{
+        padding: 5px 3px 3px 5px;
+        }
+        .basic-grey select {
+        background: #FFF url('down-arrow.png') no-repeat right;
+        background: #FFF url('down-arrow.png') no-repeat right);
+        appearance:none;
+        -webkit-appearance:none;
+        -moz-appearance: none;
+        text-indent: 0.01px;
+        text-overflow: '';
+        width: 70%;
+        height: 35px;
+        line-height: 25px;
+        }
+        .basic-grey textarea{
+        height:100px;
+        }
+        .basic-grey .button {
+        background: #8BC34A;
+        border: none;
+        padding: 10px 25px 10px 25px;
+        color: #FFF;
+        box-shadow: 1px 1px 5px #7CB342;
+        border-radius: 3px;
+        text-shadow: 1px 1px 1px #7CB342;
+        cursor: pointer;
+        margin: 0px 10px 10px 0px;
+        }
+        .basic-grey .button:hover {
+        background: #7CB342
+        }
+        .basic-grey .button-red {
+        background: #FF7043;
+        border: none;
+        padding: 10px 25px 10px 25px;
+        color: #FFF;
+        box-shadow: 1px 1px 5px #FF5722;
+        border-radius: 3px;
+        text-shadow: 1px 1px 1px #FF5722;
+        cursor: pointer;
+        margin: 0px 10px 10px 0px;
+        }
+        .basic-grey .button-red:hover {
+        background: #FF5722
+        }
+
+
+
+    </style>
+    <!-- 用户设置如下, 可以在SDK未加载完成时, 防止报错 -->
+    <!--<script type="text/javascript">-->
+    <!--window['gio'] = window['gio'] || function() {-->
+      <!--(window['gio'].q = window['gio'].q || []).push(arguments);-->
+    <!--};-->
+
+    <!--webViewRequestSend = true;-->
+    <!--!function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");-->
+      <!--gio('init', 'b685de56b4394b8f', {});-->
+
+      <!--//custom page code begin here-->
+
+
+      <!--//custom page code end here-->
+
+      <!--gio('send');-->
+
+
+
+    <!--</script>-->
+
+<!-- GrowingIO Analytics code version 2.1 -->
+<!-- Copyright 2015-2017 GrowingIO, Inc. More info available at http://www.growingio.com -->
+<script type='text/javascript'>
+    !function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.giocdn.com/2.1/gio.js","gio");
+    gio('init', 'b685de56b4394b8f', {});
+    ​
+    //custom page code begin here
+    ​
+    ​
+    //custom page code end here
+    ​
+    gio('send');
+    
+    </script>
+<!-- End GrowingIO Analytics code version: 2.1 -->
+    <script type='text/javascript'>
+    function logout() {
+      gio('clearUserId');
+    }
+
+    function refresh() {
+      window.location.reload();
+    }
+
+    function track() {
+      gio('track', 'loanAmount', 800000, {
+        'loanType': 'houseMortgage',
+        'province': 'Zhejiang'
+      });
+
+      // 1.x 版本埋点方法兼容
+      if (_vds_hybrid) {
+        _vds_hybrid.track("Custom Event", { event_id: 1, event_name: "Event 1" });
+      }
+    }
+
+    function trackTestEventIdExpectSuccess(){
+        gio('track','eventid111');
+    }
+
+    function trackTestNumHeadExpectFailure(){
+        gio('track','123Test');
+    }
+
+    function trackTestChineseExpectFailure(){
+        gio('track','中文测试');
+    }
+    <!--51 长度-->
+    function trackTestStringLength51ExpectFailure(){
+        gio('track','sssssssssssssssssssssssssssssssssssssssssssssssssss');
+    }
+
+    function trackEventIdNumberExpectSuccess(){
+        gio('track','eventid111',22.1233);
+    }
+
+    function trackEventIdNumHeadNumberExpectFailure(){
+        gio('track','1111eventid111',22.1233);
+    }
+
+    function trackEventIdChineseNumberExpectFailure(){
+        gio('track','中文中文',22.1233);
+    }
+
+    function trackEventIdObjExpectSuccess(){
+        gio('track','eventid',{
+            'loanType': 'houseMortgage',
+            'province': 'Zhejiang'
+        });
+    }
+
+    function trackEventIdNumberObjExpectSuccess(){
+        gio('track','eventid',22.1233,{
+            'loanType': 'houseMortgage',
+            'province': 'Zhejiang'
+        });
+    }
+
+    function evarSet() {
+      gio('evar.set', {
+        'campaignId': '1234567890',
+        'campaignOwner': 'lisi'
+      });
+    }
+
+    function peopleSet() {
+      gio('people.set', {
+        'gender': 'male',
+        'age': '25'
+      });
+    }
+
+    function pageSet() {
+      gio('page.set', {
+        'gender': 'male',
+        'age': '25'
+      });
+    }
+
+    function hybridSetUserId() {
+     gio('hybridSetUserId', '1234567890');
+    }
+
+
+    function hybridClearUserId() {
+     gio('hybridClearUserId');
+    }
+
+     function hybridSetVisitor() {
+         gio('hybridSetVisitor','{
+             'name': 'wangnaikun',
+             'password': '123456'
+             }');
+    }
+    
+    function setCookie()
+    {
+        var d = new Date();
+        d.setTime(d.getTime()+(100*24*60*60*1000));
+        var expires = "expires="+d.toGMTString();
+        document.cookie = "wangnaikun=123456" + "; " + expires;
+    }
+    
+    function getCookie()
+    {
+        var name = "wangnaikun" + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0; i<ca.length; i++)
+        {
+            var c = ca[i].trim();
+            if (c.indexOf(name)==0)
+            alert("Welcome again " + c);
+        }
+    }
+
+    </script>
+</head>
+<body class="basic-grey" style="margin-top: 0px; margin-botton: 0px;">
+<form method="post">
+
+
+    <br>
+
+    <a href="./test.html">点我跳转本地页面 test.html</a>
+
+    <h1>
+        Hybrid 打点事件测试 Demo
+        <span>
+                    一共测试五种数据类型, change, click, submit, page, imp. 其中 page, imp 是native 自动发的，我们不管，下面是其他三种事情类型
+                </span>
+    </h1>
+    <label>
+                <span>
+                    name：
+                </span>
+        <input id="name" name="name" placeholder="输入内容，切换光标发送change事件" type="text">
+        </input>
+    </label>
+    <label>
+                <span>
+                    Your Email :
+                </span>
+        <input id="email" name="email" placeholder="Valid Email Address" type="email">
+        </input>
+    </label>
+    <label>
+                <span>
+                    下拉框 :
+                </span>
+        <select name="selection">
+            <option value="Job Inquiry">
+                选择下拉框发送 chagne事件 1
+            </option>
+            <option value="General Question">
+                选择下拉框发送 chagne事件 2
+            </option>
+        </select>
+    </label>
+    <label>
+        <span>
+        </span>
+        <input id="submit" class="button" type="submit" value="submit"/>
+    </label>
+</form>
+<h1>
+    以下测试埋点事件
+    <span>
+        一共测试五种数据类型, track、pvar、evar、ppl、cs1，
+        绿色期望发送成功，红色期望不发送
+    </span>
+</h1>
+<label>
+    <button id="cstm_hybrid" class="button" onclick="javascript:trackEventIdNumberObjExpectSuccess()" type="button">
+        gio('track','eventid',22.1233,{
+        'loanType': 'houseMortgage',
+        'province': 'Zhejiang'
+        });
+    </button>
+    <button id="evar_hybrid" class="button" onclick="javascript:evarSet()" type="button">
+        gio('evar.set', {
+        'campaignId': '1234567890',
+        'campaignOwner': 'lisi'
+        });
+    </button>
+    <button  id="ppl_hybrid" class="button" onclick="javascript:peopleSet()" type="button">
+        gio('people.set', {
+        'gender': 'male',
+        'age': '25'
+        });
+    </button>
+    <button id="pvar_hybrid" class="button" onclick="javascript:pageSet()" type="button">
+        gio('page.set', {
+        'gender': 'male',
+        'age': '25'
+        });
+    </button>
+    <button class="button" onclick="javascript:trackTestEventIdExpectSuccess()" type="button">
+        gio('track','eventid111');
+    </button>
+    <button class="button-red" onclick="javascript:trackTestNumHeadExpectFailure()" type="button">
+        gio('track','123Test');
+    </button>
+    <button class="button-red" onclick="javascript:trackTestChineseExpectFailure()" type="button">
+        gio('track','中文测试');
+    </button>
+    <button class="button-red" onclick="javascript:trackTestStringLength51ExpectFailure()"
+            type="button">
+        gio('track',51*s);
+    </button>
+    <button class="button" onclick="javascript:trackEventIdNumberExpectSuccess()" type="button">
+        gio('track','eventid111',22.1233);
+    </button>
+    <button class="button-red" onclick="javascript:trackEventIdNumHeadNumberExpectFailure()"
+            type="button">
+        gio('track','1111eventid111',22.1233);
+    </button>
+    <button class="button-red" onclick="javascript:trackEventIdChineseNumberExpectFailure()"
+            type="button">
+        gio('track','中文中文',22.1233);
+    </button>
+    <button class="button" onclick="javascript:trackEventIdObjExpectSuccess()" type="button">
+        gio('track','eventid',{
+        'loanType': 'houseMortgage',
+        'province': 'Zhejiang'
+        });
+    </button>
+    <button class="button" onclick="javascript:trackEventIdNumberObjExpectSuccess()" type="button">
+        gio('track','eventid',22.1233,{
+        'loanType': 'houseMortgage',
+        'province': 'Zhejiang'
+        });
+    </button>
+    <button class="button" onclick="javascript:evarSet()" type="button">
+        gio('evar.set', {
+        'campaignId': '1234567890',
+        'campaignOwner': 'lisi'
+        });
+    </button>
+    <button class="button" onclick="javascript:peopleSet()" type="button">
+        gio('people.set', {
+        'gender': 'male',
+        'age': '25'
+        });
+    </button>
+    <button class="button" onclick="javascript:pageSet()" type="button">
+        gio('page.set', {
+        'gender': 'male',
+        'age': '25'
+        });
+    </button>
+    <button class="button" onclick="javascript:setUserId()" type="button">
+        gio('setUserId', '1234567890');
+    </button>
+
+    <button class="button" onclick="javascript:hybridSetUserId()" type="button">
+        gio('hybridSetUserId', '1234567890');
+    </button>
+    <button class="button" onclick="javascript:hybridSetVisitor()" type="button">
+        gio('hybridSetVisitor');
+    </button>
+    <button class="button" onclick="javascript:hybridClearUserId()" type="button">
+        gio('hybridClearUserId');
+    </button>
+    
+    <button class="button" onclick="javascript:setCookie()" type="button">
+        setCookie
+    </button>
+    
+    <button class="button" onclick="javascript:getCookie()" type="button">
+        getCookie
+    </button>
+
+</label>
+<h1>
+    clck 事件测试
+    <span>
+                测试所有的html标签，在hybrid中，不支持click 事件，点击下面的每一个元素都可以得到一个clck事件，
+但是可能由于兼容性，有的元素的click采集不到，这里罗列一个全量的，方便手工测试：
+            </span>
+</h1>
+
+<div class="elem-list">
+    我是一个body标签
+    <h1>
+        This is a heading H1
+    </h1>
+    <h2>
+        This is a heading H2
+    </h2>
+    <h3>
+        This is a heading H3
+    </h3>
+    <p>
+        P 标签
+    </p>
+    <a href="file:///Users/liz/Desktop/gio_hybrid.html#">
+        a 链接
+    </a>
+    <img src="https://www.growingio.com/vassets/images/home_v3/gio-logo-primary.svg" width="220"
+         height="342">
+    <header>
+        头部内容 header
+    </header>
+    <nav>
+        导航nav
+    </nav>
+    <section>
+        小结section
+    </section>
+    <article>
+        文章article
+    </article>
+    <footer>
+        尾部footer
+    </footer>
+    <aside>
+        侧边，边栏aside
+    </aside>
+    <div>
+        层，主要用于布局 div
+    </div>
+    <table>
+        <caption>
+            表格
+        </caption>
+        <thead>
+        </thead>
+    </table>
+    </img>
+</div>
+<ol start="1" type="A">
+    <li>
+        列表项
+    </li>
+    <!-- -->
+    <li>
+        列表项
+    </li>
+    <li>
+        列表项
+    </li>
+</ol>
+<ul type="disc">
+    <li>
+        HTML
+    </li>
+    <li>
+        CSS
+    </li>
+    <li>
+        JAVASCRIPT
+    </li>
+</ul>
+<dl>
+    <dt>
+        自定义列表
+    </dt>
+    <dd>
+        列表数据
+    </dd>
+    <dt>
+        水果
+    </dt>
+    <dd>
+        香蕉
+    </dd>
+    <dd>
+        苹果
+    </dd>
+</dl>
+<button class="button" onclick="javascript:refresh()">
+    点击刷新页面
+</button>
+</body>
+</html>

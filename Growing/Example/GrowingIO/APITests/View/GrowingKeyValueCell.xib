@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="GrowingKeyValueCell" id="UvS-Qk-N2v" customClass="GrowingKeyValueCell">
+            <rect key="frame" x="0.0" y="0.0" width="335" height="44"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="UvS-Qk-N2v" id="6sG-dp-PfC">
+                <rect key="frame" x="0.0" y="0.0" width="335" height="44"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="属性的key" textAlignment="natural" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="FtI-LD-lZR">
+                        <rect key="frame" x="0.0" y="5" width="167.5" height="34"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                    </textField>
+                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="属性的value" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="OWx-gO-GSr">
+                        <rect key="frame" x="172.5" y="5" width="162.5" height="34"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                    </textField>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="OWx-gO-GSr" firstAttribute="leading" secondItem="FtI-LD-lZR" secondAttribute="trailing" constant="5" id="4Gs-9d-eDE"/>
+                    <constraint firstAttribute="trailing" secondItem="OWx-gO-GSr" secondAttribute="trailing" id="AU6-Vy-oKP"/>
+                    <constraint firstItem="OWx-gO-GSr" firstAttribute="centerY" secondItem="6sG-dp-PfC" secondAttribute="centerY" id="Fwj-jc-hYr"/>
+                    <constraint firstItem="FtI-LD-lZR" firstAttribute="leading" secondItem="6sG-dp-PfC" secondAttribute="leading" id="ULX-kD-6lW"/>
+                    <constraint firstItem="FtI-LD-lZR" firstAttribute="width" secondItem="6sG-dp-PfC" secondAttribute="width" multiplier="0.5" id="vS7-3h-AaX"/>
+                    <constraint firstItem="FtI-LD-lZR" firstAttribute="centerY" secondItem="6sG-dp-PfC" secondAttribute="centerY" id="zAE-G8-Wdi"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="keyTextField" destination="FtI-LD-lZR" id="OHu-nx-7I5"/>
+                <outlet property="valueTextField" destination="OWx-gO-GSr" id="QAv-4h-cVm"/>
+            </connections>
+            <point key="canvasLocation" x="141" y="154"/>
+        </tableViewCell>
+    </objects>
+</document>
