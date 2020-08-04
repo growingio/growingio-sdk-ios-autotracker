@@ -19,41 +19,17 @@ profile
 DerivedData
 .idea/
 
-# CocoaPods
-#
-# We recommend against adding the Pods directory to your .gitignore. However
-# you should judge for yourself, the pros and cons are mentioned at:
-# https://guides.cocoapods.org/using/using-cocoapods.html#should-i-check-the-pods-directory-into-source-control
-#
 
 Example/Pods/
 
 Growing/release
 
-证书/ios_development.cer
-
-证书/CertificateSigningRequest.certSigningRequest
-
-证书/dev_growingio_common.mobileprovision
-
-Product/Growing_SDK_iOS.zip
-
-Product/libGrowing.a
-
-Product/Growing.h
-
-Product/Growing_SDK_iOS_0.9.zip
-
-Product/Growing_SDK_iOS_0.9.1.zip
-
-Product/Growing_SDK_iOS_0.9.2.zip
-
-# this is generated automatically
-Growing/Growing/GrowingResource.h
 release/
-
-# ignore the Pods directory
-Growing/Pods/
 
 # ignore XCExtent report
 */XCExtentReport.html
+
+node_modules/
+
+package-lock.json
+package.json
