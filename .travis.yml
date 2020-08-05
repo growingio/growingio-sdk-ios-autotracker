@@ -12,7 +12,11 @@ before_install:
 
 script:
   - set -o pipefail
-  - xcodebuild -workspace Growing/Example/GrowingIO.xcworkspace -scheme GrowingAutoTracker -configuration Release clean build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO | xcpretty -c
-  - echo "hello world"
+  - xcodebuild -workspace Growing/Example/GrowingIO.xcworkspace -scheme GrowingAutoTracker -configuration Release -sdk iphoneos -arch armv7 clean build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO | xcpretty -r json-compilation-database -o compile_commands.json
+  - oclint-json-compilation-database -e Pods -- -rc GIO_METHOD_ALLOW_UPPERCASE="URL,FMG3DB,TXT,UTF,STM" -rc GIO_CATEGORY_PREFIX=Growing -rc GIO_CLASS_PREFIX=Growing
+  - echo "===== GrowingAutoTracker build end ====="
+  - xcodebuild -workspace Growing/Example/GrowingIO.xcworkspace -scheme GrowingTracker -configuration Release -sdk iphoneos -arch armv7 clean build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO | xcpretty -r json-compilation-database -o compile_commands.json
+  - oclint-json-compilation-database -e Pods -- -rc GIO_METHOD_ALLOW_UPPERCASE="URL,FMG3DB,TXT,UTF,STM" -rc GIO_CATEGORY_PREFIX=Growing -rc GIO_CLASS_PREFIX=Growing
+  - echo "===== GrowingTracker build end ====="
 
-    
+

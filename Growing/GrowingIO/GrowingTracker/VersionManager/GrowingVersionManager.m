@@ -32,13 +32,13 @@ static NSMutableDictionary *versionDict;
     [versionDict addEntriesFromDictionary:infoDict];
 }
 
-static NSString *versionInfoString;
+static NSString *kGrowingVersionInfoString;
 + (NSString *)versionInfo
 {
-    if (versionInfoString.length == 0) {
-        versionInfoString = [versionDict growingHelper_jsonString];
+    if (kGrowingVersionInfoString.length == 0) {
+        kGrowingVersionInfoString = [versionDict growingHelper_jsonString];
     }
-    return versionInfoString;
+    return kGrowingVersionInfoString;
 }
 
 @end

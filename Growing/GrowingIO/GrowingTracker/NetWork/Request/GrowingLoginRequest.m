@@ -32,7 +32,7 @@
 
 @implementation GrowingLoginRequest
 
-+ (instancetype)loginRequestWithHeader:(NSDictionary *)header Parameter:(NSDictionary *)parameter {
++ (instancetype)loginRequestWithHeader:(NSDictionary *)header parameter:(NSDictionary *)parameter {
     GrowingLoginRequest *loginRequest = [[GrowingLoginRequest alloc] init];
     loginRequest.parameter = parameter;
     loginRequest.header = header;

@@ -42,7 +42,7 @@
 @end
 
 
-@interface _GrowingWindowContentView : UIView
+@interface GrowingWindowContentView : UIView
 
 @property (nonatomic, retain) UIWindow *showWindow;
 @property (nonatomic, retain) NSMutableArray *childWindowView;
@@ -80,7 +80,7 @@
 
 @end
 
-@implementation _GrowingWindowContentView
+@implementation GrowingWindowContentView
 
 - (void)layoutSubviews {
     [super layoutSubviews];
@@ -91,7 +91,7 @@
     static __strong id instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _GrowingWindowContentView *contentView = [[self alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        GrowingWindowContentView *contentView = [[self alloc] initWithFrame:[UIScreen mainScreen].bounds];
         contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         instance = contentView;
         [contentView _growingWindowTrySetShow];
@@ -149,7 +149,7 @@
     }];
     
     if (!added) {
-        [[_GrowingWindowContentView shareInstance] addSubview:view];
+        [[GrowingWindowContentView shareInstance] addSubview:view];
     }
 }
 
@@ -182,9 +182,9 @@
 - (void)setHidden:(BOOL)hidden {
     [super setHidden:hidden];
     if (!hidden) {
-        [[_GrowingWindowContentView shareInstance] addWindowView:self];
+        [[GrowingWindowContentView shareInstance] addWindowView:self];
     } else {
-        [[_GrowingWindowContentView shareInstance] removeWindowView:self];
+        [[GrowingWindowContentView shareInstance] removeWindowView:self];
     }
 }
 

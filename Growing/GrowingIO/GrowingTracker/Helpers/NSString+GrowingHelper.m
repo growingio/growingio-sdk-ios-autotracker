@@ -25,7 +25,7 @@
 #import "GrowingDeviceInfo.h"
 #import "GrowingCocoaLumberjack.h"
 
-static NSString *const growingSpecialCharactersString = @"_!@#$%^&*()-=+|\[]{},.<>/?";
+static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\[]{},.<>/?";
 
 @implementation NSString (GrowingHelper)
 
@@ -215,7 +215,7 @@ static NSString *const growingSpecialCharactersString = @"_!@#$%^&*()-=+|\[]{},.
     
     BOOL isNum = isdigit(character);
     BOOL isLetter = (character >= 'a' && character <= 'z') || (character >= 'A' && character <= 'Z');
-    BOOL isSpecialCharacter = ([growingSpecialCharactersString rangeOfString:self].location != NSNotFound);
+    BOOL isSpecialCharacter = ([kGrowingSpecialCharactersString rangeOfString:self].location != NSNotFound);
     if (isNum || isLetter || isSpecialCharacter) {
         return YES;
     } else {
