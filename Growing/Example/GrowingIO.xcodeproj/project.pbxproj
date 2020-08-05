@@ -66,43 +66,43 @@
 		425E0C6E24D9346200BEEA93 /* GIOButtonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0C5824D9346200BEEA93 /* GIOButtonViewController.m */; };
 		425E0C7524D93B3100BEEA93 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 425E0C7124D93B3000BEEA93 /* Main.storyboard */; };
 		425E0C7624D93B3100BEEA93 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 425E0C7324D93B3000BEEA93 /* LaunchScreen.storyboard */; };
-		4916317F24DA5A7D0037D2CA /* GrowingIO_ExampleUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916317E24DA5A7D0037D2CA /* GrowingIO_ExampleUITests.m */; };
-		4916319824DA5BDD0037D2CA /* EvarEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916318C24DA5BDD0037D2CA /* EvarEventsTest.m */; };
-		4916319924DA5BDD0037D2CA /* VstrEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916318E24DA5BDD0037D2CA /* VstrEventsTest.m */; };
-		4916319A24DA5BDD0037D2CA /* CstmEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916319124DA5BDD0037D2CA /* CstmEventsTest.m */; };
-		4916319B24DA5BDD0037D2CA /* CS1ManualTrackTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916319224DA5BDD0037D2CA /* CS1ManualTrackTest.m */; };
-		4916319C24DA5BDD0037D2CA /* PPLEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916319424DA5BDD0037D2CA /* PPLEventsTest.m */; };
-		4916319D24DA5BDD0037D2CA /* AppVarEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916319624DA5BDD0037D2CA /* AppVarEventsTest.m */; };
-		4916319E24DA5BDD0037D2CA /* PvarEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916319724DA5BDD0037D2CA /* PvarEventsTest.m */; };
-		491631AF24DA5BF80037D2CA /* TrackAPIMainThreadTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 491631A224DA5BF80037D2CA /* TrackAPIMainThreadTest.m */; };
-		491631B024DA5BF80037D2CA /* MediatorTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 491631A324DA5BF80037D2CA /* MediatorTest.m */; };
-		491631B124DA5BF80037D2CA /* GetIDsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 491631A624DA5BF80037D2CA /* GetIDsTest.m */; };
-		491631B224DA5BF80037D2CA /* GDPRTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 491631A724DA5BF80037D2CA /* GDPRTest.m */; };
-		491631B324DA5BF80037D2CA /* TrackViewTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 491631A824DA5BF80037D2CA /* TrackViewTest.m */; };
-		491631B424DA5BF80037D2CA /* FlushIntervalAPITest.m in Sources */ = {isa = PBXBuildFile; fileRef = 491631A924DA5BF80037D2CA /* FlushIntervalAPITest.m */; };
-		491631B524DA5BF80037D2CA /* DailyDataLimit.m in Sources */ = {isa = PBXBuildFile; fileRef = 491631AA24DA5BF80037D2CA /* DailyDataLimit.m */; };
-		491631B624DA5BF80037D2CA /* GetEnableLogTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 491631AC24DA5BF80037D2CA /* GetEnableLogTest.m */; };
-		491631B724DA5BF80037D2CA /* GetConfigurationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 491631AE24DA5BF80037D2CA /* GetConfigurationTest.m */; };
-		491631C124DA5C090037D2CA /* VstEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 491631B924DA5C090037D2CA /* VstEventsTest.m */; };
-		491631C224DA5C090037D2CA /* ClckEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 491631BA24DA5C090037D2CA /* ClckEventsTest.m */; };
-		491631C324DA5C090037D2CA /* pageEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 491631BD24DA5C090037D2CA /* pageEventsTest.m */; };
-		491631C424DA5C090037D2CA /* ChgEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 491631BF24DA5C090037D2CA /* ChgEventsTest.m */; };
-		491631D324DA5C150037D2CA /* LogOperHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 491631C824DA5C150037D2CA /* LogOperHelper.m */; };
-		491631D424DA5C150037D2CA /* ManualTrackHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 491631CC24DA5C150037D2CA /* ManualTrackHelper.m */; };
-		491631D524DA5C150037D2CA /* MockEventQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 491631CD24DA5C150037D2CA /* MockEventQueue.m */; };
-		491631D624DA5C150037D2CA /* GrowingTestHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 491631CF24DA5C150037D2CA /* GrowingTestHelper.m */; };
-		491631D724DA5C150037D2CA /* NoburPoMeaProCheck.m in Sources */ = {isa = PBXBuildFile; fileRef = 491631D024DA5C150037D2CA /* NoburPoMeaProCheck.m */; };
-		491631D824DA5C150037D2CA /* NSURLSession+TestHook.m in Sources */ = {isa = PBXBuildFile; fileRef = 491631D124DA5C150037D2CA /* NSURLSession+TestHook.m */; };
+		4962652B24DA667900032551 /* GrowingIO_ExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962652924DA667900032551 /* GrowingIO_ExampleTests.m */; };
+		4962653924DA66B600032551 /* LogOperHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962652E24DA66B600032551 /* LogOperHelper.m */; };
+		4962653A24DA66B600032551 /* ManualTrackHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962653224DA66B600032551 /* ManualTrackHelper.m */; };
+		4962653B24DA66B600032551 /* MockEventQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962653324DA66B600032551 /* MockEventQueue.m */; };
+		4962653C24DA66B600032551 /* GrowingTestHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962653524DA66B600032551 /* GrowingTestHelper.m */; };
+		4962653D24DA66B600032551 /* NoburPoMeaProCheck.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962653624DA66B600032551 /* NoburPoMeaProCheck.m */; };
+		4962653E24DA66B600032551 /* NSURLSession+TestHook.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962653724DA66B600032551 /* NSURLSession+TestHook.m */; };
+		4962656624DA66BF00032551 /* TrackAPIMainThreadTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962654224DA66BF00032551 /* TrackAPIMainThreadTest.m */; };
+		4962656724DA66BF00032551 /* MediatorTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962654324DA66BF00032551 /* MediatorTest.m */; };
+		4962656824DA66BF00032551 /* GetIDsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962654624DA66BF00032551 /* GetIDsTest.m */; };
+		4962656924DA66BF00032551 /* GDPRTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962654724DA66BF00032551 /* GDPRTest.m */; };
+		4962656A24DA66BF00032551 /* TrackViewTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962654824DA66BF00032551 /* TrackViewTest.m */; };
+		4962656B24DA66BF00032551 /* FlushIntervalAPITest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962654924DA66BF00032551 /* FlushIntervalAPITest.m */; };
+		4962656C24DA66BF00032551 /* DailyDataLimit.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962654A24DA66BF00032551 /* DailyDataLimit.m */; };
+		4962656D24DA66BF00032551 /* GetEnableLogTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962654C24DA66BF00032551 /* GetEnableLogTest.m */; };
+		4962656E24DA66BF00032551 /* GetConfigurationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962654E24DA66BF00032551 /* GetConfigurationTest.m */; };
+		4962656F24DA66BF00032551 /* EvarEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962655224DA66BF00032551 /* EvarEventsTest.m */; };
+		4962657024DA66BF00032551 /* VstrEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962655424DA66BF00032551 /* VstrEventsTest.m */; };
+		4962657124DA66BF00032551 /* CstmEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962655724DA66BF00032551 /* CstmEventsTest.m */; };
+		4962657224DA66BF00032551 /* CS1ManualTrackTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962655824DA66BF00032551 /* CS1ManualTrackTest.m */; };
+		4962657324DA66BF00032551 /* PPLEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962655A24DA66BF00032551 /* PPLEventsTest.m */; };
+		4962657424DA66BF00032551 /* AppVarEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962655C24DA66BF00032551 /* AppVarEventsTest.m */; };
+		4962657524DA66BF00032551 /* PvarEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962655D24DA66BF00032551 /* PvarEventsTest.m */; };
+		4962657624DA66BF00032551 /* VstEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962655F24DA66BF00032551 /* VstEventsTest.m */; };
+		4962657724DA66BF00032551 /* ClckEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962656024DA66BF00032551 /* ClckEventsTest.m */; };
+		4962657824DA66BF00032551 /* pageEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962656324DA66BF00032551 /* pageEventsTest.m */; };
+		4962657924DA66BF00032551 /* ChgEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962656524DA66BF00032551 /* ChgEventsTest.m */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
 		6003F598195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F596195388D20070C39A /* InfoPlist.strings */; };
 		6003F59A195388D20070C39A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F599195388D20070C39A /* main.m */; };
-		84B3977DE4BFAE2E5F03A0D0 /* Pods_GrowingIO_ExampleUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 846BD2A13C449846E098218A /* Pods_GrowingIO_ExampleUITests.framework */; };
+		B6A93A6A1CB7D1C840EF7892 /* Pods_GrowingIO_ExampleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C0434E2008C053A776D1B69 /* Pods_GrowingIO_ExampleTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		4916318124DA5A7D0037D2CA /* PBXContainerItemProxy */ = {
+		4962652324DA665200032551 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 6003F582195388D10070C39A /* Project object */;
 			proxyType = 1;
@@ -217,57 +217,58 @@
 		425E0C5B24D9346200BEEA93 /* GIOActionSheetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOActionSheetViewController.h; sourceTree = "<group>"; };
 		425E0C7224D93B3000BEEA93 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = GrowingIO/Base.lproj/Main.storyboard; sourceTree = SOURCE_ROOT; };
 		425E0C7424D93B3100BEEA93 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = GrowingIO/Base.lproj/LaunchScreen.storyboard; sourceTree = SOURCE_ROOT; };
-		4916317C24DA5A7D0037D2CA /* GrowingIO_ExampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrowingIO_ExampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		4916317E24DA5A7D0037D2CA /* GrowingIO_ExampleUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GrowingIO_ExampleUITests.m; sourceTree = "<group>"; };
-		4916318024DA5A7D0037D2CA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4916318A24DA5BDD0037D2CA /* CS1ManualTrackTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CS1ManualTrackTest.h; sourceTree = "<group>"; };
-		4916318B24DA5BDD0037D2CA /* CstmEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CstmEventsTest.h; sourceTree = "<group>"; };
-		4916318C24DA5BDD0037D2CA /* EvarEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EvarEventsTest.m; sourceTree = "<group>"; };
-		4916318D24DA5BDD0037D2CA /* AppVarEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppVarEventsTest.h; sourceTree = "<group>"; };
-		4916318E24DA5BDD0037D2CA /* VstrEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VstrEventsTest.m; sourceTree = "<group>"; };
-		4916318F24DA5BDD0037D2CA /* PPLEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPLEventsTest.h; sourceTree = "<group>"; };
-		4916319024DA5BDD0037D2CA /* PvarEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PvarEventsTest.h; sourceTree = "<group>"; };
-		4916319124DA5BDD0037D2CA /* CstmEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CstmEventsTest.m; sourceTree = "<group>"; };
-		4916319224DA5BDD0037D2CA /* CS1ManualTrackTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CS1ManualTrackTest.m; sourceTree = "<group>"; };
-		4916319324DA5BDD0037D2CA /* EvarEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EvarEventsTest.h; sourceTree = "<group>"; };
-		4916319424DA5BDD0037D2CA /* PPLEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPLEventsTest.m; sourceTree = "<group>"; };
-		4916319524DA5BDD0037D2CA /* VstrEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VstrEventsTest.h; sourceTree = "<group>"; };
-		4916319624DA5BDD0037D2CA /* AppVarEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppVarEventsTest.m; sourceTree = "<group>"; };
-		4916319724DA5BDD0037D2CA /* PvarEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PvarEventsTest.m; sourceTree = "<group>"; };
-		491631A024DA5BF80037D2CA /* DailyDataLimit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DailyDataLimit.h; sourceTree = "<group>"; };
-		491631A124DA5BF80037D2CA /* FlushIntervalAPITest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlushIntervalAPITest.h; sourceTree = "<group>"; };
-		491631A224DA5BF80037D2CA /* TrackAPIMainThreadTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackAPIMainThreadTest.m; sourceTree = "<group>"; };
-		491631A324DA5BF80037D2CA /* MediatorTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MediatorTest.m; sourceTree = "<group>"; };
-		491631A424DA5BF80037D2CA /* TrackViewTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackViewTest.h; sourceTree = "<group>"; };
-		491631A524DA5BF80037D2CA /* GetEnableLogTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetEnableLogTest.h; sourceTree = "<group>"; };
-		491631A624DA5BF80037D2CA /* GetIDsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetIDsTest.m; sourceTree = "<group>"; };
-		491631A724DA5BF80037D2CA /* GDPRTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDPRTest.m; sourceTree = "<group>"; };
-		491631A824DA5BF80037D2CA /* TrackViewTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackViewTest.m; sourceTree = "<group>"; };
-		491631A924DA5BF80037D2CA /* FlushIntervalAPITest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FlushIntervalAPITest.m; sourceTree = "<group>"; };
-		491631AA24DA5BF80037D2CA /* DailyDataLimit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DailyDataLimit.m; sourceTree = "<group>"; };
-		491631AB24DA5BF80037D2CA /* GetIDsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetIDsTest.h; sourceTree = "<group>"; };
-		491631AC24DA5BF80037D2CA /* GetEnableLogTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetEnableLogTest.m; sourceTree = "<group>"; };
-		491631AD24DA5BF80037D2CA /* GDPRTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDPRTest.h; sourceTree = "<group>"; };
-		491631AE24DA5BF80037D2CA /* GetConfigurationTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetConfigurationTest.m; sourceTree = "<group>"; };
-		491631B924DA5C090037D2CA /* VstEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VstEventsTest.m; sourceTree = "<group>"; };
-		491631BA24DA5C090037D2CA /* ClckEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClckEventsTest.m; sourceTree = "<group>"; };
-		491631BB24DA5C090037D2CA /* ChgEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChgEventsTest.h; sourceTree = "<group>"; };
-		491631BC24DA5C090037D2CA /* ClckEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClckEventsTest.h; sourceTree = "<group>"; };
-		491631BD24DA5C090037D2CA /* pageEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = pageEventsTest.m; sourceTree = "<group>"; };
-		491631BE24DA5C090037D2CA /* VstEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VstEventsTest.h; sourceTree = "<group>"; };
-		491631BF24DA5C090037D2CA /* ChgEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChgEventsTest.m; sourceTree = "<group>"; };
-		491631C724DA5C150037D2CA /* GrowingTestHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrowingTestHelper.h; sourceTree = "<group>"; };
-		491631C824DA5C150037D2CA /* LogOperHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogOperHelper.m; sourceTree = "<group>"; };
-		491631C924DA5C150037D2CA /* MockEventQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockEventQueue.h; sourceTree = "<group>"; };
-		491631CA24DA5C150037D2CA /* NSURLSession+TestHook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURLSession+TestHook.h"; sourceTree = "<group>"; };
-		491631CB24DA5C150037D2CA /* NoburPoMeaProCheck.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoburPoMeaProCheck.h; sourceTree = "<group>"; };
-		491631CC24DA5C150037D2CA /* ManualTrackHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManualTrackHelper.m; sourceTree = "<group>"; };
-		491631CD24DA5C150037D2CA /* MockEventQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockEventQueue.m; sourceTree = "<group>"; };
-		491631CE24DA5C150037D2CA /* LogOperHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogOperHelper.h; sourceTree = "<group>"; };
-		491631CF24DA5C150037D2CA /* GrowingTestHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingTestHelper.m; sourceTree = "<group>"; };
-		491631D024DA5C150037D2CA /* NoburPoMeaProCheck.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoburPoMeaProCheck.m; sourceTree = "<group>"; };
-		491631D124DA5C150037D2CA /* NSURLSession+TestHook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURLSession+TestHook.m"; sourceTree = "<group>"; };
-		491631D224DA5C150037D2CA /* ManualTrackHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManualTrackHelper.h; sourceTree = "<group>"; };
+		4962651E24DA665200032551 /* GrowingIO_ExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrowingIO_ExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4962652824DA667900032551 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4962652924DA667900032551 /* GrowingIO_ExampleTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingIO_ExampleTests.m; sourceTree = "<group>"; };
+		4962652D24DA66B600032551 /* GrowingTestHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrowingTestHelper.h; sourceTree = "<group>"; };
+		4962652E24DA66B600032551 /* LogOperHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogOperHelper.m; sourceTree = "<group>"; };
+		4962652F24DA66B600032551 /* MockEventQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockEventQueue.h; sourceTree = "<group>"; };
+		4962653024DA66B600032551 /* NSURLSession+TestHook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURLSession+TestHook.h"; sourceTree = "<group>"; };
+		4962653124DA66B600032551 /* NoburPoMeaProCheck.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoburPoMeaProCheck.h; sourceTree = "<group>"; };
+		4962653224DA66B600032551 /* ManualTrackHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManualTrackHelper.m; sourceTree = "<group>"; };
+		4962653324DA66B600032551 /* MockEventQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockEventQueue.m; sourceTree = "<group>"; };
+		4962653424DA66B600032551 /* LogOperHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogOperHelper.h; sourceTree = "<group>"; };
+		4962653524DA66B600032551 /* GrowingTestHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingTestHelper.m; sourceTree = "<group>"; };
+		4962653624DA66B600032551 /* NoburPoMeaProCheck.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoburPoMeaProCheck.m; sourceTree = "<group>"; };
+		4962653724DA66B600032551 /* NSURLSession+TestHook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURLSession+TestHook.m"; sourceTree = "<group>"; };
+		4962653824DA66B600032551 /* ManualTrackHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManualTrackHelper.h; sourceTree = "<group>"; };
+		4962654024DA66BF00032551 /* DailyDataLimit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DailyDataLimit.h; sourceTree = "<group>"; };
+		4962654124DA66BF00032551 /* FlushIntervalAPITest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlushIntervalAPITest.h; sourceTree = "<group>"; };
+		4962654224DA66BF00032551 /* TrackAPIMainThreadTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackAPIMainThreadTest.m; sourceTree = "<group>"; };
+		4962654324DA66BF00032551 /* MediatorTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MediatorTest.m; sourceTree = "<group>"; };
+		4962654424DA66BF00032551 /* TrackViewTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackViewTest.h; sourceTree = "<group>"; };
+		4962654524DA66BF00032551 /* GetEnableLogTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetEnableLogTest.h; sourceTree = "<group>"; };
+		4962654624DA66BF00032551 /* GetIDsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetIDsTest.m; sourceTree = "<group>"; };
+		4962654724DA66BF00032551 /* GDPRTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDPRTest.m; sourceTree = "<group>"; };
+		4962654824DA66BF00032551 /* TrackViewTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackViewTest.m; sourceTree = "<group>"; };
+		4962654924DA66BF00032551 /* FlushIntervalAPITest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FlushIntervalAPITest.m; sourceTree = "<group>"; };
+		4962654A24DA66BF00032551 /* DailyDataLimit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DailyDataLimit.m; sourceTree = "<group>"; };
+		4962654B24DA66BF00032551 /* GetIDsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetIDsTest.h; sourceTree = "<group>"; };
+		4962654C24DA66BF00032551 /* GetEnableLogTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetEnableLogTest.m; sourceTree = "<group>"; };
+		4962654D24DA66BF00032551 /* GDPRTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDPRTest.h; sourceTree = "<group>"; };
+		4962654E24DA66BF00032551 /* GetConfigurationTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetConfigurationTest.m; sourceTree = "<group>"; };
+		4962655024DA66BF00032551 /* CS1ManualTrackTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CS1ManualTrackTest.h; sourceTree = "<group>"; };
+		4962655124DA66BF00032551 /* CstmEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CstmEventsTest.h; sourceTree = "<group>"; };
+		4962655224DA66BF00032551 /* EvarEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EvarEventsTest.m; sourceTree = "<group>"; };
+		4962655324DA66BF00032551 /* AppVarEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppVarEventsTest.h; sourceTree = "<group>"; };
+		4962655424DA66BF00032551 /* VstrEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VstrEventsTest.m; sourceTree = "<group>"; };
+		4962655524DA66BF00032551 /* PPLEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPLEventsTest.h; sourceTree = "<group>"; };
+		4962655624DA66BF00032551 /* PvarEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PvarEventsTest.h; sourceTree = "<group>"; };
+		4962655724DA66BF00032551 /* CstmEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CstmEventsTest.m; sourceTree = "<group>"; };
+		4962655824DA66BF00032551 /* CS1ManualTrackTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CS1ManualTrackTest.m; sourceTree = "<group>"; };
+		4962655924DA66BF00032551 /* EvarEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EvarEventsTest.h; sourceTree = "<group>"; };
+		4962655A24DA66BF00032551 /* PPLEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPLEventsTest.m; sourceTree = "<group>"; };
+		4962655B24DA66BF00032551 /* VstrEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VstrEventsTest.h; sourceTree = "<group>"; };
+		4962655C24DA66BF00032551 /* AppVarEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppVarEventsTest.m; sourceTree = "<group>"; };
+		4962655D24DA66BF00032551 /* PvarEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PvarEventsTest.m; sourceTree = "<group>"; };
+		4962655F24DA66BF00032551 /* VstEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VstEventsTest.m; sourceTree = "<group>"; };
+		4962656024DA66BF00032551 /* ClckEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClckEventsTest.m; sourceTree = "<group>"; };
+		4962656124DA66BF00032551 /* ChgEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChgEventsTest.h; sourceTree = "<group>"; };
+		4962656224DA66BF00032551 /* ClckEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClckEventsTest.h; sourceTree = "<group>"; };
+		4962656324DA66BF00032551 /* pageEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = pageEventsTest.m; sourceTree = "<group>"; };
+		4962656424DA66BF00032551 /* VstEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VstEventsTest.h; sourceTree = "<group>"; };
+		4962656524DA66BF00032551 /* ChgEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChgEventsTest.m; sourceTree = "<group>"; };
+		4C0434E2008C053A776D1B69 /* Pods_GrowingIO_ExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GrowingIO_ExampleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58A195388D20070C39A /* GrowingIO_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GrowingIO_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		6003F58F195388D20070C39A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -278,6 +279,8 @@
 		6003F59B195388D20070C39A /* GrowingIO-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GrowingIO-Prefix.pch"; sourceTree = "<group>"; };
 		6003F5AF195388D20070C39A /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		6BF3EAD3D3A5ED365819D758 /* Pods-GrowingIO_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GrowingIO_Example.debug.xcconfig"; path = "Target Support Files/Pods-GrowingIO_Example/Pods-GrowingIO_Example.debug.xcconfig"; sourceTree = "<group>"; };
+		7960B1F6F6B981911C36D5E6 /* Pods-GrowingIO_ExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GrowingIO_ExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-GrowingIO_ExampleTests/Pods-GrowingIO_ExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
+		7F0F6BA089703227980ABCA2 /* Pods-GrowingIO_ExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GrowingIO_ExampleTests.release.xcconfig"; path = "Target Support Files/Pods-GrowingIO_ExampleTests/Pods-GrowingIO_ExampleTests.release.xcconfig"; sourceTree = "<group>"; };
 		812FD9EA827A3C38792185E5 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		8469CDEB71F01440C245A977 /* Pods-GrowingIO_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GrowingIO_Tests.debug.xcconfig"; path = "Target Support Files/Pods-GrowingIO_Tests/Pods-GrowingIO_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		846BD2A13C449846E098218A /* Pods_GrowingIO_ExampleUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GrowingIO_ExampleUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -290,11 +293,11 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		4916317924DA5A7D0037D2CA /* Frameworks */ = {
+		4962651B24DA665200032551 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				84B3977DE4BFAE2E5F03A0D0 /* Pods_GrowingIO_ExampleUITests.framework in Frameworks */,
+				B6A93A6A1CB7D1C840EF7892 /* Pods_GrowingIO_ExampleTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -465,93 +468,93 @@
 			path = View;
 			sourceTree = "<group>";
 		};
-		4916317D24DA5A7D0037D2CA /* GrowingIO_ExampleUITests */ = {
+		4962651F24DA665200032551 /* GrowingIO_ExampleTests */ = {
 			isa = PBXGroup;
 			children = (
-				491631C624DA5C150037D2CA /* Helper */,
-				491631B824DA5C090037D2CA /* protocol test and api test */,
-				4916319F24DA5BF80037D2CA /* SDK Method Test */,
-				4916318924DA5BDD0037D2CA /* ManualTrackTest */,
-				4916317E24DA5A7D0037D2CA /* GrowingIO_ExampleUITests.m */,
-				4916318024DA5A7D0037D2CA /* Info.plist */,
+				4962652924DA667900032551 /* GrowingIO_ExampleTests.m */,
+				4962654F24DA66BF00032551 /* ManualTrackTest */,
+				4962655E24DA66BF00032551 /* protocol test and api test */,
+				4962653F24DA66BF00032551 /* SDK Method Test */,
+				4962652C24DA66B600032551 /* Helper */,
+				4962652824DA667900032551 /* Info.plist */,
 			);
-			path = GrowingIO_ExampleUITests;
+			path = GrowingIO_ExampleTests;
 			sourceTree = "<group>";
 		};
-		4916318924DA5BDD0037D2CA /* ManualTrackTest */ = {
+		4962652C24DA66B600032551 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
-				4916318B24DA5BDD0037D2CA /* CstmEventsTest.h */,
-				4916319124DA5BDD0037D2CA /* CstmEventsTest.m */,
-				4916319324DA5BDD0037D2CA /* EvarEventsTest.h */,
-				4916318C24DA5BDD0037D2CA /* EvarEventsTest.m */,
-				4916318F24DA5BDD0037D2CA /* PPLEventsTest.h */,
-				4916319424DA5BDD0037D2CA /* PPLEventsTest.m */,
-				4916319024DA5BDD0037D2CA /* PvarEventsTest.h */,
-				4916319724DA5BDD0037D2CA /* PvarEventsTest.m */,
-				4916318A24DA5BDD0037D2CA /* CS1ManualTrackTest.h */,
-				4916319224DA5BDD0037D2CA /* CS1ManualTrackTest.m */,
-				4916319524DA5BDD0037D2CA /* VstrEventsTest.h */,
-				4916318E24DA5BDD0037D2CA /* VstrEventsTest.m */,
-				4916318D24DA5BDD0037D2CA /* AppVarEventsTest.h */,
-				4916319624DA5BDD0037D2CA /* AppVarEventsTest.m */,
+				4962653024DA66B600032551 /* NSURLSession+TestHook.h */,
+				4962653724DA66B600032551 /* NSURLSession+TestHook.m */,
+				4962652F24DA66B600032551 /* MockEventQueue.h */,
+				4962653324DA66B600032551 /* MockEventQueue.m */,
+				4962653424DA66B600032551 /* LogOperHelper.h */,
+				4962652E24DA66B600032551 /* LogOperHelper.m */,
+				4962652D24DA66B600032551 /* GrowingTestHelper.h */,
+				4962653524DA66B600032551 /* GrowingTestHelper.m */,
+				4962653124DA66B600032551 /* NoburPoMeaProCheck.h */,
+				4962653624DA66B600032551 /* NoburPoMeaProCheck.m */,
+				4962653824DA66B600032551 /* ManualTrackHelper.h */,
+				4962653224DA66B600032551 /* ManualTrackHelper.m */,
 			);
-			path = ManualTrackTest;
+			path = Helper;
 			sourceTree = "<group>";
 		};
-		4916319F24DA5BF80037D2CA /* SDK Method Test */ = {
+		4962653F24DA66BF00032551 /* SDK Method Test */ = {
 			isa = PBXGroup;
 			children = (
-				491631A024DA5BF80037D2CA /* DailyDataLimit.h */,
-				491631A124DA5BF80037D2CA /* FlushIntervalAPITest.h */,
-				491631A224DA5BF80037D2CA /* TrackAPIMainThreadTest.m */,
-				491631A324DA5BF80037D2CA /* MediatorTest.m */,
-				491631A424DA5BF80037D2CA /* TrackViewTest.h */,
-				491631A524DA5BF80037D2CA /* GetEnableLogTest.h */,
-				491631A624DA5BF80037D2CA /* GetIDsTest.m */,
-				491631A724DA5BF80037D2CA /* GDPRTest.m */,
-				491631A824DA5BF80037D2CA /* TrackViewTest.m */,
-				491631A924DA5BF80037D2CA /* FlushIntervalAPITest.m */,
-				491631AA24DA5BF80037D2CA /* DailyDataLimit.m */,
-				491631AB24DA5BF80037D2CA /* GetIDsTest.h */,
-				491631AC24DA5BF80037D2CA /* GetEnableLogTest.m */,
-				491631AD24DA5BF80037D2CA /* GDPRTest.h */,
-				491631AE24DA5BF80037D2CA /* GetConfigurationTest.m */,
+				4962654124DA66BF00032551 /* FlushIntervalAPITest.h */,
+				4962654924DA66BF00032551 /* FlushIntervalAPITest.m */,
+				4962654324DA66BF00032551 /* MediatorTest.m */,
+				4962654424DA66BF00032551 /* TrackViewTest.h */,
+				4962654824DA66BF00032551 /* TrackViewTest.m */,
+				4962654B24DA66BF00032551 /* GetIDsTest.h */,
+				4962654624DA66BF00032551 /* GetIDsTest.m */,
+				4962654024DA66BF00032551 /* DailyDataLimit.h */,
+				4962654A24DA66BF00032551 /* DailyDataLimit.m */,
+				4962654524DA66BF00032551 /* GetEnableLogTest.h */,
+				4962654C24DA66BF00032551 /* GetEnableLogTest.m */,
+				4962654D24DA66BF00032551 /* GDPRTest.h */,
+				4962654724DA66BF00032551 /* GDPRTest.m */,
+				4962654224DA66BF00032551 /* TrackAPIMainThreadTest.m */,
+				4962654E24DA66BF00032551 /* GetConfigurationTest.m */,
 			);
 			path = "SDK Method Test";
 			sourceTree = "<group>";
 		};
-		491631B824DA5C090037D2CA /* protocol test and api test */ = {
+		4962654F24DA66BF00032551 /* ManualTrackTest */ = {
 			isa = PBXGroup;
 			children = (
-				491631BE24DA5C090037D2CA /* VstEventsTest.h */,
-				491631B924DA5C090037D2CA /* VstEventsTest.m */,
-				491631BB24DA5C090037D2CA /* ChgEventsTest.h */,
-				491631BF24DA5C090037D2CA /* ChgEventsTest.m */,
-				491631BC24DA5C090037D2CA /* ClckEventsTest.h */,
-				491631BA24DA5C090037D2CA /* ClckEventsTest.m */,
-				491631BD24DA5C090037D2CA /* pageEventsTest.m */,
+				4962655024DA66BF00032551 /* CS1ManualTrackTest.h */,
+				4962655824DA66BF00032551 /* CS1ManualTrackTest.m */,
+				4962655924DA66BF00032551 /* EvarEventsTest.h */,
+				4962655224DA66BF00032551 /* EvarEventsTest.m */,
+				4962655524DA66BF00032551 /* PPLEventsTest.h */,
+				4962655A24DA66BF00032551 /* PPLEventsTest.m */,
+				4962655624DA66BF00032551 /* PvarEventsTest.h */,
+				4962655D24DA66BF00032551 /* PvarEventsTest.m */,
+				4962655124DA66BF00032551 /* CstmEventsTest.h */,
+				4962655724DA66BF00032551 /* CstmEventsTest.m */,
+				4962655B24DA66BF00032551 /* VstrEventsTest.h */,
+				4962655424DA66BF00032551 /* VstrEventsTest.m */,
+				4962655324DA66BF00032551 /* AppVarEventsTest.h */,
+				4962655C24DA66BF00032551 /* AppVarEventsTest.m */,
 			);
-			path = "protocol test and api test";
+			path = ManualTrackTest;
 			sourceTree = "<group>";
 		};
-		491631C624DA5C150037D2CA /* Helper */ = {
+		4962655E24DA66BF00032551 /* protocol test and api test */ = {
 			isa = PBXGroup;
 			children = (
-				491631C724DA5C150037D2CA /* GrowingTestHelper.h */,
-				491631C824DA5C150037D2CA /* LogOperHelper.m */,
-				491631C924DA5C150037D2CA /* MockEventQueue.h */,
-				491631CA24DA5C150037D2CA /* NSURLSession+TestHook.h */,
-				491631CB24DA5C150037D2CA /* NoburPoMeaProCheck.h */,
-				491631CC24DA5C150037D2CA /* ManualTrackHelper.m */,
-				491631CD24DA5C150037D2CA /* MockEventQueue.m */,
-				491631CE24DA5C150037D2CA /* LogOperHelper.h */,
-				491631CF24DA5C150037D2CA /* GrowingTestHelper.m */,
-				491631D024DA5C150037D2CA /* NoburPoMeaProCheck.m */,
-				491631D124DA5C150037D2CA /* NSURLSession+TestHook.m */,
-				491631D224DA5C150037D2CA /* ManualTrackHelper.h */,
+				4962656124DA66BF00032551 /* ChgEventsTest.h */,
+				4962656524DA66BF00032551 /* ChgEventsTest.m */,
+				4962656224DA66BF00032551 /* ClckEventsTest.h */,
+				4962656024DA66BF00032551 /* ClckEventsTest.m */,
+				4962656324DA66BF00032551 /* pageEventsTest.m */,
+				4962656424DA66BF00032551 /* VstEventsTest.h */,
+				4962655F24DA66BF00032551 /* VstEventsTest.m */,
 			);
-			path = Helper;
+			path = "protocol test and api test";
 			sourceTree = "<group>";
 		};
 		6003F581195388D10070C39A = {
@@ -559,7 +562,7 @@
 			children = (
 				60FF7A9C1954A5C5007DD14C /* Podspec Metadata */,
 				6003F593195388D20070C39A /* Example for GrowingIO */,
-				4916317D24DA5A7D0037D2CA /* GrowingIO_ExampleUITests */,
+				4962651F24DA665200032551 /* GrowingIO_ExampleTests */,
 				6003F58C195388D20070C39A /* Frameworks */,
 				6003F58B195388D20070C39A /* Products */,
 				8D165A0B3E74C46645524A2A /* Pods */,
@@ -570,7 +573,7 @@
 			isa = PBXGroup;
 			children = (
 				6003F58A195388D20070C39A /* GrowingIO_Example.app */,
-				4916317C24DA5A7D0037D2CA /* GrowingIO_ExampleUITests.xctest */,
+				4962651E24DA665200032551 /* GrowingIO_ExampleTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -585,6 +588,7 @@
 				A4E5C55D6D8A5A241ABCCCB3 /* Pods_GrowingIO_Example.framework */,
 				C47FDA808DE0E2525D606D30 /* Pods_GrowingIO_Tests.framework */,
 				846BD2A13C449846E098218A /* Pods_GrowingIO_ExampleUITests.framework */,
+				4C0434E2008C053A776D1B69 /* Pods_GrowingIO_ExampleTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -638,6 +642,8 @@
 				ECF46BA10071097C2CEC3A0B /* Pods-GrowingIO_Tests.release.xcconfig */,
 				9A2DCFDF4BCC9456D44C2F19 /* Pods-GrowingIO_ExampleUITests.debug.xcconfig */,
 				9994609423F44E2423C346ED /* Pods-GrowingIO_ExampleUITests.release.xcconfig */,
+				7960B1F6F6B981911C36D5E6 /* Pods-GrowingIO_ExampleTests.debug.xcconfig */,
+				7F0F6BA089703227980ABCA2 /* Pods-GrowingIO_ExampleTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -645,25 +651,25 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		4916317B24DA5A7D0037D2CA /* GrowingIO_ExampleUITests */ = {
+		4962651D24DA665200032551 /* GrowingIO_ExampleTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4916318524DA5A7D0037D2CA /* Build configuration list for PBXNativeTarget "GrowingIO_ExampleUITests" */;
+			buildConfigurationList = 4962652724DA665200032551 /* Build configuration list for PBXNativeTarget "GrowingIO_ExampleTests" */;
 			buildPhases = (
-				F55A3E261734DB2837C86A80 /* [CP] Check Pods Manifest.lock */,
-				4916317824DA5A7D0037D2CA /* Sources */,
-				4916317924DA5A7D0037D2CA /* Frameworks */,
-				4916317A24DA5A7D0037D2CA /* Resources */,
-				E37158045FB121C7B688820C /* [CP] Embed Pods Frameworks */,
+				D82F3128F826E62B39F8A14D /* [CP] Check Pods Manifest.lock */,
+				4962651A24DA665200032551 /* Sources */,
+				4962651B24DA665200032551 /* Frameworks */,
+				4962651C24DA665200032551 /* Resources */,
+				8F8F7BBB9A89FC6F783C21C1 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				4916318224DA5A7D0037D2CA /* PBXTargetDependency */,
+				4962652424DA665200032551 /* PBXTargetDependency */,
 			);
-			name = GrowingIO_ExampleUITests;
-			productName = GrowingIO_ExampleUITests;
-			productReference = 4916317C24DA5A7D0037D2CA /* GrowingIO_ExampleUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
+			name = GrowingIO_ExampleTests;
+			productName = GrowingIO_ExampleTests;
+			productReference = 4962651E24DA665200032551 /* GrowingIO_ExampleTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		6003F589195388D20070C39A /* GrowingIO_Example */ = {
 			isa = PBXNativeTarget;
@@ -695,7 +701,7 @@
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "3255289628@qq.com";
 				TargetAttributes = {
-					4916317B24DA5A7D0037D2CA = {
+					4962651D24DA665200032551 = {
 						CreatedOnToolsVersion = 11.5;
 						DevelopmentTeam = SXBU677CPT;
 						ProvisioningStyle = Automatic;
@@ -718,13 +724,13 @@
 			projectRoot = "";
 			targets = (
 				6003F589195388D20070C39A /* GrowingIO_Example */,
-				4916317B24DA5A7D0037D2CA /* GrowingIO_ExampleUITests */,
+				4962651D24DA665200032551 /* GrowingIO_ExampleTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		4916317A24DA5A7D0037D2CA /* Resources */ = {
+		4962651C24DA665200032551 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -769,13 +775,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		E37158045FB121C7B688820C /* [CP] Embed Pods Frameworks */ = {
+		8F8F7BBB9A89FC6F783C21C1 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-GrowingIO_ExampleUITests/Pods-GrowingIO_ExampleUITests-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-GrowingIO_ExampleTests/Pods-GrowingIO_ExampleTests-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/KIF/KIF.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -784,7 +790,29 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-GrowingIO_ExampleUITests/Pods-GrowingIO_ExampleUITests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-GrowingIO_ExampleTests/Pods-GrowingIO_ExampleTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D82F3128F826E62B39F8A14D /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-GrowingIO_ExampleTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		E7892524FBD4CD27DBE03E48 /* [CP] Check Pods Manifest.lock */ = {
@@ -833,62 +861,40 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-GrowingIO_Example/Pods-GrowingIO_Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		F55A3E261734DB2837C86A80 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-GrowingIO_ExampleUITests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		4916317824DA5A7D0037D2CA /* Sources */ = {
+		4962651A24DA665200032551 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4916319824DA5BDD0037D2CA /* EvarEventsTest.m in Sources */,
-				4916317F24DA5A7D0037D2CA /* GrowingIO_ExampleUITests.m in Sources */,
-				491631D724DA5C150037D2CA /* NoburPoMeaProCheck.m in Sources */,
-				491631B224DA5BF80037D2CA /* GDPRTest.m in Sources */,
-				4916319C24DA5BDD0037D2CA /* PPLEventsTest.m in Sources */,
-				491631B324DA5BF80037D2CA /* TrackViewTest.m in Sources */,
-				491631D424DA5C150037D2CA /* ManualTrackHelper.m in Sources */,
-				491631C224DA5C090037D2CA /* ClckEventsTest.m in Sources */,
-				4916319A24DA5BDD0037D2CA /* CstmEventsTest.m in Sources */,
-				4916319D24DA5BDD0037D2CA /* AppVarEventsTest.m in Sources */,
-				491631B524DA5BF80037D2CA /* DailyDataLimit.m in Sources */,
-				491631D624DA5C150037D2CA /* GrowingTestHelper.m in Sources */,
-				491631B024DA5BF80037D2CA /* MediatorTest.m in Sources */,
-				491631AF24DA5BF80037D2CA /* TrackAPIMainThreadTest.m in Sources */,
-				491631D524DA5C150037D2CA /* MockEventQueue.m in Sources */,
-				491631C424DA5C090037D2CA /* ChgEventsTest.m in Sources */,
-				491631B424DA5BF80037D2CA /* FlushIntervalAPITest.m in Sources */,
-				491631B124DA5BF80037D2CA /* GetIDsTest.m in Sources */,
-				4916319E24DA5BDD0037D2CA /* PvarEventsTest.m in Sources */,
-				491631C124DA5C090037D2CA /* VstEventsTest.m in Sources */,
-				4916319924DA5BDD0037D2CA /* VstrEventsTest.m in Sources */,
-				491631D324DA5C150037D2CA /* LogOperHelper.m in Sources */,
-				491631C324DA5C090037D2CA /* pageEventsTest.m in Sources */,
-				491631B724DA5BF80037D2CA /* GetConfigurationTest.m in Sources */,
-				491631D824DA5C150037D2CA /* NSURLSession+TestHook.m in Sources */,
-				491631B624DA5BF80037D2CA /* GetEnableLogTest.m in Sources */,
-				4916319B24DA5BDD0037D2CA /* CS1ManualTrackTest.m in Sources */,
+				4962653B24DA66B600032551 /* MockEventQueue.m in Sources */,
+				4962653924DA66B600032551 /* LogOperHelper.m in Sources */,
+				4962656924DA66BF00032551 /* GDPRTest.m in Sources */,
+				4962653D24DA66B600032551 /* NoburPoMeaProCheck.m in Sources */,
+				4962653A24DA66B600032551 /* ManualTrackHelper.m in Sources */,
+				4962657824DA66BF00032551 /* pageEventsTest.m in Sources */,
+				4962657724DA66BF00032551 /* ClckEventsTest.m in Sources */,
+				4962653E24DA66B600032551 /* NSURLSession+TestHook.m in Sources */,
+				4962653C24DA66B600032551 /* GrowingTestHelper.m in Sources */,
+				4962657124DA66BF00032551 /* CstmEventsTest.m in Sources */,
+				4962656F24DA66BF00032551 /* EvarEventsTest.m in Sources */,
+				4962657924DA66BF00032551 /* ChgEventsTest.m in Sources */,
+				4962656D24DA66BF00032551 /* GetEnableLogTest.m in Sources */,
+				4962657424DA66BF00032551 /* AppVarEventsTest.m in Sources */,
+				4962656B24DA66BF00032551 /* FlushIntervalAPITest.m in Sources */,
+				4962657624DA66BF00032551 /* VstEventsTest.m in Sources */,
+				4962656E24DA66BF00032551 /* GetConfigurationTest.m in Sources */,
+				4962656724DA66BF00032551 /* MediatorTest.m in Sources */,
+				4962657224DA66BF00032551 /* CS1ManualTrackTest.m in Sources */,
+				4962656824DA66BF00032551 /* GetIDsTest.m in Sources */,
+				4962652B24DA667900032551 /* GrowingIO_ExampleTests.m in Sources */,
+				4962657524DA66BF00032551 /* PvarEventsTest.m in Sources */,
+				4962657324DA66BF00032551 /* PPLEventsTest.m in Sources */,
+				4962656A24DA66BF00032551 /* TrackViewTest.m in Sources */,
+				4962657024DA66BF00032551 /* VstrEventsTest.m in Sources */,
+				4962656624DA66BF00032551 /* TrackAPIMainThreadTest.m in Sources */,
+				4962656C24DA66BF00032551 /* DailyDataLimit.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -934,10 +940,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		4916318224DA5A7D0037D2CA /* PBXTargetDependency */ = {
+		4962652424DA665200032551 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 6003F589195388D20070C39A /* GrowingIO_Example */;
-			targetProxy = 4916318124DA5A7D0037D2CA /* PBXContainerItemProxy */;
+			targetProxy = 4962652324DA665200032551 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -969,11 +975,11 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		4916318324DA5A7D0037D2CA /* Debug */ = {
+		4962652524DA665200032551 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9A2DCFDF4BCC9456D44C2F19 /* Pods-GrowingIO_ExampleUITests.debug.xcconfig */;
+			baseConfigurationReference = 7960B1F6F6B981911C36D5E6 /* Pods-GrowingIO_ExampleTests.debug.xcconfig */;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/GrowingIO_Example.app/GrowingIO_Example";
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -997,23 +1003,23 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = GrowingIO_ExampleUITests/Info.plist;
+				INFOPLIST_FILE = GrowingIO_ExampleTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "growingio.GrowingIO-ExampleUITests";
+				PRODUCT_BUNDLE_IDENTIFIER = "growingio.GrowingIO-ExampleTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = GrowingIO_Example;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GrowingIO_Example.app/GrowingIO_Example";
 			};
 			name = Debug;
 		};
-		4916318424DA5A7D0037D2CA /* Release */ = {
+		4962652624DA665200032551 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9994609423F44E2423C346ED /* Pods-GrowingIO_ExampleUITests.release.xcconfig */;
+			baseConfigurationReference = 7F0F6BA089703227980ABCA2 /* Pods-GrowingIO_ExampleTests.release.xcconfig */;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/GrowingIO_Example.app/GrowingIO_Example";
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1038,15 +1044,15 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = GrowingIO_ExampleUITests/Info.plist;
+				INFOPLIST_FILE = GrowingIO_ExampleTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "growingio.GrowingIO-ExampleUITests";
+				PRODUCT_BUNDLE_IDENTIFIER = "growingio.GrowingIO-ExampleTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = GrowingIO_Example;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GrowingIO_Example.app/GrowingIO_Example";
 			};
 			name = Release;
 		};
@@ -1162,11 +1168,11 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		4916318524DA5A7D0037D2CA /* Build configuration list for PBXNativeTarget "GrowingIO_ExampleUITests" */ = {
+		4962652724DA665200032551 /* Build configuration list for PBXNativeTarget "GrowingIO_ExampleTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4916318324DA5A7D0037D2CA /* Debug */,
-				4916318424DA5A7D0037D2CA /* Release */,
+				4962652524DA665200032551 /* Debug */,
+				4962652624DA665200032551 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
