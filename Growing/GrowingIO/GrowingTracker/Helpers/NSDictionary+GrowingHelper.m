@@ -25,19 +25,16 @@
 
 @implementation NSDictionary (GrowingHelper)
 
-- (NSData*)growingHelper_jsonData
-{
+- (NSData*)growingHelper_jsonData {
     return [self growingHelper_jsonDataWithOptions:0];
 }
 
-- (NSData*)growingHelper_jsonDataWithOptions:(NSJSONWritingOptions)options
-{
+- (NSData*)growingHelper_jsonDataWithOptions:(NSJSONWritingOptions)options {
     NSData * jsonData = nil;
     @try {
         NSError * error = nil;
         jsonData = [NSJSONSerialization dataWithJSONObject:self options:options error:&error];
-        if (error != nil)
-        {
+        if (error != nil) {
             jsonData = nil;
         }
     } @catch (NSException *exception) {
@@ -47,51 +44,31 @@
     }
 }
 
-- (NSString*)growingHelper_jsonString
-{
+- (NSString*)growingHelper_jsonString {
     return [[self growingHelper_jsonData] growingHelper_utf8String];
 }
 
-- (NSNumber*)growingHelper_numberWithKey:(NSString *)key
-{
-    id n = self[key];
-    if ([n isKindOfClass:[NSNumber class]])
-    {
-        return n;
-    }
-    else if ([n isKindOfClass:[NSString class]])
-    {
-        return [NSNumber numberWithDouble:[n doubleValue]];
-    }
-    else
-    {
-        return nil;
-    }
-}
-
-- (BOOL)isValidDicVar{
-    for (NSString * k in self)
-    {
+- (BOOL)isValidDictVariable {
+    for (NSString * k in self) {
         NSString * key = k ;
-        if (self[key] == nil || key.length > 50 )
-        {
+        if (self[key] == nil || key.length > 50 ) {
             GIOLogError(parameterKeyErrorLog);
             return NO ;
         }
-        if ([self[key] isKindOfClass:[NSNull class]] || self[key] == nil)
-        {
+        
+        if ([self[key] isKindOfClass:[NSNull class]] || self[key] == nil) {
             GIOLogError(parameterValueErrorLog);
             return NO ;
         }
-        if ([self[key] isKindOfClass:[NSString class]])
-        {
+        
+        if ([self[key] isKindOfClass:[NSString class]]) {
             NSString * v = self[key];
-            if (v.length > 1000)
-            {
+            if (v.length > 1000) {
                 GIOLogError(parameterValueErrorLog);
                 return NO ;
             }
         }
+        
         if (![self[key] isKindOfClass:[NSString class]] && ![self[key] isKindOfClass:[NSNumber class]]) {
             GIOLogError(parameterValueErrorLog);
             return NO ;
@@ -100,18 +77,21 @@
     return YES ;
 }
 
-- (NSString *)growingHelper_queryString
-{
+- (NSString *)growingHelper_queryString {
     NSString *query = @"";
-    if (self.count > 0) {
-        for (NSString *key in self) {
-            if (query.length == 0) {
-                query = [query stringByAppendingString:[NSString stringWithFormat:@"%@=%@",key,self[key]]];
-            } else {
-                query = [query stringByAppendingString:[NSString stringWithFormat:@"&%@=%@",key,self[key]]];
-            }
+    
+    if (self.count < 1) {
+        return query;
+    }
+    
+    for (NSString *key in self) {
+        if (query.length == 0) {
+            query = [query stringByAppendingString:[NSString stringWithFormat:@"%@=%@",key,self[key]]];
+        } else {
+            query = [query stringByAppendingString:[NSString stringWithFormat:@"&%@=%@",key,self[key]]];
         }
     }
+    
     return query;
 }
 

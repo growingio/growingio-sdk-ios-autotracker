@@ -29,111 +29,39 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\[]{},
 
 @implementation NSString (GrowingHelper)
 
-// 这个函数千万不要删掉  这里留作移除sdk备用的拦截原型
-+ (void)load
-{
-}
-
-- (NSString*)growingHelper_safeSubStringWithLength:(NSInteger)length
-{
-    if (self.length <= length)
-    {
+- (NSString*)growingHelper_safeSubStringWithLength:(NSInteger)length {
+    if (self.length <= length) {
         return self;
     }
     
     NSRange range;
-    for(int i = 0 ; i < self.length ; i += range.length)
-    {
+    for(int i = 0 ; i < self.length ; i += range.length) {
         range = [self rangeOfComposedCharacterSequenceAtIndex:i];
-        if (range.location + range.length > length)
-        {
+        if (range.location + range.length > length) {
             return [self substringToIndex:range.location];
         }
     }
     return self;
 }
 
-- (NSData*)growingHelper_uft8Data
-{
+- (NSData*)growingHelper_uft8Data {
     return [self dataUsingEncoding:NSUTF8StringEncoding];
 }
 
-- (id)growingHelper_jsonObject
-{
+- (id)growingHelper_jsonObject {
     return [[self growingHelper_uft8Data] growingHelper_jsonObject];
 }
 
-- (NSDictionary *)growingHelper_dictionaryObject
-{
+- (NSDictionary *)growingHelper_dictionaryObject {
     id dict = [self growingHelper_jsonObject];
-    if ([dict isKindOfClass:[NSDictionary class]])
-    {
+    if ([dict isKindOfClass:[NSDictionary class]]){
         return dict;
-    }
-    else
-    {
+    } else {
         return nil;
     }
 }
 
-
--(NSString *)growingHelper_stringWithXmlConformed
-{
-    NSMutableString * xml = [[NSMutableString alloc] init];
-    for (NSUInteger i = 0; i < self.length; i++)
-    {
-        unichar c = [self characterAtIndex:i];
-        switch (c)
-        {
-            case (unichar)'&':
-            {
-                [xml appendString:@"&amp;"];
-            }
-                break;
-            case (unichar)'<':
-            {
-                [xml appendString:@"&lt;"];
-            }
-                break;
-            case (unichar)'>':
-            {
-                [xml appendString:@"&gt;"];
-            }
-                break;
-            case (unichar)'\"':
-            {
-                [xml appendString:@"&quot;"];
-            }
-                break;
-            case (unichar)'\'':
-            {
-                [xml appendString:@"&apos;"];
-            }
-                break;
-            default:
-            {
-                [xml appendString:[NSString stringWithCharacters:&c length:1]];
-            }
-                break;
-        }
-    }
-    return xml;
-}
-
-- (NSString*)growingHelper_stringWithUrlDecode
-{
-    NSString * s = [self stringByReplacingOccurrencesOfString:@"+" withString:@" "];
-    return [s stringByRemovingPercentEncoding];
-}
-
-- (NSString*)growingHelper_stringByRemovingSpace
-{
-    NSArray * array = [self componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    return [array componentsJoinedByString:@""];
-}
-
-- (NSString *)growingHelper_sha1
-{
+- (NSString *)growingHelper_sha1 {
     NSData *data = [self dataUsingEncoding:NSUTF8StringEncoding];
     uint8_t digest[CC_SHA1_DIGEST_LENGTH];
 
@@ -141,75 +69,15 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\[]{},
 
     NSMutableString *output = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 2];
 
-    for (int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++)
-    {
+    for (int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++) {
         [output appendFormat:@"%02x", digest[i]];
     }
 
     return output;
 }
 
-- (BOOL)growingHelper_matchWildly:(NSString *)wildPattern
-{
-    BOOL hasWildStar = NO;
-    BOOL hasMultipleWildStar = NO;
-    NSRange firstStarRange = [wildPattern rangeOfString:@"*"];
-    NSUInteger endPosOfFirstStarRange = firstStarRange.location + firstStarRange.length;
-
-    hasWildStar = (firstStarRange.location != NSNotFound);
-    if (hasWildStar)
-    {
-        if (wildPattern.length > endPosOfFirstStarRange)
-        {
-            NSRange range;
-            range.location = endPosOfFirstStarRange;
-            range.length = wildPattern.length - range.location;
-            NSRange secondStarRange = [wildPattern rangeOfString:@"*" options:NSLiteralSearch range:range];
-            hasMultipleWildStar = (secondStarRange.location != NSNotFound);
-        }
-        else if (wildPattern.length == 1) // just @"*"
-        {
-            return true;
-        }
-    }
-
-    if (hasWildStar)
-    {
-        if (hasMultipleWildStar)
-        {
-            // Multiple "*"s, we can use NSPredict or NSRegularExpression,
-            // see http://stackoverflow.com/questions/5097491/evaluate-compare-nsstring-with-wildcards
-            NSPredicate *pred = [NSPredicate predicateWithFormat:@"self LIKE %@", wildPattern];
-            return [pred evaluateWithObject:self];
-        }
-        else
-        {
-            if (firstStarRange.location == 0)
-            {
-                return [self hasSuffix:[wildPattern substringFromIndex:endPosOfFirstStarRange]];
-            }
-            else if (endPosOfFirstStarRange == wildPattern.length)
-            {
-                return [self hasPrefix:[wildPattern substringToIndex:firstStarRange.location]];
-            }
-            else
-            {
-                return [self hasPrefix:[wildPattern substringToIndex:firstStarRange.location]]
-                    && [self hasSuffix:[wildPattern substringFromIndex:endPosOfFirstStarRange]];
-            }
-        }
-    }
-    else
-    {
-        return [self isEqualToString:wildPattern];
-    }
-}
-
-- (BOOL)growingHelper_isLegal
-{
-    if (self.length != 1) {
-        return NO;
-    }
+- (BOOL)growingHelper_isLegal {
+    if (self.length != 1) { return NO; }
     
     unichar character = [self characterAtIndex:0];
     
@@ -223,11 +91,8 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\[]{},
     }
 }
 
-- (BOOL)growingHelper_isValidU
-{
-    if (!self.length) {
-        return NO;
-    }
+- (BOOL)growingHelper_isValidU {
+    if (!self.length) { return NO; }
     
     NSArray *stringArray = [self componentsSeparatedByString:@"-"];
     
@@ -242,8 +107,7 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\[]{},
     return NO;
 }
 
-- (NSString *)growingHelper_encryptString
-{
+- (NSString *)growingHelper_encryptString {
     if ([GrowingDeviceInfo currentDeviceInfo].encryptStringBlock) {
         return [GrowingDeviceInfo currentDeviceInfo].encryptStringBlock(self);
     } else {
@@ -252,10 +116,8 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\[]{},
 }
 
 
-- (instancetype)initWithJsonObject_growingHelper:(id)obj
-{
-    if (!obj || ![NSJSONSerialization isValidJSONObject:obj])
-    {
+- (instancetype)initWithJsonObject_growingHelper:(id)obj {
+    if (!obj || ![NSJSONSerialization isValidJSONObject:obj]) {
         return nil;
     }
     
@@ -268,25 +130,14 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\[]{},
     return self;
 }
 
-- (void)growingHelper_debugOutput
-{
-    // * NSLog truncates long text to 1023 characters on iOS 10.
-    // * C function printf doesn't have any limits on text length, but it
-    //   prints to XCode log window only and doesn't print to device log.
-    // * So, for customer developer to gather logs, printf is sufficient.
-    // * If we want to collect logs from customer's app, we can hook this
-    //   method and print log with _os_log_internal.
-    //   See: http://stackoverflow.com/questions/39584707/nslog-on-devices-in-ios-10-xcode-8-seems-to-truncate-why
-    //   Check out Elist's answer on Oct. 27th. 2016.
-    printf("%s\n", self.UTF8String);
-}
-
 //添加Log
-- (BOOL)isValidKey{
-    if (![self isValidIdentifier]) {
+- (BOOL)isValidKey {
+    BOOL valid = [self isValidIdentifier];
+    
+    if (!valid) {
         GIOLogError(parameterKeyErrorLog);
     }
-    return [self isValidIdentifier];
+    return valid;
 }
 
 /**
@@ -295,21 +146,13 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\[]{},
  
  @return 有效返回 YES，否则为NO
  */
-- (BOOL)isValidIdentifier{
+- (BOOL)isValidIdentifier {
     //标识符不允许空字符串，不允许nil
     //标识符的长度限制在50个英文字符之内
     if (self.length == 0 || self.length > 50) {
         return NO;
     }
-//    //标识符仅允许大小写英文、数字、下划线、以及英文冒号，并且不能以数字和冒号开头
-//    static NSRegularExpression *idExp = nil;
-//    if (!idExp) {
-//        idExp = [NSRegularExpression regularExpressionWithPattern:@"^[a-zA-Z_][a-zA-Z0-9_:]*$" options:0 error:nil];
-//    }
-//    NSRange range = [idExp rangeOfFirstMatchInString:self options:0 range:NSMakeRange(0, self.length)];
-//    if (range.location == 0 && range.length == self.length) {
-//        return YES;
-//    }
+    
     return YES;
 }
 
@@ -326,16 +169,12 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\[]{},
 
 }
 
-- (NSDictionary *)growingHelper_queryObject
-{
-    if (self.length == 0) {
-        return nil;
-    }
+- (NSDictionary *)growingHelper_queryObject {
+    if (self.length == 0) { return nil; }
     
     NSArray *stringArray = [self componentsSeparatedByString:@"&"];
-    if (stringArray.count == 0) {
-        return nil;
-    }
+    if (stringArray.count == 0) { return nil; }
+    
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     for (NSString *string in stringArray) {
         NSArray *keyValueArray = [string componentsSeparatedByString:@"="];

@@ -23,92 +23,57 @@
 #import "GrowingWindow.h"
 @implementation UIApplication (GrowingHelper)
 
-- (NSArray<UIWindow*>*)growingHelper_allWindows
-{
+- (NSArray<UIWindow*>*)growingHelper_allWindows {
     NSArray * array = [self windows];
     UIWindow * keyWindow = [self keyWindow];
     
-    if (!keyWindow)
-    {
+    if (!keyWindow) {
         return array;
     }
-    else if (!array.count)
-    {
+    
+    if (!array.count) {
         return @[keyWindow];
     }
-    else if ([array containsObject:keyWindow])
-    {
+    
+    if ([array containsObject:keyWindow]) {
         return array;
     }
-    else
-    {
-        return [array arrayByAddingObject:keyWindow];
-    }
+    
+    return [array arrayByAddingObject:keyWindow];
 }
 
-- (NSArray<UIWindow*>*)growingHelper_allWindowsSortedByWindowLevel
-{
+- (NSArray<UIWindow*>*)growingHelper_allWindowsSortedByWindowLevel {
     NSArray *windows = [[UIApplication sharedApplication] growingHelper_allWindows];
-
+    
     NSMutableArray *sortedWindows = [NSMutableArray arrayWithArray:windows];
     [sortedWindows sortWithOptions:NSSortStable
                    usingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
-                       UIWindow * win1 = obj1;
-                       UIWindow * win2 = obj2;
-                       if (win1.windowLevel < win2.windowLevel)
-                       {
-                           return NSOrderedAscending;
-                       }
-                       else if (win1.windowLevel > win2.windowLevel)
-                       {
-                           return NSOrderedDescending;
-                       }
-                       else
-                       {
-                           return NSOrderedSame;
-                       }
-                   }];
+        UIWindow * win1 = obj1;
+        UIWindow * win2 = obj2;
+        if (win1.windowLevel < win2.windowLevel) {
+            return NSOrderedAscending;
+        }
+        
+        if (win1.windowLevel > win2.windowLevel) {
+            return NSOrderedDescending;
+        }
+        
+        return NSOrderedSame;
+    }];
+    
     return sortedWindows;
 }
 
-- (NSArray<UIWindow*>*)growingHelper_allWindowsWithoutGrowingWindowSortedByWindowLevel
-{
-    NSMutableArray *windows = [[NSMutableArray alloc] initWithArray:self.growingHelper_allWindowsSortedByWindowLevel];
-    for (NSInteger i = windows.count - 1; i >= 0 ; i --)
-    {
-        UIWindow *win = windows[i];
-        if ([win isKindOfClass:[GrowingWindow class]])
-        {
-            [windows removeObjectAtIndex:i];
-        }
-    }
-    return windows;
-}
-
-- (NSArray<UIWindow*>*)growingHelper_allWindowsWithoutGrowingWindow
-{
+- (NSArray<UIWindow*>*)growingHelper_allWindowsWithoutGrowingWindow {
     NSMutableArray *windows = [[NSMutableArray alloc] initWithArray:self.growingHelper_allWindows];
-    for (NSInteger i = windows.count - 1; i >= 0 ; i --)
-    {
+    for (NSInteger i = windows.count - 1; i >= 0 ; i --) {
         UIWindow *win = windows[i];
-        if ([win isKindOfClass:[GrowingWindow class]])
-        {
+        
+        if ([win isKindOfClass:[GrowingWindow class]]) {
             [windows removeObjectAtIndex:i];
         }
     }
     return windows;
-}
-
-- (UIImage*)growingHelper_screenshotWithGrowingWindow:(CGFloat)maxScale
-{
-    return [self growingHelper_screenshotWithGrowingWindow:maxScale block:nil];
-}
-
-- (UIImage*)growingHelper_screenshotWithGrowingWindow:(CGFloat)maxScale block:(void (^)(CGContextRef))block
-{
-    return [UIWindow growingHelper_screenshotWithWindows:[self growingHelper_allWindowsWithoutGrowingWindow]
-                                             andMaxScale:maxScale
-                                                   block:block];
 }
 
 @end

@@ -24,20 +24,17 @@
 
 @implementation UIWindow (GrowingHelper)
 
-- (UIImage*)growingHelper_screenshot:(CGFloat)maxScale
-{
+- (UIImage *)growingHelper_screenshot:(CGFloat)maxScale {
     return [[self class] growingHelper_screenshotWithWindows:@[self] andMaxScale:maxScale];
 }
 
-+ (UIImage*)growingHelper_screenshotWithWindows:(NSArray<UIWindow *> *)windows andMaxScale:(CGFloat)maxScale
-{
++ (UIImage *)growingHelper_screenshotWithWindows:(NSArray<UIWindow *> *)windows andMaxScale:(CGFloat)maxScale {
     return [self growingHelper_screenshotWithWindows:windows andMaxScale:maxScale block:nil];
 }
 
-+ (UIImage*)growingHelper_screenshotWithWindows:(NSArray<UIWindow *> *)windows
++ (UIImage *)growingHelper_screenshotWithWindows:(NSArray<UIWindow *> *)windows
                                     andMaxScale:(CGFloat)maxScale
-                                          block:(void (^)(CGContextRef))block
-{
+                                          block:(void (^)(CGContextRef))block {
     CGFloat scale = [UIScreen mainScreen].scale;
     if (maxScale != 0 && maxScale < scale) {
         scale = maxScale;
@@ -59,8 +56,8 @@
 
     UIGraphicsBeginImageContextWithOptions(imageSize, NO, scale);
     CGContextRef context = UIGraphicsGetCurrentContext();
-    for (UIWindow *window in windows)
-    {
+    
+    for (UIWindow *window in windows) {
         CGContextSaveGState(context);
         CGContextTranslateCTM(context, window.center.x, window.center.y);
         CGContextConcatCTM(context, window.transform);
@@ -85,8 +82,7 @@
         CGContextRestoreGState(context);
     }
     
-    if (block)
-    {
+    if (block) {
         block(context);
     }
 

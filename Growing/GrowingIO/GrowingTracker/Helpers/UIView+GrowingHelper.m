@@ -19,18 +19,14 @@
 
 
 #import "UIView+GrowingHelper.h"
-#import "NSObject+GrowingHelper.h"
-#import <objc/runtime.h>
 
 @implementation UIView (GrowingHelper)
 
-- (UIImage*)growingHelper_screenshot:(CGFloat)maxScale
-{
+- (UIImage*)growingHelper_screenshot:(CGFloat)maxScale {
     UIView *view = self;
 
     CGFloat scale = [UIScreen mainScreen].scale;
-    if (maxScale != 0 && maxScale < scale)
-    {
+    if (maxScale != 0 && maxScale < scale) {
         scale = maxScale;
     }
     UIGraphicsBeginImageContextWithOptions(self.bounds.size, NO, scale);
@@ -42,13 +38,10 @@
     return image;
 }
 
-- (UIViewController*)growingHelper_viewController
-{
+- (UIViewController*)growingHelper_viewController {
     UIResponder *curNode = self.nextResponder;
-    while (curNode)
-    {
-        if ([curNode isKindOfClass:[UIViewController class]])
-        {
+    while (curNode) {
+        if ([curNode isKindOfClass:[UIViewController class]]) {
             return (id)curNode;
         }
         curNode = [curNode nextResponder];

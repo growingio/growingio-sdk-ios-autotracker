@@ -23,28 +23,23 @@
 
 @implementation UIImage (GrowingHelper)
 
-- (NSData*)growingHelper_JPEG:(CGFloat)compress
-{
+- (NSData*)growingHelper_JPEG:(CGFloat)compress {
     return UIImageJPEGRepresentation(self, compress);
 }
 
-- (NSData*)growingHelper_PNG
-{
+- (NSData*)growingHelper_PNG {
     return UIImagePNGRepresentation(self);
 }
 
-- (NSString*)growingHelper_Base64JPEG:(CGFloat)compress
-{
+- (NSString*)growingHelper_Base64JPEG:(CGFloat)compress {
     return [[self growingHelper_JPEG:compress] growingHelper_base64String];
 }
 
-- (NSString*)growingHelper_Base64PNG
-{
+- (NSString*)growingHelper_Base64PNG {
     return [[self growingHelper_PNG] growingHelper_base64String];
 }
 
-- (UIImage*)growingHelper_getSubImage:(CGRect)rect
-{
+- (UIImage*)growingHelper_getSubImage:(CGRect)rect {
     rect.origin.x *= self.scale;
     rect.origin.y *= self.scale;
     rect.size.width *= self.scale;

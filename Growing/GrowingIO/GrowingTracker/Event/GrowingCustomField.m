@@ -94,7 +94,7 @@ static NSString *const kGrowingCustomField = @"customField";
 - (void)sendEvarEvent:(NSDictionary<NSString *, NSObject *> *)evar {
     [[GrowingMobileDebugger shareDebugger] cacheValue:evar ofType:@"evar"];
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:evar];
-    if (![dict isValidDicVar]) {
+    if (![dict isValidDictVariable]) {
         return ;
     }
     if (dict.count > 100 ) {
@@ -108,7 +108,7 @@ static NSString *const kGrowingCustomField = @"customField";
     //为GrowingMobileDebugger缓存用户设置 - ppl
     [[GrowingMobileDebugger shareDebugger] cacheValue:peopleVar ofType:@"ppl"];
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:peopleVar];
-    if (![dict isValidDicVar]) {
+    if (![dict isValidDictVariable]) {
         return ;
     }
     if (dict.count > 100 ) {
@@ -147,7 +147,7 @@ static NSString *const kGrowingCustomField = @"customField";
 
 - (void)sendVisitorEvent:(NSDictionary<NSString *, NSObject *> *)variable {
     if ([variable isKindOfClass:[NSDictionary class]]) {
-        if (![variable isValidDicVar]) {
+        if (![variable isValidDictVariable]) {
             return ;
         }
         if (variable.count > 100 ) {

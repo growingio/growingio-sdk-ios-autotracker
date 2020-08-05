@@ -33,15 +33,7 @@
 
 - (NSString *)growingHelper_safeSubStringWithLength:(NSInteger)length;
 
-- (NSString *)growingHelper_stringWithXmlConformed;
-
-- (NSString *)growingHelper_stringWithUrlDecode;
-
-- (NSString *)growingHelper_stringByRemovingSpace;
-
 - (NSString *)growingHelper_sha1;
-
-- (BOOL)growingHelper_matchWildly:(NSString *)wildPattern;
 
 - (BOOL)growingHelper_isLegal;
 
@@ -53,11 +45,7 @@
 //判断key的有效性
 - (BOOL)isValidKey;
 
-- (BOOL)isValidIdentifier;
-
 - (instancetype)initWithJsonObject_growingHelper:(id)obj;
-
-- (void)growingHelper_debugOutput;
 
 + (BOOL)growingHelper_isBlankString:(NSString *)string;
 

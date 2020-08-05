@@ -325,7 +325,7 @@
         GIOLogError(parameterValueErrorLog);
         return ;
     }
-    if (![eventName isValidKey] || ![attributes isValidDicVar]) {
+    if (![eventName isValidKey] || ![attributes isValidDictVariable]) {
         return ;
     }
     

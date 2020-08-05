@@ -22,8 +22,7 @@
 
 @implementation NSObject(GrowingIvarHelper)
 
-- (BOOL)growingHelper_getIvar:(const char *)ivarName outObj:(id *)outObj
-{
+- (BOOL)growingHelper_getIvar:(const char *)ivarName outObj:(id *)outObj {
     unsigned count = 0;
     Ivar var = nil;
     Ivar *ivars = class_copyIvarList(self.class, &count);
@@ -35,8 +34,8 @@
         }
     }
     free(ivars);
-    if (outObj && var)
-    {
+    
+    if (outObj && var) {
         *outObj = object_getIvar(self, var);
     }
     return var ? YES : NO;

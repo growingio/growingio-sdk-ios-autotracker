@@ -238,7 +238,7 @@ GrowingSafeStringPropertyImplementation(growingPageAlias,
                 NSLog(parameterValueErrorLog);
                 return ;
             }
-            if (![growingPageAttributes isValidDicVar]) {
+            if (![growingPageAttributes isValidDictVariable]) {
                 return ;
             }
             [self mergeGrowingAttributesPvar:growingPageAttributes];

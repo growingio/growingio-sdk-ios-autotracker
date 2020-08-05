@@ -17,12 +17,9 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
-
-#import "NSObject+GrowingHelper.h"
 #import "UIAlertController+GrowingNode.h"
-
 #import <objc/runtime.h>
+#import "NSObject+GrowingIvarHelper.h"
 
 @implementation UIAlertController (GrowingNode)
 

@@ -22,8 +22,8 @@
 
 @interface NSArray (GrowingHelper)
 
-- (NSData*)growingHelper_jsonData;
-- (NSData*)growingHelper_jsonDataWithOptions:(NSJSONWritingOptions)options;
-- (NSString*)growingHelper_jsonString;
+- (NSData *)growingHelper_jsonData;
+- (NSData *)growingHelper_jsonDataWithOptions:(NSJSONWritingOptions)options;
+- (NSString *)growingHelper_jsonString;
 
 @end
