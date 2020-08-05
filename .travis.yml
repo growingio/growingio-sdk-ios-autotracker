@@ -13,7 +13,6 @@ before_install:
 script:
   - set -o pipefail
   - xcodebuild -workspace Growing/Example/GrowingIO.xcworkspace -scheme GrowingAutoTracker -configuration Release clean build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO | xcpretty -c
+  - echo "hello world"
 
-
-script:
-    - echo "hello world"
+    
