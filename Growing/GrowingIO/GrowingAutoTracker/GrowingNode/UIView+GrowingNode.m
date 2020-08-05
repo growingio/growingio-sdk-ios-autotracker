@@ -30,6 +30,8 @@
 #import "UITableView+GrowingAutoTrack.h"
 #import "UIView+GrowingHelper.h"
 #import "UIView+GrowingNode.h"
+#import "GrowingInstance.h"
+#import "GrowingConfiguration+GrowingAutoTrack.h"
 
 @interface GrowingMaskView : UIImageView
 @end
@@ -98,10 +100,10 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
     /* 忽略路径
      UITableViewWrapperView 为 iOS11 以下 UITableView 与 cell 之间的 view
      */
-    if ([NSStringFromClass(self.class)
-            isEqualToString:@"UITableViewWrapperView"]) {
+    if ([NSStringFromClass(self.class) isEqualToString:@"UITableViewWrapperView"]) {
         return nil;
     }
+    
     NSInteger index = [self growingNodeKeyIndex];
     NSString *className = NSStringFromClass(self.class);
     return index < 0
@@ -149,47 +151,47 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
 }
 
 - (BOOL)growingImpNodeIsVisible {
-    if (self.window && !self.hidden && self.alpha >= 0.001 && self.superview) {
-        BOOL isInScreen;
-        CGRect rect = [self growingNodeFrame];
-        CGRect intersectionRect =
-            CGRectIntersection([UIScreen mainScreen].bounds, rect);
-        if (CGRectIsEmpty(intersectionRect) || CGRectIsNull(intersectionRect)) {
-            isInScreen = NO;
-        } else {
-            if (self.growingImpressionScale == 0.0) {
-                isInScreen = YES;
-            } else {
-                if (intersectionRect.size.width *
-                        intersectionRect.size.height >=
-                    self.bounds.size.width * self.bounds.size.height *
-                        self.growingImpressionScale) {
-                    isInScreen = YES;
-                } else {
-                    isInScreen = NO;
-                }
-            }
-        }
-
-        if (!isInScreen) {
-            return NO;
-        } else {
-            UIResponder *curNode = self.nextResponder;
-            while (curNode) {
-                if (!curNode.isProxy &&
-                    [curNode isKindOfClass:[UIView class]]) {
-                    if (((UIView *)curNode).hidden == YES ||
-                        ((UIView *)curNode).alpha < 0.001) {
-                        return NO;
-                    }
-                }
-                curNode = curNode.nextResponder;
-            }
-            return YES;
-        }
-    } else {
+    if (!self.window || self.hidden || self.alpha < 0.001 || !self.superview) {
         return NO;
     }
+    
+    CGRect rect = [self growingNodeFrame];
+    CGRect intersectionRect = CGRectIntersection([UIScreen mainScreen].bounds, rect);
+    
+    if (CGRectIsEmpty(intersectionRect) || CGRectIsNull(intersectionRect)) {
+        return NO;
+    }
+    
+    BOOL isInScreen = NO;
+    double impScale = [GrowingInstance sharedInstance].configuration.impressionScale;
+    
+    if (impScale == 0.0) {
+        isInScreen = YES;
+    } else {
+        if (intersectionRect.size.width * intersectionRect.size.height >=
+            self.bounds.size.width * self.bounds.size.height * impScale) {
+            isInScreen = YES;
+        } else {
+            isInScreen = NO;
+        }
+    }
+
+    if (isInScreen) {
+        UIResponder *curNode = self.nextResponder;
+        while (curNode) {
+            if (!curNode.isProxy &&
+                [curNode isKindOfClass:[UIView class]]) {
+                if (((UIView *)curNode).hidden == YES ||
+                    ((UIView *)curNode).alpha < 0.001) {
+                    return NO;
+                }
+            }
+            curNode = curNode.nextResponder;
+        }
+        return YES;
+    }
+    
+    return NO;
 }
 
 // 关系

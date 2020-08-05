@@ -158,7 +158,6 @@
 		425E0B2D24D9112B00BEEA93 /* UILabel+GrowingNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+GrowingNode.m"; sourceTree = "<group>"; };
 		425E0B2E24D9112B00BEEA93 /* GrowingNodeItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrowingNodeItem.h; sourceTree = "<group>"; };
 		425E0B2F24D9112B00BEEA93 /* GrowingEventNodeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingEventNodeManager.m; sourceTree = "<group>"; };
-		425E0B3024D9112B00BEEA93 /* WKWebView+GrowingNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WKWebView+GrowingNode.m"; sourceTree = "<group>"; };
 		425E0B3124D9112B00BEEA93 /* UISegmentedControl+GrowingNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UISegmentedControl+GrowingNode.h"; sourceTree = "<group>"; };
 		425E0B3224D9112B00BEEA93 /* UICollectionView+GrowingNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UICollectionView+GrowingNode.h"; sourceTree = "<group>"; };
 		425E0B3324D9112B00BEEA93 /* UITableView+GrowingNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+GrowingNode.m"; sourceTree = "<group>"; };
@@ -185,7 +184,6 @@
 		425E0B4924D9112B00BEEA93 /* GrowingConfiguration+GrowingAutoTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GrowingConfiguration+GrowingAutoTrack.h"; sourceTree = "<group>"; };
 		425E0B4A24D9112B00BEEA93 /* GrowingAutoTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingAutoTracker.m; sourceTree = "<group>"; };
 		425E0B4B24D9112B00BEEA93 /* GrowingConfiguration+GrowingAutoTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GrowingConfiguration+GrowingAutoTrack.m"; sourceTree = "<group>"; };
-		425E0B4D24D9112B00BEEA93 /* GrowingHeatMapManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingHeatMapManager.m; sourceTree = "<group>"; };
 		425E0B5324D9112B00BEEA93 /* GrowingActionEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingActionEvent.m; sourceTree = "<group>"; };
 		425E0B5424D9112B00BEEA93 /* GrowingClickEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrowingClickEvent.h; sourceTree = "<group>"; };
 		425E0B5524D9112B00BEEA93 /* GrowingActionEventElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingActionEventElement.m; sourceTree = "<group>"; };
@@ -268,7 +266,6 @@
 				425E0B2224D9112B00BEEA93 /* CircleList */,
 				425E0B2524D9112B00BEEA93 /* GrowingNode */,
 				425E0B4724D9112B00BEEA93 /* Public */,
-				425E0B4C24D9112B00BEEA93 /* HeatMap */,
 				425E0B4F24D9112B00BEEA93 /* Event */,
 				425E0B5924D9112B00BEEA93 /* Hybrid */,
 			);
@@ -280,12 +277,12 @@
 			isa = PBXGroup;
 			children = (
 				425E0AF124D9112B00BEEA93 /* GrowingPageManager.h */,
-				425E0AF224D9112B00BEEA93 /* UIViewController+GrowingPageHelper.h */,
-				425E0AF324D9112B00BEEA93 /* GrowingPageGroup.h */,
-				425E0AF424D9112B00BEEA93 /* GrowingPage.h */,
 				425E0AF524D9112B00BEEA93 /* GrowingPageManager.m */,
+				425E0AF224D9112B00BEEA93 /* UIViewController+GrowingPageHelper.h */,
 				425E0AF624D9112B00BEEA93 /* UIViewController+GrowingPageHelper.m */,
+				425E0AF324D9112B00BEEA93 /* GrowingPageGroup.h */,
 				425E0AF724D9112B00BEEA93 /* GrowingPageGroup.m */,
+				425E0AF424D9112B00BEEA93 /* GrowingPage.h */,
 				425E0AF824D9112B00BEEA93 /* GrowingPage.m */,
 			);
 			path = Page;
@@ -381,7 +378,6 @@
 				425E0B4224D9112B00BEEA93 /* UIViewController+GrowingNode.m */,
 				425E0B2724D9112B00BEEA93 /* UIWindow+GrowingNode.h */,
 				425E0B3824D9112B00BEEA93 /* UIWindow+GrowingNode.m */,
-				425E0B3024D9112B00BEEA93 /* WKWebView+GrowingNode.m */,
 			);
 			path = GrowingNode;
 			sourceTree = "<group>";
@@ -390,19 +386,11 @@
 			isa = PBXGroup;
 			children = (
 				425E0B4824D9112B00BEEA93 /* GrowingAutoTracker.h */,
-				425E0B4924D9112B00BEEA93 /* GrowingConfiguration+GrowingAutoTrack.h */,
 				425E0B4A24D9112B00BEEA93 /* GrowingAutoTracker.m */,
+				425E0B4924D9112B00BEEA93 /* GrowingConfiguration+GrowingAutoTrack.h */,
 				425E0B4B24D9112B00BEEA93 /* GrowingConfiguration+GrowingAutoTrack.m */,
 			);
 			path = Public;
-			sourceTree = "<group>";
-		};
-		425E0B4C24D9112B00BEEA93 /* HeatMap */ = {
-			isa = PBXGroup;
-			children = (
-				425E0B4D24D9112B00BEEA93 /* GrowingHeatMapManager.m */,
-			);
-			path = HeatMap;
 			sourceTree = "<group>";
 		};
 		425E0B4F24D9112B00BEEA93 /* Event */ = {
@@ -416,12 +404,12 @@
 		425E0B5224D9112B00BEEA93 /* GrowingActionEvent */ = {
 			isa = PBXGroup;
 			children = (
-				425E0B5324D9112B00BEEA93 /* GrowingActionEvent.m */,
 				425E0B5424D9112B00BEEA93 /* GrowingClickEvent.h */,
-				425E0B5524D9112B00BEEA93 /* GrowingActionEventElement.m */,
-				425E0B5624D9112B00BEEA93 /* GrowingActionEvent.h */,
 				425E0B5724D9112B00BEEA93 /* GrowingClickEvent.m */,
+				425E0B5624D9112B00BEEA93 /* GrowingActionEvent.h */,
+				425E0B5324D9112B00BEEA93 /* GrowingActionEvent.m */,
 				425E0B5824D9112B00BEEA93 /* GrowingActionEventElement.h */,
+				425E0B5524D9112B00BEEA93 /* GrowingActionEventElement.m */,
 			);
 			path = GrowingActionEvent;
 			sourceTree = "<group>";

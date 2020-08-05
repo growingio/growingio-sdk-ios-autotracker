@@ -45,14 +45,6 @@ typedef NS_ENUM(NSUInteger, GrowingIgnorePolicy) {
 // imp半自动打点
 @interface UIView (GrowingImpression)
 
-#pragma mark - Warning: 请在真机下校验数据
-
-// 设置该节点被认定为可见的比例
-// 节点在屏幕中展示的面积 >= 节点面积 * scale 则判定该节点可见,反之不可见
-// scale 比例因子,范围[0-1];默认值为0,这里0的意义可理解为无限接近于0
-// 如需要指定scale 请在API growingImpTrack 调用之前调用
-@property (nonatomic, assign) double growingImpressionScale;
-
 // 以下为元素展示打点事件
 // 在元素展示前调用即可,GIO负责监听元素展示并触发事件
 // 事件类型为自定义事件(cstm)

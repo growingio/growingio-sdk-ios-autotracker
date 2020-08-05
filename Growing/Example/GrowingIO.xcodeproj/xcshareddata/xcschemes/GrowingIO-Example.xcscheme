@@ -57,6 +57,26 @@
                ReferencedContainer = "container:GrowingIO.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "4916317B24DA5A7D0037D2CA"
+               BuildableName = "GrowingIO_ExampleUITests.xctest"
+               BlueprintName = "GrowingIO_ExampleUITests"
+               ReferencedContainer = "container:GrowingIO.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "491631E324DA64570037D2CA"
+               BuildableName = "GrowingIO_ExampleTests.xctest"
+               BlueprintName = "GrowingIO_ExampleTests"
+               ReferencedContainer = "container:GrowingIO.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

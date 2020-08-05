@@ -24,7 +24,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingConfiguration (GrowingAutoTrack)
 
-@property(nonatomic, assign) double growingGlobalImpScale;
+// 全局设置节点有效曝光的比例
+// 当可见像素值 / 总像素值 >= scale 则判定该节点可见、有效曝光， 反之不可见
+// scale 有效曝光比例， 范围[0-1]; 默认值为0, 0：任意像素可见为有效曝光， 1：全部像素可见时为有效曝光
+@property(nonatomic, assign) double impressionScale;
 
 @end
 

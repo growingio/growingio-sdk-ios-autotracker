@@ -25,14 +25,14 @@
 
 @implementation GrowingConfiguration (GrowingAutoTrack)
 
-static NSString * _Nonnull const kGrowingGlobalImpScale = @"growingGlobalImpScale";
+static NSString * _Nonnull const kImpressionScale = @"impressionScale";
 
-- (void)setGrowingGlobalImpScale:(double)scale {
-    objc_setAssociatedObject(self, &kGrowingGlobalImpScale, [NSNumber numberWithDouble:scale], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setImpressionScale:(double)impressionScale {
+    objc_setAssociatedObject(self, &kImpressionScale, [NSNumber numberWithDouble:impressionScale], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (double)growingGlobalImpScale {
-    NSNumber *number = objc_getAssociatedObject(self, &kGrowingGlobalImpScale);
+- (double)impressionScale {
+    NSNumber *number = objc_getAssociatedObject(self, &kImpressionScale);
     if (number) {
         return [number doubleValue];
     } else {

@@ -19,9 +19,11 @@ target 'GrowingIO_Example' do
 
 end
 
-target 'GrowingIO_Tests' do
+target 'GrowingIO_ExampleUITests' do
    
    pod 'KIF', :configurations => ['Debug']
+   pod 'GrowingIO', :path => '../'
+
    
 end
 
