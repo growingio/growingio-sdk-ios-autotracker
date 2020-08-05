@@ -10,7 +10,7 @@
 #import "MockEventQueue.h"
 #import "GrowingTestHelper.h"
 #import "NoburPoMeaProCheck.h"
-#import <GrowingTracker.h>
+#import "GrowingTracker.h"
 
 @implementation VstEventsTest
 

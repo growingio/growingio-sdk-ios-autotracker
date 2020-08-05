@@ -14,15 +14,13 @@
 #import "GrowingEventManager.h"
 #import "GrowingEventCounter.h"
 #import <UIKit/UIKit.h>
-#import <Foundation/Foundation.h>
 
-
-@interface GrowingEventManager (growingAutoTest)
+@interface GrowingEventManager (GrowingAutoTest)
 
 @end
 
 
-@implementation GrowingEventManager (growingAutoTest)
+@implementation GrowingEventManager (GrowingAutoTest)
 
 static NSString *isMainThread = @"1";
 static NSMutableArray *originalEventArray = nil;
@@ -35,7 +33,7 @@ static GrowingEvent *originalEvent = nil;
     dispatch_once(&onceToken, ^{
         Class clazz = NSClassFromString(@"GrowingEventManager");
         
-        NSDictionary *swizzleDic = @{@"handleEvent:":@"mainThreadHandleEvent:", @"writeToDBWithEvent:":@"writeToDBWithEventTest:"};
+        NSDictionary *swizzleDic = @{@"handleEvent:":@"mainThreadHandleEvent:", @"writeToDatabaseWithEvent:":@"writeToDBWithEventTest:"};
         
         for (NSString *key in swizzleDic) {
             
@@ -81,7 +79,6 @@ static GrowingEvent *originalEvent = nil;
         //  非主线程
         isMainThread = @"0";
     }
-    
 }
 
 

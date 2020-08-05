@@ -1012,6 +1012,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GrowingIO_Example.app/GrowingIO_Example";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/../GrowingIO/GrowingAutoTracker/** $(SRCROOT)/../GrowingIO/GrowingTracker/**";
 			};
 			name = Debug;
 		};
@@ -1053,6 +1054,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GrowingIO_Example.app/GrowingIO_Example";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/../GrowingIO/GrowingAutoTracker/** $(SRCROOT)/../GrowingIO/GrowingTracker/**";
 			};
 			name = Release;
 		};

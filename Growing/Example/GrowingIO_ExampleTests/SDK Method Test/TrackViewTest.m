@@ -8,8 +8,7 @@
 
 #import "TrackViewTest.h"
 #import "MockEventQueue.h"
-//#import <GrowingTracker/GrowingTracker.h>
-#import <GrowingTracker.h>
+#import "GrowingTracker.h"
 
 @implementation TrackViewTest
 
