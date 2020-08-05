@@ -542,7 +542,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 1150;
-				ORGANIZATIONNAME = HangZhou;
+				ORGANIZATIONNAME = GrowingIO;
 				TargetAttributes = {
 					425E092A24D90F5200BEEA93 = {
 						CreatedOnToolsVersion = 11.5;
@@ -778,7 +778,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = SXBU677CPT;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -812,7 +812,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = SXBU677CPT;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
