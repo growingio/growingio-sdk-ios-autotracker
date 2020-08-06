@@ -33,12 +33,8 @@
 		425E0A5024D9111F00BEEA93 /* Growing3rdLibSocketRocket-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 425E098624D9111E00BEEA93 /* Growing3rdLibSocketRocket-Prefix.pch */; };
 		425E0A5124D9111F00BEEA93 /* GrowingLZ4.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E098824D9111E00BEEA93 /* GrowingLZ4.h */; };
 		425E0A5224D9111F00BEEA93 /* GrowingLZ4.c in Sources */ = {isa = PBXBuildFile; fileRef = 425E098924D9111E00BEEA93 /* GrowingLZ4.c */; };
-		425E0A5324D9111F00BEEA93 /* GrowingDeepLinkModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E098B24D9111E00BEEA93 /* GrowingDeepLinkModel.m */; };
 		425E0A5424D9111F00BEEA93 /* GrowingNetworkConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E098C24D9111E00BEEA93 /* GrowingNetworkConfig.m */; };
-		425E0A5524D9111F00BEEA93 /* GrowingBaseModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E098D24D9111E00BEEA93 /* GrowingBaseModel.h */; };
-		425E0A5624D9111F00BEEA93 /* GrowingDeepLinkModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E098E24D9111E00BEEA93 /* GrowingDeepLinkModel.h */; };
 		425E0A5724D9111F00BEEA93 /* GrowingNetworkConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E098F24D9111E00BEEA93 /* GrowingNetworkConfig.h */; };
-		425E0A5824D9111F00BEEA93 /* GrowingBaseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E099024D9111E00BEEA93 /* GrowingBaseModel.m */; };
 		425E0A5924D9111F00BEEA93 /* GrowingNetworkInterfaceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E099124D9111E00BEEA93 /* GrowingNetworkInterfaceManager.m */; };
 		425E0A5A24D9111F00BEEA93 /* GrowingMobileDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E099224D9111E00BEEA93 /* GrowingMobileDebugger.m */; };
 		425E0A5B24D9111F00BEEA93 /* GrowingURLSessionDataTaskProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E099424D9111E00BEEA93 /* GrowingURLSessionDataTaskProtocol.h */; };
@@ -228,12 +224,8 @@
 		425E098624D9111E00BEEA93 /* Growing3rdLibSocketRocket-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Growing3rdLibSocketRocket-Prefix.pch"; sourceTree = "<group>"; };
 		425E098824D9111E00BEEA93 /* GrowingLZ4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrowingLZ4.h; sourceTree = "<group>"; };
 		425E098924D9111E00BEEA93 /* GrowingLZ4.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = GrowingLZ4.c; sourceTree = "<group>"; };
-		425E098B24D9111E00BEEA93 /* GrowingDeepLinkModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingDeepLinkModel.m; sourceTree = "<group>"; };
 		425E098C24D9111E00BEEA93 /* GrowingNetworkConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingNetworkConfig.m; sourceTree = "<group>"; };
-		425E098D24D9111E00BEEA93 /* GrowingBaseModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrowingBaseModel.h; sourceTree = "<group>"; };
-		425E098E24D9111E00BEEA93 /* GrowingDeepLinkModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrowingDeepLinkModel.h; sourceTree = "<group>"; };
 		425E098F24D9111E00BEEA93 /* GrowingNetworkConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrowingNetworkConfig.h; sourceTree = "<group>"; };
-		425E099024D9111E00BEEA93 /* GrowingBaseModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingBaseModel.m; sourceTree = "<group>"; };
 		425E099124D9111E00BEEA93 /* GrowingNetworkInterfaceManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingNetworkInterfaceManager.m; sourceTree = "<group>"; };
 		425E099224D9111E00BEEA93 /* GrowingMobileDebugger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingMobileDebugger.m; sourceTree = "<group>"; };
 		425E099424D9111E00BEEA93 /* GrowingURLSessionDataTaskProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrowingURLSessionDataTaskProtocol.h; sourceTree = "<group>"; };
@@ -555,10 +547,6 @@
 		425E098A24D9111E00BEEA93 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				425E098D24D9111E00BEEA93 /* GrowingBaseModel.h */,
-				425E099024D9111E00BEEA93 /* GrowingBaseModel.m */,
-				425E098E24D9111E00BEEA93 /* GrowingDeepLinkModel.h */,
-				425E098B24D9111E00BEEA93 /* GrowingDeepLinkModel.m */,
 				425E098F24D9111E00BEEA93 /* GrowingNetworkConfig.h */,
 				425E098C24D9111E00BEEA93 /* GrowingNetworkConfig.m */,
 			);
@@ -881,7 +869,6 @@
 				425E0A7D24D9111F00BEEA93 /* GrowingGlobal.h in Headers */,
 				425E0AA924D9111F00BEEA93 /* GrowingActivateEvent.h in Headers */,
 				425E0A9224D9111F00BEEA93 /* GrowingVisitEvent.h in Headers */,
-				425E0A5524D9111F00BEEA93 /* GrowingBaseModel.h in Headers */,
 				425E0A3D24D9111F00BEEA93 /* GrowingBroadcaster.h in Headers */,
 				425E0AB824D9111F00BEEA93 /* UIWindow+GrowingHelper.h in Headers */,
 				425E0AA824D9111F00BEEA93 /* GrowingAdEvent.h in Headers */,
@@ -926,7 +913,6 @@
 				425E0AA724D9111F00BEEA93 /* GrowingReengageEvent.h in Headers */,
 				425E0AE824D9111F00BEEA93 /* GrowingFMDB.h in Headers */,
 				425E0AE224D9111F00BEEA93 /* GrowingFMResultSet.h in Headers */,
-				425E0A5624D9111F00BEEA93 /* GrowingDeepLinkModel.h in Headers */,
 				425E0ACE24D9111F00BEEA93 /* GrowingMediator.h in Headers */,
 				425E0A9324D9111F00BEEA93 /* GrowingEventChannel.h in Headers */,
 				425E0AC924D9111F00BEEA93 /* GrowingDispatchManager.h in Headers */,
@@ -1133,7 +1119,6 @@
 				425E0ACB24D9111F00BEEA93 /* GrowingMediator+GrowingDeepLink.m in Sources */,
 				425E0AE424D9111F00BEEA93 /* GrowingFMDatabaseAdditions.m in Sources */,
 				425E0ACC24D9111F00BEEA93 /* GrowingMediator.m in Sources */,
-				425E0A5824D9111F00BEEA93 /* GrowingBaseModel.m in Sources */,
 				425E0AE124D9111F00BEEA93 /* GrowingFMDatabasePool.m in Sources */,
 				425E0ACA24D9111F00BEEA93 /* UIApplication+GrowingHelper.m in Sources */,
 				425E0ABC24D9111F00BEEA93 /* NSObject+GrowingIvarHelper.m in Sources */,
@@ -1171,7 +1156,6 @@
 				425E0AE624D9111F00BEEA93 /* GrowingFMDatabaseQueue.m in Sources */,
 				425E0ABF24D9111F00BEEA93 /* UIView+GrowingHelper.m in Sources */,
 				425E0A7A24D9111F00BEEA93 /* GrowingConfiguration.m in Sources */,
-				425E0A5324D9111F00BEEA93 /* GrowingDeepLinkModel.m in Sources */,
 				425E0A4824D9111F00BEEA93 /* NSURLSession+GrowingURLSessionHelper.m in Sources */,
 				425E0A4424D9111F00BEEA93 /* GrowingAppLifecycle.m in Sources */,
 				425E0A4724D9111F00BEEA93 /* UIApplication+GrowingNode.m in Sources */,

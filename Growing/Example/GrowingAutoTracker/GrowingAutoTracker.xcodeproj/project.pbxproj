@@ -19,8 +19,8 @@
 		425E0B6A24D9112C00BEEA93 /* GrowingPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0AF824D9112B00BEEA93 /* GrowingPage.m */; };
 		425E0B7524D9112C00BEEA93 /* GrowingIMPTrack.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E0B0624D9112B00BEEA93 /* GrowingIMPTrack.h */; };
 		425E0B7624D9112C00BEEA93 /* GrowingIMPTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0B0724D9112B00BEEA93 /* GrowingIMPTrack.m */; };
-		425E0B7824D9112C00BEEA93 /* GrowingLoginModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E0B0A24D9112B00BEEA93 /* GrowingLoginModel.h */; };
-		425E0B7924D9112C00BEEA93 /* GrowingLoginModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0B0B24D9112B00BEEA93 /* GrowingLoginModel.m */; };
+		425E0B7824D9112C00BEEA93 /* GrowingAuthManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E0B0A24D9112B00BEEA93 /* GrowingAuthManager.h */; };
+		425E0B7924D9112C00BEEA93 /* GrowingAuthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0B0B24D9112B00BEEA93 /* GrowingAuthManager.m */; };
 		425E0B7A24D9112C00BEEA93 /* NSNotificationCenter+GrowingAutoTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0B0D24D9112B00BEEA93 /* NSNotificationCenter+GrowingAutoTrack.m */; };
 		425E0B7B24D9112C00BEEA93 /* UITapGestureRecognizer+GrowingAutoTrack.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E0B0E24D9112B00BEEA93 /* UITapGestureRecognizer+GrowingAutoTrack.h */; };
 		425E0B7C24D9112C00BEEA93 /* UIApplication+GrowingAutoTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0B0F24D9112B00BEEA93 /* UIApplication+GrowingAutoTrack.m */; };
@@ -145,8 +145,8 @@
 		425E0AF824D9112B00BEEA93 /* GrowingPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingPage.m; sourceTree = "<group>"; };
 		425E0B0624D9112B00BEEA93 /* GrowingIMPTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrowingIMPTrack.h; sourceTree = "<group>"; };
 		425E0B0724D9112B00BEEA93 /* GrowingIMPTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingIMPTrack.m; sourceTree = "<group>"; };
-		425E0B0A24D9112B00BEEA93 /* GrowingLoginModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrowingLoginModel.h; sourceTree = "<group>"; };
-		425E0B0B24D9112B00BEEA93 /* GrowingLoginModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingLoginModel.m; sourceTree = "<group>"; };
+		425E0B0A24D9112B00BEEA93 /* GrowingAuthManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrowingAuthManager.h; sourceTree = "<group>"; };
+		425E0B0B24D9112B00BEEA93 /* GrowingAuthManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingAuthManager.m; sourceTree = "<group>"; };
 		425E0B0D24D9112B00BEEA93 /* NSNotificationCenter+GrowingAutoTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNotificationCenter+GrowingAutoTrack.m"; sourceTree = "<group>"; };
 		425E0B0E24D9112B00BEEA93 /* UITapGestureRecognizer+GrowingAutoTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITapGestureRecognizer+GrowingAutoTrack.h"; sourceTree = "<group>"; };
 		425E0B0F24D9112B00BEEA93 /* UIApplication+GrowingAutoTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+GrowingAutoTrack.m"; sourceTree = "<group>"; };
@@ -332,8 +332,8 @@
 		425E0B0924D9112B00BEEA93 /* NetWork */ = {
 			isa = PBXGroup;
 			children = (
-				425E0B0A24D9112B00BEEA93 /* GrowingLoginModel.h */,
-				425E0B0B24D9112B00BEEA93 /* GrowingLoginModel.m */,
+				425E0B0A24D9112B00BEEA93 /* GrowingAuthManager.h */,
+				425E0B0B24D9112B00BEEA93 /* GrowingAuthManager.m */,
 			);
 			path = NetWork;
 			sourceTree = "<group>";
@@ -478,7 +478,7 @@
 				425E0BBD24D9112D00BEEA93 /* GrowingActionEvent.h in Headers */,
 				425E0BBF24D9112D00BEEA93 /* GrowingActionEventElement.h in Headers */,
 				425E0B6624D9112C00BEEA93 /* GrowingPage.h in Headers */,
-				425E0B7824D9112C00BEEA93 /* GrowingLoginModel.h in Headers */,
+				425E0B7824D9112C00BEEA93 /* GrowingAuthManager.h in Headers */,
 				425E0B8A24D9112C00BEEA93 /* UISegmentedControl+GrowingAutoTrack.h in Headers */,
 				425E0B9724D9112C00BEEA93 /* UIImageView+GrowingNode.h in Headers */,
 				425E0BAE24D9112D00BEEA93 /* UIControl+GrowingNode.h in Headers */,
@@ -640,7 +640,7 @@
 				425E0B9024D9112C00BEEA93 /* GrowingLoginMenu.m in Sources */,
 				425E0B9524D9112C00BEEA93 /* UINavigationController+GrowingNode.m in Sources */,
 				425E0BBE24D9112D00BEEA93 /* GrowingClickEvent.m in Sources */,
-				425E0B7924D9112C00BEEA93 /* GrowingLoginModel.m in Sources */,
+				425E0B7924D9112C00BEEA93 /* GrowingAuthManager.m in Sources */,
 				425E0B8324D9112C00BEEA93 /* UISegmentedControl+GrowingAutoTrack.m in Sources */,
 				425E0B7624D9112C00BEEA93 /* GrowingIMPTrack.m in Sources */,
 				425E0B6724D9112C00BEEA93 /* GrowingPageManager.m in Sources */,

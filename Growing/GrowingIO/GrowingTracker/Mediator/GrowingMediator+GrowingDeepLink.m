@@ -168,7 +168,7 @@
 - (void)authorizationWithToken:(NSString *)token loginToken:(NSString *)loginToken block:(void(^)(void))block
 {
     // 所有未识别状态都走到App圈App状态
-    id loginModel = [[GrowingMediator sharedInstance] performClass:@"GrowingLoginModel" action:@"sdkInstance" params:nil];
+    id loginModel = [[GrowingMediator sharedInstance] performClass:@"GrowingAuthManager" action:@"shareManager" params:nil];
     
     if (loginToken.length > 0)
     {
