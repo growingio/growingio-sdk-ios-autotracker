@@ -32,6 +32,7 @@
 #import "GrowingCocoaLumberjack.h"
 #import "GrowingConfiguration.h"
 #import "GrowingBroadcaster.h"
+#import "metamacros.h"
 
 @implementation Growing
 
