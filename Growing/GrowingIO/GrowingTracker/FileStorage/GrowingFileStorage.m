@@ -25,7 +25,7 @@
 #import "GrowingCocoaLumberjack.h"
 
 NSString *const kGrowingResidentDirName = @"com.growingio.core";
-NSString *const kDirCommonPrefix = @"com.growingio.";
+NSString *const kGrowingDirCommonPrefix = @"com.growingio.";
 
 @interface GrowingFileStorage ()
 
@@ -50,7 +50,7 @@ NSString *const kDirCommonPrefix = @"com.growingio.";
 
 - (instancetype)initWithName:(NSString *)name directory:(GrowingUserDirectory)directory crypto:(id<GrowingCrypto>)crypto {
     if (self = [super init]) {
-        NSString *fullPath = [NSString stringWithFormat:@"%@/%@%@", kGrowingResidentDirName, kDirCommonPrefix, name];
+        NSString *fullPath = [NSString stringWithFormat:@"%@/%@%@", kGrowingResidentDirName, kGrowingDirCommonPrefix, name];
         NSURL *userDir = [GrowingFileStorage userDirectoryURL:directory];
         _folderURL = [userDir URLByAppendingPathComponent:fullPath];;
         _crypto = crypto;
@@ -105,25 +105,25 @@ NSString *const kDirCommonPrefix = @"com.growingio.";
 #pragma mark Public
 
 + (NSString *)getTimingDatabasePath {
-    static NSString *path = nil;
+    static NSString *kGrowingPathTiming = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         NSURL *userDir = [GrowingFileStorage userDirectoryURL:GrowingUserDirectoryLibrary];
-        NSString *dirName = [NSString stringWithFormat:@"%@/%@%@", kGrowingResidentDirName, kDirCommonPrefix, @"event/timing.sqlite"];
-        path = [userDir URLByAppendingPathComponent:dirName].path;
+        NSString *dirName = [NSString stringWithFormat:@"%@/%@%@", kGrowingResidentDirName, kGrowingDirCommonPrefix, @"event/timing.sqlite"];
+        kGrowingPathTiming = [userDir URLByAppendingPathComponent:dirName].path;
     });
-    return path;
+    return kGrowingPathTiming;
 }
 
 + (NSString *)getRealtimeDatabasePath {
-    static NSString *path = nil;
+    static NSString *kGrowingPathReal = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         NSURL *userDir = [GrowingFileStorage userDirectoryURL:GrowingUserDirectoryLibrary];
-        NSString *dirName = [NSString stringWithFormat:@"%@/%@%@", kGrowingResidentDirName, kDirCommonPrefix, @"event/realtime.sqlite"];
-        path = [userDir URLByAppendingPathComponent:dirName].path;
+        NSString *dirName = [NSString stringWithFormat:@"%@/%@%@", kGrowingResidentDirName, kGrowingDirCommonPrefix, @"event/realtime.sqlite"];
+        kGrowingPathReal = [userDir URLByAppendingPathComponent:dirName].path;
     });
-    return path;
+    return kGrowingPathReal;
 }
 
 #pragma mark - GrowingStorage

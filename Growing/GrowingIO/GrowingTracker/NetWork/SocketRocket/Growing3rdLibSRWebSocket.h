@@ -39,8 +39,8 @@ typedef enum Growing3rdLibSRStatusCode : NSInteger {
 
 @class Growing3rdLibSRWebSocket;
 
-extern NSString *const Growing3rdLibSRWebSocketErrorDomain;
-extern NSString *const Growing3rdLibSRHTTPResponseErrorKey;
+extern NSString *const kGrowing3rdLibSRWebSocketErrorDomain;
+extern NSString *const kGrowing3rdLibSRHTTPResponseErrorKey;
 
 #pragma mark - Growing3rdLibSRWebSocketDelegate
 
@@ -111,7 +111,7 @@ extern NSString *const Growing3rdLibSRHTTPResponseErrorKey;
 
 @interface NSURLRequest (Growing3rdLibCertificateAdditions)
 
-@property (nonatomic, retain, readonly) NSArray *Growing3rdLib_SR_SSLPinnedCertificates;
+@property (nonatomic, retain, readonly) NSArray *growing3rdLib_SR_SSLPinnedCertificates;
 
 @end
 
@@ -119,7 +119,7 @@ extern NSString *const Growing3rdLibSRHTTPResponseErrorKey;
 
 @interface NSMutableURLRequest (Growing3rdLibCertificateAdditions)
 
-@property (nonatomic, retain) NSArray *Growing3rdLib_SR_SSLPinnedCertificates;
+@property (nonatomic, retain) NSArray *growing3rdLib_SR_SSLPinnedCertificates;
 
 @end
 
@@ -127,6 +127,6 @@ extern NSString *const Growing3rdLibSRHTTPResponseErrorKey;
 
 @interface NSRunLoop (Growing3rdLibSRWebSocket)
 
-+ (NSRunLoop *)Growing3rdLib_SR_networkRunLoop;
++ (NSRunLoop *)growing3rdLib_SR_networkRunLoop;
 
 @end

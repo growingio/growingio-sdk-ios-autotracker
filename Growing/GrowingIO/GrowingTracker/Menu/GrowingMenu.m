@@ -101,7 +101,7 @@ static GrowingMenu *showMenu = nil;
         [UIView animateWithDuration:0.3
                          animations:^{
             view.alpha = 1;
-            [self setActive:NO WithoutView:view];
+            [self setActive:NO withoutView:view];
             self.shadowMaskView.alpha = 1;
             
         } completion:^(BOOL finished) {
@@ -130,7 +130,7 @@ static GrowingMenu *showMenu = nil;
                              
             view.frame = frame;
             self.shadowMaskView.alpha = 1;
-            [self setActive:NO WithoutView:view];
+            [self setActive:NO withoutView:view];
         } completion:^(BOOL finished) {
             self.userInteractionEnabled = self.allViews.count == 0 ? NO : YES;
         }];
@@ -138,7 +138,7 @@ static GrowingMenu *showMenu = nil;
     }
 }
 
-- (void)setActive:(BOOL)active WithoutView:(UIView*)view
+- (void)setActive:(BOOL)active withoutView:(UIView*)view
 {
     [self.allViews enumerateObjectsUsingBlock:^(GrowingMenuView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if (obj != view)
@@ -199,7 +199,7 @@ static GrowingMenu *showMenu = nil;
             animationBlock = ^{
                 view.alpha = 0;
                 lastView.active = YES;
-                [self setActive:NO WithoutView:lastView];
+                [self setActive:NO withoutView:lastView];
             };
             finishBlock = ^{
                 view.alpha = 1;
@@ -214,7 +214,7 @@ static GrowingMenu *showMenu = nil;
                 frame.origin.y = self.bounds.size.height;
                 view.frame = frame;
                 lastView.active = YES;
-                [self setActive:NO WithoutView:lastView];
+                [self setActive:NO withoutView:lastView];
             };
         }
             break;

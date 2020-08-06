@@ -68,7 +68,7 @@ static const char  GETTER ## _key;                                              
 }                                                                               \
 
 
-@implementation UIControl(Block)
+@implementation UIControl(GrowingHelper)
 UICONTROL_BLOCK(UIControlEventTouchUpInside, growingHelper_onClick, setGrowingHelper_onClick)
 @end
 

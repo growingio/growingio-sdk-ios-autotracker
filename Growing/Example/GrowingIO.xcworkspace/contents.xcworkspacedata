@@ -5,7 +5,7 @@
       location = "group:GrowingAutoTracker/GrowingAutoTracker.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:GrowingTracker/GrowingTracker.xcodeproj">
+      location = "group:GrowingAutoTracker/../GrowingTracker/GrowingTracker.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:GrowingIO.xcodeproj">

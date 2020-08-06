@@ -22,7 +22,7 @@
 #import "GrowingInstance.h"
 #import "GrowingDeviceInfo.h"
 
-static NSString *const temporaryHost = @"https://t.growingio.com";
+static NSString *const kGrowingTemporaryHost = @"https://t.growingio.com";
 
 @implementation GrowingDeepLinkModel
 
@@ -33,7 +33,7 @@ static NSString *const temporaryHost = @"https://t.growingio.com";
                  succeed:(GROWNetworkSuccessBlock)succeedBlock
                     fail:(GROWNetworkFailureBlock)failBlock
 {
-    [self startTaskWithURL:[NSString stringWithFormat:@"%@/app/at6/%@/ios/%@/%@/%@%@", temporaryHost, manual ? @"inapp" : @"defer", [GrowingInstance sharedInstance].projectID, [GrowingDeviceInfo currentDeviceInfo].bundleID, hashId, query.length ? [NSString stringWithFormat:@"?%@", query] : @""]
+    [self startTaskWithURL:[NSString stringWithFormat:@"%@/app/at6/%@/ios/%@/%@/%@%@", kGrowingTemporaryHost, manual ? @"inapp" : @"defer", [GrowingInstance sharedInstance].projectID, [GrowingDeviceInfo currentDeviceInfo].bundleID, hashId, query.length ? [NSString stringWithFormat:@"?%@", query] : @""]
                 httpMethod:@"GET"
                 parameters:nil
               outsizeBlock:nil

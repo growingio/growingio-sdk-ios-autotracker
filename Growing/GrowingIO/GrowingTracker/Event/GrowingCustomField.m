@@ -29,8 +29,8 @@
 #import "GrowingCocoaLumberjack.h"
 #import "GrowingPageEvent.h"
 
-static NSString *const kUserIdKey = @"userId";
-static NSString *const kCustomField = @"customField";
+static NSString *const kGrowingUserIdKey = @"userId";
+static NSString *const kGrowingCustomField = @"customField";
 
 @interface GrowingCustomField ()
 
@@ -56,7 +56,7 @@ static NSString *const kCustomField = @"customField";
                 
         self.configStorage = [[GrowingFileStorage alloc] initWithName:@"config"];
         
-        NSDictionary *diskField = [self.configStorage dictionaryForKey:kCustomField];
+        NSDictionary *diskField = [self.configStorage dictionaryForKey:kGrowingCustomField];
         if (diskField) {
             self.customFieldDict = [NSMutableDictionary dictionaryWithDictionary:diskField];
         } else {
@@ -76,16 +76,16 @@ static NSString *const kCustomField = @"customField";
 
 - (void)configUserId {
     self.userCanAccess = NO;
-    self.userId = [self.customFieldDict valueForKey:kUserIdKey];
+    self.userId = [self.customFieldDict valueForKey:kGrowingUserIdKey];
     self.userCanAccess = YES;
 }
 
 - (void)persistenceCustomField {
     
-    [self.customFieldDict setValue:self.userId forKey:kUserIdKey];
+    [self.customFieldDict setValue:self.userId forKey:kGrowingUserIdKey];
     NSMutableDictionary *dataDict = [self.customFieldDict mutableCopy];
     [GrowingDispatchManager dispatchInLowThread:^{
-        [self.configStorage setDictionary:dataDict forKey:kCustomField];
+        [self.configStorage setDictionary:dataDict forKey:kGrowingCustomField];
     }];
 }
 

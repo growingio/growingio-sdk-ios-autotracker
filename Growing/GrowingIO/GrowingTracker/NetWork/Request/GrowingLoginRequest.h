@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GrowingLoginRequest : NSObject <GrowingRequestProtocol>
 
 + (instancetype)loginRequestWithHeader:(NSDictionary *)header
-                            Parameter:(NSDictionary *)parameter;
+                            parameter:(NSDictionary *)parameter;
 
 @end
 

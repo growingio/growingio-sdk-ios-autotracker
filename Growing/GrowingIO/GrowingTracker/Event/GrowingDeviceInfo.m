@@ -29,7 +29,7 @@
 #import "GrowingCocoaLumberjack.h"
 #import "GrowingConfiguration.h"
 
-static NSString *growingUrlScheme = nil;
+static NSString *kGrowingUrlScheme = nil;
 
 @import CoreTelephony;
 
@@ -185,7 +185,7 @@ static pthread_mutex_t _mutex;
         _appShortVersion = infoDictionary[@"CFBundleShortVersionString"];
         
         // @property (nonatomic, readonly) NSString *urlScheme;
-        NSString *urlScheme = growingUrlScheme;
+        NSString *urlScheme = kGrowingUrlScheme;
         _urlScheme = urlScheme ?: [self getCurrentUrlScheme];
         
         NSMutableDictionary *customDict = [[NSMutableDictionary alloc] init];
@@ -295,7 +295,7 @@ static pthread_mutex_t _mutex;
 }
 
 + (void)configUrlScheme:(NSString *)urlScheme {
-    growingUrlScheme = urlScheme;
+    kGrowingUrlScheme = urlScheme;
 }
 
 - (NSString *)getUserIdentifier {

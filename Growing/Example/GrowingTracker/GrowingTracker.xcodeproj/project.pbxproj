@@ -204,6 +204,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0411C49324DAC78500DFD1BE /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/CoreTelephony.framework; sourceTree = DEVELOPER_DIR; };
 		425E094F24D90F7900BEEA93 /* GrowingTracker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GrowingTracker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		425E095324D90F7900BEEA93 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		425E095824D90F7900BEEA93 /* GrowingTrackerUnitTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrowingTrackerUnitTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -861,6 +862,7 @@
 		7C8B72A4A4B3DDE4480358C0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0411C49324DAC78500DFD1BE /* CoreTelephony.framework */,
 				79F962C7D3C7113848C2F249 /* Pods_GrowingTrackerUnitTest.framework */,
 			);
 			name = Frameworks;
@@ -1349,7 +1351,7 @@
 		425E096424D90F7900BEEA93 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -1374,6 +1376,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.GrowingIO.GrowingTracker;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1382,7 +1386,7 @@
 		425E096524D90F7900BEEA93 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -1407,6 +1411,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.GrowingIO.GrowingTracker;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

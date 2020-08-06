@@ -98,6 +98,27 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		0411C49B24DADE7B00DFD1BE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0411C49624DADE7B00DFD1BE /* GrowingTracker.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 425E094F24D90F7900BEEA93;
+			remoteInfo = GrowingTracker;
+		};
+		0411C49D24DADE7B00DFD1BE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0411C49624DADE7B00DFD1BE /* GrowingTracker.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 425E095824D90F7900BEEA93;
+			remoteInfo = GrowingTrackerUnitTest;
+		};
+		0411C49F24DADE8100DFD1BE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0411C49624DADE7B00DFD1BE /* GrowingTracker.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 425E094E24D90F7900BEEA93;
+			remoteInfo = GrowingTracker;
+		};
 		425E093624D90F5200BEEA93 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 425E092224D90F5200BEEA93 /* Project object */;
@@ -108,6 +129,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0411C49624DADE7B00DFD1BE /* GrowingTracker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GrowingTracker.xcodeproj; path = ../GrowingTracker/GrowingTracker.xcodeproj; sourceTree = "<group>"; };
 		425E092B24D90F5200BEEA93 /* GrowingAutoTracker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GrowingAutoTracker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		425E092F24D90F5200BEEA93 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		425E093424D90F5200BEEA93 /* GrowingAutoTrackerUnitTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrowingAutoTrackerUnitTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -220,9 +242,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0411C49724DADE7B00DFD1BE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0411C49C24DADE7B00DFD1BE /* GrowingTracker.framework */,
+				0411C49E24DADE7B00DFD1BE /* GrowingTrackerUnitTest.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		425E092124D90F5200BEEA93 = {
 			isa = PBXGroup;
 			children = (
+				0411C49624DADE7B00DFD1BE /* GrowingTracker.xcodeproj */,
 				425E092D24D90F5200BEEA93 /* GrowingAutoTracker */,
 				425E093824D90F5200BEEA93 /* GrowingAutoTrackerUnitTest */,
 				425E092C24D90F5200BEEA93 /* Products */,
@@ -499,6 +531,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				0411C4A024DADE8100DFD1BE /* PBXTargetDependency */,
 			);
 			name = GrowingAutoTracker;
 			productName = GrowingAutoTracker;
@@ -551,6 +584,12 @@
 			mainGroup = 425E092124D90F5200BEEA93;
 			productRefGroup = 425E092C24D90F5200BEEA93 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 0411C49724DADE7B00DFD1BE /* Products */;
+					ProjectRef = 0411C49624DADE7B00DFD1BE /* GrowingTracker.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				425E092A24D90F5200BEEA93 /* GrowingAutoTracker */,
@@ -558,6 +597,23 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		0411C49C24DADE7B00DFD1BE /* GrowingTracker.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = GrowingTracker.framework;
+			remoteRef = 0411C49B24DADE7B00DFD1BE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0411C49E24DADE7B00DFD1BE /* GrowingTrackerUnitTest.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = GrowingTrackerUnitTest.xctest;
+			remoteRef = 0411C49D24DADE7B00DFD1BE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		425E092924D90F5200BEEA93 /* Resources */ = {
@@ -637,6 +693,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		0411C4A024DADE8100DFD1BE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = GrowingTracker;
+			targetProxy = 0411C49F24DADE8100DFD1BE /* PBXContainerItemProxy */;
+		};
 		425E093724D90F5200BEEA93 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 425E092A24D90F5200BEEA93 /* GrowingAutoTracker */;

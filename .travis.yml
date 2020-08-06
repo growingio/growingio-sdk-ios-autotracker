@@ -1,6 +1,20 @@
 osx_image: xcode11.6
 language: objective-c
 
+env:
+  global:
+    - LANG=en_US.UTF-8
+    - LC_ALL=en_US.UTF-8
+
+before_install:
+  - echo "$TRAVIS_BUILD_DIR"
+
+
 script:
-    - set -o pipefail && xcodebuild -project Growing/Example/GrowingIO.xcworkspace -scheme GrowingAutoTracker -sdk
-    iphoneos -configuration Release | xcpretty
+  - set -o pipefail
+  - xcodebuild -workspace Growing/Example/GrowingIO.xcworkspace -scheme GrowingAutoTracker -configuration Release -sdk iphoneos -arch armv7 clean build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO | xcpretty
+#-r json-compilation-database -o compile_commands.json
+#  - oclint-json-compilation-database -e Pods -- -rc GIO_METHOD_ALLOW_UPPERCASE="URL,FMG3DB,TXT,UTF,STM" -rc GIO_CATEGORY_PREFIX=Growing -rc GIO_CLASS_PREFIX=Growing
+  
+
+

@@ -23,7 +23,7 @@ NSString *WKWebViewJavascriptBridge_js() {
 #define __WKWebViewJavascriptBridge_js_func__(x) #x
 
     // BEGIN preprocessorJSCode
-    static NSString *preprocessorJSCode = @__WKWebViewJavascriptBridge_js_func__((function() {
+    static NSString *kGrowingPreprocessorJSCode = @__WKWebViewJavascriptBridge_js_func__((function() {
         if (window.GrowingWebViewJavascriptBridge) {
             return;
         }
@@ -62,7 +62,7 @@ NSString *WKWebViewJavascriptBridge_js() {
     ); // END preprocessorJSCode
 
 #undef __WKWebViewJavascriptBridge_js_func__
-    return preprocessorJSCode;
+    return kGrowingPreprocessorJSCode;
 };
 
 + (NSString *)createJavascriptBridgeJsWithNativeConfiguration:(GrowingWebViewJavascriptBridgeConfiguration *)configuration {

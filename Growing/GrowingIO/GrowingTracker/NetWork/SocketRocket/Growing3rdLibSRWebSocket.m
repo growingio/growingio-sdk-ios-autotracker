@@ -69,21 +69,21 @@ typedef struct {
     uint64_t payload_length;
 } Growing3rdLib_frame_header;
 
-static NSString *const Growing3rdLibSRWebSocketAppendToSecKeyString = @"258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
+static NSString *const kGrowing3rdLibSRWebSocketAppendToSecKeyString = @"258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 
 static inline int32_t Growing3rdLib_validate_dispatch_data_partial_string(NSData *data);
 static inline void Growing3rdLibSRFastLog(NSString *format, ...);
 
 @interface NSData (Growing3rdLibSRWebSocket)
 
-- (NSString *)Growing3rdLibStringBySHA1ThenBase64Encoding;
+- (NSString *)growing3rdLibStringBySHA1ThenBase64Encoding;
 
 @end
 
 
 @interface NSString (Growing3rdLibSRWebSocket)
 
-- (NSString *)Growing3rdLibStringBySHA1ThenBase64Encoding;
+- (NSString *)growing3rdLibStringBySHA1ThenBase64Encoding;
 
 @end
 
@@ -92,7 +92,7 @@ static inline void Growing3rdLibSRFastLog(NSString *format, ...);
 
 // The origin isn't really applicable for a native application.
 // So instead, just map ws -> http and wss -> https.
-- (NSString *)Growing3rdLib_SR_origin;
+- (NSString *)growing3rdLib_SR_origin;
 
 @end
 
@@ -125,7 +125,7 @@ static NSString *Growing3rdLib_newSHA1String(const char *bytes, size_t length) {
 
 @implementation NSData (Growing3rdLibSRWebSocket)
 
-- (NSString *)Growing3rdLibStringBySHA1ThenBase64Encoding;
+- (NSString *)growing3rdLibStringBySHA1ThenBase64Encoding;
 {
     return Growing3rdLib_newSHA1String(self.bytes, self.length);
 }
@@ -135,15 +135,15 @@ static NSString *Growing3rdLib_newSHA1String(const char *bytes, size_t length) {
 
 @implementation NSString (Growing3rdLibSRWebSocket)
 
-- (NSString *)Growing3rdLibStringBySHA1ThenBase64Encoding;
+- (NSString *)growing3rdLibStringBySHA1ThenBase64Encoding;
 {
     return Growing3rdLib_newSHA1String(self.UTF8String, self.length);
 }
 
 @end
 
-NSString *const Growing3rdLibSRWebSocketErrorDomain = @"Growing3rdLibSRWebSocketErrorDomain";
-NSString *const Growing3rdLibSRHTTPResponseErrorKey = @"HTTPResponseStatusCode";
+NSString *const kGrowing3rdLibSRWebSocketErrorDomain = @"Growing3rdLibSRWebSocketErrorDomain";
+NSString *const kGrowing3rdLibSRHTTPResponseErrorKey = @"HTTPResponseStatusCode";
 
 // Returns number of bytes consumed. Returning 0 means you didn't match.
 // Sends bytes to callback handler;
@@ -410,8 +410,8 @@ static __strong NSData *CRLFCRLF;
         return NO;
     }
     
-    NSString *concattedString = [_secKey stringByAppendingString:Growing3rdLibSRWebSocketAppendToSecKeyString];
-    NSString *expectedAccept = [concattedString Growing3rdLibStringBySHA1ThenBase64Encoding];
+    NSString *concattedString = [_secKey stringByAppendingString:kGrowing3rdLibSRWebSocketAppendToSecKeyString];
+    NSString *expectedAccept = [concattedString growing3rdLibStringBySHA1ThenBase64Encoding];
     
     return [acceptHeader isEqualToString:expectedAccept];
 }
@@ -422,12 +422,12 @@ static __strong NSData *CRLFCRLF;
     
     if (responseCode >= 400) {
         Growing3rdLibSRFastLog(@"Request failed with response code %d", responseCode);
-        [self _failWithError:[NSError errorWithDomain:Growing3rdLibSRWebSocketErrorDomain code:2132 userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"received bad response code from server %ld", (long)responseCode], Growing3rdLibSRHTTPResponseErrorKey:@(responseCode)}]];
+        [self _failWithError:[NSError errorWithDomain:kGrowing3rdLibSRWebSocketErrorDomain code:2132 userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"received bad response code from server %ld", (long)responseCode], kGrowing3rdLibSRHTTPResponseErrorKey:@(responseCode)}]];
         return;
     }
     
     if(![self _checkHandshake:_receivedHTTPHeaders]) {
-        [self _failWithError:[NSError errorWithDomain:Growing3rdLibSRWebSocketErrorDomain code:2133 userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Invalid Sec-WebSocket-Accept response"] forKey:NSLocalizedDescriptionKey]]];
+        [self _failWithError:[NSError errorWithDomain:kGrowing3rdLibSRWebSocketErrorDomain code:2133 userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Invalid Sec-WebSocket-Accept response"] forKey:NSLocalizedDescriptionKey]]];
         return;
     }
     
@@ -435,7 +435,7 @@ static __strong NSData *CRLFCRLF;
     if (negotiatedProtocol) {
         // Make sure we requested the protocol
         if ([_requestedProtocols indexOfObject:negotiatedProtocol] == NSNotFound) {
-            [self _failWithError:[NSError errorWithDomain:Growing3rdLibSRWebSocketErrorDomain code:2133 userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Server specified Sec-WebSocket-Protocol that wasn't requested"] forKey:NSLocalizedDescriptionKey]]];
+            [self _failWithError:[NSError errorWithDomain:kGrowing3rdLibSRWebSocketErrorDomain code:2133 userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Server specified Sec-WebSocket-Protocol that wasn't requested"] forKey:NSLocalizedDescriptionKey]]];
             return;
         }
         
@@ -504,7 +504,7 @@ static __strong NSData *CRLFCRLF;
     CFHTTPMessageSetHeaderFieldValue(request, CFSTR("Sec-WebSocket-Key"), (__bridge CFStringRef)_secKey);
     CFHTTPMessageSetHeaderFieldValue(request, CFSTR("Sec-WebSocket-Version"), (__bridge CFStringRef)[NSString stringWithFormat:@"%ld", (long)_webSocketVersion]);
     
-    CFHTTPMessageSetHeaderFieldValue(request, CFSTR("Origin"), (__bridge CFStringRef)_url.Growing3rdLib_SR_origin);
+    CFHTTPMessageSetHeaderFieldValue(request, CFSTR("Origin"), (__bridge CFStringRef)_url.growing3rdLib_SR_origin);
     
     if (_requestedProtocols) {
         CFHTTPMessageSetHeaderFieldValue(request, CFSTR("Sec-WebSocket-Protocol"), (__bridge CFStringRef)[_requestedProtocols componentsJoinedByString:@", "]);
@@ -550,7 +550,7 @@ static __strong NSData *CRLFCRLF;
         [_outputStream setProperty:(__bridge id)kCFStreamSocketSecurityLevelNegotiatedSSL forKey:(__bridge id)kCFStreamPropertySocketSecurityLevel];
         
         // If we're using pinned certs, don't validate the certificate chain
-        if ([_urlRequest Growing3rdLib_SR_SSLPinnedCertificates].count) {
+        if ([_urlRequest growing3rdLib_SR_SSLPinnedCertificates].count) {
             [SSLOptions setValue:[NSNumber numberWithBool:NO] forKey:(__bridge id)kCFStreamSSLValidatesCertificateChain];
         }
         
@@ -570,7 +570,7 @@ static __strong NSData *CRLFCRLF;
 - (void)_openConnection;
 {
     if (!_scheduledRunloops.count) {
-        [self scheduleInRunLoop:[NSRunLoop Growing3rdLib_SR_networkRunLoop] forMode:NSDefaultRunLoopMode];
+        [self scheduleInRunLoop:[NSRunLoop growing3rdLib_SR_networkRunLoop] forMode:NSDefaultRunLoopMode];
     }
     
     
@@ -1062,7 +1062,7 @@ static const uint8_t SRPayloadLenMask   = 0x7F;
     if (dataLength - _outputBufferOffset > 0 && _outputStream.hasSpaceAvailable) {
         NSInteger bytesWritten = [_outputStream write:_outputBuffer.bytes + _outputBufferOffset maxLength:dataLength - _outputBufferOffset];
         if (bytesWritten == -1) {
-            [self _failWithError:[NSError errorWithDomain:Growing3rdLibSRWebSocketErrorDomain code:2145 userInfo:[NSDictionary dictionaryWithObject:@"Error writing to stream" forKey:NSLocalizedDescriptionKey]]];
+            [self _failWithError:[NSError errorWithDomain:kGrowing3rdLibSRWebSocketErrorDomain code:2145 userInfo:[NSDictionary dictionaryWithObject:@"Error writing to stream" forKey:NSLocalizedDescriptionKey]]];
              return;
         }
         
@@ -1370,7 +1370,7 @@ static const size_t SRFrameHeaderOverhead = 32;
 {
     if (_secure && !_pinnedCertFound && (eventCode == NSStreamEventHasBytesAvailable || eventCode == NSStreamEventHasSpaceAvailable)) {
         
-        NSArray *sslCerts = [_urlRequest Growing3rdLib_SR_SSLPinnedCertificates];
+        NSArray *sslCerts = [_urlRequest growing3rdLib_SR_SSLPinnedCertificates];
         if (sslCerts) {
             SecTrustRef secTrust = (__bridge SecTrustRef)[aStream propertyForKey:(__bridge id)kCFStreamPropertySSLPeerTrust];
             if (secTrust) {
@@ -1393,7 +1393,7 @@ static const size_t SRFrameHeaderOverhead = 32;
             
             if (!_pinnedCertFound) {
                 dispatch_async(_workQueue, ^{
-                    [self _failWithError:[NSError errorWithDomain:Growing3rdLibSRWebSocketErrorDomain code:23556 userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Invalid server cert"] forKey:NSLocalizedDescriptionKey]]];
+                    [self _failWithError:[NSError errorWithDomain:kGrowing3rdLibSRWebSocketErrorDomain code:23556 userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Invalid server cert"] forKey:NSLocalizedDescriptionKey]]];
                 });
                 return;
             }
@@ -1559,7 +1559,7 @@ static const size_t SRFrameHeaderOverhead = 32;
 
 @implementation  NSURLRequest (Growing3rdLibCertificateAdditions)
 
-- (NSArray *)Growing3rdLib_SR_SSLPinnedCertificates;
+- (NSArray *)growing3rdLib_SR_SSLPinnedCertificates;
 {
     return [NSURLProtocol propertyForKey:@"Growing3rdLib_SR_SSLPinnedCertificates" inRequest:self];
 }
@@ -1568,7 +1568,7 @@ static const size_t SRFrameHeaderOverhead = 32;
 
 @implementation  NSMutableURLRequest (Growing3rdLibCertificateAdditions)
 
-- (NSArray *)Growing3rdLib_SR_SSLPinnedCertificates;
+- (NSArray *)growing3rdLib_SR_SSLPinnedCertificates;
 {
     return [NSURLProtocol propertyForKey:@"Growing3rdLib_SR_SSLPinnedCertificates" inRequest:self];
 }
@@ -1582,7 +1582,7 @@ static const size_t SRFrameHeaderOverhead = 32;
 
 @implementation NSURL (Growing3rdLibSRWebSocket)
 
-- (NSString *)Growing3rdLib_SR_origin;
+- (NSString *)growing3rdLib_SR_origin;
 {
     NSString *scheme = [self.scheme lowercaseString];
         
@@ -1689,7 +1689,7 @@ static NSRunLoop *networkRunLoop = nil;
 
 @implementation NSRunLoop (Growing3rdLibSRWebSocket)
 
-+ (NSRunLoop *)Growing3rdLib_SR_networkRunLoop {
++ (NSRunLoop *)growing3rdLib_SR_networkRunLoop {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         networkThread = [[Growing3rdLib___SRRunLoopThread alloc] init];
