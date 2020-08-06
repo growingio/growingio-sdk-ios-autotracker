@@ -51,4 +51,6 @@
 
 - (NSString *)absoluteURLStringWithPath:(NSString *)path andQuery:(NSDictionary *)query;
 
+- (NSDictionary *)convertToDictFromPasteboard;
+
 @end

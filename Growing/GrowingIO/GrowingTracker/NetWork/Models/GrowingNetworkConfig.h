@@ -74,6 +74,4 @@
 
 - (NSString *)growingReportEndPoint;
 
-- (NSString *)hybridJSSDKUrlPrefix;
-
 @end

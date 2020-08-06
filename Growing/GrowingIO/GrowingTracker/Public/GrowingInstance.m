@@ -205,14 +205,15 @@ static BOOL isGrowingDeeplink = NO;
     NSString *pasteString = [UIPasteboard generalPasteboard].string;
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSDictionary *callbackDict = [self convertPastedboardString:pasteString];
+        NSDictionary *callbackDict = [pasteString convertToDictFromPasteboard];
         
         if (callbackDict.count == 0) {
             finishBlock();
             return;
         }
         
-        if (![callbackDict[@"typ"] isEqualToString:@"gads"] || ![callbackDict[@"scheme"] isEqualToString:[GrowingDeviceInfo currentDeviceInfo].urlScheme]) {
+        if (![callbackDict[@"typ"] isEqualToString:@"gads"] ||
+            ![callbackDict[@"scheme"] isEqualToString:[GrowingDeviceInfo currentDeviceInfo].urlScheme]) {
             finishBlock();
             return;
         }
@@ -253,65 +254,6 @@ static BOOL isGrowingDeeplink = NO;
             finishBlock();
         });
     });
-    
-}
-
-
-- (NSDictionary *)convertPastedboardString:(NSString *)clipboardString {
-    if (clipboardString.length > 2000 * 16) {
-        return nil;
-    }
-    
-    NSString *binaryList = @"";
-    
-    for (int i = 0; i < clipboardString.length; i++) {
-        char a = [clipboardString characterAtIndex:i];
-        NSString *charString = @"";
-        if (a == (char)020014) {
-            charString = @"0";
-        } else {
-            charString = @"1";
-        }
-        binaryList = [binaryList stringByAppendingString:charString];
-    }
-    
-    NSInteger binaryListLength = binaryList.length;
-    
-    NSInteger SINGLE_CHAR_LENGTH = 16;
-    
-    if (binaryListLength % SINGLE_CHAR_LENGTH != 0) {
-        return nil;
-    }
-    
-    NSMutableArray *bs = [NSMutableArray array];
-    
-    int i = 0;
-    while (i < binaryListLength) {
-        [bs addObject:[binaryList substringWithRange:NSMakeRange(i, SINGLE_CHAR_LENGTH)]];
-        i += SINGLE_CHAR_LENGTH;
-    }
-    
-    NSString *listString = @"";
-    
-    for (int i = 0; i < bs.count; i++) {
-        NSString *partString = bs[i];
-        long long part = [partString longLongValue];
-        int partInt = [self convertBinaryToDecimal:part];
-        listString = [listString stringByAppendingString:[NSString stringWithFormat:@"%C", (unichar)partInt]];
-    }
-    NSDictionary *dict = listString.growingHelper_jsonObject;
-    return [dict isKindOfClass:[NSDictionary class]] ? dict : nil;
-}
-
-- (int)convertBinaryToDecimal:(long long)n {
-    int decimalNumber = 0, i = 0, remainder;
-    while (n != 0) {
-        remainder = n%10;
-        n /= 10;
-        decimalNumber += remainder*pow(2,i);
-        ++i;
-    }
-    return decimalNumber;
 }
 
 - (void)_reportInstallSoucre {

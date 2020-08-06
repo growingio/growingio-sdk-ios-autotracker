@@ -22,10 +22,10 @@
 #define Growing_GrowingPropertyDefine_h
 
 #define GrowingPropertyDefine(theClass,theType,theGetter,theSetter)                         \
-        @interface theClass(FoDefineProperty_##theGetter)                                   \
+        @interface theClass(GrowingDefineProperty_##theGetter)                                   \
         @property (nonatomic, retain) theType theGetter;                                    \
         @end                                                                                \
-        @implementation theClass(FoDefineProperty_##theGetter)                              \
+        @implementation theClass(GrowingDefineProperty_##theGetter)                              \
              GrowingPropertyImplementation(theType,theGetter,theSetter)                     \
         @end                                                                                \
 

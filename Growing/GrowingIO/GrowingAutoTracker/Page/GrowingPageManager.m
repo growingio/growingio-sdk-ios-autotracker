@@ -111,20 +111,20 @@
 
 - (void)reissuePageVariable:(GrowingPageGroup *)pageGroup {
     NSDictionary<NSString *, NSString *> *var = [pageGroup.carrier growingPageAttributes];
-    if (var != nil) {
+    if (var.count > 0) {
         [self setPage:pageGroup variable:var];
         return;
     }
 
     var = pageGroup.variables;
-    if (var != nil) {
+    if (var.count > 0) {
         [self setPage:pageGroup variable:var];
         return;
     }
 
     if (pageGroup.parent != nil) {
         var = pageGroup.parent.variables;
-        if (var != nil) {
+        if (var.count > 0) {
             [self setPage:pageGroup variable:var];
         }
     }

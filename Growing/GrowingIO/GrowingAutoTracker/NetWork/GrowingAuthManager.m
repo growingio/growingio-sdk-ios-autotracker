@@ -171,7 +171,8 @@ static GrowingAuthManager *authManager = nil;
     
     NSDictionary *header = [self buildAuthorityHeader];
     GrowingLoginRequest *loginRequest = [GrowingLoginRequest loginRequestWithHeader:header
-                                                                          Parameter:params];
+                                                                          parameter:params];
+    
     [GrowingNetworkManager.shareManager sendRequest:loginRequest
                                             success:^(NSHTTPURLResponse * _Nonnull httpResponse, NSData * _Nonnull data) {
         
