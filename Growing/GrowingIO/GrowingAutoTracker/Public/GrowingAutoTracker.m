@@ -207,21 +207,6 @@
 
 @implementation UIView (GrowingImpression)
 
-static char kUIViewGrowingIMPTrackScaleKey;
-
-- (double)growingImpressionScale {
-    NSNumber *number = objc_getAssociatedObject(self, &kUIViewGrowingIMPTrackScaleKey);
-    if (number) {
-        return [number doubleValue];
-    } else {
-        return [GrowingInstance sharedInstance].configuration.growingGlobalImpScale;
-    }
-}
-
-- (void)setGrowingImpressionScale:(double)scale {
-    objc_setAssociatedObject(self, &kUIViewGrowingIMPTrackScaleKey, [NSNumber numberWithDouble:scale], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
 - (void)growingTrackImpression:(NSString *)eventName
                     attributes:(NSDictionary<NSString *,NSString *> *)attributes {
     

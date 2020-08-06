@@ -69,11 +69,11 @@ static BOOL isInResignSate;
 
 - (void)becomeActive {
     if (isInResignSate) {
-        [self.bgSourceTable.allObjects
-            enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx,
-                                         BOOL *_Nonnull stop) {
-                ((UIView *)obj).growingIMPTracked = NO;
-            }];
+        [self.bgSourceTable.allObjects enumerateObjectsUsingBlock:^(id _Nonnull obj,
+                                                                    NSUInteger idx,
+                                                                    BOOL *_Nonnull stop) {
+            ((UIView *)obj).growingIMPTracked = NO;
+        }];
         isInResignSate = NO;
     }
     [self.bgSourceTable removeAllObjects];
@@ -81,30 +81,29 @@ static BOOL isInResignSate;
 
 - (void)resignActive {
     isInResignSate = YES;
-
-    [self.sourceTable.allObjects
-        enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx,
-                                     BOOL *_Nonnull stop) {
-            [self.bgSourceTable addObject:obj];
-        }];
+    
+    [self.sourceTable.allObjects enumerateObjectsUsingBlock:^(id _Nonnull obj,
+                                                              NSUInteger idx,
+                                                              BOOL *_Nonnull stop) {
+        [self.bgSourceTable addObject:obj];
+    }];
 }
 
 - (void)markInvisibleNodes {
     if (self.sourceTable.count == 0) {
         return;
     }
-    [self.sourceTable.allObjects
-        enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx,
-                                     BOOL *_Nonnull stop) {
-            UIView<GrowingNode> *node = obj;
-            if (![node growingImpNodeIsVisible]) {
-                node.growingIMPTracked = NO;
-            }
-        }];
+    [self.sourceTable.allObjects enumerateObjectsUsingBlock:^(id _Nonnull obj,
+                                                              NSUInteger idx,
+                                                              BOOL *_Nonnull stop) {
+        UIView<GrowingNode> *node = obj;
+        if (![node growingImpNodeIsVisible]) {
+            node.growingIMPTracked = NO;
+        }
+    }];
 }
 
-- (void)markInvisibleNode:(UIView *)node inSubView:(BOOL)flag;
-{
+- (void)markInvisibleNode:(UIView *)node inSubView:(BOOL)flag; {
     if (node.growingIMPTrackEventId > 0) {
         node.growingIMPTracked = NO;
     }
