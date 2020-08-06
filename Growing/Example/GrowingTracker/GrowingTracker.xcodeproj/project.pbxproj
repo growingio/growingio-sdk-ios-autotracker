@@ -511,11 +511,11 @@
 				425E098324D9111E00BEEA93 /* SocketRocket */,
 				425E098724D9111E00BEEA93 /* LZ4 */,
 				425E098A24D9111E00BEEA93 /* Models */,
-				425E099124D9111E00BEEA93 /* GrowingNetworkInterfaceManager.m */,
-				425E099224D9111E00BEEA93 /* GrowingMobileDebugger.m */,
 				425E099324D9111E00BEEA93 /* Request */,
 				425E09AA24D9111E00BEEA93 /* GrowingMobileDebugger.h */,
+				425E099224D9111E00BEEA93 /* GrowingMobileDebugger.m */,
 				425E09AB24D9111E00BEEA93 /* GrowingNetworkInterfaceManager.h */,
+				425E099124D9111E00BEEA93 /* GrowingNetworkInterfaceManager.m */,
 			);
 			path = NetWork;
 			sourceTree = "<group>";

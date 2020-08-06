@@ -24,12 +24,13 @@
 #import "GrowingGlobal.h"
 
 @interface GrowingNetworkInterfaceManager()
+
 @property (nonatomic, retain) GrowingReachability * internetReachability;
 @property (nonatomic, assign) BOOL isUnknown;
+
 @end
 
-@implementation GrowingNetworkInterfaceManager {
-}
+@implementation GrowingNetworkInterfaceManager
 
 + (instancetype)sharedInstance {
     if ([GrowingInstance sharedInstance].projectID.length == 0 ||
