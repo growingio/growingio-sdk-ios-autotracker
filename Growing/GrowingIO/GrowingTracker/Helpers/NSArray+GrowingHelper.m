@@ -23,19 +23,18 @@
 
 @implementation NSArray (GrowingHelper)
 
-- (NSData*)growingHelper_jsonData
-{
+- (NSData*)growingHelper_jsonData {
     return [self growingHelper_jsonDataWithOptions:0];
 }
 
-- (NSData*)growingHelper_jsonDataWithOptions:(NSJSONWritingOptions)options
-{
+- (NSData*)growingHelper_jsonDataWithOptions:(NSJSONWritingOptions)options {
     NSData * jsonData = nil;
     @try {
         NSError * error = nil;
-        jsonData = [NSJSONSerialization dataWithJSONObject:self options:options error:&error];
-        if (error != nil)
-        {
+        jsonData = [NSJSONSerialization dataWithJSONObject:self
+                                                   options:options
+                                                     error:&error];
+        if (error != nil) {
             jsonData = nil;
         }
     } @catch (NSException *exception) {
@@ -45,8 +44,7 @@
     }
 }
 
-- (NSString*)growingHelper_jsonString
-{
+- (NSString*)growingHelper_jsonString {
     return [[self growingHelper_jsonData] growingHelper_utf8String];
 }
 

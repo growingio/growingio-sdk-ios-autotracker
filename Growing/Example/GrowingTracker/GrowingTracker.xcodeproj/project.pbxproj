@@ -31,14 +31,10 @@
 		425E0A4E24D9111F00BEEA93 /* Growing3rdLibSRWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E098424D9111E00BEEA93 /* Growing3rdLibSRWebSocket.m */; };
 		425E0A4F24D9111F00BEEA93 /* Growing3rdLibSRWebSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E098524D9111E00BEEA93 /* Growing3rdLibSRWebSocket.h */; };
 		425E0A5024D9111F00BEEA93 /* Growing3rdLibSocketRocket-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 425E098624D9111E00BEEA93 /* Growing3rdLibSocketRocket-Prefix.pch */; };
-		425E0A5124D9111F00BEEA93 /* lz4.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E098824D9111E00BEEA93 /* lz4.h */; };
-		425E0A5224D9111F00BEEA93 /* lz4.c in Sources */ = {isa = PBXBuildFile; fileRef = 425E098924D9111E00BEEA93 /* lz4.c */; };
-		425E0A5324D9111F00BEEA93 /* GrowingDeepLinkModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E098B24D9111E00BEEA93 /* GrowingDeepLinkModel.m */; };
+		425E0A5124D9111F00BEEA93 /* GrowingLZ4.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E098824D9111E00BEEA93 /* GrowingLZ4.h */; };
+		425E0A5224D9111F00BEEA93 /* GrowingLZ4.c in Sources */ = {isa = PBXBuildFile; fileRef = 425E098924D9111E00BEEA93 /* GrowingLZ4.c */; };
 		425E0A5424D9111F00BEEA93 /* GrowingNetworkConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E098C24D9111E00BEEA93 /* GrowingNetworkConfig.m */; };
-		425E0A5524D9111F00BEEA93 /* GrowingBaseModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E098D24D9111E00BEEA93 /* GrowingBaseModel.h */; };
-		425E0A5624D9111F00BEEA93 /* GrowingDeepLinkModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E098E24D9111E00BEEA93 /* GrowingDeepLinkModel.h */; };
 		425E0A5724D9111F00BEEA93 /* GrowingNetworkConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E098F24D9111E00BEEA93 /* GrowingNetworkConfig.h */; };
-		425E0A5824D9111F00BEEA93 /* GrowingBaseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E099024D9111E00BEEA93 /* GrowingBaseModel.m */; };
 		425E0A5924D9111F00BEEA93 /* GrowingNetworkInterfaceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E099124D9111E00BEEA93 /* GrowingNetworkInterfaceManager.m */; };
 		425E0A5A24D9111F00BEEA93 /* GrowingMobileDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E099224D9111E00BEEA93 /* GrowingMobileDebugger.m */; };
 		425E0A5B24D9111F00BEEA93 /* GrowingURLSessionDataTaskProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E099424D9111E00BEEA93 /* GrowingURLSessionDataTaskProtocol.h */; };
@@ -123,23 +119,18 @@
 		425E0AAB24D9111F00BEEA93 /* GrowingVisitEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E09ED24D9111E00BEEA93 /* GrowingVisitEvent.m */; };
 		425E0AAC24D9111F00BEEA93 /* NSData+GrowingHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E09EF24D9111E00BEEA93 /* NSData+GrowingHelper.h */; };
 		425E0AAD24D9111F00BEEA93 /* NSObject+GrowingIvarHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E09F024D9111E00BEEA93 /* NSObject+GrowingIvarHelper.h */; };
-		425E0AAE24D9111F00BEEA93 /* NSNumber+GrowingHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E09F124D9111E00BEEA93 /* NSNumber+GrowingHelper.h */; };
 		425E0AAF24D9111F00BEEA93 /* NSDictionary+GrowingHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E09F224D9111E00BEEA93 /* NSDictionary+GrowingHelper.h */; };
 		425E0AB024D9111F00BEEA93 /* UIControl+GrowingHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E09F324D9111E00BEEA93 /* UIControl+GrowingHelper.h */; };
 		425E0AB124D9111F00BEEA93 /* NSURL+GrowingHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E09F424D9111E00BEEA93 /* NSURL+GrowingHelper.m */; };
 		425E0AB224D9111F00BEEA93 /* UIImage+GrowingHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E09F524D9111E00BEEA93 /* UIImage+GrowingHelper.h */; };
 		425E0AB324D9111F00BEEA93 /* NSString+GrowingHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E09F624D9111E00BEEA93 /* NSString+GrowingHelper.h */; };
 		425E0AB424D9111F00BEEA93 /* UIView+GrowingHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E09F724D9111E00BEEA93 /* UIView+GrowingHelper.h */; };
-		425E0AB524D9111F00BEEA93 /* UITextField+GrowingHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E09F824D9111E00BEEA93 /* UITextField+GrowingHelper.m */; };
-		425E0AB624D9111F00BEEA93 /* NSObject+GrowingHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E09F924D9111E00BEEA93 /* NSObject+GrowingHelper.h */; };
 		425E0AB724D9111F00BEEA93 /* NSArray+GrowingHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E09FA24D9111E00BEEA93 /* NSArray+GrowingHelper.h */; };
 		425E0AB824D9111F00BEEA93 /* UIWindow+GrowingHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E09FB24D9111E00BEEA93 /* UIWindow+GrowingHelper.h */; };
 		425E0AB924D9111F00BEEA93 /* UIApplication+GrowingHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E09FC24D9111E00BEEA93 /* UIApplication+GrowingHelper.h */; };
 		425E0ABA24D9111F00BEEA93 /* GrowingDispatchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E09FD24D9111E00BEEA93 /* GrowingDispatchManager.m */; };
-		425E0ABB24D9111F00BEEA93 /* NSNumber+GrowingHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E09FE24D9111E00BEEA93 /* NSNumber+GrowingHelper.m */; };
 		425E0ABC24D9111F00BEEA93 /* NSObject+GrowingIvarHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E09FF24D9111E00BEEA93 /* NSObject+GrowingIvarHelper.m */; };
 		425E0ABD24D9111F00BEEA93 /* NSData+GrowingHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0A0024D9111E00BEEA93 /* NSData+GrowingHelper.m */; };
-		425E0ABE24D9111F00BEEA93 /* UITextField+GrowingHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E0A0124D9111E00BEEA93 /* UITextField+GrowingHelper.h */; };
 		425E0ABF24D9111F00BEEA93 /* UIView+GrowingHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0A0224D9111E00BEEA93 /* UIView+GrowingHelper.m */; };
 		425E0AC024D9111F00BEEA93 /* UIImage+GrowingHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0A0324D9111E00BEEA93 /* UIImage+GrowingHelper.m */; };
 		425E0AC124D9111F00BEEA93 /* NSString+GrowingHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0A0424D9111E00BEEA93 /* NSString+GrowingHelper.m */; };
@@ -149,7 +140,6 @@
 		425E0AC524D9111F00BEEA93 /* UIWindow+GrowingHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0A0824D9111E00BEEA93 /* UIWindow+GrowingHelper.m */; };
 		425E0AC624D9111F00BEEA93 /* NSArray+GrowingHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0A0924D9111E00BEEA93 /* NSArray+GrowingHelper.m */; };
 		425E0AC724D9111F00BEEA93 /* GrowingHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E0A0A24D9111E00BEEA93 /* GrowingHelpers.h */; };
-		425E0AC824D9111F00BEEA93 /* NSObject+GrowingHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0A0B24D9111E00BEEA93 /* NSObject+GrowingHelper.m */; };
 		425E0AC924D9111F00BEEA93 /* GrowingDispatchManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E0A0C24D9111E00BEEA93 /* GrowingDispatchManager.h */; };
 		425E0ACA24D9111F00BEEA93 /* UIApplication+GrowingHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0A0D24D9111E00BEEA93 /* UIApplication+GrowingHelper.m */; };
 		425E0ACB24D9111F00BEEA93 /* GrowingMediator+GrowingDeepLink.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0A0F24D9111E00BEEA93 /* GrowingMediator+GrowingDeepLink.m */; };
@@ -232,14 +222,10 @@
 		425E098424D9111E00BEEA93 /* Growing3rdLibSRWebSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Growing3rdLibSRWebSocket.m; sourceTree = "<group>"; };
 		425E098524D9111E00BEEA93 /* Growing3rdLibSRWebSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Growing3rdLibSRWebSocket.h; sourceTree = "<group>"; };
 		425E098624D9111E00BEEA93 /* Growing3rdLibSocketRocket-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Growing3rdLibSocketRocket-Prefix.pch"; sourceTree = "<group>"; };
-		425E098824D9111E00BEEA93 /* lz4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lz4.h; sourceTree = "<group>"; };
-		425E098924D9111E00BEEA93 /* lz4.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lz4.c; sourceTree = "<group>"; };
-		425E098B24D9111E00BEEA93 /* GrowingDeepLinkModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingDeepLinkModel.m; sourceTree = "<group>"; };
+		425E098824D9111E00BEEA93 /* GrowingLZ4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrowingLZ4.h; sourceTree = "<group>"; };
+		425E098924D9111E00BEEA93 /* GrowingLZ4.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = GrowingLZ4.c; sourceTree = "<group>"; };
 		425E098C24D9111E00BEEA93 /* GrowingNetworkConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingNetworkConfig.m; sourceTree = "<group>"; };
-		425E098D24D9111E00BEEA93 /* GrowingBaseModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrowingBaseModel.h; sourceTree = "<group>"; };
-		425E098E24D9111E00BEEA93 /* GrowingDeepLinkModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrowingDeepLinkModel.h; sourceTree = "<group>"; };
 		425E098F24D9111E00BEEA93 /* GrowingNetworkConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrowingNetworkConfig.h; sourceTree = "<group>"; };
-		425E099024D9111E00BEEA93 /* GrowingBaseModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingBaseModel.m; sourceTree = "<group>"; };
 		425E099124D9111E00BEEA93 /* GrowingNetworkInterfaceManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingNetworkInterfaceManager.m; sourceTree = "<group>"; };
 		425E099224D9111E00BEEA93 /* GrowingMobileDebugger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingMobileDebugger.m; sourceTree = "<group>"; };
 		425E099424D9111E00BEEA93 /* GrowingURLSessionDataTaskProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrowingURLSessionDataTaskProtocol.h; sourceTree = "<group>"; };
@@ -324,23 +310,18 @@
 		425E09ED24D9111E00BEEA93 /* GrowingVisitEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingVisitEvent.m; sourceTree = "<group>"; };
 		425E09EF24D9111E00BEEA93 /* NSData+GrowingHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+GrowingHelper.h"; sourceTree = "<group>"; };
 		425E09F024D9111E00BEEA93 /* NSObject+GrowingIvarHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+GrowingIvarHelper.h"; sourceTree = "<group>"; };
-		425E09F124D9111E00BEEA93 /* NSNumber+GrowingHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNumber+GrowingHelper.h"; sourceTree = "<group>"; };
 		425E09F224D9111E00BEEA93 /* NSDictionary+GrowingHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+GrowingHelper.h"; sourceTree = "<group>"; };
 		425E09F324D9111E00BEEA93 /* UIControl+GrowingHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIControl+GrowingHelper.h"; sourceTree = "<group>"; };
 		425E09F424D9111E00BEEA93 /* NSURL+GrowingHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+GrowingHelper.m"; sourceTree = "<group>"; };
 		425E09F524D9111E00BEEA93 /* UIImage+GrowingHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+GrowingHelper.h"; sourceTree = "<group>"; };
 		425E09F624D9111E00BEEA93 /* NSString+GrowingHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+GrowingHelper.h"; sourceTree = "<group>"; };
 		425E09F724D9111E00BEEA93 /* UIView+GrowingHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+GrowingHelper.h"; sourceTree = "<group>"; };
-		425E09F824D9111E00BEEA93 /* UITextField+GrowingHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextField+GrowingHelper.m"; sourceTree = "<group>"; };
-		425E09F924D9111E00BEEA93 /* NSObject+GrowingHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+GrowingHelper.h"; sourceTree = "<group>"; };
 		425E09FA24D9111E00BEEA93 /* NSArray+GrowingHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+GrowingHelper.h"; sourceTree = "<group>"; };
 		425E09FB24D9111E00BEEA93 /* UIWindow+GrowingHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWindow+GrowingHelper.h"; sourceTree = "<group>"; };
 		425E09FC24D9111E00BEEA93 /* UIApplication+GrowingHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+GrowingHelper.h"; sourceTree = "<group>"; };
 		425E09FD24D9111E00BEEA93 /* GrowingDispatchManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingDispatchManager.m; sourceTree = "<group>"; };
-		425E09FE24D9111E00BEEA93 /* NSNumber+GrowingHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNumber+GrowingHelper.m"; sourceTree = "<group>"; };
 		425E09FF24D9111E00BEEA93 /* NSObject+GrowingIvarHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+GrowingIvarHelper.m"; sourceTree = "<group>"; };
 		425E0A0024D9111E00BEEA93 /* NSData+GrowingHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+GrowingHelper.m"; sourceTree = "<group>"; };
-		425E0A0124D9111E00BEEA93 /* UITextField+GrowingHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextField+GrowingHelper.h"; sourceTree = "<group>"; };
 		425E0A0224D9111E00BEEA93 /* UIView+GrowingHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+GrowingHelper.m"; sourceTree = "<group>"; };
 		425E0A0324D9111E00BEEA93 /* UIImage+GrowingHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+GrowingHelper.m"; sourceTree = "<group>"; };
 		425E0A0424D9111E00BEEA93 /* NSString+GrowingHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+GrowingHelper.m"; sourceTree = "<group>"; };
@@ -350,7 +331,6 @@
 		425E0A0824D9111E00BEEA93 /* UIWindow+GrowingHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWindow+GrowingHelper.m"; sourceTree = "<group>"; };
 		425E0A0924D9111E00BEEA93 /* NSArray+GrowingHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+GrowingHelper.m"; sourceTree = "<group>"; };
 		425E0A0A24D9111E00BEEA93 /* GrowingHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrowingHelpers.h; sourceTree = "<group>"; };
-		425E0A0B24D9111E00BEEA93 /* NSObject+GrowingHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+GrowingHelper.m"; sourceTree = "<group>"; };
 		425E0A0C24D9111E00BEEA93 /* GrowingDispatchManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrowingDispatchManager.h; sourceTree = "<group>"; };
 		425E0A0D24D9111E00BEEA93 /* UIApplication+GrowingHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+GrowingHelper.m"; sourceTree = "<group>"; };
 		425E0A0F24D9111E00BEEA93 /* GrowingMediator+GrowingDeepLink.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GrowingMediator+GrowingDeepLink.m"; sourceTree = "<group>"; };
@@ -523,11 +503,11 @@
 				425E098324D9111E00BEEA93 /* SocketRocket */,
 				425E098724D9111E00BEEA93 /* LZ4 */,
 				425E098A24D9111E00BEEA93 /* Models */,
-				425E099124D9111E00BEEA93 /* GrowingNetworkInterfaceManager.m */,
-				425E099224D9111E00BEEA93 /* GrowingMobileDebugger.m */,
 				425E099324D9111E00BEEA93 /* Request */,
 				425E09AA24D9111E00BEEA93 /* GrowingMobileDebugger.h */,
+				425E099224D9111E00BEEA93 /* GrowingMobileDebugger.m */,
 				425E09AB24D9111E00BEEA93 /* GrowingNetworkInterfaceManager.h */,
+				425E099124D9111E00BEEA93 /* GrowingNetworkInterfaceManager.m */,
 			);
 			path = NetWork;
 			sourceTree = "<group>";
@@ -558,8 +538,8 @@
 		425E098724D9111E00BEEA93 /* LZ4 */ = {
 			isa = PBXGroup;
 			children = (
-				425E098924D9111E00BEEA93 /* lz4.c */,
-				425E098824D9111E00BEEA93 /* lz4.h */,
+				425E098924D9111E00BEEA93 /* GrowingLZ4.c */,
+				425E098824D9111E00BEEA93 /* GrowingLZ4.h */,
 			);
 			path = LZ4;
 			sourceTree = "<group>";
@@ -567,10 +547,6 @@
 		425E098A24D9111E00BEEA93 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				425E098D24D9111E00BEEA93 /* GrowingBaseModel.h */,
-				425E099024D9111E00BEEA93 /* GrowingBaseModel.m */,
-				425E098E24D9111E00BEEA93 /* GrowingDeepLinkModel.h */,
-				425E098B24D9111E00BEEA93 /* GrowingDeepLinkModel.m */,
 				425E098F24D9111E00BEEA93 /* GrowingNetworkConfig.h */,
 				425E098C24D9111E00BEEA93 /* GrowingNetworkConfig.m */,
 			);
@@ -729,19 +705,15 @@
 		425E09EE24D9111E00BEEA93 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				425E0A0A24D9111E00BEEA93 /* GrowingHelpers.h */,
 				425E0A0C24D9111E00BEEA93 /* GrowingDispatchManager.h */,
 				425E09FD24D9111E00BEEA93 /* GrowingDispatchManager.m */,
-				425E0A0A24D9111E00BEEA93 /* GrowingHelpers.h */,
 				425E09FA24D9111E00BEEA93 /* NSArray+GrowingHelper.h */,
 				425E0A0924D9111E00BEEA93 /* NSArray+GrowingHelper.m */,
 				425E09EF24D9111E00BEEA93 /* NSData+GrowingHelper.h */,
 				425E0A0024D9111E00BEEA93 /* NSData+GrowingHelper.m */,
 				425E09F224D9111E00BEEA93 /* NSDictionary+GrowingHelper.h */,
 				425E0A0724D9111E00BEEA93 /* NSDictionary+GrowingHelper.m */,
-				425E09F124D9111E00BEEA93 /* NSNumber+GrowingHelper.h */,
-				425E09FE24D9111E00BEEA93 /* NSNumber+GrowingHelper.m */,
-				425E09F924D9111E00BEEA93 /* NSObject+GrowingHelper.h */,
-				425E0A0B24D9111E00BEEA93 /* NSObject+GrowingHelper.m */,
 				425E09F024D9111E00BEEA93 /* NSObject+GrowingIvarHelper.h */,
 				425E09FF24D9111E00BEEA93 /* NSObject+GrowingIvarHelper.m */,
 				425E09F624D9111E00BEEA93 /* NSString+GrowingHelper.h */,
@@ -754,8 +726,6 @@
 				425E0A0624D9111E00BEEA93 /* UIControl+GrowingHelper.m */,
 				425E09F524D9111E00BEEA93 /* UIImage+GrowingHelper.h */,
 				425E0A0324D9111E00BEEA93 /* UIImage+GrowingHelper.m */,
-				425E0A0124D9111E00BEEA93 /* UITextField+GrowingHelper.h */,
-				425E09F824D9111E00BEEA93 /* UITextField+GrowingHelper.m */,
 				425E09F724D9111E00BEEA93 /* UIView+GrowingHelper.h */,
 				425E0A0224D9111E00BEEA93 /* UIView+GrowingHelper.m */,
 				425E09FB24D9111E00BEEA93 /* UIWindow+GrowingHelper.h */,
@@ -893,14 +863,12 @@
 				425E0A3C24D9111F00BEEA93 /* GrowingMessageProtocol.h in Headers */,
 				425E0AAD24D9111F00BEEA93 /* NSObject+GrowingIvarHelper.h in Headers */,
 				425E0AC224D9111F00BEEA93 /* NSURL+GrowingHelper.h in Headers */,
-				425E0ABE24D9111F00BEEA93 /* UITextField+GrowingHelper.h in Headers */,
 				425E0A5024D9111F00BEEA93 /* Growing3rdLibSocketRocket-Prefix.pch in Headers */,
 				425E0AED24D9111F00BEEA93 /* GrowingVersionManager.h in Headers */,
 				425E0AEA24D9111F00BEEA93 /* GrowingUserDefaults.h in Headers */,
 				425E0A7D24D9111F00BEEA93 /* GrowingGlobal.h in Headers */,
 				425E0AA924D9111F00BEEA93 /* GrowingActivateEvent.h in Headers */,
 				425E0A9224D9111F00BEEA93 /* GrowingVisitEvent.h in Headers */,
-				425E0A5524D9111F00BEEA93 /* GrowingBaseModel.h in Headers */,
 				425E0A3D24D9111F00BEEA93 /* GrowingBroadcaster.h in Headers */,
 				425E0AB824D9111F00BEEA93 /* UIWindow+GrowingHelper.h in Headers */,
 				425E0AA824D9111F00BEEA93 /* GrowingAdEvent.h in Headers */,
@@ -931,7 +899,6 @@
 				425E0ADF24D9111F00BEEA93 /* GrowingFMDatabaseAdditions.h in Headers */,
 				425E0A4B24D9111F00BEEA93 /* NSURLSession+GrowingURLSessionHelper.h in Headers */,
 				425E0A7124D9111F00BEEA93 /* GrowingNetworkInterfaceManager.h in Headers */,
-				425E0AAE24D9111F00BEEA93 /* NSNumber+GrowingHelper.h in Headers */,
 				425E0A6924D9111F00BEEA93 /* GrowingEventOtherRequest.h in Headers */,
 				425E0AB424D9111F00BEEA93 /* UIView+GrowingHelper.h in Headers */,
 				425E0A5724D9111F00BEEA93 /* GrowingNetworkConfig.h in Headers */,
@@ -946,7 +913,6 @@
 				425E0AA724D9111F00BEEA93 /* GrowingReengageEvent.h in Headers */,
 				425E0AE824D9111F00BEEA93 /* GrowingFMDB.h in Headers */,
 				425E0AE224D9111F00BEEA93 /* GrowingFMResultSet.h in Headers */,
-				425E0A5624D9111F00BEEA93 /* GrowingDeepLinkModel.h in Headers */,
 				425E0ACE24D9111F00BEEA93 /* GrowingMediator.h in Headers */,
 				425E0A9324D9111F00BEEA93 /* GrowingEventChannel.h in Headers */,
 				425E0AC924D9111F00BEEA93 /* GrowingDispatchManager.h in Headers */,
@@ -967,14 +933,13 @@
 				425E0A8124D9111F00BEEA93 /* GrowingMenuView.h in Headers */,
 				425E0A9E24D9111F00BEEA93 /* GrowingPvarEvent.h in Headers */,
 				425E0AEB24D9111F00BEEA93 /* Growing.pch in Headers */,
-				425E0A5124D9111F00BEEA93 /* lz4.h in Headers */,
+				425E0A5124D9111F00BEEA93 /* GrowingLZ4.h in Headers */,
 				425E0AB724D9111F00BEEA93 /* NSArray+GrowingHelper.h in Headers */,
 				425E0A8524D9111F00BEEA93 /* GrowingStatusBar.h in Headers */,
 				425E0AA224D9111F00BEEA93 /* GrowingEventDataBase.h in Headers */,
 				425E0ADC24D9111F00BEEA93 /* GrowingLoggerNames.h in Headers */,
 				425E0AE024D9111F00BEEA93 /* GrowingFMDatabaseQueue.h in Headers */,
 				425E0AB324D9111F00BEEA93 /* NSString+GrowingHelper.h in Headers */,
-				425E0AB624D9111F00BEEA93 /* NSObject+GrowingHelper.h in Headers */,
 				425E0A7624D9111F00BEEA93 /* GrowingWindow.h in Headers */,
 				425E0A6F24D9111F00BEEA93 /* GrowingEventAdRequest.h in Headers */,
 				425E0A9724D9111F00BEEA93 /* GrowingManualTrackEvent.h in Headers */,
@@ -1139,7 +1104,7 @@
 				425E0A5924D9111F00BEEA93 /* GrowingNetworkInterfaceManager.m in Sources */,
 				425E0A4E24D9111F00BEEA93 /* Growing3rdLibSRWebSocket.m in Sources */,
 				425E0AC524D9111F00BEEA93 /* UIWindow+GrowingHelper.m in Sources */,
-				425E0A5224D9111F00BEEA93 /* lz4.c in Sources */,
+				425E0A5224D9111F00BEEA93 /* GrowingLZ4.c in Sources */,
 				425E0A6824D9111F00BEEA93 /* GrowingEventPVRequest.m in Sources */,
 				425E0AB124D9111F00BEEA93 /* NSURL+GrowingHelper.m in Sources */,
 				425E0ACF24D9111F00BEEA93 /* GrowingASLLoggerFormat.m in Sources */,
@@ -1154,7 +1119,6 @@
 				425E0ACB24D9111F00BEEA93 /* GrowingMediator+GrowingDeepLink.m in Sources */,
 				425E0AE424D9111F00BEEA93 /* GrowingFMDatabaseAdditions.m in Sources */,
 				425E0ACC24D9111F00BEEA93 /* GrowingMediator.m in Sources */,
-				425E0A5824D9111F00BEEA93 /* GrowingBaseModel.m in Sources */,
 				425E0AE124D9111F00BEEA93 /* GrowingFMDatabasePool.m in Sources */,
 				425E0ACA24D9111F00BEEA93 /* UIApplication+GrowingHelper.m in Sources */,
 				425E0ABC24D9111F00BEEA93 /* NSObject+GrowingIvarHelper.m in Sources */,
@@ -1162,13 +1126,11 @@
 				425E0AC424D9111F00BEEA93 /* NSDictionary+GrowingHelper.m in Sources */,
 				425E0A4924D9111F00BEEA93 /* GrowingNetworkManager.m in Sources */,
 				425E0AAA24D9111F00BEEA93 /* GrowingEventChannel.m in Sources */,
-				425E0AB524D9111F00BEEA93 /* UITextField+GrowingHelper.m in Sources */,
 				425E0AD524D9111F00BEEA93 /* GrowingLoggerNames.m in Sources */,
 				425E0A8224D9111F00BEEA93 /* GrowingMenuView.m in Sources */,
 				425E0A8B24D9111F00BEEA93 /* GrowingCloseEvent.m in Sources */,
 				425E0A6224D9111F00BEEA93 /* GrowingLoginRequest.m in Sources */,
 				425E0AAB24D9111F00BEEA93 /* GrowingVisitEvent.m in Sources */,
-				425E0AC824D9111F00BEEA93 /* NSObject+GrowingHelper.m in Sources */,
 				425E0AC124D9111F00BEEA93 /* NSString+GrowingHelper.m in Sources */,
 				425E0ABA24D9111F00BEEA93 /* GrowingDispatchManager.m in Sources */,
 				425E0A3F24D9111F00BEEA93 /* GrowingAttributesConst.m in Sources */,
@@ -1177,7 +1139,6 @@
 				425E0A5F24D9111F00BEEA93 /* GrowingDeeplinkRequest.m in Sources */,
 				425E0A5E24D9111F00BEEA93 /* GrowingEventCstmRequest.m in Sources */,
 				425E0A9824D9111F00BEEA93 /* GrowingManualTrackEvent.m in Sources */,
-				425E0ABB24D9111F00BEEA93 /* NSNumber+GrowingHelper.m in Sources */,
 				425E0A6724D9111F00BEEA93 /* GrowingRequestAdapter.m in Sources */,
 				425E0AE724D9111F00BEEA93 /* GrowingFMResultSet.m in Sources */,
 				425E0AA624D9111F00BEEA93 /* GrowingActivateEvent.m in Sources */,
@@ -1195,7 +1156,6 @@
 				425E0AE624D9111F00BEEA93 /* GrowingFMDatabaseQueue.m in Sources */,
 				425E0ABF24D9111F00BEEA93 /* UIView+GrowingHelper.m in Sources */,
 				425E0A7A24D9111F00BEEA93 /* GrowingConfiguration.m in Sources */,
-				425E0A5324D9111F00BEEA93 /* GrowingDeepLinkModel.m in Sources */,
 				425E0A4824D9111F00BEEA93 /* NSURLSession+GrowingURLSessionHelper.m in Sources */,
 				425E0A4424D9111F00BEEA93 /* GrowingAppLifecycle.m in Sources */,
 				425E0A4724D9111F00BEEA93 /* UIApplication+GrowingNode.m in Sources */,

@@ -34,9 +34,6 @@
 
 #define kGrowingDataApiHost(path) ([NSString stringWithFormat: @"%@/%@", [[GrowingNetworkConfig sharedInstance] growingDataHostEnd], path])
 
-#define kGrowingTagApi                  kGrowingDataApiHost(@"mobile/events")
-#define kGrowingWebCircleWSPost         kGrowingDataApiHost(@"mobile/link")
-
 #define kGrowingLoginApiV2              kGrowingDataApiHost(@"oauth2/token")
 
 #define kGrowingDataCheckAddress      @"/feeds/apps/%@/exchanges/data-check/%@?clientType=sdk"
@@ -76,7 +73,5 @@
 - (NSString *)dataCheckEndPoint;
 
 - (NSString *)growingReportEndPoint;
-
-- (NSString *)hybridJSSDKUrlPrefix;
 
 @end

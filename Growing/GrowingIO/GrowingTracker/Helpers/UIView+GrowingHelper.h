@@ -22,7 +22,7 @@
 
 @interface UIView (GrowingHelper)
 
-- (UIImage*)growingHelper_screenshot:(CGFloat)maxScale;
-- (UIViewController*)growingHelper_viewController;
+- (UIImage *)growingHelper_screenshot:(CGFloat)maxScale;
+- (UIViewController *)growingHelper_viewController;
 
 @end

@@ -23,7 +23,6 @@
 #import "GrowingEventManager.h"
 #import "GrowingDeviceInfo.h"
 #import "GrowingInstance.h"
-#import "GrowingBaseModel.h"
 #import "NSString+GrowingHelper.h"
 #import "GrowingNetworkInterfaceManager.h"
 #import "GrowingEvent.h"

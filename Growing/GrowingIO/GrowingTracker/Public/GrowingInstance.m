@@ -29,7 +29,8 @@
 #import "GrowingCustomField.h"
 #import "GrowingNetworkConfig.h"
 #import "GrowingMobileDebugger.h"
-#import "GrowingDeepLinkModel.h"
+#import "GrowingDeeplinkRequest.h"
+#import "GrowingNetworkManager.h"
 #import "NSDictionary+GrowingHelper.h"
 #import "NSURL+GrowingHelper.h"
 #import "GrowingMediator+GrowingDeepLink.h"
@@ -204,14 +205,15 @@ static BOOL isGrowingDeeplink = NO;
     NSString *pasteString = [UIPasteboard generalPasteboard].string;
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSDictionary *callbackDict = [self convertPastedboardString:pasteString];
+        NSDictionary *callbackDict = [pasteString convertToDictFromPasteboard];
         
         if (callbackDict.count == 0) {
             finishBlock();
             return;
         }
         
-        if (![callbackDict[@"typ"] isEqualToString:@"gads"] || ![callbackDict[@"scheme"] isEqualToString:[GrowingDeviceInfo currentDeviceInfo].urlScheme]) {
+        if (![callbackDict[@"typ"] isEqualToString:@"gads"] ||
+            ![callbackDict[@"scheme"] isEqualToString:[GrowingDeviceInfo currentDeviceInfo].urlScheme]) {
             finishBlock();
             return;
         }
@@ -252,65 +254,6 @@ static BOOL isGrowingDeeplink = NO;
             finishBlock();
         });
     });
-    
-}
-
-
-- (NSDictionary *)convertPastedboardString:(NSString *)clipboardString {
-    if (clipboardString.length > 2000 * 16) {
-        return nil;
-    }
-    
-    NSString *binaryList = @"";
-    
-    for (int i = 0; i < clipboardString.length; i++) {
-        char a = [clipboardString characterAtIndex:i];
-        NSString *charString = @"";
-        if (a == (char)020014) {
-            charString = @"0";
-        } else {
-            charString = @"1";
-        }
-        binaryList = [binaryList stringByAppendingString:charString];
-    }
-    
-    NSInteger binaryListLength = binaryList.length;
-    
-    NSInteger SINGLE_CHAR_LENGTH = 16;
-    
-    if (binaryListLength % SINGLE_CHAR_LENGTH != 0) {
-        return nil;
-    }
-    
-    NSMutableArray *bs = [NSMutableArray array];
-    
-    int i = 0;
-    while (i < binaryListLength) {
-        [bs addObject:[binaryList substringWithRange:NSMakeRange(i, SINGLE_CHAR_LENGTH)]];
-        i += SINGLE_CHAR_LENGTH;
-    }
-    
-    NSString *listString = @"";
-    
-    for (int i = 0; i < bs.count; i++) {
-        NSString *partString = bs[i];
-        long long part = [partString longLongValue];
-        int partInt = [self convertBinaryToDecimal:part];
-        listString = [listString stringByAppendingString:[NSString stringWithFormat:@"%C", (unichar)partInt]];
-    }
-    NSDictionary *dict = listString.growingHelper_jsonObject;
-    return [dict isKindOfClass:[NSDictionary class]] ? dict : nil;
-}
-
-- (int)convertBinaryToDecimal:(long long)n {
-    int decimalNumber = 0, i = 0, remainder;
-    while (n != 0) {
-        remainder = n%10;
-        n /= 10;
-        decimalNumber += remainder*pow(2,i);
-        ++i;
-    }
-    return decimalNumber;
 }
 
 - (void)_reportInstallSoucre {
@@ -338,8 +281,7 @@ static BOOL isGrowingDeeplink = NO;
     [[self sharedInstance] reportGIODeeplink:linkURL];
 }
 
-+ (void)reportShortChainDeeplink:(NSURL *)linkURL
-{
++ (void)reportShortChainDeeplink:(NSURL *)linkURL {
     [[self sharedInstance] reportShortChainDeeplink:linkURL isManual:NO callback:nil];
 }
 
@@ -413,10 +355,11 @@ static GrowingDeeplinkHandler deeplinkHandler;
     [self loadUserAgentWithCompletion:^(NSString *ua) {
         
         NSMutableDictionary *queryParams = [NSMutableDictionary dictionaryWithDictionary:linkURL.growingHelper_queryDict];
-
+        
         __block NSString *cstm_params = nil ;
         
-        [[[self URLDecode:linkURL.query] componentsSeparatedByString:@"&"] enumerateObjectsUsingBlock:^(NSString *_Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [[[self URLDecode:linkURL.query] componentsSeparatedByString:@"&"]
+         enumerateObjectsUsingBlock:^(NSString *_Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if ([obj hasPrefix:@"custom_params"]) {
                 NSArray *pair = [obj componentsSeparatedByString:@"="];
                 if (pair.count > 1) {
@@ -431,7 +374,7 @@ static GrowingDeeplinkHandler deeplinkHandler;
         
         NSString *jsonCustomStr = [self URLDecodedString:cstm_params];
         NSDictionary *customParams = [jsonCustomStr growingHelper_dictionaryObject];
-            
+        
         GrowingDeeplinkInfo *linkInfo = [[GrowingDeeplinkInfo alloc] initWithQueryDict:queryParams];
         linkInfo.customParams = customParams;
         [GrowingReengageEvent sendEventWithDeeplinkInfo:linkInfo];
@@ -497,12 +440,12 @@ static GrowingDeeplinkHandler deeplinkHandler;
     
     [self loadUserAgentWithCompletion:^(NSString * ua) {
         
-        GrowingDeepLinkModel *deepLinkModel = [[GrowingDeepLinkModel alloc] init];
-        
-        [deepLinkModel getParamByHashId:hashId query:linkURL.query
-                                     ua:ua
-                                 manual:isManual
-                                succeed:^(NSHTTPURLResponse *httpResponse, NSData *data) {
+        GrowingDeeplinkRequest *request = [[GrowingDeeplinkRequest alloc] initWithHashId:hashId
+                                                                                   query:linkURL.query
+                                                                               userAgent:ua
+                                                                                  manual:isManual];
+        [[GrowingNetworkManager shareManager] sendRequest:request
+                                                  success:^(NSHTTPURLResponse * _Nonnull httpResponse, NSData * _Nonnull data) {
             
             NSDictionary *responseDict = [data growingHelper_dictionaryObject];
             NSNumber *statusNumber = responseDict[@"code"];
@@ -511,7 +454,9 @@ static GrowingDeeplinkHandler deeplinkHandler;
             NSDictionary *dataDict = responseDict[@"data"];
             
             if (statusNumber.intValue != 200) {
-                NSError *err = [NSError errorWithDomain:@"com.growingio.deeplink" code:statusNumber.integerValue userInfo:@{@"error" : message}];
+                NSError *err = [NSError errorWithDomain:@"com.growingio.deeplink"
+                                                   code:statusNumber.integerValue
+                                               userInfo:@{@"error" : message}];
                 NSDate *endTime = [NSDate date];
                 NSTimeInterval processTime = [endTime timeIntervalSinceDate:startData];
                 if (callback) {
@@ -564,8 +509,7 @@ static GrowingDeeplinkHandler deeplinkHandler;
                 GrowingInstance.deeplinkHandler(dictInfo, processTime, err);
             }
             
-        } fail:^(NSHTTPURLResponse *httpResponse, NSData *data, NSError *error) {
-            
+        } failure:^(NSHTTPURLResponse * _Nonnull httpResponse, NSData * _Nonnull data, NSError * _Nonnull error) {
             NSDate *endTime = [NSDate date];
             NSTimeInterval processTime = [endTime timeIntervalSinceDate:startData];
             
@@ -602,12 +546,13 @@ static GrowingDeeplinkHandler deeplinkHandler;
     if (self.userAgent) {
         return completion(self.userAgent);
     }
-
+    
     __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         
         self.wkWebView = [[WKWebView alloc] initWithFrame:CGRectZero];
-        [self.wkWebView evaluateJavaScript:@"navigator.userAgent" completionHandler:^(id _Nullable response, NSError *_Nullable error) {
+        [self.wkWebView evaluateJavaScript:@"navigator.userAgent"
+                         completionHandler:^(id _Nullable response, NSError *_Nullable error) {
             if (error || !response) {
                 GIOLogError(@"WKWebView evaluateJavaScript load UA error:%@", error);
                 completion(nil);

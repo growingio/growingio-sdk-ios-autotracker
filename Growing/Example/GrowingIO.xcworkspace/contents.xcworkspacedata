@@ -13,4 +13,7 @@
    <FileRef
       location = "group:Pods/Pods.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:GrowingTracker/GrowingTracker.xcodeproj">
+   </FileRef>
 </Workspace>

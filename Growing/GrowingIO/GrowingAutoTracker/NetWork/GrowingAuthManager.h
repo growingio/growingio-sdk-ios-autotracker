@@ -1,5 +1,5 @@
 //
-//  GrowingLoginModel.m
+//  GrowingAuthManager.m
 //  GrowingTracker
 //
 //  Created by GrowingIO on 15/10/27.
@@ -19,17 +19,18 @@
 
 
 #import <Foundation/Foundation.h>
-#import "GrowingBaseModel.h"
 
 extern NSString * _Nonnull GrowingDidLogin;
 extern NSString * _Nonnull GrowingDidLogout;
 
-@interface GrowingLoginModel : GrowingBaseModel
+@interface GrowingAuthManager : NSObject
 
 @property (nonatomic, readonly) NSString * _Nullable token;
 @property (nonatomic, readonly) NSString * _Nullable userId;
 @property (nonatomic, readonly) NSString * _Nullable loginToken;
 @property (nonatomic, readonly) NSString * _Nullable refreshToken;
+
++ (instancetype _Nonnull)shareManager;
 
 - (BOOL)isLogin;
 - (void)logout;

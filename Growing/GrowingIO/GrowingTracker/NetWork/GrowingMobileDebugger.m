@@ -273,21 +273,23 @@ static GrowingMobileDebugger *debugger = nil;
 
 - (UIImage *)screenShot {
     CGFloat scale = MIN([UIScreen mainScreen].scale, 2);
-    NSArray *windows = [[UIApplication sharedApplication].growingHelper_allWindowsWithoutGrowingWindow sortedArrayUsingComparator:^NSComparisonResult(UIWindow *obj1, UIWindow *obj2) {
+    NSArray *windows = [[UIApplication sharedApplication].growingHelper_allWindowsWithoutGrowingWindow
+                        sortedArrayUsingComparator:^NSComparisonResult(UIWindow *obj1, UIWindow *obj2) {
         if (obj1.windowLevel == obj2.windowLevel) {
             return NSOrderedSame;
-        }else if (obj1.windowLevel > obj2.windowLevel) {
-            return NSOrderedDescending;
-        }else {
-            return NSOrderedAscending;
         }
+        
+        if (obj1.windowLevel > obj2.windowLevel) {
+            return NSOrderedDescending;
+        }
+        return NSOrderedAscending;
     }];
     
     UIImage *image = [UIWindow growingHelper_screenshotWithWindows:windows
                                                        andMaxScale:scale
                                                              block:^(CGContextRef context) {
-                                                                 
-                                                             }];
+        
+    }];
     return image;
 }
 
@@ -324,7 +326,11 @@ static GrowingMobileDebugger *debugger = nil;
     [self _stopWithError:@"服务器链接失败"];
 }
 
-- (void)webSocket:(Growing3rdLibSRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
+- (void)webSocket:(Growing3rdLibSRWebSocket *)webSocket
+ didCloseWithCode:(NSInteger)code
+           reason:(NSString *)reason
+         wasClean:(BOOL)wasClean {
+    
     NSString *message = nil;
     if (code != 1000) {
         message = @"已从服务器断开链接";
@@ -418,7 +424,7 @@ static GrowingMobileDebugger *debugger = nil;
         for (NSString *key in self.actionVar.allKeys) {
             if([key isEqualToString:@"evar"] || [key isEqualToString:@"ppl"]) {
                 [info setObject:self.actionVar[key] forKey:key];
-            }else {
+            } else {
                 [pvarDic setObject:self.actionVar[key] forKey:key];
                 [info setObject:pvarDic forKey:@"pvar"];
             }
@@ -474,10 +480,10 @@ static GrowingMobileDebugger *debugger = nil;
         urlTemplate = kGrowingEventApiTemplate_PV;
         
     } else if([eventType isEqualToString:kEventTypeKeyCustom]
-             || [eventType isEqualToString:kEventTypeKeyPageVariable]
-             || [eventType isEqualToString:kEventTypeKeyConversionVariable]
-             || [eventType isEqualToString:kEventTypeKeyPeopleVariable]
-             || [eventType isEqualToString:kEventTypeKeyVisitor]) {
+              || [eventType isEqualToString:kEventTypeKeyPageVariable]
+              || [eventType isEqualToString:kEventTypeKeyConversionVariable]
+              || [eventType isEqualToString:kEventTypeKeyPeopleVariable]
+              || [eventType isEqualToString:kEventTypeKeyVisitor]) {
         urlTemplate = kGrowingEventApiTemplate_Custom;
         
     } else {
@@ -488,7 +494,7 @@ static GrowingMobileDebugger *debugger = nil;
     
     if ([eventType isEqualToString:kEventTypeKeyReengage] ||
         [eventType isEqualToString:kEventTypeKeyActivate]) {
-
+        
         urlTemplate = kGrowingEventApiTemplate_Activate;
         url = kGrowingReportApi(urlTemplate, [GrowingInstance sharedInstance].projectID, stm);
     }

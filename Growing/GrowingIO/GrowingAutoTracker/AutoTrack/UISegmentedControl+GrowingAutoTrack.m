@@ -19,9 +19,9 @@
 
 
 #import "UISegmentedControl+GrowingAutoTrack.h"
-#import "NSObject+GrowingHelper.h"
 #import "GrowingClickEvent.h"
 #import "UIView+GrowingNode.h"
+#import "NSObject+GrowingIvarHelper.h"
 
 @interface UISegmentedControlGrowingObserver : NSObject
 

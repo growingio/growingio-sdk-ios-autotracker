@@ -19,8 +19,8 @@
 		425E0B6A24D9112C00BEEA93 /* GrowingPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0AF824D9112B00BEEA93 /* GrowingPage.m */; };
 		425E0B7524D9112C00BEEA93 /* GrowingIMPTrack.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E0B0624D9112B00BEEA93 /* GrowingIMPTrack.h */; };
 		425E0B7624D9112C00BEEA93 /* GrowingIMPTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0B0724D9112B00BEEA93 /* GrowingIMPTrack.m */; };
-		425E0B7824D9112C00BEEA93 /* GrowingLoginModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E0B0A24D9112B00BEEA93 /* GrowingLoginModel.h */; };
-		425E0B7924D9112C00BEEA93 /* GrowingLoginModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0B0B24D9112B00BEEA93 /* GrowingLoginModel.m */; };
+		425E0B7824D9112C00BEEA93 /* GrowingAuthManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E0B0A24D9112B00BEEA93 /* GrowingAuthManager.h */; };
+		425E0B7924D9112C00BEEA93 /* GrowingAuthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0B0B24D9112B00BEEA93 /* GrowingAuthManager.m */; };
 		425E0B7A24D9112C00BEEA93 /* NSNotificationCenter+GrowingAutoTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0B0D24D9112B00BEEA93 /* NSNotificationCenter+GrowingAutoTrack.m */; };
 		425E0B7B24D9112C00BEEA93 /* UITapGestureRecognizer+GrowingAutoTrack.h in Headers */ = {isa = PBXBuildFile; fileRef = 425E0B0E24D9112B00BEEA93 /* UITapGestureRecognizer+GrowingAutoTrack.h */; };
 		425E0B7C24D9112C00BEEA93 /* UIApplication+GrowingAutoTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0B0F24D9112B00BEEA93 /* UIApplication+GrowingAutoTrack.m */; };
@@ -98,27 +98,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		0411C49B24DADE7B00DFD1BE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0411C49624DADE7B00DFD1BE /* GrowingTracker.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 425E094F24D90F7900BEEA93;
-			remoteInfo = GrowingTracker;
-		};
-		0411C49D24DADE7B00DFD1BE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0411C49624DADE7B00DFD1BE /* GrowingTracker.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 425E095824D90F7900BEEA93;
-			remoteInfo = GrowingTrackerUnitTest;
-		};
-		0411C49F24DADE8100DFD1BE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0411C49624DADE7B00DFD1BE /* GrowingTracker.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 425E094E24D90F7900BEEA93;
-			remoteInfo = GrowingTracker;
-		};
 		425E093624D90F5200BEEA93 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 425E092224D90F5200BEEA93 /* Project object */;
@@ -129,7 +108,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0411C49624DADE7B00DFD1BE /* GrowingTracker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GrowingTracker.xcodeproj; path = ../GrowingTracker/GrowingTracker.xcodeproj; sourceTree = "<group>"; };
 		425E092B24D90F5200BEEA93 /* GrowingAutoTracker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GrowingAutoTracker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		425E092F24D90F5200BEEA93 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		425E093424D90F5200BEEA93 /* GrowingAutoTrackerUnitTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrowingAutoTrackerUnitTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -145,8 +123,8 @@
 		425E0AF824D9112B00BEEA93 /* GrowingPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingPage.m; sourceTree = "<group>"; };
 		425E0B0624D9112B00BEEA93 /* GrowingIMPTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrowingIMPTrack.h; sourceTree = "<group>"; };
 		425E0B0724D9112B00BEEA93 /* GrowingIMPTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingIMPTrack.m; sourceTree = "<group>"; };
-		425E0B0A24D9112B00BEEA93 /* GrowingLoginModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrowingLoginModel.h; sourceTree = "<group>"; };
-		425E0B0B24D9112B00BEEA93 /* GrowingLoginModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingLoginModel.m; sourceTree = "<group>"; };
+		425E0B0A24D9112B00BEEA93 /* GrowingAuthManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrowingAuthManager.h; sourceTree = "<group>"; };
+		425E0B0B24D9112B00BEEA93 /* GrowingAuthManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingAuthManager.m; sourceTree = "<group>"; };
 		425E0B0D24D9112B00BEEA93 /* NSNotificationCenter+GrowingAutoTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNotificationCenter+GrowingAutoTrack.m"; sourceTree = "<group>"; };
 		425E0B0E24D9112B00BEEA93 /* UITapGestureRecognizer+GrowingAutoTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITapGestureRecognizer+GrowingAutoTrack.h"; sourceTree = "<group>"; };
 		425E0B0F24D9112B00BEEA93 /* UIApplication+GrowingAutoTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+GrowingAutoTrack.m"; sourceTree = "<group>"; };
@@ -242,19 +220,9 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0411C49724DADE7B00DFD1BE /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				0411C49C24DADE7B00DFD1BE /* GrowingTracker.framework */,
-				0411C49E24DADE7B00DFD1BE /* GrowingTrackerUnitTest.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		425E092124D90F5200BEEA93 = {
 			isa = PBXGroup;
 			children = (
-				0411C49624DADE7B00DFD1BE /* GrowingTracker.xcodeproj */,
 				425E092D24D90F5200BEEA93 /* GrowingAutoTracker */,
 				425E093824D90F5200BEEA93 /* GrowingAutoTrackerUnitTest */,
 				425E092C24D90F5200BEEA93 /* Products */,
@@ -332,8 +300,8 @@
 		425E0B0924D9112B00BEEA93 /* NetWork */ = {
 			isa = PBXGroup;
 			children = (
-				425E0B0A24D9112B00BEEA93 /* GrowingLoginModel.h */,
-				425E0B0B24D9112B00BEEA93 /* GrowingLoginModel.m */,
+				425E0B0A24D9112B00BEEA93 /* GrowingAuthManager.h */,
+				425E0B0B24D9112B00BEEA93 /* GrowingAuthManager.m */,
 			);
 			path = NetWork;
 			sourceTree = "<group>";
@@ -478,7 +446,7 @@
 				425E0BBD24D9112D00BEEA93 /* GrowingActionEvent.h in Headers */,
 				425E0BBF24D9112D00BEEA93 /* GrowingActionEventElement.h in Headers */,
 				425E0B6624D9112C00BEEA93 /* GrowingPage.h in Headers */,
-				425E0B7824D9112C00BEEA93 /* GrowingLoginModel.h in Headers */,
+				425E0B7824D9112C00BEEA93 /* GrowingAuthManager.h in Headers */,
 				425E0B8A24D9112C00BEEA93 /* UISegmentedControl+GrowingAutoTrack.h in Headers */,
 				425E0B9724D9112C00BEEA93 /* UIImageView+GrowingNode.h in Headers */,
 				425E0BAE24D9112D00BEEA93 /* UIControl+GrowingNode.h in Headers */,
@@ -531,7 +499,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				0411C4A024DADE8100DFD1BE /* PBXTargetDependency */,
 			);
 			name = GrowingAutoTracker;
 			productName = GrowingAutoTracker;
@@ -584,12 +551,6 @@
 			mainGroup = 425E092124D90F5200BEEA93;
 			productRefGroup = 425E092C24D90F5200BEEA93 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 0411C49724DADE7B00DFD1BE /* Products */;
-					ProjectRef = 0411C49624DADE7B00DFD1BE /* GrowingTracker.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				425E092A24D90F5200BEEA93 /* GrowingAutoTracker */,
@@ -597,23 +558,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		0411C49C24DADE7B00DFD1BE /* GrowingTracker.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = GrowingTracker.framework;
-			remoteRef = 0411C49B24DADE7B00DFD1BE /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0411C49E24DADE7B00DFD1BE /* GrowingTrackerUnitTest.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = GrowingTrackerUnitTest.xctest;
-			remoteRef = 0411C49D24DADE7B00DFD1BE /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		425E092924D90F5200BEEA93 /* Resources */ = {
@@ -640,7 +584,7 @@
 				425E0B9024D9112C00BEEA93 /* GrowingLoginMenu.m in Sources */,
 				425E0B9524D9112C00BEEA93 /* UINavigationController+GrowingNode.m in Sources */,
 				425E0BBE24D9112D00BEEA93 /* GrowingClickEvent.m in Sources */,
-				425E0B7924D9112C00BEEA93 /* GrowingLoginModel.m in Sources */,
+				425E0B7924D9112C00BEEA93 /* GrowingAuthManager.m in Sources */,
 				425E0B8324D9112C00BEEA93 /* UISegmentedControl+GrowingAutoTrack.m in Sources */,
 				425E0B7624D9112C00BEEA93 /* GrowingIMPTrack.m in Sources */,
 				425E0B6724D9112C00BEEA93 /* GrowingPageManager.m in Sources */,
@@ -693,11 +637,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		0411C4A024DADE8100DFD1BE /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = GrowingTracker;
-			targetProxy = 0411C49F24DADE8100DFD1BE /* PBXContainerItemProxy */;
-		};
 		425E093724D90F5200BEEA93 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 425E092A24D90F5200BEEA93 /* GrowingAutoTracker */;

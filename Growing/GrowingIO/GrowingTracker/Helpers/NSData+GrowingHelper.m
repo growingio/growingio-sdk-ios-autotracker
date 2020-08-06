@@ -19,19 +19,17 @@
 
 
 #import "NSData+GrowingHelper.h"
-#import "lz4.h"
+#import "GrowingLZ4.h"
 #import "NSString+GrowingHelper.h"
 #import <CommonCrypto/CommonCrypto.h>
 
 @implementation NSData (GrowingHelper)
 
-- (NSString*)growingHelper_utf8String
-{
+- (NSString*)growingHelper_utf8String {
     return [[NSString alloc] initWithData:self encoding:NSUTF8StringEncoding];
 }
 
-- (NSData*)growingHelper_LZ4String
-{
+- (NSData*)growingHelper_LZ4String {
     void *out_buff = malloc(LZ4_compressBound((int)self.length));
     int out_size = GROW_LZ4_compress(self.bytes, out_buff, (int)self.length);
     if (out_size < 0) {
@@ -42,8 +40,7 @@
     return [[NSData alloc] initWithBytesNoCopy:out_buff length:out_size freeWhenDone:YES];
 }
 
-- (NSString*)growingHelper_base64String
-{
+- (NSString*)growingHelper_base64String {
     //ensure wrapWidth is a multiple of 4
     
     NSUInteger wrapWidth = 0;
@@ -59,32 +56,28 @@
     
     long long i;
     long long outputLength =0;
-    for (i = 0; i < inputLength -2; i += 3)
-    {
+    for (i = 0; i < inputLength -2; i += 3) {
         outputBytes[outputLength++] = lookup[(inputBytes[i] &0xFC) >> 2];
         outputBytes[outputLength++] = lookup[((inputBytes[i] &0x03) << 4) | ((inputBytes[i +1] & 0xF0) >>4)];
         outputBytes[outputLength++] = lookup[((inputBytes[i +1] & 0x0F) <<2) | ((inputBytes[i + 2] & 0xC0) >> 6)];
         outputBytes[outputLength++] = lookup[inputBytes[i +2] & 0x3F];
         
         //add line break
-        if (wrapWidth && (outputLength + 2) % (wrapWidth + 2) == 0)
-        {
+        if (wrapWidth && (outputLength + 2) % (wrapWidth + 2) == 0) {
             outputBytes[outputLength++] ='\r';
             outputBytes[outputLength++] ='\n';
         }
     }
     
     //handle left-over data
-    if (i == inputLength - 2)
-    {
+    if (i == inputLength - 2) {
         // = terminator
         outputBytes[outputLength++] = lookup[(inputBytes[i] &0xFC) >> 2];
         outputBytes[outputLength++] = lookup[((inputBytes[i] &0x03) << 4) | ((inputBytes[i +1] & 0xF0) >>4)];
         outputBytes[outputLength++] = lookup[(inputBytes[i +1] & 0x0F) <<2];
         outputBytes[outputLength++] =  '=';
-    }
-    else if (i == inputLength -1)
-    {
+    
+    } else if (i == inputLength -1) {
         // == terminator
         outputBytes[outputLength++] = lookup[(inputBytes[i] &0xFC) >> 2];
         outputBytes[outputLength++] = lookup[(inputBytes[i] &0x03) << 4];
@@ -103,45 +96,36 @@
     return (outputLength >= 4)? result: nil;
 }
 
-- (id)growingHelper_jsonObject
-{
+- (id)growingHelper_jsonObject {
     id jsonObj = [NSJSONSerialization JSONObjectWithData:self options:0 error:nil];
     return jsonObj;
 }
 
-- (NSDictionary*)growingHelper_dictionaryObject
-{
+- (NSDictionary*)growingHelper_dictionaryObject {
+    
     NSDictionary *dict = [self growingHelper_jsonObject];
-    if (dict && [dict isKindOfClass:[NSDictionary class]])
-    {
+    if (dict && [dict isKindOfClass:[NSDictionary class]]) {
         return dict;
-    }
-    else
-    {
+    } else {
         return nil;
     }
 }
 
-- (NSArray*)growingHelper_arrayObject
-{
+- (NSArray*)growingHelper_arrayObject {
+    
     NSArray *arr = [self growingHelper_jsonObject];
-    if (arr && [arr isKindOfClass:[NSArray class]])
-    {
+    if (arr && [arr isKindOfClass:[NSArray class]]) {
         return arr;
-    }
-    else
-    {
+    } else {
         return nil;
     }
 }
 
-- (void)growingHelper_md5value:(unsigned char *)valueArray
-{
+- (void)growingHelper_md5value:(unsigned char *)valueArray {
     CC_MD5(self.bytes, (CC_LONG)[self length], valueArray);
 }
 
-- (NSString*)growingHelper_md5String
-{
+- (NSString*)growingHelper_md5String {
     unsigned char result[16];
     [self growingHelper_md5value:result];
     NSString *retVal =
@@ -155,13 +139,12 @@
     return retVal;
 }
 
-- (NSData *)growingHelper_xorEncryptWithHint:(unsigned char)hint
-{
+- (NSData *)growingHelper_xorEncryptWithHint:(unsigned char)hint {
     NSMutableData * data = [[NSMutableData alloc] initWithLength:self.length];
     const unsigned char * p = self.bytes;
     unsigned char * q = data.mutableBytes;
-    for (NSUInteger i = 0; i < self.length; i++, p++, q++)
-    {
+    
+    for (NSUInteger i = 0; i < self.length; i++, p++, q++) {
         *q = (*p ^ hint);
     }
     return data;

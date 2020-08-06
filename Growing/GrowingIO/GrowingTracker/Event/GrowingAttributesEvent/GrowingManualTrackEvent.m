@@ -192,7 +192,7 @@
 - (instancetype)initWithVisitorVariable:(NSDictionary<NSString *, NSObject *> *)variable
 {
     if ([variable isKindOfClass:[NSDictionary class]]) {
-        if (![variable isValidDicVar]) {
+        if (![variable isValidDictVariable]) {
             return nil;
         }
         if (variable.count > 100 ) {

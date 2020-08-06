@@ -24,10 +24,8 @@
 
 + (void)dispatchInMainThread:(void (^_Nullable)(void))block;
 
-+ (void)dispatchInHighThread:(void (^_Nullable)(void))block;
-
 + (void)dispatchInLowThread:(void (^_Nullable)(void))block;
 
-+ (void)trackApiSel:(SEL)selector dispatchInMainThread:(void (^_Nullable)(void))block;
++ (void)trackApiSel:(SEL _Nonnull )selector dispatchInMainThread:(void (^_Nullable)(void))block;
 
 @end

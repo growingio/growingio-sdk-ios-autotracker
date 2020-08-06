@@ -179,38 +179,34 @@ static BOOL impTrackIsRegistered = NO;
     // ensure call in main thread
     [GrowingDispatchManager dispatchInMainThread:^{
         static CFRunLoopObserverRef observer;
-
-        if (observer) {
-            return;
-        }
-
+        
+        if (observer) { return; }
+        
         CFRunLoopRef runLoop = CFRunLoopGetCurrent();
-        CFOptionFlags activities =
-            (kCFRunLoopBeforeWaiting |  // before the run loop starts sleeping
-             kCFRunLoopExit);           // before exiting a runloop run
-
+        // before the run loop starts sleeping
+        // before exiting a runloop run
+        CFOptionFlags activities = (kCFRunLoopBeforeWaiting | kCFRunLoopExit);
+        
         observer = CFRunLoopObserverCreateWithHandler(
-            NULL,         // allocator
-            activities,   // activities
-            YES,          // repeats
-            INT_MAX - 1,  // order after CA transaction commits
-            ^(CFRunLoopObserverRef observer, CFRunLoopActivity activity) {
-                if (self.IMPInterval == 0.0) {
-                    [self impTrack];
-                } else {
-                    [NSObject cancelPreviousPerformRequestsWithTarget:self
-                                                             selector:@selector
-                                                             (impTrack)
-                                                               object:nil];
-                    [self performSelector:@selector(impTrack)
-                               withObject:nil
-                               afterDelay:self.IMPInterval
-                                  inModes:@[ NSRunLoopCommonModes ]];
-                }
-            });
-
+                                                      NULL,         // allocator
+                                                      activities,   // activities
+                                                      YES,          // repeats
+                                                      INT_MAX - 1,  // order after CA transaction commits
+                                                      ^(CFRunLoopObserverRef observer, CFRunLoopActivity activity) {
+            if (self.IMPInterval == 0.0) {
+                [self impTrack];
+            } else {
+                [NSObject cancelPreviousPerformRequestsWithTarget:self
+                                                         selector:@selector(impTrack)
+                                                           object:nil];
+                [self performSelector:@selector(impTrack)
+                           withObject:nil
+                           afterDelay:self.IMPInterval
+                              inModes:@[ NSRunLoopCommonModes ]];
+            }
+        });
+        
         CFRunLoopAddObserver(runLoop, observer, kCFRunLoopCommonModes);
-
         CFRelease(observer);
     }];
 }

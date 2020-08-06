@@ -23,8 +23,7 @@
 
 @implementation GrowingDispatchManager
 
-+ (void)dispatchInMainThread:(void (^_Nullable)(void))block
-{
++ (void)dispatchInMainThread:(void (^_Nullable)(void))block {
     if ([NSThread isMainThread]) {
         block();
     } else {
@@ -32,34 +31,8 @@
     }
 }
 
-+ (void)dispatchInHighThread:(void (^_Nullable)(void))block
-{
-    #pragma clang diagnostic push
-    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        if (dispatch_get_current_queue() == self.highDispatch)
-    #pragma clang diagnostic pop
-        {
-            block();
-        }
-        else
-        {
-            dispatch_async(self.highDispatch,block);
-        }
-}
-
-+ (void)dispatchInLowThread:(void (^_Nullable)(void))block
-{
-    #pragma clang diagnostic push
-    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        if (dispatch_get_current_queue() == self.lowDispatch)
-    #pragma clang diagnostic pop
-        {
-            block();
-        }
-        else
-        {
-            dispatch_async(self.lowDispatch,block);
-        }
++ (void)dispatchInLowThread:(void (^_Nullable)(void))block {
+    dispatch_async(self.lowDispatch, block);
 }
 
 + (void)trackApiSel:(SEL)selector dispatchInMainThread:(void (^_Nullable)(void))block {
@@ -72,21 +45,7 @@
     }
 }
 
-+ (dispatch_queue_t)highDispatch
-{
-    static dispatch_queue_t  highDispatch = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        highDispatch = dispatch_queue_create("io.growing.high", NULL);
-        dispatch_set_target_queue(highDispatch,
-                                  dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0));
-    });
-    
-    return highDispatch;
-}
-
-+ (dispatch_queue_t)lowDispatch
-{
++ (dispatch_queue_t)lowDispatch {
     static dispatch_queue_t  lowDispatch = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{

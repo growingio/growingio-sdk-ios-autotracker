@@ -19,7 +19,7 @@
 
 
 #import "GrowingLoginMenu.h"
-#import "GrowingLoginModel.h"
+#import "GrowingAuthManager.h"
 #import "GrowingAlertMenu.h"
 
 @interface GrowingLoginTextField : UITextField
@@ -214,7 +214,7 @@
     };
     
     
-    [[GrowingLoginModel sdkInstance] loginByUserId:aId
+    [[GrowingAuthManager shareManager] loginByUserId:aId
                                             password:pwd
                                              succeed:succeedBlock
                                                 fail:faileBlock];
@@ -275,7 +275,7 @@ static NSMutableArray<void (^)(void)> *failBlocks = nil;
 
 + (void)showIfNeededSucceed:(void (^)(void))succeedBlock fail:(void (^)(void))failBlock
 {
-    if ([GrowingLoginModel sdkInstance].token.length)
+    if ([GrowingAuthManager shareManager].token.length)
     {
         succeedBlock();
     }

@@ -25,7 +25,9 @@
     self.view.growingViewIgonrePolicy = GrowingIgnoreChild;
  
     self.growingPageAttributes = @{@"greet": @"hello"};
-    self.growingPageIgonrePolicy = GrowingIgnoreSelf;
+    self.growingPageIgonrePolicy = GrowingIgnoreChild;
+    
+    self.parentViewController.growingPageIgonrePolicy = GrowingIgnoreAll;
 }
 
 - (IBAction)buttonClick:(UIButton *)sender {

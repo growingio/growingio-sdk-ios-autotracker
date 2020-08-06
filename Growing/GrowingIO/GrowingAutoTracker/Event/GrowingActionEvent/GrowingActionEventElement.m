@@ -28,7 +28,9 @@
 
 @implementation GrowingActionEventElement
 
-- (instancetype)initWithNode:(id<GrowingNode>)node nodeManagerContext:(GrowingNodeManagerEnumerateContext *)context  triggerEventType:(GrowingEventType)eventType {
+- (instancetype)initWithNode:(id<GrowingNode>)node
+          nodeManagerContext:(GrowingNodeManagerEnumerateContext *)context
+            triggerEventType:(GrowingEventType)eventType {
         
     GrowingActionEventElement *element = [[GrowingActionEventElement alloc] init];
     element.xPath = [context xpath];

@@ -22,12 +22,8 @@
 
 @interface UIApplication (GrowingHelper)
 
-- (NSArray<UIWindow*>*)growingHelper_allWindows;
-- (NSArray<UIWindow*>*)growingHelper_allWindowsSortedByWindowLevel;
-- (NSArray<UIWindow*>*)growingHelper_allWindowsWithoutGrowingWindowSortedByWindowLevel;
-- (NSArray<UIWindow*>*)growingHelper_allWindowsWithoutGrowingWindow;
-
-- (UIImage*)growingHelper_screenshotWithGrowingWindow:(CGFloat)maxScale;
-- (UIImage*)growingHelper_screenshotWithGrowingWindow:(CGFloat)maxScale block:(void(^)(CGContextRef context))block;
+- (NSArray <UIWindow *> *)growingHelper_allWindows;
+- (NSArray <UIWindow *> *)growingHelper_allWindowsSortedByWindowLevel;
+- (NSArray <UIWindow *> *)growingHelper_allWindowsWithoutGrowingWindow;
 
 @end

@@ -70,7 +70,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// 禁用 new 初始化
 + (instancetype)new NS_UNAVAILABLE;
 
-
 @end
 
 NS_ASSUME_NONNULL_END
