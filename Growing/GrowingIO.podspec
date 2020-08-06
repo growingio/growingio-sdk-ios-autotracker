@@ -24,12 +24,12 @@ TODO: Add long description of the pod here.
   
   s.subspec 'GrowingTracker' do |tracker|
       tracker.source_files = 'GrowingIO/GrowingTracker/**/*'
-      tracker.public_header_files = 'GrowingIO/GrowingTracker/**/*.h'
+      tracker.public_header_files = 'GrowingIO/GrowingTracker/Public/*.h'
   end
   
   s.subspec 'GrowingAutoTracker' do |autotracker|
       autotracker.source_files = 'GrowingIO/GrowingAutoTracker/**/*'
-      autotracker.public_header_files = 'GrowingIO/GrowingAutoTracker/**/*.h'
+      autotracker.public_header_files = 'GrowingIO/GrowingAutoTracker/Public/*.h'
       autotracker.dependency 'GrowingIO/GrowingTracker'
   end
   

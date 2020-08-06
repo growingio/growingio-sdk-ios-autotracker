@@ -67,6 +67,10 @@
     // TODO: avoid crash for GrowingUIGestureRecognizerObserver unrecongnized
 }
 
+- (void)_tapAction:(id)action {
+    // TODO: avoid crash for GrowingUIGestureRecognizerObserver unrecongnized
+}
+
 @end
 
 @implementation UITapGestureRecognizer (GrowingAutoTrack)
