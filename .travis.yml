@@ -1,20 +1,33 @@
 osx_image: xcode11.6
 language: objective-c
-
 env:
   global:
-    - LANG=en_US.UTF-8
-    - LC_ALL=en_US.UTF-8
-
+  - LANG=en_US.UTF-8
+  - LC_ALL=en_US.UTF-8
+  - secure: EjENUJrtmWR9ks38rNQvum6ljD1cmFJcL59a9l2pSZdpg5aZLlU9qmlkbtE1a+tYy5aUqjexLmBNGlF5qEp6V0vYcWSkUD7+3NbVnF7uSR+qqy5aMBCdq2gO0bM3AJgIZYfmJpS23QDxyUoDCng+AwyzhqNbFBoOh9RbABDIGljWYa61fRiofAkE68XooFHmwW84R8/4TMSIHBIMFXYrKdvO2sBH/Sl5Ig2nmVN83Guv+p7B+ISXkkRjw/+r+tqmPB3Oj0gRBP7nfKId7FTbGm+AyZ+xGBkoSVzddWwOderkXHk/7zgsZhD3OKF/MtVDXgv0355+JcWDFvSgd2wtUJoSL1CJd+Y0hVfEdatf9MaL9BfCG9yxDMJUtph7upXlGaBqo2N1fPQM3JAZMk5+hOBkyjXFfKMF3H5wJ0uA8hadpelqgPuxinvjC/qBBbsbbvjcwl6JgmEjQ12TXF1GjnyhOPHce+0bnux6/tkJqfZH37Cn2W4+8uzbuRHUjscIEmCntxI0gyuWkU8XpSZb0u/o/VDUArBo3y6K1v4PES31im2aLWYt7mFuG9kpEns0rPRU/iQPsRt90aa+HN4P4qSHPJRKcVssaiknCwUiPq2y8lfILH5ihiyaeZHPpyHtidgEPXFvofzRRaKMc+4tS2846aToWZV6B0WMJghWnKY=
+  - APPNAME="Example"
+  - 'DEVELOPER_NAME="Apple Development: 鹏 盛 (59U3UW842N)"'
+  - PROFILE_NAME="sdk_demo"
 before_install:
-  - echo "$TRAVIS_BUILD_DIR"
-  - brew tap growingio/homebrew-oclint
-  - brew install oclint-growing
-
+#解密证书
+- openssl aes-256-cbc -K $encrypted_325e42e71f12_key -iv $encrypted_325e42e71f12_iv
+  -in certificates.tar.enc -out certificates.tar -d
+#解压证书tar
+- tar xvf certificates.tar -C ./certificates
+#给脚本添加执行权限，用于给travis添加证书环境
+- chmod +x Scripts/add-key.sh
+- chmod +x Scripts/remove-key.sh
+#安装 oclint-growing
+- brew tap growingio/homebrew-oclint
+- brew install oclint-growing
+before_script:
+- "./Scripts/add-key.sh"
 script:
-  - set -o pipefail
-  - xcodebuild -workspace GrowingAnalytics.xcworkspace -scheme GrowingAutoTracker -configuration Release -sdk iphoneos -arch armv7 clean build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO | xcpretty -r json-compilation-database -o compile_commands.json
-  - oclint-json-compilation-database -e Pods -- -rc GIO_METHOD_ALLOW_UPPERCASE="URL,FMG3DB,TXT,UTF,STM,IMP" -rc GIO_CATEGORY_PREFIX=Growing -rc GIO_CLASS_PREFIX=Growing -max-priority-2=0
-  
-
-
+- set -o pipefail
+- xcodebuild -workspace GrowingAnalytics.xcworkspace -scheme GrowingAutoTracker -configuration
+  Release -sdk iphoneos -arch armv7 clean build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+  | xcpretty -r json-compilation-database -o compile_commands.json
+- oclint-json-compilation-database -e Pods -- -rc GIO_METHOD_ALLOW_UPPERCASE="URL,FMG3DB,TXT,UTF,STM,IMP"
+  -rc GIO_CATEGORY_PREFIX=Growing -rc GIO_CLASS_PREFIX=Growing -max-priority-2=0
+after_script:
+- "./Scripts/remove-key.sh"
