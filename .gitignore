@@ -21,7 +21,8 @@ DerivedData
 
 
 Growing/Example/Pods/
-
+Example/Pods/
+Example/Example.xcodeproj/xcshareddata/
 Growing/release
 
 release/
@@ -29,7 +30,10 @@ release/
 # ignore XCExtent report
 */XCExtentReport.html
 
+# commitzen tool
 node_modules/
-
 package-lock.json
 package.json
+
+# oclint files
+compile_commands.json
