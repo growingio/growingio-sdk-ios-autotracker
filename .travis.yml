@@ -1,9 +1,6 @@
 osx_image: xcode11.6
 language: objective-c
 
-cache:
-  directories:
-    - /usr/local/Cellar/oclint-growing
 env:
   global:
     - LANG=en_US.UTF-8
