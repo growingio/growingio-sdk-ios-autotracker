@@ -4,20 +4,16 @@ env:
   global:
   - LANG=en_US.UTF-8
   - LC_ALL=en_US.UTF-8
-  - secure: EjENUJrtmWR9ks38rNQvum6ljD1cmFJcL59a9l2pSZdpg5aZLlU9qmlkbtE1a+tYy5aUqjexLmBNGlF5qEp6V0vYcWSkUD7+3NbVnF7uSR+qqy5aMBCdq2gO0bM3AJgIZYfmJpS23QDxyUoDCng+AwyzhqNbFBoOh9RbABDIGljWYa61fRiofAkE68XooFHmwW84R8/4TMSIHBIMFXYrKdvO2sBH/Sl5Ig2nmVN83Guv+p7B+ISXkkRjw/+r+tqmPB3Oj0gRBP7nfKId7FTbGm+AyZ+xGBkoSVzddWwOderkXHk/7zgsZhD3OKF/MtVDXgv0355+JcWDFvSgd2wtUJoSL1CJd+Y0hVfEdatf9MaL9BfCG9yxDMJUtph7upXlGaBqo2N1fPQM3JAZMk5+hOBkyjXFfKMF3H5wJ0uA8hadpelqgPuxinvjC/qBBbsbbvjcwl6JgmEjQ12TXF1GjnyhOPHce+0bnux6/tkJqfZH37Cn2W4+8uzbuRHUjscIEmCntxI0gyuWkU8XpSZb0u/o/VDUArBo3y6K1v4PES31im2aLWYt7mFuG9kpEns0rPRU/iQPsRt90aa+HN4P4qSHPJRKcVssaiknCwUiPq2y8lfILH5ihiyaeZHPpyHtidgEPXFvofzRRaKMc+4tS2846aToWZV6B0WMJghWnKY=
   - APPNAME="Example"
   - 'DEVELOPER_NAME="Apple Development: 鹏 盛 (59U3UW842N)"'
   - PROFILE_NAME="sdk_demo"
+  - secure: R/LSwvhW5nnAzw1amT+ivGatMGhh3mwgBlFX8KwPKwA4L8YXadUHYAe/b6fLEpIzTCdKBUODXasGWX3xJ8iQz575xOJaoTSv6zQDUAj+BeVaHRJqj2f2R6vtV7lsGg4qIl1l7HVpaYWAQComoW51YII3ln6Vt5BJJ6tl/X1ohhq28r8kFcImvMYLb8eKZLe+oOWJ50GfFYArl+pyRTxTIScZl9PxzT+6k5OOWzYN2soX2XTW+ZV+9+Kg1sLREKovCsXgXP1b9QaXZepPrzw5AOYCeC+loOI/B/3kF/2EOmo7DyB4pXEHnSQWG6d4ccnQzVUa1GscW0a0lJiiqR1pUNA57kK0BzLgUqfm8PIngSs3SIChBddrWAd4hP7KHm+5gq5mp082oNd7kYnEVP4275SRix1wPxnRBgk6hZNuT3cFjHwRlx/agopBlKp7N9Euk+BojSlFsvy2xd+df7+abJeQrdNmrAnCJTG295JL2wdINjTEjnhYFTbsuIZS2RaFoj5aB3fvkBSsNVAucWHS/g9hQA/r/WwIkWjZcdHfQRjGBqE2diJ39U2j2B4ws7bUop3vu3+KnuvVFhLb8DYedy9LqVIERaoB+qp4hqizvnYDFjvdicXDFvxLtfjGWSOx2EnPi3V+ZvZlOKhEUOUbTUOX+lQbFAThct5H238tBp8=
 before_install:
-#解密证书
 - openssl aes-256-cbc -K $encrypted_325e42e71f12_key -iv $encrypted_325e42e71f12_iv
   -in certificates.tar.enc -out certificates.tar -d
-#解压证书tar
 - tar xvf certificates.tar -C ./certificates
-#给脚本添加执行权限，用于给travis添加证书环境
 - chmod +x Scripts/add-key.sh
 - chmod +x Scripts/remove-key.sh
-#安装 oclint-growing
 - brew tap growingio/homebrew-oclint
 - brew install oclint-growing
 before_script:
