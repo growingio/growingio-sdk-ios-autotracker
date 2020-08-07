@@ -20,16 +20,14 @@ TODO: Add long description of the pod here.
   s.source           = { :git => 'ssh://vcs-user@codes.growingio.com/diffusion/9/growingio-ios.git', :tag => s.version.to_s }
   s.ios.deployment_target = '8.0'
   s.requires_arc = true
-  s.static_framework = true
+  s.default_subspec = "AutoTracker"
   
   s.subspec 'Tracker' do |tracker|
       tracker.source_files = 'GrowingTracker/**/*'
-      tracker.public_header_files = 'GrowingTracker/Public/*.h'
   end
   
   s.subspec 'AutoTracker' do |autotracker|
       autotracker.source_files = 'GrowingAutoTracker/**/*'
-      autotracker.public_header_files = 'GrowingAutoTracker/Public/*.h'
       autotracker.dependency 'GrowingAnalytics/Tracker'
   end
   

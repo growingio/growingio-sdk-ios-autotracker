@@ -7,67 +7,67 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0411CB1924DC277600DFD1BE /* GrowingAutoTracker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0411CB1724DC277600DFD1BE /* GrowingAutoTracker.framework */; };
-		0411CB1B24DC277700DFD1BE /* GrowingTracker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0411CB1824DC277600DFD1BE /* GrowingTracker.framework */; };
-		2A18D2307743A3668392A1D5 /* Pods_ExampleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44416E4B09508096B9CC7290 /* Pods_ExampleTests.framework */; };
-		425E0C1124D9345400BEEA93 /* merge.ico in Resources */ = {isa = PBXBuildFile; fileRef = 425E0BD124D9345300BEEA93 /* merge.ico */; };
-		425E0C1224D9345400BEEA93 /* agree.ico in Resources */ = {isa = PBXBuildFile; fileRef = 425E0BD224D9345300BEEA93 /* agree.ico */; };
-		425E0C1324D9345400BEEA93 /* cycle_08.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 425E0BD324D9345300BEEA93 /* cycle_08.jpg */; };
-		425E0C1424D9345400BEEA93 /* recomand_01.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 425E0BD424D9345300BEEA93 /* recomand_01.jpg */; };
-		425E0C1524D9345400BEEA93 /* recomand_03.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 425E0BD524D9345300BEEA93 /* recomand_03.jpg */; };
-		425E0C1624D9345400BEEA93 /* recomand_02.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 425E0BD624D9345300BEEA93 /* recomand_02.jpg */; };
-		425E0C1724D9345400BEEA93 /* API.ico in Resources */ = {isa = PBXBuildFile; fileRef = 425E0BD724D9345300BEEA93 /* API.ico */; };
-		425E0C1824D9345400BEEA93 /* fire.ico in Resources */ = {isa = PBXBuildFile; fileRef = 425E0BD824D9345300BEEA93 /* fire.ico */; };
-		425E0C1924D9345400BEEA93 /* uipage.png in Resources */ = {isa = PBXBuildFile; fileRef = 425E0BD924D9345300BEEA93 /* uipage.png */; };
-		425E0C1A24D9345400BEEA93 /* greenWave.png in Resources */ = {isa = PBXBuildFile; fileRef = 425E0BDA24D9345300BEEA93 /* greenWave.png */; };
-		425E0C1B24D9345400BEEA93 /* cycle_07.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 425E0BDB24D9345300BEEA93 /* cycle_07.jpg */; };
-		425E0C1C24D9345400BEEA93 /* cycle_06.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 425E0BDC24D9345300BEEA93 /* cycle_06.jpg */; };
-		425E0C1D24D9345400BEEA93 /* cycle_04.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 425E0BDD24D9345300BEEA93 /* cycle_04.jpg */; };
-		425E0C1E24D9345400BEEA93 /* cycle_05.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 425E0BDE24D9345300BEEA93 /* cycle_05.jpg */; };
-		425E0C1F24D9345400BEEA93 /* cycle_01.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 425E0BDF24D9345300BEEA93 /* cycle_01.jpg */; };
-		425E0C2024D9345400BEEA93 /* cycle_02.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 425E0BE024D9345300BEEA93 /* cycle_02.jpg */; };
-		425E0C2124D9345400BEEA93 /* cycle_03.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 425E0BE124D9345300BEEA93 /* cycle_03.jpg */; };
-		425E0C2224D9345400BEEA93 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 425E0BE224D9345300BEEA93 /* Assets.xcassets */; };
-		425E0C2324D9345400BEEA93 /* GIOUserIdViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0BE624D9345300BEEA93 /* GIOUserIdViewController.m */; };
-		425E0C2424D9345400BEEA93 /* GIOAttributesTrackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0BEC24D9345300BEEA93 /* GIOAttributesTrackViewController.m */; };
-		425E0C2524D9345400BEEA93 /* GIOInputChangeEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0BED24D9345300BEEA93 /* GIOInputChangeEventViewController.m */; };
-		425E0C2624D9345400BEEA93 /* GrowingKeyValueCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0BEF24D9345300BEEA93 /* GrowingKeyValueCell.m */; };
-		425E0C2724D9345400BEEA93 /* GrowingKeyValueCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 425E0BF024D9345300BEEA93 /* GrowingKeyValueCell.xib */; };
-		425E0C2824D9345400BEEA93 /* PVarEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0BF224D9345300BEEA93 /* PVarEventViewController.m */; };
-		425E0C2924D9345400BEEA93 /* GIOClickEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0BF324D9345300BEEA93 /* GIOClickEventViewController.m */; };
-		425E0C2A24D9345400BEEA93 /* MeasurementProtocolTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0BF424D9345300BEEA93 /* MeasurementProtocolTableViewController.m */; };
-		425E0C2B24D9345400BEEA93 /* GIOCstmEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0BF524D9345300BEEA93 /* GIOCstmEventViewController.m */; };
-		425E0C2C24D9345400BEEA93 /* GIOVisitEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0BF624D9345300BEEA93 /* GIOVisitEventViewController.m */; };
-		425E0C2D24D9345400BEEA93 /* ContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0BF924D9345300BEEA93 /* ContainerViewController.m */; };
-		425E0C2E24D9345400BEEA93 /* GIOPageEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0BFC24D9345300BEEA93 /* GIOPageEventViewController.m */; };
-		425E0C2F24D9345400BEEA93 /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0BFE24D9345300BEEA93 /* FirstViewController.m */; };
-		425E0C3024D9345400BEEA93 /* SecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0BFF24D9345300BEEA93 /* SecondViewController.m */; };
-		425E0C3124D9345400BEEA93 /* AliyunEmasServices-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 425E0C0324D9345400BEEA93 /* AliyunEmasServices-Info.plist */; };
-		425E0C3224D9345400BEEA93 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0C0424D9345400BEEA93 /* AppDelegate.m */; };
-		425E0C3324D9345400BEEA93 /* GIODataProcessOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0C0624D9345400BEEA93 /* GIODataProcessOperation.m */; };
-		425E0C3424D9345400BEEA93 /* MBProgressHUD+GrowingHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0C0824D9345400BEEA93 /* MBProgressHUD+GrowingHelper.m */; };
-		425E0C3524D9345400BEEA93 /* GIOConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0C0A24D9345400BEEA93 /* GIOConstants.m */; };
-		425E0C5C24D9346200BEEA93 /* GIOLabelAttributeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0C3924D9346200BEEA93 /* GIOLabelAttributeViewController.m */; };
-		425E0C5D24D9346200BEEA93 /* GIOTextFieldViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0C3A24D9346200BEEA93 /* GIOTextFieldViewController.m */; };
-		425E0C5E24D9346200BEEA93 /* GIOCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0C3B24D9346200BEEA93 /* GIOCollectionViewController.m */; };
-		425E0C5F24D9346200BEEA93 /* GIOUICategoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0C3C24D9346200BEEA93 /* GIOUICategoryViewController.m */; };
-		425E0C6024D9346200BEEA93 /* gio_hybrid.html in Resources */ = {isa = PBXBuildFile; fileRef = 425E0C3E24D9346200BEEA93 /* gio_hybrid.html */; };
-		425E0C6124D9346200BEEA93 /* GIOActionSheetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0C4024D9346200BEEA93 /* GIOActionSheetViewController.m */; };
-		425E0C6224D9346200BEEA93 /* GIOSimpleUIElemtsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0C4124D9346200BEEA93 /* GIOSimpleUIElemtsViewController.m */; };
-		425E0C6324D9346200BEEA93 /* GIOHybridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0C4224D9346200BEEA93 /* GIOHybridViewController.m */; };
-		425E0C6424D9346200BEEA93 /* GIOBannerAndTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0C4524D9346200BEEA93 /* GIOBannerAndTableViewController.m */; };
-		425E0C6524D9346200BEEA93 /* GIOMultiViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0C4924D9346200BEEA93 /* GIOMultiViewController.m */; };
-		425E0C6624D9346200BEEA93 /* GIOPageStructureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0C4A24D9346200BEEA93 /* GIOPageStructureViewController.m */; };
-		425E0C6724D9346200BEEA93 /* GIOPageStructure.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 425E0C4C24D9346200BEEA93 /* GIOPageStructure.storyboard */; };
-		425E0C6824D9346200BEEA93 /* GIOFoodTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0C4E24D9346200BEEA93 /* GIOFoodTableViewCell.m */; };
-		425E0C6924D9346200BEEA93 /* GIOCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0C4F24D9346200BEEA93 /* GIOCollectionViewCell.m */; };
-		425E0C6A24D9346200BEEA93 /* GIOCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 425E0C5024D9346200BEEA93 /* GIOCollectionViewCell.xib */; };
-		425E0C6B24D9346200BEEA93 /* GIOFoodTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 425E0C5324D9346200BEEA93 /* GIOFoodTableViewCell.xib */; };
-		425E0C6C24D9346200BEEA93 /* GIOListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0C5524D9346200BEEA93 /* GIOListTableViewCell.m */; };
-		425E0C6D24D9346200BEEA93 /* GIOListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 425E0C5624D9346200BEEA93 /* GIOListTableViewCell.xib */; };
-		425E0C6E24D9346200BEEA93 /* GIOButtonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 425E0C5824D9346200BEEA93 /* GIOButtonViewController.m */; };
-		425E0C7524D93B3100BEEA93 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 425E0C7124D93B3000BEEA93 /* Main.storyboard */; };
-		425E0C7624D93B3100BEEA93 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 425E0C7324D93B3000BEEA93 /* LaunchScreen.storyboard */; };
+		0465312424DD4271002D254C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 046530BB24DD4271002D254C /* InfoPlist.strings */; };
+		0465312524DD4271002D254C /* merge.ico in Resources */ = {isa = PBXBuildFile; fileRef = 046530C024DD4271002D254C /* merge.ico */; };
+		0465312624DD4271002D254C /* agree.ico in Resources */ = {isa = PBXBuildFile; fileRef = 046530C124DD4271002D254C /* agree.ico */; };
+		0465312724DD4271002D254C /* cycle_08.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 046530C224DD4271002D254C /* cycle_08.jpg */; };
+		0465312824DD4271002D254C /* recomand_01.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 046530C324DD4271002D254C /* recomand_01.jpg */; };
+		0465312924DD4271002D254C /* recomand_03.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 046530C424DD4271002D254C /* recomand_03.jpg */; };
+		0465312A24DD4271002D254C /* recomand_02.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 046530C524DD4271002D254C /* recomand_02.jpg */; };
+		0465312B24DD4271002D254C /* API.ico in Resources */ = {isa = PBXBuildFile; fileRef = 046530C624DD4271002D254C /* API.ico */; };
+		0465312C24DD4271002D254C /* fire.ico in Resources */ = {isa = PBXBuildFile; fileRef = 046530C724DD4271002D254C /* fire.ico */; };
+		0465312D24DD4271002D254C /* uipage.png in Resources */ = {isa = PBXBuildFile; fileRef = 046530C824DD4271002D254C /* uipage.png */; };
+		0465312E24DD4272002D254C /* greenWave.png in Resources */ = {isa = PBXBuildFile; fileRef = 046530C924DD4271002D254C /* greenWave.png */; };
+		0465312F24DD4272002D254C /* cycle_07.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 046530CA24DD4271002D254C /* cycle_07.jpg */; };
+		0465313024DD4272002D254C /* cycle_06.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 046530CB24DD4271002D254C /* cycle_06.jpg */; };
+		0465313124DD4272002D254C /* cycle_04.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 046530CC24DD4271002D254C /* cycle_04.jpg */; };
+		0465313224DD4272002D254C /* cycle_05.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 046530CD24DD4271002D254C /* cycle_05.jpg */; };
+		0465313324DD4272002D254C /* cycle_01.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 046530CE24DD4271002D254C /* cycle_01.jpg */; };
+		0465313424DD4272002D254C /* cycle_02.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 046530CF24DD4271002D254C /* cycle_02.jpg */; };
+		0465313524DD4272002D254C /* cycle_03.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 046530D024DD4271002D254C /* cycle_03.jpg */; };
+		0465313624DD4272002D254C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 046530D124DD4271002D254C /* Assets.xcassets */; };
+		0465313724DD4272002D254C /* GIODataProcessOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 046530D324DD4271002D254C /* GIODataProcessOperation.m */; };
+		0465313824DD4272002D254C /* MBProgressHUD+GrowingHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 046530D524DD4271002D254C /* MBProgressHUD+GrowingHelper.m */; };
+		0465313924DD4272002D254C /* GIOConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 046530D724DD4271002D254C /* GIOConstants.m */; };
+		0465313A24DD4272002D254C /* AliyunEmasServices-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 046530D924DD4271002D254C /* AliyunEmasServices-Info.plist */; };
+		0465313B24DD4272002D254C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 046530DA24DD4271002D254C /* LaunchScreen.storyboard */; };
+		0465313C24DD4272002D254C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 046530DC24DD4271002D254C /* Main.storyboard */; };
+		0465313D24DD4272002D254C /* GIOUserIdViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 046530E124DD4271002D254C /* GIOUserIdViewController.m */; };
+		0465313E24DD4272002D254C /* GIOAttributesTrackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 046530E724DD4271002D254C /* GIOAttributesTrackViewController.m */; };
+		0465313F24DD4272002D254C /* GIOInputChangeEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 046530E824DD4271002D254C /* GIOInputChangeEventViewController.m */; };
+		0465314024DD4272002D254C /* GrowingKeyValueCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 046530EA24DD4271002D254C /* GrowingKeyValueCell.m */; };
+		0465314124DD4272002D254C /* GrowingKeyValueCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 046530EB24DD4271002D254C /* GrowingKeyValueCell.xib */; };
+		0465314224DD4272002D254C /* PVarEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 046530ED24DD4271002D254C /* PVarEventViewController.m */; };
+		0465314324DD4272002D254C /* GIOClickEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 046530EE24DD4271002D254C /* GIOClickEventViewController.m */; };
+		0465314424DD4272002D254C /* MeasurementProtocolTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 046530EF24DD4271002D254C /* MeasurementProtocolTableViewController.m */; };
+		0465314524DD4272002D254C /* GIOCstmEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 046530F024DD4271002D254C /* GIOCstmEventViewController.m */; };
+		0465314624DD4272002D254C /* GIOVisitEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 046530F124DD4271002D254C /* GIOVisitEventViewController.m */; };
+		0465314724DD4272002D254C /* ContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 046530F424DD4271002D254C /* ContainerViewController.m */; };
+		0465314824DD4272002D254C /* GIOPageEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 046530F724DD4271002D254C /* GIOPageEventViewController.m */; };
+		0465314924DD4272002D254C /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 046530F924DD4271002D254C /* FirstViewController.m */; };
+		0465314A24DD4272002D254C /* SecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 046530FA24DD4271002D254C /* SecondViewController.m */; };
+		0465314B24DD4272002D254C /* GrowingIO-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 046530FD24DD4271002D254C /* GrowingIO-Info.plist */; };
+		0465314C24DD4272002D254C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 046530FE24DD4271002D254C /* main.m */; };
+		0465314D24DD4272002D254C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 046530FF24DD4271002D254C /* AppDelegate.m */; };
+		0465314E24DD4272002D254C /* GIOLabelAttributeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0465310124DD4271002D254C /* GIOLabelAttributeViewController.m */; };
+		0465314F24DD4272002D254C /* GIOTextFieldViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0465310224DD4271002D254C /* GIOTextFieldViewController.m */; };
+		0465315024DD4272002D254C /* GIOCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0465310324DD4271002D254C /* GIOCollectionViewController.m */; };
+		0465315124DD4272002D254C /* GIOUICategoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0465310424DD4271002D254C /* GIOUICategoryViewController.m */; };
+		0465315224DD4272002D254C /* gio_hybrid.html in Resources */ = {isa = PBXBuildFile; fileRef = 0465310624DD4271002D254C /* gio_hybrid.html */; };
+		0465315324DD4272002D254C /* GIOActionSheetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0465310824DD4271002D254C /* GIOActionSheetViewController.m */; };
+		0465315424DD4272002D254C /* GIOSimpleUIElemtsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0465310924DD4271002D254C /* GIOSimpleUIElemtsViewController.m */; };
+		0465315524DD4272002D254C /* GIOHybridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0465310A24DD4271002D254C /* GIOHybridViewController.m */; };
+		0465315624DD4272002D254C /* GIOBannerAndTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0465310D24DD4271002D254C /* GIOBannerAndTableViewController.m */; };
+		0465315724DD4272002D254C /* GIOMultiViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0465311124DD4271002D254C /* GIOMultiViewController.m */; };
+		0465315824DD4272002D254C /* GIOPageStructureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0465311224DD4271002D254C /* GIOPageStructureViewController.m */; };
+		0465315924DD4272002D254C /* GIOPageStructure.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0465311424DD4271002D254C /* GIOPageStructure.storyboard */; };
+		0465315A24DD4272002D254C /* GIOFoodTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0465311624DD4271002D254C /* GIOFoodTableViewCell.m */; };
+		0465315B24DD4272002D254C /* GIOCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0465311724DD4271002D254C /* GIOCollectionViewCell.m */; };
+		0465315C24DD4272002D254C /* GIOCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0465311824DD4271002D254C /* GIOCollectionViewCell.xib */; };
+		0465315D24DD4272002D254C /* GIOFoodTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0465311B24DD4271002D254C /* GIOFoodTableViewCell.xib */; };
+		0465315E24DD4272002D254C /* GIOListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0465311D24DD4271002D254C /* GIOListTableViewCell.m */; };
+		0465315F24DD4272002D254C /* GIOListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0465311E24DD4271002D254C /* GIOListTableViewCell.xib */; };
+		0465316024DD4272002D254C /* GIOButtonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0465312024DD4271002D254C /* GIOButtonViewController.m */; };
 		4962652B24DA667900032551 /* GrowingIO_ExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962652924DA667900032551 /* GrowingIO_ExampleTests.m */; };
 		4962653924DA66B600032551 /* LogOperHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962652E24DA66B600032551 /* LogOperHelper.m */; };
 		4962653A24DA66B600032551 /* ManualTrackHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962653224DA66B600032551 /* ManualTrackHelper.m */; };
@@ -98,8 +98,7 @@
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
-		6003F598195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F596195388D20070C39A /* InfoPlist.strings */; };
-		6003F59A195388D20070C39A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F599195388D20070C39A /* main.m */; };
+		D11B6BB753D8C3D9D49C5936 /* Pods_ExampleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11EA2ABB8F1029820A3234DB /* Pods_ExampleTests.framework */; };
 		DB4A57BCAF407C6A96A7BA4F /* Pods_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A7E3FD24C4FAE13C586766A1 /* Pods_Example.framework */; };
 /* End PBXBuildFile section */
 
@@ -114,100 +113,102 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0411CB1724DC277600DFD1BE /* GrowingAutoTracker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = GrowingAutoTracker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		0411CB1824DC277600DFD1BE /* GrowingTracker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = GrowingTracker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		425E0BD124D9345300BEEA93 /* merge.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = merge.ico; sourceTree = "<group>"; };
-		425E0BD224D9345300BEEA93 /* agree.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = agree.ico; sourceTree = "<group>"; };
-		425E0BD324D9345300BEEA93 /* cycle_08.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cycle_08.jpg; sourceTree = "<group>"; };
-		425E0BD424D9345300BEEA93 /* recomand_01.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = recomand_01.jpg; sourceTree = "<group>"; };
-		425E0BD524D9345300BEEA93 /* recomand_03.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = recomand_03.jpg; sourceTree = "<group>"; };
-		425E0BD624D9345300BEEA93 /* recomand_02.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = recomand_02.jpg; sourceTree = "<group>"; };
-		425E0BD724D9345300BEEA93 /* API.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = API.ico; sourceTree = "<group>"; };
-		425E0BD824D9345300BEEA93 /* fire.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = fire.ico; sourceTree = "<group>"; };
-		425E0BD924D9345300BEEA93 /* uipage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = uipage.png; sourceTree = "<group>"; };
-		425E0BDA24D9345300BEEA93 /* greenWave.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = greenWave.png; sourceTree = "<group>"; };
-		425E0BDB24D9345300BEEA93 /* cycle_07.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cycle_07.jpg; sourceTree = "<group>"; };
-		425E0BDC24D9345300BEEA93 /* cycle_06.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cycle_06.jpg; sourceTree = "<group>"; };
-		425E0BDD24D9345300BEEA93 /* cycle_04.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cycle_04.jpg; sourceTree = "<group>"; };
-		425E0BDE24D9345300BEEA93 /* cycle_05.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cycle_05.jpg; sourceTree = "<group>"; };
-		425E0BDF24D9345300BEEA93 /* cycle_01.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cycle_01.jpg; sourceTree = "<group>"; };
-		425E0BE024D9345300BEEA93 /* cycle_02.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cycle_02.jpg; sourceTree = "<group>"; };
-		425E0BE124D9345300BEEA93 /* cycle_03.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cycle_03.jpg; sourceTree = "<group>"; };
-		425E0BE224D9345300BEEA93 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		425E0BE424D9345300BEEA93 /* GIOInputChangeEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOInputChangeEventViewController.h; sourceTree = "<group>"; };
-		425E0BE524D9345300BEEA93 /* GIOAttributesTrackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOAttributesTrackViewController.h; sourceTree = "<group>"; };
-		425E0BE624D9345300BEEA93 /* GIOUserIdViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOUserIdViewController.m; sourceTree = "<group>"; };
-		425E0BE724D9345300BEEA93 /* GIOVisitEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOVisitEventViewController.h; sourceTree = "<group>"; };
-		425E0BE824D9345300BEEA93 /* GIOCstmEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOCstmEventViewController.h; sourceTree = "<group>"; };
-		425E0BE924D9345300BEEA93 /* MeasurementProtocolTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeasurementProtocolTableViewController.h; sourceTree = "<group>"; };
-		425E0BEA24D9345300BEEA93 /* GIOClickEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOClickEventViewController.h; sourceTree = "<group>"; };
-		425E0BEB24D9345300BEEA93 /* PVarEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PVarEventViewController.h; sourceTree = "<group>"; };
-		425E0BEC24D9345300BEEA93 /* GIOAttributesTrackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOAttributesTrackViewController.m; sourceTree = "<group>"; };
-		425E0BED24D9345300BEEA93 /* GIOInputChangeEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOInputChangeEventViewController.m; sourceTree = "<group>"; };
-		425E0BEF24D9345300BEEA93 /* GrowingKeyValueCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingKeyValueCell.m; sourceTree = "<group>"; };
-		425E0BF024D9345300BEEA93 /* GrowingKeyValueCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GrowingKeyValueCell.xib; sourceTree = "<group>"; };
-		425E0BF124D9345300BEEA93 /* GrowingKeyValueCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrowingKeyValueCell.h; sourceTree = "<group>"; };
-		425E0BF224D9345300BEEA93 /* PVarEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PVarEventViewController.m; sourceTree = "<group>"; };
-		425E0BF324D9345300BEEA93 /* GIOClickEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOClickEventViewController.m; sourceTree = "<group>"; };
-		425E0BF424D9345300BEEA93 /* MeasurementProtocolTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeasurementProtocolTableViewController.m; sourceTree = "<group>"; };
-		425E0BF524D9345300BEEA93 /* GIOCstmEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOCstmEventViewController.m; sourceTree = "<group>"; };
-		425E0BF624D9345300BEEA93 /* GIOVisitEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOVisitEventViewController.m; sourceTree = "<group>"; };
-		425E0BF724D9345300BEEA93 /* GIOUserIdViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOUserIdViewController.h; sourceTree = "<group>"; };
-		425E0BF924D9345300BEEA93 /* ContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContainerViewController.m; sourceTree = "<group>"; };
-		425E0BFA24D9345300BEEA93 /* FirstViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstViewController.h; sourceTree = "<group>"; };
-		425E0BFB24D9345300BEEA93 /* SecondViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecondViewController.h; sourceTree = "<group>"; };
-		425E0BFC24D9345300BEEA93 /* GIOPageEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOPageEventViewController.m; sourceTree = "<group>"; };
-		425E0BFD24D9345300BEEA93 /* ContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContainerViewController.h; sourceTree = "<group>"; };
-		425E0BFE24D9345300BEEA93 /* FirstViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FirstViewController.m; sourceTree = "<group>"; };
-		425E0BFF24D9345300BEEA93 /* SecondViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecondViewController.m; sourceTree = "<group>"; };
-		425E0C0024D9345300BEEA93 /* GIOPageEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOPageEventViewController.h; sourceTree = "<group>"; };
-		425E0C0124D9345400BEEA93 /* GrowingIO.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = GrowingIO.entitlements; sourceTree = "<group>"; };
-		425E0C0224D9345400BEEA93 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		425E0C0324D9345400BEEA93 /* AliyunEmasServices-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "AliyunEmasServices-Info.plist"; sourceTree = "<group>"; };
-		425E0C0424D9345400BEEA93 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		425E0C0624D9345400BEEA93 /* GIODataProcessOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIODataProcessOperation.m; sourceTree = "<group>"; };
-		425E0C0724D9345400BEEA93 /* GIOConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOConstants.h; sourceTree = "<group>"; };
-		425E0C0824D9345400BEEA93 /* MBProgressHUD+GrowingHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MBProgressHUD+GrowingHelper.m"; sourceTree = "<group>"; };
-		425E0C0924D9345400BEEA93 /* GIODataProcessOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIODataProcessOperation.h; sourceTree = "<group>"; };
-		425E0C0A24D9345400BEEA93 /* GIOConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOConstants.m; sourceTree = "<group>"; };
-		425E0C0B24D9345400BEEA93 /* MBProgressHUD+GrowingHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MBProgressHUD+GrowingHelper.h"; sourceTree = "<group>"; };
-		425E0C3924D9346200BEEA93 /* GIOLabelAttributeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOLabelAttributeViewController.m; sourceTree = "<group>"; };
-		425E0C3A24D9346200BEEA93 /* GIOTextFieldViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOTextFieldViewController.m; sourceTree = "<group>"; };
-		425E0C3B24D9346200BEEA93 /* GIOCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOCollectionViewController.m; sourceTree = "<group>"; };
-		425E0C3C24D9346200BEEA93 /* GIOUICategoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOUICategoryViewController.m; sourceTree = "<group>"; };
-		425E0C3D24D9346200BEEA93 /* GIOBannerAndTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOBannerAndTableViewController.h; sourceTree = "<group>"; };
-		425E0C3E24D9346200BEEA93 /* gio_hybrid.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = gio_hybrid.html; sourceTree = "<group>"; };
-		425E0C3F24D9346200BEEA93 /* GIOButtonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOButtonViewController.h; sourceTree = "<group>"; };
-		425E0C4024D9346200BEEA93 /* GIOActionSheetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOActionSheetViewController.m; sourceTree = "<group>"; };
-		425E0C4124D9346200BEEA93 /* GIOSimpleUIElemtsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOSimpleUIElemtsViewController.m; sourceTree = "<group>"; };
-		425E0C4224D9346200BEEA93 /* GIOHybridViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOHybridViewController.m; sourceTree = "<group>"; };
-		425E0C4324D9346200BEEA93 /* GIOTextFieldViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOTextFieldViewController.h; sourceTree = "<group>"; };
-		425E0C4424D9346200BEEA93 /* GIOLabelAttributeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOLabelAttributeViewController.h; sourceTree = "<group>"; };
-		425E0C4524D9346200BEEA93 /* GIOBannerAndTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOBannerAndTableViewController.m; sourceTree = "<group>"; };
-		425E0C4624D9346200BEEA93 /* GIOUICategoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOUICategoryViewController.h; sourceTree = "<group>"; };
-		425E0C4824D9346200BEEA93 /* GIOPageStructureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOPageStructureViewController.h; sourceTree = "<group>"; };
-		425E0C4924D9346200BEEA93 /* GIOMultiViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOMultiViewController.m; sourceTree = "<group>"; };
-		425E0C4A24D9346200BEEA93 /* GIOPageStructureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOPageStructureViewController.m; sourceTree = "<group>"; };
-		425E0C4B24D9346200BEEA93 /* GIOMultiViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOMultiViewController.h; sourceTree = "<group>"; };
-		425E0C4C24D9346200BEEA93 /* GIOPageStructure.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = GIOPageStructure.storyboard; sourceTree = "<group>"; };
-		425E0C4E24D9346200BEEA93 /* GIOFoodTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOFoodTableViewCell.m; sourceTree = "<group>"; };
-		425E0C4F24D9346200BEEA93 /* GIOCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOCollectionViewCell.m; sourceTree = "<group>"; };
-		425E0C5024D9346200BEEA93 /* GIOCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GIOCollectionViewCell.xib; sourceTree = "<group>"; };
-		425E0C5124D9346200BEEA93 /* GIOListTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOListTableViewCell.h; sourceTree = "<group>"; };
-		425E0C5224D9346200BEEA93 /* GIOFoodTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOFoodTableViewCell.h; sourceTree = "<group>"; };
-		425E0C5324D9346200BEEA93 /* GIOFoodTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GIOFoodTableViewCell.xib; sourceTree = "<group>"; };
-		425E0C5424D9346200BEEA93 /* GIOCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOCollectionViewCell.h; sourceTree = "<group>"; };
-		425E0C5524D9346200BEEA93 /* GIOListTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOListTableViewCell.m; sourceTree = "<group>"; };
-		425E0C5624D9346200BEEA93 /* GIOListTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GIOListTableViewCell.xib; sourceTree = "<group>"; };
-		425E0C5724D9346200BEEA93 /* GIOCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOCollectionViewController.h; sourceTree = "<group>"; };
-		425E0C5824D9346200BEEA93 /* GIOButtonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOButtonViewController.m; sourceTree = "<group>"; };
-		425E0C5924D9346200BEEA93 /* GIOHybridViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOHybridViewController.h; sourceTree = "<group>"; };
-		425E0C5A24D9346200BEEA93 /* GIOSimpleUIElemtsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOSimpleUIElemtsViewController.h; sourceTree = "<group>"; };
-		425E0C5B24D9346200BEEA93 /* GIOActionSheetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOActionSheetViewController.h; sourceTree = "<group>"; };
-		425E0C7224D93B3000BEEA93 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = GrowingIO/Base.lproj/Main.storyboard; sourceTree = SOURCE_ROOT; };
-		425E0C7424D93B3100BEEA93 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = GrowingIO/Base.lproj/LaunchScreen.storyboard; sourceTree = SOURCE_ROOT; };
-		44416E4B09508096B9CC7290 /* Pods_ExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ExampleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		48BA0D37888FF209ED84CD0E /* Pods-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.debug.xcconfig"; path = "Target Support Files/Pods-Example/Pods-Example.debug.xcconfig"; sourceTree = "<group>"; };
+		046530BC24DD4271002D254C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		046530BD24DD4271002D254C /* GrowingIO-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GrowingIO-Prefix.pch"; sourceTree = "<group>"; };
+		046530BE24DD4271002D254C /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		046530C024DD4271002D254C /* merge.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = merge.ico; sourceTree = "<group>"; };
+		046530C124DD4271002D254C /* agree.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = agree.ico; sourceTree = "<group>"; };
+		046530C224DD4271002D254C /* cycle_08.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cycle_08.jpg; sourceTree = "<group>"; };
+		046530C324DD4271002D254C /* recomand_01.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = recomand_01.jpg; sourceTree = "<group>"; };
+		046530C424DD4271002D254C /* recomand_03.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = recomand_03.jpg; sourceTree = "<group>"; };
+		046530C524DD4271002D254C /* recomand_02.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = recomand_02.jpg; sourceTree = "<group>"; };
+		046530C624DD4271002D254C /* API.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = API.ico; sourceTree = "<group>"; };
+		046530C724DD4271002D254C /* fire.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = fire.ico; sourceTree = "<group>"; };
+		046530C824DD4271002D254C /* uipage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = uipage.png; sourceTree = "<group>"; };
+		046530C924DD4271002D254C /* greenWave.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = greenWave.png; sourceTree = "<group>"; };
+		046530CA24DD4271002D254C /* cycle_07.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cycle_07.jpg; sourceTree = "<group>"; };
+		046530CB24DD4271002D254C /* cycle_06.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cycle_06.jpg; sourceTree = "<group>"; };
+		046530CC24DD4271002D254C /* cycle_04.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cycle_04.jpg; sourceTree = "<group>"; };
+		046530CD24DD4271002D254C /* cycle_05.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cycle_05.jpg; sourceTree = "<group>"; };
+		046530CE24DD4271002D254C /* cycle_01.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cycle_01.jpg; sourceTree = "<group>"; };
+		046530CF24DD4271002D254C /* cycle_02.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cycle_02.jpg; sourceTree = "<group>"; };
+		046530D024DD4271002D254C /* cycle_03.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cycle_03.jpg; sourceTree = "<group>"; };
+		046530D124DD4271002D254C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		046530D324DD4271002D254C /* GIODataProcessOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIODataProcessOperation.m; sourceTree = "<group>"; };
+		046530D424DD4271002D254C /* GIOConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOConstants.h; sourceTree = "<group>"; };
+		046530D524DD4271002D254C /* MBProgressHUD+GrowingHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MBProgressHUD+GrowingHelper.m"; sourceTree = "<group>"; };
+		046530D624DD4271002D254C /* GIODataProcessOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIODataProcessOperation.h; sourceTree = "<group>"; };
+		046530D724DD4271002D254C /* GIOConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOConstants.m; sourceTree = "<group>"; };
+		046530D824DD4271002D254C /* MBProgressHUD+GrowingHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MBProgressHUD+GrowingHelper.h"; sourceTree = "<group>"; };
+		046530D924DD4271002D254C /* AliyunEmasServices-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "AliyunEmasServices-Info.plist"; sourceTree = "<group>"; };
+		046530DB24DD4271002D254C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		046530DD24DD4271002D254C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		046530DF24DD4271002D254C /* GIOInputChangeEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOInputChangeEventViewController.h; sourceTree = "<group>"; };
+		046530E024DD4271002D254C /* GIOAttributesTrackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOAttributesTrackViewController.h; sourceTree = "<group>"; };
+		046530E124DD4271002D254C /* GIOUserIdViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOUserIdViewController.m; sourceTree = "<group>"; };
+		046530E224DD4271002D254C /* GIOVisitEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOVisitEventViewController.h; sourceTree = "<group>"; };
+		046530E324DD4271002D254C /* GIOCstmEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOCstmEventViewController.h; sourceTree = "<group>"; };
+		046530E424DD4271002D254C /* MeasurementProtocolTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeasurementProtocolTableViewController.h; sourceTree = "<group>"; };
+		046530E524DD4271002D254C /* GIOClickEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOClickEventViewController.h; sourceTree = "<group>"; };
+		046530E624DD4271002D254C /* PVarEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PVarEventViewController.h; sourceTree = "<group>"; };
+		046530E724DD4271002D254C /* GIOAttributesTrackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOAttributesTrackViewController.m; sourceTree = "<group>"; };
+		046530E824DD4271002D254C /* GIOInputChangeEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOInputChangeEventViewController.m; sourceTree = "<group>"; };
+		046530EA24DD4271002D254C /* GrowingKeyValueCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingKeyValueCell.m; sourceTree = "<group>"; };
+		046530EB24DD4271002D254C /* GrowingKeyValueCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GrowingKeyValueCell.xib; sourceTree = "<group>"; };
+		046530EC24DD4271002D254C /* GrowingKeyValueCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrowingKeyValueCell.h; sourceTree = "<group>"; };
+		046530ED24DD4271002D254C /* PVarEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PVarEventViewController.m; sourceTree = "<group>"; };
+		046530EE24DD4271002D254C /* GIOClickEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOClickEventViewController.m; sourceTree = "<group>"; };
+		046530EF24DD4271002D254C /* MeasurementProtocolTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeasurementProtocolTableViewController.m; sourceTree = "<group>"; };
+		046530F024DD4271002D254C /* GIOCstmEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOCstmEventViewController.m; sourceTree = "<group>"; };
+		046530F124DD4271002D254C /* GIOVisitEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOVisitEventViewController.m; sourceTree = "<group>"; };
+		046530F224DD4271002D254C /* GIOUserIdViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOUserIdViewController.h; sourceTree = "<group>"; };
+		046530F424DD4271002D254C /* ContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContainerViewController.m; sourceTree = "<group>"; };
+		046530F524DD4271002D254C /* FirstViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstViewController.h; sourceTree = "<group>"; };
+		046530F624DD4271002D254C /* SecondViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecondViewController.h; sourceTree = "<group>"; };
+		046530F724DD4271002D254C /* GIOPageEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOPageEventViewController.m; sourceTree = "<group>"; };
+		046530F824DD4271002D254C /* ContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContainerViewController.h; sourceTree = "<group>"; };
+		046530F924DD4271002D254C /* FirstViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FirstViewController.m; sourceTree = "<group>"; };
+		046530FA24DD4271002D254C /* SecondViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecondViewController.m; sourceTree = "<group>"; };
+		046530FB24DD4271002D254C /* GIOPageEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOPageEventViewController.h; sourceTree = "<group>"; };
+		046530FC24DD4271002D254C /* GrowingIO.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = GrowingIO.entitlements; sourceTree = "<group>"; };
+		046530FD24DD4271002D254C /* GrowingIO-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GrowingIO-Info.plist"; sourceTree = "<group>"; };
+		046530FE24DD4271002D254C /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		046530FF24DD4271002D254C /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		0465310124DD4271002D254C /* GIOLabelAttributeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOLabelAttributeViewController.m; sourceTree = "<group>"; };
+		0465310224DD4271002D254C /* GIOTextFieldViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOTextFieldViewController.m; sourceTree = "<group>"; };
+		0465310324DD4271002D254C /* GIOCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOCollectionViewController.m; sourceTree = "<group>"; };
+		0465310424DD4271002D254C /* GIOUICategoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOUICategoryViewController.m; sourceTree = "<group>"; };
+		0465310524DD4271002D254C /* GIOBannerAndTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOBannerAndTableViewController.h; sourceTree = "<group>"; };
+		0465310624DD4271002D254C /* gio_hybrid.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = gio_hybrid.html; sourceTree = "<group>"; };
+		0465310724DD4271002D254C /* GIOButtonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOButtonViewController.h; sourceTree = "<group>"; };
+		0465310824DD4271002D254C /* GIOActionSheetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOActionSheetViewController.m; sourceTree = "<group>"; };
+		0465310924DD4271002D254C /* GIOSimpleUIElemtsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOSimpleUIElemtsViewController.m; sourceTree = "<group>"; };
+		0465310A24DD4271002D254C /* GIOHybridViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOHybridViewController.m; sourceTree = "<group>"; };
+		0465310B24DD4271002D254C /* GIOTextFieldViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOTextFieldViewController.h; sourceTree = "<group>"; };
+		0465310C24DD4271002D254C /* GIOLabelAttributeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOLabelAttributeViewController.h; sourceTree = "<group>"; };
+		0465310D24DD4271002D254C /* GIOBannerAndTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOBannerAndTableViewController.m; sourceTree = "<group>"; };
+		0465310E24DD4271002D254C /* GIOUICategoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOUICategoryViewController.h; sourceTree = "<group>"; };
+		0465311024DD4271002D254C /* GIOPageStructureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOPageStructureViewController.h; sourceTree = "<group>"; };
+		0465311124DD4271002D254C /* GIOMultiViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOMultiViewController.m; sourceTree = "<group>"; };
+		0465311224DD4271002D254C /* GIOPageStructureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOPageStructureViewController.m; sourceTree = "<group>"; };
+		0465311324DD4271002D254C /* GIOMultiViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOMultiViewController.h; sourceTree = "<group>"; };
+		0465311424DD4271002D254C /* GIOPageStructure.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = GIOPageStructure.storyboard; sourceTree = "<group>"; };
+		0465311624DD4271002D254C /* GIOFoodTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOFoodTableViewCell.m; sourceTree = "<group>"; };
+		0465311724DD4271002D254C /* GIOCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOCollectionViewCell.m; sourceTree = "<group>"; };
+		0465311824DD4271002D254C /* GIOCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GIOCollectionViewCell.xib; sourceTree = "<group>"; };
+		0465311924DD4271002D254C /* GIOListTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOListTableViewCell.h; sourceTree = "<group>"; };
+		0465311A24DD4271002D254C /* GIOFoodTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOFoodTableViewCell.h; sourceTree = "<group>"; };
+		0465311B24DD4271002D254C /* GIOFoodTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GIOFoodTableViewCell.xib; sourceTree = "<group>"; };
+		0465311C24DD4271002D254C /* GIOCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOCollectionViewCell.h; sourceTree = "<group>"; };
+		0465311D24DD4271002D254C /* GIOListTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOListTableViewCell.m; sourceTree = "<group>"; };
+		0465311E24DD4271002D254C /* GIOListTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GIOListTableViewCell.xib; sourceTree = "<group>"; };
+		0465311F24DD4271002D254C /* GIOCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOCollectionViewController.h; sourceTree = "<group>"; };
+		0465312024DD4271002D254C /* GIOButtonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOButtonViewController.m; sourceTree = "<group>"; };
+		0465312124DD4271002D254C /* GIOHybridViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOHybridViewController.h; sourceTree = "<group>"; };
+		0465312224DD4271002D254C /* GIOSimpleUIElemtsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOSimpleUIElemtsViewController.h; sourceTree = "<group>"; };
+		0465312324DD4271002D254C /* GIOActionSheetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOActionSheetViewController.h; sourceTree = "<group>"; };
+		11EA2ABB8F1029820A3234DB /* Pods_ExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ExampleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		48BA0D37888FF209ED84CD0E /* Pods-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.debug.xcconfig"; path = "../../Pods/Target Support Files/Pods-Example/Pods-Example.debug.xcconfig"; sourceTree = "<group>"; };
 		4962651E24DA665200032551 /* ExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4962652824DA667900032551 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4962652924DA667900032551 /* GrowingIO_ExampleTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingIO_ExampleTests.m; sourceTree = "<group>"; };
@@ -263,15 +264,11 @@
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		6003F58F195388D20070C39A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		6003F591195388D20070C39A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		6003F595195388D20070C39A /* GrowingIO-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GrowingIO-Info.plist"; sourceTree = "<group>"; };
-		6003F597195388D20070C39A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		6003F599195388D20070C39A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		6003F59B195388D20070C39A /* GrowingIO-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GrowingIO-Prefix.pch"; sourceTree = "<group>"; };
 		6003F5AF195388D20070C39A /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		79424AEB90B32411A6333538 /* Pods-ExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-ExampleTests/Pods-ExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
-		9A876D5DC8D9DD502F29EF91 /* Pods-ExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExampleTests.release.xcconfig"; path = "Target Support Files/Pods-ExampleTests/Pods-ExampleTests.release.xcconfig"; sourceTree = "<group>"; };
+		79424AEB90B32411A6333538 /* Pods-ExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExampleTests.debug.xcconfig"; path = "../../Pods/Target Support Files/Pods-ExampleTests/Pods-ExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
+		9A876D5DC8D9DD502F29EF91 /* Pods-ExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExampleTests.release.xcconfig"; path = "../../Pods/Target Support Files/Pods-ExampleTests/Pods-ExampleTests.release.xcconfig"; sourceTree = "<group>"; };
 		A7E3FD24C4FAE13C586766A1 /* Pods_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		AD17E1EE298841C971EAE661 /* Pods-Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.release.xcconfig"; path = "Target Support Files/Pods-Example/Pods-Example.release.xcconfig"; sourceTree = "<group>"; };
+		AD17E1EE298841C971EAE661 /* Pods-Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.release.xcconfig"; path = "../../Pods/Target Support Files/Pods-Example/Pods-Example.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -279,7 +276,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2A18D2307743A3668392A1D5 /* Pods_ExampleTests.framework in Frameworks */,
+				D11B6BB753D8C3D9D49C5936 /* Pods_ExampleTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,8 +286,6 @@
 			files = (
 				6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */,
 				6003F592195388D20070C39A /* UIKit.framework in Frameworks */,
-				0411CB1B24DC277700DFD1BE /* GrowingTracker.framework in Frameworks */,
-				0411CB1924DC277600DFD1BE /* GrowingAutoTracker.framework in Frameworks */,
 				6003F58E195388D20070C39A /* Foundation.framework in Frameworks */,
 				DB4A57BCAF407C6A96A7BA4F /* Pods_Example.framework in Frameworks */,
 			);
@@ -299,160 +294,172 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		425E0BD024D9345300BEEA93 /* ImageSources */ = {
+		046530BA24DD4271002D254C /* Example */ = {
 			isa = PBXGroup;
 			children = (
-				425E0BD224D9345300BEEA93 /* agree.ico */,
-				425E0BD724D9345300BEEA93 /* API.ico */,
-				425E0BDF24D9345300BEEA93 /* cycle_01.jpg */,
-				425E0BE024D9345300BEEA93 /* cycle_02.jpg */,
-				425E0BE124D9345300BEEA93 /* cycle_03.jpg */,
-				425E0BDD24D9345300BEEA93 /* cycle_04.jpg */,
-				425E0BDE24D9345300BEEA93 /* cycle_05.jpg */,
-				425E0BDC24D9345300BEEA93 /* cycle_06.jpg */,
-				425E0BDB24D9345300BEEA93 /* cycle_07.jpg */,
-				425E0BD324D9345300BEEA93 /* cycle_08.jpg */,
-				425E0BD824D9345300BEEA93 /* fire.ico */,
-				425E0BDA24D9345300BEEA93 /* greenWave.png */,
-				425E0BD124D9345300BEEA93 /* merge.ico */,
-				425E0BD424D9345300BEEA93 /* recomand_01.jpg */,
-				425E0BD624D9345300BEEA93 /* recomand_02.jpg */,
-				425E0BD524D9345300BEEA93 /* recomand_03.jpg */,
-				425E0BD924D9345300BEEA93 /* uipage.png */,
+				046530BB24DD4271002D254C /* InfoPlist.strings */,
+				046530BD24DD4271002D254C /* GrowingIO-Prefix.pch */,
+				046530BE24DD4271002D254C /* AppDelegate.h */,
+				046530BF24DD4271002D254C /* ImageSources */,
+				046530D124DD4271002D254C /* Assets.xcassets */,
+				046530D224DD4271002D254C /* GrowingUtil */,
+				046530D924DD4271002D254C /* AliyunEmasServices-Info.plist */,
+				046530DA24DD4271002D254C /* LaunchScreen.storyboard */,
+				046530DC24DD4271002D254C /* Main.storyboard */,
+				046530DE24DD4271002D254C /* APITests */,
+				046530FC24DD4271002D254C /* GrowingIO.entitlements */,
+				046530FD24DD4271002D254C /* GrowingIO-Info.plist */,
+				046530FE24DD4271002D254C /* main.m */,
+				046530FF24DD4271002D254C /* AppDelegate.m */,
+				0465310024DD4271002D254C /* UICategoryTests */,
+			);
+			path = Example;
+			sourceTree = "<group>";
+		};
+		046530BF24DD4271002D254C /* ImageSources */ = {
+			isa = PBXGroup;
+			children = (
+				046530C024DD4271002D254C /* merge.ico */,
+				046530C124DD4271002D254C /* agree.ico */,
+				046530C224DD4271002D254C /* cycle_08.jpg */,
+				046530C324DD4271002D254C /* recomand_01.jpg */,
+				046530C424DD4271002D254C /* recomand_03.jpg */,
+				046530C524DD4271002D254C /* recomand_02.jpg */,
+				046530C624DD4271002D254C /* API.ico */,
+				046530C724DD4271002D254C /* fire.ico */,
+				046530C824DD4271002D254C /* uipage.png */,
+				046530C924DD4271002D254C /* greenWave.png */,
+				046530CA24DD4271002D254C /* cycle_07.jpg */,
+				046530CB24DD4271002D254C /* cycle_06.jpg */,
+				046530CC24DD4271002D254C /* cycle_04.jpg */,
+				046530CD24DD4271002D254C /* cycle_05.jpg */,
+				046530CE24DD4271002D254C /* cycle_01.jpg */,
+				046530CF24DD4271002D254C /* cycle_02.jpg */,
+				046530D024DD4271002D254C /* cycle_03.jpg */,
 			);
 			path = ImageSources;
 			sourceTree = "<group>";
 		};
-		425E0BE324D9345300BEEA93 /* APITests */ = {
+		046530D224DD4271002D254C /* GrowingUtil */ = {
 			isa = PBXGroup;
 			children = (
-				425E0BE524D9345300BEEA93 /* GIOAttributesTrackViewController.h */,
-				425E0BEC24D9345300BEEA93 /* GIOAttributesTrackViewController.m */,
-				425E0BEA24D9345300BEEA93 /* GIOClickEventViewController.h */,
-				425E0BF324D9345300BEEA93 /* GIOClickEventViewController.m */,
-				425E0BE824D9345300BEEA93 /* GIOCstmEventViewController.h */,
-				425E0BF524D9345300BEEA93 /* GIOCstmEventViewController.m */,
-				425E0BE424D9345300BEEA93 /* GIOInputChangeEventViewController.h */,
-				425E0BED24D9345300BEEA93 /* GIOInputChangeEventViewController.m */,
-				425E0BF724D9345300BEEA93 /* GIOUserIdViewController.h */,
-				425E0BE624D9345300BEEA93 /* GIOUserIdViewController.m */,
-				425E0BE724D9345300BEEA93 /* GIOVisitEventViewController.h */,
-				425E0BF624D9345300BEEA93 /* GIOVisitEventViewController.m */,
-				425E0BE924D9345300BEEA93 /* MeasurementProtocolTableViewController.h */,
-				425E0BF424D9345300BEEA93 /* MeasurementProtocolTableViewController.m */,
-				425E0BF824D9345300BEEA93 /* PageEvent */,
-				425E0BEB24D9345300BEEA93 /* PVarEventViewController.h */,
-				425E0BF224D9345300BEEA93 /* PVarEventViewController.m */,
-				425E0BEE24D9345300BEEA93 /* View */,
-			);
-			path = APITests;
-			sourceTree = "<group>";
-		};
-		425E0BEE24D9345300BEEA93 /* View */ = {
-			isa = PBXGroup;
-			children = (
-				425E0BEF24D9345300BEEA93 /* GrowingKeyValueCell.m */,
-				425E0BF024D9345300BEEA93 /* GrowingKeyValueCell.xib */,
-				425E0BF124D9345300BEEA93 /* GrowingKeyValueCell.h */,
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
-		425E0BF824D9345300BEEA93 /* PageEvent */ = {
-			isa = PBXGroup;
-			children = (
-				425E0BFD24D9345300BEEA93 /* ContainerViewController.h */,
-				425E0BF924D9345300BEEA93 /* ContainerViewController.m */,
-				425E0BFA24D9345300BEEA93 /* FirstViewController.h */,
-				425E0BFE24D9345300BEEA93 /* FirstViewController.m */,
-				425E0C0024D9345300BEEA93 /* GIOPageEventViewController.h */,
-				425E0BFC24D9345300BEEA93 /* GIOPageEventViewController.m */,
-				425E0BFB24D9345300BEEA93 /* SecondViewController.h */,
-				425E0BFF24D9345300BEEA93 /* SecondViewController.m */,
-			);
-			path = PageEvent;
-			sourceTree = "<group>";
-		};
-		425E0C0524D9345400BEEA93 /* GrowingUtil */ = {
-			isa = PBXGroup;
-			children = (
-				425E0C0724D9345400BEEA93 /* GIOConstants.h */,
-				425E0C0A24D9345400BEEA93 /* GIOConstants.m */,
-				425E0C0924D9345400BEEA93 /* GIODataProcessOperation.h */,
-				425E0C0624D9345400BEEA93 /* GIODataProcessOperation.m */,
-				425E0C0B24D9345400BEEA93 /* MBProgressHUD+GrowingHelper.h */,
-				425E0C0824D9345400BEEA93 /* MBProgressHUD+GrowingHelper.m */,
+				046530D324DD4271002D254C /* GIODataProcessOperation.m */,
+				046530D424DD4271002D254C /* GIOConstants.h */,
+				046530D524DD4271002D254C /* MBProgressHUD+GrowingHelper.m */,
+				046530D624DD4271002D254C /* GIODataProcessOperation.h */,
+				046530D724DD4271002D254C /* GIOConstants.m */,
+				046530D824DD4271002D254C /* MBProgressHUD+GrowingHelper.h */,
 			);
 			path = GrowingUtil;
 			sourceTree = "<group>";
 		};
-		425E0C0C24D9345400BEEA93 /* Base.lproj */ = {
+		046530DE24DD4271002D254C /* APITests */ = {
 			isa = PBXGroup;
 			children = (
-				425E0C7324D93B3000BEEA93 /* LaunchScreen.storyboard */,
-				425E0C7124D93B3000BEEA93 /* Main.storyboard */,
+				046530DF24DD4271002D254C /* GIOInputChangeEventViewController.h */,
+				046530E024DD4271002D254C /* GIOAttributesTrackViewController.h */,
+				046530E124DD4271002D254C /* GIOUserIdViewController.m */,
+				046530E224DD4271002D254C /* GIOVisitEventViewController.h */,
+				046530E324DD4271002D254C /* GIOCstmEventViewController.h */,
+				046530E424DD4271002D254C /* MeasurementProtocolTableViewController.h */,
+				046530E524DD4271002D254C /* GIOClickEventViewController.h */,
+				046530E624DD4271002D254C /* PVarEventViewController.h */,
+				046530E724DD4271002D254C /* GIOAttributesTrackViewController.m */,
+				046530E824DD4271002D254C /* GIOInputChangeEventViewController.m */,
+				046530E924DD4271002D254C /* View */,
+				046530ED24DD4271002D254C /* PVarEventViewController.m */,
+				046530EE24DD4271002D254C /* GIOClickEventViewController.m */,
+				046530EF24DD4271002D254C /* MeasurementProtocolTableViewController.m */,
+				046530F024DD4271002D254C /* GIOCstmEventViewController.m */,
+				046530F124DD4271002D254C /* GIOVisitEventViewController.m */,
+				046530F224DD4271002D254C /* GIOUserIdViewController.h */,
+				046530F324DD4271002D254C /* PageEvent */,
 			);
-			name = Base.lproj;
-			path = "../../../../../../GIO/growingio-ios/Growing/Demo/Demo/Base.lproj";
+			path = APITests;
 			sourceTree = "<group>";
 		};
-		425E0C3824D9346200BEEA93 /* UICategoryTests */ = {
+		046530E924DD4271002D254C /* View */ = {
 			isa = PBXGroup;
 			children = (
-				425E0C3E24D9346200BEEA93 /* gio_hybrid.html */,
-				425E0C5B24D9346200BEEA93 /* GIOActionSheetViewController.h */,
-				425E0C4024D9346200BEEA93 /* GIOActionSheetViewController.m */,
-				425E0C3D24D9346200BEEA93 /* GIOBannerAndTableViewController.h */,
-				425E0C4524D9346200BEEA93 /* GIOBannerAndTableViewController.m */,
-				425E0C3F24D9346200BEEA93 /* GIOButtonViewController.h */,
-				425E0C5824D9346200BEEA93 /* GIOButtonViewController.m */,
-				425E0C5724D9346200BEEA93 /* GIOCollectionViewController.h */,
-				425E0C3B24D9346200BEEA93 /* GIOCollectionViewController.m */,
-				425E0C5924D9346200BEEA93 /* GIOHybridViewController.h */,
-				425E0C4224D9346200BEEA93 /* GIOHybridViewController.m */,
-				425E0C4424D9346200BEEA93 /* GIOLabelAttributeViewController.h */,
-				425E0C3924D9346200BEEA93 /* GIOLabelAttributeViewController.m */,
-				425E0C5A24D9346200BEEA93 /* GIOSimpleUIElemtsViewController.h */,
-				425E0C4124D9346200BEEA93 /* GIOSimpleUIElemtsViewController.m */,
-				425E0C4324D9346200BEEA93 /* GIOTextFieldViewController.h */,
-				425E0C3A24D9346200BEEA93 /* GIOTextFieldViewController.m */,
-				425E0C4624D9346200BEEA93 /* GIOUICategoryViewController.h */,
-				425E0C3C24D9346200BEEA93 /* GIOUICategoryViewController.m */,
-				425E0C4724D9346200BEEA93 /* PageStructure */,
-				425E0C4D24D9346200BEEA93 /* View */,
-			);
-			path = UICategoryTests;
-			sourceTree = "<group>";
-		};
-		425E0C4724D9346200BEEA93 /* PageStructure */ = {
-			isa = PBXGroup;
-			children = (
-				425E0C4B24D9346200BEEA93 /* GIOMultiViewController.h */,
-				425E0C4924D9346200BEEA93 /* GIOMultiViewController.m */,
-				425E0C4C24D9346200BEEA93 /* GIOPageStructure.storyboard */,
-				425E0C4824D9346200BEEA93 /* GIOPageStructureViewController.h */,
-				425E0C4A24D9346200BEEA93 /* GIOPageStructureViewController.m */,
-			);
-			path = PageStructure;
-			sourceTree = "<group>";
-		};
-		425E0C4D24D9346200BEEA93 /* View */ = {
-			isa = PBXGroup;
-			children = (
-				425E0C5424D9346200BEEA93 /* GIOCollectionViewCell.h */,
-				425E0C4F24D9346200BEEA93 /* GIOCollectionViewCell.m */,
-				425E0C5024D9346200BEEA93 /* GIOCollectionViewCell.xib */,
-				425E0C5224D9346200BEEA93 /* GIOFoodTableViewCell.h */,
-				425E0C4E24D9346200BEEA93 /* GIOFoodTableViewCell.m */,
-				425E0C5324D9346200BEEA93 /* GIOFoodTableViewCell.xib */,
-				425E0C5124D9346200BEEA93 /* GIOListTableViewCell.h */,
-				425E0C5524D9346200BEEA93 /* GIOListTableViewCell.m */,
-				425E0C5624D9346200BEEA93 /* GIOListTableViewCell.xib */,
+				046530EA24DD4271002D254C /* GrowingKeyValueCell.m */,
+				046530EB24DD4271002D254C /* GrowingKeyValueCell.xib */,
+				046530EC24DD4271002D254C /* GrowingKeyValueCell.h */,
 			);
 			path = View;
 			sourceTree = "<group>";
 		};
-		4962651F24DA665200032551 /* GrowingIO_ExampleTests */ = {
+		046530F324DD4271002D254C /* PageEvent */ = {
+			isa = PBXGroup;
+			children = (
+				046530F424DD4271002D254C /* ContainerViewController.m */,
+				046530F524DD4271002D254C /* FirstViewController.h */,
+				046530F624DD4271002D254C /* SecondViewController.h */,
+				046530F724DD4271002D254C /* GIOPageEventViewController.m */,
+				046530F824DD4271002D254C /* ContainerViewController.h */,
+				046530F924DD4271002D254C /* FirstViewController.m */,
+				046530FA24DD4271002D254C /* SecondViewController.m */,
+				046530FB24DD4271002D254C /* GIOPageEventViewController.h */,
+			);
+			path = PageEvent;
+			sourceTree = "<group>";
+		};
+		0465310024DD4271002D254C /* UICategoryTests */ = {
+			isa = PBXGroup;
+			children = (
+				0465310124DD4271002D254C /* GIOLabelAttributeViewController.m */,
+				0465310224DD4271002D254C /* GIOTextFieldViewController.m */,
+				0465310324DD4271002D254C /* GIOCollectionViewController.m */,
+				0465310424DD4271002D254C /* GIOUICategoryViewController.m */,
+				0465310524DD4271002D254C /* GIOBannerAndTableViewController.h */,
+				0465310624DD4271002D254C /* gio_hybrid.html */,
+				0465310724DD4271002D254C /* GIOButtonViewController.h */,
+				0465310824DD4271002D254C /* GIOActionSheetViewController.m */,
+				0465310924DD4271002D254C /* GIOSimpleUIElemtsViewController.m */,
+				0465310A24DD4271002D254C /* GIOHybridViewController.m */,
+				0465310B24DD4271002D254C /* GIOTextFieldViewController.h */,
+				0465310C24DD4271002D254C /* GIOLabelAttributeViewController.h */,
+				0465310D24DD4271002D254C /* GIOBannerAndTableViewController.m */,
+				0465310E24DD4271002D254C /* GIOUICategoryViewController.h */,
+				0465310F24DD4271002D254C /* PageStructure */,
+				0465311524DD4271002D254C /* View */,
+				0465311F24DD4271002D254C /* GIOCollectionViewController.h */,
+				0465312024DD4271002D254C /* GIOButtonViewController.m */,
+				0465312124DD4271002D254C /* GIOHybridViewController.h */,
+				0465312224DD4271002D254C /* GIOSimpleUIElemtsViewController.h */,
+				0465312324DD4271002D254C /* GIOActionSheetViewController.h */,
+			);
+			path = UICategoryTests;
+			sourceTree = "<group>";
+		};
+		0465310F24DD4271002D254C /* PageStructure */ = {
+			isa = PBXGroup;
+			children = (
+				0465311024DD4271002D254C /* GIOPageStructureViewController.h */,
+				0465311124DD4271002D254C /* GIOMultiViewController.m */,
+				0465311224DD4271002D254C /* GIOPageStructureViewController.m */,
+				0465311324DD4271002D254C /* GIOMultiViewController.h */,
+				0465311424DD4271002D254C /* GIOPageStructure.storyboard */,
+			);
+			path = PageStructure;
+			sourceTree = "<group>";
+		};
+		0465311524DD4271002D254C /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0465311624DD4271002D254C /* GIOFoodTableViewCell.m */,
+				0465311724DD4271002D254C /* GIOCollectionViewCell.m */,
+				0465311824DD4271002D254C /* GIOCollectionViewCell.xib */,
+				0465311924DD4271002D254C /* GIOListTableViewCell.h */,
+				0465311A24DD4271002D254C /* GIOFoodTableViewCell.h */,
+				0465311B24DD4271002D254C /* GIOFoodTableViewCell.xib */,
+				0465311C24DD4271002D254C /* GIOCollectionViewCell.h */,
+				0465311D24DD4271002D254C /* GIOListTableViewCell.m */,
+				0465311E24DD4271002D254C /* GIOListTableViewCell.xib */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		4962651F24DA665200032551 /* ExampleTests */ = {
 			isa = PBXGroup;
 			children = (
 				4962652924DA667900032551 /* GrowingIO_ExampleTests.m */,
@@ -462,7 +469,7 @@
 				4962655E24DA66BF00032551 /* protocol test and api test */,
 				4962653F24DA66BF00032551 /* SDK Method Test */,
 			);
-			path = GrowingIO_ExampleTests;
+			path = ExampleTests;
 			sourceTree = "<group>";
 		};
 		4962652C24DA66B600032551 /* Helper */ = {
@@ -544,8 +551,8 @@
 		6003F581195388D10070C39A = {
 			isa = PBXGroup;
 			children = (
-				6003F593195388D20070C39A /* Example for GrowingIO */,
-				4962651F24DA665200032551 /* GrowingIO_ExampleTests */,
+				046530BA24DD4271002D254C /* Example */,
+				4962651F24DA665200032551 /* ExampleTests */,
 				6003F58C195388D20070C39A /* Frameworks */,
 				6003F58B195388D20070C39A /* Products */,
 				7D103DEFD312B6151DF0F9EA /* Pods */,
@@ -564,46 +571,14 @@
 		6003F58C195388D20070C39A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				0411CB1724DC277600DFD1BE /* GrowingAutoTracker.framework */,
-				0411CB1824DC277600DFD1BE /* GrowingTracker.framework */,
 				6003F58D195388D20070C39A /* Foundation.framework */,
 				6003F58F195388D20070C39A /* CoreGraphics.framework */,
 				6003F591195388D20070C39A /* UIKit.framework */,
 				6003F5AF195388D20070C39A /* XCTest.framework */,
 				A7E3FD24C4FAE13C586766A1 /* Pods_Example.framework */,
-				44416E4B09508096B9CC7290 /* Pods_ExampleTests.framework */,
+				11EA2ABB8F1029820A3234DB /* Pods_ExampleTests.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		6003F593195388D20070C39A /* Example for GrowingIO */ = {
-			isa = PBXGroup;
-			children = (
-				425E0C0324D9345400BEEA93 /* AliyunEmasServices-Info.plist */,
-				425E0BE324D9345300BEEA93 /* APITests */,
-				425E0C0224D9345400BEEA93 /* AppDelegate.h */,
-				425E0C0424D9345400BEEA93 /* AppDelegate.m */,
-				425E0BE224D9345300BEEA93 /* Assets.xcassets */,
-				425E0C0C24D9345400BEEA93 /* Base.lproj */,
-				425E0C0124D9345400BEEA93 /* GrowingIO.entitlements */,
-				425E0C0524D9345400BEEA93 /* GrowingUtil */,
-				425E0BD024D9345300BEEA93 /* ImageSources */,
-				6003F594195388D20070C39A /* Supporting Files */,
-				425E0C3824D9346200BEEA93 /* UICategoryTests */,
-			);
-			name = "Example for GrowingIO";
-			path = GrowingIO;
-			sourceTree = "<group>";
-		};
-		6003F594195388D20070C39A /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				6003F595195388D20070C39A /* GrowingIO-Info.plist */,
-				6003F59B195388D20070C39A /* GrowingIO-Prefix.pch */,
-				6003F596195388D20070C39A /* InfoPlist.strings */,
-				6003F599195388D20070C39A /* main.m */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		7D103DEFD312B6151DF0F9EA /* Pods */ = {
@@ -672,6 +647,7 @@
 					4962651D24DA665200032551 = {
 						DevelopmentTeam = SXBU677CPT;
 						ProvisioningStyle = Automatic;
+						TestTargetID = 6003F589195388D20070C39A;
 					};
 					6003F589195388D20070C39A = {
 						DevelopmentTeam = SXBU677CPT;
@@ -710,34 +686,35 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				425E0C1424D9345400BEEA93 /* recomand_01.jpg in Resources */,
-				425E0C1624D9345400BEEA93 /* recomand_02.jpg in Resources */,
-				425E0C1724D9345400BEEA93 /* API.ico in Resources */,
-				425E0C2224D9345400BEEA93 /* Assets.xcassets in Resources */,
-				425E0C6A24D9346200BEEA93 /* GIOCollectionViewCell.xib in Resources */,
-				425E0C1124D9345400BEEA93 /* merge.ico in Resources */,
-				425E0C7524D93B3100BEEA93 /* Main.storyboard in Resources */,
-				6003F598195388D20070C39A /* InfoPlist.strings in Resources */,
-				425E0C3124D9345400BEEA93 /* AliyunEmasServices-Info.plist in Resources */,
-				425E0C2124D9345400BEEA93 /* cycle_03.jpg in Resources */,
-				425E0C2024D9345400BEEA93 /* cycle_02.jpg in Resources */,
-				425E0C6024D9346200BEEA93 /* gio_hybrid.html in Resources */,
-				425E0C6724D9346200BEEA93 /* GIOPageStructure.storyboard in Resources */,
-				425E0C1B24D9345400BEEA93 /* cycle_07.jpg in Resources */,
-				425E0C1324D9345400BEEA93 /* cycle_08.jpg in Resources */,
-				425E0C1224D9345400BEEA93 /* agree.ico in Resources */,
-				425E0C1D24D9345400BEEA93 /* cycle_04.jpg in Resources */,
-				425E0C1A24D9345400BEEA93 /* greenWave.png in Resources */,
-				425E0C6D24D9346200BEEA93 /* GIOListTableViewCell.xib in Resources */,
-				425E0C1524D9345400BEEA93 /* recomand_03.jpg in Resources */,
-				425E0C1F24D9345400BEEA93 /* cycle_01.jpg in Resources */,
-				425E0C1E24D9345400BEEA93 /* cycle_05.jpg in Resources */,
-				425E0C1924D9345400BEEA93 /* uipage.png in Resources */,
-				425E0C1824D9345400BEEA93 /* fire.ico in Resources */,
-				425E0C1C24D9345400BEEA93 /* cycle_06.jpg in Resources */,
-				425E0C7624D93B3100BEEA93 /* LaunchScreen.storyboard in Resources */,
-				425E0C2724D9345400BEEA93 /* GrowingKeyValueCell.xib in Resources */,
-				425E0C6B24D9346200BEEA93 /* GIOFoodTableViewCell.xib in Resources */,
+				0465313A24DD4272002D254C /* AliyunEmasServices-Info.plist in Resources */,
+				0465312824DD4271002D254C /* recomand_01.jpg in Resources */,
+				0465312A24DD4271002D254C /* recomand_02.jpg in Resources */,
+				0465312B24DD4271002D254C /* API.ico in Resources */,
+				0465313624DD4272002D254C /* Assets.xcassets in Resources */,
+				0465313C24DD4272002D254C /* Main.storyboard in Resources */,
+				0465312524DD4271002D254C /* merge.ico in Resources */,
+				0465315C24DD4272002D254C /* GIOCollectionViewCell.xib in Resources */,
+				0465312424DD4271002D254C /* InfoPlist.strings in Resources */,
+				0465315F24DD4272002D254C /* GIOListTableViewCell.xib in Resources */,
+				0465313524DD4272002D254C /* cycle_03.jpg in Resources */,
+				0465313424DD4272002D254C /* cycle_02.jpg in Resources */,
+				0465315D24DD4272002D254C /* GIOFoodTableViewCell.xib in Resources */,
+				0465312F24DD4272002D254C /* cycle_07.jpg in Resources */,
+				0465312724DD4271002D254C /* cycle_08.jpg in Resources */,
+				0465314B24DD4272002D254C /* GrowingIO-Info.plist in Resources */,
+				0465315924DD4272002D254C /* GIOPageStructure.storyboard in Resources */,
+				0465312624DD4271002D254C /* agree.ico in Resources */,
+				0465313124DD4272002D254C /* cycle_04.jpg in Resources */,
+				0465312E24DD4272002D254C /* greenWave.png in Resources */,
+				0465312924DD4271002D254C /* recomand_03.jpg in Resources */,
+				0465313324DD4272002D254C /* cycle_01.jpg in Resources */,
+				0465313224DD4272002D254C /* cycle_05.jpg in Resources */,
+				0465312D24DD4271002D254C /* uipage.png in Resources */,
+				0465315224DD4272002D254C /* gio_hybrid.html in Resources */,
+				0465313B24DD4272002D254C /* LaunchScreen.storyboard in Resources */,
+				0465312C24DD4271002D254C /* fire.ico in Resources */,
+				0465313024DD4272002D254C /* cycle_06.jpg in Resources */,
+				0465314124DD4272002D254C /* GrowingKeyValueCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -773,6 +750,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Example/Pods-Example-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework",
 				"${BUILT_PRODUCTS_DIR}/MJRefresh/MJRefresh.framework",
 				"${BUILT_PRODUCTS_DIR}/SDCycleScrollView/SDCycleScrollView.framework",
@@ -780,6 +758,7 @@
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GrowingAnalytics.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MBProgressHUD.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MJRefresh.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDCycleScrollView.framework",
@@ -797,10 +776,12 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ExampleTests/Pods-ExampleTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/KIF/KIF.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GrowingAnalytics.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KIF.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -871,38 +852,38 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				425E0C2E24D9345400BEEA93 /* GIOPageEventViewController.m in Sources */,
-				425E0C2B24D9345400BEEA93 /* GIOCstmEventViewController.m in Sources */,
-				425E0C2824D9345400BEEA93 /* PVarEventViewController.m in Sources */,
-				425E0C5E24D9346200BEEA93 /* GIOCollectionViewController.m in Sources */,
-				425E0C6224D9346200BEEA93 /* GIOSimpleUIElemtsViewController.m in Sources */,
-				425E0C6424D9346200BEEA93 /* GIOBannerAndTableViewController.m in Sources */,
-				425E0C6324D9346200BEEA93 /* GIOHybridViewController.m in Sources */,
-				425E0C5F24D9346200BEEA93 /* GIOUICategoryViewController.m in Sources */,
-				425E0C2524D9345400BEEA93 /* GIOInputChangeEventViewController.m in Sources */,
-				425E0C2A24D9345400BEEA93 /* MeasurementProtocolTableViewController.m in Sources */,
-				425E0C2624D9345400BEEA93 /* GrowingKeyValueCell.m in Sources */,
-				425E0C2324D9345400BEEA93 /* GIOUserIdViewController.m in Sources */,
-				425E0C2F24D9345400BEEA93 /* FirstViewController.m in Sources */,
-				425E0C3424D9345400BEEA93 /* MBProgressHUD+GrowingHelper.m in Sources */,
-				425E0C6E24D9346200BEEA93 /* GIOButtonViewController.m in Sources */,
-				425E0C6C24D9346200BEEA93 /* GIOListTableViewCell.m in Sources */,
-				425E0C6624D9346200BEEA93 /* GIOPageStructureViewController.m in Sources */,
-				425E0C3524D9345400BEEA93 /* GIOConstants.m in Sources */,
-				425E0C6924D9346200BEEA93 /* GIOCollectionViewCell.m in Sources */,
-				425E0C5D24D9346200BEEA93 /* GIOTextFieldViewController.m in Sources */,
-				6003F59A195388D20070C39A /* main.m in Sources */,
-				425E0C6824D9346200BEEA93 /* GIOFoodTableViewCell.m in Sources */,
-				425E0C2D24D9345400BEEA93 /* ContainerViewController.m in Sources */,
-				425E0C3024D9345400BEEA93 /* SecondViewController.m in Sources */,
-				425E0C5C24D9346200BEEA93 /* GIOLabelAttributeViewController.m in Sources */,
-				425E0C6124D9346200BEEA93 /* GIOActionSheetViewController.m in Sources */,
-				425E0C2924D9345400BEEA93 /* GIOClickEventViewController.m in Sources */,
-				425E0C2424D9345400BEEA93 /* GIOAttributesTrackViewController.m in Sources */,
-				425E0C3324D9345400BEEA93 /* GIODataProcessOperation.m in Sources */,
-				425E0C6524D9346200BEEA93 /* GIOMultiViewController.m in Sources */,
-				425E0C2C24D9345400BEEA93 /* GIOVisitEventViewController.m in Sources */,
-				425E0C3224D9345400BEEA93 /* AppDelegate.m in Sources */,
+				0465314424DD4272002D254C /* MeasurementProtocolTableViewController.m in Sources */,
+				0465314024DD4272002D254C /* GrowingKeyValueCell.m in Sources */,
+				0465314D24DD4272002D254C /* AppDelegate.m in Sources */,
+				0465315024DD4272002D254C /* GIOCollectionViewController.m in Sources */,
+				0465315424DD4272002D254C /* GIOSimpleUIElemtsViewController.m in Sources */,
+				0465315624DD4272002D254C /* GIOBannerAndTableViewController.m in Sources */,
+				0465315524DD4272002D254C /* GIOHybridViewController.m in Sources */,
+				0465315124DD4272002D254C /* GIOUICategoryViewController.m in Sources */,
+				0465314824DD4272002D254C /* GIOPageEventViewController.m in Sources */,
+				0465313E24DD4272002D254C /* GIOAttributesTrackViewController.m in Sources */,
+				0465314624DD4272002D254C /* GIOVisitEventViewController.m in Sources */,
+				0465313924DD4272002D254C /* GIOConstants.m in Sources */,
+				0465313724DD4272002D254C /* GIODataProcessOperation.m in Sources */,
+				0465314924DD4272002D254C /* FirstViewController.m in Sources */,
+				0465316024DD4272002D254C /* GIOButtonViewController.m in Sources */,
+				0465315E24DD4272002D254C /* GIOListTableViewCell.m in Sources */,
+				0465315824DD4272002D254C /* GIOPageStructureViewController.m in Sources */,
+				0465313D24DD4272002D254C /* GIOUserIdViewController.m in Sources */,
+				0465315B24DD4272002D254C /* GIOCollectionViewCell.m in Sources */,
+				0465314F24DD4272002D254C /* GIOTextFieldViewController.m in Sources */,
+				0465313F24DD4272002D254C /* GIOInputChangeEventViewController.m in Sources */,
+				0465315A24DD4272002D254C /* GIOFoodTableViewCell.m in Sources */,
+				0465314524DD4272002D254C /* GIOCstmEventViewController.m in Sources */,
+				0465314724DD4272002D254C /* ContainerViewController.m in Sources */,
+				0465314E24DD4272002D254C /* GIOLabelAttributeViewController.m in Sources */,
+				0465315324DD4272002D254C /* GIOActionSheetViewController.m in Sources */,
+				0465314C24DD4272002D254C /* main.m in Sources */,
+				0465314A24DD4272002D254C /* SecondViewController.m in Sources */,
+				0465314224DD4272002D254C /* PVarEventViewController.m in Sources */,
+				0465315724DD4272002D254C /* GIOMultiViewController.m in Sources */,
+				0465314324DD4272002D254C /* GIOClickEventViewController.m in Sources */,
+				0465313824DD4272002D254C /* MBProgressHUD+GrowingHelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -917,28 +898,28 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		425E0C7124D93B3000BEEA93 /* Main.storyboard */ = {
+		046530BB24DD4271002D254C /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				425E0C7224D93B3000BEEA93 /* Base */,
+				046530BC24DD4271002D254C /* en */,
 			);
-			name = Main.storyboard;
+			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		425E0C7324D93B3000BEEA93 /* LaunchScreen.storyboard */ = {
+		046530DA24DD4271002D254C /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				425E0C7424D93B3100BEEA93 /* Base */,
+				046530DB24DD4271002D254C /* Base */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
-		6003F596195388D20070C39A /* InfoPlist.strings */ = {
+		046530DC24DD4271002D254C /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				6003F597195388D20070C39A /* en */,
+				046530DD24DD4271002D254C /* Base */,
 			);
-			name = InfoPlist.strings;
+			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -972,7 +953,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = GrowingIO_ExampleTests/Info.plist;
+				INFOPLIST_FILE = ExampleTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -980,8 +961,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "growingio.GrowingIO-ExampleTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Example_Example.app/Example_Example";
-				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/../GrowingIO/GrowingAutoTracker/** $(SRCROOT)/../GrowingIO/GrowingTracker/**";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Example.app/Example";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/../GrowingAutoTracker/** $(SRCROOT)/../GrowingTracker/**";
 			};
 			name = Debug;
 		};
@@ -1014,7 +995,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = GrowingIO_ExampleTests/Info.plist;
+				INFOPLIST_FILE = ExampleTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -1022,8 +1003,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "growingio.GrowingIO-ExampleTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Example_Example.app/Example_Example";
-				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/../GrowingIO/GrowingAutoTracker/** $(SRCROOT)/../GrowingIO/GrowingTracker/**";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Example.app/Example";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/../GrowingAutoTracker/** $(SRCROOT)/../GrowingTracker/**";
 			};
 			name = Release;
 		};
@@ -1107,8 +1088,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = SXBU677CPT;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "GrowingIO/GrowingIO-Prefix.pch";
-				INFOPLIST_FILE = "GrowingIO/GrowingIO-Info.plist";
+				GCC_PREFIX_HEADER = "Example/GrowingIO-Prefix.pch";
+				INFOPLIST_FILE = "Example/GrowingIO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
@@ -1126,8 +1107,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = SXBU677CPT;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "GrowingIO/GrowingIO-Prefix.pch";
-				INFOPLIST_FILE = "GrowingIO/GrowingIO-Info.plist";
+				GCC_PREFIX_HEADER = "Example/GrowingIO-Prefix.pch";
+				INFOPLIST_FILE = "Example/GrowingIO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
