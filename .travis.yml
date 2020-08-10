@@ -23,7 +23,7 @@ before_script:
 - "./Scripts/add-key.sh"
 script:
 - set -o pipefail
-- xcodebuild -workspace GrowingAnalytics.xcworkspace -scheme GrowingAutoTracker -configuration
+- xcodebuild -workspace GrowingAnalytics.xcworkspace -scheme Example -configuration
   Release -sdk iphoneos -arch armv7 clean build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
   | xcpretty -r json-compilation-database -o compile_commands.json
 - oclint-json-compilation-database -e Pods -- -rc GIO_METHOD_ALLOW_UPPERCASE="URL,FMG3DB,TXT,UTF,STM,IMP"
