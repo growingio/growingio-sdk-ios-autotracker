@@ -23,7 +23,7 @@
 #import "GrowingInstance.h"
 #import "GrowingNetworkConfig.h"
 #import "GrowingMobileDebugger.h"
-#import "GrowingAlertMenu.h"
+#import "GrowingAlert.h"
 #import "GrowingDispatchManager.h"
 #import "GrowingCocoaLumberjack.h"
 #import "GrowingASLLoggerFormat.h"
@@ -170,37 +170,27 @@
     // 所有未识别状态都走到App圈App状态
     id loginModel = [[GrowingMediator sharedInstance] performClass:@"GrowingAuthManager" action:@"shareManager" params:nil];
     
-    if (loginToken.length > 0)
-    {
+    if (loginToken.length > 0) {
         void (^loginSuccess)(void) = ^ {
-            [[GrowingMediator sharedInstance] performClass:@"GrowingLoginMenu" action:@"clearGrowingLoginMenu" params:nil];
             block();
         };
         
         void (^loginFailure)(NSString * _Nullable msg) = ^(NSString *msg) {
             GIOLogError(@"登陆失败：%@", msg);
-            [GrowingAlertMenu alertWithTitle:@"登录失败"
-                                        text:msg
-                                     buttons:@[[GrowingMenuButton buttonWithTitle:@"确定" block:^(){
-                void (^showSucceed)(void) = ^ {
-                    block();
-                };
-                
-                void (^showFail)(void) = ^ {
-                    // do nothing
-                };
-                [[GrowingMediator sharedInstance] performClass:@"GrowingLoginMenu"
-                                                        action:@"showWithSucceed:fail:"
-                                                        params:@{@"0":showSucceed, @"1":showFail}];
-            }]]];
+            
+            GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert
+                                                               title:@"登录失败"
+                                                             message:msg];
+            [alert addOkWithTitle:@"确定" handler:nil];
+            [alert showAlertAnimated:YES];
+            
         };
         
         [[GrowingMediator sharedInstance] performTarget:loginModel
                                                  action:@"loginWithLoginToken:success:failure:"
                                                  params:@{@"0":loginToken, @"1":loginSuccess, @"2":loginFailure}];
-    }
-    else if (token.length > 0)
-    {
+    
+    } else if (token.length > 0) {
         [[GrowingMediator sharedInstance] performTarget:loginModel action:@"loginWithToken:" params:@{@"0":token}];
         block();
     }

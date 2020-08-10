@@ -40,7 +40,6 @@ static pthread_mutex_t _mutex;
 static GrowingDataTraffic *_instance;
 
 + (instancetype)shareInstance {
-    
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _instance = [[self alloc] init];

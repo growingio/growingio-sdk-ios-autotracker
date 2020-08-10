@@ -22,7 +22,7 @@
 #import "GrowingEventManager.h"
 #import "GrowingStatusBar.h"
 #import "GrowingInstance.h"
-#import "GrowingAlertMenu.h"
+#import "GrowingAlert.h"
 #import "NSDictionary+GrowingHelper.h"
 #import "UIWindow+GrowingHelper.h"
 #import "UIApplication+GrowingHelper.h"
@@ -164,14 +164,20 @@ static GrowingMobileDebugger *debugger = nil;
             self.statusWindow.hidden = NO;
             __weak __typeof__(self) weakSelf = self;
             self.statusWindow.onButtonClick = ^{
-                GrowingMenuButton *btn_1 = [GrowingMenuButton buttonWithTitle:@"取消" block:nil];
-                GrowingMenuButton *btn_2 = [GrowingMenuButton buttonWithTitle:@"退出" block:^{
-                                                                            __strong __typeof__(weakSelf) strongSelf = weakSelf;
-                                                                            [strongSelf stop];
-                                                                        }];
-                [GrowingAlertMenu alertWithTitle:@"Debug模式" text:@"是否退出" buttons:@[btn_1, btn_2]];
+                
+                GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert
+                                                                   title:@"Debug模式"
+                                                                 message:@"是否退出"];
+                [alert addCancelWithTitle:@"取消" handler:nil];
+                [alert addDestructiveWithTitle:@"退出" handler:^(UIAlertAction * _Nonnull action, NSArray<UITextField *> * _Nonnull textFields) {
+                    __strong __typeof__(weakSelf) strongSelf = weakSelf;
+                    [strongSelf stop];
+                }];
+                
+                [alert showAlertAnimated:YES];
             };
         }
+        
         NSString *endPoint = @"";
         if (dataCheck){
              endPoint = [GrowingNetworkConfig.sharedInstance dataCheckEndPoint];
@@ -239,9 +245,12 @@ static GrowingMobileDebugger *debugger = nil;
         self.statusWindow = nil;
     }
     if (error.length) {
-        [GrowingAlertMenu alertWithTitle:@"Debug结束"
-                                    text:error
-                                 buttons:@[[GrowingMenuButton buttonWithTitle:@"OK" block:nil]]];
+        
+        GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert
+                                                           title:@"Debug结束"
+                                                         message:@"error"];
+        [alert addCancelWithTitle:@"OK" handler:nil];
+        [alert showAlertAnimated:YES];
     }
 }
 
