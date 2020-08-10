@@ -19,11 +19,11 @@ before_install:
 - chmod +x Scripts/remove-key.sh
 - brew tap growingio/homebrew-oclint
 - brew install oclint-growing
-- pod update SDCycleScrollView --verbose --no-repo-update
-- pod update MJRefresh --verbose --no-repo-update
-- pod update MBProgressHUD --verbose --no-repo-update
-- pod update Bugly --verbose --no-repo-update
-- pod update KIF --verbose --no-repo-update
+- pod update SDCycleScrollView
+- pod update MJRefresh
+- pod update MBProgressHUD
+- pod update Bugly
+- pod update KIF
 before_script:
 - "./Scripts/add-key.sh"
 script:
