@@ -50,14 +50,14 @@ typedef NS_ENUM(NSInteger, GIOElementType) {
 #pragma mark - Table view data source
 //更新列表头颜色
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    static NSString *headerId = @"customHeader";
+    static NSString *kGrowingHeaderId = @"customHeader";
     
     UITableViewHeaderFooterView *vHeader;
     
-    vHeader = [tableView dequeueReusableHeaderFooterViewWithIdentifier:headerId];
+    vHeader = [tableView dequeueReusableHeaderFooterViewWithIdentifier:kGrowingHeaderId];
     
     if (!vHeader) {
-        vHeader = [GIOConstants globalSectionHeaderForIdentifier:headerId];
+        vHeader = [GIOConstants globalSectionHeaderForIdentifier:kGrowingHeaderId];
     }
     
     vHeader.textLabel.text = [self tableView:tableView titleForHeaderInSection:section];

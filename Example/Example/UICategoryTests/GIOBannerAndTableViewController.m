@@ -20,8 +20,8 @@
 
 @end
 
-static NSString *gioBannerTableViewCell = @"GIOBannerTableViewCell";
-static NSString *gioListTableViewCell = @"GIOListTableViewCell";
+static NSString *kGrowingBannerTableViewCell = @"GIOBannerTableViewCell";
+static NSString *kGrowingListTableViewCell = @"GIOListTableViewCell";
 
 @implementation GIOBannerAndTableViewController
 
@@ -34,8 +34,8 @@ static NSString *gioListTableViewCell = @"GIOListTableViewCell";
 //配置tableview
 - (void)configureTableView {
     
-    UINib *nib = [UINib nibWithNibName:gioListTableViewCell bundle:nil];
-    [self.tableView registerNib:nib forCellReuseIdentifier:gioListTableViewCell];
+    UINib *nib = [UINib nibWithNibName:kGrowingListTableViewCell bundle:nil];
+    [self.tableView registerNib:nib forCellReuseIdentifier:kGrowingListTableViewCell];
     
     self.tableView.accessibilityIdentifier = @"GIOBannerAndTableViewIdentifier";
     self.tableView.accessibilityLabel= @"GIOBannerAndTableViewIdentifier";
@@ -54,7 +54,7 @@ static NSString *gioListTableViewCell = @"GIOListTableViewCell";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    GIOListTableViewCell *listCell = [tableView dequeueReusableCellWithIdentifier:gioListTableViewCell];
+    GIOListTableViewCell *listCell = [tableView dequeueReusableCellWithIdentifier:kGrowingListTableViewCell];
     listCell.index = indexPath.item;
     
     return listCell;

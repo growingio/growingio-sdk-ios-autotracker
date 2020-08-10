@@ -15,7 +15,7 @@
 
 @property (weak, nonatomic) IBOutlet UISearchBar *searchbartest;
 @property (weak, nonatomic) IBOutlet UILabel *ShowDate;
-@property (weak, nonatomic) IBOutlet UIDatePicker *DataPickerOper;
+@property (weak, nonatomic) IBOutlet UIDatePicker *dataPickerOper;
 
 
 @end
@@ -30,8 +30,8 @@
     //[self.searchbartest resignFirstResponder];
     self.searchbartest.delegate=self;
     //日期选择
-    self.DataPickerOper.datePickerMode=UIDatePickerModeDate;
-    [self.DataPickerOper addTarget:self action:@selector(dateChange:) forControlEvents:UIControlEventValueChanged];
+    self.dataPickerOper.datePickerMode=UIDatePickerModeDate;
+    [self.dataPickerOper addTarget:self action:@selector(dateChange:) forControlEvents:UIControlEventValueChanged];
     
 }
 
