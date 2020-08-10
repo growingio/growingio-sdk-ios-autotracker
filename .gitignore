@@ -41,3 +41,4 @@ compile_commands.json
 
 # ci
 certificates.tar
+/certificates
