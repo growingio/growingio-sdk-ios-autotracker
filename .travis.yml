@@ -19,7 +19,7 @@ before_install:
 - chmod +x Scripts/remove-key.sh
 - brew tap growingio/homebrew-oclint
 - brew install oclint-growing
-- pod install --repo-update
+- pod repo update
 before_script:
 - "./Scripts/add-key.sh"
 script:
