@@ -24,8 +24,7 @@ before_script:
 - "./Scripts/add-key.sh"
 script:
 - set -o pipefail
-- xcodebuild -workspace GrowingAnalytics.xcworkspace -scheme Example -configuration
-  Release -sdk iphoneos -arch armv7 clean build | xcpretty -r json-compilation-database
+- xcodebuild -workspace GrowingAnalytics.xcworkspace -scheme Example -configuration Release -sdk iphonesimulator -arch x86_64 clean build | xcpretty -r json-compilation-database
   -o compile_commands.json
 - oclint-json-compilation-database -e Pods -- -rc GIO_METHOD_ALLOW_UPPERCASE="URL,FMG3DB,TXT,UTF,STM,IMP"
   -rc GIO_CATEGORY_PREFIX=Growing -rc GIO_CLASS_PREFIX=Growing -max-priority-2=0
