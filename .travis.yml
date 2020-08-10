@@ -10,6 +10,7 @@ env:
   - PROFILE_NAME="sdk_demo"
   - secure: R/LSwvhW5nnAzw1amT+ivGatMGhh3mwgBlFX8KwPKwA4L8YXadUHYAe/b6fLEpIzTCdKBUODXasGWX3xJ8iQz575xOJaoTSv6zQDUAj+BeVaHRJqj2f2R6vtV7lsGg4qIl1l7HVpaYWAQComoW51YII3ln6Vt5BJJ6tl/X1ohhq28r8kFcImvMYLb8eKZLe+oOWJ50GfFYArl+pyRTxTIScZl9PxzT+6k5OOWzYN2soX2XTW+ZV+9+Kg1sLREKovCsXgXP1b9QaXZepPrzw5AOYCeC+loOI/B/3kF/2EOmo7DyB4pXEHnSQWG6d4ccnQzVUa1GscW0a0lJiiqR1pUNA57kK0BzLgUqfm8PIngSs3SIChBddrWAd4hP7KHm+5gq5mp082oNd7kYnEVP4275SRix1wPxnRBgk6hZNuT3cFjHwRlx/agopBlKp7N9Euk+BojSlFsvy2xd+df7+abJeQrdNmrAnCJTG295JL2wdINjTEjnhYFTbsuIZS2RaFoj5aB3fvkBSsNVAucWHS/g9hQA/r/WwIkWjZcdHfQRjGBqE2diJ39U2j2B4ws7bUop3vu3+KnuvVFhLb8DYedy9LqVIERaoB+qp4hqizvnYDFjvdicXDFvxLtfjGWSOx2EnPi3V+ZvZlOKhEUOUbTUOX+lQbFAThct5H238tBp8=
 before_install:
+- openssl version
 - openssl aes-256-cbc -K $encrypted_377178948fed_key -iv $encrypted_377178948fed_iv -in certificates.tar.enc -out certificates.tar -d
 - mkdir ./certificates
 - tar xvf certificates.tar -C ./certificates
