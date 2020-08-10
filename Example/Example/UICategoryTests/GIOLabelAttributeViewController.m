@@ -31,26 +31,26 @@
 }
 
 //设置alpha的值为0.005
-- (IBAction)SetAlphaSmall:(id)sender {
+- (IBAction)setAlphaSmall:(id)sender {
     self.CheckAlpLabel.alpha=0.005;
     NSLog(@"设置alpha的值为0.005");
 }
 //设置alpha的值为1
-- (IBAction)SetAlphLarge:(id)sender {
+- (IBAction)setAlphLarge:(id)sender {
     self.CheckAlpLabel.alpha=1;
     NSLog(@"设置alpha的值为1");
 }
 //隐藏label
-- (IBAction)HiddenLabel:(id)sender {
+- (IBAction)hiddenLabel:(id)sender {
     self.CheckHiddenLabel.hidden=TRUE;
     NSLog(@"隐藏Label标签！");
 }
-- (IBAction)ShowLabel:(id)sender {
+- (IBAction)showLabel:(id)sender {
     self.CheckHiddenLabel.hidden=false;
     NSLog(@"显示Label标签！");
 }
 //弹出浮层测试
-- (IBAction)ShowAlertTest:(id)sender {
+- (IBAction)showAlertTest:(id)sender {
     //alert第一种形式
 //    NSString *title = NSLocalizedString(@"A Short Title Is Best", nil);
 //    NSString *message = NSLocalizedString(@"A message should be a short, complete sentence.", nil);
@@ -92,7 +92,7 @@
 
 
 //设置GIO不采集数据
-- (IBAction)GIONotTrack:(id)sender {
+- (IBAction)growingNotTrack:(id)sender {
     NSLog(@"GrowingIO 不采集点击事件！");
 }
 

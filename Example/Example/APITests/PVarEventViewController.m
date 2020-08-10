@@ -12,7 +12,7 @@
 
 @interface PVarEventViewController ()
 
-@property(nonatomic, strong)UIStoryboard *SB;
+@property(nonatomic, strong)UIStoryboard *storyboard;
 
 @end
 
@@ -26,7 +26,7 @@
     self.PVarNumVal.accessibilityLabel=@"PVarNv";
     self.PVarStrVal.accessibilityLabel=@"PVarSv";
     
-    self.SB = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    self.storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -35,7 +35,7 @@
 }
 
 //setPageVariable操作
-- (IBAction)SetPvarVal:(id)sender {
+- (IBAction)setPvarVal:(id)sender {
     NSString *pvar = self.PVarValiable.text;
     if ([pvar isEqualToString:@"NULL"]) {
 //        [Growing setPageVariable:nil toViewController:self];
@@ -47,7 +47,7 @@
     NSLog(@"******setPageVariable:%@******",pvar);
 }
 //-setPageVariableWithKey:andStringValue操作
-- (IBAction)SetPvarWithStr:(id)sender {
+- (IBAction)setPvarWithStr:(id)sender {
     NSString *pvarkey = self.PVarKey.text;
     NSString *pstrval = self.PVarStrVal.text;
     //为方便测试，不判断数据
@@ -63,7 +63,7 @@
     }
 }
 //-setPageVariableWithKey:andNumberValue操作
-- (IBAction)SetPvarWithNum:(id)sender {
+- (IBAction)setPvarWithNum:(id)sender {
     NSString *pvarkey = self.PVarKey.text;
     NSString *pnumval = self.PVarNumVal.text;
     if ([pvarkey isEqualToString:@"NULL"]) {
@@ -80,7 +80,7 @@
     }
 }
 //setPageVariable 值为超过100键值对
-- (IBAction)SetPvarOutRange:(id)sender {
+- (IBAction)setPvarOutRange:(id)sender {
     NSDictionary *pval = [GIOConstants getLargeDictionary];
 //    [Growing setPageVariable:pval toViewController:self];
     NSLog(@"setPageVariable largeDic length is:%ld",pval.count);

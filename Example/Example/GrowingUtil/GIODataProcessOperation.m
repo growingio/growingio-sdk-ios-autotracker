@@ -7,7 +7,7 @@
 //
 
 #import "GIODataProcessOperation.h"
-static NSString *const GTOUCH_STATE = @"GIO_TOUCH_DEMO_gtouch_state";
+static NSString *const kGrowingTouchState = @"GIO_TOUCH_DEMO_gtouch_state";
 
 @implementation GIODataProcessOperation
 
@@ -123,13 +123,13 @@ static NSString *const GTOUCH_STATE = @"GIO_TOUCH_DEMO_gtouch_state";
 
 + (void)saveGTouchEnableState:(BOOL)enable {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setBool:enable forKey:GTOUCH_STATE];
+    [userDefaults setBool:enable forKey:kGrowingTouchState];
     [userDefaults synchronize];
 }
 
 + (BOOL)getGTouchEnableState {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    BOOL enable = [[userDefaults objectForKey:GTOUCH_STATE] boolValue];
+    BOOL enable = [[userDefaults objectForKey:kGrowingTouchState] boolValue];
     return enable;
 }
 

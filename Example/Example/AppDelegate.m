@@ -14,7 +14,7 @@
 #import <CommonCrypto/CommonDigest.h>
 #import <GrowingAutoTracker.h>
 
-static NSString * const kProjectIdForGrowingIO = @"0a1b4118dd954ec3bcc69da5138bdb96";
+static NSString * const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
 
 @interface AppDelegate ()<UNUserNotificationCenterDelegate>
 
@@ -35,7 +35,7 @@ static NSString * const kProjectIdForGrowingIO = @"0a1b4118dd954ec3bcc69da5138bd
     [Bugly startWithAppId:@"93004a21ca"];
     
     // Config GrowingIO
-    GrowingConfiguration *configuration = [[GrowingConfiguration alloc] initWithProjectId:kProjectIdForGrowingIO
+    GrowingConfiguration *configuration = [[GrowingConfiguration alloc] initWithProjectId:kGrowingProjectId
                                                                             launchOptions:launchOptions];
     [configuration setLogEnabled:YES];
     configuration.samplingRate = 1.0;

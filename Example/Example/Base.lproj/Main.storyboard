@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="pLp-tX-MIQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="pLp-tX-MIQ">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -482,7 +482,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="SetPgVar"/>
                                 <connections>
-                                    <action selector="SetPvarVal:" destination="SvQ-jS-w6Q" eventType="touchUpInside" id="1Kw-fO-tZa"/>
+                                    <action selector="setPvarVal:" destination="SvQ-jS-w6Q" eventType="touchUpInside" id="1Kw-fO-tZa"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M2v-5K-RHC">
@@ -490,7 +490,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="SetPgVS"/>
                                 <connections>
-                                    <action selector="SetPvarWithStr:" destination="SvQ-jS-w6Q" eventType="touchUpInside" id="fLQ-JC-PXD"/>
+                                    <action selector="setPvarWithStr:" destination="SvQ-jS-w6Q" eventType="touchUpInside" id="fLQ-JC-PXD"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3TG-bp-DKq">
@@ -498,7 +498,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="SetPgVN"/>
                                 <connections>
-                                    <action selector="SetPvarWithNum:" destination="SvQ-jS-w6Q" eventType="touchUpInside" id="buw-Th-RN5"/>
+                                    <action selector="setPvarWithNum:" destination="SvQ-jS-w6Q" eventType="touchUpInside" id="buw-Th-RN5"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qg7-Ce-UuJ">
@@ -506,7 +506,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="PvarOutR"/>
                                 <connections>
-                                    <action selector="SetPvarOutRange:" destination="SvQ-jS-w6Q" eventType="touchUpInside" id="c01-bO-NHA"/>
+                                    <action selector="setPvarOutRange:" destination="SvQ-jS-w6Q" eventType="touchUpInside" id="c01-bO-NHA"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -1126,8 +1126,8 @@
                     </view>
                     <navigationItem key="navigationItem" title="chng 请求" id="u82-48-fwM"/>
                     <connections>
-                        <outlet property="DataPickerOper" destination="akj-3O-qcd" id="3LV-7J-maW"/>
                         <outlet property="ShowDate" destination="eGn-gf-Jbp" id="pqB-ge-53f"/>
+                        <outlet property="dataPickerOper" destination="akj-3O-qcd" id="3LV-7J-maW"/>
                         <outlet property="passWordTextField" destination="rn0-CK-f3T" id="2se-aj-wyM"/>
                         <outlet property="searchbartest" destination="zy7-qC-Pwm" id="I7o-08-pLk"/>
                         <outlet property="userNameTextField" destination="pKv-cg-QdJ" id="Vx6-ly-mIK"/>
@@ -1374,11 +1374,11 @@
                                         <rect key="frame" x="0.0" y="624" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="snU-MT-yxw" id="Tav-w2-DbV">
-                                            <rect key="frame" x="0.0" y="0.0" width="356" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="581" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="+ (void)setUserId:(NSString *)userId;" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="HeO-PR-Fvc">
-                                                    <rect key="frame" x="15" y="0.0" width="333" height="44"/>
+                                                    <rect key="frame" x="15" y="0.0" width="558" height="44"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
@@ -1394,11 +1394,11 @@
                                         <rect key="frame" x="0.0" y="668" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Fgh-lD-Q2D" id="mZ9-Cs-UTG">
-                                            <rect key="frame" x="0.0" y="0.0" width="356" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="581" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="+ (void)clearUserId;" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="FsD-4j-Ebt">
-                                                    <rect key="frame" x="15" y="0.0" width="333" height="44"/>
+                                                    <rect key="frame" x="15" y="0.0" width="558" height="44"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
@@ -1659,7 +1659,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="SetAlpha0.005"/>
                                 <connections>
-                                    <action selector="SetAlphaSmall:" destination="41x-Hf-DE9" eventType="touchUpInside" id="lqR-Yw-lK3"/>
+                                    <action selector="setAlphaSmall:" destination="41x-Hf-DE9" eventType="touchUpInside" id="lqR-Yw-lK3"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Moo-RP-JyE">
@@ -1667,7 +1667,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="SetAlpha1"/>
                                 <connections>
-                                    <action selector="SetAlphLarge:" destination="41x-Hf-DE9" eventType="touchUpInside" id="51o-65-PKx"/>
+                                    <action selector="setAlphLarge:" destination="41x-Hf-DE9" eventType="touchUpInside" id="51o-65-PKx"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XFJ-X9-ffN">
@@ -1675,7 +1675,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="ShowLabel"/>
                                 <connections>
-                                    <action selector="ShowLabel:" destination="41x-Hf-DE9" eventType="touchUpInside" id="GxZ-QZ-OIY"/>
+                                    <action selector="showLabel:" destination="41x-Hf-DE9" eventType="touchUpInside" id="GxZ-QZ-OIY"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="检测Hidden属性" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pvk-vv-FfC">
@@ -1697,7 +1697,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="ShowAlert"/>
                                 <connections>
-                                    <action selector="ShowAlertTest:" destination="41x-Hf-DE9" eventType="touchUpInside" id="YAX-de-dOd"/>
+                                    <action selector="showAlertTest:" destination="41x-Hf-DE9" eventType="touchUpInside" id="YAX-de-dOd"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pdl-Wr-SYs">
@@ -1705,7 +1705,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="HiddenLabel"/>
                                 <connections>
-                                    <action selector="HiddenLabel:" destination="41x-Hf-DE9" eventType="touchUpInside" id="q6s-HI-8Hc"/>
+                                    <action selector="hiddenLabel:" destination="41x-Hf-DE9" eventType="touchUpInside" id="q6s-HI-8Hc"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Buttons不同属性clck事件检测：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EYl-aG-N1M">
@@ -1730,7 +1730,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="BtnGIODNTR"/>
                                 <connections>
-                                    <action selector="GIONotTrack:" destination="41x-Hf-DE9" eventType="touchUpInside" id="Bkf-gO-hmp"/>
+                                    <action selector="growingNotTrack:" destination="41x-Hf-DE9" eventType="touchUpInside" id="Bkf-gO-hmp"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="------------------------------------" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m5k-HU-AMa">
