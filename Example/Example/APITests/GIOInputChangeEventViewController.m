@@ -14,7 +14,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *passWordTextField;
 
 @property (weak, nonatomic) IBOutlet UISearchBar *searchbartest;
-@property (weak, nonatomic) IBOutlet UILabel *ShowDate;
+@property (weak, nonatomic) IBOutlet UILabel *showDate;
 @property (weak, nonatomic) IBOutlet UIDatePicker *dataPickerOper;
 
 
@@ -78,6 +78,6 @@
     formatter.dateFormat = @"yyyy年 MM月 dd日";
     NSString *dateStr = [formatter stringFromDate:datePicker.date];
     
-    self.ShowDate.text=dateStr;
+    self.showDate.text=dateStr;
 }
 @end

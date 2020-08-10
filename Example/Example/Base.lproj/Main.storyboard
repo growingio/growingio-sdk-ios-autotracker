@@ -1126,10 +1126,10 @@
                     </view>
                     <navigationItem key="navigationItem" title="chng 请求" id="u82-48-fwM"/>
                     <connections>
-                        <outlet property="ShowDate" destination="eGn-gf-Jbp" id="pqB-ge-53f"/>
                         <outlet property="dataPickerOper" destination="akj-3O-qcd" id="3LV-7J-maW"/>
                         <outlet property="passWordTextField" destination="rn0-CK-f3T" id="2se-aj-wyM"/>
                         <outlet property="searchbartest" destination="zy7-qC-Pwm" id="I7o-08-pLk"/>
+                        <outlet property="showDate" destination="eGn-gf-Jbp" id="pqB-ge-53f"/>
                         <outlet property="userNameTextField" destination="pKv-cg-QdJ" id="Vx6-ly-mIK"/>
                     </connections>
                 </viewController>
