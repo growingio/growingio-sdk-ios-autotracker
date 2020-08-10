@@ -104,14 +104,14 @@ static BOOL isInResignSate;
 }
 
 - (void)markInvisibleNode:(UIView *)node inSubView:(BOOL)flag; {
-    if (node.growingIMPTrackEventId > 0) {
+    if (node.growingIMPTrackEventName > 0) {
         node.growingIMPTracked = NO;
     }
 
     if (flag) {
         [self enumerateSubViewsWithNode:node
                                   block:^(UIView *view) {
-                                      if (view.growingIMPTrackEventId > 0) {
+                                      if (view.growingIMPTrackEventName > 0) {
                                           view.growingIMPTracked = NO;
                                       }
                                   }];
@@ -212,14 +212,9 @@ static BOOL impTrackIsRegistered = NO;
 }
 
 - (void)impTrack {
-    if (isInResignSate) {
-        return;
-    }
-
+    if (isInResignSate) { return; }
     
-    if (self.sourceTable.count == 0) {
-        return;
-    }
+    if (self.sourceTable.count == 0) { return; }
 
     [self.sourceTable.allObjects
         enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx,
@@ -227,7 +222,7 @@ static BOOL impTrackIsRegistered = NO;
             UIView<GrowingNode> *node = obj;
             if ([node growingImpNodeIsVisible]) {
                 if (node.growingIMPTracked == NO) {
-                    if (node.growingIMPTrackEventId.length > 0) {
+                    if (node.growingIMPTrackEventName.length > 0) {
                         [self sendCstm:node];
                     }
                 }
@@ -253,48 +248,38 @@ static BOOL impTrackIsRegistered = NO;
         node.growingIMPTrackVariable = impTrackVariable;
     }
 
-    if (node.growingIMPTrackEventId.length > 0 && node.growingIMPTrackNumber &&
+    if (node.growingIMPTrackEventName.length > 0 &&
         node.growingIMPTrackVariable.count > 0) {
-        [Growing trackCustomEvent:node.growingIMPTrackEventId
+        [Growing trackCustomEvent:node.growingIMPTrackEventName
                    withAttributes:node.growingIMPTrackVariable];
-    } else if (node.growingIMPTrackEventId.length > 0 &&
-               node.growingIMPTrackNumber) {
-        [Growing trackCustomEvent:node.growingIMPTrackEventId];
-    } else if (node.growingIMPTrackEventId.length > 0 &&
-               node.growingIMPTrackVariable.count > 0) {
-        [Growing trackCustomEvent:node.growingIMPTrackEventId
-                   withAttributes:node.growingIMPTrackVariable];
-    } else if (node.growingIMPTrackEventId.length > 0) {
-        [Growing trackCustomEvent:node.growingIMPTrackEventId];
+    } else if (node.growingIMPTrackEventName.length > 0) {
+        [Growing trackCustomEvent:node.growingIMPTrackEventName];
     }
 }
 
-- (void)addNode:(UIView *)node inSubView:(BOOL)flag;
-{
-    if (node.growingIMPTrackEventId.length > 0) {
+- (void)addNode:(UIView *)node inSubView:(BOOL)flag; {
+    if (node.growingIMPTrackEventName.length > 0) {
         [self.sourceTable addObject:node];
     }
 
-    if (flag) {
-        [self enumerateSubViewsWithNode:node
-                                  block:^(UIView *view) {
-                                      if (view.growingIMPTrackEventId.length >
-                                          0) {
-                                          [self.sourceTable addObject:view];
-                                      }
-                                  }];
-    }
+    if (!flag) { return; }
+    
+    [self enumerateSubViewsWithNode:node
+                              block:^(UIView *view) {
+        if (view.growingIMPTrackEventName.length > 0) {
+            [self.sourceTable addObject:view];
+        }
+    }];
 }
 
 - (void)addNode:(UIView *)node {
-    if (node.growingIMPTrackEventId.length > 0) {
+    if (node.growingIMPTrackEventName.length > 0) {
         [self.sourceTable addObject:node];
     }
 }
 
 - (void)clearNode:(UIView *)node {
-    node.growingIMPTrackEventId = nil;
-    node.growingIMPTrackNumber = nil;
+    node.growingIMPTrackEventName = nil;
     node.growingIMPTrackVariable = nil;
     node.growingIMPTracked = NO;
     [self.sourceTable removeObject:node];

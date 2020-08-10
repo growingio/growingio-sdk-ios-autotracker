@@ -299,7 +299,6 @@
 			children = (
 				046530BB24DD4271002D254C /* InfoPlist.strings */,
 				046530BD24DD4271002D254C /* GrowingIO-Prefix.pch */,
-				046530BE24DD4271002D254C /* AppDelegate.h */,
 				046530BF24DD4271002D254C /* ImageSources */,
 				046530D124DD4271002D254C /* Assets.xcassets */,
 				046530D224DD4271002D254C /* GrowingUtil */,
@@ -310,6 +309,7 @@
 				046530FC24DD4271002D254C /* GrowingIO.entitlements */,
 				046530FD24DD4271002D254C /* GrowingIO-Info.plist */,
 				046530FE24DD4271002D254C /* main.m */,
+				046530BE24DD4271002D254C /* AppDelegate.h */,
 				046530FF24DD4271002D254C /* AppDelegate.m */,
 				0465310024DD4271002D254C /* UICategoryTests */,
 			);

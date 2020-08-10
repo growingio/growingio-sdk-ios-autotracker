@@ -26,15 +26,10 @@
 @interface UIView (GrowingNode) <GrowingNode>
 
 @property (nonatomic, assign) BOOL growingIMPTracked;
-@property (nonatomic, copy) NSString *growingIMPTrackEventId;
-@property (nonatomic, strong) NSNumber *growingIMPTrackNumber;
+@property (nonatomic, copy) NSString *growingIMPTrackEventName;
 @property (nonatomic, strong) NSDictionary *growingIMPTrackVariable;
 
-- (BOOL)growingNodeUserInteraction __deprecated_msg(
-    "请使用growingViewUserInteraction");
 - (BOOL)growingViewUserInteraction;
-
-- (NSString *)growingNodeContent __deprecated_msg("请使用growingViewContent");
 - (NSString *)growingViewContent;
 
 @end
