@@ -8,11 +8,12 @@ env:
   - APPNAME="Example"
   - 'DEVELOPER_NAME="iPhone Distribution: Beijing Yishu Technology Co., Ltd. (SXBU677CPT)"'
   - PROFILE_NAME="sdk_demo"
-  - secure: R/LSwvhW5nnAzw1amT+ivGatMGhh3mwgBlFX8KwPKwA4L8YXadUHYAe/b6fLEpIzTCdKBUODXasGWX3xJ8iQz575xOJaoTSv6zQDUAj+BeVaHRJqj2f2R6vtV7lsGg4qIl1l7HVpaYWAQComoW51YII3ln6Vt5BJJ6tl/X1ohhq28r8kFcImvMYLb8eKZLe+oOWJ50GfFYArl+pyRTxTIScZl9PxzT+6k5OOWzYN2soX2XTW+ZV+9+Kg1sLREKovCsXgXP1b9QaXZepPrzw5AOYCeC+loOI/B/3kF/2EOmo7DyB4pXEHnSQWG6d4ccnQzVUa1GscW0a0lJiiqR1pUNA57kK0BzLgUqfm8PIngSs3SIChBddrWAd4hP7KHm+5gq5mp082oNd7kYnEVP4275SRix1wPxnRBgk6hZNuT3cFjHwRlx/agopBlKp7N9Euk+BojSlFsvy2xd+df7+abJeQrdNmrAnCJTG295JL2wdINjTEjnhYFTbsuIZS2RaFoj5aB3fvkBSsNVAucWHS/g9hQA/r/WwIkWjZcdHfQRjGBqE2diJ39U2j2B4ws7bUop3vu3+KnuvVFhLb8DYedy9LqVIERaoB+qp4hqizvnYDFjvdicXDFvxLtfjGWSOx2EnPi3V+ZvZlOKhEUOUbTUOX+lQbFAThct5H238tBp8=
   - secure: EZE8xmWQcBcNMFVjP2wH/ipYgs86PJ4MdaiqUzabWjQu5NAhzh3yHWcaLXxXgB0zVCt3E4xxKCaBse+ccEG/5URU5tm3CPHhFwwuhPtCLHaYiUWkilzdGud8svQvlopY9QS3I/M7WVA96dla2MUFzhbN16QZFAANsoDJoT9e6YWR4mNOCkgVCeYYS1FtogVIGNFL5NNKLVN2F3WXMtINZZsIKF309DnaSAOLfEWgTgxX2QmP0S+gxG10Ewm/doM5J39nrwvNoxhITElrfNFMVjCMAQZmEBwJN/OchOQrdEuznJ5jzyNOXhGpwUGN3h9weTsuPHwbemj/GOEsK0rVvfAol002Lwl3Wq18IPJ6Yda8bYles9qqgexbNKvHQnuVJ3lnid/kSPQTqm6CrnWAqmvVz46utDVTtBsKrrJWI8I8X7+nUtIaX9XciEcMz26AoBCGbDYH2EYt3zZ/OjvbZGBY0iX0wM3y2ltI0pUBcUHW4UEzAH9QGLzGctf+7PsoedqMZSVmdttGM9ypoONScfK9xU1BiF+7A/oOce+pKCVG+YjjODcp3oOej64g/kWM/8A6jToDjfFUMH2nvfFo9Fy7gx/2kouJAYcFBHnbXOv9aLjcHvofwI49mjT1j9NXMXFbrSzVIr7S087j88eVBqnq+eASHIYtpCcfNJpw2hA=
+  - secure: RXcb5hMJbBQQdKCd+Nk7Nm371VAOyElI6KksI7Sogz3wC8o0QSICrRW8CKwaDX34nEnRHB79IA1bvx1zOZ3ZsBU07n24GYn8oJRrS5WWWYtR6xVmqH1iV9G9iewGo6PwNifiGpElhQziaM1X3hAuEE6UOiE9kJmDjc0ANyEiT0+KpiWmsBOXZ96gheLG2b0hGxrI77Zk2NA76XHkoytXx5Dq4K+jpMlMhP5C22xsX/qqhMTQqS+zFTf/SLD2JrMI6fUs2uv9J7hQxD3zsJCRFxQVtyK7Ste3CQTIihmESAN3hkxvHO3QHWEW2WpnJzPjdtVm5YDkRxnmQBCtNDk9peLPacwJFmef3NQ947pfrN+bEOxI+EgQuZEjDaly8mJerzEFN0vVPDCJ45KKjpNUEx1RntE2V99uT5+8IvpnWTucRf/+ik8GApW+B9rVrPx2t0oVcCmC1y3K0xJ4vTBK/1SHxF4FOB6NR64sE3VhVnC78SG89t4ydy0KUFdLJquIUd/8+xcIEj+1phfOZWi2ZK/1bRv5Sy0xWtOwLt1RyKK53Qx5ERwC3UY/z0urUXw8IgXXXOOnQY6P3gdtEuxE8Z855dNPqMWWd/CFppyaMZJVRoamXyJKQso/z5ZtgWDFykL8EYUQV9/1YgyNMMBPRCtm/FwwPC/psBvfvJPDG2U=
 before_install:
 - openssl version
-- openssl aes-256-cbc -k "$ENCRYPTION_SECRET" -in certificates.tar.enc -d -a -out certificates.tar
+- openssl aes-256-cbc -k "$ENCRYPTION_SECRET" -in certificates.tar.enc -d -a -out
+  certificates.tar
 - mkdir ./certificates
 - tar xvf certificates.tar -C ./certificates
 - chmod +x Scripts/add-key.sh
@@ -24,7 +25,8 @@ before_script:
 script:
 - set -o pipefail
 - xcodebuild -workspace GrowingAnalytics.xcworkspace -scheme Example -configuration
-  Release -sdk iphoneos -arch armv7 clean build | xcpretty -r json-compilation-database -o compile_commands.json
+  Release -sdk iphoneos -arch armv7 clean build | xcpretty -r json-compilation-database
+  -o compile_commands.json
 - oclint-json-compilation-database -e Pods -- -rc GIO_METHOD_ALLOW_UPPERCASE="URL,FMG3DB,TXT,UTF,STM,IMP"
   -rc GIO_CATEGORY_PREFIX=Growing -rc GIO_CLASS_PREFIX=Growing -max-priority-2=0
 after_script:
