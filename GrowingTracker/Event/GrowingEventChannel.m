@@ -27,28 +27,22 @@
 - (instancetype)initWithTypes:(NSArray<NSString *> *)eventTypes
                   urlTemplate:(NSString *)urlTemplate
                 isCustomEvent:(BOOL)isCustomEvent
-                isReportEvent:(BOOL)isReportEvent
-                  isUploading:(BOOL)isUploading
-{
+                  isUploading:(BOOL)isUploading {
     if (self = [super init]) {
         _eventTypes = eventTypes;
         _urlTemplate = urlTemplate;
         _isCustomEvent = isCustomEvent;
         _isUploading = isUploading;
-        _isReportEvent = isReportEvent;
     }
     return self;
 }
 
 + (instancetype)eventChannelWithEventTypes:(NSArray<NSString *> *)eventTypes
                                urlTemplate:(NSString *)urlTemplate
-                             isCustomEvent:(BOOL)isCustomEvent
-                             isReportEvent:(BOOL)isReportEvent
-{
+                             isCustomEvent:(BOOL)isCustomEvent {
     return [[GrowingEventChannel alloc] initWithTypes:eventTypes
                                           urlTemplate:urlTemplate
                                         isCustomEvent:isCustomEvent
-                                        isReportEvent:isReportEvent
                                           isUploading:NO];
 }
 
@@ -57,20 +51,13 @@
     return @[
         [GrowingEventChannel eventChannelWithEventTypes:@[kEventTypeKeyVisit, kEventTypeKeyPage, kEventTypeKeyClose]
                                             urlTemplate:kGrowingEventApiTemplate_PV
-                                          isCustomEvent:NO
-                                          isReportEvent:NO],
+                                          isCustomEvent:NO],
         [GrowingEventChannel eventChannelWithEventTypes:@[kEventTypeKeyCustom, kEventTypeKeyPageVariable, kEventTypeKeyConversionVariable, kEventTypeKeyPeopleVariable, kEventTypeKeyVisitor]
                                             urlTemplate:kGrowingEventApiTemplate_Custom
-                                          isCustomEvent:YES
-                                          isReportEvent:NO],
-        [GrowingEventChannel eventChannelWithEventTypes:@[kEventTypeKeyActivate, kEventTypeKeyReengage]
-                                            urlTemplate:kGrowingEventApiTemplate_Activate
-                                          isCustomEvent:NO
-                                          isReportEvent:YES],
+                                          isCustomEvent:YES],
         [GrowingEventChannel eventChannelWithEventTypes:nil
                                             urlTemplate:kGrowingEventApiTemplate_Other
-                                          isCustomEvent:NO
-                                          isReportEvent:NO],
+                                          isCustomEvent:NO],
     ];
 }
 
@@ -90,8 +77,6 @@
         kEventTypeKeyConversionVariable: allEventChannels[1],
         kEventTypeKeyPeopleVariable: allEventChannels[1],
         kEventTypeKeyVisitor: allEventChannels[1],
-        kEventTypeKeyActivate: allEventChannels[2],
-        kEventTypeKeyReengage: allEventChannels[2],
     };
 }
 

@@ -26,7 +26,6 @@
 #define kGrowingEventApiTemplate_Custom @"v3/%@/ios/cstm?stm=%llu"
 #define kGrowingEventApiTemplate_PV @"v3/%@/ios/pv?stm=%llu"
 #define kGrowingEventApiTemplate_Imp @"v3/%@/ios/imp?stm=%llu"
-#define kGrowingEventApiTemplate_Activate @"%@/ios/ctvt?stm=%llu"
 #define kGrowingEventApiTemplate_Other @"v3/%@/ios/other?stm=%llu"
 #define kGrowingEventApiV3(Template, AI, STM) [[GrowingNetworkConfig sharedInstance] buildEndPointWithTemplate:(Template) accountId:(AI) andSTM:(STM)]
 
@@ -47,7 +46,7 @@
 
 @property (nonatomic, copy) NSString *customTrackerHost;
 @property (nonatomic, copy) NSString *customDataHost;
-@property (nonatomic, copy) NSString *customAdHost;
+//@property (nonatomic, copy) NSString *customAdHost;
 @property (nonatomic, copy) NSString *customWsHost;
 
 + (instancetype)sharedInstance;
@@ -56,22 +55,14 @@
                               accountId:(NSString *)accountId
                                  andSTM:(unsigned long long)stm;
 
-- (NSString *)buildReportEndPointWithTemplate:(NSString *)template
-                                    accountId:(NSString *)accountId
-                                       andSTM:(unsigned long long)stm;
-
 - (NSString *)growingApiHostEnd;
 
 - (NSString *)growingDataHostEnd;
-
-- (NSString *)growingAdHostEnd;
 
 - (NSString *)tagsHost;
 
 - (NSString *)wsEndPoint;
 
 - (NSString *)dataCheckEndPoint;
-
-- (NSString *)growingReportEndPoint;
 
 @end

@@ -93,21 +93,6 @@
     
     NSDictionary *params = url.growingHelper_queryDict;
     
-    // 是否是短链deeplink
-    BOOL isShortChainUlink = [self isShortChainUlink:url];
-    
-    if (isShortChainUlink) {
-        // 处理广告
-        [GrowingInstance reportShortChainDeeplink:url];
-        return YES;
-    }
-    
-    if ([self isLongChainDeeplink:url]) {
-        // 处理广告
-        [GrowingInstance reportGIODeeplink:url];
-        return YES;
-    }
-    
     if (![[url path] isEqualToString:@"/oauth2/token"]) {
         return NO;
     }

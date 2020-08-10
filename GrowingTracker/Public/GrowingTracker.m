@@ -176,18 +176,6 @@
     g_GDPRFlag = !enabled;
 }
 
-+ (void)registerDeeplinkHandler:(void(^)(NSDictionary *params, NSTimeInterval processTime, NSError *error))handler {
-    [GrowingInstance setDeeplinkHandler:handler];
-}
-
-+ (BOOL)isDeeplinkURL:(NSURL *)url {
-    return [[GrowingMediator sharedInstance] isShortChainUlink:url];
-}
-
-+ (BOOL)doDeeplinkURL:(NSURL *)url callback:(void (^)(NSDictionary * _Nonnull, NSTimeInterval, NSError * _Nonnull))callback {
-    return [GrowingInstance doDeeplinkByUrl:url callback:callback];
-}
-
 + (NSString *)getDeviceId {
     return [GrowingDeviceInfo currentDeviceInfo].deviceIDString;
 }
@@ -362,9 +350,7 @@
             [message monitorStateDidSettingWithState:state userInfo:dataDict];
         }
     }];
-
 }
-
 
 @end
 

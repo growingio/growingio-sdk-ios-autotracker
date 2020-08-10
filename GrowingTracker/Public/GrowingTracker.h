@@ -62,35 +62,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// 清除地理位置
 + (void)cleanLocation;
 
-/**
- deeplink广告落地页参数回调设置
- 调用时机在startWithAccountId函数之前
-
- @param handler deeplink广告落地页参数回调, params 为解析正确时回调的参数, processTime为从app被deeplink唤起到handler回调的时间(单位秒), error 为解析错误时返回的参数.
-                 handler 默认为空, 客户需要手动设置.
- */
-+ (void)registerDeeplinkHandler:(void(^)(NSDictionary *params, NSTimeInterval processTime, NSError *error))handler;
-
-
-/**
- 判断链接是否为deeplink链接
-
- @param url 传入的网址
- @return YES:是deeplink链接 NO:不是deeplink链接
-*/
-+ (BOOL)isDeeplinkURL:(NSURL *)url;
-
-/**
- 手动处理deeplink链接
-
- @param url 传入的网址
- @param callback deeplink广告落地页参数回调, params 为解析正确时回调的参数, processTime为从app被deeplink唤起到handler回调的时间(单位秒), error 为解析错误时返回的参数.
- callback若传nil:回调结果将从method <registerDeeplinkHandler:>中设置的handler返回
- callback若不为nil:回调结果只从当前的callback中返回
- @return YES:是deeplink链接 NO:不是deeplink链接
-*/
-+ (BOOL)doDeeplinkURL:(NSURL *)url callback:(void(^)(NSDictionary *params, NSTimeInterval processTime, NSError *error))callback;
-
 // 设置 GDPR 是否生效
 + (void)setDataCollectionEnabled:(BOOL)enabled;
 // 获取当前设备id

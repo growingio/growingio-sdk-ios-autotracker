@@ -62,10 +62,6 @@
     [GrowingNetworkConfig.sharedInstance setCustomWsHost:host];
 }
 
-- (void)setAdvertisementHost:(NSString *)host {
-    [GrowingNetworkConfig.sharedInstance setCustomAdHost:host];
-}
-
 - (void)setCellularDataLimit:(NSUInteger)cellularDataLimit {
     _cellularDataLimit = cellularDataLimit * 1024;
 }

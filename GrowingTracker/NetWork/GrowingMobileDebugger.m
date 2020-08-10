@@ -501,13 +501,6 @@ static GrowingMobileDebugger *debugger = nil;
     
     NSString *url = kGrowingEventApiV3(urlTemplate, [GrowingInstance sharedInstance].projectID, stm);
     
-    if ([eventType isEqualToString:kEventTypeKeyReengage] ||
-        [eventType isEqualToString:kEventTypeKeyActivate]) {
-        
-        urlTemplate = kGrowingEventApiTemplate_Activate;
-        url = kGrowingReportApi(urlTemplate, [GrowingInstance sharedInstance].projectID, stm);
-    }
-    
     [eventInfo setValue:url forKey:@"uri"];
     
     dispatch_async(dispatch_get_main_queue(), ^{
