@@ -42,35 +42,6 @@ static NSString * const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
     [Growing startWithConfiguration:configuration];
     [Growing addAutoTrackSwizzles];
     
-    // Deep link
-    /*
-    [Growing doDeeplinkByUrl:[NSURL URLWithString:@"https://datayi.cn/v8adidvJy?a=b&b=c"] callback:^(NSDictionary *params, NSTimeInterval processTime, NSError *error) {
-        NSString *paramsString = [params growingHelper_jsonString];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"do deeplink" message:paramsString delegate:nil cancelButtonTitle:@"确认" otherButtonTitles:nil];
-        [alert show];
-        NSLog(@"deepLink params = %@", params);
-    }];
-    */
-    
-    
-//    //DeepLink回调参数
-//    [Growing registerDeeplinkHandler:^(NSDictionary *params, NSError *error) {
-//        NSLog(@"==> %@", params);
-//        //NSDictionary转NSString
-//        NSData *data = [NSJSONSerialization dataWithJSONObject:params options:NSJSONWritingPrettyPrinted error:nil];
-//        NSString *strhh = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-//        //弹出信息
-//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"DeepLink回调信息"
-//                                                        message:strhh
-//                                                       delegate:self
-//                                              cancelButtonTitle:@"确定"
-//                                              otherButtonTitles:nil, nil];
-//
-//        [alert show];
-//
-//    }];
-    
-    
     NSString *trackSdkVersion = [Growing getTrackVersion];
     NSString *systemVersion = [[UIDevice currentDevice] systemVersion];
     NSLog(@"GIO SDK当前版本号：%@;\n 当前手机系统的版本号：%@", trackSdkVersion, systemVersion);
@@ -143,13 +114,6 @@ static NSString * const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
     }];
     [alert addAction:action];
     [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
-    
-    
-}
-
-- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void(^)(void))completionHandler {
-    
-    
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
@@ -160,7 +124,7 @@ static NSString * const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
 }
 
 //universal Link执行
-- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler{
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler {
     [Growing handleURL:userActivity.webpageURL];
     return YES;
 }

@@ -67,19 +67,19 @@
     [self loggerSetting:configuration.logEnabled];
     
     if (![NSThread isMainThread]) {
-        GIOLogDebug(@"请在applicationDidFinishLaunching中调用startWithAccountId函数,并且确保在主线程中");
+        GIOLogError(@"请在applicationDidFinishLaunching中调用startWithAccountId函数,并且确保在主线程中");
     }
     
     if (!configuration.projectId.length) {
-        GIOLogDebug(@"GrowingIO启动失败:ProjectId不能为空");
+        GIOLogError(@"GrowingIO启动失败:ProjectId不能为空");
         return;
     }
     
     BOOL urlSchemeRight = [self urlSchemeCheck];
     
     if (urlSchemeRight) {
-        GIOLogDebug(@"!!! Thank you very much for using GrowingIO. We will do our best to provide you with the best service. !!!");
-        GIOLogDebug(@"!!! GrowingIO version: %@ !!!", [Growing getTrackVersion]);
+        GIOLogError(@"!!! Thank you very much for using GrowingIO. We will do our best to provide you with the best service. !!!");
+        GIOLogError(@"!!! GrowingIO version: %@ !!!", [Growing getTrackVersion]);
         [GrowingInstance startWithConfiguration:configuration];
     }
     

@@ -8,7 +8,7 @@
 
 #import "GIOInputChangeEventViewController.h"
 
-@interface GIOInputChangeEventViewController ()<UITextFieldDelegate>
+@interface GIOInputChangeEventViewController ()<UITextFieldDelegate, UISearchBarDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *userNameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *passWordTextField;
@@ -17,7 +17,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *showDate;
 @property (weak, nonatomic) IBOutlet UIDatePicker *dataPickerOper;
 
-
 @end
 
 @implementation GIOInputChangeEventViewController
@@ -25,12 +24,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.searchbartest.placeholder=@"搜索";
-    self.searchbartest.accessibilityLabel=@"SearchBarTest";
+    self.searchbartest.placeholder = @"搜索";
+    self.searchbartest.accessibilityLabel = @"SearchBarTest";
     //[self.searchbartest resignFirstResponder];
-    self.searchbartest.delegate=self;
+    self.searchbartest.delegate = self;
     //日期选择
-    self.dataPickerOper.datePickerMode=UIDatePickerModeDate;
+    self.dataPickerOper.datePickerMode = UIDatePickerModeDate;
     [self.dataPickerOper addTarget:self action:@selector(dateChange:) forControlEvents:UIControlEventValueChanged];
     
 }
@@ -39,6 +38,8 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+#pragma mark UISearchBarDelegate
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
@@ -53,19 +54,16 @@
     NSLog(@"开始输入搜索内容");
     [searchBar setShowsCancelButton:YES animated:YES]; // 动画显示取消按钮
 //    [searchBar resignFirstResponder];
-    
 }
 
-- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
-{
-    searchBar.text=@"";
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+    searchBar.text = @"";
     [searchBar setShowsCancelButton:NO animated:YES];
     NSLog(@"清空搜索框！");
     [searchBar resignFirstResponder];
 }
 
--(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
-{
+-(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
     NSLog(@"开始搜索：%@",searchBar.text);
     [searchBar setShowsCancelButton:NO animated:YES]; 
     [searchBar resignFirstResponder];
@@ -80,4 +78,5 @@
     
     self.showDate.text=dateStr;
 }
+
 @end

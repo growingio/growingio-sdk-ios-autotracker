@@ -37,52 +37,47 @@ typedef NS_OPTIONS(NSUInteger, GrowingElementEventCategory) {
 /// UILabel[0] UILabel[1]
 @property (nonatomic, assign, readonly) NSInteger growingNodeKeyIndex;
 /// 只有UITableView UICollectionView才有的indexpath
-@property (nonatomic, assign, readonly) NSIndexPath *growingNodeIndexPath;
+@property (nonatomic, assign, readonly) NSIndexPath * _Nullable growingNodeIndexPath;
 /// 完整的xpath由各个node的subPath拼接而成
-@property (nonatomic, copy, readonly) NSString *growingNodeSubPath;
+@property (nonatomic, copy, readonly) NSString * _Nullable growingNodeSubPath;
 /// 当同一视图下相同class的两个node点击行为相似
 /// 当不需要区分点击哪一个node，仅需要区分点击那种类型时，使用该属性
-@property (nonatomic, copy, readonly) NSString *growingNodeSubSimilarPath;
+@property (nonatomic, copy, readonly) NSString * _Nullable growingNodeSubSimilarPath;
 
 // 原始父节点
-- (id<GrowingNode>)growingNodeParent;
+- (id <GrowingNode> _Nullable)growingNodeParent;
 // 过滤后的子节点,例如UITableView子节点只需要是cell和footter
-- (NSArray<id<GrowingNode>>*)growingNodeChilds;
+- (NSArray <id<GrowingNode>> * _Nullable)growingNodeChilds;
 /// 不进行track
 - (BOOL)growingNodeDonotTrack;
 
-- (BOOL)growingNodeDonotTrackImp;
 /// 不进行圈选
 - (BOOL)growingNodeDonotCircle;
 
 // 值
 - (BOOL)growingNodeUserInteraction;
 
-- (NSString *)growingNodeName;
-- (NSString *)growingNodeContent;
+- (NSString * _Nullable)growingNodeName;
+- (NSString * _Nullable)growingNodeContent;
 
-- (NSDictionary *)growingNodeDataDict;
+- (NSDictionary * _Nullable)growingNodeDataDict;
 
-- (UIWindow *)growingNodeWindow;
+- (UIWindow * _Nullable)growingNodeWindow;
 
-// 圈选逻辑 hittest
-- (void)growingNodeHighLight:(BOOL)highLight
-             withBorderColor:(UIColor *)borderColor
-          andBackgroundColor:(UIColor *)backgroundColor;
 - (CGRect)growingNodeFrame;
 
 // 截图
-- (UIImage *)growingNodeScreenShot:(UIImage *)fullScreenImage;
-- (UIImage *)growingNodeScreenShotWithScale:(CGFloat)maxScale;
+- (UIImage * _Nullable)growingNodeScreenShot:(UIImage * _Nullable)fullScreenImage;
+- (UIImage * _Nullable)growingNodeScreenShotWithScale:(CGFloat)maxScale;
 
 // 附加属性
-- (id)growingNodeAttribute:(NSString *)attrbute;
-- (id)growingNodeAttribute:(NSString *)attrbute forChild:(id<GrowingNode>)node;
+- (id _Nullable)growingNodeAttribute:(NSString * _Nullable)attrbute;
+- (id _Nullable)growingNodeAttribute:(NSString * _Nullable)attrbute forChild:(id<GrowingNode> _Nullable)node;
 
-- (id /* <GrowingNodeAsyncNativeHandler> */)growingNodeAsyncNativeHandler;
+- (id _Nullable /* <GrowingNodeAsyncNativeHandler> */)growingNodeAsyncNativeHandler;
 
 // 唯一标识某个view，客户可通过 growingAttributesUniqueTag 设置
-- (NSString *)growingNodeUniqueTag;
+- (NSString * _Nullable)growingNodeUniqueTag;
 
 @optional
 

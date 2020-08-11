@@ -117,6 +117,26 @@ static char growingNodeIsBadNodeKey;
     return nil;
 }
 
+- (NSArray<id<GrowingNode>> * _Nullable)growingNodeChilds {
+    return nil;
+}
+
+- (NSIndexPath *)growingNodeIndexPath {
+    return nil;
+}
+
+- (NSString *)growingNodeSubPath {
+    return nil;
+}
+
+- (NSString *)growingNodeSubSimilarPath {
+    return nil;
+}
+
+- (NSInteger)growingNodeKeyIndex {
+    return 0;
+}
+
 @end
 
 @interface GrowingDullNode ()
@@ -206,6 +226,14 @@ static char growingNodeIsBadNodeKey;
 }
 
 - (NSString *)growingNodeUniqueTag {
+    return nil;
+}
+
+- (NSArray<id<GrowingNode>> * _Nullable)growingNodeChilds {
+    return nil;
+}
+
+- (NSIndexPath *)growingNodeIndexPath {
     return nil;
 }
 

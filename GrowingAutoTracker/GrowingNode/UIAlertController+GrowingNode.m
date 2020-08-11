@@ -27,9 +27,7 @@
     return [self.view growingNodeFrame];
 }
 
-
-- (NSMapTable*)growing_allActionViews
-{
+- (NSMapTable*)growing_allActionViews {
     UICollectionView *collectionView = [self growing_collectionView];
     NSMapTable *retMap = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsStrongMemory
                                                 valueOptions:NSPointerFunctionsStrongMemory
