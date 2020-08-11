@@ -136,10 +136,10 @@
     if (circleTypeDict[@"web"]) {
         // TODO: add circle logic
         GIOLogError(@"圈选功能暂时无法使用");
-//        void (^startWebCircleApp)(void) = ^() {
-//            [[GrowingMediator sharedInstance] performClass:@"GrowingWebSocket" action:@"runWithCircleRoomNumber:ReadyBlock:finishBlock:" params:@{@"0":paireKey}];
-//        };
-//        [self authorizationWithToken:token loginToken:loginToken block:startWebCircleApp];
+        void (^startWebCircleApp)(void) = ^() {
+            [[GrowingMediator sharedInstance] performClass:@"GrowingWebSocket" action:@"runWithCircleRoomNumber:ReadyBlock:finishBlock:" params:@{@"0":paireKey}];
+        };
+        [self authorizationWithToken:token loginToken:loginToken block:startWebCircleApp];
         
     } else if(circleTypeDict[@"debugger"] ) {
         [[GrowingMobileDebugger shareDebugger] debugWithRoomNumber:circleRoomNumber dataCheck:false];

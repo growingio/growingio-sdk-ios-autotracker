@@ -15,7 +15,7 @@
 //
 
 
-#import "Growing3rdLibSRWebSocket.h"
+#import "GrowingSRWebSocket.h"
 
 #if TARGET_OS_IPHONE
 #define HAS_ICU
@@ -50,14 +50,14 @@
 
 
 typedef enum  {
-    Growing3rdLibSROpCodeTextFrame = 0x1,
-    Growing3rdLibSROpCodeBinaryFrame = 0x2,
+    GrowingSROpCodeTextFrame = 0x1,
+    GrowingSROpCodeBinaryFrame = 0x2,
     // 3-7 reserved.
-    Growing3rdLibSROpCodeConnectionClose = 0x8,
-    Growing3rdLibSROpCodePing = 0x9,
-    Growing3rdLibSROpCodePong = 0xA,
+    GrowingSROpCodeConnectionClose = 0x8,
+    GrowingSROpCodePing = 0x9,
+    GrowingSROpCodePong = 0xA,
     // B-F reserved.
-} Growing3rdLibSROpCode;
+} GrowingSROpCode;
 
 typedef struct {
     BOOL fin;
@@ -67,44 +67,44 @@ typedef struct {
     uint8_t opcode;
     BOOL masked;
     uint64_t payload_length;
-} Growing3rdLib_frame_header;
+} Growing_frame_header;
 
-static NSString *const kGrowing3rdLibSRWebSocketAppendToSecKeyString = @"258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
+static NSString *const kGrowingSRWebSocketAppendToSecKeyString = @"258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 
-static inline int32_t Growing3rdLib_validate_dispatch_data_partial_string(NSData *data);
-static inline void Growing3rdLibSRFastLog(NSString *format, ...);
+static inline int32_t Growing_validate_dispatch_data_partial_string(NSData *data);
+static inline void GrowingSRFastLog(NSString *format, ...);
 
-@interface NSData (Growing3rdLibSRWebSocket)
+@interface NSData (GrowingSRWebSocket)
 
-- (NSString *)growing3rdLibStringBySHA1ThenBase64Encoding;
-
-@end
-
-
-@interface NSString (Growing3rdLibSRWebSocket)
-
-- (NSString *)growing3rdLibStringBySHA1ThenBase64Encoding;
+- (NSString *)GrowingStringBySHA1ThenBase64Encoding;
 
 @end
 
 
-@interface NSURL (Growing3rdLibSRWebSocket)
+@interface NSString (GrowingSRWebSocket)
+
+- (NSString *)GrowingStringBySHA1ThenBase64Encoding;
+
+@end
+
+
+@interface NSURL (GrowingSRWebSocket)
 
 // The origin isn't really applicable for a native application.
 // So instead, just map ws -> http and wss -> https.
-- (NSString *)growing3rdLib_SR_origin;
+- (NSString *)Growing_SR_origin;
 
 @end
 
 
-@interface Growing3rdLib___SRRunLoopThread : NSThread
+@interface Growing___SRRunLoopThread : NSThread
 
 @property (nonatomic, readonly) NSRunLoop *runLoop;
 
 @end
 
 
-static NSString *Growing3rdLib_newSHA1String(const char *bytes, size_t length) {
+static NSString *Growing_newSHA1String(const char *bytes, size_t length) {
     uint8_t md[CC_SHA1_DIGEST_LENGTH];
 
     assert(length >= 0);
@@ -123,43 +123,43 @@ static NSString *Growing3rdLib_newSHA1String(const char *bytes, size_t length) {
 #pragma clang diagnostic pop
 }
 
-@implementation NSData (Growing3rdLibSRWebSocket)
+@implementation NSData (GrowingSRWebSocket)
 
-- (NSString *)growing3rdLibStringBySHA1ThenBase64Encoding;
+- (NSString *)GrowingStringBySHA1ThenBase64Encoding;
 {
-    return Growing3rdLib_newSHA1String(self.bytes, self.length);
+    return Growing_newSHA1String(self.bytes, self.length);
 }
 
 @end
 
 
-@implementation NSString (Growing3rdLibSRWebSocket)
+@implementation NSString (GrowingSRWebSocket)
 
-- (NSString *)growing3rdLibStringBySHA1ThenBase64Encoding;
+- (NSString *)GrowingStringBySHA1ThenBase64Encoding;
 {
-    return Growing3rdLib_newSHA1String(self.UTF8String, self.length);
+    return Growing_newSHA1String(self.UTF8String, self.length);
 }
 
 @end
 
-NSString *const kGrowing3rdLibSRWebSocketErrorDomain = @"Growing3rdLibSRWebSocketErrorDomain";
-NSString *const kGrowing3rdLibSRHTTPResponseErrorKey = @"HTTPResponseStatusCode";
+NSString *const kGrowingSRWebSocketErrorDomain = @"GrowingSRWebSocketErrorDomain";
+NSString *const kGrowingSRHTTPResponseErrorKey = @"HTTPResponseStatusCode";
 
 // Returns number of bytes consumed. Returning 0 means you didn't match.
 // Sends bytes to callback handler;
-typedef size_t (^Growing3rdLib_stream_scanner)(NSData *collected_data);
+typedef size_t (^Growing_stream_scanner)(NSData *collected_data);
 
-typedef void (^Growing3rdLib_data_callback)(Growing3rdLibSRWebSocket *webSocket,  NSData *data);
+typedef void (^Growing_data_callback)(GrowingSRWebSocket *webSocket,  NSData *data);
 
-@interface Growing3rdLib_SRIOConsumer : NSObject {
-    Growing3rdLib_stream_scanner _scanner;
-    Growing3rdLib_data_callback _handler;
+@interface Growing_SRIOConsumer : NSObject {
+    Growing_stream_scanner _scanner;
+    Growing_data_callback _handler;
     size_t _bytesNeeded;
     BOOL _readToCurrentFrame;
     BOOL _unmaskBytes;
 }
-@property (nonatomic, copy, readonly) Growing3rdLib_stream_scanner consumer;
-@property (nonatomic, copy, readonly) Growing3rdLib_data_callback handler;
+@property (nonatomic, copy, readonly) Growing_stream_scanner consumer;
+@property (nonatomic, copy, readonly) Growing_data_callback handler;
 @property (nonatomic, assign) size_t bytesNeeded;
 @property (nonatomic, assign, readonly) BOOL readToCurrentFrame;
 @property (nonatomic, assign, readonly) BOOL unmaskBytes;
@@ -167,18 +167,18 @@ typedef void (^Growing3rdLib_data_callback)(Growing3rdLibSRWebSocket *webSocket,
 @end
 
 // This class is not thread-safe, and is expected to always be run on the same queue.
-@interface Growing3rdLib_Growing3rdLib_SRIOConsumerPool : NSObject
+@interface Growing_Growing_SRIOConsumerPool : NSObject
 
 - (id)initWithBufferCapacity:(NSUInteger)poolSize;
 
-- (Growing3rdLib_SRIOConsumer *)consumerWithScanner:(Growing3rdLib_stream_scanner)scanner handler:(Growing3rdLib_data_callback)handler bytesNeeded:(size_t)bytesNeeded readToCurrentFrame:(BOOL)readToCurrentFrame unmaskBytes:(BOOL)unmaskBytes;
-- (void)returnConsumer:(Growing3rdLib_SRIOConsumer *)consumer;
+- (Growing_SRIOConsumer *)consumerWithScanner:(Growing_stream_scanner)scanner handler:(Growing_data_callback)handler bytesNeeded:(size_t)bytesNeeded readToCurrentFrame:(BOOL)readToCurrentFrame unmaskBytes:(BOOL)unmaskBytes;
+- (void)returnConsumer:(Growing_SRIOConsumer *)consumer;
 
 @end
 
-@interface Growing3rdLibSRWebSocket ()  <NSStreamDelegate>
+@interface GrowingSRWebSocket ()  <NSStreamDelegate>
 
-@property (nonatomic) Growing3rdLibSRReadyState readyState;
+@property (nonatomic) GrowingSRReadyState readyState;
 
 @property (nonatomic) NSOperationQueue *delegateOperationQueue;
 @property (nonatomic) dispatch_queue_t delegateDispatchQueue;
@@ -186,7 +186,7 @@ typedef void (^Growing3rdLib_data_callback)(Growing3rdLibSRWebSocket *webSocket,
 @end
 
 
-@implementation Growing3rdLibSRWebSocket {
+@implementation GrowingSRWebSocket {
     NSInteger _webSocketVersion;
     
     NSOperationQueue *_delegateOperationQueue;
@@ -238,10 +238,10 @@ typedef void (^Growing3rdLib_data_callback)(Growing3rdLibSRWebSocket *webSocket,
     NSMutableSet *_scheduledRunloops;
     
     // We use this to retain ourselves.
-    __strong Growing3rdLibSRWebSocket *_selfRetain;
+    __strong GrowingSRWebSocket *_selfRetain;
     
     NSArray *_requestedProtocols;
-    Growing3rdLib_Growing3rdLib_SRIOConsumerPool *_consumerPool;
+    Growing_Growing_SRIOConsumerPool *_consumerPool;
 }
 
 @synthesize delegate = _delegate;
@@ -301,7 +301,7 @@ static __strong NSData *CRLFCRLF;
         _secure = YES;
     }
     
-    _readyState = Growing3rdLib_SR_CONNECTING;
+    _readyState = Growing_SR_CONNECTING;
     _consumerStopped = YES;
     _webSocketVersion = 13;
     
@@ -320,7 +320,7 @@ static __strong NSData *CRLFCRLF;
 
     _consumers = [[NSMutableArray alloc] init];
     
-    _consumerPool = [[Growing3rdLib_Growing3rdLib_SRIOConsumerPool alloc] init];
+    _consumerPool = [[Growing_Growing_SRIOConsumerPool alloc] init];
     
     _scheduledRunloops = [[NSMutableSet alloc] init];
     
@@ -358,7 +358,7 @@ static __strong NSData *CRLFCRLF;
 
 #ifndef NDEBUG
 
-- (void)setReadyState:(Growing3rdLibSRReadyState)aReadyState;
+- (void)setReadyState:(GrowingSRReadyState)aReadyState;
 {
     [self willChangeValueForKey:@"readyState"];
     assert(aReadyState > _readyState);
@@ -371,7 +371,7 @@ static __strong NSData *CRLFCRLF;
 - (void)open;
 {
     assert(_url);
-    NSAssert(_readyState == Growing3rdLib_SR_CONNECTING, @"Cannot call -(void)open on Growing3rdLibSRWebSocket more than once");
+    NSAssert(_readyState == Growing_SR_CONNECTING, @"Cannot call -(void)open on GrowingSRWebSocket more than once");
 
     _selfRetain = self;
     
@@ -410,8 +410,8 @@ static __strong NSData *CRLFCRLF;
         return NO;
     }
     
-    NSString *concattedString = [_secKey stringByAppendingString:kGrowing3rdLibSRWebSocketAppendToSecKeyString];
-    NSString *expectedAccept = [concattedString growing3rdLibStringBySHA1ThenBase64Encoding];
+    NSString *concattedString = [_secKey stringByAppendingString:kGrowingSRWebSocketAppendToSecKeyString];
+    NSString *expectedAccept = [concattedString GrowingStringBySHA1ThenBase64Encoding];
     
     return [acceptHeader isEqualToString:expectedAccept];
 }
@@ -421,13 +421,13 @@ static __strong NSData *CRLFCRLF;
     NSInteger responseCode = CFHTTPMessageGetResponseStatusCode(_receivedHTTPHeaders);
     
     if (responseCode >= 400) {
-        Growing3rdLibSRFastLog(@"Request failed with response code %d", responseCode);
-        [self _failWithError:[NSError errorWithDomain:kGrowing3rdLibSRWebSocketErrorDomain code:2132 userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"received bad response code from server %ld", (long)responseCode], kGrowing3rdLibSRHTTPResponseErrorKey:@(responseCode)}]];
+        GrowingSRFastLog(@"Request failed with response code %d", responseCode);
+        [self _failWithError:[NSError errorWithDomain:kGrowingSRWebSocketErrorDomain code:2132 userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"received bad response code from server %ld", (long)responseCode], kGrowingSRHTTPResponseErrorKey:@(responseCode)}]];
         return;
     }
     
     if(![self _checkHandshake:_receivedHTTPHeaders]) {
-        [self _failWithError:[NSError errorWithDomain:kGrowing3rdLibSRWebSocketErrorDomain code:2133 userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Invalid Sec-WebSocket-Accept response"] forKey:NSLocalizedDescriptionKey]]];
+        [self _failWithError:[NSError errorWithDomain:kGrowingSRWebSocketErrorDomain code:2133 userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Invalid Sec-WebSocket-Accept response"] forKey:NSLocalizedDescriptionKey]]];
         return;
     }
     
@@ -435,14 +435,14 @@ static __strong NSData *CRLFCRLF;
     if (negotiatedProtocol) {
         // Make sure we requested the protocol
         if ([_requestedProtocols indexOfObject:negotiatedProtocol] == NSNotFound) {
-            [self _failWithError:[NSError errorWithDomain:kGrowing3rdLibSRWebSocketErrorDomain code:2133 userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Server specified Sec-WebSocket-Protocol that wasn't requested"] forKey:NSLocalizedDescriptionKey]]];
+            [self _failWithError:[NSError errorWithDomain:kGrowingSRWebSocketErrorDomain code:2133 userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Server specified Sec-WebSocket-Protocol that wasn't requested"] forKey:NSLocalizedDescriptionKey]]];
             return;
         }
         
         _protocol = negotiatedProtocol;
     }
     
-    self.readyState = Growing3rdLib_SR_OPEN;
+    self.readyState = Growing_SR_OPEN;
     
     if (!_didFail) {
         [self _readFrameNew];
@@ -462,11 +462,11 @@ static __strong NSData *CRLFCRLF;
         _receivedHTTPHeaders = CFHTTPMessageCreateEmpty(NULL, NO);
     }
                         
-    [self _readUntilHeaderCompleteWithCallback:^(Growing3rdLibSRWebSocket *self,  NSData *data) {
+    [self _readUntilHeaderCompleteWithCallback:^(GrowingSRWebSocket *self,  NSData *data) {
         CFHTTPMessageAppendBytes(_receivedHTTPHeaders, (const UInt8 *)data.bytes, data.length);
         
         if (CFHTTPMessageIsHeaderComplete(_receivedHTTPHeaders)) {
-            Growing3rdLibSRFastLog(@"Finished reading headers %@", CFBridgingRelease(CFHTTPMessageCopyAllHeaderFields(_receivedHTTPHeaders)));
+            GrowingSRFastLog(@"Finished reading headers %@", CFBridgingRelease(CFHTTPMessageCopyAllHeaderFields(_receivedHTTPHeaders)));
             [self _HTTPHeadersDidFinish];
         } else {
             [self _readHTTPHeader];
@@ -476,7 +476,7 @@ static __strong NSData *CRLFCRLF;
 
 - (void)didConnect
 {
-    Growing3rdLibSRFastLog(@"Connected");
+    GrowingSRFastLog(@"Connected");
     CFHTTPMessageRef request = CFHTTPMessageCreateRequest(NULL, CFSTR("GET"), (__bridge CFURLRef)_url, kCFHTTPVersion1_1);
     
     // Set host first so it defaults
@@ -504,7 +504,7 @@ static __strong NSData *CRLFCRLF;
     CFHTTPMessageSetHeaderFieldValue(request, CFSTR("Sec-WebSocket-Key"), (__bridge CFStringRef)_secKey);
     CFHTTPMessageSetHeaderFieldValue(request, CFSTR("Sec-WebSocket-Version"), (__bridge CFStringRef)[NSString stringWithFormat:@"%ld", (long)_webSocketVersion]);
     
-    CFHTTPMessageSetHeaderFieldValue(request, CFSTR("Origin"), (__bridge CFStringRef)_url.growing3rdLib_SR_origin);
+    CFHTTPMessageSetHeaderFieldValue(request, CFSTR("Origin"), (__bridge CFStringRef)_url.Growing_SR_origin);
     
     if (_requestedProtocols) {
         CFHTTPMessageSetHeaderFieldValue(request, CFSTR("Sec-WebSocket-Protocol"), (__bridge CFStringRef)[_requestedProtocols componentsJoinedByString:@", "]);
@@ -550,7 +550,7 @@ static __strong NSData *CRLFCRLF;
         [_outputStream setProperty:(__bridge id)kCFStreamSocketSecurityLevelNegotiatedSSL forKey:(__bridge id)kCFStreamPropertySocketSecurityLevel];
         
         // If we're using pinned certs, don't validate the certificate chain
-        if ([_urlRequest growing3rdLib_SR_SSLPinnedCertificates].count) {
+        if ([_urlRequest Growing_SR_SSLPinnedCertificates].count) {
             [SSLOptions setValue:[NSNumber numberWithBool:NO] forKey:(__bridge id)kCFStreamSSLValidatesCertificateChain];
         }
         
@@ -570,7 +570,7 @@ static __strong NSData *CRLFCRLF;
 - (void)_openConnection;
 {
     if (!_scheduledRunloops.count) {
-        [self scheduleInRunLoop:[NSRunLoop growing3rdLib_SR_networkRunLoop] forMode:NSDefaultRunLoopMode];
+        [self scheduleInRunLoop:[NSRunLoop Growing_SR_networkRunLoop] forMode:NSDefaultRunLoopMode];
     }
     
     
@@ -596,22 +596,22 @@ static __strong NSData *CRLFCRLF;
 
 - (void)close;
 {
-    [self closeWithCode:Growing3rdLibSRStatusCodeNormal reason:nil];
+    [self closeWithCode:GrowingSRStatusCodeNormal reason:nil];
 }
 
 - (void)closeWithCode:(NSInteger)code reason:(NSString *)reason;
 {
     assert(code);
     dispatch_async(_workQueue, ^{
-        if (self.readyState == Growing3rdLib_SR_CLOSING || self.readyState == Growing3rdLib_SR_CLOSED) {
+        if (self.readyState == Growing_SR_CLOSING || self.readyState == Growing_SR_CLOSED) {
             return;
         }
         
-        BOOL wasConnecting = self.readyState == Growing3rdLib_SR_CONNECTING;
+        BOOL wasConnecting = self.readyState == Growing_SR_CONNECTING;
         
-        self.readyState = Growing3rdLib_SR_CLOSING;
+        self.readyState = Growing_SR_CLOSING;
         
-        Growing3rdLibSRFastLog(@"Closing with code %d reason %@", code, reason);
+        GrowingSRFastLog(@"Closing with code %d reason %@", code, reason);
         
         if (wasConnecting) {
             [self _closeConnection];
@@ -641,7 +641,7 @@ static __strong NSData *CRLFCRLF;
         }
         
         
-        [self _sendFrameWithOpcode:Growing3rdLibSROpCodeConnectionClose data:payload];
+        [self _sendFrameWithOpcode:GrowingSROpCodeConnectionClose data:payload];
     });
 }
 
@@ -649,7 +649,7 @@ static __strong NSData *CRLFCRLF;
 {
     // Need to shunt this on the _callbackQueue first to see if they received any messages 
     [self _performDelegateBlock:^{
-        [self closeWithCode:Growing3rdLibSRStatusCodeProtocolError reason:message];
+        [self closeWithCode:GrowingSRStatusCodeProtocolError reason:message];
         dispatch_async(_workQueue, ^{
             [self _closeConnection];
         });
@@ -659,7 +659,7 @@ static __strong NSData *CRLFCRLF;
 - (void)_failWithError:(NSError *)error;
 {
     dispatch_async(_workQueue, ^{
-        if (self.readyState != Growing3rdLib_SR_CLOSED) {
+        if (self.readyState != Growing_SR_CLOSED) {
             _failed = YES;
             [self _performDelegateBlock:^{
                 if ([self.delegate respondsToSelector:@selector(webSocket:didFailWithError:)]) {
@@ -667,10 +667,10 @@ static __strong NSData *CRLFCRLF;
                 }
             }];
 
-            self.readyState = Growing3rdLib_SR_CLOSED;
+            self.readyState = Growing_SR_CLOSED;
             _selfRetain = nil;
 
-            Growing3rdLibSRFastLog(@"Failing with error %@", error.localizedDescription);
+            GrowingSRFastLog(@"Failing with error %@", error.localizedDescription);
             
             [self _closeConnection];
         }
@@ -690,16 +690,16 @@ static __strong NSData *CRLFCRLF;
 
 - (void)send:(id)data;
 {
-    NSAssert(self.readyState != Growing3rdLib_SR_CONNECTING, @"Invalid State: Cannot call send: until connection is open");
+    NSAssert(self.readyState != Growing_SR_CONNECTING, @"Invalid State: Cannot call send: until connection is open");
     // TODO: maybe not copy this for performance
     data = [data copy];
     dispatch_async(_workQueue, ^{
         if ([data isKindOfClass:[NSString class]]) {
-            [self _sendFrameWithOpcode:Growing3rdLibSROpCodeTextFrame data:[(NSString *)data dataUsingEncoding:NSUTF8StringEncoding]];
+            [self _sendFrameWithOpcode:GrowingSROpCodeTextFrame data:[(NSString *)data dataUsingEncoding:NSUTF8StringEncoding]];
         } else if ([data isKindOfClass:[NSData class]]) {
-            [self _sendFrameWithOpcode:Growing3rdLibSROpCodeBinaryFrame data:data];
+            [self _sendFrameWithOpcode:GrowingSROpCodeBinaryFrame data:data];
         } else if (data == nil) {
-            [self _sendFrameWithOpcode:Growing3rdLibSROpCodeTextFrame data:data];
+            [self _sendFrameWithOpcode:GrowingSROpCodeTextFrame data:data];
         } else {
             assert(NO);
         }
@@ -708,11 +708,11 @@ static __strong NSData *CRLFCRLF;
 
 - (void)sendPing:(NSData *)data;
 {
-    NSAssert(self.readyState == Growing3rdLib_SR_OPEN, @"Invalid State: Cannot call send: until connection is open");
+    NSAssert(self.readyState == Growing_SR_OPEN, @"Invalid State: Cannot call send: until connection is open");
     // TODO: maybe not copy this for performance
     data = [data copy] ?: [NSData data]; // It's okay for a ping to be empty
     dispatch_async(_workQueue, ^{
-        [self _sendFrameWithOpcode:Growing3rdLibSROpCodePing data:data];
+        [self _sendFrameWithOpcode:GrowingSROpCodePing data:data];
     });
 }
 
@@ -721,14 +721,14 @@ static __strong NSData *CRLFCRLF;
     // Need to pingpong this off _callbackQueue first to make sure messages happen in order
     [self _performDelegateBlock:^{
         dispatch_async(_workQueue, ^{
-            [self _sendFrameWithOpcode:Growing3rdLibSROpCodePong data:pingData];
+            [self _sendFrameWithOpcode:GrowingSROpCodePong data:pingData];
         });
     }];
 }
 
 - (void)handlePong:(NSData *)pongData;
 {
-    Growing3rdLibSRFastLog(@"Received pong");
+    GrowingSRFastLog(@"Received pong");
     [self _performDelegateBlock:^{
         if ([self.delegate respondsToSelector:@selector(webSocket:didReceivePong:)]) {
             [self.delegate webSocket:self didReceivePong:pongData];
@@ -738,7 +738,7 @@ static __strong NSData *CRLFCRLF;
 
 - (void)_handleMessage:(id)message
 {
-    Growing3rdLibSRFastLog(@"Received message");
+    GrowingSRFastLog(@"Received message");
     [self _performDelegateBlock:^{
         [self.delegate webSocket:self didReceiveMessage:message];
     }];
@@ -784,7 +784,7 @@ static inline BOOL closeCodeIsValid(int closeCode) {
     size_t dataSize = data.length;
     __block uint16_t closeCode = 0;
     
-    Growing3rdLibSRFastLog(@"Received close frame");
+    GrowingSRFastLog(@"Received close frame");
     
     if (dataSize == 1) {
         // TODO handle error
@@ -805,12 +805,12 @@ static inline BOOL closeCodeIsValid(int closeCode) {
             }
         }
     } else {
-        _closeCode = SRStatusNoStatusReceived;
+        _closeCode = GrowingSRStatusNoStatusReceived;
     }
     
     [self assertOnWorkQueue];
     
-    if (self.readyState == Growing3rdLib_SR_OPEN) {
+    if (self.readyState == Growing_SR_OPEN) {
         [self closeWithCode:1000 reason:nil];
     }
     dispatch_async(_workQueue, ^{
@@ -821,7 +821,7 @@ static inline BOOL closeCodeIsValid(int closeCode) {
 - (void)_closeConnection;
 {
     [self assertOnWorkQueue];
-    Growing3rdLibSRFastLog(@"Trying to disconnect");
+    GrowingSRFastLog(@"Trying to disconnect");
     _closeWhenFinishedWriting = YES;
     [self _pumpWriting];
 }
@@ -830,7 +830,7 @@ static inline BOOL closeCodeIsValid(int closeCode) {
 {                
     // Check that the current data is valid UTF8
     
-    BOOL isControlFrame = (opcode == Growing3rdLibSROpCodePing || opcode == Growing3rdLibSROpCodePong || opcode == Growing3rdLibSROpCodeConnectionClose);
+    BOOL isControlFrame = (opcode == GrowingSROpCodePing || opcode == GrowingSROpCodePong || opcode == GrowingSROpCodeConnectionClose);
     if (!isControlFrame) {
         [self _readFrameNew];
     } else {
@@ -840,10 +840,10 @@ static inline BOOL closeCodeIsValid(int closeCode) {
     }
     
     switch (opcode) {
-        case Growing3rdLibSROpCodeTextFrame: {
+        case GrowingSROpCodeTextFrame: {
             NSString *str = [[NSString alloc] initWithData:frameData encoding:NSUTF8StringEncoding];
             if (str == nil && frameData) {
-                [self closeWithCode:Growing3rdLibSRStatusCodeInvalidUTF8 reason:@"Text frames must be valid UTF-8"];
+                [self closeWithCode:GrowingSRStatusCodeInvalidUTF8 reason:@"Text frames must be valid UTF-8"];
                 dispatch_async(_workQueue, ^{
                     [self _closeConnection];
                 });
@@ -853,16 +853,16 @@ static inline BOOL closeCodeIsValid(int closeCode) {
             [self _handleMessage:str];
             break;
         }
-        case Growing3rdLibSROpCodeBinaryFrame:
+        case GrowingSROpCodeBinaryFrame:
             [self _handleMessage:[frameData copy]];
             break;
-        case Growing3rdLibSROpCodeConnectionClose:
+        case GrowingSROpCodeConnectionClose:
             [self handleCloseWithData:frameData];
             break;
-        case Growing3rdLibSROpCodePing:
+        case GrowingSROpCodePing:
             [self handlePing:frameData];
             break;
-        case Growing3rdLibSROpCodePong:
+        case GrowingSROpCodePong:
             [self handlePong:frameData];
             break;
         default:
@@ -872,58 +872,58 @@ static inline BOOL closeCodeIsValid(int closeCode) {
     }
 }
 
-- (void)_handleFrameHeader:(Growing3rdLib_frame_header)Growing3rdLib_frame_header curData:(NSData *)curData;
+- (void)_handleFrameHeader:(Growing_frame_header)Growing_frame_header curData:(NSData *)curData;
 {
-    assert(Growing3rdLib_frame_header.opcode != 0);
+    assert(Growing_frame_header.opcode != 0);
     
-    if (self.readyState != Growing3rdLib_SR_OPEN) {
+    if (self.readyState != Growing_SR_OPEN) {
         return;
     }
     
     
-    BOOL isControlFrame = (Growing3rdLib_frame_header.opcode == Growing3rdLibSROpCodePing || Growing3rdLib_frame_header.opcode == Growing3rdLibSROpCodePong || Growing3rdLib_frame_header.opcode == Growing3rdLibSROpCodeConnectionClose);
+    BOOL isControlFrame = (Growing_frame_header.opcode == GrowingSROpCodePing || Growing_frame_header.opcode == GrowingSROpCodePong || Growing_frame_header.opcode == GrowingSROpCodeConnectionClose);
     
-    if (isControlFrame && !Growing3rdLib_frame_header.fin) {
+    if (isControlFrame && !Growing_frame_header.fin) {
         [self _closeWithProtocolError:@"Fragmented control frames not allowed"];
         return;
     }
     
-    if (isControlFrame && Growing3rdLib_frame_header.payload_length >= 126) {
+    if (isControlFrame && Growing_frame_header.payload_length >= 126) {
         [self _closeWithProtocolError:@"Control frames cannot have payloads larger than 126 bytes"];
         return;
     }
     
     if (!isControlFrame) {
-        _currentFrameOpcode = Growing3rdLib_frame_header.opcode;
+        _currentFrameOpcode = Growing_frame_header.opcode;
         _currentFrameCount += 1;
     }
     
-    if (Growing3rdLib_frame_header.payload_length == 0) {
+    if (Growing_frame_header.payload_length == 0) {
         if (isControlFrame) {
-            [self _handleFrameWithData:curData opCode:Growing3rdLib_frame_header.opcode];
+            [self _handleFrameWithData:curData opCode:Growing_frame_header.opcode];
         } else {
-            if (Growing3rdLib_frame_header.fin) {
-                [self _handleFrameWithData:_currentFrameData opCode:Growing3rdLib_frame_header.opcode];
+            if (Growing_frame_header.fin) {
+                [self _handleFrameWithData:_currentFrameData opCode:Growing_frame_header.opcode];
             } else {
                 // TODO add assert that opcode is not a control;
                 [self _readFrameContinue];
             }
         }
     } else {
-        assert(Growing3rdLib_frame_header.payload_length <= SIZE_T_MAX);
-        [self _addConsumerWithDataLength:(size_t)Growing3rdLib_frame_header.payload_length callback:^(Growing3rdLibSRWebSocket *self, NSData *newData) {
+        assert(Growing_frame_header.payload_length <= SIZE_T_MAX);
+        [self _addConsumerWithDataLength:(size_t)Growing_frame_header.payload_length callback:^(GrowingSRWebSocket *self, NSData *newData) {
             if (isControlFrame) {
-                [self _handleFrameWithData:newData opCode:Growing3rdLib_frame_header.opcode];
+                [self _handleFrameWithData:newData opCode:Growing_frame_header.opcode];
             } else {
-                if (Growing3rdLib_frame_header.fin) {
-                    [self _handleFrameWithData:self->_currentFrameData opCode:Growing3rdLib_frame_header.opcode];
+                if (Growing_frame_header.fin) {
+                    [self _handleFrameWithData:self->_currentFrameData opCode:Growing_frame_header.opcode];
                 } else {
                     // TODO add assert that opcode is not a control;
                     [self _readFrameContinue];
                 }
                 
             }
-        } readToCurrentFrame:!isControlFrame unmaskBytes:Growing3rdLib_frame_header.masked];
+        } readToCurrentFrame:!isControlFrame unmaskBytes:Growing_frame_header.masked];
     }
 }
 
@@ -950,7 +950,7 @@ static inline BOOL closeCodeIsValid(int closeCode) {
  */
 
 static const uint8_t SRFinMask          = 0x80;
-static const uint8_t Growing3rdLibSROpCodeMask       = 0x0F;
+static const uint8_t GrowingSROpCodeMask       = 0x0F;
 static const uint8_t SRRsvMask          = 0x70;
 static const uint8_t SRMaskMask         = 0x80;
 static const uint8_t SRPayloadLenMask   = 0x7F;
@@ -960,8 +960,8 @@ static const uint8_t SRPayloadLenMask   = 0x7F;
 {
     assert((_currentFrameCount == 0 && _currentFrameOpcode == 0) || (_currentFrameCount > 0 && _currentFrameOpcode > 0));
 
-    [self _addConsumerWithDataLength:2 callback:^(Growing3rdLibSRWebSocket *self, NSData *data) {
-        __block Growing3rdLib_frame_header header = {0};
+    [self _addConsumerWithDataLength:2 callback:^(GrowingSRWebSocket *self, NSData *data) {
+        __block Growing_frame_header header = {0};
         
         const uint8_t *headerBuffer = data.bytes;
         assert(data.length >= 2);
@@ -971,9 +971,9 @@ static const uint8_t SRPayloadLenMask   = 0x7F;
             return;
         }
         
-        uint8_t receivedOpcode = (Growing3rdLibSROpCodeMask & headerBuffer[0]);
+        uint8_t receivedOpcode = (GrowingSROpCodeMask & headerBuffer[0]);
         
-        BOOL isControlFrame = (receivedOpcode == Growing3rdLibSROpCodePing || receivedOpcode == Growing3rdLibSROpCodePong || receivedOpcode == Growing3rdLibSROpCodeConnectionClose);
+        BOOL isControlFrame = (receivedOpcode == GrowingSROpCodePing || receivedOpcode == GrowingSROpCodePong || receivedOpcode == GrowingSROpCodeConnectionClose);
         
         if (!isControlFrame && receivedOpcode != 0 && self->_currentFrameCount > 0) {
             [self _closeWithProtocolError:@"all data frames after the initial data frame must have opcode 0"];
@@ -1010,7 +1010,7 @@ static const uint8_t SRPayloadLenMask   = 0x7F;
         if (extra_bytes_needed == 0) {
             [self _handleFrameHeader:header curData:self->_currentFrameData];
         } else {
-            [self _addConsumerWithDataLength:extra_bytes_needed callback:^(Growing3rdLibSRWebSocket *self, NSData *data) {
+            [self _addConsumerWithDataLength:extra_bytes_needed callback:^(GrowingSRWebSocket *self, NSData *data) {
                 size_t mapped_size = data.length;
                 #pragma unused (mapped_size)
                 const void *mapped_buffer = data.bytes;
@@ -1062,7 +1062,7 @@ static const uint8_t SRPayloadLenMask   = 0x7F;
     if (dataLength - _outputBufferOffset > 0 && _outputStream.hasSpaceAvailable) {
         NSInteger bytesWritten = [_outputStream write:_outputBuffer.bytes + _outputBufferOffset maxLength:dataLength - _outputBufferOffset];
         if (bytesWritten == -1) {
-            [self _failWithError:[NSError errorWithDomain:kGrowing3rdLibSRWebSocketErrorDomain code:2145 userInfo:[NSDictionary dictionaryWithObject:@"Error writing to stream" forKey:NSLocalizedDescriptionKey]]];
+            [self _failWithError:[NSError errorWithDomain:kGrowingSRWebSocketErrorDomain code:2145 userInfo:[NSDictionary dictionaryWithObject:@"Error writing to stream" forKey:NSLocalizedDescriptionKey]]];
              return;
         }
         
@@ -1101,13 +1101,13 @@ static const uint8_t SRPayloadLenMask   = 0x7F;
     }
 }
 
-- (void)_addConsumerWithScanner:(Growing3rdLib_stream_scanner)consumer callback:(Growing3rdLib_data_callback)callback;
+- (void)_addConsumerWithScanner:(Growing_stream_scanner)consumer callback:(Growing_data_callback)callback;
 {
     [self assertOnWorkQueue];
     [self _addConsumerWithScanner:consumer callback:callback dataLength:0];
 }
 
-- (void)_addConsumerWithDataLength:(size_t)dataLength callback:(Growing3rdLib_data_callback)callback readToCurrentFrame:(BOOL)readToCurrentFrame unmaskBytes:(BOOL)unmaskBytes;
+- (void)_addConsumerWithDataLength:(size_t)dataLength callback:(Growing_data_callback)callback readToCurrentFrame:(BOOL)readToCurrentFrame unmaskBytes:(BOOL)unmaskBytes;
 {   
     [self assertOnWorkQueue];
     assert(dataLength);
@@ -1116,7 +1116,7 @@ static const uint8_t SRPayloadLenMask   = 0x7F;
     [self _pumpScanner];
 }
 
-- (void)_addConsumerWithScanner:(Growing3rdLib_stream_scanner)consumer callback:(Growing3rdLib_data_callback)callback dataLength:(size_t)dataLength;
+- (void)_addConsumerWithScanner:(Growing_stream_scanner)consumer callback:(Growing_data_callback)callback dataLength:(size_t)dataLength;
 {    
     [self assertOnWorkQueue];
     [_consumers addObject:[_consumerPool consumerWithScanner:consumer handler:callback bytesNeeded:dataLength readToCurrentFrame:NO unmaskBytes:NO]];
@@ -1126,15 +1126,15 @@ static const uint8_t SRPayloadLenMask   = 0x7F;
 
 static const char CRLFCRLFBytes[] = {'\r', '\n', '\r', '\n'};
 
-- (void)_readUntilHeaderCompleteWithCallback:(Growing3rdLib_data_callback)dataHandler;
+- (void)_readUntilHeaderCompleteWithCallback:(Growing_data_callback)dataHandler;
 {
     [self _readUntilBytes:CRLFCRLFBytes length:sizeof(CRLFCRLFBytes) callback:dataHandler];
 }
 
-- (void)_readUntilBytes:(const void *)bytes length:(size_t)length callback:(Growing3rdLib_data_callback)dataHandler;
+- (void)_readUntilBytes:(const void *)bytes length:(size_t)length callback:(Growing_data_callback)dataHandler;
 {
     // TODO optimize so this can continue from where we last searched
-    Growing3rdLib_stream_scanner consumer = ^size_t(NSData *data) {
+    Growing_stream_scanner consumer = ^size_t(NSData *data) {
         __block size_t found_size = 0;
         __block size_t match_count = 0;
         
@@ -1162,7 +1162,7 @@ static const char CRLFCRLFBytes[] = {'\r', '\n', '\r', '\n'};
     
     BOOL didWork = NO;
     
-    if (self.readyState >= Growing3rdLib_SR_CLOSING) {
+    if (self.readyState >= Growing_SR_CLOSING) {
         return didWork;
     }
     
@@ -1175,7 +1175,7 @@ static const char CRLFCRLFBytes[] = {'\r', '\n', '\r', '\n'};
         return didWork;
     }
     
-    Growing3rdLib_SRIOConsumer *consumer = [_consumers objectAtIndex:0];
+    Growing_SRIOConsumer *consumer = [_consumers objectAtIndex:0];
     
     size_t bytesNeeded = consumer.bytesNeeded;
     
@@ -1222,19 +1222,19 @@ static const char CRLFCRLFBytes[] = {'\r', '\n', '\r', '\n'};
             
             _readOpCount += 1;
             
-            if (_currentFrameOpcode == Growing3rdLibSROpCodeTextFrame) {
+            if (_currentFrameOpcode == GrowingSROpCodeTextFrame) {
                 // Validate UTF8 stuff.
                 size_t currentDataSize = _currentFrameData.length;
-                if (_currentFrameOpcode == Growing3rdLibSROpCodeTextFrame && currentDataSize > 0) {
+                if (_currentFrameOpcode == GrowingSROpCodeTextFrame && currentDataSize > 0) {
                     // TODO: Optimize the crap out of this.  Don't really have to copy all the data each time
                     
                     size_t scanSize = currentDataSize - _currentStringScanPosition;
                     
                     NSData *scan_data = [_currentFrameData subdataWithRange:NSMakeRange(_currentStringScanPosition, scanSize)];
-                    int32_t valid_utf8_size = Growing3rdLib_validate_dispatch_data_partial_string(scan_data);
+                    int32_t valid_utf8_size = Growing_validate_dispatch_data_partial_string(scan_data);
                     
                     if (valid_utf8_size == -1) {
-                        [self closeWithCode:Growing3rdLibSRStatusCodeInvalidUTF8 reason:@"Text frames must be valid UTF-8"];
+                        [self closeWithCode:GrowingSRStatusCodeInvalidUTF8 reason:@"Text frames must be valid UTF-8"];
                         dispatch_async(_workQueue, ^{
                             [self _closeConnection];
                         });
@@ -1285,7 +1285,7 @@ static const char CRLFCRLFBytes[] = {'\r', '\n', '\r', '\n'};
 
 static const size_t SRFrameHeaderOverhead = 32;
 
-- (void)_sendFrameWithOpcode:(Growing3rdLibSROpCode)opcode data:(id)data;
+- (void)_sendFrameWithOpcode:(GrowingSROpCode)opcode data:(id)data;
 {
     [self assertOnWorkQueue];
     
@@ -1299,7 +1299,7 @@ static const size_t SRFrameHeaderOverhead = 32;
         
     NSMutableData *frame = [[NSMutableData alloc] initWithLength:payloadLength + SRFrameHeaderOverhead];
     if (!frame) {
-        [self closeWithCode:Growing3rdLibSRStatusCodeMessageTooBig reason:@"Message too big"];
+        [self closeWithCode:GrowingSRStatusCodeMessageTooBig reason:@"Message too big"];
         return;
     }
     uint8_t *frame_buffer = (uint8_t *)[frame mutableBytes];
@@ -1370,7 +1370,7 @@ static const size_t SRFrameHeaderOverhead = 32;
 {
     if (_secure && !_pinnedCertFound && (eventCode == NSStreamEventHasBytesAvailable || eventCode == NSStreamEventHasSpaceAvailable)) {
         
-        NSArray *sslCerts = [_urlRequest growing3rdLib_SR_SSLPinnedCertificates];
+        NSArray *sslCerts = [_urlRequest Growing_SR_SSLPinnedCertificates];
         if (sslCerts) {
             SecTrustRef secTrust = (__bridge SecTrustRef)[aStream propertyForKey:(__bridge id)kCFStreamPropertySSLPeerTrust];
             if (secTrust) {
@@ -1393,7 +1393,7 @@ static const size_t SRFrameHeaderOverhead = 32;
             
             if (!_pinnedCertFound) {
                 dispatch_async(_workQueue, ^{
-                    [self _failWithError:[NSError errorWithDomain:kGrowing3rdLibSRWebSocketErrorDomain code:23556 userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Invalid server cert"] forKey:NSLocalizedDescriptionKey]]];
+                    [self _failWithError:[NSError errorWithDomain:kGrowingSRWebSocketErrorDomain code:23556 userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Invalid server cert"] forKey:NSLocalizedDescriptionKey]]];
                 });
                 return;
             }
@@ -1403,13 +1403,13 @@ static const size_t SRFrameHeaderOverhead = 32;
     dispatch_async(_workQueue, ^{
         switch (eventCode) {
             case NSStreamEventOpenCompleted: {
-                Growing3rdLibSRFastLog(@"NSStreamEventOpenCompleted %@", aStream);
-                if (self.readyState >= Growing3rdLib_SR_CLOSING) {
+                GrowingSRFastLog(@"NSStreamEventOpenCompleted %@", aStream);
+                if (self.readyState >= Growing_SR_CLOSING) {
                     return;
                 }
                 assert(_readBuffer);
                 
-                if (self.readyState == Growing3rdLib_SR_CONNECTING && aStream == _inputStream) {
+                if (self.readyState == Growing_SR_CONNECTING && aStream == _inputStream) {
                     [self didConnect];
                 }
                 [self _pumpWriting];
@@ -1418,7 +1418,7 @@ static const size_t SRFrameHeaderOverhead = 32;
             }
                 
             case NSStreamEventErrorOccurred: {
-                Growing3rdLibSRFastLog(@"NSStreamEventErrorOccurred %@ %@", aStream, [[aStream streamError] copy]);
+                GrowingSRFastLog(@"NSStreamEventErrorOccurred %@ %@", aStream, [[aStream streamError] copy]);
                 /// TODO specify error better!
                 [self _failWithError:aStream.streamError];
                 _readBufferOffset = 0;
@@ -1429,12 +1429,12 @@ static const size_t SRFrameHeaderOverhead = 32;
                 
             case NSStreamEventEndEncountered: {
                 [self _pumpScanner];
-                Growing3rdLibSRFastLog(@"NSStreamEventEndEncountered %@", aStream);
+                GrowingSRFastLog(@"NSStreamEventEndEncountered %@", aStream);
                 if (aStream.streamError) {
                     [self _failWithError:aStream.streamError];
                 } else {
-                    if (self.readyState != Growing3rdLib_SR_CLOSED) {
-                        self.readyState = Growing3rdLib_SR_CLOSED;
+                    if (self.readyState != Growing_SR_CLOSED) {
+                        self.readyState = Growing_SR_CLOSED;
                         _selfRetain = nil;
                     }
 
@@ -1443,7 +1443,7 @@ static const size_t SRFrameHeaderOverhead = 32;
                         // If we get closed in this state it's probably not clean because we should be sending this when we send messages
                         [self _performDelegateBlock:^{
                             if ([self.delegate respondsToSelector:@selector(webSocket:didCloseWithCode:reason:wasClean:)]) {
-                                [self.delegate webSocket:self didCloseWithCode:Growing3rdLibSRStatusCodeGoingAway reason:@"Stream end encountered" wasClean:NO];
+                                [self.delegate webSocket:self didCloseWithCode:GrowingSRStatusCodeGoingAway reason:@"Stream end encountered" wasClean:NO];
                             }
                         }];
                     }
@@ -1453,7 +1453,7 @@ static const size_t SRFrameHeaderOverhead = 32;
             }
                 
             case NSStreamEventHasBytesAvailable: {
-                Growing3rdLibSRFastLog(@"NSStreamEventHasBytesAvailable %@", aStream);
+                GrowingSRFastLog(@"NSStreamEventHasBytesAvailable %@", aStream);
                 const int bufferSize = 2048;
                 uint8_t buffer[bufferSize];
                 
@@ -1475,13 +1475,13 @@ static const size_t SRFrameHeaderOverhead = 32;
             }
                 
             case NSStreamEventHasSpaceAvailable: {
-                Growing3rdLibSRFastLog(@"NSStreamEventHasSpaceAvailable %@", aStream);
+                GrowingSRFastLog(@"NSStreamEventHasSpaceAvailable %@", aStream);
                 [self _pumpWriting];
                 break;
             }
                 
             default:
-                Growing3rdLibSRFastLog(@"(default)  %@", aStream);
+                GrowingSRFastLog(@"(default)  %@", aStream);
                 break;
         }
     });
@@ -1490,7 +1490,7 @@ static const size_t SRFrameHeaderOverhead = 32;
 @end
 
 
-@implementation Growing3rdLib_SRIOConsumer
+@implementation Growing_SRIOConsumer
 
 @synthesize bytesNeeded = _bytesNeeded;
 @synthesize consumer = _scanner;
@@ -1498,7 +1498,7 @@ static const size_t SRFrameHeaderOverhead = 32;
 @synthesize readToCurrentFrame = _readToCurrentFrame;
 @synthesize unmaskBytes = _unmaskBytes;
 
-- (void)setupWithScanner:(Growing3rdLib_stream_scanner)scanner handler:(Growing3rdLib_data_callback)handler bytesNeeded:(size_t)bytesNeeded readToCurrentFrame:(BOOL)readToCurrentFrame unmaskBytes:(BOOL)unmaskBytes;
+- (void)setupWithScanner:(Growing_stream_scanner)scanner handler:(Growing_data_callback)handler bytesNeeded:(size_t)bytesNeeded readToCurrentFrame:(BOOL)readToCurrentFrame unmaskBytes:(BOOL)unmaskBytes;
 {
     _scanner = [scanner copy];
     _handler = [handler copy];
@@ -1512,7 +1512,7 @@ static const size_t SRFrameHeaderOverhead = 32;
 @end
 
 
-@implementation Growing3rdLib_Growing3rdLib_SRIOConsumerPool {
+@implementation Growing_Growing_SRIOConsumerPool {
     NSUInteger _poolSize;
     NSMutableArray *_bufferedConsumers;
 }
@@ -1532,14 +1532,14 @@ static const size_t SRFrameHeaderOverhead = 32;
     return [self initWithBufferCapacity:8];
 }
 
-- (Growing3rdLib_SRIOConsumer *)consumerWithScanner:(Growing3rdLib_stream_scanner)scanner handler:(Growing3rdLib_data_callback)handler bytesNeeded:(size_t)bytesNeeded readToCurrentFrame:(BOOL)readToCurrentFrame unmaskBytes:(BOOL)unmaskBytes;
+- (Growing_SRIOConsumer *)consumerWithScanner:(Growing_stream_scanner)scanner handler:(Growing_data_callback)handler bytesNeeded:(size_t)bytesNeeded readToCurrentFrame:(BOOL)readToCurrentFrame unmaskBytes:(BOOL)unmaskBytes;
 {
-    Growing3rdLib_SRIOConsumer *consumer = nil;
+    Growing_SRIOConsumer *consumer = nil;
     if (_bufferedConsumers.count) {
         consumer = [_bufferedConsumers lastObject];
         [_bufferedConsumers removeLastObject];
     } else {
-        consumer = [[Growing3rdLib_SRIOConsumer alloc] init];
+        consumer = [[Growing_SRIOConsumer alloc] init];
     }
     
     [consumer setupWithScanner:scanner handler:handler bytesNeeded:bytesNeeded readToCurrentFrame:readToCurrentFrame unmaskBytes:unmaskBytes];
@@ -1547,7 +1547,7 @@ static const size_t SRFrameHeaderOverhead = 32;
     return consumer;
 }
 
-- (void)returnConsumer:(Growing3rdLib_SRIOConsumer *)consumer;
+- (void)returnConsumer:(Growing_SRIOConsumer *)consumer;
 {
     if (_bufferedConsumers.count < _poolSize) {
         [_bufferedConsumers addObject:consumer];
@@ -1557,32 +1557,32 @@ static const size_t SRFrameHeaderOverhead = 32;
 @end
 
 
-@implementation  NSURLRequest (Growing3rdLibCertificateAdditions)
+@implementation  NSURLRequest (GrowingCertificateAdditions)
 
-- (NSArray *)growing3rdLib_SR_SSLPinnedCertificates;
+- (NSArray *)Growing_SR_SSLPinnedCertificates;
 {
-    return [NSURLProtocol propertyForKey:@"Growing3rdLib_SR_SSLPinnedCertificates" inRequest:self];
+    return [NSURLProtocol propertyForKey:@"Growing_SR_SSLPinnedCertificates" inRequest:self];
 }
 
 @end
 
-@implementation  NSMutableURLRequest (Growing3rdLibCertificateAdditions)
+@implementation  NSMutableURLRequest (GrowingCertificateAdditions)
 
-- (NSArray *)growing3rdLib_SR_SSLPinnedCertificates;
+- (NSArray *)Growing_SR_SSLPinnedCertificates;
 {
-    return [NSURLProtocol propertyForKey:@"Growing3rdLib_SR_SSLPinnedCertificates" inRequest:self];
+    return [NSURLProtocol propertyForKey:@"Growing_SR_SSLPinnedCertificates" inRequest:self];
 }
 
-- (void)setGrowing3rdLib_SR_SSLPinnedCertificates:(NSArray *)Growing3rdLib_SR_SSLPinnedCertificates;
+- (void)setGrowing_SR_SSLPinnedCertificates:(NSArray *)Growing_SR_SSLPinnedCertificates;
 {
-    [NSURLProtocol setProperty:Growing3rdLib_SR_SSLPinnedCertificates forKey:@"Growing3rdLib_SR_SSLPinnedCertificates" inRequest:self];
+    [NSURLProtocol setProperty:Growing_SR_SSLPinnedCertificates forKey:@"Growing_SR_SSLPinnedCertificates" inRequest:self];
 }
 
 @end
 
-@implementation NSURL (Growing3rdLibSRWebSocket)
+@implementation NSURL (GrowingSRWebSocket)
 
-- (NSString *)growing3rdLib_SR_origin;
+- (NSString *)Growing_SR_origin;
 {
     NSString *scheme = [self.scheme lowercaseString];
         
@@ -1603,7 +1603,7 @@ static const size_t SRFrameHeaderOverhead = 32;
 
 //#define SR_ENABLE_LOG
 
-static inline void Growing3rdLibSRFastLog(NSString *format, ...)  {
+static inline void GrowingSRFastLog(NSString *format, ...)  {
 #ifdef SR_ENABLE_LOG
     __block va_list arg_list;
     va_start (arg_list, format);
@@ -1619,7 +1619,7 @@ static inline void Growing3rdLibSRFastLog(NSString *format, ...)  {
 
 #ifdef HAS_ICU
 
-static inline int32_t Growing3rdLib_validate_dispatch_data_partial_string(NSData *data) {
+static inline int32_t Growing_validate_dispatch_data_partial_string(NSData *data) {
     if ([data length] > INT32_MAX) {
         // INT32_MAX is the limit so long as this Framework is using 32 bit ints everywhere.
         return -1;
@@ -1669,7 +1669,7 @@ static inline int32_t Growing3rdLib_validate_dispatch_data_partial_string(NSData
 #else
 
 // This is a hack, and probably not optimal
-static inline int32_t Growing3rdLib_validate_dispatch_data_partial_string(NSData *data) {
+static inline int32_t Growing_validate_dispatch_data_partial_string(NSData *data) {
     static const int maxCodepointSize = 3;
     
     for (int i = 0; i < maxCodepointSize; i++) {
@@ -1684,15 +1684,15 @@ static inline int32_t Growing3rdLib_validate_dispatch_data_partial_string(NSData
 
 #endif
 
-static Growing3rdLib___SRRunLoopThread *networkThread = nil;
+static Growing___SRRunLoopThread *networkThread = nil;
 static NSRunLoop *networkRunLoop = nil;
 
-@implementation NSRunLoop (Growing3rdLibSRWebSocket)
+@implementation NSRunLoop (GrowingSRWebSocket)
 
-+ (NSRunLoop *)growing3rdLib_SR_networkRunLoop {
++ (NSRunLoop *)Growing_SR_networkRunLoop {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        networkThread = [[Growing3rdLib___SRRunLoopThread alloc] init];
+        networkThread = [[Growing___SRRunLoopThread alloc] init];
         networkThread.name = @"com.squareup.SocketRocket.NetworkThread";
         [networkThread start];
         networkRunLoop = networkThread.runLoop;
@@ -1704,7 +1704,7 @@ static NSRunLoop *networkRunLoop = nil;
 @end
 
 
-@implementation Growing3rdLib___SRRunLoopThread {
+@implementation Growing___SRRunLoopThread {
     dispatch_group_t _waitGroup;
 }
 
