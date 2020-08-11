@@ -288,10 +288,6 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
     return self.window;
 }
 
-- (id<GrowingNodeAsyncNativeHandler>)growingNodeAsyncNativeHandler {
-    return nil;
-}
-
 - (NSString *)growingNodeUniqueTag {
     return self.growingUniqueTag;
 }

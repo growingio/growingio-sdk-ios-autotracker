@@ -111,12 +111,12 @@
     }
     
     NSString *circleTypes = params[@"circleType"];
-    NSString *token = [params[@"token"] stringByRemovingPercentEncoding];
+//    NSString *token = [params[@"token"] stringByRemovingPercentEncoding];
     NSString *circleRoomNumber = params[@"circleRoomNumber"];
     NSString *dataCheckRoomNumber = params[@"dataCheckRoomNumber"];
     NSString *loginToken = [params[@"loginToken"] stringByRemovingPercentEncoding];
     NSString *wsHost = [params[@"wsHost"] stringByRemovingPercentEncoding];
-    NSString *paireKey = [params[@"pairKey"] stringByRemovingPercentEncoding];
+//    NSString *paireKey = [params[@"pairKey"] stringByRemovingPercentEncoding];
     if ((!circleTypes.length || !loginToken.length) && !dataCheckRoomNumber)
     {
         return NO;

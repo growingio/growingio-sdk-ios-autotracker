@@ -39,8 +39,7 @@
                                                                                  NSUInteger idx,
                                                                                  BOOL * _Nonnull stop) {
             UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:obj];
-            if (cell)
-            {
+            if (cell) {
                 [retMap setObject:[NSNumber numberWithInteger:obj.row] forKey:cell];
             }
         }];
@@ -56,28 +55,20 @@
     return retMap;
 }
 
-- (UICollectionView*)growing_collectionView
-{
+- (UICollectionView*)growing_collectionView {
     return [self growing_alertViewCollectionView:self.view];
 }
 
-- (UICollectionView*)growing_alertViewCollectionView:(UIView*)view
-{
-    for (UIView *subview in view.subviews)
-    {
-        if ([subview isKindOfClass:[UICollectionView class]])
-        {
+- (UICollectionView*)growing_alertViewCollectionView:(UIView*)view {
+    for (UIView *subview in view.subviews) {
+        if ([subview isKindOfClass:[UICollectionView class]]) {
             return (UICollectionView*)subview;
-        }
-        else
-        {
+        } else {
             UICollectionView *ret = [self growing_alertViewCollectionView:subview];
-            if (ret)
-            {
+            if (ret) {
                 return ret;
             }
         }
-
     }
     return nil;
 }
@@ -100,8 +91,23 @@
     return childs;
 }
 
-+ (UIAlertAction*)growing_actionForActionView:(UIView*)actionView
-{
+- (NSInteger)growingNodeKeyIndex {
+    return 0;
+}
+
+- (NSIndexPath *)growingNodeIndexPath {
+    return nil;
+}
+
+- (NSString *)growingNodeSubPath {
+    return nil;
+}
+
+- (NSString *)growingNodeSubSimilarPath {
+    return nil;
+}
+
++ (UIAlertAction*)growing_actionForActionView:(UIView*)actionView {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"

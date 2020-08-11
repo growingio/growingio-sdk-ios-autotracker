@@ -109,10 +109,6 @@ static char growingNodeIsBadNodeKey;
     return CGRectZero;
 }
 
-- (id<GrowingNodeAsyncNativeHandler>)growingNodeAsyncNativeHandler {
-    return nil;
-}
-
 - (NSString *)growingNodeUniqueTag {
     return nil;
 }
@@ -153,8 +149,6 @@ static char growingNodeIsBadNodeKey;
 @property (nonatomic, weak) NSDictionary *growingNodeDataDict;
 @property (nonatomic, weak) UIWindow *growingNodeWindow;
 @property (nonatomic, assign) CGRect growingNodeFrame;
-@property (nonatomic, weak) id<GrowingNodeAsyncNativeHandler>
-    growingNodeAsyncNativeHandler;
 
 @property (nonatomic, copy) NSString *growingNodeXPath;
 @property (nonatomic, copy) NSString *growingNodePatternXPath;
@@ -189,7 +183,6 @@ static char growingNodeIsBadNodeKey;
         self.growingNodeDataDict = nil;
         self.growingNodeWindow = nil;
         self.growingNodeFrame = frame;
-        self.growingNodeAsyncNativeHandler = nil;
         self.growingNodeXPath = xPath;
         self.growingNodePatternXPath = patternXPath;
         self.growingNodeKeyIndex = keyIndex;

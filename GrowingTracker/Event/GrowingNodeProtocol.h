@@ -74,8 +74,6 @@ typedef NS_OPTIONS(NSUInteger, GrowingElementEventCategory) {
 - (id _Nullable)growingNodeAttribute:(NSString * _Nullable)attrbute;
 - (id _Nullable)growingNodeAttribute:(NSString * _Nullable)attrbute forChild:(id<GrowingNode> _Nullable)node;
 
-- (id _Nullable /* <GrowingNodeAsyncNativeHandler> */)growingNodeAsyncNativeHandler;
-
 // 唯一标识某个view，客户可通过 growingAttributesUniqueTag 设置
 - (NSString * _Nullable)growingNodeUniqueTag;
 

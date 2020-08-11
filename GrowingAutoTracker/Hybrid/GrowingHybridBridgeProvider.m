@@ -68,7 +68,7 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
     } else if ([kGrowingJavascriptMessageType_setNativeUserId isEqualToString:messageType]) {
         [Growing setLoginUserId:messageData];
     } else if ([kGrowingJavascriptMessageType_clearNativeUserId isEqualToString:messageType]) {
-        [Growing setLoginUserId:nil];
+        [Growing cleanLoginUserId];
     } else if ([kGrowingJavascriptMessageType_onDomChanged isEqualToString:messageType]) {
         [self dispatchWebViewDomChanged];
     }

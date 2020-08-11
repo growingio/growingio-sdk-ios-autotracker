@@ -59,10 +59,11 @@
 
 + (UIAlertAction*)growing_actionForActionView:(UIView*)actionView {
 #pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wundeclared-selector"
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     NSString *viewSelectorString = [NSString stringWithFormat:@"a%@ion%@w", @"ct", @"Vie"];
-    if ([actionView respondsToSelector:NSSelectorFromString(viewSelectorString)]) {
-        actionView = [actionView performSelector:NSSelectorFromString(viewSelectorString)];
+    SEL selector = NSSelectorFromString(viewSelectorString);
+    if ([actionView respondsToSelector:selector]) {
+        actionView = [actionView performSelector:selector];
     }
 #pragma clang diagnostic pop
     UIAlertAction *action = nil;
