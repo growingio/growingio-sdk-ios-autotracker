@@ -28,9 +28,6 @@ static NSString * _Nonnull const kEventTypeKeyVisitor = @"vstr";
 static NSString * _Nonnull const kEventTypeKeyCustom = @"cstm";
 static NSString * _Nonnull const kEventTypeKeyPeopleVariable = @"ppl";
 
-static NSString * _Nonnull const kEventTypeKeyActivate = @"activate";
-static NSString * _Nonnull const kEventTypeKeyReengage = @"reengage";
-
 static NSString * _Nonnull const kEventTypeKeyPage = @"page";
 static NSString * _Nonnull const kEventTypeKeyPageVariable = @"pvar";
 static NSString * _Nonnull const kEventTypeKeyConversionVariable = @"evar";

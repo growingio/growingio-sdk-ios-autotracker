@@ -37,7 +37,6 @@
 #import "GrowingPageEvent.h"
 #import "GrowingEventPVRequest.h"
 #import "GrowingEventCstmRequest.h"
-#import "GrowingEventAdRequest.h"
 #import "GrowingEventOtherRequest.h"
 #import "GrowingNetworkManager.h"
 
@@ -56,8 +55,6 @@ static NSUInteger const kGrowingMaxBatchSize = 500; // default: send no more tha
 @property (nonatomic, readonly, strong)   GrowingEventChannel * otherEventChannel;
 @property (nonatomic, readonly) dispatch_queue_t  eventDispatch;
 @property (nonatomic, strong)   dispatch_source_t reportTimer;
-
-@property (nonatomic, strong) GrowingEventDataBase *reportEventDB;
 
 @property (nonatomic, strong) GrowingEventDataBase *timingEventDB;
 @property (nonatomic, strong) GrowingEventDataBase *realtimeEventDB;
@@ -130,9 +127,6 @@ static GrowingEventManager *shareinstance = nil;
             
             self.realtimeEventDB = [GrowingEventDataBase databaseWithPath:[GrowingFileStorage getRealtimeDatabasePath]
                                                                    name:[name stringByAppendingString:@"realtimevent"]];
-            
-            self.reportEventDB = [GrowingEventDataBase databaseWithPath:[GrowingFileStorage getRealtimeDatabasePath]
-                                                                   name:[name stringByAppendingString:@"reportevent"]];
             
             [self.timingEventDB vacuum];
         }];
@@ -307,11 +301,10 @@ static GrowingEventManager *shareinstance = nil;
     
     GrowingEventChannel * eventChannel = self.eventChannelDict[eventType] ?: self.otherEventChannel;
     BOOL isCustomEvent = eventChannel.isCustomEvent;
-    BOOL isReportEvent = eventChannel.isReportEvent;
     
     GrowingEventPersistence *waitForPersist = [GrowingEventPersistence persistenceEventWithEvent:event];
     
-    if (!isCustomEvent && !isReportEvent) // custom event never goes into self.eventQueue, event can not be nil
+    if (!isCustomEvent) // custom event never goes into self.eventQueue, event can not be nil
     {
         [self.eventQueue addObject:waitForPersist];
     }
@@ -319,9 +312,7 @@ static GrowingEventManager *shareinstance = nil;
     NSError *error = nil;
     
     GrowingEventDataBase *db = (isCustomEvent ? self.realtimeEventDB : self.timingEventDB);
-    if (isReportEvent) {
-        db = self.reportEventDB;
-    }
+    
     [db setEvent:waitForPersist forKey:event.uuid error:&error];
     
     [db handleDatabaseError:error];
@@ -336,12 +327,6 @@ static GrowingEventManager *shareinstance = nil;
 }
 
 - (void)removeEvents_unsafe:(NSArray<__kindof GrowingEventPersistence *>*)events forChannel:(GrowingEventChannel *)channel {
-    if (channel.isReportEvent) {
-        for (NSInteger i = 0 ; i < events.count ; i++)
-        {
-            [self.reportEventDB setEvent:nil forKey:events[i].eventUUID];
-        }
-    }
     
     if (channel.isCustomEvent) {
         
@@ -387,7 +372,7 @@ static GrowingEventManager *shareinstance = nil;
         GIOLogError(@"No valid ProjectId (channel = %zd).", [self.allEventChannels indexOfObject:channel]);
         return;
     }
-    if (!channel.isCustomEvent && !channel.isReportEvent && self.eventQueue.count == 0) {
+    if (!channel.isCustomEvent && self.eventQueue.count == 0) {
         return;
     }
     
@@ -426,9 +411,7 @@ static GrowingEventManager *shareinstance = nil;
 #endif
     
     GrowingEventRequest *eventRequest = nil;
-    if (channel.isReportEvent) {
-        eventRequest = [[GrowingEventAdRequest alloc] initWithEvents:rawEvents];
-    } else if (channel.isCustomEvent) {
+    if (channel.isCustomEvent) {
         eventRequest = [[GrowingEventCstmRequest alloc] initWithEvents:rawEvents];
     } else if (!channel.isCustomEvent && channel != self.otherEventChannel) {
         eventRequest = [[GrowingEventPVRequest alloc] initWithEvents:rawEvents];
@@ -450,11 +433,9 @@ static GrowingEventManager *shareinstance = nil;
             // 如果剩余数量 大于单包数量  则直接发送
             if (channel.isCustomEvent && self.realtimeEventDB.countOfEvents >= self.packageNum) {
                 [self sendAllChannelEvents];
-            } else if (channel.isReportEvent && self.reportEventDB.countOfEvents >= self.packageNum) {
-                [self sendAllChannelEvents];
             }
             
-            if (!channel.isCustomEvent && !channel.isReportEvent && self.eventQueue.count >= self.packageNum) {
+            if (!channel.isCustomEvent && self.eventQueue.count >= self.packageNum) {
                 [self sendAllChannelEvents];
             }
         }];
@@ -479,9 +460,7 @@ static GrowingEventManager *shareinstance = nil;
 
 - (NSArray<GrowingEventPersistence *> *)getEventsToBeUploadUnsafe:(GrowingEventChannel *)channel {
    
-    if (channel.isReportEvent) {
-        return [self.reportEventDB getEventsWithPackageNum:self.packageNum];
-    } else if (channel.isCustomEvent) {
+    if (channel.isCustomEvent) {
         return [self.realtimeEventDB getEventsWithPackageNum:self.packageNum];
     } else {
         NSMutableArray<GrowingEventPersistence *> * events = [[NSMutableArray alloc] initWithCapacity:self.eventQueue.count];
@@ -508,7 +487,6 @@ static GrowingEventManager *shareinstance = nil;
 - (void)clearAllEvents {
     self.eventQueue = [[NSMutableArray alloc] init];
     [GrowingDispatchManager dispatchInLowThread:^() {
-        [self.reportEventDB clearAllItems];
         [self.timingEventDB clearAllItems];
         [self.realtimeEventDB clearAllItems];
     }];

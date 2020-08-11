@@ -54,10 +54,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param host host 示例：https://api.growingio.com
 - (void)setWebSocketHost:(NSString *)host;
 
-/// 设置广告业务相关 host
-/// @param host host 示例：https://api.growingio.com
-- (void)setAdvertisementHost:(NSString *)host;
-
 /// 指定的初始化方法
 /// @param projectId GrowingIO 申请的项目id
 /// @param launchOptions App 启动参数

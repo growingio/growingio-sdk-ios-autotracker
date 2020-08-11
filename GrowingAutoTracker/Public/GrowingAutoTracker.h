@@ -45,9 +45,21 @@ typedef NS_ENUM(NSUInteger, GrowingIgnorePolicy) {
 // imp半自动打点
 @interface UIView (GrowingImpression)
 
-// 以下为元素展示打点事件
-// 在元素展示前调用即可,GIO负责监听元素展示并触发事件
-// 事件类型为自定义事件(cstm)
+/**
+ 以下为元素展示打点事件
+ 在元素展示前调用即可,GIO负责监听元素展示并触发事件
+ 事件类型为自定义事件(cstm)
+ @param eventName 自定义事件名称
+ */
+- (void)growingTrackImpression:(NSString *)eventName;
+
+/**
+ 以下为元素展示打点事件
+ 在元素展示前调用即可,GIO负责监听元素展示并触发事件
+ 事件类型为自定义事件(cstm)
+ @param eventName 自定义事件名称
+ @param attributes 自定义属性
+ */
 - (void)growingTrackImpression:(NSString *)eventName attributes:(NSDictionary<NSString *, NSString *> *)attributes;
 
 // 停止该元素展示追踪

@@ -23,7 +23,6 @@
 #import "NSData+GrowingHelper.h"
 #import "GrowingUserDefaults.h"
 #import "GrowingDeviceInfo.h"
-#import "GrowingLoginMenu.h"
 #import "GrowingCocoaLumberjack.h"
 #import "GrowingLoginRequest.h"
 #import "GrowingNetworkManager.h"
@@ -81,12 +80,12 @@ static GrowingAuthManager *authManager = nil;
 }
 
 - (BOOL)authorityErrorHandle:(void (^)(BOOL))finishBlock {
-    [GrowingLoginMenu showWithSucceed:^{
-        finishBlock(YES);
-    } fail:^{
-        [[GrowingAuthManager shareManager] logout];
-        finishBlock(NO);
-    }];
+//    [GrowingLoginMenu showWithSucceed:^{
+//        finishBlock(YES);
+//    } fail:^{
+//        [[GrowingAuthManager shareManager] logout];
+//        finishBlock(NO);
+//    }];
     return NO;
 }
 

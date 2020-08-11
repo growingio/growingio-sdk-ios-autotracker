@@ -252,6 +252,8 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
     }
 }
 
+#pragma mark - GrowingNodeProtocol
+
 - (NSString *)growingNodeContent {
     NSString *attrContent = self.growingViewCustomContent;
     if ([attrContent isKindOfClass:[NSString class]] && attrContent.length) {
@@ -269,9 +271,10 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
 - (BOOL)growingNodeUserInteraction {
     return self.userInteractionEnabled &&
            ([self growingViewUserInteraction] ||
-            [UITapGestureRecognizer
-                growingGestureRecognizerCanHandleView:self]);
+            [UITapGestureRecognizer growingGestureRecognizerCanHandleView:self]);
 }
+
+#pragma mark - Public Method
 
 - (BOOL)growingViewUserInteraction {
     return NO;
@@ -329,11 +332,11 @@ static char kUIViewGrowingIgnorePolicyKey;
                              OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (NSString *)growingIMPTrackEventId {
+- (NSString *)growingIMPTrackEventName {
     return objc_getAssociatedObject(self, &kUIViewGrowingIMPTrackEventNameKey);
 }
 
-- (void)setGrowingIMPTrackEventId:(NSString *)eventId {
+- (void)setGrowingIMPTrackEventName:(NSString *)eventId {
     objc_setAssociatedObject(self, &kUIViewGrowingIMPTrackEventNameKey, eventId,
                              OBJC_ASSOCIATION_COPY_NONATOMIC);
 }

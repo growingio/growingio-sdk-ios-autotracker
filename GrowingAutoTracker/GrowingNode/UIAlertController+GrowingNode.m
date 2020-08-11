@@ -169,10 +169,9 @@
                : [NSString stringWithFormat:@"Button[%ld]", (long)index];
 }
 
-// TODO: crash when open it
-//- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-//    [super touchesBegan:touches withEvent:event];
-//}
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesBegan:touches withEvent:event];
+}
 
 - (BOOL)growingNodeUserInteraction
 {

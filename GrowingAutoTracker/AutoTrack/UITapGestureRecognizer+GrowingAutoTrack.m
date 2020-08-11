@@ -63,14 +63,6 @@
                           andEventType:GrowingEventTypeTapGest];
 }
 
-- (void)oneFingerTap:(id)gesture {
-    // TODO: avoid crash for GrowingUIGestureRecognizerObserver unrecongnized
-}
-
-- (void)_tapAction:(id)action {
-    // TODO: avoid crash for GrowingUIGestureRecognizerObserver unrecongnized
-}
-
 @end
 
 @implementation UITapGestureRecognizer (GrowingAutoTrack)
@@ -78,7 +70,7 @@
 - (instancetype)growing_initWithTarget:(id)target action:(SEL)action {
     
     UITapGestureRecognizer *gesture = [self growing_initWithTarget:[GrowingUIGestureRecognizerObserver shareInstance]
-                                                            action:action];
+                                                            action:@selector(growingHandleGesture:)];
     [gesture addTarget:target action:action];
     return gesture;
 }

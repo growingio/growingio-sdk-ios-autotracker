@@ -29,13 +29,11 @@
 static GrowingNetworkConfig *sharedInstance;
 
 static NSString * const kGrowingDataHost = @"https://www.growingio.com";
-static NSString * const kGrowingAdHost = @"https://t.growingio.com";
 static NSString * const kGrowingTrackerHost = @"https://api.growingio.com";
 static NSString * const kGrowingTagsHostFormat = @"https://tags.growingio.com";
 static NSString * const kGrowingWsHostFormat =  @"wss://ws.growingio.com";
 
-+ (instancetype)sharedInstance
-{
++ (instancetype)sharedInstance {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         sharedInstance = [[self alloc] init];
@@ -43,8 +41,7 @@ static NSString * const kGrowingWsHostFormat =  @"wss://ws.growingio.com";
     return sharedInstance;
 }
 
-+ (NSString *)generateValidEndPoint:(NSString *)customHost
-{
++ (NSString *)generateValidEndPoint:(NSString *)customHost {
     NSString *validEndPoint = [[customHost stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] copy];
     if (!validEndPoint.length) {
         GIOLogError(@"An empty string is set as tracker host.");
@@ -64,70 +61,46 @@ static NSString * const kGrowingWsHostFormat =  @"wss://ws.growingio.com";
 
 - (NSString *)buildEndPointWithTemplate:(NSString *)template
                               accountId:(NSString *)accountId
-                                 andSTM:(unsigned long long)stm
-{
+                                 andSTM:(unsigned long long)stm {
     return [NSString stringWithFormat:@"%@/%@",
                          (_customTrackerHost.length > 0 ? _customTrackerHost : [self growingApiHostEnd]),
                          [NSString stringWithFormat:template, accountId, stm]];
 }
 
-- (void)setCustomTrackerHost:(NSString *)customHost
-{
+- (void)setCustomTrackerHost:(NSString *)customHost {
     NSString *validEndPoint = [GrowingNetworkConfig generateValidEndPoint:customHost];
-    if (validEndPoint.length)
-    {
+    if (validEndPoint.length) {
         _customTrackerHost = validEndPoint;
     }
 }
 
-- (void)setCustomDataHost:(NSString *)customHost
-{
+- (void)setCustomDataHost:(NSString *)customHost {
     NSString *validEndPoint = [GrowingNetworkConfig generateValidEndPoint:customHost];
-    if (validEndPoint.length)
-    {
+    if (validEndPoint.length) {
         _customDataHost = validEndPoint;
     }
 }
 
-- (void)setCustomWsHost:(NSString *)customHost
-{
+- (void)setCustomWsHost:(NSString *)customHost {
     // web socket 直接赋值, 不需要调用|generateValidEndPoint|
     if (customHost && customHost.length > 0) {
         _customWsHost = customHost;
     }
 }
 
-- (void)setCustomReportHost:(NSString *)customHost
-{
-    NSString *validEndPoint = [GrowingNetworkConfig generateValidEndPoint:customHost];
-    if (validEndPoint.length)
-    {
-        _customAdHost = validEndPoint;
-    }
-}
-
-- (NSString *)growingApiHostEnd
-{
+- (NSString *)growingApiHostEnd {
     return _customTrackerHost.length > 0 ? _customTrackerHost : kGrowingTrackerHost;
 }
 
-- (NSString *)growingDataHostEnd
-{
+- (NSString *)growingDataHostEnd {
     return _customDataHost.length > 0 ? _customDataHost : kGrowingDataHost;
 }
 
-- (NSString *)growingAdHostEnd
-{
-    return _customAdHost.length > 0 ? _customAdHost : kGrowingAdHost;
-}
-
-- (NSString *)tagsHost
-{
+- (NSString *)tagsHost {
     return [NSString stringWithFormat:kGrowingTagsHostFormat];
 }
 
-- (NSString *)wsEndPoint
-{
+- (NSString *)wsEndPoint {
     if (_customWsHost.length > 0) {
         return [_customWsHost stringByAppendingString:@"/app/%@/circle/%@"];
     } else {
@@ -135,27 +108,12 @@ static NSString * const kGrowingWsHostFormat =  @"wss://ws.growingio.com";
     }
 }
 
-- (NSString *)dataCheckEndPoint
-{
+- (NSString *)dataCheckEndPoint {
     if (_customWsHost.length > 0) {
         return [_customWsHost stringByAppendingString:kGrowingDataCheckAddress];
     } else {
         return [kGrowingWsHostFormat stringByAppendingString:kGrowingDataCheckAddress];
     }
-}
-
-- (NSString *)growingReportEndPoint
-{
-    return (_customAdHost.length) > 0 ? _customAdHost : kGrowingAdHost;
-}
-
-- (NSString *)buildReportEndPointWithTemplate:(NSString *)template
-                                    accountId:(NSString *)accountId
-                                       andSTM:(unsigned long long)stm
-{
-    return [NSString stringWithFormat:@"%@/app/%@",
-                         (_customAdHost.length > 0 ? _customAdHost : [self growingReportEndPoint]),
-                         [NSString stringWithFormat:template, accountId, stm]];
 }
 
 @end

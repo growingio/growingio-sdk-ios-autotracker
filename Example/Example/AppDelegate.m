@@ -25,13 +25,6 @@ static NSString * const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    [Growing registerDeeplinkHandler:^(NSDictionary *params, NSTimeInterval processTime, NSError *error) {
-        NSString *paramsString = [GIODataProcessOperation convertToJsonStringFromJSON:params];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"deeplink" message:paramsString delegate:nil cancelButtonTitle:@"确认" otherButtonTitles:nil];
-        [alert show];
-        NSLog(@"deepLink params = %@", params);
-    }];
-    
     [Bugly startWithAppId:@"93004a21ca"];
     
     // Config GrowingIO

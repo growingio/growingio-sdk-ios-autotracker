@@ -207,6 +207,10 @@
 
 @implementation UIView (GrowingImpression)
 
+- (void)growingTrackImpression:(NSString *)eventName {
+    [self growingTrackImpression:eventName attributes:nil];
+}
+
 - (void)growingTrackImpression:(NSString *)eventName
                     attributes:(NSDictionary<NSString *,NSString *> *)attributes {
     
@@ -214,7 +218,7 @@
         return;
     }
     
-    if ([eventName isEqualToString:self.growingIMPTrackEventId]) {
+    if ([eventName isEqualToString:self.growingIMPTrackEventName]) {
         if ((attributes && [attributes isEqualToDictionary:self.growingIMPTrackVariable]) ||
             attributes == self.growingIMPTrackVariable) {
             return;
@@ -223,7 +227,7 @@
     
     [GrowingIMPTrack shareInstance].impTrackActive = YES;
     
-    self.growingIMPTrackEventId = eventName;
+    self.growingIMPTrackEventName = eventName;
     self.growingIMPTrackVariable = attributes;
     self.growingIMPTracked = NO;
     [[GrowingIMPTrack shareInstance] addNode:self inSubView:NO];

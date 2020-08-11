@@ -27,7 +27,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly, copy)   NSArray<NSString *> * eventTypes;
 @property (nonatomic, readonly, copy)   NSString * urlTemplate;
 @property (nonatomic, readonly, assign) BOOL isCustomEvent;
-@property (nonatomic, readonly, assign) BOOL isReportEvent;
 @property (nonatomic,           assign) BOOL isUploading;
 
 + (NSArray<GrowingEventChannel *> *)buildAllEventChannels;
