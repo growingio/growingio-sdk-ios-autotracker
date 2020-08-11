@@ -201,8 +201,8 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
 
 - (BOOL)growingViewDontTrack {
         
-    GrowingIgnorePolicy selfPolicy = self.growingViewIgonrePolicy;
-    GrowingIgnorePolicy superPolicy = self.superview.growingViewIgonrePolicy;
+    GrowingIgnorePolicy selfPolicy = self.growingViewIgnorePolicy;
+    GrowingIgnorePolicy superPolicy = self.superview.growingViewIgnorePolicy;
     
     if (selfPolicy == GrowingIgnoreNone &&
         (superPolicy == GrowingIgnoreNone || superPolicy == GrowingIgnoreSelf)) {
@@ -346,14 +346,14 @@ static char kUIViewGrowingIgnorePolicyKey;
                              OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (void)setGrowingViewIgonrePolicy:(GrowingIgnorePolicy)growingIgonrePolicy {
+- (void)setGrowingViewIgnorePolicy:(GrowingIgnorePolicy)growingIgonrePolicy {
     objc_setAssociatedObject(self,
                              &kUIViewGrowingIgnorePolicyKey,
                              [NSNumber numberWithUnsignedInteger:growingIgonrePolicy],
                              OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (GrowingIgnorePolicy)growingViewIgonrePolicy {
+- (GrowingIgnorePolicy)growingViewIgnorePolicy {
     id policyObjc = objc_getAssociatedObject(self, &kUIViewGrowingIgnorePolicyKey);
     if (!policyObjc) {
         return GrowingIgnoreNone;

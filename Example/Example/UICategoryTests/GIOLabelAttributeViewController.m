@@ -22,7 +22,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     //设置不采集Btn GIONotTrack数据
-    self.GIONotTrack.growingViewIgonrePolicy = GrowingIgnoreSelf;
+    self.GIONotTrack.growingViewIgnorePolicy = GrowingIgnoreSelf;
 }
 
 - (void)didReceiveMemoryWarning {

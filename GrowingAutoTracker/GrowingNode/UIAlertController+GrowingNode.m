@@ -20,6 +20,7 @@
 #import "UIAlertController+GrowingNode.h"
 #import <objc/runtime.h>
 #import "NSObject+GrowingIvarHelper.h"
+#import "UIView+GrowingNode.h"
 
 @implementation UIAlertController (GrowingNode)
 
@@ -27,7 +28,7 @@
     return [self.view growingNodeFrame];
 }
 
-- (NSMapTable*)growing_allActionViews {
+- (NSMapTable *)growing_allActionViews {
     UICollectionView *collectionView = [self growing_collectionView];
     NSMapTable *retMap = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsStrongMemory
                                                 valueOptions:NSPointerFunctionsStrongMemory
@@ -55,11 +56,11 @@
     return retMap;
 }
 
-- (UICollectionView*)growing_collectionView {
+- (UICollectionView *)growing_collectionView {
     return [self growing_alertViewCollectionView:self.view];
 }
 
-- (UICollectionView*)growing_alertViewCollectionView:(UIView*)view {
+- (UICollectionView *)growing_alertViewCollectionView:(UIView*)view {
     for (UIView *subview in view.subviews) {
         if ([subview isKindOfClass:[UICollectionView class]]) {
             return (UICollectionView*)subview;
@@ -73,7 +74,7 @@
     return nil;
 }
 
-- (NSArray<id<GrowingNode>>*)growingNodeChilds {
+- (NSArray <id <GrowingNode> > *)growingNodeChilds {
     NSMutableArray *childs = [NSMutableArray array];
     NSMapTable *allButton = [self growing_allActionViews];
     for (UIView *view in  [allButton keyEnumerator]) {
@@ -105,6 +106,24 @@
 
 - (NSString *)growingNodeSubSimilarPath {
     return nil;
+}
+
+- (BOOL)growingNodeUserInteraction {
+    return YES;
+}
+
+- (NSString *)growingNodeName {
+    return @"弹出框选项";
+}
+
+- (NSString *)growingNodeContent {
+    NSString *nodeContent = [[UIAlertController growing_actionForActionView:(id)self] title];
+    
+    if (nodeContent.length) {
+        return nodeContent;
+    } else {
+        return self.accessibilityLabel;
+    }
 }
 
 + (UIAlertAction*)growing_actionForActionView:(UIView*)actionView {
@@ -171,30 +190,6 @@
     return index < 0
                ? @"Button"
                : [NSString stringWithFormat:@"Button[%ld]", (long)index];
-}
-
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [super touchesBegan:touches withEvent:event];
-}
-
-- (BOOL)growingNodeUserInteraction
-{
-    return YES;
-}
-
-- (NSString*)growingNodeName
-{
-    return @"弹出框选项";
-}
-- (NSString*)growingNodeContent
-{
-    NSString *nodeContent = [[UIAlertController growing_actionForActionView:(id)self] title];
-    
-    if (nodeContent.length) {
-        return nodeContent;
-    } else {
-        return self.accessibilityLabel;
-    }
 }
 
 @end

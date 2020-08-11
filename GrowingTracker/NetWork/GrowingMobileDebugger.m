@@ -36,7 +36,7 @@
 #import "GrowingBroadcaster.h"
 
 @GrowingBroadcasterRegister(GrowingApplicationMessage, GrowingMobileDebugger)
-@interface GrowingMobileDebugger() <Growing3rdLibSRWebSocketDelegate, GrowingEventManagerObserver, CLLocationManagerDelegate, GrowingApplicationMessage>
+@interface GrowingMobileDebugger() <Growing3rdLibSRWebSocketDelegate, GrowingEventManagerObserver, GrowingApplicationMessage>
 
 @property (nonatomic, retain) NSTimer                   *keepAliveTimer;
 @property (nonatomic, retain) Growing3rdLibSRWebSocket  *webSocket;

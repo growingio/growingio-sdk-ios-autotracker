@@ -23,16 +23,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#ifndef __cplusplus
-@import Foundation;
-@import CoreTelephony;
-@import SystemConfiguration;
-@import Security;
-@import CFNetwork;
-@import CoreLocation;
-@import WebKit;
-#endif
-
 @interface Growing : NSObject
 
 // SDK版本号

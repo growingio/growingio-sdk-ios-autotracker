@@ -74,7 +74,7 @@ typedef NS_ENUM(NSUInteger, GrowingIgnorePolicy) {
 @interface UIView(GrowingAttributes)
 
 // 手动标识该view的忽略策略，请在该view被初始化后立刻赋值
-@property (nonatomic, assign) GrowingIgnorePolicy growingViewIgonrePolicy;
+@property (nonatomic, assign) GrowingIgnorePolicy growingViewIgnorePolicy;
 
 // 手动标识该view的内容  比如banner广告条的id 可以放在banner按钮的任意view上
 @property (nonatomic, copy) NSString *growingViewCustomContent;

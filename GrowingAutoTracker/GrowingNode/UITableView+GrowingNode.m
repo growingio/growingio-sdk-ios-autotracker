@@ -17,9 +17,6 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
-#import <pthread.h>
-
 #import "GrowingAttributesConst.h"
 #import "UITableView+GrowingAutoTrack.h"
 #import "UITableView+GrowingNode.h"
@@ -53,8 +50,6 @@
     return nil;
 }
 
-
-
 - (NSArray<id<GrowingNode>>*)growingNodeChilds {
     // 对于collectionView我们仅需要返回可见cell
     NSMutableArray *childs = [NSMutableArray array];
@@ -62,10 +57,7 @@
     return childs;
 }
 
-
 @end
-
-
 
 @implementation UITableViewCell (GrowingNode)
 

@@ -24,6 +24,7 @@
 #import "GrowingVersionManager.h"
 #import "GrowingEventManager.h"
 #import "GrowingCustomField.h"
+@import CoreLocation;
 
 @interface GrowingVisitEvent ()
 

@@ -20,7 +20,6 @@
 
 #import <Foundation/Foundation.h>
 #import "GrowingFileStorage.h"
-#import <UIKit/UIKit.h>
 
 @interface GrowingDeviceInfo : NSObject
 

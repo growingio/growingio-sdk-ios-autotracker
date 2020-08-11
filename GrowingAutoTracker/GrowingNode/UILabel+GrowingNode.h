@@ -20,6 +20,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UILabel (GrowingNode)<GrowingNode>
+@interface UILabel (GrowingNode) <GrowingNode>
 
 @end

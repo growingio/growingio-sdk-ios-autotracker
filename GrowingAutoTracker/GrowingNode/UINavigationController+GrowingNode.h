@@ -19,7 +19,6 @@
 
 
 #import <UIKit/UIKit.h>
-
 #import "UIViewController+GrowingNode.h"
 
 @interface UINavigationController (GrowingNode)

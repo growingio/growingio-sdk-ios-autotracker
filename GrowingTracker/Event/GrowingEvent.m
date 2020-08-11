@@ -25,7 +25,6 @@
 #import "UIApplication+GrowingNode.h"
 #import "GrowingNetworkInterfaceManager.h"
 #import "GrowingEventManager.h"
-#import "GrowingVersionManager.h"
 #import "NSString+GrowingHelper.h"
 
 @interface GrowingEvent()
@@ -72,39 +71,25 @@
     return self;
 }
 
-- (instancetype)init
-{
+- (instancetype)init {
     return [self initWithTimestamp:nil];
 }
 
-+ (instancetype)event
-{
++ (instancetype)event {
     return [[self alloc] init];
 }
 
-+ (instancetype)eventWithTimestamp:(NSNumber *)tm
-{
++ (instancetype)eventWithTimestamp:(NSNumber *)tm {
     return [[self alloc] initWithTimestamp:tm];
 }
 
-- (NSString*)description
-{
+- (NSString*)description {
     return self.toDictionary.description;
 }
 
-- (NSString*)eventTypeKey
-{
+- (NSString*)eventTypeKey {
     return @"";
 }
-
-//- (instancetype)copyWithZone:(NSZone *)zone {
-//    
-//    GrowingEvent *event = [[[self class] allocWithZone:zone] initWithUUID:self.uuid.copy
-//                                                                 withType:self.eventType
-//                                                                     data:[[NSMutableDictionary alloc] initWithDictionary:self.dataDict copyItems:YES]];
-//    event.sendPolicy = self.sendPolicy;
-//    return event;
-//}
 
 #pragma mark GrowingEventCountable
 

@@ -33,6 +33,7 @@
 #import "GrowingConfiguration.h"
 #import "GrowingBroadcaster.h"
 #import "metamacros.h"
+@import CoreLocation;
 
 @implementation Growing
 
