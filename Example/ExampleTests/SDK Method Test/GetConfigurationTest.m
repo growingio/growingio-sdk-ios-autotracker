@@ -43,7 +43,7 @@
     /*
         Function:测试getTrackVersion
     */
-    [Growing getTrackVersion];
+    [Growing getVersion];
 }
 -(void)testGetDeviceId{
     /*

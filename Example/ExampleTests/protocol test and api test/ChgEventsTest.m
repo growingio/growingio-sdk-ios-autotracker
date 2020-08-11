@@ -39,7 +39,7 @@
         NSDictionary *chevent=[chngEventArray objectAtIndex:chngEventArray.count-1];
         //检测发送事件情况
         NSDictionary *chngchr=[NoburPoMeaProCheck ChngEventCheck:chevent];
-        //NSLog(@"Check result:%@",chngchr);
+        NSLog(@"Check result:%@",chngchr);
         XCTAssertEqualObjects(chngchr[@"KeysCheck"][@"chres"], @"Passed");
         NSArray *incr=chngchr[@"ProCheck"][@"incre"];
         XCTAssertEqual(incr.count, 1);
