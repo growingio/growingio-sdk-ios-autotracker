@@ -28,6 +28,8 @@
     self.growingPageIgonrePolicy = GrowingIgnoreChild;
     
     self.parentViewController.growingPageIgonrePolicy = GrowingIgnoreAll;
+    [self.sendEventButton growingTrackImpression:@"hello_track_impression"];
+    [self.view growingTrackImpression:@"self_view_imp_track" attributes:@{@"self_view_key": @"self_view_value"}];
 }
 
 - (IBAction)buttonClick:(UIButton *)sender {

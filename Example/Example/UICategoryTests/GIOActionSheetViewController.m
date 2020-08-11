@@ -7,10 +7,8 @@
 //
 
 #import "GIOActionSheetViewController.h"
-//#import "GrowingLoginMenu.h"
-//#import "GrowingAlertMenu.h"
-//#import "GrowingMenu.h"
-//#import "GrowingMediator.h"
+#import <GrowingAlert.h>
+
 
 // Corresponds to the row in the action sheet section.
 typedef NS_ENUM(NSInteger, GIOActionSheetsViewControllerTableRow) {
@@ -68,55 +66,88 @@ typedef NS_ENUM(NSInteger, GIOActionSheetsViewControllerTableRow) {
     [actionSheet showInView:self.view];
 }
 
-//- (void)showGrowingAlertMenuOne {
-//    [GrowingAlertMenu alertWithTitle:@"提示"
-//                                text:@"电脑端连接超时，请刷新电脑页面，再次尝试扫码圈选。"
-//                             buttons:@[[GrowingMenuButton buttonWithTitle:@"知道了"
-//                                                                    block:nil]]];
-//}
-//
-//- (void)showGrowingAlertMenuTwo {
+- (void)showGrowingAlertMenuOne {
+    
+    GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert
+                                                       title:@"提示"
+                                                     message:@"电脑端连接超时，请刷新电脑页面，再次尝试扫码圈选。"];
+    [alert addOkWithTitle:@"知道了"
+                  handler:^(UIAlertAction * _Nonnull action, NSArray<UITextField *> * _Nonnull textFields) {
+        NSLog(@"aciton = %@, textFields = %@", action, textFields);
+    }];
+    
+    [alert showAlertAnimated:YES];
+    
+}
+
+- (void)showGrowingAlertMenuTwo {
 //    [GrowingAlertMenu alertWithTitle:@"提示"
 //                                text:@"电脑端连接超时，请刷新电脑页面，再次尝试扫码圈选。"
 //                             buttons:@[[GrowingMenuButton buttonWithTitle:@"知道了" block:nil],
 //                                       [GrowingMenuButton buttonWithTitle:@"取消" block:nil]]];
-//
-//}
-//
-//- (void)showGrowingAlertMenuThree {
-//    [GrowingAlertMenu alertWithTitle:@"提示"
-//                                text:@"电脑端连接超时，请刷新电脑页面，再次尝试扫码圈选。"
-//                             buttons:@[[GrowingMenuButton buttonWithTitle:@"One" block:nil],
-//                                       [GrowingMenuButton buttonWithTitle:@"Two" block:nil],
-//                                       [GrowingMenuButton buttonWithTitle:@"Three" block:nil]]];
-//
-//}
-//
-//- (void)showGrowingAlertMenuTwoText {
-//    [GrowingAlertMenu alertWithTitle:@"title"
-//                               text1:@"text1text1text1text1text1text1"
-//                               text2:@"text2text2text2text2text2text2text2text2text2text2text2text2text2text2"
-//                             buttons:@[[GrowingMenuButton buttonWithTitle:@"know"
-//                                                                    block:nil]]];
-//
-//}
+    
+    GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert
+                                                       title:@"提示"
+                                                     message:@"电脑端连接超时，请刷新电脑页面，再次尝试扫码圈选。"];
+    [alert addOkWithTitle:@"知道了"
+                  handler:^(UIAlertAction * _Nonnull action, NSArray<UITextField *> * _Nonnull textFields) {
+        NSLog(@"aciton = %@, textFields = %@", action, textFields);
+    }];
+    
+    [alert addCancelWithTitle:@"取消"
+                  handler:^(UIAlertAction * _Nonnull action, NSArray<UITextField *> * _Nonnull textFields) {
+        NSLog(@"aciton = %@, textFields = %@", action, textFields);
+    }];
+    
+    [alert showAlertAnimated:YES];
+}
 
-//- (void)showGrowingAlertMenuLeftRightBtn {
-//
-//    //    GrowingAlertMenu *alertMenu = [GrowingAlertMenu alertWithTitle:@"TITLE"
-//    //                                                             text1:@"TEXT 001"
-//    //                                                             text2:@"TEXT 002"
-//    //                                                           buttons:@[[GrowingMenuButton buttonWithTitle:@"One" block:nil]]];
-//    //    alertMenu.leftButton = [GrowingMenuButton buttonWithCustomView:[UIButton buttonWithType:UIButtonTypeContactAdd]];
-//    //    alertMenu.rightButton = [GrowingMenuButton buttonWithCustomView:[UIButton buttonWithType:UIButtonTypeInfoDark]];
-//
+- (void)showGrowingAlertMenuThree {
+    
+    GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert
+                                                       title:@"提示"
+                                                     message:@"电脑端连接超时，请刷新电脑页面，再次尝试扫码圈选。"];
+    [alert addActionWithTitle:@"One" style:UIAlertActionStyleDefault handler:nil];
+    [alert addActionWithTitle:@"Two" style:UIAlertActionStyleDefault handler:nil];
+    [alert addActionWithTitle:@"Three" style:UIAlertActionStyleDefault handler:nil];
+
+    [alert showAlertAnimated:YES];
+
+}
+
+- (void)showGrowingAlertMenuTwoText {
+    
+    GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert
+                                                       title:@"提示"
+                                                     message:@"电脑端连接超时，请刷新电脑页面，再次尝试扫码圈选。"];
+    [alert addActionWithTitle:@"One" style:UIAlertActionStyleDefault handler:nil];
+    [alert addActionWithTitle:@"Two" style:UIAlertActionStyleDefault handler:nil];
+    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.placeholder = @"account-name";
+    }];
+    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.placeholder = @"account-passwrokd";
+    }];
+    [alert showAlertAnimated:YES];
+
+}
+
+- (void)showGrowingAlertMenuLeftRightBtn {
+
+    //    GrowingAlertMenu *alertMenu = [GrowingAlertMenu alertWithTitle:@"TITLE"
+    //                                                             text1:@"TEXT 001"
+    //                                                             text2:@"TEXT 002"
+    //                                                           buttons:@[[GrowingMenuButton buttonWithTitle:@"One" block:nil]]];
+    //    alertMenu.leftButton = [GrowingMenuButton buttonWithCustomView:[UIButton buttonWithType:UIButtonTypeContactAdd]];
+    //    alertMenu.rightButton = [GrowingMenuButton buttonWithCustomView:[UIButton buttonWithType:UIButtonTypeInfoDark]];
+
 //        GrowingAlertMenu *alertMenu = [GrowingAlertMenu alertWithTitle:@"TITLE"
 //                                                                 text1:@"TEXT 001"
 //                                                                 text2:@"TEXT 002"
 //                                                               buttons:@[[GrowingMenuButton buttonWithTitle:@"One" block:nil]]];
 //        alertMenu.leftButton = [GrowingMenuButton buttonWithTitle:@"LBtn" block:nil];
 //        alertMenu.rightButton = [GrowingMenuButton buttonWithTitle:@"RBtn" block:nil];
-//}
+}
 
 - (void)showGrowingLoginMenu {
     
@@ -150,37 +181,37 @@ typedef NS_ENUM(NSInteger, GIOActionSheetsViewControllerTableRow) {
 #pragma mark - UITableViewDelegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     GIOActionSheetsViewControllerTableRow row = indexPath.row;
-//
-//    switch (row) {
-//        case GIOAlertsViewControllerActionSheetRowOkayCancel:
-//            [self showOkayCancelActionSheet];
-//            break;
-//        case GIOAlertsViewControllerActionSheetRowOther:
-//            [self showOtherActionSheet];
-//            break;
-//        case GrwingAlertOneMenuRow:
-//            [self showGrowingAlertMenuOne];
-//            break;
-//        case GrwingAlertTwoMenuRow:
-//            [self showGrowingAlertMenuTwo];
-//            break;
-//        case GrwingAlertThreeMenuRow:
-//            [self showGrowingAlertMenuThree];
-//            break;
-//        case GrwingAlertTwoTextMenuRow:
-//            [self showGrowingAlertMenuTwoText];
-//            break;
-//        case GrwingAlertLeftRightBtnMenuRow:
-//            [self showGrowingAlertMenuLeftRightBtn];
-//            break;
-//        case GrwingLoginMenuRow:
-//            [self showGrowingLoginMenu];
-//            break;
-//        default:
-//            break;
-//    }
-//
-//    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+
+    switch (row) {
+        case GIOAlertsViewControllerActionSheetRowOkayCancel:
+            [self showOkayCancelActionSheet];
+            break;
+        case GIOAlertsViewControllerActionSheetRowOther:
+            [self showOtherActionSheet];
+            break;
+        case GrwingAlertOneMenuRow:
+            [self showGrowingAlertMenuOne];
+            break;
+        case GrwingAlertTwoMenuRow:
+            [self showGrowingAlertMenuTwo];
+            break;
+        case GrwingAlertThreeMenuRow:
+            [self showGrowingAlertMenuThree];
+            break;
+        case GrwingAlertTwoTextMenuRow:
+            [self showGrowingAlertMenuTwoText];
+            break;
+        case GrwingAlertLeftRightBtnMenuRow:
+            [self showGrowingAlertMenuLeftRightBtn];
+            break;
+        case GrwingLoginMenuRow:
+            [self showGrowingLoginMenu];
+            break;
+        default:
+            break;
+    }
+
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 @end

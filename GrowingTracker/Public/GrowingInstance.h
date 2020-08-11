@@ -29,14 +29,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedInstance;
 + (void)startWithConfiguration:(GrowingConfiguration * _Nonnull)configuration;
-+ (BOOL)doDeeplinkByUrl:(NSURL *)url callback:(void(^)(NSDictionary *params, NSTimeInterval processTime, NSError *error))callback;
-
-+ (void)reportGIODeeplink:(NSURL *)linkURL;
-+ (void)reportShortChainDeeplink:(NSURL *)linkURL;
-
-typedef void (^GrowingDeeplinkHandler) (NSDictionary * _Nullable params, NSTimeInterval processTime, NSError *error);
-+ (void)setDeeplinkHandler:(GrowingDeeplinkHandler)handler;
-+ (GrowingDeeplinkHandler)deeplinkHandler;
 
 @property (nonatomic, copy, readonly) NSString * _Nonnull projectID;
 @property (nonatomic, copy) CLLocation * _Nullable gpsLocation;

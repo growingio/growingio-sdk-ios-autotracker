@@ -43,16 +43,21 @@ GrowingPropertyDefine(UITextView, NSString *, growingHookOldText, setGrowingHook
 - (void)handleInputViewDidEndingEditing:(id)anObject {
     if ([anObject isKindOfClass:UITextField.class]) {
         UITextField *inputView = (UITextField *)anObject;
+        
+        if (inputView.isSecureTextEntry) { return; }
+        
         NSString *text = inputView.text;
         if (![inputView.growingHookOldText isEqualToString:text]) {
-            
             inputView.growingHookOldText = text;
             [GrowingTextEditContentChangeEvent sendEventWithNode:inputView andEventType:GrowingEventTypeUIChangeText];
         }
-    }
-    
-    if ([anObject isKindOfClass:UITextView.class]) {
+        
+    } else if ([anObject isKindOfClass:UITextView.class]) {
+        
         UITextView *inputView = (UITextView *)anObject;
+        
+        if (inputView.isSecureTextEntry) { return; }
+        
         NSString *text = inputView.text;
         if (![inputView.growingHookOldText isEqualToString:text]) {
             inputView.growingHookOldText = text;

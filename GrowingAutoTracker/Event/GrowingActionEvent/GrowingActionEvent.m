@@ -146,10 +146,8 @@
 }
 
 + (BOOL)checkNode:(id<GrowingNode>)aNode {
-    if ([aNode
-            respondsToSelector:@selector(growingNodeEligibleEventCategory)]) {
-        GrowingElementEventCategory c =
-            [aNode growingNodeEligibleEventCategory];
+    if ([aNode respondsToSelector:@selector(growingNodeEligibleEventCategory)]) {
+        GrowingElementEventCategory c = [aNode growingNodeEligibleEventCategory];
         if (!(c & GrowingElementEventCategoryClick)) {
             return NO;
         }

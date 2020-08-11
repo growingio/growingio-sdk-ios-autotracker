@@ -25,6 +25,6 @@
 
 @end
 
-@interface GrowingAlertVCActionView : UIControl
+@interface GrowingAlertVCActionView : UIView
 
 @end

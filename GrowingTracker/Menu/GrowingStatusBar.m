@@ -27,14 +27,10 @@
 
 @end
 
-
 @implementation GrowingStatusBar
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self)
-    {
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
         UILabel *label = [[UILabel alloc] init];
         label.userInteractionEnabled = YES;
         label.backgroundColor = [UIColor blueColor];
@@ -54,31 +50,26 @@
     return self;
 }
 
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
     [super layoutSubviews];
     self.statusLable.frame = CGRectMake(0,0,self.bounds.size.width, 20);
     self.btn.frame = self.statusLable.bounds;
 }
 
-- (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent *)event
-{
+- (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
     UIView *view = [super hitTest:point withEvent:event];
-    if (self == view)
-    {
+    if (self == view) {
         return nil;
     }
     return view;
 }
 
-- (void)setOnButtonClick:(void (^)(void))onButtonClick
-{
+- (void)setOnButtonClick:(void (^)(void))onButtonClick {
     _onButtonClick = onButtonClick;
     self.btn.growingHelper_onClick = self.onButtonClick;
 }
 
-- (BOOL)growingNodeIsBadNode
-{
+- (BOOL)growingNodeIsBadNode {
     return NO;
 }
 
