@@ -144,7 +144,7 @@
         }
         NSString * d = [GrowingDeviceInfo currentDeviceInfo].bundleID;
         NSString * cv = [GrowingDeviceInfo currentDeviceInfo].appShortVersion;
-        NSString * av = [Growing getTrackVersion];
+        NSString * av = [Growing getVersion];
         NSString * signText = [NSString stringWithFormat:@"api=/products/%@/ios/%@/settings&av=%@&cv=%@&timestamp=%llu",
                                ai, d, av, cv,timestamp];
         NSString * hash = signText.growingHelper_sha1;

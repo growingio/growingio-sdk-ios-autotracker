@@ -391,7 +391,7 @@ static GrowingMobileDebugger *debugger = nil;
     //SDK版本、访问用户ID(deviceID／u)、登录用户ID（cs1）
     NSString *uesrId        = [GrowingCustomField shareInstance].userId;
     NSString *loginId       = deviceInfo.deviceIDString;//u
-    NSString *sdkVersion    = [Growing getTrackVersion];
+    NSString *sdkVersion    = [Growing getVersion];
     
     [info setObject:@"client_info" forKey:@"msgId"];
     [info setObject:(uesrId? uesrId:@"") forKey:@"cs1"];

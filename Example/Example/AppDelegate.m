@@ -42,7 +42,7 @@ static NSString * const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
     [Growing startWithConfiguration:configuration];
     [Growing addAutoTrackSwizzles];
     
-    NSString *trackSdkVersion = [Growing getTrackVersion];
+    NSString *trackSdkVersion = [Growing getVersion];
     NSString *systemVersion = [[UIDevice currentDevice] systemVersion];
     NSLog(@"GIO SDK当前版本号：%@;\n 当前手机系统的版本号：%@", trackSdkVersion, systemVersion);
 

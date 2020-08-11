@@ -35,9 +35,6 @@ typedef NS_ENUM(NSUInteger, GrowingIgnorePolicy) {
 
 @interface Growing (AutoTrackKit)
 
-// SDK版本号
-+ (NSString *)getAutoTrackVersion;
-
 + (void)addAutoTrackSwizzles;
 
 @end
