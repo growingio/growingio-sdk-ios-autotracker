@@ -113,10 +113,6 @@
     return self.view.window;
 }
 
-- (id<GrowingNodeAsyncNativeHandler>)growingNodeAsyncNativeHandler {
-    return nil;
-}
-
 - (NSString *)growingNodeUniqueTag {
     return self.growingPageAlias;
 }

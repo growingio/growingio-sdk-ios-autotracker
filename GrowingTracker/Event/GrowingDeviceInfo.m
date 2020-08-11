@@ -21,13 +21,10 @@
 #import "GrowingDeviceInfo.h"
 #import <sys/utsname.h>
 #import "GrowingInstance.h"
-#import "GrowingEventDataBase.h"
 #import "NSString+GrowingHelper.h"
 #import <pthread.h>
-#import "GrowingEventManager.h"
 #import "GrowingDispatchManager.h"
 #import "GrowingCocoaLumberjack.h"
-#import "GrowingConfiguration.h"
 
 static NSString *kGrowingUrlScheme = nil;
 

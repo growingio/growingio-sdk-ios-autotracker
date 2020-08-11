@@ -19,7 +19,6 @@
 
 
 #import <Foundation/Foundation.h>
-
 #import "UIView+GrowingNode.h"
 
 @interface UITableView (GrowingNode)

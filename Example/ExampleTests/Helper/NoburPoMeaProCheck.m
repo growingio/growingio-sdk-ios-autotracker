@@ -46,43 +46,43 @@
     
 }
 //判断NSDictionary是否存在空关键字
-+(NSDictionary *)CheckDictEmpty:(NSDictionary *)ckdict
-{
++ (NSDictionary *)CheckDictEmpty:(NSDictionary *)checkDict {
     NSDictionary * dechres;
     NSArray * emptykeys;
-    for (NSString *key in ckdict)
-    {
+    
+    for (NSString *key in checkDict) {
         //NSLog(@"PRO Value:%@-->%@",key,ckdict[key]);
-        NSString *aString;
+        id value = checkDict[key];
+        NSString *waitForCheckString = nil;
         //添加对多重字典的支持
-        if([ckdict[key] isKindOfClass:[NSDictionary class]])
-        {
-            [self CheckDictEmpty:ckdict[key]];
+        if ([value isKindOfClass:[NSDictionary class]]) {
+            [self CheckDictEmpty:value];
             continue;
         }
-        if ([ckdict[key] isKindOfClass:[NSNumber class]])
-          {
-              aString = [NSString stringWithFormat:@"%@",ckdict[key]];
-          }
-        else
-           {
-               aString=ckdict[key];
-           }
-        if([self isBlankString:aString])
-        {
-            emptykeys=[NSArray arrayWithObject:key];
+        if ([value isKindOfClass:[NSNumber class]]) {
+            waitForCheckString = [NSString stringWithFormat:@"%@", value];
+        } else if ([value isKindOfClass:NSString.class]) {
+            waitForCheckString = value;
+        } else if ([value isKindOfClass:NSArray.class]) {
+            NSArray *arrayValue = (NSArray *)value;
+            for (NSDictionary *v in arrayValue) {
+                [self CheckDictEmpty:v];
+            }
+        }
+        
+        if ([self isBlankString:waitForCheckString]) {
+            emptykeys = [NSArray arrayWithObject:key];
         }
     }
-    if (emptykeys.count>0)
-    {
+    
+    if (emptykeys.count>0) {
         dechres=@{@"chres":@"Failed",@"EmptyKeys":emptykeys};
-    }
-    else
-    {
+    } else {
         dechres=@{@"chres":@"Passed",@"EmptyKeys":@""};
     }
     return dechres;
 }
+
 //Vst事件对比，测量协议字段完整且每个字段不为空
 +(NSDictionary *)VstEventCheck:(NSDictionary *)vstevent
 {

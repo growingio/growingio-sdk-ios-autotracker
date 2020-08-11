@@ -62,8 +62,8 @@ static const NSInteger kGIOMaxCachesLogNumber = 100;
     struct tm tm;
     time_t time = (time_t)epoch;
     (void)localtime_r(&time, &tm);
-    int milliseconds = (int)((epoch - floor(epoch)) * 1000.0);
-    NSString *timeStamp = [NSString stringWithFormat:@"%04d-%02d-%02d %02d:%02d:%02d:%03d", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec, milliseconds];
+//    int milliseconds = (int)((epoch - floor(epoch)) * 1000.0);
+//    NSString *timeStamp = [NSString stringWithFormat:@"%04d-%02d-%02d %02d:%02d:%02d:%03d", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec, milliseconds];
     
     //  获取对应的字典构成字典，转成json进行发送
     

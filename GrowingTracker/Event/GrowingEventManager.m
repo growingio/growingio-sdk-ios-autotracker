@@ -133,7 +133,8 @@ static GrowingEventManager *shareinstance = nil;
 
         // timer
         self.reportTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, self.eventDispatch);
-        CGFloat dataUploadInterval = [GrowingInstance sharedInstance].configuration.dataUploadInterval >= 5 ? [GrowingInstance sharedInstance].configuration.dataUploadInterval : 5; // at least 5 seconds
+        CGFloat configInterval = [GrowingInstance sharedInstance].configuration.dataUploadInterval;
+        CGFloat dataUploadInterval = configInterval >= 5 ? configInterval : 5; // at least 5 seconds
         dispatch_source_set_timer(self.reportTimer,
                                   dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC * 5), // first upload
                                   NSEC_PER_SEC * dataUploadInterval,

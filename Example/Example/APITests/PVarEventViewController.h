@@ -9,16 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface PVarEventViewController : UIViewController
-//pvar valiable
-@property (weak, nonatomic) IBOutlet UITextField *PVarValiable;
-
-//pvar key
-@property (weak, nonatomic) IBOutlet UITextField *PVarKey;
-
-//pvar StringValue
-@property (weak, nonatomic) IBOutlet UITextField *PVarStrVal;
-
-//pvar NumberValue
-@property (weak, nonatomic) IBOutlet UITextField *PVarNumVal;
 
 @end

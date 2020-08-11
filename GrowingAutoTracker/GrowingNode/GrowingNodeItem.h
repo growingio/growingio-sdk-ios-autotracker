@@ -20,8 +20,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import "metamacros.h"
-
 @protocol GrowingNode;
 
 @interface GrowingNodeItemComponent : NSObject

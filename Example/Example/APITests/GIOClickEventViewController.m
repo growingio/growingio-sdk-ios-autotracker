@@ -22,7 +22,7 @@
     [super viewDidLoad];
     self.growingPageAlias = @"CLICK_EVENT_VC_ON_OPTION";
     self.segmentControl.growingUniqueTag = @"language-selector";
-    self.view.growingViewIgonrePolicy = GrowingIgnoreChild;
+    self.view.growingViewIgnorePolicy = GrowingIgnoreChild;
  
     self.growingPageAttributes = @{@"greet": @"hello"};
     self.growingPageIgonrePolicy = GrowingIgnoreChild;

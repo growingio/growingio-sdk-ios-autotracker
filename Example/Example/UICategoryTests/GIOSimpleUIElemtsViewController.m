@@ -21,13 +21,6 @@ const NSUInteger kProgressViewControllerMaxProgress = 100;
 @property (nonatomic, weak) IBOutlet UIToolbar *toolbar;
 @property (nonatomic, weak) IBOutlet UIActivityIndicatorView *grayStyleActivityIndicatorView;
 
-@property (nonatomic) NSOperationQueue *operationQueue;
-@property (nonatomic) NSUInteger completedProgress;
-
-@property (nonatomic, weak) IBOutlet UIButton *btn2;
-@property (nonatomic, weak) IBOutlet UIButton *btn4;
-@property (nonatomic, weak) IBOutlet UIButton *btn5;
-
 @end
 
 @implementation GIOSimpleUIElemtsViewController
@@ -37,63 +30,16 @@ const NSUInteger kProgressViewControllerMaxProgress = 100;
     
     [self configureRightNavButtonItem];
     [self configureSearchBar];
-    [self configureDefaultSwitch];
-    [self configureDefaultStepper];
-    [self configureDefaultSegmentedControl];
-    [self configureDefaultSlider];
-    [self configureToolbar];
-    [self configureGrayActivityIndicatorView];
-    
-    [self configureDefaultStyleProgressView];
-    [self simulateProgress];
-    
-    //添加特殊的按钮
-    _btn2 = [[UIButton alloc] initWithFrame:CGRectMake(50,500,50,30)];
-    [_btn2 addTarget:self action:@selector(ontap) forControlEvents:UIControlEventTouchUpInside];
-    _btn2.backgroundColor = [UIColor blueColor];
-    [self.view addSubview:_btn2];
-    
-    _btn4 = [[UIButton alloc] initWithFrame:CGRectMake(130, 500, 50,50)];
-    [_btn4 addTarget:self action:@selector(ontap) forControlEvents:UIControlEventTouchUpInside];
-    //NSBundle *bundle = [NSBundle mainBundle];
-    //NSString *resourcePath = [bundle resourcePath];
-    //NSString *filePath = [resourcePath stringByAppendingPathComponent:@"/resource/icon_email@3x.png"];
-    //UIImage *image = [UIImage imageWithContentsOfFile:filePath];
-    UIImage *image=[UIImage imageNamed:@"bugs.png"];
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
-    imageView.accessibilityLabel = @"邮件";
-    [_btn4 addSubview:imageView];
-    [self.view addSubview:_btn4];
-    
-    UIView *viewContainer = [[UIView alloc] initWithFrame:CGRectMake(200, 500, 50, 50)];
-    UIImage *image1=[UIImage imageNamed:@"fire.ico"];
-    UIImageView *imageView2 = [[UIImageView alloc] initWithImage:image1];
-    imageView2.accessibilityLabel = @"邮件容器";
-    [viewContainer addSubview:imageView2];
-    _btn5 = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
-    [_btn5 addTarget:self action:@selector(ontap) forControlEvents:UIControlEventTouchUpInside];
-    [viewContainer addSubview:_btn5];
-    [self.view addSubview:viewContainer];
-    
 }
 
--(void)ontap
-{
-
-    UIWindow * window=[[[UIApplication sharedApplication] delegate] window];
-    
-    CGRect startRact = [_btn5 convertRect:_btn5.bounds toView:window];
-    
-    NSLog(@"Btn5 x=%f,y=%f",startRact.origin.x,startRact.origin.y);
-    
-    
+- (IBAction)imageBtnClick:(UIButton *)sender {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Hello"
                                                                    message:@"你好,今天的天气真不错？"
                                                             preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:@"好的"
                                               style:UIAlertActionStyleDefault
                                             handler:^(UIAlertAction * _Nonnull action) {
-                                            }]];
+    }]];
     [self presentViewController:alert animated:YES completion:nil];
 }
 
@@ -123,7 +69,6 @@ const NSUInteger kProgressViewControllerMaxProgress = 100;
     NSLog(@"User click scan qrcode");
 }
 
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -147,6 +92,11 @@ const NSUInteger kProgressViewControllerMaxProgress = 100;
     [self.searchBar setImage:bookmarkHighlightedImage forSearchBarIcon:UISearchBarIconBookmark state:UIControlStateHighlighted];
 }
 
+#pragma mark - Stepper Actions
+
+- (IBAction)stepperValueDidChange:(UIStepper *)sender {
+    NSLog(@"A stepper changed its value: %@.", sender);
+}
 
 #pragma mark - UISearchBarDelegate
 
@@ -166,150 +116,30 @@ const NSUInteger kProgressViewControllerMaxProgress = 100;
     NSLog(@"The custom bookmark button inside the search bar was tapped.");
 }
 
-#pragma mark - Switch Configuration
-
-- (void)configureDefaultSwitch {
-    [self.defaultSwitch setOn:YES animated:YES];
-    
-    [self.defaultSwitch addTarget:self action:@selector(switchValueDidChange:) forControlEvents:UIControlEventValueChanged];
-}
-
 #pragma mark - Switch Actions
 
-- (void)switchValueDidChange:(UISwitch *)aSwitch {
-    NSLog(@"A switch changed its value: %@.", aSwitch);
-}
-
-
-#pragma mark - Stepper Configuration
-
-- (void)configureDefaultStepper {
-    self.defaultStepper.value = 0;
-    self.defaultStepper.minimumValue = 0;
-    self.defaultStepper.maximumValue = 10;
-    self.defaultStepper.stepValue = 1;
-    [self.defaultStepper addTarget:self action:@selector(stepperValueDidChange:) forControlEvents:UIControlEventValueChanged];
-}
-
-#pragma mark - Stepper Actions
-
-- (void)stepperValueDidChange:(UIStepper *)stepper {
-    NSLog(@"A stepper changed its value: %@.", stepper);
-}
-
-#pragma mark - SegmentedControl Configuration
-
-- (void)configureDefaultSegmentedControl {
-    self.defaultSegmentedControl.tintColor = [UIColor colorWithRed:0.333 green:0.784 blue:1 alpha:1];
-
-    [self.defaultSegmentedControl addTarget:self
-                                     action:@selector(selectedSegmentDidChange:)
-                           forControlEvents:UIControlEventValueChanged];
-    
-    self.defaultSegmentedControl.growingUniqueTag = @"defaultSegmentUniqueTag";
+- (IBAction)switchValueDidChange:(UISwitch *)sender {
+    NSLog(@"A switch changed its value: %@.", sender);
 }
 
 #pragma mark - SegmentedControl Actions
 
-- (void)selectedSegmentDidChange:(UISegmentedControl *)segmentedControl {
-    NSLog(@"The selected segment changed for: %@.", segmentedControl);
-}
-
-#pragma mark - Slider Configuration
-
-- (void)configureDefaultSlider {
-    self.defaultSlider.minimumValue = 0;
-    self.defaultSlider.maximumValue = 100;
-    self.defaultSlider.value = 42;
-    self.defaultSlider.continuous = YES;
-    
-    [self.defaultSlider addTarget:self action:@selector(sliderValueDidChange:) forControlEvents:UIControlEventValueChanged];
+- (IBAction)segmentValudDidChange:(UISegmentedControl *)sender {
+    NSLog(@"The selected segment changed for: %@.", sender);
 }
 
 #pragma mark - Slider Actions
 
-- (void)sliderValueDidChange:(UISlider *)slider {
-    NSLog(@"A slider changed its value: %@", slider);
+- (IBAction)sliderValueDidChange:(UISlider *)sender {
+    NSLog(@"A slider changed its value: %@", sender);
+    float scale = sender.value / sender.maximumValue;
+    [self.defaultStyleProgressView setProgress:scale animated:YES];
 }
-
-#pragma mark - ProgressView Configuration
-
-// Overrides the "completedProgress" property's setter.
-- (void)setCompletedProgress:(NSUInteger)completedProgress {
-    if (_completedProgress != completedProgress) {
-        float fractionalProgress = (float)completedProgress / (float)kProgressViewControllerMaxProgress;
-        
-        [self.defaultStyleProgressView setProgress:fractionalProgress animated:YES];
-        
-        _completedProgress = completedProgress;
-    }
-}
-
-- (void)configureDefaultStyleProgressView {
-    self.defaultStyleProgressView.progressViewStyle = UIProgressViewStyleDefault;
-}
-
-#pragma mark - Progress Simulation
-
-- (void)simulateProgress {
-    // In this example we will simulate progress with a "sleep operation".
-    self.operationQueue = [[NSOperationQueue alloc] init];
-    
-    for (NSUInteger count = 0; count < kProgressViewControllerMaxProgress; count++) {
-        [self.operationQueue addOperationWithBlock:^{
-            // Delay the system for a random number of seconds.
-            // This code is _not_ intended for production purposes. The "sleep" call is meant to simulate work done in another subsystem.
-            sleep(arc4random_uniform(10));
-            
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                self.completedProgress++;
-            }];
-        }];
-    }
-}
-
-#pragma mark - Toolbar Configuration
-
-- (void)configureToolbar {
-    NSArray *toolbarButtonItems = @[[self trashBarButtonItem], [self flexibleSpaceBarButtonItem], [self customTitleBarButtonItem]];
-    [self.toolbar setItems:toolbarButtonItems animated:YES];
-}
-
-
-#pragma mark - UIBarButtonItem Creation and Configuration
-
-- (UIBarButtonItem *)trashBarButtonItem {
-    return [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:self action:@selector(barButtonItemClicked:)];
-}
-
-- (UIBarButtonItem *)flexibleSpaceBarButtonItem {
-    return [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:NULL];
-}
-
-- (UIBarButtonItem *)customTitleBarButtonItem {
-    NSString *customTitle = NSLocalizedString(@"Action", nil);
-    
-    return [[UIBarButtonItem alloc] initWithTitle:customTitle style:UIBarButtonItemStylePlain target:self action:@selector(barButtonItemClicked:)];
-}
-
 
 #pragma mark - Toolbar Actions
 
-- (void)barButtonItemClicked:(UIBarButtonItem *)barButtonItem {
-    NSLog(@"A bar button item on the default toolbar was clicked: %@.", barButtonItem);
+- (IBAction)barBtnItemClicked:(UIBarButtonItem *)sender {
+    NSLog(@"A bar button item on the default toolbar was clicked: %@.", sender);
 }
-
-#pragma mark - Configuration
-
-- (void)configureGrayActivityIndicatorView {
-    self.grayStyleActivityIndicatorView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
-    
-    [self.grayStyleActivityIndicatorView startAnimating];
-    
-    self.grayStyleActivityIndicatorView.hidesWhenStopped = YES;
-}
-
-
-
 
 @end

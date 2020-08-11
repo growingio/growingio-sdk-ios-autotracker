@@ -19,8 +19,6 @@
 
 
 #import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
-//#import "GrowingAddEventContextProtocal.h"
 
 static NSString * _Nonnull const kEventTypeKeyClose = @"cls";
 static NSString * _Nonnull const kEventTypeKeyVisit = @"vst";

@@ -757,7 +757,7 @@ int GROW_LZ4_uncompress(const char* source,
             op[1] = ref[1];
             op[2] = ref[2];
             op[3] = ref[3];
-            op += 4, ref += 4; ref -= dec32table[op-ref];
+            op += 4; ref += 4; ref -= dec32table[op-ref];
             A32(op) = A32(ref); 
             op += STEPSIZE-4; ref -= dec64;
         } else { LZ4_COPYSTEP(ref,op); }
@@ -846,7 +846,7 @@ int GROW_LZ4_uncompress_unknownOutputSize(
             op[1] = ref[1];
             op[2] = ref[2];
             op[3] = ref[3];
-            op += 4, ref += 4; ref -= dec32table[op-ref];
+            op += 4; ref += 4; ref -= dec32table[op-ref];
             A32(op) = A32(ref); 
             op += STEPSIZE-4; ref -= dec64;
         } else { LZ4_COPYSTEP(ref,op); }
