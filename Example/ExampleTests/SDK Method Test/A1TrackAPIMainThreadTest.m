@@ -104,11 +104,11 @@ static GrowingEvent *originalEvent = nil;
 @end
 
 
-@interface TrackAPIMainThreadTest : KIFTestCase
+@interface A1TrackAPIMainThreadTest : KIFTestCase
 
 @end
 
-@implementation TrackAPIMainThreadTest
+@implementation A1TrackAPIMainThreadTest
 
 + (void)setUp {
     [super setUp];
@@ -479,9 +479,7 @@ static GrowingEvent *originalEvent = nil;
     XCTAssertNotNil(originalEvent);
     XCTAssertTrue(originalEvent.eventTypeKey.length > 0);
     [originalEventArray enumerateObjectsUsingBlock:^(GrowingEvent *event, NSUInteger idx, BOOL * _Nonnull stop) {
-        //  遍历原始事件数组，不包含 gesid 和 esid
-        XCTAssertNil(event.globalSequenceId);
-        XCTAssertNil(event.eventSequenceId);
+
     }];
     
     [dbEventArray enumerateObjectsUsingBlock:^(GrowingEvent *event, NSUInteger idx, BOOL * _Nonnull stop) {
