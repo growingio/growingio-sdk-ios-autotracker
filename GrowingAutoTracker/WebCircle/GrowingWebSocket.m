@@ -1116,24 +1116,19 @@ static GrowingWebSocket *shareInstance = nil;
             __weak typeof(self) wself = self;
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 if (wself && [wself.statusWindow.statusLable.text isEqualToString:@"正在等待web链接"]){
-//                    [GrowingAlertMenu alertWithTitle:@"提示"
-//                                                text:@"电脑端连接超时，请刷新电脑页面，再次尝试扫码圈选。"
-//                                             buttons:@[[GrowingMenuButton buttonWithTitle:@"知道了" block:nil]]];
+                    GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert title:@"提示" message:@"电脑端连接超时，请刷新电脑页面，再次尝试扫码圈选。"];
+                    [alert addOkWithTitle:@"知道了" handler:nil];
+                    [alert showAlertAnimated:NO];
                 }
             });
             self.statusWindow.onButtonClick = ^{
-                
-//                GrowingMenuButton *btn = [GrowingMenuButton buttonWithTitle:@"继续圈选"
-//                                                                      block:nil];
-//                GrowingMenuButton *btn2 = [GrowingMenuButton buttonWithTitle:@"退出圈选"
-//                                                                       block:^{
-//                                                                           [GrowingWebSocket stop];
-//                                                                       }];
-//
-//                [GrowingAlertMenu alertWithTitle:@"正在进行圈选"
-//                                           text1:[NSString stringWithFormat:@"APP版本: %@", [GrowingDeviceInfo currentDeviceInfo].appShortVersion]
-//                                           text2:[NSString stringWithFormat:@"SDK版本: %@", [Growing sdkVersion]]
-//                                         buttons:@[btn,btn2]];
+                NSString *content = [NSString stringWithFormat:@"APP版本: %@\nSDK版本: %@",[GrowingDeviceInfo currentDeviceInfo].appShortVersion],[NSString stringWithFormat:@"SDK版本: %@", [Growing getTrackVersion]]];
+                GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert title:@"正在进行圈选" message:content];
+                [alert addOkWithTitle:@"继续圈选" handler:nil];
+                [alert addCancelWithTitle:@"退出圈选" handler:^(UIAlertAction * _Nonnull action, NSArray<UITextField *> * _Nonnull textFields) {
+                    [GrowingWebSocket stop];
+                }];
+                [alert showAlertAnimated:NO];
             };
         }
         
