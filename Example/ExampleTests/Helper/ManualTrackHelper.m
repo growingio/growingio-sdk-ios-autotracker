@@ -91,7 +91,7 @@
 +(NSDictionary *)VstrEventCheck:(NSDictionary *)vstrevent
 {
     NSDictionary *vstrchres;
-    NSArray * vstrprome=@[@"u",@"s",@"t",@"tm",@"d",@"var",@"cs1",@"gesid",@"esid"];
+    NSArray * vstrprome=@[@"u",@"s",@"t",@"tm",@"d",@"var",@"cs1"];
     //对比测量协议结构
     if (vstrevent.count>0)
     {

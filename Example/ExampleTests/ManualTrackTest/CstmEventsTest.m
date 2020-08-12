@@ -638,6 +638,7 @@
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[viewTester usingLabel:@"协议/接口"] tap];
+    [[viewTester usingLabel:@"协议/接口"] tap];
     [[viewTester usingLabel:@"cstm请求"] tap];
 
     //将Log日志写入文件
