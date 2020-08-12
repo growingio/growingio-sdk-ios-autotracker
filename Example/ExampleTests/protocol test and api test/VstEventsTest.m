@@ -26,10 +26,10 @@
     /**
      function:SetLocation触发，从null -> 非null 发一次。非null - 非null不发vst
      **/
-    [MockEventQueue.sharedQueue cleanQueue];
     NSString *oldSession = [Growing getSessionId];
     XCTAssertNotNil(oldSession);
     [Growing cleanLocation];
+    [MockEventQueue.sharedQueue cleanQueue];
     [Growing setLocation:[@30.11 doubleValue] longitude:[@32.22 doubleValue]];
     [tester waitForTimeInterval:1];
     NSArray *vstEventArray = [MockEventQueue.sharedQueue eventsFor:@"vst"];

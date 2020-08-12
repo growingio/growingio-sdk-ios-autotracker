@@ -25,11 +25,11 @@
     /**
      function:vstr正常情况
      **/
+    [tester waitForTimeInterval:1];
     [MockEventQueue.sharedQueue cleanQueue];
     [Growing setVisitorAttributes:@{@"var1":@"good",@"var2":@"excell"}];
-    [tester waitForTimeInterval:1];
     NSArray *vstrEventArray = [MockEventQueue.sharedQueue eventsFor:@"vstr"];
-    //NSLog(@"Vstr事件：%@",vstrEventArray);
+    NSLog(@"Vstr事件：%@",vstrEventArray);
     if (vstrEventArray.count>=1)
     {
         NSDictionary *epvarchr=[vstrEventArray objectAtIndex:vstrEventArray.count-1];
