@@ -28,9 +28,9 @@
     self.segmentControl.growingUniqueTag = @"language-selector";
  
     self.growingPageAttributes = @{@"greet": @"hello"};
-//    self.growingPageIgonrePolicy = GrowingIgnoreChild;
+//    self.growingPageIgnorePolicy = GrowingIgnoreChild;
     
-//    self.parentViewController.growingPageIgonrePolicy = GrowingIgnoreAll;
+//    self.parentViewController.growingPageIgnorePolicy = GrowingIgnoreAll;
     [self.sendEventButton growingTrackImpression:@"hello_track_impression"];
     [self.view growingTrackImpression:@"self_view_imp_track" attributes:@{@"self_view_key": @"self_view_value"}];
     

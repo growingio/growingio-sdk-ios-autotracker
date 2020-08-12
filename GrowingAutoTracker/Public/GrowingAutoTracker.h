@@ -88,7 +88,7 @@ typedef NS_ENUM(NSUInteger, GrowingIgnorePolicy) {
  */
 @property (nonatomic, strong) NSDictionary <NSString *, NSString *> *growingPageAttributes;
 
-@property (nonatomic, assign) GrowingIgnorePolicy growingPageIgonrePolicy;
+@property (nonatomic, assign) GrowingIgnorePolicy growingPageIgnorePolicy;
 
 @end
 

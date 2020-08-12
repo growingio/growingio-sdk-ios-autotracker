@@ -246,14 +246,14 @@ GrowingSafeStringPropertyImplementation(growingPageAlias,
     return [[self growingAttributesMutablePvar] copy];
 }
 
-- (void)setGrowingPageIgonrePolicy:(GrowingIgnorePolicy)growingPageIgonrePolicy {
+- (void)setGrowingPageIgnorePolicy:(GrowingIgnorePolicy)growingPageIgnorePolicy {
     objc_setAssociatedObject(self,
                              &kGrowingPageIgnorePolicyKey,
-                             [NSNumber numberWithUnsignedInteger:growingPageIgonrePolicy],
+                             [NSNumber numberWithUnsignedInteger:growingPageIgnorePolicy],
                              OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (GrowingIgnorePolicy)growingPageIgonrePolicy {
+- (GrowingIgnorePolicy)growingPageIgnorePolicy {
     id policyObjc = objc_getAssociatedObject(self, &kGrowingPageIgnorePolicyKey);
     if (!policyObjc) {
         return GrowingIgnoreNone;
