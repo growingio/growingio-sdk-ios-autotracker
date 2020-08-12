@@ -43,7 +43,7 @@
         self.logEnabled = NO;
         self.dataUploadInterval = 15;
         self.sessionInterval = 30;
-        self.cellularDataLimit = 10 * 1024;
+        self.cellularDataLimit = 10; // default 10KB
         self.uploadExceptionEnable = YES;
         self.samplingRate = 1.0;
     }
@@ -60,10 +60,6 @@
 
 - (void)setWebSocketHost:(NSString *)host {
     [GrowingNetworkConfig.sharedInstance setCustomWsHost:host];
-}
-
-- (void)setCellularDataLimit:(NSUInteger)cellularDataLimit {
-    _cellularDataLimit = cellularDataLimit * 1024;
 }
 
 - (void)setUrlScheme:(NSString *)urlScheme {

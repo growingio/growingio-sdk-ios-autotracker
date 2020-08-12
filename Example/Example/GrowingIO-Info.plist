@@ -24,6 +24,10 @@
 	<string>1.0</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSLocationUsageDescription</key>
+	<string>GrowingIO测试demo 需要访问你的 位置信息</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>GrowingIO测试demo 需要访问你的 位置信息</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

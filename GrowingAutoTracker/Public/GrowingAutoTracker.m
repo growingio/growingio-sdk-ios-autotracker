@@ -51,22 +51,8 @@
 
 @implementation Growing (AutoTrackKit)
 
-+ (void)growingTrackConfigurationDidChanged:(GrowingConfiguration *)configuration {
++ (void)growingTrackerConfigurationDidChanged:(GrowingConfiguration *)configuration {
     [self addAutoTrackSwizzles];
-}
-
-+ (void)setIMPInterval:(NSTimeInterval)interval {
-    [GrowingIMPTrack shareInstance].IMPInterval = interval;
-}
-
-+ (NSTimeInterval)IMPInterval {
-    return [GrowingIMPTrack shareInstance].IMPInterval;
-}
-
-+ (void)sendPage:(NSString *)pageName
-{
-    // TODO: SEND PAGE
-//    [GrowingPageEvent sendPage:pageName];
 }
 
 + (void)addAutoTrackSwizzles {

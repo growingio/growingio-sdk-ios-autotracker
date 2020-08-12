@@ -41,7 +41,7 @@
         [self.locationManager requestWhenInUseAuthorization];
     }
     
-    MKCoordinateSpan span=MKCoordinateSpanMake(0.021251, 0.016093);
+    MKCoordinateSpan span = MKCoordinateSpanMake(0.021251, 0.016093);
     
     self.mapView.showsUserLocation = YES;
     self.mapView.userTrackingMode = MKUserTrackingModeFollow;

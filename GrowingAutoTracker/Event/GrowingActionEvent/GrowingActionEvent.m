@@ -101,9 +101,7 @@
         }
     }
 
-    if (!manager) {
-        return;
-    }
+    if (!manager) { return; }
 
     [self _sendEventsWithManager:manager
                      triggerNode:node

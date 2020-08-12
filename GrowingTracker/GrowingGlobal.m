@@ -23,9 +23,6 @@
 #import "GrowingGlobal.h"
 #import "GrowingInstance.h"
 
-const NSUInteger    g_K                     = 1024;
-const NSUInteger    g_M                     = g_K * g_K;
-
 BOOL                g_GDPRFlag              = NO;
 BOOL                g_DataUploadFlag        = YES;
 

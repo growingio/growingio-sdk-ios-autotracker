@@ -108,24 +108,6 @@
     return nil;
 }
 
-- (BOOL)growingNodeUserInteraction {
-    return YES;
-}
-
-- (NSString *)growingNodeName {
-    return @"弹出框选项";
-}
-
-- (NSString *)growingNodeContent {
-    NSString *nodeContent = [[UIAlertController growing_actionForActionView:(id)self] title];
-    
-    if (nodeContent.length) {
-        return nodeContent;
-    } else {
-        return self.accessibilityLabel;
-    }
-}
-
 + (UIAlertAction*)growing_actionForActionView:(UIView*)actionView {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
@@ -191,5 +173,25 @@
                ? @"Button"
                : [NSString stringWithFormat:@"Button[%ld]", (long)index];
 }
+
+
+- (BOOL)growingNodeUserInteraction {
+    return YES;
+}
+
+- (NSString *)growingNodeName {
+    return @"弹出框选项";
+}
+
+- (NSString *)growingNodeContent {
+    NSString *nodeContent = [[UIAlertController growing_actionForActionView:(id)self] title];
+    
+    if (nodeContent.length) {
+        return nodeContent;
+    } else {
+        return self.accessibilityLabel;
+    }
+}
+
 
 @end
