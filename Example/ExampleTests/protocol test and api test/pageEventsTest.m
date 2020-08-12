@@ -2,7 +2,7 @@
 //  PageEventsTest.m
 //  GIOAutoTests
 //
-//  Created by GIO-baitianyu on 31/03/2018.
+//  Created by GrowingIO on 31/03/2018.
 //  Copyright © 2018 GrowingIO. All rights reserved.
 //
 

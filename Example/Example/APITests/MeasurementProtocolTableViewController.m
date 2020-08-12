@@ -1,8 +1,8 @@
 //
 //  MeasurementProtocolTableViewController.m
-//  GrowingIOTest
+//  GrowingExample
 //
-//  Created by GIO-baitianyu on 20/03/2018.
+//  Created by GrowingIO on 20/03/2018.
 //  Copyright © 2018 GrowingIO. All rights reserved.
 //
 

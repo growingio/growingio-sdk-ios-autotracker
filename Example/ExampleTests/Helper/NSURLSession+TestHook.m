@@ -3,7 +3,7 @@
 //  GrowingSDKTest
 //
 //  Created by smart on 2018/3/21.
-//  Copyright © 2018年 GrowingIO. All rights reserved.
+//  Copyright (C) 2018 Beijing Yishu Technology Co., Ltd.
 //
 
 #import "NSURLSession+TestHook.h"

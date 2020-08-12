@@ -1,6 +1,6 @@
 //
 //  GIOAttributesTrackViewController.m
-//  GrowingIOTest
+//  GrowingExample
 //
 //  Created by GrowingIO on 2020/6/10.
 //  Copyright © 2020 GrowingIO. All rights reserved.

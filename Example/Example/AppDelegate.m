@@ -1,8 +1,8 @@
 //
 //  AppDelegate.m
-//  GrowingIOTest
+//  GrowingExample
 //
-//  Created by GIO-baitianyu on 14/03/2018.
+//  Created by GrowingIO on 14/03/2018.
 //  Copyright © 2018 GrowingIO. All rights reserved.
 //
 
@@ -62,14 +62,12 @@ static NSString * const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
         //iOS 10 使用以下方法注册，才能得到授权，注册通知以后，会自动注册 deviceToken，如果获取不到 deviceToken，Xcode8下要注意开启 Capability->Push Notification。
         [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert | UNAuthorizationOptionSound )
                               completionHandler:^(BOOL granted, NSError * _Nullable error) {
-                                  if (granted) {
-                                      
-                                      dispatch_async(dispatch_get_main_queue(), ^{
-                                          
-                                          [[UIApplication sharedApplication] registerForRemoteNotifications];
-                                      });
-                                  }
-                              }];
+            if (granted) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[UIApplication sharedApplication] registerForRemoteNotifications];
+                });
+            }
+        }];
         
     } else if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
         
@@ -78,7 +76,6 @@ static NSString * const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
                                                                                  categories:nil];
         [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
         [[UIApplication sharedApplication] registerForRemoteNotifications];
-        
     }
 }
 
@@ -147,4 +144,5 @@ static NSString * const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
 - (void)applicationWillTerminate:(UIApplication *)application{
     NSLog(@"状态** 将要退出程序");
 }
+
 @end

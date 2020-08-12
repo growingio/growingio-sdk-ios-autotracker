@@ -21,11 +21,6 @@
 #import <UIKit/UIKit.h>
 #import "GrowingTracker.h"
 
-#ifndef __cplusplus
-@import Foundation;
-@import WebKit;
-#endif
-
 typedef NS_ENUM(NSUInteger, GrowingIgnorePolicy) {
     GrowingIgnoreNone = 0,
     GrowingIgnoreSelf = 1,
