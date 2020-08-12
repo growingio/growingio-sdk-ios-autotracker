@@ -20,6 +20,7 @@
 
 #import <UIKit/UIKit.h>
 #import "GrowingTracker.h"
+#import "GrowingConfiguration+GrowingAutoTrack.h"
 
 typedef NS_ENUM(NSUInteger, GrowingIgnorePolicy) {
     GrowingIgnoreNone = 0,
@@ -27,12 +28,6 @@ typedef NS_ENUM(NSUInteger, GrowingIgnorePolicy) {
     GrowingIgnoreChild = 2,
     GrowingIgnoreAll = 3,
 };
-
-@interface Growing (AutoTrackKit)
-
-+ (void)addAutoTrackSwizzles;
-
-@end
 
 // imp半自动打点
 @interface UIView (GrowingImpression)

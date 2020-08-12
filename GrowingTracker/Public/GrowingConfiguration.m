@@ -50,7 +50,7 @@
     return self;
 }
 
-- (void)setDataCollectionHost:(NSString *)host {
+- (void)setDataTrackHost:(NSString *)host {
     [GrowingNetworkConfig.sharedInstance setCustomTrackerHost:host];
 }
 
@@ -71,6 +71,24 @@
     [GrowingDeviceInfo configUrlScheme:urlScheme];
 }
 
+#pragma mark - GrowingSettingProtocol
+
+- (void)setDataTrackEnabled:(BOOL)dataTrackEnabled {
+    [Growing setDataTrackEnabled:dataTrackEnabled];
+}
+
+- (void)setDataUploadEnabled:(BOOL)dataUploadEnabled {
+    [Growing setDataUploadEnabled:dataUploadEnabled];
+}
+
+- (BOOL)dataTrackEnabled {
+    return !GrowingSDKDoNotTrack();
+}
+
+- (BOOL)dataUploadEnabled {
+    return !GrowingSDKDoNotUpload();
+}
+
 #pragma mark NSCopying
 
 - (id)copyWithZone:(NSZone *)zone {
@@ -84,7 +102,7 @@
     config.cellularDataLimit = self.cellularDataLimit;
     config.uploadExceptionEnable = self.uploadExceptionEnable;
     config.samplingRate = self.samplingRate;
-    
+        
     return config;
 }
 

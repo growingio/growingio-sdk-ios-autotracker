@@ -19,33 +19,16 @@
 
 
 #import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
 #import "GrowingInstance.h"
-#import "GrowingDeviceInfo.h"
 #import "NSString+GrowingHelper.h"
 #import "NSData+GrowingHelper.h"
-#import "GrowingGlobal.h"
-#import "GrowingCustomField.h"
-#import "GrowingMobileDebugger.h"
 #import "GrowingAppLifecycle.h"
-#import "GrowingCocoaLumberjack.h"
 
-static BOOL checkUUIDwithSampling(NSUUID *uuid, CGFloat sampling)
-{
+static BOOL growingCheckUUIDwithSampling(NSUUID *uuid, CGFloat sampling) {
     // 理论上 idfv是一定有的  但是万一没有就发吧
-    if (!uuid)
-    {
-        return YES;
-    }
-    
-    if (sampling <= 0)
-    {
-        return NO;
-    }
-    if (sampling >= 0.9999)
-    {
-        return YES;
-    }
+    if (!uuid) { return YES; }
+    if (sampling <= 0) { return NO; }
+    if (sampling >= 0.9999) { return YES; }
     
     unsigned char md5[16];
     [[[uuid UUIDString] growingHelper_uft8Data] growingHelper_md5value:md5];
@@ -53,19 +36,13 @@ static BOOL checkUUIDwithSampling(NSUUID *uuid, CGFloat sampling)
     unsigned long bar = 100000;
     unsigned long rightValue = (sampling + 1.0f / bar) * bar;
     unsigned long value = 1;
-    for (int i = 15; i >=0 ; i --)
-    {
+    
+    for (int i = 15; i >= 0 ; i --) {
         unsigned char n = md5[i];
         value = ((value * 256) + n ) % bar;
     }
-    if (value < rightValue)
-    {
-        return YES;
-    }
-    else
-    {
-        return NO;
-    }
+    
+    return (value < rightValue);
 }
 
 @interface GrowingInstance ()
@@ -73,7 +50,6 @@ static BOOL checkUUIDwithSampling(NSUUID *uuid, CGFloat sampling)
 @property (nonatomic, strong) GrowingAppLifecycle *appLifecycle;
 
 @end
-
 
 @implementation GrowingInstance
 
@@ -84,9 +60,7 @@ static GrowingInstance *instance = nil;
 }
 
 + (void)startWithConfiguration:(GrowingConfiguration *)configuration {
-    if (instance) {
-        return;
-    }
+    if (instance) { return; }
     instance = [[self alloc] initWithConfiguration:configuration];
 }
 
@@ -116,8 +90,9 @@ static GrowingInstance *instance = nil;
 }
 
 - (void)updateSampling:(CGFloat)sampling {
+    if (GrowingSDKDoNotTrack()) { return; }
     NSUUID *idfv = [[UIDevice currentDevice] identifierForVendor];
-    [Growing setDataCollectionEnabled:checkUUIDwithSampling(idfv, sampling)];
+    [Growing setDataTrackEnabled:growingCheckUUIDwithSampling(idfv, sampling)];
 }
 
 @end

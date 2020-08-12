@@ -66,6 +66,9 @@ static NSString* const kGrowingVersion = @"3.0.0";
         [GrowingInstance startWithConfiguration:configuration];
     }
     
+    // Notify GrowingInstance Did Start.
+    [self notifyTrackerConfigurationDidChange:configuration];
+    
     //  默认启动sdk crash 收集
     [self setUploadExceptionEnable:configuration.uploadExceptionEnable];
 }
@@ -155,8 +158,12 @@ static NSString* const kGrowingVersion = @"3.0.0";
     }
 }
 
-+ (void)setDataCollectionEnabled:(BOOL)enabled {
++ (void)setDataTrackEnabled:(BOOL)enabled {
     g_GDPRFlag = !enabled;
+}
+
++ (void)setDataUploadEnabled:(BOOL)enabled {
+    g_DataUploadFlag = enabled;
 }
 
 + (NSString *)getDeviceId {
@@ -182,6 +189,16 @@ static NSString* const kGrowingVersion = @"3.0.0";
 + (void)cleanLoginUserId {
     [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
         [self setUserIdValue:@""];
+    }];
+}
+
++ (void)notifyTrackerConfigurationDidChange:(GrowingConfiguration *)configuration {
+    [[GrowingBroadcaster sharedInstance] notifyEvent:@protocol(GrowingTrackerConfigurationMessage)
+                                          usingBlock:^(id<GrowingTrackerConfigurationMessage>  _Nonnull obj) {
+        if ([obj respondsToSelector:@selector(growingTrackerConfigurationDidChanged:)]) {
+            id<GrowingTrackerConfigurationMessage> message = (id<GrowingTrackerConfigurationMessage>)obj;
+            [message growingTrackerConfigurationDidChanged:configuration];
+        }
     }];
 }
 
@@ -305,18 +322,14 @@ static NSString* const kGrowingVersion = @"3.0.0";
     }
     
     [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
-        
          [[GrowingCustomField shareInstance] sendCustomTrackEventWithName:eventName andVariable:attributes];
-        
     }];
     
 }
 
 + (void)setUploadExceptionEnable:(BOOL)uploadExceptionEnable {
-        
     GrowingMonitorState state = uploadExceptionEnable ? GrowingMonitorStateUploadExceptionEnable : GrowingMonitorStateUploadExceptionDisable;
     [self sendGrowingEBMonitorEventState:state];
-    
 }
 
 + (void)sendGrowingEBMonitorEventState:(GrowingMonitorState)state {

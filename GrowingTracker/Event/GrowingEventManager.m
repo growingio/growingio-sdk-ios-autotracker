@@ -178,9 +178,7 @@ static GrowingEventManager *shareinstance = nil;
 }
 
 - (void)dbErrorWithError:(NSError*)error {
-    if (!error) {
-        return;
-    }
+    if (!error) {  return; }
     GIOLogError(@"dbError: %@", error.localizedDescription);
 }
 
@@ -215,7 +213,7 @@ static GrowingEventManager *shareinstance = nil;
      triggerNode:(id<GrowingNode>)triggerNode
      withContext:(id<GrowingAddEventContext>)context {
     
-    if (!event || ![GrowingInstance sharedInstance] || SDKDoNotTrack()) {
+    if (!event || ![GrowingInstance sharedInstance] || GrowingSDKDoNotTrack()) {
         return;
     }
     
@@ -366,13 +364,12 @@ static GrowingEventManager *shareinstance = nil;
 }
 
 // 非安全 发送日志
-- (void)sendEventsOfChannel_unsafe:(GrowingEventChannel *)channel
-{
-    if (self.ai.length == 0)
-    {
+- (void)sendEventsOfChannel_unsafe:(GrowingEventChannel *)channel {
+    if (self.ai.length == 0) {
         GIOLogError(@"No valid ProjectId (channel = %zd).", [self.allEventChannels indexOfObject:channel]);
         return;
     }
+    
     if (!channel.isCustomEvent && self.eventQueue.count == 0) {
         return;
     }
@@ -389,7 +386,13 @@ static GrowingEventManager *shareinstance = nil;
         // 没网络 直接返回
         GIOLogDebug(@"No availabel Internet connection, delay upload (channel = %zd).", [self.allEventChannels indexOfObject:channel]);
         return;
-    }    
+    }
+    
+    if (GrowingSDKDoNotUpload()) {
+        GIOLogDebug(@"Data upload disabled, if you want upload event data, please setting dataUploadEnabled to YES!");
+        return;
+    }
+    
     if ([GrowingNetworkInterfaceManager sharedInstance].WiFiValid) {
         // do nothing
     } else if (self.uploadEventSize < self.uploadLimitOfCellular) {
@@ -446,7 +449,6 @@ static GrowingEventManager *shareinstance = nil;
             channel.isUploading = NO;
         }];
     }];
-
 }
 
 - (void)prettyLogForEvents:(NSArray <NSString *> *)events withChannel:(GrowingEventChannel *)channel {

@@ -41,8 +41,19 @@
 #import "GrowingConfiguration+GrowingAutoTrack.h"
 #import "UIAlertController+GrowingAutoTrack.h"
 #import "UIViewController+GrowingNode.h"
+#import "GrowingBroadcaster.h"
+#import "GrowingMessageProtocol.h"
+
+@GrowingBroadcasterRegister(GrowingTrackerConfigurationMessage, Growing)
+@interface Growing (AutoTrackKit) <GrowingTrackerConfigurationMessage>
+
+@end
 
 @implementation Growing (AutoTrackKit)
+
++ (void)growingTrackConfigurationDidChanged:(GrowingConfiguration *)configuration {
+    [self addAutoTrackSwizzles];
+}
 
 + (void)setIMPInterval:(NSTimeInterval)interval {
     [GrowingIMPTrack shareInstance].IMPInterval = interval;
@@ -61,9 +72,7 @@
 + (void)addAutoTrackSwizzles {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        
         NSError *error = NULL;
-        
         // UIViewController
         [UIViewController growing_swizzleMethod:@selector(viewDidAppear:)
                                      withMethod:@selector(growing_viewDidAppear:)

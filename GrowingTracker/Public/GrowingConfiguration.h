@@ -20,7 +20,16 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingConfiguration : NSObject
+@protocol GrowingSettingProtocol <NSObject>
+
+/// 是否采集数据
+@property(nonatomic, assign) BOOL dataTrackEnabled;
+/// 是否不上报数据, 但是数据正常采集
+@property(nonatomic, assign) BOOL dataUploadEnabled;
+
+@end
+
+@interface GrowingConfiguration : NSObject <GrowingSettingProtocol>
 
 /// 是否开启日志
 @property(nonatomic, assign) BOOL logEnabled;
@@ -44,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 设置数据收集 host
 /// @param host host 示例：https://api.growingio.com
-- (void)setDataCollectionHost:(NSString *)host;
+- (void)setDataTrackHost:(NSString *)host;
 
 /// 设置web 圈选相关 host
 /// @param host host 示例：https://api.growingio.com

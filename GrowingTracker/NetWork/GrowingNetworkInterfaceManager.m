@@ -1,6 +1,6 @@
 //
-//  KDNetworkInterfaceManager.m
-//  Netpas
+//  GrowingNetworkInterfaceManager.m
+//  GrowingTracker
 //
 //  Created by GrowingIO on 4/23/15.
 //  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
@@ -33,8 +33,7 @@
 @implementation GrowingNetworkInterfaceManager
 
 + (instancetype)sharedInstance {
-    if ([GrowingInstance sharedInstance].projectID.length == 0 ||
-        SDKDoNotTrack()) {
+    if ([GrowingInstance sharedInstance].projectID.length == 0 || GrowingSDKDoNotTrack()) {
         return nil;
     }
     

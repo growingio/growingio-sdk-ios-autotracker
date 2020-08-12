@@ -20,17 +20,21 @@
 
 #ifndef GrowingGlobal_h
 #define GrowingGlobal_h
+
 extern BOOL                 g_GDPRFlag;
+extern BOOL                 g_DataUploadFlag;
 
 // 埋点的一些限制
 extern const NSUInteger g_maxCountOfKVPairs;
 extern const NSUInteger g_maxLengthOfKey;
 extern const NSUInteger g_maxLengthOfValue;
 
-BOOL SDKDoNotTrack(void);
+BOOL GrowingSDKDoNotTrack(void);
+BOOL GrowingSDKDoNotUpload(void);
+
 #define parameterKeyErrorLog @"当前数据的标识符不合法。合法的标识符的详细定义请参考：https://docs.growingio.com/v3/developer-manual/sdkintegrated/ios-sdk/ios-sdk-api/customize-api"
 #define parameterValueErrorLog @"当前数据的值不合法。合法值的详细定义请参考：https://docs.growingio.com/v3/developer-manual/sdkintegrated/ios-sdk/ios-sdk-api/customize-api"
-// Feature 编译控制宏
+
 
 // 是否支持 Hybrid 埋点
 #define kHybridModeTrack 1
