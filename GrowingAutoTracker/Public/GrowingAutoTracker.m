@@ -26,7 +26,6 @@
 #import "GrowingIMPTrack.h"
 #import "UIView+GrowingNode.h"
 #import <objc/runtime.h>
-#import "GrowingVersionManager.h"
 #import "GrowingPageEvent.h"
 #import "GrowingCocoaLumberjack.h"
 #import "GrowingSwizzle.h"
@@ -44,28 +43,6 @@
 #import "UIViewController+GrowingNode.h"
 
 @implementation Growing (AutoTrackKit)
-
-+ (void)load {
-    [GrowingVersionManager registerVersionInfo:@{@"av":[Growing getAutoTrackVersion]}];
-}
-
-+ (NSString*)getAutoTrackVersion {
-    static NSString *kGrowingVersion = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-#ifdef GROWINGIO_AUTO_SDK_VERSION
-        const char * v = metamacro_stringify(GROWINGIO_AUTO_SDK_VERSION);
-#else
-        const char * v = "3.0";
-#endif
-#if defined(DEBUG) && DEBUG
-        kGrowingVersion = [NSString stringWithFormat:@"%s-%@", v, @"debug"];
-#else
-        kGrowingVersion = [NSString stringWithFormat:@"%s", v];
-#endif
-    });
-    return kGrowingVersion;
-}
 
 + (void)setIMPInterval:(NSTimeInterval)interval {
     [GrowingIMPTrack shareInstance].IMPInterval = interval;

@@ -24,10 +24,12 @@
     return FMG3DBReturnAutoreleased(rs);
 }
 
+#if ! __has_feature(objc_arc)
 - (void)finalize {
     [self close];
     [super finalize];
 }
+#endif
 
 - (void)dealloc {
     [self close];

@@ -31,21 +31,6 @@
 
 @class GrowingDullNode;
 
-@protocol GrowingNodeAsyncNativeHandler <NSObject>
-@required
-- (void)refreshContext;
-- (void)highlightElementAtPoint:(CGPoint)point; // the point is relative to UIWindow
-- (void)findNodeAtPoint:(CGPoint)point // the point is relative to UIWindow
-           withCallback:(void(^)(NSArray<GrowingDullNode *> * nodes, NSDictionary * pageData))callback;
-- (void)cancelHighlight;
-- (void)impressAllChildren;
-- (void)getAllNode:(void(^)(NSArray<GrowingDullNode *> * nodes, NSDictionary * pageData))callback;
-- (void)setLastPoint:(CGPoint)point;
-- (BOOL)isResponsive;
-- (void)setShouldDisplayTaggedViews:(BOOL)shouldDisplayTaggedViews;
-- (void)getPageInfoWithCallback:(void(^)(NSDictionary * pageData))callback;
-@end
-
 @interface GrowingRootNode : NSObject<GrowingNode>
 + (instancetype)rootNode;
 @end

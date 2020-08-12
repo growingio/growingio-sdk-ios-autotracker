@@ -18,6 +18,7 @@
 //  limitations under the License.
 
 #import "GrowingTracker.h"
+@class CLLocation;
 
 NS_ASSUME_NONNULL_BEGIN
 

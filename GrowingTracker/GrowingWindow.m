@@ -19,7 +19,6 @@
 
 
 #import "GrowingWindow.h"
-#import <UIKit/UIKit.h>
 
 @interface GrowingWindowViewController : UIViewController
 

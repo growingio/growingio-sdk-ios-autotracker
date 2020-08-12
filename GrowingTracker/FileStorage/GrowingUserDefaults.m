@@ -19,7 +19,6 @@
 
 
 #import "GrowingUserDefaults.h"
-#import "GrowingEventDataBase.h"
 #import "GrowingFileStorage.h"
 #import "GrowingDispatchManager.h"
 
@@ -31,18 +30,14 @@
 
 @implementation GrowingUserDefaults
 
-- (instancetype)init
-{
-    self = [super init];
-    if (self)
-    {
+- (instancetype)init {
+    if (self = [super init]) {
         self.fileStorage = [[GrowingFileStorage alloc] initWithName:@"config"];
     }
     return self;
 }
 
-+ (instancetype)shareInstance
-{
++ (instancetype)shareInstance {
     static GrowingUserDefaults *_shareInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -51,15 +46,13 @@
     return _shareInstance;
 }
 
-- (void)setValue:(NSString *)value forKey:(NSString *)key
-{
+- (void)setValue:(NSString *)value forKey:(NSString *)key {
     [GrowingDispatchManager dispatchInLowThread:^{
         [self.fileStorage setString:value forKey:key];
     }];
 }
 
-- (NSString*)valueForKey:(NSString *)key
-{
+- (NSString*)valueForKey:(NSString *)key {
     return [self.fileStorage stringForKey:key];
 }
 

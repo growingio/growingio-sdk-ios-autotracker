@@ -19,7 +19,6 @@
 
 
 #import <Foundation/Foundation.h>
-
 @class GrowingEvent;
 
 @interface GrowingMobileDebugger : NSObject

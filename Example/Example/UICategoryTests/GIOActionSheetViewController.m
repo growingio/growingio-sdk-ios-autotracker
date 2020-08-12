@@ -18,8 +18,6 @@ typedef NS_ENUM(NSInteger, GIOActionSheetsViewControllerTableRow) {
     GrwingAlertTwoMenuRow,
     GrwingAlertThreeMenuRow,
     GrwingAlertTwoTextMenuRow,
-    GrwingAlertLeftRightBtnMenuRow,
-    GrwingLoginMenuRow,
 };
 
 @interface GIOActionSheetViewController ()<UIActionSheetDelegate>
@@ -81,10 +79,6 @@ typedef NS_ENUM(NSInteger, GIOActionSheetsViewControllerTableRow) {
 }
 
 - (void)showGrowingAlertMenuTwo {
-//    [GrowingAlertMenu alertWithTitle:@"提示"
-//                                text:@"电脑端连接超时，请刷新电脑页面，再次尝试扫码圈选。"
-//                             buttons:@[[GrowingMenuButton buttonWithTitle:@"知道了" block:nil],
-//                                       [GrowingMenuButton buttonWithTitle:@"取消" block:nil]]];
     
     GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert
                                                        title:@"提示"
@@ -132,39 +126,6 @@ typedef NS_ENUM(NSInteger, GIOActionSheetsViewControllerTableRow) {
 
 }
 
-- (void)showGrowingAlertMenuLeftRightBtn {
-
-    //    GrowingAlertMenu *alertMenu = [GrowingAlertMenu alertWithTitle:@"TITLE"
-    //                                                             text1:@"TEXT 001"
-    //                                                             text2:@"TEXT 002"
-    //                                                           buttons:@[[GrowingMenuButton buttonWithTitle:@"One" block:nil]]];
-    //    alertMenu.leftButton = [GrowingMenuButton buttonWithCustomView:[UIButton buttonWithType:UIButtonTypeContactAdd]];
-    //    alertMenu.rightButton = [GrowingMenuButton buttonWithCustomView:[UIButton buttonWithType:UIButtonTypeInfoDark]];
-
-//        GrowingAlertMenu *alertMenu = [GrowingAlertMenu alertWithTitle:@"TITLE"
-//                                                                 text1:@"TEXT 001"
-//                                                                 text2:@"TEXT 002"
-//                                                               buttons:@[[GrowingMenuButton buttonWithTitle:@"One" block:nil]]];
-//        alertMenu.leftButton = [GrowingMenuButton buttonWithTitle:@"LBtn" block:nil];
-//        alertMenu.rightButton = [GrowingMenuButton buttonWithTitle:@"RBtn" block:nil];
-}
-
-- (void)showGrowingLoginMenu {
-    
-//    void (^showSucceed)(void) = ^ {
-//        NSLog(@"succeed...");
-//    };
-//
-//    void (^showFail)(void) = ^ {
-//        NSLog(@"fail...");
-//    };
-//
-//    [[GrowingMediator sharedInstance] performClass:@"GrowingLoginMenu"
-//                                            action:@"showWithSucceed:fail:"
-//                                            params:@{@"0":showSucceed, @"1":showFail}];
-
-}
-
 #pragma mark - UIActionSheetDelegate
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (actionSheet.destructiveButtonIndex == buttonIndex) {
@@ -200,12 +161,6 @@ typedef NS_ENUM(NSInteger, GIOActionSheetsViewControllerTableRow) {
             break;
         case GrwingAlertTwoTextMenuRow:
             [self showGrowingAlertMenuTwoText];
-            break;
-        case GrwingAlertLeftRightBtnMenuRow:
-            [self showGrowingAlertMenuLeftRightBtn];
-            break;
-        case GrwingLoginMenuRow:
-            [self showGrowingLoginMenu];
             break;
         default:
             break;

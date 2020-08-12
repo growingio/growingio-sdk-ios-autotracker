@@ -21,9 +21,9 @@
 #import "GrowingVisitEvent.h"
 #import "GrowingDeviceInfo.h"
 #import "GrowingInstance.h"
-#import "GrowingVersionManager.h"
 #import "GrowingEventManager.h"
 #import "GrowingCustomField.h"
+@import CoreLocation;
 
 @interface GrowingVisitEvent ()
 
@@ -42,7 +42,6 @@
 /// Identifier For Vendor
 @property (nonatomic, copy, readwrite) NSString * _Nonnull idfv;
 @property (nonatomic, copy, readwrite) NSString * _Nonnull sdkVersion;
-@property (nonatomic, copy, readwrite) NSString * _Nonnull versionInfo;
 
 @property (nonatomic, strong, readwrite) NSNumber * _Nonnull screenW;
 @property (nonatomic, strong, readwrite) NSNumber * _Nonnull screenH;
@@ -54,8 +53,7 @@
 
 @implementation GrowingVisitEvent
 
-- (GrowingEventType)simpleEventType
-{
+- (GrowingEventType)simpleEventType {
     return GrowingEventTypeAppLifeCycleAppNewVisit;
 }
 
@@ -74,8 +72,7 @@
         self.urlScheme  = deviceInfo.urlScheme;
         self.idfa = deviceInfo.idfa;
         self.idfv = deviceInfo.idfv;
-        self.sdkVersion = [Growing getTrackVersion];
-        self.versionInfo = [GrowingVersionManager versionInfo];
+        self.sdkVersion = [Growing getVersion];
         
         CGSize screenSize = [GrowingDeviceInfo deviceScreenSize];
         self.screenW = [NSNumber numberWithInteger:screenSize.width];
@@ -149,7 +146,6 @@
     dataDictM[@"ui"] = self.idfa;
     dataDictM[@"iv"] = self.idfv;
     dataDictM[@"av"] = self.sdkVersion;
-    dataDictM[@"fv"] = self.versionInfo;
     dataDictM[@"sw"] = self.screenW;
     dataDictM[@"sh"] = self.screenH;
     dataDictM[@"lat"] = self.latitude;

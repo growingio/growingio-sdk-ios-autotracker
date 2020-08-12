@@ -23,20 +23,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#ifndef __cplusplus
-@import Foundation;
-@import CoreTelephony;
-@import SystemConfiguration;
-@import Security;
-@import CFNetwork;
-@import CoreLocation;
-@import WebKit;
-#endif
-
 @interface Growing : NSObject
 
 // SDK版本号
-+ (NSString *)getTrackVersion;
++ (NSString *)getVersion;
 
 // 如果您的AppDelegate中 实现了其中一个或者多个方法 请以在已实现的函数中 调用handleURL
 //- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(nullable NSString *)sourceApplication annotation:(id)annotation

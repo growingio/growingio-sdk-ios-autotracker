@@ -37,7 +37,6 @@
 #import "GrowingAttributesConst.h"
 #import "NSData+GrowingHelper.h"
 #import "GrowingCustomField.h"
-#import "metamacros.h"
 #import "GrowingEventNodeManager.h"
 #import "GrowingDispatchManager.h"
 #import <ifaddrs.h>
@@ -749,57 +748,57 @@ static GrowingWebSocket *shareInstance = nil;
         }
         
         if (![aNode isKindOfClass:[WKWebView class]]) {
-            id<GrowingNodeAsyncNativeHandler> asyncHandler = [aNode growingNodeAsyncNativeHandler];
-            if (asyncHandler != nil && ![aNode growingNodeDonotTrack] && [asyncHandler isResponsive])
-            {
-                asyncNativeHandlerWaitingCount++;
-                [asyncHandler getAllNode:^(NSArray<GrowingDullNode *> *nodes, NSDictionary *webViewPageData) {
-                    if (nodes.count > 0)
-                    {
-                        // TODO:js
-                        // 拼page和domain
-//                        NSString * mergedPage = [GrowingJavascriptCore jointField:modifiedPageData[@"page"]
-//                                                                        withField:webViewPageData[@"p"]];
-//                        NSString * mergedDomain = [GrowingJavascriptCore jointField:modifiedPageData[@"domain"]
-//                                                                          withField:webViewPageData[@"d"]];
-                        NSMutableDictionary * modifiedWebViewPageData = [[NSMutableDictionary alloc] init];
-                        if (webViewPageData[@"q"] != nil)
-                        {
-                            modifiedWebViewPageData[@"query"] = webViewPageData[@"q"];
-                        }
-                        if (webViewPageData[@"h"] != nil)
-                        {
-                            modifiedWebViewPageData[@"href"] = webViewPageData[@"h"];
-                        }
-//                        modifiedWebViewPageData[@"page"] = mergedPage;
-//                        modifiedWebViewPageData[@"domain"] = mergedDomain;
-                        for (NSUInteger i = 0; i < nodes.count; i++)
-                        {
-                            GrowingDullNode * node = nodes[i];
-                            NSMutableDictionary * dict = [self dictFromNode:node
-                                                                   pageData:modifiedWebViewPageData
-                                                                   keyIndex:node.growingNodeKeyIndex
-                                                                      xPath:node.growingNodeXPath
-                                                                   nodeType:node.growingNodeType
-                                                                isContainer:YES];
-                            if (dict.count > 0)
-                            {
-                                [arr addObject:dict];
-                            }
-                        }
-                    }
-                    asyncNativeHandlerWaitingCount--;
-                    if (asyncNativeHandlerWaitingCount == 0)
-                    {
-                        finalDataDict[@"impress"] = arr;
-                        if (completion != nil)
-                        {
-                            completion(finalDataDict);
-                        }
-                    }
-                }];
-                return;
-            }
+//            id<GrowingNodeAsyncNativeHandler> asyncHandler = [aNode growingNodeAsyncNativeHandler];
+//            if (asyncHandler != nil && ![aNode growingNodeDonotTrack] && [asyncHandler isResponsive])
+//            {
+//                asyncNativeHandlerWaitingCount++;
+//                [asyncHandler getAllNode:^(NSArray<GrowingDullNode *> *nodes, NSDictionary *webViewPageData) {
+//                    if (nodes.count > 0)
+//                    {
+//                        // TODO:js
+//                        // 拼page和domain
+////                        NSString * mergedPage = [GrowingJavascriptCore jointField:modifiedPageData[@"page"]
+////                                                                        withField:webViewPageData[@"p"]];
+////                        NSString * mergedDomain = [GrowingJavascriptCore jointField:modifiedPageData[@"domain"]
+////                                                                          withField:webViewPageData[@"d"]];
+//                        NSMutableDictionary * modifiedWebViewPageData = [[NSMutableDictionary alloc] init];
+//                        if (webViewPageData[@"q"] != nil)
+//                        {
+//                            modifiedWebViewPageData[@"query"] = webViewPageData[@"q"];
+//                        }
+//                        if (webViewPageData[@"h"] != nil)
+//                        {
+//                            modifiedWebViewPageData[@"href"] = webViewPageData[@"h"];
+//                        }
+////                        modifiedWebViewPageData[@"page"] = mergedPage;
+////                        modifiedWebViewPageData[@"domain"] = mergedDomain;
+//                        for (NSUInteger i = 0; i < nodes.count; i++)
+//                        {
+//                            GrowingDullNode * node = nodes[i];
+//                            NSMutableDictionary * dict = [self dictFromNode:node
+//                                                                   pageData:modifiedWebViewPageData
+//                                                                   keyIndex:node.growingNodeKeyIndex
+//                                                                      xPath:node.growingNodeXPath
+//                                                                   nodeType:node.growingNodeType
+//                                                                isContainer:YES];
+//                            if (dict.count > 0)
+//                            {
+//                                [arr addObject:dict];
+//                            }
+//                        }
+//                    }
+//                    asyncNativeHandlerWaitingCount--;
+//                    if (asyncNativeHandlerWaitingCount == 0)
+//                    {
+//                        finalDataDict[@"impress"] = arr;
+//                        if (completion != nil)
+//                        {
+//                            completion(finalDataDict);
+//                        }
+//                    }
+//                }];
+//                return;
+//            }
         }
         NSMutableDictionary * dict = [self dictFromNode:aNode
                                                pageData:modifiedPageData
@@ -924,7 +923,7 @@ static GrowingWebSocket *shareInstance = nil;
     
     
     NSDictionary *sdkConfig = @{
-                                @"sdkVersion"        :[Growing getTrackVersion],
+                                @"sdkVersion"        :[Growing getVersion],
                                 @"appVersion"        :[GrowingDeviceInfo currentDeviceInfo].appFullVersion,
                                 @"isTrackWebView"    :@(YES)
                                 };
@@ -940,7 +939,7 @@ static GrowingWebSocket *shareInstance = nil;
                            @"screenshot"        :[@"data:image/jpeg;base64," stringByAppendingString:imgBase64Str],
                            @"screenshotWidth"   :@(image.size.width * image.scale),
                            @"screenshotHeight"  :@(image.size.height * image.scale),
-                           @"sdkVersion"        :[Growing getTrackVersion],
+                           @"sdkVersion"        :[Growing getVersion],
                            @"appVersion"        :[GrowingDeviceInfo currentDeviceInfo].appFullVersion,
                            @"actionDesc"        :@"a",
                            @"sdkConfig"         :sdkConfig,
@@ -1122,7 +1121,7 @@ static GrowingWebSocket *shareInstance = nil;
                 }
             });
             self.statusWindow.onButtonClick = ^{
-                NSString *content = [NSString stringWithFormat:@"APP版本: %@\nSDK版本: %@",[GrowingDeviceInfo currentDeviceInfo].appShortVersion],[NSString stringWithFormat:@"SDK版本: %@", [Growing getTrackVersion]]];
+                NSString *content = [NSString stringWithFormat:@"APP版本: %@\nSDK版本: %@",[GrowingDeviceInfo currentDeviceInfo].appShortVersion,[NSString stringWithFormat:@"SDK版本: %@", [Growing getVersion]]];
                 GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert title:@"正在进行圈选" message:content];
                 [alert addOkWithTitle:@"继续圈选" handler:nil];
                 [alert addCancelWithTitle:@"退出圈选" handler:^(UIAlertAction * _Nonnull action, NSArray<UITextField *> * _Nonnull textFields) {
@@ -1256,7 +1255,7 @@ static GrowingWebSocket *shareInstance = nil;
 
 - (void)stop {
     GIOLogDebug(@"开始断开连接");
-    NSDictionary *dict = @{@"msgId":@"client_quit"};
+    NSDictionary *dict = @{@"msgType":@"quit"};
     [self sendJson:dict];
     self.statusWindow.statusLable.text = @"正在关闭web圈选...";
     self.statusWindow.statusLable.textAlignment = NSTextAlignmentCenter;
@@ -1298,7 +1297,8 @@ static GrowingWebSocket *shareInstance = nil;
 }
 
 - (BOOL)isRunning {
-    return self.webSocket != nil;
+//    return self.webSocket != nil;
+    return self.isReady;
 }
 
 - (void)sendJson:(id)json {
@@ -1335,16 +1335,13 @@ static GrowingWebSocket *shareInstance = nil;
                            @"msgType"   :@"ready",
                            @"timestamp" :@([[NSDate date] timeIntervalSince1970]),
                            @"domain"    :[GrowingDeviceInfo currentDeviceInfo].bundleID,
-                           @"sdkVersion":[Growing getTrackVersion],
+                           @"sdkVersion":[Growing getVersion],
                            @"appVersion":[GrowingDeviceInfo currentDeviceInfo].appFullVersion,
                            @"os":@"iOS",
                            @"screenWidth":[NSNumber numberWithInteger:screenSize.width],
                            @"screenHeight":[NSNumber numberWithInteger:screenSize.height],};
     [self sendJson:dict];
-    
-    //[self beginKeepAlive];
-    
-    
+    [self beginKeepAlive];
 }
 
 - (void)webSocket:(GrowingSRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {

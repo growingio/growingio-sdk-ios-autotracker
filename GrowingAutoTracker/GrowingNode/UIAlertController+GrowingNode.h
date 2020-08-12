@@ -19,7 +19,7 @@
 
 
 #import <UIKit/UIKit.h>
-#import "UIView+GrowingNode.h"
+#import "UIViewController+GrowingNode.h"
 
 @interface UIAlertController (GrowingNode)<GrowingNode>
 

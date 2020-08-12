@@ -21,6 +21,7 @@
 #import <UIKit/UIKit.h>
 #import "UIWindow+GrowingHelper.h"
 #import "GrowingWindow.h"
+
 @implementation UIApplication (GrowingHelper)
 
 - (NSArray<UIWindow*>*)growingHelper_allWindows {

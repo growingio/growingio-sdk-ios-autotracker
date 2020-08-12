@@ -28,33 +28,16 @@
 #import "GrowingMediator+GrowingDeepLink.h"
 #import "NSString+GrowingHelper.h"
 #import "NSDictionary+GrowingHelper.h"
-#import "GrowingVersionManager.h"
 #import "GrowingCocoaLumberjack.h"
 #import "GrowingConfiguration.h"
 #import "GrowingBroadcaster.h"
-#import "metamacros.h"
+@import CoreLocation;
+
+static NSString* const kGrowingVersion = @"3.0.0";
 
 @implementation Growing
 
-+ (void)load {
-    [GrowingVersionManager registerVersionInfo:@{@"cv":[self getTrackVersion]}];
-}
-
-+ (NSString*)getTrackVersion {
-    static NSString *kGrowingVersion = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-#ifdef GROWINGIO_SDK_VERSION
-        const char * v = metamacro_stringify(GROWINGIO_SDK_VERSION);
-#else
-        const char * v = "3.0";
-#endif
-#if defined(DEBUG) && DEBUG
-        kGrowingVersion = [NSString stringWithFormat:@"%s-%@", v, @"debug"];
-#else
-        kGrowingVersion = [NSString stringWithFormat:@"%s", v];
-#endif
-    });
++ (NSString*)getVersion {
     return kGrowingVersion;
 }
 
@@ -67,19 +50,19 @@
     [self loggerSetting:configuration.logEnabled];
     
     if (![NSThread isMainThread]) {
-        GIOLogDebug(@"请在applicationDidFinishLaunching中调用startWithAccountId函数,并且确保在主线程中");
+        GIOLogError(@"请在applicationDidFinishLaunching中调用startWithAccountId函数,并且确保在主线程中");
     }
     
     if (!configuration.projectId.length) {
-        GIOLogDebug(@"GrowingIO启动失败:ProjectId不能为空");
+        GIOLogError(@"GrowingIO启动失败:ProjectId不能为空");
         return;
     }
     
     BOOL urlSchemeRight = [self urlSchemeCheck];
     
     if (urlSchemeRight) {
-        GIOLogDebug(@"!!! Thank you very much for using GrowingIO. We will do our best to provide you with the best service. !!!");
-        GIOLogDebug(@"!!! GrowingIO version: %@ !!!", [Growing getTrackVersion]);
+        GIOLogError(@"!!! Thank you very much for using GrowingIO. We will do our best to provide you with the best service. !!!");
+        GIOLogError(@"!!! GrowingIO version: %@ !!!", [Growing getVersion]);
         [GrowingInstance startWithConfiguration:configuration];
     }
     
@@ -338,7 +321,7 @@
 
 + (void)sendGrowingEBMonitorEventState:(GrowingMonitorState)state {
         
-    NSDictionary *dataDict = @{@"v": [NSString stringWithFormat:@"GrowingTracker-%@", [self getTrackVersion]],
+    NSDictionary *dataDict = @{@"v": [NSString stringWithFormat:@"GrowingTracker-%@", [self getVersion]],
                                @"u": [GrowingDeviceInfo currentDeviceInfo].deviceIDString ?: @"",
                                @"ai": [GrowingInstance sharedInstance].projectID ?: @"",
     };
