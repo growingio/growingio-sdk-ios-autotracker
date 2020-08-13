@@ -23,16 +23,18 @@
 #import "GrowingGlobal.h"
 #import "GrowingInstance.h"
 
-const NSUInteger    g_K                     = 1024;
-const NSUInteger    g_M                     = g_K * g_K;
-
 BOOL                g_GDPRFlag              = NO;
+BOOL                g_DataUploadFlag        = YES;
 
 const NSUInteger    g_maxCountOfKVPairs     = 100;
 const NSUInteger    g_maxLengthOfKey        = 50;
 const NSUInteger    g_maxLengthOfValue      = 1000;
 
 
-BOOL SDKDoNotTrack() {
+BOOL GrowingSDKDoNotTrack() {
     return g_GDPRFlag;
+}
+
+BOOL GrowingSDKDoNotUpload() {
+    return !g_DataUploadFlag;
 }

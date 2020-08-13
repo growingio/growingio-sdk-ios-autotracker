@@ -44,6 +44,7 @@ static NSUInteger const kGrowingMaxQueueSize = 10000; // default: max event queu
 static NSUInteger const kGrowingFillQueueSize = 1000; // default: determine when event queue is filled from DB
 static NSUInteger const kGrowingMaxDBCacheSize = 100; // default: write to DB as soon as there are 300 events
 static NSUInteger const kGrowingMaxBatchSize = 500; // default: send no more than 500 events in every batch;
+static const NSUInteger g_K                  = 1024;
 
 @interface GrowingEventManager()
 
@@ -154,7 +155,7 @@ static GrowingEventManager *shareinstance = nil;
         // all other events got to this category
         _otherEventChannel = [GrowingEventChannel otherEventChannelFromAllChannels:_allEventChannels];
         
-        self.uploadLimitOfCellular = [GrowingInstance sharedInstance].configuration.cellularDataLimit;;
+        self.uploadLimitOfCellular = [GrowingInstance sharedInstance].configuration.cellularDataLimit * g_K;
     }
     return self;
 }
@@ -178,9 +179,7 @@ static GrowingEventManager *shareinstance = nil;
 }
 
 - (void)dbErrorWithError:(NSError*)error {
-    if (!error) {
-        return;
-    }
+    if (!error) {  return; }
     GIOLogError(@"dbError: %@", error.localizedDescription);
 }
 
@@ -215,7 +214,7 @@ static GrowingEventManager *shareinstance = nil;
      triggerNode:(id<GrowingNode>)triggerNode
      withContext:(id<GrowingAddEventContext>)context {
     
-    if (!event || ![GrowingInstance sharedInstance] || SDKDoNotTrack()) {
+    if (!event || ![GrowingInstance sharedInstance] || GrowingSDKDoNotTrack()) {
         return;
     }
     
@@ -366,13 +365,12 @@ static GrowingEventManager *shareinstance = nil;
 }
 
 // 非安全 发送日志
-- (void)sendEventsOfChannel_unsafe:(GrowingEventChannel *)channel
-{
-    if (self.ai.length == 0)
-    {
+- (void)sendEventsOfChannel_unsafe:(GrowingEventChannel *)channel {
+    if (self.ai.length == 0) {
         GIOLogError(@"No valid ProjectId (channel = %zd).", [self.allEventChannels indexOfObject:channel]);
         return;
     }
+    
     if (!channel.isCustomEvent && self.eventQueue.count == 0) {
         return;
     }
@@ -389,7 +387,13 @@ static GrowingEventManager *shareinstance = nil;
         // 没网络 直接返回
         GIOLogDebug(@"No availabel Internet connection, delay upload (channel = %zd).", [self.allEventChannels indexOfObject:channel]);
         return;
-    }    
+    }
+    
+    if (GrowingSDKDoNotUpload()) {
+        GIOLogDebug(@"Data upload disabled, if you want upload event data, please setting dataUploadEnabled to YES!");
+        return;
+    }
+    
     if ([GrowingNetworkInterfaceManager sharedInstance].WiFiValid) {
         // do nothing
     } else if (self.uploadEventSize < self.uploadLimitOfCellular) {
@@ -446,7 +450,6 @@ static GrowingEventManager *shareinstance = nil;
             channel.isUploading = NO;
         }];
     }];
-
 }
 
 - (void)prettyLogForEvents:(NSArray <NSString *> *)events withChannel:(GrowingEventChannel *)channel {

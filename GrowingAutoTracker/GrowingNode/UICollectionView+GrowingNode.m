@@ -27,43 +27,6 @@
 
 @implementation UICollectionView (GrowingNode)
 
-- (id)growingNodeAttribute:(NSString *)attrbute {
-    if (attrbute == GrowingAttributeIsHorizontalTableKey) {
-        if (self.alwaysBounceHorizontal && !self.alwaysBounceVertical) {
-            return GrowingAttributeReturnYESKey;
-        }
-        CGSize boundSize = self.bounds.size;
-        CGSize contentSize = self.contentSize;
-        if (contentSize.height <= boundSize.height &&
-            contentSize.width > boundSize.width) {
-            return GrowingAttributeReturnYESKey;
-        }
-    }
-    return nil;
-}
-
-
-- (id)growingNodeAttribute:(NSString *)attrbute forChild:(id<GrowingNode>)node
-{
-    if (attrbute == GrowingAttributeIsWithinRowOfTableKey)
-    {
-        // TODO: created cells
-//        if ([self.growingHook_allCreatedCells containsObject:node])
-//        {
-//            return GrowingAttributeReturnYESKey;
-//        }
-//        if ([self.growingHook_allCreatedHeaders containsObject:node])
-//        {
-//            return GrowingAttributeReturnYESKey;
-//        }
-//        if ([self.growingHook_allCreatedFooters containsObject:node])
-//        {
-//            return GrowingAttributeReturnYESKey;
-//        }
-    }
-    return nil;
-}
-
 - (NSArray<id<GrowingNode>>*)growingNodeChilds {
     // 对于collectionView我们仅需要返回可见cell
     NSMutableArray *childs = [NSMutableArray array];

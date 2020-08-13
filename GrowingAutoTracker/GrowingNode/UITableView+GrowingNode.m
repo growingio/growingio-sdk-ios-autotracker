@@ -24,32 +24,6 @@
 
 @implementation UITableView (GrowingNode)
 
-- (id)growingNodeAttribute:(NSString *)attrbute {
-    if (attrbute == GrowingAttributeIsHorizontalTableKey) {
-        CGRect rect = CGRectMake(0, 0, 10, 20);
-        rect = [self convertRect:rect toView:self.window];
-        if (rect.size.width > rect.size.height) {
-            // ignore the improportional scale
-            return GrowingAttributeReturnYESKey;
-        }
-    }
-    return nil;
-}
-
-
-- (id)growingNodeAttribute:(NSString *)attrbute forChild:(id<GrowingNode>)node
-{
-    if (attrbute == GrowingAttributeIsWithinRowOfTableKey)
-    {
-        // TODO: create cells
-//        if ([self.growingHook_allCreatedCells containsObject:node])
-//        {
-//            return GrowingAttributeReturnYESKey;
-//        }
-    }
-    return nil;
-}
-
 - (NSArray<id<GrowingNode>>*)growingNodeChilds {
     // 对于collectionView我们仅需要返回可见cell
     NSMutableArray *childs = [NSMutableArray array];
@@ -132,11 +106,8 @@
     if (tableView == nil) {
         return @"列表项";
     }
-    return
-        [tableView growingNodeAttribute:GrowingAttributeIsHorizontalTableKey] ==
-                GrowingAttributeReturnYESKey
-            ? @"横滑列表项"
-            : @"竖滑列表项";
+    
+    return @"列表";
 }
 
 - (BOOL)growingNodeDonotCircle {

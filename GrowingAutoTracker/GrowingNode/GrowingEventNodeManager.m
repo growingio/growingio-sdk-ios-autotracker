@@ -27,17 +27,14 @@
 @implementation GrowingEventNodeManager
 
 - (instancetype)initWithNode:(id<GrowingNode>)aNode
-                   eventType:(GrowingEventType)eventType
-{
-    if (!aNode)
-    {
-        return nil;
-    }
+                   eventType:(GrowingEventType)eventType {
+    
+    if (!aNode) { return nil; }
+    
     self.triggerNode = aNode;
     
     BOOL(^checkBlock)(id<GrowingNode> node) = ^BOOL(id<GrowingNode> node) {
-        if ([node growingNodeDonotTrack])
-        {
+        if ([node growingNodeDonotTrack]) {
             return NO;
         }
         

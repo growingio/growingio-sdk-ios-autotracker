@@ -33,8 +33,8 @@ static void *const GROWING_PAGE_OBJECT = "GROWING_PAGE_OBJECT";
 }
 
 - (BOOL)growingPageHelper_pageDidIgnore {
-    GrowingIgnorePolicy selfPolicy = self.growingPageIgonrePolicy;
-    GrowingIgnorePolicy parentPolicy = self.parentViewController.growingPageIgonrePolicy;
+    GrowingIgnorePolicy selfPolicy = self.growingPageIgnorePolicy;
+    GrowingIgnorePolicy parentPolicy = self.parentViewController.growingPageIgnorePolicy;
     
     if (selfPolicy == GrowingIgnoreNone &&
         (parentPolicy == GrowingIgnoreNone || parentPolicy == GrowingIgnoreSelf)) {

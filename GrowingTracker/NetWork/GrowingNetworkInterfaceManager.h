@@ -1,6 +1,6 @@
 //
-//  KDNetworkInterfaceManager.h
-//  Netpas
+//  GrowingNetworkInterfaceManager.h
+//  GrowingTracker
 //
 //  Created by GrowingIO on 4/23/15.
 //  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.

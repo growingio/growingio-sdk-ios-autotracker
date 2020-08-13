@@ -70,10 +70,6 @@ typedef NS_OPTIONS(NSUInteger, GrowingElementEventCategory) {
 - (UIImage * _Nullable)growingNodeScreenShot:(UIImage * _Nullable)fullScreenImage;
 - (UIImage * _Nullable)growingNodeScreenShotWithScale:(CGFloat)maxScale;
 
-// 附加属性
-- (id _Nullable)growingNodeAttribute:(NSString * _Nullable)attrbute;
-- (id _Nullable)growingNodeAttribute:(NSString * _Nullable)attrbute forChild:(id<GrowingNode> _Nullable)node;
-
 // 唯一标识某个view，客户可通过 growingAttributesUniqueTag 设置
 - (NSString * _Nullable)growingNodeUniqueTag;
 

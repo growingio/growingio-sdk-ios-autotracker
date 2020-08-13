@@ -1,17 +1,19 @@
 //
 //  AppDelegate.h
-//  GrowingIOTest
+//  GrowingExample
 //
-//  Created by GIO-baitianyu on 14/03/2018.
+//  Created by GrowingIO on 14/03/2018.
 //  Copyright © 2018 GrowingIO. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
+#import <GrowingTracker.h>
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
+@property (nonatomic, strong) GrowingConfiguration *configuation;
 
 @end
 

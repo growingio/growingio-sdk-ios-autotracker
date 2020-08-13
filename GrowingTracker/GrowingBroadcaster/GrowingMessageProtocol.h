@@ -19,6 +19,7 @@
 
 
 #import <Foundation/Foundation.h>
+@class GrowingConfiguration;
 
 typedef NS_ENUM(NSUInteger, GrowingApplicationLifecycle) {
     GrowingApplicationDidFinishLaunching,
@@ -55,10 +56,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// 通过的消息接口
 @protocol GrowingMessageProtocol <NSObject>
 
-@optional
-
-- (void)eventDidChangedWithUserInfo:(NSDictionary *)userInfo;
-
 @end
 
 /// Application 生命周期相关的消息
@@ -74,6 +71,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @optional
 - (void)viewControllerLifecycleDidChanged:(GrowingVCLifecycle)lifecycle;
+
+@end
+
+/// 埋点库初始化完毕
+@protocol GrowingTrackerConfigurationMessage <NSObject, GrowingMessageProtocol>
+
+@optional
++ (void)growingTrackerConfigurationDidChanged:(GrowingConfiguration *)configuration;
 
 @end
 

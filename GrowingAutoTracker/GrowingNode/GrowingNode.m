@@ -47,14 +47,6 @@ static char growingNodeIsBadNodeKey;
 
 @implementation GrowingRootNode
 
-- (id)growingNodeAttribute:(NSString *)attrbute {
-    return nil;
-}
-
-- (id)growingNodeAttribute:(NSString *)attrbute forChild:(id<GrowingNode>)node {
-    return nil;
-}
-
 - (UIImage *)growingNodeScreenShot:(UIImage *)fullScreenImage {
     return nil;
 }
@@ -207,14 +199,6 @@ static char growingNodeIsBadNodeKey;
 }
 
 - (UIImage *)growingNodeScreenShotWithScale:(CGFloat)maxScale {
-    return nil;
-}
-
-- (id)growingNodeAttribute:(NSString *)attrbute {
-    return nil;
-}
-
-- (id)growingNodeAttribute:(NSString *)attrbute forChild:(id<GrowingNode>)node {
     return nil;
 }
 

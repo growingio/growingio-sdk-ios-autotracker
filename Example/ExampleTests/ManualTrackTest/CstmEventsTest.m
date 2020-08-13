@@ -3,7 +3,7 @@
 //  GIOAutoTests
 //
 //  Created by GrowingIO on 2018/6/6.
-//  Copyright © 2018年 GrowingIO. All rights reserved.
+//  Copyright (C) 2018 Beijing Yishu Technology Co., Ltd.
 //
 //  修改记录：
 //    1，根据bugs处理结果，优化测试用例  2018-06-26

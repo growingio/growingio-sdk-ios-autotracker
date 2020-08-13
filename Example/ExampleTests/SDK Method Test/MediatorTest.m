@@ -3,7 +3,7 @@
 //  GIOAutoTests
 //
 //  Created by apple on 2018/4/18.
-//  Copyright © 2018年 GrowingIO. All rights reserved.
+//  Copyright (C) 2018 Beijing Yishu Technology Co., Ltd.
 //
 
 #import <XCTest/XCTest.h>

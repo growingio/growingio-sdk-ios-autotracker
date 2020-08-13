@@ -3,7 +3,7 @@
 //  GrowingIO_ExampleTests
 //
 //  Created by BeyondChao on 2020/8/5.
-//  Copyright © 2020 3255289628@qq.com. All rights reserved.
+//  Copyright © 2020 GrowingIO. All rights reserved.
 //
 
 #import <XCTest/XCTest.h>

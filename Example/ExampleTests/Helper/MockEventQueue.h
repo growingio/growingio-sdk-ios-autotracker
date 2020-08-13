@@ -2,7 +2,7 @@
 //  TestHelper.h
 //  GIOAutoTests
 //
-//  Created by GIO-baitianyu on 28/03/2018.
+//  Created by GrowingIO on 28/03/2018.
 //  Copyright © 2018 GrowingIO. All rights reserved.
 //
 
