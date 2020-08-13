@@ -36,14 +36,6 @@
 
 @implementation UIViewController (GrowingNode)
 
-- (id)growingNodeAttribute:(NSString *)attrbute forChild:(id<GrowingNode>)node {
-    return nil;
-}
-
-- (id)growingNodeAttribute:(NSString *)attrbute {
-    return nil;
-}
-
 - (UIImage *)growingNodeScreenShot:(UIImage *)fullScreenImage {
     return [fullScreenImage growingHelper_getSubImage:[self.view growingNodeFrame]];
 }

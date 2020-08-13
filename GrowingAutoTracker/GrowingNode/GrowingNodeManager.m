@@ -147,19 +147,6 @@
     return context;
 }
 
-+ (instancetype)recursiveAttributeValueOfNode:(id<GrowingNode>)aNode
-                             forKey:(NSString *)key {
-    GrowingNodeManager *manager = [[self alloc] initWithNodeAndParent:aNode];
-    __block id attribute = nil;
-    [manager enumerateChildrenUsingBlock:^(
-                 id<GrowingNode> aNode,
-                 GrowingNodeManagerEnumerateContext *context) {
-        [context stop];
-        attribute = [context attributeValueForKey:key];
-    }];
-    return attribute;
-}
-
 #pragma mark - 添加删除
 
 // 添加
@@ -314,29 +301,6 @@
 @end
 
 @implementation GrowingNodeManagerEnumerateContext
-
-- (id)attributeValueForKey:(NSString *)key {
-    NSArray *nodes = [self allNodes];
-    id ret = nil;
-    id<GrowingNode> lastNode = nil;
-    id<GrowingNode> curNode = nil;
-    for (NSInteger i = nodes.count - 1; i >= 0; i--) {
-        curNode = nodes[i];
-        ret = [curNode growingNodeAttribute:key];
-        if (ret) {
-            break;
-        }
-        if (lastNode) {
-            ret = [curNode growingNodeAttribute:key forChild:lastNode];
-            if (ret) {
-                break;
-            }
-        }
-
-        lastNode = curNode;
-    }
-    return ret;
-}
 
 - (NSArray<id<GrowingNode>> *)allNodes {
     NSMutableArray *nodes = [[NSMutableArray alloc] init];

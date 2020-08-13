@@ -48,7 +48,7 @@ GrowingPropertyDefine(UIViewController, NSNumber*, growingHook_hasDidAppear, set
     [[GrowingPageManager sharedInstance] createdViewControllerPage:self];
 
     [self setGrowingHook_hasDidAppear:@YES];
-    [self growingTrackSelfPage];
+    
     [[GrowingPageManager sharedInstance] addDidAppearController:self];
     [self sendViewControllerLifecycleChanged:GrowingVCLifecycleDidAppear];
 
@@ -107,27 +107,13 @@ GrowingPropertyDefine(UIViewController, NSNumber*, growingHook_hasDidAppear, set
 }
 
 - (void)growingOutOfLifetimeShow {
-    [self growingTrackSelfPage];
+    [[GrowingPageManager sharedInstance] createdViewControllerPage:self];
 }
 
 - (BOOL)growingHookIsCustomAddVC {
     return !self.growingHook_hasDidAppear.boolValue
             && self.parentViewController == nil
             && [UIApplication sharedApplication].keyWindow.rootViewController != self;
-}
-
-- (void)growingTrackSelfPage
-{
-    // TODO: SEND PAGE
-//    [GrowingPageEvent sendEventWithController:self];
-}
-
-- (void)growingTrackSelfSendNewPage {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if ([self growingCanResendPage]) {
-            [self growingTrackSelfPage];
-        }
-    });
 }
 
 - (BOOL)growingCanResendPage {

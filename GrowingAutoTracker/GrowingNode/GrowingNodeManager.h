@@ -34,13 +34,9 @@
 - (NSArray<id<GrowingNode>>*)allNodes;
 - (id<GrowingNode>)startNode;
 
-- (id)attributeValueForKey:(NSString*)key;
-
 @end
 
 @interface GrowingNodeManager : NSObject
-
-+ (instancetype)recursiveAttributeValueOfNode:(id<GrowingNode>)aNode forKey:(NSString *)key;
 
 - (id<GrowingNode>)nodeAtFirst;
 

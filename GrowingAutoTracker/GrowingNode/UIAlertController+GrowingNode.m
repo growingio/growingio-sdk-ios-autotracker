@@ -21,57 +21,12 @@
 #import <objc/runtime.h>
 #import "NSObject+GrowingIvarHelper.h"
 #import "UIView+GrowingNode.h"
+#import "UIAlertController+GrowingAutoTrack.h"
 
 @implementation UIAlertController (GrowingNode)
 
 - (CGRect)growingNodeFrame {
     return [self.view growingNodeFrame];
-}
-
-- (NSMapTable *)growing_allActionViews {
-    UICollectionView *collectionView = [self growing_collectionView];
-    NSMapTable *retMap = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsStrongMemory
-                                                valueOptions:NSPointerFunctionsStrongMemory
-                                                    capacity:4];
-    // ios9以及以下时，包含actionView
-    // 获取UIAlert中的TextField等元素，以collectionView为容器
-    if (collectionView) {
-        [[collectionView indexPathsForVisibleItems] enumerateObjectsUsingBlock:^(NSIndexPath * _Nonnull obj,
-                                                                                 NSUInteger idx,
-                                                                                 BOOL * _Nonnull stop) {
-            UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:obj];
-            if (cell) {
-                [retMap setObject:[NSNumber numberWithInteger:obj.row] forKey:cell];
-            }
-        }];
-    }
-    //  ios10以及以上
-    // 获取actionViews
-    NSArray *views = nil;
-    if ([self.view growingHelper_getIvar:"_actionViews" outObj:&views]) {
-        [views enumerateObjectsUsingBlock:^(UIView *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            [retMap setObject:[NSNumber numberWithInteger:idx] forKey:obj];
-        }];
-    }
-    return retMap;
-}
-
-- (UICollectionView *)growing_collectionView {
-    return [self growing_alertViewCollectionView:self.view];
-}
-
-- (UICollectionView *)growing_alertViewCollectionView:(UIView*)view {
-    for (UIView *subview in view.subviews) {
-        if ([subview isKindOfClass:[UICollectionView class]]) {
-            return (UICollectionView*)subview;
-        } else {
-            UICollectionView *ret = [self growing_alertViewCollectionView:subview];
-            if (ret) {
-                return ret;
-            }
-        }
-    }
-    return nil;
 }
 
 - (NSArray <id <GrowingNode> > *)growingNodeChilds {
@@ -106,23 +61,6 @@
 
 - (NSString *)growingNodeSubSimilarPath {
     return nil;
-}
-
-+ (UIAlertAction*)growing_actionForActionView:(UIView*)actionView {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wundeclared-selector"
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    NSString *viewSelectorString = [NSString stringWithFormat:@"a%@ion%@w", @"ct", @"Vie"];
-    if ([actionView respondsToSelector:NSSelectorFromString(viewSelectorString)]) {
-        actionView = [actionView performSelector:NSSelectorFromString(viewSelectorString)];
-    }
-#pragma clang diagnostic pop
-    UIAlertAction *action = nil;
-    if ([actionView respondsToSelector:@selector(action)])
-    {
-        action =[actionView performSelector:@selector(action)];
-    }
-    return action;
 }
 
 @end

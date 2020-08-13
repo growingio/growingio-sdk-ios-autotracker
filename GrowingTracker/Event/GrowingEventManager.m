@@ -45,7 +45,6 @@ static NSUInteger const kGrowingFillQueueSize = 1000; // default: determine when
 static NSUInteger const kGrowingMaxDBCacheSize = 100; // default: write to DB as soon as there are 300 events
 static NSUInteger const kGrowingMaxBatchSize = 500; // default: send no more than 500 events in every batch;
 static const NSUInteger g_K                  = 1024;
-static const NSUInteger g_M                  = g_K * g_K;
 
 @interface GrowingEventManager()
 

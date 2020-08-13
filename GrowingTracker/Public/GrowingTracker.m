@@ -194,7 +194,7 @@ static NSString* const kGrowingVersion = @"3.0.0";
 
 + (void)notifyTrackerConfigurationDidChange:(GrowingConfiguration *)configuration {
     [[GrowingBroadcaster sharedInstance] notifyEvent:@protocol(GrowingTrackerConfigurationMessage)
-                                          usingBlock:^(id<GrowingTrackerConfigurationMessage>  _Nonnull obj) {
+                                          usingBlock:^(id<GrowingMessageProtocol>  _Nonnull obj) {
         if ([obj respondsToSelector:@selector(growingTrackerConfigurationDidChanged:)]) {
             id<GrowingTrackerConfigurationMessage> message = (id<GrowingTrackerConfigurationMessage>)obj;
             [message growingTrackerConfigurationDidChanged:configuration];
