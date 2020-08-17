@@ -18,6 +18,6 @@ script:
   -rc GIO_CATEGORY_PREFIX=Growing -rc GIO_CLASS_PREFIX=Growing -max-priority-2=0
   
   
-xcodebuild test -workspace  GrowingAnalytics.xcworkspace -scheme Example  -only-testing:ExampleTests/CstmEventsTest  -destination 'platform=iOS Simulator,name=iPhone 8,OS=13.5' | xcpretty --report html
+- xcodebuild test -workspace  GrowingAnalytics.xcworkspace -scheme Example  -only-testing:ExampleTests/CstmEventsTest  -destination 'platform=iOS Simulator,name=iPhone 8,OS=13.5' | xcpretty --report html
 
 
