@@ -1,5 +1,5 @@
 //
-//  GrowingWebSocket.m
+//  GrowingWebCircle.m
 //  Growing
 //
 //  Created by 陈曦 on 15/8/26.
@@ -406,7 +406,7 @@ static GrowingWebCircle *shareInstance = nil;
                                                   pageData:modifiedPageData
                                                   keyIndex:context.nodeKeyIndex
                                                      xPath:context.xpath
-                                                  nodeType:[aNode growingNodeUserInteraction] ? @"button" : @"text"
+                                                  nodeType:@"webView"
                                                isContainer:[self isContainer:aNode]];
             
             [[GrowingHybridBridgeProvider sharedInstance]

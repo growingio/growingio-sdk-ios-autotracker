@@ -25,6 +25,10 @@
 
 @end
 
+@interface UINavigationBar (GrowingNode)
+
+@end
+
 /// 用于圈选
 @interface GrowingNavigationBarBackButton : NSObject
 

@@ -111,7 +111,7 @@ extern NSString *const kGrowingSRHTTPResponseErrorKey;
 
 @interface NSURLRequest (GrowingCertificateAdditions)
 
-@property (nonatomic, retain, readonly) NSArray *Growing_SR_SSLPinnedCertificates;
+@property (nonatomic, retain, readonly) NSArray *growing_SR_SSLPinnedCertificates;
 
 @end
 
@@ -119,7 +119,7 @@ extern NSString *const kGrowingSRHTTPResponseErrorKey;
 
 @interface NSMutableURLRequest (GrowingCertificateAdditions)
 
-@property (nonatomic, retain) NSArray *Growing_SR_SSLPinnedCertificates;
+@property (nonatomic, retain) NSArray *growing_SR_SSLPinnedCertificates;
 
 @end
 
@@ -127,6 +127,6 @@ extern NSString *const kGrowingSRHTTPResponseErrorKey;
 
 @interface NSRunLoop (GrowingSRWebSocket)
 
-+ (NSRunLoop *)Growing_SR_networkRunLoop;
++ (NSRunLoop *)growing_SR_networkRunLoop;
 
 @end

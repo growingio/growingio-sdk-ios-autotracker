@@ -1,5 +1,5 @@
 //
-//  GrowingWebSocket.h
+//  GrowingWebCircle.h
 //  Growing
 //
 //  Created by 陈曦 on 15/8/26.
@@ -21,13 +21,13 @@
 #import "GrowingNode.h"
 #import "GrowingSRWebSocket.h"
 
-@interface GrowingWebSocket : NSObject
+@interface GrowingWebCircle : NSObject
 
 @property (nonatomic, retain) GrowingSRWebSocket *webSocket;
 + (instancetype)shareInstance;
 
 + (BOOL)isRunning;
-+ (void)runWithCircleRoomNumber:(NSString *)circleRoomNumber ReadyBlock:(void(^)(void))readyBlock finishBlock:(void(^)(void))finishBlock;
++ (void)runWithCircleRoomNumber:(NSString *)circleRoomNumber readyBlock:(void(^)(void))readyBlock finishBlock:(void(^)(void))finishBlock;
 + (void)stop;
 
 + (void)setNeedUpdateScreen;

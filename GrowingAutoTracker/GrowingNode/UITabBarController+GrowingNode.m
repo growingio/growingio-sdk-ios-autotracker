@@ -35,9 +35,27 @@
 
 - (NSArray<id<GrowingNode>>*)growingNodeChilds {
     NSMutableArray *childs = [NSMutableArray array];
-    [childs addObjectsFromArray:[super growingNodeChilds]];
-    [childs addObject:self.tabBar];
+    if (self.presentedViewController) {
+        [childs addObject:self.presentedViewController];
+        return childs;
+    }
+    
+    if (self.selectedViewController) {
+        [childs addObject:self.selectedViewController];
+    }
+    
+    if (self.isViewLoaded && [self.tabBar growingImpNodeIsVisible]) {
+        [childs addObject:self.tabBar];
+    }
+    
     return childs;
 }
 
+
+- (CGRect)growingNodeFrame {
+    return self.view.growingNodeFrame;
+}
+
 @end
+
+

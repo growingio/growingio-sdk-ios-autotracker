@@ -122,7 +122,6 @@
     GrowingNodeManagerEnumerateContext *context =
         [[GrowingNodeManagerEnumerateContext alloc] init];
     context.manager = self;
-
     block(endItem.node, context);
     
     if (context.stopAll || context.stopChilds) {
@@ -133,7 +132,7 @@
     for (int i = 0; i < childs.count; i++) {
         id<GrowingNode> node = childs[i];
         if (!self.checkBlock || self.checkBlock(node)) {
-            [self addNodeAtEnd:childs[i]];
+            [self addNodeAtEnd:node];
             GrowingNodeManagerEnumerateContext *childContext = [self _enumerateChildrenUsingBlock:block];
             [self removeNodeItemAtEnd];
             
@@ -215,7 +214,7 @@
         //如果唯一标识存在，则前面的xpath不需要了，以唯一标识开始
         if (dataItem.node.growingNodeUniqueTag) {
             lastNodeFullPath = [NSMutableString stringWithFormat:@"%@",dataItem.node.growingNodeUniqueTag];
-            lastNodePatchedPath = lastNodeFullPath;
+            lastNodePatchedPath = [lastNodeFullPath mutableCopy];
         }else {
             
             if (i == self.allItems.count - 1) {
