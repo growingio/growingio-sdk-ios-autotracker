@@ -1,8 +1,8 @@
 //
 //  GIOSimpleUIElemtsViewController.m
-//  GrowingIOTest
+//  GrowingExample
 //
-//  Created by GIO-baitianyu on 23/03/2018.
+//  Created by GrowingIO on 23/03/2018.
 //  Copyright © 2018 GrowingIO. All rights reserved.
 //
 

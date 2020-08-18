@@ -20,11 +20,7 @@
 
 #import <UIKit/UIKit.h>
 #import "GrowingTracker.h"
-
-#ifndef __cplusplus
-@import Foundation;
-@import WebKit;
-#endif
+#import "GrowingConfiguration+GrowingAutoTrack.h"
 
 typedef NS_ENUM(NSUInteger, GrowingIgnorePolicy) {
     GrowingIgnoreNone = 0,
@@ -32,12 +28,6 @@ typedef NS_ENUM(NSUInteger, GrowingIgnorePolicy) {
     GrowingIgnoreChild = 2,
     GrowingIgnoreAll = 3,
 };
-
-@interface Growing (AutoTrackKit)
-
-+ (void)addAutoTrackSwizzles;
-
-@end
 
 // imp半自动打点
 @interface UIView (GrowingImpression)
@@ -98,7 +88,7 @@ typedef NS_ENUM(NSUInteger, GrowingIgnorePolicy) {
  */
 @property (nonatomic, strong) NSDictionary <NSString *, NSString *> *growingPageAttributes;
 
-@property (nonatomic, assign) GrowingIgnorePolicy growingPageIgonrePolicy;
+@property (nonatomic, assign) GrowingIgnorePolicy growingPageIgnorePolicy;
 
 @end
 

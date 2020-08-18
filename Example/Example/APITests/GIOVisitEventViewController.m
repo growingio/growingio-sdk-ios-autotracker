@@ -1,6 +1,6 @@
 //
 //  GIOVisitEventViewController.m
-//  GrowingIOTest
+//  GrowingExample
 //
 //  Created by GrowingIO on 2020/2/28.
 //  Copyright © 2020 GrowingIO. All rights reserved.
@@ -41,7 +41,7 @@
         [self.locationManager requestWhenInUseAuthorization];
     }
     
-    MKCoordinateSpan span=MKCoordinateSpanMake(0.021251, 0.016093);
+    MKCoordinateSpan span = MKCoordinateSpanMake(0.021251, 0.016093);
     
     self.mapView.showsUserLocation = YES;
     self.mapView.userTrackingMode = MKUserTrackingModeFollow;

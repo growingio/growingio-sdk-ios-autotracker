@@ -43,14 +43,14 @@
         self.logEnabled = NO;
         self.dataUploadInterval = 15;
         self.sessionInterval = 30;
-        self.cellularDataLimit = 10 * 1024;
+        self.cellularDataLimit = 10; // default 10KB
         self.uploadExceptionEnable = YES;
         self.samplingRate = 1.0;
     }
     return self;
 }
 
-- (void)setDataCollectionHost:(NSString *)host {
+- (void)setDataTrackHost:(NSString *)host {
     [GrowingNetworkConfig.sharedInstance setCustomTrackerHost:host];
 }
 
@@ -62,13 +62,27 @@
     [GrowingNetworkConfig.sharedInstance setCustomWsHost:host];
 }
 
-- (void)setCellularDataLimit:(NSUInteger)cellularDataLimit {
-    _cellularDataLimit = cellularDataLimit * 1024;
-}
-
 - (void)setUrlScheme:(NSString *)urlScheme {
     _urlScheme = urlScheme;
     [GrowingDeviceInfo configUrlScheme:urlScheme];
+}
+
+#pragma mark - GrowingSettingProtocol
+
+- (void)setDataTrackEnabled:(BOOL)dataTrackEnabled {
+    [Growing setDataTrackEnabled:dataTrackEnabled];
+}
+
+- (void)setDataUploadEnabled:(BOOL)dataUploadEnabled {
+    [Growing setDataUploadEnabled:dataUploadEnabled];
+}
+
+- (BOOL)dataTrackEnabled {
+    return !GrowingSDKDoNotTrack();
+}
+
+- (BOOL)dataUploadEnabled {
+    return !GrowingSDKDoNotUpload();
 }
 
 #pragma mark NSCopying
@@ -84,7 +98,7 @@
     config.cellularDataLimit = self.cellularDataLimit;
     config.uploadExceptionEnable = self.uploadExceptionEnable;
     config.samplingRate = self.samplingRate;
-    
+        
     return config;
 }
 

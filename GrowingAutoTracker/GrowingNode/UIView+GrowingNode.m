@@ -49,14 +49,6 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
 
 @implementation UIView(GrowingNode)
 
-- (id)growingNodeAttribute:(NSString *)attrbute forChild:(id<GrowingNode>)node {
-    return nil;
-}
-
-- (id)growingNodeAttribute:(NSString *)attrbute {
-    return nil;
-}
-
 - (UIImage *)growingNodeScreenShot:(UIImage *)fullScreenImage {
     return [fullScreenImage growingHelper_getSubImage:[self growingNodeFrame]];
 }
@@ -116,7 +108,8 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
 }
 
 - (NSArray<id<GrowingNode>> *)growingNodeChilds {
-    if ([self isKindOfClass:[WKWebView class]]) {
+    //由于WKWebView具有内容视图，不再对其子元素进行遍历
+    if ([self isKindOfClass:NSClassFromString(@"WKWebView")]) {
         return nil;
     }
     return self.subviews;

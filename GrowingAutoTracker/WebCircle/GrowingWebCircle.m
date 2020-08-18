@@ -757,7 +757,7 @@ static GrowingWebCircle *shareInstance = nil;
             [[GrowingEventManager shareInstance] addObserver:self];
             // webSocket连接成功的速度比viewDidAppear慢,因此page事件没有发送成功
             //解决方式在webSocket链接成功后 再发一次page事件
-            [[[GrowingPageManager sharedInstance] currentViewController] growingTrackSelfPage];
+            [[GrowingPageManager sharedInstance] createdViewControllerPage:[[GrowingPageManager sharedInstance] currentViewController]];
         }
         // 版本号不适配web圈选
         if ([[dict objectForKey:@"msgType"] isEqualToString:@"incompatible_version"]) {

@@ -24,17 +24,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIViewController (GrowingAutoTrack)
 
-
 //用来判断是否是没有使用addChildViewController方法的childVC
 - (BOOL)growingHookIsCustomAddVC;
 - (void)growingOutOfLifetimeShow;
 
 - (NSString *)growingPageName;
 - (NSString *)growingPageTitle;
-
-// 子类重写
-- (void)growingTrackSelfPage;
-- (void)growingTrackSelfSendNewPage;
 
 - (void)growing_viewDidAppear:(BOOL)animated;
 - (void)growing_viewDidDisappear:(BOOL)animated;

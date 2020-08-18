@@ -52,8 +52,12 @@ NS_ASSUME_NONNULL_BEGIN
 /// 清除地理位置
 + (void)cleanLocation;
 
-// 设置 GDPR 是否生效
-+ (void)setDataCollectionEnabled:(BOOL)enabled;
+/// 是否采集数据（设置 GDPR 是否生效)
++ (void)setDataTrackEnabled:(BOOL)enabled;
+
+/// 是否不上报数据, 但是进行采集
++ (void)setDataUploadEnabled:(BOOL)enabled;
+
 // 获取当前设备id
 + (NSString *)getDeviceId;
 // 获取当前访问id

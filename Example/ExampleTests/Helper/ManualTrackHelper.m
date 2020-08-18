@@ -3,7 +3,7 @@
 //  GIOAutoTests
 //
 //  Created by GrowingIO on 2018/6/6.
-//  Copyright © 2018年 GrowingIO. All rights reserved.
+//  Copyright (C) 2018 Beijing Yishu Technology Co., Ltd.
 //  function:打点事件测试公共方法
 
 #import "ManualTrackHelper.h"
@@ -91,7 +91,7 @@
 +(NSDictionary *)VstrEventCheck:(NSDictionary *)vstrevent
 {
     NSDictionary *vstrchres;
-    NSArray * vstrprome=@[@"u",@"s",@"t",@"tm",@"d",@"var",@"cs1",@"gesid",@"esid"];
+    NSArray * vstrprome=@[@"u",@"s",@"t",@"tm",@"d",@"var",@"cs1"];
     //对比测量协议结构
     if (vstrevent.count>0)
     {

@@ -3,7 +3,7 @@
 //  GIOAutoTests
 //
 //  Created by GrowingIO on 2018/2/22.
-//  Copyright © 2018年 GrowingIO. All rights reserved.
+//  Copyright (C) 2018 Beijing Yishu Technology Co., Ltd.
 //
 
 #import "VstEventsTest.h"
@@ -26,10 +26,10 @@
     /**
      function:SetLocation触发，从null -> 非null 发一次。非null - 非null不发vst
      **/
-    [MockEventQueue.sharedQueue cleanQueue];
     NSString *oldSession = [Growing getSessionId];
     XCTAssertNotNil(oldSession);
     [Growing cleanLocation];
+    [MockEventQueue.sharedQueue cleanQueue];
     [Growing setLocation:[@30.11 doubleValue] longitude:[@32.22 doubleValue]];
     [tester waitForTimeInterval:1];
     NSArray *vstEventArray = [MockEventQueue.sharedQueue eventsFor:@"vst"];

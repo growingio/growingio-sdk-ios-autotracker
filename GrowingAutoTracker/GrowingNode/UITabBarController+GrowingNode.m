@@ -24,15 +24,6 @@
 
 @implementation UITabBarController (GrowingNode)
 
-- (id)growingNodeAttribute:(NSString *)attrbute forChild:(id<GrowingNode>)node {
-    if ((attrbute == GrowingAttributeIgnorePageKey ||
-         attrbute == GrowingAttributeIsTabbarInTabbarControllerKey) &&
-        node == self.tabBar) {
-        return GrowingAttributeReturnYESKey;
-    }
-    return [super growingNodeAttribute:attrbute forChild:node];
-}
-
 - (NSArray<id<GrowingNode>>*)growingNodeChilds {
     NSMutableArray *childs = [NSMutableArray array];
     if (self.presentedViewController) {

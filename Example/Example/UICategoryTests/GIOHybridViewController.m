@@ -1,8 +1,8 @@
 //
 //  GIOHybridViewController.m
-//  GrowingIOTest
+//  GrowingExample
 //
-//  Created by GIO-baitianyu on 16/03/2018.
+//  Created by GrowingIO on 16/03/2018.
 //  Copyright © 2018 GrowingIO. All rights reserved.
 //
 

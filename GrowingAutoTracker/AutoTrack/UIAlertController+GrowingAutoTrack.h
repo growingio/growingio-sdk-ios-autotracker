@@ -30,6 +30,10 @@ NS_ASSUME_NONNULL_BEGIN
              triggeringAction:(UIAlertAction *)action
 triggeredByPopoverDimmingView:(UIView *)view
               dismissCompletion:(id)completion;
+
++ (UIAlertAction *)growing_actionForActionView:(UIView*)actionView;
+- (NSMapTable *)growing_allActionViews;
+
 @end
 
 NS_ASSUME_NONNULL_END

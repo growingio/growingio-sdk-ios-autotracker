@@ -3,7 +3,7 @@
 //  GIOAutoTests
 //
 //  Created by GrowingIO on 2018/2/28.
-//  Copyright © 2018年 GrowingIO. All rights reserved.
+//  Copyright (C) 2018 Beijing Yishu Technology Co., Ltd.
 //
 
 #import "ChgEventsTest.h"
@@ -161,11 +161,11 @@
     /**
      function:日期控件操作，不发送chng事件
      **/
-    [MockEventQueue.sharedQueue cleanQueue];
     [[viewTester usingLabel:@"协议/接口"] tap];
     //单击两次返回列表页
     [[viewTester usingLabel:@"协议/接口"] tap];
     [[viewTester usingLabel:@"chng请求"] tap];
+    [MockEventQueue.sharedQueue cleanQueue];
     NSArray *date = @[@"June", @"10", @"2019"];
     [tester selectDatePickerValue:date];
     [tester waitForTimeInterval:2];

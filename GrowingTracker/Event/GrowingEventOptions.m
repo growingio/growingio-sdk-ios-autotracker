@@ -114,7 +114,7 @@
     // runs in main thread
     NSNumber * allDisabled = dict[@"disabled"];
     if ([allDisabled isKindOfClass:[NSNumber class]]) {
-        [Growing setDataCollectionEnabled:!allDisabled.boolValue];
+        [Growing setDataUploadEnabled:!allDisabled.boolValue];
     }
 
     NSNumber * sampling = dict[@"sampling"];

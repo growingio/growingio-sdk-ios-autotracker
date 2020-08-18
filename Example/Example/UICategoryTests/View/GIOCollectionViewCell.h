@@ -1,6 +1,6 @@
 //
 //  GIOCollectionViewCell.h
-//  GrowingIOTest
+//  GrowingExample
 //
 //  Created by GrowingIO on 2020/6/9.
 //  Copyright © 2020 GrowingIO. All rights reserved.

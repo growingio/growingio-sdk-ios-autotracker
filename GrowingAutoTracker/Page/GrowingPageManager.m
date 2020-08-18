@@ -256,10 +256,7 @@
 }
 
 - (void)becomeActiveResendPage {
-    [self.visiableControllersTable.allObjects
-        enumerateObjectsUsingBlock:^(UIViewController *visiableController, NSUInteger idx, BOOL *_Nonnull stop) {
-            [visiableController growingOutOfLifetimeShow];
-        }];
+    [self.currentViewController growingOutOfLifetimeShow];
 }
 
 #pragma mark Lazy Load
