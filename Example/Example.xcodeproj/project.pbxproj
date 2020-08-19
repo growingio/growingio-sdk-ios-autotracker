@@ -382,8 +382,6 @@
 		046530D224DD4271002D254C /* GrowingUtil */ = {
 			isa = PBXGroup;
 			children = (
-				046530D624DD4271002D254C /* GIODataProcessOperation.h */,
-				046530D324DD4271002D254C /* GIODataProcessOperation.m */,
 				046530D424DD4271002D254C /* GIOConstants.h */,
 				046530D724DD4271002D254C /* GIOConstants.m */,
 				046530D624DD4271002D254C /* GIODataProcessOperation.h */,
@@ -702,12 +700,10 @@
 						ProvisioningStyle = Automatic;
 					};
 					4962651D24DA665200032551 = {
-						DevelopmentTeam = SXBU677CPT;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 6003F589195388D20070C39A;
 					};
 					6003F589195388D20070C39A = {
-						DevelopmentTeam = SXBU677CPT;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -1079,7 +1075,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = SXBU677CPT;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1121,7 +1117,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = SXBU677CPT;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1219,7 +1215,7 @@
 				CODE_SIGN_ENTITLEMENTS = Example/Example.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = SXBU677CPT;
+				DEVELOPMENT_TEAM = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Example/GrowingIO-Prefix.pch";
 				INFOPLIST_FILE = "Example/GrowingIO-Info.plist";
@@ -1242,7 +1238,7 @@
 				CODE_SIGN_ENTITLEMENTS = Example/Example.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = SXBU677CPT;
+				DEVELOPMENT_TEAM = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Example/GrowingIO-Prefix.pch";
 				INFOPLIST_FILE = "Example/GrowingIO-Info.plist";

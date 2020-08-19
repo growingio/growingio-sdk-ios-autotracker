@@ -37,5 +37,8 @@
         [self.navigationController pushViewController:childsvc animated:NO];
     }
 }
+- (IBAction)clickRed:(id)sender {
+    NSLog(@"clickRed");
+}
 
 @end

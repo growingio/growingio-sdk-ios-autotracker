@@ -31,6 +31,8 @@
 #import "NSString+GrowingHelper.h"
 #import "UIView+GrowingHelper.h"
 #import "UIViewController+GrowingNode.h"
+#import "UIViewController+GrowingPageHelper.h"
+#import "GrowingPageGroup.h"
 @interface GrowingActionEvent ()
 
 @property (nonatomic, copy, readwrite) NSString *_Nullable query;
@@ -88,18 +90,32 @@
 
     GrowingNodeManager *manager =
         [[GrowingEventNodeManager alloc] initWithNode:node eventType:eventType];
-
-    NSDictionary *pageData = [[[GrowingPageManager sharedInstance] currentViewController] growingNodeDataDict];
-    if (pageData.count != 0) {
-        // 这里传进来的pageData依赖于vc的growingNodeDataDict方法
-        // 待重构,目前工程pageData中的时间字段可能有几率错乱,所以直接用上一次发的page,逻辑也本应该如此
-        GrowingPageEvent *lastPageEvent =
-            [GrowingEventManager shareInstance].lastPageEvent;
-        if (lastPageEvent) {
-            pageData = [NSMutableDictionary
-                dictionaryWithObjectsAndKeys:lastPageEvent.pageName, @"p", nil];
+    
+    NSDictionary *pageData = nil;
+    id<GrowingNode> parent = node.growingNodeParent;
+    while (parent) {
+        if ([parent isKindOfClass:[UIViewController class]]) {
+            UIViewController *currentVC = (UIViewController*)parent;
+            GrowingPageGroup *page = [currentVC growingPageHelper_getPageObject];
+            if (!page) {
+                [[GrowingPageManager sharedInstance] createdViewControllerPage:currentVC];
+            }
+            pageData = [NSMutableDictionary dictionaryWithObjectsAndKeys:page.path, @"p", nil];
+            break;
         }
+        parent = parent.growingNodeParent;
     }
+//    NSDictionary *pageData = [[[GrowingPageManager sharedInstance] currentViewController] growingNodeDataDict];
+//    if (pageData.count != 0) {
+//        // 这里传进来的pageData依赖于vc的growingNodeDataDict方法
+//        // 待重构,目前工程pageData中的时间字段可能有几率错乱,所以直接用上一次发的page,逻辑也本应该如此
+//        GrowingPageEvent *lastPageEvent =
+//            [GrowingEventManager shareInstance].lastPageEvent;
+//        if (lastPageEvent) {
+//            pageData = [NSMutableDictionary
+//                dictionaryWithObjectsAndKeys:lastPageEvent.pageName, @"p", nil];
+//        }
+//    }
 
     if (!manager) { return; }
 

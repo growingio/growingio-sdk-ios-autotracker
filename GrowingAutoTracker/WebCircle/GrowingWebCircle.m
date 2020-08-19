@@ -74,7 +74,7 @@
 @property (nonatomic, strong) NSMutableArray *gWebViewArray;
 @property (nonatomic, assign) int nodeZLevel;
 @property (nonatomic, assign) int zLevel;
-@property (nonatomic, copy) NSString *randomNumber;
+@property (nonatomic, assign) unsigned long snapNumber; //数据发出序列号
 @property (nonatomic, assign) unsigned int messageId;
 @end
 
@@ -334,14 +334,11 @@ static GrowingWebCircle *shareInstance = nil;
     }
 }
 
-- (NSString *)getSnapshotKey {
-    NSString *r = [NSString stringWithFormat:@"%d", arc4random_uniform(10000)];
-    if (![_randomNumber isEqualToString:r]) {
-        _randomNumber = r;
-    } else {
-        _randomNumber = [NSString stringWithFormat:@"%@new", r];
+- (unsigned long)getSnapshotKey {
+    @synchronized (self) {
+        _snapNumber ++;
     }
-    return _randomNumber;
+    return _snapNumber;
 }
 
 //获取 WebView
@@ -480,7 +477,7 @@ static GrowingWebCircle *shareInstance = nil;
         @"scale" : @(1),  //暂时没有计算
         @"screenshot" : [@"data:image/jpeg;base64," stringByAppendingString:imgBase64Str],
         @"msgType" : action,
-        @"snapshotKey" : [self getSnapshotKey],
+        @"snapshotKey" : @([self getSnapshotKey]),
     };
 
     return dict;
@@ -638,6 +635,7 @@ static GrowingWebCircle *shareInstance = nil;
         self.onFinishBlock = finishBlock;
         
     }
+
     //DEBUG 调试
     
 //    [self webSocket:nil didReceiveMessage:[@{@"msgType" : @"ready"} growingHelper_jsonString]];
@@ -749,8 +747,9 @@ static GrowingWebCircle *shareInstance = nil;
                 self.onReadyBlock();
                 self.onReadyBlock = nil;
             }
+            //序列号置零
+            _snapNumber = 0;
             self.isReady = YES;
-
             // Hybird的布局改变回调代理设置
             [GrowingHybridBridgeProvider sharedInstance].domChangedDelegate = self;
             //监听原生事件，变动时发送
@@ -780,7 +779,7 @@ static GrowingWebCircle *shareInstance = nil;
 - (void)webSocketDidOpen:(GrowingSRWebSocket *)webSocket {
     GIOLogDebug(@"web已连接websocket server");
     CGSize screenSize = [GrowingDeviceInfo deviceScreenSize];
-    //    [GrowingInstance sharedInstance].projectID
+//    NSString *projectId = [GrowingInstance sharedInstance].projectID ?: @"";
     NSDictionary *dict = @{
         @"projectId" : @"testProjectId",
         @"msgType" : @"ready",

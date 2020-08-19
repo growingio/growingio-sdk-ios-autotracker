@@ -20,6 +20,7 @@
 
 #import "GrowingNodeManager.h"
 #import "NSString+GrowingHelper.h"
+#import "UIView+GrowingNode.h"
 
 #define parentIndexNull NSUIntegerMax
 
@@ -82,7 +83,10 @@
 
         id<GrowingNode> curNode = aNode;
         while (curNode) {
-            [self addNodeAtFront:curNode];
+            //SDK3.0 不再记录到UIViewController的xpath
+            if ([curNode isKindOfClass:[UIView class]] && ![curNode growingNodeDonotTrack]) {
+               [self addNodeAtFront:curNode];
+            }
             curNode = [curNode growingNodeParent];
         }
         [self updateAllItems];
@@ -197,10 +201,15 @@
 
     for (NSUInteger i = MAX(0, index); i < self.allItems.count; i++) {
         GrowingNodeManagerDataItem *dataItem = self.allItems[i];
-
+        //由于我们仅保留UIView类型的Node,对于首个元素,替换成/Page
+        if (i == 0 && [dataItem.node isKindOfClass:[UIView class]]) {
+            [lastNodeFullPath appendFormat:@"/Page"];
+            [lastNodePatchedPath appendFormat:@"/Page"];
+            continue;
+        }
         //如果唯一标识存在，则前面的xpath不需要了，以唯一标识开始
         if (dataItem.node.growingNodeUniqueTag) {
-            lastNodeFullPath = [NSMutableString stringWithFormat:@"%@",dataItem.node.growingNodeUniqueTag];
+            lastNodeFullPath = [NSMutableString stringWithFormat:@"/%@",dataItem.node.growingNodeUniqueTag];
             lastNodePatchedPath = [lastNodeFullPath mutableCopy];
         }else {
             
@@ -213,10 +222,10 @@
                 }
             }else {
                 [lastNodePatchedPath
-                appendFormat:@"%@%@",(i == 0)?@"":@"/", dataItem.node.growingNodeSubPath];
+                appendFormat:@"/%@", dataItem.node.growingNodeSubPath];
             }
             [lastNodeFullPath
-            appendFormat:@"%@%@",(i == 0)?@"":@"/", dataItem.node.growingNodeSubPath];
+            appendFormat:@"/%@", dataItem.node.growingNodeSubPath];
         }
         dataItem.nodePatchedPath = lastNodePatchedPath;
         dataItem.nodeFullPath = lastNodeFullPath;
