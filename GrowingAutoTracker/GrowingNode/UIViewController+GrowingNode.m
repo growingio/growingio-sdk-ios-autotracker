@@ -30,6 +30,8 @@
 #import "UIView+GrowingNode.h"
 #import "UIViewController+GrowingAutoTrack.h"
 #import "UIViewController+GrowingNode.h"
+#import "UIViewController+GrowingPageHelper.h"
+#import "GrowingPageGroup.h"
 #import "UIWindow+GrowingNode.h"
 #import "GrowingDispatchManager.h"
 #import "GrowingPvarEvent.h"
@@ -120,7 +122,7 @@
 
 - (NSDictionary *)growingNodeDataDict {
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-    dict[@"p"] = (self.growingPageName ?: nil);
+    dict[@"p"] = ([self growingPageHelper_getPageObject].name ?: self.growingPageName);
     return dict;
 }
 

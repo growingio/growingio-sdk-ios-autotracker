@@ -32,6 +32,7 @@
 #import "UIView+GrowingHelper.h"
 #import "UIViewController+GrowingNode.h"
 #import "UIViewController+GrowingPageHelper.h"
+#import "UIView+GrowingHelper.h"
 #import "GrowingPageGroup.h"
 @interface GrowingActionEvent ()
 
@@ -90,33 +91,30 @@
 
     GrowingNodeManager *manager =
         [[GrowingEventNodeManager alloc] initWithNode:node eventType:eventType];
-    
     NSDictionary *pageData = nil;
-    id<GrowingNode> parent = node.growingNodeParent;
-    while (parent) {
-        if ([parent isKindOfClass:[UIViewController class]]) {
-            UIViewController *currentVC = (UIViewController*)parent;
-            GrowingPageGroup *page = [currentVC growingPageHelper_getPageObject];
+    
+    if ([node isKindOfClass:[UIView class]]) {
+        UIView *view = (UIView*)node;
+        UIViewController *parent = [view growingHelper_viewController];
+        if (parent) {
+            GrowingPageGroup *page = [parent growingPageHelper_getPageObject];
             if (!page) {
-                [[GrowingPageManager sharedInstance] createdViewControllerPage:currentVC];
+                [[GrowingPageManager sharedInstance] createdViewControllerPage:parent];
             }
             pageData = [NSMutableDictionary dictionaryWithObjectsAndKeys:page.path, @"p", nil];
-            break;
         }
-        parent = parent.growingNodeParent;
+    }else {
+        //错误情况
+        NSDictionary *pageData = [[[GrowingPageManager sharedInstance] currentViewController] growingNodeDataDict];
+        if (pageData.count != 0) {
+            GrowingPageEvent *lastPageEvent =
+                [GrowingEventManager shareInstance].lastPageEvent;
+            if (lastPageEvent) {
+                pageData = [NSMutableDictionary
+                    dictionaryWithObjectsAndKeys:lastPageEvent.pageName, @"p", nil];
+            }
+        }
     }
-//    NSDictionary *pageData = [[[GrowingPageManager sharedInstance] currentViewController] growingNodeDataDict];
-//    if (pageData.count != 0) {
-//        // 这里传进来的pageData依赖于vc的growingNodeDataDict方法
-//        // 待重构,目前工程pageData中的时间字段可能有几率错乱,所以直接用上一次发的page,逻辑也本应该如此
-//        GrowingPageEvent *lastPageEvent =
-//            [GrowingEventManager shareInstance].lastPageEvent;
-//        if (lastPageEvent) {
-//            pageData = [NSMutableDictionary
-//                dictionaryWithObjectsAndKeys:lastPageEvent.pageName, @"p", nil];
-//        }
-//    }
-
     if (!manager) { return; }
 
     [self _sendEventsWithManager:manager
@@ -133,30 +131,13 @@
     if (self = [super initWithTimestamp:nil]) {
         self.pageName = pageData[@"p"];
         self.pageTimestamp = pageData[@"ptm"];
-        // 根据测量协议，点击事件的 p 字段需要拼接父级 p
-        // https://growingio.atlassian.net/wiki/spaces/SDK/pages/1120830020/iOS+3.0
-        NSString *realPage = [self pageNameWithNode:view];
+//        // 根据测量协议，点击事件的 p 字段需要拼接父级 p
+//        // https://growingio.atlassian.net/wiki/spaces/SDK/pages/1120830020/iOS+3.0
+//        NSString *realPage = [self pageNameWithNode:view];
         self.elements = elements;
-        self.pageName = realPage;
+//        self.pageName = realPage;
     }
     return self;
-}
-
-- (NSString *)pageNameWithNode:(id<GrowingNode> _Nonnull)node {
-    NSString *fullPage = [node growingNodeDataDict][@"p"];
-
-    if ([node isKindOfClass:[UIView class]]) {
-        UIViewController *myselfVC =
-            [(UIView *)node growingHelper_viewController];
-        NSString *parentPage =
-            [myselfVC.parentViewController growingNodeDataDict][@"p"];
-        NSString *myselfPage = [myselfVC growingNodeDataDict][@"p"];
-        fullPage =
-            parentPage
-                ? ([NSString stringWithFormat:@"%@/%@", parentPage, myselfPage])
-                : myselfPage;
-    }
-    return fullPage;
 }
 
 + (BOOL)checkNode:(id<GrowingNode>)aNode {

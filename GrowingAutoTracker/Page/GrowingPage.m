@@ -107,14 +107,15 @@
         }
         pageParent = pageParent.parent;
     }
-    NSString *path = [NSString stringWithFormat:@"%@",pageTree[0].name];
-    for (NSInteger i = 1; i < pageTree.count; ++i) {
+    NSString *path = [NSString string];
+    for (NSInteger i = 0; i < pageTree.count; ++i) {
         if (i >= 3) {
             //SDK3.0 xpath逻辑调整,仅遍历UIViewController的三层视图
-            path = [NSString stringWithFormat:@"*/%@", path];
+            path = [NSString stringWithFormat:@"*%@", path];
             break;
         }
-        path = [NSString stringWithFormat:@"%@/%@",pageTree[i].name,path];
+        NSString *subpath = [NSString stringWithFormat:@"/%@",pageTree[i].name];
+        path = [NSString stringWithFormat:@"%@%@",subpath,path];
     }
     _pathCopy = path;
     return self.pathCopy;
