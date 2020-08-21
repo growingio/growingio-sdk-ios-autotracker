@@ -34,6 +34,7 @@
 #import "UIViewController+GrowingPageHelper.h"
 #import "UIView+GrowingHelper.h"
 #import "GrowingPageGroup.h"
+#import "GrowingNodeHelper.h"
 @interface GrowingActionEvent ()
 
 @property (nonatomic, copy, readwrite) NSString *_Nullable query;
@@ -88,21 +89,13 @@
     if (withChilds == NO && ![self checkNode:node]) {
         return;
     }
-
-    GrowingNodeManager *manager =
-        [[GrowingEventNodeManager alloc] initWithNode:node eventType:eventType];
     NSDictionary *pageData = nil;
     
     if ([node isKindOfClass:[UIView class]]) {
         UIView *view = (UIView*)node;
         UIViewController *parent = [view growingHelper_viewController];
-        if (parent) {
-            GrowingPageGroup *page = [parent growingPageHelper_getPageObject];
-            if (!page) {
-                [[GrowingPageManager sharedInstance] createdViewControllerPage:parent];
-            }
-            pageData = [NSMutableDictionary dictionaryWithObjectsAndKeys:page.path, @"p", nil];
-        }
+        NSString *path = [GrowingNodeHelper xPathForViewController:parent];
+        pageData = [NSMutableDictionary dictionaryWithObjectsAndKeys:path, @"p", nil];
     }else {
         //错误情况
         NSDictionary *pageData = [[[GrowingPageManager sharedInstance] currentViewController] growingNodeDataDict];
@@ -115,13 +108,10 @@
             }
         }
     }
-    if (!manager) { return; }
-
-    [self _sendEventsWithManager:manager
-                     triggerNode:node
-                       eventType:eventType
-                        pageData:pageData
-                      withChilds:withChilds];
+    [self _sendEventsWithNode:node
+                    eventType:eventType
+                     pageData:pageData
+                   withChilds:withChilds];
 }
 
 - (_Nullable instancetype)initWithNode:(id<GrowingNode>)view
@@ -150,45 +140,49 @@
     return [aNode growingNodeUserInteraction];
 }
 
-+ (void)_sendEventsWithManager:(GrowingNodeManager *)manager
-                   triggerNode:(id<GrowingNode>)triggerNode
-                     eventType:(GrowingEventType)eventType
-                      pageData:(NSDictionary *)pageData
-                    withChilds:(BOOL)withChilds {
-    __block BOOL isFirst = YES;
++ (void)_sendEventsWithNode:(id<GrowingNode>)triggerNode
+                  eventType:(GrowingEventType)eventType
+                   pageData:(NSDictionary *)pageData
+                 withChilds:(BOOL)withChilds {
+//    __block BOOL isFirst = YES;
 
     NSMutableArray<GrowingActionEventElement *> *elements =
         [NSMutableArray arrayWithCapacity:5];
-
-    [manager enumerateChildrenUsingBlock:^(
-                 id<GrowingNode> aNode,
-                 GrowingNodeManagerEnumerateContext *context) {
-        if (!withChilds) {
-            [context stop];
-        }
-
-        BOOL needTrack = NO;
-        BOOL userInActionNeedTrack = YES;
-        // 只捕获子views的可响应事件的一级node
-        if ([aNode growingNodeUserInteraction]) {
-            if (isFirst) {
-                isFirst = NO;
-                needTrack = YES;
-            } else {
-                userInActionNeedTrack = NO;
-                [context skipThisChilds];
-            }
-        }
-
-        if (([aNode growingNodeContent] || needTrack) &&
-            userInActionNeedTrack) {
-            GrowingActionEventElement *element =
-                [[GrowingActionEventElement alloc] initWithNode:aNode
-                                             nodeManagerContext:context
-                                               triggerEventType:eventType];
-            [elements addObject:element];
-        }
-    }];
+    
+    GrowingActionEventElement *element =
+        [[GrowingActionEventElement alloc] initWithNode:triggerNode
+                                       triggerEventType:eventType];
+    [elements addObject:element];
+    
+//    [manager enumerateChildrenUsingBlock:^(
+//                 id<GrowingNode> aNode,
+//                 GrowingNodeManagerEnumerateContext *context) {
+//        if (!withChilds) {
+//            [context stop];
+//        }
+//
+//        BOOL needTrack = NO;
+//        BOOL userInActionNeedTrack = YES;
+//        // 只捕获子views的可响应事件的一级node
+//        if ([aNode growingNodeUserInteraction]) {
+//            if (isFirst) {
+//                isFirst = NO;
+//                needTrack = YES;
+//            } else {
+//                userInActionNeedTrack = NO;
+//                [context skipThisChilds];
+//            }
+//        }
+//
+//        if (([aNode growingNodeContent] || needTrack) &&
+//            userInActionNeedTrack) {
+//            GrowingActionEventElement *element =
+//                [[GrowingActionEventElement alloc] initWithNode:aNode
+//                                             nodeManagerContext:context
+//                                               triggerEventType:eventType];
+//            [elements addObject:element];
+//        }
+//    }];
 
     GrowingEvent *event = [[self alloc] initWithNode:triggerNode
                                             pageData:pageData

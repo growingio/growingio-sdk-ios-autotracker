@@ -39,8 +39,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSNumber * _Nonnull timestamp;
 @property (nonatomic, copy) NSString * _Nullable content;
 
-- (instancetype)initWithNode:(id<GrowingNode>)node nodeManagerContext:(GrowingNodeManagerEnumerateContext *)context triggerEventType:(GrowingEventType)eventType;
-
+- (instancetype)initWithNode:(id<GrowingNode>)node
+            triggerEventType:(GrowingEventType)eventType;
 @end
 
 NS_ASSUME_NONNULL_END

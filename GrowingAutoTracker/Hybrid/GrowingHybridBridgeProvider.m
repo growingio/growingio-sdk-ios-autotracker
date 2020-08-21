@@ -95,7 +95,6 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
     NSString *javaScript = [NSString stringWithFormat:@"window.GrowingWebViewJavascriptBridge.getDomTree(%i, %i, %i, %i, 100)", left, top, width, height];
     //方法不会阻塞线程，而且它的回调代码块总是在主线程中运行。
     [webView evaluateJavaScript:javaScript completionHandler:^(id _Nullable result, NSError *error) {
-//        NSLog(@"xxx %@ %@",result ,error);
         if ([result isKindOfClass:[NSDictionary class]]) {
 //            completionHandler(result, error);
             resultDic = result;

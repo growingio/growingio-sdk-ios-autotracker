@@ -704,6 +704,7 @@
 						TestTargetID = 6003F589195388D20070C39A;
 					};
 					6003F589195388D20070C39A = {
+						DevelopmentTeam = SXBU677CPT;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -1215,7 +1216,7 @@
 				CODE_SIGN_ENTITLEMENTS = Example/Example.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = SXBU677CPT;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Example/GrowingIO-Prefix.pch";
 				INFOPLIST_FILE = "Example/GrowingIO-Info.plist";
@@ -1238,7 +1239,7 @@
 				CODE_SIGN_ENTITLEMENTS = Example/Example.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = SXBU677CPT;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Example/GrowingIO-Prefix.pch";
 				INFOPLIST_FILE = "Example/GrowingIO-Info.plist";

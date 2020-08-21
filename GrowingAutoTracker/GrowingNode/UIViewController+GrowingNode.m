@@ -181,46 +181,60 @@
     }
     // ViewController中childViewController.view与self.view.subviews中重复，去除重复元素
     // 这里仅去除self.view上的重复,self.view.view的重复暂不考虑
-    [childs addObjectsFromArray:self.view.subviews];
-    if (self.childViewControllers.count > 0 && ![self isKindOfClass:UIAlertController.class]) {
-        // 是否包含全屏视图
-        __block BOOL isContainFullScreen = NO;
+    UIView *currentView = self.view;
+    if (currentView && self.isViewLoaded && currentView.growingImpNodeIsVisible) {
         
-        NSArray <UIViewController *> *childViewControllers = self.childViewControllers;
-        [childViewControllers enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(__kindof UIViewController*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            if (obj.isViewLoaded) {
-                UIView *objSuperview = obj.view;
-                for (long i = (long)(childs.count - 1); i >= 0; i--) {
-                    UIView *childview = childs[i];
-                    //如果childview包含或者等于objsuperview
-                    if ([objSuperview isDescendantOfView:childview]) {
-                        // xib拖拽的viewController会被一个自定义的view包裹，判断其subviews数量是否为1
-                        if ([childview isEqual:objSuperview] || (childview.subviews.count == 1 && [childview.subviews.lastObject isEqual:objSuperview])) {
-//                            NSInteger index = [childs indexOfObject:objSuperview];
-                            if ([objSuperview growingImpNodeIsVisible] && !isContainFullScreen) {
-                                [childs replaceObjectAtIndex:i withObject:obj];
-                            } else {
-                                [childs removeObject:childview];
+        [childs addObjectsFromArray:self.view.subviews];
+        if (self.childViewControllers.count > 0 && ![self isKindOfClass:UIAlertController.class]) {
+            // 是否包含全屏视图
+            __block BOOL isContainFullScreen = NO;
+            
+            NSArray <UIViewController *> *childViewControllers = self.childViewControllers;
+            [childViewControllers enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(__kindof UIViewController*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if (obj.isViewLoaded) {
+                    UIView *objSuperview = obj.view;
+                    for (long i = (long)(childs.count - 1); i >= 0; i--) {
+                        UIView *childview = childs[i];
+                        //如果childview包含或者等于objsuperview
+                        if ([objSuperview isDescendantOfView:childview]) {
+                            // xib拖拽的viewController会被一个自定义的view包裹，判断其subviews数量是否为1
+                            if ([childview isEqual:objSuperview] || (childview.subviews.count == 1 && [childview.subviews.lastObject isEqual:objSuperview])) {
+                                //                            NSInteger index = [childs indexOfObject:objSuperview];
+                                if ([objSuperview growingImpNodeIsVisible] && !isContainFullScreen) {
+                                    [childs replaceObjectAtIndex:i withObject:obj];
+                                } else {
+                                    [childs removeObject:childview];
+                                }
                             }
+                            //如果用户是view嵌套view再嵌套vc.view的层级,需要对subviews进行去重，并将其层级提升
+                            //before: subviews -> view -> [viewA,viewB,viewC] -(A)-> [viewD,viewF] -(D)-> vc.view
+                            //after: subviews -> [vc.view,viewB,viewC,viewF]
                         }
-                        //如果用户是view嵌套view再嵌套vc.view的层级,需要对subviews进行去重，并将其层级提升
-                        //before: subviews -> view -> [viewA,viewB,viewC] -(A)-> [viewD,viewF] -(D)-> vc.view
-                        //after: subviews -> [vc.view,viewB,viewC,viewF]
+                    }
+                    //                [objSuperview isDescendantOfView:self];
+                    
+                    CGRect rect = [obj.view convertRect:obj.view.bounds toView:nil];
+                    // 是否全屏
+                    BOOL isFullScreenShow = CGPointEqualToPoint(rect.origin, CGPointMake(0, 0)) && CGSizeEqualToSize(rect.size, [UIApplication sharedApplication].growingMainWindow.bounds.size);
+                    // 正在全屏显示
+                    if (isFullScreenShow && [obj.view growingImpNodeIsVisible]) {
+                        isContainFullScreen = YES;
                     }
                 }
-//                [objSuperview isDescendantOfView:self];
-                
-                CGRect rect = [obj.view convertRect:obj.view.bounds toView:nil];
-               // 是否全屏
-                BOOL isFullScreenShow = CGPointEqualToPoint(rect.origin, CGPointMake(0, 0)) && CGSizeEqualToSize(rect.size, [UIApplication sharedApplication].growingMainWindow.bounds.size);
-               // 正在全屏显示
-                if (isFullScreenShow && [obj.view growingImpNodeIsVisible]) {
-                    isContainFullScreen = YES;
-                }
-            }
-        }];
+            }];
+        }
+        
+        [childs addObject:currentView];
         return childs;
     }
+    
+    
+    
+    if ([self isKindOfClass:UIPageViewController.class]) {
+        UIPageViewController *pageViewController = (UIPageViewController *)self;
+        [childs addObject:pageViewController.viewControllers];
+    }
+    
     
     return childs;
 }
