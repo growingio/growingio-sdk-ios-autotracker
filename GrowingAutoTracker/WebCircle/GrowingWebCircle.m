@@ -606,6 +606,7 @@ static GrowingWebCircle *shareInstance = nil;
         }
         if (self.webSocket) {
             [self.webSocket close];
+            self.webSocket.delegate = nil;
             self.webSocket = nil;
         }
         NSString *endPoint = @"";
