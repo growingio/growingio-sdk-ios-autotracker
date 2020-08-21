@@ -51,6 +51,7 @@
 #import "UIWindow+GrowingHelper.h"
 #import "UIWindow+GrowingNode.h"
 #import "WKWebView+GrowingAutoTrack.h"
+#import "GrowingNetworkConfig.h"
 
 @interface GrowingWeakObject : NSObject
 @property (nonatomic, weak) JSContext *context;
@@ -72,8 +73,7 @@ static NSString *const kGrowingWebCircleWebView = @"WEB_VIEW";
 
 
 @interface GrowingWebCircle () <GrowingSRWebSocketDelegate, GrowingEventManagerObserver>
-// websocketserver and web connect state
-@property (nonatomic, assign) BOOL isConnected;
+
 //表示web和app是否同时准备好数据发送，此时表示可以发送数据
 @property (nonatomic, assign) BOOL isReady;
 @property (nonatomic, retain) NSTimer *keepAliveTimer;
@@ -89,7 +89,6 @@ static NSString *const kGrowingWebCircleWebView = @"WEB_VIEW";
 @property (nonatomic, assign) int nodeZLevel;
 @property (nonatomic, assign) int zLevel;
 @property (nonatomic, assign) unsigned long snapNumber;  //数据发出序列号
-@property (nonatomic, assign) unsigned int messageId;
 @end
 
 @implementation GrowingWebCircle {
@@ -561,7 +560,7 @@ static GrowingWebCircle *shareInstance = nil;
 - (void)runWithCircleRoomNumber:(NSString *)circleRoomNumber
                      readyBlock:(void (^)(void))readyBlock
                     finishBlock:(void (^)(void))finishBlock {
-    if (!self.webSocket) {
+    if (!self.isReady) {
         [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -605,12 +604,19 @@ static GrowingWebCircle *shareInstance = nil;
                 [alert showAlertAnimated:NO];
             };
         }
-
-        NSString *urlStr =
-            @"wss://gta1.growingio.com/app/0a1b4118dd954ec3bcc69da5138bdb96/"
-            @"circle/p5Xvy2Mt5OIkWHg8";
-        self.webSocket =
-            [[GrowingSRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];
+        if (self.webSocket) {
+            [self.webSocket close];
+            self.webSocket = nil;
+        }
+        NSString *endPoint = @"";
+        endPoint = [GrowingNetworkConfig.sharedInstance wsEndPoint];
+        NSString *urlStr = [NSString stringWithFormat:endPoint, [GrowingInstance sharedInstance].projectID, circleRoomNumber];
+        self.webSocket = [[GrowingSRWebSocket alloc] initWithURLRequest: [NSURLRequest requestWithURL: [NSURL URLWithString:urlStr]]];
+//        NSString *urlStr =
+//            @"wss://gta1.growingio.com/app/0a1b4118dd954ec3bcc69da5138bdb96/"
+//            @"circle/p5Xvy2Mt5OIkWHg8";
+//        self.webSocket =
+//            [[GrowingSRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];
         self.webSocket.delegate = self;
         [self.webSocket open];
 
@@ -757,11 +763,11 @@ static GrowingWebCircle *shareInstance = nil;
 }
 
 - (void)webSocketDidOpen:(GrowingSRWebSocket *)webSocket {
-    GIOLogDebug(@"web已连接websocket server");
+    GIOLogDebug(@"websocket已连接");
     CGSize screenSize = [GrowingDeviceInfo deviceScreenSize];
-    //    NSString *projectId = [GrowingInstance sharedInstance].projectID ?: @"";
+    NSString *projectId = [GrowingInstance sharedInstance].projectID ?: @"";
     NSDictionary *dict = @{
-        @"projectId" : @"testProjectId",
+        @"projectId" : projectId,
         @"msgType" : @"ready",
         @"timestamp" : @([[NSDate date] timeIntervalSince1970]),
         @"domain" : [GrowingDeviceInfo currentDeviceInfo].bundleID,
@@ -780,11 +786,15 @@ static GrowingWebCircle *shareInstance = nil;
               reason:(NSString *)reason
             wasClean:(BOOL)wasClean {
     GIOLogDebug(@"已断开链接");
-    [self _stopWithError:@"当前设备已与Web端断开连接,如需继续圈选请扫码重新连接。"];
+    _isReady = NO;
+    if (code != GrowingSRStatusCodeNormal) {
+        [self _stopWithError:@"当前设备已与Web端断开连接,如需继续圈选请扫码重新连接。"];
+    }
 }
 
 - (void)webSocket:(GrowingSRWebSocket *)webSocket didFailWithError:(NSError *)error {
     GIOLogDebug(@"error : %@", error);
+    _isReady = NO;
     [self _stopWithError:@"服务器链接失败"];
 }
 
@@ -798,13 +808,6 @@ static GrowingWebCircle *shareInstance = nil;
     if (!currentPageName.length) {
         currentPageName = [viewController growingPageName];
     }
-    // TODO:js
-    //    NSString * taggedPageName = [[GrowingLocalCircleModel sdkInstance]
-    //    getControllerTagedName:currentPageName]; if (taggedPageName.length >
-    //    0)
-    //    {
-    //        currentPageName = taggedPageName;
-    //    }
     if (currentPageName.length > 0) {
         return currentPageName;
     } else {
@@ -817,36 +820,6 @@ static GrowingWebCircle *shareInstance = nil;
              withKeyIndex:(NSInteger)keyIndex
               withContent:(NSString *)content
                  withPage:(NSString *)page {
-//    __block NSString *plainXPath = nil;
-//    void (^updatePlainXPath)(NSString *x) = ^void(NSString *x) {
-//        plainXPath = x;
-//    };
-    // TODO:js
-    //    for (GrowingTagItem * item in [[GrowingLocalCircleModel sdkInstance]
-    //    cacheTagItems])
-    //    {
-    //        if (item.index == [GrowingNodeItemComponent indexNotDefine] ||
-    //        item.index == keyIndex)
-    //        {
-    //            if (item.content.length == 0 || [item.content
-    //            isEqualToString:content])
-    //            {
-    //                if (item.page.length == 0 || [item.page
-    //                isEqualToString:page])
-    //                {
-    //                    if (item.name.length > 0)
-    //                    {
-    //                        if ([GrowingNodeManager isElementXPath:xPath
-    //                        orElementPlainXPath:plainXPath
-    //                        matchToTagXPath:item.xpath
-    //                        updatePlainXPathBlock:updatePlainXPath]){
-    //                            return item.name;
-    //                        }
-    //                    }
-    //                }
-    //            }
-    //        }
-    //    }
 
     __block CGFloat maxFontSize = 0.0;
     __block NSString *maxFontContent = nil;

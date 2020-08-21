@@ -42,6 +42,16 @@
 				<string>growing.530c8231345c492d</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>GrowingIO2</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>growing.5fa2fc30d302f1a6</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
