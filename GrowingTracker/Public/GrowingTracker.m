@@ -31,6 +31,8 @@
 #import "GrowingCocoaLumberjack.h"
 #import "GrowingConfiguration.h"
 #import "GrowingBroadcaster.h"
+#import "GrowingWSLoggerFormat.h"
+
 @import CoreLocation;
 
 static NSString* const kGrowingVersion = @"3.0.0";
@@ -97,6 +99,9 @@ static NSString* const kGrowingVersion = @"3.0.0";
         [GrowingLog removeLogger:[GrowingTTYLogger sharedInstance]];
         [GrowingLog addLogger:[GrowingTTYLogger sharedInstance] withLevel:GrowingLogLevelError];
     }
+    
+    [GrowingLog addLogger:[GrowingWSLogger sharedInstance] withLevel:GrowingLogLevelVerbose];
+    [GrowingWSLogger sharedInstance].logFormatter = [GrowingWSLoggerFormat new];
 }
 
 + (void)setLocation:(double)latitude longitude:(double)longitude {

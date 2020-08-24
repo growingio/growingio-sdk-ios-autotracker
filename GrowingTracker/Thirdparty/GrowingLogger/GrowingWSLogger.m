@@ -19,13 +19,14 @@
 
 
 #import "GrowingWSLogger.h"
+#import "NSString+GrowingHelper.h"
 
 static const NSInteger kGIOMaxCachesLogNumber = 100;
 
 @interface GrowingWSLogger ()
 
-@property (nonatomic, strong) dispatch_queue_t cacheQueue;
 @property (nonatomic, strong) NSMutableArray *cacheArray;
+@property (nonatomic, assign) NSInteger maxCachesNumber;
 
 @end
 
@@ -37,8 +38,6 @@ static const NSInteger kGIOMaxCachesLogNumber = 100;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         sharedInstance = [[self alloc] init];
-        sharedInstance.cacheQueue =
-            dispatch_queue_create("com.cacheLogger.queue", DISPATCH_QUEUE_CONCURRENT);
         sharedInstance.cacheArray      = [NSMutableArray array];
         sharedInstance.maxCachesNumber = kGIOMaxCachesLogNumber;
     });
@@ -56,42 +55,20 @@ static const NSInteger kGIOMaxCachesLogNumber = 100;
         logMsg      = [_logFormatter formatLogMessage:logMessage];
         isFormatted = logMsg != logMessage->_message;
     }
-
-    //  timestamp formatter
-    NSTimeInterval epoch = [logMessage->_timestamp timeIntervalSince1970];
-    struct tm tm;
-    time_t time = (time_t)epoch;
-    (void)localtime_r(&time, &tm);
-//    int milliseconds = (int)((epoch - floor(epoch)) * 1000.0);
-//    NSString *timeStamp = [NSString stringWithFormat:@"%04d-%02d-%02d %02d:%02d:%02d:%03d", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec, milliseconds];
-    
-    //  获取对应的字典构成字典，转成json进行发送
     
     if (logMsg) {
-        dispatch_barrier_async(self.cacheQueue, ^{
-            
-            if (0/*  WS 开启 && 日志打开*/) {
-                //  1、如果有缓存 self.cacheArray.count > 0，获取所有缓存
-                //  2、当前这条日志
-                //  3、ws发送
-                //  4、清除缓存  [self.cacheArray removeAllObjects];
-            } else {
-                  while ((NSInteger)self.cacheArray.count >= self.maxCachesNumber) {
-                      [self.cacheArray removeObjectAtIndex:0];
-                  }
-                [self.cacheArray addObject:logMessage];
+        
+        if (self.loggerBlock) {
+            [self.cacheArray addObject:logMsg];
+            self.loggerBlock(self.cacheArray.copy);
+            [self.cacheArray removeAllObjects];
+        } else {
+            while ((NSInteger)self.cacheArray.count >= self.maxCachesNumber) {
+              [self.cacheArray removeObjectAtIndex:0];
             }
-        });
+            [self.cacheArray addObject:[logMsg growingHelper_dictionaryObject]];
+        }
     }
-}
-
-- (NSArray *)cacheLogArray {
-
-    __block NSArray *cacheArray;
-    dispatch_async(self.cacheQueue, ^{
-        cacheArray = self.cacheArray.copy;
-    });
-    return cacheArray;
 }
 
 @end

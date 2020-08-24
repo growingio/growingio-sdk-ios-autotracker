@@ -1,9 +1,9 @@
 //
-//  GrowingWSLogger.h
-//  GrowingTracker
+// GrowingWSLoggerFormat.h
+// GrowingAnalytics
 //
-//  Created by GrowingIO on 2020/5/6.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by GrowingIO on 2020/8/13.
+//  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -18,16 +18,12 @@
 //  limitations under the License.
 
 
+#import <Foundation/Foundation.h>
 #import "GrowingLog.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^loggerBlock)(NSArray *logMessageArray);
-
-@interface GrowingWSLogger : GrowingAbstractLogger
-
-@property (nonatomic, class, strong, readonly) GrowingWSLogger *sharedInstance;
-@property (nonatomic, copy, nullable) loggerBlock loggerBlock;
+@interface GrowingWSLoggerFormat : NSObject <GrowingLogFormatter>
 
 @end
 
