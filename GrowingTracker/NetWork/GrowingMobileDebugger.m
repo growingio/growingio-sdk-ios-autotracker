@@ -34,11 +34,11 @@
 #import "NSURL+GrowingHelper.h"
 #import "GrowingCocoaLumberjack.h"
 #import "GrowingBroadcaster.h"
-#import <CoreLocation/CoreLocation.h>
+#import "GrowingLoggerDebugger.h"
 
 @GrowingBroadcasterRegister(GrowingApplicationMessage, GrowingMobileDebugger)
 
-@interface GrowingMobileDebugger() <GrowingSRWebSocketDelegate, GrowingEventManagerObserver, CLLocationManagerDelegate, GrowingApplicationMessage>
+@interface GrowingMobileDebugger() <GrowingSRWebSocketDelegate, GrowingEventManagerObserver, GrowingApplicationMessage>
 
 @property (nonatomic, retain) NSTimer                   *keepAliveTimer;
 @property (nonatomic, retain) GrowingSRWebSocket  *webSocket;
@@ -202,15 +202,17 @@ static GrowingMobileDebugger *debugger = nil;
 
 #pragma mark - websocket生命周期
 - (void)stop {
-    NSDictionary *dict = @{@"msgId": @"client_quit"};
+    NSDictionary *dict = @{@"msgType": @"client_quit"};
     [self sendJson:dict];
     self.statusWindow.statusLable.text = @"正在关闭Debugger...";
     self.statusWindow.statusLable.textAlignment = NSTextAlignmentCenter ;
     [self _stopWithError:nil];
+    [GrowingLoggerDebugger stopLoggerDebugger];
+    
 }
 
 - (void)keepAlive {
-    NSDictionary *dict = @{@"msgId":@"heartbeat"};
+    NSDictionary *dict = @{@"msgType":@"heartbeat"};
     [self sendJson:dict];
 }
 
@@ -273,7 +275,7 @@ static GrowingMobileDebugger *debugger = nil;
         return ;
     }
     
-    NSDictionary *dict = @{@"msgId"             :@"screen_update",
+    NSDictionary *dict = @{@"msgType"             :@"screen_update",
                            @"screenshot"        :[@"data:image/jpeg;base64," stringByAppendingString:imgBase64Str],
                            @"screenshotWidth"   :@(image.size.width * image.scale),
                            @"screenshotHeight"  :@(image.size.height * image.scale)
@@ -307,7 +309,7 @@ static GrowingMobileDebugger *debugger = nil;
 #pragma mark - GrowingSRWebSocketDelegate delegate
 - (void)webSocketDidOpen:(GrowingSRWebSocket *)webSocket {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary] ;
-    dict[@"msgId"] = @"client_init" ;
+    dict[@"msgType"] = @"client_init" ;
     dict[@"tm"] = GROWGetTimestamp();
     [self sendJson:dict];
     [self beginKeepAlive];
@@ -329,6 +331,12 @@ static GrowingMobileDebugger *debugger = nil;
         
         self.statusWindow.statusLable.text = @"Debug进行中...";
         self.statusWindow.statusLable.textAlignment = NSTextAlignmentCenter ;
+        
+        NSDictionary* messageDic = [message growingHelper_jsonObject];
+        NSString *msgType = messageDic[@"msgType"];
+        if ([msgType isKindOfClass:NSString.class] && [msgType isEqualToString:@"logger_open"]) {
+            [GrowingLoggerDebugger startLoggerDebuggerWithKey:messageDic[@"pairKey"]];
+        }
     }
 }
 
@@ -395,7 +403,7 @@ static GrowingMobileDebugger *debugger = nil;
     NSString *loginId       = deviceInfo.deviceIDString;//u
     NSString *sdkVersion    = [Growing getVersion];
     
-    [info setObject:@"client_info" forKey:@"msgId"];
+    [info setObject:@"client_info" forKey:@"msgType"];
     [info setObject:(uesrId? uesrId:@"") forKey:@"cs1"];
     [info setObject:(loginId? loginId:@"") forKey:@"u"];
     [info setObject:sdkVersion forKey:@"sdkVersion"];
@@ -480,7 +488,7 @@ static GrowingMobileDebugger *debugger = nil;
         return;
     }
     
-    [eventInfo setValue:@"server_action" forKey:@"msgId"];
+    [eventInfo setValue:@"server_action" forKey:@"msgType"];
     
     //生成uri
     unsigned long long stm = GROWGetTimestamp().unsignedLongLongValue;
