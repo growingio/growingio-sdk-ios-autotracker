@@ -30,8 +30,8 @@
 #import "NSString+GrowingHelper.h"
 #import "GrowingDeviceInfo.h"
 
-static NSString * const kWebSocketMsgType = @"msgType";
-static NSString * const kLoggerWsEndPoint = @"wss://gta1.growingio.com/app/%@/circle/%@";
+static NSString * const kGrowingWebSocketMsgType = @"msgType";
+static NSString * const kGrowingLoggerWsEndPoint = @"wss://gta1.growingio.com/app/%@/circle/%@";
 
 @interface GrowingLoggerDebugger ()<GrowingSRWebSocketDelegate>
 
@@ -54,7 +54,7 @@ static GrowingLoggerDebugger* _loggerDebugger = nil;
     }
     
     if (!_loggerDebugger.webSocket) {
-        NSString* urlStr = [NSString stringWithFormat:kLoggerWsEndPoint, [GrowingInstance sharedInstance].projectID, _loggerDebugger.wsKey];
+        NSString* urlStr = [NSString stringWithFormat:kGrowingLoggerWsEndPoint, [GrowingInstance sharedInstance].projectID, _loggerDebugger.wsKey];
         _loggerDebugger.webSocket = [[GrowingSRWebSocket alloc] initWithURLRequest: [NSURLRequest requestWithURL: [NSURL URLWithString:urlStr]]];
         _loggerDebugger.webSocket.delegate = _loggerDebugger;
         [_loggerDebugger.webSocket open];
@@ -78,7 +78,7 @@ static GrowingLoggerDebugger* _loggerDebugger = nil;
 - (void)sendClientInfo {
     
     NSMutableDictionary *info = [NSMutableDictionary dictionary];
-    info[kWebSocketMsgType] = @"client_info";
+    info[kGrowingWebSocketMsgType] = @"client_info";
     info[@"sdkVersion"] = [Growing getVersion];
     
     GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
@@ -102,7 +102,7 @@ static GrowingLoggerDebugger* _loggerDebugger = nil;
 - (void)sendReadyMessage {
 
     NSMutableDictionary *readyDic = [NSMutableDictionary dictionary];
-    [readyDic setValue:@"ready" forKey:kWebSocketMsgType];
+    [readyDic setValue:@"ready" forKey:kGrowingWebSocketMsgType];
     [readyDic setValue:[GrowingInstance sharedInstance].projectID forKey:@"projectId"];
     [readyDic setValue:GROWGetTimestamp() forKey:@"timestamp"];
     [readyDic setValue:[Growing getVersion] forKey:@"sdkVersion"];
@@ -125,7 +125,7 @@ static GrowingLoggerDebugger* _loggerDebugger = nil;
 - (void)webSocket:(GrowingSRWebSocket *)webSocket didReceiveMessage:(id)message {
     if ([[message growingHelper_jsonObject] isKindOfClass:NSDictionary.class]) {
         NSDictionary *msgDic = [message growingHelper_jsonObject];
-        NSString *msg = msgDic[kWebSocketMsgType];
+        NSString *msg = msgDic[kGrowingWebSocketMsgType];
         if ([msg isKindOfClass:NSString.class]) {
             if ([msg isEqualToString:@"quit"]) {
                 [GrowingLoggerDebugger stopLoggerDebugger];
@@ -134,7 +134,7 @@ static GrowingLoggerDebugger* _loggerDebugger = nil;
                 [GrowingWSLogger sharedInstance].loggerBlock = ^(NSArray * logMessageArray) {
                     if (logMessageArray.count > 0) {
                         NSMutableDictionary *cacheDic = [NSMutableDictionary dictionary];
-                        cacheDic[kWebSocketMsgType] = @"logger_data";
+                        cacheDic[kGrowingWebSocketMsgType] = @"logger_data";
                         cacheDic[@"logs"] = logMessageArray;
                         [self sendData:cacheDic.copy];
                     }
