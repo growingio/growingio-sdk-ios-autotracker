@@ -19,47 +19,37 @@
 
 
 #import "UINavigationController+GrowingNode.h"
+#import "NSObject+GrowingIvarHelper.h"
 #import <objc/runtime.h>
-@implementation UINavigationController (GrowingNode)
+#import "UIView+GrowingNode.h"
+#import "UIApplication+GrowingNode.h"
 
+@implementation UINavigationController (GrowingNode)
+- (CGRect)growingNodeFrame {
+    CGRect rect = self.view.growingNodeFrame;
+    BOOL isFullScreenShow = CGPointEqualToPoint(rect.origin, CGPointMake(0, 0)) && CGSizeEqualToSize(rect.size, [UIApplication sharedApplication].growingMainWindow.bounds.size);
+    if (isFullScreenShow && self.parentViewController && [self.parentViewController isKindOfClass:[UITabBarController class]]) {
+        UITabBarController *tabbarvc = (UITabBarController*)self.parentViewController;
+        rect.size.height -= tabbarvc.tabBar.frame.size.height;
+    }
+    
+    return rect;
+}
 - (NSArray<id<GrowingNode>>*)growingNodeChilds {
     NSMutableArray *childs = [NSMutableArray array];
-    [childs addObjectsFromArray:self.childViewControllers];
-    [childs addObject:self.navigationBar];
+    if (self.presentedViewController) {
+        [childs addObject:self.presentedViewController];
+        return childs;
+    }
+    
+    [childs addObject:self.topViewController];
+    
+    if (self.isViewLoaded && [self.navigationBar growingImpNodeIsVisible]) {
+        [childs addObject:self.navigationBar];
+    }
+    
     return childs;
 }
 
-@end
-
-
-@implementation GrowingNavigationBarBackButton
-
-+ (void)load {
-    unsigned int count = 0;
-    Method *methods = class_copyMethodList(self, &count);
-    NSMutableArray *classes = [[NSMutableArray alloc] init];
-    Class clazz = NSClassFromString([NSString stringWithFormat:@"UI%@Item%@View",@"Navigation",@"Button"]);
-    if (clazz) {
-        [classes addObject:clazz];
-    }
-    for (unsigned int i = 0 ; i < count ; i++) {
-        Method method = methods[i];
-        for (Class clazz in classes) {
-            class_addMethod(clazz,
-                            method_getName(method),
-                            method_getImplementation(method),
-                            method_getTypeEncoding(method));
-        }
-    }
-    free(methods);
-}
-
-- (BOOL)growingNodeUserInteraction {
-    return YES;
-}
-
-- (NSString*)growingNodeName {
-    return @"返回按钮";
-}
 
 @end

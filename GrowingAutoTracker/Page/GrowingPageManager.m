@@ -14,30 +14,30 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import "GrowingPageManager.h"
 
 #import <UIKit/UIKit.h>
-#import "GrowingPageManager.h"
-#import "GrowingPageGroup.h"
-#import "GrowingPage.h"
-#import "GrowingInstance.h"
-#import "NSString+GrowingHelper.h"
-#import "UIViewController+GrowingPageHelper.h"
-#import "GrowingCocoaLumberjack.h"
-#import "GrowingPageEvent.h"
-#import "GrowingPvarEvent.h"
-#import "GrowingEventManager.h"
-#import "UIViewController+GrowingNode.h"
-#import "GrowingBroadcaster.h"
-#import "GrowingAppLifecycle.h"
-#import "UIViewController+GrowingAutoTrack.h"
 
-@GrowingBroadcasterRegister(GrowingApplicationMessage, GrowingPageManager)
-@interface GrowingPageManager ()
+#import "GrowingAppLifecycle.h"
+#import "GrowingBroadcaster.h"
+#import "GrowingCocoaLumberjack.h"
+#import "GrowingEventManager.h"
+#import "GrowingInstance.h"
+#import "GrowingPage.h"
+#import "GrowingPageEvent.h"
+#import "GrowingPageGroup.h"
+#import "GrowingPvarEvent.h"
+#import "NSString+GrowingHelper.h"
+#import "UIViewController+GrowingAutoTrack.h"
+#import "UIViewController+GrowingNode.h"
+#import "UIViewController+GrowingPageHelper.h"
+
+@GrowingBroadcasterRegister(GrowingApplicationMessage, GrowingPageManager) @interface GrowingPageManager()
 
 @property (nonatomic, strong) NSHashTable *visiableControllersTable;
 @property (nonatomic, strong) NSPointerArray *visiableControllersArray;
 
-@property (nonatomic, strong) NSMutableArray <NSString *> *ignoredPrivateControllers;
+@property (nonatomic, strong) NSMutableArray<NSString *> *ignoredPrivateControllers;
 
 @end
 
@@ -69,7 +69,7 @@
     if (!page.isIgnored) {
         //发送page事件
         [self sendPageEventWithPage:page];
-        
+
     } else {
         GIOLogDebug(@"createdViewControllerPage: path = %@ is ignored", page.path);
     }
@@ -77,13 +77,12 @@
 }
 
 - (void)sendPageEventWithPage:(GrowingPage *)page {
-    
     GrowingPageEvent *pageEvent = [GrowingPageEvent pageEventWithTitle:page.title
                                                               pageName:page.path
                                                              timestamp:page.showTimestamp];
-    
+
     [GrowingEventManager shareInstance].lastPageEvent = pageEvent;
-        
+
     [[GrowingEventManager shareInstance] addEvent:pageEvent
                                          thisNode:page.carrier
                                       triggerNode:page.carrier
@@ -91,11 +90,10 @@
 }
 
 - (void)sendPageVariableEventWithPage:(GrowingPage *)page {
-    
     GrowingPvarEvent *pvarEvent = [GrowingPvarEvent pvarEventWithPageName:page.path
                                                             showTimestamp:page.showTimestamp
                                                                  variable:page.variables];
-        
+
     [[GrowingEventManager shareInstance] addEvent:pvarEvent
                                          thisNode:page.carrier
                                       triggerNode:page.carrier
@@ -146,18 +144,17 @@
 
 - (void)setPage:(GrowingPage *)page variable:(NSDictionary<NSString *, NSString *> *)variable {
     page.variables = variable;
-    
+
     if (!page.isIgnored) {
         // 发送pvar事件
         [self sendPageVariableEventWithPage:page];
-        
     }
     if ([page isKindOfClass:GrowingPageGroup.class]) {
         GrowingPageGroup *pageGroup = (GrowingPageGroup *)page;
         if (!pageGroup.childPages) {
             return;
         }
-        
+
         for (GrowingPage *child in pageGroup.childPages) {
             if (child.showTimestamp >= pageGroup.showTimestamp) {
                 [self setPage:child variable:variable];
@@ -169,14 +166,20 @@
 #pragma mark Visiable ViewController
 
 - (void)addDidAppearController:(UIViewController *)appearVc {
+    if ([appearVc isMemberOfClass:[UIViewController class]]) {
+        
+    }
+    if ([self isViewControllerIgnored:appearVc]) {
+        return;
+    }
     if (!self.visiableControllersTable) {
         self.visiableControllersTable = [NSHashTable weakObjectsHashTable];
     }
-    
+
     if (!self.visiableControllersArray) {
         self.visiableControllersArray = [NSPointerArray weakObjectsPointerArray];
     }
-    
+
     [self.visiableControllersTable addObject:appearVc];
     if (![self.visiableControllersArray.allObjects containsObject:appearVc]) {
         [self.visiableControllersArray addPointer:(__bridge void *)appearVc];
@@ -184,13 +187,17 @@
 }
 
 - (void)removeDidDisappearController:(UIViewController *)disappearVc {
+    if ([self isViewControllerIgnored:disappearVc]) {
+        return;
+    }
     [self.visiableControllersTable removeObject:disappearVc];
-    [self.visiableControllersArray.allObjects enumerateObjectsWithOptions:NSEnumerationReverse
-                                                               usingBlock:^(UIViewController *vc, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (disappearVc == vc) {
-            [self.visiableControllersArray removePointerAtIndex:idx];
-        }
-    }];
+    [self.visiableControllersArray.allObjects
+        enumerateObjectsWithOptions:NSEnumerationReverse
+                         usingBlock:^(UIViewController *vc, NSUInteger idx, BOOL *_Nonnull stop) {
+                             if (disappearVc == vc) {
+                                 [self.visiableControllersArray removePointerAtIndex:idx];
+                             }
+                         }];
 }
 
 - (UIViewController *)currentViewController {
@@ -198,17 +205,20 @@
 }
 
 - (UIViewController *)rootViewController {
-    return [self growingHook_updateVisiableVC].firstObject;
+    UIViewController *vc = [self growingHook_updateVisiableVC].lastObject;
+    while (vc.parentViewController) {
+        vc = vc.parentViewController;
+    }
+    return vc;
 }
 
-- (NSArray <UIViewController *> *)allDidAppearViewControllers {
+- (NSArray<UIViewController *> *)allDidAppearViewControllers {
     return [self growingHook_updateVisiableVC];
 }
 
-- (NSArray <UIViewController *> *)growingHook_updateVisiableVC {
-
+- (NSArray<UIViewController *> *)growingHook_updateVisiableVC {
     UIViewController *curVC = self.visiableControllersArray.allObjects.lastObject;
-    NSMutableArray <UIViewController *> *arr = [[NSMutableArray alloc] init];
+    NSMutableArray<UIViewController *> *arr = [[NSMutableArray alloc] init];
     UIView *curView = curVC.view;
     while (curView) {
         if ([curView.nextResponder isKindOfClass:[UIViewController class]]) {
@@ -232,19 +242,20 @@
     if (self.ignoredPrivateControllers.count > 0 && [self.ignoredPrivateControllers containsObject:vcName]) {
         return YES;
     }
-    
+
     return NO;
 }
 
 #pragma mark - GrowingApplicationMessage
 
-+ (void)applicationStateDidChangedWithUserInfo:(NSDictionary *)userInfo lifecycle:(GrowingApplicationLifecycle)lifecycle {
++ (void)applicationStateDidChangedWithUserInfo:(NSDictionary *)userInfo
+                                     lifecycle:(GrowingApplicationLifecycle)lifecycle {
     if (GrowingApplicationDidBecomeActive == lifecycle && ![GrowingAppActivationTime didStartFromScratch]) {
         [[GrowingPageManager sharedInstance] becomeActiveResendPage];
     }
 }
 
-- (void)becomeActiveResendPage {    
+- (void)becomeActiveResendPage {
     [self.currentViewController growingOutOfLifetimeShow];
 }
 
@@ -252,12 +263,11 @@
 
 - (NSMutableArray *)ignoredPrivateControllers {
     if (!_ignoredPrivateControllers) {
-        _ignoredPrivateControllers = [NSMutableArray arrayWithArray:@[@"UIInputWindowController",
-                                                                      @"UIActivityGroupViewController",
-                                                                      @"UIKeyboardHiddenViewController",
-                                                                      @"UICompatibilityInputViewController",
-                                                                      @"UISystemInputAssistantViewController",
-                                                                      @"UIPredictionViewController"]];
+        _ignoredPrivateControllers = [NSMutableArray arrayWithArray:@[
+            @"UIInputWindowController", @"UIActivityGroupViewController", @"UIKeyboardHiddenViewController",
+            @"UICompatibilityInputViewController", @"UISystemInputAssistantViewController",
+            @"UIPredictionViewController", @"GrowingWindowViewController"
+        ]];
     }
     return _ignoredPrivateControllers;
 }

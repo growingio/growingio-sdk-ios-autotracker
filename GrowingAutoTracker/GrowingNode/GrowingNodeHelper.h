@@ -1,8 +1,8 @@
 //
-//  UINavigationController+GrowingNode.m
-//  GrowingTracker
+//  GrowingNodeHelper.h
+//  GrowingAnalytics
 //
-//  Created by GrowingIO on 15/9/10.
+//  Created by sheng on 2020/8/20.
 //  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,10 +17,16 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import <Foundation/Foundation.h>
+#import "GrowingNode.h"
 
-#import <UIKit/UIKit.h>
-#import "UIViewController+GrowingNode.h"
+NS_ASSUME_NONNULL_BEGIN
 
-@interface UINavigationController (GrowingNode)
+@interface GrowingNodeHelper : NSObject
 
++ (NSString *)xPathForNode:(id<GrowingNode>)node;
++ (NSString *)xPathForView:(UIView *)view;
++ (NSString *)xPathForViewController:(UIViewController *)vc;
 @end
+
+NS_ASSUME_NONNULL_END

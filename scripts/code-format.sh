@@ -3,14 +3,18 @@
 # 这个脚本用于格式化代码，例如你修改了或添加了部分代码，脚本会通过git status检测到变动的文件(无论你有没有git add)，然后格式化，将括号，对齐等问题全部处理。
 # 使用clang-format google标准
 
+
+# Usage
+# sh code-format.sh 你的git仓库目录
+
 #获取现在shell的目录
-cur_dir=$(dirname $0)
+cur_dir=$1
 echo "[LOG] current path is :$cur_dir"
 
-gio_dirname=$(echo $cur_dir | grep "Growing")
+gio_dirname=$(echo $cur_dir | grep "growing")
 
 if [[ "$gio_dirname" == "" ]]; then
-	echo "该shell脚本目录不为Growing，exit"
+	echo "该shell脚本目录不为growing，exit"
 	exit 0;
 fi
 

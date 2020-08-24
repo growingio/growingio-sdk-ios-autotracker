@@ -28,9 +28,6 @@
 - (void)skipThisChilds;
 - (void)onNodeFinish:(void(^)(id<GrowingNode> node))finishBlock;
 
-- (NSString*)xpath;
-- (NSInteger)nodeKeyIndex;
-
 - (NSArray<id<GrowingNode>>*)allNodes;
 - (id<GrowingNode>)startNode;
 

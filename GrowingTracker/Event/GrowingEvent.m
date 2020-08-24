@@ -17,39 +17,40 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import "GrowingEvent.h"
-#import "GrowingInstance.h"
-#import "GrowingDeviceInfo.h"
+
 #import "GrowingCustomField.h"
-#import "UIApplication+GrowingNode.h"
-#import "GrowingNetworkInterfaceManager.h"
+#import "GrowingDeviceInfo.h"
 #import "GrowingEventManager.h"
+#import "GrowingInstance.h"
+#import "GrowingNetworkInterfaceManager.h"
 #import "NSString+GrowingHelper.h"
+#import "UIApplication+GrowingNode.h"
 
-@interface GrowingEvent()
+@interface GrowingEvent ()
 
-@property (nonatomic, copy, readwrite) NSString * _Nonnull eventTypeKey;
-@property (nonatomic, copy, readwrite) NSString * _Nonnull domain;
-@property (nonatomic, copy, readwrite) NSString * _Nullable customerAttribute;
-@property (nonatomic, copy, readwrite) NSString * _Nonnull deviceId;
-@property (nonatomic, strong, readwrite) NSNumber * _Nonnull appState;
-@property (nonatomic, copy, readwrite) NSString * _Nonnull uuid;
+@property (nonatomic, copy, readwrite) NSString *_Nonnull eventTypeKey;
+@property (nonatomic, copy, readwrite) NSString *_Nonnull domain;
+@property (nonatomic, copy, readwrite) NSString *_Nullable customerAttribute;
+@property (nonatomic, copy, readwrite) NSString *_Nonnull deviceId;
+@property (nonatomic, strong, readwrite) NSNumber *_Nonnull appState;
+@property (nonatomic, copy, readwrite) NSString *_Nonnull uuid;
 
 @end
 
 // base
 @implementation GrowingEvent
 
-- (instancetype)initWithUUID:(NSString*)uuid data:(NSDictionary * _Nullable)data {
+- (instancetype)initWithUUID:(NSString *)uuid data:(NSDictionary *_Nullable)data {
     if (self = [super init]) {
         self.uuid = uuid;
     }
     return self;
 }
 
-- (_Nullable instancetype)initWithUUID:(NSString* _Nonnull)uuid withType:(GrowingEventType)type data:(NSDictionary* _Nullable)data {
-    
+- (_Nullable instancetype)initWithUUID:(NSString *_Nonnull)uuid
+                              withType:(GrowingEventType)type
+                                  data:(NSDictionary *_Nullable)data {
     self = [self initWithUUID:uuid data:data];
     return self;
 }
@@ -57,11 +58,11 @@
 - (instancetype)initWithTimestamp:(NSNumber *)tm {
     self = [self initWithUUID:[[NSUUID UUID] UUIDString] data:nil];
     if (self) {
-        self.sessionId  = [GrowingDeviceInfo currentDeviceInfo].sessionID ?: @"";
+        self.sessionId = [GrowingDeviceInfo currentDeviceInfo].sessionID ?: @"";
         self.timestamp = tm ?: GROWGetTimestamp();
         self.eventTypeKey = [self eventTypeKey];
         self.domain = [GrowingDeviceInfo currentDeviceInfo].bundleID;
-        
+
         if ([GrowingCustomField shareInstance].userId.length > 0) {
             self.customerAttribute = [GrowingCustomField shareInstance].userId;
         }
@@ -83,11 +84,11 @@
     return [[self alloc] initWithTimestamp:tm];
 }
 
-- (NSString*)description {
+- (NSString *)description {
     return self.toDictionary.description;
 }
 
-- (NSString*)eventTypeKey {
+- (NSString *)eventTypeKey {
     return @"";
 }
 
@@ -96,7 +97,7 @@
 - (NSInteger)nextGlobalSequenceWithBase:(NSInteger)base andStep:(NSInteger)step {
     NSInteger baseSeq = (base > 0) ? base : 0;
     NSInteger baseStep = (step > 0) ? step : 1;
-    
+
     NSInteger result = baseSeq + baseStep;
     self.globalSequenceId = [NSNumber numberWithInteger:result];
     return result;
@@ -105,7 +106,7 @@
 - (NSInteger)nextEventSequenceWithBase:(NSInteger)base andStep:(NSInteger)step {
     NSInteger baseSeq = (base > 0) ? base : 0;
     NSInteger baseStep = (step > 0) ? step : 1;
-    
+
     NSInteger result = baseSeq + baseStep;
     self.eventSequenceId = [NSNumber numberWithInteger:result];
     return result;
@@ -127,11 +128,15 @@
     dataDict[@"d"] = self.domain;
     dataDict[@"cs1"] = self.customerAttribute;
     dataDict[@"u"] = self.deviceId;
-    
+
     dataDict[@"gesid"] = self.globalSequenceId;
     dataDict[@"esid"] = self.eventSequenceId;
-    
+
     return [dataDict copy];
+}
+
+- (NSMutableDictionary *)dataDict {
+    return [self toDictionary];
 }
 
 @end
@@ -140,18 +145,15 @@
 
 @interface GrowingEventPersistence ()
 
-@property (nonatomic, copy, readwrite) NSString * _Nonnull eventUUID;
-@property (nonatomic, copy, readwrite) NSString * _Nonnull eventTypeKey;
-@property (nonatomic, copy, readwrite) NSString * _Nonnull rawJsonString;
+@property (nonatomic, copy, readwrite) NSString *_Nonnull eventUUID;
+@property (nonatomic, copy, readwrite) NSString *_Nonnull eventTypeKey;
+@property (nonatomic, copy, readwrite) NSString *_Nonnull rawJsonString;
 
 @end
 
 @implementation GrowingEventPersistence
 
-- (instancetype)initWithUUID:(NSString *)uuid
-                   eventType:(NSString *)evnetType
-                  jsonString:(NSString *)jsonString {
-    
+- (instancetype)initWithUUID:(NSString *)uuid eventType:(NSString *)evnetType jsonString:(NSString *)jsonString {
     if (self = [super init]) {
         self.eventUUID = uuid;
         self.eventTypeKey = evnetType;
@@ -162,7 +164,7 @@
 
 + (instancetype)persistenceEventWithEvent:(GrowingEvent *)event {
     NSString *eventJsonString = [[NSString alloc] initWithJsonObject_growingHelper:event.toDictionary];
-    
+
     return [[GrowingEventPersistence alloc] initWithUUID:event.uuid
                                                eventType:event.eventTypeKey
                                               jsonString:eventJsonString];

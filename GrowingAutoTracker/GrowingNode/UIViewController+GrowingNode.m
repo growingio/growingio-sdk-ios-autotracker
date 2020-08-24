@@ -30,9 +30,12 @@
 #import "UIView+GrowingNode.h"
 #import "UIViewController+GrowingAutoTrack.h"
 #import "UIViewController+GrowingNode.h"
+#import "UIViewController+GrowingPageHelper.h"
+#import "GrowingPageGroup.h"
 #import "UIWindow+GrowingNode.h"
 #import "GrowingDispatchManager.h"
 #import "GrowingPvarEvent.h"
+#import "UIApplication+GrowingNode.h"
 
 @implementation UIViewController (GrowingNode)
 
@@ -45,7 +48,29 @@
 }
 
 - (CGRect)growingNodeFrame {
-    return CGRectZero;
+    CGRect rect = self.view.growingNodeFrame;
+    //是否全屏显示
+    //当ViewController全屏显示时，如果被NavigationController包裹,其frame大小高度应减去导航栏的高度
+    BOOL isFullScreenShow = CGPointEqualToPoint(rect.origin, CGPointMake(0, 0)) && CGSizeEqualToSize(rect.size, [UIApplication sharedApplication].growingMainWindow.bounds.size);
+    if (isFullScreenShow) {
+        UIViewController *parentVC = self.parentViewController;
+        while (parentVC) {
+            if ([parentVC isKindOfClass:[UINavigationController class]]) {
+                UINavigationController *navi = (UINavigationController*)parentVC;
+                if (!navi.navigationBar.hidden) {
+                    rect.origin.y += (navi.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height);
+                    rect.size.height -= (navi.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height);
+                }
+            }
+            
+            if ([parentVC isKindOfClass:[UITabBarController class]]) {
+                UITabBarController *tabbarvc = (UITabBarController*)parentVC;
+                rect.size.height -= tabbarvc.tabBar.frame.size.height;
+            }
+            parentVC = parentVC.parentViewController;
+        }
+    }
+    return rect;
 }
 
 - (id<GrowingNode>)growingNodeParent {
@@ -97,7 +122,7 @@
 
 - (NSDictionary *)growingNodeDataDict {
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-    dict[@"p"] = (self.growingPageName ?: nil);
+    dict[@"p"] = ([self growingPageHelper_getPageObject].name ?: self.growingPageName);
     return dict;
 }
 
@@ -140,9 +165,7 @@
 }
 
 - (NSString *)growingNodeSubSimilarPath {
-    NSInteger index = [self growingNodeKeyIndex];
-    NSString *className = NSStringFromClass(self.class);
-    return index < 0 ? className : [NSString stringWithFormat:@"%@[-]", className];
+    return [self growingNodeSubPath];
 }
 
 - (NSIndexPath *)growingNodeIndexPath {
@@ -151,23 +174,68 @@
 
 - (NSArray<id<GrowingNode>>*)growingNodeChilds {
     NSMutableArray *childs = [NSMutableArray array];
-    NSArray *vcs = [[GrowingPageManager sharedInstance] allDidAppearViewControllers];
-    
-    __block NSInteger index = NSNotFound;
-    [vcs enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (obj == self) {
-            index = idx;
-            *stop = YES;
-        }
-    }];
-    // 1.如果present了alertVC，则childs为alertVC
-    // 2.否则为self.view
-    if (vcs.count && index >= 0 && index < vcs.count - 1) {
-        id<GrowingNode> node = vcs[index + 1];
-        [childs addObject:node];
-    } else {
-        [childs addObject:self.view];
+
+    if (self.presentedViewController) {
+        [childs addObject:self.presentedViewController];
+        return childs;
     }
+    // ViewController中childViewController.view与self.view.subviews中重复，去除重复元素
+    // 这里仅去除self.view上的重复,self.view.view的重复暂不考虑
+    UIView *currentView = self.view;
+    if (currentView && self.isViewLoaded && currentView.growingImpNodeIsVisible) {
+        
+        [childs addObjectsFromArray:self.view.subviews];
+        if (self.childViewControllers.count > 0 && ![self isKindOfClass:UIAlertController.class]) {
+            // 是否包含全屏视图
+            __block BOOL isContainFullScreen = NO;
+            
+            NSArray <UIViewController *> *childViewControllers = self.childViewControllers;
+            [childViewControllers enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(__kindof UIViewController*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if (obj.isViewLoaded) {
+                    UIView *objSuperview = obj.view;
+                    for (long i = (long)(childs.count - 1); i >= 0; i--) {
+                        UIView *childview = childs[i];
+                        //如果childview包含或者等于objsuperview
+                        if ([objSuperview isDescendantOfView:childview]) {
+                            // xib拖拽的viewController会被一个自定义的view包裹，判断其subviews数量是否为1
+                            if ([childview isEqual:objSuperview] || (childview.subviews.count == 1 && [childview.subviews.lastObject isEqual:objSuperview])) {
+                                //                            NSInteger index = [childs indexOfObject:objSuperview];
+                                if ([objSuperview growingImpNodeIsVisible] && !isContainFullScreen) {
+                                    [childs replaceObjectAtIndex:i withObject:obj];
+                                } else {
+                                    [childs removeObject:childview];
+                                }
+                            }
+                            //如果用户是view嵌套view再嵌套vc.view的层级,需要对subviews进行去重，并将其层级提升
+                            //before: subviews -> view -> [viewA,viewB,viewC] -(A)-> [viewD,viewF] -(D)-> vc.view
+                            //after: subviews -> [vc.view,viewB,viewC,viewF]
+                        }
+                    }
+                    //                [objSuperview isDescendantOfView:self];
+                    
+                    CGRect rect = [obj.view convertRect:obj.view.bounds toView:nil];
+                    // 是否全屏
+                    BOOL isFullScreenShow = CGPointEqualToPoint(rect.origin, CGPointMake(0, 0)) && CGSizeEqualToSize(rect.size, [UIApplication sharedApplication].growingMainWindow.bounds.size);
+                    // 正在全屏显示
+                    if (isFullScreenShow && [obj.view growingImpNodeIsVisible]) {
+                        isContainFullScreen = YES;
+                    }
+                }
+            }];
+        }
+        
+        [childs addObject:currentView];
+        return childs;
+    }
+    
+    
+    
+    if ([self isKindOfClass:UIPageViewController.class]) {
+        UIPageViewController *pageViewController = (UIPageViewController *)self;
+        [childs addObject:pageViewController.viewControllers];
+    }
+    
+    
     return childs;
 }
 

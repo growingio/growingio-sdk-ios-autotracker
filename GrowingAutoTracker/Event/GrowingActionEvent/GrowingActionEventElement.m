@@ -25,24 +25,20 @@
 #import "NSString+GrowingHelper.h"
 #import "UIView+GrowingHelper.h"
 #import "GrowingInstance.h"
+#import "GrowingNodeHelper.h"
 
 @implementation GrowingActionEventElement
 
 - (instancetype)initWithNode:(id<GrowingNode>)node
-          nodeManagerContext:(GrowingNodeManagerEnumerateContext *)context
             triggerEventType:(GrowingEventType)eventType {
-        
-    GrowingActionEventElement *element = [[GrowingActionEventElement alloc] init];
-    element.xPath = [context xpath];
-    element.content = [self buildElementContentForNode:node];
-    element.timestamp = GROWGetTimestamp();
-    if (context.nodeKeyIndex >= 0) {
-        element.index = [NSString stringWithFormat:@"%d",(int)context.nodeKeyIndex];
+    if (self = [super init]) {
+        _xPath = [GrowingNodeHelper xPathForNode:node];
+        _content = [self buildElementContentForNode:node];
+        _timestamp = GROWGetTimestamp();
+        _index = [NSString stringWithFormat:@"%d",(int)node.growingNodeKeyIndex];
+        _cid = [node growingNodeUniqueTag];
     }
-    
-    element.cid = [node growingNodeUniqueTag];
-    
-    return element;
+    return self;
 }
 
 - (NSString *)buildElementContentForNode:(id <GrowingNode> _Nonnull)view {

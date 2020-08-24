@@ -38,7 +38,7 @@ package.json
 
 # oclint files
 compile_commands.json
-
+Example/compile_commands.json
 # ci
 certificates.tar
 /certificates

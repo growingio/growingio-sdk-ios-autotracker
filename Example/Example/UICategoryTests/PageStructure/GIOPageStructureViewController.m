@@ -7,7 +7,7 @@
 //
 
 #import "GIOPageStructureViewController.h"
-
+#import "GIOChildsAddViewController.h"
 @interface GIOPageStructureViewController ()
 
 @end
@@ -32,7 +32,13 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    
+    if (indexPath.row == 3) {
+        GIOChildsAddViewController *childsvc = [[GIOChildsAddViewController alloc] init];
+        [self.navigationController pushViewController:childsvc animated:NO];
+    }
+}
+- (IBAction)clickRed:(id)sender {
+    NSLog(@"clickRed");
 }
 
 @end

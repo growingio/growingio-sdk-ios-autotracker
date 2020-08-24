@@ -25,6 +25,7 @@
 #import "GrowingActionEvent.h"
 #import "GrowingClickEvent.h"
 #import "GrowingManualTrackEvent.h"
+#import "UIView+GrowingNode.h"
 
 NSString *const kGrowingJavascriptMessageTypeKey = @"messageType";
 NSString *const kGrowingJavascriptMessageDataKey = @"data";
@@ -81,18 +82,34 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
 }
 
 - (void)getDomTreeForWebView:(WKWebView *)webView completionHandler:(void (^ _Nonnull)(NSDictionary *_Nullable domTee, NSError *_Nullable error))completionHandler {
-    int left = (int) webView.frame.origin.x;
-    int top = (int) webView.frame.origin.y;
-    int width = (int) webView.frame.size.width;
-    int height = (int) webView.frame.size.height;
+    __block BOOL finished = NO;
+    __block NSDictionary *resultDic = nil;
+    __block NSError *resultError = nil;
+    CGRect rect = webView.growingNodeFrame;
+    CGFloat scale = [UIScreen mainScreen].scale;
+    scale = MIN(scale, 2);
+    int left = (int) (rect.origin.x*scale);
+    int top = (int) (rect.origin.y*scale);
+    int width = (int) (rect.size.width*scale);
+    int height = (int) (rect.size.height*scale);
     NSString *javaScript = [NSString stringWithFormat:@"window.GrowingWebViewJavascriptBridge.getDomTree(%i, %i, %i, %i, 100)", left, top, width, height];
-    [webView evaluateJavaScript:javaScript completionHandler:^(id o, NSError *error) {
-        if ([o isKindOfClass:NSDictionary.class]) {
-            completionHandler(o, error);
+    //方法不会阻塞线程，而且它的回调代码块总是在主线程中运行。
+    [webView evaluateJavaScript:javaScript completionHandler:^(id _Nullable result, NSError *error) {
+        if ([result isKindOfClass:[NSDictionary class]]) {
+//            completionHandler(result, error);
+            resultDic = result;
         } else {
-            completionHandler(nil, error);
+//            completionHandler(nil, error);
+            resultError = error;
         }
+        finished = YES;
     }];
+    while (!finished) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    }
+    
+    completionHandler(resultDic, resultError);
+    
 }
 
 - (void)parseEventJsonString:(NSString *)jsonString {
