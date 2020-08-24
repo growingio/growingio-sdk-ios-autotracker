@@ -18,7 +18,7 @@
 //  limitations under the License.
 
 #import "GrowingMobileDebugger.h"
-#import "Growing3rdLibSRWebSocket.h"
+#import "GrowingSRWebSocket.h"
 #import "GrowingEventManager.h"
 #import "GrowingStatusBar.h"
 #import "GrowingInstance.h"
@@ -34,12 +34,14 @@
 #import "NSURL+GrowingHelper.h"
 #import "GrowingCocoaLumberjack.h"
 #import "GrowingBroadcaster.h"
+#import <CoreLocation/CoreLocation.h>
 
 @GrowingBroadcasterRegister(GrowingApplicationMessage, GrowingMobileDebugger)
-@interface GrowingMobileDebugger() <Growing3rdLibSRWebSocketDelegate, GrowingEventManagerObserver, GrowingApplicationMessage>
+
+@interface GrowingMobileDebugger() <GrowingSRWebSocketDelegate, GrowingEventManagerObserver, CLLocationManagerDelegate, GrowingApplicationMessage>
 
 @property (nonatomic, retain) NSTimer                   *keepAliveTimer;
-@property (nonatomic, retain) Growing3rdLibSRWebSocket  *webSocket;
+@property (nonatomic, retain) GrowingSRWebSocket  *webSocket;
 @property (nonatomic, retain) GrowingStatusBar          *statusWindow;
 @property (nonatomic, strong) NSMutableArray            *cachedEvents;
 @property (nonatomic, assign) BOOL                       cachedStatus;
@@ -185,7 +187,7 @@ static GrowingMobileDebugger *debugger = nil;
              endPoint = [GrowingNetworkConfig.sharedInstance wsEndPoint];
         }
         NSString *urlStr = [NSString stringWithFormat:endPoint, [GrowingInstance sharedInstance].projectID, roomNumber];
-        self.webSocket = [[Growing3rdLibSRWebSocket alloc] initWithURLRequest: [NSURLRequest requestWithURL: [NSURL URLWithString:urlStr]]];
+        self.webSocket = [[GrowingSRWebSocket alloc] initWithURLRequest: [NSURLRequest requestWithURL: [NSURL URLWithString:urlStr]]];
         self.webSocket.delegate = self;
         [self.webSocket open];
     }
@@ -302,8 +304,8 @@ static GrowingMobileDebugger *debugger = nil;
     return image;
 }
 
-#pragma mark - Growing3rdLibSRWebSocketDelegate delegate
-- (void)webSocketDidOpen:(Growing3rdLibSRWebSocket *)webSocket {
+#pragma mark - GrowingSRWebSocketDelegate delegate
+- (void)webSocketDidOpen:(GrowingSRWebSocket *)webSocket {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary] ;
     dict[@"msgId"] = @"client_init" ;
     dict[@"tm"] = GROWGetTimestamp();
@@ -311,7 +313,7 @@ static GrowingMobileDebugger *debugger = nil;
     [self beginKeepAlive];
 }
 
-- (void)webSocket:(Growing3rdLibSRWebSocket *)webSocket didReceiveMessage:(id)message {
+- (void)webSocket:(GrowingSRWebSocket *)webSocket didReceiveMessage:(id)message {
     if ([[message growingHelper_jsonObject] isKindOfClass:[NSDictionary class]]) {
         [self sendJson:[self userInfo]];//发送用户行为信息
         [self sendScreenShot];
@@ -330,12 +332,12 @@ static GrowingMobileDebugger *debugger = nil;
     }
 }
 
-- (void)webSocket:(Growing3rdLibSRWebSocket *)webSocket didFailWithError:(NSError *)error {
+- (void)webSocket:(GrowingSRWebSocket *)webSocket didFailWithError:(NSError *)error {
     GIOLogDebug(@"error : %@", error);
     [self _stopWithError:@"服务器链接失败"];
 }
 
-- (void)webSocket:(Growing3rdLibSRWebSocket *)webSocket
+- (void)webSocket:(GrowingSRWebSocket *)webSocket
  didCloseWithCode:(NSInteger)code
            reason:(NSString *)reason
          wasClean:(BOOL)wasClean {
@@ -347,12 +349,12 @@ static GrowingMobileDebugger *debugger = nil;
     [self _stopWithError:message];
 }
 
-- (void)webSocket:(Growing3rdLibSRWebSocket *)webSocket didReceivePong:(NSData *)pongPayload {
+- (void)webSocket:(GrowingSRWebSocket *)webSocket didReceivePong:(NSData *)pongPayload {
     
 }
 
 - (void)sendJson:(id)json {
-    if (self.webSocket.readyState == Growing3rdLib_SR_OPEN && ([json isKindOfClass:[NSDictionary class]] || [json isKindOfClass:[NSArray class]])) {
+    if (self.webSocket.readyState == Growing_SR_OPEN && ([json isKindOfClass:[NSDictionary class]] || [json isKindOfClass:[NSArray class]])) {
         NSString *jsonString = [json growingHelper_jsonString];
         [self.webSocket send:jsonString];
     }

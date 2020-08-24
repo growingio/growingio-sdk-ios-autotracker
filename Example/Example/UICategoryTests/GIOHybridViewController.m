@@ -65,7 +65,7 @@
 //    NSURLRequest *request = [NSURLRequest requestWithURL:requestURL];
 //    [self.webView loadRequest:request];
     
-    NSURL* url = [NSURL URLWithString:@"http://10.20.50.34:9009/init.html"];
+    NSURL* url = [NSURL URLWithString:@"http://10.20.50.26:8081/#/"];
     NSURLRequest* request = [NSURLRequest requestWithURL:url];
     [self.webView loadRequest:request];
 }

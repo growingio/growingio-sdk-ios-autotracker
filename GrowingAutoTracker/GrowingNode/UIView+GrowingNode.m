@@ -108,6 +108,10 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
 }
 
 - (NSArray<id<GrowingNode>> *)growingNodeChilds {
+    //由于WKWebView具有内容视图，不再对其子元素进行遍历
+    if ([self isKindOfClass:NSClassFromString(@"WKWebView")]) {
+        return nil;
+    }
     return self.subviews;
 }
 
@@ -136,10 +140,10 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
 }
 
 - (BOOL)growingViewNodeIsInvisiable {
+    // 这个应该放在controller代码里 放这里可以提升效率
+    // 逻辑冗余
     return (self.hidden || self.alpha < 0.001 ||
-            !self.superview  // 这个应该放在controller代码里 放这里可以提升效率
-                             // 逻辑冗余
-            || self.growingNodeIsBadNode || !self.window);
+            !self.superview || self.growingNodeIsBadNode || !self.window);
 }
 
 - (BOOL)growingImpNodeIsVisible {
@@ -188,6 +192,9 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
 
 // 关系
 - (BOOL)growingNodeDonotTrack {
+    if ([self isKindOfClass:NSClassFromString(@"_UINavigationItemButtonView")]) {
+        return NO;
+    }
     return [self growingViewNodeIsInvisiable] || [self growingViewDontTrack];
 }
 
@@ -210,11 +217,17 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
 }
 
 - (BOOL)growingNodeDonotCircle {
+    if ([self isKindOfClass:NSClassFromString(@"_UINavigationItemButtonView")]) {
+        return NO;
+    }
     return [self growingViewNodeIsInvisiable];
 }
 
 // 值
 - (NSString *)growingNodeName {
+    if ([self isKindOfClass:NSClassFromString(@"_UINavigationItemButtonView")]) {
+        return @"返回按钮";
+    }
     return NSStringFromClass(self.class);
 }
 
@@ -261,6 +274,10 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
 }
 
 - (BOOL)growingNodeUserInteraction {
+    if ([self isKindOfClass:NSClassFromString(@"_UINavigationItemButtonView")]) {
+        return YES;
+    }
+    
     return self.userInteractionEnabled &&
            ([self growingViewUserInteraction] ||
             [UITapGestureRecognizer growingGestureRecognizerCanHandleView:self]);

@@ -6,6 +6,31 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		04A6FAE624E4F0F4006C72F0 /* CodeCheck */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 04A6FAE924E4F0F5006C72F0 /* Build configuration list for PBXAggregateTarget "CodeCheck" */;
+			buildPhases = (
+				04A6FAEA24E4F0FB006C72F0 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = CodeCheck;
+			productName = CodeCheck;
+		};
+		04A6FAEB24E50EE0006C72F0 /* CodeFormat */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 04A6FAEC24E50EE0006C72F0 /* Build configuration list for PBXAggregateTarget "CodeFormat" */;
+			buildPhases = (
+				04A6FAEF24E50EE5006C72F0 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = CodeFormat;
+			productName = CodeFormat;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		0465312424DD4271002D254C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 046530BB24DD4271002D254C /* InfoPlist.strings */; };
 		0465312524DD4271002D254C /* merge.ico in Resources */ = {isa = PBXBuildFile; fileRef = 046530C024DD4271002D254C /* merge.ico */; };
@@ -68,6 +93,8 @@
 		0465315E24DD4272002D254C /* GIOListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0465311D24DD4271002D254C /* GIOListTableViewCell.m */; };
 		0465315F24DD4272002D254C /* GIOListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0465311E24DD4271002D254C /* GIOListTableViewCell.xib */; };
 		0465316024DD4272002D254C /* GIOButtonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0465312024DD4271002D254C /* GIOButtonViewController.m */; };
+		04A6FAF224E662E9006C72F0 /* GIOChildsAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A6FAF124E662E9006C72F0 /* GIOChildsAddViewController.m */; };
+		04A6FAF524E67215006C72F0 /* GIOBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A6FAF424E67215006C72F0 /* GIOBaseViewController.m */; };
 		4916270F24E157BB00444AF2 /* GIOPresentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916270E24E157BB00444AF2 /* GIOPresentViewController.m */; };
 		4916271224E157CF00444AF2 /* GIOPagingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916271124E157CF00444AF2 /* GIOPagingViewController.m */; };
 		4962652B24DA667900032551 /* GrowingIO_ExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962652924DA667900032551 /* GrowingIO_ExampleTests.m */; };
@@ -209,6 +236,11 @@
 		0465312124DD4271002D254C /* GIOHybridViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOHybridViewController.h; sourceTree = "<group>"; };
 		0465312224DD4271002D254C /* GIOSimpleUIElemtsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOSimpleUIElemtsViewController.h; sourceTree = "<group>"; };
 		0465312324DD4271002D254C /* GIOActionSheetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOActionSheetViewController.h; sourceTree = "<group>"; };
+		04A6FAE024E2BF11006C72F0 /* Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Example.entitlements; sourceTree = "<group>"; };
+		04A6FAF024E662E8006C72F0 /* GIOChildsAddViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIOChildsAddViewController.h; sourceTree = "<group>"; };
+		04A6FAF124E662E9006C72F0 /* GIOChildsAddViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOChildsAddViewController.m; sourceTree = "<group>"; };
+		04A6FAF324E67215006C72F0 /* GIOBaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIOBaseViewController.h; sourceTree = "<group>"; };
+		04A6FAF424E67215006C72F0 /* GIOBaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOBaseViewController.m; sourceTree = "<group>"; };
 		11EA2ABB8F1029820A3234DB /* Pods_ExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ExampleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		48BA0D37888FF209ED84CD0E /* Pods-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.debug.xcconfig"; path = "../../Pods/Target Support Files/Pods-Example/Pods-Example.debug.xcconfig"; sourceTree = "<group>"; };
 		4916270D24E157BB00444AF2 /* GIOPresentViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIOPresentViewController.h; sourceTree = "<group>"; };
@@ -303,20 +335,21 @@
 		046530BA24DD4271002D254C /* Example */ = {
 			isa = PBXGroup;
 			children = (
-				046530BB24DD4271002D254C /* InfoPlist.strings */,
-				046530BD24DD4271002D254C /* GrowingIO-Prefix.pch */,
-				046530BF24DD4271002D254C /* ImageSources */,
-				046530D124DD4271002D254C /* Assets.xcassets */,
-				046530D224DD4271002D254C /* GrowingUtil */,
 				046530D924DD4271002D254C /* AliyunEmasServices-Info.plist */,
-				046530DA24DD4271002D254C /* LaunchScreen.storyboard */,
-				046530DC24DD4271002D254C /* Main.storyboard */,
 				046530DE24DD4271002D254C /* APITests */,
-				046530FC24DD4271002D254C /* GrowingIO.entitlements */,
-				046530FD24DD4271002D254C /* GrowingIO-Info.plist */,
-				046530FE24DD4271002D254C /* main.m */,
 				046530BE24DD4271002D254C /* AppDelegate.h */,
 				046530FF24DD4271002D254C /* AppDelegate.m */,
+				046530D124DD4271002D254C /* Assets.xcassets */,
+				04A6FAE024E2BF11006C72F0 /* Example.entitlements */,
+				046530FD24DD4271002D254C /* GrowingIO-Info.plist */,
+				046530BD24DD4271002D254C /* GrowingIO-Prefix.pch */,
+				046530FC24DD4271002D254C /* GrowingIO.entitlements */,
+				046530D224DD4271002D254C /* GrowingUtil */,
+				046530BF24DD4271002D254C /* ImageSources */,
+				046530BB24DD4271002D254C /* InfoPlist.strings */,
+				046530DA24DD4271002D254C /* LaunchScreen.storyboard */,
+				046530FE24DD4271002D254C /* main.m */,
+				046530DC24DD4271002D254C /* Main.storyboard */,
 				0465310024DD4271002D254C /* UICategoryTests */,
 			);
 			path = Example;
@@ -349,10 +382,10 @@
 		046530D224DD4271002D254C /* GrowingUtil */ = {
 			isa = PBXGroup;
 			children = (
-				046530D624DD4271002D254C /* GIODataProcessOperation.h */,
-				046530D324DD4271002D254C /* GIODataProcessOperation.m */,
 				046530D424DD4271002D254C /* GIOConstants.h */,
 				046530D724DD4271002D254C /* GIOConstants.m */,
+				046530D624DD4271002D254C /* GIODataProcessOperation.h */,
+				046530D324DD4271002D254C /* GIODataProcessOperation.m */,
 				046530D824DD4271002D254C /* MBProgressHUD+GrowingHelper.h */,
 				046530D524DD4271002D254C /* MBProgressHUD+GrowingHelper.m */,
 			);
@@ -397,14 +430,14 @@
 		046530F324DD4271002D254C /* PageEvent */ = {
 			isa = PBXGroup;
 			children = (
+				046530F824DD4271002D254C /* ContainerViewController.h */,
 				046530F424DD4271002D254C /* ContainerViewController.m */,
 				046530F524DD4271002D254C /* FirstViewController.h */,
-				046530F624DD4271002D254C /* SecondViewController.h */,
-				046530F724DD4271002D254C /* GIOPageEventViewController.m */,
-				046530F824DD4271002D254C /* ContainerViewController.h */,
 				046530F924DD4271002D254C /* FirstViewController.m */,
-				046530FA24DD4271002D254C /* SecondViewController.m */,
 				046530FB24DD4271002D254C /* GIOPageEventViewController.h */,
+				046530F724DD4271002D254C /* GIOPageEventViewController.m */,
+				046530F624DD4271002D254C /* SecondViewController.h */,
+				046530FA24DD4271002D254C /* SecondViewController.m */,
 			);
 			path = PageEvent;
 			sourceTree = "<group>";
@@ -448,6 +481,10 @@
 				4916271124E157CF00444AF2 /* GIOPagingViewController.m */,
 				0465311324DD4271002D254C /* GIOMultiViewController.h */,
 				0465311124DD4271002D254C /* GIOMultiViewController.m */,
+				04A6FAF324E67215006C72F0 /* GIOBaseViewController.h */,
+				04A6FAF424E67215006C72F0 /* GIOBaseViewController.m */,
+				04A6FAF024E662E8006C72F0 /* GIOChildsAddViewController.h */,
+				04A6FAF124E662E9006C72F0 /* GIOChildsAddViewController.m */,
 				0465311424DD4271002D254C /* GIOPageStructure.storyboard */,
 			);
 			path = PageStructure;
@@ -456,13 +493,13 @@
 		0465311524DD4271002D254C /* View */ = {
 			isa = PBXGroup;
 			children = (
-				0465311624DD4271002D254C /* GIOFoodTableViewCell.m */,
+				0465311C24DD4271002D254C /* GIOCollectionViewCell.h */,
 				0465311724DD4271002D254C /* GIOCollectionViewCell.m */,
 				0465311824DD4271002D254C /* GIOCollectionViewCell.xib */,
-				0465311924DD4271002D254C /* GIOListTableViewCell.h */,
 				0465311A24DD4271002D254C /* GIOFoodTableViewCell.h */,
+				0465311624DD4271002D254C /* GIOFoodTableViewCell.m */,
 				0465311B24DD4271002D254C /* GIOFoodTableViewCell.xib */,
-				0465311C24DD4271002D254C /* GIOCollectionViewCell.h */,
+				0465311924DD4271002D254C /* GIOListTableViewCell.h */,
 				0465311D24DD4271002D254C /* GIOListTableViewCell.m */,
 				0465311E24DD4271002D254C /* GIOListTableViewCell.xib */,
 			);
@@ -654,8 +691,15 @@
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = GrowingIO;
 				TargetAttributes = {
+					04A6FAE624E4F0F4006C72F0 = {
+						CreatedOnToolsVersion = 11.6;
+						ProvisioningStyle = Automatic;
+					};
+					04A6FAEB24E50EE0006C72F0 = {
+						CreatedOnToolsVersion = 11.6;
+						ProvisioningStyle = Automatic;
+					};
 					4962651D24DA665200032551 = {
-						DevelopmentTeam = SXBU677CPT;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 6003F589195388D20070C39A;
 					};
@@ -681,6 +725,8 @@
 			targets = (
 				6003F589195388D20070C39A /* Example */,
 				4962651D24DA665200032551 /* ExampleTests */,
+				04A6FAE624E4F0F4006C72F0 /* CodeCheck */,
+				04A6FAEB24E50EE0006C72F0 /* CodeFormat */,
 			);
 		};
 /* End PBXProject section */
@@ -753,6 +799,40 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
+		};
+		04A6FAEA24E4F0FB006C72F0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "##### 提交CI前自行检测代码 #####\n# 1.请提前使用Codeformat进行代码格式化\n# 2.执行此脚本前请先确保工程编译通过\n\ncd ${SRCROOT}/../Scripts\nsh code-checker.sh\n";
+		};
+		04A6FAEF24E50EE5006C72F0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "##### 代码格式化工具 #####\n# 使用clang-format格式化变动的代码\n# 代码规则见.clang-format\n\ncd ${SRCROOT}/../Scripts\nsh code-format.sh ${SRCROOT}/../\n";
 		};
 		42BC6DA229F2457EC8670B4E /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -863,6 +943,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04A6FAF224E662E9006C72F0 /* GIOChildsAddViewController.m in Sources */,
 				0465314424DD4272002D254C /* MeasurementProtocolTableViewController.m in Sources */,
 				0465314024DD4272002D254C /* GrowingKeyValueCell.m in Sources */,
 				0465314D24DD4272002D254C /* AppDelegate.m in Sources */,
@@ -885,6 +966,7 @@
 				0465314F24DD4272002D254C /* GIOTextFieldViewController.m in Sources */,
 				4916271224E157CF00444AF2 /* GIOPagingViewController.m in Sources */,
 				0465313F24DD4272002D254C /* GIOInputChangeEventViewController.m in Sources */,
+				04A6FAF524E67215006C72F0 /* GIOBaseViewController.m in Sources */,
 				0465315A24DD4272002D254C /* GIOFoodTableViewCell.m in Sources */,
 				0465314524DD4272002D254C /* GIOCstmEventViewController.m in Sources */,
 				0465314724DD4272002D254C /* ContainerViewController.m in Sources */,
@@ -938,6 +1020,38 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		04A6FAE724E4F0F5006C72F0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		04A6FAE824E4F0F5006C72F0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		04A6FAED24E50EE0006C72F0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		04A6FAEE24E50EE0006C72F0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		4962652524DA665200032551 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 79424AEB90B32411A6333538 /* Pods-ExampleTests.debug.xcconfig */;
@@ -962,7 +1076,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = SXBU677CPT;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1004,7 +1118,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = SXBU677CPT;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1099,6 +1213,7 @@
 			baseConfigurationReference = 48BA0D37888FF209ED84CD0E /* Pods-Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Example/Example.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SXBU677CPT;
@@ -1121,6 +1236,7 @@
 			baseConfigurationReference = AD17E1EE298841C971EAE661 /* Pods-Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Example/Example.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SXBU677CPT;
@@ -1141,6 +1257,24 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		04A6FAE924E4F0F5006C72F0 /* Build configuration list for PBXAggregateTarget "CodeCheck" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				04A6FAE724E4F0F5006C72F0 /* Debug */,
+				04A6FAE824E4F0F5006C72F0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		04A6FAEC24E50EE0006C72F0 /* Build configuration list for PBXAggregateTarget "CodeFormat" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				04A6FAED24E50EE0006C72F0 /* Debug */,
+				04A6FAEE24E50EE0006C72F0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		4962652724DA665200032551 /* Build configuration list for PBXNativeTarget "ExampleTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -32,8 +32,8 @@
     BOOL result = YES;
     result = [self growing_sendAction:action to:target from:sender forEvent:event];
     
-    if (NSClassFromString(@"GrowingWebSocket") != NULL) {
-        [[GrowingMediator sharedInstance] performClass:@"GrowingWebSocket" action:@"setNeedUpdateScreen" params:nil];
+    if (NSClassFromString(@"GrowingWebCircle") != NULL) {
+        [[GrowingMediator sharedInstance] performClass:@"GrowingWebCircle" action:@"setNeedUpdateScreen" params:nil];
     }
     
     if ([sender isKindOfClass:UITabBarItem.class] ||

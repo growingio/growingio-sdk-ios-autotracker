@@ -1,8 +1,8 @@
 //
-//  GrowingNode.m
-//  GrowingTracker
+//  GrowingWebCircle.h
+//  Growing
 //
-//  Created by GrowingIO on 15/12/12.
+//  Created by 陈曦 on 15/8/26.
 //  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,19 +18,23 @@
 //  limitations under the License.
 
 #import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
+#import "GrowingNode.h"
+#import "GrowingSRWebSocket.h"
 
-#import "GrowingAutoTracker.h"
-#import "GrowingNodeItem.h"
-#import "GrowingNodeProtocol.h"
-#import "GrowingTracker.h"
+@interface GrowingWebCircle : NSObject
 
-@interface NSObject (GrowingNode)
-@property (nonatomic, assign) BOOL growingNodeIsBadNode;
-@end
+@property (nonatomic, retain) GrowingSRWebSocket *webSocket;
++ (instancetype)shareInstance;
 
++ (BOOL)isRunning;
++ (void)runWithCircleRoomNumber:(NSString *)circleRoomNumber readyBlock:(void(^)(void))readyBlock finishBlock:(void(^)(void))finishBlock;
++ (void)stop;
 
++ (void)setNeedUpdateScreen;
 
-@interface GrowingRootNode : NSObject <GrowingNode>
-+ (instancetype)rootNode;
+// for webview based add-tag-menu
++ (CGFloat)impressScale;
++ (BOOL)isContainer:(id<GrowingNode>)node;
++ (void)retrieveAllElementsAsync:(void(^)(NSString *))callback;
+
 @end

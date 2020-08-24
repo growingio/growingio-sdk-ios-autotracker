@@ -41,8 +41,7 @@
 
 @implementation GrowingSegmentButton
 
-+ (void)load
-{
++ (void)load {
 //    metamacro_foreach(GrowingCategoryBindCheckName, ,__VA_ARGS__ )
     unsigned int count = 0;
     Method *methods = class_copyMethodList(self, &count);
@@ -86,5 +85,6 @@
         return self.accessibilityLabel;
     }
 }
+
 
 @end
