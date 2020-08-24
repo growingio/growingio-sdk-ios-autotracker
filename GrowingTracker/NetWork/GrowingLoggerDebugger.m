@@ -19,7 +19,7 @@
 
 
 #import "GrowingLoggerDebugger.h"
-#import "Growing3rdLibSRWebSocket.h"
+#import "GrowingSRWebSocket.h"
 #import "GrowingInstance.h"
 #import "GrowingNetworkConfig.h"
 #import "NSDictionary+GrowingHelper.h"
@@ -33,9 +33,9 @@
 static NSString * const kWebSocketMsgType = @"msgType";
 static NSString * const kLoggerWsEndPoint = @"wss://gta1.growingio.com/app/%@/circle/%@";
 
-@interface GrowingLoggerDebugger ()<Growing3rdLibSRWebSocketDelegate>
+@interface GrowingLoggerDebugger ()<GrowingSRWebSocketDelegate>
 
-@property (nonatomic, strong) Growing3rdLibSRWebSocket  *webSocket;
+@property (nonatomic, strong) GrowingSRWebSocket  *webSocket;
 @property (nonatomic, copy) NSString *wsKey;
 @end
 
@@ -55,7 +55,7 @@ static GrowingLoggerDebugger* _loggerDebugger = nil;
     
     if (!_loggerDebugger.webSocket) {
         NSString* urlStr = [NSString stringWithFormat:kLoggerWsEndPoint, [GrowingInstance sharedInstance].projectID, _loggerDebugger.wsKey];
-        _loggerDebugger.webSocket = [[Growing3rdLibSRWebSocket alloc] initWithURLRequest: [NSURLRequest requestWithURL: [NSURL URLWithString:urlStr]]];
+        _loggerDebugger.webSocket = [[GrowingSRWebSocket alloc] initWithURLRequest: [NSURLRequest requestWithURL: [NSURL URLWithString:urlStr]]];
         _loggerDebugger.webSocket.delegate = _loggerDebugger;
         [_loggerDebugger.webSocket open];
     }
@@ -69,7 +69,7 @@ static GrowingLoggerDebugger* _loggerDebugger = nil;
 
 - (void)sendData:(id) data {
     
-    if (self.webSocket.readyState == Growing3rdLib_SR_OPEN && ([data isKindOfClass:NSDictionary.class] || [data isKindOfClass:NSArray.class])) {
+    if (self.webSocket.readyState == Growing_SR_OPEN && ([data isKindOfClass:NSDictionary.class] || [data isKindOfClass:NSArray.class])) {
         NSString *jsonString = [data growingHelper_jsonString];
         [self.webSocket send:jsonString];
     }
@@ -121,8 +121,8 @@ static GrowingLoggerDebugger* _loggerDebugger = nil;
     _loggerDebugger = nil;
 }
 
-#pragma mark - Growing3rdLibSRWebSocketDelegate
-- (void)webSocket:(Growing3rdLibSRWebSocket *)webSocket didReceiveMessage:(id)message {
+#pragma mark - GrowingSRWebSocketDelegate
+- (void)webSocket:(GrowingSRWebSocket *)webSocket didReceiveMessage:(id)message {
     if ([[message growingHelper_jsonObject] isKindOfClass:NSDictionary.class]) {
         NSDictionary *msgDic = [message growingHelper_jsonObject];
         NSString *msg = msgDic[kWebSocketMsgType];
@@ -145,17 +145,17 @@ static GrowingLoggerDebugger* _loggerDebugger = nil;
     }
 }
 
-- (void)webSocketDidOpen:(Growing3rdLibSRWebSocket *)webSocket {
+- (void)webSocketDidOpen:(GrowingSRWebSocket *)webSocket {
     GIOLogDebug(@"LoggerDebugger did open");
     [self sendReadyMessage];
 }
 
-- (void)webSocket:(Growing3rdLibSRWebSocket *)webSocket didFailWithError:(NSError *)error {
+- (void)webSocket:(GrowingSRWebSocket *)webSocket didFailWithError:(NSError *)error {
     GIOLogError(@"error : %@", error);
     [GrowingLoggerDebugger stopLoggerDebugger];
 }
 
-- (void)webSocket:(Growing3rdLibSRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
+- (void)webSocket:(GrowingSRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
     
     NSString *message = nil;
     if (code != 1000) {
