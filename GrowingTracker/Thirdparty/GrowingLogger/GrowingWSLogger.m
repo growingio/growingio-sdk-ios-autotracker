@@ -66,7 +66,7 @@ static const NSInteger kGIOMaxCachesLogNumber = 100;
             while ((NSInteger)self.cacheArray.count >= self.maxCachesNumber) {
               [self.cacheArray removeObjectAtIndex:0];
             }
-            [self.cacheArray addObject:[logMsg growingHelper_dictionaryObject]];
+            [self.cacheArray addObject:logMsg];
         }
     }
 }
