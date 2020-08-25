@@ -28,6 +28,7 @@
 #import "NSString+GrowingHelper.h"
 
 static NSString *kGrowingUrlScheme = nil;
+NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 
 @import CoreTelephony;
 
@@ -195,17 +196,9 @@ static pthread_mutex_t _mutex;
     return self;
 }
 
-#define GROWINGIO_KEYCHAIN_KEY @"GROWINGIO_KEYCHAIN_KEY"
-#define GROWINGIO_CUSTOM_U_KEY @"GROWINGIO_CUSTOM_U_KEY"
-
 - (NSString *)getDeviceIdString {
-    NSString *customDeviceIdString = [self keyChainObjectForKey:GROWINGIO_CUSTOM_U_KEY];
-    // 如果取到有效u值，直接返回
-    if ([customDeviceIdString growingHelper_isValidU]) {
-        return customDeviceIdString;
-    }
-
-    NSString *deviceIdString = [self keyChainObjectForKey:GROWINGIO_KEYCHAIN_KEY];
+    
+    NSString *deviceIdString = [self keyChainObjectForKey:kGrowingKeychainUserIdKey];
     // 如果取到有效u值，直接返回
     if ([deviceIdString growingHelper_isValidU]) {
         return deviceIdString;
@@ -226,7 +219,7 @@ static pthread_mutex_t _mutex;
         uuid = [[NSUUID UUID] UUIDString];
     }
     // 保存
-    [self setKeychainObject:uuid forKey:GROWINGIO_KEYCHAIN_KEY];
+    [self setKeychainObject:uuid forKey:kGrowingKeychainUserIdKey];
 
     return uuid;
 }
