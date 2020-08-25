@@ -118,8 +118,7 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
 #pragma mark -
 
 - (CGRect)growingNodeFrame {
-    UIWindow *mainWindow =
-        [[UIApplication sharedApplication] growingMainWindow];
+    UIWindow *mainWindow = [[UIApplication sharedApplication] growingMainWindow];
     UIWindow *parentWindow = self.window;
 
     CGRect frame = [self convertRect:self.bounds toView:parentWindow];
