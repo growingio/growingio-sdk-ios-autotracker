@@ -17,17 +17,17 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import "GrowingCustomField.h"
-#import "NSDictionary+GrowingHelper.h"
+
+#import "GrowingCocoaLumberjack.h"
+#import "GrowingDispatchManager.h"
 #import "GrowingEventManager.h"
+#import "GrowingFileStorage.h"
+#import "GrowingGlobal.h"
 #import "GrowingManualTrackEvent.h"
 #import "GrowingMobileDebugger.h"
-#import "GrowingGlobal.h"
-#import "GrowingDispatchManager.h"
-#import "GrowingFileStorage.h"
-#import "GrowingCocoaLumberjack.h"
 #import "GrowingPageEvent.h"
+#import "NSDictionary+GrowingHelper.h"
 
 static NSString *const kGrowingUserIdKey = @"userId";
 static NSString *const kGrowingCustomField = @"customField";
@@ -53,9 +53,8 @@ static NSString *const kGrowingCustomField = @"customField";
 
 - (instancetype)init {
     if (self = [super init]) {
-                
         self.configStorage = [[GrowingFileStorage alloc] initWithName:@"config"];
-        
+
         NSDictionary *diskField = [self.configStorage dictionaryForKey:kGrowingCustomField];
         if (diskField) {
             self.customFieldDict = [NSMutableDictionary dictionaryWithDictionary:diskField];
@@ -81,7 +80,6 @@ static NSString *const kGrowingCustomField = @"customField";
 }
 
 - (void)persistenceCustomField {
-    
     [self.customFieldDict setValue:self.userId forKey:kGrowingUserIdKey];
     NSMutableDictionary *dataDict = [self.customFieldDict mutableCopy];
     [GrowingDispatchManager dispatchInLowThread:^{
@@ -92,33 +90,34 @@ static NSString *const kGrowingCustomField = @"customField";
 // 埋点相关
 
 - (void)sendEvarEvent:(NSDictionary<NSString *, NSObject *> *)evar {
-    [[GrowingMobileDebugger shareDebugger] cacheValue:evar ofType:@"evar"];
+    [[GrowingMobileDebugger shareDebugger] cacheValue:evar ofType:kEventTypeKeyConversionVariable];
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:evar];
     if (![dict isValidDictVariable]) {
-        return ;
+        return;
     }
-    if (dict.count > 100 ) {
+    if (dict.count > 100) {
         GIOLogError(parameterValueErrorLog);
-        return ;
+        return;
     }
     [GrowingEvarEvent sendEvarEvent:dict];
 }
 
 - (void)sendPeopleEvent:(NSDictionary<NSString *, NSObject *> *)peopleVar {
     //为GrowingMobileDebugger缓存用户设置 - ppl
-    [[GrowingMobileDebugger shareDebugger] cacheValue:peopleVar ofType:@"ppl"];
+    [[GrowingMobileDebugger shareDebugger] cacheValue:peopleVar ofType:kEventTypeKeyPeopleVariable];
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:peopleVar];
     if (![dict isValidDictVariable]) {
-        return ;
+        return;
     }
-    if (dict.count > 100 ) {
+    if (dict.count > 100) {
         GIOLogError(parameterValueErrorLog);
-        return ;
+        return;
     }
     [GrowingPeopleVarEvent sendEventWithVariable:dict];
 }
 
-- (void)sendCustomTrackEventWithName:(NSString *)eventName andVariable:(NSDictionary<NSString *, NSObject *> *)variable {
+- (void)sendCustomTrackEventWithName:(NSString *)eventName
+                         andVariable:(NSDictionary<NSString *, NSObject *> *)variable {
     if ([self isOnlyCoreKit]) {
         [self sendGIOFakePageEvent];
     }
@@ -135,24 +134,21 @@ static NSString *const kGrowingCustomField = @"customField";
         GrowingPageEvent *eventPage = [[GrowingPageEvent alloc] initWithTitle:@""
                                                                      pageName:@"GIOFakePage"
                                                                   referalPage:nil];
-        
+
         [GrowingEventManager shareInstance].lastPageEvent = eventPage;
-        
-        [[GrowingEventManager shareInstance] addEvent:eventPage
-                                             thisNode:nil
-                                          triggerNode:nil
-                                          withContext:nil];
+
+        [[GrowingEventManager shareInstance] addEvent:eventPage thisNode:nil triggerNode:nil withContext:nil];
     }
 }
 
 - (void)sendVisitorEvent:(NSDictionary<NSString *, NSObject *> *)variable {
     if ([variable isKindOfClass:[NSDictionary class]]) {
         if (![variable isValidDictVariable]) {
-            return ;
+            return;
         }
-        if (variable.count > 100 ) {
+        if (variable.count > 100) {
             GIOLogError(parameterValueErrorLog);
-            return ;
+            return;
         }
     }
     //缓存variable

@@ -8,46 +8,43 @@
 //
 
 #import "VstrEventsTest.h"
-#import "MockEventQueue.h"
-#import "ManualTrackHelper.h"
+
 #import "GrowingTracker.h"
 #import "LogOperHelper.h"
+#import "ManualTrackHelper.h"
+#import "MockEventQueue.h"
 
 @implementation VstrEventsTest
 
-- (void)setUp{
+- (void)setUp {
     //设置userid,确保cs1字段不空
     [Growing setLoginUserId:@"test"];
-
 }
 
--(void)test1VstrNormal{
+- (void)test1VstrNormal {
     /**
      function:vstr正常情况
      **/
     [tester waitForTimeInterval:1];
     [MockEventQueue.sharedQueue cleanQueue];
-    [Growing setVisitorAttributes:@{@"var1":@"good",@"var2":@"excell"}];
-    NSArray *vstrEventArray = [MockEventQueue.sharedQueue eventsFor:@"vstr"];
-    NSLog(@"Vstr事件：%@",vstrEventArray);
-    if (vstrEventArray.count>=1)
-    {
-        NSDictionary *epvarchr=[vstrEventArray objectAtIndex:vstrEventArray.count-1];
-        XCTAssertEqualObjects(epvarchr[@"eventType"], @"vstr");
-        XCTAssertTrue([ManualTrackHelper CheckContainsKey:epvarchr :@"var"]);
-        XCTAssertEqualObjects(epvarchr[@"var"][@"var1"], @"good");
-        XCTAssertEqualObjects(epvarchr[@"var"][@"var2"], @"excell");
+    [Growing setVisitorAttributes:@{@"var1" : @"good", @"var2" : @"excell"}];
+    NSArray *vstrEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISITOR_ATTRIBUTES"];
+    NSLog(@"Vstr事件：%@", vstrEventArray);
+    if (vstrEventArray.count >= 1) {
+        NSDictionary *epvarchr = [vstrEventArray objectAtIndex:vstrEventArray.count - 1];
+        XCTAssertEqualObjects(epvarchr[@"eventType"], @"VISITOR_ATTRIBUTES");
+        XCTAssertTrue([ManualTrackHelper CheckContainsKey:epvarchr:@"attributes"]);
+        XCTAssertEqualObjects(epvarchr[@"attributes"][@"var1"], @"good");
+        XCTAssertEqualObjects(epvarchr[@"attributes"][@"var2"], @"excell");
 
-        NSDictionary *chres=[ManualTrackHelper VstrEventCheck:epvarchr];
-        //NSLog(@"Check Result:%@",chres);
+        NSDictionary *chres = [ManualTrackHelper VstrEventCheck:epvarchr];
+        // NSLog(@"Check Result:%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
         XCTAssertEqualObjects(chres[@"ProCheck"][@"chres"], @"same");
         NSLog(@"EVar事件，vstr正常情况测试通过-----passed");
-    }
-    else
-    {
-        NSLog(@"EVar事件，vstr正常情况测试失败:%@",vstrEventArray);
-        XCTAssertEqual(1,0);
+    } else {
+        NSLog(@"EVar事件，vstr正常情况测试失败:%@", vstrEventArray);
+        XCTAssertEqual(1, 0);
     }
 }
 
@@ -64,7 +61,7 @@
 //    [tester enterTextIntoCurrentFirstResponder:@"NULL"];
 //    [[viewTester usingLabel:@"SetVVar"] tap];
 //    [tester waitForTimeInterval:3];
-//    NSArray *vstrEventArray = [MockEventQueue eventsFor:@"vstr"];
+//    NSArray *vstrEventArray = [MockEventQueue eventsFor:@"VISITOR_ATTRIBUTES"];
 //    //NSLog(@"Vstr事件：%@",vstrEventArray);
 //    if (vstrEventArray.count==0)
 //    {
@@ -77,7 +74,6 @@
 //        XCTAssertEqual(1,0);
 //    }
 //}
-
 
 //-(void)test3VstrEmpty{
 //    /**
@@ -92,12 +88,12 @@
 //    [tester enterTextIntoCurrentFirstResponder:@"{}"];
 //    [[viewTester usingLabel:@"SetVVar"] tap];
 //    [tester waitForTimeInterval:3];
-//    NSArray *vstrEventArray = [MockEventQueue eventsFor:@"vstr"];
+//    NSArray *vstrEventArray = [MockEventQueue eventsFor:@"VISITOR_ATTRIBUTES"];
 //    //NSLog(@"Vstr事件：%@",vstrEventArray);
 //    if (vstrEventArray.count>=1)
 //    {
 //        NSDictionary *epvarchr=[vstrEventArray objectAtIndex:vstrEventArray.count-1];
-//        XCTAssertEqualObjects(epvarchr[@"eventType"], @"vstr");
+//        XCTAssertEqualObjects(epvarchr[@"eventType"], @"VISITOR_ATTRIBUTES");
 //        NSDictionary *chres=[ManualTrackHelper VstrEventCheck:epvarchr];
 //        //NSLog(@"Check Result:%@",chres);
 //        XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");

@@ -25,7 +25,7 @@
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"UI界面"] tap];
     [tester waitForTimeInterval:1];
-    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"clck"];
+    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
     NSLog(@"Clck 事件：%@",clckEventArray);
     if(clckEventArray.count==0)
     {
@@ -55,7 +55,7 @@
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"UI界面"] tap];
     [tester waitForTimeInterval:1];
-    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"clck"];
+    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
     XCTAssertEqual(clckEventArray.count,0);
     //GDPR失效
     [Growing setDataCollectionEnabled:YES];
@@ -65,7 +65,7 @@
     [[viewTester usingLabel:@"clck请求"] tap];
     [[viewTester usingLabel:@"send clck event"] tap];
 
-    NSArray *clckEventArray1 = [MockEventQueue.sharedQueue eventsFor:@"clck"];
+    NSArray *clckEventArray1 = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
     NSLog(@"Clck 事件：%@",clckEventArray1);
     if(clckEventArray1.count>=1)
     {

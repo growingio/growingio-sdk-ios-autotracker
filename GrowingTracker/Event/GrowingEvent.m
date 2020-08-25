@@ -31,7 +31,7 @@
 
 @property (nonatomic, copy, readwrite) NSString *_Nonnull eventTypeKey;
 @property (nonatomic, copy, readwrite) NSString *_Nonnull domain;
-@property (nonatomic, copy, readwrite) NSString *_Nullable customerAttribute;
+@property (nonatomic, copy, readwrite) NSString *_Nullable userId;
 @property (nonatomic, copy, readwrite) NSString *_Nonnull deviceId;
 @property (nonatomic, strong, readwrite) NSNumber *_Nonnull appState;
 @property (nonatomic, copy, readwrite) NSString *_Nonnull uuid;
@@ -58,16 +58,18 @@
 - (instancetype)initWithTimestamp:(NSNumber *)tm {
     self = [self initWithUUID:[[NSUUID UUID] UUIDString] data:nil];
     if (self) {
-        self.sessionId = [GrowingDeviceInfo currentDeviceInfo].sessionID ?: @"";
+        GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
+        self.sessionId = deviceInfo.sessionID ?: @"";
         self.timestamp = tm ?: GROWGetTimestamp();
         self.eventTypeKey = [self eventTypeKey];
         self.domain = [GrowingDeviceInfo currentDeviceInfo].bundleID;
 
         if ([GrowingCustomField shareInstance].userId.length > 0) {
-            self.customerAttribute = [GrowingCustomField shareInstance].userId;
+            self.userId = [GrowingCustomField shareInstance].userId;
         }
         self.deviceId = [GrowingDeviceInfo currentDeviceInfo].deviceIDString ?: @"";
         self.appState = [NSNumber numberWithInteger:[UIApplication sharedApplication].applicationState];
+        self.urlScheme = deviceInfo.urlScheme;
     }
     return self;
 }
@@ -126,23 +128,23 @@
     dataDict[@"timestamp"] = self.timestamp;
     dataDict[@"eventType"] = self.eventTypeKey;
     dataDict[@"domain"] = self.domain;
-    //TODO:3.0
-    dataDict[@"userId"] = self.customerAttribute;
+    dataDict[@"userId"] = self.userId;
     dataDict[@"deviceId"] = self.deviceId;
 
     dataDict[@"globalSequenceId"] = self.globalSequenceId;
     dataDict[@"eventSequenceId"] = self.eventSequenceId;
-
+    dataDict[@"appState"] = (self.appState.intValue == 0) ? @"FOREGROUND" : @"BACKGROUND";
+    dataDict[@"urlScheme"] = self.urlScheme;
     return [dataDict copy];
 }
 
 - (NSMutableDictionary *)dataDict {
-    return [self toDictionary];
+    return [NSMutableDictionary dictionaryWithDictionary:[self toDictionary]];
 }
 
 @end
 
-#pragma mark GrowingEventPersistence
+#pragma mark - GrowingEventPersistence
 
 @interface GrowingEventPersistence ()
 

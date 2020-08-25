@@ -32,7 +32,7 @@
     [MockEventQueue.sharedQueue cleanQueue];
     [Growing setLocation:[@30.11 doubleValue] longitude:[@32.22 doubleValue]];
     [tester waitForTimeInterval:1];
-    NSArray *vstEventArray = [MockEventQueue.sharedQueue eventsFor:@"vst"];
+    NSArray *vstEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
     //NSLog(@"VST事件：%@",vstEventArray);
     if (vstEventArray.count>0)
     {
@@ -72,7 +72,7 @@
 //    [[viewTester usingLabel:@"SetUserID"] tap];
 //    [[viewTester usingLabel:@"ChangeUID"] tap];
 //    [tester waitForTimeInterval:2];
-//    NSArray *vstEventArray = [MockEventQueue eventsFor:@"vst"];
+//    NSArray *vstEventArray = [MockEventQueue eventsFor:@"VISIT"];
 //    //NSLog(@"VST事件：%@",vstEventArray);
 //    if (vstEventArray.count>=1)
 //    {
@@ -105,7 +105,7 @@
 //     **/
 //    //[MockEventQueue cleanQueue];
 //    [tester waitForTimeInterval:2];
-//    NSArray *vstEventArray = [MockEventQueue eventsFor:@"vst"];
+//    NSArray *vstEventArray = [MockEventQueue eventsFor:@"VISIT"];
 //    //NSLog(@"VST事件：%@",vstEventArray);
 //    if (vstEventArray.count>0)
 //    {
@@ -149,7 +149,7 @@
 //    }
 //    
 //    [tester waitForTimeInterval:2];
-//    NSArray *vstEventArray = [MockEventQueue eventsFor:@"vst"];
+//    NSArray *vstEventArray = [MockEventQueue eventsFor:@"VISIT"];
 //    //NSLog(@"VST事件：%@",vstEventArray);
 //    if (vstEventArray.count>1)
 //    {
@@ -193,7 +193,7 @@
 //    }
 //    
 //    [tester waitForTimeInterval:2];
-//    NSArray *vstEventArray = [MockEventQueue eventsFor:@"vst"];
+//    NSArray *vstEventArray = [MockEventQueue eventsFor:@"VISIT"];
 //    //NSLog(@"VST事件：%@",vstEventArray);
 //    if (vstEventArray.count>1)
 //    {

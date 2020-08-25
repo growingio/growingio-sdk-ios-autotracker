@@ -344,7 +344,7 @@ static pthread_mutex_t _mutex;
 + (NSString *)deviceOrientation {
     UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
     if (orientation != UIInterfaceOrientationUnknown) {
-        return UIInterfaceOrientationIsPortrait(orientation) ? @"portrait" : @"landscape";
+        return UIInterfaceOrientationIsPortrait(orientation) ? @"PORTRAIT" : @"LANDSCAPE";
     }
     return nil;
 }

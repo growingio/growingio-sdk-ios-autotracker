@@ -10,7 +10,7 @@
 #import "MockEventQueue.h"
 #import "GrowingTestHelper.h"
 
-static NSString *pageType = @"page";
+static NSString *pageType = @"PAGE";
 
 @interface PageEventsTest : KIFTestCase
 
@@ -34,7 +34,7 @@ static NSString *pageType = @"page";
 //
 //    //虽然产生了page事件，但是并没有添加到 MockEventQueue 中，所以设置10s延时
 //    [tester waitForTimeInterval:10];
-//    NSArray *pageEventArray = [MockEventQueue eventsFor:@"page"];
+//    NSArray *pageEventArray = [MockEventQueue eventsFor:@"PAGE"];
 //    NSInteger count = [self calculateEventsCountWithTitle:@"page 请求" fromEventsArray:pageEventArray];
 //    XCTAssertEqual(count, 1);
 //
@@ -51,7 +51,7 @@ static NSString *pageType = @"page";
 //    [GrowingTestHelper reactivateApp];
 //
 //    [tester waitForTimeInterval:10];
-//    NSArray *pageEventArray = [MockEventQueue eventsFor:@"page"];
+//    NSArray *pageEventArray = [MockEventQueue eventsFor:@"PAGE"];
 //    NSInteger count = [self calculateEventsCountWithTitle:@"page 请求" fromEventsArray:pageEventArray];
 //    //进入page请求页面时有1个page请求，进入后台再进入page页面还会有一个page请求
 //    XCTAssertEqual(count, 2);
@@ -64,7 +64,7 @@ static NSString *pageType = @"page";
 //    [MockEventQueue cleanQueue];
 //    [[viewTester usingLabel:@"UI界面"] tap];
 //
-//    NSArray *pageEventArray = [MockEventQueue eventsFor:@"page"];
+//    NSArray *pageEventArray = [MockEventQueue eventsFor:@"PAGE"];
 //    //检验page请求的tl是否合理
 //    NSInteger count = [self calculateEventsCountWithTitle:@"UI 测试" fromEventsArray:pageEventArray];
 //
@@ -80,7 +80,7 @@ static NSString *pageType = @"page";
 //
 //    [[viewTester usingLabel:@"进入测试"] tap];
 //    [tester waitForTimeInterval:10];
-//    NSUInteger pageEventCount = [[MockEventQueue eventsFor:@"page"] count];
+//    NSUInteger pageEventCount = [[MockEventQueue eventsFor:@"PAGE"] count];
 //
 //    XCTAssertEqual(pageEventCount, 1);
 //}
@@ -91,7 +91,7 @@ static NSString *pageType = @"page";
 //    [MockEventQueue cleanQueue];
 //    [[viewTester usingLabel:@"第二页"] tap];
 //    [tester waitForTimeInterval:10];
-//    NSUInteger pageEventCount = [[MockEventQueue eventsFor:@"page"] count];
+//    NSUInteger pageEventCount = [[MockEventQueue eventsFor:@"PAGE"] count];
 //    XCTAssertEqual(pageEventCount, 1);
 //}
 

@@ -24,15 +24,15 @@
 //    [tester enterTextIntoCurrentFirstResponder:@"{\"cs2\":\"GIO\",\"cs3\":\"QA\"}"];
 //    [[viewTester usingLabel:@"SetAppVar"] tap];
 //    [tester waitForTimeInterval:3];
-//    NSArray *apvarEventArray = [MockEventQueue eventsFor:@"page"];
+//    NSArray *apvarEventArray = [MockEventQueue eventsFor:@"PAGE"];
 //    //NSLog(@"AppVar事件：%@",apvarEventArray);
 //    if (apvarEventArray.count>=1)
 //    {
 //        NSDictionary *apvarchr=[apvarEventArray objectAtIndex:apvarEventArray.count-1];
-//        XCTAssertEqualObjects(apvarchr[@"eventType"], @"page");
-//        XCTAssertTrue([ManualTrackHelper CheckContainsKey:apvarchr :@"var"]);
-//        XCTAssertEqualObjects(apvarchr[@"var"][@"cs2"], @"GIO");
-//        XCTAssertEqualObjects(apvarchr[@"var"][@"cs3"], @"QA");
+//        XCTAssertEqualObjects(apvarchr[@"eventType"], @"PAGE");
+//        XCTAssertTrue([ManualTrackHelper CheckContainsKey:apvarchr :@"attributes"]);
+//        XCTAssertEqualObjects(apvarchr[@"attributes"][@"cs2"], @"GIO");
+//        XCTAssertEqualObjects(apvarchr[@"attributes"][@"cs3"], @"QA");
 //        NSLog(@"AppVar事件，setAppVariable正常情况测试通过-----passed");
 //    }
 //    else
@@ -60,7 +60,7 @@
 //    [LogOperHelper redirectLogBack];
 //    if(chres)
 //    {
-//        
+//
 //        XCTAssertEqual(1, 1);
 //        NSLog(@"AppVar事件，setAppVariable，var为nil日志检测测试通过-----passed");
 //    }
@@ -83,12 +83,12 @@
 //    [tester enterTextIntoCurrentFirstResponder:@"{}"];
 //    [[viewTester usingLabel:@"SetAppVar"] tap];
 //    [tester waitForTimeInterval:3];
-//    NSArray *apvarEventArray = [MockEventQueue eventsFor:@"page"];
+//    NSArray *apvarEventArray = [MockEventQueue eventsFor:@"PAGE"];
 //    //NSLog(@"AppVar事件：%@",apvarEventArray);
 //    if (apvarEventArray.count>=1)
 //    {
 //        NSDictionary *apvarchr=[apvarEventArray objectAtIndex:apvarEventArray.count-1];
-//        XCTAssertEqualObjects(apvarchr[@"eventType"], @"page");
+//        XCTAssertEqualObjects(apvarchr[@"eventType"], @"PAGE");
 //        NSLog(@"AppVar事件，setAppVariable，var为Dict为空测试通过-----passed");
 //    }
 //    else
@@ -96,7 +96,7 @@
 //        NSLog(@"AppVar事件，setAppVariable，var为Dict为空测试失败:%@",apvarEventArray);
 //        XCTAssertEqual(1,0);
 //    }
-//    
+//
 ////    //将Log日志写入文件
 ////    [LogOperHelper writeLogToFile];
 ////    [[viewTester usingLabel:@"SetAppVar"] tap];
@@ -130,14 +130,14 @@
 //    [tester enterTextIntoCurrentFirstResponder:@"Addr BeiJing"];
 //    [[viewTester usingLabel:@"SetApSVar"] tap];
 //    [tester waitForTimeInterval:3];
-//    NSArray *apvarEventArray = [MockEventQueue eventsFor:@"page"];
+//    NSArray *apvarEventArray = [MockEventQueue eventsFor:@"PAGE"];
 //    //NSLog(@"AppVar事件：%@",apvarEventArray);
 //    if (apvarEventArray.count>=1)
 //    {
 //        NSDictionary *apvarchr=[apvarEventArray objectAtIndex:apvarEventArray.count-1];
-//        XCTAssertEqualObjects(apvarchr[@"eventType"], @"page");
-//        XCTAssertTrue([ManualTrackHelper CheckContainsKey:apvarchr :@"var"]);
-//        XCTAssertEqualObjects(apvarchr[@"var"][@"cs4"], @"Addr BeiJing");
+//        XCTAssertEqualObjects(apvarchr[@"eventType"], @"PAGE");
+//        XCTAssertTrue([ManualTrackHelper CheckContainsKey:apvarchr :@"attributes"]);
+//        XCTAssertEqualObjects(apvarchr[@"attributes"][@"cs4"], @"Addr BeiJing");
 //        NSLog(@"AppVar事件,setAppVariable:andStringValue设置变量测试通过-----passed");
 //    }
 //    else
@@ -160,14 +160,14 @@
 //    [tester enterTextIntoCurrentFirstResponder:@"Addr HeNan"];
 //    [[viewTester usingLabel:@"SetApSVar"] tap];
 //    [tester waitForTimeInterval:3];
-//    NSArray *apvarEventArray = [MockEventQueue eventsFor:@"page"];
+//    NSArray *apvarEventArray = [MockEventQueue eventsFor:@"PAGE"];
 //    //NSLog(@"AppVar事件：%@",apvarEventArray);
 //    if (apvarEventArray.count>=1)
 //    {
 //        NSDictionary *apvarchr=[apvarEventArray objectAtIndex:apvarEventArray.count-1];
-//        XCTAssertEqualObjects(apvarchr[@"eventType"], @"page");
-//        XCTAssertTrue([ManualTrackHelper CheckContainsKey:apvarchr :@"var"]);
-//        XCTAssertEqualObjects(apvarchr[@"var"][@"cs4"], @"Addr HeNan");
+//        XCTAssertEqualObjects(apvarchr[@"eventType"], @"PAGE");
+//        XCTAssertTrue([ManualTrackHelper CheckContainsKey:apvarchr :@"attributes"]);
+//        XCTAssertEqualObjects(apvarchr[@"attributes"][@"cs4"], @"Addr HeNan");
 //        NSLog(@"AppVar事件,setAppVariable:andStringValue更新变量测试通过-----passed");
 //    }
 //    else
@@ -251,7 +251,7 @@
 //    [MockEventQueue cleanQueue];
 //    [[viewTester usingLabel:@"SetApSVar"] tap];
 //    [tester waitForTimeInterval:3];
-//    NSArray *apvarEventArray = [MockEventQueue eventsFor:@"page"];
+//    NSArray *apvarEventArray = [MockEventQueue eventsFor:@"PAGE"];
 //    NSLog(@"AppVar事件：%@",apvarEventArray);
 //    if(apvarEventArray.count==0)
 //    {
@@ -308,15 +308,15 @@
 //    [tester enterTextIntoCurrentFirstResponder:@"422"];
 //    [[viewTester usingLabel:@"SetApNVar"] tap];
 //    [tester waitForTimeInterval:3];
-//    NSArray *apvarEventArray = [MockEventQueue eventsFor:@"page"];
+//    NSArray *apvarEventArray = [MockEventQueue eventsFor:@"PAGE"];
 //    //NSLog(@"AppVar事件：%@",apvarEventArray);
 //    if (apvarEventArray.count>=1)
 //    {
 //        NSDictionary *apvarchr=[apvarEventArray objectAtIndex:apvarEventArray.count-1];
 //        //NSLog(@"*****AppVar事件：%@",apvarchr);
-//        XCTAssertEqualObjects(apvarchr[@"eventType"], @"page");
-//        XCTAssertTrue([ManualTrackHelper CheckContainsKey:apvarchr :@"var"]);
-//        XCTAssertEqual([apvarchr[@"var"][@"cs2"] intValue], 422);
+//        XCTAssertEqualObjects(apvarchr[@"eventType"], @"PAGE");
+//        XCTAssertTrue([ManualTrackHelper CheckContainsKey:apvarchr :@"attributes"]);
+//        XCTAssertEqual([apvarchr[@"attributes"][@"cs2"] intValue], 422);
 //        NSLog(@"AppVar事件，setAppVariable:andNumberValue设置变量测试通过-----passed");
 //    }
 //    else
@@ -339,16 +339,16 @@
 //    [tester enterTextIntoCurrentFirstResponder:@"39.82"];
 //    [[viewTester usingLabel:@"SetApNVar"] tap];
 //    [tester waitForTimeInterval:3];
-//    NSArray *apvarEventArray = [MockEventQueue eventsFor:@"page"];
+//    NSArray *apvarEventArray = [MockEventQueue eventsFor:@"PAGE"];
 //    //NSLog(@"AppVar事件：%@",apvarEventArray);
 //    if (apvarEventArray.count>=1)
 //    {
 //        NSDictionary *apvarchr=[apvarEventArray objectAtIndex:apvarEventArray.count-1];
 //        //NSLog(@"*****AppVar事件：%@",apvarchr);
-//        XCTAssertEqualObjects(apvarchr[@"eventType"], @"page");
-//        XCTAssertTrue([ManualTrackHelper CheckContainsKey:apvarchr :@"var"]);
+//        XCTAssertEqualObjects(apvarchr[@"eventType"], @"PAGE");
+//        XCTAssertTrue([ManualTrackHelper CheckContainsKey:apvarchr :@"attributes"]);
 //        NSString *floatchr=@"39.82";
-//        XCTAssertEqual([apvarchr[@"var"][@"cs2"] floatValue], [floatchr floatValue]);
+//        XCTAssertEqual([apvarchr[@"attributes"][@"cs2"] floatValue], [floatchr floatValue]);
 //        NSLog(@"AppVar事件，setAppVariable:andNumberValue更新变量测试通过-----passed");
 //    }
 //    else

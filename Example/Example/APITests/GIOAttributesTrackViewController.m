@@ -7,16 +7,18 @@
 //
 
 #import "GIOAttributesTrackViewController.h"
-#import "GrowingKeyValueCell.h"
-#import "GIODataProcessOperation.h"
+
 #import <GrowingAutoTracker.h>
+
 #import "GIOConstants.h"
+#import "GIODataProcessOperation.h"
+#import "GrowingKeyValueCell.h"
 
 @interface GIOAttributesTrackViewController () <UITableViewDelegate, UITableViewDataSource, GrowingKeyValueCellDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) UIButton *footerButton;
-@property (nonatomic, strong) NSMutableArray <NSDictionary *> *dataSource;
+@property (nonatomic, strong) NSMutableArray<NSDictionary *> *dataSource;
 @property (nonatomic, assign) NSInteger attributesCount;
 
 @end
@@ -25,11 +27,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     self.attributesCount = [GIODataProcessOperation getRandomLengthFrom:1 to:5];
-    
+
     [self setupTableView];
-    
+
     self.navigationItem.title = [NSString stringWithFormat:@"%@事件", self.eventType];
 }
 
@@ -47,22 +49,25 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    GrowingKeyValueCell *cell = [tableView dequeueReusableCellWithIdentifier:@"GrowingKeyValueCell" forIndexPath:indexPath];
+    GrowingKeyValueCell *cell = [tableView dequeueReusableCellWithIdentifier:@"GrowingKeyValueCell"
+                                                                forIndexPath:indexPath];
     cell.delegate = self;
     [cell configContentDict:self.dataSource[indexPath.row]];
 
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView
+    commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
+     forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         [self.dataSource removeObjectAtIndex:indexPath.row];
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+        [tableView deleteRowsAtIndexPaths:@[ indexPath ] withRowAnimation:UITableViewRowAnimationLeft];
     }
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (NSString *)tableView:(UITableView *)tableView
+    titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
     return @"删除";
 }
 
@@ -76,13 +81,12 @@
 #pragma mark Target Action
 
 - (IBAction)trackBtnClick:(UIButton *)sender {
-    
     NSMutableDictionary *atts = [NSMutableDictionary dictionary];
-    
+
     for (NSDictionary *d in self.dataSource) {
         [atts addEntriesFromDictionary:d];
     }
-    
+
     [self trackEventWithAttributes:atts];
 }
 
@@ -96,23 +100,21 @@
 }
 
 - (void)trackEventWithAttributes:(NSDictionary *)atts {
-    
-    if ([self.eventType isEqualToString:@"ppl"]) {
+    if ([self.eventType isEqualToString:@"LOGIN_USER_ATTRIBUTES"]) {
         [Growing setLoginUserAttributes:atts];
-        
-    } else if ([self.eventType isEqualToString:@"evar"]) {
+
+    } else if ([self.eventType isEqualToString:@"CONVERSION_VARIABLES"]) {
         [Growing setConversionVariables:atts];
-        
-    } else if ([self.eventType isEqualToString:@"vstr"]) {
+
+    } else if ([self.eventType isEqualToString:@"VISITOR_ATTRIBUTES"]) {
         [Growing setVisitorAttributes:atts];
     }
-    
+
     NSLog(@"track %@ 事件，attributes:%@", self.eventType, atts);
 }
 
 - (void)footerAddButtonClick:(UIButton *)sender {
-    
-    [self.dataSource addObject:@{[self randomKey]: [self randomValue]}];
+    [self.dataSource addObject:@{[self randomKey] : [self randomValue]}];
     [self.tableView reloadData];
 }
 
@@ -121,9 +123,9 @@
 - (NSMutableArray<NSDictionary *> *)dataSource {
     if (!_dataSource) {
         _dataSource = [NSMutableArray array];
-        
+
         for (NSInteger i = 0; i < self.attributesCount; i++) {
-            [_dataSource addObject:@{[self randomKey]: [self randomValue]}];
+            [_dataSource addObject:@{[self randomKey] : [self randomValue]}];
         }
     }
     return _dataSource;
@@ -139,7 +141,6 @@
     }
     return _footerButton;
 }
-
 
 - (NSString *)randomKey {
     int l = [GIODataProcessOperation getRandomLengthFrom:5 to:20];

@@ -31,7 +31,7 @@
     [tester waitForTimeInterval:1];
     [tester tapViewWithAccessibilityLabel:@"secondTF"];
     [tester waitForTimeInterval:2];
-    NSArray *chngEventArray = [MockEventQueue.sharedQueue eventsFor:@"chng"];
+    NSArray *chngEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CHANGE"];
     //NSLog(@"chng事件：%@",chngEventArray);
     if(chngEventArray.count>0)
     {
@@ -67,7 +67,7 @@
 //    [tester enterTextIntoCurrentFirstResponder:@"Good"];
 //    [tester tapViewWithAccessibilityLabel:@"Search"];
 //    [tester waitForTimeInterval:2];
-//    NSArray *chngEventArray = [MockEventQueue.sharedQueue eventsFor:@"chng"];
+//    NSArray *chngEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CHANGE"];
 //    //NSLog(@"chng事件：%@",chngEventArray);
 //    if(chngEventArray.count>0)
 //    {
@@ -99,7 +99,7 @@
 //    [tester tapViewWithAccessibilityLabel:@"PassWord"];
 //    [tester enterTextIntoCurrentFirstResponder:@"123426"];
 //    [tester waitForTimeInterval:2];
-//    NSArray *chngEventArray = [MockEventQueue.sharedQueue eventsFor:@"chng"];
+//    NSArray *chngEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CHANGE"];
 //    //NSLog(@"chng事件：%@",chngEventArray);
 //    if(chngEventArray.count>0)
 //    {
@@ -135,7 +135,7 @@
 //    [tester waitForTimeInterval:1];
 //    [tester tapViewWithAccessibilityLabel:@"return"];
 //    [tester waitForTimeInterval:2];
-//    NSArray *chngEventArray = [MockEventQueue.sharedQueue eventsFor:@"chng"];
+//    NSArray *chngEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CHANGE"];
 //    //NSLog(@"chng事件：%@",chngEventArray);
 //    if(chngEventArray.count>0)
 //    {
@@ -169,7 +169,7 @@
     NSArray *date = @[@"June", @"10", @"2019"];
     [tester selectDatePickerValue:date];
     [tester waitForTimeInterval:2];
-    NSArray *chngEventArray = [MockEventQueue.sharedQueue eventsFor:@"chng"];
+    NSArray *chngEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CHANGE"];
     //NSLog(@"chng事件：%@",chngEventArray);
     if (chngEventArray == NULL)
     {

@@ -39,7 +39,7 @@
 //    [[viewTester usingLabel:@"Button"] tap];
 //
 //    [tester waitForTimeInterval:3];
-//    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"clck"];
+//    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
 //    //NSLog(@"Clck事件：%@",[clckEventArray objectAtIndex:clckEventArray.count-1]);
 //    if(clckEventArray.count>=3)
 //    {
@@ -76,11 +76,11 @@
 //    [[viewTester usingLabel:@"Button"] tap];
 //
 //    [tester waitForTimeInterval:3];
-//    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"clck"];
+//    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
 //    //NSLog(@"Clck事件：%@",[clckEventArray objectAtIndex:clckEventArray.count-1]);
 //    NSDictionary *clickchr=[clckEventArray objectAtIndex:clckEventArray.count-1];
 //
-//    NSArray *pageEventArray = [MockEventQueue.sharedQueue eventsFor:@"page"];
+//    NSArray *pageEventArray = [MockEventQueue.sharedQueue eventsFor:@"PAGE"];
 //    //NSLog(@"page事件：%@",[pageEventArray objectAtIndex:pageEventArray.count-1]);
 //    NSDictionary *pagechr=[pageEventArray objectAtIndex:pageEventArray.count-1];
 //    if(clickchr.count>0 && pagechr.count>0)
@@ -112,7 +112,7 @@
 //    [tester swipeViewWithAccessibilityLabel:@"Button" inDirection:KIFSwipeDirectionRight];
 //
 //    [tester waitForTimeInterval:3];
-//    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"clck"];
+//    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
 //    //NSLog(@"Clck事件个数：%lu",(unsigned long)clckEventArray.count);
 //    if(clckEventArray.count==6)
 //    {
@@ -141,7 +141,7 @@
 //    [[viewTester usingLabel:@"Button"] longPress];
 //
 //    [tester waitForTimeInterval:3];
-//    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"clck"];
+//    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
 //    //NSLog(@"Clck事件个数：%lu",(unsigned long)clckEventArray.count);
 //    if(clckEventArray.count>=3)
 //    {
@@ -178,7 +178,7 @@
 //    [[viewTester usingLabel:@"Simple UI Elements"] tap];
 //    [[viewTester usingLabel:@"Second"] tap];
 //    [tester waitForTimeInterval:3];
-//    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"clck"];
+//    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
 //    //NSLog(@"Clck事件：%@",[clckEventArray objectAtIndex:clckEventArray.count-1]);
 //    if(clckEventArray.count>=3)
 //    {
@@ -215,7 +215,7 @@
 //    [tester waitForTimeInterval:1];
 //    [[viewTester usingLabel:@"Simple UI Elements"] tap];
 //    [tester waitForTimeInterval:3];
-//    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"clck"];
+//    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
 //    //NSLog(@"Clck事件：%@",[clckEventArray objectAtIndex:clckEventArray.count-1]);
 //    if(clckEventArray.count>=2)
 //    {
@@ -252,7 +252,7 @@
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"取消"] tap];
     [tester waitForTimeInterval:3];
-    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"clck"];
+    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
     //NSLog(@"Clck 事件：%@",[clckEventArray objectAtIndex:clckEventArray.count-1]);
     //NSLog(@"Clck 事件个数：%lu",clckEventArray.count);
     //是否发送clck事件，需要确认
@@ -291,7 +291,7 @@
 //                                                    fromView:repsStepper.superview];
 //    [tester tapScreenAtPoint:stepperCenter];
 //    [tester waitForTimeInterval:3];
-//    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"clck"];
+//    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
 //    //NSLog(@"Clck 事件：%@",[clckEventArray objectAtIndex:clckEventArray.count-1]);
 //    if(clckEventArray.count==6)
 //    {
@@ -327,7 +327,7 @@
 //    CGPoint point=CGPointMake(179, 114);
 //    [tester tapScreenAtPoint:point];
 //    [tester waitForTimeInterval:3];
-//    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"clck"];
+//    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
 //    //NSLog(@"Clck 事件：%@",[clckEventArray objectAtIndex:clckEventArray.count-1]);
 //    if(clckEventArray.count>4)
 //    {
@@ -366,7 +366,7 @@
     [MockEventQueue.sharedQueue cleanQueue];
     [[viewTester usingLabel:@"BtnGIODNTR"] tap];
     [tester waitForTimeInterval:3];
-    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"clck"];
+    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
     //NSLog(@"Clck 事件：%@",clckEventArray);
     if(clckEventArray==NULL)
     {
@@ -397,7 +397,7 @@
     [tester tapScreenAtPoint:point];
     [tester waitForTimeInterval:3];
      [[viewTester usingLabel:@"好的"] tap];
-    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"clck"];
+    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
     //NSLog(@"Clck 事件：%@",[clckEventArray objectAtIndex:clckEventArray.count-1]);
     if(clckEventArray.count>4)
     {
@@ -439,7 +439,7 @@
     [tester tapScreenAtPoint:point];
     [tester waitForTimeInterval:3];
      [[viewTester usingLabel:@"好的"] tap];
-    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"clck"];
+    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
     //NSLog(@"Clck 事件：%@",[clckEventArray objectAtIndex:clckEventArray.count-1]);
     if(clckEventArray.count>4)
     {
@@ -480,7 +480,7 @@
     [[viewTester usingLabel:@"Fire"] tap];
     [tester waitForTimeInterval:3];
     [[viewTester usingLabel:@"好的"] tap];
-    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"clck"];
+    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
     //NSLog(@"Clck 事件：%@",[clckEventArray objectAtIndex:clckEventArray.count-1]);
     if(clckEventArray.count>3)
     {

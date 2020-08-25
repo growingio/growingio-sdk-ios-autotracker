@@ -17,28 +17,26 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import "GrowingPvarEvent.h"
 
 @interface GrowingPvarEvent ()
 
-@property (nonatomic, copy) NSString * _Nullable hybridDomain;
-@property (nonatomic, copy, readwrite) NSString * _Nullable pageName;
-@property (nonatomic, copy, readwrite) NSString * _Nullable pageTimestamp;
-@property (nonatomic, copy, readwrite) NSString * _Nullable query;
+@property (nonatomic, copy) NSString *_Nullable hybridDomain;
+@property (nonatomic, copy, readwrite) NSString *_Nullable pageName;
+@property (nonatomic, copy, readwrite) NSString *_Nullable pageTimestamp;
+@property (nonatomic, copy, readwrite) NSString *_Nullable query;
 
 @end
 
 @implementation GrowingPvarEvent
 
-- (NSString*)eventTypeKey {
+- (NSString *)eventTypeKey {
     return kEventTypeKeyPageVariable;
 }
 
 - (instancetype)initWithPageName:(NSString *)pageName
                    showTimestamp:(NSNumber *)timestamp
                         variable:(NSDictionary *)variable {
- 
     if (self = [super initWithTimestamp:timestamp]) {
         self.attributes = variable;
         self.pageName = pageName;
@@ -49,24 +47,20 @@
 + (instancetype)pvarEventWithPageName:(NSString *)pageName
                         showTimestamp:(NSNumber *)timestamp
                              variable:(NSDictionary *)variable {
-    
     return [[GrowingPvarEvent alloc] initWithPageName:pageName showTimestamp:timestamp variable:variable];
 }
 
 + (instancetype)hybridPvarEventWithDataDict:(NSDictionary *)dataDict {
     NSString *domain = dataDict[@"domain"];
     NSString *pageName = dataDict[@"pageName"];
-    //TODO: time ispageShowTimestamp?
     NSNumber *timestamp = dataDict[@"pageShowTimestamp"];
     NSDictionary *attributes = dataDict[@"attributes"];
     NSString *query = dataDict[@"queryParameters"];
-    
-    GrowingPvarEvent *pvarEvent = [[self alloc] initWithPageName:pageName
-                                                   showTimestamp:timestamp
-                                                        variable:attributes];
+
+    GrowingPvarEvent *pvarEvent = [[self alloc] initWithPageName:pageName showTimestamp:timestamp variable:attributes];
     pvarEvent.hybridDomain = domain;
     pvarEvent.query = query;
-    
+
     return pvarEvent;
 }
 
@@ -74,13 +68,13 @@
 
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
-    
+
     dataDictM[@"timestamp"] = self.timestamp;
     dataDictM[@"pageShowTimestamp"] = self.pageTimestamp;
     dataDictM[@"domain"] = self.hybridDomain ?: self.domain;
     dataDictM[@"pageName"] = self.pageName;
     dataDictM[@"queryParameters"] = self.query;
-    
+
     return dataDictM;
 }
 

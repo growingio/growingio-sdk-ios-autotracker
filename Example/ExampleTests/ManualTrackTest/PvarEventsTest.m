@@ -7,47 +7,46 @@
 //  function:Pvar事件测试用例集
 
 #import "PvarEventsTest.h"
-#import "MockEventQueue.h"
-#import "ManualTrackHelper.h"
-#import "LogOperHelper.h"
+
 #import <GrowingAutoTracker.h>
+
+#import "LogOperHelper.h"
+#import "ManualTrackHelper.h"
+#import "MockEventQueue.h"
 
 @implementation PvarEventsTest
 
--(void)setUp{
+- (void)setUp {
 }
 
--(void)test1PvarNormal{
+- (void)test1PvarNormal {
     /**
      function:setPageVariable正常情况
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[viewTester usingLabel:@"协议/接口"] tap];
     [[viewTester usingLabel:@"pvar请求"] tap];
-//    [tester tapViewWithAccessibilityLabel:@"PVarVal"];
-//    [tester enterTextIntoCurrentFirstResponder:@"{\"page1\":\"test\",\"ptvar\":\"flag1\"}"];
-//    [[viewTester usingLabel:@"SetPgVar"] tap];
-//    [Growing setPageAttributes:@{@"page1":@"test",@"ptvar":@"flag1"}];
+    //    [tester tapViewWithAccessibilityLabel:@"PVarVal"];
+    //    [tester enterTextIntoCurrentFirstResponder:@"{\"page1\":\"test\",\"ptvar\":\"flag1\"}"];
+    //    [[viewTester usingLabel:@"SetPgVar"] tap];
+    //    [Growing setPageAttributes:@{@"page1":@"test",@"ptvar":@"flag1"}];
     [tester waitForTimeInterval:2];
     NSArray *pvarEventArray = [MockEventQueue.sharedQueue eventsFor:@"pvar"];
-    //NSLog(@"PVar事件：%@",pvarEventArray);
-    if (pvarEventArray.count>=1)
-    {
-        NSDictionary *pvarchr=[pvarEventArray objectAtIndex:pvarEventArray.count-1];
+    // NSLog(@"PVar事件：%@",pvarEventArray);
+    if (pvarEventArray.count >= 1) {
+        NSDictionary *pvarchr = [pvarEventArray objectAtIndex:pvarEventArray.count - 1];
         XCTAssertEqualObjects(pvarchr[@"eventType"], @"pvar");
-//        XCTAssertTrue([ManualTrackHelper CheckContainsKey:pvarchr :@"var"]);
-//        XCTAssertEqualObjects(pvarchr[@"var"][@"page1"], @"test");
-//        XCTAssertEqualObjects(pvarchr[@"var"][@"ptvar"], @"flag1");
-//        NSDictionary *chres=[ManualTrackHelper PvarEventCheck:pvarchr];
-//        //NSLog(@"Check Result:%@",chres);
-//        XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
-//        XCTAssertEqualObjects(chres[@"ProCheck"][@"chres"], @"same");
+        //        XCTAssertTrue([ManualTrackHelper CheckContainsKey:pvarchr :@"attributes"]);
+        //        XCTAssertEqualObjects(pvarchr[@"attributes"][@"page1"], @"test");
+        //        XCTAssertEqualObjects(pvarchr[@"attributes"][@"ptvar"], @"flag1");
+        //        NSDictionary *chres=[ManualTrackHelper PvarEventCheck:pvarchr];
+        //        //NSLog(@"Check Result:%@",chres);
+        //        XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
+        //        XCTAssertEqualObjects(chres[@"ProCheck"][@"chres"], @"same");
         NSLog(@"pvar事件， 测试通过-----passed");
-    }
-    else
-    {
-        NSLog(@"pvar事件， 测试失败:%@",pvarEventArray);
-        XCTAssertEqual(1,0);
+    } else {
+        NSLog(@"pvar事件， 测试失败:%@", pvarEventArray);
+        XCTAssertEqual(1, 0);
     }
 }
 
@@ -155,8 +154,8 @@
 //    {
 //        NSDictionary *pvarchr=[pvarEventArray objectAtIndex:pvarEventArray.count-1];
 //        XCTAssertEqualObjects(pvarchr[@"eventType"], @"pvar");
-//        XCTAssertTrue([ManualTrackHelper CheckContainsKey:pvarchr :@"var"]);
-//        XCTAssertEqualObjects(pvarchr[@"var"][@"pvar1"], @"pvalue");
+//        XCTAssertTrue([ManualTrackHelper CheckContainsKey:pvarchr :@"attributes"]);
+//        XCTAssertEqualObjects(pvarchr[@"attributes"][@"pvar1"], @"pvalue");
 //        NSDictionary *chres=[ManualTrackHelper PvarEventCheck:pvarchr];
 //        //NSLog(@"Check Result:%@",chres);
 //        XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
@@ -190,8 +189,8 @@
 //    {
 //        NSDictionary *pvarchr=[pvarEventArray objectAtIndex:pvarEventArray.count-1];
 //        XCTAssertEqualObjects(pvarchr[@"eventType"], @"pvar");
-//        XCTAssertTrue([ManualTrackHelper CheckContainsKey:pvarchr :@"var"]);
-//        XCTAssertEqualObjects(pvarchr[@"var"][@"pvar1"], @"pupdate");
+//        XCTAssertTrue([ManualTrackHelper CheckContainsKey:pvarchr :@"attributes"]);
+//        XCTAssertEqualObjects(pvarchr[@"attributes"][@"pvar1"], @"pupdate");
 //        NSDictionary *chres=[ManualTrackHelper PvarEventCheck:pvarchr];
 //        //NSLog(@"Check Result:%@",chres);
 //        XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
@@ -350,8 +349,8 @@
 ////    {
 ////        NSDictionary *pvarchr=[pvarEventArray objectAtIndex:pvarEventArray.count-1];
 ////        XCTAssertEqualObjects(pvarchr[@"eventType"], @"pvar");
-////        XCTAssertTrue([ManualTrackHelper CheckContainsKey:pvarchr :@"var"]);
-////        XCTAssertEqual([pvarchr[@"var"][@"pnvar1"] intValue],342);
+////        XCTAssertTrue([ManualTrackHelper CheckContainsKey:pvarchr :@"attributes"]);
+////        XCTAssertEqual([pvarchr[@"attributes"][@"pnvar1"] intValue],342);
 ////        NSDictionary *chres=[ManualTrackHelper PvarEventCheck:pvarchr];
 ////        //NSLog(@"Check Result:%@",chres);
 ////        XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
@@ -385,9 +384,9 @@
 //    {
 //        NSDictionary *pvarchr=[pvarEventArray objectAtIndex:pvarEventArray.count-1];
 //        XCTAssertEqualObjects(pvarchr[@"eventType"], @"pvar");
-//        XCTAssertTrue([ManualTrackHelper CheckContainsKey:pvarchr :@"var"]);
+//        XCTAssertTrue([ManualTrackHelper CheckContainsKey:pvarchr :@"attributes"]);
 //        NSString *fnum=@"78.27";
-//        XCTAssertEqual([pvarchr[@"var"][@"pnvar1"] floatValue],[fnum floatValue]);
+//        XCTAssertEqual([pvarchr[@"attributes"][@"pnvar1"] floatValue],[fnum floatValue]);
 //        NSDictionary *chres=[ManualTrackHelper PvarEventCheck:pvarchr];
 //        //NSLog(@"Check Result:%@",chres);
 //        XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
