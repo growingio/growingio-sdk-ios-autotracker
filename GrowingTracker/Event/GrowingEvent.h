@@ -20,19 +20,19 @@
 
 #import <Foundation/Foundation.h>
 
-static NSString * _Nonnull const kEventTypeKeyClose = @"cls";
-static NSString * _Nonnull const kEventTypeKeyVisit = @"vst";
-static NSString * _Nonnull const kEventTypeKeyVisitor = @"vstr";
-static NSString * _Nonnull const kEventTypeKeyCustom = @"cstm";
+static NSString * _Nonnull const kEventTypeKeyClose = @"APP_CLOSED";
+static NSString * _Nonnull const kEventTypeKeyVisit = @"VISIT";
+static NSString * _Nonnull const kEventTypeKeyVisitor = @"VISITOR_ATTRIBUTES";
+static NSString * _Nonnull const kEventTypeKeyCustom = @"CUSTOM";
 static NSString * _Nonnull const kEventTypeKeyPeopleVariable = @"ppl";
 
-static NSString * _Nonnull const kEventTypeKeyPage = @"page";
-static NSString * _Nonnull const kEventTypeKeyPageVariable = @"pvar";
-static NSString * _Nonnull const kEventTypeKeyConversionVariable = @"evar";
+static NSString * _Nonnull const kEventTypeKeyPage = @"PAGE";
+static NSString * _Nonnull const kEventTypeKeyPageVariable = @"PAGE_ATTRIBUTES";
+static NSString * _Nonnull const kEventTypeKeyConversionVariable = @"CONVERSION_VARIABLES";
 
-static NSString * _Nonnull const kEventTypeKeyClick = @"clck";
-static NSString * _Nonnull const kEventTypeKeyInputChange = @"chng";
-static NSString * _Nonnull const kEventTypeKeyInputSubmit = @"sbmt";
+static NSString * _Nonnull const kEventTypeKeyClick = @"VIEW_CLICK";
+static NSString * _Nonnull const kEventTypeKeyInputChange = @"VIEW_CHANGE";
+static NSString * _Nonnull const kEventTypeKeyInputSubmit = @"FORM_SUBMIT";
 
 
 // event类型定义

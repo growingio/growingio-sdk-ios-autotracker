@@ -41,8 +41,8 @@
     {
         NSDictionary *cstmchr=[cstmEventArray objectAtIndex:cstmEventArray.count-1];
         //NSLog(@"Cstm事件：%@",cstmchr);
-        XCTAssertEqualObjects(cstmchr[@"t"], @"cstm");
-        XCTAssertEqualObjects(cstmchr[@"n"], @"GrowingIO2018");
+        XCTAssertEqualObjects(cstmchr[@"eventType"], @"cstm");
+        XCTAssertEqualObjects(cstmchr[@"eventName"], @"GrowingIO2018");
         NSDictionary *chres=[ManualTrackHelper CstmEventCheck:cstmchr];
         //NSLog(@"Check Result:%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
@@ -77,8 +77,8 @@
     if (cstmEventArray.count>=1)
     {
         NSDictionary *cstmchr=[cstmEventArray objectAtIndex:cstmEventArray.count-1];
-        XCTAssertEqualObjects(cstmchr[@"t"], @"cstm");
-        XCTAssertEqualObjects(cstmchr[@"n"], @"GIO%#*/");
+        XCTAssertEqualObjects(cstmchr[@"eventType"], @"cstm");
+        XCTAssertEqualObjects(cstmchr[@"eventName"], @"GIO%#*/");
         NSDictionary *chres=[ManualTrackHelper CstmEventCheck:cstmchr];
         //NSLog(@"Check Result:%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
@@ -91,7 +91,7 @@
     }
     else
     {
-        NSLog(@"cstm事件,EventId为特殊字符测试失败，cstm的n为：%@",cstmEventArray[0][@"n"]);
+        NSLog(@"cstm事件,EventId为特殊字符测试失败，cstm的n为：%@",cstmEventArray[0][@"eventName"]);
         XCTAssertEqual(1,0);
     }
 }
@@ -113,8 +113,8 @@
     if (cstmEventArray.count>=1)
     {
         NSDictionary *cstmchr=[cstmEventArray objectAtIndex:cstmEventArray.count-1];
-        XCTAssertEqualObjects(cstmchr[@"t"], @"cstm");
-        XCTAssertEqualObjects(cstmchr[@"n"], @"企业增长");
+        XCTAssertEqualObjects(cstmchr[@"eventType"], @"cstm");
+        XCTAssertEqualObjects(cstmchr[@"eventName"], @"企业增长");
         NSDictionary *chres=[ManualTrackHelper CstmEventCheck:cstmchr];
         //NSLog(@"Check Result:%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
@@ -127,7 +127,7 @@
     }
     else
     {
-        NSLog(@"cstm事件,EventId为中文测试失败，cstm的n为：%@",cstmEventArray[0][@"n"]);
+        NSLog(@"cstm事件,EventId为中文测试失败，cstm的n为：%@",cstmEventArray[0][@"eventName"]);
         XCTAssertEqual(1,0);
     }
 }
@@ -240,8 +240,8 @@
 //    if (cstmEventArray.count>=1)
 //    {
 //        NSDictionary *cstmchr=[cstmEventArray objectAtIndex:cstmEventArray.count-1];
-//        XCTAssertEqualObjects(cstmchr[@"t"], @"cstm");
-//        XCTAssertEqualObjects(cstmchr[@"n"], @"GIO");
+//        XCTAssertEqualObjects(cstmchr[@"eventType"], @"cstm");
+//        XCTAssertEqualObjects(cstmchr[@"eventName"], @"GIO");
 //        NSString *cstmnum=[cstmchr objectForKey:@"num"];
 //        NSString *chnum=@"21.35";
 //        XCTAssertEqual([cstmnum floatValue],[chnum floatValue]);
@@ -350,8 +350,8 @@
 //    {
 //        NSDictionary *cstmchr=[cstmEventArray objectAtIndex:cstmEventArray.count-1];
 //        //判断关键字段
-//        XCTAssertEqualObjects(cstmchr[@"t"], @"cstm");
-//        XCTAssertEqualObjects(cstmchr[@"n"], @"GIO");
+//        XCTAssertEqualObjects(cstmchr[@"eventType"], @"cstm");
+//        XCTAssertEqualObjects(cstmchr[@"eventName"], @"GIO");
 //        NSString *cstmnum=[cstmchr objectForKey:@"num"];
 //        XCTAssertEqual([cstmnum intValue],123);
 //        XCTAssertTrue([ManualTrackHelper CheckContainsKey:cstmchr :@"var"]);
@@ -395,8 +395,8 @@
     {
         NSDictionary *cstmchr=[cstmEventArray objectAtIndex:cstmEventArray.count-1];
         //判断关键字段
-        XCTAssertEqualObjects(cstmchr[@"t"], @"cstm");
-        XCTAssertEqualObjects(cstmchr[@"n"], @"GIO");
+        XCTAssertEqualObjects(cstmchr[@"eventType"], @"cstm");
+        XCTAssertEqualObjects(cstmchr[@"eventName"], @"GIO");
         XCTAssertTrue([ManualTrackHelper CheckContainsKey:cstmchr :@"var"]);
         XCTAssertEqualObjects(cstmchr[@"var"][@"name"], @"GIO");
         XCTAssertEqualObjects(cstmchr[@"var"][@"title"], @"QA");
@@ -439,8 +439,8 @@
     {
         NSDictionary *cstmchr=[cstmEventArray objectAtIndex:cstmEventArray.count-1];
         //判断关键字段
-        XCTAssertEqualObjects(cstmchr[@"t"], @"cstm");
-        XCTAssertEqualObjects(cstmchr[@"n"], @"GIO");
+        XCTAssertEqualObjects(cstmchr[@"eventType"], @"cstm");
+        XCTAssertEqualObjects(cstmchr[@"eventName"], @"GIO");
         XCTAssertTrue([ManualTrackHelper CheckContainsKey:cstmchr :@"var"]);
         XCTAssertEqualObjects(cstmchr[@"var"][@"name"], @"GrowingIO");
         XCTAssertEqualObjects(cstmchr[@"var"][@"title"], @"RD");
@@ -546,8 +546,8 @@
     {
         NSDictionary *cstmchr=[cstmEventArray objectAtIndex:cstmEventArray.count-1];
         //判断关键字段
-        XCTAssertEqualObjects(cstmchr[@"t"], @"cstm");
-        XCTAssertEqualObjects(cstmchr[@"n"], @"北京");
+        XCTAssertEqualObjects(cstmchr[@"eventType"], @"cstm");
+        XCTAssertEqualObjects(cstmchr[@"eventName"], @"北京");
         //判断测量协议
         NSDictionary *chres=[ManualTrackHelper CstmEventCheck:cstmchr];
         //NSLog(@"Check Result:%@",chres);
@@ -561,7 +561,7 @@
     }
     else
     {
-        NSLog(@"cstm事件,EventId中文测试失败，cstm的n为：%@",cstmEventArray[0][@"n"]);
+        NSLog(@"cstm事件,EventId中文测试失败，cstm的n为：%@",cstmEventArray[0][@"eventName"]);
         XCTAssertEqual(1,0);
     }
 }

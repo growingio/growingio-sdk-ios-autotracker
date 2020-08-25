@@ -29,7 +29,7 @@
 //    if (apvarEventArray.count>=1)
 //    {
 //        NSDictionary *apvarchr=[apvarEventArray objectAtIndex:apvarEventArray.count-1];
-//        XCTAssertEqualObjects(apvarchr[@"t"], @"page");
+//        XCTAssertEqualObjects(apvarchr[@"eventType"], @"page");
 //        XCTAssertTrue([ManualTrackHelper CheckContainsKey:apvarchr :@"var"]);
 //        XCTAssertEqualObjects(apvarchr[@"var"][@"cs2"], @"GIO");
 //        XCTAssertEqualObjects(apvarchr[@"var"][@"cs3"], @"QA");
@@ -88,7 +88,7 @@
 //    if (apvarEventArray.count>=1)
 //    {
 //        NSDictionary *apvarchr=[apvarEventArray objectAtIndex:apvarEventArray.count-1];
-//        XCTAssertEqualObjects(apvarchr[@"t"], @"page");
+//        XCTAssertEqualObjects(apvarchr[@"eventType"], @"page");
 //        NSLog(@"AppVar事件，setAppVariable，var为Dict为空测试通过-----passed");
 //    }
 //    else
@@ -135,7 +135,7 @@
 //    if (apvarEventArray.count>=1)
 //    {
 //        NSDictionary *apvarchr=[apvarEventArray objectAtIndex:apvarEventArray.count-1];
-//        XCTAssertEqualObjects(apvarchr[@"t"], @"page");
+//        XCTAssertEqualObjects(apvarchr[@"eventType"], @"page");
 //        XCTAssertTrue([ManualTrackHelper CheckContainsKey:apvarchr :@"var"]);
 //        XCTAssertEqualObjects(apvarchr[@"var"][@"cs4"], @"Addr BeiJing");
 //        NSLog(@"AppVar事件,setAppVariable:andStringValue设置变量测试通过-----passed");
@@ -165,7 +165,7 @@
 //    if (apvarEventArray.count>=1)
 //    {
 //        NSDictionary *apvarchr=[apvarEventArray objectAtIndex:apvarEventArray.count-1];
-//        XCTAssertEqualObjects(apvarchr[@"t"], @"page");
+//        XCTAssertEqualObjects(apvarchr[@"eventType"], @"page");
 //        XCTAssertTrue([ManualTrackHelper CheckContainsKey:apvarchr :@"var"]);
 //        XCTAssertEqualObjects(apvarchr[@"var"][@"cs4"], @"Addr HeNan");
 //        NSLog(@"AppVar事件,setAppVariable:andStringValue更新变量测试通过-----passed");
@@ -314,7 +314,7 @@
 //    {
 //        NSDictionary *apvarchr=[apvarEventArray objectAtIndex:apvarEventArray.count-1];
 //        //NSLog(@"*****AppVar事件：%@",apvarchr);
-//        XCTAssertEqualObjects(apvarchr[@"t"], @"page");
+//        XCTAssertEqualObjects(apvarchr[@"eventType"], @"page");
 //        XCTAssertTrue([ManualTrackHelper CheckContainsKey:apvarchr :@"var"]);
 //        XCTAssertEqual([apvarchr[@"var"][@"cs2"] intValue], 422);
 //        NSLog(@"AppVar事件，setAppVariable:andNumberValue设置变量测试通过-----passed");
@@ -345,7 +345,7 @@
 //    {
 //        NSDictionary *apvarchr=[apvarEventArray objectAtIndex:apvarEventArray.count-1];
 //        //NSLog(@"*****AppVar事件：%@",apvarchr);
-//        XCTAssertEqualObjects(apvarchr[@"t"], @"page");
+//        XCTAssertEqualObjects(apvarchr[@"eventType"], @"page");
 //        XCTAssertTrue([ManualTrackHelper CheckContainsKey:apvarchr :@"var"]);
 //        NSString *floatchr=@"39.82";
 //        XCTAssertEqual([apvarchr[@"var"][@"cs2"] floatValue], [floatchr floatValue]);

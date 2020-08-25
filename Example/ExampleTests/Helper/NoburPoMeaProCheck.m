@@ -88,11 +88,11 @@
 {
     NSDictionary *vstchres;
     //测试中发现测量协议字段过多，产品删除了b, p, ch,dt
-    //NSArray * vstprome=@[@"u",@"s",@"t",@"tm",@"av",@"b",@"d",@"p",@"r",@"ch",@"sh",@"sw",@"db",@"dm",@"ph",@"os",@"osv",@"ca",@"cv",@"sn",@"v",@"l",@"lat",@"lng",@"gesid",@"esid",@"tz",@"utm",@"cb",@"iv",@"dt",@"ui",@"cs1"];
-//    NSArray * vstprome=@[@"u",@"s",@"t",@"tm",@"av",@"d",@"r",@"sh",@"sw",@"db",@"dm",@"ph",@"os",@"osv",@"ca",@"cv",@"sn",@"v",@"l",@"lat",@"lng",@"gesid",@"esid",@"tz",@"utm",@"cb",@"iv",@"ui",@"cs1"];
+    //NSArray * vstprome=@[@"userId",@"sessionId",@"eventType",@"timestamp",@"av",@"b",@"domain",@"pageName",@"r",@"ch",@"screenHeight",@"screenWidth",@"deviceBrand",@"deviceModel",@"deviceType",@"operatingSystem",@"operatingSystemVersion",@"ca",@"appVersion",@"appName",@"textValue",@"language",@"latitude",@"longitude",@"globalSequenceId",@"eventSequenceId",@"tz",@"utm",@"cb",@"iv",@"dt",@"ui",@"userId"];
+//    NSArray * vstprome=@[@"userId",@"sessionId",@"eventType",@"timestamp",@"av",@"domain",@"r",@"screenHeight",@"screenWidth",@"deviceBrand",@"deviceModel",@"deviceType",@"operatingSystem",@"operatingSystemVersion",@"ca",@"appVersion",@"appName",@"textValue",@"language",@"latitude",@"longitude",@"globalSequenceId",@"eventSequenceId",@"tz",@"utm",@"cb",@"iv",@"ui",@"userId"];
     
     //SDK重构2.5.0,调整测量协议 2-18-08-09
-    NSArray *vstprome=@[@"u",@"s",@"t",@"tm",@"av",@"d",@"sh",@"sw",@"db",@"dm",@"ph",@"os",@"osv",@"cv",@"sn",@"v",@"l",@"lat",@"lng",@"iv",@"ui",@"cs1",@"gesid",@"esid",@"fv"];
+    NSArray *vstprome=@[@"userId",@"sessionId",@"eventType",@"timestamp",@"av",@"domain",@"screenHeight",@"screenWidth",@"deviceBrand",@"deviceModel",@"deviceType",@"operatingSystem",@"operatingSystemVersion",@"appVersion",@"appName",@"textValue",@"language",@"latitude",@"longitude",@"iv",@"ui",@"userId",@"globalSequenceId",@"eventSequenceId",@"fv"];
     //对比测量协议结构
     if (vstevent.count>0)
     {
@@ -106,9 +106,9 @@
 +(NSDictionary *)ClckEventCheck:(NSDictionary *)clckevent
 {
     NSDictionary *clckchres;
-   // NSArray * clckprome=@[@"u",@"s",@"t",@"tm",@"ppt",@"pctm",@"ptm",@"d",@"p",@"r",@"tm",@"v",@"gesid",@"esid",@"x",@"idx",@"cs1"];
+   // NSArray * clckprome=@[@"userId",@"sessionId",@"eventType",@"timestamp",@"ppt",@"pctm",@"pageShowTimestamp",@"domain",@"pageName",@"r",@"timestamp",@"textValue",@"globalSequenceId",@"eventSequenceId",@"xpath",@"index",@"userId"];
     //SDK重构2.5.0,调整测量协议 2-18-08-09
-    NSArray * clckprome=@[@"u",@"s",@"t",@"tm",@"d",@"p",@"v",@"x",@"idx",@"cs1",@"gesid",@"esid"];
+    NSArray * clckprome=@[@"userId",@"sessionId",@"eventType",@"timestamp",@"domain",@"pageName",@"textValue",@"xpath",@"index",@"userId",@"globalSequenceId",@"eventSequenceId"];
     //对比测量协议结构
     if (clckevent.count>0)
     {
@@ -117,13 +117,13 @@
     }
     return clckchres;
 }
-//chng事件对比，测量协议字段完整且每个字段不为空
+//VIEW_CHANGE事件对比，测量协议字段完整且每个字段不为空
 +(NSDictionary *)ChngEventCheck:(NSDictionary *)chngevent
 {
     NSDictionary *chngchres;
-    //NSArray * chngprome=@[@"u",@"s",@"t",@"tm",@"ppt",@"pctm",@"ptm",@"d",@"p",@"gesid",@"esid",@"n",@"x",@"v",@"tm",@"cs1"];
+    //NSArray * chngprome=@[@"userId",@"sessionId",@"eventType",@"timestamp",@"ppt",@"pctm",@"pageShowTimestamp",@"domain",@"pageName",@"globalSequenceId",@"eventSequenceId",@"eventName",@"xpath",@"textValue",@"timestamp",@"userId"];
      //SDK重构2.5.0,调整测量协议 2-18-08-09
-    NSArray * chngprome=@[@"u",@"s",@"t",@"tm",@"d",@"p",@"n",@"x",@"v",@"tm",@"cs1",@"gesid",@"esid"];
+    NSArray * chngprome=@[@"userId",@"sessionId",@"eventType",@"timestamp",@"domain",@"pageName",@"eventName",@"xpath",@"textValue",@"timestamp",@"userId",@"globalSequenceId",@"eventSequenceId"];
     //对比测量协议结构
     if (chngevent.count>0)
     {
@@ -137,11 +137,11 @@
 +(NSDictionary *)ImpEventCheck:(NSDictionary *)impevent
 {
     NSDictionary *impchres;
-    //NSArray * impprome=@[@"u",@"s",@"t",@"tm",@"d",@"p",@"gesid",@"esid",@"ppt",@"pctm",@"ptm",@"tm",@"n",@"v",@"x",@"idx",@"cs1"];
+    //NSArray * impprome=@[@"userId",@"sessionId",@"eventType",@"timestamp",@"domain",@"pageName",@"globalSequenceId",@"eventSequenceId",@"ppt",@"pctm",@"pageShowTimestamp",@"timestamp",@"eventName",@"textValue",@"xpath",@"index",@"userId"];
     //修改测量协议，去掉gesid,esid两项，2018-05-30
-    //NSArray * impprome=@[@"u",@"s",@"t",@"tm",@"d",@"p",@"ppt",@"pctm",@"ptm",@"tm",@"n",@"v",@"x",@"idx",@"cs1"];
+    //NSArray * impprome=@[@"userId",@"sessionId",@"eventType",@"timestamp",@"domain",@"pageName",@"ppt",@"pctm",@"pageShowTimestamp",@"timestamp",@"eventName",@"textValue",@"xpath",@"index",@"userId"];
      //SDK重构2.5.0,调整测量协议 2018-08-09
-    NSArray * impprome=@[@"u",@"s",@"t",@"tm",@"d",@"p",@"tm",@"n",@"v",@"x",@"idx",@"cs1"];
+    NSArray * impprome=@[@"userId",@"sessionId",@"eventType",@"timestamp",@"domain",@"pageName",@"timestamp",@"eventName",@"textValue",@"xpath",@"index",@"userId"];
     //对比测量协议结构
     if (impevent.count>0)
     {

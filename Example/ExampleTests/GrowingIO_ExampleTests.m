@@ -19,7 +19,7 @@
 
 // beforeEach 的作用参考KIF，简单概括就是构造测试Case的必要条件
 - (void)beforeEach {
-    [[viewTester usingLabel:@"chng请求"] tap];
+    [[viewTester usingLabel:@"VIEW_CHANGE请求"] tap];
 }
 
 // afterEach 的作用参考KIF，简单概括就是恢复app状态到初始状态，使得本case不对下次测试造成影响
@@ -50,14 +50,14 @@
 }
 
 //- (void)testExample {
-//    //构造chng事件
+//    //构造VIEW_CHANGE事件
 //    [[viewTester usingLabel:@"UserName"] enterText:@"GrowingIOUser\n"];
 //    [[viewTester usingLabel:@"PassWord"] waitToBecomeFirstResponder];
 //    [[viewTester usingLabel:@"PassWord"] waitForView];
 //    [[viewTester usingLabel:@"PassWord"] enterText:@"GrowingIO" expectedResult:@"GrowingIO"];
 //
 //    //MockEventQueue 缓存事件并提供了几个高效的接口
-//    NSUInteger chngEventCount = [[MockEventQueue eventsFor:@"chng"] count];
+//    NSUInteger chngEventCount = [[MockEventQueue eventsFor:@"VIEW_CHANGE"] count];
 //
 //    NSUInteger acvEventCount = [[MockEventQueue eventsFor:@"app_activate"] count];
 //

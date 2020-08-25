@@ -33,7 +33,7 @@
     if (vstrEventArray.count>=1)
     {
         NSDictionary *epvarchr=[vstrEventArray objectAtIndex:vstrEventArray.count-1];
-        XCTAssertEqualObjects(epvarchr[@"t"], @"vstr");
+        XCTAssertEqualObjects(epvarchr[@"eventType"], @"vstr");
         XCTAssertTrue([ManualTrackHelper CheckContainsKey:epvarchr :@"var"]);
         XCTAssertEqualObjects(epvarchr[@"var"][@"var1"], @"good");
         XCTAssertEqualObjects(epvarchr[@"var"][@"var2"], @"excell");
@@ -97,7 +97,7 @@
 //    if (vstrEventArray.count>=1)
 //    {
 //        NSDictionary *epvarchr=[vstrEventArray objectAtIndex:vstrEventArray.count-1];
-//        XCTAssertEqualObjects(epvarchr[@"t"], @"vstr");
+//        XCTAssertEqualObjects(epvarchr[@"eventType"], @"vstr");
 //        NSDictionary *chres=[ManualTrackHelper VstrEventCheck:epvarchr];
 //        //NSLog(@"Check Result:%@",chres);
 //        XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");

@@ -95,7 +95,7 @@
         UIView *view = (UIView*)node;
         UIViewController *parent = [view growingHelper_viewController];
         NSString *path = [GrowingNodeHelper xPathForViewController:parent];
-        pageData = [NSMutableDictionary dictionaryWithObjectsAndKeys:path, @"p", nil];
+        pageData = [NSMutableDictionary dictionaryWithObjectsAndKeys:path, @"pageName", nil];
     }else {
         //错误情况
         NSDictionary *pageData = [[[GrowingPageManager sharedInstance] currentViewController] growingNodeDataDict];
@@ -104,7 +104,7 @@
                 [GrowingEventManager shareInstance].lastPageEvent;
             if (lastPageEvent) {
                 pageData = [NSMutableDictionary
-                    dictionaryWithObjectsAndKeys:lastPageEvent.pageName, @"p", nil];
+                    dictionaryWithObjectsAndKeys:lastPageEvent.pageName, @"pageName", nil];
             }
         }
     }
@@ -119,8 +119,8 @@
                               elements:(NSArray<GrowingActionEventElement *> *)
                                            elements {
     if (self = [super initWithTimestamp:nil]) {
-        self.pageName = pageData[@"p"];
-        self.pageTimestamp = pageData[@"ptm"];
+        self.pageName = pageData[@"pageName"];
+        self.pageTimestamp = pageData[@"pageShowTimestamp"];
 //        // 根据测量协议，点击事件的 p 字段需要拼接父级 p
 //        // https://growingio.atlassian.net/wiki/spaces/SDK/pages/1120830020/iOS+3.0
 //        NSString *realPage = [self pageNameWithNode:view];
@@ -144,8 +144,6 @@
                   eventType:(GrowingEventType)eventType
                    pageData:(NSDictionary *)pageData
                  withChilds:(BOOL)withChilds {
-//    __block BOOL isFirst = YES;
-
     NSMutableArray<GrowingActionEventElement *> *elements =
         [NSMutableArray arrayWithCapacity:5];
     
@@ -153,36 +151,6 @@
         [[GrowingActionEventElement alloc] initWithNode:triggerNode
                                        triggerEventType:eventType];
     [elements addObject:element];
-    
-//    [manager enumerateChildrenUsingBlock:^(
-//                 id<GrowingNode> aNode,
-//                 GrowingNodeManagerEnumerateContext *context) {
-//        if (!withChilds) {
-//            [context stop];
-//        }
-//
-//        BOOL needTrack = NO;
-//        BOOL userInActionNeedTrack = YES;
-//        // 只捕获子views的可响应事件的一级node
-//        if ([aNode growingNodeUserInteraction]) {
-//            if (isFirst) {
-//                isFirst = NO;
-//                needTrack = YES;
-//            } else {
-//                userInActionNeedTrack = NO;
-//                [context skipThisChilds];
-//            }
-//        }
-//
-//        if (([aNode growingNodeContent] || needTrack) &&
-//            userInActionNeedTrack) {
-//            GrowingActionEventElement *element =
-//                [[GrowingActionEventElement alloc] initWithNode:aNode
-//                                             nodeManagerContext:context
-//                                               triggerEventType:eventType];
-//            [elements addObject:element];
-//        }
-//    }];
 
     GrowingEvent *event = [[self alloc] initWithNode:triggerNode
                                             pageData:pageData
@@ -196,13 +164,13 @@
 }
 
 + (instancetype)hybridActionEventWithDataDict:(NSDictionary *)dataDict {
-    NSNumber *timestamp = dataDict[@"ptm"];
+    NSNumber *timestamp = dataDict[@"pageShowTimestamp"];
 
     GrowingActionEvent *actionEvent =
         [[self alloc] initWithTimestamp:timestamp];
-    actionEvent.pageName = dataDict[@"p"];
-    actionEvent.query = dataDict[@"q"];
-    actionEvent.hybridDomain = dataDict[@"d"];
+    actionEvent.pageName = dataDict[@"pageName"];
+    actionEvent.query = dataDict[@"queryParameters"];
+    actionEvent.hybridDomain = dataDict[@"domain"];
 
     NSArray<NSDictionary *> *elementDicts = dataDict[@"e"];
     NSMutableArray<GrowingActionEventElement *> *elementsM =
@@ -211,11 +179,11 @@
     for (NSDictionary *elementDict in elementDicts) {
         GrowingActionEventElement *element =
             [[GrowingActionEventElement alloc] init];
-        element.hyperLink = elementDict[@"h"];
-        element.index = elementDict[@"i"];
-        element.content = elementDict[@"v"];
-        element.xPath = elementDict[@"x"];
-        element.timestamp = elementDict[@"tm"];
+        element.hyperLink = elementDict[@"hyperlink"];
+        element.index = elementDict[@"index"];
+        element.content = elementDict[@"textValue"];
+        element.xPath = elementDict[@"xpath"];
+        element.timestamp = elementDict[@"timestamp"];
 
         [elementsM addObject:element];
     }
@@ -262,17 +230,17 @@
         [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
 
     // sub element will fill these two field
-    if ([dataDictM valueForKey:@"gesid"]) {
-        [dataDictM removeObjectForKey:@"gesid"];
+    if ([dataDictM valueForKey:@"globalSequenceId"]) {
+        [dataDictM removeObjectForKey:@"globalSequenceId"];
     }
 
-    if ([dataDictM valueForKey:@"esid"]) {
-        [dataDictM removeObjectForKey:@"esid"];
+    if ([dataDictM valueForKey:@"eventSequenceId"]) {
+        [dataDictM removeObjectForKey:@"eventSequenceId"];
     }
 
     dataDictM[@"q"] = self.query;
-    dataDictM[@"p"] = self.pageName;
-    dataDictM[@"d"] = self.hybridDomain ?: self.domain;
+    dataDictM[@"pageName"] = self.pageName;
+    dataDictM[@"domain"] = self.hybridDomain ?: self.domain;
 
     NSMutableArray *eles = [NSMutableArray arrayWithCapacity:5];
     for (GrowingActionEventElement *element in self.elements) {

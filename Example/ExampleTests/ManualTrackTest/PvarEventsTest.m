@@ -34,7 +34,7 @@
     if (pvarEventArray.count>=1)
     {
         NSDictionary *pvarchr=[pvarEventArray objectAtIndex:pvarEventArray.count-1];
-        XCTAssertEqualObjects(pvarchr[@"t"], @"pvar");
+        XCTAssertEqualObjects(pvarchr[@"eventType"], @"pvar");
 //        XCTAssertTrue([ManualTrackHelper CheckContainsKey:pvarchr :@"var"]);
 //        XCTAssertEqualObjects(pvarchr[@"var"][@"page1"], @"test");
 //        XCTAssertEqualObjects(pvarchr[@"var"][@"ptvar"], @"flag1");
@@ -154,7 +154,7 @@
 //    if (pvarEventArray.count>=1)
 //    {
 //        NSDictionary *pvarchr=[pvarEventArray objectAtIndex:pvarEventArray.count-1];
-//        XCTAssertEqualObjects(pvarchr[@"t"], @"pvar");
+//        XCTAssertEqualObjects(pvarchr[@"eventType"], @"pvar");
 //        XCTAssertTrue([ManualTrackHelper CheckContainsKey:pvarchr :@"var"]);
 //        XCTAssertEqualObjects(pvarchr[@"var"][@"pvar1"], @"pvalue");
 //        NSDictionary *chres=[ManualTrackHelper PvarEventCheck:pvarchr];
@@ -189,7 +189,7 @@
 //    if (pvarEventArray.count>=1)
 //    {
 //        NSDictionary *pvarchr=[pvarEventArray objectAtIndex:pvarEventArray.count-1];
-//        XCTAssertEqualObjects(pvarchr[@"t"], @"pvar");
+//        XCTAssertEqualObjects(pvarchr[@"eventType"], @"pvar");
 //        XCTAssertTrue([ManualTrackHelper CheckContainsKey:pvarchr :@"var"]);
 //        XCTAssertEqualObjects(pvarchr[@"var"][@"pvar1"], @"pupdate");
 //        NSDictionary *chres=[ManualTrackHelper PvarEventCheck:pvarchr];
@@ -349,7 +349,7 @@
 ////    if (pvarEventArray.count>=1)
 ////    {
 ////        NSDictionary *pvarchr=[pvarEventArray objectAtIndex:pvarEventArray.count-1];
-////        XCTAssertEqualObjects(pvarchr[@"t"], @"pvar");
+////        XCTAssertEqualObjects(pvarchr[@"eventType"], @"pvar");
 ////        XCTAssertTrue([ManualTrackHelper CheckContainsKey:pvarchr :@"var"]);
 ////        XCTAssertEqual([pvarchr[@"var"][@"pnvar1"] intValue],342);
 ////        NSDictionary *chres=[ManualTrackHelper PvarEventCheck:pvarchr];
@@ -384,7 +384,7 @@
 //    if (pvarEventArray.count>=1)
 //    {
 //        NSDictionary *pvarchr=[pvarEventArray objectAtIndex:pvarEventArray.count-1];
-//        XCTAssertEqualObjects(pvarchr[@"t"], @"pvar");
+//        XCTAssertEqualObjects(pvarchr[@"eventType"], @"pvar");
 //        XCTAssertTrue([ManualTrackHelper CheckContainsKey:pvarchr :@"var"]);
 //        NSString *fnum=@"78.27";
 //        XCTAssertEqual([pvarchr[@"var"][@"pnvar1"] floatValue],[fnum floatValue]);

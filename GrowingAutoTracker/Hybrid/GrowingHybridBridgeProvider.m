@@ -125,7 +125,7 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
     }
 
     NSDictionary *evetDataDict = (NSDictionary *) dict;
-    NSString *type = evetDataDict[@"t"];
+    NSString *type = evetDataDict[@"eventType"];
 
     GrowingEvent *event = nil;
     if ([type isEqualToString:kEventTypeKeyPage]) {

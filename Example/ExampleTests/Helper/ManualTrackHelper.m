@@ -28,11 +28,11 @@
 +(NSDictionary *)CstmEventCheck:(NSDictionary *)cstmevent
 {
     NSDictionary *cstmchres;
-    //NSArray * cstmprome=@[@"u",@"s",@"t",@"tm",@"ptm",@"d",@"n",@"num",@"gesid",@"esid",@"var",@"cs1"];
+    //NSArray * cstmprome=@[@"userId",@"sessionId",@"eventType",@"timestamp",@"pageShowTimestamp",@"domain",@"eventName",@"num",@"globalSequenceId",@"eventSequenceId",@"var",@"userId"];
     //重构代码后，废弃ptm字段 2018-07-23
-    //NSArray * cstmprome=@[@"u",@"s",@"t",@"tm",@"d",@"n",@"num",@"gesid",@"esid",@"var",@"cs1"];
+    //NSArray * cstmprome=@[@"userId",@"sessionId",@"eventType",@"timestamp",@"domain",@"eventName",@"num",@"globalSequenceId",@"eventSequenceId",@"var",@"userId"];
     //SDK重构2.5.0,调整测量协议 2018-08-09
-    NSArray * cstmprome=@[@"u",@"s",@"t",@"tm",@"p",@"d",@"n",@"num",@"var",@"cs1",@"gesid",@"esid"];
+    NSArray * cstmprome=@[@"userId",@"sessionId",@"eventType",@"timestamp",@"pageName",@"domain",@"eventName",@"num",@"var",@"userId",@"globalSequenceId",@"eventSequenceId"];
     //对比测量协议结构
     if (cstmevent.count>0)
     {
@@ -46,9 +46,9 @@
 +(NSDictionary *)PplEventCheck:(NSDictionary *)pplevent
 {
     NSDictionary *pplchres;
-    //NSArray * pplprome=@[@"u",@"s",@"t",@"tm",@"d",@"gesid",@"esid",@"var",@"cs1"];
+    //NSArray * pplprome=@[@"userId",@"sessionId",@"eventType",@"timestamp",@"domain",@"globalSequenceId",@"eventSequenceId",@"var",@"userId"];
      //SDK重构2.5.0,调整测量协议 2018-08-09
-    NSArray * pplprome=@[@"u",@"s",@"t",@"tm",@"d",@"var",@"cs1",@"gesid",@"esid"];
+    NSArray * pplprome=@[@"userId",@"sessionId",@"eventType",@"timestamp",@"domain",@"var",@"userId",@"globalSequenceId",@"eventSequenceId"];
     //对比测量协议结构
     if (pplevent.count>0)
     {
@@ -62,7 +62,7 @@
 +(NSDictionary *)PvarEventCheck:(NSDictionary *)pvarevent
 {
     NSDictionary *pvarchres;
-    NSArray * pvarlprome=@[@"u",@"s",@"t",@"tm",@"d",@"p",@"var",@"cs1",@"gesid",@"esid"];
+    NSArray * pvarlprome=@[@"userId",@"sessionId",@"eventType",@"timestamp",@"domain",@"pageName",@"var",@"userId",@"globalSequenceId",@"eventSequenceId"];
     //对比测量协议结构
     if (pvarevent.count>0)
     {
@@ -77,7 +77,7 @@
 +(NSDictionary *)EvarEventCheck:(NSDictionary *)evarevent
 {
     NSDictionary *evarchres;
-    NSArray * evarlprome=@[@"u",@"s",@"t",@"tm",@"d",@"var",@"cs1",@"esid",@"gesid"];
+    NSArray * evarlprome=@[@"userId",@"sessionId",@"eventType",@"timestamp",@"domain",@"var",@"userId",@"eventSequenceId",@"globalSequenceId"];
     //对比测量协议结构
     if (evarevent.count>0)
     {
@@ -91,7 +91,7 @@
 +(NSDictionary *)VstrEventCheck:(NSDictionary *)vstrevent
 {
     NSDictionary *vstrchres;
-    NSArray * vstrprome=@[@"u",@"s",@"t",@"tm",@"d",@"var",@"cs1"];
+    NSArray * vstrprome=@[@"userId",@"sessionId",@"eventType",@"timestamp",@"domain",@"var",@"userId"];
     //对比测量协议结构
     if (vstrevent.count>0)
     {

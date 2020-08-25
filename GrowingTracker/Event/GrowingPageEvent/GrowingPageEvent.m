@@ -58,11 +58,11 @@
 
 + (instancetype)hybridPageEventWithDataDict:(NSDictionary *)dataDict {
 
-    NSString *referalPage = dataDict[@"rp"];
-    NSString *title = dataDict[@"tl"];
-    NSString *pageName = dataDict[@"p"];
-    NSString *query = dataDict[@"q"];
-    NSNumber *timestamp = dataDict[@"tm"];
+    NSString *referalPage = dataDict[@"referralPage"];
+    NSString *title = dataDict[@"title"];
+    NSString *pageName = dataDict[@"pageName"];
+    NSString *query = dataDict[@"queryParameters"];
+    NSNumber *timestamp = dataDict[@"timestamp"];
     
     GrowingPageEvent *page = [[self alloc] initWithTitle:title
                                                         pageName:pageName
@@ -87,13 +87,13 @@
 
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
-    dataDictM[@"r"] = [[GrowingNetworkInterfaceManager sharedInstance] networkType];
-    dataDictM[@"d"] = self.hybridDomain ?: self.domain;
-    dataDictM[@"p"] = self.pageName;
-    dataDictM[@"rp"] = self.referalPage;
-    dataDictM[@"q"] = self.query;
-    dataDictM[@"o"] = self.orientation;
-    dataDictM[@"tl"] = self.pageTitle;
+    dataDictM[@"networkState"] = [[GrowingNetworkInterfaceManager sharedInstance] networkType];
+    dataDictM[@"domain"] = self.hybridDomain ?: self.domain;
+    dataDictM[@"pageName"] = self.pageName;
+    dataDictM[@"referralPage"] = self.referalPage;
+    dataDictM[@"queryParameters"] = self.query;
+    dataDictM[@"orientation"] = self.orientation;
+    dataDictM[@"title"] = self.pageTitle;
     return dataDictM;;
 }
 

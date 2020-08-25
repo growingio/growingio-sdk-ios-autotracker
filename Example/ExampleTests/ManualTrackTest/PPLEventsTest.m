@@ -30,7 +30,7 @@
     if (pplEventArray.count>=1)
     {
         NSDictionary *cstmchr=[pplEventArray objectAtIndex:pplEventArray.count-1];
-        XCTAssertEqualObjects(cstmchr[@"t"], @"ppl");
+        XCTAssertEqualObjects(cstmchr[@"eventType"], @"ppl");
         XCTAssertTrue([ManualTrackHelper CheckContainsKey:cstmchr :@"var"]);
         XCTAssertEqualObjects(cstmchr[@"var"][@"name"], @"测试名字");
         XCTAssertEqualObjects(cstmchr[@"var"][@"title"], @"QA");
@@ -90,7 +90,7 @@
     if (pplEventArray.count>=1)
     {
         NSDictionary *cstmchr=[pplEventArray objectAtIndex:pplEventArray.count-1];
-        XCTAssertEqualObjects(cstmchr[@"t"], @"ppl");
+        XCTAssertEqualObjects(cstmchr[@"eventType"], @"ppl");
         NSDictionary *chres=[ManualTrackHelper PplEventCheck:cstmchr];
         //NSLog(@"Check Result:%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
@@ -141,7 +141,7 @@
     if (pplEventArray.count>=1)
     {
         NSDictionary *cstmchr=[pplEventArray objectAtIndex:pplEventArray.count-1];
-        XCTAssertEqualObjects(cstmchr[@"t"], @"ppl");
+        XCTAssertEqualObjects(cstmchr[@"eventType"], @"ppl");
         XCTAssertTrue([ManualTrackHelper CheckContainsKey:cstmchr :@"var"]);
         XCTAssertEqualObjects(cstmchr[@"var"][@"name"], @"GrowingIO");
         NSDictionary *chres=[ManualTrackHelper PplEventCheck:cstmchr];
@@ -176,7 +176,7 @@
     if (pplEventArray.count>=1)
     {
         NSDictionary *cstmchr=[pplEventArray objectAtIndex:pplEventArray.count-1];
-        XCTAssertEqualObjects(cstmchr[@"t"], @"ppl");
+        XCTAssertEqualObjects(cstmchr[@"eventType"], @"ppl");
         XCTAssertTrue([ManualTrackHelper CheckContainsKey:cstmchr :@"var"]);
         XCTAssertEqualObjects(cstmchr[@"var"][@"name"], @"GIO");
         NSDictionary *chres=[ManualTrackHelper PplEventCheck:cstmchr];
@@ -333,7 +333,7 @@
     {
         NSDictionary *cstmchr=[pplEventArray objectAtIndex:pplEventArray.count-1];
         NSLog(@"ppl Result:%@",cstmchr);
-        XCTAssertEqualObjects(cstmchr[@"t"], @"ppl");
+        XCTAssertEqualObjects(cstmchr[@"eventType"], @"ppl");
         XCTAssertTrue([ManualTrackHelper CheckContainsKey:cstmchr :@"var"]);
         NSString *cstmnum=cstmchr[@"var"][@"score"];
         XCTAssertEqual([cstmnum intValue],98);
@@ -369,7 +369,7 @@
     if (pplEventArray.count>=1)
     {
         NSDictionary *cstmchr=[pplEventArray objectAtIndex:pplEventArray.count-1];
-        XCTAssertEqualObjects(cstmchr[@"t"], @"ppl");
+        XCTAssertEqualObjects(cstmchr[@"eventType"], @"ppl");
         XCTAssertTrue([ManualTrackHelper CheckContainsKey:cstmchr :@"var"]);
         NSString *cstmnum=cstmchr[@"var"][@"score"];
         NSString *floatchr=@"23.62";

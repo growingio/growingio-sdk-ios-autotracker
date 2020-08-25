@@ -864,19 +864,19 @@ static GrowingWebCircle *shareInstance = nil;
     __weak GrowingWebCircle *wself = self;
     // toDictionary每次都会生成新字典，这里存储一份，避免重复生成
     NSDictionary *eventDictionary = event.toDictionary;
-    NSString *eventType = eventDictionary[@"t"];
+    NSString *eventType = eventDictionary[@"eventType"];
     if ([eventType isEqualToString:@"clck"]
         //        || [eventType isEqualToString:@"tchd"]
         || [eventType isEqualToString:@"lngclck"] || [eventType isEqualToString:@"dbclck"]) {
         NSMutableDictionary *pageData = [[NSMutableDictionary alloc] init];
 
-        NSString *page = eventDictionary[@"p"];
+        NSString *page = eventDictionary[@"pageName"];
         pageData[@"page"] = page;
-        pageData[@"domain"] = eventDictionary[@"d"];
+        pageData[@"domain"] = eventDictionary[@"domain"];
   
         NSInteger keyIndex =
-            eventDictionary[@"idx"] ? [eventDictionary[@"idx"] integerValue] : [GrowingNodeItemComponent indexNotFound];
-        NSString *xPath = eventDictionary[@"x"];
+            eventDictionary[@"index"] ? [eventDictionary[@"index"] integerValue] : [GrowingNodeItemComponent indexNotFound];
+        NSString *xPath = eventDictionary[@"xpath"];
         BOOL isContainer = [self isContainer:thisNode];
         NSMutableDictionary *dict = [self dictFromNode:thisNode
                                               pageData:pageData
@@ -928,7 +928,7 @@ static GrowingWebCircle *shareInstance = nil;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             NSString *pageName = [thisNode isKindOfClass:[UIViewController class]]
                                      ? [self getViewControllerName:(UIViewController *)thisNode]
-                                     : eventDictionary[@"p"];
+                                     : eventDictionary[@"pageName"];
             [self sendScreenShotWithEventType:@"page"
                               optionalTargets:nil
                              optionalNodeName:nil

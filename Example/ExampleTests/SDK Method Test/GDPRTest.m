@@ -72,7 +72,7 @@
         //判断单击列表是否正确
         NSDictionary *chevent=[clckEventArray1 objectAtIndex:clckEventArray1.count-1];
         NSLog(@"###%@",chevent);
- //       XCTAssertEqualObjects(chevent[@"v"], @"send clck event");
+ //       XCTAssertEqualObjects(chevent[@"textValue"], @"send clck event");
         XCTAssertEqual(1, 1);
         NSLog(@"设置GDPR失效,采取数据，测试通过--passed!");
     }

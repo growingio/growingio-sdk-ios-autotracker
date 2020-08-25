@@ -25,7 +25,7 @@
 //clck事件对比，测量协议字段完整且每个字段不为空
 +(NSDictionary *)ClckEventCheck:(NSDictionary *)clckevent;
 
-//chng事件对比，测量协议字段完整且每个字段不为空
+//VIEW_CHANGE事件对比，测量协议字段完整且每个字段不为空
 +(NSDictionary *)ChngEventCheck:(NSDictionary *)chngevent;
 
 //imp事件对比，测量协议字段完整且每个字段不为空

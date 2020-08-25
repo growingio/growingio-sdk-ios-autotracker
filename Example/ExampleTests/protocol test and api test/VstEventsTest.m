@@ -46,10 +46,10 @@
 //        NSArray *redu=vstchr[@"ProCheck"][@"reduce"];
 //        XCTAssertEqual(incr.count, 0);
 //        XCTAssertEqual(redu.count, 2);
-//        XCTAssertEqualObjects(vstchr[@"ProCheck"][@"reduce"][0],@"lat");
-//        XCTAssertEqualObjects(vstchr[@"ProCheck"][@"reduce"][1],@"lng");
-        XCTAssertEqualObjects(vstchr[@"lat"], @30.11);
-        XCTAssertEqualObjects(vstchr[@"lng"], @32.22);
+//        XCTAssertEqualObjects(vstchr[@"ProCheck"][@"reduce"][0],@"latitude");
+//        XCTAssertEqualObjects(vstchr[@"ProCheck"][@"reduce"][1],@"longitude");
+        XCTAssertEqualObjects(vstchr[@"latitude"], @30.11);
+        XCTAssertEqualObjects(vstchr[@"longitude"], @32.22);
         NSLog(@"setLocation 从null -> 非null 发vst，测试通过--Passed！");
     }
     else
@@ -88,8 +88,8 @@
 //        NSArray *redu=vstchr[@"ProCheck"][@"reduce"];
 //        XCTAssertEqual(incr.count, 0);
 //        XCTAssertEqual(redu.count, 2);
-//        XCTAssertEqualObjects(vstchr[@"ProCheck"][@"reduce"][0],@"lat");
-//        XCTAssertEqualObjects(vstchr[@"ProCheck"][@"reduce"][1],@"lng");
+//        XCTAssertEqualObjects(vstchr[@"ProCheck"][@"reduce"][0],@"latitude");
+//        XCTAssertEqualObjects(vstchr[@"ProCheck"][@"reduce"][1],@"longitude");
 //        NSLog(@"更新setUserid触发vst事件，测试通过--Passed！");
 //    }
 //    else
@@ -121,8 +121,8 @@
 //        NSArray *redu=vstchr[@"ProCheck"][@"reduce"];
 //        XCTAssertEqual(incr.count, 0);
 //        XCTAssertEqual(redu.count, 2);
-//        XCTAssertEqualObjects(vstchr[@"ProCheck"][@"reduce"][0],@"lat");
-//        XCTAssertEqualObjects(vstchr[@"ProCheck"][@"reduce"][1],@"lng");
+//        XCTAssertEqualObjects(vstchr[@"ProCheck"][@"reduce"][0],@"latitude");
+//        XCTAssertEqualObjects(vstchr[@"ProCheck"][@"reduce"][1],@"longitude");
 //        NSLog(@"冷启动App,Vst事件检测，测试通过---Passed!");
 //    }
 //    else
@@ -165,8 +165,8 @@
 //        NSArray *redu=vstchr[@"ProCheck"][@"reduce"];
 //        XCTAssertEqual(incr.count, 0);
 //        XCTAssertEqual(redu.count, 2);
-//        XCTAssertEqualObjects(vstchr[@"ProCheck"][@"reduce"][0],@"lat");
-//        XCTAssertEqualObjects(vstchr[@"ProCheck"][@"reduce"][1],@"lng");
+//        XCTAssertEqualObjects(vstchr[@"ProCheck"][@"reduce"][0],@"latitude");
+//        XCTAssertEqualObjects(vstchr[@"ProCheck"][@"reduce"][1],@"longitude");
 //        NSLog(@"后台停留30s,再唤醒到前台，测试通过--Passed!");
 //    }
 //    else
@@ -199,8 +199,8 @@
 //    {
 //        NSDictionary *vstchrfirst=[vstEventArray objectAtIndex:0];
 //        NSDictionary *vstchrsecond=[vstEventArray objectAtIndex:1];
-//        XCTAssertEqualObjects(vstchrfirst[@"u"], vstchrsecond[@"u"]);
-//        XCTAssertNotEqualObjects(vstchrfirst[@"s"], vstchrsecond[@"s"]);
+//        XCTAssertEqualObjects(vstchrfirst[@"userId"], vstchrsecond[@"userId"]);
+//        XCTAssertNotEqualObjects(vstchrfirst[@"sessionId"], vstchrsecond[@"sessionId"]);
 //        NSLog(@"测试两次vst请求中，U和S字段的变化，测试通过---Passed！");
 //    }
 //    else

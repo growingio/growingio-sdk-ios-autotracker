@@ -122,15 +122,16 @@
 
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDict = [NSMutableDictionary dictionaryWithCapacity:5];
-    dataDict[@"s"] = self.sessionId;
-    dataDict[@"tm"] = self.timestamp;
-    dataDict[@"t"] = self.eventTypeKey;
-    dataDict[@"d"] = self.domain;
-    dataDict[@"cs1"] = self.customerAttribute;
-    dataDict[@"u"] = self.deviceId;
+    dataDict[@"sessionId"] = self.sessionId;
+    dataDict[@"timestamp"] = self.timestamp;
+    dataDict[@"eventType"] = self.eventTypeKey;
+    dataDict[@"domain"] = self.domain;
+    //TODO:3.0
+    dataDict[@"userId"] = self.customerAttribute;
+    dataDict[@"deviceId"] = self.deviceId;
 
-    dataDict[@"gesid"] = self.globalSequenceId;
-    dataDict[@"esid"] = self.eventSequenceId;
+    dataDict[@"globalSequenceId"] = self.globalSequenceId;
+    dataDict[@"eventSequenceId"] = self.eventSequenceId;
 
     return [dataDict copy];
 }

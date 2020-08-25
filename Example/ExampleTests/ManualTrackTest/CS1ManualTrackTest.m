@@ -42,7 +42,7 @@
     if (vstEventArray.count >= 1) {
         NSDictionary *vstchr = vstEventArray.lastObject;
         //NSLog(@"Check Result:%@",vstchr);
-        XCTAssertEqualObjects(vstchr[@"cs1"], newestUserId);
+        XCTAssertEqualObjects(vstchr[@"userId"], newestUserId);
         NSLog(@"正常测试SetUserID，检查cs1测试通过-----passed");
     } else {
         NSLog(@"正常测试SetUserID，测试失败!Problems:%@",vstEventArray);
@@ -68,7 +68,7 @@
     NSArray *cstmEventArray = [MockEventQueue.sharedQueue eventsFor:@"cstm"];
     if (cstmEventArray.count >= 1) {
         NSDictionary *cstmchr = cstmEventArray.lastObject;
-        XCTAssertNotNil(cstmchr[@"s"]);
+        XCTAssertNotNil(cstmchr[@"sessionId"]);
     }
     
     //更新UID
@@ -81,10 +81,10 @@
     
     if (vstEventArray.count >= 1) {
         NSDictionary *vstchr = vstEventArray.lastObject;
-        XCTAssertEqualObjects(vstchr[@"cs1"], @"SxfChange");
-        XCTAssertNotNil(vstchr[@"s"]);
+        XCTAssertEqualObjects(vstchr[@"userId"], @"SxfChange");
+        XCTAssertNotNil(vstchr[@"sessionId"]);
         // 校验sessions 变化
-        XCTAssertNotEqual(cstmEventArray.lastObject[@"s"], vstchr[@"s"]);
+        XCTAssertNotEqual(cstmEventArray.lastObject[@"sessionId"], vstchr[@"sessionId"]);
         NSLog(@"更新UID，检测cs1测试通过-----passed");
     } else {
         NSLog(@"更新UID，检测cs1测试失败!Problems:%@",vstEventArray);
@@ -110,7 +110,7 @@
     if (vstEventArray.count >= 1) {
         NSDictionary *vstchr = vstEventArray.lastObject;
     
-        XCTAssertEqualObjects(vstchr[@"cs1"],@"%$#./");
+        XCTAssertEqualObjects(vstchr[@"userId"],@"%$#./");
         NSLog(@"UID为特殊字符，检测cs1测试通过-----passed");
     } else {
         NSLog(@"UID为特殊字符，检测cs1测试失败!Problems:%@",vstEventArray);
@@ -135,7 +135,7 @@
     
     if (vstEventArray.count >= 1) {
         NSDictionary *vstchr = vstEventArray.lastObject;
-        XCTAssertEqualObjects(vstchr[@"cs1"], @"数据分析");
+        XCTAssertEqualObjects(vstchr[@"userId"], @"数据分析");
         NSLog(@"UID为中文字符，检测cs1测试通过-----passed");
     } else {
         NSLog(@"UID为中文字符，检测cs1测试失败!Problems:%@",vstEventArray);
@@ -162,7 +162,7 @@
         XCTAssertEqual(1,1);
         NSLog(@"UID为空,检测CS1测试通过---passed!");
     } else {
-        NSLog(@"UID为空,检测CS1测试失败，VST中的CS1为：%@",vstEventArray.firstObject[@"cs1"]);
+        NSLog(@"UID为空,检测CS1测试失败，VST中的CS1为：%@",vstEventArray.firstObject[@"userId"]);
         XCTAssertEqual(1,0);
     }
 }
@@ -189,7 +189,7 @@
     }
     else
     {
-        NSLog(@"UID为nil,检测CS1测试失败，VST中的CS1为：%@",vstEventArray.firstObject[@"cs1"]);
+        NSLog(@"UID为nil,检测CS1测试失败，VST中的CS1为：%@",vstEventArray.firstObject[@"userId"]);
         XCTAssertEqual(1,0);
     }
 }
@@ -211,7 +211,7 @@
         XCTAssertEqual(1,1);
         NSLog(@"UID为超过1000个字符,检测CS1测试通过---passed!");
     } else {
-        NSLog(@"UID为超过1000个字符,检测CS1测试失败，VST中的CS1为：%@",vstEventArray.firstObject[@"cs1"]);
+        NSLog(@"UID为超过1000个字符,检测CS1测试失败，VST中的CS1为：%@",vstEventArray.firstObject[@"userId"]);
         XCTAssertEqual(1,0);
     }
 }
@@ -235,7 +235,7 @@
     {
         //pageg事件包含cs1字段
         NSDictionary *page1chr=[page1Array objectAtIndex:page1Array.count-1];
-        XCTAssertTrue([ManualTrackHelper CheckContainsKey:page1chr :@"cs1"]);
+        XCTAssertTrue([ManualTrackHelper CheckContainsKey:page1chr :@"userId"]);
     }
     
     
@@ -251,7 +251,7 @@
     {
         //pageg事件包含cs1字段
         NSDictionary *page2chr=[page2Array objectAtIndex:page2Array.count-1];
-        XCTAssertFalse([ManualTrackHelper CheckContainsKey:page2chr :@"cs1"]);
+        XCTAssertFalse([ManualTrackHelper CheckContainsKey:page2chr :@"userId"]);
         NSLog(@"清除UID,page事件中无cs1字段测试通过---passed!");
     }
     else
@@ -272,7 +272,7 @@
     
     //     NSArray *EventArrayOld = [MockEventQueue.sharedQueue eventsFor:@"vst"];
     //     NSDictionary *cstmchr=[EventArrayOld objectAtIndex:EventArrayOld.count-1];
-    //     NSString *oldSession = cstmchr[@"s"];
+    //     NSString *oldSession = cstmchr[@"sessionId"];
     NSString *oldSession = [Growing getSessionId];
     XCTAssertNotNil(oldSession);
     [Growing cleanLoginUserId];
@@ -280,7 +280,7 @@
     [Growing setLoginUserId:@"lisi"];
 //    NSArray *cstmEventArrayNew = [MockEventQueue.sharedQueue eventsFor:@"vst"];
 //    NSDictionary *cstmchrNew=[cstmEventArrayNew objectAtIndex:cstmEventArrayNew.count-1];
-//    NSString *newSession = cstmchrNew[@"s"];
+//    NSString *newSession = cstmchrNew[@"sessionId"];
     NSString *newSession = [Growing getSessionId];
     XCTAssertNotNil(newSession);
     XCTAssertNotEqual(oldSession, newSession);
@@ -295,7 +295,7 @@
     [Growing setLoginUserId:timeSp];
 //    NSArray *EventArrayOld = [MockEventQueue.sharedQueue eventsFor:@"vst"];
 //    NSDictionary *cstmchr=[EventArrayOld objectAtIndex:EventArrayOld.count-1];
-//    NSString *oldSession = cstmchr[@"s"];
+//    NSString *oldSession = cstmchr[@"sessionId"];
     NSString *oldSession = [Growing getSessionId];
     XCTAssertNotNil(oldSession);
     
@@ -305,7 +305,7 @@
     [Growing setLoginUserId:@"lisi"];
 //    NSArray *EventArrayNew = [MockEventQueue.sharedQueue eventsFor:@"vst"];
 //    NSDictionary *chrNew=[EventArrayNew objectAtIndex:EventArrayNew.count-1];
-//    NSString *newSession = chrNew[@"s"];
+//    NSString *newSession = chrNew[@"sessionId"];
     NSString *newSession = [Growing getSessionId];
     XCTAssertNotNil(newSession);
     XCTAssertNotEqual(oldSession, newSession);
@@ -321,7 +321,7 @@
 //    [Growing setLoginUserId:timeSp];
 //    NSArray *EventArrayOld = [MockEventQueue.sharedQueue eventsFor:@"vst"];
 //    NSDictionary *chr=[EventArrayOld objectAtIndex:EventArrayOld.count-1];
-//    NSString *oldSession = chr[@"s"];
+//    NSString *oldSession = chr[@"sessionId"];
 ////    NSString *oldSession = [Growing getSessionId];
 //    XCTAssertNotNil(oldSession);
 //    [MockEventQueue.sharedQueue cleanQueue];
@@ -330,7 +330,7 @@
 //    [self enterForeground];
 //    NSArray *EventArrayNew = [MockEventQueue.sharedQueue eventsFor:@"vst"];
 //    NSDictionary *chrNew=[EventArrayNew objectAtIndex:EventArrayNew.count-1];
-//    NSString *newSession = chrNew[@"s"];
+//    NSString *newSession = chrNew[@"sessionId"];
 ////    NSString *newSession = [Growing getSessionId];
 //    XCTAssertNotNil(newSession);
 //    XCTAssertNotEqual(oldSession, newSession);

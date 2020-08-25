@@ -70,16 +70,16 @@
 
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithCapacity:5];
-    dataDictM[@"x"] = self.xPath;
-    dataDictM[@"tm"] = self.timestamp;
+    dataDictM[@"xpath"] = self.xPath;
+    dataDictM[@"timestamp"] = self.timestamp;
     dataDictM[@"cid"] = self.cid;
     dataDictM[@"sgn"] = self.signature;
-    dataDictM[@"v"] = self.content;
-    dataDictM[@"h"] = self.hyperLink;
-    dataDictM[@"idx"] = self.index;
+    dataDictM[@"textValue"] = self.content;
+    dataDictM[@"hyperlink"] = self.hyperLink;
+    dataDictM[@"index"] = self.index;
 
-    dataDictM[@"gesid"] = self.globalSequenceId;
-    dataDictM[@"esid"] = self.eventSequenceId;
+    dataDictM[@"globalSequenceId"] = self.globalSequenceId;
+    dataDictM[@"eventSequenceId"] = self.eventSequenceId;
     
     return dataDictM;
 }

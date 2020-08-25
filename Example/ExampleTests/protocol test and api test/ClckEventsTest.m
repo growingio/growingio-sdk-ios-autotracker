@@ -45,7 +45,7 @@
 //    {
 //        //判断单击列表是否正确
 //        NSDictionary *chevent=[clckEventArray objectAtIndex:clckEventArray.count-1];
-//        //XCTAssertEqualObjects(chevent[@"v"],@"Button");
+//        //XCTAssertEqualObjects(chevent[@"textValue"],@"Button");
 //        //检测发送事件情况
 //        NSDictionary *clkchr=[NoburPoMeaProCheck ClckEventCheck:chevent];
 //        //NSLog(@"Check Result:%@",clkchr);
@@ -85,8 +85,8 @@
 //    NSDictionary *pagechr=[pageEventArray objectAtIndex:pageEventArray.count-1];
 //    if(clickchr.count>0 && pagechr.count>0)
 //    {
-//        XCTAssertEqualObjects(clickchr[@"p"],pagechr[@"p"]);
-//        XCTAssertEqualObjects(clickchr[@"ptm"],pagechr[@"ptm"]);
+//        XCTAssertEqualObjects(clickchr[@"pageName"],pagechr[@"pageName"]);
+//        XCTAssertEqualObjects(clickchr[@"pageShowTimestamp"],pagechr[@"pageShowTimestamp"]);
 //        NSLog(@"检测clck事件与page事件的p,ptm字段的一致性测试通过---Passed！");
 //    }
 //    else
@@ -148,7 +148,7 @@
 //        //判断单击列表是否正确
 //        NSDictionary *chevent=[clckEventArray objectAtIndex:clckEventArray.count-1];
 //        //NSLog(@"clck事件：%@",chevent);
-//        XCTAssertEqualObjects(chevent[@"v"],@"Button");
+//        XCTAssertEqualObjects(chevent[@"textValue"],@"Button");
 //        //检测发送事件情况
 //        NSDictionary *clkchr=[NoburPoMeaProCheck ClckEventCheck:chevent];
 //        //NSLog(@"Check Result:%@",clkchr);
@@ -185,14 +185,14 @@
 //        //判断单击列表是否正确
 //        NSDictionary *chevent=[clckEventArray objectAtIndex:clckEventArray.count-1];
 //        //NSLog(@"Clck事件：%@",chevent);
-//        XCTAssertEqualObjects(chevent[@"v"],@"Second");
+//        XCTAssertEqualObjects(chevent[@"textValue"],@"Second");
 //        //检测发送事件情况
 //        NSDictionary *clkchr=[NoburPoMeaProCheck ClckEventCheck:chevent];
 //        NSLog(@"Check Result:%@",clkchr);
 //        XCTAssertEqual(clkchr[@"KeysCheck"][@"chres"], @"Passed");
 //        NSArray *reduc=clkchr[@"ProCheck"][@"reduce"];
 //        XCTAssertEqual(reduc.count, 1);
-//        XCTAssertEqualObjects(clkchr[@"ProCheck"][@"reduce"][0],@"idx");
+//        XCTAssertEqualObjects(clkchr[@"ProCheck"][@"reduce"][0],@"index");
 //        NSLog(@"多选控件点击，clck事件检测测试通过---Passed！");
 //    }
 //    else
@@ -221,7 +221,7 @@
 //    {
 //        //判断单击列表是否正确
 //        NSDictionary *chevent=[clckEventArray objectAtIndex:clckEventArray.count-1];
-//        XCTAssertEqualObjects(chevent[@"v"],@"Simple UI Elements");
+//        XCTAssertEqualObjects(chevent[@"textValue"],@"Simple UI Elements");
 //        //检测发送事件情况
 //        NSDictionary *clkchr=[NoburPoMeaProCheck ClckEventCheck:chevent];
 //        //NSLog(@"Check Result:%@",clkchr);
@@ -264,7 +264,7 @@
         //NSLog(@"Check Result:%@",clkchr);
         XCTAssertEqual(clkchr[@"KeysCheck"][@"chres"], @"Passed");
         XCTAssertEqualObjects(clkchr[@"ProCheck"][@"chres"],@"different");
-        XCTAssertEqualObjects(clkchr[@"ProCheck"][@"reduce"][0],@"idx");
+        XCTAssertEqualObjects(clkchr[@"ProCheck"][@"reduce"][0],@"index");
         NSLog(@"对话框按钮点击，检测clck事件测试通过---Passed！");
     }
     else
@@ -297,7 +297,7 @@
 //    {
 //        //判断单击列表是否正确
 //        NSDictionary *chevent=[clckEventArray objectAtIndex:clckEventArray.count-1];
-//        XCTAssertEqualObjects(chevent[@"v"],@"Page Control & ImageView");
+//        XCTAssertEqualObjects(chevent[@"textValue"],@"Page Control & ImageView");
 //        XCTAssertEqual(1, 1);
 //        NSLog(@"点击图片,不发送clck事件测试通过---Passed！");
 //    }
@@ -333,14 +333,14 @@
 //    {
 //        //判断单击列表是否正确
 //        NSDictionary *chevent=[clckEventArray objectAtIndex:clckEventArray.count-1];
-//        XCTAssertEqualObjects(chevent[@"v"],@"非UIControl，为UILabel");
+//        XCTAssertEqualObjects(chevent[@"textValue"],@"非UIControl，为UILabel");
 //        //检测发送事件情况
 //        NSDictionary *clkchr=[NoburPoMeaProCheck ClckEventCheck:chevent];
 //        //NSLog(@"Check Result:%@",clkchr);
 //        XCTAssertEqual(clkchr[@"KeysCheck"][@"chres"], @"Passed");
 //        NSArray *reduc=clkchr[@"ProCheck"][@"reduce"];
 //        XCTAssertEqual(reduc.count, 1);
-//        XCTAssertEqualObjects(clkchr[@"ProCheck"][@"reduce"][0],@"idx");
+//        XCTAssertEqualObjects(clkchr[@"ProCheck"][@"reduce"][0],@"index");
 //        NSLog(@"UITapGestureRecognizer触发，发送clck事件测试通过---Passed！");
 //    }
 //    else
@@ -402,16 +402,16 @@
     if(clckEventArray.count>4)
     {
         NSDictionary *chevent=[clckEventArray objectAtIndex:clckEventArray.count-2];
-        XCTAssertEqualObjects(chevent[@"v"],@"");
+        XCTAssertEqualObjects(chevent[@"textValue"],@"");
         //检测发送事件情况
         NSDictionary *clkchr=[NoburPoMeaProCheck ClckEventCheck:chevent];
         //NSLog(@"Check Result:%@",clkchr);
         NSArray *ekey=clkchr[@"KeysCheck"][@"EmptyKeys"];
         XCTAssertEqual(ekey.count, 1);
-        XCTAssertEqualObjects(clkchr[@"KeysCheck"][@"EmptyKeys"][0],@"v");
+        XCTAssertEqualObjects(clkchr[@"KeysCheck"][@"EmptyKeys"][0],@"textValue");
         NSArray *reduc=clkchr[@"ProCheck"][@"reduce"];
         XCTAssertEqual(reduc.count, 1);
-        XCTAssertEqualObjects(clkchr[@"ProCheck"][@"reduce"][0],@"idx");
+        XCTAssertEqualObjects(clkchr[@"ProCheck"][@"reduce"][0],@"index");
         NSLog(@"单击ColorButton，发送clck事件测试通过---Passed！");
     }
     else
@@ -444,14 +444,14 @@
     if(clckEventArray.count>4)
     {
         NSDictionary *chevent=[clckEventArray objectAtIndex:clckEventArray.count-2];
-        XCTAssertEqualObjects(chevent[@"v"],@"邮件");
+        XCTAssertEqualObjects(chevent[@"textValue"],@"邮件");
         //检测发送事件情况
         NSDictionary *clkchr=[NoburPoMeaProCheck ClckEventCheck:chevent];
         //NSLog(@"Check Result:%@",clkchr);
         XCTAssertEqual(clkchr[@"KeysCheck"][@"chres"], @"Passed");
         NSArray *reduc=clkchr[@"ProCheck"][@"reduce"];
         XCTAssertEqual(reduc.count, 1);
-        XCTAssertEqualObjects(clkchr[@"ProCheck"][@"reduce"][0],@"idx");
+        XCTAssertEqualObjects(clkchr[@"ProCheck"][@"reduce"][0],@"index");
         NSLog(@"单击ButtonWithImageView，发送clck事件测试通过---Passed！");
     }
     else
@@ -491,7 +491,7 @@
         XCTAssertEqual(clkchr[@"KeysCheck"][@"chres"], @"Passed");
         NSArray *reduc=clkchr[@"ProCheck"][@"reduce"];
         XCTAssertEqual(reduc.count, 1);
-        XCTAssertEqualObjects(clkchr[@"ProCheck"][@"reduce"][0],@"idx");
+        XCTAssertEqualObjects(clkchr[@"ProCheck"][@"reduce"][0],@"index");
         NSLog(@"单击UIViewButton，发送clck事件测试通过---Passed！");
     }
     else

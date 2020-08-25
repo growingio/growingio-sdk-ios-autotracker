@@ -43,7 +43,7 @@
         XCTAssertEqualObjects(chngchr[@"KeysCheck"][@"chres"], @"Passed");
         NSArray *incr=chngchr[@"ProCheck"][@"incre"];
         XCTAssertEqual(incr.count, 1);
-        XCTAssertEqualObjects(chngchr[@"ProCheck"][@"incre"][0],@"idx");
+        XCTAssertEqualObjects(chngchr[@"ProCheck"][@"incre"][0],@"index");
         NSLog(@"TextField输出内容，检测chng事件测试通过---Passed！");
     }
     else
@@ -111,7 +111,7 @@
 //        NSArray *empty=chngchr[@"KeysCheck"][@"EmptyKeys"];
 //        XCTAssertEqual(empty.count, 1);
 //        //TextField不采集输入的内容
-//        XCTAssertEqualObjects(chngchr[@"KeysCheck"][@"EmptyKeys"][0], @"v");
+//        XCTAssertEqualObjects(chngchr[@"KeysCheck"][@"EmptyKeys"][0], @"textValue");
 //        XCTAssertEqualObjects(chngchr[@"ProCheck"][@"chres"], @"same");
 //        NSLog(@"用户名和密码，检测chng事件测试通过---Passed！");
 //    }
@@ -146,7 +146,7 @@
 //        //NSLog(@"Check result:%@",chngchr);
 //        NSArray *empty=chngchr[@"KeysCheck"][@"EmptyKeys"];
 //        XCTAssertEqual(empty.count, 1);
-//        XCTAssertEqualObjects(chngchr[@"KeysCheck"][@"EmptyKeys"][0], @"v");
+//        XCTAssertEqualObjects(chngchr[@"KeysCheck"][@"EmptyKeys"][0], @"textValue");
 //        XCTAssertEqualObjects(chngchr[@"ProCheck"][@"chres"], @"same");
 //        NSLog(@"textview操作，检测chng事件测试通过---Passed！");
 //    }

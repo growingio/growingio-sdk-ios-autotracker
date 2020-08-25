@@ -33,7 +33,7 @@
 @property (nonatomic, copy, readwrite) NSString * _Nonnull deviceBrand;
 @property (nonatomic, copy, readwrite) NSString * _Nonnull systemName;
 @property (nonatomic, copy, readwrite) NSString * _Nonnull systemVersion;
-@property (nonatomic, copy, readwrite) NSString * _Nonnull displayName;
+@property (nonatomic, copy, readwrite) NSString * _Nonnull appName;
 @property (nonatomic, copy, readwrite) NSString * _Nonnull bundleID;
 @property (nonatomic, copy, readwrite) NSString * _Nonnull appShortVersion;
 @property (nonatomic, copy, readwrite) NSString * _Nonnull urlScheme;
@@ -66,7 +66,7 @@
         self.deviceBrand = deviceInfo.deviceBrand;
         self.systemName = deviceInfo.systemName;
         self.systemVersion = deviceInfo.systemVersion;
-        self.displayName = deviceInfo.displayName;
+        self.appName = deviceInfo.displayName;
         self.bundleID = deviceInfo.bundleID;
         self.appShortVersion = deviceInfo.appShortVersion;
         self.urlScheme  = deviceInfo.urlScheme;
@@ -133,23 +133,23 @@
 
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
-    dataDictM[@"l"]  = self.language;
-    dataDictM[@"dm"] = self.deviceModel;
-    dataDictM[@"ph"] = self.isPhone;
-    dataDictM[@"db"] = self.deviceBrand;
-    dataDictM[@"os"] = self.systemName;
-    dataDictM[@"osv"]= self.systemVersion;
-    dataDictM[@"sn"] = self.displayName;
-    dataDictM[@"d"]  = self.bundleID;
-    dataDictM[@"cv"] = self.appShortVersion;
-    dataDictM[@"v"]  = self.urlScheme;
-    dataDictM[@"ui"] = self.idfa;
-    dataDictM[@"iv"] = self.idfv;
-    dataDictM[@"av"] = self.sdkVersion;
-    dataDictM[@"sw"] = self.screenW;
-    dataDictM[@"sh"] = self.screenH;
-    dataDictM[@"lat"] = self.latitude;
-    dataDictM[@"lng"] = self.longitude;
+    dataDictM[@"language"]  = self.language;
+    dataDictM[@"deviceModel"] = self.deviceModel;
+    dataDictM[@"deviceType"] = self.isPhone.boolValue?@"PHONE":@"PAD";
+    dataDictM[@"deviceBrand"] = self.deviceBrand;
+    dataDictM[@"operatingSystem"] = self.systemName;
+    dataDictM[@"operatingSystemVersion"]= self.systemVersion;
+    dataDictM[@"appName"] = self.appName;
+    dataDictM[@"domain"]  = self.bundleID;
+    dataDictM[@"appVersion"] = self.appShortVersion;
+    dataDictM[@"urlScheme"]  = self.urlScheme;
+    dataDictM[@"idfa"] = self.idfa;
+    dataDictM[@"idfv"] = self.idfv;
+    dataDictM[@"sdkVersion"] = self.sdkVersion;
+    dataDictM[@"screenWidth"] = self.screenW;
+    dataDictM[@"screenHeight"] = self.screenH;
+    dataDictM[@"latitude"] = self.latitude;
+    dataDictM[@"longitude"] = self.longitude;
     return dataDictM;;
 }
 

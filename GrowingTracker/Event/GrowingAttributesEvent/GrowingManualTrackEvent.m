@@ -49,7 +49,7 @@
 
 + (instancetype)hybridEvarEventWithDataDict:(NSDictionary *)dataDict {
     GrowingEvarEvent *evarEvent = [[self alloc] initWithTimestamp:nil];
-    evarEvent.attributes = dataDict[@"var"];
+    evarEvent.attributes = dataDict[@"variables"];
     return evarEvent;
 }
 
@@ -129,14 +129,14 @@
 }
 
 + (instancetype)hybridCustomEventWithDataDict:(NSDictionary *)dataDict {
-    NSNumber *timestamp = dataDict[@"ptm"];
+    NSNumber *timestamp = dataDict[@"pageShowTimestamp"];
 
     GrowingCustomTrackEvent *customEvent = [[self alloc] initWithTimestamp:timestamp];
-    customEvent.hybridDomain = dataDict[@"d"];
-    customEvent.query = dataDict[@"q"];
-    customEvent.pageName = dataDict[@"p"];
-    customEvent.eventName = dataDict[@"n"];
-    customEvent.attributes = dataDict[@"var"];
+    customEvent.hybridDomain = dataDict[@"domain"];
+    customEvent.query = dataDict[@"queryParameters"];
+    customEvent.pageName = dataDict[@"pageName"];
+    customEvent.eventName = dataDict[@"eventName"];
+    customEvent.attributes = dataDict[@"attributes"];
     
     return customEvent;
 }
@@ -145,12 +145,11 @@
 
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
-    dataDictM[@"n"] = self.eventName;
-    dataDictM[@"p"] = self.pageName;
-    dataDictM[@"ptm"] = self.pageTimestamp;
-    dataDictM[@"q"] = self.query;
-    dataDictM[@"d"] = self.hybridDomain ?: self.domain;
-    
+    dataDictM[@"eventName"] = self.eventName;
+    dataDictM[@"pageName"] = self.pageName;
+    dataDictM[@"pageShowTimestamp"] = self.pageTimestamp;
+    dataDictM[@"queryParameters"] = self.query;
+    dataDictM[@"domain"] = self.hybridDomain ?: self.domain;
     return dataDictM;;
 }
 
@@ -233,7 +232,7 @@
 
 + (instancetype)hybridVisitorEventWithDataDict:(NSDictionary *)dataDict {
     GrowingVisitorEvent *vstrEvent = [[self alloc] initWithTimestamp:nil];
-    vstrEvent.attributes = dataDict[@"var"];
+    vstrEvent.attributes = dataDict[@"attributes"];
     return vstrEvent;
 }
 
