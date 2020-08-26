@@ -23,6 +23,8 @@
     // Do any additional setup after loading the view.
     //设置不采集Btn GIONotTrack数据
     self.GIONotTrack.growingViewIgnorePolicy = GrowingIgnoreSelf;
+    [self.CheckHiddenLabel growingTrackImpression:@"HiddenLabel"];
+    [self.CheckAlpLabel growingTrackImpression:@"AlpLabel"];
 }
 
 - (void)didReceiveMemoryWarning {

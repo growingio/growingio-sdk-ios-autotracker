@@ -20,7 +20,7 @@
 //    [[viewTester usingLabel:@"接口"] tap];
 //    [[viewTester usingLabel:@"+ GDPR(数据保护)"] tap];
 //    [[viewTester usingLabel:@"GDPR生效"] tap];
-    [Growing setDataCollectionEnabled:NO];
+    [Growing setDataTrackEnabled:NO];
     [MockEventQueue.sharedQueue cleanQueue];
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"UI界面"] tap];
@@ -50,7 +50,7 @@
 //    [[viewTester usingLabel:@"+ GDPR(数据保护)"] tap];
 //    //GDPR生效
 //    [[viewTester usingLabel:@"GDPR生效"] tap];
-    [Growing setDataCollectionEnabled:NO];
+    [Growing setDataTrackEnabled:NO];
     [MockEventQueue.sharedQueue cleanQueue];
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"UI界面"] tap];
@@ -58,7 +58,7 @@
     NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
     XCTAssertEqual(clckEventArray.count,0);
     //GDPR失效
-    [Growing setDataCollectionEnabled:YES];
+    [Growing setDataTrackEnabled:YES];
 //    [[viewTester usingLabel:@"GDPR失效"] tap];
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"协议/接口"] tap];

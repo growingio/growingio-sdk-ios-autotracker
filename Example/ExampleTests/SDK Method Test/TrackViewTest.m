@@ -24,7 +24,7 @@
 //    [[viewTester usingLabel:@"获取状态"] tap];
 //    [tester waitForTimeInterval:1];
 //    UILabel *slab=[tester waitForViewWithAccessibilityLabel:@"trackviewstatus"];
-    [Growing setDataCollectionEnabled:YES];
+    [Growing setDataTrackEnabled:YES];
  //   [Growing isTrackingWebView];
     //NSLog(@"****获取当前trackingWebView****：%@",slab.text);
 //    if(![slab.text isEqualToString:@""])
@@ -52,7 +52,7 @@
 //    [[viewTester usingLabel:@"获取状态"] tap];
 //    [tester waitForTimeInterval:1];
 //    UILabel *slab=[tester waitForViewWithAccessibilityLabel:@"trackviewstatus"];
-    [Growing setDataCollectionEnabled:NO];
+    [Growing setDataTrackEnabled:NO];
 
     //NSLog(@"****获取当前trackingWebView****：%@",slab.text);
 //    if(![slab.text isEqualToString:@""])
