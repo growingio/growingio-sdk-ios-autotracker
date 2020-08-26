@@ -28,7 +28,7 @@
     [Growing setConversionVariables:@{@"var1" : @"good", @"var2" : @"excell"}];
     [tester waitForTimeInterval:3];
     NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
-    NSLog(@"EVar事件：%@", evarEventArray);
+    NSLog(@"CONVERSION_VARIABLES事件：%@", evarEventArray);
     if (evarEventArray.count >= 1) {
         NSDictionary *epvarchr = [evarEventArray objectAtIndex:evarEventArray.count - 1];
         XCTAssertEqualObjects(epvarchr[@"eventType"], @"CONVERSION_VARIABLES");
@@ -36,13 +36,13 @@
         XCTAssertEqualObjects(epvarchr[@"attributes"][@"var1"], @"good");
         XCTAssertEqualObjects(epvarchr[@"attributes"][@"var2"], @"excell");
 
-        NSDictionary *chres = [ManualTrackHelper EvarEventCheck:epvarchr];
+        NSDictionary *chres = [ManualTrackHelper conversionVariablesEventCheck:epvarchr];
         NSLog(@"Check Result:%@", chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
         XCTAssertEqualObjects(chres[@"ProCheck"][@"chres"], @"same");
-        NSLog(@"EVar事件，setEvar正常情况测试通过-----passed");
+        NSLog(@"CONVERSION_VARIABLES事件，setEvar正常情况测试通过-----passed");
     } else {
-        NSLog(@"EVar事件，setEvar正常情况测试失败:%@", evarEventArray);
+        NSLog(@"CONVERSION_VARIABLES事件，setEvar正常情况测试失败:%@", evarEventArray);
         XCTAssertEqual(1, 0);
     }
 }
@@ -62,9 +62,9 @@
     [LogOperHelper redirectLogBack];
     if (chres) {
         XCTAssertEqual(1, 1);
-        NSLog(@"EVar事件，setEvar，日志提醒测试通过-----passed");
+        NSLog(@"CONVERSION_VARIABLES事件，setEvar，日志提醒测试通过-----passed");
     } else {
-        NSLog(@"EVar事件，setEvar，日志提醒测试失败!---Failed");
+        NSLog(@"CONVERSION_VARIABLES事件，setEvar，日志提醒测试失败!---Failed");
         XCTAssertEqual(1, 0);
     }
 }
@@ -78,18 +78,18 @@
     [Growing setConversionVariables:@{}];
     [tester waitForTimeInterval:3];
     NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
-    // NSLog(@"EVar事件：%@",evarEventArray);
+    // NSLog(@"CONVERSION_VARIABLES事件：%@",evarEventArray);
 
     if (evarEventArray.count >= 1) {
         NSDictionary *epvarchr = [evarEventArray objectAtIndex:evarEventArray.count - 1];
         XCTAssertEqualObjects(epvarchr[@"eventType"], @"CONVERSION_VARIABLES");
-        NSDictionary *chres = [ManualTrackHelper EvarEventCheck:epvarchr];
+        NSDictionary *chres = [ManualTrackHelper conversionVariablesEventCheck:epvarchr];
         // NSLog(@"Check Result:%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
         XCTAssertEqualObjects(chres[@"ProCheck"][@"chres"], @"same");
-        NSLog(@"EVar事件，setEvar正常情况测试通过-----passed");
+        NSLog(@"CONVERSION_VARIABLES事件，setEvar正常情况测试通过-----passed");
     } else {
-        NSLog(@"EVar事件，setEvar正常情况测试失败:%@", evarEventArray);
+        NSLog(@"CONVERSION_VARIABLES事件，setEvar正常情况测试失败:%@", evarEventArray);
         XCTAssertEqual(1, 0);
     }
 }
@@ -102,20 +102,20 @@
     [Growing setConversionVariables:@{@"ekey1" : @"Good"}];
     [tester waitForTimeInterval:3];
     NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
-    // NSLog(@"EVar事件：%@",evarEventArray);
+    // NSLog(@"CONVERSION_VARIABLES事件：%@",evarEventArray);
     if (evarEventArray.count >= 1) {
         NSDictionary *epvarchr = [evarEventArray objectAtIndex:evarEventArray.count - 1];
         XCTAssertEqualObjects(epvarchr[@"eventType"], @"CONVERSION_VARIABLES");
         XCTAssertTrue([ManualTrackHelper CheckContainsKey:epvarchr:@"attributes"]);
         XCTAssertEqualObjects(epvarchr[@"attributes"][@"ekey1"], @"Good");
 
-        NSDictionary *chres = [ManualTrackHelper EvarEventCheck:epvarchr];
+        NSDictionary *chres = [ManualTrackHelper conversionVariablesEventCheck:epvarchr];
         // NSLog(@"Check Result:%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
         XCTAssertEqualObjects(chres[@"ProCheck"][@"chres"], @"same");
-        NSLog(@"EVar事件，setEvarWithKey:andStringValue设置变量测试通过-----passed");
+        NSLog(@"CONVERSION_VARIABLES事件，setEvarWithKey:andStringValue设置变量测试通过-----passed");
     } else {
-        NSLog(@"EVar事件，setEvarWithKey:andStringValue设置变量测试失败:%@", evarEventArray);
+        NSLog(@"CONVERSION_VARIABLES事件，setEvarWithKey:andStringValue设置变量测试失败:%@", evarEventArray);
         XCTAssertEqual(1, 0);
     }
 }
@@ -128,20 +128,20 @@
     [Growing setConversionVariables:@{@"ekey1" : @"Better"}];
     [tester waitForTimeInterval:3];
     NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
-    // NSLog(@"EVar事件：%@",evarEventArray);
+    // NSLog(@"CONVERSION_VARIABLES事件：%@",evarEventArray);
     if (evarEventArray.count >= 1) {
         NSDictionary *epvarchr = [evarEventArray objectAtIndex:evarEventArray.count - 1];
         XCTAssertEqualObjects(epvarchr[@"eventType"], @"CONVERSION_VARIABLES");
         XCTAssertTrue([ManualTrackHelper CheckContainsKey:epvarchr:@"attributes"]);
         XCTAssertEqualObjects(epvarchr[@"attributes"][@"ekey1"], @"Better");
 
-        NSDictionary *chres = [ManualTrackHelper EvarEventCheck:epvarchr];
+        NSDictionary *chres = [ManualTrackHelper conversionVariablesEventCheck:epvarchr];
         // NSLog(@"Check Result:%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
         XCTAssertEqualObjects(chres[@"ProCheck"][@"chres"], @"same");
-        NSLog(@"EVar事件，setEvarWithKey:andStringValue更新变量测试通过-----passed");
+        NSLog(@"CONVERSION_VARIABLES事件，setEvarWithKey:andStringValue更新变量测试通过-----passed");
     } else {
-        NSLog(@"EVar事件，setEvarWithKey:andStringValue更新变量测试失败:%@", evarEventArray);
+        NSLog(@"CONVERSION_VARIABLES事件，setEvarWithKey:andStringValue更新变量测试失败:%@", evarEventArray);
         XCTAssertEqual(1, 0);
     }
 }
@@ -161,9 +161,9 @@
     [LogOperHelper redirectLogBack];
     if (chres) {
         XCTAssertEqual(1, 1);
-        NSLog(@"EVar事件，setEvarWithKey:andStringValue关键字为空,日志检测测试通过-----passed");
+        NSLog(@"CONVERSION_VARIABLES事件，setEvarWithKey:andStringValue关键字为空,日志检测测试通过-----passed");
     } else {
-        NSLog(@"EVar事件，setEvarWithKey:andStringValue关键字为空,日志检测测试失败----Failed");
+        NSLog(@"CONVERSION_VARIABLES事件，setEvarWithKey:andStringValue关键字为空,日志检测测试失败----Failed");
         XCTAssertEqual(1, 0);
     }
 }
@@ -183,9 +183,9 @@
     [LogOperHelper redirectLogBack];
     if (chres) {
         XCTAssertEqual(1, 1);
-        NSLog(@"EVar事件，setEvarWithKey:andStringValue关键字为nil,日志检测测试通过-----passed");
+        NSLog(@"CONVERSION_VARIABLES事件，setEvarWithKey:andStringValue关键字为nil,日志检测测试通过-----passed");
     } else {
-        NSLog(@"EVar事件，setEvarWithKey:andStringValue关键字为nil,日志检测测试失败----Failed");
+        NSLog(@"CONVERSION_VARIABLES事件，setEvarWithKey:andStringValue关键字为nil,日志检测测试失败----Failed");
         XCTAssertEqual(1, 0);
     }
 }
@@ -205,9 +205,9 @@
     [LogOperHelper redirectLogBack];
     if (chres) {
         XCTAssertEqual(1, 1);
-        NSLog(@"EVar事件，setEvarWithKey:andStringValue Str值为空,日志检测测试通过-----passed");
+        NSLog(@"CONVERSION_VARIABLES事件，setEvarWithKey:andStringValue Str值为空,日志检测测试通过-----passed");
     } else {
-        NSLog(@"EVar事件，setEvarWithKey:andStringValue Str值为空,日志检测测试失败-----Failed");
+        NSLog(@"CONVERSION_VARIABLES事件，setEvarWithKey:andStringValue Str值为空,日志检测测试失败-----Failed");
         XCTAssertEqual(1, 0);
     }
 }
@@ -220,20 +220,20 @@
     [Growing setConversionVariables:@{@"evkey1" : @"132"}];
     [tester waitForTimeInterval:3];
     NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
-    // NSLog(@"EVar事件：%@",evarEventArray);
+    // NSLog(@"CONVERSION_VARIABLES事件：%@",evarEventArray);
     if (evarEventArray.count >= 1) {
         NSDictionary *epvarchr = [evarEventArray objectAtIndex:evarEventArray.count - 1];
         XCTAssertEqualObjects(epvarchr[@"eventType"], @"CONVERSION_VARIABLES");
         XCTAssertTrue([ManualTrackHelper CheckContainsKey:epvarchr:@"attributes"]);
         XCTAssertEqual([epvarchr[@"attributes"][@"evkey1"] intValue], 132);
 
-        NSDictionary *chres = [ManualTrackHelper EvarEventCheck:epvarchr];
+        NSDictionary *chres = [ManualTrackHelper conversionVariablesEventCheck:epvarchr];
         // NSLog(@"Check Result:%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
         XCTAssertEqualObjects(chres[@"ProCheck"][@"chres"], @"same");
-        NSLog(@"EVar事件，setEvarWithKey:andNumberValue设置变量测试通过-----passed");
+        NSLog(@"CONVERSION_VARIABLES事件，setEvarWithKey:andNumberValue设置变量测试通过-----passed");
     } else {
-        NSLog(@"EVar事件，setEvarWithKey:andNumberValue设置变量测试失败:%@", evarEventArray);
+        NSLog(@"CONVERSION_VARIABLES事件，setEvarWithKey:andNumberValue设置变量测试失败:%@", evarEventArray);
         XCTAssertEqual(1, 0);
     }
 }
@@ -246,7 +246,7 @@
     [Growing setConversionVariables:@{@"evkey1" : @"43.22"}];
     [tester waitForTimeInterval:3];
     NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
-    // NSLog(@"EVar事件：%@",evarEventArray);
+    // NSLog(@"CONVERSION_VARIABLES事件：%@",evarEventArray);
     if (evarEventArray.count >= 1) {
         NSDictionary *epvarchr = [evarEventArray objectAtIndex:evarEventArray.count - 1];
         XCTAssertEqualObjects(epvarchr[@"eventType"], @"CONVERSION_VARIABLES");
@@ -254,13 +254,13 @@
         NSString *fvalue = @"43.22";
         XCTAssertEqual([epvarchr[@"attributes"][@"evkey1"] floatValue], [fvalue floatValue]);
 
-        NSDictionary *chres = [ManualTrackHelper EvarEventCheck:epvarchr];
+        NSDictionary *chres = [ManualTrackHelper conversionVariablesEventCheck:epvarchr];
         // NSLog(@"Check Result:%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
         XCTAssertEqualObjects(chres[@"ProCheck"][@"chres"], @"same");
-        NSLog(@"EVar事件，setEvarWithKey:andNumberValue更新变量测试通过-----passed");
+        NSLog(@"CONVERSION_VARIABLES事件，setEvarWithKey:andNumberValue更新变量测试通过-----passed");
     } else {
-        NSLog(@"EVar事件，setEvarWithKey:andNumberValue更新变量测试失败:%@", evarEventArray);
+        NSLog(@"CONVERSION_VARIABLES事件，setEvarWithKey:andNumberValue更新变量测试失败:%@", evarEventArray);
         XCTAssertEqual(1, 0);
     }
 }
@@ -280,9 +280,9 @@
     [LogOperHelper redirectLogBack];
     if (chres) {
         XCTAssertEqual(1, 1);
-        NSLog(@"EVar事件，setEvarWithKey:andNumberValue Key为空,日志检测测试通过-----passed");
+        NSLog(@"CONVERSION_VARIABLES事件，setEvarWithKey:andNumberValue Key为空,日志检测测试通过-----passed");
     } else {
-        NSLog(@"EVar事件，setEvarWithKey:andNumberValue Key为空,日志检测测试失败----Failed");
+        NSLog(@"CONVERSION_VARIABLES事件，setEvarWithKey:andNumberValue Key为空,日志检测测试失败----Failed");
         XCTAssertEqual(1, 0);
     }
 }
@@ -302,9 +302,9 @@
     [LogOperHelper redirectLogBack];
     if (chres) {
         XCTAssertEqual(1, 1);
-        NSLog(@"EVar事件，setEvarWithKey:andNumberValue Value为空,日志检测测试通过-----passed");
+        NSLog(@"CONVERSION_VARIABLES事件，setEvarWithKey:andNumberValue Value为空,日志检测测试通过-----passed");
     } else {
-        NSLog(@"EVar事件，setEvarWithKey:andNumberValue Value为空,日志检测测试失败----Failed");
+        NSLog(@"CONVERSION_VARIABLES事件，setEvarWithKey:andNumberValue Value为空,日志检测测试失败----Failed");
         XCTAssertEqual(1, 0);
     }
 }
@@ -317,20 +317,20 @@
     [Growing setConversionVariables:@{@"关键字" : @"北京"}];
     [tester waitForTimeInterval:3];
     NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
-    // NSLog(@"EVar事件：%@",evarEventArray);
+    // NSLog(@"CONVERSION_VARIABLES事件：%@",evarEventArray);
     if (evarEventArray.count >= 1) {
         NSDictionary *epvarchr = [evarEventArray objectAtIndex:evarEventArray.count - 1];
         XCTAssertEqualObjects(epvarchr[@"eventType"], @"CONVERSION_VARIABLES");
         XCTAssertTrue([ManualTrackHelper CheckContainsKey:epvarchr:@"attributes"]);
         XCTAssertEqualObjects(epvarchr[@"attributes"][@"关键字"], @"北京");
 
-        NSDictionary *chres = [ManualTrackHelper EvarEventCheck:epvarchr];
+        NSDictionary *chres = [ManualTrackHelper conversionVariablesEventCheck:epvarchr];
         // NSLog(@"Check Result:%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
         XCTAssertEqualObjects(chres[@"ProCheck"][@"chres"], @"same");
-        NSLog(@"EVar事件，setEvarWithKey:andStringValue关键字和值为中文测试通过-----passed");
+        NSLog(@"CONVERSION_VARIABLES事件，setEvarWithKey:andStringValue关键字和值为中文测试通过-----passed");
     } else {
-        NSLog(@"EVar事件，setEvarWithKey:andStringValue关键字和值为中文测试失败:%@", evarEventArray);
+        NSLog(@"CONVERSION_VARIABLES事件，setEvarWithKey:andStringValue关键字和值为中文测试失败:%@", evarEventArray);
         XCTAssertEqual(1, 0);
     }
 }
@@ -351,9 +351,9 @@
     [LogOperHelper redirectLogBack];
     if (chres) {
         XCTAssertEqual(1, 1);
-        NSLog(@"EVar事件，setEvar数值字典超过100个关键字，日志检测测试通过-----passed");
+        NSLog(@"CONVERSION_VARIABLES事件，setEvar数值字典超过100个关键字，日志检测测试通过-----passed");
     } else {
-        NSLog(@"EVar事件，setEvar数值字典超过100个关键字，日志检测测试失败---Failed");
+        NSLog(@"CONVERSION_VARIABLES事件，setEvar数值字典超过100个关键字，日志检测测试失败---Failed");
         XCTAssertEqual(1, 0);
     }
 }

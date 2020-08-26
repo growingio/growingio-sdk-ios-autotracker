@@ -8,6 +8,6 @@
 
 #import <KIF/KIF.h>
 
-@interface VisitorEventsTest : KIFTestCase
+@interface VisitEventsTest : KIFTestCase
 
 @end

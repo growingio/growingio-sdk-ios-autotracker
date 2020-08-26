@@ -41,7 +41,7 @@
     return cstmchres;
 }
 
-// ppl事件对比，测量协议字段完整且每个字段不为空
+// LOGIN_USER_ATTRIBUTES事件对比，测量协议字段完整且每个字段不为空
 + (NSDictionary *)PplEventCheck:(NSDictionary *)pplevent {
     NSDictionary *pplchres;
     NSArray *pplprome = @[
@@ -77,8 +77,8 @@
     return pvarchres;
 }
 
-// evar事件对比，测量协议字段完整且每个字段不为空
-+ (NSDictionary *)EvarEventCheck:(NSDictionary *)evarevent {
+// CONVERSION_VARIABLES事件对比，测量协议字段完整且每个字段不为空
++ (NSDictionary *)conversionVariablesEventCheck:(NSDictionary *)evarevent {
     NSDictionary *evarchres;
     NSArray *evarlprome = @[
         @"userId", @"sessionId", @"eventType", @"timestamp", @"domain", @"attributes", @"userId", @"eventSequenceId",
@@ -96,15 +96,15 @@
 }
 
 // vstr事件对比，测量协议字段完整且每个字段不为空
-+ (NSDictionary *)visitorEventCheck:(NSDictionary *)vstrevent {
++ (NSDictionary *)visitorEventCheck:(NSDictionary *)visitorAttributesEvent {
     NSDictionary *vstrchres;
     NSArray *vstrprome = @[ @"userId", @"sessionId", @"eventType", @"timestamp", @"domain", @"attributes", @"userId" ];
     //对比测量协议结构
-    if (vstrevent.count > 0) {
-        NSArray *chevstr = vstrevent.allKeys;
+    if (visitorAttributesEvent.count > 0) {
+        NSArray *chevstr = visitorAttributesEvent.allKeys;
         vstrchres = @{
             @"ProCheck" : [NoburPoMeaProCheck ComNSArray:vstrprome:chevstr],
-            @"KeysCheck" : [NoburPoMeaProCheck CheckDictEmpty:vstrevent]
+            @"KeysCheck" : [NoburPoMeaProCheck CheckDictEmpty:visitorAttributesEvent]
         };
     }
     return vstrchres;

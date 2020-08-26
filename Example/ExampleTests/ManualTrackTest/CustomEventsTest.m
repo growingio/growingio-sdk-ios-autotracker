@@ -115,7 +115,7 @@
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[viewTester usingLabel:@"协议/接口"] tap];
-    [[viewTester usingLabel:@"cstm请求"] tap];
+    [[viewTester usingLabel:@"CUSTOM请求"] tap];
     //将Log日志写入文件
     [LogOperHelper writeLogToFile];
     [[viewTester usingLabel:@"EventNameOutRange"] tap];
@@ -391,7 +391,7 @@
     [MockEventQueue.sharedQueue cleanQueue];
     [[viewTester usingLabel:@"协议/接口"] tap];
     [[viewTester usingLabel:@"协议/接口"] tap];
-    [[viewTester usingLabel:@"cstm请求"] tap];
+    [[viewTester usingLabel:@"CUSTOM请求"] tap];
 
     //将Log日志写入文件
     [LogOperHelper writeLogToFile];

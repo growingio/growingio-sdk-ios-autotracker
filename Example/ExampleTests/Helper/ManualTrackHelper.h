@@ -15,15 +15,15 @@
 // cstm事件对比，测量协议字段完整且每个字段不为空
 + (NSDictionary *)customEventCheck:(NSDictionary *)cstmevent;
 
-// ppl事件对比，测量协议字段完整且每个字段不为空
+// LOGIN_USER_ATTRIBUTES事件对比，测量协议字段完整且每个字段不为空
 + (NSDictionary *)PplEventCheck:(NSDictionary *)pplevent;
 
 // pvar事件对比，测量协议字段完整且每个字段不为空
 + (NSDictionary *)PvarEventCheck:(NSDictionary *)pvarevent;
 
-// evar事件对比，测量协议字段完整且每个字段不为空
-+ (NSDictionary *)EvarEventCheck:(NSDictionary *)evarevent;
+// CONVERSION_VARIABLES事件对比，测量协议字段完整且每个字段不为空
++ (NSDictionary *)conversionVariablesEventCheck:(NSDictionary *)evarevent;
 
-// vstr事件对比，测量协议字段完整且每个字段不为空
-+ (NSDictionary *)visitorEventCheck:(NSDictionary *)vstrevent;
+// VISITOR_ATTRIBUTES 事件对比，测量协议字段完整且每个字段不为空
++ (NSDictionary *)visitorEventCheck:(NSDictionary *)visitorAttributesEvent;
 @end

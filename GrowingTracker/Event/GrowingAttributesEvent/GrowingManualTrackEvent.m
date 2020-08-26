@@ -228,9 +228,9 @@
 }
 
 + (instancetype)hybridVisitorEventWithDataDict:(NSDictionary *)dataDict {
-    GrowingVisitorEvent *vstrEvent = [[self alloc] initWithTimestamp:nil];
-    vstrEvent.attributes = dataDict[@"attributes"];
-    return vstrEvent;
+    GrowingVisitorEvent *visitorAttributesEvent = [[self alloc] initWithTimestamp:nil];
+    visitorAttributesEvent.attributes = dataDict[@"attributes"];
+    return visitorAttributesEvent;
 }
 
 @end

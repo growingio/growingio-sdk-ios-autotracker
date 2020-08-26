@@ -102,7 +102,7 @@
 		047BF3AF24F638BB0028FE94 /* DailyDataLimit.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3A424F638BB0028FE94 /* DailyDataLimit.m */; };
 		047BF3B024F638BB0028FE94 /* GetEnableLogTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3A624F638BB0028FE94 /* GetEnableLogTest.m */; };
 		047BF3B124F638BB0028FE94 /* GetConfigurationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3A824F638BB0028FE94 /* GetConfigurationTest.m */; };
-		047BF3B424F6551B0028FE94 /* VisitorEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3B324F6551B0028FE94 /* VisitorEventsTest.m */; };
+		047BF3B424F6551B0028FE94 /* VisitEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3B324F6551B0028FE94 /* VisitEventsTest.m */; };
 		047BF3BA24F655A50028FE94 /* ClickEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3B624F655A50028FE94 /* ClickEventsTest.m */; };
 		047BF3BB24F655A50028FE94 /* ViewChangeEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3B724F655A50028FE94 /* ViewChangeEventsTest.m */; };
 		047BF3BC24F655A50028FE94 /* PageEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3B924F655A50028FE94 /* PageEventsTest.m */; };
@@ -250,8 +250,8 @@
 		047BF3A624F638BB0028FE94 /* GetEnableLogTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetEnableLogTest.m; sourceTree = "<group>"; };
 		047BF3A724F638BB0028FE94 /* GDPRTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDPRTest.h; sourceTree = "<group>"; };
 		047BF3A824F638BB0028FE94 /* GetConfigurationTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetConfigurationTest.m; sourceTree = "<group>"; };
-		047BF3B224F6551B0028FE94 /* VisitorEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VisitorEventsTest.h; sourceTree = "<group>"; };
-		047BF3B324F6551B0028FE94 /* VisitorEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VisitorEventsTest.m; sourceTree = "<group>"; };
+		047BF3B224F6551B0028FE94 /* VisitEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VisitEventsTest.h; sourceTree = "<group>"; };
+		047BF3B324F6551B0028FE94 /* VisitEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VisitEventsTest.m; sourceTree = "<group>"; };
 		047BF3B524F655A50028FE94 /* ClickEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClickEventsTest.h; sourceTree = "<group>"; };
 		047BF3B624F655A50028FE94 /* ClickEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClickEventsTest.m; sourceTree = "<group>"; };
 		047BF3B724F655A50028FE94 /* ViewChangeEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewChangeEventsTest.m; sourceTree = "<group>"; };
@@ -511,8 +511,8 @@
 				047BF3B924F655A50028FE94 /* PageEventsTest.m */,
 				047BF3B824F655A50028FE94 /* ViewChangeEventsTest.h */,
 				047BF3B724F655A50028FE94 /* ViewChangeEventsTest.m */,
-				047BF3B224F6551B0028FE94 /* VisitorEventsTest.h */,
-				047BF3B324F6551B0028FE94 /* VisitorEventsTest.m */,
+				047BF3B224F6551B0028FE94 /* VisitEventsTest.h */,
+				047BF3B324F6551B0028FE94 /* VisitEventsTest.m */,
 			);
 			path = ProtocolAndApi;
 			sourceTree = "<group>";
@@ -911,7 +911,7 @@
 				4962653D24DA66B600032551 /* NoburPoMeaProCheck.m in Sources */,
 				4962653A24DA66B600032551 /* ManualTrackHelper.m in Sources */,
 				047BF3BB24F655A50028FE94 /* ViewChangeEventsTest.m in Sources */,
-				047BF3B424F6551B0028FE94 /* VisitorEventsTest.m in Sources */,
+				047BF3B424F6551B0028FE94 /* VisitEventsTest.m in Sources */,
 				047BF3AA24F638BB0028FE94 /* GetIDsTest.m in Sources */,
 				047BF3B024F638BB0028FE94 /* GetEnableLogTest.m in Sources */,
 				4962653E24DA66B600032551 /* NSURLSession+TestHook.m in Sources */,

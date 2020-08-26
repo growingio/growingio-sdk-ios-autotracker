@@ -613,12 +613,6 @@ static GrowingWebCircle *shareInstance = nil;
             [NSString stringWithFormat:endPoint, [GrowingInstance sharedInstance].projectID, circleRoomNumber];
         self.webSocket =
             [[GrowingSRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];
-        //        NSString *urlStr =
-        //            @"wss://gta1.growingio.com/app/0a1b4118dd954ec3bcc69da5138bdb96/"
-        //            @"circle/p5Xvy2Mt5OIkWHg8";
-        //        self.webSocket =
-        //            [[GrowingSRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL
-        //            URLWithString:urlStr]]];
         self.webSocket.delegate = self;
         [self.webSocket open];
 

@@ -57,7 +57,7 @@
     [[viewTester usingLabel:@"协议/接口"] tap];
     //单击两次返回列表页
     [[viewTester usingLabel:@"协议/接口"] tap];
-    [[viewTester usingLabel:@"chng请求"] tap];
+    [[viewTester usingLabel:@"VIEW_CHANGE请求"] tap];
     [MockEventQueue.sharedQueue cleanQueue];
     NSArray *date = @[@"June", @"10", @"2019"];
     [tester selectDatePickerValue:date];

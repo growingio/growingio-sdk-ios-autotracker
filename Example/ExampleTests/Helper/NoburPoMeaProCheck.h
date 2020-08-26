@@ -22,8 +22,8 @@
 // Vst事件对比，测量协议字段完整且每个字段不为空
 + (NSDictionary *)visitEventCheck:(NSDictionary *)vstevent;
 
-// clck事件对比，测量协议字段完整且每个字段不为空
-+ (NSDictionary *)clickEventCheck:(NSDictionary *)clckevent;
+// click事件对比，测量协议字段完整且每个字段不为空
++ (NSDictionary *)clickEventCheck:(NSDictionary *)clickevent;
 
 // VIEW_CHANGE事件对比，测量协议字段完整且每个字段不为空
 + (NSDictionary *)viewChangeEventCheck:(NSDictionary *)chngevent;

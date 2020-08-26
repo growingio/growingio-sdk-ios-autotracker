@@ -115,19 +115,20 @@
     return vstchres;
 }
 
-// clck事件对比，测量协议字段完整且每个字段不为空
-+ (NSDictionary *)clickEventCheck:(NSDictionary *)clckevent {
-    NSDictionary *clckchres;
-    NSArray *clckprome = @[
+// click事件对比，测量协议字段完整且每个字段不为空
++ (NSDictionary *)clickEventCheck:(NSDictionary *)clickevent {
+    NSDictionary *clickchres;
+    NSArray *clickprome = @[
         @"userId", @"sessionId", @"eventType", @"timestamp", @"domain", @"pageName", @"textValue", @"xpath", @"index",
         @"userId", @"globalSequenceId", @"eventSequenceId"
     ];
     //对比测量协议结构
-    if (clckevent.count > 0) {
-        NSArray *chevst = clckevent.allKeys;
-        clckchres = @{@"ProCheck" : [self ComNSArray:clckprome:chevst], @"KeysCheck" : [self CheckDictEmpty:clckevent]};
+    if (clickevent.count > 0) {
+        NSArray *chevst = clickevent.allKeys;
+        clickchres =
+            @{@"ProCheck" : [self ComNSArray:clickprome:chevst], @"KeysCheck" : [self CheckDictEmpty:clickevent]};
     }
-    return clckchres;
+    return clickchres;
 }
 // VIEW_CHANGE事件对比，测量协议字段完整且每个字段不为空
 + (NSDictionary *)viewChangeEventCheck:(NSDictionary *)chngevent {

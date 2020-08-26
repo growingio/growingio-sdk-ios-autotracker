@@ -1,5 +1,5 @@
 //
-//  VstrEventsTest.h
+//  visitorAttributesEventsTest.h
 //  GIOAutoTests
 //
 //  Created by GrowingIO on 2018/7/12.

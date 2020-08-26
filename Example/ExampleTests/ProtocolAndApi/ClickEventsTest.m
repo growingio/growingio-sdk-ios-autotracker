@@ -1,5 +1,5 @@
 //
-//  ClckEventsTest.m
+//  clickEventsTest.m
 //  GIOAutoTests
 //
 //  Created by GrowingIO on 2018/2/24.
@@ -7,24 +7,23 @@
 //
 
 #import "ClickEventsTest.h"
+
+#import "GrowingTracker.h"
 #import "MockEventQueue.h"
 #import "NoburPoMeaProCheck.h"
-#import "GrowingTracker.h"
 @implementation ClickEventsTest
 
 - (void)beforeEach {
     //设置userid,确保cs1字段不空
     [Growing setLoginUserId:@"test"];
-
 }
 
 - (void)afterEach {
-    
 }
 
-- (void)test7DialogBtnCheck{
+- (void)test7DialogBtnCheck {
     /**
-     function:对话框按钮点击，检测clck事件，模拟器上没有数据发送，真机上有
+     function:对话框按钮点击，检测click事件，模拟器上没有数据发送，真机上有
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[viewTester usingLabel:@"UI界面"] tap];
@@ -38,29 +37,26 @@
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"取消"] tap];
     [tester waitForTimeInterval:3];
-    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
-    //是否发送clck事件，需要确认
-    if(clckEventArray.count>=2)
-    {
+    NSArray *clickEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
+    //是否发送click事件，需要确认
+    if (clickEventArray.count >= 2) {
         //判断单击列表是否正确
-        NSDictionary *chevent=[clckEventArray objectAtIndex:clckEventArray.count-1];
-        NSDictionary *clkchr=[NoburPoMeaProCheck clickEventCheck:chevent];
-        //NSLog(@"Check Result:%@",clkchr);
+        NSDictionary *chevent = [clickEventArray objectAtIndex:clickEventArray.count - 1];
+        NSDictionary *clkchr = [NoburPoMeaProCheck clickEventCheck:chevent];
+        // NSLog(@"Check Result:%@",clkchr);
         XCTAssertEqual(clkchr[@"KeysCheck"][@"chres"], @"Passed");
-        XCTAssertEqualObjects(clkchr[@"ProCheck"][@"chres"],@"different");
-        XCTAssertEqualObjects(clkchr[@"ProCheck"][@"reduce"][0],@"index");
-        NSLog(@"对话框按钮点击，检测clck事件测试通过---Passed！");
-    }
-    else
-    {
-        NSLog(@"对话框按钮点击，检测clck事件测试不通过:%@！",clckEventArray);
+        XCTAssertEqualObjects(clkchr[@"ProCheck"][@"chres"], @"different");
+        XCTAssertEqualObjects(clkchr[@"ProCheck"][@"reduce"][0], @"index");
+        NSLog(@"对话框按钮点击，检测click事件测试通过---Passed！");
+    } else {
+        NSLog(@"对话框按钮点击，检测click事件测试不通过:%@！", clickEventArray);
         XCTAssertEqual(1, 0);
     }
 }
 
-- (void)test10BtnGIONotTrackClick{
+- (void)test10BtnGIONotTrackClick {
     /**
-     function:setDataTrackEnabled:NO，不发送clck事件
+     function:setDataTrackEnabled:NO，不发送click事件
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [Growing setDataTrackEnabled:NO];
@@ -74,21 +70,21 @@
     [MockEventQueue.sharedQueue cleanQueue];
     [[viewTester usingLabel:@"BtnGIODNTR"] tap];
     [tester waitForTimeInterval:3];
-    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
-    if (clckEventArray==NULL) {
+    NSArray *clickEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
+    if (clickEventArray == NULL) {
         XCTAssertEqual(1, 1);
-        NSLog(@"setDataTrackEnabled:NO，不发送clck事件测试通过---Passed！");
+        NSLog(@"setDataTrackEnabled:NO，不发送click事件测试通过---Passed！");
     } else {
-        NSLog(@"setDataTrackEnabled:NO，不发送clck事件测试不通过:%@！",clckEventArray);
+        NSLog(@"setDataTrackEnabled:NO，不发送click事件测试不通过:%@！", clickEventArray);
         XCTAssertEqual(1, 0);
     }
     //恢复track状态
     [Growing setDataTrackEnabled:YES];
 }
 
-- (void)test11ColorButtonCheck{
+- (void)test11ColorButtonCheck {
     /**
-     function:单击ColorButton，检测clck事件
+     function:单击ColorButton，检测click事件
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[viewTester usingLabel:@"UI界面"] tap];
@@ -99,35 +95,24 @@
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"Simple UI Elements"] tap];
     [tester waitForTimeInterval:5];
-    CGPoint point=CGPointMake(50,500);
+    CGPoint point = CGPointMake(50, 500);
     [tester tapScreenAtPoint:point];
     [tester waitForTimeInterval:3];
     [[viewTester usingLabel:@"好的"] tap];
-    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
-    if (clckEventArray.count>4) {
-        //TODO:3.0 测量协议修改
-//        NSDictionary *chevent=[clckEventArray objectAtIndex:clckEventArray.count-2];
-//        XCTAssertEqualObjects(chevent[@"textValue"],@"");
-        //检测发送事件情况
-//        NSDictionary *clkchr=[NoburPoMeaProCheck clickEventCheck:chevent];
-        //NSLog(@"Check Result:%@",clkchr);
-//        NSArray *ekey=clkchr[@"KeysCheck"][@"EmptyKeys"];
-//        XCTAssertEqual(ekey.count, 1);
-//        XCTAssertEqualObjects(clkchr[@"KeysCheck"][@"EmptyKeys"][0],@"textValue");
-//        NSArray *reduc=clkchr[@"ProCheck"][@"reduce"];
-//        XCTAssertEqual(reduc.count, 1);
-//        XCTAssertEqualObjects(clkchr[@"ProCheck"][@"reduce"][0],@"index");
-        NSLog(@"单击ColorButton，发送clck事件测试通过---Passed！");
+    NSArray *clickEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
+    if (clickEventArray.count > 4) {
+        // TODO:3.0 测量协议修改
+        XCTAssertEqual(1, 1);
+        NSLog(@"单击ColorButton，发送click事件测试通过---Passed！");
     } else {
-        NSLog(@"单击ColorButton，发送clck事件测试不通过:%@！",clckEventArray);
+        NSLog(@"单击ColorButton，发送click事件测试不通过:%@！", clickEventArray);
         XCTAssertEqual(1, 0);
     }
-   
 }
 
 - (void)test12ButtonWithImageViewCheck {
     /**
-     function:单击ButtonWithImageView，检测clck事件
+     function:单击ButtonWithImageView，检测click事件
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[viewTester usingLabel:@"UI界面"] tap];
@@ -138,34 +123,25 @@
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"Simple UI Elements"] tap];
     [tester waitForTimeInterval:1];
-    CGPoint point=CGPointMake(130,500);
+    CGPoint point = CGPointMake(130, 500);
     [tester tapScreenAtPoint:point];
     [tester waitForTimeInterval:3];
-     [[viewTester usingLabel:@"好的"] tap];
-    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
-    //NSLog(@"Clck 事件：%@",[clckEventArray objectAtIndex:clckEventArray.count-1]);
-    if(clckEventArray.count>4) {
-        //TODO:3.0 测量协议修改
-//        NSDictionary *chevent=[clckEventArray objectAtIndex:clckEventArray.count-2];
-//        XCTAssertEqualObjects(chevent[@"textValue"],@"邮件");
-//        //检测发送事件情况
-//        NSDictionary *clkchr=[NoburPoMeaProCheck clickEventCheck:chevent];
-//        //NSLog(@"Check Result:%@",clkchr);
-//        XCTAssertEqual(clkchr[@"KeysCheck"][@"chres"], @"Passed");
-//        NSArray *reduc=clkchr[@"ProCheck"][@"reduce"];
-//        XCTAssertEqual(reduc.count, 1);
-//        XCTAssertEqualObjects(clkchr[@"ProCheck"][@"reduce"][0],@"index");
-        NSLog(@"单击ButtonWithImageView，发送clck事件测试通过---Passed！");
+    [[viewTester usingLabel:@"好的"] tap];
+    NSArray *clickEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
+    // NSLog(@"Click 事件：%@",[clckEventArray objectAtIndex:clckEventArray.count-1]);
+    if (clickEventArray.count > 4) {
+        // TODO:3.0 测量协议修改
+        XCTAssertEqual(1, 1);
+        NSLog(@"单击ButtonWithImageView，发送click事件测试通过---Passed！");
     } else {
-        NSLog(@"单击ButtonWithImageView，发送clck事件测试不通过:%@！",clckEventArray);
+        NSLog(@"单击ButtonWithImageView，发送click事件测试不通过:%@！", clickEventArray);
         XCTAssertEqual(1, 0);
     }
-   
 }
 
 - (void)test13UIViewButtonCheck {
     /**
-     function:单击UIViewButton，检测clck事件
+     function:单击UIViewButton，检测click事件
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[viewTester usingLabel:@"UI界面"] tap];
@@ -179,21 +155,13 @@
     [[viewTester usingLabel:@"Fire"] tap];
     [tester waitForTimeInterval:3];
     [[viewTester usingLabel:@"好的"] tap];
-    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
-    //NSLog(@"Clck 事件：%@",[clckEventArray objectAtIndex:clckEventArray.count-1]);
-    if (clckEventArray.count>3) {
-        //TODO:3.0 测量协议修改
-//        NSDictionary *chevent=[clckEventArray objectAtIndex:clckEventArray.count-2];
-//        //检测发送事件情况
-//        NSDictionary *clkchr=[NoburPoMeaProCheck clickEventCheck:chevent];
-//        //NSLog(@"Check Result:%@",clkchr);
-//        XCTAssertEqual(clkchr[@"KeysCheck"][@"chres"], @"Passed");
-//        NSArray *reduc=clkchr[@"ProCheck"][@"reduce"];
-//        XCTAssertEqual(reduc.count, 1);
-//        XCTAssertEqualObjects(clkchr[@"ProCheck"][@"reduce"][0],@"index");
-        NSLog(@"单击UIViewButton，发送clck事件测试通过---Passed！");
+    NSArray *clickEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
+    if (clickEventArray.count > 3) {
+        // TODO:3.0 测量协议修改
+        XCTAssertEqual(1, 1);
+        NSLog(@"单击UIViewButton，发送click事件测试通过---Passed！");
     } else {
-        NSLog(@"单击UIViewButton，发送clck事件测试不通过:%@！",clckEventArray);
+        NSLog(@"单击UIViewButton，发送click事件测试不通过:%@！", clickEventArray);
         XCTAssertEqual(1, 0);
     }
 }

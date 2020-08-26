@@ -4,7 +4,7 @@
 //
 //  Created by GrowingIO on 2018/6/8.
 //  Copyright (C) 2018 Beijing Yishu Technology Co., Ltd.
-//  function:ppl事件相关测试用例
+//  function:LOGIN_USER_ATTRIBUTES事件相关测试用例
 
 #import "LoginUserAttributerEventsTest.h"
 
@@ -27,7 +27,7 @@
     [Growing setLoginUserAttributes:@{@"name" : @"测试名字", @"title" : @"QA"}];
     [tester waitForTimeInterval:2];
     NSArray *pplEventArray = [MockEventQueue.sharedQueue eventsFor:@"LOGIN_USER_ATTRIBUTES"];
-    NSLog(@"PPL事件：%@", pplEventArray);
+    NSLog(@"LOGIN_USER_ATTRIBUTES事件：%@", pplEventArray);
     if (pplEventArray.count >= 1) {
         NSDictionary *cstmchr = [pplEventArray objectAtIndex:pplEventArray.count - 1];
         XCTAssertEqualObjects(cstmchr[@"eventType"], @"LOGIN_USER_ATTRIBUTES");
@@ -38,9 +38,9 @@
         // NSLog(@"Check Result:%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
         XCTAssertEqualObjects(chres[@"ProCheck"][@"chres"], @"same");
-        NSLog(@"ppl事件，setPeopleVariable正常情况测试通过-----passed");
+        NSLog(@"LOGIN_USER_ATTRIBUTES事件，setPeopleVariable正常情况测试通过-----passed");
     } else {
-        NSLog(@"ppl事件，setPeopleVariable正常情况测试失败:%@", pplEventArray);
+        NSLog(@"LOGIN_USER_ATTRIBUTES事件，setPeopleVariable正常情况测试失败:%@", pplEventArray);
         XCTAssertEqual(1, 0);
     }
 }
@@ -60,9 +60,9 @@
     [LogOperHelper redirectLogBack];
     if (chres) {
         XCTAssertEqual(1, 1);
-        NSLog(@"ppl事件，setPeopleVariable为nil,日志检测测试通过-----passed");
+        NSLog(@"LOGIN_USER_ATTRIBUTES事件，setPeopleVariable为nil,日志检测测试通过-----passed");
     } else {
-        NSLog(@"ppl事件，setPeopleVariable为nil,日志检测测试失败---Failed");
+        NSLog(@"LOGIN_USER_ATTRIBUTES事件，setPeopleVariable为nil,日志检测测试失败---Failed");
         XCTAssertEqual(1, 0);
     }
 }
@@ -84,9 +84,9 @@
         // NSLog(@"Check Result:%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
         XCTAssertEqualObjects(chres[@"ProCheck"][@"chres"], @"same");
-        NSLog(@"ppl事件，setPeopleVariable为空测试通过-----passed");
+        NSLog(@"LOGIN_USER_ATTRIBUTES事件，setPeopleVariable为空测试通过-----passed");
     } else {
-        NSLog(@"ppl事件，setPeopleVariable为空测试失败:%@", pplEventArray);
+        NSLog(@"LOGIN_USER_ATTRIBUTES事件，setPeopleVariable为空测试失败:%@", pplEventArray);
         XCTAssertEqual(1, 0);
     }
 }
@@ -99,7 +99,7 @@
     [Growing setLoginUserAttributes:@{@"name" : @"GrowingIO"}];
     [tester waitForTimeInterval:2];
     NSArray *pplEventArray = [MockEventQueue.sharedQueue eventsFor:@"LOGIN_USER_ATTRIBUTES"];
-    // NSLog(@"PPL事件：%@",pplEventArray);
+    // NSLog(@"LOGIN_USER_ATTRIBUTES事件：%@",pplEventArray);
     if (pplEventArray.count >= 1) {
         NSDictionary *cstmchr = [pplEventArray objectAtIndex:pplEventArray.count - 1];
         XCTAssertEqualObjects(cstmchr[@"eventType"], @"LOGIN_USER_ATTRIBUTES");
@@ -109,9 +109,10 @@
         // NSLog(@"Check Result:%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
         XCTAssertEqualObjects(chres[@"ProCheck"][@"chres"], @"same");
-        NSLog(@"ppl事件,setPeopleVariableWithKey:andStringValue,发送正常数据测试通过-----passed");
+        NSLog(@"LOGIN_USER_ATTRIBUTES事件,setPeopleVariableWithKey:andStringValue,发送正常数据测试通过-----passed");
     } else {
-        NSLog(@"ppl事件,setPeopleVariableWithKey:andStringValue,发送正常数据测试失败:%@", pplEventArray);
+        NSLog(@"LOGIN_USER_ATTRIBUTES事件,setPeopleVariableWithKey:andStringValue,发送正常数据测试失败:%@",
+              pplEventArray);
         XCTAssertEqual(1, 0);
     }
 }
@@ -124,7 +125,7 @@
     [Growing setLoginUserAttributes:@{@"name" : @"GIO"}];
     [tester waitForTimeInterval:2];
     NSArray *pplEventArray = [MockEventQueue.sharedQueue eventsFor:@"LOGIN_USER_ATTRIBUTES"];
-    // NSLog(@"PPL事件：%@",pplEventArray);
+    // NSLog(@"LOGIN_USER_ATTRIBUTES事件：%@",pplEventArray);
     if (pplEventArray.count >= 1) {
         NSDictionary *cstmchr = [pplEventArray objectAtIndex:pplEventArray.count - 1];
         XCTAssertEqualObjects(cstmchr[@"eventType"], @"LOGIN_USER_ATTRIBUTES");
@@ -134,9 +135,9 @@
         // NSLog(@"Check Result:%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
         XCTAssertEqualObjects(chres[@"ProCheck"][@"chres"], @"same");
-        NSLog(@"ppl事件,setPeopleVariableWithKey:andStringValue,更新数据测试通过-----passed");
+        NSLog(@"LOGIN_USER_ATTRIBUTES事件,setPeopleVariableWithKey:andStringValue,更新数据测试通过-----passed");
     } else {
-        NSLog(@"ppl事件,setPeopleVariableWithKey:andStringValue,更新数据测试失败:%@", pplEventArray);
+        NSLog(@"LOGIN_USER_ATTRIBUTES事件,setPeopleVariableWithKey:andStringValue,更新数据测试失败:%@", pplEventArray);
         XCTAssertEqual(1, 0);
     }
 }
@@ -156,9 +157,9 @@
     [LogOperHelper redirectLogBack];
     if (chres) {
         XCTAssertEqual(1, 1);
-        NSLog(@"ppl事件，setPeopleVariableWithKey:andStringValue,Key为空日志检测测试通过-----passed");
+        NSLog(@"LOGIN_USER_ATTRIBUTES事件，setPeopleVariableWithKey:andStringValue,Key为空日志检测测试通过-----passed");
     } else {
-        NSLog(@"ppl事件，setPeopleVariableWithKey:andStringValue,Key为空日志检测测试失败---Failed");
+        NSLog(@"LOGIN_USER_ATTRIBUTES事件，setPeopleVariableWithKey:andStringValue,Key为空日志检测测试失败---Failed");
         XCTAssertEqual(1, 0);
     }
 }
@@ -179,9 +180,10 @@
     [LogOperHelper redirectLogBack];
     if (chres) {
         XCTAssertEqual(1, 1);
-        NSLog(@"ppl事件，setPeopleVariableWithKey:andStringValue,Key为nil日志检测测试通过-----passed");
+        NSLog(
+            @"LOGIN_USER_ATTRIBUTES事件，setPeopleVariableWithKey:andStringValue,Key为nil日志检测测试通过-----passed");
     } else {
-        NSLog(@"ppl事件，setPeopleVariableWithKey:andStringValue,Key为nil日志检测测试失败---Failed");
+        NSLog(@"LOGIN_USER_ATTRIBUTES事件，setPeopleVariableWithKey:andStringValue,Key为nil日志检测测试失败---Failed");
         XCTAssertEqual(1, 0);
     }
 }
@@ -202,9 +204,12 @@
     [LogOperHelper redirectLogBack];
     if (chres) {
         XCTAssertEqual(1, 1);
-        NSLog(@"ppl事件，setPeopleVariableWithKey:andStringValue,Value为Nil日志检测测试通过-----passed");
+        NSLog(
+            @"LOGIN_USER_ATTRIBUTES事件，setPeopleVariableWithKey:andStringValue,Value为Nil日志检测测试通过-----"
+            @"passed");
     } else {
-        NSLog(@"ppl事件，setPeopleVariableWithKey:andStringValue,Value为Nil日志检测测试失败---Failed");
+        NSLog(
+            @"LOGIN_USER_ATTRIBUTES事件，setPeopleVariableWithKey:andStringValue,Value为Nil日志检测测试失败---Failed");
         XCTAssertEqual(1, 0);
     }
 }
@@ -224,9 +229,13 @@
     [LogOperHelper redirectLogBack];
     if (chres) {
         XCTAssertEqual(1, 1);
-        NSLog(@"ppl事件，setPeopleVariableWithKey:andStringValue,Value为Empty日志检测测试通过-----passed");
+        NSLog(
+            @"LOGIN_USER_ATTRIBUTES事件，setPeopleVariableWithKey:andStringValue,Value为Empty日志检测测试通过-----"
+            @"passed");
     } else {
-        NSLog(@"ppl事件，setPeopleVariableWithKey:andStringValue,Value为Empty日志检测测试失败---Failed");
+        NSLog(
+            @"LOGIN_USER_ATTRIBUTES事件，setPeopleVariableWithKey:andStringValue,Value为Empty日志检测测试失败---"
+            @"Failed");
         XCTAssertEqual(1, 0);
     }
 }
@@ -238,10 +247,10 @@
     [Growing setLoginUserAttributes:@{@"score" : @"98"}];
     [tester waitForTimeInterval:2];
     NSArray *pplEventArray = [MockEventQueue.sharedQueue eventsFor:@"LOGIN_USER_ATTRIBUTES"];
-    // NSLog(@"PPL事件：%@",pplEventArray);
+    // NSLog(@"LOGIN_USER_ATTRIBUTES事件：%@",pplEventArray);
     if (pplEventArray.count >= 1) {
         NSDictionary *cstmchr = [pplEventArray objectAtIndex:pplEventArray.count - 1];
-        NSLog(@"ppl Result:%@", cstmchr);
+        NSLog(@"LOGIN_USER_ATTRIBUTES Result:%@", cstmchr);
         XCTAssertEqualObjects(cstmchr[@"eventType"], @"LOGIN_USER_ATTRIBUTES");
         XCTAssertTrue([ManualTrackHelper CheckContainsKey:cstmchr:@"attributes"]);
         NSString *cstmnum = cstmchr[@"attributes"][@"score"];
@@ -250,9 +259,9 @@
         NSLog(@"Check Result:%@", chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
         XCTAssertEqualObjects(chres[@"ProCheck"][@"chres"], @"same");
-        NSLog(@"ppl事件,setPeopleVariableWithKey:andNumberValue正整数测试通过-----passed");
+        NSLog(@"LOGIN_USER_ATTRIBUTES事件,setPeopleVariableWithKey:andNumberValue正整数测试通过-----passed");
     } else {
-        NSLog(@"ppl事件,setPeopleVariableWithKey:andNumberValue正整数测试失败:%@", pplEventArray);
+        NSLog(@"LOGIN_USER_ATTRIBUTES事件,setPeopleVariableWithKey:andNumberValue正整数测试失败:%@", pplEventArray);
         XCTAssertEqual(1, 0);
     }
 }
@@ -265,7 +274,7 @@
     [Growing setLoginUserAttributes:@{@"score" : @"23.62"}];
     [tester waitForTimeInterval:2];
     NSArray *pplEventArray = [MockEventQueue.sharedQueue eventsFor:@"LOGIN_USER_ATTRIBUTES"];
-    // NSLog(@"PPL事件：%@",pplEventArray);
+    // NSLog(@"LOGIN_USER_ATTRIBUTES事件：%@",pplEventArray);
     if (pplEventArray.count >= 1) {
         NSDictionary *cstmchr = [pplEventArray objectAtIndex:pplEventArray.count - 1];
         XCTAssertEqualObjects(cstmchr[@"eventType"], @"LOGIN_USER_ATTRIBUTES");
@@ -277,9 +286,10 @@
         // NSLog(@"Check Result:%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
         XCTAssertEqualObjects(chres[@"ProCheck"][@"chres"], @"same");
-        NSLog(@"ppl事件,setPeopleVariableWithKey:andNumberValue更新为浮点数测试通过-----passed");
+        NSLog(@"LOGIN_USER_ATTRIBUTES事件,setPeopleVariableWithKey:andNumberValue更新为浮点数测试通过-----passed");
     } else {
-        NSLog(@"ppl事件,setPeopleVariableWithKey:andNumberValue更新为浮点数测试失败:%@", pplEventArray);
+        NSLog(@"LOGIN_USER_ATTRIBUTES事件,setPeopleVariableWithKey:andNumberValue更新为浮点数测试失败:%@",
+              pplEventArray);
         XCTAssertEqual(1, 0);
     }
 }
@@ -299,9 +309,10 @@
     [LogOperHelper redirectLogBack];
     if (chres) {
         XCTAssertEqual(1, 1);
-        NSLog(@"ppl事件，setPeopleVariableWithKey:andNumberValue，Key为空日志检测测试通过-----passed");
+        NSLog(
+            @"LOGIN_USER_ATTRIBUTES事件，setPeopleVariableWithKey:andNumberValue，Key为空日志检测测试通过-----passed");
     } else {
-        NSLog(@"ppl事件，setPeopleVariableWithKey:andNumberValue，Key为空日志检测测试失败---Failed");
+        NSLog(@"LOGIN_USER_ATTRIBUTES事件，setPeopleVariableWithKey:andNumberValue，Key为空日志检测测试失败---Failed");
         XCTAssertEqual(1, 0);
     }
 }

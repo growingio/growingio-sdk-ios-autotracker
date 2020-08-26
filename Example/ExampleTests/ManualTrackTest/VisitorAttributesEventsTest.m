@@ -1,5 +1,5 @@
 //
-//  VstrEventsTest.m
+//  visitorAttributesEventsTest.m
 //  GIOAutoTests
 //
 //  Created by GrowingIO on 2018/7/12.
@@ -28,10 +28,10 @@
     [tester waitForTimeInterval:1];
     [MockEventQueue.sharedQueue cleanQueue];
     [Growing setVisitorAttributes:@{@"var1" : @"good", @"var2" : @"excell"}];
-    NSArray *vstrEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISITOR_ATTRIBUTES"];
-    NSLog(@"Vstr事件：%@", vstrEventArray);
-    if (vstrEventArray.count >= 1) {
-        NSDictionary *epvarchr = [vstrEventArray objectAtIndex:vstrEventArray.count - 1];
+    NSArray *visitorAttributesEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISITOR_ATTRIBUTES"];
+    NSLog(@"VISITOR_ATTRIBUTES 事件：%@", visitorAttributesEventArray);
+    if (visitorAttributesEventArray.count >= 1) {
+        NSDictionary *epvarchr = [visitorAttributesEventArray objectAtIndex:visitorAttributesEventArray.count - 1];
         XCTAssertEqualObjects(epvarchr[@"eventType"], @"VISITOR_ATTRIBUTES");
         XCTAssertTrue([ManualTrackHelper CheckContainsKey:epvarchr:@"attributes"]);
         XCTAssertEqualObjects(epvarchr[@"attributes"][@"var1"], @"good");
@@ -40,9 +40,9 @@
         NSDictionary *chres = [ManualTrackHelper visitorEventCheck:epvarchr];
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
         XCTAssertEqualObjects(chres[@"ProCheck"][@"chres"], @"same");
-        NSLog(@"EVar事件，vstr正常情况测试通过-----passed");
+        NSLog(@"CONVERSION_VARIABLES事件，vstr正常情况测试通过-----passed");
     } else {
-        NSLog(@"EVar事件，vstr正常情况测试失败:%@", vstrEventArray);
+        NSLog(@"CONVERSION_VARIABLES事件，vstr正常情况测试失败:%@", visitorAttributesEventArray);
         XCTAssertEqual(1, 0);
     }
 }

@@ -25,15 +25,15 @@
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[viewTester usingLabel:@"协议/接口"] tap];
-    [[viewTester usingLabel:@"pvar请求"] tap];
+    [[viewTester usingLabel:@"PAGE_ATTRIBUTES请求"] tap];
     [tester waitForTimeInterval:2];
-    NSArray *pvarEventArray = [MockEventQueue.sharedQueue eventsFor:@"pvar"];
+    NSArray *pvarEventArray = [MockEventQueue.sharedQueue eventsFor:@"PAGE_ATTRIBUTES"];
     if (pvarEventArray.count >= 1) {
         NSDictionary *pvarchr = [pvarEventArray objectAtIndex:pvarEventArray.count - 1];
-        XCTAssertEqualObjects(pvarchr[@"eventType"], @"pvar");
-        NSLog(@"pvar事件， 测试通过-----passed");
+        XCTAssertEqualObjects(pvarchr[@"eventType"], @"PAGE_ATTRIBUTES");
+        NSLog(@"PAGE_ATTRIBUTES事件， 测试通过-----passed");
     } else {
-        NSLog(@"pvar事件， 测试失败:%@", pvarEventArray);
+        NSLog(@"PAGE_ATTRIBUTES事件， 测试失败:%@", pvarEventArray);
         XCTAssertEqual(1, 0);
     }
 }
