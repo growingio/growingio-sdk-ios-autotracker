@@ -57,16 +57,16 @@ static const NSInteger kGIOMaxCachesLogNumber = 100;
     }
     
     if (logMsg) {
-        
+        NSDictionary *logDic = [logMsg growingHelper_dictionaryObject];
         if (self.loggerBlock) {
-            [self.cacheArray addObject:logMsg];
+            [self.cacheArray addObject:logDic];
             self.loggerBlock(self.cacheArray.copy);
             [self.cacheArray removeAllObjects];
         } else {
             while ((NSInteger)self.cacheArray.count >= self.maxCachesNumber) {
               [self.cacheArray removeObjectAtIndex:0];
             }
-            [self.cacheArray addObject:logMsg];
+            [self.cacheArray addObject:logDic];
         }
     }
 }
