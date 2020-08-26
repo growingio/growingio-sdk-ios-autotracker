@@ -31,8 +31,8 @@
 @property (nonatomic, copy, readwrite) NSString *_Nonnull deviceModel;
 @property (nonatomic, strong, readwrite) NSNumber *_Nonnull isPhone;
 @property (nonatomic, copy, readwrite) NSString *_Nonnull deviceBrand;
-@property (nonatomic, copy, readwrite) NSString *_Nonnull systemName;
-@property (nonatomic, copy, readwrite) NSString *_Nonnull systemVersion;
+@property (nonatomic, copy, readwrite) NSString *_Nonnull operatingSystem;
+@property (nonatomic, copy, readwrite) NSString *_Nonnull operatingSystemVersion;
 @property (nonatomic, copy, readwrite) NSString *_Nonnull appName;
 @property (nonatomic, copy, readwrite) NSString *_Nonnull bundleID;
 @property (nonatomic, copy, readwrite) NSString *_Nonnull appShortVersion;
@@ -63,8 +63,8 @@
         self.deviceModel = deviceInfo.deviceModel;
         self.isPhone = deviceInfo.isPhone;
         self.deviceBrand = deviceInfo.deviceBrand;
-        self.systemName = deviceInfo.systemName;
-        self.systemVersion = deviceInfo.systemVersion;
+        self.operatingSystem = deviceInfo.systemName;
+        self.operatingSystemVersion = deviceInfo.systemVersion;
         self.appName = deviceInfo.displayName;
         self.bundleID = deviceInfo.bundleID;
         self.appShortVersion = deviceInfo.appShortVersion;
@@ -132,8 +132,8 @@
     dataDictM[@"deviceModel"] = self.deviceModel;
     dataDictM[@"deviceType"] = self.isPhone.boolValue ? @"PHONE" : @"PAD";
     dataDictM[@"deviceBrand"] = self.deviceBrand;
-    dataDictM[@"operatingSystem"] = self.systemName;
-    dataDictM[@"operatingSystemVersion"] = self.systemVersion;
+    dataDictM[@"operatingSystem"] = self.operatingSystem;
+    dataDictM[@"operatingSystemVersion"] = self.operatingSystemVersion;
     dataDictM[@"appName"] = self.appName;
     dataDictM[@"domain"] = self.bundleID;
     dataDictM[@"appVersion"] = self.appShortVersion;
@@ -145,6 +145,7 @@
     dataDictM[@"screenHeight"] = self.screenH;
     dataDictM[@"latitude"] = self.latitude;
     dataDictM[@"longitude"] = self.longitude;
+    //TODO: extraSdk字段在后续应该添加
     return dataDictM;
 }
 

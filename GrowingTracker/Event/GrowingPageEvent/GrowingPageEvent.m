@@ -27,7 +27,7 @@
 
 @property (nonatomic, copy, readwrite) NSString * _Nullable orientation;
 @property (nonatomic, copy, readwrite) NSString * _Nullable pageTitle;
-@property (nonatomic, copy, readwrite) NSString * _Nullable referalPage;
+@property (nonatomic, copy, readwrite) NSString * _Nullable referralPage;
 @property (nonatomic, copy, readwrite) NSString * _Nullable pageName;
 
 @property (nonatomic, copy, readwrite) NSString * _Nullable networkState;
@@ -41,24 +41,24 @@
 @implementation GrowingPageEvent
 
 
-- (instancetype)initWithTitle:(NSString *)title pageName:(NSString *)pageName referalPage:(NSString *)referalPage {
+- (instancetype)initWithTitle:(NSString *)title pageName:(NSString *)pageName referralPage:(NSString *)referralPage {
     if (self = [super initWithTimestamp:nil]) {
         self.pageTitle = title;
         self.pageName = pageName;
-        self.referalPage = referalPage;
+        self.referralPage = referralPage;
         self.networkState = [[GrowingNetworkInterfaceManager sharedInstance] networkType];
         self.orientation = [GrowingDeviceInfo deviceOrientation];
     }
     return self;
 }
 
-+ (instancetype)pageEventWithTitle:(NSString *)title pageName:(NSString *)pageName referalPage:(NSString *)referalPage {
-    return [[self alloc] initWithTitle:title pageName:pageName referalPage:referalPage];
++ (instancetype)pageEventWithTitle:(NSString *)title pageName:(NSString *)pageName referralPage:(NSString *)referralPage {
+    return [[self alloc] initWithTitle:title pageName:pageName referralPage:referralPage];
 }
 
 + (instancetype)hybridPageEventWithDataDict:(NSDictionary *)dataDict {
 
-    NSString *referalPage = dataDict[@"referralPage"];
+    NSString *referralPage = dataDict[@"referralPage"];
     NSString *title = dataDict[@"title"];
     NSString *pageName = dataDict[@"pageName"];
     NSString *query = dataDict[@"queryParameters"];
@@ -66,7 +66,7 @@
     
     GrowingPageEvent *page = [[self alloc] initWithTitle:title
                                                         pageName:pageName
-                                                     referalPage:referalPage];
+                                                     referralPage:referralPage];
     page.timestamp = timestamp;
     page.query = query;
     
@@ -74,7 +74,7 @@
 }
 
 + (instancetype)pageEventWithTitle:(NSString *)title pageName:(NSString *)pageName timestamp:(NSNumber *)timestamp {
-    GrowingPageEvent *page = [[self alloc] initWithTitle:title pageName:pageName referalPage:nil];
+    GrowingPageEvent *page = [[self alloc] initWithTitle:title pageName:pageName referralPage:nil];
     page.timestamp = timestamp;
     return page;
 }
@@ -90,7 +90,7 @@
     dataDictM[@"networkState"] = [[GrowingNetworkInterfaceManager sharedInstance] networkType];
     dataDictM[@"domain"] = self.hybridDomain ?: self.domain;
     dataDictM[@"pageName"] = self.pageName;
-    dataDictM[@"referralPage"] = self.referalPage;
+    dataDictM[@"referralPage"] = self.referralPage;
     dataDictM[@"queryParameters"] = self.query;
     dataDictM[@"orientation"] = self.orientation;
     dataDictM[@"title"] = self.pageTitle;

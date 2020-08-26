@@ -182,13 +182,6 @@
      function:UID为nil
      ***/
     [MockEventQueue.sharedQueue cleanQueue];
-    //    [tester scrollViewWithAccessibilityIdentifier:@"MeasurementProtocolTableView" byFractionOfSizeHorizontal:0.0f
-    //    vertical:-0.3f]; [tester waitForTimeInterval:1];
-    //    [[viewTester usingLabel:@"+ (void)setUserId:(NSString *)userId;"] tap];
-    //    //设置初值
-    //    [tester tapViewWithAccessibilityLabel:@"userIdTextField"];
-    //    [tester clearTextFromAndThenEnterTextIntoCurrentFirstResponder:@"NULL"];
-    //    [[viewTester usingLabel:@"CustomSet"] tap];
     [Growing setLoginUserId:NULL];
     [tester waitForTimeInterval:2];
     NSArray *vstEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
@@ -274,18 +267,11 @@
     // 时间戳setUserId 方便触发事件获取session
     [Growing setLoginUserId:timeSp];
     [tester waitForTimeInterval:2];
-
-    //     NSArray *EventArrayOld = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
-    //     NSDictionary *cstmchr=[EventArrayOld objectAtIndex:EventArrayOld.count-1];
-    //     NSString *oldSession = cstmchr[@"sessionId"];
     NSString *oldSession = [Growing getSessionId];
     XCTAssertNotNil(oldSession);
     [Growing cleanLoginUserId];
 
     [Growing setLoginUserId:@"lisi"];
-    //    NSArray *cstmEventArrayNew = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
-    //    NSDictionary *cstmchrNew=[cstmEventArrayNew objectAtIndex:cstmEventArrayNew.count-1];
-    //    NSString *newSession = cstmchrNew[@"sessionId"];
     NSString *newSession = [Growing getSessionId];
     XCTAssertNotNil(newSession);
     XCTAssertNotEqual(oldSession, newSession);
@@ -298,9 +284,6 @@
     NSString *timeSp = [NSString stringWithFormat:@"%lld", (long long)[datenow timeIntervalSince1970] * 1000LL];
     // 时间戳setUserId 方便触发事件获取session
     [Growing setLoginUserId:timeSp];
-    //    NSArray *EventArrayOld = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
-    //    NSDictionary *cstmchr=[EventArrayOld objectAtIndex:EventArrayOld.count-1];
-    //    NSString *oldSession = cstmchr[@"sessionId"];
     NSString *oldSession = [Growing getSessionId];
     XCTAssertNotNil(oldSession);
 
@@ -308,39 +291,11 @@
     [self enterBackground];
     [self enterForeground];
     [Growing setLoginUserId:@"lisi"];
-    //    NSArray *EventArrayNew = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
-    //    NSDictionary *chrNew=[EventArrayNew objectAtIndex:EventArrayNew.count-1];
-    //    NSString *newSession = chrNew[@"sessionId"];
     NSString *newSession = [Growing getSessionId];
     XCTAssertNotNil(newSession);
     XCTAssertNotEqual(oldSession, newSession);
     NSLog(@"old:%@,new:%@", oldSession, newSession);
 }
-
-//-(void) test11CheckSessionChangeByTime{
-//    // userID 切换后台超过31秒  sessionid 变
-//    [MockEventQueue.sharedQueue cleanQueue];
-//    NSDate *datenow = [NSDate date];
-//    NSString *timeSp = [NSString stringWithFormat:@"%lld", (long long)[datenow timeIntervalSince1970]];
-//    // 时间戳setUserId 方便触发事件获取session
-//    [Growing setLoginUserId:timeSp];
-//    NSArray *EventArrayOld = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
-//    NSDictionary *chr=[EventArrayOld objectAtIndex:EventArrayOld.count-1];
-//    NSString *oldSession = chr[@"sessionId"];
-////    NSString *oldSession = [Growing getSessionId];
-//    XCTAssertNotNil(oldSession);
-//    [MockEventQueue.sharedQueue cleanQueue];
-//    [self enterBackground];
-//    [tester waitForTimeInterval:31];
-//    [self enterForeground];
-//    NSArray *EventArrayNew = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
-//    NSDictionary *chrNew=[EventArrayNew objectAtIndex:EventArrayNew.count-1];
-//    NSString *newSession = chrNew[@"sessionId"];
-////    NSString *newSession = [Growing getSessionId];
-//    XCTAssertNotNil(newSession);
-//    XCTAssertNotEqual(oldSession, newSession);
-//    NSLog(@"old:%@,new:%@",oldSession,newSession);
-//}
 
 - (void)enterBackground {
     UIApplication *app = [UIApplication sharedApplication];

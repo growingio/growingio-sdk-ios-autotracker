@@ -23,15 +23,9 @@
     return FALSE;
 }
 
-// cstm事件对比，测量协议字段完整且每个字段不为空
-+ (NSDictionary *)CstmEventCheck:(NSDictionary *)cstmevent {
+// custom事件对比，测量协议字段完整且每个字段不为空
++ (NSDictionary *)customEventCheck:(NSDictionary *)cstmevent {
     NSDictionary *cstmchres;
-    // NSArray *
-    // cstmprome=@[@"userId",@"sessionId",@"eventType",@"timestamp",@"pageShowTimestamp",@"domain",@"eventName",@"num",@"globalSequenceId",@"eventSequenceId",@"attributes",@"userId"];
-    //重构代码后，废弃ptm字段 2018-07-23
-    // NSArray *
-    // cstmprome=@[@"userId",@"sessionId",@"eventType",@"timestamp",@"domain",@"eventName",@"num",@"globalSequenceId",@"eventSequenceId",@"attributes",@"userId"];
-    // SDK重构2.5.0,调整测量协议 2018-08-09
     NSArray *cstmprome = @[
         @"userId", @"sessionId", @"eventType", @"timestamp", @"pageName", @"domain", @"eventName", @"num",
         @"attributes", @"userId", @"globalSequenceId", @"eventSequenceId"
@@ -50,9 +44,6 @@
 // ppl事件对比，测量协议字段完整且每个字段不为空
 + (NSDictionary *)PplEventCheck:(NSDictionary *)pplevent {
     NSDictionary *pplchres;
-    // NSArray *
-    // pplprome=@[@"userId",@"sessionId",@"eventType",@"timestamp",@"domain",@"globalSequenceId",@"eventSequenceId",@"attributes",@"userId"];
-    // SDK重构2.5.0,调整测量协议 2018-08-09
     NSArray *pplprome = @[
         @"userId", @"sessionId", @"eventType", @"timestamp", @"domain", @"attributes", @"userId", @"globalSequenceId",
         @"eventSequenceId"
@@ -105,7 +96,7 @@
 }
 
 // vstr事件对比，测量协议字段完整且每个字段不为空
-+ (NSDictionary *)VstrEventCheck:(NSDictionary *)vstrevent {
++ (NSDictionary *)visitorEventCheck:(NSDictionary *)vstrevent {
     NSDictionary *vstrchres;
     NSArray *vstrprome = @[ @"userId", @"sessionId", @"eventType", @"timestamp", @"domain", @"attributes", @"userId" ];
     //对比测量协议结构

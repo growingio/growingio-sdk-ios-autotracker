@@ -6,14 +6,14 @@
 //  Copyright (C) 2018 Beijing Yishu Technology Co., Ltd.
 //
 
-#import "EvarEventsTest.h"
+#import "ConversionVariablesEventsTest.h"
 
 #import "GrowingTracker.h"
 #import "LogOperHelper.h"
 #import "ManualTrackHelper.h"
 #import "MockEventQueue.h"
 
-@implementation EvarEventsTest
+@implementation ConversionVariablesEventsTest
 
 - (void)setUp {
     //设置userid,确保cs1字段不空
@@ -25,11 +25,6 @@
      function:setEvar正常情况
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    //    [[viewTester usingLabel:@"协议/接口"] tap];
-    //    [[viewTester usingLabel:@"evar请求"] tap];
-    //    [tester tapViewWithAccessibilityLabel:@"Evalue"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"{\"var1\":\"good\",\"var2\":\"excell\"}"];
-    //    [[viewTester usingLabel:@"SendEvar"] tap];
     [Growing setConversionVariables:@{@"var1" : @"good", @"var2" : @"excell"}];
     [tester waitForTimeInterval:3];
     NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
@@ -57,10 +52,6 @@
      function:setEvar Nil
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    //    [[viewTester usingLabel:@"协议/接口"] tap];
-    //    [[viewTester usingLabel:@"evar请求"] tap];
-    //    [tester tapViewWithAccessibilityLabel:@"Evalue"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"NULL"];
     //将Log日志写入文件
     [LogOperHelper writeLogToFile];
     //    [[viewTester usingLabel:@"SendEvar"] tap];
@@ -84,11 +75,6 @@
      2019-1-7,优化支持传空对象：{}
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    //    [[viewTester usingLabel:@"协议/接口"] tap];
-    //    [[viewTester usingLabel:@"evar请求"] tap];
-    //    [tester tapViewWithAccessibilityLabel:@"Evalue"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"{}"];
-    //    [[viewTester usingLabel:@"SendEvar"] tap];
     [Growing setConversionVariables:@{}];
     [tester waitForTimeInterval:3];
     NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
@@ -106,24 +92,6 @@
         NSLog(@"EVar事件，setEvar正常情况测试失败:%@", evarEventArray);
         XCTAssertEqual(1, 0);
     }
-
-    //    //将Log日志写入文件
-    //    [LogOperHelper writeLogToFile];
-    //    [[viewTester usingLabel:@"SendEvar"] tap];
-    //    //检测日志输出
-    //    Boolean chres=[LogOperHelper CheckLogOutput:[LogOperHelper getValueErrNsLog]];
-    //    //恢复日志重定向
-    //    [LogOperHelper redirectLogBack];
-    //    if(chres)
-    //    {
-    //        XCTAssertEqual(1,1);
-    //        NSLog(@"EVar事件，setEvar空字典，日志提醒测试通过-----passed");
-    //    }
-    //    else
-    //    {
-    //        NSLog(@"EVar事件，setEvar空字典，日志提醒测试失败!---Failed");
-    //        XCTAssertEqual(1,0);
-    //    }
 }
 
 - (void)test4SetEvarKeyStr {
@@ -131,13 +99,6 @@
      function:setEvarWithKey:andStringValue设置变量
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    //    [[viewTester usingLabel:@"协议/接口"] tap];
-    //    [[viewTester usingLabel:@"evar请求"] tap];
-    //    [tester tapViewWithAccessibilityLabel:@"EvarKey"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"ekey1"];
-    //    [tester tapViewWithAccessibilityLabel:@"EvarStrVal"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"Good"];
-    //    [[viewTester usingLabel:@"SendESVar"] tap];
     [Growing setConversionVariables:@{@"ekey1" : @"Good"}];
     [tester waitForTimeInterval:3];
     NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
@@ -164,13 +125,6 @@
      function:setEvarWithKey:andStringValue更新变量
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    //    [[viewTester usingLabel:@"协议/接口"] tap];
-    //    [[viewTester usingLabel:@"evar请求"] tap];
-    //    [tester tapViewWithAccessibilityLabel:@"EvarKey"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"ekey1"];
-    //    [tester tapViewWithAccessibilityLabel:@"EvarStrVal"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"Better"];
-    //    [[viewTester usingLabel:@"SendESVar"] tap];
     [Growing setConversionVariables:@{@"ekey1" : @"Better"}];
     [tester waitForTimeInterval:3];
     NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
@@ -197,12 +151,6 @@
      function:setEvarWithKey:andStringValue关键字为空,检测日志
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    //    [[viewTester usingLabel:@"协议/接口"] tap];
-    //    [[viewTester usingLabel:@"evar请求"] tap];
-    //    [tester tapViewWithAccessibilityLabel:@"EvarKey"];
-    //    [tester enterTextIntoCurrentFirstResponder:@""];
-    //    [tester tapViewWithAccessibilityLabel:@"EvarStrVal"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"Better"];
     //将Log日志写入文件
     [LogOperHelper writeLogToFile];
     //    [[viewTester usingLabel:@"SendESVar"] tap];
@@ -225,12 +173,6 @@
      function:setEvarWithKey:andStringValue关键字为nil,检测日志
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    //    [[viewTester usingLabel:@"协议/接口"] tap];
-    //    [[viewTester usingLabel:@"evar请求"] tap];
-    //    [tester tapViewWithAccessibilityLabel:@"EvarKey"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"NULL"];
-    //    [tester tapViewWithAccessibilityLabel:@"EvarStrVal"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"Better"];
     //将Log日志写入文件
     [LogOperHelper writeLogToFile];
     //    [[viewTester usingLabel:@"SendESVar"] tap];
@@ -248,48 +190,11 @@
     }
 }
 
-//-(void)test8SetEvarValNil{
-//    /**
-//     function:setEvarWithKey:andStringValue 值为Nil
-//     **/
-//    [MockEventQueue.sharedQueue cleanQueue];
-////    [[viewTester usingLabel:@"协议/接口"] tap];
-////    [[viewTester usingLabel:@"evar请求"] tap];
-////    [tester tapViewWithAccessibilityLabel:@"EvarKey"];
-////    [tester enterTextIntoCurrentFirstResponder:@"ekey1"];
-////    [tester tapViewWithAccessibilityLabel:@"EvarStrVal"];
-////    [tester enterTextIntoCurrentFirstResponder:@"NULL"];
-//    //将Log日志写入文件
-//    [LogOperHelper writeLogToFile];
-////    [[viewTester usingLabel:@"SendESVar"] tap];
-////    [Growing setConversionVariables:@{@"ekey1":nil}];
-//    //检测日志输出
-//    Boolean chres=[LogOperHelper CheckLogOutput:[LogOperHelper getValueErrNsLog]];
-//    //恢复日志重定向
-//    [LogOperHelper redirectLogBack];
-//    if(chres)
-//    {
-//        XCTAssertEqual(1,1);
-//        NSLog(@"EVar事件，setEvarWithKey:andStringValue值为Nil,日志检测测试通过-----passed");
-//    }
-//    else
-//    {
-//        NSLog(@"EVar事件，setEvarWithKey:andStringValue值为Nil,日志检测测试失败-----Failed");
-//        XCTAssertEqual(1,0);
-//    }
-//}
-
 - (void)test9SetEvarValStrEmpty {
     /**
      function:setEvarWithKey:andStringValue Str值为空,不发送数据,日志检测
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    //    [[viewTester usingLabel:@"协议/接口"] tap];
-    //    [[viewTester usingLabel:@"evar请求"] tap];
-    //    [tester tapViewWithAccessibilityLabel:@"EvarKey"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"ekey1"];
-    //    [tester tapViewWithAccessibilityLabel:@"EvarStrVal"];
-    //    [tester enterTextIntoCurrentFirstResponder:@""];
     //将Log日志写入文件
     [LogOperHelper writeLogToFile];
     //    [[viewTester usingLabel:@"SendESVar"] tap];
@@ -312,13 +217,6 @@
      function:setEvarWithKey:andNumberValue设置变量
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    //    [[viewTester usingLabel:@"协议/接口"] tap];
-    //    [[viewTester usingLabel:@"evar请求"] tap];
-    //    [tester tapViewWithAccessibilityLabel:@"EvarKey"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"evkey1"];
-    //    [tester tapViewWithAccessibilityLabel:@"EvarNumVal"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"132"];
-    //    [[viewTester usingLabel:@"SendENVar"] tap];
     [Growing setConversionVariables:@{@"evkey1" : @"132"}];
     [tester waitForTimeInterval:3];
     NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
@@ -345,13 +243,6 @@
      function:setEvarWithKey:andNumberValue更新变量
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    //    [[viewTester usingLabel:@"协议/接口"] tap];
-    //    [[viewTester usingLabel:@"evar请求"] tap];
-    //    [tester tapViewWithAccessibilityLabel:@"EvarKey"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"evkey1"];
-    //    [tester tapViewWithAccessibilityLabel:@"EvarNumVal"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"43.22"];
-    //    [[viewTester usingLabel:@"SendENVar"] tap];
     [Growing setConversionVariables:@{@"evkey1" : @"43.22"}];
     [tester waitForTimeInterval:3];
     NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
@@ -379,12 +270,6 @@
      function:setEvarWithKey:andNumberValue Key为空,日志检测
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    //    [[viewTester usingLabel:@"协议/接口"] tap];
-    //    [[viewTester usingLabel:@"evar请求"] tap];
-    //    [tester tapViewWithAccessibilityLabel:@"EvarKey"];
-    //    [tester enterTextIntoCurrentFirstResponder:@""];
-    //    [tester tapViewWithAccessibilityLabel:@"EvarNumVal"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"43.22"];
     //将Log日志写入文件
     [LogOperHelper writeLogToFile];
     //   [[viewTester usingLabel:@"SendENVar"] tap];
@@ -402,48 +287,11 @@
     }
 }
 
-//-(void)test13SetEvarValNumKeyNil{
-//    /**
-//     function:setEvarWithKey:andNumberValue Key为Nil
-//     **/
-//    [MockEventQueue.sharedQueue cleanQueue];
-////    [[viewTester usingLabel:@"协议/接口"] tap];
-////    [[viewTester usingLabel:@"evar请求"] tap];
-////    [tester tapViewWithAccessibilityLabel:@"EvarKey"];
-////    [tester enterTextIntoCurrentFirstResponder:@"NULL"];
-////    [tester tapViewWithAccessibilityLabel:@"EvarNumVal"];
-////    [tester enterTextIntoCurrentFirstResponder:@"123"];
-//    //将Log日志写入文件
-//    [LogOperHelper writeLogToFile];
-////    [[viewTester usingLabel:@"SendENVar"] tap];
-//    [Growing setConversionVariables:@{NULL:@"43.22"}];
-//    //检测日志输出
-//    Boolean chres=[LogOperHelper CheckLogOutput:[LogOperHelper getFlagErrNsLog]];
-//    //恢复日志重定向
-//    [LogOperHelper redirectLogBack];
-//    if(chres)
-//    {
-//        XCTAssertEqual(1,1);
-//        NSLog(@"EVar事件，setEvarWithKey:andNumberValue Key为Nil，日志检测测试通过-----passed");
-//    }
-//    else
-//    {
-//        NSLog(@"EVar事件，setEvarWithKey:andNumberValue Key为Nil，日志检测测试失败---Failed");
-//        XCTAssertEqual(1,0);
-//    }
-//}
-
 - (void)test14SetEvarValNumValEmpty {
     /**
      function:setEvarWithKey:andNumberValue Value为空
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    //    [[viewTester usingLabel:@"协议/接口"] tap];
-    //    [[viewTester usingLabel:@"evar请求"] tap];
-    //    [tester tapViewWithAccessibilityLabel:@"EvarKey"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"enkey2"];
-    //    [tester tapViewWithAccessibilityLabel:@"EvarNumVal"];
-    //    [tester enterTextIntoCurrentFirstResponder:@""];
     //将Log日志写入文件
     [LogOperHelper writeLogToFile];
     //   [[viewTester usingLabel:@"SendENVar"] tap];
@@ -460,49 +308,12 @@
         XCTAssertEqual(1, 0);
     }
 }
-//-(void)test12SetEvarValNumValNil{
-//    /**
-//     function:setEvarWithKey:andNumberValue Value为Nil
-//     **/
-//    [MockEventQueue.sharedQueue cleanQueue];
-////    [[viewTester usingLabel:@"协议/接口"] tap];
-////    [[viewTester usingLabel:@"evar请求"] tap];
-////    [tester tapViewWithAccessibilityLabel:@"EvarKey"];
-////    [tester enterTextIntoCurrentFirstResponder:@"enkey2"];
-////    [tester tapViewWithAccessibilityLabel:@"EvarNumVal"];
-////    [tester enterTextIntoCurrentFirstResponder:@"NULL"];
-////    [Growing setConversionVariables:@{@"enkey2":NULL}];
-//    //将Log日志写入文件
-//    [LogOperHelper writeLogToFile];
-////    [[viewTester usingLabel:@"SendENVar"] tap];
-//    //检测日志输出
-//    Boolean chres=[LogOperHelper CheckLogOutput:[LogOperHelper getValueErrNsLog]];
-//    //恢复日志重定向
-//    [LogOperHelper redirectLogBack];
-//    if(chres)
-//    {
-//        XCTAssertEqual(1,1);
-//        NSLog(@"EVar事件，setEvarWithKey:andNumberValue Value为Nil，日志检测测试通过-----passed");
-//    }
-//    else
-//    {
-//        NSLog(@"EVar事件，setEvarWithKey:andNumberValue Value为Nil，日志检测测试失败---Failed");
-//        XCTAssertEqual(1,0);
-//    }
-//}
 
 - (void)test16SetEvarKeyStrChinese {
     /**
      function:setEvarWithKey:andStringValue关键字和值为中文
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    //    [[viewTester usingLabel:@"协议/接口"] tap];
-    //    [[viewTester usingLabel:@"evar请求"] tap];
-    //    [tester tapViewWithAccessibilityLabel:@"EvarKey"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"关键字"];
-    //    [tester tapViewWithAccessibilityLabel:@"EvarStrVal"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"北京"];
-    //    [[viewTester usingLabel:@"SendESVar"] tap];
     [Growing setConversionVariables:@{@"关键字" : @"北京"}];
     [tester waitForTimeInterval:3];
     NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];

@@ -18,14 +18,15 @@
 //  limitations under the License.
 
 #import "GrowingIMPTrack.h"
-#import "GrowingDispatchManager.h"
-#import "UIView+GrowingNode.h"
-#import "UIApplication+GrowingNode.h"
+
 #import "GrowingBroadcaster.h"
+#import "GrowingDispatchManager.h"
+#import "UIApplication+GrowingNode.h"
+#import "UIView+GrowingNode.h"
 
 @GrowingBroadcasterRegister(GrowingViewControlerLifecycleMessage, GrowingIMPTrack)
-@GrowingBroadcasterRegister(GrowingApplicationMessage, GrowingIMPTrack)
-@interface GrowingIMPTrack() <GrowingApplicationMessage, GrowingViewControlerLifecycleMessage>
+    @GrowingBroadcasterRegister(GrowingApplicationMessage, GrowingIMPTrack)
+        @interface GrowingIMPTrack()<GrowingApplicationMessage, GrowingViewControlerLifecycleMessage>
 
 @property (nonatomic, strong) NSHashTable *sourceTable;
 @property (nonatomic, strong) NSHashTable *bgSourceTable;
@@ -36,10 +37,10 @@ static BOOL isInResignSate;
 
 @implementation GrowingIMPTrack
 
-
 #pragma mark - GrowingApplicationMessage
 
-+ (void)applicationStateDidChangedWithUserInfo:(NSDictionary * _Nullable)userInfo lifecycle:(GrowingApplicationLifecycle)lifecycle {
++ (void)applicationStateDidChangedWithUserInfo:(NSDictionary *_Nullable)userInfo
+                                     lifecycle:(GrowingApplicationLifecycle)lifecycle {
     switch (lifecycle) {
         case GrowingApplicationWillResignActive:
             [[GrowingIMPTrack shareInstance] resignActive];
@@ -54,10 +55,9 @@ static BOOL isInResignSate;
 
 #pragma mark - GrowingViewControlerLifecycleMessage
 
-
 - (void)viewControllerLifecycleDidChanged:(GrowingVCLifecycle)lifecycle {
     switch (lifecycle) {
-        case GrowingVCLifecycleDidAppear:{
+        case GrowingVCLifecycleDidAppear: {
             [[GrowingIMPTrack shareInstance] markInvisibleNodes];
             [[GrowingIMPTrack shareInstance] addWindowNodes];
         } break;
@@ -69,11 +69,10 @@ static BOOL isInResignSate;
 
 - (void)becomeActive {
     if (isInResignSate) {
-        [self.bgSourceTable.allObjects enumerateObjectsUsingBlock:^(id _Nonnull obj,
-                                                                    NSUInteger idx,
-                                                                    BOOL *_Nonnull stop) {
-            ((UIView *)obj).growingIMPTracked = NO;
-        }];
+        [self.bgSourceTable.allObjects
+            enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+                ((UIView *)obj).growingIMPTracked = NO;
+            }];
         isInResignSate = NO;
     }
     [self.bgSourceTable removeAllObjects];
@@ -81,10 +80,8 @@ static BOOL isInResignSate;
 
 - (void)resignActive {
     isInResignSate = YES;
-    
-    [self.sourceTable.allObjects enumerateObjectsUsingBlock:^(id _Nonnull obj,
-                                                              NSUInteger idx,
-                                                              BOOL *_Nonnull stop) {
+
+    [self.sourceTable.allObjects enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
         [self.bgSourceTable addObject:obj];
     }];
 }
@@ -93,9 +90,7 @@ static BOOL isInResignSate;
     if (self.sourceTable.count == 0) {
         return;
     }
-    [self.sourceTable.allObjects enumerateObjectsUsingBlock:^(id _Nonnull obj,
-                                                              NSUInteger idx,
-                                                              BOOL *_Nonnull stop) {
+    [self.sourceTable.allObjects enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
         UIView<GrowingNode> *node = obj;
         if (![node growingImpNodeIsVisible]) {
             node.growingIMPTracked = NO;
@@ -103,7 +98,8 @@ static BOOL isInResignSate;
     }];
 }
 
-- (void)markInvisibleNode:(UIView *)node inSubView:(BOOL)flag; {
+- (void)markInvisibleNode:(UIView *)node inSubView:(BOOL)flag;
+{
     if (node.growingIMPTrackEventName > 0) {
         node.growingIMPTracked = NO;
     }
@@ -131,8 +127,7 @@ static BOOL isInResignSate;
     }
 }
 
-- (void)enumerateSubViewsWithNode:(UIView *)node
-                            block:(void (^)(UIView *view))block {
+- (void)enumerateSubViewsWithNode:(UIView *)node block:(void (^)(UIView *view))block {
     if (!self.impTrackActive) {
         return;
     }
@@ -155,12 +150,13 @@ static GrowingIMPTrack *impTrack = nil;
 }
 
 - (instancetype)init {
+    if (impTrack != nil) {
+        return nil;
+    }
 
-    if (impTrack != nil) { return nil; }
-    
-    if (self =[super init]) {
-        self.sourceTable = [[NSHashTable alloc] initWithOptions:NSPointerFunctionsWeakMemory |
-                            NSPointerFunctionsObjectPointerPersonality
+    if (self = [super init]) {
+        self.sourceTable = [[NSHashTable alloc]
+            initWithOptions:NSPointerFunctionsWeakMemory | NSPointerFunctionsObjectPointerPersonality
                    capacity:100];
     }
     return self;
@@ -179,57 +175,59 @@ static BOOL impTrackIsRegistered = NO;
     // ensure call in main thread
     [GrowingDispatchManager dispatchInMainThread:^{
         static CFRunLoopObserverRef observer;
-        
-        if (observer) { return; }
-        
+
+        if (observer) {
+            return;
+        }
+
         CFRunLoopRef runLoop = CFRunLoopGetCurrent();
         // before the run loop starts sleeping
         // before exiting a runloop run
         CFOptionFlags activities = (kCFRunLoopBeforeWaiting | kCFRunLoopExit);
-        
+
         observer = CFRunLoopObserverCreateWithHandler(
-                                                      NULL,         // allocator
-                                                      activities,   // activities
-                                                      YES,          // repeats
-                                                      INT_MAX - 1,  // order after CA transaction commits
-                                                      ^(CFRunLoopObserverRef observer, CFRunLoopActivity activity) {
-            if (self.IMPInterval == 0.0) {
-                [self impTrack];
-            } else {
-                [NSObject cancelPreviousPerformRequestsWithTarget:self
-                                                         selector:@selector(impTrack)
-                                                           object:nil];
-                [self performSelector:@selector(impTrack)
-                           withObject:nil
-                           afterDelay:self.IMPInterval
-                              inModes:@[ NSRunLoopCommonModes ]];
-            }
-        });
-        
+            NULL,         // allocator
+            activities,   // activities
+            YES,          // repeats
+            INT_MAX - 1,  // order after CA transaction commits and before autoreleasepool
+            ^(CFRunLoopObserverRef observer, CFRunLoopActivity activity) {
+                if (self.IMPInterval == 0.0) {
+                    [self impTrack];
+                } else {
+                    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(impTrack) object:nil];
+                    [self performSelector:@selector(impTrack)
+                               withObject:nil
+                               afterDelay:self.IMPInterval
+                                  inModes:@[ NSRunLoopCommonModes ]];
+                }
+            });
+
         CFRunLoopAddObserver(runLoop, observer, kCFRunLoopCommonModes);
         CFRelease(observer);
     }];
 }
 
 - (void)impTrack {
-    if (isInResignSate) { return; }
-    
-    if (self.sourceTable.count == 0) { return; }
+    if (isInResignSate) {
+        return;
+    }
 
-    [self.sourceTable.allObjects
-        enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx,
-                                     BOOL *_Nonnull stop) {
-            UIView<GrowingNode> *node = obj;
-            if ([node growingImpNodeIsVisible]) {
-                if (node.growingIMPTracked == NO) {
-                    if (node.growingIMPTrackEventName.length > 0) {
-                        [self sendCstm:node];
-                    }
+    if (self.sourceTable.count == 0) {
+        return;
+    }
+
+    [self.sourceTable.allObjects enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+        UIView<GrowingNode> *node = obj;
+        if ([node growingImpNodeIsVisible]) {
+            if (node.growingIMPTracked == NO) {
+                if (node.growingIMPTrackEventName.length > 0) {
+                    [self sendCstm:node];
                 }
-            } else {
-                node.growingIMPTracked = NO;
             }
-        }];
+        } else {
+            node.growingIMPTracked = NO;
+        }
+    }];
 }
 
 - (void)sendCstm:(UIView<GrowingNode> *)node {
@@ -248,28 +246,29 @@ static BOOL impTrackIsRegistered = NO;
         node.growingIMPTrackVariable = impTrackVariable;
     }
 
-    if (node.growingIMPTrackEventName.length > 0 &&
-        node.growingIMPTrackVariable.count > 0) {
-        [Growing trackCustomEvent:node.growingIMPTrackEventName
-                   withAttributes:node.growingIMPTrackVariable];
+    if (node.growingIMPTrackEventName.length > 0 && node.growingIMPTrackVariable.count > 0) {
+        [Growing trackCustomEvent:node.growingIMPTrackEventName withAttributes:node.growingIMPTrackVariable];
     } else if (node.growingIMPTrackEventName.length > 0) {
         [Growing trackCustomEvent:node.growingIMPTrackEventName];
     }
 }
 
-- (void)addNode:(UIView *)node inSubView:(BOOL)flag; {
+- (void)addNode:(UIView *)node inSubView:(BOOL)flag;
+{
     if (node.growingIMPTrackEventName.length > 0) {
         [self.sourceTable addObject:node];
     }
 
-    if (!flag) { return; }
-    
+    if (!flag) {
+        return;
+    }
+
     [self enumerateSubViewsWithNode:node
                               block:^(UIView *view) {
-        if (view.growingIMPTrackEventName.length > 0) {
-            [self.sourceTable addObject:view];
-        }
-    }];
+                                  if (view.growingIMPTrackEventName.length > 0) {
+                                      [self.sourceTable addObject:view];
+                                  }
+                              }];
 }
 
 - (void)addNode:(UIView *)node {

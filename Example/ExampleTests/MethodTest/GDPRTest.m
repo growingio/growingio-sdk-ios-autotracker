@@ -17,10 +17,7 @@
      function:设置GDPR ， 不采集数据
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-//    [[viewTester usingLabel:@"接口"] tap];
-//    [[viewTester usingLabel:@"+ GDPR(数据保护)"] tap];
-//    [[viewTester usingLabel:@"GDPR生效"] tap];
-    [Growing setDataCollectionEnabled:NO];
+    [Growing setDataTrackEnabled:NO];
     [MockEventQueue.sharedQueue cleanQueue];
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"UI界面"] tap];
@@ -46,11 +43,7 @@
      function:设置GDPR失效
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-//    [[viewTester usingLabel:@"接口"] tap];
-//    [[viewTester usingLabel:@"+ GDPR(数据保护)"] tap];
-//    //GDPR生效
-//    [[viewTester usingLabel:@"GDPR生效"] tap];
-    [Growing setDataCollectionEnabled:NO];
+    [Growing setDataTrackEnabled:NO];
     [MockEventQueue.sharedQueue cleanQueue];
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"UI界面"] tap];
@@ -58,8 +51,7 @@
     NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
     XCTAssertEqual(clckEventArray.count,0);
     //GDPR失效
-    [Growing setDataCollectionEnabled:YES];
-//    [[viewTester usingLabel:@"GDPR失效"] tap];
+    [Growing setDataTrackEnabled:YES];
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"协议/接口"] tap];
     [[viewTester usingLabel:@"clck请求"] tap];
@@ -72,7 +64,6 @@
         //判断单击列表是否正确
         NSDictionary *chevent=[clckEventArray1 objectAtIndex:clckEventArray1.count-1];
         NSLog(@"###%@",chevent);
- //       XCTAssertEqualObjects(chevent[@"textValue"], @"send clck event");
         XCTAssertEqual(1, 1);
         NSLog(@"设置GDPR失效,采取数据，测试通过--passed!");
     }

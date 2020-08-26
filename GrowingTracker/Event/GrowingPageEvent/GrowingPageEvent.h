@@ -25,16 +25,16 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GrowingPageEvent : GrowingEvent
 
 @property (nonatomic, copy, readonly) NSString * _Nullable pageTitle;
-@property (nonatomic, copy, readonly) NSString * _Nullable referalPage;
+@property (nonatomic, copy, readonly) NSString * _Nullable referralPage;
 @property (nonatomic, copy, readonly) NSString * _Nullable pageName;
 @property (nonatomic, copy, readonly) NSString * _Nullable orientation;
 @property (nonatomic, copy, readonly) NSString * _Nullable networkState;
 
 + (instancetype)pageEventWithTitle:(NSString *)title pageName:(NSString *)pageName timestamp:(NSNumber *)timestamp;
 
-+ (instancetype)pageEventWithTitle:(NSString *)title pageName:(NSString *)pageName referalPage:(NSString * _Nullable)referalPage;
++ (instancetype)pageEventWithTitle:(NSString *)title pageName:(NSString *)pageName referralPage:(NSString * _Nullable)referralPage;
 
-- (instancetype)initWithTitle:(NSString *)title pageName:(NSString *)pageName referalPage:(NSString * _Nullable )referalPage;
+- (instancetype)initWithTitle:(NSString *)title pageName:(NSString *)pageName referralPage:(NSString * _Nullable )referralPage;
 
 + (instancetype)hybridPageEventWithDataDict:(NSDictionary *)dataDict;
 

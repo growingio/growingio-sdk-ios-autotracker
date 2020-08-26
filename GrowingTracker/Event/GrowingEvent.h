@@ -33,6 +33,8 @@ static NSString *_Nonnull const kEventTypeKeyClick = @"VIEW_CLICK";
 static NSString *_Nonnull const kEventTypeKeyInputChange = @"VIEW_CHANGE";
 static NSString *_Nonnull const kEventTypeKeyInputSubmit = @"FORM_SUBMIT";
 
+
+
 // event类型定义
 #define GROWING_EVENT_LIST(MACRO)                      \
     MACRO(AppLifeCycleAppNewVisit, = 1, @"一次新访问") \

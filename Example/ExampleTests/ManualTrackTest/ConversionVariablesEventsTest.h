@@ -8,6 +8,6 @@
 
 #import <KIF/KIF.h>
 
-@interface EvarEventsTest : KIFTestCase
+@interface ConversionVariablesEventsTest : KIFTestCase
 
 @end

@@ -31,16 +31,8 @@ static NSString *const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
     self.configuation = [[GrowingConfiguration alloc] initWithProjectId:kGrowingProjectId launchOptions:launchOptions];
     [self.configuation setLogEnabled:YES];
     self.configuation.samplingRate = 1.0;
-    //    self.configuation.urlScheme = @"hello_url_scheme";
     self.configuation.cellularDataLimit = 1;
-    //    self.configuation.dataUploadEnabled = NO;
-    //    self.configuation.dataTrackEnabled = NO;
     self.configuation.impressionScale = 1.0;
-
-    // 自定义相关host设置
-    //    [configuration setDataTrackHost:@"http://k8s-mobile-www.growingio.com"];
-    //    [configuration setWebSocketHost:@"ws://k8s-mobile-gta.growingio.com"];
-    //    [configuration setAdvertisementHost:@"http://k8s-mobile-www.growingio.com"];
 
     [Growing startWithConfiguration:self.configuation];
 

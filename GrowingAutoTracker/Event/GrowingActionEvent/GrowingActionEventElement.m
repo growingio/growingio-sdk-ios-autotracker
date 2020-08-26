@@ -17,31 +17,32 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import "GrowingActionEventElement.h"
-#import "GrowingNodeManager.h"
-#import "UIViewController+GrowingNode.h"
+
 #import "GrowingEventManager.h"
-#import "NSString+GrowingHelper.h"
-#import "UIView+GrowingHelper.h"
 #import "GrowingInstance.h"
 #import "GrowingNodeHelper.h"
+#import "GrowingNodeManager.h"
+#import "NSString+GrowingHelper.h"
+#import "UIView+GrowingHelper.h"
+#import "UIViewController+GrowingNode.h"
 
 @implementation GrowingActionEventElement
 
-- (instancetype)initWithNode:(id<GrowingNode>)node
-            triggerEventType:(GrowingEventType)eventType {
+- (instancetype)initWithNode:(id<GrowingNode>)node triggerEventType:(GrowingEventType)eventType {
     if (self = [super init]) {
         _xPath = [GrowingNodeHelper xPathForNode:node];
-        _content = [self buildElementContentForNode:node];
+        _textValue = [self buildElementContentForNode:node];
         _timestamp = GROWGetTimestamp();
-        _index = [NSString stringWithFormat:@"%d",(int)node.growingNodeKeyIndex];
-        _cid = [node growingNodeUniqueTag];
+        //对于非列表元素，不添加index字段
+        if (node.growingNodeIndexPath) {
+            _index = [NSString stringWithFormat:@"%d", (int)node.growingNodeKeyIndex];
+        }
     }
     return self;
 }
 
-- (NSString *)buildElementContentForNode:(id <GrowingNode> _Nonnull)view {
+- (NSString *)buildElementContentForNode:(id<GrowingNode> _Nonnull)view {
     NSString *content = [view growingNodeContent];
     if (!content) {
         content = @"";
@@ -52,19 +53,19 @@
     } else {
         content = content.description;
     }
-    
+
     if (![content isKindOfClass:NSString.class]) {
         content = @"";
     }
-    
+
     content = [content growingHelper_safeSubStringWithLength:100];
-    
+
     if (content.growingHelper_isLegal) {
         content = @"";
     } else {
         content = content.growingHelper_encryptString;
     }
-    
+
     return content;
 }
 
@@ -72,15 +73,16 @@
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithCapacity:5];
     dataDictM[@"xpath"] = self.xPath;
     dataDictM[@"timestamp"] = self.timestamp;
-    dataDictM[@"cid"] = self.cid;
-    dataDictM[@"sgn"] = self.signature;
-    dataDictM[@"textValue"] = self.content;
+    if (self.textValue.length > 0) {
+        dataDictM[@"textValue"] = self.textValue;
+    }
+    
     dataDictM[@"hyperlink"] = self.hyperLink;
     dataDictM[@"index"] = self.index;
 
     dataDictM[@"globalSequenceId"] = self.globalSequenceId;
     dataDictM[@"eventSequenceId"] = self.eventSequenceId;
-    
+
     return dataDictM;
 }
 

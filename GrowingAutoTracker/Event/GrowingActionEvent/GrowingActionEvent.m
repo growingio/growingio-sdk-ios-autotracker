@@ -35,11 +35,11 @@
 #import "UIViewController+GrowingPageHelper.h"
 @interface GrowingActionEvent ()
 
-@property (nonatomic, copy, readwrite) NSString *_Nullable query;
+@property (nonatomic, copy, readwrite) NSString *_Nullable queryParameters;
 @property (nonatomic, copy, readwrite) NSString *_Nonnull pageName;
 @property (nonatomic, copy, readwrite) NSString *_Nullable name;
 @property (nonatomic, copy, readwrite) NSString *_Nullable objInfo;
-@property (nonatomic, copy, readwrite) NSString *_Nullable pageTimestamp;
+@property (nonatomic, copy, readwrite) NSString *_Nullable pageShowTimestamp;
 
 @property (nonatomic, strong) GrowingActionEventElement *element;
 
@@ -109,7 +109,7 @@
                                element:(GrowingActionEventElement *)element {
     if (self = [super initWithTimestamp:nil]) {
         self.pageName = pageData[@"pageName"];
-        self.pageTimestamp = pageData[@"pageShowTimestamp"];
+        self.pageShowTimestamp = pageData[@"pageShowTimestamp"];
         // 根据测量协议，点击事件的 p 字段需要拼接父级 p
         // https://growingio.atlassian.net/wiki/spaces/SDK/pages/1120830020/iOS+3.0
         self.element = element;
@@ -148,13 +148,13 @@
 
     GrowingActionEvent *actionEvent = [[self alloc] initWithTimestamp:timestamp];
     actionEvent.pageName = dataDict[@"pageName"];
-    actionEvent.query = dataDict[@"queryParameters"];
+    actionEvent.queryParameters = dataDict[@"queryParameters"];
     actionEvent.hybridDomain = dataDict[@"domain"];
 
     GrowingActionEventElement *element = [[GrowingActionEventElement alloc] init];
     element.hyperLink = dataDict[@"hyperlink"];
     element.index = dataDict[@"index"];
-    element.content = dataDict[@"textValue"];
+    element.textValue = dataDict[@"textValue"];
     element.xPath = dataDict[@"xpath"];
     element.timestamp = dataDict[@"timestamp"];
 
@@ -199,10 +199,10 @@
     if ([dataDictM valueForKey:@"eventSequenceId"]) {
         [dataDictM removeObjectForKey:@"eventSequenceId"];
     }
-    if (self.pageTimestamp) {
-        dataDictM[@"pageShowTimestamp"] = self.pageTimestamp;
+    if (self.pageShowTimestamp) {
+        dataDictM[@"pageShowTimestamp"] = self.pageShowTimestamp;
     }
-    dataDictM[@"queryParameters"] = self.query;
+    dataDictM[@"queryParameters"] = self.queryParameters;
     dataDictM[@"pageName"] = self.pageName;
     dataDictM[@"domain"] = self.hybridDomain ?: self.domain;
     if (self.element) {

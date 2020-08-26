@@ -133,7 +133,7 @@ static NSString *const kGrowingCustomField = @"customField";
     if ([self isOnlyCoreKit]) {
         GrowingPageEvent *eventPage = [[GrowingPageEvent alloc] initWithTitle:@""
                                                                      pageName:@"GIOFakePage"
-                                                                  referalPage:nil];
+                                                                  referralPage:nil];
 
         [GrowingEventManager shareInstance].lastPageEvent = eventPage;
 

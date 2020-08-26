@@ -6,14 +6,14 @@
 //  Copyright (C) 2018 Beijing Yishu Technology Co., Ltd.
 //  function:ppl事件相关测试用例
 
-#import "PPLEventsTest.h"
+#import "LoginUserAttributerEventsTest.h"
 
 #import "GrowingTracker.h"
 #import "LogOperHelper.h"
 #import "ManualTrackHelper.h"
 #import "MockEventQueue.h"
 
-@implementation PPLEventsTest
+@implementation LoginUserAttributerEventsTest
 
 //-(void)tearDown{
 //     [[viewTester usingLabel:@"协议/接口"] tap];
@@ -50,11 +50,6 @@
      function:setPeopleVariable为nil,日志检测
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    //    [[viewTester usingLabel:@"协议/接口"] tap];
-    //    [[viewTester usingLabel:@"ppl请求"] tap];
-    //    [tester tapViewWithAccessibilityLabel:@"PVariable"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"NULL"];
-
     //将Log日志写入文件
     [LogOperHelper writeLogToFile];
     //    [[viewTester usingLabel:@"SetPV"] tap];
@@ -94,23 +89,6 @@
         NSLog(@"ppl事件，setPeopleVariable为空测试失败:%@", pplEventArray);
         XCTAssertEqual(1, 0);
     }
-    //    //将Log日志写入文件
-    //    [LogOperHelper writeLogToFile];
-    //    [[viewTester usingLabel:@"SetPV"] tap];
-    //    //检测日志输出
-    //    Boolean chres=[LogOperHelper CheckLogOutput:[LogOperHelper getValueErrNsLog]];
-    //    //恢复日志重定向
-    //    [LogOperHelper redirectLogBack];
-    //    if(chres)
-    //    {
-    //        XCTAssertEqual(1,1);
-    //        NSLog(@"ppl事件，setPeopleVariable为空,日志检测测试通过-----passed");
-    //    }
-    //    else
-    //    {
-    //        NSLog(@"ppl事件，setPeopleVariable为空,日志检测测试失败---Failed");
-    //        XCTAssertEqual(1,0);
-    //    }
 }
 
 - (void)test4SpvAndStr {
@@ -118,15 +96,7 @@
      function:setPeopleVariableWithKey:andStringValue,发送正常数据
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    //    [[viewTester usingLabel:@"协议/接口"] tap];
-    //    [[viewTester usingLabel:@"ppl请求"] tap];
-    //    [tester tapViewWithAccessibilityLabel:@"PplKey"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"name"];
-    //    [tester tapViewWithAccessibilityLabel:@"PplSVal"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"GrowingIO"];
     [Growing setLoginUserAttributes:@{@"name" : @"GrowingIO"}];
-    //   [[viewTester usingLabel:@"SetPVS"] tap];
-
     [tester waitForTimeInterval:2];
     NSArray *pplEventArray = [MockEventQueue.sharedQueue eventsFor:@"LOGIN_USER_ATTRIBUTES"];
     // NSLog(@"PPL事件：%@",pplEventArray);
@@ -151,13 +121,6 @@
      function:setPeopleVariableWithKey:andStringValue,更新数据
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    //    [[viewTester usingLabel:@"协议/接口"] tap];
-    //    [[viewTester usingLabel:@"ppl请求"] tap];
-    //    [tester tapViewWithAccessibilityLabel:@"PplKey"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"name"];
-    //    [tester tapViewWithAccessibilityLabel:@"PplSVal"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"GIO"];
-    //    [[viewTester usingLabel:@"SetPVS"] tap];
     [Growing setLoginUserAttributes:@{@"name" : @"GIO"}];
     [tester waitForTimeInterval:2];
     NSArray *pplEventArray = [MockEventQueue.sharedQueue eventsFor:@"LOGIN_USER_ATTRIBUTES"];
@@ -183,12 +146,6 @@
      function:setPeopleVariableWithKey:andStringValue,Key为空
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    //    [[viewTester usingLabel:@"协议/接口"] tap];
-    //    [[viewTester usingLabel:@"ppl请求"] tap];
-    //    [tester tapViewWithAccessibilityLabel:@"PplKey"];
-    //    [tester enterTextIntoCurrentFirstResponder:@""];
-    //    [tester tapViewWithAccessibilityLabel:@"PplSVal"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"GIO"];
     //将Log日志写入文件
     [LogOperHelper writeLogToFile];
     [Growing setLoginUserAttributes:@{@"" : @"GIO"}];
@@ -211,12 +168,6 @@
      function:setPeopleVariableWithKey:andStringValue,Key为Nil
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    //    [[viewTester usingLabel:@"协议/接口"] tap];
-    //    [[viewTester usingLabel:@"ppl请求"] tap];
-    //    [tester tapViewWithAccessibilityLabel:@"PplKey"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"NULL"];
-    //    [tester tapViewWithAccessibilityLabel:@"PplSVal"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"GIO"];
     //将Log日志写入文件
     [LogOperHelper writeLogToFile];
     //   [[viewTester usingLabel:@"SetPVS"] tap];
@@ -240,12 +191,6 @@
      function:setPeopleVariableWithKey:andStringValue,Value为Nil
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    //    [[viewTester usingLabel:@"协议/接口"] tap];
-    //    [[viewTester usingLabel:@"ppl请求"] tap];
-    //    [tester tapViewWithAccessibilityLabel:@"PplKey"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"name"];
-    //    [tester tapViewWithAccessibilityLabel:@"PplSVal"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"NULL"];
     //将Log日志写入文件
     [LogOperHelper writeLogToFile];
     //   [[viewTester usingLabel:@"SetPVS"] tap];
@@ -269,12 +214,6 @@
      function:setPeopleVariableWithKey:andStringValue,Value为Empty
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    //    [[viewTester usingLabel:@"协议/接口"] tap];
-    //    [[viewTester usingLabel:@"ppl请求"] tap];
-    //    [tester tapViewWithAccessibilityLabel:@"PplKey"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"name"];
-    //    [tester tapViewWithAccessibilityLabel:@"PplSVal"];
-    //    [tester enterTextIntoCurrentFirstResponder:@""];
     //将Log日志写入文件
     [LogOperHelper writeLogToFile];
     //   [[viewTester usingLabel:@"SetPVS"] tap];
@@ -323,13 +262,6 @@
      function:setPeopleVariableWithKey:andNumberValue更新为浮点数
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    //    [[viewTester usingLabel:@"协议/接口"] tap];
-    //    [[viewTester usingLabel:@"ppl请求"] tap];
-    //    [tester tapViewWithAccessibilityLabel:@"PplKey"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"score"];
-    //    [tester tapViewWithAccessibilityLabel:@"PplNVal"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"23.62"];
-    //    [[viewTester usingLabel:@"SetPVN"] tap];
     [Growing setLoginUserAttributes:@{@"score" : @"23.62"}];
     [tester waitForTimeInterval:2];
     NSArray *pplEventArray = [MockEventQueue.sharedQueue eventsFor:@"LOGIN_USER_ATTRIBUTES"];
@@ -357,12 +289,6 @@
      function:setPeopleVariableWithKey:andNumberValue Key为空不发送事件
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    //    [[viewTester usingLabel:@"协议/接口"] tap];
-    //    [[viewTester usingLabel:@"ppl请求"] tap];
-    //    [tester tapViewWithAccessibilityLabel:@"PplKey"];
-    //    [tester enterTextIntoCurrentFirstResponder:@""];
-    //    [tester tapViewWithAccessibilityLabel:@"PplNVal"];
-    //    [tester enterTextIntoCurrentFirstResponder:@"42"];
     //将Log日志写入文件
     [LogOperHelper writeLogToFile];
     //    [[viewTester usingLabel:@"SetPVN"] tap];
