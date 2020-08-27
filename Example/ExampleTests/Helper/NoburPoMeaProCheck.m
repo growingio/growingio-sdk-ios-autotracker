@@ -28,7 +28,7 @@
     return NO;
 }
 //对比两个NSArray
-+ (NSDictionary *)ComNSArray:(NSArray *)arr1:(NSArray *)arr2 {
++ (NSDictionary *)compareArray:(NSArray *)arr1 toAnother:(NSArray *)arr2 {
     NSDictionary *cmpres;
     NSArray *reduce = [arr1 filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF in %@)", arr2]];
     NSArray *incre = [arr2 filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF in %@)", arr1]];
@@ -40,7 +40,7 @@
     return cmpres;
 }
 //判断NSDictionary是否存在空关键字
-+ (NSDictionary *)CheckDictEmpty:(NSDictionary *)checkDict {
++ (NSDictionary *)checkDictEmpty:(NSDictionary *)checkDict {
     NSDictionary *dechres;
     NSArray *emptykeys;
 
@@ -50,7 +50,7 @@
         NSString *waitForCheckString = nil;
         //添加对多重字典的支持
         if ([value isKindOfClass:[NSDictionary class]]) {
-            [self CheckDictEmpty:value];
+            [self checkDictEmpty:value];
             continue;
         }
         if ([value isKindOfClass:[NSNumber class]]) {
@@ -60,7 +60,7 @@
         } else if ([value isKindOfClass:NSArray.class]) {
             NSArray *arrayValue = (NSArray *)value;
             for (NSDictionary *v in arrayValue) {
-                [self CheckDictEmpty:v];
+                [self checkDictEmpty:v];
             }
         }
 
@@ -77,10 +77,10 @@
     return dechres;
 }
 
-// Vst事件对比，测量协议字段完整且每个字段不为空
-+ (NSDictionary *)visitEventCheck:(NSDictionary *)vstevent {
-    NSDictionary *vstchres;
-    NSArray *vstprome = @[
+// Visit事件对比，测量协议字段完整且每个字段不为空
++ (NSDictionary *)visitEventCheck:(NSDictionary *)visitevent {
+    NSDictionary *visitchres;
+    NSArray *visitprome = @[
         @"userId",
         @"sessionId",
         @"eventType",
@@ -108,9 +108,9 @@
         @"fv"
     ];
     //对比测量协议结构
-    if (vstevent.count > 0) {
-        NSArray *chevst = vstevent.allKeys;
-        vstchres = @{@"ProCheck" : [self ComNSArray:vstprome:chevst], @"KeysCheck" : [self CheckDictEmpty:vstevent]};
+    if (visitevent.count > 0) {
+        NSArray *chevst = visitevent.allKeys;
+        visitchres = @{@"ProCheck" : [self compareArray:visitprome toAnother:chevst], @"KeysCheck" : [self checkDictEmpty:visitevent]};
     }
     return vstchres;
 }
@@ -126,22 +126,22 @@
     if (clickevent.count > 0) {
         NSArray *chevst = clickevent.allKeys;
         clickchres =
-            @{@"ProCheck" : [self ComNSArray:clickprome:chevst], @"KeysCheck" : [self CheckDictEmpty:clickevent]};
+            @{@"ProCheck" : [self compareArray:clickprome toAnother:chevst], @"KeysCheck" : [self checkDictEmpty:clickevent]};
     }
     return clickchres;
 }
 // VIEW_CHANGE事件对比，测量协议字段完整且每个字段不为空
-+ (NSDictionary *)viewChangeEventCheck:(NSDictionary *)chngevent {
++ (NSDictionary *)viewChangeEventCheck:(NSDictionary *)changeEvent {
     NSDictionary *chngchres;
     NSArray *chngprome = @[
         @"userId", @"sessionId", @"eventType", @"timestamp", @"domain", @"pageName", @"eventName", @"xpath",
         @"textValue", @"timestamp", @"userId", @"globalSequenceId", @"eventSequenceId"
     ];
     //对比测量协议结构
-    if (chngevent.count > 0) {
-        NSArray *chngvst = chngevent.allKeys;
+    if (changeEvent.count > 0) {
+        NSArray *chngvst = changeEvent.allKeys;
         chngchres =
-            @{@"ProCheck" : [self ComNSArray:chngprome:chngvst], @"KeysCheck" : [self CheckDictEmpty:chngevent]};
+            @{@"ProCheck" : [self compareArray:chngprome toAnother:chngvst], @"KeysCheck" : [self checkDictEmpty:changeEvent]};
     }
     return chngchres;
 }
@@ -156,7 +156,7 @@
     //对比测量协议结构
     if (impevent.count > 0) {
         NSArray *impkeys = impevent.allKeys;
-        impchres = @{@"ProCheck" : [self ComNSArray:impprome:impkeys], @"KeysCheck" : [self CheckDictEmpty:impevent]};
+        impchres = @{@"ProCheck" : [self compareArray:impprome toAnother:impkeys], @"KeysCheck" : [self checkDictEmpty:impevent]};
     }
     return impchres;
 }

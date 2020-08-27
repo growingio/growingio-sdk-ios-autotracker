@@ -106,13 +106,13 @@
             } else if ([typeStrings2G containsObject:accessString]) {
                 netType = @"2G";
             } else {
-                netType = @"NONE";
+                netType = @"UNKNOW";
             }
         } else {
-            netType = @"NONE";
+            netType = @"UNKNOW";
         }
     } else {
-        netType = @"NONE";
+        netType = @"UNKNOW";
     }
     return netType;
 }

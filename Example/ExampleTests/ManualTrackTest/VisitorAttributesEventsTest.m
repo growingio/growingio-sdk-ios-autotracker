@@ -37,7 +37,7 @@
         XCTAssertEqualObjects(epvarchr[@"attributes"][@"var1"], @"good");
         XCTAssertEqualObjects(epvarchr[@"attributes"][@"var2"], @"excell");
 
-        NSDictionary *chres = [ManualTrackHelper visitorEventCheck:epvarchr];
+        NSDictionary *chres = [ManualTrackHelper visitorAttributesEventCheck:epvarchr];
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
         XCTAssertEqualObjects(chres[@"ProCheck"][@"chres"], @"same");
         NSLog(@"CONVERSION_VARIABLES事件，vstr正常情况测试通过-----passed");

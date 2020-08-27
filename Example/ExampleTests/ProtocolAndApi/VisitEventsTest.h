@@ -1,5 +1,5 @@
 //
-//  VstEventsTest.h
+//  VisitEventsTest.h
 //  GIOAutoTests
 //
 //  Created by GrowingIO on 2018/5/22.

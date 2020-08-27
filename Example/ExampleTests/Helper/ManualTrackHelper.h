@@ -25,5 +25,5 @@
 + (NSDictionary *)conversionVariablesEventCheck:(NSDictionary *)evarevent;
 
 // VISITOR_ATTRIBUTES 事件对比，测量协议字段完整且每个字段不为空
-+ (NSDictionary *)visitorEventCheck:(NSDictionary *)visitorAttributesEvent;
++ (NSDictionary *)visitorAttributesEventCheck:(NSDictionary *)visitorAttributesEvent;
 @end

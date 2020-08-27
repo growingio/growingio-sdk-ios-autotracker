@@ -34,8 +34,8 @@
     if (cstmevent.count > 0) {
         NSArray *checstm = cstmevent.allKeys;
         cstmchres = @{
-            @"ProCheck" : [NoburPoMeaProCheck ComNSArray:cstmprome:checstm],
-            @"KeysCheck" : [NoburPoMeaProCheck CheckDictEmpty:cstmevent]
+            @"ProCheck" : [NoburPoMeaProCheck compareArray:cstmprome toAnother:checstm],
+            @"KeysCheck" : [NoburPoMeaProCheck checkDictEmpty:cstmevent]
         };
     }
     return cstmchres;
@@ -52,8 +52,8 @@
     if (pplevent.count > 0) {
         NSArray *cheppl = pplevent.allKeys;
         pplchres = @{
-            @"ProCheck" : [NoburPoMeaProCheck ComNSArray:pplprome:cheppl],
-            @"KeysCheck" : [NoburPoMeaProCheck CheckDictEmpty:pplevent]
+            @"ProCheck" : [NoburPoMeaProCheck compareArray:pplprome toAnother:cheppl],
+            @"KeysCheck" : [NoburPoMeaProCheck checkDictEmpty:pplevent]
         };
     }
     return pplchres;
@@ -70,8 +70,8 @@
     if (pvarevent.count > 0) {
         NSArray *chepvar = pvarevent.allKeys;
         pvarchres = @{
-            @"ProCheck" : [NoburPoMeaProCheck ComNSArray:pvarlprome:chepvar],
-            @"KeysCheck" : [NoburPoMeaProCheck CheckDictEmpty:pvarevent]
+            @"ProCheck" : [NoburPoMeaProCheck compareArray:pvarlprome toAnother:chepvar],
+            @"KeysCheck" : [NoburPoMeaProCheck checkDictEmpty:pvarevent]
         };
     }
     return pvarchres;
@@ -88,26 +88,26 @@
     if (evarevent.count > 0) {
         NSArray *cheevar = evarevent.allKeys;
         evarchres = @{
-            @"ProCheck" : [NoburPoMeaProCheck ComNSArray:evarlprome:cheevar],
-            @"KeysCheck" : [NoburPoMeaProCheck CheckDictEmpty:evarevent]
+            @"ProCheck" : [NoburPoMeaProCheck compareArray:evarlprome toAnother:cheevar],
+            @"KeysCheck" : [NoburPoMeaProCheck checkDictEmpty:evarevent]
         };
     }
     return evarchres;
 }
 
-// vstr事件对比，测量协议字段完整且每个字段不为空
-+ (NSDictionary *)visitorEventCheck:(NSDictionary *)visitorAttributesEvent {
-    NSDictionary *vstrchres;
-    NSArray *vstrprome = @[ @"userId", @"sessionId", @"eventType", @"timestamp", @"domain", @"attributes", @"userId" ];
+// VISITOR_ATTRIBUTES 事件对比，测量协议字段完整且每个字段不为空
++ (NSDictionary *)visitorAttributesEventCheck:(NSDictionary *)visitorAttributesEvent {
+    NSDictionary *visitor_chres;
+    NSArray *visitor_prome = @[ @"userId", @"sessionId", @"eventType", @"timestamp", @"domain", @"attributes", @"userId" ];
     //对比测量协议结构
     if (visitorAttributesEvent.count > 0) {
         NSArray *chevstr = visitorAttributesEvent.allKeys;
-        vstrchres = @{
-            @"ProCheck" : [NoburPoMeaProCheck ComNSArray:vstrprome:chevstr],
-            @"KeysCheck" : [NoburPoMeaProCheck CheckDictEmpty:visitorAttributesEvent]
+        visitor_chres = @{
+            @"ProCheck" : [NoburPoMeaProCheck compareArray:visitor_prome toAnother:chevstr],
+            @"KeysCheck" : [NoburPoMeaProCheck checkDictEmpty:visitorAttributesEvent]
         };
     }
-    return vstrchres;
+    return visitor_chres;
 }
 
 @end

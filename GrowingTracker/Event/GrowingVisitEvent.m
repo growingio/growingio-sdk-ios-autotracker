@@ -84,7 +84,7 @@
         }
 
         // 记录当前的vst事件
-        [GrowingEventManager shareInstance].vstEvent = self;
+        [GrowingEventManager shareInstance].visitEvent = self;
     }
     return self;
 }
@@ -95,14 +95,14 @@
 
 + (void)onGpsLocationChanged:(CLLocation *_Nullable)location {
     // TODO: 工程中最后一次发的visit 事件，应该存在多线程问题
-    GrowingVisitEvent *vstEvent = [GrowingEventManager shareInstance].vstEvent;
+    GrowingVisitEvent *visitEvent = [GrowingEventManager shareInstance].visitEvent;
 
-    if (location != nil && vstEvent.latitude == nil && vstEvent.longitude == nil) {
+    if (location != nil && visitEvent.latitude == nil && visitEvent.longitude == nil) {
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
-            vstEvent.latitude = @(location.coordinate.latitude);
-            vstEvent.longitude = @(location.coordinate.longitude);
-            [GrowingVisitEvent sendWithEvent:vstEvent];
+            visitEvent.latitude = @(location.coordinate.latitude);
+            visitEvent.longitude = @(location.coordinate.longitude);
+            [GrowingVisitEvent sendWithEvent:visitEvent];
         });
     }
 }

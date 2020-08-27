@@ -40,15 +40,15 @@
     [tester enterTextIntoCurrentFirstResponder:newestUserId];
     [[viewTester usingLabel:@"CustomSet"] tap];
     [tester waitForTimeInterval:2];
-    NSArray<NSDictionary *> *vstEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
+    NSArray<NSDictionary *> *visitEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
 
-    if (vstEventArray.count >= 1) {
-        NSDictionary *vstchr = vstEventArray.lastObject;
+    if (visitEventArray.count >= 1) {
+        NSDictionary *visit_chr = visitEventArray.lastObject;
         // NSLog(@"Check Result:%@",vstchr);
-        XCTAssertEqualObjects(vstchr[@"userId"], newestUserId);
+        XCTAssertEqualObjects(visit_chr[@"userId"], newestUserId);
         NSLog(@"正常测试SetUserID，检查cs1测试通过-----passed");
     } else {
-        NSLog(@"正常测试SetUserID，测试失败!Problems:%@", vstEventArray);
+        NSLog(@"正常测试SetUserID，测试失败!Problems:%@", visitEventArray);
         XCTAssertEqual(1, 0);
     }
 }
@@ -81,17 +81,17 @@
     [[viewTester usingLabel:@"CustomSet"] tap];
     [tester waitForTimeInterval:2];
 
-    NSArray *vstEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
+    NSArray *visitEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
 
-    if (vstEventArray.count >= 1) {
-        NSDictionary *vstchr = vstEventArray.lastObject;
-        XCTAssertEqualObjects(vstchr[@"userId"], @"SxfChange");
-        XCTAssertNotNil(vstchr[@"sessionId"]);
+    if (visitEventArray.count >= 1) {
+        NSDictionary *visit_chr = visitEventArray.lastObject;
+        XCTAssertEqualObjects(visit_chr[@"userId"], @"SxfChange");
+        XCTAssertNotNil(visit_chr[@"sessionId"]);
         // 校验sessions 变化
-        XCTAssertNotEqual(cstmEventArray.lastObject[@"sessionId"], vstchr[@"sessionId"]);
+        XCTAssertNotEqual(cstmEventArray.lastObject[@"sessionId"], visit_chr[@"sessionId"]);
         NSLog(@"更新UID，检测cs1测试通过-----passed");
     } else {
-        NSLog(@"更新UID，检测cs1测试失败!Problems:%@", vstEventArray);
+        NSLog(@"更新UID，检测cs1测试失败!Problems:%@", visitEventArray);
         XCTAssertEqual(1, 0);
     }
 }
@@ -111,15 +111,15 @@
     [tester clearTextFromAndThenEnterTextIntoCurrentFirstResponder:@"%$#./"];
     [[viewTester usingLabel:@"CustomSet"] tap];
     [tester waitForTimeInterval:2];
-    NSArray *vstEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
+    NSArray *visitEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
 
-    if (vstEventArray.count >= 1) {
-        NSDictionary *vstchr = vstEventArray.lastObject;
+    if (visitEventArray.count >= 1) {
+        NSDictionary *vstchr = visitEventArray.lastObject;
 
         XCTAssertEqualObjects(vstchr[@"userId"], @"%$#./");
         NSLog(@"UID为特殊字符，检测cs1测试通过-----passed");
     } else {
-        NSLog(@"UID为特殊字符，检测cs1测试失败!Problems:%@", vstEventArray);
+        NSLog(@"UID为特殊字符，检测cs1测试失败!Problems:%@", visitEventArray);
         XCTAssertEqual(1, 0);
     }
 }
@@ -139,14 +139,14 @@
     [tester clearTextFromAndThenEnterTextIntoCurrentFirstResponder:@"数据分析"];
     [[viewTester usingLabel:@"CustomSet"] tap];
     [tester waitForTimeInterval:2];
-    NSArray *vstEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
+    NSArray *visitEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
 
-    if (vstEventArray.count >= 1) {
-        NSDictionary *vstchr = vstEventArray.lastObject;
+    if (visitEventArray.count >= 1) {
+        NSDictionary *vstchr = visitEventArray.lastObject;
         XCTAssertEqualObjects(vstchr[@"userId"], @"数据分析");
         NSLog(@"UID为中文字符，检测cs1测试通过-----passed");
     } else {
-        NSLog(@"UID为中文字符，检测cs1测试失败!Problems:%@", vstEventArray);
+        NSLog(@"UID为中文字符，检测cs1测试失败!Problems:%@", visitEventArray);
         XCTAssertEqual(1, 0);
     }
 }
@@ -166,13 +166,13 @@
     [tester clearTextFromAndThenEnterTextIntoCurrentFirstResponder:@""];
     [[viewTester usingLabel:@"CustomSet"] tap];
     [tester waitForTimeInterval:2];
-    NSArray *vstEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
+    NSArray *visitEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
 
-    if (vstEventArray.count == 0) {
+    if (visitEventArray.count == 0) {
         XCTAssertEqual(1, 1);
         NSLog(@"UID为空,检测CS1测试通过---passed!");
     } else {
-        NSLog(@"UID为空,检测CS1测试失败，VST中的CS1为：%@", vstEventArray.firstObject[@"userId"]);
+        NSLog(@"UID为空,检测CS1测试失败，VST中的CS1为：%@", visitEventArray.firstObject[@"userId"]);
         XCTAssertEqual(1, 0);
     }
 }
@@ -184,13 +184,13 @@
     [MockEventQueue.sharedQueue cleanQueue];
     [Growing setLoginUserId:NULL];
     [tester waitForTimeInterval:2];
-    NSArray *vstEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
+    NSArray *visitEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
 
-    if (vstEventArray.count == 0) {
+    if (visitEventArray.count == 0) {
         XCTAssertEqual(1, 1);
         NSLog(@"UID为nil,检测CS1测试通过---passed!");
     } else {
-        NSLog(@"UID为nil,检测CS1测试失败，VST中的CS1为：%@", vstEventArray.firstObject[@"userId"]);
+        NSLog(@"UID为nil,检测CS1测试失败，VST中的CS1为：%@", visitEventArray.firstObject[@"userId"]);
         XCTAssertEqual(1, 0);
     }
 }
@@ -208,13 +208,13 @@
     [[viewTester usingLabel:@"+ (void)setUserId:(NSString *)userId;"] tap];
     [[viewTester usingLabel:@"SetUserIdOutRange"] tap];
     [tester waitForTimeInterval:2];
-    NSArray *vstEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
+    NSArray *visitEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
 
-    if (vstEventArray.count == 0) {
+    if (visitEventArray.count == 0) {
         XCTAssertEqual(1, 1);
         NSLog(@"UID为超过1000个字符,检测CS1测试通过---passed!");
     } else {
-        NSLog(@"UID为超过1000个字符,检测CS1测试失败，VST中的CS1为：%@", vstEventArray.firstObject[@"userId"]);
+        NSLog(@"UID为超过1000个字符,检测CS1测试失败，VST中的CS1为：%@", visitEventArray.firstObject[@"userId"]);
         XCTAssertEqual(1, 0);
     }
 }

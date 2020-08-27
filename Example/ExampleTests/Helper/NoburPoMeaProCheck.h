@@ -14,13 +14,13 @@
 + (BOOL)isBlankString:(NSString *)aStr;
 
 //对比两个NSArray
-+ (NSDictionary *)ComNSArray:(NSArray *)arr1:(NSArray *)arr2;
++ (NSDictionary *)compareArray:(NSArray *)arr1 toAnother:(NSArray *)arr2;
 
 //判断NSDictionary是否存在空关键字
-+ (NSDictionary *)CheckDictEmpty:(NSDictionary *)ckdict;
++ (NSDictionary *)checkDictEmpty:(NSDictionary *)ckdict;
 
 // Vst事件对比，测量协议字段完整且每个字段不为空
-+ (NSDictionary *)visitEventCheck:(NSDictionary *)vstevent;
++ (NSDictionary *)visitEventCheck:(NSDictionary *)visitevent;
 
 // click事件对比，测量协议字段完整且每个字段不为空
 + (NSDictionary *)clickEventCheck:(NSDictionary *)clickevent;

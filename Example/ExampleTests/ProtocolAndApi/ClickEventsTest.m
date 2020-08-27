@@ -128,7 +128,6 @@
     [tester waitForTimeInterval:3];
     [[viewTester usingLabel:@"好的"] tap];
     NSArray *clickEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
-    // NSLog(@"Click 事件：%@",[clckEventArray objectAtIndex:clckEventArray.count-1]);
     if (clickEventArray.count > 4) {
         // TODO:3.0 测量协议修改
         XCTAssertEqual(1, 1);

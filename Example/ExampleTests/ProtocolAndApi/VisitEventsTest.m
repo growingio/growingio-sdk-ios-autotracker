@@ -1,5 +1,5 @@
 //
-//  VstEventsTest.m
+//  VisitEventsTest.m
 //  GIOAutoTests
 //
 //  Created by GrowingIO on 2018/2/22.
@@ -25,7 +25,7 @@
 
 - (void)test1SetLocation {
     /**
-     function:SetLocation触发，从null -> 非null 发一次。非null - 非null不发vst
+     function:SetLocation触发，从null -> 非null 发一次。非null - 非null不发visit
      **/
     NSString *oldSession = [Growing getSessionId];
     XCTAssertNotNil(oldSession);
@@ -33,16 +33,15 @@
     [MockEventQueue.sharedQueue cleanQueue];
     [Growing setLocation:[@30.11 doubleValue] longitude:[@32.22 doubleValue]];
     [tester waitForTimeInterval:1];
-    NSArray *vstEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
-    // NSLog(@"VST事件：%@",vstEventArray);
-    if (vstEventArray.count > 0) {
-        NSDictionary *vstchr = [vstEventArray objectAtIndex:vstEventArray.count - 1];
-        NSLog(@"Check Result:%@", vstchr);
-        XCTAssertEqualObjects(vstchr[@"latitude"], @30.11);
-        XCTAssertEqualObjects(vstchr[@"longitude"], @32.22);
-        NSLog(@"setLocation 从null -> 非null 发vst，测试通过--Passed！");
+    NSArray *visitEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
+    if (visitEventArray.count > 0) {
+        NSDictionary *visit_chr = [visitEventArray objectAtIndex:visitEventArray.count - 1];
+        NSLog(@"Check Result:%@", visit_chr);
+        XCTAssertEqualObjects(visit_chr[@"latitude"], @30.11);
+        XCTAssertEqualObjects(visit_chr[@"longitude"], @32.22);
+        NSLog(@"setLocation 从null -> 非null 发visit，测试通过--Passed！");
     } else {
-        NSLog(@"setLocation 从null -> 非null 发vst，测试不通过:%@", vstEventArray);
+        NSLog(@"setLocation 从null -> 非null 发visit，测试不通过:%@", visitEventArray);
         XCTAssertEqual(1, 0);
     }
 }

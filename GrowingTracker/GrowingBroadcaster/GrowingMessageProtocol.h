@@ -82,7 +82,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-/// 手动track某个事件相关的消息（包括 vstr, cstm, evar, pvar）
+/// 手动track某个事件相关的消息（包括 VISITOR_ATTRIBUTES, CUSTOM, CONVERSION_VARIABLES, PAGE_ATTRIBUTES）
 @protocol GrowingManualTrackMessage <NSObject, GrowingMessageProtocol>
 
 - (void)manualEventDidTrackWithUserInfo:(NSDictionary * _Nullable)userInfo manualTrackEventType:(GrowingManualTrackEventType)eventType;
