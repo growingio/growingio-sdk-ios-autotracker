@@ -41,6 +41,7 @@
 #import "GrowingNetworkConfig.h"
 #import "NSURL+GrowingHelper.h"
 #import "GrowingLoggerDebugger.h"
+#import "UIWindow+GrowingHelper.h"
 
 @GrowingBroadcasterRegister(GrowingApplicationMessage, GrowingMobileDebugger)
 
