@@ -104,7 +104,7 @@ static NSString *const kGrowingCustomField = @"customField";
 
 - (void)sendPeopleEvent:(NSDictionary<NSString *, NSObject *> *)peopleVar {
     //为GrowingMobileDebugger缓存用户设置 - ppl
-    [[GrowingMobileDebugger shareDebugger] cacheValue:peopleVar ofType:kEventTypeKeyPeopleVariable];
+    [[GrowingMobileDebugger shareDebugger] cacheValue:peopleVar ofType:kEventTypeKeyLoginUserAttributes];
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:peopleVar];
     if (![dict isValidDictVariable]) {
         return;

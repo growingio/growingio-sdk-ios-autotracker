@@ -51,7 +51,7 @@
     [Growing setDataTrackEnabled:YES];
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"协议/接口"] tap];
-    [[viewTester usingLabel:@"click请求"] tap];
+    [[viewTester usingLabel:@"CLICK请求"] tap];
     [[viewTester usingLabel:@"send click event"] tap];
 
     NSArray *clickEventArray1 = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];

@@ -85,7 +85,7 @@
         @"sessionId",
         @"eventType",
         @"timestamp",
-        @"av",
+        @"appVersion",
         @"domain",
         @"screenHeight",
         @"screenWidth",
@@ -94,25 +94,24 @@
         @"deviceType",
         @"operatingSystem",
         @"operatingSystemVersion",
-        @"appVersion",
         @"appName",
         @"textValue",
         @"language",
         @"latitude",
         @"longitude",
-        @"iv",
-        @"ui",
+        @"idfa",
+        @"idfa",
         @"userId",
         @"globalSequenceId",
         @"eventSequenceId",
-        @"fv"
+        @"fv",@"pageShowTimestamp",@"deviceId",@"urlScheme",@"appState"
     ];
     //对比测量协议结构
     if (visitevent.count > 0) {
         NSArray *chevst = visitevent.allKeys;
         visitchres = @{@"ProCheck" : [self compareArray:visitprome toAnother:chevst], @"KeysCheck" : [self checkDictEmpty:visitevent]};
     }
-    return vstchres;
+    return visitchres;
 }
 
 // click事件对比，测量协议字段完整且每个字段不为空
@@ -120,7 +119,7 @@
     NSDictionary *clickchres;
     NSArray *clickprome = @[
         @"userId", @"sessionId", @"eventType", @"timestamp", @"domain", @"pageName", @"textValue", @"xpath", @"index",
-        @"userId", @"globalSequenceId", @"eventSequenceId"
+        @"userId", @"globalSequenceId", @"eventSequenceId",@"pageShowTimestamp",@"deviceId",@"urlScheme",@"appState"
     ];
     //对比测量协议结构
     if (clickevent.count > 0) {
@@ -134,8 +133,8 @@
 + (NSDictionary *)viewChangeEventCheck:(NSDictionary *)changeEvent {
     NSDictionary *chngchres;
     NSArray *chngprome = @[
-        @"userId", @"sessionId", @"eventType", @"timestamp", @"domain", @"pageName", @"eventName", @"xpath",
-        @"textValue", @"timestamp", @"userId", @"globalSequenceId", @"eventSequenceId"
+        @"userId", @"sessionId", @"eventType", @"timestamp", @"domain", @"pageName", @"xpath",
+        @"textValue", @"timestamp", @"userId", @"globalSequenceId", @"eventSequenceId",@"pageShowTimestamp",@"deviceId",@"urlScheme",@"appState"
     ];
     //对比测量协议结构
     if (changeEvent.count > 0) {

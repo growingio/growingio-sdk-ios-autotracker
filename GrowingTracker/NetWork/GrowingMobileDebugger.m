@@ -503,9 +503,9 @@ static GrowingMobileDebugger *debugger = nil;
         urlTemplate = kGrowingEventApiTemplate_PV;
 
     } else if ([eventType isEqualToString:kEventTypeKeyCustom] ||
-               [eventType isEqualToString:kEventTypeKeyPageVariable] ||
+               [eventType isEqualToString:kEventTypeKeyPageAttributes] ||
                [eventType isEqualToString:kEventTypeKeyConversionVariable] ||
-               [eventType isEqualToString:kEventTypeKeyPeopleVariable] ||
+               [eventType isEqualToString:kEventTypeKeyLoginUserAttributes] ||
                [eventType isEqualToString:kEventTypeKeyVisitor]) {
         urlTemplate = kGrowingEventApiTemplate_Custom;
 

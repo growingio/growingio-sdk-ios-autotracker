@@ -225,7 +225,7 @@
      记录：重构后的打点事件，没有page事件   2018-07-24
      ***/
     [MockEventQueue.sharedQueue cleanQueue];
-    [tester scrollViewWithAccessibilityLabel:@"ppl请求" byFractionOfSizeHorizontal:0.0f vertical:-10.0f];
+    [tester scrollViewWithAccessibilityLabel:@"LOGIN_USER_ATTRIBUTES请求" byFractionOfSizeHorizontal:0.0f vertical:-10.0f];
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"+ (void)clearUserId;"] tap];
     [[viewTester usingLabel:@"SetUserId"] tap];

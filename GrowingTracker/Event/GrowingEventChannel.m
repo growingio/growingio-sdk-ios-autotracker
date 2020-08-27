@@ -52,7 +52,7 @@
         [GrowingEventChannel eventChannelWithEventTypes:@[kEventTypeKeyVisit, kEventTypeKeyPage, kEventTypeKeyClose]
                                             urlTemplate:kGrowingEventApiTemplate_PV
                                           isCustomEvent:NO],
-        [GrowingEventChannel eventChannelWithEventTypes:@[kEventTypeKeyCustom, kEventTypeKeyPageVariable, kEventTypeKeyConversionVariable, kEventTypeKeyPeopleVariable, kEventTypeKeyVisitor]
+        [GrowingEventChannel eventChannelWithEventTypes:@[kEventTypeKeyCustom, kEventTypeKeyPageAttributes, kEventTypeKeyConversionVariable, kEventTypeKeyLoginUserAttributes, kEventTypeKeyVisitor]
                                             urlTemplate:kGrowingEventApiTemplate_Custom
                                           isCustomEvent:YES],
         [GrowingEventChannel eventChannelWithEventTypes:nil
@@ -73,9 +73,9 @@
         kEventTypeKeyPage: allEventChannels[0],
         kEventTypeKeyClose: allEventChannels[0],
         kEventTypeKeyCustom: allEventChannels[1],
-        kEventTypeKeyPageVariable: allEventChannels[1],
+        kEventTypeKeyPageAttributes: allEventChannels[1],
         kEventTypeKeyConversionVariable: allEventChannels[1],
-        kEventTypeKeyPeopleVariable: allEventChannels[1],
+        kEventTypeKeyLoginUserAttributes: allEventChannels[1],
         kEventTypeKeyVisitor: allEventChannels[1],
     };
 }

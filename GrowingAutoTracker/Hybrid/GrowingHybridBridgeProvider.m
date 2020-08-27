@@ -131,22 +131,22 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
     if ([type isEqualToString:kEventTypeKeyPage]) {
         event = [GrowingPageEvent hybridPageEventWithDataDict:evetDataDict];
 
-    } else if ([type isEqualToString:kEventTypeKeyPageVariable]) {
+    } else if ([type isEqualToString:kEventTypeKeyPageAttributes]) {
         event = [GrowingPvarEvent hybridPvarEventWithDataDict:evetDataDict];
 
-    } else if ([type isEqualToString:kEventTypeKeyClick]) {
+    } else if ([type isEqualToString:kEventTypeKeyViewClick]) {
         event = [GrowingClickEvent hybridActionEventWithDataDict:evetDataDict];
 
     } else if ([type isEqualToString:kEventTypeKeyInputSubmit]) {
         event = [GrowingSubmitEvent hybridActionEventWithDataDict:evetDataDict];
 
-    } else if ([type isEqualToString:kEventTypeKeyInputChange]) {
+    } else if ([type isEqualToString:kEventTypeKeyViewChange]) {
         event = [GrowingTextEditContentChangeEvent hybridActionEventWithDataDict:evetDataDict];
 
     } else if ([type isEqualToString:kEventTypeKeyCustom]) {
         event = [GrowingCustomTrackEvent hybridCustomEventWithDataDict:evetDataDict];
 
-    } else if ([type isEqualToString:kEventTypeKeyPeopleVariable]) {
+    } else if ([type isEqualToString:kEventTypeKeyLoginUserAttributes]) {
         event = [GrowingPeopleVarEvent hybridPeopleVarEventWithDataDict:evetDataDict];
 
     } else if ([type isEqualToString:kEventTypeKeyVisitor]) {

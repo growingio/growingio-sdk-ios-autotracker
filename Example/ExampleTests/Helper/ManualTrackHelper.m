@@ -28,7 +28,7 @@
     NSDictionary *cstmchres;
     NSArray *cstmprome = @[
         @"userId", @"sessionId", @"eventType", @"timestamp", @"pageName", @"domain", @"eventName", @"num",
-        @"attributes", @"userId", @"globalSequenceId", @"eventSequenceId"
+        @"attributes", @"globalSequenceId", @"eventSequenceId",@"deviceId",@"appState",@"urlScheme"
     ];
     //对比测量协议结构
     if (cstmevent.count > 0) {
@@ -46,7 +46,7 @@
     NSDictionary *pplchres;
     NSArray *pplprome = @[
         @"userId", @"sessionId", @"eventType", @"timestamp", @"domain", @"attributes", @"userId", @"globalSequenceId",
-        @"eventSequenceId"
+        @"eventSequenceId",@"deviceId",@"appState",@"urlScheme"
     ];
     //对比测量协议结构
     if (pplevent.count > 0) {
@@ -64,7 +64,7 @@
     NSDictionary *pvarchres;
     NSArray *pvarlprome = @[
         @"userId", @"sessionId", @"eventType", @"timestamp", @"domain", @"pageName", @"attributes", @"userId",
-        @"globalSequenceId", @"eventSequenceId"
+        @"globalSequenceId", @"eventSequenceId",@"deviceId",@"appState",@"urlScheme"
     ];
     //对比测量协议结构
     if (pvarevent.count > 0) {
@@ -82,7 +82,7 @@
     NSDictionary *evarchres;
     NSArray *evarlprome = @[
         @"userId", @"sessionId", @"eventType", @"timestamp", @"domain", @"attributes", @"userId", @"eventSequenceId",
-        @"globalSequenceId"
+        @"globalSequenceId",@"deviceId",@"appState",@"urlScheme"
     ];
     //对比测量协议结构
     if (evarevent.count > 0) {
@@ -98,7 +98,7 @@
 // VISITOR_ATTRIBUTES 事件对比，测量协议字段完整且每个字段不为空
 + (NSDictionary *)visitorAttributesEventCheck:(NSDictionary *)visitorAttributesEvent {
     NSDictionary *visitor_chres;
-    NSArray *visitor_prome = @[ @"userId", @"sessionId", @"eventType", @"timestamp", @"domain", @"attributes", @"userId" ];
+    NSArray *visitor_prome = @[ @"userId", @"sessionId", @"eventType", @"timestamp", @"domain", @"attributes", @"userId",@"deviceId",@"appState",@"urlScheme" ];
     //对比测量协议结构
     if (visitorAttributesEvent.count > 0) {
         NSArray *chevstr = visitorAttributesEvent.allKeys;

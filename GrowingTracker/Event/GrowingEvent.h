@@ -23,14 +23,14 @@ static NSString *_Nonnull const kEventTypeKeyClose = @"APP_CLOSED";
 static NSString *_Nonnull const kEventTypeKeyVisit = @"VISIT";
 static NSString *_Nonnull const kEventTypeKeyVisitor = @"VISITOR_ATTRIBUTES";
 static NSString *_Nonnull const kEventTypeKeyCustom = @"CUSTOM";
-static NSString *_Nonnull const kEventTypeKeyPeopleVariable = @"LOGIN_USER_ATTRIBUTES";
+static NSString *_Nonnull const kEventTypeKeyLoginUserAttributes = @"LOGIN_USER_ATTRIBUTES";
 
 static NSString *_Nonnull const kEventTypeKeyPage = @"PAGE";
-static NSString *_Nonnull const kEventTypeKeyPageVariable = @"PAGE_ATTRIBUTES";
+static NSString *_Nonnull const kEventTypeKeyPageAttributes = @"PAGE_ATTRIBUTES";
 static NSString *_Nonnull const kEventTypeKeyConversionVariable = @"CONVERSION_VARIABLES";
 
-static NSString *_Nonnull const kEventTypeKeyClick = @"VIEW_CLICK";
-static NSString *_Nonnull const kEventTypeKeyInputChange = @"VIEW_CHANGE";
+static NSString *_Nonnull const kEventTypeKeyViewClick = @"VIEW_CLICK";
+static NSString *_Nonnull const kEventTypeKeyViewChange = @"VIEW_CHANGE";
 static NSString *_Nonnull const kEventTypeKeyInputSubmit = @"FORM_SUBMIT";
 
 

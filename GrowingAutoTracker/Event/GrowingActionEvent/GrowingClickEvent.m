@@ -35,7 +35,7 @@
 }
 
 - (NSString*)eventTypeKey {
-    return kEventTypeKeyInputChange;
+    return kEventTypeKeyViewChange;
 }
 
 @end
@@ -52,7 +52,7 @@
 @implementation GrowingClickEvent
 
 - (NSString*)eventTypeKey {
-    return kEventTypeKeyClick;
+    return kEventTypeKeyViewClick;
 }
 
 @end

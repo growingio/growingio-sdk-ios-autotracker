@@ -158,7 +158,7 @@
 @implementation GrowingPeopleVarEvent
 
 - (NSString *)eventTypeKey {
-    return kEventTypeKeyPeopleVariable;
+    return kEventTypeKeyLoginUserAttributes;
 }
 
 + (void)sendEventWithVariable:(NSDictionary<NSString *, NSObject *> *_Nonnull)variable {

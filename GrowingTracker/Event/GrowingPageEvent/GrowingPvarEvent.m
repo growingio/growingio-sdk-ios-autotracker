@@ -31,7 +31,7 @@
 @implementation GrowingPvarEvent
 
 - (NSString *)eventTypeKey {
-    return kEventTypeKeyPageVariable;
+    return kEventTypeKeyPageAttributes;
 }
 
 - (instancetype)initWithPageName:(NSString *)pageName
