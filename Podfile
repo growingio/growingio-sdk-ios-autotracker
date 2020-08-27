@@ -15,7 +15,6 @@ target 'Example' do
   pod 'SDCycleScrollView', '~> 1.75'
   pod 'MJRefresh'
   pod 'MBProgressHUD'
-  pod 'Bugly'
   pod 'AlicloudPush', '~> 1.9.8'
 end
 
