@@ -43,6 +43,7 @@ SPEC REPOS:
     - MBProgressHUD
     - MJRefresh
     - SDCycleScrollView
+  https://github.com/growingio/giospec.git:
     - SDWebImage
 
 EXTERNAL SOURCES:
