@@ -19,6 +19,7 @@
 
 
 #import "GrowingTracker.h"
+#import "GrowingAlert.h"
 #import "GrowingInstance.h"
 #import "GrowingCustomField.h"
 #import "GrowingEventManager.h"
@@ -32,6 +33,7 @@
 #import "GrowingConfiguration.h"
 #import "GrowingBroadcaster.h"
 #import "GrowingWSLoggerFormat.h"
+
 
 @import CoreLocation;
 
@@ -77,12 +79,11 @@ static NSString* const kGrowingVersion = @"3.0.0";
 
 + (BOOL)urlSchemeCheck {
     if ([GrowingDeviceInfo currentDeviceInfo].urlScheme.length == 0) {
-        UIAlertView *view = [[UIAlertView alloc] initWithTitle:@"未检测到GrowingIO的URLScheme"
-                                                       message:@"请参考帮助文档 https://help.growingio.com/SDK/iOS.html#urlscheme 进行集成"
-                                                      delegate:nil
-                                             cancelButtonTitle:@"OK"
-                                             otherButtonTitles:nil];
-        [view show];
+        GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert
+                                                           title:@"未检测到GrowingIO的URLScheme"
+                                                         message:@"请参考帮助文档 https://help.growingio.com/SDK/iOS.html#urlscheme 进行集成"];
+        [alert addOkWithTitle:@"OK" handler:nil];
+        [alert showAlertAnimated:YES];
         GIOLogError(@"未检测到GrowingIO的URLScheme !!!");
         GIOLogInfo (@"请参考帮助文档 https://help.growingio.com/SDK/iOS.html#urlscheme 进行集成");
         return NO;

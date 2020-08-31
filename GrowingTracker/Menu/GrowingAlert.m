@@ -17,7 +17,7 @@
 //  limitations under the License.
 
 #import "GrowingAlert.h"
-
+#import "GrowingCocoaLumberjack.h"
 typedef NS_ENUM(NSUInteger, GrowingAlertError) {
     alertControllerNil = 0,
     popoverNotSet = 1,
@@ -195,9 +195,14 @@ static GrowingAlertConfiguration *defaultConfiguration = nil;
 
 - (void)showAlertAnimated:(BOOL)animated {
     UIViewController *sourceViewController = [[UIApplication sharedApplication] growing_topMostViewController];
-    [sourceViewController presentViewController:self.alertController
-                                       animated:YES
-                                     completion:nil];
+    if (sourceViewController) {
+        [sourceViewController presentViewController:self.alertController
+          animated:YES
+        completion:nil];
+    }else {
+        GIOLogError(@"Alert show Error : Window Top ViewController is not find");
+    }
+    
 }
 
 @end
