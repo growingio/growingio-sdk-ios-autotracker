@@ -17,8 +17,8 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <Foundation/Foundation.h>
+
 #import "GrowingEvent.h"
 #import "GrowingNodeProtocol.h"
 
@@ -28,19 +28,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingActionEventElement : NSObject <GrowingEventTransformable>
 
-@property (nonatomic, strong) NSNumber * _Nonnull globalSequenceId;
-@property (nonatomic, strong) NSNumber * _Nonnull eventSequenceId;
+@property (nonatomic, strong) NSNumber* _Nonnull globalSequenceId;
+@property (nonatomic, strong) NSNumber* _Nonnull eventSequenceId;
 
-@property (nonatomic, copy) NSString * _Nonnull xPath;
-@property (nonatomic, copy) NSString * _Nullable hyperLink;
-@property (nonatomic, copy) NSString * _Nullable index;
-@property (nonatomic, copy) NSString * _Nullable cid;
-@property (nonatomic, copy) NSString * _Nullable signature;
-@property (nonatomic, strong) NSNumber * _Nonnull timestamp;
-@property (nonatomic, copy) NSString * _Nullable content;
+@property (nonatomic, copy) NSString* _Nonnull xPath;
+@property (nonatomic, copy) NSString* _Nullable hyperLink;
+@property (nonatomic, copy) NSString* _Nullable index;
+@property (nonatomic, strong) NSNumber* _Nonnull timestamp;
+@property (nonatomic, copy) NSString* _Nullable textValue;
 
-- (instancetype)initWithNode:(id<GrowingNode>)node
-            triggerEventType:(GrowingEventType)eventType;
+- (instancetype)initWithNode:(id<GrowingNode>)node triggerEventType:(GrowingEventType)eventType;
 @end
 
 NS_ASSUME_NONNULL_END

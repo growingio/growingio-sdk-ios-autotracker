@@ -20,7 +20,6 @@
 
     NSString *slab = [Growing getDeviceId];
     [tester waitForTimeInterval:1];
-//    UILabel *slab=[tester waitForViewWithAccessibilityLabel:@"ShowDevId"];
     NSLog(@"****获取设备ID****：%@",slab);
     if(![slab isEqualToString:@""])
     {
@@ -42,7 +41,6 @@
      */
     [MockEventQueue.sharedQueue cleanQueue];
     [tester waitForTimeInterval:1];
-//    UILabel *slab=[tester waitForViewWithAccessibilityLabel:@"ShowUid"];
     NSString *slab = [Growing getDeviceId];
     NSLog(@"****获取当前UID****：%@",slab);
     if(![slab isEqualToString:@""])
@@ -62,11 +60,6 @@
      Function:测试getSessionId
      */
     [MockEventQueue.sharedQueue cleanQueue];
-//    [[viewTester usingLabel:@"接口"] tap];
-//    [[viewTester usingLabel:@"+ FlushInterval(发送数据间隔)"] tap];
-//    [[viewTester usingLabel:@"获取当前访问ID"] tap];
-//    [tester waitForTimeInterval:5];
-//    UILabel *slab=[tester waitForViewWithAccessibilityLabel:@"ShowVistId"];
     NSString *slab = [Growing getSessionId];
     NSLog(@"****获取当前访问ID****：%@",slab);
     if(![slab isEqualToString:@""])

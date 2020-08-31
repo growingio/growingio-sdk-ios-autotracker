@@ -17,10 +17,6 @@ static NSString * const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
     /**
      Function:获取显示日志状态
      **/
-    //    [[viewTester usingLabel:@"接口"] tap];
-    //    [[viewTester usingLabel:@"+ getEnableLog(日志开关状态)"] tap];
-    //    [[viewTester usingLabel:@"获取日志状态"] tap];
-    // Config GrowingIO
     GrowingConfiguration *configuration = [[GrowingConfiguration alloc] initWithProjectId:kGrowingProjectId
                                                                             launchOptions:nil];
     [configuration setLogEnabled:YES];
@@ -28,8 +24,6 @@ static NSString * const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
     NSLog(@"日志打开状态，%@",log?@"YES":@"NO");
     NSString *logab = log ? @"1" : @"0";
     [tester waitForTimeInterval:1];
-    //   UILabel *logab=[tester waitForViewWithAccessibilityLabel:@"ShowLogDeInfo"];
-    //NSLog(@"****获取发送时间间隔****：%@",slab.text);
     if(![logab isEqualToString:@""])
     {
         XCTAssertEqualObjects(logab, @"1");

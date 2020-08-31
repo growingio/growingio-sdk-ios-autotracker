@@ -5,7 +5,7 @@
 //  Created by GrowingIO on 2020/6/10.
 //  Copyright © 2020 GrowingIO. All rights reserved.
 //
-//  evar, ppl, vstr 事件的测试页面
+//  CONVERSION_VARIABLES, LOGIN_USER_ATTRIBUTES, VISITOR_ATTRIBUTES 事件的测试页面
 
 #import <UIKit/UIKit.h>
 

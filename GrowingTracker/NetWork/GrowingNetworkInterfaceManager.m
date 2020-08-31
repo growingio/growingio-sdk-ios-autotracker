@@ -22,6 +22,7 @@
 #import "GrowingReachability.h"
 #import "GrowingInstance.h"
 #import "GrowingGlobal.h"
+#import <CoreTelephony/CTTelephonyNetworkInfo.h>
 
 @interface GrowingNetworkInterfaceManager()
 
@@ -80,9 +81,38 @@
     } else if (self.WiFiValid) {
         netType = @"WIFI";
     } else if (self.WWANValid) {
-        netType = @"CELL";
+        NSArray *typeStrings2G = @[CTRadioAccessTechnologyEdge,
+                                   CTRadioAccessTechnologyGPRS,
+                                   CTRadioAccessTechnologyCDMA1x];
+        
+        NSArray *typeStrings3G = @[CTRadioAccessTechnologyHSDPA,
+                                   CTRadioAccessTechnologyWCDMA,
+                                   CTRadioAccessTechnologyHSUPA,
+                                   CTRadioAccessTechnologyCDMAEVDORev0,
+                                   CTRadioAccessTechnologyCDMAEVDORevA,
+                                   CTRadioAccessTechnologyCDMAEVDORevB,
+                                   CTRadioAccessTechnologyeHRPD];
+        
+        NSArray *typeStrings4G = @[CTRadioAccessTechnologyLTE];
+        
+        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
+            CTTelephonyNetworkInfo *teleInfo= [[CTTelephonyNetworkInfo alloc] init];
+            NSString *accessString = teleInfo.currentRadioAccessTechnology;
+            //TODO: 5G还未公开变量
+            if ([typeStrings4G containsObject:accessString]) {
+                netType = @"4G";
+            } else if ([typeStrings3G containsObject:accessString]) {
+                netType = @"3G";
+            } else if ([typeStrings2G containsObject:accessString]) {
+                netType = @"2G";
+            } else {
+                netType = @"UNKNOW";
+            }
+        } else {
+            netType = @"UNKNOW";
+        }
     } else {
-        netType = @"NONE";
+        netType = @"UNKNOW";
     }
     return netType;
 }

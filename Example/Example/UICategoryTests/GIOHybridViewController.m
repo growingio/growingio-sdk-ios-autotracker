@@ -19,7 +19,6 @@
 
 @implementation GIOHybridViewController
 
-
 - (void)viewDidLoad {
     [super viewDidLoad];
 
@@ -31,20 +30,18 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-    
 }
 
 - (void)loadAddressURL {
-    //NSURL *requestURL = [NSURL URLWithString:@"https://dn-sharebaidu.qbox.me/gio_hybrid.html"];
-    //NSURL *requestURL = [NSURL URLWithString:@"http://192.168.52.51/gio_hybrid.html"];
-//    NSURL *requestURL = [NSURL URLWithString:@"http://192.168.52.116/Hybrid_PatternServer.html"];
-//    
-//    //NSURL *requestURL = [NSURL URLWithString:@"http://192.168.52.54/zeptotest1.html"];
-//    
-//     NSURLRequest *request = [NSURLRequest requestWithURL:requestURL];
-//     [self.webView loadRequest:request];
-    
-    
+    // NSURL *requestURL = [NSURL URLWithString:@"https://dn-sharebaidu.qbox.me/gio_hybrid.html"];
+    // NSURL *requestURL = [NSURL URLWithString:@"http://192.168.52.51/gio_hybrid.html"];
+    //    NSURL *requestURL = [NSURL URLWithString:@"http://192.168.52.116/Hybrid_PatternServer.html"];
+    //
+    //    //NSURL *requestURL = [NSURL URLWithString:@"http://192.168.52.54/zeptotest1.html"];
+    //
+    //     NSURLRequest *request = [NSURLRequest requestWithURL:requestURL];
+    //     [self.webView loadRequest:request];
+
     //直接加载html文件
     // NSString *path = [[NSBundle mainBundle] bundlePath];
     // NSURL *baseURL = [NSURL fileURLWithPath:path];
@@ -55,18 +52,17 @@
     //                                                           error:nil];
     //  [self.webView loadHTMLString:htmlCont baseURL:baseURL];
     //
-//    NSURL *requestURL = [NSURL URLWithString:@"http://m.baidu.com/"];
-//    NSURL *requestURL = [NSURL URLWithString:@"https://m.baidu.com/"];
-//    NSURLRequest *request = [NSURLRequest requestWithURL:requestURL];
-//    [self.webView loadRequest:request];
+    //    NSURL *requestURL = [NSURL URLWithString:@"http://m.baidu.com/"];
+    //    NSURL *requestURL = [NSURL URLWithString:@"https://m.baidu.com/"];
+    //    NSURLRequest *request = [NSURLRequest requestWithURL:requestURL];
+    //    [self.webView loadRequest:request];
 
+    //    NSURL *requestURL = [NSURL URLWithString:@"https://dn-sharebaidu.qbox.me/gio_hybrid.html"];
+    //    NSURLRequest *request = [NSURLRequest requestWithURL:requestURL];
+    //    [self.webView loadRequest:request];
 
-//    NSURL *requestURL = [NSURL URLWithString:@"https://dn-sharebaidu.qbox.me/gio_hybrid.html"];
-//    NSURLRequest *request = [NSURLRequest requestWithURL:requestURL];
-//    [self.webView loadRequest:request];
-    
-    NSURL* url = [NSURL URLWithString:@"http://10.20.50.26:8081/#/"];
-    NSURLRequest* request = [NSURLRequest requestWithURL:url];
+    NSURL *url = [NSURL URLWithString:@"https://www.baidu.com/"];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [self.webView loadRequest:request];
 }
 
@@ -102,7 +98,7 @@
     NSLog(@"webViewDidFinishLoad");
 }
 
--(void)dealloc{
+- (void)dealloc {
     NSLog(@"self = %@ dealloc", NSStringFromClass(self.class));
 }
 

@@ -7,14 +7,16 @@
 //
 
 #import "AppDelegate.h"
-#import <Bugly/Bugly.h>
-#import "GIODataProcessOperation.h"
+
+//#import <Bugly/Bugly.h>
 #import <UserNotifications/UserNotifications.h>
+
+#import "GIODataProcessOperation.h"
 //使用md5加密
 #import <CommonCrypto/CommonDigest.h>
 #import <GrowingAutoTracker.h>
 
-static NSString * const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
+static NSString *const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
 
 @interface AppDelegate () <UNUserNotificationCenterDelegate>
 
@@ -22,67 +24,56 @@ static NSString * const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
 
 @implementation AppDelegate
 
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    
-    [Bugly startWithAppId:@"93004a21ca"];
-    
+//    [Bugly startWithAppId:@"93004a21ca"];
+
     // Config GrowingIO
-    self.configuation = [[GrowingConfiguration alloc] initWithProjectId:kGrowingProjectId
-                                                          launchOptions:launchOptions];
+    self.configuation = [[GrowingConfiguration alloc] initWithProjectId:kGrowingProjectId launchOptions:launchOptions];
     [self.configuation setLogEnabled:YES];
     self.configuation.samplingRate = 1.0;
-    self.configuation.urlScheme = @"hello_url_scheme";
     self.configuation.cellularDataLimit = 1;
-//    self.configuation.dataUploadEnabled = NO;
-//    self.configuation.dataTrackEnabled = NO;
     self.configuation.impressionScale = 1.0;
-    // 自定义相关host设置
-//    [configuration setDataTrackHost:@"http://k8s-mobile-www.growingio.com"];
-//    [configuration setWebSocketHost:@"ws://k8s-mobile-gta.growingio.com"];
-//    [configuration setAdvertisementHost:@"http://k8s-mobile-www.growingio.com"];
     [Growing startWithConfiguration:self.configuation];
-    
+
     NSString *trackSdkVersion = [Growing getVersion];
     NSString *systemVersion = [[UIDevice currentDevice] systemVersion];
     NSLog(@"GIO SDK当前版本号：%@;\n 当前手机系统的版本号：%@", trackSdkVersion, systemVersion);
 
     [self registerRemoteNotification];
-    
+
     return YES;
-   
 }
 
 /** 注册 APNs */
 - (void)registerRemoteNotification {
-    if (@available(iOS 10,*)) {
+    if (@available(iOS 10, *)) {
         //  10以后的注册方式
         UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
         center.delegate = self;
         //监听回调事件
-        //iOS 10 使用以下方法注册，才能得到授权，注册通知以后，会自动注册 deviceToken，如果获取不到 deviceToken，Xcode8下要注意开启 Capability->Push Notification。
-        [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert | UNAuthorizationOptionSound )
-                              completionHandler:^(BOOL granted, NSError * _Nullable error) {
-            if (granted) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [[UIApplication sharedApplication] registerForRemoteNotifications];
-                });
-            }
-        }];
-        
+        // iOS 10 使用以下方法注册，才能得到授权，注册通知以后，会自动注册 deviceToken，如果获取不到
+        // deviceToken，Xcode8下要注意开启 Capability->Push Notification。
+        [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert | UNAuthorizationOptionSound)
+                              completionHandler:^(BOOL granted, NSError *_Nullable error) {
+                                  if (granted) {
+                                      dispatch_async(dispatch_get_main_queue(), ^{
+                                          [[UIApplication sharedApplication] registerForRemoteNotifications];
+                                      });
+                                  }
+                              }];
+
     } else if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
-        
-        UIUserNotificationType type =  UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound;
-        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:type
-                                                                                 categories:nil];
+        UIUserNotificationType type =
+            UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound;
+        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:type categories:nil];
         [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
         [[UIApplication sharedApplication] registerForRemoteNotifications];
     }
 }
 
 /** 远程通知注册成功委托 */
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    
+- (void)application:(UIApplication *)application
+    didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     NSMutableString *deviceTokenString = [NSMutableString string];
     const char *bytes = deviceToken.bytes;
     NSInteger count = deviceToken.length;
@@ -94,55 +85,71 @@ static NSString * const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"远程通知" message:@"点击一下呗" preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                [alert dismissViewControllerAnimated:YES completion:nil];
-    }];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"远程通知"
+                                                                   message:@"点击一下呗"
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定"
+                                                     style:UIAlertActionStyleCancel
+                                                   handler:^(UIAlertAction *_Nonnull action) {
+                                                       [alert dismissViewControllerAnimated:YES completion:nil];
+                                                   }];
     [alert addAction:action];
-    [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
+    [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert
+                                                                                 animated:YES
+                                                                               completion:nil];
 }
-
 
 #pragma mark - UNUserNotificationCenterDelegate
-- (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler {
-    
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"远程通知1" message:@"点击一下呗" preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-        [alert dismissViewControllerAnimated:YES completion:nil];
-    }];
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center
+       willPresentNotification:(UNNotification *)notification
+         withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"远程通知1"
+                                                                   message:@"点击一下呗"
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定"
+                                                     style:UIAlertActionStyleCancel
+                                                   handler:^(UIAlertAction *_Nonnull action) {
+                                                       [alert dismissViewControllerAnimated:YES completion:nil];
+                                                   }];
     [alert addAction:action];
-    [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
+    [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert
+                                                                                 animated:YES
+                                                                               completion:nil];
 }
 
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+- (BOOL)application:(UIApplication *)application
+              openURL:(NSURL *)url
+    sourceApplication:(NSString *)sourceApplication
+           annotation:(id)annotation {
     if ([Growing handleURL:url]) {
         return YES;
     }
     return NO;
 }
 
-//universal Link执行
-- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler {
+// universal Link执行
+- (BOOL)application:(UIApplication *)application
+    continueUserActivity:(NSUserActivity *)userActivity
+      restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> *_Nullable))restorationHandler {
     [Growing handleURL:userActivity.webpageURL];
     return YES;
 }
 
-
 #pragma mark - 生命周期
-//xcode11 以后 AppDelegate.m文件没有了APP的生命周期,为了自动化测试用例添加
-- (void)applicationWillEnterForeground:(UIApplication *)application{
+// xcode11 以后 AppDelegate.m文件没有了APP的生命周期,为了自动化测试用例添加
+- (void)applicationWillEnterForeground:(UIApplication *)application {
     NSLog(@"状态** 将要进入前台");
 }
-- (void)applicationDidBecomeActive:(UIApplication *)application{
+- (void)applicationDidBecomeActive:(UIApplication *)application {
     NSLog(@"状态** 已经活跃");
 }
-- (void)applicationWillResignActive:(UIApplication *)application{
+- (void)applicationWillResignActive:(UIApplication *)application {
     NSLog(@"状态** 将要进入后台");
 }
-- (void)applicationDidEnterBackground:(UIApplication *)application{
+- (void)applicationDidEnterBackground:(UIApplication *)application {
     NSLog(@"状态** 已经进入后台");
 }
-- (void)applicationWillTerminate:(UIApplication *)application{
+- (void)applicationWillTerminate:(UIApplication *)application {
     NSLog(@"状态** 将要退出程序");
 }
 

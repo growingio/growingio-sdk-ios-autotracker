@@ -44,7 +44,7 @@
 @interface GrowingEventManager : NSObject
 
 @property (nonatomic, strong) GrowingPageEvent * _Nullable lastPageEvent;
-@property (nonatomic, strong) GrowingVisitEvent * _Nullable vstEvent;
+@property (nonatomic, strong) GrowingVisitEvent * _Nullable visitEvent;
 @property (nonatomic, assign) BOOL shouldCacheEvent;
 
 + (_Nonnull instancetype)shareInstance;

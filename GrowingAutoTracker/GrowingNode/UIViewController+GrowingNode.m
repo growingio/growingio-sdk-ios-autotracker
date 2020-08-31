@@ -122,7 +122,7 @@
 
 - (NSDictionary *)growingNodeDataDict {
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-    dict[@"p"] = ([self growingPageHelper_getPageObject].name ?: self.growingPageName);
+    dict[@"pageName"] = ([self growingPageHelper_getPageObject].name ?: self.growingPageName);
     return dict;
 }
 
@@ -206,9 +206,6 @@
                                     [childs removeObject:childview];
                                 }
                             }
-                            //如果用户是view嵌套view再嵌套vc.view的层级,需要对subviews进行去重，并将其层级提升
-                            //before: subviews -> view -> [viewA,viewB,viewC] -(A)-> [viewD,viewF] -(D)-> vc.view
-                            //after: subviews -> [vc.view,viewB,viewC,viewF]
                         }
                     }
                     //                [objSuperview isDescendantOfView:self];

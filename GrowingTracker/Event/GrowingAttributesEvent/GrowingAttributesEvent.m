@@ -30,7 +30,7 @@
 
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
-    dataDictM[@"var"] = self.attributes;
+    dataDictM[@"attributes"] = self.attributes;
     return dataDictM;;
 }
 

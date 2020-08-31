@@ -25,7 +25,7 @@
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"UI界面"] tap];
     [tester waitForTimeInterval:1];
-    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"clck"];
+    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
     NSLog(@"Clck 事件：%@",clckEventArray);
     if(clckEventArray.count==0)
     {
@@ -55,7 +55,7 @@
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"UI界面"] tap];
     [tester waitForTimeInterval:1];
-    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"clck"];
+    NSArray *clckEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
     XCTAssertEqual(clckEventArray.count,0);
     //GDPR失效
     [Growing setDataTrackEnabled:YES];
@@ -65,14 +65,14 @@
     [[viewTester usingLabel:@"clck请求"] tap];
     [[viewTester usingLabel:@"send clck event"] tap];
 
-    NSArray *clckEventArray1 = [MockEventQueue.sharedQueue eventsFor:@"clck"];
+    NSArray *clckEventArray1 = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
     NSLog(@"Clck 事件：%@",clckEventArray1);
     if(clckEventArray1.count>=1)
     {
         //判断单击列表是否正确
         NSDictionary *chevent=[clckEventArray1 objectAtIndex:clckEventArray1.count-1];
         NSLog(@"###%@",chevent);
- //       XCTAssertEqualObjects(chevent[@"v"], @"send clck event");
+ //       XCTAssertEqualObjects(chevent[@"textValue"], @"send clck event");
         XCTAssertEqual(1, 1);
         NSLog(@"设置GDPR失效,采取数据，测试通过--passed!");
     }

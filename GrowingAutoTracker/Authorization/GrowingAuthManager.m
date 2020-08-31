@@ -181,7 +181,6 @@ static GrowingAuthManager *authManager = nil;
         self.userId = token[@"userId"];
         self.loginToken = token[@"loginToken"];
         self.refreshToken = token[@"refreshToken"];
-        self.userId = token[@"userId"];
         [[NSNotificationCenter defaultCenter] postNotificationName:GrowingDidLogin object:self];
         
         if (succeedBlock) { succeedBlock(); }

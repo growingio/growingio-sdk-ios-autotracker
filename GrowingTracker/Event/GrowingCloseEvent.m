@@ -54,8 +54,8 @@
 
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
-    dataDictM[@"p"] = self.pageName ?: @"";
-    dataDictM[@"r"] = [[GrowingNetworkInterfaceManager sharedInstance] networkType];
+    dataDictM[@"pageName"] = self.pageName ?: @"";
+    dataDictM[@"networkState"] = [[GrowingNetworkInterfaceManager sharedInstance] networkType];
     return dataDictM;;
 }
 

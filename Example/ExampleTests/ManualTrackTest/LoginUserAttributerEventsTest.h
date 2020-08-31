@@ -8,6 +8,6 @@
 
 #import <KIF/KIF.h>
 
-@interface PPLEventsTest : KIFTestCase
+@interface LoginUserAttributerEventsTest : KIFTestCase
 
 @end

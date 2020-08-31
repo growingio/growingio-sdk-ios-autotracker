@@ -35,7 +35,7 @@
 }
 
 - (NSString*)eventTypeKey {
-    return @"chng";
+    return kEventTypeKeyViewChange;
 }
 
 @end
@@ -44,7 +44,7 @@
 @implementation GrowingSubmitEvent
 
 - (NSString*)eventTypeKey {
-    return @"sbmt";
+    return kEventTypeKeyInputSubmit;
 }
 
 @end
@@ -52,7 +52,7 @@
 @implementation GrowingClickEvent
 
 - (NSString*)eventTypeKey {
-    return @"clck";
+    return kEventTypeKeyViewClick;
 }
 
 @end
