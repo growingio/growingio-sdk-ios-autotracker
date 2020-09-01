@@ -118,8 +118,7 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
 #pragma mark -
 
 - (CGRect)growingNodeFrame {
-    UIWindow *mainWindow =
-        [[UIApplication sharedApplication] growingMainWindow];
+    UIWindow *mainWindow = [[UIApplication sharedApplication] growingMainWindow];
     UIWindow *parentWindow = self.window;
 
     CGRect frame = [self convertRect:self.bounds toView:parentWindow];
@@ -199,21 +198,27 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
 }
 
 - (BOOL)growingViewDontTrack {
-        
+    
+    // judge self firstly
     GrowingIgnorePolicy selfPolicy = self.growingViewIgnorePolicy;
-    GrowingIgnorePolicy superPolicy = self.superview.growingViewIgnorePolicy;
-    
-    if (selfPolicy == GrowingIgnoreNone &&
-        (superPolicy == GrowingIgnoreNone || superPolicy == GrowingIgnoreSelf)) {
-        return NO;
+    if (GrowingIgnoreAll == selfPolicy || GrowingIgnoreSelf == selfPolicy) {
+        return YES;
     }
     
-    if (selfPolicy == GrowingIgnoreChild &&
-        (superPolicy == GrowingIgnoreNone || superPolicy == GrowingIgnoreSelf)) {
-        return NO;
+    // judge parent
+    UIView *current = self;
+    while (current.superview) {
+        UIView *parent = current.superview;
+        GrowingIgnorePolicy parentPolicy = parent.growingViewIgnorePolicy;
+        
+        if (GrowingIgnoreChildren == parentPolicy || GrowingIgnoreAll == parentPolicy) {
+            return YES;
+        }
+        
+        current = parent;
     }
     
-    return YES;
+    return NO;
 }
 
 - (BOOL)growingNodeDonotCircle {

@@ -129,8 +129,16 @@
 }
 
 - (GrowingPageGroup *)findParentPage:(UIViewController *)carrier {
-    UIViewController *parentVC = carrier.parentViewController;
+    UIViewController *parentVC = nil;
+    
+    if ([carrier isKindOfClass:UIAlertController.class]) {
+        parentVC = [self currentViewController];
+    } else {
+        parentVC = carrier.parentViewController;
+    }
+    
     if (parentVC == nil) {
+        GIOLogError(@"parentVC is nil");
         return nil;
     } else {
         GrowingPageGroup *page = [parentVC growingPageHelper_getPageObject];
@@ -166,9 +174,7 @@
 #pragma mark Visiable ViewController
 
 - (void)addDidAppearController:(UIViewController *)appearVc {
-    if ([appearVc isMemberOfClass:[UIViewController class]]) {
-        
-    }
+   
     if ([self isViewControllerIgnored:appearVc]) {
         return;
     }
@@ -266,7 +272,8 @@
         _ignoredPrivateControllers = [NSMutableArray arrayWithArray:@[
             @"UIInputWindowController", @"UIActivityGroupViewController", @"UIKeyboardHiddenViewController",
             @"UICompatibilityInputViewController", @"UISystemInputAssistantViewController",
-            @"UIPredictionViewController", @"GrowingWindowViewController"
+            @"UIPredictionViewController", @"GrowingWindowViewController", @"UIApplicationRotationFollowingController",
+            @"UIAlertController"
         ]];
     }
     return _ignoredPrivateControllers;

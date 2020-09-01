@@ -208,15 +208,13 @@ static BOOL impTrackIsRegistered = NO;
 }
 
 - (void)impTrack {
-    if (isInResignSate) {
-        return;
-    }
 
-    if (self.sourceTable.count == 0) {
-        return;
-    }
-
-    [self.sourceTable.allObjects enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+    if (isInResignSate) { return; }
+    
+    if (self.sourceTable.count == 0) { return; }
+    
+    [self.sourceTable.allObjects enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx,
+                                                              BOOL *_Nonnull stop) {
         UIView<GrowingNode> *node = obj;
         if ([node growingImpNodeIsVisible]) {
             if (node.growingIMPTracked == NO) {
@@ -232,19 +230,14 @@ static BOOL impTrackIsRegistered = NO;
 
 - (void)sendCstm:(UIView<GrowingNode> *)node {
     node.growingIMPTracked = YES;
-
-    NSString *v = [node growingNodeContent];
-
-    if (v.length > 0 && v.length <= 50) {
-        NSMutableDictionary *impTrackVariable;
-        if (node.growingIMPTrackVariable.count > 0) {
-            impTrackVariable = node.growingIMPTrackVariable.mutableCopy;
-        } else {
-            impTrackVariable = [[NSMutableDictionary alloc] init];
-        }
-        impTrackVariable[@"gio_v"] = v;
-        node.growingIMPTrackVariable = impTrackVariable;
+    
+    NSMutableDictionary *impTrackVariable;
+    if (node.growingIMPTrackVariable.count > 0) {
+        impTrackVariable = node.growingIMPTrackVariable.mutableCopy;
+    } else {
+        impTrackVariable = [[NSMutableDictionary alloc] init];
     }
+    node.growingIMPTrackVariable = impTrackVariable;
 
     if (node.growingIMPTrackEventName.length > 0 && node.growingIMPTrackVariable.count > 0) {
         [Growing trackCustomEvent:node.growingIMPTrackEventName withAttributes:node.growingIMPTrackVariable];

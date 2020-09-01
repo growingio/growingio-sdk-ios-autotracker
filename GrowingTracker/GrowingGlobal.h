@@ -29,6 +29,8 @@ extern const NSUInteger g_maxCountOfKVPairs;
 extern const NSUInteger g_maxLengthOfKey;
 extern const NSUInteger g_maxLengthOfValue;
 
+extern const NSUInteger g_K;
+
 BOOL GrowingSDKDoNotTrack(void);
 BOOL GrowingSDKDoNotUpload(void);
 
