@@ -44,9 +44,18 @@
         if ([parent isKindOfClass:[UIViewController class]]) {
             [viewPathArray addObject:@"Page"];
             break;
+        }
+        if ([parent isEqual:((UIView*)node).nextResponder]) { //如果父节点和nextResponder一致，说明没有进行跨度取值
+            if ([parent isKindOfClass:[UIViewController class]]) {
+                [viewPathArray addObject:@"Page"];
+                break;
+            }else {
+                [viewPathArray addObject:node.growingNodeSubPath];
+            }
         }else {
             [viewPathArray addObject:node.growingNodeSubPath];
         }
+        
         node = parent;
     } while (node);
     NSString *viewPath = [[[viewPathArray reverseObjectEnumerator] allObjects] componentsJoinedByString:@"/"];

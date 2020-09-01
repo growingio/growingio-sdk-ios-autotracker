@@ -69,9 +69,9 @@
     [[viewTester usingLabel:@"CustomSet"] tap];
     [tester waitForTimeInterval:1];
     // 先获取第一次setUserID的信息，供后面比较
-    NSArray *cstmEventArray = [MockEventQueue.sharedQueue eventsFor:@"CUSTOM"];
-    if (cstmEventArray.count >= 1) {
-        NSDictionary *cstmchr = cstmEventArray.lastObject;
+    NSArray *customEventArray = [MockEventQueue.sharedQueue eventsFor:@"CUSTOM"];
+    if (customEventArray.count >= 1) {
+        NSDictionary *cstmchr = customEventArray.lastObject;
         XCTAssertNotNil(cstmchr[@"sessionId"]);
     }
 
@@ -88,7 +88,7 @@
         XCTAssertEqualObjects(visit_chr[@"userId"], @"SxfChange");
         XCTAssertNotNil(visit_chr[@"sessionId"]);
         // 校验sessions 变化
-        XCTAssertNotEqual(cstmEventArray.lastObject[@"sessionId"], visit_chr[@"sessionId"]);
+        XCTAssertNotEqual(customEventArray.lastObject[@"sessionId"], visit_chr[@"sessionId"]);
         NSLog(@"更新UID，检测cs1测试通过-----passed");
     } else {
         NSLog(@"更新UID，检测cs1测试失败!Problems:%@", visitEventArray);

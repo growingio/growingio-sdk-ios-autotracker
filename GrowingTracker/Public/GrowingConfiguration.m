@@ -43,7 +43,7 @@
         self.logEnabled = NO;
         self.dataUploadInterval = 15;
         self.sessionInterval = 30;
-        self.cellularDataLimit = 10; // default 10KB
+        self.cellularDataLimit = 10; // default 10MB
         self.uploadExceptionEnable = YES;
         self.samplingRate = 1.0;
     }

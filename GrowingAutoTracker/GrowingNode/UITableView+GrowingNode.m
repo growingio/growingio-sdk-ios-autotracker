@@ -76,7 +76,6 @@
 
 
 - (NSArray<id<GrowingNode>>*)growingNodeChilds {
-    // 对于collectionView我们仅需要返回可见cell
     UIView * cell = self;
     NSMutableArray *childs = [NSMutableArray array];
     for (UIView * v in cell.subviews) {

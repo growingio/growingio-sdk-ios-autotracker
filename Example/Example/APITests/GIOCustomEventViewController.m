@@ -6,7 +6,7 @@
 //  Copyright (C) 2018 Beijing Yishu Technology Co., Ltd.
 //
 
-#import "GIOCstmEventViewController.h"
+#import "GIOCustomEventViewController.h"
 #import "GIOConstants.h"
 #import "GIODataProcessOperation.h"
 #import <GrowingAutoTracker.h>
@@ -15,7 +15,7 @@
 
 #define DEFAULT_ATTRIBUTES_COUNT 0
 
-@interface GIOCstmEventViewController () <UITableViewDelegate, UITableViewDataSource>
+@interface GIOCustomEventViewController () <UITableViewDelegate, UITableViewDataSource>
 
 @property (weak, nonatomic) IBOutlet UITextField *eventNameTextField;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -24,7 +24,7 @@
 
 @end
 
-@implementation GIOCstmEventViewController
+@implementation GIOCustomEventViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];

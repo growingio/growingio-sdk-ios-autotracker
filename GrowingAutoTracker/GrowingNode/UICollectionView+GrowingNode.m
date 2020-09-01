@@ -68,7 +68,6 @@
                                        (long)indexpath.section,
                                        NSStringFromClass(self.class),
                                        (long)indexpath.row];
-        ;
     }
     return [super growingNodeSubPath];
 }
@@ -80,7 +79,6 @@
             [NSString stringWithFormat:@"Section[%ld]/%@[-]",
                                        (long)indexpath.section,
                                        NSStringFromClass(self.class)];
-        ;
     }
     return [super growingNodeSubPath];
 }

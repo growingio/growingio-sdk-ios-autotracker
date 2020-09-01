@@ -29,12 +29,12 @@
     NSArray *pplEventArray = [MockEventQueue.sharedQueue eventsFor:@"LOGIN_USER_ATTRIBUTES"];
     NSLog(@"LOGIN_USER_ATTRIBUTES事件：%@", pplEventArray);
     if (pplEventArray.count >= 1) {
-        NSDictionary *cstmchr = [pplEventArray objectAtIndex:pplEventArray.count - 1];
-        XCTAssertEqualObjects(cstmchr[@"eventType"], @"LOGIN_USER_ATTRIBUTES");
-        XCTAssertTrue([ManualTrackHelper CheckContainsKey:cstmchr:@"attributes"]);
-        XCTAssertEqualObjects(cstmchr[@"attributes"][@"name"], @"测试名字");
-        XCTAssertEqualObjects(cstmchr[@"attributes"][@"title"], @"QA");
-        NSDictionary *chres = [ManualTrackHelper PplEventCheck:cstmchr];
+        NSDictionary *customchr = [pplEventArray objectAtIndex:pplEventArray.count - 1];
+        XCTAssertEqualObjects(customchr[@"eventType"], @"LOGIN_USER_ATTRIBUTES");
+        XCTAssertTrue([ManualTrackHelper CheckContainsKey:customchr:@"attributes"]);
+        XCTAssertEqualObjects(customchr[@"attributes"][@"name"], @"测试名字");
+        XCTAssertEqualObjects(customchr[@"attributes"][@"title"], @"QA");
+        NSDictionary *chres = [ManualTrackHelper PplEventCheck:customchr];
         // NSLog(@"Check Result:%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
         XCTAssertEqualObjects(chres[@"ProCheck"][@"chres"], @"same");
@@ -78,9 +78,9 @@
     NSArray *pplEventArray = [MockEventQueue.sharedQueue eventsFor:@"LOGIN_USER_ATTRIBUTES"];
     NSLog(@"PPL事件：%@", pplEventArray);
     if (pplEventArray.count >= 1) {
-        NSDictionary *cstmchr = [pplEventArray objectAtIndex:pplEventArray.count - 1];
-        XCTAssertEqualObjects(cstmchr[@"eventType"], @"LOGIN_USER_ATTRIBUTES");
-        NSDictionary *chres = [ManualTrackHelper PplEventCheck:cstmchr];
+        NSDictionary *customchr = [pplEventArray objectAtIndex:pplEventArray.count - 1];
+        XCTAssertEqualObjects(customchr[@"eventType"], @"LOGIN_USER_ATTRIBUTES");
+        NSDictionary *chres = [ManualTrackHelper PplEventCheck:customchr];
         // NSLog(@"Check Result:%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
         XCTAssertEqualObjects(chres[@"ProCheck"][@"chres"], @"same");
@@ -101,11 +101,11 @@
     NSArray *pplEventArray = [MockEventQueue.sharedQueue eventsFor:@"LOGIN_USER_ATTRIBUTES"];
     // NSLog(@"LOGIN_USER_ATTRIBUTES事件：%@",pplEventArray);
     if (pplEventArray.count >= 1) {
-        NSDictionary *cstmchr = [pplEventArray objectAtIndex:pplEventArray.count - 1];
-        XCTAssertEqualObjects(cstmchr[@"eventType"], @"LOGIN_USER_ATTRIBUTES");
-        XCTAssertTrue([ManualTrackHelper CheckContainsKey:cstmchr:@"attributes"]);
-        XCTAssertEqualObjects(cstmchr[@"attributes"][@"name"], @"GrowingIO");
-        NSDictionary *chres = [ManualTrackHelper PplEventCheck:cstmchr];
+        NSDictionary *customchr = [pplEventArray objectAtIndex:pplEventArray.count - 1];
+        XCTAssertEqualObjects(customchr[@"eventType"], @"LOGIN_USER_ATTRIBUTES");
+        XCTAssertTrue([ManualTrackHelper CheckContainsKey:customchr:@"attributes"]);
+        XCTAssertEqualObjects(customchr[@"attributes"][@"name"], @"GrowingIO");
+        NSDictionary *chres = [ManualTrackHelper PplEventCheck:customchr];
         // NSLog(@"Check Result:%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
         XCTAssertEqualObjects(chres[@"ProCheck"][@"chres"], @"same");
@@ -127,11 +127,11 @@
     NSArray *pplEventArray = [MockEventQueue.sharedQueue eventsFor:@"LOGIN_USER_ATTRIBUTES"];
     // NSLog(@"LOGIN_USER_ATTRIBUTES事件：%@",pplEventArray);
     if (pplEventArray.count >= 1) {
-        NSDictionary *cstmchr = [pplEventArray objectAtIndex:pplEventArray.count - 1];
-        XCTAssertEqualObjects(cstmchr[@"eventType"], @"LOGIN_USER_ATTRIBUTES");
-        XCTAssertTrue([ManualTrackHelper CheckContainsKey:cstmchr:@"attributes"]);
-        XCTAssertEqualObjects(cstmchr[@"attributes"][@"name"], @"GIO");
-        NSDictionary *chres = [ManualTrackHelper PplEventCheck:cstmchr];
+        NSDictionary *customchr = [pplEventArray objectAtIndex:pplEventArray.count - 1];
+        XCTAssertEqualObjects(customchr[@"eventType"], @"LOGIN_USER_ATTRIBUTES");
+        XCTAssertTrue([ManualTrackHelper CheckContainsKey:customchr:@"attributes"]);
+        XCTAssertEqualObjects(customchr[@"attributes"][@"name"], @"GIO");
+        NSDictionary *chres = [ManualTrackHelper PplEventCheck:customchr];
         // NSLog(@"Check Result:%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
         XCTAssertEqualObjects(chres[@"ProCheck"][@"chres"], @"same");
@@ -249,13 +249,13 @@
     NSArray *pplEventArray = [MockEventQueue.sharedQueue eventsFor:@"LOGIN_USER_ATTRIBUTES"];
     // NSLog(@"LOGIN_USER_ATTRIBUTES事件：%@",pplEventArray);
     if (pplEventArray.count >= 1) {
-        NSDictionary *cstmchr = [pplEventArray objectAtIndex:pplEventArray.count - 1];
-        NSLog(@"LOGIN_USER_ATTRIBUTES Result:%@", cstmchr);
-        XCTAssertEqualObjects(cstmchr[@"eventType"], @"LOGIN_USER_ATTRIBUTES");
-        XCTAssertTrue([ManualTrackHelper CheckContainsKey:cstmchr:@"attributes"]);
-        NSString *cstmnum = cstmchr[@"attributes"][@"score"];
-        XCTAssertEqual([cstmnum intValue], 98);
-        NSDictionary *chres = [ManualTrackHelper PplEventCheck:cstmchr];
+        NSDictionary *customchr = [pplEventArray objectAtIndex:pplEventArray.count - 1];
+        NSLog(@"LOGIN_USER_ATTRIBUTES Result:%@", customchr);
+        XCTAssertEqualObjects(customchr[@"eventType"], @"LOGIN_USER_ATTRIBUTES");
+        XCTAssertTrue([ManualTrackHelper CheckContainsKey:customchr:@"attributes"]);
+        NSString *customnum = customchr[@"attributes"][@"score"];
+        XCTAssertEqual([customnum intValue], 98);
+        NSDictionary *chres = [ManualTrackHelper PplEventCheck:customchr];
         NSLog(@"Check Result:%@", chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
         XCTAssertEqualObjects(chres[@"ProCheck"][@"chres"], @"same");
@@ -276,13 +276,13 @@
     NSArray *pplEventArray = [MockEventQueue.sharedQueue eventsFor:@"LOGIN_USER_ATTRIBUTES"];
     // NSLog(@"LOGIN_USER_ATTRIBUTES事件：%@",pplEventArray);
     if (pplEventArray.count >= 1) {
-        NSDictionary *cstmchr = [pplEventArray objectAtIndex:pplEventArray.count - 1];
-        XCTAssertEqualObjects(cstmchr[@"eventType"], @"LOGIN_USER_ATTRIBUTES");
-        XCTAssertTrue([ManualTrackHelper CheckContainsKey:cstmchr:@"attributes"]);
-        NSString *cstmnum = cstmchr[@"attributes"][@"score"];
+        NSDictionary *customchr = [pplEventArray objectAtIndex:pplEventArray.count - 1];
+        XCTAssertEqualObjects(customchr[@"eventType"], @"LOGIN_USER_ATTRIBUTES");
+        XCTAssertTrue([ManualTrackHelper CheckContainsKey:customchr:@"attributes"]);
+        NSString *customnum = customchr[@"attributes"][@"score"];
         NSString *floatchr = @"23.62";
-        XCTAssertEqual([cstmnum floatValue], [floatchr floatValue]);
-        NSDictionary *chres = [ManualTrackHelper PplEventCheck:cstmchr];
+        XCTAssertEqual([customnum floatValue], [floatchr floatValue]);
+        NSDictionary *chres = [ManualTrackHelper PplEventCheck:customchr];
         // NSLog(@"Check Result:%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
         XCTAssertEqualObjects(chres[@"ProCheck"][@"chres"], @"same");

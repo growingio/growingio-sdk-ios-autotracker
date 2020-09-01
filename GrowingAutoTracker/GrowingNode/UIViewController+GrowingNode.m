@@ -208,7 +208,6 @@
                             }
                         }
                     }
-                    //                [objSuperview isDescendantOfView:self];
                     
                     CGRect rect = [obj.view convertRect:obj.view.bounds toView:nil];
                     // 是否全屏

@@ -1,5 +1,5 @@
 //
-//  GIOCstmEventViewController.h
+//  GIOCustomEventViewController.h
 //  GrowingExample
 //
 //  Created by GrowingIO on 2018/6/1.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface GIOCstmEventViewController : UIViewController
+@interface GIOCustomEventViewController : UIViewController
 
 @end
