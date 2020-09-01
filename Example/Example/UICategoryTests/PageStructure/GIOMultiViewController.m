@@ -4,6 +4,7 @@
 //
 
 #import "GIOMultiViewController.h"
+#import <GrowingAutoTracker.h>
 
 @implementation GIOMultiViewController
 
@@ -11,6 +12,8 @@
     [super viewDidLoad];
     self.view.backgroundColor = UIColor.whiteColor;
     self.navigationItem.title = @"Multi ViewController";
+    
+    self.growingPageIgnorePolicy = GrowingIgnoreAll;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
