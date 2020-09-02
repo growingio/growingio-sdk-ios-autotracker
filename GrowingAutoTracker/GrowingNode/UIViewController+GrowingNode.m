@@ -81,6 +81,9 @@
     if (![self isViewLoaded]) {
         return nil;
     }
+    //UIResponder关系为 UIApplication/UIWindowScene/_UIAlertControllerShimPresenterWindow/UITransitionView/UIAlertController/AlertView
+    //UIAlertController的presentingViewController 为 UIApplicationRotationFollowingController
+    //取最上层的视图控制器，则无法使用上面两种方式。
     if ([self isKindOfClass:UIAlertController.class]) {
         return [[GrowingPageManager sharedInstance] currentViewController];
     } else {
