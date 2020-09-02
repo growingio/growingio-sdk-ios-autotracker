@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) NSTimeInterval dataUploadInterval;
 /// 一个采集会话间隔
 @property(nonatomic, assign) NSTimeInterval sessionInterval;
-/// 设置每天使用数据网络（2G、3G、4G）上传的数据量的上限（单位是 KB）
+/// 设置每天使用数据网络（2G、3G、4G）上传的数据量的上限（单位是 MB）
 @property(nonatomic, assign) NSUInteger cellularDataLimit;
 /// 是否开启 SDK 的异常监控，默认是开启的
 @property (nonatomic, assign) BOOL uploadExceptionEnable;

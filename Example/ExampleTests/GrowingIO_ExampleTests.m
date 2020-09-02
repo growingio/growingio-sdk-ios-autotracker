@@ -37,8 +37,8 @@
 }
 
 - (void)testExample {
-    XCUIApplication *app = [[XCUIApplication alloc] init];
-    [app launch];
+//    XCUIApplication *app = [[XCUIApplication alloc] init];
+//    [app launch];
 }
 
 @end
