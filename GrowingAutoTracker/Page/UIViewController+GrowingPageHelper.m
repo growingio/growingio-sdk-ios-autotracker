@@ -33,20 +33,27 @@ static void *const GROWING_PAGE_OBJECT = "GROWING_PAGE_OBJECT";
 }
 
 - (BOOL)growingPageHelper_pageDidIgnore {
+    
+    // judge self firstly
     GrowingIgnorePolicy selfPolicy = self.growingPageIgnorePolicy;
-    GrowingIgnorePolicy parentPolicy = self.parentViewController.growingPageIgnorePolicy;
-    
-    if (selfPolicy == GrowingIgnoreNone &&
-        (parentPolicy == GrowingIgnoreNone || parentPolicy == GrowingIgnoreSelf)) {
-        return NO;
+    if (GrowingIgnoreAll == selfPolicy || GrowingIgnoreSelf == selfPolicy) {
+        return YES;
     }
     
-    if (selfPolicy == GrowingIgnoreChild &&
-        (parentPolicy == GrowingIgnoreNone || parentPolicy == GrowingIgnoreSelf)) {
-        return NO;
+    // judge parent
+    UIViewController *current = self;
+    while (current.parentViewController) {
+        UIViewController *parent = current.parentViewController;
+        GrowingIgnorePolicy parentPolicy = parent.growingPageIgnorePolicy;
+ 
+        if (GrowingIgnoreChildren == parentPolicy || GrowingIgnoreAll == parentPolicy) {
+            return YES;
+        }
+        
+        current = parent;
     }
     
-    return YES;
+    return NO;
 }
 
 @end

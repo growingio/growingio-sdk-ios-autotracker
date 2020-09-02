@@ -59,12 +59,12 @@
 }
 
 - (IBAction)trackSwitchValueChange:(UISwitch *)sender {
-    [Growing setDataTrackEnabled:sender.enabled];
+    [Growing setDataTrackEnabled:sender.isOn];
     NSLog(@"setDataTrackEnabled: %@", (sender.enabled ? @"YES" : @"NO"));
 }
 
 - (IBAction)uploadSwitchValueChange:(UISwitch *)sender {
-    [Growing setDataUploadEnabled:sender.enabled];
+    [Growing setDataUploadEnabled:sender.isOn];
     NSLog(@"setDataUploadEnabled: %@", (sender.enabled ? @"YES" : @"NO"));
 }
 

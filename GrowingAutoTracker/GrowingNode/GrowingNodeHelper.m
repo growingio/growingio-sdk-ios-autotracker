@@ -25,6 +25,9 @@
 #import "UIViewController+GrowingPageHelper.h"
 #import "GrowingCocoaLumberjack.h"
 
+static NSString * const kGrowingNodeRootPage = @"Page";
+static NSString * const kGrowingNodeRootAlert = @"UIAlert";
+
 @implementation GrowingNodeHelper
 
 + (NSString *)xPathForNode:(id<GrowingNode>)node {
@@ -41,21 +44,25 @@
     id<GrowingNode> node = view;
     do {
         id<GrowingNode> parent = node.growingNodeParent;
-        if ([parent isKindOfClass:[UIViewController class]]) {
-            [viewPathArray addObject:@"Page"];
+        //当时跟视图时
+        //1. 如果是UIAlertViewController, /UIAlert/...
+        //2. 如果是UIViewController, /Page/...
+        if ([parent isKindOfClass:[UIAlertController class]]) {
+            [viewPathArray addObject:kGrowingNodeRootAlert];
             break;
-        }
-        if ([parent isEqual:((UIView*)node).nextResponder]) { //如果父节点和nextResponder一致，说明没有进行跨度取值
-            if ([parent isKindOfClass:[UIViewController class]]) {
-                [viewPathArray addObject:@"Page"];
-                break;
+        }else if ([parent isKindOfClass:[UIViewController class]]) {
+            UIViewController *parentVC = (UIViewController*)parent;
+            UIView *nodeView = (UIView*)node;
+            //1. VC.view 包含node 或者相等
+            if ([nodeView isEqual:parentVC.view] || [nodeView isDescendantOfView:parentVC.view]) {
+                [viewPathArray addObject:kGrowingNodeRootPage];
             }else {
                 [viewPathArray addObject:node.growingNodeSubPath];
             }
-        }else {
-            [viewPathArray addObject:node.growingNodeSubPath];
+            break;
         }
         
+        [viewPathArray addObject:node.growingNodeSubPath];
         node = parent;
     } while (node);
     NSString *viewPath = [[[viewPathArray reverseObjectEnumerator] allObjects] componentsJoinedByString:@"/"];
@@ -65,17 +72,21 @@
 
 
 + (NSString *)xPathForViewController:(UIViewController *)vc {
-    UIViewController *parent = vc;
-    if (parent) {
-        GrowingPageGroup *page = [parent growingPageHelper_getPageObject];
-        if (!page) {
-            GIOLogError(@"%@(%@)未发送Page事件，重新获取并发送",page.carrier,page.carrier.class);
-            [[GrowingPageManager sharedInstance] createdViewControllerPage:parent];
-            page = [parent growingPageHelper_getPageObject];
-        }
-        return page.path;
+    UIViewController <GrowingNode>*parent = vc;
+    //当为 UIAlertController 时，向上寻找没有被忽略的节点
+    while ([parent isKindOfClass:[UIAlertController class]]  || parent.growingPageIgnorePolicy == GrowingIgnoreSelf || parent.growingPageIgnorePolicy == GrowingIgnoreAll) {
+        parent = parent.growingNodeParent;
     }
-    return nil;
+    //如果没有父VC，自己也被忽略，那么取自己
+    if (!parent) {
+        parent = vc;
+    }
+    GrowingPageGroup *page = [parent growingPageHelper_getPageObject];
+    if (!page) {
+        [[GrowingPageManager sharedInstance] createdViewControllerPage:parent];
+        page = [parent growingPageHelper_getPageObject];
+    }
+    return page.path;
 }
 
 

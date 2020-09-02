@@ -22,6 +22,7 @@
 #import "NSObject+GrowingIvarHelper.h"
 #import "UIView+GrowingNode.h"
 #import "UIAlertController+GrowingAutoTrack.h"
+#import "UIView+GrowingHelper.h"
 
 @implementation UIAlertController (GrowingNode)
 
@@ -91,25 +92,24 @@
     free(methods);
 }
 
-- (id<GrowingNode>)growingNodeParent {
-    UIResponder *nextNode = self.nextResponder;
-    while (nextNode && ![nextNode isKindOfClass:[UIAlertController class]]) {
-        nextNode = nextNode.nextResponder;
-    }
-    return (id<GrowingNode>)nextNode;
-}
 
 - (NSString *)growingNodeSubPath {
-    // TODO:SubPath index 计算
-    UIAlertController *alertVC = (UIAlertController*)[self growingNodeParent];
-    UIAlertAction *action = [UIAlertController growing_actionForActionView:(id)self];
-    NSInteger index = -1;
-    if (alertVC.actions && action) {
-        index = [alertVC.actions indexOfObject:action];
+    
+    NSString *subpath = @"Button";
+    
+    UIViewController *responderVC = [self growingHelper_viewController];
+    if ([responderVC isKindOfClass:UIAlertController.class]) {
+        UIAlertController *alertVC = (UIAlertController *)responderVC;
+        
+        UIAlertAction *action = [UIAlertController growing_actionForActionView:(id)self];
+        NSInteger index = -1;
+        if (alertVC.actions && action) {
+            index = [alertVC.actions indexOfObject:action];
+        }
+        subpath = (index < 0) ? subpath : [NSString stringWithFormat:@"Button[%ld]", (long)index];
     }
-    return index < 0
-               ? @"Button"
-               : [NSString stringWithFormat:@"Button[%ld]", (long)index];
+    
+    return subpath;
 }
 
 

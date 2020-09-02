@@ -27,7 +27,7 @@
 @interface GrowingConfiguration () <NSCopying>
 
 /// 项目 id
-@property (nonatomic, copy, readwrite) NSString * projectId;
+@property (nonatomic, copy, readwrite) NSString *projectId;
 /// App 启动的 launchOptions
 @property (nonatomic, copy, readwrite) NSDictionary *launchOptions;
 
@@ -43,6 +43,7 @@
         self.logEnabled = NO;
         self.dataUploadInterval = 15;
         self.sessionInterval = 30;
+
         self.cellularDataLimit = 10; // default 10MB
         self.uploadExceptionEnable = YES;
         self.samplingRate = 1.0;

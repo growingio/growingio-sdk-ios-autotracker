@@ -30,6 +30,8 @@ const NSUInteger    g_maxCountOfKVPairs     = 100;
 const NSUInteger    g_maxLengthOfKey        = 50;
 const NSUInteger    g_maxLengthOfValue      = 1000;
 
+const NSUInteger    g_K                     = 1024;
+
 
 BOOL GrowingSDKDoNotTrack() {
     return g_GDPRFlag;

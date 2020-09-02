@@ -19,25 +19,17 @@
 
 
 #import "GrowingConfiguration+GrowingAutoTrack.h"
-#import "GrowingNetworkConfig.h"
-#import "GrowingGlobal.h"
-#import <objc/runtime.h>
 
 @implementation GrowingConfiguration (GrowingAutoTrack)
 
-static NSString * _Nonnull const kGrowingImpressionScale = @"impressionScale";
+static double gImpressionScale = 0.0;
 
 - (void)setImpressionScale:(double)impressionScale {
-    objc_setAssociatedObject(self, &kGrowingImpressionScale, [NSNumber numberWithDouble:impressionScale], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    gImpressionScale = impressionScale;
 }
 
 - (double)impressionScale {
-    NSNumber *number = objc_getAssociatedObject(self, &kGrowingImpressionScale);
-    if (number) {
-        return [number doubleValue];
-    } else {
-        return 0.0;
-    }
+    return gImpressionScale;
 }
 
 @end

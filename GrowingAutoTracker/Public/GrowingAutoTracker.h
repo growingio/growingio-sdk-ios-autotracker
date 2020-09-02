@@ -24,9 +24,9 @@
 
 typedef NS_ENUM(NSUInteger, GrowingIgnorePolicy) {
     GrowingIgnoreNone = 0,
-    GrowingIgnoreSelf = 1,
-    GrowingIgnoreChild = 2,
-    GrowingIgnoreAll = 3,
+    GrowingIgnoreSelf = 1,     // 忽略自身
+    GrowingIgnoreChildren = 2, // 忽略所有子页面和孙子页面
+    GrowingIgnoreAll = 3,      // 忽略自身 + 忽略所有子页面和孙子页面
 };
 
 // imp半自动打点
