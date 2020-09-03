@@ -110,6 +110,7 @@
 		04A6FAF524E67215006C72F0 /* GIOBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A6FAF424E67215006C72F0 /* GIOBaseViewController.m */; };
 		4916270F24E157BB00444AF2 /* GIOPresentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916270E24E157BB00444AF2 /* GIOPresentViewController.m */; };
 		4916271224E157CF00444AF2 /* GIOPagingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916271124E157CF00444AF2 /* GIOPagingViewController.m */; };
+		491D2D8D2500E2D9001CB289 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 491D2D8C2500E2D9001CB289 /* MapKit.framework */; };
 		4962652B24DA667900032551 /* GrowingIO_ExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962652924DA667900032551 /* GrowingIO_ExampleTests.m */; };
 		4962653924DA66B600032551 /* LogOperHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962652E24DA66B600032551 /* LogOperHelper.m */; };
 		4962653A24DA66B600032551 /* ManualTrackHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962653224DA66B600032551 /* ManualTrackHelper.m */; };
@@ -268,6 +269,7 @@
 		4916270E24E157BB00444AF2 /* GIOPresentViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOPresentViewController.m; sourceTree = "<group>"; };
 		4916271024E157CF00444AF2 /* GIOPagingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIOPagingViewController.h; sourceTree = "<group>"; };
 		4916271124E157CF00444AF2 /* GIOPagingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOPagingViewController.m; sourceTree = "<group>"; };
+		491D2D8C2500E2D9001CB289 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		4962651E24DA665200032551 /* ExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4962652824DA667900032551 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4962652924DA667900032551 /* GrowingIO_ExampleTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingIO_ExampleTests.m; sourceTree = "<group>"; };
@@ -321,6 +323,7 @@
 			files = (
 				6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */,
 				6003F592195388D20070C39A /* UIKit.framework in Frameworks */,
+				491D2D8D2500E2D9001CB289 /* MapKit.framework in Frameworks */,
 				6003F58E195388D20070C39A /* Foundation.framework in Frameworks */,
 				DB4A57BCAF407C6A96A7BA4F /* Pods_Example.framework in Frameworks */,
 			);
@@ -614,6 +617,7 @@
 		6003F58C195388D20070C39A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				491D2D8C2500E2D9001CB289 /* MapKit.framework */,
 				6003F58D195388D20070C39A /* Foundation.framework */,
 				6003F58F195388D20070C39A /* CoreGraphics.framework */,
 				6003F591195388D20070C39A /* UIKit.framework */,

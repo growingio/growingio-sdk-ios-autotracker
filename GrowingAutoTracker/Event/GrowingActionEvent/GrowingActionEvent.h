@@ -30,6 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)hybridActionEventWithDataDict:(NSDictionary *)dataDict;
 
++ (BOOL)isValidClickEventForNode:(id <GrowingNode> _Nonnull)node;
+
 @end
 
 
