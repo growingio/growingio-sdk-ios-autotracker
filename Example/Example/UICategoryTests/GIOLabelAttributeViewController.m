@@ -12,6 +12,11 @@
 #import <GrowingAutoTracker.h>
 
 @interface GIOLabelAttributeViewController ()
+
+@property (weak, nonatomic) IBOutlet UILabel *CheckAlpLabel;
+@property (weak, nonatomic) IBOutlet UILabel *CheckHiddenLabel;
+@property (weak, nonatomic) IBOutlet UIButton *GIONotTrack;
+
 @end
 
 @implementation GIOLabelAttributeViewController

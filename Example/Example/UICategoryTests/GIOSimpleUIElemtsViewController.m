@@ -81,7 +81,7 @@ const NSUInteger kProgressViewControllerMaxProgress = 100;
     self.searchBar.showsBookmarkButton = YES;
     self.searchBar.accessibilityLabel=@"SearhBarTest";
     self.searchBar.tintColor = [UIColor colorWithRed:0.659 green:0.271 blue:0.988 alpha:1];
-    
+    self.searchBar.delegate = self;
     self.searchBar.backgroundImage = [UIImage imageNamed:@"search_bar_background"];
     
     // Set the bookmark image for both normal and highlighted states.
