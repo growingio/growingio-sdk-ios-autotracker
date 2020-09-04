@@ -1,7 +1,7 @@
 GrowingIO Autotracker
 ======
 ![GrowingIO](https://www.growingio.com/vassets/images/home_v3/gio-logo-primary.svg)  
-[![CI](https://github.com/growingio/growingio-sdk-ios-autotracker/workflows/CI/badge.svg?event=pull_request)]()
+[![CI](https://img.shields.io/github/workflow/status/growingio/growingio-sdk-ios-autotracker/CI)](https://github.com/growingio/growingio-sdk-ios-autotracker/actions)
 [![GitHub](https://img.shields.io/github/license/growingio/growingio-sdk-ios-autotracker)](https://github.com/growingio/growingio-sdk-ios-autotracker/blob/master/LICENSE)
 [![Platform iOS](https://img.shields.io/badge/platform-iOS-brightgreen)]()
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
