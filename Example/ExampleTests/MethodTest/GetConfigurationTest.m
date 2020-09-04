@@ -24,7 +24,7 @@
 
     GrowingConfiguration *configuration = [[GrowingConfiguration alloc] initWithProjectId:@"aaa"
                                                                             launchOptions:nil];
-    if(configuration.logEnabled == NO && configuration.dataUploadInterval == 15  && configuration.sessionInterval == 30 && configuration.cellularDataLimit == 10 * 1024 * 1024 && configuration.uploadExceptionEnable == YES && configuration.samplingRate == 1.0)
+    if(configuration.logEnabled == NO && configuration.dataUploadInterval == 15  && configuration.sessionInterval == 30 && configuration.cellularDataLimit == 10 * 1024 && configuration.uploadExceptionEnable == YES && configuration.samplingRate == 1.0)
     {
         XCTAssertEqual(1, 1);
         NSLog(@"测试配置通过---passed");
