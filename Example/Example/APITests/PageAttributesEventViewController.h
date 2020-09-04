@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PVarEventViewController : UIViewController
+@interface PageAttributesEventViewController : UIViewController
 
 @end

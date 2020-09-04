@@ -48,22 +48,6 @@
     return childs;
 }
 
-- (NSInteger)growingNodeKeyIndex {
-    return 0;
-}
-
-- (NSIndexPath *)growingNodeIndexPath {
-    return nil;
-}
-
-- (NSString *)growingNodeSubPath {
-    return nil;
-}
-
-- (NSString *)growingNodeSubSimilarPath {
-    return nil;
-}
-
 @end
 
 
@@ -92,13 +76,6 @@
     free(methods);
 }
 
-- (id<GrowingNode>)growingNodeParent {
-    UIResponder *nextNode = self.nextResponder;
-    while (nextNode && ![nextNode isKindOfClass:[UIAlertController class]]) {
-        nextNode = nextNode.nextResponder;
-    }
-    return (id<GrowingNode>)nextNode;
-}
 
 - (NSString *)growingNodeSubPath {
     

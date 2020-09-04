@@ -69,7 +69,6 @@
     if (!page.isIgnored) {
         //发送page事件
         [self sendPageEventWithPage:page];
-
     } else {
         GIOLogDebug(@"createdViewControllerPage: path = %@ is ignored", page.path);
     }
@@ -143,6 +142,7 @@
     } else {
         GrowingPageGroup *page = [parentVC growingPageHelper_getPageObject];
         if (page == nil) {
+            //TODO: why add a class?
             [self.ignoredPrivateControllers addObject:NSStringFromClass(carrier.class)];
             GIOLogError(@"UIViewController: %@ associated page object is nil", carrier);
         }

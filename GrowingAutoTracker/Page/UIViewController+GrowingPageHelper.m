@@ -33,7 +33,7 @@ static void *const GROWING_PAGE_OBJECT = "GROWING_PAGE_OBJECT";
 }
 
 - (BOOL)growingPageHelper_pageDidIgnore {
-    
+
     // judge self firstly
     GrowingIgnorePolicy selfPolicy = self.growingPageIgnorePolicy;
     if (GrowingIgnoreAll == selfPolicy || GrowingIgnoreSelf == selfPolicy) {

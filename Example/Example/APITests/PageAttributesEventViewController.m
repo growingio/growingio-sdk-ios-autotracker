@@ -6,18 +6,18 @@
 //  Copyright (C) 2018 Beijing Yishu Technology Co., Ltd.
 //
 
-#import "PVarEventViewController.h"
+#import "PageAttributesEventViewController.h"
 #import "GIODataProcessOperation.h"
 #import "GIOConstants.h"
 #import <GrowingAutoTracker.h>
 
-@interface PVarEventViewController ()
+@interface PageAttributesEventViewController ()
 
 @property (nonatomic, strong) NSDictionary *pageAttributes;
 
 @end
 
-@implementation PVarEventViewController
+@implementation PageAttributesEventViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];

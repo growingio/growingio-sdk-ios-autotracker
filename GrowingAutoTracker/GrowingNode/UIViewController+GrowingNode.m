@@ -57,14 +57,18 @@
         while (parentVC) {
             if ([parentVC isKindOfClass:[UINavigationController class]]) {
                 UINavigationController *navi = (UINavigationController*)parentVC;
-                if (!navi.navigationBar.hidden) {
-                    rect.origin.y += (navi.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height);
-                    rect.size.height -= (navi.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height);
+                if (!navi.navigationBar.window || navi.navigationBar.hidden || navi.navigationBar.alpha < 0.001 || !navi.navigationBar.superview) {
+                    break;;
                 }
+                rect.origin.y += (navi.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height);
+                rect.size.height -= (navi.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height);
             }
             
             if ([parentVC isKindOfClass:[UITabBarController class]]) {
                 UITabBarController *tabbarvc = (UITabBarController*)parentVC;
+                if (!tabbarvc.tabBar.window || tabbarvc.tabBar.hidden || tabbarvc.tabBar.alpha < 0.001 || !tabbarvc.tabBar.superview) {
+                    break;;
+                }
                 rect.size.height -= tabbarvc.tabBar.frame.size.height;
             }
             parentVC = parentVC.parentViewController;
@@ -77,7 +81,14 @@
     if (![self isViewLoaded]) {
         return nil;
     }
-    return self.parentViewController;
+    //UIResponder关系为 UIApplication/UIWindowScene/_UIAlertControllerShimPresenterWindow/UITransitionView/UIAlertController/AlertView
+    //UIAlertController的presentingViewController 为 UIApplicationRotationFollowingController
+    //取最上层的视图控制器，则无法使用上面两种方式。
+    if ([self isKindOfClass:UIAlertController.class]) {
+        return [[GrowingPageManager sharedInstance] currentViewController];
+    } else {
+        return self.parentViewController;
+    }
 }
 
 - (BOOL)growingAppearStateCanTrack {
@@ -208,7 +219,6 @@
                             }
                         }
                     }
-                    //                [objSuperview isDescendantOfView:self];
                     
                     CGRect rect = [obj.view convertRect:obj.view.bounds toView:nil];
                     // 是否全屏

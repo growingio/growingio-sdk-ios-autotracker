@@ -45,6 +45,8 @@ static NSUInteger const kGrowingFillQueueSize = 1000; // default: determine when
 static NSUInteger const kGrowingMaxDBCacheSize = 100; // default: write to DB as soon as there are 300 events
 static NSUInteger const kGrowingMaxBatchSize = 500; // default: send no more than 500 events in every batch;
 
+static const NSUInteger kGrowingUnit_MB                 = 1024*1024;
+
 @interface GrowingEventManager()
 
 @property (nonatomic, strong) NSMutableArray<NSObject<GrowingEventManagerObserver>*>   *allObservers;
@@ -154,7 +156,7 @@ static GrowingEventManager *shareinstance = nil;
         // all other events got to this category
         _otherEventChannel = [GrowingEventChannel otherEventChannelFromAllChannels:_allEventChannels];
         
-        self.uploadLimitOfCellular = [GrowingInstance sharedInstance].configuration.cellularDataLimit * g_K;
+        self.uploadLimitOfCellular = [GrowingInstance sharedInstance].configuration.cellularDataLimit * kGrowingUnit_MB;
     }
     return self;
 }

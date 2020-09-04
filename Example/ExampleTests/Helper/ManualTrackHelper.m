@@ -24,18 +24,18 @@
 }
 
 // custom事件对比，测量协议字段完整且每个字段不为空
-+ (NSDictionary *)customEventCheck:(NSDictionary *)cstmevent {
++ (NSDictionary *)customEventCheck:(NSDictionary *)customevent {
     NSDictionary *cstmchres;
     NSArray *cstmprome = @[
         @"userId", @"sessionId", @"eventType", @"timestamp", @"pageName", @"domain", @"eventName", @"num",
         @"attributes", @"globalSequenceId", @"eventSequenceId",@"deviceId",@"appState",@"urlScheme"
     ];
     //对比测量协议结构
-    if (cstmevent.count > 0) {
-        NSArray *checstm = cstmevent.allKeys;
+    if (customevent.count > 0) {
+        NSArray *checstm = customevent.allKeys;
         cstmchres = @{
             @"ProCheck" : [NoburPoMeaProCheck compareArray:cstmprome toAnother:checstm],
-            @"KeysCheck" : [NoburPoMeaProCheck checkDictEmpty:cstmevent]
+            @"KeysCheck" : [NoburPoMeaProCheck checkDictEmpty:customevent]
         };
     }
     return cstmchres;

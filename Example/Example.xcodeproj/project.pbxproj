@@ -62,10 +62,10 @@
 		0465313F24DD4272002D254C /* GIOInputChangeEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 046530E824DD4271002D254C /* GIOInputChangeEventViewController.m */; };
 		0465314024DD4272002D254C /* GrowingKeyValueCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 046530EA24DD4271002D254C /* GrowingKeyValueCell.m */; };
 		0465314124DD4272002D254C /* GrowingKeyValueCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 046530EB24DD4271002D254C /* GrowingKeyValueCell.xib */; };
-		0465314224DD4272002D254C /* PVarEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 046530ED24DD4271002D254C /* PVarEventViewController.m */; };
+		0465314224DD4272002D254C /* PageAttributesEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 046530ED24DD4271002D254C /* PageAttributesEventViewController.m */; };
 		0465314324DD4272002D254C /* GIOClickEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 046530EE24DD4271002D254C /* GIOClickEventViewController.m */; };
 		0465314424DD4272002D254C /* MeasurementProtocolTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 046530EF24DD4271002D254C /* MeasurementProtocolTableViewController.m */; };
-		0465314524DD4272002D254C /* GIOCstmEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 046530F024DD4271002D254C /* GIOCstmEventViewController.m */; };
+		0465314524DD4272002D254C /* GIOCustomEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 046530F024DD4271002D254C /* GIOCustomEventViewController.m */; };
 		0465314624DD4272002D254C /* GIOVisitEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 046530F124DD4271002D254C /* GIOVisitEventViewController.m */; };
 		0465314724DD4272002D254C /* ContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 046530F424DD4271002D254C /* ContainerViewController.m */; };
 		0465314824DD4272002D254C /* GIOPageEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 046530F724DD4271002D254C /* GIOPageEventViewController.m */; };
@@ -175,19 +175,19 @@
 		046530E024DD4271002D254C /* GIOAttributesTrackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOAttributesTrackViewController.h; sourceTree = "<group>"; };
 		046530E124DD4271002D254C /* GIOUserIdViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOUserIdViewController.m; sourceTree = "<group>"; };
 		046530E224DD4271002D254C /* GIOVisitEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOVisitEventViewController.h; sourceTree = "<group>"; };
-		046530E324DD4271002D254C /* GIOCstmEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOCstmEventViewController.h; sourceTree = "<group>"; };
+		046530E324DD4271002D254C /* GIOCustomEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOCustomEventViewController.h; sourceTree = "<group>"; };
 		046530E424DD4271002D254C /* MeasurementProtocolTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeasurementProtocolTableViewController.h; sourceTree = "<group>"; };
 		046530E524DD4271002D254C /* GIOClickEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOClickEventViewController.h; sourceTree = "<group>"; };
-		046530E624DD4271002D254C /* PVarEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PVarEventViewController.h; sourceTree = "<group>"; };
+		046530E624DD4271002D254C /* PageAttributesEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PageAttributesEventViewController.h; sourceTree = "<group>"; };
 		046530E724DD4271002D254C /* GIOAttributesTrackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOAttributesTrackViewController.m; sourceTree = "<group>"; };
 		046530E824DD4271002D254C /* GIOInputChangeEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOInputChangeEventViewController.m; sourceTree = "<group>"; };
 		046530EA24DD4271002D254C /* GrowingKeyValueCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingKeyValueCell.m; sourceTree = "<group>"; };
 		046530EB24DD4271002D254C /* GrowingKeyValueCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GrowingKeyValueCell.xib; sourceTree = "<group>"; };
 		046530EC24DD4271002D254C /* GrowingKeyValueCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrowingKeyValueCell.h; sourceTree = "<group>"; };
-		046530ED24DD4271002D254C /* PVarEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PVarEventViewController.m; sourceTree = "<group>"; };
+		046530ED24DD4271002D254C /* PageAttributesEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PageAttributesEventViewController.m; sourceTree = "<group>"; };
 		046530EE24DD4271002D254C /* GIOClickEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOClickEventViewController.m; sourceTree = "<group>"; };
 		046530EF24DD4271002D254C /* MeasurementProtocolTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeasurementProtocolTableViewController.m; sourceTree = "<group>"; };
-		046530F024DD4271002D254C /* GIOCstmEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOCstmEventViewController.m; sourceTree = "<group>"; };
+		046530F024DD4271002D254C /* GIOCustomEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOCustomEventViewController.m; sourceTree = "<group>"; };
 		046530F124DD4271002D254C /* GIOVisitEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOVisitEventViewController.m; sourceTree = "<group>"; };
 		046530F224DD4271002D254C /* GIOUserIdViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOUserIdViewController.h; sourceTree = "<group>"; };
 		046530F424DD4271002D254C /* ContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContainerViewController.m; sourceTree = "<group>"; };
@@ -398,16 +398,16 @@
 				046530E124DD4271002D254C /* GIOUserIdViewController.m */,
 				046530E224DD4271002D254C /* GIOVisitEventViewController.h */,
 				046530F124DD4271002D254C /* GIOVisitEventViewController.m */,
-				046530E324DD4271002D254C /* GIOCstmEventViewController.h */,
-				046530F024DD4271002D254C /* GIOCstmEventViewController.m */,
+				046530E324DD4271002D254C /* GIOCustomEventViewController.h */,
+				046530F024DD4271002D254C /* GIOCustomEventViewController.m */,
 				046530E424DD4271002D254C /* MeasurementProtocolTableViewController.h */,
 				046530EF24DD4271002D254C /* MeasurementProtocolTableViewController.m */,
 				046530E524DD4271002D254C /* GIOClickEventViewController.h */,
 				046530EE24DD4271002D254C /* GIOClickEventViewController.m */,
 				046530DF24DD4271002D254C /* GIOInputChangeEventViewController.h */,
 				046530E824DD4271002D254C /* GIOInputChangeEventViewController.m */,
-				046530E624DD4271002D254C /* PVarEventViewController.h */,
-				046530ED24DD4271002D254C /* PVarEventViewController.m */,
+				046530E624DD4271002D254C /* PageAttributesEventViewController.h */,
+				046530ED24DD4271002D254C /* PageAttributesEventViewController.m */,
 				046530E924DD4271002D254C /* View */,
 				046530F324DD4271002D254C /* PageEvent */,
 			);
@@ -963,13 +963,13 @@
 				0465313F24DD4272002D254C /* GIOInputChangeEventViewController.m in Sources */,
 				04A6FAF524E67215006C72F0 /* GIOBaseViewController.m in Sources */,
 				0465315A24DD4272002D254C /* GIOFoodTableViewCell.m in Sources */,
-				0465314524DD4272002D254C /* GIOCstmEventViewController.m in Sources */,
+				0465314524DD4272002D254C /* GIOCustomEventViewController.m in Sources */,
 				0465314724DD4272002D254C /* ContainerViewController.m in Sources */,
 				0465314E24DD4272002D254C /* GIOLabelAttributeViewController.m in Sources */,
 				0465315324DD4272002D254C /* GIOActionSheetViewController.m in Sources */,
 				0465314C24DD4272002D254C /* main.m in Sources */,
 				0465314A24DD4272002D254C /* SecondViewController.m in Sources */,
-				0465314224DD4272002D254C /* PVarEventViewController.m in Sources */,
+				0465314224DD4272002D254C /* PageAttributesEventViewController.m in Sources */,
 				0465315724DD4272002D254C /* GIOMultiViewController.m in Sources */,
 				0465314324DD4272002D254C /* GIOClickEventViewController.m in Sources */,
 				0465313824DD4272002D254C /* MBProgressHUD+GrowingHelper.m in Sources */,
