@@ -86,15 +86,20 @@ static NSString * const kGrowingNodeRootIgnore = @"IgnorePage";
         return nil;
     }
     UIViewController <GrowingNode>*current = vc;
+    id <GrowingNode> parent = current.growingNodeParent;
     //当为 UIAlertController 时，向上寻找没有被忽略的节点
-    while (current.growingNodeParent) {
+    while (parent) {
         if ([[GrowingPageManager sharedInstance] isViewControllerIgnored:current]) {
-            current = (UIViewController<GrowingNode>*)current.growingNodeParent;
-        }else if (current.growingPageIgnorePolicy == GrowingIgnoreSelf || current.growingPageIgnorePolicy == GrowingIgnoreAll) {
-            current = (UIViewController<GrowingNode>*)current.growingNodeParent;
+            current = (UIViewController<GrowingNode>*)parent;
         }else {
-            break;
+            GrowingPageGroup *page = [self getPageObjectWithViewController:current];
+            if (page.isIgnored) {
+                current = (UIViewController<GrowingNode>*)parent;
+            }else {
+                break;
+            }
         }
+        parent = parent.growingNodeParent;
     }
     
     GrowingPageGroup *page = [self getPageObjectWithViewController:current];

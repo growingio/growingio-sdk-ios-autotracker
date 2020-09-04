@@ -19,10 +19,8 @@
 #import "UIViewController+GrowingPageHelper.h"
 #import "GrowingPage.h"
 #import "GrowingAutoTracker.h"
-#import "GrowingPageManager.h"
 
 static void *const GROWING_PAGE_OBJECT = "GROWING_PAGE_OBJECT";
-static void *const GROWING_PAGE_IGNORE = "GROWING_PAGE_IGNORE";
 
 @implementation UIViewController (GrowingPageHelper)
 
@@ -35,15 +33,10 @@ static void *const GROWING_PAGE_IGNORE = "GROWING_PAGE_IGNORE";
 }
 
 - (BOOL)growingPageHelper_pageDidIgnore {
-    NSNumber *isIgnoredObj = objc_getAssociatedObject(self, GROWING_PAGE_OBJECT);
-    if (isIgnoredObj) {
-        NSLog(@"找到记录的ignored值 ： %d",isIgnoredObj.boolValue);
-        return isIgnoredObj.boolValue;
-    }
+
     // judge self firstly
     GrowingIgnorePolicy selfPolicy = self.growingPageIgnorePolicy;
     if (GrowingIgnoreAll == selfPolicy || GrowingIgnoreSelf == selfPolicy) {
-        objc_setAssociatedObject(self, GROWING_PAGE_IGNORE, @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         return YES;
     }
     
@@ -54,7 +47,6 @@ static void *const GROWING_PAGE_IGNORE = "GROWING_PAGE_IGNORE";
         GrowingIgnorePolicy parentPolicy = parent.growingPageIgnorePolicy;
  
         if (GrowingIgnoreChildren == parentPolicy || GrowingIgnoreAll == parentPolicy) {
-            objc_setAssociatedObject(self, GROWING_PAGE_IGNORE, @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
             return YES;
         }
         
