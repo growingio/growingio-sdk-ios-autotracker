@@ -26,7 +26,7 @@
 #import "GrowingCocoaLumberjack.h"
 
 static NSString * const kGrowingNodeRootPage = @"Page";
-static NSString * const kGrowingNodeRootAlert = @"UIAlert";
+static NSString * const kGrowingNodeRootIgnore = @"IgnorePage";
 
 @implementation GrowingNodeHelper
 
@@ -42,29 +42,39 @@ static NSString * const kGrowingNodeRootAlert = @"UIAlert";
 + (NSString *)xPathForView:(UIView *)view {
     NSMutableArray *viewPathArray = [NSMutableArray array];
     id<GrowingNode> node = view;
+    id<GrowingNode> parent = nil;
+    /**
+    1. 先以触发的View向上追溯父View ，直至找到第一个 Page
+    2.如果 Page 没被 ignored，然后替换为 /Page，转到 5
+    3.如果 Page 被忽略，那么向上追溯 Page （中间的View不再追溯），然后首部 插入 /Page ，转到 5
+    4.如果全部被 ignored，首部 插入 /IgnorePage，则转到 5
+    5.生成xpath
+    */
     do {
-        id<GrowingNode> parent = node.growingNodeParent;
+        parent = node.growingNodeParent;
         //当时跟视图时
-        //1. 如果是UIAlertViewController, /UIAlert/...
-        //2. 如果是UIViewController, /Page/...
-        if ([parent isKindOfClass:[UIAlertController class]]) {
-            [viewPathArray addObject:kGrowingNodeRootAlert];
-            break;
-        }else if ([parent isKindOfClass:[UIViewController class]]) {
-            UIViewController *parentVC = (UIViewController*)parent;
-            UIView *nodeView = (UIView*)node;
-            //1. VC.view 包含node 或者相等
-            if ([nodeView isEqual:parentVC.view] || [nodeView isDescendantOfView:parentVC.view]) {
-                [viewPathArray addObject:kGrowingNodeRootPage];
+        if (parent) {
+            if ([parent isKindOfClass:[UIViewController class]]) {
+                if ([[GrowingPageManager sharedInstance] isViewControllerIgnored:(UIViewController*)parent]) {
+                    if (parent.growingNodeSubPath) [viewPathArray addObject:parent.growingNodeSubPath];
+                }else {
+                    GrowingPageGroup *page = [self getPageObjectWithViewController:(UIViewController*)parent];
+                    if (page.isIgnored) {
+                        if (parent.growingNodeSubPath) [viewPathArray addObject:parent.growingNodeSubPath];
+                    }else {
+                        [viewPathArray addObject:kGrowingNodeRootPage];
+                        break;
+                    }
+                }
             }else {
-                [viewPathArray addObject:node.growingNodeSubPath];
+                if (node.growingNodeSubPath) [viewPathArray addObject:node.growingNodeSubPath];
             }
-            break;
+        }else {
+            [viewPathArray addObject:kGrowingNodeRootIgnore];
         }
-        
-        [viewPathArray addObject:node.growingNodeSubPath];
         node = parent;
     } while (node);
+    
     NSString *viewPath = [[[viewPathArray reverseObjectEnumerator] allObjects] componentsJoinedByString:@"/"];
     viewPath = [@"/" stringByAppendingString:viewPath];
     return viewPath;
@@ -72,22 +82,34 @@ static NSString * const kGrowingNodeRootAlert = @"UIAlert";
 
 
 + (NSString *)xPathForViewController:(UIViewController *)vc {
-    UIViewController <GrowingNode>*parent = vc;
+    if (!vc) {
+        return nil;
+    }
+    UIViewController <GrowingNode>*current = vc;
     //当为 UIAlertController 时，向上寻找没有被忽略的节点
-    while ([parent isKindOfClass:[UIAlertController class]]  || parent.growingPageIgnorePolicy == GrowingIgnoreSelf || parent.growingPageIgnorePolicy == GrowingIgnoreAll) {
-        parent = parent.growingNodeParent;
+    while (current.growingNodeParent) {
+        if ([[GrowingPageManager sharedInstance] isViewControllerIgnored:current]) {
+            current = (UIViewController<GrowingNode>*)current.growingNodeParent;
+        }else if (current.growingPageIgnorePolicy == GrowingIgnoreSelf || current.growingPageIgnorePolicy == GrowingIgnoreAll) {
+            current = (UIViewController<GrowingNode>*)current.growingNodeParent;
+        }else {
+            break;
+        }
     }
-    //如果没有父VC，自己也被忽略，那么取自己
-    if (!parent) {
-        parent = vc;
-    }
-    GrowingPageGroup *page = [parent growingPageHelper_getPageObject];
-    if (!page) {
-        [[GrowingPageManager sharedInstance] createdViewControllerPage:parent];
-        page = [parent growingPageHelper_getPageObject];
-    }
+    
+    GrowingPageGroup *page = [self getPageObjectWithViewController:current];
+    
     return page.path;
 }
 
+
++ (GrowingPageGroup *)getPageObjectWithViewController:(UIViewController *)vc {
+    GrowingPageGroup *page = [vc growingPageHelper_getPageObject];
+    if (!page) {
+        [[GrowingPageManager sharedInstance] createdViewControllerPage:vc];
+        page = [vc growingPageHelper_getPageObject];
+    }
+    return page;
+}
 
 @end

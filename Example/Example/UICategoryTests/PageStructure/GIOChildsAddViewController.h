@@ -7,10 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "GIOBaseViewController.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface GIOChildsAddViewController : UIViewController
+
+@end
+
+@interface GIOIgnoreBaseViewController : GIOBaseViewController
 
 @end
 
