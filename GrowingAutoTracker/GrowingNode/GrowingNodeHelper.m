@@ -56,18 +56,18 @@ static NSString * const kGrowingNodeRootIgnore = @"IgnorePage";
         if (parent) {
             if ([parent isKindOfClass:[UIViewController class]]) {
                 if ([[GrowingPageManager sharedInstance] isViewControllerIgnored:(UIViewController*)parent]) {
-                    if (parent.growingNodeSubPath) [viewPathArray addObject:parent.growingNodeSubPath];
+                    if (parent.growingNodeSubPath.length > 0) [viewPathArray addObject:parent.growingNodeSubPath];
                 }else {
                     GrowingPageGroup *page = [self getPageObjectWithViewController:(UIViewController*)parent];
                     if (page.isIgnored) {
-                        if (parent.growingNodeSubPath) [viewPathArray addObject:parent.growingNodeSubPath];
+                        if (parent.growingNodeSubPath.length > 0) [viewPathArray addObject:parent.growingNodeSubPath];
                     }else {
                         [viewPathArray addObject:kGrowingNodeRootPage];
                         break;
                     }
                 }
             }else {
-                if (node.growingNodeSubPath) [viewPathArray addObject:node.growingNodeSubPath];
+                if (node.growingNodeSubPath.length > 0) [viewPathArray addObject:node.growingNodeSubPath];
             }
         }else {
             [viewPathArray addObject:kGrowingNodeRootIgnore];
