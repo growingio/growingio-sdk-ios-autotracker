@@ -88,6 +88,7 @@ static NSString *const kGrowingWebCircleWebView = @"WEB_VIEW";
 @property (nonatomic, assign) int nodeZLevel;
 @property (nonatomic, assign) int zLevel;
 @property (nonatomic, assign) unsigned long snapNumber;  //数据发出序列号
+@property (nonatomic, assign) BOOL onProcessing;
 @end
 
 @implementation GrowingWebCircle {
@@ -624,7 +625,7 @@ static GrowingWebCircle *shareInstance = nil;
 - (void)beginKeepAlive {
     if (!self.keepAliveTimer) {
         __weak typeof(self) wself = self;
-        self.keepAliveTimer = [NSTimer scheduledTimerWithTimeInterval:1
+        self.keepAliveTimer = [NSTimer scheduledTimerWithTimeInterval:30
                                                                target:wself
                                                              selector:@selector(keepAlive)
                                                              userInfo:nil
@@ -632,7 +633,7 @@ static GrowingWebCircle *shareInstance = nil;
     }
 }
 
-static long long heartbeatCountdown = 29;
+
 
 - (void)endKeepAlive {
     if (self.keepAliveTimer) {
@@ -642,24 +643,8 @@ static long long heartbeatCountdown = 29;
 }
 
 - (void)keepAlive {
-    if (heartbeatCountdown > 0) {
-        heartbeatCountdown --;
-    }else {
-        heartbeatCountdown = 29;
-        NSDictionary *dict = @{@"msgType" : @"heartbeat"};
-        [self sendJson:dict];
-    }
-    
-    if (self.cachedEvents.count == 0) return;
-    
-    NSMutableArray *eventArray = self.cachedEvents;
-    self.cachedEvents = [NSMutableArray array];
-    [eventArray enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(__kindof GrowingEvent*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj.eventTypeKey isEqualToString:kEventTypeKeyViewClick] || [obj.eventTypeKey isEqualToString:kEventTypeKeyPage]) {
-            [self sendScreenShotWithCallback:nil];
-            *stop = YES;
-        }
-    }];
+    NSDictionary *dict = @{@"msgType" : @"heartbeat"};
+    [self sendJson:dict];
 }
 
 - (void)stop {
@@ -858,8 +843,29 @@ static long long heartbeatCountdown = 29;
                                thisNode:(id<GrowingNode> _Nullable)thisNode
                             triggerNode:(id<GrowingNode> _Nullable)triggerNode
                             withContext:(id<GrowingAddEventContext> _Nullable)context {
+    //this call back run in main thread
+    //so not use lock
     if (event && _isReady) {
         [self.cachedEvents addObject:event];
+        if (self.onProcessing) {
+            GIOLogDebug(@"[GrowingWebCircle] onProcessing event to webcircle");
+            return;
+        }
+        self.onProcessing = YES;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(200 * NSEC_PER_MSEC)), dispatch_get_main_queue(), ^{
+            if (self.cachedEvents.count == 0) return;
+            NSMutableArray *eventArray = self.cachedEvents;
+            GIOLogDebug(@"[GrowingWebCircle] onProcessing count %lu",(unsigned long)eventArray.count);
+            self.cachedEvents = [NSMutableArray array];
+            [eventArray enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(__kindof GrowingEvent*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([obj.eventTypeKey isEqualToString:kEventTypeKeyViewClick] || [obj.eventTypeKey isEqualToString:kEventTypeKeyPage]) {
+                    [self sendScreenShotWithCallback:nil];
+                    *stop = YES;
+                }
+            }];
+            self.onProcessing = NO;
+        });
+        
     }
 }
 
