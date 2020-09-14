@@ -20,7 +20,6 @@
 
 #import "GrowingPageEvent.h"
 #import "GrowingEventManager.h"
-#import "GrowingNetworkInterfaceManager.h"
 #import "GrowingDeviceInfo.h"
 
 @interface GrowingPageEvent ()
@@ -30,7 +29,6 @@
 @property (nonatomic, copy, readwrite) NSString * _Nullable referralPage;
 @property (nonatomic, copy, readwrite) NSString * _Nullable pageName;
 
-@property (nonatomic, copy, readwrite) NSString * _Nullable networkState;
 
 @property (nonatomic, copy) NSString * _Nullable hybridDomain;
 @property (nonatomic, copy) NSString * _Nullable protocolType;
@@ -46,7 +44,6 @@
         self.pageTitle = title;
         self.pageName = pageName;
         self.referralPage = referralPage;
-        self.networkState = [[GrowingNetworkInterfaceManager sharedInstance] networkType];
         self.orientation = [GrowingDeviceInfo deviceOrientation];
     }
     return self;
@@ -87,7 +84,7 @@
 
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
-    dataDictM[@"networkState"] = [[GrowingNetworkInterfaceManager sharedInstance] networkType];
+//    dataDictM[@"networkState"] = [[GrowingNetworkInterfaceManager sharedInstance] networkType];
     dataDictM[@"domain"] = self.hybridDomain ?: self.domain;
     dataDictM[@"pageName"] = self.pageName;
     dataDictM[@"referralPage"] = self.referralPage;

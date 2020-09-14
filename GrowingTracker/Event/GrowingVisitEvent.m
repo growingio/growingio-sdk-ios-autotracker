@@ -23,6 +23,8 @@
 #import "GrowingDeviceInfo.h"
 #import "GrowingEventManager.h"
 #import "GrowingInstance.h"
+#import "GrowingNetworkInterfaceManager.h"
+
 @import CoreLocation;
 
 @interface GrowingVisitEvent ()
@@ -48,6 +50,8 @@
 @property (nonatomic, strong, readwrite) NSNumber *_Nullable latitude;
 @property (nonatomic, strong, readwrite) NSNumber *_Nullable longitude;
 
+@property (nonatomic, copy, readwrite) NSString * _Nullable networkState;
+
 @end
 
 @implementation GrowingVisitEvent
@@ -72,7 +76,7 @@
         self.idfa = deviceInfo.idfa;
         self.idfv = deviceInfo.idfv;
         self.sdkVersion = [Growing getVersion];
-
+        self.networkState = [[GrowingNetworkInterfaceManager sharedInstance] networkType];
         CGSize screenSize = [GrowingDeviceInfo deviceScreenSize];
         self.screenW = [NSNumber numberWithInteger:screenSize.width];
         self.screenH = [NSNumber numberWithInteger:screenSize.height];
@@ -145,6 +149,7 @@
     dataDictM[@"screenHeight"] = self.screenH;
     dataDictM[@"latitude"] = self.latitude;
     dataDictM[@"longitude"] = self.longitude;
+    dataDictM[@"networkState"] = self.networkState;
     //TODO: extraSdk字段在后续应该添加
     return dataDictM;
 }
