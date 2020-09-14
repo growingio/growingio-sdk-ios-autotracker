@@ -93,7 +93,7 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
      UITableViewWrapperView 为 iOS11 以下 UITableView 与 cell 之间的 view
      */
     if ([NSStringFromClass(self.class) isEqualToString:@"UITableViewWrapperView"]) {
-        return nil;
+        return @"";
     }
     
     NSInteger index = [self growingNodeKeyIndex];
@@ -288,6 +288,15 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
             [UITapGestureRecognizer growingGestureRecognizerCanHandleView:self]);
 }
 
+- (NSTimeInterval)growingTimeIntervalForLastClick {
+    return [objc_getAssociatedObject(self, @selector(growingTimeIntervalForLastClick)) doubleValue];
+}
+
+- (void)setGrowingTimeIntervalForLastClick:(NSTimeInterval)growingTimeIntervalForLastClick {
+    NSNumber *interval = [NSNumber numberWithDouble:growingTimeIntervalForLastClick];
+    objc_setAssociatedObject(self, @selector(growingTimeIntervalForLastClick), interval, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 #pragma mark - Public Method
 
 - (BOOL)growingViewUserInteraction {
@@ -308,14 +317,8 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
 
 #pragma mark GrowingAttributes
 
-static char kUIViewGrowingCustomContentKey;
-static char kUIViewGrowingIMPTrackIsTrackedKey;
-static char kUIViewGrowingIMPTrackEventNameKey;
-static char kUIViewGrowingIMPTrackVariableKey;
-static char kUIViewGrowingIgnorePolicyKey;
-
 - (NSString *)growingViewCustomContent {
-    return objc_getAssociatedObject(self, &kUIViewGrowingCustomContentKey);
+    return objc_getAssociatedObject(self, @selector(growingViewCustomContent));
 }
 
 - (void)setGrowingViewCustomContent:(NSString *)content {
@@ -328,47 +331,47 @@ static char kUIViewGrowingIgnorePolicyKey;
     if (content.length > 50) {
         content = [content substringToIndex:50];
     }
-    objc_setAssociatedObject(self, &kUIViewGrowingCustomContentKey, content,
+    objc_setAssociatedObject(self, @selector(growingViewCustomContent), content,
                              OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
 - (BOOL)growingIMPTracked {
-    return [objc_getAssociatedObject(self, &kUIViewGrowingIMPTrackIsTrackedKey) boolValue];
+    return [objc_getAssociatedObject(self, @selector(growingIMPTracked)) boolValue];
 }
 
 - (void)setGrowingIMPTracked:(BOOL)flag {
-    objc_setAssociatedObject(self, &kUIViewGrowingIMPTrackIsTrackedKey,
+    objc_setAssociatedObject(self, @selector(growingIMPTracked),
                              [NSNumber numberWithBool:flag],
                              OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (NSString *)growingIMPTrackEventName {
-    return objc_getAssociatedObject(self, &kUIViewGrowingIMPTrackEventNameKey);
+    return objc_getAssociatedObject(self, @selector(growingIMPTrackEventName));
 }
 
 - (void)setGrowingIMPTrackEventName:(NSString *)eventId {
-    objc_setAssociatedObject(self, &kUIViewGrowingIMPTrackEventNameKey, eventId,
+    objc_setAssociatedObject(self, @selector(growingIMPTrackEventName), eventId,
                              OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
 - (NSDictionary *)growingIMPTrackVariable {
-    return objc_getAssociatedObject(self, &kUIViewGrowingIMPTrackVariableKey);
+    return objc_getAssociatedObject(self, @selector(growingIMPTrackVariable));
 }
 
 - (void)setGrowingIMPTrackVariable:(NSDictionary *)variable {
-    objc_setAssociatedObject(self, &kUIViewGrowingIMPTrackVariableKey, variable,
+    objc_setAssociatedObject(self, @selector(growingIMPTrackVariable), variable,
                              OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (void)setGrowingViewIgnorePolicy:(GrowingIgnorePolicy)growingIgonrePolicy {
     objc_setAssociatedObject(self,
-                             &kUIViewGrowingIgnorePolicyKey,
+                             @selector(growingViewIgnorePolicy),
                              [NSNumber numberWithUnsignedInteger:growingIgonrePolicy],
                              OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (GrowingIgnorePolicy)growingViewIgnorePolicy {
-    id policyObjc = objc_getAssociatedObject(self, &kUIViewGrowingIgnorePolicyKey);
+    id policyObjc = objc_getAssociatedObject(self, @selector(growingViewIgnorePolicy));
     if (!policyObjc) {
         return GrowingIgnoreNone;
     }

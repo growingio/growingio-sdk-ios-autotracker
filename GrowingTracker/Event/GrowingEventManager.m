@@ -131,6 +131,8 @@ static GrowingEventManager *shareinstance = nil;
                                                                    name:[name stringByAppendingString:@"realtimevent"]];
             
             [self.timingEventDB vacuum];
+            
+            [self cleanExpiredData_unsafe];
         }];
 
         // timer
@@ -161,7 +163,7 @@ static GrowingEventManager *shareinstance = nil;
     return self;
 }
 
-- (void)cleanExpiredData {
+- (void)cleanExpiredData_unsafe {
     [self.timingEventDB cleanExpiredDataIfNeeded];
     [self.realtimeEventDB cleanExpiredDataIfNeeded];
 }
