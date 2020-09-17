@@ -33,6 +33,10 @@
 #import "UIView+GrowingHelper.h"
 #import "UIViewController+GrowingNode.h"
 #import "UIViewController+GrowingPageHelper.h"
+
+/// 点击事件的最小时间间隔，默认是 100 毫秒
+static NSTimeInterval kGrowingTrackClickMinTimeInterval = 0.1;
+
 @interface GrowingActionEvent ()
 
 @property (nonatomic, copy, readwrite) NSString *_Nullable queryParameters;
@@ -161,6 +165,20 @@
     actionEvent.element = element;
 
     return actionEvent;
+}
+
++ (BOOL)isValidClickEventForNode:(id<GrowingNode>)node {
+    if (!node) {
+        return NO;
+    }
+    
+    NSTimeInterval lastTime = node.growingTimeIntervalForLastClick;
+    NSTimeInterval currentTime = [NSProcessInfo processInfo].systemUptime;
+    if (lastTime > 0 && (currentTime - lastTime) < kGrowingTrackClickMinTimeInterval) {
+        return NO;
+    }
+    
+    return YES;
 }
 
 #pragma mark GrowingEventCountable
