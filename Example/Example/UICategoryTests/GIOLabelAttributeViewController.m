@@ -12,6 +12,11 @@
 #import <GrowingAutoTracker.h>
 
 @interface GIOLabelAttributeViewController ()
+
+@property (weak, nonatomic) IBOutlet UILabel *checkAlpLabel;
+@property (weak, nonatomic) IBOutlet UILabel *checkHiddenLabel;
+@property (weak, nonatomic) IBOutlet UIButton *gioNotTrack;
+
 @end
 
 @implementation GIOLabelAttributeViewController
@@ -19,10 +24,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    //设置不采集Btn GIONotTrack数据
-    self.GIONotTrack.growingViewIgnorePolicy = GrowingIgnoreSelf;
-    [self.CheckHiddenLabel growingTrackImpression:@"HiddenLabel"];
-    [self.CheckAlpLabel growingTrackImpression:@"AlpLabel"];
+    //设置不采集Btn gioNotTrack数据
+    self.gioNotTrack.growingViewIgnorePolicy = GrowingIgnoreSelf;
+    [self.checkHiddenLabel growingTrackImpression:@"HiddenLabel"];
+    [self.checkAlpLabel growingTrackImpression:@"AlpLabel"];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -32,21 +37,21 @@
 
 //设置alpha的值为0.005
 - (IBAction)setAlphaSmall:(id)sender {
-    self.CheckAlpLabel.alpha = 0.005;
+    self.checkAlpLabel.alpha = 0.005;
     NSLog(@"设置alpha的值为0.005");
 }
 //设置alpha的值为1
 - (IBAction)setAlphLarge:(id)sender {
-    self.CheckAlpLabel.alpha = 1;
+    self.checkAlpLabel.alpha = 1;
     NSLog(@"设置alpha的值为1");
 }
 //隐藏label
 - (IBAction)hiddenLabel:(id)sender {
-    self.CheckHiddenLabel.hidden = TRUE;
+    self.checkHiddenLabel.hidden = TRUE;
     NSLog(@"隐藏Label标签！");
 }
 - (IBAction)showLabel:(id)sender {
-    self.CheckHiddenLabel.hidden = false;
+    self.checkHiddenLabel.hidden = false;
     NSLog(@"显示Label标签！");
 }
 //弹出浮层测试

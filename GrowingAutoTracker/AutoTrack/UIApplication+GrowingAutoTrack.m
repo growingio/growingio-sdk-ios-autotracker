@@ -21,6 +21,7 @@
 #import "UIApplication+GrowingAutoTrack.h"
 #import "GrowingClickEvent.h"
 #import "GrowingMediator.h"
+#import "GrowingCocoaLumberjack.h"
 
 @implementation UIApplication (GrowingAutoTrack)
 
@@ -30,35 +31,68 @@
                   forEvent:(UIEvent *)event {
     
     BOOL result = YES;
-    result = [self growing_sendAction:action to:target from:sender forEvent:event];
+    // 切换 tab，采集切换之后的页面信息，所以需要先调用 growing_sendAction 完成切换
+    BOOL isTabBar = [target isKindOfClass:UITabBar.class] || [target isKindOfClass:UITabBarController.class];
+
+    if (isTabBar) {
+        result = [self growing_sendAction:action to:target from:sender forEvent:event];
+    }
     
     if (NSClassFromString(@"GrowingWebCircle") != NULL) {
         [[GrowingMediator sharedInstance] performClass:@"GrowingWebCircle" action:@"setNeedUpdateScreen" params:nil];
     }
     
+    @try {
+        // 捕获异常，比如 UITextMultiTapRecognizer 没有实现GrowingNode 相关方法, 如：growingTimeIntervalForLastClick
+        [self growing_trackAction:action to:target from:sender forEvent:event];
+    
+    } @catch (NSException *exception) {
+        GIOLogError(@"%@ catch exception = %@", self, exception);
+    }
+    
+    if (!isTabBar) {
+        result = [self growing_sendAction:action to:target from:sender forEvent:event];
+    }
+    
+    return result;
+}
+
+- (void)growing_trackAction:(SEL)action to:(id)target from:(id)sender forEvent:(UIEvent *)event {
+    
     if ([sender isKindOfClass:UITabBarItem.class] ||
         [sender isKindOfClass:UIBarButtonItem.class] ||
         [sender isKindOfClass:UISegmentedControl.class]) {
-        return result;
+        return;
+    }
+    
+    NSObject <GrowingNode> *node = (NSObject<GrowingNode> *)sender;
+    
+    // 判断触发间隔是否有效
+    if (![GrowingActionEvent isValidClickEventForNode:node]) {
+        return;
     }
     
     if ([sender isKindOfClass:UISwitch.class] ||
         [sender isKindOfClass:UIStepper.class] ||
         [sender isKindOfClass:UIPageControl.class]) {
 
+        // 保存当前事件触发时间
+        node.growingTimeIntervalForLastClick = [NSProcessInfo processInfo].systemUptime;
         [GrowingClickEvent sendEventWithNode:sender andEventType:GrowingEventTypeButtonClick];
-
-        return result;
-    }
-
-    if ([event isKindOfClass:[UIEvent class]] && event.type == UIEventTypeTouches && [[[event allTouches] anyObject] phase] == UITouchPhaseEnded) {
         
-        [GrowingClickEvent sendEventWithNode:sender andEventType:GrowingEventTypeButtonClick];
-
-        return result;
+        return;
     }
-    
-    return result;
+
+    if ([event isKindOfClass:[UIEvent class]] &&
+        event.type == UIEventTypeTouches &&
+        [[[event allTouches] anyObject] phase] == UITouchPhaseEnded) {
+        
+        // 保存当前事件触发时间
+        node.growingTimeIntervalForLastClick = [NSProcessInfo processInfo].systemUptime;
+        [GrowingClickEvent sendEventWithNode:sender andEventType:GrowingEventTypeButtonClick];
+        
+        return;
+    }
 }
 
 @end
