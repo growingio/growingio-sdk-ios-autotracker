@@ -17,6 +17,7 @@
 @implementation PageAttributesEventsTest
 
 - (void)setUp {
+    [[viewTester usingLabel:@"协议/接口"] tap];
 }
 
 - (void)test1PvarNormal {
