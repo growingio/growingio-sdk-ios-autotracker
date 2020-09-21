@@ -8,6 +8,8 @@
 
 #import "GIOPageStructureViewController.h"
 #import "GIOChildsAddViewController.h"
+#import "GIOSplitMasterViewController.h"
+#import "GIOSplitDetailViewController.h"
 @interface GIOPageStructureViewController ()
 
 @end
@@ -35,6 +37,21 @@
     if (indexPath.row == 3) {
         GIOChildsAddViewController *childsvc = [[GIOChildsAddViewController alloc] init];
         [self.navigationController pushViewController:childsvc animated:NO];
+    }else if (indexPath.row == 4) {
+        GIOSplitMasterViewController *masterViewController = [[GIOSplitMasterViewController alloc] init];
+        UINavigationController *masterNavigationController =
+        [[UINavigationController alloc] initWithRootViewController: masterViewController];
+
+        GIOSplitDetailViewController *detailViewController = [[GIOSplitDetailViewController alloc] init];
+        UINavigationController *detailNavigationController = [[UINavigationController alloc] initWithRootViewController: detailViewController];
+
+        masterViewController.detailViewController = detailViewController;
+
+        UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
+        splitViewController.delegate = detailViewController;
+        splitViewController.viewControllers = @[masterNavigationController, detailNavigationController];
+        [self presentViewController:splitViewController animated:YES completion:nil];
+        
     }
 }
 - (IBAction)clickRed:(id)sender {

@@ -93,6 +93,8 @@
 		0465315E24DD4272002D254C /* GIOListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0465311D24DD4271002D254C /* GIOListTableViewCell.m */; };
 		0465315F24DD4272002D254C /* GIOListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0465311E24DD4271002D254C /* GIOListTableViewCell.xib */; };
 		0465316024DD4272002D254C /* GIOButtonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0465312024DD4271002D254C /* GIOButtonViewController.m */; };
+		047AFAE9251381F400CB2664 /* GIOSplitMasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 047AFAE6251381F300CB2664 /* GIOSplitMasterViewController.m */; };
+		047AFAEA251381F400CB2664 /* GIOSplitDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 047AFAE8251381F300CB2664 /* GIOSplitDetailViewController.m */; };
 		047BF3A924F638BB0028FE94 /* MediatorTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF39C24F638BB0028FE94 /* MediatorTest.m */; };
 		047BF3AA24F638BB0028FE94 /* GetIDsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF39F24F638BB0028FE94 /* GetIDsTest.m */; };
 		047BF3AB24F638BB0028FE94 /* GDPRTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3A024F638BB0028FE94 /* GDPRTest.m */; };
@@ -236,6 +238,10 @@
 		0465312124DD4271002D254C /* GIOHybridViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOHybridViewController.h; sourceTree = "<group>"; };
 		0465312224DD4271002D254C /* GIOSimpleUIElemtsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOSimpleUIElemtsViewController.h; sourceTree = "<group>"; };
 		0465312324DD4271002D254C /* GIOActionSheetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOActionSheetViewController.h; sourceTree = "<group>"; };
+		047AFAE5251381F300CB2664 /* GIOSplitDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOSplitDetailViewController.h; sourceTree = "<group>"; };
+		047AFAE6251381F300CB2664 /* GIOSplitMasterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOSplitMasterViewController.m; sourceTree = "<group>"; };
+		047AFAE7251381F300CB2664 /* GIOSplitMasterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOSplitMasterViewController.h; sourceTree = "<group>"; };
+		047AFAE8251381F300CB2664 /* GIOSplitDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOSplitDetailViewController.m; sourceTree = "<group>"; };
 		047BF39A24F638BB0028FE94 /* DailyDataLimit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DailyDataLimit.h; sourceTree = "<group>"; };
 		047BF39B24F638BB0028FE94 /* FlushIntervalAPITest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlushIntervalAPITest.h; sourceTree = "<group>"; };
 		047BF39C24F638BB0028FE94 /* MediatorTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MediatorTest.m; sourceTree = "<group>"; };
@@ -473,6 +479,7 @@
 		0465310F24DD4271002D254C /* PageStructure */ = {
 			isa = PBXGroup;
 			children = (
+				047AFAE4251381F300CB2664 /* UISplitViewController */,
 				0465311024DD4271002D254C /* GIOPageStructureViewController.h */,
 				0465311224DD4271002D254C /* GIOPageStructureViewController.m */,
 				4916270D24E157BB00444AF2 /* GIOPresentViewController.h */,
@@ -504,6 +511,17 @@
 				0465311E24DD4271002D254C /* GIOListTableViewCell.xib */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		047AFAE4251381F300CB2664 /* UISplitViewController */ = {
+			isa = PBXGroup;
+			children = (
+				047AFAE5251381F300CB2664 /* GIOSplitDetailViewController.h */,
+				047AFAE8251381F300CB2664 /* GIOSplitDetailViewController.m */,
+				047AFAE7251381F300CB2664 /* GIOSplitMasterViewController.h */,
+				047AFAE6251381F300CB2664 /* GIOSplitMasterViewController.m */,
+			);
+			path = UISplitViewController;
 			sourceTree = "<group>";
 		};
 		047BF38D24F6379B0028FE94 /* ProtocolAndApi */ = {
@@ -963,10 +981,12 @@
 				0465313D24DD4272002D254C /* GIOUserIdViewController.m in Sources */,
 				0465315B24DD4272002D254C /* GIOCollectionViewCell.m in Sources */,
 				0465314F24DD4272002D254C /* GIOTextFieldViewController.m in Sources */,
+				047AFAE9251381F400CB2664 /* GIOSplitMasterViewController.m in Sources */,
 				4916271224E157CF00444AF2 /* GIOPagingViewController.m in Sources */,
 				0465313F24DD4272002D254C /* GIOInputChangeEventViewController.m in Sources */,
 				04A6FAF524E67215006C72F0 /* GIOBaseViewController.m in Sources */,
 				0465315A24DD4272002D254C /* GIOFoodTableViewCell.m in Sources */,
+				047AFAEA251381F400CB2664 /* GIOSplitDetailViewController.m in Sources */,
 				0465314524DD4272002D254C /* GIOCustomEventViewController.m in Sources */,
 				0465314724DD4272002D254C /* ContainerViewController.m in Sources */,
 				0465314E24DD4272002D254C /* GIOLabelAttributeViewController.m in Sources */,
