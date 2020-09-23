@@ -55,6 +55,7 @@
 
 - (void)createdViewControllerPage:(UIViewController *)viewController {
     GrowingPageGroup *page = [viewController growingPageHelper_getPageObject];
+    //每个ViewController都会绑定一个page示例，一旦生成就无法修改
     if (page == nil) {
         page = [GrowingPageGroup pageWithCarrier:viewController];
         page.parent = [self findParentPage:viewController];
@@ -74,7 +75,7 @@
     }
     [self reissuePageVariable:page];
 }
-
+//由page生成GrowingPageEvent
 - (void)sendPageEventWithPage:(GrowingPage *)page {
     GrowingPageEvent *pageEvent = [GrowingPageEvent pageEventWithTitle:page.title
                                                               pageName:page.path

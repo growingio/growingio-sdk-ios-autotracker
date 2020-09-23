@@ -34,24 +34,25 @@ GrowingPropertyDefine(UIViewController, NSNumber*, growingHook_hasDidAppear, set
 @implementation UIViewController (GrowingAutoTrack)
 
 - (void)growing_viewDidAppear:(BOOL)animated {
+    //处理viewDidAppear
     [self handleViewDidAppear];
-    
+    //调用系统默认的viewDidAppear实现
     [self growing_viewDidAppear:animated];
 }
 
 - (void)handleViewDidAppear {
-
+    //判断是否过滤
     if ([[GrowingPageManager sharedInstance] isViewControllerIgnored:self]) {
         return;
     }
-    
+    //创建page对象，并发送Event
     [[GrowingPageManager sharedInstance] createdViewControllerPage:self];
-
+    //给绑定的属性变量赋值
     [self setGrowingHook_hasDidAppear:@YES];
-    
+    //加入弱引用集合Set中
     [[GrowingPageManager sharedInstance] addDidAppearController:self];
+    //生命周期相关
     [self sendViewControllerLifecycleChanged:GrowingVCLifecycleDidAppear];
-
 }
 
 - (void)growing_viewDidDisappear:(BOOL)animated {

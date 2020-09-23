@@ -43,7 +43,8 @@
     }
     
     @try {
-        // 捕获异常，比如 UITextMultiTapRecognizer 没有实现GrowingNode 相关方法, 如：growingTimeIntervalForLastClick
+        //iOS 13.4之后 UITextField的点击target为UITextMultiTapRecognizer
+        //捕获异常，比如 UITextMultiTapRecognizer 没有实现GrowingNode 相关方法, 如：growingTimeIntervalForLastClick
         [self growing_trackAction:action to:target from:sender forEvent:event];
     
     } @catch (NSException *exception) {
@@ -63,6 +64,13 @@
         [sender isKindOfClass:UIBarButtonItem.class] ||
         [sender isKindOfClass:UISegmentedControl.class]) {
         return;
+    }
+    
+    if (@available(iOS 13.4, *)) {
+        //iOS 13.4以上UITextField会以UITextMultiTapRecognizer为sender的点击动作触发
+        if ([sender isKindOfClass:NSClassFromString(@"UITextMultiTapRecognizer")]) {
+            return;
+        }
     }
     
     NSObject <GrowingNode> *node = (NSObject<GrowingNode> *)sender;
