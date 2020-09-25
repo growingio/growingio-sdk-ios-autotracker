@@ -83,13 +83,13 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:
   (NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *kGrowingSplitCell = @"kGrowingSplitCell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:
-    CellIdentifier];
+                             kGrowingSplitCell];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:
-        UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        UITableViewCellStyleDefault reuseIdentifier:kGrowingSplitCell];
     }
 
 
