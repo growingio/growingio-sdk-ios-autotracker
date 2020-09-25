@@ -98,7 +98,6 @@
 }
 
 + (void)onGpsLocationChanged:(CLLocation *_Nullable)location {
-    // TODO: 工程中最后一次发的visit 事件，应该存在多线程问题
     GrowingVisitEvent *visitEvent = [GrowingEventManager shareInstance].visitEvent;
 
     if (location != nil && visitEvent.latitude == nil && visitEvent.longitude == nil) {
