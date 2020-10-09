@@ -33,7 +33,7 @@
 #import "GrowingConfiguration.h"
 #import "GrowingBroadcaster.h"
 #import "GrowingWSLoggerFormat.h"
-
+#import "GrowingAppExtensionManager.h"
 
 @import CoreLocation;
 
@@ -332,6 +332,31 @@ static NSString* const kGrowingVersion = @"3.0.0";
     }];
     
 }
+
+
++ (void)trackExensionWithGroupIdentifier:(NSString *)groupIdentifier completion:(void (^)(NSString *groupIdentifier, NSArray *events)) completion {
+    @try {
+        if (groupIdentifier == nil || [groupIdentifier isEqualToString:@""]) {
+            return;
+        }
+        NSDictionary *eventDic = [[GrowingAppExtensionManager sharedInstance] readAllEventsWithGroupIdentifier:groupIdentifier];
+        NSArray *trackEvents = eventDic[kGrowingExtensionCustomEvent];
+        if (trackEvents) {
+            for (NSDictionary *dict in trackEvents) {
+                //TODO: add track
+                [Growing trackCustomEvent:dict[kGrowingExtensionCustomEvent_event] withAttributes:dict[kGrowingExtensionCustomEvent_attributes]];
+//                [self track:dict[@"event"]];
+            }
+            [[GrowingAppExtensionManager sharedInstance] deleteEventsWithGroupIdentifier:groupIdentifier];
+            if (completion) {
+                completion(groupIdentifier, trackEvents);
+            }
+        }
+    } @catch (NSException *exception) {
+        NSLog(@"%@ error: %@", self, exception);
+    }
+}
+
 
 + (void)setUploadExceptionEnable:(BOOL)uploadExceptionEnable {
     GrowingMonitorState state = uploadExceptionEnable ? GrowingMonitorStateUploadExceptionEnable : GrowingMonitorStateUploadExceptionDisable;

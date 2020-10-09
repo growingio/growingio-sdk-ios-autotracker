@@ -150,7 +150,6 @@
     dataDictM[@"queryParameters"] = self.query;
     dataDictM[@"domain"] = self.hybridDomain ?: self.domain;
     return dataDictM;
-    ;
 }
 
 @end

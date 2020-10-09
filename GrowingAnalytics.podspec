@@ -21,9 +21,14 @@ TODO: Add long description of the pod here.
   s.ios.deployment_target = '8.0'
   s.requires_arc = true
   s.default_subspec = "AutoTracker"
+
+  s.subspec 'Extension' do |extension|
+      extension.source_files = 'Extension/*'
+  end
   
   s.subspec 'Tracker' do |tracker|
       tracker.source_files = 'GrowingTracker/**/*'
+      tracker.dependency 'GrowingAnalytics/Extension'
   end
   
   s.subspec 'AutoTracker' do |autotracker|
@@ -31,5 +36,6 @@ TODO: Add long description of the pod here.
       autotracker.dependency 'GrowingAnalytics/Tracker'
   end
   
+
 
 end

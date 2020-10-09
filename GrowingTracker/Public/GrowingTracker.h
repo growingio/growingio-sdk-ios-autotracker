@@ -111,6 +111,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (void)setVisitorAttributes:(NSDictionary<NSString *, NSString *> *)attributes;
 
+/**
+ 发送Extension存储的所有事件
+ 
+ @param groupIdentifier : extension的App Group id
+ */
++ (void)trackExensionWithGroupIdentifier:(NSString *)groupIdentifier completion:(void (^)(NSString *groupIdentifier, NSArray *events)) completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

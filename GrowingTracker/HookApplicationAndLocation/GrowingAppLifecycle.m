@@ -30,6 +30,7 @@
 #import "GrowingCloseEvent.h"
 #import "GrowingPageEvent.h"
 #import "GrowingBroadcaster.h"
+#import "GrowingAppExtensionManager.h"
 
 @implementation GrowingAppActivationTime
 

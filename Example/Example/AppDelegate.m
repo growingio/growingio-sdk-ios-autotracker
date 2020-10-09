@@ -142,6 +142,9 @@ static NSString *const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
 }
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     NSLog(@"状态** 已经活跃");
+    [Growing trackExensionWithGroupIdentifier:@"group.cn.com.growingio.Example" completion:^(NSString * _Nonnull groupIdentifier, NSArray * _Nonnull events) {
+            
+    }];
 }
 - (void)applicationWillResignActive:(UIApplication *)application {
     NSLog(@"状态** 将要进入后台");

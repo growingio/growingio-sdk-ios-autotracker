@@ -24,4 +24,9 @@ target 'ExampleTests' do
    pod 'KIF', :configurations => ['Debug']
 end
 
+target 'ExampleShareExtension' do
+   project 'Example/Example'
+   pod 'GrowingAnalytics/Extension', :path => './'
+end
+
 
