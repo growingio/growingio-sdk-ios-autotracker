@@ -23,7 +23,9 @@
     [Growing setLoginUserId:@"test"];
     [tester waitForTimeInterval:1];
 }
-
+- (void)tearDown {
+    [[viewTester usingLabel:@"协议/接口"] tap];
+}
 - (void)test1TrackNormal {
     /**
      function:EventId合法
