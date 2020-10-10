@@ -113,7 +113,11 @@
 		047BF3BC24F655A50028FE94 /* PageEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3B924F655A50028FE94 /* PageEventsTest.m */; };
 		04A6FAF224E662E9006C72F0 /* GIOChildsAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A6FAF124E662E9006C72F0 /* GIOChildsAddViewController.m */; };
 		04A6FAF524E67215006C72F0 /* GIOBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A6FAF424E67215006C72F0 /* GIOBaseViewController.m */; };
+
 		4621F05F25747527F983501B /* Pods_ExampleShareExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B399E5AB4FD0AE072A27E07A /* Pods_ExampleShareExtension.framework */; };
+
+		42ADE26C250B292900CA7268 /* HybirdTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 42ADE26B250B292900CA7268 /* HybirdTests.m */; };
+
 		4916270F24E157BB00444AF2 /* GIOPresentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916270E24E157BB00444AF2 /* GIOPresentViewController.m */; };
 		4916271224E157CF00444AF2 /* GIOPagingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916271124E157CF00444AF2 /* GIOPagingViewController.m */; };
 		491D2D8D2500E2D9001CB289 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 491D2D8C2500E2D9001CB289 /* MapKit.framework */; };
@@ -303,6 +307,7 @@
 		04A6FAF424E67215006C72F0 /* GIOBaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOBaseViewController.m; sourceTree = "<group>"; };
 		09F106E4725F279ED99D5C1E /* Pods-ExampleShareExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExampleShareExtension.debug.xcconfig"; path = "../../Pods/Target Support Files/Pods-ExampleShareExtension/Pods-ExampleShareExtension.debug.xcconfig"; sourceTree = "<group>"; };
 		11EA2ABB8F1029820A3234DB /* Pods_ExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ExampleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		42ADE26B250B292900CA7268 /* HybirdTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HybirdTests.m; sourceTree = "<group>"; };
 		48BA0D37888FF209ED84CD0E /* Pods-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.debug.xcconfig"; path = "../../Pods/Target Support Files/Pods-Example/Pods-Example.debug.xcconfig"; sourceTree = "<group>"; };
 		4916270D24E157BB00444AF2 /* GIOPresentViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIOPresentViewController.h; sourceTree = "<group>"; };
 		4916270E24E157BB00444AF2 /* GIOPresentViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOPresentViewController.m; sourceTree = "<group>"; };
@@ -616,6 +621,14 @@
 			path = ExampleTests/MethodTest;
 			sourceTree = "<group>";
 		};
+		42ADE26A250B28BC00CA7268 /* OtherTests */ = {
+			isa = PBXGroup;
+			children = (
+				42ADE26B250B292900CA7268 /* HybirdTests.m */,
+			);
+			path = OtherTests;
+			sourceTree = "<group>";
+		};
 		4962651F24DA665200032551 /* ExampleTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -624,6 +637,7 @@
 				4962652824DA667900032551 /* Info.plist */,
 				047BF38D24F6379B0028FE94 /* ProtocolAndApi */,
 				4962654F24DA66BF00032551 /* ManualTrackTest */,
+				42ADE26A250B28BC00CA7268 /* OtherTests */,
 			);
 			path = ExampleTests;
 			sourceTree = "<group>";
@@ -1077,6 +1091,7 @@
 				4962657524DA66BF00032551 /* PageAttributesEventsTest.m in Sources */,
 				047BF3BC24F655A50028FE94 /* PageEventsTest.m in Sources */,
 				4962657324DA66BF00032551 /* LoginUserAttributerEventsTest.m in Sources */,
+				42ADE26C250B292900CA7268 /* HybirdTests.m in Sources */,
 				4962657024DA66BF00032551 /* VisitorAttributesEventsTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

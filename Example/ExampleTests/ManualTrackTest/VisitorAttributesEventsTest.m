@@ -19,6 +19,8 @@
 - (void)setUp {
     //设置userid,确保cs1字段不空
     [Growing setLoginUserId:@"test"];
+    [[viewTester usingLabel:@"UI界面"] tap];
+
 }
 
 - (void)test1VstrNormal {
