@@ -19,6 +19,7 @@
 
 
 #import <Foundation/Foundation.h>
+#import "GrowingManualTrackEvent.h"
 
 @interface GrowingCustomField : NSObject
 
@@ -31,6 +32,9 @@
 - (void)sendEvarEvent:(NSDictionary<NSString *, NSObject *> *)evar;
 - (void)sendPeopleEvent:(NSDictionary<NSString *, NSObject *> *)peopleVar;
 - (void)sendCustomTrackEventWithName:(NSString *)eventName andVariable:(NSDictionary<NSString *, NSObject *> *)variable;
+- (void)sendCustomTrackEventWithName:(NSString *)eventName
+                         andVariable:(NSDictionary<NSString *, NSObject *> *)variable
+                             handler:(void(^)(GrowingCustomTrackEvent *event))handler;
 - (void)sendVisitorEvent:(NSDictionary<NSString *, NSObject *> *)variable;
 - (BOOL)isOnlyCoreKit;
 - (void)sendGIOFakePageEvent;

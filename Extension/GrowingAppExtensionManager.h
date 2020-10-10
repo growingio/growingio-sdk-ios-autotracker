@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 static NSString *kGrowingExtensionCustomEvent = @"CustomEvent";
 static NSString *kGrowingExtensionCustomEvent_event = @"event";
 static NSString *kGrowingExtensionCustomEvent_attributes = @"attributes";
+static NSString *kGrowingExtensionCustomEvent_timestamp = @"timestamp";
 static NSString *kGrowingExtensionConversionVariables = @"ConversionVariables";
 static NSString *kGrowingExtensionConversionVariables_variables = @"variables";
 static NSString *kGrowingExtensionLoginUserAttributes = @"LoginUserAttributes";

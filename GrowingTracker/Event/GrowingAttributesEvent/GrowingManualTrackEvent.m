@@ -97,11 +97,19 @@
 }
 
 + (void)sendEventWithName:(NSString *_Nonnull)eventName
-              andVariable:(NSDictionary<NSString *, NSObject *> *_Nonnull)variable {
+              andVariable:(NSDictionary<NSString *, NSObject *> *_Nonnull)variable
+                  handler:(void(^)(GrowingCustomTrackEvent *event))handler{
     GrowingCustomTrackEvent *customEvent = [[GrowingCustomTrackEvent alloc] initWithEventName:eventName
                                                                                  withVariable:variable];
-
+    if (handler) {
+        handler(customEvent);
+    }
     [self sendCustomTrackEvent:customEvent];
+}
+
++ (void)sendEventWithName:(NSString *_Nonnull)eventName
+              andVariable:(NSDictionary<NSString *, NSObject *> *_Nonnull)variable {
+    [self sendEventWithName:eventName andVariable:variable handler:nil];
 }
 
 + (void)sendCustomTrackEvent:(GrowingCustomTrackEvent *)customEvent {

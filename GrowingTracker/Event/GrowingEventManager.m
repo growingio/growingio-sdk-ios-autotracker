@@ -252,7 +252,7 @@ static GrowingEventManager *shareinstance = nil;
 - (void)handleEvent:(GrowingEvent *)event {
     GrowingEvent *dbEvent = event;
     // cstm按函数实际触发为标准
-    if ([event.eventTypeKey isEqualToString:kEventTypeKeyCustom] && [UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
+    if ([event.eventTypeKey isEqualToString:kEventTypeKeyCustom]) {
         __weak GrowingEventManager *weakSelf = self;
         [GrowingDispatchManager dispatchInLowThread:^{
             GrowingEventManager *strongSelf = weakSelf;

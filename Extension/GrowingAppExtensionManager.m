@@ -116,8 +116,10 @@
         if (attributes && ![attributes isKindOfClass:NSDictionary.class]) {
             return NO;
         }
-        
-        NSDictionary *event = @{kGrowingExtensionCustomEvent_event: eventName, kGrowingExtensionCustomEvent_attributes: attributes?attributes:@{}};
+    
+        NSDictionary *event = @{kGrowingExtensionCustomEvent_event: eventName,
+                                kGrowingExtensionCustomEvent_timestamp: [NSNumber numberWithUnsignedLongLong:[[NSDate date] timeIntervalSince1970] * 1000.0],
+                                kGrowingExtensionCustomEvent_attributes: attributes?attributes:@{}};
         return [self _writeEvent:event key:kGrowingExtensionCustomEvent groupIdentifier:groupIdentifier];
     } @catch (NSException *exception) {
         return NO;
@@ -161,7 +163,7 @@
         if(![[NSFileManager defaultManager] fileExistsAtPath:path]) {
             BOOL success = [[NSFileManager defaultManager] createFileAtPath:path contents:nil attributes:nil];
             if (success) {
-                //                    SALogDebug(@"create plist file success!!!!!!! APPEXtension...");
+                NSLog(@"create extension plist file");
             }
         }
         NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithContentsOfFile:path];

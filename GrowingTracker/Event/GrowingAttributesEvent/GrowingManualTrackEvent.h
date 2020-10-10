@@ -40,6 +40,10 @@
 - (instancetype _Nullable )initWithEventName:(NSString *_Nullable)eventName
                                 withVariable:(NSDictionary<NSString *, NSObject *> *_Nullable)variable;
 
++ (void)sendEventWithName:(NSString *_Nonnull)eventName
+              andVariable:(NSDictionary<NSString *, NSObject *> *_Nonnull)variable
+                  handler:(void(^_Nullable)(GrowingCustomTrackEvent * _Nullable event))handler;
+
 + (void)sendEventWithName:(NSString * _Nonnull)eventName
               andVariable:(NSDictionary<NSString *, NSObject *> * _Nonnull)variable;
 

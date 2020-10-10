@@ -311,6 +311,10 @@ static NSString* const kGrowingVersion = @"3.0.0";
 }
 
 + (void)trackCustomEvent:(NSString *)eventName withAttributes:(NSDictionary<NSString *,NSString *> *)attributes {
+    [self trackCustomEvent:eventName timestamp:nil withAttributes:attributes];
+}
+
++ (void)trackCustomEvent:(NSString *)eventName timestamp:(NSNumber *)timestamp withAttributes:(NSDictionary<NSString *,NSString *> *)attributes {
     if (![eventName isKindOfClass:[NSString class]]) {
         GIOLogError(parameterKeyErrorLog);
         return ;
@@ -328,7 +332,9 @@ static NSString* const kGrowingVersion = @"3.0.0";
     }
     
     [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
-         [[GrowingCustomField shareInstance] sendCustomTrackEventWithName:eventName andVariable:attributes];
+        [[GrowingCustomField shareInstance] sendCustomTrackEventWithName:eventName andVariable:attributes handler:^(GrowingCustomTrackEvent *event) {
+            event.timestamp = timestamp;
+        }];
     }];
     
 }
@@ -344,21 +350,21 @@ static NSString* const kGrowingVersion = @"3.0.0";
         if (trackEvents) {
             for (NSDictionary *dict in trackEvents) {
                 //TODO: add track
-                [Growing trackCustomEvent:dict[kGrowingExtensionCustomEvent_event] withAttributes:dict[kGrowingExtensionCustomEvent_attributes]];
+                [Growing trackCustomEvent:dict[kGrowingExtensionCustomEvent_event] timestamp:dict[kGrowingExtensionCustomEvent_timestamp] withAttributes:dict[kGrowingExtensionCustomEvent_attributes]];
             }
         }
         
         NSArray *conversionEvents = eventDic[kGrowingExtensionConversionVariables];
-        if (trackEvents) {
-            for (NSDictionary *dict in trackEvents) {
+        if (conversionEvents) {
+            for (NSDictionary *dict in conversionEvents) {
                 //TODO: add track
                 [Growing setConversionVariables:dict[kGrowingExtensionConversionVariables_variables]];
             }
         }
         
         NSArray *visitorEvents = eventDic[kGrowingExtensionLoginUserAttributes];
-        if (trackEvents) {
-            for (NSDictionary *dict in trackEvents) {
+        if (visitorEvents) {
+            for (NSDictionary *dict in visitorEvents) {
                 //TODO: add track
                 [Growing setLoginUserAttributes:dict[kGrowingExtensionLoginUserAttributes_attributes]];
             }

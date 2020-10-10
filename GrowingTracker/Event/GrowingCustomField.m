@@ -24,7 +24,6 @@
 #import "GrowingEventManager.h"
 #import "GrowingFileStorage.h"
 #import "GrowingGlobal.h"
-#import "GrowingManualTrackEvent.h"
 #import "GrowingMobileDebugger.h"
 #import "GrowingPageEvent.h"
 #import "NSDictionary+GrowingHelper.h"
@@ -115,14 +114,19 @@ static NSString *const kGrowingCustomField = @"customField";
     }
     [GrowingPeopleVarEvent sendEventWithVariable:dict];
 }
+- (void)sendCustomTrackEventWithName:(NSString *)eventName
+                         andVariable:(NSDictionary<NSString *, NSObject *> *)variable{
+    [self sendCustomTrackEventWithName:eventName andVariable:variable handler:nil];
+}
 
 - (void)sendCustomTrackEventWithName:(NSString *)eventName
-                         andVariable:(NSDictionary<NSString *, NSObject *> *)variable {
+                         andVariable:(NSDictionary<NSString *, NSObject *> *)variable
+                             handler:(void(^)(GrowingCustomTrackEvent *event))handler{
     if ([self isOnlyCoreKit]) {
         [self sendGIOFakePageEvent];
     }
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:variable];
-    [GrowingCustomTrackEvent sendEventWithName:eventName andVariable:dict];
+    [GrowingCustomTrackEvent sendEventWithName:eventName andVariable:dict handler:handler];
 }
 
 - (BOOL)isOnlyCoreKit {
