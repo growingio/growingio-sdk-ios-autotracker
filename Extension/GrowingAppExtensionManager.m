@@ -84,7 +84,7 @@
 }
 
 #pragma mark -- plistfile
-- (NSString *)filePathForApplicationGroupIdentifier:(NSString *)groupIdentifier {
+- (NSString *)filePathForGroupIdentifier:(NSString *)groupIdentifier {
     @try {
         if (![groupIdentifier isKindOfClass:NSString.class] || !groupIdentifier.length) {
             return nil;
@@ -105,56 +105,6 @@
     }
 }
 
-- (NSUInteger)fileDataCountForGroupIdentifier:(NSString *)groupIdentifier {
-    @try {
-        if (![groupIdentifier isKindOfClass:NSString.class] || !groupIdentifier.length) {
-            return 0;
-        }
-        
-        __block NSUInteger count = 0;
-        dispatch_block_t block = ^() {
-            NSString *path = [self filePathForApplicationGroupIdentifier:groupIdentifier];
-            NSArray *array = [[NSMutableArray alloc] initWithContentsOfFile:path];
-            count = array.count;
-        };
-        if ([self isAppExtensionQueue]) {
-            block();
-        } else {
-            dispatch_sync(self.appExtensionQueue, block);
-        }
-        return count;
-    } @catch (NSException *exception) {
-        return 0;
-    }
-}
-
-- (NSArray *)fileDataArrayWithPath:(NSString *)path limit:(NSUInteger)limit {
-    @try {
-        if (![path isKindOfClass:NSString.class] || !path.length) {
-            return @[];
-        }
-        if (limit==0) {
-            return @[];
-        }
-        __block NSArray *dataArray = @[];
-        dispatch_block_t block = ^() {
-            NSArray *array = [[NSArray alloc] initWithContentsOfFile:path];
-            if (array.count >= limit) {
-                array = [array subarrayWithRange:NSMakeRange(0, limit)];
-            }
-            dataArray = array;
-        };
-        if ([self isAppExtensionQueue]) {
-            block();
-        } else {
-            dispatch_sync(self.appExtensionQueue, block);
-        }
-        return dataArray;
-    } @catch (NSException *exception) {
-        return @[];
-    }
-}
-
 - (BOOL)writeCustomEvent:(NSString *)eventName attributes:(NSDictionary *)attributes groupIdentifier:(NSString *)groupIdentifier {
     @try {
         if (![eventName isKindOfClass:NSString.class] || !eventName.length) {
@@ -167,7 +117,7 @@
             return NO;
         }
         
-        NSDictionary *event = @{@"event": eventName, @"attributes": attributes?attributes:@{}};
+        NSDictionary *event = @{kGrowingExtensionCustomEvent_event: eventName, kGrowingExtensionCustomEvent_attributes: attributes?attributes:@{}};
         return [self _writeEvent:event key:kGrowingExtensionCustomEvent groupIdentifier:groupIdentifier];
     } @catch (NSException *exception) {
         return NO;
@@ -182,14 +132,14 @@
         return NO;
     }
     @try {
-        NSDictionary *event = @{@"variables": variables?variables:@{}};
+        NSDictionary *event = @{kGrowingExtensionConversionVariables_variables: variables?variables:@{}};
         return [self _writeEvent:event key:kGrowingExtensionConversionVariables groupIdentifier:groupIdentifier];
     } @catch (NSException *exception) {
         return NO;
     }
 }
 
-- (BOOL)writeVisitorAttributes:(NSDictionary *)attributes groupIdentifier:(NSString *)groupIdentifier {
+- (BOOL)writeLoginUserAttributes:(NSDictionary *)attributes groupIdentifier:(NSString *)groupIdentifier {
     if (![groupIdentifier isKindOfClass:NSString.class] || !groupIdentifier.length) {
         return NO;
     }
@@ -197,8 +147,8 @@
         return NO;
     }
     @try {
-        NSDictionary *event = @{@"attributes": attributes?attributes:@{}};
-        return [self _writeEvent:event key:kGrowingExtensionVisitorAttributes groupIdentifier:groupIdentifier];
+        NSDictionary *event = @{kGrowingExtensionLoginUserAttributes_attributes: attributes?attributes:@{}};
+        return [self _writeEvent:event key:kGrowingExtensionLoginUserAttributes groupIdentifier:groupIdentifier];
     } @catch (NSException *exception) {
         return NO;
     }
@@ -207,7 +157,7 @@
 - (BOOL)_writeEvent:(NSDictionary *)event key:(NSString *)name groupIdentifier:(NSString *)groupIdentifier {
     __block BOOL result = NO;
     dispatch_block_t block = ^{
-        NSString *path = [self filePathForApplicationGroupIdentifier:groupIdentifier];
+        NSString *path = [self filePathForGroupIdentifier:groupIdentifier];
         if(![[NSFileManager defaultManager] fileExistsAtPath:path]) {
             BOOL success = [[NSFileManager defaultManager] createFileAtPath:path contents:nil attributes:nil];
             if (success) {
@@ -251,7 +201,7 @@
         }
         __block NSDictionary *dataDic = @{};
         dispatch_block_t block = ^() {
-            NSString *path = [self filePathForApplicationGroupIdentifier:groupIdentifier];
+            NSString *path = [self filePathForGroupIdentifier:groupIdentifier];
             NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithContentsOfFile:path];
             dataDic = dictionary;
         };
@@ -273,7 +223,7 @@
         }
         __block BOOL result = NO;
         dispatch_block_t block = ^{
-            NSString *path = [self filePathForApplicationGroupIdentifier:groupIdentifier];
+            NSString *path = [self filePathForGroupIdentifier:groupIdentifier];
             NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithContentsOfFile:path];
             [dictionary removeAllObjects];
             NSData *data= [NSPropertyListSerialization dataWithPropertyList:dictionary

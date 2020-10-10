@@ -27,8 +27,8 @@ static NSString *kGrowingExtensionCustomEvent_event = @"event";
 static NSString *kGrowingExtensionCustomEvent_attributes = @"attributes";
 static NSString *kGrowingExtensionConversionVariables = @"ConversionVariables";
 static NSString *kGrowingExtensionConversionVariables_variables = @"variables";
-static NSString *kGrowingExtensionVisitorAttributes = @"VisitorAttributes";
-static NSString *kGrowingExtensionVisitorAttributes_attributes = @"attributes";
+static NSString *kGrowingExtensionLoginUserAttributes = @"LoginUserAttributes";
+static NSString *kGrowingExtensionLoginUserAttributes_attributes = @"attributes";
 
 @interface GrowingAppExtensionManager : NSObject
 
@@ -38,29 +38,13 @@ static NSString *kGrowingExtensionVisitorAttributes_attributes = @"attributes";
 
 /**
  * @abstract
- * 根据传入的 ApplicationGroupIdentifier 返回对应 Extension 的数据缓存路径
+ * 根据传入的 groupIdentifier 返回对应 Extension 的数据缓存路径
  *
- * @param groupIdentifier ApplicationGroupIdentifier
- * @return 在 group 中的数据缓存路径
+ * @param groupIdentifier App组标识 eg:group.cn.com.growingio.Example
+ * @return 在 group 中的数据缓存文件路径
  */
-- (NSString *)filePathForApplicationGroupIdentifier:(NSString *)groupIdentifier;
+- (NSString *)filePathForGroupIdentifier:(NSString *)groupIdentifier;
 
-/**
- * @abstract
- * 根据传入的 ApplicationGroupIdentifier 返回对应 Extension 当前缓存的事件数量
- * @param groupIdentifier ApplicationGroupIdentifier
- * @return 在该 group 中当前缓存的事件数量
- */
-- (NSUInteger)fileDataCountForGroupIdentifier:(NSString *)groupIdentifier;
-
-/**
- * @abstract
- * 从指定路径限量读取缓存的数据
- * @param path 缓存路径
- * @param limit 限定读取数，不足则返回当前缓存的全部数据
- * @return 路径限量读取limit条数据，当前的缓存的事件数量不足 limit，则返回当前缓存的全部数据
- */
-- (NSArray *)fileDataArrayWithPath:(NSString *)path limit:(NSUInteger)limit;
 
 /**
  * @abstract
@@ -83,12 +67,12 @@ static NSString *kGrowingExtensionVisitorAttributes_attributes = @"attributes";
 
 /**
  * @abstract
- * 给一个groupIdentifier写入访问变量
- * @param attributes 访问变量
+ * 给一个groupIdentifier写入登录用户属性
+ * @param attributes 登录用户属性
  * @param groupIdentifier ApplicationGroupIdentifier
  * @return 是否（YES/NO）写入成功
  */
-- (BOOL)writeVisitorAttributes:(NSDictionary *)attributes groupIdentifier:(NSString *)groupIdentifier;
+- (BOOL)writeLoginUserAttributes:(NSDictionary *)attributes groupIdentifier:(NSString *)groupIdentifier;
 /**
  * @abstract
  * 读取groupIdentifier的所有缓存事件

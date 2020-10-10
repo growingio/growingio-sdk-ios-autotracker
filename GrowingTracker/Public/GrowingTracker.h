@@ -116,7 +116,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param groupIdentifier : extension的App Group id
  */
-+ (void)trackExensionWithGroupIdentifier:(NSString *)groupIdentifier completion:(void (^)(NSString *groupIdentifier, NSArray *events)) completion;
++ (void)trackExensionWithGroupIdentifier:(NSString *)groupIdentifier completion:(void (^)(NSString *groupIdentifier, NSDictionary *eventDic)) completion;
 
 @end
 

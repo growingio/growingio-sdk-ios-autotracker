@@ -334,7 +334,7 @@ static NSString* const kGrowingVersion = @"3.0.0";
 }
 
 
-+ (void)trackExensionWithGroupIdentifier:(NSString *)groupIdentifier completion:(void (^)(NSString *groupIdentifier, NSArray *events)) completion {
++ (void)trackExensionWithGroupIdentifier:(NSString *)groupIdentifier completion:(void (^)(NSString *groupIdentifier, NSDictionary *eventDic)) completion {
     @try {
         if (groupIdentifier == nil || [groupIdentifier isEqualToString:@""]) {
             return;
@@ -345,12 +345,28 @@ static NSString* const kGrowingVersion = @"3.0.0";
             for (NSDictionary *dict in trackEvents) {
                 //TODO: add track
                 [Growing trackCustomEvent:dict[kGrowingExtensionCustomEvent_event] withAttributes:dict[kGrowingExtensionCustomEvent_attributes]];
-//                [self track:dict[@"event"]];
             }
-            [[GrowingAppExtensionManager sharedInstance] deleteEventsWithGroupIdentifier:groupIdentifier];
-            if (completion) {
-                completion(groupIdentifier, trackEvents);
+        }
+        
+        NSArray *conversionEvents = eventDic[kGrowingExtensionConversionVariables];
+        if (trackEvents) {
+            for (NSDictionary *dict in trackEvents) {
+                //TODO: add track
+                [Growing setConversionVariables:dict[kGrowingExtensionConversionVariables_variables]];
             }
+        }
+        
+        NSArray *visitorEvents = eventDic[kGrowingExtensionLoginUserAttributes];
+        if (trackEvents) {
+            for (NSDictionary *dict in trackEvents) {
+                //TODO: add track
+                [Growing setLoginUserAttributes:dict[kGrowingExtensionLoginUserAttributes_attributes]];
+            }
+        }
+        
+        [[GrowingAppExtensionManager sharedInstance] deleteEventsWithGroupIdentifier:groupIdentifier];
+        if (completion) {
+            completion(groupIdentifier, eventDic);
         }
     } @catch (NSException *exception) {
         NSLog(@"%@ error: %@", self, exception);

@@ -33,6 +33,7 @@ static NSString *const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
     self.configuation.samplingRate = 1.0;
     self.configuation.cellularDataLimit = 10;
     self.configuation.impressionScale = 1.0;
+    
     [Growing startWithConfiguration:self.configuation];
 
     NSString *trackSdkVersion = [Growing getVersion];
