@@ -24,6 +24,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface Growing : NSObject
++ (instancetype)sharedInstance;
 
 // SDK版本号
 + (NSString *)getVersion;

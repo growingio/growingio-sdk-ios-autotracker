@@ -23,7 +23,7 @@
 #import "GrowingAutoTracker.h"
 #import "GrowingNodeItem.h"
 #import "GrowingNodeProtocol.h"
-#import "GrowingTracker.h"
+#import "GrowingTrackerx.h"
 
 @interface NSObject (GrowingNode)
 @property (nonatomic, assign) BOOL growingNodeIsBadNode;

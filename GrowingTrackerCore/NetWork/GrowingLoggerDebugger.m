@@ -25,7 +25,7 @@
 #import "NSDictionary+GrowingHelper.h"
 #import "NSData+GrowingHelper.h"
 #import "GrowingCocoaLumberjack.h"
-#import "GrowingTracker.h"
+#import "GrowingTrackerx.h"
 #import "GrowingWSLogger.h"
 #import "NSString+GrowingHelper.h"
 #import "GrowingDeviceInfo.h"
