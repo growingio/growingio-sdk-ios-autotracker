@@ -22,13 +22,23 @@ TODO: Add long description of the pod here.
   s.requires_arc = true
   s.default_subspec = "AutoTracker"
   
-  s.subspec 'Tracker' do |tracker|
-      tracker.source_files = 'GrowingTracker/**/*'
+  s.subspec 'TrackerCore' do |trackerCore|
+      trackerCore.source_files = 'GrowingTrackerCore/**/*{.h,.m}'
   end
   
-  s.subspec 'AutoTracker' do |autotracker|
-      autotracker.source_files = 'GrowingAutoTracker/**/*'
-      autotracker.dependency 'GrowingAnalytics/Tracker'
+  s.subspec 'Tracker' do |tracker|
+      tracker.source_files = 'GrowingTracker/**/*{.h,.m}'
+      tracker.dependency 'GrowingAnalytics/TrackerCore'
+  end
+  
+  s.subspec 'AutotrackerCore' do |autotrackerCore|
+      autotrackerCore.source_files = 'GrowingAutotrackerCore/**/*{.h,.m}'
+      autotrackerCore.dependency 'GrowingAnalytics/TrackerCore'
+  end
+  
+  s.subspec 'Autotracker' do |autotracker|
+      autotracker.source_files = 'GrowingAutotracker/**/*{.h,.m}'
+      autotracker.dependency 'GrowingAnalytics/AutotrackerCore'
   end
   
 

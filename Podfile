@@ -11,7 +11,8 @@ workspace 'GrowingAnalytics.xcworkspace'
 
 target 'Example' do
   project 'Example/Example'
-  pod 'GrowingAnalytics/AutoTracker', :path => './'
+  pod 'GrowingAnalytics/Autotracker', :path => './'
+  pod 'GrowingAnalytics/Tracker', :path => './'
   pod 'SDCycleScrollView', '~> 1.75'
   pod 'MJRefresh'
   pod 'MBProgressHUD'
@@ -20,7 +21,8 @@ end
 
 target 'ExampleTests' do
    project 'Example/Example'
-   pod 'GrowingAnalytics/AutoTracker', :path => './'
+   pod 'GrowingAnalytics/Autotracker', :path => './'
+   pod 'GrowingAnalytics/Tracker', :path => './'
    pod 'KIF', :configurations => ['Debug']
 end
 

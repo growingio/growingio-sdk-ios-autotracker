@@ -15,7 +15,7 @@
 
 #import <WebKit/WebKit.h>
 #import "GrowingHybridBridgeProvider.h"
-#import "GrowingTracker.h"
+#import "GrowingTrackerx.h"
 #import "NSString+GrowingHelper.h"
 #import "GrowingEvent.h"
 #import "GrowingWebViewDomChangedDelegate.h"

@@ -18,7 +18,7 @@
 //  limitations under the License.
 
 
-#import "GrowingTracker.h"
+#import "GrowingTrackerx.h"
 #import "GrowingAlert.h"
 #import "GrowingInstance.h"
 #import "GrowingCustomField.h"
@@ -46,6 +46,7 @@ static NSString* const kGrowingVersion = @"3.0.0";
 }
 
 + (BOOL)handleURL:(NSURL *)url {
+    
     return [[GrowingMediator sharedInstance] performActionWithUrl:url];
 }
 
@@ -116,53 +117,6 @@ static NSString* const kGrowingVersion = @"3.0.0";
     [GrowingInstance sharedInstance].gpsLocation = nil;
 }
 
-+ (void)setUserIdValue:(nonnull NSString *)value {
-    NSString * oldValue = [GrowingCustomField shareInstance].userId;
-    
-    if ([value isKindOfClass:[NSNumber class]]) {
-        value = [(NSNumber *)value stringValue];
-    }
-    
-    if (![value isKindOfClass:[NSString class]] || value.length == 0) {
-        [GrowingCustomField shareInstance].userId = nil;
-    } else {
-        [GrowingCustomField shareInstance].userId = value;
-    }
-    
-    NSString *newValue = [GrowingCustomField shareInstance].userId;
-    
-    [self resetSessionIdWhileUserIdChangedFrom:oldValue toNewValue:newValue];
-    
-    // Notify userId changed
-    [[GrowingBroadcaster sharedInstance] notifyEvent:@protocol(GrowingUserIdChangedMeessage)
-                                          usingBlock:^(id<GrowingMessageProtocol>  _Nonnull obj) {
-        if ([obj respondsToSelector:@selector(userIdDidChangedFrom:to:)]) {
-            id<GrowingUserIdChangedMeessage> message = (id<GrowingUserIdChangedMeessage>)obj;
-            [message userIdDidChangedFrom:oldValue to:newValue];
-        }
-    }];
-}
-
-+ (void)resetSessionIdWhileUserIdChangedFrom:(NSString *)oldValue toNewValue:(NSString *)newValue {
-    // lastUserId 记录的是上一个有值的 CS1
-    static NSString *kGrowinglastUserId = nil;
-    
-    // 保持 lastUserId 为最近有值的值
-    if (oldValue.length > 0) {
-        kGrowinglastUserId = oldValue;
-    }
-    
-    // 如果 lastUserId 有值，并且新设置 CS1 也有值，当两个不同的时候，启用新的 Session 并发送 visit
-    if (kGrowinglastUserId.length > 0 && newValue.length > 0 && ![kGrowinglastUserId isEqualToString:newValue]) {
-        [[GrowingDeviceInfo currentDeviceInfo] resetSessionID];
-        [GrowingVisitEvent send];
-        
-        //重置session, 发 Visitor 事件
-        if ([[GrowingCustomField shareInstance] growingVistorVar]) {
-            [[GrowingCustomField shareInstance] sendVisitorEvent:[[GrowingCustomField shareInstance] growingVistorVar]];
-        }
-    }
-}
 
 + (void)setDataTrackEnabled:(BOOL)enabled {
     g_GDPRFlag = !enabled;
@@ -186,7 +140,7 @@ static NSString* const kGrowingVersion = @"3.0.0";
     if (userId.length == 0 || userId.length > 1000) {
         return;
     }
-        
+
     [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
         [self setUserIdValue:userId];
     }];
@@ -212,124 +166,26 @@ static NSString* const kGrowingVersion = @"3.0.0";
 
 + (void)setConversionVariables:(NSDictionary<NSString *,NSString *> *)variables {
     
-    if (variables == nil || ![variables isKindOfClass:[NSDictionary class]]) {
-        GIOLogError(parameterKeyErrorLog);
-        return ;
-    }
-    
-    for (NSString *key in variables) {
-        if (![key isKindOfClass:NSString.class] || ![key isValidKey]) {
-            GIOLogError(parameterValueErrorLog);
-            return;
-        }
-        
-        NSString *stringValue = variables[key];
-        
-        if (![stringValue isKindOfClass:NSString.class]) {
-            GIOLogError(parameterValueErrorLog);
-            return;;
-        }
-        
-        if (stringValue.length > 1000 || stringValue.length == 0) {
-            GIOLogError(parameterValueErrorLog);
-            return ;
-        }
-    }
-    
-    [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
-        [[GrowingCustomField shareInstance] sendEvarEvent:variables];
-    }];
+
 }
 
 + (void)setVisitorAttributes:(NSDictionary<NSString *,NSString *> *)attributes {
-    
-    [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
-        
-        [[GrowingCustomField shareInstance] sendVisitorEvent:attributes];
-        //  GrowingBroadcaster 传入 GTouch
-        NSDictionary *variable = [GrowingCustomField shareInstance].growingVistorVar?:@{};
-        [[GrowingBroadcaster sharedInstance] notifyEvent:@protocol(GrowingManualTrackMessage)
-                                              usingBlock:^(id<GrowingMessageProtocol>  _Nonnull obj) {
-            
-            if ([obj respondsToSelector:@selector(manualEventDidTrackWithUserInfo:manualTrackEventType:)]) {
-                id <GrowingManualTrackMessage> message = (id <GrowingManualTrackMessage>)obj;
-                [message manualEventDidTrackWithUserInfo:variable manualTrackEventType:GrowingManualTrackVisitorEventType];
-            }
-        }];
-    }];
+
 }
 
 + (void)setLoginUserAttributes:(NSDictionary<NSString *,NSString *> *)attributes {
-    if (![attributes isKindOfClass:[NSDictionary class]]) {
-        GIOLogError(parameterValueErrorLog);
-        return ;
-    }
-    
-    for (NSString *key in attributes) {
-        if (![key isKindOfClass:NSString.class] || ![key isValidKey]) {
-            GIOLogError(parameterValueErrorLog);
-            return;
-        }
-        
-        NSString *stringValue = attributes[key];
-        
-        if (![stringValue isKindOfClass:NSString.class]) {
-            GIOLogError(parameterValueErrorLog);
-            return;;
-        }
-        
-        if (stringValue.length > 1000 || stringValue.length == 0) {
-            GIOLogError(parameterValueErrorLog);
-            return ;
-        }
-    }
-    
-    [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
-        
-         [[GrowingCustomField shareInstance] sendPeopleEvent:attributes];
-    }];
+
 }
 
 #pragma mark Track Custom Event
 
 + (void)trackCustomEvent:(NSString *)eventName {
-    if (![eventName isKindOfClass:[NSString class]]) {
-        GIOLogError(parameterKeyErrorLog);
-        return ;
-    }
-    if (![eventName isValidKey]) {
-        GIOLogError(parameterValueErrorLog);
-        return ;
-    }
-    
-    [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
-        
-         [[GrowingCustomField shareInstance] sendCustomTrackEventWithName:eventName andVariable:nil];
-        
-    }];
+
     
 }
 
 + (void)trackCustomEvent:(NSString *)eventName withAttributes:(NSDictionary<NSString *,NSString *> *)attributes {
-    if (![eventName isKindOfClass:[NSString class]]) {
-        GIOLogError(parameterKeyErrorLog);
-        return ;
-    }
-    if (![attributes isKindOfClass:[NSDictionary class]]) {
-        GIOLogError(parameterValueErrorLog);
-        return ;
-    }
-    if (attributes.count > 100 ) {
-        GIOLogError(parameterValueErrorLog);
-        return ;
-    }
-    if (![eventName isValidKey] || ![attributes isValidDictVariable]) {
-        return ;
-    }
-    
-    [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
-         [[GrowingCustomField shareInstance] sendCustomTrackEventWithName:eventName andVariable:attributes];
-    }];
+
     
 }
 
@@ -352,6 +208,16 @@ static NSString* const kGrowingVersion = @"3.0.0";
             [message monitorStateDidSettingWithState:state userInfo:dataDict];
         }
     }];
+}
+
++ (instancetype)sharedInstance {
+    static id _sharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _sharedInstance = [[self alloc] init];
+    });
+
+    return _sharedInstance;
 }
 
 @end
