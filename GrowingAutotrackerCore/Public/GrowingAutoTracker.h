@@ -19,7 +19,6 @@
 
 
 #import <UIKit/UIKit.h>
-#import "GrowingTrackerx.h"
 #import "GrowingConfiguration+GrowingAutoTrack.h"
 
 typedef NS_ENUM(NSUInteger, GrowingIgnorePolicy) {

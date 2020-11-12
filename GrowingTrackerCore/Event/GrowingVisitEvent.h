@@ -19,16 +19,34 @@
 
 
 #import "GrowingEvent.h"
-@class CLLocation;
+#import "GrowingBaseEvent.h"
 
-NS_ASSUME_NONNULL_BEGIN
+typedef NS_ENUM(NSUInteger, GrowingDeviceType) {
+    GrowingDeviceTypePhone, GrowingDeviceTypePad
+};
 
-@interface GrowingVisitEvent : GrowingEvent
+@interface GrowingVisitEvent : GrowingBaseEvent
 
-+ (void)onGpsLocationChanged:(CLLocation * _Nullable)location;
-+ (void)sendWithEvent:(GrowingVisitEvent *_Nonnull)event;
-+ (void)send;
+@property(nonatomic, copy, readonly) NSString *_Nullable networkState;
+@property(nonatomic, strong, readonly) NSNumber *_Nonnull screenHeight;
+@property(nonatomic, strong, readonly) NSNumber *_Nonnull screenWidth;
+@property(nonatomic, copy, readonly) NSString *_Nonnull deviceBrand;
+@property(nonatomic, copy, readonly) NSString *_Nonnull deviceModel;
+@property(nonatomic, copy, readonly) NSString *_Nonnull deviceType;
+@property(nonatomic, copy, readonly) NSString *_Nonnull platform;
+@property(nonatomic, copy, readonly) NSString *_Nonnull platformVersion;
+@property(nonatomic, copy, readonly) NSString *_Nonnull appName;
+@property(nonatomic, copy, readonly) NSString *_Nonnull appVersion;
+@property(nonatomic, copy, readonly) NSString *_Nonnull language;
+@property(nonatomic, strong, readonly) NSNumber *_Nullable latitude;
+@property(nonatomic, strong, readonly) NSNumber *_Nullable longitude;
+@property(nonatomic, copy, readonly) NSString *_Nonnull idfa;
+@property(nonatomic, copy, readonly) NSString *_Nonnull idfv;
+@property(nonatomic, copy, readonly) NSString *_Nonnull sdkVersion;
+@property(nonatomic, strong, readonly) NSDictionary *_Nonnull extraSdk;
+
+//@property(nonatomic, copy, readwrite) NSString *_Nullable sessionId;
+//@property(nonatomic, strong, readwrite) NSNumber *_Nonnull timestamp;
 
 @end
 
-NS_ASSUME_NONNULL_END

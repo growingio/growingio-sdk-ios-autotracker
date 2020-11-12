@@ -9,7 +9,6 @@
 #import "GIOLabelAttributeViewController.h"
 //#import "GrowingAutoTracker.h"
 #import <CoreLocation/CoreLocation.h>
-#import <GrowingAutoTracker.h>
 
 @interface GIOLabelAttributeViewController ()
 
@@ -25,9 +24,9 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     //设置不采集Btn gioNotTrack数据
-    self.gioNotTrack.growingViewIgnorePolicy = GrowingIgnoreSelf;
-    [self.checkHiddenLabel growingTrackImpression:@"HiddenLabel"];
-    [self.checkAlpLabel growingTrackImpression:@"AlpLabel"];
+//    self.gioNotTrack.growingViewIgnorePolicy = GrowingIgnoreSelf;
+//    [self.checkHiddenLabel growingTrackImpression:@"HiddenLabel"];
+//    [self.checkAlpLabel growingTrackImpression:@"AlpLabel"];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -20,12 +20,10 @@
 
 #import "GrowingLoggerDebugger.h"
 #import "GrowingSRWebSocket.h"
-#import "GrowingInstance.h"
 #import "GrowingNetworkConfig.h"
 #import "NSDictionary+GrowingHelper.h"
 #import "NSData+GrowingHelper.h"
 #import "GrowingCocoaLumberjack.h"
-#import "GrowingTrackerx.h"
 #import "GrowingWSLogger.h"
 #import "NSString+GrowingHelper.h"
 #import "GrowingDeviceInfo.h"
@@ -54,10 +52,10 @@ static GrowingLoggerDebugger* _loggerDebugger = nil;
     }
     
     if (!_loggerDebugger.webSocket) {
-        NSString* urlStr = [NSString stringWithFormat:kGrowingLoggerWsEndPoint, [GrowingInstance sharedInstance].projectID, _loggerDebugger.wsKey];
-        _loggerDebugger.webSocket = [[GrowingSRWebSocket alloc] initWithURLRequest: [NSURLRequest requestWithURL: [NSURL URLWithString:urlStr]]];
-        _loggerDebugger.webSocket.delegate = _loggerDebugger;
-        [_loggerDebugger.webSocket open];
+//        NSString* urlStr = [NSString stringWithFormat:kGrowingLoggerWsEndPoint, [GrowingInstance sharedInstance].projectID, _loggerDebugger.wsKey];
+//        _loggerDebugger.webSocket = [[GrowingSRWebSocket alloc] initWithURLRequest: [NSURLRequest requestWithURL: [NSURL URLWithString:urlStr]]];
+//        _loggerDebugger.webSocket.delegate = _loggerDebugger;
+//        [_loggerDebugger.webSocket open];
     }
 }
 
@@ -79,35 +77,35 @@ static GrowingLoggerDebugger* _loggerDebugger = nil;
     
     NSMutableDictionary *info = [NSMutableDictionary dictionary];
     info[kGrowingWebSocketMsgType] = @"client_info";
-    info[@"sdkVersion"] = [Growing getVersion];
+//    info[@"sdkVersion"] = [Growing getVersion];
     
     GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
     CGRect screenRect = [UIScreen mainScreen].bounds;
     NSString    *w    = [NSString stringWithFormat:@"%f", screenRect.size.width];
     NSString    *h    = [NSString stringWithFormat:@"%f", screenRect.size.height];
-    NSNumber* stm = GROWGetTimestamp();
-    [info setObject:@{@"deviceBrand": deviceInfo.deviceBrand,
-                      @"appChannel" : @"App Store",
-                      @"screenSize" : @{@"w":w, @"h":h},
-                      @"os"         : deviceInfo.systemName,
-                      @"osVersion"  : deviceInfo.systemVersion,
-                      @"deviceType" : deviceInfo.deviceType,
-                      @"deviceModel": deviceInfo.deviceModel,
-                      @"appVersion" : deviceInfo.appFullVersion,
-                      @"stm" : stm
-                      } forKey:@"device"];
+//    NSNumber* stm = GROWGetTimestamp();
+//    [info setObject:@{@"deviceBrand": deviceInfo.deviceBrand,
+//                      @"appChannel" : @"App Store",
+//                      @"screenSize" : @{@"w":w, @"h":h},
+//                      @"os"         : deviceInfo.systemName,
+//                      @"osVersion"  : deviceInfo.systemVersion,
+//                      @"deviceType" : deviceInfo.deviceType,
+//                      @"deviceModel": deviceInfo.deviceModel,
+//                      @"appVersion" : deviceInfo.appFullVersion,
+//                      @"stm" : stm
+//                      } forKey:@"device"];
     [self sendData:info];
 }
 
 - (void)sendReadyMessage {
 
     NSMutableDictionary *readyDic = [NSMutableDictionary dictionary];
-    [readyDic setValue:@"ready" forKey:kGrowingWebSocketMsgType];
-    [readyDic setValue:[GrowingInstance sharedInstance].projectID forKey:@"projectId"];
-    [readyDic setValue:GROWGetTimestamp() forKey:@"timestamp"];
-    [readyDic setValue:[Growing getVersion] forKey:@"sdkVersion"];
-    [readyDic setValue:[Growing getVersion] forKey:@"sdkVersionCode"];
-    [readyDic setValue:@"iOS" forKey:@"os"];
+//    [readyDic setValue:@"ready" forKey:kGrowingWebSocketMsgType];
+//    [readyDic setValue:[GrowingInstance sharedInstance].projectID forKey:@"projectId"];
+//    [readyDic setValue:GROWGetTimestamp() forKey:@"timestamp"];
+//    [readyDic setValue:[Growing getVersion] forKey:@"sdkVersion"];
+//    [readyDic setValue:[Growing getVersion] forKey:@"sdkVersionCode"];
+//    [readyDic setValue:@"iOS" forKey:@"os"];
     [self sendData:readyDic];
     
 }

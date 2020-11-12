@@ -8,7 +8,6 @@
 
 #import "GIOVisitEventViewController.h"
 
-#import <GrowingAutoTracker.h>
 @import MapKit;
 
 @interface GIOVisitEventViewController () <MKMapViewDelegate>
@@ -49,11 +48,11 @@
 }
 
 - (IBAction)setLocationBtnClick:(UIButton *)sender {
-    [Growing setLocation:self.location.coordinate.latitude longitude:self.location.coordinate.longitude];
+//    [Growing setLocation:self.location.coordinate.latitude longitude:self.location.coordinate.longitude];
 }
 
 - (IBAction)clearLocationBtnClick:(UIButton *)sender {
-    [Growing cleanLocation];
+//    [Growing cleanLocation];
 }
 
 #pragma mark MKMapViewDelegate

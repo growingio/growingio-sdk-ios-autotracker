@@ -24,7 +24,6 @@
 
 #import "GrowingCocoaLumberjack.h"
 #import "GrowingDispatchManager.h"
-#import "GrowingInstance.h"
 #import "NSString+GrowingHelper.h"
 
 static NSString *kGrowingUrlScheme = nil;
@@ -301,9 +300,9 @@ static pthread_mutex_t _mutex;
 
     // In iOS 10.0 and later, the value of advertisingIdentifier is all zeroes
     // when the user has limited ad tracking; So return @"";
-    if (IOS10_PLUS && !trackingEnabled) {
-        return uid;
-    }
+//    if (IOS10_PLUS && !trackingEnabled) {
+//        return uid;
+//    }
 
     SEL advertisingIdentifierSelector = NSSelectorFromString(@"advertisingIdentifier");
 

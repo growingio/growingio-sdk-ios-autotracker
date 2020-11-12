@@ -3,10 +3,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "GrowingBaseConfiguration.h"
+#import "GrowingBaseTrackConfiguration.h"
 
 
-@interface GrowingConfiguration : GrowingBaseConfiguration
+@interface GrowingTrackConfiguration : GrowingBaseTrackConfiguration
 
 
 

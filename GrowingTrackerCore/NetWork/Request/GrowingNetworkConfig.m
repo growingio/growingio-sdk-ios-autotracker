@@ -19,7 +19,6 @@
 
 
 #import <Foundation/Foundation.h>
-#import "GrowingInstance.h"
 #import "GrowingNetworkConfig.h"
 #import "GrowingGlobal.h"
 #import "GrowingCocoaLumberjack.h"

@@ -24,7 +24,6 @@
 #import "GrowingGlobal.h"
 #import "GrowingDeviceInfo.h"
 #import "NSString+GrowingHelper.h"
-#import "GrowingInstance.h"
 #import "GrowingNetworkConfig.h"
 
 @interface GrowingEventOptions ()
@@ -114,12 +113,12 @@
     // runs in main thread
     NSNumber * allDisabled = dict[@"disabled"];
     if ([allDisabled isKindOfClass:[NSNumber class]]) {
-        [Growing setDataUploadEnabled:!allDisabled.boolValue];
+//        [Growing setDataUploadEnabled:!allDisabled.boolValue];
     }
 
     NSNumber * sampling = dict[@"sampling"];
     if ([sampling isKindOfClass:[NSNumber class]]) {
-        [GrowingInstance updateSampling:sampling.floatValue];
+//        [GrowingInstance updateSampling:sampling.floatValue];
     }
 }
 
@@ -137,22 +136,22 @@
 - (NSURL *)optionsURL {
     if (!_optionsURL) {
         
-        unsigned long long timestamp = [GROWGetTimestamp() unsignedLongLongValue];
-        NSString * ai = [GrowingInstance sharedInstance].projectID;
-        if (ai.length == 0) {
-            return nil;
-        }
-        NSString * d = [GrowingDeviceInfo currentDeviceInfo].bundleID;
-        NSString * cv = [GrowingDeviceInfo currentDeviceInfo].appShortVersion;
-        NSString * av = [Growing getVersion];
-        NSString * signText = [NSString stringWithFormat:@"api=/products/%@/ios/%@/settings&av=%@&cv=%@&timestamp=%llu",
-                               ai, d, av, cv,timestamp];
-        NSString * hash = signText.growingHelper_sha1;
-        
-        NSString * urlString = [NSString stringWithFormat:@"%@/products/%@/ios/%@/settings?&av=%@&cv=%@&timestamp=%llu&sign=%@",
-                                [GrowingNetworkConfig.sharedInstance tagsHost], ai, d,  av, cv,timestamp, hash];
-        
-        _optionsURL = [NSURL URLWithString:urlString];
+//        unsigned long long timestamp = [GROWGetTimestamp() unsignedLongLongValue];
+//        NSString * ai = [GrowingInstance sharedInstance].projectID;
+//        if (ai.length == 0) {
+//            return nil;
+//        }
+//        NSString * d = [GrowingDeviceInfo currentDeviceInfo].bundleID;
+//        NSString * cv = [GrowingDeviceInfo currentDeviceInfo].appShortVersion;
+//        NSString * av = [Growing getVersion];
+//        NSString * signText = [NSString stringWithFormat:@"api=/products/%@/ios/%@/settings&av=%@&cv=%@&timestamp=%llu",
+//                               ai, d, av, cv,timestamp];
+//        NSString * hash = signText.growingHelper_sha1;
+//
+//        NSString * urlString = [NSString stringWithFormat:@"%@/products/%@/ios/%@/settings?&av=%@&cv=%@&timestamp=%llu&sign=%@",
+//                                [GrowingNetworkConfig.sharedInstance tagsHost], ai, d,  av, cv,timestamp, hash];
+//
+//        _optionsURL = [NSURL URLWithString:urlString];
     }
     return _optionsURL;;
 }

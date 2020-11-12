@@ -19,7 +19,6 @@
 
 
 #import "GrowingFileStorage.h"
-#import "GrowingInstance.h"
 #import "NSArray+GrowingHelper.h"
 #import "NSDictionary+GrowingHelper.h"
 #import "GrowingCocoaLumberjack.h"

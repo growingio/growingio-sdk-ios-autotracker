@@ -7,14 +7,13 @@
 //
 
 #import "GIOChildsAddViewController.h"
-#import <GrowingAnalytics/GrowingAutoTracker.h>
 
 
 @implementation GIOIgnoreBaseViewController
     
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.growingPageIgnorePolicy = GrowingIgnoreSelf;
+//    self.growingPageIgnorePolicy = GrowingIgnoreSelf;
 }
 
 @end
@@ -32,7 +31,7 @@
     while (parent.parentViewController) {
         parent = parent.parentViewController;
     }
-    parent.growingPageIgnorePolicy = GrowingIgnoreAll;
+//    parent.growingPageIgnorePolicy = GrowingIgnoreAll;
     
     
     CGFloat width = [UIScreen mainScreen].bounds.size.width;

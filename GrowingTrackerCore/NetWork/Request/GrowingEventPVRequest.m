@@ -19,14 +19,14 @@
 
 
 #import "GrowingEventPVRequest.h"
-#import "GrowingInstance.h"
 
 @implementation GrowingEventPVRequest
 
 - (NSString *)path {
-    NSString *accountId = [GrowingInstance sharedInstance].projectID ? : @"";
-    NSString *path = [NSString stringWithFormat:@"v3/%@/ios/pv", accountId];
-    return path;
+//    NSString *accountId = [GrowingInstance sharedInstance].projectID ? : @"";
+//    NSString *path = [NSString stringWithFormat:@"v3/%@/ios/pv", accountId];
+//    return path;
+    return nil;
 }
 
 @end

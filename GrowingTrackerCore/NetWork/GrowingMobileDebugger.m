@@ -27,7 +27,6 @@
 #import "GrowingCustomField.h"
 #import "GrowingDeviceInfo.h"
 #import "GrowingEventManager.h"
-#import "GrowingInstance.h"
 #import "GrowingNetworkConfig.h"
 #import "GrowingSRWebSocket.h"
 #import "GrowingStatusBar.h"
@@ -195,7 +194,7 @@ static GrowingMobileDebugger *debugger = nil;
         } else {
             endPoint = [GrowingNetworkConfig.sharedInstance wsEndPoint];
         }
-        NSString *urlStr = [NSString stringWithFormat:endPoint, [GrowingInstance sharedInstance].projectID, roomNumber];
+        NSString *urlStr = [NSString stringWithFormat:endPoint, @"", roomNumber];
         self.webSocket =
             [[GrowingSRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];
         self.webSocket.delegate = self;
@@ -319,7 +318,7 @@ static GrowingMobileDebugger *debugger = nil;
 - (void)webSocketDidOpen:(GrowingSRWebSocket *)webSocket {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary] ;
     dict[@"msgType"] = @"client_init" ;
-    dict[@"tm"] = GROWGetTimestamp();
+//    dict[@"tm"] = GROWGetTimestamp();
     [self sendJson:dict];
     [self beginKeepAlive];
 }
@@ -401,60 +400,60 @@ static GrowingMobileDebugger *debugger = nil;
 
 #pragma mark debugger信息
 - (NSMutableDictionary *)userInfo {
-    GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
-
-    NSMutableDictionary *info = [[NSMutableDictionary alloc] initWithCapacity:7];
-    //SDK版本、访问用户ID(deviceID／u)、登录用户ID（cs1）
-    NSString *uesrId        = [GrowingCustomField shareInstance].userId;
-    NSString *loginId       = deviceInfo.deviceIDString;//u
-    NSString *sdkVersion    = [Growing getVersion];
-    
-    [info setObject:@"client_info" forKey:@"msgType"];
-    [info setObject:(uesrId? uesrId:@"") forKey:@"cs1"];
-    [info setObject:(loginId? loginId:@"") forKey:@"u"];
-    [info setObject:sdkVersion forKey:@"sdkVersion"];
-
-    //地域信息
-    //国家代码(CN)、国家名称(中国)、地区名称(北京)、城市名称(北京)
-    NSString *countryCode = [[NSLocale currentLocale] objectForKey:NSLocaleCountryCode] ?: @"";
-    NSString *countryName = [[NSLocale currentLocale] displayNameForKey:NSLocaleCountryCode value:countryCode] ?: @"";
-
-    [info setObject:@{@"countryCode" : countryCode, @"country" : countryName, @"region" : @"", @"city" : @""}
-             forKey:@"locate"];
-
-    //设备信息
-    // APP版本、APP渠道、屏幕大小、操作系统、操作系统版本、设备类型、设备型号、app版本
-    CGRect screenRect = [UIScreen mainScreen].bounds;
-    NSString *w = [NSString stringWithFormat:@"%f", screenRect.size.width];
-    NSString *h = [NSString stringWithFormat:@"%f", screenRect.size.height];
-    //生成uri
-    NSNumber *stm = GROWGetTimestamp();
-    [info setObject:@{
-        @"deviceBrand" : deviceInfo.deviceBrand,
-        @"appChannel" : @"App Store",
-        @"screenSize" : @{@"w" : w, @"h" : h},
-        @"os" : deviceInfo.systemName,
-        @"osVersion" : deviceInfo.systemVersion,
-        @"deviceType" : deviceInfo.deviceType,
-        @"deviceModel" : deviceInfo.deviceModel,
-        @"appVersion" : deviceInfo.appFullVersion,
-        @"stm" : stm
-    }
-             forKey:@"device"];
-
-    //来自用户设置的信息
-    if (self.actionVar.count != 0) {
-        NSMutableDictionary *pvarDic = [[NSMutableDictionary alloc] init];
-        for (NSString *key in self.actionVar.allKeys) {
-            if ([key isEqualToString:@"CONVERSION_VARIABLES"] || [key isEqualToString:@"LOGIN_USER_ATTRIBUTES"]) {
-                [info setObject:self.actionVar[key] forKey:key];
-            } else {
-                [pvarDic setObject:self.actionVar[key] forKey:key];
-                [info setObject:pvarDic forKey:@"pvar"];
-            }
-        }
-    }
-    return info;
+//    GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
+//
+//    NSMutableDictionary *info = [[NSMutableDictionary alloc] initWithCapacity:7];
+//    //SDK版本、访问用户ID(deviceID／u)、登录用户ID（cs1）
+//    NSString *uesrId        = [GrowingCustomField shareInstance].userId;
+//    NSString *loginId       = deviceInfo.deviceIDString;//u
+//    NSString *sdkVersion    = [Growing getVersion];
+//
+//    [info setObject:@"client_info" forKey:@"msgType"];
+//    [info setObject:(uesrId? uesrId:@"") forKey:@"cs1"];
+//    [info setObject:(loginId? loginId:@"") forKey:@"u"];
+//    [info setObject:sdkVersion forKey:@"sdkVersion"];
+//
+//    //地域信息
+//    //国家代码(CN)、国家名称(中国)、地区名称(北京)、城市名称(北京)
+//    NSString *countryCode = [[NSLocale currentLocale] objectForKey:NSLocaleCountryCode] ?: @"";
+//    NSString *countryName = [[NSLocale currentLocale] displayNameForKey:NSLocaleCountryCode value:countryCode] ?: @"";
+//
+//    [info setObject:@{@"countryCode" : countryCode, @"country" : countryName, @"region" : @"", @"city" : @""}
+//             forKey:@"locate"];
+//
+//    //设备信息
+//    // APP版本、APP渠道、屏幕大小、操作系统、操作系统版本、设备类型、设备型号、app版本
+//    CGRect screenRect = [UIScreen mainScreen].bounds;
+//    NSString *w = [NSString stringWithFormat:@"%f", screenRect.size.width];
+//    NSString *h = [NSString stringWithFormat:@"%f", screenRect.size.height];
+//    //生成uri
+//    NSNumber *stm = GROWGetTimestamp();
+//    [info setObject:@{
+//        @"deviceBrand" : deviceInfo.deviceBrand,
+//        @"appChannel" : @"App Store",
+//        @"screenSize" : @{@"w" : w, @"h" : h},
+//        @"os" : deviceInfo.systemName,
+//        @"osVersion" : deviceInfo.systemVersion,
+//        @"deviceType" : deviceInfo.deviceType,
+//        @"deviceModel" : deviceInfo.deviceModel,
+//        @"appVersion" : deviceInfo.appFullVersion,
+//        @"stm" : stm
+//    }
+//             forKey:@"device"];
+//
+//    //来自用户设置的信息
+//    if (self.actionVar.count != 0) {
+//        NSMutableDictionary *pvarDic = [[NSMutableDictionary alloc] init];
+//        for (NSString *key in self.actionVar.allKeys) {
+//            if ([key isEqualToString:@"CONVERSION_VARIABLES"] || [key isEqualToString:@"LOGIN_USER_ATTRIBUTES"]) {
+//                [info setObject:self.actionVar[key] forKey:key];
+//            } else {
+//                [pvarDic setObject:self.actionVar[key] forKey:key];
+//                [info setObject:pvarDic forKey:@"pvar"];
+//            }
+//        }
+//    }
+    return nil;
 }
 
 - (void)cacheValue:(NSDictionary<NSString *, NSObject *> *)varDic ofType:(NSString *)type {
@@ -495,7 +494,7 @@ static GrowingMobileDebugger *debugger = nil;
 
     [eventInfo setValue:@"server_action" forKey:@"msgId"];
     //生成uri
-    unsigned long long stm = GROWGetTimestamp().unsignedLongLongValue;
+    unsigned long long stm =0;
     NSString *urlTemplate = nil;
     NSString *eventType = event.eventTypeKey;
 
@@ -513,7 +512,7 @@ static GrowingMobileDebugger *debugger = nil;
         urlTemplate = kGrowingEventApiTemplate_Other;
     }
 
-    NSString *url = kGrowingEventApiV3(urlTemplate, [GrowingInstance sharedInstance].projectID, stm);
+    NSString *url = kGrowingEventApiV3(urlTemplate, @"", stm);
 
     [eventInfo setValue:url forKey:@"uri"];
 

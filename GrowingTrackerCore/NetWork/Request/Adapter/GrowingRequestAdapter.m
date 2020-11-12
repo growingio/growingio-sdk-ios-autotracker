@@ -20,7 +20,6 @@
 
 #import "GrowingRequestAdapter.h"
 #import "GrowingEventRequest.h"
-#import "GrowingInstance.h"
 #import "NSData+GrowingHelper.h"
 #import "NSDictionary+GrowingHelper.h"
 
@@ -40,7 +39,7 @@
 
 - (NSMutableURLRequest *)adaptedRequest:(NSMutableURLRequest *)request {
     NSMutableURLRequest *needAdaptReq = request ;
-    [needAdaptReq setValue:[GROWGetTimestamp() stringValue] forHTTPHeaderField:@"X-Timestamp"];
+//    [needAdaptReq setValue:[GROWGetTimestamp() stringValue] forHTTPHeaderField:@"X-Timestamp"];
     [needAdaptReq setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     
     if (!self.header.count) {

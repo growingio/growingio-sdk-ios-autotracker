@@ -24,7 +24,6 @@
 #import "GrowingDeviceInfo.h"
 #import "GrowingEventManager.h"
 #import "GrowingGlobal.h"
-#import "GrowingInstance.h"
 #import "GrowingPageEvent.h"
 #import "NSDictionary+GrowingHelper.h"
 #import "NSString+GrowingHelper.h"
@@ -38,7 +37,7 @@
 }
 
 + (void)sendEvarEvent:(NSDictionary<NSString *, NSObject *> *_Nonnull)evar {
-    if ([GrowingInstance sharedInstance] == nil) {
+    if (YES) {
         return;
     }
 
@@ -77,10 +76,6 @@
     if (![eventName isValidKey]) {
         GIOLogError(@"event name is invalid!");
         return nil;  // invalid eventName is not acceptable
-    }
-
-    if ([GrowingInstance sharedInstance] == nil) {
-        return nil;
     }
 
     GrowingCustomTrackEvent *customEvent = [[GrowingCustomTrackEvent alloc] init];
@@ -162,9 +157,6 @@
 }
 
 + (void)sendEventWithVariable:(NSDictionary<NSString *, NSObject *> *_Nonnull)variable {
-    if ([GrowingInstance sharedInstance] == nil) {
-        return;
-    }
 
     [[GrowingBroadcaster sharedInstance]
         notifyEvent:@protocol(GrowingManualTrackMessage)
@@ -201,9 +193,6 @@
             return nil;
         }
     }
-    if ([GrowingInstance sharedInstance] == nil) {
-        return nil;
-    }
     GrowingVisitorEvent *visitorEvent = [[GrowingVisitorEvent alloc] init];
     visitorEvent.attributes = variable;
     return visitorEvent;
@@ -214,9 +203,6 @@
 }
 
 + (void)sendVisitorEventWithVariable:(NSDictionary<NSString *, NSObject *> *)variable {
-    if ([GrowingInstance sharedInstance] == nil) {
-        return;
-    }
     GrowingVisitorEvent *event = [[GrowingVisitorEvent alloc] init];
     event.attributes = variable;
 

@@ -22,73 +22,47 @@
 #import "GrowingCustomField.h"
 #import "GrowingDeviceInfo.h"
 #import "GrowingEventManager.h"
-#import "GrowingInstance.h"
 #import "GrowingNetworkInterfaceManager.h"
 
 @import CoreLocation;
 
 @interface GrowingVisitEvent ()
 
-@property (nonatomic, copy, readwrite) NSString *_Nonnull language;
-@property (nonatomic, copy, readwrite) NSString *_Nonnull deviceModel;
-@property (nonatomic, strong, readwrite) NSNumber *_Nonnull isPhone;
-@property (nonatomic, copy, readwrite) NSString *_Nonnull deviceBrand;
-@property (nonatomic, copy, readwrite) NSString *_Nonnull operatingSystem;
-@property (nonatomic, copy, readwrite) NSString *_Nonnull operatingSystemVersion;
-@property (nonatomic, copy, readwrite) NSString *_Nonnull appName;
-@property (nonatomic, copy, readwrite) NSString *_Nonnull bundleID;
-@property (nonatomic, copy, readwrite) NSString *_Nonnull appShortVersion;
-/// Identifier For Advertising
-@property (nonatomic, copy, readwrite) NSString *_Nonnull idfa;
-/// Identifier For Vendor
-@property (nonatomic, copy, readwrite) NSString *_Nonnull idfv;
-@property (nonatomic, copy, readwrite) NSString *_Nonnull sdkVersion;
-
-@property (nonatomic, strong, readwrite) NSNumber *_Nonnull screenW;
-@property (nonatomic, strong, readwrite) NSNumber *_Nonnull screenH;
-
-@property (nonatomic, strong, readwrite) NSNumber *_Nullable latitude;
-@property (nonatomic, strong, readwrite) NSNumber *_Nullable longitude;
-
-@property (nonatomic, copy, readwrite) NSString * _Nullable networkState;
-
 @end
 
 @implementation GrowingVisitEvent
 
-- (GrowingEventType)simpleEventType {
-    return GrowingEventTypeAppLifeCycleAppNewVisit;
-}
+
 
 - (instancetype)init {
     if (self = [super init]) {
         GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
-        self.language = deviceInfo.language;
-        self.deviceModel = deviceInfo.deviceModel;
-        self.isPhone = deviceInfo.isPhone;
-        self.deviceBrand = deviceInfo.deviceBrand;
-        self.operatingSystem = deviceInfo.systemName;
-        self.operatingSystemVersion = deviceInfo.systemVersion;
-        self.appName = deviceInfo.displayName;
-        self.bundleID = deviceInfo.bundleID;
-        self.appShortVersion = deviceInfo.appShortVersion;
-        self.urlScheme = deviceInfo.urlScheme;
-        self.idfa = deviceInfo.idfa;
-        self.idfv = deviceInfo.idfv;
-        self.sdkVersion = [Growing getVersion];
-        self.networkState = [[GrowingNetworkInterfaceManager sharedInstance] networkType];
-        CGSize screenSize = [GrowingDeviceInfo deviceScreenSize];
-        self.screenW = [NSNumber numberWithInteger:screenSize.width];
-        self.screenH = [NSNumber numberWithInteger:screenSize.height];
-
-        CLLocation *gpsLocation = [GrowingInstance sharedInstance].gpsLocation;
-        if (gpsLocation != nil) {
-            self.latitude = @(gpsLocation.coordinate.latitude);
-            self.longitude = @(gpsLocation.coordinate.longitude);
-        }
-
-        // 记录当前的vst事件
-        [GrowingEventManager shareInstance].visitEvent = self;
+//        _language = deviceInfo.language;
+//        _deviceModel = deviceInfo.deviceModel;
+//        _isPhone = deviceInfo.isPhone;
+//        _deviceBrand = deviceInfo.deviceBrand;
+//        _operatingSystem = deviceInfo.systemName;
+//        _operatingSystemVersion = deviceInfo.systemVersion;
+//        _appName = deviceInfo.displayName;
+//        _bundleID = deviceInfo.bundleID;
+//        _appShortVersion = deviceInfo.appShortVersion;
+//        _urlScheme = deviceInfo.urlScheme;
+//        _idfa = deviceInfo.idfa;
+//        _idfv = deviceInfo.idfv;
+//        _sdkVersion = [Growing getVersion];
+//        _networkState = [[GrowingNetworkInterfaceManager sharedInstance] networkType];
+//        CGSize screenSize = [GrowingDeviceInfo deviceScreenSize];
+//        _screenW = [NSNumber numberWithInteger:screenSize.width];
+//        _screenH = [NSNumber numberWithInteger:screenSize.height];
+//
+//        CLLocation *gpsLocation = [GrowingInstance sharedInstance].gpsLocation;
+//        if (gpsLocation != nil) {
+//            self.latitude = @(gpsLocation.coordinate.latitude);
+//            self.longitude = @(gpsLocation.coordinate.longitude);
+//        }
+//
+//        // 记录当前的vst事件
+//        [GrowingEventManager shareInstance].visitEvent = self;
     }
     return self;
 }
@@ -132,24 +106,24 @@
 
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
-    dataDictM[@"language"] = self.language;
-    dataDictM[@"deviceModel"] = self.deviceModel;
-    dataDictM[@"deviceType"] = self.isPhone.boolValue ? @"PHONE" : @"PAD";
-    dataDictM[@"deviceBrand"] = self.deviceBrand;
-    dataDictM[@"operatingSystem"] = self.operatingSystem;
-    dataDictM[@"operatingSystemVersion"] = self.operatingSystemVersion;
-    dataDictM[@"appName"] = self.appName;
-    dataDictM[@"domain"] = self.bundleID;
-    dataDictM[@"appVersion"] = self.appShortVersion;
-    dataDictM[@"urlScheme"] = self.urlScheme;
-    dataDictM[@"idfa"] = self.idfa;
-    dataDictM[@"idfv"] = self.idfv;
-    dataDictM[@"sdkVersion"] = self.sdkVersion;
-    dataDictM[@"screenWidth"] = self.screenW;
-    dataDictM[@"screenHeight"] = self.screenH;
-    dataDictM[@"latitude"] = self.latitude;
-    dataDictM[@"longitude"] = self.longitude;
-    dataDictM[@"networkState"] = self.networkState;
+//    dataDictM[@"language"] = self.language;
+//    dataDictM[@"deviceModel"] = self.deviceModel;
+//    dataDictM[@"deviceType"] = self.isPhone.boolValue ? @"PHONE" : @"PAD";
+//    dataDictM[@"deviceBrand"] = self.deviceBrand;
+//    dataDictM[@"operatingSystem"] = self.operatingSystem;
+//    dataDictM[@"operatingSystemVersion"] = self.operatingSystemVersion;
+//    dataDictM[@"appName"] = self.appName;
+//    dataDictM[@"domain"] = self.bundleID;
+//    dataDictM[@"appVersion"] = self.appShortVersion;
+//    dataDictM[@"urlScheme"] = self.urlScheme;
+//    dataDictM[@"idfa"] = self.idfa;
+//    dataDictM[@"idfv"] = self.idfv;
+//    dataDictM[@"sdkVersion"] = self.sdkVersion;
+//    dataDictM[@"screenWidth"] = self.screenW;
+//    dataDictM[@"screenHeight"] = self.screenH;
+//    dataDictM[@"latitude"] = self.latitude;
+//    dataDictM[@"longitude"] = self.longitude;
+//    dataDictM[@"networkState"] = self.networkState;
     //TODO: extraSdk字段在后续应该添加
     return dataDictM;
 }

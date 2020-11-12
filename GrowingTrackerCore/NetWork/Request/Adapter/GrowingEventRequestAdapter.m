@@ -20,7 +20,6 @@
 
 #import "GrowingEventRequestAdapter.h"
 #import "GrowingEventRequest.h"
-#import "GrowingInstance.h"
 #import "NSData+GrowingHelper.h"
 
 @implementation GrowingEventRequestHeaderAdapter
@@ -31,8 +30,7 @@
     [needAdaptReq setValue:@"3" forHTTPHeaderField:@"X-Compress-Code"];
     [needAdaptReq setValue:@"1" forHTTPHeaderField:@"X-Crypt-Codec"];
     [needAdaptReq setValue:@"application/octet-stream" forHTTPHeaderField:@"Content-Type"];
-    [needAdaptReq setValue:[GrowingInstance sharedInstance].projectID ? : @"" forHTTPHeaderField:@"X-GrowingIO-UID"];
-    
+
     return needAdaptReq;
 }
 

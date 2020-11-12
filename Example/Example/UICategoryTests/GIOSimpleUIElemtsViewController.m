@@ -7,7 +7,6 @@
 //
 
 #import "GIOSimpleUIElemtsViewController.h"
-#import <GrowingAutoTracker.h>
 
 const NSUInteger kProgressViewControllerMaxProgress = 100;
 

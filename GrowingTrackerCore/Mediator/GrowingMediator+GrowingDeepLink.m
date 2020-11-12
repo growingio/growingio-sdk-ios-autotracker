@@ -20,7 +20,6 @@
 
 #import "GrowingMediator+GrowingDeepLink.h"
 #import "NSURL+GrowingHelper.h"
-#import "GrowingInstance.h"
 #import "GrowingNetworkConfig.h"
 #import "GrowingMobileDebugger.h"
 #import "GrowingAlert.h"
