@@ -9,7 +9,6 @@
 #import "PageAttributesEventViewController.h"
 #import "GIODataProcessOperation.h"
 #import "GIOConstants.h"
-#import <GrowingAutoTracker.h>
 
 @interface PageAttributesEventViewController ()
 
@@ -30,7 +29,7 @@
 }
 
 - (void)configRandomPageAttributes {
-    self.growingPageAttributes = [self getRandomAttributes];
+//    self.growingPageAttributes = [self getRandomAttributes];
 }
 
 - (IBAction)setPageAttributesBtnClick:(UIButton *)sender {
@@ -40,7 +39,7 @@
 - (IBAction)setPageAttributesOutRangeBtnClick:(UIButton *)sender {
     
     NSDictionary *pval = [GIOConstants getLargeDictionary];
-    self.growingPageAttributes = pval;
+//    self.growingPageAttributes = pval;
     NSLog(@"setPageVariable largeDic length is:%ld",pval.count);
 }
 

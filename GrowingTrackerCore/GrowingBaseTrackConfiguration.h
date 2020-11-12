@@ -5,7 +5,7 @@
 #import <Foundation/Foundation.h>
 
 
-@interface GrowingBaseConfiguration : NSObject <NSCopying>
+@interface GrowingBaseTrackConfiguration : NSObject <NSCopying>
 @property(nonatomic, copy, readonly) NSString *projectId;
 
 @property(nonatomic, assign) BOOL debugEnabled;
@@ -16,9 +16,9 @@
 @property(nonatomic, assign) BOOL uploadExceptionEnable;
 @property(nonatomic, copy) NSString *dataCollectionServerHost;
 
-- (instancetype)initWithProjectId:(NSString *)projectId launchOptions:(NSDictionary *)launchOptions;
+- (instancetype)initWithProjectId:(NSString *)projectId;
 
-+ (instancetype)configurationWithProjectId:(NSString *)projectId launchOptions:(NSDictionary *)launchOptions;
++ (instancetype)configurationWithProjectId:(NSString *)projectId;
 
 
 @end

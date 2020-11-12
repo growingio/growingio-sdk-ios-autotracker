@@ -4,13 +4,13 @@
 
 #import <Foundation/Foundation.h>
 
-@class GrowingBaseConfiguration;
+@class GrowingBaseTrackConfiguration;
 
 
 @interface GrowingRealTracker : NSObject
-- (instancetype)initWithConfiguration:(GrowingBaseConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions;
+- (instancetype)initWithConfiguration:(GrowingBaseTrackConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions;
 
-+ (instancetype)trackerWithConfiguration:(GrowingBaseConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions;
++ (instancetype)trackerWithConfiguration:(GrowingBaseTrackConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions;
 
 - (void)trackCustomEvent:(NSString *)eventName;
 

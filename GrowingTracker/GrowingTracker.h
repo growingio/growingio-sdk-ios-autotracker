@@ -4,12 +4,12 @@
 
 #import <Foundation/Foundation.h>
 
-@class GrowingConfiguration;
+@class GrowingTrackConfiguration;
 @class GrowingRealTracker;
 
 
 @interface GrowingTracker : NSObject
-+ (void)startWithConfiguration:(GrowingConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions;
++ (void)startWithConfiguration:(GrowingTrackConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions;
 
 + (instancetype)sharedInstance;
 

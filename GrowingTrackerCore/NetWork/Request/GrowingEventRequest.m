@@ -20,7 +20,6 @@
 
 #import "GrowingEventRequest.h"
 #import "GrowingNetworkConfig.h"
-#import "GrowingInstance.h"
 #import "GrowingEventRequestAdapter.h"
 #import "GrowingRequestAdapter.h"
 #import "GrowingRequestAdapter.h"
@@ -39,7 +38,7 @@
 - (instancetype)initWithEvents:(NSArray<NSString *> *)events {
     if (self = [super init]) {
         self.events = events;
-        self.stm = GROWGetTimestamp().unsignedLongLongValue;
+//        self.stm = GROWGetTimestamp().unsignedLongLongValue;
     }
     return self;
 }

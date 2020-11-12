@@ -21,7 +21,6 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 #import "GrowingGlobal.h"
-#import "GrowingInstance.h"
 
 BOOL                g_GDPRFlag              = NO;
 BOOL                g_DataUploadFlag        = YES;

@@ -7,7 +7,6 @@
 //
 
 #import "GIOClickEventViewController.h"
-#import <GrowingAutoTracker.h>
 #import <GrowingTracker.h>
 #import "AppDelegate.h"
 
@@ -24,20 +23,20 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.segmentControl.growingUniqueTag = @"language-selector";
+//    self.segmentControl.growingUniqueTag = @"language-selector";
 
  
-    self.growingPageAttributes = @{@"greet": @"hello"};
+//    self.growingPageAttributes = @{@"greet": @"hello"};
 //    self.growingPageIgnorePolicy = GrowingIgnoreChild;
     
 //    self.parentViewController.growingPageIgnorePolicy = GrowingIgnoreAll;
-    [self.sendEventButton growingTrackImpression:@"hello_track_impression"];
-    [self.view growingTrackImpression:@"self_view_imp_track" attributes:@{@"self_view_key": @"self_view_value"}];
+//    [self.sendEventButton growingTrackImpression:@"hello_track_impression"];
+//    [self.view growingTrackImpression:@"self_view_imp_track" attributes:@{@"self_view_key": @"self_view_value"}];
     
     if ([UIApplication.sharedApplication.delegate isKindOfClass:AppDelegate.class]) {
         AppDelegate *appDelegate = (AppDelegate *)UIApplication.sharedApplication.delegate;
-        [self.trackEnabledSwitch setOn:appDelegate.configuation.dataTrackEnabled animated:YES];
-        [self.uploadEnabledSwitch setOn:appDelegate.configuation.dataUploadEnabled animated:YES];
+//        [self.trackEnabledSwitch setOn:appDelegate.configuation.dataTrackEnabled animated:YES];
+//        [self.uploadEnabledSwitch setOn:appDelegate.configuation.dataUploadEnabled animated:YES];
     }
 }
 
@@ -58,12 +57,12 @@
 }
 
 - (IBAction)trackSwitchValueChange:(UISwitch *)sender {
-    [Growing setDataTrackEnabled:sender.isOn];
+//    [Growing setDataTrackEnabled:sender.isOn];
     NSLog(@"setDataTrackEnabled: %@", (sender.isOn ? @"YES" : @"NO"));
 }
 
 - (IBAction)uploadSwitchValueChange:(UISwitch *)sender {
-    [Growing setDataUploadEnabled:sender.isOn];
+//    [Growing setDataUploadEnabled:sender.isOn];
     NSLog(@"setDataUploadEnabled: %@", (sender.isOn ? @"YES" : @"NO"));
 }
 

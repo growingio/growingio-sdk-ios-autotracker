@@ -3,7 +3,7 @@
 //
 
 #import "GrowingRealTracker.h"
-#import "GrowingBaseConfiguration.h"
+#import "GrowingBaseTrackConfiguration.h"
 #import "GrowingAppLifecycle.h"
 #import "GrowingLog.h"
 #import "GrowingTTYLogger.h"
@@ -19,16 +19,17 @@
 #import "GrowingBroadcaster.h"
 #import "GrowingDeviceInfo.h"
 #import "GrowingVisitEvent.h"
+#import "GrowingSession.h"
+#import "GrowingConfigurationManager.h"
 
 @interface GrowingRealTracker ()
 @property(nonatomic, copy, readonly) NSDictionary *launchOptions;
-@property(nonatomic, strong, readonly) GrowingBaseConfiguration *configuration;
-@property(nonatomic, strong, readonly) GrowingAppLifecycle *appLifecycle;
+@property(nonatomic, strong, readonly) GrowingBaseTrackConfiguration *configuration;
 
 @end
 
 @implementation GrowingRealTracker
-- (instancetype)initWithConfiguration:(GrowingBaseConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions {
+- (instancetype)initWithConfiguration:(GrowingBaseTrackConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions {
     self = [super init];
     if (self) {
         _configuration = [configuration copyWithZone:nil];
@@ -36,14 +37,15 @@
 
         [self loggerSetting];
 
-        _appLifecycle = [[GrowingAppLifecycle alloc] init];
-        [_appLifecycle setupAppStateNotification];
+        GrowingConfigurationManager.sharedInstance.trackConfiguration = self.configuration;
+        [GrowingAppLifecycle.sharedInstance setupAppStateNotification];
+        [GrowingSession startSession];
     }
 
     return self;
 }
 
-+ (instancetype)trackerWithConfiguration:(GrowingBaseConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions {
++ (instancetype)trackerWithConfiguration:(GrowingBaseTrackConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions {
     return [[self alloc] initWithConfiguration:configuration launchOptions:launchOptions];
 }
 
@@ -205,7 +207,6 @@
     // 如果 lastUserId 有值，并且新设置 CS1 也有值，当两个不同的时候，启用新的 Session 并发送 visit
     if (kGrowinglastUserId.length > 0 && newValue.length > 0 && ![kGrowinglastUserId isEqualToString:newValue]) {
         [[GrowingDeviceInfo currentDeviceInfo] resetSessionID];
-        [GrowingVisitEvent send];
 
         //重置session, 发 Visitor 事件
         if ([[GrowingCustomField shareInstance] growingVistorVar]) {

@@ -19,7 +19,6 @@
 
 
 #import "UIWindow+GrowingHelper.h"
-#import "GrowingInstance.h"
 #import "UIView+GrowingHelper.h"
 
 @implementation UIWindow (GrowingHelper)
@@ -43,7 +42,8 @@
     CGSize imageSize = CGSizeZero;
 
     UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
-    if (!IOS8_PLUS) {
+//    if (!IOS8_PLUS) {
+    if (NO) {
         if (UIInterfaceOrientationIsPortrait(orientation)) {
             imageSize = [UIScreen mainScreen].bounds.size;
         } else {
@@ -62,7 +62,8 @@
         CGContextTranslateCTM(context, window.center.x, window.center.y);
         CGContextConcatCTM(context, window.transform);
         CGContextTranslateCTM(context, -window.bounds.size.width * window.layer.anchorPoint.x, -window.bounds.size.height * window.layer.anchorPoint.y);
-        if (!IOS8_PLUS) {
+//        if (!IOS8_PLUS) {
+        if (NO) {
             if (orientation == UIInterfaceOrientationLandscapeLeft) {
                 CGContextRotateCTM(context, M_PI_2);
                 CGContextTranslateCTM(context, 0, -imageSize.width);

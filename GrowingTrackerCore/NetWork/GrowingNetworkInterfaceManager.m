@@ -20,7 +20,6 @@
 
 #import "GrowingNetworkInterfaceManager.h"
 #import "GrowingReachability.h"
-#import "GrowingInstance.h"
 #import "GrowingGlobal.h"
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 
@@ -34,10 +33,6 @@
 @implementation GrowingNetworkInterfaceManager
 
 + (instancetype)sharedInstance {
-    if ([GrowingInstance sharedInstance].projectID.length == 0 || GrowingSDKDoNotTrack()) {
-        return nil;
-    }
-    
     static dispatch_once_t pred;
     __strong static id sharedInstance = nil;
     dispatch_once(&pred, ^{

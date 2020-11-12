@@ -22,7 +22,6 @@
 #import "GrowingFMDB.h"
 #import <pthread.h>
 #import "GrowingEvent.h"
-#import "GrowingInstance.h"
 #import "NSString+GrowingHelper.h"
 #import "GrowingCocoaLumberjack.h"
 
@@ -359,11 +358,11 @@ static BOOL isExecuteVaccum(NSString *name)
             NSString *type = event.eventTypeKey;
             NSString *eventString = event.rawJsonString;
             
-            BOOL result = [db executeUpdate:@"insert into namedcachetable(name,key,value,createAt,type) values(?,?,?,?,?)", self.name, keys[i], eventString, GROWGetTimestamp(), type];
-            if (!result) {
-                error = [db lastError];
-                break;
-            }
+//            BOOL result = [db executeUpdate:@"insert into namedcachetable(name,key,value,createAt,type) values(?,?,?,?,?)", self.name, keys[i], eventString, GROWGetTimestamp(), type];
+//            if (!result) {
+//                error = [db lastError];
+//                break;
+//            }
         }
     }
     return error;
@@ -468,7 +467,8 @@ static BOOL isExecuteVaccum(NSString *name)
 
 - (NSError *)cleanExpiredDataIfNeeded {
     
-    NSNumber *now = GROWGetTimestamp();
+//    NSNumber *now = GROWGetTimestamp();
+    NSNumber *now =0;
     NSNumber *sevenDayBefore = [NSNumber numberWithLong:(now.longValue - DAY_IN_MILLISECOND * 7)]; // (now.longValue - now.longValue);
     
     __block NSError *deleteError = nil;

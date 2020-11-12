@@ -698,7 +698,7 @@
 		6003F582195388D10070C39A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				CLASSPREFIX = GIO;
+				CLASSPREFIX = Growing;
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = GrowingIO;
 				TargetAttributes = {

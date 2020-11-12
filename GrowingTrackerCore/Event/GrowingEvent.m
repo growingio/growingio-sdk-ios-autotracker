@@ -22,7 +22,6 @@
 #import "GrowingCustomField.h"
 #import "GrowingDeviceInfo.h"
 #import "GrowingEventManager.h"
-#import "GrowingInstance.h"
 #import "GrowingNetworkInterfaceManager.h"
 #import "NSString+GrowingHelper.h"
 #import "UIApplication+GrowingNode.h"
@@ -60,7 +59,7 @@
     if (self) {
         GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
         self.sessionId = deviceInfo.sessionID ?: @"";
-        self.timestamp = tm ?: GROWGetTimestamp();
+//        self.timestamp = tm ?: GROWGetTimestamp();
         self.eventTypeKey = [self eventTypeKey];
         self.domain = [GrowingDeviceInfo currentDeviceInfo].bundleID;
 

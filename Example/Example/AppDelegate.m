@@ -14,7 +14,8 @@
 #import "GIODataProcessOperation.h"
 //使用md5加密
 #import <CommonCrypto/CommonDigest.h>
-#import <GrowingAutoTracker.h>
+#import "GrowingTracker.h"
+#import "GrowingTrackConfiguration.h"
 
 static NSString *const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
 
@@ -28,16 +29,9 @@ static NSString *const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
 //    [Bugly startWithAppId:@"93004a21ca"];
 
     // Config GrowingIO
-    self.configuation = [[GrowingConfiguration alloc] initWithProjectId:kGrowingProjectId launchOptions:launchOptions];
-    [self.configuation setLogEnabled:YES];
-    self.configuation.samplingRate = 1.0;
-    self.configuation.cellularDataLimit = 10;
-    self.configuation.impressionScale = 1.0;
-    [Growing startWithConfiguration:self.configuation];
-
-    NSString *trackSdkVersion = [Growing getVersion];
-    NSString *systemVersion = [[UIDevice currentDevice] systemVersion];
-    NSLog(@"GIO SDK当前版本号：%@;\n 当前手机系统的版本号：%@", trackSdkVersion, systemVersion);
+    GrowingTrackConfiguration *configuration = [GrowingTrackConfiguration configurationWithProjectId:@"xxxxx"];
+    configuration.debugEnabled = YES;
+    [GrowingTracker startWithConfiguration:configuration launchOptions:launchOptions];
 
     [self registerRemoteNotification];
 
@@ -64,7 +58,7 @@ static NSString *const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
 
     } else if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
         UIUserNotificationType type =
-            UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound;
+                UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound;
         UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:type categories:nil];
         [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
         [[UIApplication sharedApplication] registerForRemoteNotifications];
@@ -72,8 +66,8 @@ static NSString *const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
 }
 
 /** 远程通知注册成功委托 */
-- (void)application:(UIApplication *)application
-    didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+- (void)                             application:(UIApplication *)application
+didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     NSMutableString *deviceTokenString = [NSMutableString string];
     const char *bytes = deviceToken.bytes;
     NSInteger count = deviceToken.length;
@@ -100,6 +94,7 @@ static NSString *const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
 }
 
 #pragma mark - UNUserNotificationCenterDelegate
+
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center
        willPresentNotification:(UNNotification *)notification
          withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler {
@@ -118,37 +113,42 @@ static NSString *const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
 }
 
 - (BOOL)application:(UIApplication *)application
-              openURL:(NSURL *)url
-    sourceApplication:(NSString *)sourceApplication
-           annotation:(id)annotation {
-    if ([Growing handleURL:url]) {
-        return YES;
-    }
+            openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation {
+//    if ([Growing handleURL:url]) {
+//        return YES;
+//    }
     return NO;
 }
 
 // universal Link执行
-- (BOOL)application:(UIApplication *)application
-    continueUserActivity:(NSUserActivity *)userActivity
-      restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> *_Nullable))restorationHandler {
-    [Growing handleURL:userActivity.webpageURL];
+- (BOOL) application:(UIApplication *)application
+continueUserActivity:(NSUserActivity *)userActivity
+  restorationHandler:(void (^)(NSArray<id <UIUserActivityRestoring>> *_Nullable))restorationHandler {
+//    [Growing handleURL:userActivity.webpageURL];
     return YES;
 }
 
 #pragma mark - 生命周期
+
 // xcode11 以后 AppDelegate.m文件没有了APP的生命周期,为了自动化测试用例添加
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     NSLog(@"状态** 将要进入前台");
 }
+
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     NSLog(@"状态** 已经活跃");
 }
+
 - (void)applicationWillResignActive:(UIApplication *)application {
     NSLog(@"状态** 将要进入后台");
 }
+
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     NSLog(@"状态** 已经进入后台");
 }
+
 - (void)applicationWillTerminate:(UIApplication *)application {
     NSLog(@"状态** 将要退出程序");
 }

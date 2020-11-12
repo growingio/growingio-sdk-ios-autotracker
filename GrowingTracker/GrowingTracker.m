@@ -3,8 +3,8 @@
 //
 
 #import "GrowingTracker.h"
-#import "GrowingBaseConfiguration.h"
-#import "GrowingConfiguration.h"
+#import "GrowingBaseTrackConfiguration.h"
+#import "GrowingTrackConfiguration.h"
 #import "GrowingRealTracker.h"
 #import "GrowingLogMacros.h"
 #import "GrowingCocoaLumberjack.h"
@@ -25,7 +25,7 @@ static GrowingTracker *sharedInstance = nil;
     return self;
 }
 
-+ (void)startWithConfiguration:(GrowingConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions {
++ (void)startWithConfiguration:(GrowingTrackConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions {
     if (![NSThread isMainThread]) {
         @throw [NSException exceptionWithName:@"初始化异常" reason:@"请在applicationDidFinishLaunching中调用startWithConfiguration函数,并且确保在主线程中" userInfo:nil];
     }

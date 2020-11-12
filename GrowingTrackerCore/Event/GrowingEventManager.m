@@ -22,7 +22,6 @@
 
 #import "GrowingEventManager.h"
 #import "GrowingDeviceInfo.h"
-#import "GrowingInstance.h"
 #import "NSString+GrowingHelper.h"
 #import "GrowingNetworkInterfaceManager.h"
 #import "GrowingEvent.h"
@@ -137,7 +136,8 @@ static GrowingEventManager *shareinstance = nil;
 
         // timer
         self.reportTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, self.eventDispatch);
-        CGFloat configInterval = [GrowingInstance sharedInstance].configuration.dataUploadInterval;
+//        CGFloat configInterval = [GrowingInstance sharedInstance].configuration.dataUploadInterval;
+        CGFloat configInterval = 0;
         CGFloat dataUploadInterval = configInterval >= 5 ? configInterval : 5; // at least 5 seconds
         dispatch_source_set_timer(self.reportTimer,
                                   dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC * 5), // first upload
@@ -158,7 +158,7 @@ static GrowingEventManager *shareinstance = nil;
         // all other events got to this category
         _otherEventChannel = [GrowingEventChannel otherEventChannelFromAllChannels:_allEventChannels];
         
-        self.uploadLimitOfCellular = [GrowingInstance sharedInstance].configuration.cellularDataLimit * kGrowingUnit_MB;
+//        self.uploadLimitOfCellular = [GrowingInstance sharedInstance].configuration.cellularDataLimit * kGrowingUnit_MB;
     }
     return self;
 }
@@ -217,9 +217,9 @@ static GrowingEventManager *shareinstance = nil;
      triggerNode:(id<GrowingNode>)triggerNode
      withContext:(id<GrowingAddEventContext>)context {
     
-    if (!event || ![GrowingInstance sharedInstance] || GrowingSDKDoNotTrack()) {
-        return;
-    }
+//    if (!event || ![GrowingInstance sharedInstance] || GrowingSDKDoNotTrack()) {
+//        return;
+//    }
     
     [GrowingDispatchManager dispatchInMainThread:^{
         
@@ -456,8 +456,6 @@ static GrowingEventManager *shareinstance = nil;
 }
 
 - (void)prettyLogForEvents:(NSArray <NSString *> *)events withChannel:(GrowingEventChannel *)channel {
-    if (![GrowingInstance sharedInstance].configuration.logEnabled) { return; }
-    
     NSMutableArray *arrayM = [NSMutableArray array];
     for (NSString *rawEvent in events) {
         [arrayM addObject:[rawEvent growingHelper_jsonObject]];
@@ -500,7 +498,7 @@ static GrowingEventManager *shareinstance = nil;
 }
 
 - (NSString *)ai {
-    return [GrowingInstance sharedInstance].projectID;
+    return nil;
 }
 
 - (dispatch_queue_t)eventDispatch {

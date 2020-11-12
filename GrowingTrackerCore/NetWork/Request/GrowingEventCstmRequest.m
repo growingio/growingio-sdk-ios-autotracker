@@ -19,14 +19,14 @@
 
 
 #import "GrowingEventCstmRequest.h"
-#import "GrowingInstance.h"
 
 @implementation GrowingEventCstmRequest
 
 - (NSString *)path {
-    NSString *accountId = [GrowingInstance sharedInstance].projectID ? : @"";
-    NSString *path = [NSString stringWithFormat:@"v3/%@/ios/cstm", accountId];
-    return path;
+//    NSString *accountId = [GrowingInstance sharedInstance].projectID ? : @"";
+//    NSString *path = [NSString stringWithFormat:@"v3/%@/ios/cstm", accountId];
+//    return path;
+    return nil;
 }
 
 @end
