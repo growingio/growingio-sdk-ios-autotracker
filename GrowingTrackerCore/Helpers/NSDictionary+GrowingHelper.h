@@ -36,7 +36,6 @@
 
 // return YES: something was changed;
 // return NO: nothing was changed.
-- (BOOL)mergeGrowingAttributesVar:(NSDictionary<NSString *, NSObject *> *)growingAttributesVar;
 - (BOOL)removeGrowingAttributesVar:(NSString *)key;
 
 @end

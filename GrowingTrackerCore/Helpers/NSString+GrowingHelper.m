@@ -130,32 +130,6 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\[]{},
     return self;
 }
 
-//添加Log
-- (BOOL)isValidKey {
-    BOOL valid = [self isValidIdentifier];
-    
-    if (!valid) {
-        GIOLogError(parameterKeyErrorLog);
-    }
-    return valid;
-}
-
-/**
- 判断标志符是否有效
- 文档：https://docs.google.com/document/d/1lpx1wzCktp0JJFbLUl4o357kvALYGKDQHbzFXgRhYT0/edit#
- 
- @return 有效返回 YES，否则为NO
- */
-- (BOOL)isValidIdentifier {
-    //标识符不允许空字符串，不允许nil
-    //标识符的长度限制在50个英文字符之内
-    if (self.length == 0 || self.length > 50) {
-        return NO;
-    }
-    
-    return YES;
-}
-
 + (BOOL)growingHelper_isBlankString:(NSString *)string {
     if (string == nil) {
         return YES;

@@ -21,7 +21,6 @@
 #import "GrowingEventOptions.h"
 #import "GrowingFileStorage.h"
 #import "GrowingDispatchManager.h"
-#import "GrowingGlobal.h"
 #import "GrowingDeviceInfo.h"
 #import "NSString+GrowingHelper.h"
 #import "GrowingNetworkConfig.h"

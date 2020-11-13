@@ -23,7 +23,6 @@
 #import "GrowingDispatchManager.h"
 #import "GrowingEventManager.h"
 #import "GrowingFileStorage.h"
-#import "GrowingGlobal.h"
 #import "GrowingManualTrackEvent.h"
 #import "GrowingMobileDebugger.h"
 #import "GrowingPageEvent.h"
@@ -95,10 +94,6 @@ static NSString *const kGrowingCustomField = @"customField";
     if (![dict isValidDictVariable]) {
         return;
     }
-    if (dict.count > 100) {
-        GIOLogError(parameterValueErrorLog);
-        return;
-    }
     [GrowingEvarEvent sendEvarEvent:dict];
 }
 
@@ -107,10 +102,6 @@ static NSString *const kGrowingCustomField = @"customField";
     [[GrowingMobileDebugger shareDebugger] cacheValue:peopleVar ofType:kEventTypeKeyLoginUserAttributes];
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:peopleVar];
     if (![dict isValidDictVariable]) {
-        return;
-    }
-    if (dict.count > 100) {
-        GIOLogError(parameterValueErrorLog);
         return;
     }
     [GrowingPeopleVarEvent sendEventWithVariable:dict];
@@ -142,15 +133,6 @@ static NSString *const kGrowingCustomField = @"customField";
 }
 
 - (void)sendVisitorEvent:(NSDictionary<NSString *, NSObject *> *)variable {
-    if ([variable isKindOfClass:[NSDictionary class]]) {
-        if (![variable isValidDictVariable]) {
-            return;
-        }
-        if (variable.count > 100) {
-            GIOLogError(parameterValueErrorLog);
-            return;
-        }
-    }
     //缓存variable
     self.growingVistorVar = [variable mutableCopy];
     [GrowingVisitorEvent sendVisitorEventWithVariable:variable];
