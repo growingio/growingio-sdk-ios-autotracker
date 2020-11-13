@@ -19,7 +19,7 @@
 
 
 #import "GrowingPropertyDefine.h"
-#import "UITapGestureRecognizer+GrowingAutoTrack.h"
+#import "UITapGestureRecognizer+GrowingAutotracker.h"
 #import "UIImage+GrowingHelper.h"
 #import "GrowingEvent.h"
 #import "GrowingPageManager.h"
@@ -27,11 +27,11 @@
 #import "NSObject+GrowingIvarHelper.h"
 #import "UIApplication+GrowingNode.h"
 #import "UIImage+GrowingHelper.h"
-#import "UITableView+GrowingAutoTrack.h"
+#import "UITableView+GrowingAutotracker.h"
 #import "UIView+GrowingHelper.h"
 #import "UIView+GrowingNode.h"
-#import "GrowingInstance.h"
-#import "GrowingConfiguration+GrowingAutoTrack.h"
+#import "GrowingIMPTrack.h"
+#import "GrowingConfigurationManager.h"
 
 @interface GrowingMaskView : UIImageView
 @end
@@ -157,8 +157,8 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
         return NO;
     }
     
-    BOOL isInScreen = NO;
-    double impScale = [GrowingInstance sharedInstance].configuration.impressionScale;
+    BOOL isInScreen;
+    double impScale = GrowingConfigurationManager.sharedInstance.trackConfiguration.impressionScale;
     
     if (impScale == 0.0) {
         isInScreen = YES;
@@ -416,6 +416,37 @@ GrowingSafeStringPropertyImplementation(growingUniqueTag, setGrowingUniqueTag)
     return [super growingNodeSubPath];
 }
 
+@end
 
+@implementation UIView (GrowingImpression)
 
+- (void)growingTrackImpression:(NSString *)eventName {
+    [self growingTrackImpression:eventName attributes:nil];
+}
+
+- (void)growingTrackImpression:(NSString *)eventName
+                    attributes:(NSDictionary<NSString *,NSString *> *)attributes {
+
+    if (eventName.length == 0) {
+        return;
+    }
+
+    if ([eventName isEqualToString:self.growingIMPTrackEventName]) {
+        if ((attributes && [attributes isEqualToDictionary:self.growingIMPTrackVariable]) ||
+                attributes == self.growingIMPTrackVariable) {
+            return;
+        }
+    }
+
+    [GrowingIMPTrack shareInstance].impTrackActive = YES;
+
+    self.growingIMPTrackEventName = eventName;
+    self.growingIMPTrackVariable = attributes;
+    self.growingIMPTracked = NO;
+    [[GrowingIMPTrack shareInstance] addNode:self inSubView:NO];
+}
+
+- (void)growingStopTrackImpression {
+    [[GrowingIMPTrack shareInstance] clearNode:self];
+}
 @end

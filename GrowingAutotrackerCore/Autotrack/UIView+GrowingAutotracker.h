@@ -1,8 +1,8 @@
 //
-//  GrowingConfiguration+GrowingAutoTrack.m
+//  UIView+GrowingAutoTrack.h
 //  GrowingAutoTracker
 //
-//  Created by GrowingIO on 2020/7/30.
+//  Created by GrowingIO on 2020/7/23.
 //  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,18 +18,14 @@
 //  limitations under the License.
 
 
-#import "GrowingConfiguration+GrowingAutoTrack.h"
+#import <UIKit/UIKit.h>
 
-@implementation GrowingConfiguration (GrowingAutoTrack)
+NS_ASSUME_NONNULL_BEGIN
 
-static double gImpressionScale = 0.0;
+@interface UIView (GrowingAutotracker)
 
-- (void)setImpressionScale:(double)impressionScale {
-    gImpressionScale = impressionScale;
-}
-
-- (double)impressionScale {
-    return gImpressionScale;
-}
+- (void)growing_didMoveToSuperview;
 
 @end
+
+NS_ASSUME_NONNULL_END

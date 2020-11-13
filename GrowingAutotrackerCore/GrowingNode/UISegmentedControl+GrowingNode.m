@@ -17,7 +17,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "UISegmentedControl+GrowingAutoTrack.h"
+#import "UISegmentedControl+GrowingAutotracker.h"
 #import "UISegmentedControl+GrowingNode.h"
 #import "UIView+GrowingNode.h"
 #import <objc/runtime.h>

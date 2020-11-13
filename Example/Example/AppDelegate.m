@@ -14,8 +14,7 @@
 #import "GIODataProcessOperation.h"
 //使用md5加密
 #import <CommonCrypto/CommonDigest.h>
-#import "GrowingTracker.h"
-#import "GrowingTrackConfiguration.h"
+#import "GrowingAutotracker.h"
 
 static NSString *const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
 
@@ -31,7 +30,9 @@ static NSString *const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
     // Config GrowingIO
     GrowingTrackConfiguration *configuration = [GrowingTrackConfiguration configurationWithProjectId:@"xxxxx"];
     configuration.debugEnabled = YES;
-    [GrowingTracker startWithConfiguration:configuration launchOptions:launchOptions];
+    configuration.impressionScale = 1.0;
+    [GrowingAutotracker startWithConfiguration:configuration launchOptions:launchOptions];
+//    [GrowingTracker startWithConfiguration:configuration launchOptions:launchOptions];
 
     [self registerRemoteNotification];
 

@@ -19,7 +19,7 @@
 
 
 #import <UIKit/UIKit.h>
-#import "NSNotificationCenter+GrowingAutoTrack.h"
+#import "NSNotificationCenter+GrowingAutotracker.h"
 #import "GrowingPropertyDefine.h"
 #import "GrowingClickEvent.h"
 #import "UIView+GrowingNode.h"
@@ -29,7 +29,7 @@
 GrowingPropertyDefine(UITextField, NSString *, growingHookOldText, setGrowingHookOldText)
 GrowingPropertyDefine(UITextView, NSString *, growingHookOldText, setGrowingHookOldText)
 
-@implementation NSNotificationCenter (GrowingAutoTrack)
+@implementation NSNotificationCenter (GrowingAutotracker)
 
 - (void)growing_postNotificationName:(NSNotificationName)aName object:(id)anObject userInfo:(NSDictionary *)aUserInfo {
     

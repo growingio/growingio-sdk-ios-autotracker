@@ -240,9 +240,9 @@ static BOOL impTrackIsRegistered = NO;
     node.growingIMPTrackVariable = impTrackVariable;
 
     if (node.growingIMPTrackEventName.length > 0 && node.growingIMPTrackVariable.count > 0) {
-        [Growing trackCustomEvent:node.growingIMPTrackEventName withAttributes:node.growingIMPTrackVariable];
+//        [Growing trackCustomEvent:node.growingIMPTrackEventName withAttributes:node.growingIMPTrackVariable];
     } else if (node.growingIMPTrackEventName.length > 0) {
-        [Growing trackCustomEvent:node.growingIMPTrackEventName];
+//        [Growing trackCustomEvent:node.growingIMPTrackEventName];
     }
 }
 

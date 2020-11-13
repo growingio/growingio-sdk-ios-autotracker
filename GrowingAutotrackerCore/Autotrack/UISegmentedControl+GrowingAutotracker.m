@@ -18,7 +18,7 @@
 //  limitations under the License.
 
 
-#import "UISegmentedControl+GrowingAutoTrack.h"
+#import "UISegmentedControl+GrowingAutotracker.h"
 #import "GrowingClickEvent.h"
 #import "UIView+GrowingNode.h"
 #import "NSObject+GrowingIvarHelper.h"
@@ -30,7 +30,7 @@
 
 @end
 
-@implementation UISegmentedControl (GrowingAutoTrack)
+@implementation UISegmentedControl (GrowingAutotracker)
 
 + (UILabel*)growing_labelForSegment:(UIView*)segment {
     UILabel *lable = nil;

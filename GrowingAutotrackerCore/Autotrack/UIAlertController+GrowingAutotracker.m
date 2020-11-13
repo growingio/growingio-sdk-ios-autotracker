@@ -18,13 +18,13 @@
 //  limitations under the License.
 
 
-#import "UIAlertController+GrowingAutoTrack.h"
+#import "UIAlertController+GrowingAutotracker.h"
 #import "NSObject+GrowingIvarHelper.h"
 #import "GrowingSwizzle.h"
 #import "GrowingClickEvent.h"
 #import "UIView+GrowingNode.h"
 
-@implementation UIAlertController (GrowingAutoTrack)
+@implementation UIAlertController (GrowingAutotracker)
 
 - (void)growing_dismissAnimated:(BOOL)animated triggeringAction:(UIAlertAction *)action {
     

@@ -1,8 +1,8 @@
 //
-//  UIView+GrowingAutoTrack.h
+//  UIAlertController+GrowingAutoTrack.h
 //  GrowingAutoTracker
 //
-//  Created by GrowingIO on 2020/7/23.
+//  Created by GrowingIO on 2020/7/30.
 //  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,9 +22,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface UIView (GrowingAutoTrack)
+@interface UIAlertController (GrowingAutotracker)
 
-- (void)growing_didMoveToSuperview;
+- (void)growing_dismissAnimated:(BOOL)animated triggeringAction:(UIAlertAction *)action;
+
+- (void)growing_dismissAnimated:(BOOL)animated
+             triggeringAction:(UIAlertAction *)action
+triggeredByPopoverDimmingView:(UIView *)view
+              dismissCompletion:(id)completion;
+
++ (UIAlertAction *)growing_actionForActionView:(UIView*)actionView;
+- (NSMapTable *)growing_allActionViews;
 
 @end
 

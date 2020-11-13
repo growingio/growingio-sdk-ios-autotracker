@@ -78,8 +78,8 @@
     if (location != nil && visitEvent.latitude == nil && visitEvent.longitude == nil) {
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
-            visitEvent.latitude = @(location.coordinate.latitude);
-            visitEvent.longitude = @(location.coordinate.longitude);
+//            visitEvent.latitude = @(location.coordinate.latitude);
+//            visitEvent.longitude = @(location.coordinate.longitude);
             [GrowingVisitEvent sendWithEvent:visitEvent];
         });
     }

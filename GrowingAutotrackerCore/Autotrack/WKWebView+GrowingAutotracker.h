@@ -22,7 +22,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface WKWebView (GrowingAutoTrack)
+@interface WKWebView (GrowingAutotracker)
 
 - (instancetype)growing_initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration *)configuration;
 

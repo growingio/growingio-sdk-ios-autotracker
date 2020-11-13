@@ -1,5 +1,5 @@
 //
-//  UIViewController+GrowingAutoTrack.h
+//  UIView+GrowingAutoTrack.m
 //  GrowingAutoTracker
 //
 //  Created by GrowingIO on 2020/7/23.
@@ -18,22 +18,17 @@
 //  limitations under the License.
 
 
-#import <UIKit/UIKit.h>
+#import "UIView+GrowingAutotracker.h"
+#import "GrowingIMPTrack.h"
 
-NS_ASSUME_NONNULL_BEGIN
+@implementation UIView (GrowingAutotracker)
 
-@interface UIViewController (GrowingAutoTrack)
-
-//用来判断是否是没有使用addChildViewController方法的childVC
-- (BOOL)growingHookIsCustomAddVC;
-- (void)growingOutOfLifetimeShow;
-
-- (NSString *)growingPageName;
-- (NSString *)growingPageTitle;
-
-- (void)growing_viewDidAppear:(BOOL)animated;
-- (void)growing_viewDidDisappear:(BOOL)animated;
+- (void)growing_didMoveToSuperview {
+    [self growing_didMoveToSuperview];
+    
+    if (self.superview && self.window) {
+        [[GrowingIMPTrack shareInstance] addNode:self inSubView:YES];
+    }
+}
 
 @end
-
-NS_ASSUME_NONNULL_END

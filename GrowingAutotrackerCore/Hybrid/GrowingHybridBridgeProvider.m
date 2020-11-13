@@ -15,7 +15,6 @@
 
 #import <WebKit/WebKit.h>
 #import "GrowingHybridBridgeProvider.h"
-#import "GrowingTrackerx.h"
 #import "NSString+GrowingHelper.h"
 #import "GrowingEvent.h"
 #import "GrowingWebViewDomChangedDelegate.h"
@@ -67,9 +66,9 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
         [self parseEventJsonString:messageData];
 
     } else if ([kGrowingJavascriptMessageType_setNativeUserId isEqualToString:messageType]) {
-        [Growing setLoginUserId:messageData];
+//        [growing setLoginUserId:messageData];
     } else if ([kGrowingJavascriptMessageType_clearNativeUserId isEqualToString:messageType]) {
-        [Growing cleanLoginUserId];
+//        [Growing cleanLoginUserId];
     } else if ([kGrowingJavascriptMessageType_onDomChanged isEqualToString:messageType]) {
         [self dispatchWebViewDomChanged];
     }
@@ -107,9 +106,9 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
     while (!finished) {
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
     }
-    
+
     completionHandler(resultDic, resultError);
-    
+
 }
 
 - (void)parseEventJsonString:(NSString *)jsonString {

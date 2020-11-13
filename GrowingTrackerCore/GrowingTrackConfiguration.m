@@ -2,13 +2,13 @@
 // Created by xiangyang on 2020/11/6.
 //
 
-#import "GrowingBaseTrackConfiguration.h"
+#import "GrowingTrackConfiguration.h"
 
-@interface GrowingBaseTrackConfiguration ()
+@interface GrowingTrackConfiguration ()
 @property(nonatomic, copy, readwrite) NSString *projectId;
 @end
 
-@implementation GrowingBaseTrackConfiguration
+@implementation GrowingTrackConfiguration
 - (instancetype)initWithProjectId:(NSString *)projectId {
     self = [super init];
     if (self) {
@@ -31,7 +31,7 @@
 }
 
 - (id)copyWithZone:(NSZone *)zone {
-    GrowingBaseTrackConfiguration *configuration = [[[self class] alloc] init];
+    GrowingTrackConfiguration *configuration = [[[self class] alloc] init];
     configuration.projectId = [_projectId copy];
     configuration.debugEnabled = _debugEnabled;
     configuration.cellularDataLimit = _cellularDataLimit;

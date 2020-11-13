@@ -1,5 +1,5 @@
 //
-//  UITableView+GrowingAutoTrack.m
+//  UICollectionView+GrowingAutoTrack.m
 //  GrowingAutoTracker
 //
 //  Created by GrowingIO on 2020/7/23.
@@ -18,35 +18,34 @@
 //  limitations under the License.
 
 
-#import "UITableView+GrowingAutoTrack.h"
+#import "UICollectionView+GrowingAutotracker.h"
 #import "GrowingSwizzle.h"
 #import "GrowingSwizzler.h"
 #import "GrowingClickEvent.h"
 #import "UIView+GrowingNode.h"
 
-@implementation UITableView (GrowingAutoTrack)
+@implementation UICollectionView (GrowingAutotracker)
 
-- (void)growing_setDelegate:(id<UITableViewDelegate>)delegate {
+- (void)growing_setDelegate:(id<UICollectionViewDelegate>)delegate {
     
-    if ([delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)]) {
+    if ([delegate respondsToSelector:@selector(collectionView:didSelectItemAtIndexPath:)]) {
         
-        void (^didSelectBlock)(id, SEL, id, id) = ^(id view, SEL command, UITableView *tableView, NSIndexPath *indexPath) {
+        void (^didSelectItemBlock)(id, SEL, id, id) = ^(id view, SEL command, UICollectionView *collectionView, NSIndexPath *indexPath) {
                                                  
-            if (tableView && indexPath) {
-                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+            if (collectionView && indexPath) {
+                UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
                 [GrowingClickEvent sendEventWithNode:cell
                                         andEventType:GrowingEventTypeRowSelected];
             }
         };
         
-        [GrowingSwizzler growing_swizzleSelector:@selector(tableView:didSelectRowAtIndexPath:)
+        [GrowingSwizzler growing_swizzleSelector:@selector(collectionView:didSelectItemAtIndexPath:)
                                          onClass:delegate.class
-                                       withBlock:didSelectBlock
-                                           named:@"growing_tableView_didSelect"];
+                                       withBlock:didSelectItemBlock
+                                           named:@"growing_collectionView_didSelect"];
     }
     
     [self growing_setDelegate:delegate];
 }
 
 @end
-

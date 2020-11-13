@@ -23,7 +23,6 @@
 #import "GrowingCocoaLumberjack.h"
 #import "GrowingEventManager.h"
 #import "GrowingEventNodeManager.h"
-#import "GrowingInstance.h"
 #import "GrowingNodeHelper.h"
 #import "GrowingNodeManager.h"
 #import "GrowingPageEvent.h"
