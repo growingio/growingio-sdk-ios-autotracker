@@ -6,5 +6,5 @@
 
 
 @interface GrowingTimeUtil : NSObject
-+ (NSNumber *)currentTimeMillis;
++ (long long)currentTimeMillis;
 @end
