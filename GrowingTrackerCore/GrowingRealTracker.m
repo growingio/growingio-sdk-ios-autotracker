@@ -10,7 +10,6 @@
 #import "GrowingWSLogger.h"
 #import "GrowingWSLoggerFormat.h"
 #import "GrowingLogMacros.h"
-#import "GrowingGlobal.h"
 #import "GrowingDispatchManager.h"
 #import "GrowingCustomField.h"
 #import "NSString+GrowingHelper.h"
@@ -21,6 +20,7 @@
 #import "GrowingVisitEvent.h"
 #import "GrowingSession.h"
 #import "GrowingConfigurationManager.h"
+#import "GrowingArgumentChecker.h"
 
 NSString *const GrowingTrackerVersionName = @"3.0.0";
 const int GrowingTrackerVersionCode = 300;
@@ -65,12 +65,7 @@ const int GrowingTrackerVersionCode = 300;
 }
 
 - (void)trackCustomEvent:(NSString *)eventName {
-    if (![eventName isKindOfClass:[NSString class]]) {
-        GIOLogError(parameterKeyErrorLog);
-        return;
-    }
-    if (![eventName isValidKey]) {
-        GIOLogError(parameterValueErrorLog);
+    if ([GrowingArgumentChecker isIllegalEventName:eventName]) {
         return;
     }
 
@@ -82,20 +77,7 @@ const int GrowingTrackerVersionCode = 300;
 }
 
 - (void)trackCustomEvent:(NSString *)eventName withAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
-    if (![eventName isKindOfClass:[NSString class]]) {
-        GIOLogError(parameterKeyErrorLog);
-        return;
-    }
-    if (![attributes isKindOfClass:NSDictionary.class]) {
-        GIOLogError(parameterValueErrorLog);
-        return;
-    }
-
-    if (attributes.count > 100) {
-        GIOLogError(parameterValueErrorLog);
-        return;
-    }
-    if (![eventName isValidKey] || ![attributes isValidDictVariable]) {
+    if ([GrowingArgumentChecker isIllegalEventName:eventName] || [GrowingArgumentChecker isIllegalAttributes:attributes]) {
         return;
     }
 
@@ -105,28 +87,8 @@ const int GrowingTrackerVersionCode = 300;
 }
 
 - (void)setLoginUserAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
-    if (![attributes isKindOfClass:NSDictionary.class]) {
-        GIOLogError(parameterValueErrorLog);
+    if ([GrowingArgumentChecker isIllegalAttributes:attributes]) {
         return;
-    }
-
-    for (NSString *key in attributes) {
-        if (![key isKindOfClass:NSString.class] || ![key isValidKey]) {
-            GIOLogError(parameterValueErrorLog);
-            return;
-        }
-
-        NSString *stringValue = attributes[key];
-
-        if (![stringValue isKindOfClass:NSString.class]) {
-            GIOLogError(parameterValueErrorLog);
-            return;;
-        }
-
-        if (stringValue.length > 1000 || stringValue.length == 0) {
-            GIOLogError(parameterValueErrorLog);
-            return;
-        }
     }
 
     [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
@@ -136,6 +98,10 @@ const int GrowingTrackerVersionCode = 300;
 }
 
 - (void)setVisitorAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
+    if ([GrowingArgumentChecker isIllegalAttributes:attributes]) {
+        return;
+    }
+
     [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
 
         [[GrowingCustomField shareInstance] sendVisitorEvent:attributes];
@@ -145,28 +111,8 @@ const int GrowingTrackerVersionCode = 300;
 }
 
 - (void)setConversionVariables:(NSDictionary<NSString *, NSString *> *)variables {
-    if (variables == nil || ![variables isKindOfClass:NSDictionary.class]) {
-        GIOLogError(parameterKeyErrorLog);
+    if ([GrowingArgumentChecker isIllegalAttributes:variables]) {
         return;
-    }
-
-    for (NSString *key in variables) {
-        if (![key isKindOfClass:NSString.class] || ![key isValidKey]) {
-            GIOLogError(parameterValueErrorLog);
-            return;
-        }
-
-        NSString *stringValue = variables[key];
-
-        if (![stringValue isKindOfClass:NSString.class]) {
-            GIOLogError(parameterValueErrorLog);
-            return;;
-        }
-
-        if (stringValue.length > 1000 || stringValue.length == 0) {
-            GIOLogError(parameterValueErrorLog);
-            return;
-        }
     }
 
     [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{

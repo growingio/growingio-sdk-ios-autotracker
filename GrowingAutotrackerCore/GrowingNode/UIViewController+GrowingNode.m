@@ -20,7 +20,6 @@
 
 #import "GrowingPropertyDefine.h"
 #import "GrowingPageManager.h"
-#import "GrowingGlobal.h"
 #import "GrowingManualTrackEvent.h"
 #import "GrowingMobileDebugger.h"
 #import "NSDictionary+GrowingHelper.h"
@@ -262,17 +261,11 @@ GrowingSafeStringPropertyImplementation(growingPageAlias,
 
 - (void)mergeGrowingAttributesPvar:(NSDictionary<NSString *, NSObject *> *)growingAttributesPvar {
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:growingAttributesPvar];
-    if (dict.count > 100 || dict.count == 0) {
-        NSLog(parameterValueErrorLog);
-        return ;
-    }
     //为GrowingMobileDebugger缓存用户设置 - pvar
     if (growingAttributesPvar.count != 0 ) {
         [[GrowingMobileDebugger shareDebugger] cacheValue:growingAttributesPvar
                                                    ofType:NSStringFromClass([self class])];
     }
-    
-    [self.growingAttributesMutablePvar mergeGrowingAttributesVar:growingAttributesPvar];
 }
 
 - (void)removeGrowingAttributesPvar:(NSString *)key {
@@ -301,10 +294,6 @@ GrowingSafeStringPropertyImplementation(growingPageAlias,
             [self removeGrowingAttributesPvar:nil]; // remove all
             
         } else {
-            if (![growingPageAttributes isKindOfClass:NSDictionary.class]) {
-                NSLog(parameterValueErrorLog);
-                return ;
-            }
             if (![growingPageAttributes isValidDictVariable]) {
                 return ;
             }

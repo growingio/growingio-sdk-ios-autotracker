@@ -38,6 +38,8 @@
 #import "GrowingEventCstmRequest.h"
 #import "GrowingEventOtherRequest.h"
 #import "GrowingNetworkManager.h"
+#import "GrowingConfigurationManager.h"
+#import "GrowingTrackConfiguration.h"
 
 static NSUInteger const kGrowingMaxQueueSize = 10000; // default: max event queue size there are 10000 events
 static NSUInteger const kGrowingFillQueueSize = 1000; // default: determine when event queue is filled from DB
@@ -392,7 +394,7 @@ static GrowingEventManager *shareinstance = nil;
         return;
     }
     
-    if (GrowingSDKDoNotUpload()) {
+    if (GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionEnabled) {
         GIOLogDebug(@"Data upload disabled, if you want upload event data, please setting dataUploadEnabled to YES!");
         return;
     }

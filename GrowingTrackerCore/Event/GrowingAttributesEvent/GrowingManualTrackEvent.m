@@ -23,7 +23,6 @@
 #import "GrowingCocoaLumberjack.h"
 #import "GrowingDeviceInfo.h"
 #import "GrowingEventManager.h"
-#import "GrowingGlobal.h"
 #import "GrowingPageEvent.h"
 #import "NSDictionary+GrowingHelper.h"
 #import "NSString+GrowingHelper.h"
@@ -68,15 +67,6 @@
 @implementation GrowingCustomTrackEvent
 
 - (instancetype)initWithEventName:(NSString *)eventName withVariable:(NSDictionary<NSString *, NSObject *> *)variable {
-    if (eventName == nil || ![eventName isKindOfClass:[NSString class]]) {
-        GIOLogError(parameterKeyErrorLog);
-        return nil;
-    }
-    // eventName 有效性判断
-    if (![eventName isValidKey]) {
-        GIOLogError(@"event name is invalid!");
-        return nil;  // invalid eventName is not acceptable
-    }
 
     GrowingCustomTrackEvent *customEvent = [[GrowingCustomTrackEvent alloc] init];
     customEvent.eventName = eventName;
@@ -184,15 +174,6 @@
 @implementation GrowingVisitorEvent
 
 - (instancetype)initWithVisitorVariable:(NSDictionary<NSString *, NSObject *> *)variable {
-    if ([variable isKindOfClass:[NSDictionary class]]) {
-        if (![variable isValidDictVariable]) {
-            return nil;
-        }
-        if (variable.count > 100) {
-            GIOLogError(parameterValueErrorLog);
-            return nil;
-        }
-    }
     GrowingVisitorEvent *visitorEvent = [[GrowingVisitorEvent alloc] init];
     visitorEvent.attributes = variable;
     return visitorEvent;

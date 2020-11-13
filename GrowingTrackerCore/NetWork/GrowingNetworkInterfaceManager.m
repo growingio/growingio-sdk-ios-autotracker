@@ -20,7 +20,6 @@
 
 #import "GrowingNetworkInterfaceManager.h"
 #import "GrowingReachability.h"
-#import "GrowingGlobal.h"
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 
 @interface GrowingNetworkInterfaceManager()

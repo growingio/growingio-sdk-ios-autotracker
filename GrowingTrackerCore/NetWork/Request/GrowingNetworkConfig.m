@@ -20,7 +20,6 @@
 
 #import <Foundation/Foundation.h>
 #import "GrowingNetworkConfig.h"
-#import "GrowingGlobal.h"
 #import "GrowingCocoaLumberjack.h"
 
 @implementation GrowingNetworkConfig

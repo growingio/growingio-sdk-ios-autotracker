@@ -20,7 +20,6 @@
 
 #import "UIApplication+GrowingAutotracker.h"
 #import "GrowingClickEvent.h"
-#import "GrowingMediator.h"
 #import "GrowingCocoaLumberjack.h"
 
 @implementation UIApplication (GrowingAutotracker)
@@ -36,10 +35,6 @@
 
     if (isTabBar) {
         result = [self growing_sendAction:action to:target from:sender forEvent:event];
-    }
-    
-    if (NSClassFromString(@"GrowingWebCircle") != NULL) {
-        [[GrowingMediator sharedInstance] performClass:@"GrowingWebCircle" action:@"setNeedUpdateScreen" params:nil];
     }
     
     @try {
