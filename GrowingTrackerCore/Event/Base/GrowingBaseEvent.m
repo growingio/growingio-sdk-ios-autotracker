@@ -14,7 +14,7 @@
         _deviceId = [GrowingDeviceInfo currentDeviceInfo].deviceIDString;
         _userId = @"";
         _sessionId = GrowingSession.currentSession.sessionId;
-        _timestamp = GrowingTimeUtil.currentTimeMillis;
+//        _timestamp = GrowingTimeUtil.currentTimeMillis;
         _domain = @"";
         _urlScheme = @"";
 //        _appState =0;

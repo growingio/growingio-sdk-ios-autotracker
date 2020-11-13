@@ -75,27 +75,27 @@
 }
 
 - (void)sendPageEventWithPage:(GrowingPage *)page {
-    GrowingPageEvent *pageEvent = [GrowingPageEvent pageEventWithTitle:page.title
-                                                              pageName:page.path
-                                                             timestamp:page.showTimestamp];
-
-    [GrowingEventManager shareInstance].lastPageEvent = pageEvent;
-
-    [[GrowingEventManager shareInstance] addEvent:pageEvent
-                                         thisNode:page.carrier
-                                      triggerNode:page.carrier
-                                      withContext:nil];
+//    GrowingPageEvent *pageEvent = [GrowingPageEvent pageEventWithTitle:page.title
+//                                                              pageName:page.path
+//                                                             timestamp:page.showTimestamp];
+//
+//    [GrowingEventManager shareInstance].lastPageEvent = pageEvent;
+//
+//    [[GrowingEventManager shareInstance] addEvent:pageEvent
+//                                         thisNode:page.carrier
+//                                      triggerNode:page.carrier
+//                                      withContext:nil];
 }
 
 - (void)sendPageVariableEventWithPage:(GrowingPage *)page {
-    GrowingPvarEvent *pvarEvent = [GrowingPvarEvent pvarEventWithPageName:page.path
-                                                            showTimestamp:page.showTimestamp
-                                                                 variable:page.variables];
-
-    [[GrowingEventManager shareInstance] addEvent:pvarEvent
-                                         thisNode:page.carrier
-                                      triggerNode:page.carrier
-                                      withContext:nil];
+//    GrowingPvarEvent *pvarEvent = [GrowingPvarEvent pvarEventWithPageName:page.path
+//                                                            showTimestamp:page.showTimestamp
+//                                                                 variable:page.variables];
+//
+//    [[GrowingEventManager shareInstance] addEvent:pvarEvent
+//                                         thisNode:page.carrier
+//                                      triggerNode:page.carrier
+//                                      withContext:nil];
 }
 
 - (void)addPageAlias:(GrowingPage *)page {
