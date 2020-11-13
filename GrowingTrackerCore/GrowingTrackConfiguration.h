@@ -5,7 +5,7 @@
 #import <Foundation/Foundation.h>
 
 
-@interface GrowingBaseTrackConfiguration : NSObject <NSCopying>
+@interface GrowingTrackConfiguration : NSObject <NSCopying>
 @property(nonatomic, copy, readonly) NSString *projectId;
 
 @property(nonatomic, assign) BOOL debugEnabled;

@@ -21,7 +21,7 @@
 #import <objc/runtime.h>
 #import "NSObject+GrowingIvarHelper.h"
 #import "UIView+GrowingNode.h"
-#import "UIAlertController+GrowingAutoTrack.h"
+#import "UIAlertController+GrowingAutotracker.h"
 #import "UIView+GrowingHelper.h"
 
 @implementation UIAlertController (GrowingNode)

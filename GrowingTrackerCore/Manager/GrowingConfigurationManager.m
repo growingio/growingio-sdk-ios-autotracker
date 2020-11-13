@@ -3,10 +3,10 @@
 //
 
 #import "GrowingConfigurationManager.h"
-#import "GrowingBaseTrackConfiguration.h"
+#import "GrowingTrackConfiguration.h"
 
 @interface GrowingConfigurationManager ()
-@property(nonatomic, strong) GrowingBaseTrackConfiguration *realConfiguration;
+@property(nonatomic, strong) GrowingTrackConfiguration *realConfiguration;
 @end
 
 @implementation GrowingConfigurationManager
@@ -22,11 +22,11 @@
     return _sharedInstance;
 }
 
-- (GrowingBaseTrackConfiguration *)trackConfiguration {
+- (GrowingTrackConfiguration *)trackConfiguration {
     return [_realConfiguration copyWithZone:nil];
 }
 
-- (void)setTrackConfiguration:(GrowingBaseTrackConfiguration *)configuration {
+- (void)setTrackConfiguration:(GrowingTrackConfiguration *)configuration {
     _realConfiguration = [configuration copyWithZone:nil];
 }
 

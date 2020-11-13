@@ -22,13 +22,12 @@
 #import "GrowingBroadcaster.h"
 #import "GrowingCocoaLumberjack.h"
 #import "GrowingEventManager.h"
-#import "GrowingInstance.h"
 #import "GrowingPage.h"
 #import "GrowingPageEvent.h"
 #import "GrowingPageGroup.h"
 #import "GrowingPvarEvent.h"
 #import "NSString+GrowingHelper.h"
-#import "UIViewController+GrowingAutoTrack.h"
+#import "UIViewController+GrowingAutotracker.h"
 #import "UIViewController+GrowingNode.h"
 #import "UIViewController+GrowingPageHelper.h"
 
@@ -250,19 +249,6 @@
     }
 
     return NO;
-}
-
-#pragma mark - GrowingApplicationMessage
-
-+ (void)applicationStateDidChangedWithUserInfo:(NSDictionary *)userInfo
-                                     lifecycle:(GrowingApplicationLifecycle)lifecycle {
-    if (GrowingApplicationDidBecomeActive == lifecycle && ![GrowingAppActivationTime didStartFromScratch]) {
-        [[GrowingPageManager sharedInstance] becomeActiveResendPage];
-    }
-}
-
-- (void)becomeActiveResendPage {
-    [self.currentViewController growingOutOfLifetimeShow];
 }
 
 #pragma mark Lazy Load

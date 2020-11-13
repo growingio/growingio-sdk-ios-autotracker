@@ -1,5 +1,5 @@
 //
-//  WKWebView+GrowingAutoTrack.m
+//  UIApplication+GrowingAutoTrack.h
 //  GrowingAutoTracker
 //
 //  Created by GrowingIO on 2020/7/23.
@@ -18,15 +18,17 @@
 //  limitations under the License.
 
 
-#import "WKWebView+GrowingAutoTrack.h"
-#import "GrowingWKWebViewJavascriptBridge.h"
+#import <UIKit/UIKit.h>
 
-@implementation WKWebView (GrowingAutoTrack)
+NS_ASSUME_NONNULL_BEGIN
 
-- (instancetype)growing_initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration *)configuration {
-    __strong WKWebView *wkWebView = [self growing_initWithFrame:frame configuration:configuration];
-    [GrowingWKWebViewJavascriptBridge bridgeForWebView:wkWebView];
-    return wkWebView;
-}
+@interface UIApplication (GrowingAutotracker)
+
+- (BOOL)growing_sendAction:(SEL)action
+                        to:(nullable id)target
+                      from:(nullable id)sender
+                  forEvent:(nullable UIEvent *)event;
 
 @end
+
+NS_ASSUME_NONNULL_END

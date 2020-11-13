@@ -18,10 +18,9 @@
 //  limitations under the License.
 
 
-#import "UIViewController+GrowingAutoTrack.h"
+#import "UIViewController+GrowingAutotracker.h"
 #import "GrowingEventManager.h"
 #import "GrowingPropertyDefine.h"
-#import "GrowingInstance.h"
 #import "GrowingBroadcaster.h"
 #import "UIViewController+GrowingNode.h"
 #import "GrowingPageManager.h"
@@ -31,7 +30,7 @@
 
 GrowingPropertyDefine(UIViewController, NSNumber*, growingHook_hasDidAppear, setGrowingHook_hasDidAppear)
 
-@implementation UIViewController (GrowingAutoTrack)
+@implementation UIViewController (GrowingAutotracker)
 
 - (void)growing_viewDidAppear:(BOOL)animated {
     [self handleViewDidAppear];

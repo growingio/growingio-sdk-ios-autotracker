@@ -1,8 +1,8 @@
 //
-//  UITapGestureRecognizer+GrowingAutoTrack.h
+//  UIViewController+GrowingAutoTrack.h
 //  GrowingAutoTracker
 //
-//  Created by GrowingIO on 2020/7/27.
+//  Created by GrowingIO on 2020/7/23.
 //  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,12 +22,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface UITapGestureRecognizer (GrowingAutoTrack)
+@interface UIViewController (GrowingAutotracker)
 
-+ (BOOL)growingGestureRecognizerCanHandleView:(UIView*)view;
+//用来判断是否是没有使用addChildViewController方法的childVC
+- (BOOL)growingHookIsCustomAddVC;
+- (void)growingOutOfLifetimeShow;
 
-- (instancetype)growing_initWithTarget:(id)target action:(SEL)action;
-- (instancetype)growing_initWithCoder:(NSCoder *)coder;
+- (NSString *)growingPageName;
+- (NSString *)growingPageTitle;
+
+- (void)growing_viewDidAppear:(BOOL)animated;
+- (void)growing_viewDidDisappear:(BOOL)animated;
 
 @end
 

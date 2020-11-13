@@ -1,8 +1,8 @@
 //
-//  UITableView+GrowingAutoTrack.h
+//  UITapGestureRecognizer+GrowingAutoTrack.h
 //  GrowingAutoTracker
 //
-//  Created by GrowingIO on 2020/7/23.
+//  Created by GrowingIO on 2020/7/27.
 //  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,9 +22,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface UITableView (GrowingAutoTrack)
+@interface UITapGestureRecognizer (GrowingAutotracker)
 
-- (void)growing_setDelegate:(id<UITableViewDelegate>)delegate;
++ (BOOL)growingGestureRecognizerCanHandleView:(UIView*)view;
+
+- (instancetype)growing_initWithTarget:(id)target action:(SEL)action;
+- (instancetype)growing_initWithCoder:(NSCoder *)coder;
 
 @end
 

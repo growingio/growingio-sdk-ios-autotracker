@@ -852,7 +852,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Example/Pods-Example-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-Autotracker-AutotrackerCore-Tracker-TrackerCore/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework",
 				"${BUILT_PRODUCTS_DIR}/MJRefresh/MJRefresh.framework",
 				"${BUILT_PRODUCTS_DIR}/SDCycleScrollView/SDCycleScrollView.framework",
@@ -878,7 +878,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ExampleTests/Pods-ExampleTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-Tracker-TrackerCore/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/KIF/KIF.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";

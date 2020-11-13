@@ -22,7 +22,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface UISegmentedControl (GrowingAutoTrack)
+@interface UISegmentedControl (GrowingAutotracker)
 
 + (NSString *)growing_titleForSegment:(UIView*)segment;
 - (NSArray*)growing_segmentViews;

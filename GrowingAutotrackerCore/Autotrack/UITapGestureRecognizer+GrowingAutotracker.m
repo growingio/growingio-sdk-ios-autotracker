@@ -18,7 +18,7 @@
 //  limitations under the License.
 
 
-#import "UITapGestureRecognizer+GrowingAutoTrack.h"
+#import "UITapGestureRecognizer+GrowingAutotracker.h"
 #import "GrowingClickEvent.h"
 #import "GrowingSwizzle.h"
 #import "UIView+GrowingNode.h"
@@ -65,7 +65,7 @@
 
 @end
 
-@implementation UITapGestureRecognizer (GrowingAutoTrack)
+@implementation UITapGestureRecognizer (GrowingAutotracker)
 
 - (instancetype)growing_initWithTarget:(id)target action:(SEL)action {
     

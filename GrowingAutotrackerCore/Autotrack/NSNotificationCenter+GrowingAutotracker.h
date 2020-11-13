@@ -1,5 +1,5 @@
 //
-//  UICollectionView+GrowingAutoTrack.h
+//  NSNotificationCenter+GrowingAutoTrack.h
 //  GrowingAutoTracker
 //
 //  Created by GrowingIO on 2020/7/23.
@@ -18,13 +18,13 @@
 //  limitations under the License.
 
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface UICollectionView (GrowingAutoTrack)
+@interface NSNotificationCenter (GrowingAutotracker)
 
-- (void)growing_setDelegate:(id<UICollectionViewDelegate>)delegate;
+- (void)growing_postNotificationName:(NSNotificationName)aName object:(id)anObject userInfo:(NSDictionary *)aUserInfo;
 
 @end
 

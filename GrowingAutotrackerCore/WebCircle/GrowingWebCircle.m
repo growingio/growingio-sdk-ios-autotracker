@@ -33,7 +33,6 @@
 #import "GrowingEventManager.h"
 #import "GrowingEventNodeManager.h"
 #import "GrowingHybridBridgeProvider.h"
-#import "GrowingInstance.h"
 #import "GrowingNetworkConfig.h"
 #import "GrowingNodeHelper.h"
 #import "GrowingPageGroup.h"
@@ -46,12 +45,13 @@
 #import "UIApplication+GrowingHelper.h"
 #import "UIApplication+GrowingNode.h"
 #import "UIImage+GrowingHelper.h"
-#import "UIViewController+GrowingAutoTrack.h"
+#import "UIViewController+GrowingAutotracker.h"
 #import "UIViewController+GrowingNode.h"
 #import "UIViewController+GrowingPageHelper.h"
 #import "UIWindow+GrowingHelper.h"
 #import "UIWindow+GrowingNode.h"
-#import "WKWebView+GrowingAutoTrack.h"
+#import "WKWebView+GrowingAutotracker.h"
+#import "GrowingConfigurationManager.h"
 
 @interface GrowingWeakObject : NSObject
 @property (nonatomic, weak) JSContext *context;
@@ -577,7 +577,7 @@ static GrowingWebCircle *shareInstance = nil;
             self.statusWindow.onButtonClick = ^{
                 NSString *content = [NSString
                     stringWithFormat:@"APP版本: %@\nSDK版本: %@", [GrowingDeviceInfo currentDeviceInfo].appShortVersion,
-                                     [NSString stringWithFormat:@"SDK版本: %@", [Growing getVersion]]];
+                                     [NSString stringWithFormat:@"SDK版本: %@", GrowingTrackerVersionName]];
                 GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert
                                                                    title:@"正在进行圈选"
                                                                  message:content];
@@ -597,8 +597,7 @@ static GrowingWebCircle *shareInstance = nil;
         }
         NSString *endPoint = @"";
         endPoint = [GrowingNetworkConfig.sharedInstance wsEndPoint];
-        NSString *urlStr =
-            [NSString stringWithFormat:endPoint, [GrowingInstance sharedInstance].projectID, circleRoomNumber];
+        NSString *urlStr =@"";
         self.webSocket =
             [[GrowingSRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];
         self.webSocket.delegate = self;
@@ -607,7 +606,7 @@ static GrowingWebCircle *shareInstance = nil;
         self.onReadyBlock = readyBlock;
         self.onFinishBlock = finishBlock;
     }
-    
+
     NSDictionary *dict = @{@"msgType" : @"ready"};
     [self webSocket:nil didReceiveMessage:dict.growingHelper_jsonString];
 }
@@ -749,13 +748,13 @@ static GrowingWebCircle *shareInstance = nil;
 - (void)webSocketDidOpen:(GrowingSRWebSocket *)webSocket {
     GIOLogDebug(@"websocket已连接");
     CGSize screenSize = [GrowingDeviceInfo deviceScreenSize];
-    NSString *projectId = [GrowingInstance sharedInstance].projectID ?: @"";
+    NSString *projectId = GrowingConfigurationManager.sharedInstance.trackConfiguration.projectId;
     NSDictionary *dict = @{
         @"projectId" : projectId,
         @"msgType" : @"ready",
         @"timestamp" : @([[NSDate date] timeIntervalSince1970]),
         @"domain" : [GrowingDeviceInfo currentDeviceInfo].bundleID,
-        @"sdkVersion" : [Growing getVersion],
+        @"sdkVersion" : GrowingTrackerVersionName,
         @"appVersion" : [GrowingDeviceInfo currentDeviceInfo].appFullVersion,
         @"os" : @"iOS",
         @"screenWidth" : [NSNumber numberWithInteger:screenSize.width],
@@ -865,7 +864,7 @@ static GrowingWebCircle *shareInstance = nil;
             }];
             self.onProcessing = NO;
         });
-        
+
     }
 }
 

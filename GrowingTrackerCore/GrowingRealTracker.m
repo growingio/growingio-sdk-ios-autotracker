@@ -3,7 +3,7 @@
 //
 
 #import "GrowingRealTracker.h"
-#import "GrowingBaseTrackConfiguration.h"
+#import "GrowingTrackConfiguration.h"
 #import "GrowingAppLifecycle.h"
 #import "GrowingLog.h"
 #import "GrowingTTYLogger.h"
@@ -22,14 +22,17 @@
 #import "GrowingSession.h"
 #import "GrowingConfigurationManager.h"
 
+NSString *const GrowingTrackerVersionName = @"3.0.0";
+const int GrowingTrackerVersionCode = 300;
+
 @interface GrowingRealTracker ()
 @property(nonatomic, copy, readonly) NSDictionary *launchOptions;
-@property(nonatomic, strong, readonly) GrowingBaseTrackConfiguration *configuration;
+@property(nonatomic, strong, readonly) GrowingTrackConfiguration *configuration;
 
 @end
 
 @implementation GrowingRealTracker
-- (instancetype)initWithConfiguration:(GrowingBaseTrackConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions {
+- (instancetype)initWithConfiguration:(GrowingTrackConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions {
     self = [super init];
     if (self) {
         _configuration = [configuration copyWithZone:nil];
@@ -45,7 +48,7 @@
     return self;
 }
 
-+ (instancetype)trackerWithConfiguration:(GrowingBaseTrackConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions {
++ (instancetype)trackerWithConfiguration:(GrowingTrackConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions {
     return [[self alloc] initWithConfiguration:configuration launchOptions:launchOptions];
 }
 

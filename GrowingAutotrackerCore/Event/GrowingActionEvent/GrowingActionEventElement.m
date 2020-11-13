@@ -20,7 +20,6 @@
 #import "GrowingActionEventElement.h"
 
 #import "GrowingEventManager.h"
-#import "GrowingInstance.h"
 #import "GrowingNodeHelper.h"
 #import "GrowingNodeManager.h"
 #import "NSString+GrowingHelper.h"
@@ -33,7 +32,7 @@
     if (self = [super init]) {
         _xPath = [GrowingNodeHelper xPathForNode:node];
         _textValue = [self buildElementContentForNode:node];
-        _timestamp = GROWGetTimestamp();
+//        _timestamp = GROWGetTimestamp();
         //对于非列表元素，不添加index字段
         if (node.growingNodeIndexPath) {
             _index = [NSString stringWithFormat:@"%d", (int)node.growingNodeKeyIndex];

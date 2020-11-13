@@ -20,7 +20,7 @@ TODO: Add long description of the pod here.
   s.source           = { :git => 'https://github.com/growingio/growingio-sdk-ios-autotracker.git', :tag => s.version.to_s }
   s.ios.deployment_target = '8.0'
   s.requires_arc = true
-  s.default_subspec = "AutoTracker"
+  s.default_subspec = "Autotracker"
   
   s.subspec 'TrackerCore' do |trackerCore|
       trackerCore.source_files = 'GrowingTrackerCore/**/*{.h,.m}'

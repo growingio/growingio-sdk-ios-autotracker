@@ -18,7 +18,7 @@
 //  limitations under the License.
 
 #import "GrowingAttributesConst.h"
-#import "UITableView+GrowingAutoTrack.h"
+#import "UITableView+GrowingAutotracker.h"
 #import "UITableView+GrowingNode.h"
 #import "UIView+GrowingHelper.h"
 

@@ -19,8 +19,9 @@
 #import "GrowingWKWebViewJavascriptBridge_JS.h"
 #import "GrowingWebViewJavascriptBridgeConfiguration.h"
 #import "GrowingHybridBridgeProvider.h"
-#import "GrowingInstance.h"
 #import "GrowingDeviceInfo.h"
+#import "GrowingConfigurationManager.h"
+#import "GrowingTrackConfiguration.h"
 
 static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJavascriptBridge";
 
@@ -33,7 +34,7 @@ static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJav
     [webView.configuration.userContentController removeScriptMessageHandlerForName:kGrowingWKWebViewJavascriptBridge];
     [webView.configuration.userContentController addScriptMessageHandler:bridge name:kGrowingWKWebViewJavascriptBridge];
     // TODO: nativeSdkVersionCode
-    NSString *projectId = [GrowingInstance sharedInstance].projectID ?: @"";
+    NSString *projectId = GrowingConfigurationManager.sharedInstance.trackConfiguration.projectId;
     NSString *bundleId = [GrowingDeviceInfo currentDeviceInfo].bundleID;
 
     GrowingWebViewJavascriptBridgeConfiguration *config = [GrowingWebViewJavascriptBridgeConfiguration configurationWithProjectId:projectId appId:bundleId nativeSdkVersionCode:12];

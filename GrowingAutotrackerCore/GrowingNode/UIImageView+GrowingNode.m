@@ -30,9 +30,7 @@
 
 - (NSString*)growingViewContent
 {
-    if (self.growingViewCustomContent.length) {
-        return self.growingViewCustomContent;
-    } else if (self.accessibilityLabel.length) {
+    if (self.accessibilityLabel.length) {
         return self.accessibilityLabel;
     } else {
         for (UIView *view in self.subviews) {

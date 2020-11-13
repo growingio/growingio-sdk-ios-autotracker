@@ -6,7 +6,7 @@
 #import "GrowingSession.h"
 #import "GrowingAppLifecycle.h"
 #import "GrowingConfigurationManager.h"
-#import "GrowingBaseTrackConfiguration.h"
+#import "GrowingTrackConfiguration.h"
 #import "GrowingLogMacros.h"
 #import "GrowingCocoaLumberjack.h"
 

@@ -24,7 +24,7 @@
 #import "UIApplication+GrowingHelper.h"
 #import "UIApplication+GrowingNode.h"
 #import "UIImage+GrowingHelper.h"
-#import "UIViewController+GrowingAutoTrack.h"
+#import "UIViewController+GrowingAutotracker.h"
 #import "UIViewController+GrowingNode.h"
 #import "UIWindow+GrowingNode.h"
 

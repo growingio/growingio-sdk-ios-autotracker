@@ -18,12 +18,12 @@
 //  limitations under the License.
 
 
-#import "UIApplication+GrowingAutoTrack.h"
+#import "UIApplication+GrowingAutotracker.h"
 #import "GrowingClickEvent.h"
 #import "GrowingMediator.h"
 #import "GrowingCocoaLumberjack.h"
 
-@implementation UIApplication (GrowingAutoTrack)
+@implementation UIApplication (GrowingAutotracker)
 
 - (BOOL)growing_sendAction:(SEL)action
                         to:(id)target

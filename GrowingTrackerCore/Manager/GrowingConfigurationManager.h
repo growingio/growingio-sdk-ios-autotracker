@@ -4,11 +4,11 @@
 
 #import <Foundation/Foundation.h>
 
-@class GrowingBaseTrackConfiguration;
+@class GrowingTrackConfiguration;
 
 
 @interface GrowingConfigurationManager : NSObject
-@property(nonatomic, strong) GrowingBaseTrackConfiguration *trackConfiguration;
+@property(nonatomic, strong) GrowingTrackConfiguration *trackConfiguration;
 @property(nonatomic, copy, readonly) NSString *urlScheme;
 
 + (instancetype)sharedInstance;
