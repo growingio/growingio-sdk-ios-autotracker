@@ -20,8 +20,7 @@
 
 #import "GrowingEventChannel.h"
 #import "GrowingNetworkConfig.h"
-#import "GrowingEvent.h"
-
+#import "GrowingTrackEventType.h"
 @implementation GrowingEventChannel
 
 - (instancetype)initWithTypes:(NSArray<NSString *> *)eventTypes
@@ -47,12 +46,12 @@
 }
 
 + (NSArray<GrowingEventChannel *> *)buildAllEventChannels {
-    
+    //TODO:这里删除了page,pageAttributes
     return @[
-        [GrowingEventChannel eventChannelWithEventTypes:@[kEventTypeKeyVisit, kEventTypeKeyPage, kEventTypeKeyClose]
+        [GrowingEventChannel eventChannelWithEventTypes:@[GrowingEventTypeVisit, GrowingEventTypeAppClosed]
                                             urlTemplate:kGrowingEventApiTemplate_PV
                                           isCustomEvent:NO],
-        [GrowingEventChannel eventChannelWithEventTypes:@[kEventTypeKeyCustom, kEventTypeKeyPageAttributes, kEventTypeKeyConversionVariable, kEventTypeKeyLoginUserAttributes, kEventTypeKeyVisitor]
+        [GrowingEventChannel eventChannelWithEventTypes:@[GrowingEventTypeCustom, GrowingEventTypeConversionVariables, GrowingEventTypeLoginUserAttributes, GrowingEventTypeVisitorAttributes]
                                             urlTemplate:kGrowingEventApiTemplate_Custom
                                           isCustomEvent:YES],
         [GrowingEventChannel eventChannelWithEventTypes:nil
@@ -69,14 +68,14 @@
     }
     
     return @{
-        kEventTypeKeyVisit: allEventChannels[0],
-        kEventTypeKeyPage: allEventChannels[0],
-        kEventTypeKeyClose: allEventChannels[0],
-        kEventTypeKeyCustom: allEventChannels[1],
-        kEventTypeKeyPageAttributes: allEventChannels[1],
-        kEventTypeKeyConversionVariable: allEventChannels[1],
-        kEventTypeKeyLoginUserAttributes: allEventChannels[1],
-        kEventTypeKeyVisitor: allEventChannels[1],
+        GrowingEventTypeVisit: allEventChannels[0],
+//        kEventTypeKeyPage: allEventChannels[0],
+        GrowingEventTypeAppClosed: allEventChannels[0],
+        GrowingEventTypeCustom: allEventChannels[1],
+//        kEventTypeKeyPageAttributes: allEventChannels[1],
+        GrowingEventTypeConversionVariables: allEventChannels[1],
+        GrowingEventTypeLoginUserAttributes: allEventChannels[1],
+        GrowingEventTypeVisitorAttributes: allEventChannels[1],
     };
 }
 

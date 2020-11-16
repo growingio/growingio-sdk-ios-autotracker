@@ -40,10 +40,10 @@
 @property (nonatomic, readonly) NSString *deviceBrand;
 @property (nonatomic, readonly) NSNumber *isPhone;
 @property (nonatomic, readonly) NSString *deviceType;
-@property (nonatomic, readonly) NSString *systemName;
-@property (nonatomic, readonly) NSString *systemVersion;
+@property (nonatomic, readonly) NSString *platform;
+@property (nonatomic, readonly) NSString *platformVersion;
 @property (nonatomic, readonly) NSString *appFullVersion;
-@property (nonatomic, readonly) NSString *appShortVersion;
+@property (nonatomic, readonly) NSString *appVersion;
 @property (nonatomic, readonly) NSString *carrier;
 @property (nonatomic, readonly) NSString *urlScheme;
 

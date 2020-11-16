@@ -1,9 +1,9 @@
 //
-//  GrowingAttributesEvent.h
-//  GrowingTracker
+// GrowingVisitorAttributesEvent.h
+// Pods
 //
-//  Created by GrowingIO on 2020/5/28.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by sheng on 2020/11/13.
+//  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -18,13 +18,17 @@
 //  limitations under the License.
 
 
-#import "GrowingEvent.h"
+#import "GrowingBaseAttributesEvent.h"
 
 NS_ASSUME_NONNULL_BEGIN
+@class GrowingVisitorAttributesBuidler;
+@interface GrowingVisitorAttributesEvent : GrowingBaseAttributesEvent
 
-@interface GrowingAttributesEvent : GrowingEvent
++ (GrowingVisitorAttributesBuidler *_Nonnull)builder;
 
-@property (nonatomic, copy) NSDictionary <NSString *, NSObject *> *attributes;
+@end
+
+@interface GrowingVisitorAttributesBuidler : GrowingBaseAttributesBuilder
 
 @end
 

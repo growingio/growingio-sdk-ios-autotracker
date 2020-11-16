@@ -21,7 +21,7 @@
 #import "GrowingMediator+GrowingDeepLink.h"
 #import "NSURL+GrowingHelper.h"
 #import "GrowingNetworkConfig.h"
-#import "GrowingMobileDebugger.h"
+//#import "GrowingMobileDebugger.h"
 #import "GrowingAlert.h"
 #import "GrowingDispatchManager.h"
 #import "GrowingCocoaLumberjack.h"
@@ -144,9 +144,9 @@
 //        [self authorizationWithToken:token loginToken:loginToken block:startWebCircleApp];
         
     } else if(circleTypeDict[@"debugger"] ) {
-        [[GrowingMobileDebugger shareDebugger] debugWithRoomNumber:circleRoomNumber dataCheck:false];
+//        [[GrowingMobileDebugger shareDebugger] debugWithRoomNumber:circleRoomNumber dataCheck:false];
     }else if (dataCheckRoomNumber){
-        [[GrowingMobileDebugger shareDebugger] debugWithRoomNumber:dataCheckRoomNumber dataCheck:true];
+//        [[GrowingMobileDebugger shareDebugger] debugWithRoomNumber:dataCheckRoomNumber dataCheck:true];
     }
     
     return YES;

@@ -20,16 +20,16 @@
 
 #import "GrowingConfiguration+GrowingAutoTrack.h"
 
-@implementation GrowingConfiguration (GrowingAutoTrack)
-
-static double gImpressionScale = 0.0;
-
-- (void)setImpressionScale:(double)impressionScale {
-    gImpressionScale = impressionScale;
-}
-
-- (double)impressionScale {
-    return gImpressionScale;
-}
-
-@end
+//@implementation GrowingConfiguration (GrowingAutoTrack)
+//
+//static double gImpressionScale = 0.0;
+//
+//- (void)setImpressionScale:(double)impressionScale {
+//    gImpressionScale = impressionScale;
+//}
+//
+//- (double)impressionScale {
+//    return gImpressionScale;
+//}
+//
+//@end

@@ -19,26 +19,21 @@
 
 
 #import <Foundation/Foundation.h>
-#import "GrowingEvent.h"
 #import "GrowingEventDataBase.h"
 #import "GrowingVisitEvent.h"
 #import "GrowingNodeProtocol.h"
-
+#import "GrowingBaseEvent.h"
 @class GrowingPageEvent;
 
-@protocol GrowingEventManagerObserver <NSObject>
+@protocol GrowingEventInterceptor <NSObject>
 
 @optional
+//观察者不应该能够影响实际的结果，返回值不要设置为BOOL
+//在未完成构造event前，返回builder
+- (void)growingEventManagerEventWillBuild:(GrowingBaseBuilder* _Nullable)builder;
+//在完成构造event之后，返回event
+- (void)growingEventManagerEventDidBuild:(GrowingBaseEvent* _Nullable)event;
 
-- (BOOL)growingEventManagerShouldAddEvent:(GrowingEvent* _Nullable)event
-                                 thisNode:(id<GrowingNode> _Nullable)thisNode
-                              triggerNode:(id<GrowingNode> _Nullable)triggerNode
-                              withContext:(id<GrowingAddEventContext> _Nullable)context;
-
-- (void)growingEventManagerWillAddEvent:(GrowingEvent* _Nullable)event
-                               thisNode:(id<GrowingNode> _Nullable)thisNode
-                            triggerNode:(id<GrowingNode> _Nullable)triggerNode
-                            withContext:(id<GrowingAddEventContext> _Nullable)context;
 @end
 
 @interface GrowingEventManager : NSObject
@@ -54,14 +49,11 @@
 
 - (void)clearAllEvents;
 
-- (void)addObserver:(NSObject<GrowingEventManagerObserver>* _Nonnull)observer;
-- (void)removeObserver:(NSObject<GrowingEventManagerObserver> *_Nonnull)observer;
+- (void)addInterceptor:(NSObject<GrowingEventInterceptor>* _Nonnull)interceptor;
+- (void)removeInterceptor:(NSObject<GrowingEventInterceptor> *_Nonnull)interceptor;
 
 // 必须在主线程调用
-- (void)addEvent:(GrowingEvent* _Nullable)event
-        thisNode:(id<GrowingNode> _Nullable)thisNode
-     triggerNode:(id<GrowingNode> _Nullable)triggerNode
-     withContext:(id<GrowingAddEventContext> _Nullable)context;
+- (void)postEventBuidler:(GrowingBaseBuilder* _Nullable)builder;
 
 - (void)cleanExpiredData;
 

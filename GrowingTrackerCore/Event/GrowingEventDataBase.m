@@ -21,9 +21,9 @@
 #import "GrowingEventDataBase.h"
 #import "GrowingFMDB.h"
 #import <pthread.h>
-#import "GrowingEvent.h"
 #import "NSString+GrowingHelper.h"
 #import "GrowingCocoaLumberjack.h"
+#import "GrowingEventPersistence.h"
 
 #define DAY_IN_MILLISECOND (86400000)
 #define VACUUM_DATE(name) [NSString stringWithFormat:@"GIO_VACUUM_DATE_E7B96C4E-6EE2-49CD-87F0-B2E62D4EE96A-%@",name]

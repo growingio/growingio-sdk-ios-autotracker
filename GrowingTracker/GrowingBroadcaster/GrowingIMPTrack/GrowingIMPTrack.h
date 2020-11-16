@@ -1,9 +1,9 @@
 //
-//  GrowingPvarEvent.h
+//  GrowingIMPTrack.h
 //  GrowingAutoTracker
 //
-//  Created by GrowingIO on 2020/5/19.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by GrowingIO on 2019/5/9.
+//  Copyright (C) 2019 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -18,18 +18,29 @@
 //  limitations under the License.
 
 
-#import "GrowingAttributesEvent.h"
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+@interface GrowingIMPTrack : NSObject
 
-NS_ASSUME_NONNULL_BEGIN
++ (instancetype)shareInstance;
 
-@interface GrowingPvarEvent : GrowingAttributesEvent
+@property (nonatomic, assign) NSTimeInterval IMPInterval;
 
-- (instancetype)initWithPageName:(NSString *)pageName showTimestamp:(NSNumber *)timestamp variable:(NSDictionary *)variable;
+@property (nonatomic, assign) BOOL impTrackActive;
 
-+ (instancetype)pvarEventWithPageName:(NSString *)pageName showTimestamp:(NSNumber *)timestamp variable:(NSDictionary *)variable;
+- (void)markInvisibleNodes;
 
-+ (instancetype)hybridPvarEventWithDataDict:(NSDictionary *)dataDict;
+- (void)markInvisibleNode:(UIView *)node inSubView:(BOOL)flag;
+
+- (void)addWindowNodes;
+
+- (void)addNode:(UIView *)node inSubView:(BOOL)flag;
+
+- (void)clearNode:(UIView *)node;
+
+- (void)resignActive;
+
+- (void)becomeActive;
 
 @end
 
-NS_ASSUME_NONNULL_END

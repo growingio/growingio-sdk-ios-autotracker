@@ -165,10 +165,10 @@ static pthread_mutex_t _mutex;
         _isPhone = [[_deviceType lowercaseString] rangeOfString:@"ipad"].length ? @0 : @1;
 
         // @property (nonatomic, readonly) NSString *systemName;
-        _systemName = @"iOS";  // [[UIDevice currentDevice] systemName];
+        _platform = @"iOS";  // [[UIDevice currentDevice] systemName];
 
         // @property (nonatomic, readonly) NSString *systemVersion;
-        _systemVersion = [[UIDevice currentDevice] systemVersion];
+        _platformVersion = [[UIDevice currentDevice] systemVersion];
 
         // @property (nonatomic, readonly) NSString *appFullVersion;
         _appFullVersion = infoDictionary[@"CFBundleVersion"];
@@ -177,7 +177,7 @@ static pthread_mutex_t _mutex;
         }
 
         // @property (nonatomic, readonly) NSString *appShortVersion;
-        _appShortVersion = infoDictionary[@"CFBundleShortVersionString"];
+        _appVersion = infoDictionary[@"CFBundleShortVersionString"];
 
         // @property (nonatomic, readonly) NSString *urlScheme;
         NSString *urlScheme = kGrowingUrlScheme;

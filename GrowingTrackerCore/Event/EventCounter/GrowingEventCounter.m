@@ -20,7 +20,6 @@
 
 #import "GrowingEventCounter.h"
 #import "GrowingFileStorage.h"
-#import "GrowingEvent.h"
 
 static NSString * _Nonnull const kGrowingEventSequenceName = @"eventsequenceid";
 
@@ -46,28 +45,28 @@ static NSInteger const kEventCounterStep = 1;
     return self;
 }
 
-- (void)calculateSequenceIdForEvent:(GrowingEvent *)event {
+- (void)calculateSequenceIdForEvent:(GrowingBaseEvent *)event {
     
-    if ([event respondsToSelector:@selector(nextEventSequenceWithBase:andStep:)]) {
-        NSString *key = event.eventTypeKey;
-        NSNumber *eventNum = (NSNumber *)self.eventSequenceIdMap[key];
-        eventNum = eventNum ? eventNum : @0;
-        NSInteger result = [event nextEventSequenceWithBase:eventNum.integerValue andStep:kEventCounterStep];
-        NSNumber *resultNum = [NSNumber numberWithInteger:result];
-        
-        self.eventSequenceIdMap[key] = resultNum;
-        [self.eventCounterStorage setDictionary:self.eventSequenceIdMap forKey:kGrowingEventsSequenceIdKey];
-    }
-    
-    if ([event respondsToSelector:@selector(nextGlobalSequenceWithBase:andStep:)]) {
-        NSNumber *eventNum = (NSNumber *)self.eventSequenceIdMap[kGrowingGlobalEventIdKey];
-        eventNum = eventNum ? eventNum : @0;
-        NSInteger result = [event nextGlobalSequenceWithBase:eventNum.integerValue andStep:kEventCounterStep];
-        NSNumber *resultNum = [NSNumber numberWithInteger:result];
-
-        self.eventSequenceIdMap[kGrowingGlobalEventIdKey] = resultNum;
-        [self.eventCounterStorage setDictionary:self.eventSequenceIdMap forKey:kGrowingEventsSequenceIdKey];
-    }
+//    if ([event respondsToSelector:@selector(nextEventSequenceWithBase:andStep:)]) {
+//        NSString *key = event.eventType;
+//        NSNumber *eventNum = (NSNumber *)self.eventSequenceIdMap[key];
+//        eventNum = eventNum ? eventNum : @0;
+//        NSInteger result = [event nextEventSequenceWithBase:eventNum.integerValue andStep:kEventCounterStep];
+//        NSNumber *resultNum = [NSNumber numberWithInteger:result];
+//
+//        self.eventSequenceIdMap[key] = resultNum;
+//        [self.eventCounterStorage setDictionary:self.eventSequenceIdMap forKey:kGrowingEventsSequenceIdKey];
+//    }
+//
+//    if ([event respondsToSelector:@selector(nextGlobalSequenceWithBase:andStep:)]) {
+//        NSNumber *eventNum = (NSNumber *)self.eventSequenceIdMap[kGrowingGlobalEventIdKey];
+//        eventNum = eventNum ? eventNum : @0;
+//        NSInteger result = [event nextGlobalSequenceWithBase:eventNum.integerValue andStep:kEventCounterStep];
+//        NSNumber *resultNum = [NSNumber numberWithInteger:result];
+//
+//        self.eventSequenceIdMap[kGrowingGlobalEventIdKey] = resultNum;
+//        [self.eventCounterStorage setDictionary:self.eventSequenceIdMap forKey:kGrowingEventsSequenceIdKey];
+//    }
 }
 
 - (NSMutableDictionary <NSString *,NSNumber *> *)eventSequenceIdMap {

@@ -1,8 +1,8 @@
 //
-//  GrowingMobileDebugger.h
-//  GrowingTracker
+// GrowingLoignAttributesEvent.h
+// Pods
 //
-//  Created by GrowingIO on 2017/9/19.
+//  Created by sheng on 2020/11/13.
 //  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,20 +18,18 @@
 //  limitations under the License.
 
 
-#import <Foundation/Foundation.h>
-@class GrowingEvent;
+#import "GrowingBaseAttributesEvent.h"
 
-@interface GrowingMobileDebugger : NSObject
+NS_ASSUME_NONNULL_BEGIN
+@class GrowingLoignAttributesBuidler;
+@interface GrowingLoignAttributesEvent : GrowingBaseAttributesEvent
 
-+ (instancetype)shareDebugger;
-
-//获取 Mobile Debugger 当前状态：进行中、正在关闭Debugger
-+ (BOOL)isStart;
-
-//初始化debugger
-- (void)debugWithRoomNumber:(NSString *)roomNumber dataCheck:(BOOL)dataCheck;
-
-//用户一些设置events会在Observer之前发送，需要提前缓存
-- (void)cacheValue:(NSDictionary<NSString *, NSObject *> *)varDic ofType:(NSString *)type;
++ (GrowingLoignAttributesBuidler *_Nonnull)builder;
 
 @end
+
+@interface GrowingLoignAttributesBuidler : GrowingBaseAttributesBuilder
+
+@end
+
+NS_ASSUME_NONNULL_END

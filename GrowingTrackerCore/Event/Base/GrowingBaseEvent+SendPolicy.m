@@ -1,8 +1,8 @@
 //
-//  GrowingEventCounter.h
-//  GrowingTracker
+// GrowingBaseEvent+SendPolicy.m
+// Pods
 //
-//  Created by GrowingIO on 2017/1/14.
+//  Created by sheng on 2020/11/13.
 //  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,11 +18,18 @@
 //  limitations under the License.
 
 
-#import <Foundation/Foundation.h>
-#import "GrowingBaseEvent.h"
+#import "GrowingBaseEvent+SendPolicy.h"
+#import <objc/runtime.h>
+@implementation GrowingBaseEvent (SendPolicy)
 
-@interface GrowingEventCounter : NSObject
+- (GrowingEventSendPolicy)sendPolicy {
+    return (GrowingEventSendPolicy)[objc_getAssociatedObject(self, @selector(sendPolicy)) integerValue];
+}
 
-- (void)calculateSequenceIdForEvent:(GrowingBaseEvent *)event;
+- (void)setSendPolicy:(GrowingEventSendPolicy)plicy {
+    objc_setAssociatedObject(self, @selector(sendPolicy),
+                             [NSNumber numberWithInteger:plicy],
+                             OBJC_ASSOCIATION_ASSIGN);
+}
 
 @end

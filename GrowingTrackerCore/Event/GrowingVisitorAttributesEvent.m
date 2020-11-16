@@ -1,9 +1,9 @@
 //
-//  GrowingCloseEvent.h
-//  GrowingTracker
+// GrowingVisitorAttributesEvent.m
+// Pods
 //
-//  Created by GrowingIO on 2020/5/18.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by sheng on 2020/11/13.
+//  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -18,17 +18,24 @@
 //  limitations under the License.
 
 
-#import "GrowingEvent.h"
+#import "GrowingVisitorAttributesEvent.h"
 
-NS_ASSUME_NONNULL_BEGIN
+@implementation GrowingVisitorAttributesEvent
 
-@interface GrowingCloseEvent : GrowingEvent
++ (GrowingVisitorAttributesBuidler *_Nonnull)builder {
+    return [[GrowingVisitorAttributesBuidler alloc] init];
+}
 
-@property (nonatomic, copy, readonly) NSString * _Nonnull pageName;
-
-+ (void)sendWithLastPage:(NSString *)pageName;
-- (instancetype)initWithLastPage:(NSString *)pageName;
+- (NSString *)eventType {
+    return GrowingEventTypeVisitorAttributes;
+}
 
 @end
 
-NS_ASSUME_NONNULL_END
+@implementation GrowingVisitorAttributesBuidler
+
+- (GrowingBaseEvent *)build {
+    return [[GrowingVisitorAttributesEvent alloc] initWithBuilder:self];
+}
+
+@end

@@ -1,9 +1,9 @@
 //
-//  GrowingConfiguration+GrowingAutoTrack.h
-//  GrowingAutoTracker
+// GrowingBaseEvent+SendPolicy.h
+// Pods
 //
-//  Created by GrowingIO on 2020/7/30.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by sheng on 2020/11/13.
+//  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -18,17 +18,22 @@
 //  limitations under the License.
 
 
-#import "GrowingTracker.h"
+#import "GrowingBaseEvent.h"
 
+typedef NS_ENUM(NSUInteger, GrowingEventSendPolicy) {
+    GrowingEventSendPolicyInstant = 1,///实时发送
+    GrowingEventSendPolicyMobileData = 2,///移动网络流量发送
+    GrowingEventSendPolicyWifi = 3,///wif情况下发送
+};
 NS_ASSUME_NONNULL_BEGIN
 
-//@interface GrowingConfiguration (GrowingAutoTrack)
-//
-//// 全局设置节点有效曝光的比例
-//// 当可见像素值 / 总像素值 >= scale 则判定该节点可见、有效曝光， 反之不可见
-//// scale 有效曝光比例， 范围[0-1]; 默认值为0, 0：任意像素可见为有效曝光， 1：全部像素可见时为有效曝光
-//@property(nonatomic, assign) double impressionScale;
-//
-//@end
+@interface GrowingBaseEvent (SendPolicy)
+
+//发送策略
+- (GrowingEventSendPolicy)sendPolicy;
+
+- (void)setSendPolicy:(GrowingEventSendPolicy)plicy;
+
+@end
 
 NS_ASSUME_NONNULL_END

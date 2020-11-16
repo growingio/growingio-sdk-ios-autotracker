@@ -1,9 +1,9 @@
 //
-//  GrowingAttributesEvent.m
-//  GrowingTracker
+// GrowingLoignAttributesEvent.m
+// Pods
 //
-//  Created by GrowingIO on 2020/5/28.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by sheng on 2020/11/13.
+//  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -18,20 +18,25 @@
 //  limitations under the License.
 
 
-#import "GrowingAttributesEvent.h"
+#import "GrowingLoignAttributesEvent.h"
 
-@interface GrowingAttributesEvent ()
+@implementation GrowingLoignAttributesEvent
+
++ (GrowingLoignAttributesBuidler *_Nonnull)builder {
+    return [[GrowingLoignAttributesBuidler alloc] init];
+}
+
+- (NSString *)eventType {
+    return GrowingEventTypeLoginUserAttributes;
+}
 
 @end
 
-@implementation GrowingAttributesEvent
 
-#pragma mark GrowingEventTransformable
+@implementation GrowingLoignAttributesBuidler
 
-- (NSDictionary *)toDictionary {
-    NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
-    dataDictM[@"attributes"] = self.attributes;
-    return dataDictM;;
+- (GrowingBaseEvent *)build {
+    return [[GrowingLoignAttributesEvent alloc] initWithBuilder:self];
 }
 
 @end

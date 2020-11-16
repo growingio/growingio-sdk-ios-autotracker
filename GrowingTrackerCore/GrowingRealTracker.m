@@ -12,7 +12,6 @@
 #import "GrowingLogMacros.h"
 #import "GrowingGlobal.h"
 #import "GrowingDispatchManager.h"
-#import "GrowingCustomField.h"
 #import "NSString+GrowingHelper.h"
 #import "NSDictionary+GrowingHelper.h"
 #import "GrowingCocoaLumberjack.h"
@@ -21,6 +20,8 @@
 #import "GrowingVisitEvent.h"
 #import "GrowingSession.h"
 #import "GrowingConfigurationManager.h"
+#import "GrowingEventGenerator.h"
+#import "GrowingPersistenceDataProvider.h"
 
 @interface GrowingRealTracker ()
 @property(nonatomic, copy, readonly) NSDictionary *launchOptions;
@@ -62,113 +63,23 @@
 }
 
 - (void)trackCustomEvent:(NSString *)eventName {
-    if (![eventName isKindOfClass:[NSString class]]) {
-        GIOLogError(parameterKeyErrorLog);
-        return;
-    }
-    if (![eventName isValidKey]) {
-        GIOLogError(parameterValueErrorLog);
-        return;
-    }
-
-    [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
-
-        [[GrowingCustomField shareInstance] sendCustomTrackEventWithName:eventName andVariable:nil];
-
-    }];
+    [self trackCustomEvent:eventName withAttributes:nil];
 }
 
 - (void)trackCustomEvent:(NSString *)eventName withAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
-    if (![eventName isKindOfClass:[NSString class]]) {
-        GIOLogError(parameterKeyErrorLog);
-        return;
-    }
-    if (![attributes isKindOfClass:NSDictionary.class]) {
-        GIOLogError(parameterValueErrorLog);
-        return;
-    }
-
-    if (attributes.count > 100) {
-        GIOLogError(parameterValueErrorLog);
-        return;
-    }
-    if (![eventName isValidKey] || ![attributes isValidDictVariable]) {
-        return;
-    }
-
-    [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
-        [[GrowingCustomField shareInstance] sendCustomTrackEventWithName:eventName andVariable:attributes];
-    }];
+    [GrowingEventGenerator generateCustomEvent:eventName attributes:attributes];
 }
 
 - (void)setLoginUserAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
-    if (![attributes isKindOfClass:NSDictionary.class]) {
-        GIOLogError(parameterValueErrorLog);
-        return;
-    }
-
-    for (NSString *key in attributes) {
-        if (![key isKindOfClass:NSString.class] || ![key isValidKey]) {
-            GIOLogError(parameterValueErrorLog);
-            return;
-        }
-
-        NSString *stringValue = attributes[key];
-
-        if (![stringValue isKindOfClass:NSString.class]) {
-            GIOLogError(parameterValueErrorLog);
-            return;;
-        }
-
-        if (stringValue.length > 1000 || stringValue.length == 0) {
-            GIOLogError(parameterValueErrorLog);
-            return;
-        }
-    }
-
-    [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
-
-        [[GrowingCustomField shareInstance] sendPeopleEvent:attributes];
-    }];
+    [GrowingEventGenerator generateLoginUserAttributesEvent:attributes];
 }
 
 - (void)setVisitorAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
-    [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
-
-        [[GrowingCustomField shareInstance] sendVisitorEvent:attributes];
-        //  GrowingBroadcaster 传入 GTouch
-        NSDictionary *variable = [GrowingCustomField shareInstance].growingVistorVar ?: @{};
-    }];
+    [GrowingEventGenerator generateVisitorAttributesEvent:attributes];
 }
 
 - (void)setConversionVariables:(NSDictionary<NSString *, NSString *> *)variables {
-    if (variables == nil || ![variables isKindOfClass:NSDictionary.class]) {
-        GIOLogError(parameterKeyErrorLog);
-        return;
-    }
-
-    for (NSString *key in variables) {
-        if (![key isKindOfClass:NSString.class] || ![key isValidKey]) {
-            GIOLogError(parameterValueErrorLog);
-            return;
-        }
-
-        NSString *stringValue = variables[key];
-
-        if (![stringValue isKindOfClass:NSString.class]) {
-            GIOLogError(parameterValueErrorLog);
-            return;;
-        }
-
-        if (stringValue.length > 1000 || stringValue.length == 0) {
-            GIOLogError(parameterValueErrorLog);
-            return;
-        }
-    }
-
-    [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
-        [[GrowingCustomField shareInstance] sendEvarEvent:variables];
-    }];
+    [GrowingEventGenerator generateConversionVariablesEvent:variables];
 }
 
 - (void)setLoginUserId:(NSString *)userId {
@@ -209,35 +120,35 @@
         [[GrowingDeviceInfo currentDeviceInfo] resetSessionID];
 
         //重置session, 发 Visitor 事件
-        if ([[GrowingCustomField shareInstance] growingVistorVar]) {
-            [[GrowingCustomField shareInstance] sendVisitorEvent:[[GrowingCustomField shareInstance] growingVistorVar]];
-        }
+        [GrowingEventGenerator generateVisitorAttributesEventByResend];
+//        if ([[GrowingCustomField shareInstance] growingVistorVar]) {
+//            [[GrowingCustomField shareInstance] sendVisitorEvent:[[GrowingCustomField shareInstance] growingVistorVar]];
+//        }
     }
 }
 
 - (void)setUserIdValue:(nonnull NSString *)value {
-    NSString *oldValue = [GrowingCustomField shareInstance].userId;
+    NSString *oldValue = GrowingPersistenceDataProvider.sharedInstance.loginUserId;
+//    if ([value isKindOfClass:[NSNumber class]]) {
+//        value = [(NSNumber *) value stringValue];
+//    }
+//
+//    if (![value isKindOfClass:[NSString class]] || value.length == 0) {
+//        [GrowingCustomField shareInstance].userId = nil;
+//    } else {
+//        [GrowingCustomField shareInstance].userId = value;
+//    }
+//    [GrowingPersistenceDataProvider.sharedInstance setSessionId:value];
+//    NSString *newValue = [GrowingCustomField shareInstance].userId;
 
-    if ([value isKindOfClass:[NSNumber class]]) {
-        value = [(NSNumber *) value stringValue];
-    }
-
-    if (![value isKindOfClass:[NSString class]] || value.length == 0) {
-        [GrowingCustomField shareInstance].userId = nil;
-    } else {
-        [GrowingCustomField shareInstance].userId = value;
-    }
-
-    NSString *newValue = [GrowingCustomField shareInstance].userId;
-
-    [self resetSessionIdWhileUserIdChangedFrom:oldValue toNewValue:newValue];
+    [self resetSessionIdWhileUserIdChangedFrom:oldValue toNewValue:value];
 
     // Notify userId changed
     [[GrowingBroadcaster sharedInstance] notifyEvent:@protocol(GrowingUserIdChangedMeessage)
                                           usingBlock:^(id <GrowingMessageProtocol> _Nonnull obj) {
                                               if ([obj respondsToSelector:@selector(userIdDidChangedFrom:to:)]) {
                                                   id <GrowingUserIdChangedMeessage> message = (id <GrowingUserIdChangedMeessage>) obj;
-                                                  [message userIdDidChangedFrom:oldValue to:newValue];
+                                                  [message userIdDidChangedFrom:oldValue to:value];
                                               }
                                           }];
 }

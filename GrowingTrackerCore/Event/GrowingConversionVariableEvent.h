@@ -1,8 +1,8 @@
 //
-//  GrowingEventCounter.h
-//  GrowingTracker
+// GrowingConversionVariableEvent.h
+// Pods
 //
-//  Created by GrowingIO on 2017/1/14.
+//  Created by sheng on 2020/11/13.
 //  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,11 +18,24 @@
 //  limitations under the License.
 
 
-#import <Foundation/Foundation.h>
 #import "GrowingBaseEvent.h"
 
-@interface GrowingEventCounter : NSObject
+NS_ASSUME_NONNULL_BEGIN
+@class GrowingConversionVariableBuidler;
+@interface GrowingConversionVariableEvent : GrowingBaseEvent
 
-- (void)calculateSequenceIdForEvent:(GrowingBaseEvent *)event;
+@property (nonatomic, copy, readonly) NSDictionary <NSString *, NSObject *> *variables;
+
++ (GrowingConversionVariableBuidler *_Nonnull)builder;
 
 @end
+
+@interface GrowingConversionVariableBuidler : GrowingBaseBuilder
+
+@property (nonatomic, copy, readonly) NSDictionary <NSString *, NSObject *> *variables;
+
+- (GrowingConversionVariableBuidler *(^)(NSDictionary <NSString *, NSObject *> *value))setVariables;
+
+@end
+
+NS_ASSUME_NONNULL_END

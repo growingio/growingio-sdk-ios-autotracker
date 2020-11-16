@@ -19,26 +19,23 @@
 
 
 #import <UIKit/UIKit.h>
-
+#import "GrowingEventPersistence.h"
 #import "GrowingEventManager.h"
 #import "GrowingDeviceInfo.h"
 #import "NSString+GrowingHelper.h"
 #import "GrowingNetworkInterfaceManager.h"
-#import "GrowingEvent.h"
 #import "GrowingEventCounter.h"
 #import "GrowingDispatchManager.h"
 #import "GrowingDataTraffic.h"
 #import "GrowingFileStorage.h"
-#import "GrowingCustomField.h"
 #import "GrowingEventOptions.h"
 #import "GrowingEventChannel.h"
 #import "GrowingCocoaLumberjack.h"
-#import "GrowingPageEvent.h"
 #import "GrowingEventPVRequest.h"
 #import "GrowingEventCstmRequest.h"
 #import "GrowingEventOtherRequest.h"
 #import "GrowingNetworkManager.h"
-
+#import "GrowingBaseEvent+SendPolicy.h"
 static NSUInteger const kGrowingMaxQueueSize = 10000; // default: max event queue size there are 10000 events
 static NSUInteger const kGrowingFillQueueSize = 1000; // default: determine when event queue is filled from DB
 static NSUInteger const kGrowingMaxDBCacheSize = 100; // default: write to DB as soon as there are 300 events
@@ -48,7 +45,7 @@ static const NSUInteger kGrowingUnit_MB                 = 1024*1024;
 
 @interface GrowingEventManager()
 
-@property (nonatomic, strong) NSMutableArray<NSObject<GrowingEventManagerObserver>*>   *allObservers;
+@property (nonatomic, strong) NSMutableArray<NSObject<GrowingEventInterceptor>*>   *allInterceptor;
 
 @property (nonatomic, strong)   NSMutableArray<GrowingEventPersistence *> * eventQueue;
 @property (nonatomic, readonly, strong)   NSArray<GrowingEventChannel *> * allEventChannels;
@@ -74,25 +71,25 @@ static const NSUInteger kGrowingUnit_MB                 = 1024*1024;
 
 @implementation GrowingEventManager
 
-- (void)addObserver:(NSObject<GrowingEventManagerObserver> *)observer {
-    if (!observer) {
+- (void)addInterceptor:(NSObject<GrowingEventInterceptor>* _Nonnull)interceptor {
+    if (!interceptor) {
         return;
     }
-    if (!self.allObservers) {
-        self.allObservers = [[NSMutableArray alloc] init];
+    if (!self.allInterceptor) {
+        self.allInterceptor = [[NSMutableArray alloc] init];
     }
-    if ([self.allObservers containsObject:observer]) {
+    if ([self.allInterceptor containsObject:interceptor]) {
         // 某些情况下[Growing handleUrl:]会调动两次, 判断一下是否重复添加 observer
         return;
     }
-    [self.allObservers addObject:observer];
+    [self.allInterceptor addObject:interceptor];
 }
 
-- (void)removeObserver:(NSObject<GrowingEventManagerObserver> *)observer {
-    if (!observer) {
+- (void)removeInterceptor:(NSObject<GrowingEventInterceptor> *_Nonnull)interceptor {
+    if (!interceptor) {
         return;
     }
-    [self.allObservers removeObject:observer];
+    [self.allInterceptor removeObject:interceptor];
 }
 
 static GrowingEventManager *shareinstance = nil;
@@ -212,47 +209,32 @@ static GrowingEventManager *shareinstance = nil;
     [self sendAllChannelEvents];
 }
 
-- (void)addEvent:(GrowingEvent *)event
-        thisNode:(id<GrowingNode> _Nullable)thisNode
-     triggerNode:(id<GrowingNode>)triggerNode
-     withContext:(id<GrowingAddEventContext>)context {
-    
+- (void)postEventBuidler:(GrowingBaseBuilder* _Nullable)builder {
 //    if (!event || ![GrowingInstance sharedInstance] || GrowingSDKDoNotTrack()) {
 //        return;
 //    }
     
     [GrowingDispatchManager dispatchInMainThread:^{
-        
-        for (NSObject<GrowingEventManagerObserver> * obj in self.allObservers) {
-            if ([obj respondsToSelector:@selector(growingEventManagerShouldAddEvent:thisNode:triggerNode:withContext:)]) {
-                BOOL should = [obj growingEventManagerShouldAddEvent:event
-                                                            thisNode:thisNode
-                                                         triggerNode:triggerNode
-                                                         withContext:context];
-                if (!should) {
-                    return;
-                }
+        for (NSObject<GrowingEventInterceptor> * obj in self.allInterceptor) {
+            if ([obj respondsToSelector:@selector(growingEventManagerEventWillBuild:)]) {
+                [obj growingEventManagerEventWillBuild:builder];
             }
         }
+        GrowingBaseEvent *event = builder.build;
         
-        for (NSObject<GrowingEventManagerObserver> * obj in self.allObservers) {
-            if ([obj respondsToSelector:@selector(growingEventManagerWillAddEvent:thisNode:triggerNode:withContext:)]) {
-                [obj growingEventManagerWillAddEvent:event
-                                            thisNode:thisNode
-                                         triggerNode:triggerNode
-                                         withContext:context];
+        for (NSObject<GrowingEventInterceptor> * obj in self.allInterceptor) {
+            if ([obj respondsToSelector:@selector(growingEventManagerEventDidBuild:)]) {
+                [obj growingEventManagerEventDidBuild:event];
             }
         }
-        
         [self handleEvent:event];
-        
     }];
 }
 
-- (void)handleEvent:(GrowingEvent *)event {
-    GrowingEvent *dbEvent = event;
+- (void)handleEvent:(GrowingBaseEvent *)event {
+    GrowingBaseEvent *dbEvent = event;
     // cstm按函数实际触发为标准
-    if ([event.eventTypeKey isEqualToString:kEventTypeKeyCustom] && [UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
+    if ([event.eventType isEqualToString:GrowingEventTypeCustom] && [UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
         __weak GrowingEventManager *weakSelf = self;
         [GrowingDispatchManager dispatchInLowThread:^{
             GrowingEventManager *strongSelf = weakSelf;
@@ -269,23 +251,24 @@ static GrowingEventManager *shareinstance = nil;
                 
     } else {
         static BOOL resetPagetm = NO;
-        if (!resetPagetm && [GrowingEventManager shareInstance].lastPageEvent) {
-            GrowingPageEvent *lastPageEvent = [GrowingEventManager shareInstance].lastPageEvent;
-            lastPageEvent.timestamp = event.timestamp;
-            lastPageEvent.sessionId = event.sessionId;
-        }
+        //TODO:处理特别情况
+//        if (!resetPagetm && [GrowingEventManager shareInstance].lastPageEvent) {
+//            GrowingPageEvent *lastPageEvent = [GrowingEventManager shareInstance].lastPageEvent;
+//            lastPageEvent.timestamp = event.timestamp;
+//            lastPageEvent.sessionId = event.sessionId;
+//        }
         resetPagetm = YES;
         
         __weak GrowingEventManager *weakSelf = self;
         [GrowingDispatchManager dispatchInLowThread:^{
             GrowingEventManager *strongSelf = weakSelf;
             if (strongSelf.cacheArray.count) {
-                for (GrowingEvent *cacheEvent in strongSelf.cacheArray) {
-                    cacheEvent.timestamp = dbEvent.timestamp;
-                    cacheEvent.sessionId = dbEvent.sessionId;
-                    
-                    [strongSelf writeToDatabaseWithEvent:cacheEvent];
-                }
+//                for (GrowingBaseEvent *cacheEvent in strongSelf.cacheArray) {
+//                    cacheEvent.timestamp = dbEvent.timestamp;
+//                    cacheEvent.sessionId = dbEvent.sessionId;
+//
+//                    [strongSelf writeToDatabaseWithEvent:cacheEvent];
+//                }
                 
                 [strongSelf.cacheArray removeAllObjects];
             }
@@ -294,8 +277,8 @@ static GrowingEventManager *shareinstance = nil;
     }
 }
 
-- (void)writeToDatabaseWithEvent:(GrowingEvent *)event {
-    NSString* eventType = event.eventTypeKey;
+- (void)writeToDatabaseWithEvent:(GrowingBaseEvent *)event {
+    NSString* eventType = event.eventType;
     
     if (!event) { return; }
 
@@ -316,7 +299,7 @@ static GrowingEventManager *shareinstance = nil;
     
     GrowingEventDataBase *db = (isCustomEvent ? self.realtimeEventDB : self.timingEventDB);
     
-    [db setEvent:waitForPersist forKey:event.uuid error:&error];
+    [db setEvent:waitForPersist forKey:[NSUUID UUID].UUIDString error:&error];
     
     [db handleDatabaseError:error];
     
