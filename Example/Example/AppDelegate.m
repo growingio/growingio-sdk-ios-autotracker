@@ -28,7 +28,7 @@ static NSString *const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
 //    [Bugly startWithAppId:@"93004a21ca"];
 
     // Config GrowingIO
-    GrowingTrackConfiguration *configuration = [GrowingTrackConfiguration configurationWithProjectId:@"xxxxx"];
+    GrowingTrackConfiguration *configuration = [GrowingTrackConfiguration configurationWithProjectId:kGrowingProjectId];
     configuration.debugEnabled = YES;
     configuration.impressionScale = 1.0;
     [GrowingAutotracker startWithConfiguration:configuration launchOptions:launchOptions];

@@ -26,16 +26,16 @@
 - (instancetype)initWithUUID:(NSString *)uuid eventType:(NSString *)evnetType jsonString:(NSString *)jsonString {
     if (self = [super init]) {
         _eventUUID = uuid;
-        _eventTypeKey = evnetType;
+        _eventType = evnetType;
         _rawJsonString = jsonString;
     }
     return self;
 }
 
-+ (instancetype)persistenceEventWithEvent:(GrowingBaseEvent *)event {
++ (instancetype)persistenceEventWithEvent:(GrowingBaseEvent *)event uuid:(NSString *)uuid{
     NSString *eventJsonString = [[NSString alloc] initWithJsonObject_growingHelper:event.toDictionary];
 
-    return [[GrowingEventPersistence alloc] initWithUUID:[NSUUID UUID].UUIDString
+    return [[GrowingEventPersistence alloc] initWithUUID:uuid
                                                eventType:event.eventType
                                               jsonString:eventJsonString];
 }

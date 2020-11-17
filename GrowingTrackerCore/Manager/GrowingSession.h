@@ -24,4 +24,12 @@
 - (void)removeUserIdChangedDelegate:(id <GrowingUserIdChangedDelegate>)delegate;
 
 - (void)forceReissueVisit;
+
+/// 设置经纬度坐标
+/// @param latitude 纬度
+/// @param longitude 经度
+- (void)setLocation:(double)latitude longitude:(double)longitude;
+/// 清除地理位置
+- (void)cleanLocation;
+
 @end

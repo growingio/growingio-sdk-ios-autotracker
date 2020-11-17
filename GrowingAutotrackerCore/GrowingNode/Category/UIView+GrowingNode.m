@@ -287,15 +287,6 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
             [UITapGestureRecognizer growingGestureRecognizerCanHandleView:self]);
 }
 
-- (NSTimeInterval)growingTimeIntervalForLastClick {
-    return [objc_getAssociatedObject(self, @selector(growingTimeIntervalForLastClick)) doubleValue];
-}
-
-- (void)setGrowingTimeIntervalForLastClick:(NSTimeInterval)growingTimeIntervalForLastClick {
-    NSNumber *interval = [NSNumber numberWithDouble:growingTimeIntervalForLastClick];
-    objc_setAssociatedObject(self, @selector(growingTimeIntervalForLastClick), interval, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
 #pragma mark - Public Method
 
 - (BOOL)growingViewUserInteraction {

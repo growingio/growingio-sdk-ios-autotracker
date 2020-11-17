@@ -15,7 +15,7 @@
 
 - (void)setUp{
     //设置userid,确保cs1字段不空
-    [Growing setLoginUserId:@"test"];
+    [[GrowingTracker sharedInstance] setLoginUserId:@"test"];
 
 }
 

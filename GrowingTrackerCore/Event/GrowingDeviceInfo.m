@@ -189,8 +189,6 @@ static pthread_mutex_t _mutex;
                 [customDict setValue:obj forKey:key.lowercaseString];
             }
         }];
-
-        [self resetSessionID];
     }
     return self;
 }
@@ -264,9 +262,6 @@ static pthread_mutex_t _mutex;
     }
 }
 
-- (void)resetSessionID {
-    _sessionID = [[NSUUID UUID] UUIDString];
-}
 
 - (NSString *)getVendorId {
     NSString *vendorId = nil;

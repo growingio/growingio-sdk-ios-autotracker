@@ -65,8 +65,6 @@ typedef NS_ENUM(NSUInteger, GrowingDeviceType) {
 @property(nonatomic, copy, readonly) NSString *_Nonnull deviceBrand;
 @property(nonatomic, copy, readonly) NSString *_Nonnull deviceModel;
 @property(nonatomic, copy, readonly) NSString *_Nonnull deviceType;
-@property(nonatomic, copy, readonly) NSString *_Nonnull platform;
-@property(nonatomic, copy, readonly) NSString *_Nonnull platformVersion;
 @property(nonatomic, copy, readonly) NSString *_Nonnull appName;
 @property(nonatomic, copy, readonly) NSString *_Nonnull appVersion;
 @property(nonatomic, copy, readonly) NSString *_Nonnull language;
@@ -80,7 +78,8 @@ typedef NS_ENUM(NSUInteger, GrowingDeviceType) {
 NS_ASSUME_NONNULL_BEGIN
 //override set method return type
 - (GrowingVisitBuidler *(^)(long long value))setTimestamp;
-
+- (GrowingVisitBuidler *(^)(NSString *value))setPlatform;
+- (GrowingVisitBuidler *(^)(NSString *value))setPlatformVersion;
 
 //new set methods
 - (GrowingVisitBuidler *(^)(NSString *value))setNetworkState;
@@ -90,8 +89,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (GrowingVisitBuidler *(^)(NSString *value))setDeviceBrand;
 - (GrowingVisitBuidler *(^)(NSString *value))setDeviceModel;
 - (GrowingVisitBuidler *(^)(NSString *value))setDeviceType;
-- (GrowingVisitBuidler *(^)(NSString *value))setPlatform;
-- (GrowingVisitBuidler *(^)(NSString *value))setPlatformVersion;
 - (GrowingVisitBuidler *(^)(NSString *value))setAppName;
 - (GrowingVisitBuidler *(^)(NSString *value))setAppVersion;
 - (GrowingVisitBuidler *(^)(NSString *value))setLanguage;

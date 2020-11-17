@@ -32,19 +32,6 @@ static NSTimeInterval kGrowingTrackClickMinTimeInterval = 0.1;
 
 @implementation GrowingNodeHelper
 
-+ (BOOL)isValidClickEventForNode:(id<GrowingNode>)node {
-    if (!node) {
-        return NO;
-    }
-    
-    NSTimeInterval lastTime = node.growingTimeIntervalForLastClick;
-    NSTimeInterval currentTime = [NSProcessInfo processInfo].systemUptime;
-    if (lastTime > 0 && (currentTime - lastTime) < kGrowingTrackClickMinTimeInterval) {
-        return NO;
-    }
-    
-    return YES;
-}
 
 + (NSString *)xPathForNode:(id<GrowingNode>)node {
     if ([node isKindOfClass:[UIView class]]) {

@@ -242,9 +242,7 @@
     return childs;
 }
 
-- (NSTimeInterval)growingTimeIntervalForLastClick {
-    return 0;
-}
+
 
 @end
 

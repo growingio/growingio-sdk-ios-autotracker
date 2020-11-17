@@ -24,7 +24,7 @@
 
 @interface GrowingEventGenerator : NSObject
 
-+ (void)generateVisitEvent:(NSTimeInterval)ts latitude:(double)latitude longitude:(double)longitude;
++ (void)generateVisitEvent:(long long)ts latitude:(double)latitude longitude:(double)longitude;
 
 + (void)generateCustomEvent:(NSString * _Nonnull)name attributes:(NSDictionary <NSString *,NSObject *>*_Nonnull)attributes;
 
@@ -33,6 +33,8 @@
 + (void)generateLoginUserAttributesEvent:(NSDictionary <NSString *,NSObject *>*_Nonnull)attributes;
 
 + (void)generateVisitorAttributesEvent:(NSDictionary <NSString *,NSObject *>*_Nonnull)attributes;
-+ (void)generateVisitorAttributesEventByResend;
+
++ (void)generateAppCloseEvent;
+
 @end
 

@@ -43,9 +43,6 @@ typedef NS_OPTIONS(NSUInteger, GrowingElementEventCategory) {
 /// 当同一视图下相同class的两个node点击行为相似
 /// 当不需要区分点击哪一个node，仅需要区分点击那种类型时，使用该属性
 @property (nonatomic, copy, readonly) NSString * _Nullable growingNodeSubSimilarPath;
-/// 记录上次触发点击事件的开机时间，用于过滤很近的点击事件，比如点击系统的Toolbar 上面的 TabBarItem
-/// 会触发两个action：_invalidateAssistant, _invoke:forEvent:
-@property (nonatomic, assign) NSTimeInterval growingTimeIntervalForLastClick;
 
 // 原始父节点
 - (id <GrowingNode> _Nullable)growingNodeParent;

@@ -21,7 +21,7 @@ end
 
 target 'ExampleTests' do
    project 'Example/Example'
-   # pod 'GrowingAnalytics/Autotracker', :path => './'
+   pod 'GrowingAnalytics/Autotracker', :path => './'
    pod 'GrowingAnalytics/Tracker', :path => './'
    pod 'KIF', :configurations => ['Debug']
 end

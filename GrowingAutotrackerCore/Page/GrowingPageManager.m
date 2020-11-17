@@ -24,6 +24,7 @@
 #import "GrowingEventManager.h"
 #import "GrowingPage.h"
 #import "GrowingPageEvent.h"
+#import "GrowingPageAttributesEvent.h"
 #import "GrowingPageGroup.h"
 #import "NSString+GrowingHelper.h"
 #import "UIViewController+GrowingAutotracker.h"
@@ -75,19 +76,13 @@
 }
 
 - (void)sendPageEventWithPage:(GrowingPage *)page {
-//    GrowingPageEvent *pageEvent = [GrowingPageEvent pageEventWithTitle:page.title
-//                                                              pageName:page.path
-//                                                             timestamp:page.showTimestamp];
-//
-//    [GrowingEventManager shareInstance].lastPageEvent = pageEvent;
-//
-//    [[GrowingEventManager shareInstance] addEvent:pageEvent
-//                                         thisNode:page.carrier
-//                                      triggerNode:page.carrier
-//                                      withContext:nil];
+    GrowingBaseBuilder *builder = GrowingPageEvent.builder.setTitle(page.title).setPageName(page.path).setTimestamp(page.showTimestamp);
+    [[GrowingEventManager shareInstance] postEventBuidler:builder];
 }
 
-- (void)sendPageVariableEventWithPage:(GrowingPage *)page {
+- (void)sendPageAttributesEventWithPage:(GrowingPage *)page {
+    GrowingBaseBuilder *builder = GrowingPageAttributesEvent.builder.setPageName(page.path).setTimestamp(page.showTimestamp).setAttributes(page.variables);
+    [[GrowingEventManager shareInstance] postEventBuidler:builder];
 //    GrowingPvarEvent *pvarEvent = [GrowingPvarEvent pvarEventWithPageName:page.path
 //                                                            showTimestamp:page.showTimestamp
 //                                                                 variable:page.variables];
@@ -154,7 +149,7 @@
 
     if (!page.isIgnored) {
         // 发送pvar事件
-        [self sendPageVariableEventWithPage:page];
+        [self sendPageAttributesEventWithPage:page];
     }
     if ([page isKindOfClass:GrowingPageGroup.class]) {
         GrowingPageGroup *pageGroup = (GrowingPageGroup *)page;
@@ -253,6 +248,12 @@
 
 - (GrowingPageGroup*)findPageByView:(UIView *)view {
     UIViewController *parent = [view growingHelper_viewController];
+    GrowingPageGroup *page = [parent growingPageHelper_getPageObject];
+    return page;
+}
+
+- (GrowingPageGroup*)currentPage {
+    UIViewController *parent = [self currentViewController];
     GrowingPageGroup *page = [parent growingPageHelper_getPageObject];
     return page;
 }

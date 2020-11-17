@@ -11,6 +11,7 @@
 #import "GIOConstants.h"
 #import "GIODataProcessOperation.h"
 #import "GrowingKeyValueCell.h"
+#import <GrowingAnalytics/GrowingAutotracker.h>
 
 @interface GIOAttributesTrackViewController () <UITableViewDelegate, UITableViewDataSource, GrowingKeyValueCellDelegate>
 
@@ -99,13 +100,13 @@
 
 - (void)trackEventWithAttributes:(NSDictionary *)atts {
     if ([self.eventType isEqualToString:@"LOGIN_USER_ATTRIBUTES"]) {
-//        [Growing setLoginUserAttributes:atts];
+        [[GrowingAutotracker sharedInstance] setLoginUserAttributes:atts];
 
     } else if ([self.eventType isEqualToString:@"CONVERSION_VARIABLES"]) {
-//        [Growing setConversionVariables:atts];
+        [[GrowingAutotracker sharedInstance] setConversionVariables:atts];
 
     } else if ([self.eventType isEqualToString:@"VISITOR_ATTRIBUTES"]) {
-//        [Growing setVisitorAttributes:atts];
+        [[GrowingAutotracker sharedInstance] setVisitorAttributes:atts];
     }
 
     NSLog(@"track %@ 事件，attributes:%@", self.eventType, atts);

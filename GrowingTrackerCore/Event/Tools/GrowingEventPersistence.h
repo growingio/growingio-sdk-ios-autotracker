@@ -25,14 +25,14 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GrowingEventPersistence : NSObject
 
 @property (nonatomic, copy, readonly) NSString *_Nonnull eventUUID;
-@property (nonatomic, copy, readonly) NSString *_Nonnull eventTypeKey;
+@property (nonatomic, copy, readonly) NSString *_Nonnull eventType;
 @property (nonatomic, copy, readonly) NSString *_Nonnull rawJsonString;
 
 - (instancetype _Nonnull)initWithUUID:(NSString *_Nonnull)uuid
                             eventType:(NSString *_Nonnull)evnetType
                            jsonString:(NSString *_Nonnull)jsonString;
 
-+ (instancetype _Nonnull)persistenceEventWithEvent:(GrowingBaseEvent *_Nonnull)event;
++ (instancetype _Nonnull)persistenceEventWithEvent:(GrowingBaseEvent *_Nonnull)event uuid:(NSString *)uuid;
 
 + (NSArray<NSString *> *_Nonnull)buildRawEventsFromEvents:(NSArray<GrowingEventPersistence *> *_Nonnull)events;
 

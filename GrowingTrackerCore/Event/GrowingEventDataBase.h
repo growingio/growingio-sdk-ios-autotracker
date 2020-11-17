@@ -33,7 +33,7 @@ typedef NS_ENUM(NSInteger , GrowingEventDataBaseError)
 
 @interface GrowingEventDataBase : NSObject
 
-@property (nonatomic, assign) NSUInteger autoFlushCount; // 如果通过path创建 为NO 如果通过name直接床架 为YES
+@property (nonatomic, assign) NSUInteger autoFlushCount;
 
 + (instancetype)databaseWithPath:(NSString*)path name:(NSString *)name;
 

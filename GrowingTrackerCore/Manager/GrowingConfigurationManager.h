@@ -3,10 +3,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
-@class GrowingTrackConfiguration;
-
-
+#import "GrowingTrackConfiguration.h"
 @interface GrowingConfigurationManager : NSObject
 @property(nonatomic, strong) GrowingTrackConfiguration *trackConfiguration;
 @property(nonatomic, copy, readonly) NSString *urlScheme;

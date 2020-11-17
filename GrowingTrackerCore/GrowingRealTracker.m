@@ -26,7 +26,7 @@
 NSString *const GrowingTrackerVersionName = @"3.0.0";
 const int GrowingTrackerVersionCode = 300;
 
-@interface GrowingRealTracker ()
+@interface GrowingRealTracker () <GrowingUserIdChangedDelegate>
 @property(nonatomic, copy, readonly) NSDictionary *launchOptions;
 @property(nonatomic, strong, readonly) GrowingTrackConfiguration *configuration;
 
@@ -44,6 +44,7 @@ const int GrowingTrackerVersionCode = 300;
         GrowingConfigurationManager.sharedInstance.trackConfiguration = self.configuration;
         [GrowingAppLifecycle.sharedInstance setupAppStateNotification];
         [GrowingSession startSession];
+        [[GrowingSession currentSession] addUserIdChangedDelegate:self];
     }
 
     return self;
@@ -121,58 +122,43 @@ const int GrowingTrackerVersionCode = 300;
 }
 
 - (void)setDataCollectionEnabled:(BOOL)enabled {
-
+    self.configuration.dataCollectionEnabled = enabled;
 }
 
 - (NSString *)getDeviceId {
     return [GrowingDeviceInfo currentDeviceInfo].deviceIDString;
 }
 
-- (void)resetSessionIdWhileUserIdChangedFrom:(NSString *)oldValue toNewValue:(NSString *)newValue {
-    // lastUserId 记录的是上一个有值的 CS1
-    static NSString *kGrowinglastUserId = nil;
-
-    // 保持 lastUserId 为最近有值的值
-    if (oldValue.length > 0) {
-        kGrowinglastUserId = oldValue;
-    }
-
-    // 如果 lastUserId 有值，并且新设置 CS1 也有值，当两个不同的时候，启用新的 Session 并发送 visit
-    if (kGrowinglastUserId.length > 0 && newValue.length > 0 && ![kGrowinglastUserId isEqualToString:newValue]) {
-        [[GrowingDeviceInfo currentDeviceInfo] resetSessionID];
-
-        //重置session, 发 Visitor 事件
-        [GrowingEventGenerator generateVisitorAttributesEventByResend];
-//        if ([[GrowingCustomField shareInstance] growingVistorVar]) {
-//            [[GrowingCustomField shareInstance] sendVisitorEvent:[[GrowingCustomField shareInstance] growingVistorVar]];
-//        }
-    }
-}
 
 - (void)setUserIdValue:(nonnull NSString *)value {
-    NSString *oldValue = GrowingPersistenceDataProvider.sharedInstance.loginUserId;
-//    if ([value isKindOfClass:[NSNumber class]]) {
-//        value = [(NSNumber *) value stringValue];
-//    }
-//
-//    if (![value isKindOfClass:[NSString class]] || value.length == 0) {
-//        [GrowingCustomField shareInstance].userId = nil;
-//    } else {
-//        [GrowingCustomField shareInstance].userId = value;
-//    }
-//    [GrowingPersistenceDataProvider.sharedInstance setSessionId:value];
-//    NSString *newValue = [GrowingCustomField shareInstance].userId;
+    [[GrowingSession currentSession] setLoginUserId:value];
+}
 
-    [self resetSessionIdWhileUserIdChangedFrom:oldValue toNewValue:value];
+/// 设置经纬度坐标
+/// @param latitude 纬度
+/// @param longitude 经度
+- (void)setLocation:(double)latitude longitude:(double)longitude {
+    [[GrowingSession currentSession] setLocation:latitude longitude:longitude];
+}
 
+/// 清除地理位置
+- (void)cleanLocation {
+    [[GrowingSession currentSession] cleanLocation];
+}
+
+#pragma mark - GrowingUserIdChangedDelegate
+
+- (void)userIdDidChangedFrom:(NSString *)oldUserId to:(NSString *)newUserId {
     // Notify userId changed
     [[GrowingBroadcaster sharedInstance] notifyEvent:@protocol(GrowingUserIdChangedMeessage)
                                           usingBlock:^(id <GrowingMessageProtocol> _Nonnull obj) {
                                               if ([obj respondsToSelector:@selector(userIdDidChangedFrom:to:)]) {
                                                   id <GrowingUserIdChangedMeessage> message = (id <GrowingUserIdChangedMeessage>) obj;
-                                                  [message userIdDidChangedFrom:oldValue to:value];
+                                                  [message userIdDidChangedFrom:oldUserId to:newUserId];
                                               }
                                           }];
 }
+
+
 
 @end

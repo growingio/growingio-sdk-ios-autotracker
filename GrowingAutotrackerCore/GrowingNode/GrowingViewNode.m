@@ -25,14 +25,14 @@
 #import "NSString+GrowingHelper.h"
 #import "UIView+GrowingHelper.h"
 #import "UIViewController+GrowingNode.h"
-
+#import "GrowingTimeUtil.h"
 @implementation GrowingViewNode
 
 - (instancetype)initWithNode:(id<GrowingNode>)node {
     if (self = [super init]) {
         _xPath = [GrowingNodeHelper xPathForNode:node];
         _textValue = [self buildElementContentForNode:node];
-        _timestamp = [[NSDate date] timeIntervalSince1970] * 1000;
+        _timestamp = [GrowingTimeUtil currentTimeMillis];
         //对于非列表元素，不添加index字段
         if (node.growingNodeIndexPath) {
             _index = node.growingNodeKeyIndex;

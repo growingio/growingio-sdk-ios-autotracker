@@ -121,8 +121,4 @@ static char growingNodeIsBadNodeKey;
     return 0;
 }
 
-- (NSTimeInterval)growingTimeIntervalForLastClick {
-    return 0;
-}
-
 @end

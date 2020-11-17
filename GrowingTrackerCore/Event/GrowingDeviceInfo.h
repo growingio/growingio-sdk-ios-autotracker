@@ -49,8 +49,6 @@
 
 + (void)configUrlScheme:(NSString *)urlScheme;
 
-@property (nonatomic, readonly) NSString *sessionID;
-
 @property (nonatomic, strong) GrowingFileStorage *deviceStorage;
 
 - (void)resetSessionID;

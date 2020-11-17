@@ -33,12 +33,6 @@
 - (void)growingEventManagerEventDidBuild:(GrowingBaseEvent* _Nullable)event;
 @end
 
-////代理对象，决定是否event发送
-//@protocol GrowingEventManagerDelegate <NSObject>
-//- (BOOL)growingEventManagerEventShouldSend:(GrowingBaseEvent* _Nullable)event;
-//- (void)growingEventManagerEventWillSend:(GrowingBaseEvent* _Nullable)event;
-//@end
-
 @interface GrowingEventManager : NSObject
 
 //@property (nonatomic, weak) id <GrowingEventManagerDelegate> delegate;

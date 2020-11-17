@@ -69,19 +69,6 @@ static GrowingPersistenceDataProvider *persistence = nil;
     return  [_growingUserdefault valueForKey:GrowingUserdefault_deviceId];;
 }
 
-//- (void)setSessionId:(NSString * _Nonnull)sessionId {
-//    //空值
-//    if (sessionId.length == 0) {
-//        return;
-//    }
-//    [_growingUserdefault setValue:sessionId forKey:GrowingUserdefault_sessionId];
-//    //write now!
-//    [_growingUserdefault synchronize];
-//}
-//- (NSString *)sessionId {
-//    return  [_growingUserdefault valueForKey:GrowingUserdefault_sessionId];
-//}
-
 - (void)setLoginUserId:(NSString * _Nonnull)loginUserId {
     //空值
     if (loginUserId.length == 0) {

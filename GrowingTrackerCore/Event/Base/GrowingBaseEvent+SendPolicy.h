@@ -29,10 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingBaseEvent (SendPolicy)
 
-//发送策略
-- (GrowingEventSendPolicy)sendPolicy;
-
-- (void)setSendPolicy:(GrowingEventSendPolicy)plicy;
+@property (nonatomic, assign) GrowingEventSendPolicy sendPolicy;
 
 @end
 
