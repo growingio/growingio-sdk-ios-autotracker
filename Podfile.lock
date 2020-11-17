@@ -7,8 +7,6 @@ PODS:
   - AlicloudUTDID (1.5.0.91)
   - AlicloudUtils (1.3.9):
     - AlicloudUTDID
-  - GrowingAnalytics (0.1.0):
-    - GrowingAnalytics/Autotracker (= 0.1.0)
   - GrowingAnalytics/Autotracker (0.1.0):
     - GrowingAnalytics/AutotrackerCore
   - GrowingAnalytics/AutotrackerCore (0.1.0):
@@ -29,7 +27,7 @@ PODS:
 
 DEPENDENCIES:
   - AlicloudPush (~> 1.9.8)
-  - GrowingAnalytics (from `./`)
+  - GrowingAnalytics/Autotracker (from `./`)
   - GrowingAnalytics/Tracker (from `./`)
   - KIF
   - MBProgressHUD
@@ -66,6 +64,6 @@ SPEC CHECKSUMS:
   SDCycleScrollView: b3c9a5ed840c771c4938978174c7c9d9feefeb96
   SDWebImage: cf6922231e95550934da2ada0f20f2becf2ceba9
 
-PODFILE CHECKSUM: 79f9527de556a28972a3dcca8c2cc1d6cfe57726
+PODFILE CHECKSUM: 84d4adf1b9b3b14b09f290534624cf242c01c044
 
 COCOAPODS: 1.9.1

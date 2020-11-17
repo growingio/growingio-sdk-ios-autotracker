@@ -23,6 +23,7 @@
 #import "GrowingSwizzler.h"
 #import "UIView+GrowingNode.h"
 #import "GrowingViewClickProvider.h"
+
 @implementation UITableView (GrowingAutotracker)
 
 - (void)growing_setDelegate:(id<UITableViewDelegate>)delegate {

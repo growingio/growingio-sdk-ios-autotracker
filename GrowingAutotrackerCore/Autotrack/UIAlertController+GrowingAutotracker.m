@@ -24,6 +24,7 @@
 #import "UIView+GrowingNode.h"
 #import "GrowingEventManager.h"
 #import "GrowingViewClickProvider.h"
+
 @implementation UIAlertController (GrowingAutotracker)
 
 - (void)growing_dismissAnimated:(BOOL)animated triggeringAction:(UIAlertAction *)action {
