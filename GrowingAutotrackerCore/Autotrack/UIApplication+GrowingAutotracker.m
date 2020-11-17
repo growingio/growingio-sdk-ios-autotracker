@@ -64,18 +64,11 @@
     
     NSObject <GrowingNode> *node = (NSObject<GrowingNode> *)sender;
     
-    // 判断触发间隔是否有效
-    if (![GrowingNodeHelper isValidClickEventForNode:node]) {
-        return;
-    }
-    
+
     if ([sender isKindOfClass:UISwitch.class] ||
         [sender isKindOfClass:UIStepper.class] ||
         [sender isKindOfClass:UIPageControl.class]) {
 
-        // 保存当前事件触发时间
-        node.growingTimeIntervalForLastClick = [NSProcessInfo processInfo].systemUptime;
-//        [GrowingClickEvent sendEventWithNode:sender andEventType:GrowingEventTypeButtonClick];
         [GrowingViewClickProvider viewOnClick:node];
         return;
     }
@@ -83,10 +76,6 @@
     if ([event isKindOfClass:[UIEvent class]] &&
         event.type == UIEventTypeTouches &&
         [[[event allTouches] anyObject] phase] == UITouchPhaseEnded) {
-        
-        // 保存当前事件触发时间
-        node.growingTimeIntervalForLastClick = [NSProcessInfo processInfo].systemUptime;
-//        [GrowingClickEvent sendEventWithNode:sender andEventType:GrowingEventTypeButtonClick];
         [GrowingViewClickProvider viewOnClick:node];
         return;
     }

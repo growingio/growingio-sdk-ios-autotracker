@@ -37,6 +37,9 @@ static GrowingAutotracker *sharedInstance = nil;
 }
 
 + (instancetype)sharedInstance {
+    if (!sharedInstance) {
+        @throw [NSException exceptionWithName:@"GrowingAutotracker未初始化" reason:@"请在applicationDidFinishLaunching中调用startWithConfiguration函数,并且确保在主线程中" userInfo:nil];
+    }
     return sharedInstance;
 }
 

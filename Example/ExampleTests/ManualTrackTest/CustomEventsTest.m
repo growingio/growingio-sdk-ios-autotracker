@@ -20,7 +20,7 @@
 
 - (void)setUp {
     //设置userid,确保cs1字段不空
-    [Growing setLoginUserId:@"test"];
+    [[GrowingTracker sharedInstance] setLoginUserId:@"test"];
     [tester waitForTimeInterval:1];
 }
 - (void)tearDown {
@@ -31,7 +31,7 @@
      function:EventId合法
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    [Growing trackCustomEvent:@"GrowingIO2018"];
+    [[GrowingTracker sharedInstance] trackCustomEvent:@"GrowingIO2018"];
     [tester waitForTimeInterval:2];
     NSArray *cstmEventArray = [MockEventQueue.sharedQueue eventsFor:@"CUSTOM"];
     // NSLog(@"Cstm事件：%@",cstmEventArray);
@@ -62,7 +62,7 @@
      function:EventId为特殊字符，正常发送数据
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    [Growing trackCustomEvent:@"GIO%#*/"];
+    [[GrowingTracker sharedInstance] trackCustomEvent:@"GIO%#*/"];
     [tester waitForTimeInterval:2];
     NSArray *cstmEventArray = [MockEventQueue.sharedQueue eventsFor:@"CUSTOM"];
     // NSLog(@"Cstm事件：%@",cstmEventArray);
@@ -92,7 +92,7 @@
      function:EventId为中文，正常发送数据
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    [Growing trackCustomEvent:@"企业增长"];
+    [[GrowingTracker sharedInstance] trackCustomEvent:@"企业增长"];
     [tester waitForTimeInterval:2];
     NSArray *cstmEventArray = [MockEventQueue.sharedQueue eventsFor:@"CUSTOM"];
     // NSLog(@"Cstm事件：%@",cstmEventArray);
@@ -148,7 +148,7 @@
     //将Log日志写入文件
     [LogOperHelper writeLogToFile];
     //    [[viewTester usingLabel:@"Track请求"] tap];
-    [Growing trackCustomEvent:NULL];
+    [[GrowingTracker sharedInstance] trackCustomEvent:NULL];
     //检测日志输出
     Boolean chres = [LogOperHelper CheckLogOutput:[LogOperHelper getFlagErrNsLog]];
     //恢复日志重定向
@@ -171,7 +171,7 @@
     //将Log日志写入文件
     [LogOperHelper writeLogToFile];
     //    [[viewTester usingLabel:@"Track请求"] tap];
-    [Growing trackCustomEvent:@""];
+    [[GrowingTracker sharedInstance] trackCustomEvent:@""];
     //检测日志输出
     Boolean chres = [LogOperHelper CheckLogOutput:[LogOperHelper getFlagErrNsLog]];
     //恢复日志重定向
@@ -193,7 +193,7 @@
     //将Log日志写入文件
     [LogOperHelper writeLogToFile];
     //    [[viewTester usingLabel:@"TrackNum"] tap];
-    [Growing trackCustomEvent:NULL withAttributes:@{@"num" : @"企业增长"}];
+    [[GrowingTracker sharedInstance] trackCustomEvent:NULL withAttributes:@{@"num" : @"企业增长"}];
     //检测日志输出
     Boolean chres = [LogOperHelper CheckLogOutput:[LogOperHelper getFlagErrNsLog]];
     //恢复日志重定向
@@ -215,7 +215,7 @@
     //将Log日志写入文件
     [LogOperHelper writeLogToFile];
     //    [[viewTester usingLabel:@"TrackNum"] tap];
-    [Growing trackCustomEvent:@"" withAttributes:@{@"num" : @"企业增长"}];
+    [[GrowingTracker sharedInstance] trackCustomEvent:@"" withAttributes:@{@"num" : @"企业增长"}];
     //检测日志输出
     Boolean chres = [LogOperHelper CheckLogOutput:[LogOperHelper getFlagErrNsLog]];
     //恢复日志重定向
@@ -234,7 +234,7 @@
      function:WithVariable，正常情况
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    [Growing trackCustomEvent:@"GIO" withAttributes:@{@"name" : @"GIO", @"title" : @"QA"}];
+    [[GrowingTracker sharedInstance] trackCustomEvent:@"GIO" withAttributes:@{@"name" : @"GIO", @"title" : @"QA"}];
 
     [tester waitForTimeInterval:2];
     NSArray *cstmEventArray = [MockEventQueue.sharedQueue eventsFor:@"CUSTOM"];
@@ -269,7 +269,7 @@
      function:WithVariable，更新数据
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    [Growing trackCustomEvent:@"GIO" withAttributes:@{@"name" : @"GrowingIO", @"title" : @"RD"}];
+    [[GrowingTracker sharedInstance] trackCustomEvent:@"GIO" withAttributes:@{@"name" : @"GrowingIO", @"title" : @"RD"}];
     [tester waitForTimeInterval:2];
     NSArray *cstmEventArray = [MockEventQueue.sharedQueue eventsFor:@"CUSTOM"];
     // NSLog(@"Cstm事件：%@",cstmEventArray);
@@ -306,7 +306,7 @@
     //将Log日志写入文件
     [LogOperHelper writeLogToFile];
     //    [[viewTester usingLabel:@"TrackWV"] tap];
-    [Growing trackCustomEvent:@"GIO" withAttributes:NULL];
+    [[GrowingTracker sharedInstance] trackCustomEvent:@"GIO" withAttributes:NULL];
 
     //检测日志输出
     Boolean chres = [LogOperHelper CheckLogOutput:[LogOperHelper getValueErrNsLog]];
@@ -326,7 +326,7 @@
      function:EventId中文
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    [Growing trackCustomEvent:@"北京"];
+    [[GrowingTracker sharedInstance] trackCustomEvent:@"北京"];
     [tester waitForTimeInterval:2];
     NSArray *cstmEventArray = [MockEventQueue.sharedQueue eventsFor:@"CUSTOM"];
     // NSLog(@"Cstm事件：%@",cstmEventArray);
@@ -361,7 +361,7 @@
     //将Log日志写入文件
     [LogOperHelper writeLogToFile];
     //   [[viewTester usingLabel:@"TrackWV"] tap];
-    [Growing trackCustomEvent:NULL withAttributes:@{@"name" : @"GrowingIO"}];
+    [[GrowingTracker sharedInstance] trackCustomEvent:NULL withAttributes:@{@"name" : @"GrowingIO"}];
     //检测日志输出
     Boolean chres = [LogOperHelper CheckLogOutput:[LogOperHelper getFlagErrNsLog]];
     //恢复日志重定向
@@ -383,7 +383,7 @@
     //将Log日志写入文件
     [LogOperHelper writeLogToFile];
     //    [[viewTester usingLabel:@"TrackWV"] tap];
-    [Growing trackCustomEvent:@"" withAttributes:@{@"name" : @"GrowingIO"}];
+    [[GrowingTracker sharedInstance] trackCustomEvent:@"" withAttributes:@{@"name" : @"GrowingIO"}];
 
     //检测日志输出
     Boolean chres = [LogOperHelper CheckLogOutput:[LogOperHelper getFlagErrNsLog]];

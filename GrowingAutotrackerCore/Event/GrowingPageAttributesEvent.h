@@ -39,6 +39,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (GrowingPageAttributesBuilder *(^)(NSString *value))setPageName;
 - (GrowingPageAttributesBuilder *(^)(long long value))setPageShowTimestamp;
 
+//override
+- (GrowingPageAttributesBuilder *(^)(long long value))setTimestamp;
+- (GrowingPageAttributesBuilder *(^)(NSDictionary <NSString *, NSObject *>*value))setAttributes;
 @end
 
 NS_ASSUME_NONNULL_END

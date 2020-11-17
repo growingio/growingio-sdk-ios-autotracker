@@ -48,7 +48,8 @@ static const NSUInteger kGrowingUnit_MB                 = 1024*1024;
 
 @interface GrowingEventManager()
 
-@property (nonatomic, strong) NSMutableArray<NSObject<GrowingEventInterceptor>*>   *allInterceptor;
+@property (nonatomic, strong) NSHashTable *allInterceptor;
+@property (nonatomic, strong) NSLock *interceptorLock;
 
 @property (nonatomic, strong)   NSMutableArray<GrowingEventPersistence *> * eventQueue;
 @property (nonatomic, readonly, strong)   NSArray<GrowingEventChannel *> * allEventChannels;
@@ -77,21 +78,18 @@ static const NSUInteger kGrowingUnit_MB                 = 1024*1024;
     if (!interceptor) {
         return;
     }
-    if (!self.allInterceptor) {
-        self.allInterceptor = [[NSMutableArray alloc] init];
-    }
-    if ([self.allInterceptor containsObject:interceptor]) {
-        // 某些情况下[Growing handleUrl:]会调动两次, 判断一下是否重复添加 observer
-        return;
-    }
+    [self.interceptorLock lock];
     [self.allInterceptor addObject:interceptor];
+    [self.interceptorLock unlock];
 }
 
 - (void)removeInterceptor:(NSObject<GrowingEventInterceptor> *_Nonnull)interceptor {
     if (!interceptor) {
         return;
     }
+    [self.interceptorLock lock];
     [self.allInterceptor removeObject:interceptor];
+    [self.interceptorLock unlock];
 }
 
 static GrowingEventManager *shareinstance = nil;
@@ -100,10 +98,6 @@ static GrowingEventManager *shareinstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         shareinstance = [[self alloc] initWithName:@"growing"];
-        shareinstance.eventOptions = [[GrowingEventOptions alloc] init];
-        [shareinstance.eventOptions readEventOptions];
-    
-        shareinstance.cacheArray = [[NSMutableArray alloc] init];
     });
     return shareinstance;
 }
@@ -111,9 +105,10 @@ static GrowingEventManager *shareinstance = nil;
 - (instancetype)initWithName:(NSString *)name {
     
     if (self = [super init]) {
-        
-        self.packageNum = kGrowingMaxBatchSize;
-
+        _allInterceptor = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+        _interceptorLock = [[NSLock alloc] init];
+        _packageNum = kGrowingMaxBatchSize;
+        _cacheArray = [[NSMutableArray alloc] init];
         [GrowingDispatchManager dispatchInLowThread:^{
             // db
             self.timingEventDB = [GrowingEventDataBase databaseWithPath:[GrowingFileStorage getTimingDatabasePath]
@@ -151,6 +146,8 @@ static GrowingEventManager *shareinstance = nil;
         _eventChannelDict = [GrowingEventChannel eventChannelMapFromAllChannels:_allEventChannels];
         // all other events got to this category
         _otherEventChannel = [GrowingEventChannel otherEventChannelFromAllChannels:_allEventChannels];
+        _eventOptions = [[GrowingEventOptions alloc] init];
+        [_eventOptions readEventOptions];
         
     }
     return self;
@@ -281,8 +278,8 @@ static GrowingEventManager *shareinstance = nil;
     
     GrowingEventChannel * eventChannel = self.eventChannelDict[eventType] ?: self.otherEventChannel;
     BOOL isCustomEvent = eventChannel.isCustomEvent;
-    
-    GrowingEventPersistence *waitForPersist = [GrowingEventPersistence persistenceEventWithEvent:event];
+    NSString *uuidString = [NSUUID UUID].UUIDString;
+    GrowingEventPersistence *waitForPersist = [GrowingEventPersistence persistenceEventWithEvent:event uuid:uuidString];
     
     if (!isCustomEvent) // custom event never goes into self.eventQueue, event can not be nil
     {
@@ -293,7 +290,7 @@ static GrowingEventManager *shareinstance = nil;
     
     GrowingEventDataBase *db = (isCustomEvent ? self.realtimeEventDB : self.timingEventDB);
     
-    [db setEvent:waitForPersist forKey:[NSUUID UUID].UUIDString error:&error];
+    [db setEvent:waitForPersist forKey:uuidString error:&error];
     
     [db handleDatabaseError:error];
     
@@ -369,7 +366,7 @@ static GrowingEventManager *shareinstance = nil;
         return;
     }
     
-    if (GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionEnabled) {
+    if (!GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionEnabled) {
         GIOLogDebug(@"Data upload disabled, if you want upload event data, please setting dataUploadEnabled to YES!");
         return;
     }
@@ -450,7 +447,7 @@ static GrowingEventManager *shareinstance = nil;
         const NSUInteger eventTypesCount = eventTypes.count;
         NSUInteger count = 0;
         for (GrowingEventPersistence * e in self.eventQueue) {
-            NSString *type = e.eventTypeKey;
+            NSString *type = e.eventType;
             // 反向匹配（排除法）event of other type not match eventChannelDict`s all t
             if (   (eventTypesCount == 0 && self.eventChannelDict[type] == nil)
                 || (eventTypesCount > 0 && [eventTypes indexOfObject:type] != NSNotFound)) // 正向匹配
@@ -475,7 +472,7 @@ static GrowingEventManager *shareinstance = nil;
 }
 
 - (NSString *)ai {
-    return nil;
+    return GrowingConfigurationManager.sharedInstance.trackConfiguration.projectId;
 }
 
 - (dispatch_queue_t)eventDispatch {

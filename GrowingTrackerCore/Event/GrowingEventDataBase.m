@@ -24,6 +24,7 @@
 #import "NSString+GrowingHelper.h"
 #import "GrowingCocoaLumberjack.h"
 #import "GrowingEventPersistence.h"
+#import "GrowingTimeUtil.h"
 
 #define DAY_IN_MILLISECOND (86400000)
 #define VACUUM_DATE(name) [NSString stringWithFormat:@"GIO_VACUUM_DATE_E7B96C4E-6EE2-49CD-87F0-B2E62D4EE96A-%@",name]
@@ -355,14 +356,14 @@ static BOOL isExecuteVaccum(NSString *name)
         id value = values[i];
         if ([value isKindOfClass:GrowingEventPersistence.class]) {
             GrowingEventPersistence *event = (GrowingEventPersistence *)value;
-            NSString *type = event.eventTypeKey;
+            NSString *type = event.eventType;
             NSString *eventString = event.rawJsonString;
-            
-//            BOOL result = [db executeUpdate:@"insert into namedcachetable(name,key,value,createAt,type) values(?,?,?,?,?)", self.name, keys[i], eventString, GROWGetTimestamp(), type];
-//            if (!result) {
-//                error = [db lastError];
-//                break;
-//            }
+            //传入的值不能是int,long这种常量类型，需要转为NSNumber or NSString
+            BOOL result = [db executeUpdate:@"insert into namedcachetable(name,key,value,createAt,type) values(?,?,?,?,?)", self.name, keys[i], eventString, @([GrowingTimeUtil currentTimeMillis]), type];
+            if (!result) {
+                error = [db lastError];
+                break;
+            }
         }
     }
     return error;

@@ -119,8 +119,5 @@ GrowingPropertyDefine(UIViewController, NSNumber*, growingHook_hasDidAppear, set
     return !self.view.window.growingNodeIsBadNode;
 }
 
-- (NSTimeInterval)growingTimeIntervalForLastClick {
-    return 0;
-}
 
 @end

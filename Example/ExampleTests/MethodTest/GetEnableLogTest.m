@@ -9,7 +9,7 @@
 #import "GetEnableLogTest.h"
 #import "MockEventQueue.h"
 #import "GrowingTracker.h"
-
+#import "GrowingTrackConfiguration.h"
 @implementation GetEnableLogTest
 static NSString * const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
 
@@ -17,10 +17,9 @@ static NSString * const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
     /**
      Function:获取显示日志状态
      **/
-    GrowingConfiguration *configuration = [[GrowingConfiguration alloc] initWithProjectId:kGrowingProjectId
-                                                                            launchOptions:nil];
-    [configuration setLogEnabled:YES];
-    bool *log = [configuration logEnabled];
+    GrowingTrackConfiguration *configuration = [GrowingTrackConfiguration configurationWithProjectId:kGrowingProjectId];
+    configuration.debugEnabled = YES;
+    bool *log = configuration.debugEnabled;
     NSLog(@"日志打开状态，%@",log?@"YES":@"NO");
     NSString *logab = log ? @"1" : @"0";
     [tester waitForTimeInterval:1];

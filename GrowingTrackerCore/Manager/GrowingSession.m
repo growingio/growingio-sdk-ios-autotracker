@@ -11,12 +11,15 @@
 #import "GrowingCocoaLumberjack.h"
 #import "GrowingTimeUtil.h"
 #import "NSString+GrowingHelper.h"
+#import "GrowingPersistenceDataProvider.h"
+#import "GrowingEventGenerator.h"
 
 @interface GrowingSession () <GrowingAppLifecycleDelegate>
 @property(nonatomic, assign) BOOL alreadySendVisitEvent;
 @property(nonatomic, copy) NSString *latestNonNullUserId;
 @property(nonatomic, assign, readonly) long long sessionInterval;
-@property(nonatomic, copy) CLLocation *location;
+@property(nonatomic, assign) double latitude;
+@property(nonatomic, assign) double longitude;
 @property(nonatomic, assign) long long latestVisitTime;
 @property(nonatomic, assign) long long latestDidEnterBackgroundTime;
 
@@ -38,8 +41,7 @@ static GrowingSession *currentSession = nil;
         _alreadySendVisitEvent = NO;
         _latestVisitTime = 0;
         _latestDidEnterBackgroundTime = 0;
-        // todo latestNonNullUserId 取值;
-
+        _latestNonNullUserId = [GrowingPersistenceDataProvider sharedInstance].loginUserId;
         _userIdChangedDelegates = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
         _delegateLock = [[NSLock alloc] init];
     }
@@ -95,7 +97,8 @@ static GrowingSession *currentSession = nil;
 - (void)setLoginUserId:(NSString *)loginUserId {
     NSString *oldUserId = _loginUserId.copy;
     _loginUserId = loginUserId.copy;
-    // todo loginUserId 持久化
+    // loginUserId 持久化
+    [[GrowingPersistenceDataProvider sharedInstance] setLoginUserId:_loginUserId];
     [self resendVisitByUserIdDidChangedFrom:oldUserId to:_loginUserId.copy];
     [self dispatchUserIdDidChangedFrom:oldUserId to:_loginUserId.copy];
 }
@@ -123,6 +126,23 @@ static GrowingSession *currentSession = nil;
     }
 }
 
+/// 设置经纬度坐标
+/// @param latitude 纬度
+/// @param longitude 经度
+- (void)setLocation:(double)latitude longitude:(double)longitude {
+    if ((_latitude == 0 && (ABS(latitude) > 0)) || (_longitude == 0 && ABS(longitude) > 0)) {
+        [self resendVisitEvent];
+    }
+    _latitude = latitude;
+    _longitude = longitude;
+}
+/// 清除地理位置
+- (void)cleanLocation {
+    _latitude = 0;
+    _longitude = 0;
+}
+
+
 - (void)resendVisitEvent {
     GIOLogDebug(@"resendVisitEvent");
     [self sendVisitEventWithTimestamp:self.latestVisitTime];
@@ -134,7 +154,8 @@ static GrowingSession *currentSession = nil;
         self.alreadySendVisitEvent = YES;
     }
     self.latestVisitTime = timestamp;
-    // todo 发送VisitEvent
+    // 发送VisitEvent
+    [GrowingEventGenerator generateVisitEvent:timestamp latitude:_latitude longitude:_longitude];
 }
 
 - (void)refreshSessionId {
@@ -147,7 +168,8 @@ static GrowingSession *currentSession = nil;
 }
 
 - (void)sendAppClosedEventWithTimestamp:(NSTimeInterval)timestamp {
-    // todo 发送AppClosedEvent
+    // 发送AppClosedEvent
+    [GrowingEventGenerator generateAppCloseEvent];
 }
 
 

@@ -19,7 +19,7 @@
 
 
 #import "GrowingPageEvent.h"
-
+#import "GrowingDeviceInfo.h"
 
 @implementation GrowingPageEvent
 
@@ -50,6 +50,11 @@
 @end
 
 @implementation GrowingPageBuilder
+
+- (void)readPropertyInMainThread {
+    [super readPropertyInMainThread];
+    _orientation = [GrowingDeviceInfo deviceOrientation];
+}
 
 - (GrowingPageBuilder *(^)(NSString *value))setPageName {
     return ^(NSString *value) {
@@ -82,7 +87,7 @@
 
 
 - (GrowingBaseEvent *)build {
-    return [[GrowingBaseEvent alloc] initWithBuilder:self];
+    return [[GrowingPageEvent alloc] initWithBuilder:self];
 }
 
 @end

@@ -16,7 +16,7 @@
     /**
      function:测试enableAllWebViews
      **/
-    [Growing setDataTrackEnabled:YES];
+    [[GrowingTracker sharedInstance] setDataCollectionEnabled:YES];
 
 }
 
@@ -26,7 +26,7 @@
      function:测试enableAllWebViews
      **/
 
-    [Growing setDataTrackEnabled:NO];
+    [[GrowingTracker sharedInstance] setDataCollectionEnabled:NO];
 }
 
 @end

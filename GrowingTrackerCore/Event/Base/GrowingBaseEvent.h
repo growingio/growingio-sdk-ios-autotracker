@@ -23,6 +23,8 @@ typedef NS_ENUM(NSUInteger, GrowingAppState) {
 @property(nonatomic, assign, readonly) int appState;
 @property(nonatomic, assign, readonly) long long globalSequenceId;
 @property(nonatomic, assign, readonly) long long eventSequenceId;
+@property(nonatomic, copy, readonly) NSString *_Nonnull platform;
+@property(nonatomic, copy, readonly) NSString *_Nonnull platformVersion;
 @property(nonatomic, strong, readonly) NSDictionary *_Nonnull extraParams;
 
 
@@ -50,6 +52,8 @@ typedef NS_ENUM(NSUInteger, GrowingAppState) {
 @property(nonatomic, assign, readonly) int appState;
 @property(nonatomic, assign, readonly) long long globalSequenceId;
 @property(nonatomic, assign, readonly) long long eventSequenceId;
+@property(nonatomic, copy, readonly) NSString *_Nonnull platform;
+@property(nonatomic, copy, readonly) NSString *_Nonnull platformVersion;
 @property(nonatomic, strong, readonly) NSDictionary *_Nonnull extraParams;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -66,6 +70,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (GrowingBaseBuilder *(^)(int value))setAppState;
 - (GrowingBaseBuilder *(^)(long long value))setGlobalSequenceId;
 - (GrowingBaseBuilder *(^)(long long value))setEventSequenceId;
+- (GrowingBaseBuilder *(^)(NSString *value))setPlatform;
+- (GrowingBaseBuilder *(^)(NSString *value))setPlatformVersion;
 - (GrowingBaseBuilder *(^)(NSDictionary *value))setExtraParams;
 
 - (GrowingBaseBuilder *(^)(NSString *value))setEventType;

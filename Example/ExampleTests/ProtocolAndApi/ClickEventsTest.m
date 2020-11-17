@@ -15,7 +15,7 @@
 
 - (void)beforeEach {
     //设置userid,确保cs1字段不空
-    [Growing setLoginUserId:@"test"];
+    [[GrowingTracker sharedInstance] setLoginUserId:@"test"];
 }
 
 - (void)afterEach {
@@ -56,10 +56,10 @@
 
 - (void)test10BtnGIONotTrackClick {
     /**
-     function:setDataTrackEnabled:NO，不发送click事件
+     function:setDataCollectionEnabled:NO，不发送click事件
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    [Growing setDataTrackEnabled:NO];
+    [[GrowingTracker sharedInstance] setDataCollectionEnabled:NO];
     [[viewTester usingLabel:@"UI界面"] tap];
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"UI界面"] tap];
@@ -73,13 +73,13 @@
     NSArray *clickEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
     if (clickEventArray == NULL) {
         XCTAssertEqual(1, 1);
-        NSLog(@"setDataTrackEnabled:NO，不发送click事件测试通过---Passed！");
+        NSLog(@"setDataCollectionEnabled:NO，不发送click事件测试通过---Passed！");
     } else {
-        NSLog(@"setDataTrackEnabled:NO，不发送click事件测试不通过:%@！", clickEventArray);
+        NSLog(@"setDataCollectionEnabled:NO，不发送click事件测试不通过:%@！", clickEventArray);
         XCTAssertEqual(1, 0);
     }
     //恢复track状态
-    [Growing setDataTrackEnabled:YES];
+    [[GrowingTracker sharedInstance] setDataCollectionEnabled:YES];
 }
 
 - (void)test11ColorButtonCheck {

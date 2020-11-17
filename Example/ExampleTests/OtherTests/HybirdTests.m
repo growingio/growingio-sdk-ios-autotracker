@@ -23,9 +23,8 @@
 #import "NoburPoMeaProCheck.h"
 #import "GrowingTracker.h"
 #import <KIF/KIF.h>
-#import "GrowingCloseEvent.h"
-#import "GrowingWebCircle.h"
-#import "GrowingSRWebSocket.h"
+//#import "GrowingWebCircle.h"
+//#import "GrowingSRWebSocket.h"
 
 
 @interface HybirdTests : KIFTestCase
@@ -35,7 +34,7 @@
 @implementation HybirdTests
 
 - (void)setUp {
-    [Growing setLoginUserId:@"test"];
+    [[GrowingTracker sharedInstance] setLoginUserId:@"test"];
     [[viewTester usingLabel:@"UI界面"] tap];
     [viewTester waitForTimeInterval:3];
     [[viewTester usingLabel:@"UI界面"] tap];
@@ -79,22 +78,22 @@
 }
 -(void)testCloseEvent{
     
-    [GrowingCloseEvent sendWithLastPage:@"closepage"];
+//    [GrowingCloseEvent sendWithLastPage:@"closepage"];
 
 }
 -(void)testWebCircle{
-    [GrowingWebCircle isRunning];
-    [GrowingWebCircle stop];
-    [GrowingWebCircle setNeedUpdateScreen];
-    [GrowingWebCircle impressScale];
+//    [GrowingWebCircle isRunning];
+//    [GrowingWebCircle stop];
+//    [GrowingWebCircle setNeedUpdateScreen];
+//    [GrowingWebCircle impressScale];
     
 }
 
 -(void)testGrowingSRWebSocket{
-    NSURL *url = [NSURL URLWithString:@"https://www.growingio.com"];
-    GrowingSRWebSocket *webSocket = [[GrowingSRWebSocket alloc]initWithURL:url];
-    [webSocket open];
-    [webSocket close];
+//    NSURL *url = [NSURL URLWithString:@"https://www.growingio.com"];
+//    GrowingSRWebSocket *webSocket = [[GrowingSRWebSocket alloc]initWithURL:url];
+//    [webSocket open];
+//    [webSocket close];
 }
 
 @end

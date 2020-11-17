@@ -27,13 +27,16 @@
 
 + (void)viewOnChange:(UIView *)view {
     GrowingPageGroup *page = [[GrowingPageManager sharedInstance] findPageByView:view];
+    if (!page) {
+        page = [[GrowingPageManager sharedInstance] currentPage];
+    }
     GrowingViewNode *node = [[GrowingViewNode alloc] initWithNode:view];
-    [self sendClickEvent:page viewNode:node];
+    [self sendChangeEvent:page viewNode:node];
 }
 
-+ (void)sendClickEvent:(GrowingPageGroup *)page viewNode:(GrowingViewNode *)node{
++ (void)sendChangeEvent:(GrowingPageGroup *)page viewNode:(GrowingViewNode *)node{
     [[GrowingEventManager shareInstance] postEventBuidler:GrowingViewElementEvent.builder.setEventType(GrowingEventTypeViewChange)
-     .setPageName(page.name)
+     .setPageName(page.path)
      .setPageShowTimestamp(page.showTimestamp)
      .setXpath(node.xPath)
      .setIndex(node.index)

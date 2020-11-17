@@ -9,9 +9,9 @@
 #import "MockEventQueue.h"
 #import "GrowingEventManager.h"
 
-@interface MockEventQueue () <GrowingEventManagerObserver>
+@interface MockEventQueue () <GrowingEventInterceptor>
 
-@property (nonatomic, strong) NSMutableArray <GrowingEvent *> *eventQueue;
+@property (nonatomic, strong) NSMutableArray <GrowingBaseEvent *> *eventQueue;
 
 @end
 
@@ -30,7 +30,7 @@ static MockEventQueue *queue = nil;
 
 - (instancetype)init {
     if (self = [super init]) {
-        [[GrowingEventManager shareInstance] addObserver:self];
+        [[GrowingEventManager shareInstance] addInterceptor:self];
         self.eventQueue = [NSMutableArray arrayWithCapacity:5];
     }
     return self;
@@ -42,9 +42,9 @@ static MockEventQueue *queue = nil;
 
 - (NSArray <NSDictionary *> *)eventsFor:(NSString *)eventType {
     __block NSMutableArray <NSDictionary *> *events = [[NSMutableArray alloc] init];
-    [self.eventQueue enumerateObjectsUsingBlock:^(GrowingEvent *event, NSUInteger idx, BOOL *stop) {
+    [self.eventQueue enumerateObjectsUsingBlock:^(GrowingBaseEvent *event, NSUInteger idx, BOOL *stop) {
         
-        if ([event.eventTypeKey isEqualToString:eventType]) {
+        if ([event.eventType isEqualToString:eventType]) {
             [events addObject:event.toDictionary];
         }
     }];
@@ -58,8 +58,8 @@ static MockEventQueue *queue = nil;
 
 - (NSDictionary *)firstEventFor:(NSString *)eventType {
     __block NSDictionary *dataDict;
-    [self.eventQueue enumerateObjectsUsingBlock:^(GrowingEvent *event, NSUInteger idx, BOOL *stop) {
-        if ([event.eventTypeKey isEqualToString:eventType]) {
+    [self.eventQueue enumerateObjectsUsingBlock:^(GrowingBaseEvent *event, NSUInteger idx, BOOL *stop) {
+        if ([event.eventType isEqualToString:eventType]) {
             dataDict = event.toDictionary;
             *stop = YES;
         }
@@ -74,9 +74,9 @@ static MockEventQueue *queue = nil;
 
 - (NSUInteger)eventCountFor:(NSString *)eventType {
     __block NSUInteger eventCount = 0;
-    [self.eventQueue enumerateObjectsUsingBlock:^(GrowingEvent *event, NSUInteger idx, BOOL *stop) {
+    [self.eventQueue enumerateObjectsUsingBlock:^(GrowingBaseEvent *event, NSUInteger idx, BOOL *stop) {
         
-        if ([event.eventTypeKey isEqualToString:eventType]) {
+        if ([event.eventType isEqualToString:eventType]) {
             eventCount++;
         }
     }];
@@ -97,10 +97,7 @@ static MockEventQueue *queue = nil;
 
 #pragma mark GrowingEventManagerObserver
 
-- (void)growingEventManagerWillAddEvent:(GrowingEvent *)event
-                               thisNode:(id<GrowingNode>)thisNode
-                            triggerNode:(id<GrowingNode>)triggerNode
-                            withContext:(id<GrowingAddEventContext>)context {
+- (void)growingEventManagerEventDidBuild:(GrowingBaseEvent* _Nullable)event; {
     [self.eventQueue addObject:event];
 }
 

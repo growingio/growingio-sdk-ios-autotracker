@@ -21,6 +21,7 @@
 #import "GrowingDeviceInfo.h"
 #import "GrowingEventManager.h"
 #import "GrowingNetworkInterfaceManager.h"
+#import "GrowingRealTracker.h"
 
 @import CoreLocation;
 
@@ -39,8 +40,6 @@
         _deviceBrand = subBuilder.deviceBrand;
         _deviceModel = subBuilder.deviceModel;
         _deviceType = subBuilder.deviceType;
-        _platform = subBuilder.platform;
-        _platformVersion = subBuilder.platformVersion;
         _appName = subBuilder.appName;
         _appVersion = subBuilder.appVersion;
         _language = subBuilder.language;
@@ -68,13 +67,11 @@
     dataDictM[@"deviceBrand"] = self.deviceBrand;
     dataDictM[@"deviceModel"] = self.deviceModel;
     dataDictM[@"deviceType"] = self.deviceType;
-    dataDictM[@"platform"] = self.platform;
-    dataDictM[@"platformVersion"] = self.platformVersion;
     dataDictM[@"appName"] = self.appName;
     dataDictM[@"appVersion"] = self.appVersion;
     dataDictM[@"language"] = self.language;
-    dataDictM[@"latitude"] = @(self.latitude);
-    dataDictM[@"longitude"] = @(self.longitude);
+    dataDictM[@"latitude"] = ABS(self.latitude) > 0 ? @(self.latitude) : nil;
+    dataDictM[@"longitude"] = ABS(self.longitude) > 0 ? @(self.longitude) : nil;
     dataDictM[@"idfa"] = self.idfa;
     dataDictM[@"idfv"] = self.idfv;
     dataDictM[@"sdkVersion"] = self.sdkVersion;
@@ -85,6 +82,26 @@
 
 
 @implementation GrowingVisitBuidler
+
+- (void)readPropertyInMainThread {
+    [super readPropertyInMainThread];
+    GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
+    CGSize screenSize = [GrowingDeviceInfo deviceScreenSize];
+    _screenWidth = screenSize.width;
+    _screenHeight = screenSize.height;
+    _networkState = [[GrowingNetworkInterfaceManager sharedInstance] networkType];
+    _sdkVersion = GrowingTrackerVersionName;
+    _deviceBrand = deviceInfo.deviceBrand;
+    _deviceModel = deviceInfo.deviceModel;
+    _deviceType = deviceInfo.deviceType;
+    _appName = deviceInfo.displayName;
+    _appVersion = deviceInfo.appVersion;
+    _language = deviceInfo.language;
+    
+    _idfa = deviceInfo.idfa;
+    _idfv = deviceInfo.idfv;
+    
+}
 
 - (GrowingVisitBuidler *(^)(NSString *value))setNetworkState {
     return ^(NSString *value) {
@@ -128,18 +145,7 @@
         return self;
     };
 }
-- (GrowingVisitBuidler *(^)(NSString *value))setPlatform {
-    return ^(NSString *value) {
-        self->_platform = value;
-        return self;
-    };
-}
-- (GrowingVisitBuidler *(^)(NSString *value))setPlatformVersion {
-    return ^(NSString *value) {
-        self->_platformVersion = value;
-        return self;
-    };
-}
+
 - (GrowingVisitBuidler *(^)(NSString *value))setAppName {
     return ^(NSString *value) {
         self->_appName = value;
@@ -194,8 +200,8 @@
         return self;
     };
 }
-
-- (NSString *)eventTypeKey {
+//_eventType成员变量并没有值
+- (NSString *)eventType {
     return GrowingEventTypeVisit;
 }
 

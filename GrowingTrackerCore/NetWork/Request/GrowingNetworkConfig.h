@@ -46,7 +46,6 @@
 
 @property (nonatomic, copy) NSString *customTrackerHost;
 @property (nonatomic, copy) NSString *customDataHost;
-//@property (nonatomic, copy) NSString *customAdHost;
 @property (nonatomic, copy) NSString *customWsHost;
 
 + (instancetype)sharedInstance;

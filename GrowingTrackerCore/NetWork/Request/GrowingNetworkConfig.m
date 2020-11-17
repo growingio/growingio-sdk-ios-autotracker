@@ -21,7 +21,7 @@
 #import <Foundation/Foundation.h>
 #import "GrowingNetworkConfig.h"
 #import "GrowingCocoaLumberjack.h"
-
+#import "GrowingConfigurationManager.h"
 @implementation GrowingNetworkConfig
 
 static GrowingNetworkConfig *sharedInstance;
@@ -87,7 +87,7 @@ static NSString * const kGrowingWsHostFormat =  @"wss://ws.growingio.com";
 }
 
 - (NSString *)growingApiHostEnd {
-    return _customTrackerHost.length > 0 ? _customTrackerHost : kGrowingTrackerHost;
+    return GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionServerHost;
 }
 
 - (NSString *)growingDataHostEnd {

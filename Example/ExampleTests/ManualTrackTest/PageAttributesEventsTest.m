@@ -8,8 +8,6 @@
 
 #import "PageAttributesEventsTest.h"
 
-#import <GrowingAutoTracker.h>
-
 #import "LogOperHelper.h"
 #import "ManualTrackHelper.h"
 #import "MockEventQueue.h"

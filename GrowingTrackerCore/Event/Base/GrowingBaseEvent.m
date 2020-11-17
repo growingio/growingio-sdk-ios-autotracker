@@ -23,8 +23,9 @@
         _appState = builder.appState;
         _globalSequenceId = builder.globalSequenceId;
         _eventSequenceId = builder.eventSequenceId;
+        _platform = builder.platform;
+        _platformVersion = builder.platformVersion;
         _extraParams = builder.extraParams;
-
     }
     return self;
 }
@@ -42,7 +43,8 @@
     dataDict[@"domain"] = self.domain;
     dataDict[@"userId"] = self.userId;
     dataDict[@"deviceId"] = self.deviceId;
-
+    dataDict[@"platform"] = self.platform;
+    dataDict[@"platformVersion"] = self.platformVersion;
     dataDict[@"globalSequenceId"] = @(self.globalSequenceId);
     dataDict[@"eventSequenceId"] = @(self.eventSequenceId);
     dataDict[@"appState"] = (self.appState == GrowingAppStateForeground) ? @"FOREGROUND" : @"BACKGROUND";
@@ -58,8 +60,7 @@
 - (instancetype)init {
     if (self = [super init]) {
         GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
-        _sessionId = deviceInfo.sessionID ?: @"";
-        _timestamp = [[NSDate date] timeIntervalSince1970] * 1000;
+        _timestamp = [GrowingTimeUtil currentTimeMillis];
         _domain = deviceInfo.bundleID;
         _deviceId = deviceInfo.deviceIDString ?: @"";
         _urlScheme = deviceInfo.urlScheme;
@@ -68,12 +69,13 @@
 }
 //赋值属性，eg:deviceId,userId,sessionId,globalSequenceId,eventSequenceId
 - (void)readPropertyInMainThread {
-    _appState = [NSNumber numberWithInteger:[UIApplication sharedApplication].applicationState];
-    //TODO: 赋值
+    _appState = [UIApplication sharedApplication].applicationState == UIApplicationStateActive ? 0 : 1;
     GrowingEventSequenceObject *sequence = [[GrowingPersistenceDataProvider sharedInstance] getAndIncrement:self.eventType];
     _globalSequenceId = sequence.globalId;
     _eventSequenceId = sequence.eventTypeId;
-//    _userId =
+    GrowingSession *session = [GrowingSession currentSession];
+    _userId = session.loginUserId;
+    _sessionId =  session.sessionId;
 }
 
 - (GrowingBaseBuilder *(^)(NSString *value))setDeviceId {
@@ -131,6 +133,20 @@
         return self;
     };
 }
+
+- (GrowingBaseBuilder *(^)(NSString *value))setPlatform {
+    return ^(NSString *value) {
+        self->_platform = value;
+        return self;
+    };
+}
+- (GrowingBaseBuilder *(^)(NSString *value))setPlatformVersion {
+    return ^(NSString *value) {
+        self->_platformVersion = value;
+        return self;
+    };
+}
+
 - (GrowingBaseBuilder *(^)(NSDictionary *value))setExtraParams {
     return ^(NSDictionary *value) {
         self->_extraParams = value;

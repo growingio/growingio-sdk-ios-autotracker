@@ -31,9 +31,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setDeviceId:(NSString * _Nonnull)deviceId;
 - (NSString *)deviceId;
 
-//- (void)setSessionId:(NSString * _Nonnull)sessionId;
-//- (NSString *)sessionId;
-
 - (void)setLoginUserId:(NSString * _Nonnull)loginUserId;
 - (NSString *)loginUserId;
 

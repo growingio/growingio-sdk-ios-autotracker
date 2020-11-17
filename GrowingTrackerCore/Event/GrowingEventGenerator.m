@@ -28,7 +28,7 @@
 #import "GrowingVisitorAttributesEvent.h"
 @implementation GrowingEventGenerator
 
-+ (void)generateVisitEvent:(NSTimeInterval)ts latitude:(double)latitude longitude:(double)longitude; {
++ (void)generateVisitEvent:(long long)ts latitude:(double)latitude longitude:(double)longitude; {
     [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
         GrowingBaseBuilder *builder = GrowingVisitEvent.builder.setTimestamp(ts).setLatitude(latitude).setLongitude(longitude);
         [[GrowingEventManager shareInstance] postEventBuidler:builder];
@@ -56,18 +56,19 @@
     }];
 }
 
-static NSDictionary <NSString *,NSObject *>* lastVistorAttributes = nil;
 
 + (void)generateVisitorAttributesEvent:(NSDictionary <NSString *,NSObject *>*_Nonnull)attributes {
-    lastVistorAttributes = attributes;
     [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
         GrowingBaseBuilder *builder = GrowingVisitorAttributesEvent.builder.setAttributes(attributes);
         [[GrowingEventManager shareInstance] postEventBuidler:builder];
     }];
 }
 
-+ (void)generateVisitorAttributesEventByResend {
-    [self generateVisitorAttributesEvent:lastVistorAttributes];
++ (void)generateAppCloseEvent {
+    [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
+        GrowingBaseBuilder *builder = GrowingAppCloseEvent.builder;
+        [[GrowingEventManager shareInstance] postEventBuidler:builder];
+    }];
 }
 
 @end

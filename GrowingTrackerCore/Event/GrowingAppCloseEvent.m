@@ -42,21 +42,7 @@
 + (GrowingAppCloseBuidler *_Nonnull)builder {
     return [[GrowingAppCloseBuidler alloc] init];
 }
-//- (instancetype)initWithLastPage:(NSString *)pageName {
-//    if (self = [super init]) {
-//        self.pageName = pageName;
-//    }
-//    return self;
-//}
 
-//+ (void)sendWithLastPage:(NSString *)pageName {
-//    GrowingAppCloseEvent *clsEvent = [[GrowingAppCloseEvent alloc] initWithLastPage:pageName];
-//
-//    [[GrowingEventManager shareInstance] addEvent:clsEvent
-//                                         thisNode:nil
-//                                      triggerNode:nil
-//                                      withContext:nil];
-//}
 
 #pragma mark GrowingEventTransformable
 
