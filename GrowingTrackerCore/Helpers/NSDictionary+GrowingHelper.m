@@ -20,19 +20,19 @@
 
 #import "NSDictionary+GrowingHelper.h"
 #import "NSData+GrowingHelper.h"
-#import "GrowingGlobal.h"
 #import "GrowingCocoaLumberjack.h"
+
 
 @implementation NSDictionary (GrowingHelper)
 
-- (NSData*)growingHelper_jsonData {
+- (NSData *)growingHelper_jsonData {
     return [self growingHelper_jsonDataWithOptions:0];
 }
 
-- (NSData*)growingHelper_jsonDataWithOptions:(NSJSONWritingOptions)options {
-    NSData * jsonData = nil;
+- (NSData *)growingHelper_jsonDataWithOptions:(NSJSONWritingOptions)options {
+    NSData *jsonData = nil;
     @try {
-        NSError * error = nil;
+        NSError *error = nil;
         jsonData = [NSJSONSerialization dataWithJSONObject:self options:options error:&error];
         if (error != nil) {
             jsonData = nil;
@@ -44,100 +44,55 @@
     }
 }
 
-- (NSString*)growingHelper_jsonString {
+- (NSString *)growingHelper_jsonString {
     return [[self growingHelper_jsonData] growingHelper_utf8String];
 }
 
 - (BOOL)isValidDictVariable {
-    for (NSString * k in self) {
-        NSString * key = k ;
-        if (self[key] == nil || key.length > 50 ) {
-            GIOLogError(parameterKeyErrorLog);
-            return NO ;
-        }
-        
-        if ([self[key] isKindOfClass:[NSNull class]] || self[key] == nil) {
-            GIOLogError(parameterValueErrorLog);
-            return NO ;
-        }
-        
-        if ([self[key] isKindOfClass:[NSString class]]) {
-            NSString * v = self[key];
-            if (v.length > 1000) {
-                GIOLogError(parameterValueErrorLog);
-                return NO ;
-            }
-        }
-        
+    for (NSString *k in self) {
+        NSString *key = k;
         if (![self[key] isKindOfClass:[NSString class]] && ![self[key] isKindOfClass:[NSNumber class]]) {
-            GIOLogError(parameterValueErrorLog);
-            return NO ;
+            GIOLogError(@"%@ value is not NSString class", key);
+            return NO;
         }
     }
-    return YES ;
+    return YES;
 }
 
 - (NSString *)growingHelper_queryString {
     NSString *query = @"";
-    
+
     if (self.count < 1) {
         return query;
     }
-    
+
     for (NSString *key in self) {
         if (query.length == 0) {
-            query = [query stringByAppendingString:[NSString stringWithFormat:@"%@=%@",key,self[key]]];
+            query = [query stringByAppendingString:[NSString stringWithFormat:@"%@=%@", key, self[key]]];
         } else {
-            query = [query stringByAppendingString:[NSString stringWithFormat:@"&%@=%@",key,self[key]]];
+            query = [query stringByAppendingString:[NSString stringWithFormat:@"&%@=%@", key, self[key]]];
         }
     }
-    
+
     return query;
 }
 
-@end
-
-
-@implementation NSMutableDictionary (GrowingHelper)
-
-- (BOOL)mergeGrowingAttributesVar:(NSDictionary<NSString *, NSObject *> *)growingAttributesVar {
-    BOOL somethingWasChanged = NO;
-    for (NSString * k in growingAttributesVar) {
-        NSString * key = (k.length > g_maxLengthOfKey ? [k substringToIndex:g_maxLengthOfKey] : k);
-        
-        if (key.length == 0 || (self.count >= g_maxCountOfKVPairs && self[key] == nil)) {
-            continue;
-        }
-        NSObject * v = growingAttributesVar[key];
-        if ([v isKindOfClass:[NSString class]]) {
-            NSString * value = (NSString *)v;
-            value = (value.length > g_maxLengthOfValue ? [value substringToIndex:g_maxLengthOfValue] : value);
-            self[key] = value;
-            somethingWasChanged = YES;
-        } else if ([v isKindOfClass:[NSNumber class]]) {
-            NSNumber * number = (NSNumber *)v;
-            self[key] = number;
-            somethingWasChanged = YES;
-        }
+- (int)intForKey:(NSString *)key fallback:(int)value{
+    id obj = [self valueForKey:key];
+    if (obj && ([obj isKindOfClass:[NSNumber class]] || [obj isKindOfClass:[NSString class]])) {
+        NSNumber *number = obj;
+        return number.intValue;
     }
-    return somethingWasChanged;
+    return value;
 }
 
-- (BOOL)removeGrowingAttributesVar:(NSString *)key {
-    BOOL somethingWasChanged = NO;
-    if (key != nil) {
-        if (key.length > g_maxLengthOfKey) {
-            key = [key substringToIndex:g_maxLengthOfKey];
-        }
-        if (self[key] != nil) {
-            self[key] = nil;
-            somethingWasChanged = YES;
-        }
-    } else {
-        [self removeAllObjects];
-        somethingWasChanged = NO;
+- (long long)longlongForKey:(NSString *)key fallback:(long long)value {
+    id obj = [self valueForKey:key];
+    if (obj && ([obj isKindOfClass:[NSNumber class]] || [obj isKindOfClass:[NSString class]])) {
+        NSNumber *number = obj;
+        return number.longLongValue;
     }
-    return somethingWasChanged;
+    return value;
 }
 
 @end

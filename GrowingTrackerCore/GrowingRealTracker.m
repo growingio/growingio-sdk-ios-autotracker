@@ -3,14 +3,13 @@
 //
 
 #import "GrowingRealTracker.h"
-#import "GrowingBaseTrackConfiguration.h"
+#import "GrowingTrackConfiguration.h"
 #import "GrowingAppLifecycle.h"
 #import "GrowingLog.h"
 #import "GrowingTTYLogger.h"
 #import "GrowingWSLogger.h"
 #import "GrowingWSLoggerFormat.h"
 #import "GrowingLogMacros.h"
-#import "GrowingGlobal.h"
 #import "GrowingDispatchManager.h"
 #import "NSString+GrowingHelper.h"
 #import "NSDictionary+GrowingHelper.h"
@@ -22,15 +21,19 @@
 #import "GrowingConfigurationManager.h"
 #import "GrowingEventGenerator.h"
 #import "GrowingPersistenceDataProvider.h"
+#import "GrowingArgumentChecker.h"
+
+NSString *const GrowingTrackerVersionName = @"3.0.0";
+const int GrowingTrackerVersionCode = 300;
 
 @interface GrowingRealTracker ()
 @property(nonatomic, copy, readonly) NSDictionary *launchOptions;
-@property(nonatomic, strong, readonly) GrowingBaseTrackConfiguration *configuration;
+@property(nonatomic, strong, readonly) GrowingTrackConfiguration *configuration;
 
 @end
 
 @implementation GrowingRealTracker
-- (instancetype)initWithConfiguration:(GrowingBaseTrackConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions {
+- (instancetype)initWithConfiguration:(GrowingTrackConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions {
     self = [super init];
     if (self) {
         _configuration = [configuration copyWithZone:nil];
@@ -46,7 +49,7 @@
     return self;
 }
 
-+ (instancetype)trackerWithConfiguration:(GrowingBaseTrackConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions {
++ (instancetype)trackerWithConfiguration:(GrowingTrackConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions {
     return [[self alloc] initWithConfiguration:configuration launchOptions:launchOptions];
 }
 
@@ -63,23 +66,42 @@
 }
 
 - (void)trackCustomEvent:(NSString *)eventName {
+
+    if ([GrowingArgumentChecker isIllegalEventName:eventName]) {
+        return;
+    }
+
     [self trackCustomEvent:eventName withAttributes:nil];
 }
 
 - (void)trackCustomEvent:(NSString *)eventName withAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
+    if ([GrowingArgumentChecker isIllegalEventName:eventName] || [GrowingArgumentChecker isIllegalAttributes:attributes]) {
+        return;
+    }
     [GrowingEventGenerator generateCustomEvent:eventName attributes:attributes];
 }
 
 - (void)setLoginUserAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
+    if ([GrowingArgumentChecker isIllegalAttributes:attributes]) {
+        return;
+    }
     [GrowingEventGenerator generateLoginUserAttributesEvent:attributes];
 }
 
 - (void)setVisitorAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
+    if ([GrowingArgumentChecker isIllegalAttributes:attributes]) {
+        return;
+    }
     [GrowingEventGenerator generateVisitorAttributesEvent:attributes];
 }
 
 - (void)setConversionVariables:(NSDictionary<NSString *, NSString *> *)variables {
+    if ([GrowingArgumentChecker isIllegalAttributes:variables]) {
+        return;
+    }
     [GrowingEventGenerator generateConversionVariablesEvent:variables];
+
+    
 }
 
 - (void)setLoginUserId:(NSString *)userId {

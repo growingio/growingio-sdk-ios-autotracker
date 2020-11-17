@@ -58,41 +58,6 @@
     return [[GrowingVisitBuidler alloc] init];
 }
 
-- (NSString *)eventTypeKey {
-    return GrowingEventTypeVisit;
-}
-
-//+ (void)onGpsLocationChanged:(CLLocation *_Nullable)location {
-//    // TODO: 工程中最后一次发的visit 事件，应该存在多线程问题
-//    GrowingVisitEvent *visitEvent = [GrowingEventManager shareInstance].visitEvent;
-//
-//    if (location != nil && visitEvent.latitude == nil && visitEvent.longitude == nil) {
-//        static dispatch_once_t onceToken;
-//        dispatch_once(&onceToken, ^{
-////            visitEvent.latitude = @(location.coordinate.latitude);
-////            visitEvent.longitude = @(location.coordinate.longitude);
-//            [GrowingVisitEvent sendWithEvent:visitEvent];
-//        });
-//    }
-//}
-
-//+ (void)send {
-//    GrowingVisitEvent *event = [[self alloc] init];
-//    [self sendWithEvent:event];
-//}
-
-//+ (void)sendWithEvent:(GrowingVisitEvent *)event {
-//    [[GrowingEventManager shareInstance] addEvent:event thisNode:nil triggerNode:nil withContext:nil];
-//
-//    [[GrowingCustomField shareInstance] sendGIOFakePageEvent];
-//}
-
-#pragma mark GrowingEventSendPolicyDelegate
-
-//- (GrowingEventSendPolicy)sendPolicy {
-//    return GrowingEventSendPolicyInstant;
-//}
-
 #pragma mark GrowingEventTransformable
 
 - (NSDictionary *)toDictionary {
@@ -229,5 +194,14 @@
         return self;
     };
 }
+
+- (NSString *)eventTypeKey {
+    return GrowingEventTypeVisit;
+}
+
+- (GrowingBaseEvent *)build {
+    return [[GrowingVisitEvent alloc] initWithBuilder:self];
+}
+
 
 @end

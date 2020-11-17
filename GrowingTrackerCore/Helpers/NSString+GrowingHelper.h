@@ -19,7 +19,6 @@
 
 
 #import <Foundation/Foundation.h>
-#import "GrowingGlobal.h"
 
 @interface NSString (GrowingHelper)
 
@@ -40,9 +39,6 @@
 
 // 若用户设置加密method 则返回加密后的string,否则返回原值
 - (NSString *)growingHelper_encryptString;
-
-//判断key的有效性
-- (BOOL)isValidKey;
 
 - (instancetype)initWithJsonObject_growingHelper:(id)obj;
 

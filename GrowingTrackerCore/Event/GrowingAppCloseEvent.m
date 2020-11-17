@@ -31,10 +31,6 @@
 
 @implementation GrowingAppCloseEvent
 
-- (NSString *)eventTypeKey {
-    return GrowingEventTypeAppClosed;
-}
-
 - (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
     if (self = [super initWithBuilder:builder]) {
         GrowingAppCloseBuidler *subBuilder = (GrowingAppCloseBuidler*)builder;
@@ -84,6 +80,11 @@
 
 - (GrowingBaseEvent *)build {
     return [[GrowingAppCloseEvent alloc] initWithBuilder:self];
+}
+
+//重写返回事件类型，设置默认返回值
+- (NSString *)eventType {
+    return GrowingEventTypeAppClosed;
 }
 
 @end

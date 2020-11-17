@@ -22,15 +22,14 @@
 #import "GrowingBroadcaster.h"
 #import "GrowingCocoaLumberjack.h"
 #import "GrowingEventManager.h"
-#import "GrowingInstance.h"
 #import "GrowingPage.h"
 #import "GrowingPageEvent.h"
 #import "GrowingPageGroup.h"
-#import "GrowingPvarEvent.h"
 #import "NSString+GrowingHelper.h"
-#import "UIViewController+GrowingAutoTrack.h"
+#import "UIViewController+GrowingAutotracker.h"
 #import "UIViewController+GrowingNode.h"
 #import "UIViewController+GrowingPageHelper.h"
+#import "UIView+GrowingHelper.h"
 
 @GrowingBroadcasterRegister(GrowingApplicationMessage, GrowingPageManager) @interface GrowingPageManager()
 
@@ -76,27 +75,27 @@
 }
 
 - (void)sendPageEventWithPage:(GrowingPage *)page {
-    GrowingPageEvent *pageEvent = [GrowingPageEvent pageEventWithTitle:page.title
-                                                              pageName:page.path
-                                                             timestamp:page.showTimestamp];
-
-    [GrowingEventManager shareInstance].lastPageEvent = pageEvent;
-
-    [[GrowingEventManager shareInstance] addEvent:pageEvent
-                                         thisNode:page.carrier
-                                      triggerNode:page.carrier
-                                      withContext:nil];
+//    GrowingPageEvent *pageEvent = [GrowingPageEvent pageEventWithTitle:page.title
+//                                                              pageName:page.path
+//                                                             timestamp:page.showTimestamp];
+//
+//    [GrowingEventManager shareInstance].lastPageEvent = pageEvent;
+//
+//    [[GrowingEventManager shareInstance] addEvent:pageEvent
+//                                         thisNode:page.carrier
+//                                      triggerNode:page.carrier
+//                                      withContext:nil];
 }
 
 - (void)sendPageVariableEventWithPage:(GrowingPage *)page {
-    GrowingPvarEvent *pvarEvent = [GrowingPvarEvent pvarEventWithPageName:page.path
-                                                            showTimestamp:page.showTimestamp
-                                                                 variable:page.variables];
-
-    [[GrowingEventManager shareInstance] addEvent:pvarEvent
-                                         thisNode:page.carrier
-                                      triggerNode:page.carrier
-                                      withContext:nil];
+//    GrowingPvarEvent *pvarEvent = [GrowingPvarEvent pvarEventWithPageName:page.path
+//                                                            showTimestamp:page.showTimestamp
+//                                                                 variable:page.variables];
+//
+//    [[GrowingEventManager shareInstance] addEvent:pvarEvent
+//                                         thisNode:page.carrier
+//                                      triggerNode:page.carrier
+//                                      withContext:nil];
 }
 
 - (void)addPageAlias:(GrowingPage *)page {
@@ -252,17 +251,10 @@
     return NO;
 }
 
-#pragma mark - GrowingApplicationMessage
-
-+ (void)applicationStateDidChangedWithUserInfo:(NSDictionary *)userInfo
-                                     lifecycle:(GrowingApplicationLifecycle)lifecycle {
-    if (GrowingApplicationDidBecomeActive == lifecycle && ![GrowingAppActivationTime didStartFromScratch]) {
-        [[GrowingPageManager sharedInstance] becomeActiveResendPage];
-    }
-}
-
-- (void)becomeActiveResendPage {
-    [self.currentViewController growingOutOfLifetimeShow];
+- (GrowingPageGroup*)findPageByView:(UIView *)view {
+    UIViewController *parent = [view growingHelper_viewController];
+    GrowingPageGroup *page = [parent growingPageHelper_getPageObject];
+    return page;
 }
 
 #pragma mark Lazy Load

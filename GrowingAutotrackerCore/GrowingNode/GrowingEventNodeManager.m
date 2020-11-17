@@ -26,8 +26,7 @@
 
 @implementation GrowingEventNodeManager
 
-- (instancetype)initWithNode:(id<GrowingNode>)aNode
-                   eventType:(GrowingEventType)eventType {
+- (instancetype)initWithNode:(id<GrowingNode>)aNode{
     
     if (!aNode) { return nil; }
     

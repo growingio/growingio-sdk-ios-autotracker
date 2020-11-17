@@ -24,7 +24,7 @@
 #import "GrowingConversionVariableEvent.h"
 #import "GrowingAppCloseEvent.h"
 #import "GrowingVisitEvent.h"
-#import "GrowingLoignAttributesEvent.h"
+#import "GrowingLoginUserAttributesEvent.h"
 #import "GrowingVisitorAttributesEvent.h"
 @implementation GrowingEventGenerator
 
@@ -51,7 +51,7 @@
 
 + (void)generateLoginUserAttributesEvent:(NSDictionary <NSString *,NSObject *>*_Nonnull)attributes {
     [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
-        GrowingBaseBuilder *builder = GrowingLoignAttributesEvent.builder.setAttributes(attributes);
+        GrowingBaseBuilder *builder = GrowingLoginUserAttributesEvent.builder.setAttributes(attributes);
         [[GrowingEventManager shareInstance] postEventBuidler:builder];
     }];
 }

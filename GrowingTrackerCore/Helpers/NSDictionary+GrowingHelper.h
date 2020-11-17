@@ -30,13 +30,16 @@
 
 - (NSString *)growingHelper_queryString;
 
+- (int)intForKey:(NSString *)key fallback:(int)value;
+
+- (long long)longlongForKey:(NSString *)key fallback:(long long)value;
+
 @end
 
 @interface NSMutableDictionary (GrowingHelper)
 
 // return YES: something was changed;
 // return NO: nothing was changed.
-- (BOOL)mergeGrowingAttributesVar:(NSDictionary<NSString *, NSObject *> *)growingAttributesVar;
 - (BOOL)removeGrowingAttributesVar:(NSString *)key;
 
 @end

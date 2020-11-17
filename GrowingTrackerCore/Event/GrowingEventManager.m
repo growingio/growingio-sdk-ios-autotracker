@@ -24,7 +24,6 @@
 #import "GrowingDeviceInfo.h"
 #import "NSString+GrowingHelper.h"
 #import "GrowingNetworkInterfaceManager.h"
-#import "GrowingEventCounter.h"
 #import "GrowingDispatchManager.h"
 #import "GrowingDataTraffic.h"
 #import "GrowingFileStorage.h"
@@ -36,6 +35,10 @@
 #import "GrowingEventOtherRequest.h"
 #import "GrowingNetworkManager.h"
 #import "GrowingBaseEvent+SendPolicy.h"
+#import "GrowingConfigurationManager.h"
+#import "GrowingTrackConfiguration.h"
+#import "GrowingPersistenceDataProvider.h"
+
 static NSUInteger const kGrowingMaxQueueSize = 10000; // default: max event queue size there are 10000 events
 static NSUInteger const kGrowingFillQueueSize = 1000; // default: determine when event queue is filled from DB
 static NSUInteger const kGrowingMaxDBCacheSize = 100; // default: write to DB as soon as there are 300 events
@@ -56,7 +59,6 @@ static const NSUInteger kGrowingUnit_MB                 = 1024*1024;
 
 @property (nonatomic, strong) GrowingEventDataBase *timingEventDB;
 @property (nonatomic, strong) GrowingEventDataBase *realtimeEventDB;
-@property (nonatomic, strong) GrowingEventCounter *eventCounter;
 
 @property (nonatomic, assign) unsigned long long uploadEventSize;
 @property (nonatomic, assign) unsigned long long uploadLimitOfCellular;
@@ -100,15 +102,10 @@ static GrowingEventManager *shareinstance = nil;
         shareinstance = [[self alloc] initWithName:@"growing"];
         shareinstance.eventOptions = [[GrowingEventOptions alloc] init];
         [shareinstance.eventOptions readEventOptions];
-        
-        shareinstance.shouldCacheEvent = YES;
+    
         shareinstance.cacheArray = [[NSMutableArray alloc] init];
     });
     return shareinstance;
-}
-
-+ (BOOL)hasSharedInstance {
-    return shareinstance != nil;
 }
 
 - (instancetype)initWithName:(NSString *)name {
@@ -155,7 +152,6 @@ static GrowingEventManager *shareinstance = nil;
         // all other events got to this category
         _otherEventChannel = [GrowingEventChannel otherEventChannelFromAllChannels:_allEventChannels];
         
-//        self.uploadLimitOfCellular = [GrowingInstance sharedInstance].configuration.cellularDataLimit * kGrowingUnit_MB;
     }
     return self;
 }
@@ -210,16 +206,16 @@ static GrowingEventManager *shareinstance = nil;
 }
 
 - (void)postEventBuidler:(GrowingBaseBuilder* _Nullable)builder {
-//    if (!event || ![GrowingInstance sharedInstance] || GrowingSDKDoNotTrack()) {
-//        return;
-//    }
-    
     [GrowingDispatchManager dispatchInMainThread:^{
+        
+        [builder readPropertyInMainThread];
+        
         for (NSObject<GrowingEventInterceptor> * obj in self.allInterceptor) {
             if ([obj respondsToSelector:@selector(growingEventManagerEventWillBuild:)]) {
                 [obj growingEventManagerEventWillBuild:builder];
             }
         }
+        //TODO: active在page事件之后的情况处理,添加一个interceptor
         GrowingBaseEvent *event = builder.build;
         
         for (NSObject<GrowingEventInterceptor> * obj in self.allInterceptor) {
@@ -227,63 +223,61 @@ static GrowingEventManager *shareinstance = nil;
                 [obj growingEventManagerEventDidBuild:event];
             }
         }
-        [self handleEvent:event];
+        [self writeToDatabaseWithEvent:event];
     }];
 }
 
-- (void)handleEvent:(GrowingBaseEvent *)event {
-    GrowingBaseEvent *dbEvent = event;
-    // cstm按函数实际触发为标准
-    if ([event.eventType isEqualToString:GrowingEventTypeCustom] && [UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
-        __weak GrowingEventManager *weakSelf = self;
-        [GrowingDispatchManager dispatchInLowThread:^{
-            GrowingEventManager *strongSelf = weakSelf;
-            [strongSelf writeToDatabaseWithEvent:dbEvent];
-        }];
-        return;
-    }
-    
-    // 因为在app被kill之后,iOS有技术手段可以唤醒app(此时app会relaunched触发vc生命周期,但不会调用didBecomeActive)
-    // 所以在becomeActive之前 把产生的event缓存起来(因app唤醒后,再到用户打开之前,不确定app是否是被杀掉的),所以需要把之前缓存事件的tm ptm s字段改写,防止访问时长的问题
-    if (self.shouldCacheEvent) {
-
-        [self.cacheArray addObject:dbEvent];
-                
-    } else {
-        static BOOL resetPagetm = NO;
-        //TODO:处理特别情况
-//        if (!resetPagetm && [GrowingEventManager shareInstance].lastPageEvent) {
-//            GrowingPageEvent *lastPageEvent = [GrowingEventManager shareInstance].lastPageEvent;
-//            lastPageEvent.timestamp = event.timestamp;
-//            lastPageEvent.sessionId = event.sessionId;
-//        }
-        resetPagetm = YES;
-        
-        __weak GrowingEventManager *weakSelf = self;
-        [GrowingDispatchManager dispatchInLowThread:^{
-            GrowingEventManager *strongSelf = weakSelf;
-            if (strongSelf.cacheArray.count) {
-//                for (GrowingBaseEvent *cacheEvent in strongSelf.cacheArray) {
-//                    cacheEvent.timestamp = dbEvent.timestamp;
-//                    cacheEvent.sessionId = dbEvent.sessionId;
+//- (void)handleEvent:(GrowingBaseEvent *)event {
+//    GrowingBaseEvent *dbEvent = event;
+//    // cstm按函数实际触发为标准
+//    if ([event.eventType isEqualToString:GrowingEventTypeCustom] && [UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
+//        __weak GrowingEventManager *weakSelf = self;
+//        [GrowingDispatchManager dispatchInLowThread:^{
+//            GrowingEventManager *strongSelf = weakSelf;
+//            [strongSelf writeToDatabaseWithEvent:dbEvent];
+//        }];
+//        return;
+//    }
 //
-//                    [strongSelf writeToDatabaseWithEvent:cacheEvent];
-//                }
-                
-                [strongSelf.cacheArray removeAllObjects];
-            }
-            [strongSelf writeToDatabaseWithEvent:dbEvent];
-        }];
-    }
-}
+//    // 因为在app被kill之后,iOS有技术手段可以唤醒app(此时app会relaunched触发vc生命周期,但不会调用didBecomeActive)
+//    // 所以在becomeActive之前 把产生的event缓存起来(因app唤醒后,再到用户打开之前,不确定app是否是被杀掉的),所以需要把之前缓存事件的tm ptm s字段改写,防止访问时长的问题
+//    if (self.shouldCacheEvent) {
+//
+//        [self.cacheArray addObject:dbEvent];
+//
+//    } else {
+//        static BOOL resetPagetm = NO;
+//        //TODO:处理特别情况
+////        if (!resetPagetm && [GrowingEventManager shareInstance].lastPageEvent) {
+////            GrowingPageEvent *lastPageEvent = [GrowingEventManager shareInstance].lastPageEvent;
+////            lastPageEvent.timestamp = event.timestamp;
+////            lastPageEvent.sessionId = event.sessionId;
+////        }
+//        resetPagetm = YES;
+//
+//        __weak GrowingEventManager *weakSelf = self;
+//        [GrowingDispatchManager dispatchInLowThread:^{
+//            GrowingEventManager *strongSelf = weakSelf;
+//            if (strongSelf.cacheArray.count) {
+////                for (GrowingBaseEvent *cacheEvent in strongSelf.cacheArray) {
+////                    cacheEvent.timestamp = dbEvent.timestamp;
+////                    cacheEvent.sessionId = dbEvent.sessionId;
+////
+////                    [strongSelf writeToDatabaseWithEvent:cacheEvent];
+////                }
+//
+//                [strongSelf.cacheArray removeAllObjects];
+//            }
+//            [strongSelf writeToDatabaseWithEvent:dbEvent];
+//        }];
+//    }
+//}
 
 - (void)writeToDatabaseWithEvent:(GrowingBaseEvent *)event {
     NSString* eventType = event.eventType;
     
     if (!event) { return; }
 
-    // cal sequence id before write to db
-    [self.eventCounter calculateSequenceIdForEvent:event];
     
     GrowingEventChannel * eventChannel = self.eventChannelDict[eventType] ?: self.otherEventChannel;
     BOOL isCustomEvent = eventChannel.isCustomEvent;
@@ -375,7 +369,7 @@ static GrowingEventManager *shareinstance = nil;
         return;
     }
     
-    if (GrowingSDKDoNotUpload()) {
+    if (GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionEnabled) {
         GIOLogDebug(@"Data upload disabled, if you want upload event data, please setting dataUploadEnabled to YES!");
         return;
     }
@@ -494,13 +488,6 @@ static GrowingEventManager *shareinstance = nil;
     });
     
     return _eventDispatch;
-}
-
-- (GrowingEventCounter *)eventCounter {
-    if (!_eventCounter) {
-        _eventCounter = [[GrowingEventCounter alloc] init];
-    }
-    return _eventCounter;
 }
 
 @end

@@ -24,18 +24,14 @@
 
 - (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
     if (self = [super initWithBuilder:builder]) {
-        GrowingCustomBuidler *subBuilder = (GrowingCustomBuidler*)builder;
+        GrowingCustomBuilder *subBuilder = (GrowingCustomBuilder*)builder;
         _eventName = subBuilder.eventName;
     }
     return self;
 }
 
-+ (GrowingCustomBuidler *)builder {
-    return [[GrowingCustomBuidler alloc]init];
-}
-
-- (NSString *)eventType {
-    return GrowingEventTypeCustom;
++ (GrowingCustomBuilder *)builder {
+    return [[GrowingCustomBuilder alloc]init];
 }
 
 - (NSDictionary *)toDictionary {
@@ -47,13 +43,17 @@
 @end
 
 
-@implementation GrowingCustomBuidler
+@implementation GrowingCustomBuilder
 
 - (GrowingBaseBuilder *(^)(NSString *value))setEventName {
     return ^(NSString *value) {
         self->_eventName = value;
         return self;
     };
+}
+
+- (NSString *)eventType {
+    return GrowingEventTypeCustom;
 }
 
 - (GrowingBaseEvent *)build {

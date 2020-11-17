@@ -15,7 +15,7 @@
 // limitations under the License.
 
 #import <UIKit/UIKit.h>
-
+#import "GrowingPageGroup.h"
 @interface GrowingPageManager : NSObject
 
 + (instancetype)sharedInstance;
@@ -33,5 +33,7 @@
 - (UIViewController *)rootViewController;
 // Whether a vc is did appeared
 - (BOOL)isDidAppearController:(UIViewController *)vc;
+
+- (GrowingPageGroup*)findPageByView:(UIView *)view;
 
 @end

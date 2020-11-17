@@ -20,6 +20,7 @@
 
 #import <Foundation/Foundation.h>
 #import "GrowingBaseEvent.h"
+NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingBaseAttributesEvent : GrowingBaseEvent
 
@@ -32,9 +33,9 @@
 @interface GrowingBaseAttributesBuilder : GrowingBaseBuilder
 @property (nonatomic, copy, readonly) NSDictionary <NSString *, NSObject *> *attributes;
 
-NS_ASSUME_NONNULL_BEGIN
 
-- (GrowingBaseBuilder *(^)(NSDictionary <NSString *, NSObject *>*value))setAttributes;
+
+- (GrowingBaseAttributesBuilder *(^)(NSDictionary <NSString *, NSObject *>*value))setAttributes;
 
 NS_ASSUME_NONNULL_END
 

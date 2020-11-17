@@ -20,17 +20,17 @@
 
 #import <Foundation/Foundation.h>
 #import "GrowingBaseAttributesEvent.h"
-@class GrowingCustomBuidler;
-@interface GrowingCustomEvent : GrowingBaseEvent
+@class GrowingCustomBuilder;
+@interface GrowingCustomEvent : GrowingBaseAttributesEvent
 
 @property(nonatomic, copy) NSString *_Nonnull eventName;
 
-+ (GrowingCustomBuidler *_Nonnull)builder;
++ (GrowingCustomBuilder *_Nonnull)builder;
 
 @end
 
 
-@interface GrowingCustomBuidler : GrowingBaseBuilder
+@interface GrowingCustomBuilder : GrowingBaseAttributesBuilder
 
 @property(nonatomic, copy, readonly) NSString *_Nonnull eventName;
 

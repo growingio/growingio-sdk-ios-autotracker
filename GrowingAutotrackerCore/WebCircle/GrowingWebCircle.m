@@ -27,13 +27,11 @@
 #import "GrowingAlert.h"
 #import "GrowingAttributesConst.h"
 #import "GrowingCocoaLumberjack.h"
-#import "GrowingCustomField.h"
 #import "GrowingDeviceInfo.h"
 #import "GrowingDispatchManager.h"
 #import "GrowingEventManager.h"
 #import "GrowingEventNodeManager.h"
 #import "GrowingHybridBridgeProvider.h"
-#import "GrowingInstance.h"
 #import "GrowingNetworkConfig.h"
 #import "GrowingNodeHelper.h"
 #import "GrowingPageGroup.h"
@@ -46,12 +44,14 @@
 #import "UIApplication+GrowingHelper.h"
 #import "UIApplication+GrowingNode.h"
 #import "UIImage+GrowingHelper.h"
-#import "UIViewController+GrowingAutoTrack.h"
+#import "UIViewController+GrowingAutotracker.h"
 #import "UIViewController+GrowingNode.h"
 #import "UIViewController+GrowingPageHelper.h"
 #import "UIWindow+GrowingHelper.h"
 #import "UIWindow+GrowingNode.h"
-#import "WKWebView+GrowingAutoTrack.h"
+#import "WKWebView+GrowingAutotracker.h"
+#import "GrowingConfigurationManager.h"
+#import "GrowingAutotrackEventType.h"
 
 @interface GrowingWeakObject : NSObject
 @property (nonatomic, weak) JSContext *context;
@@ -71,7 +71,7 @@ static NSString *const kGrowingWebCircleList = @"LIST";
 // WKWebView - webview只做标记用，不参与元素定义。
 static NSString *const kGrowingWebCircleWebView = @"WEB_VIEW";
 
-@interface GrowingWebCircle () <GrowingSRWebSocketDelegate, GrowingEventManagerObserver>
+@interface GrowingWebCircle () <GrowingSRWebSocketDelegate, GrowingEventInterceptor>
 
 //表示web和app是否同时准备好数据发送，此时表示可以发送数据
 @property (nonatomic, assign) BOOL isReady;
@@ -82,7 +82,7 @@ static NSString *const kGrowingWebCircleWebView = @"WEB_VIEW";
 
 @property (nonatomic, retain) GrowingStatusBar *statusWindow;
 
-@property (nonatomic, retain) NSMutableArray<GrowingEvent *> *cachedEvents;
+@property (nonatomic, retain) NSMutableArray<GrowingBaseEvent *> *cachedEvents;
 
 @property (nonatomic, strong) NSMutableArray *gWebViewArray;
 @property (nonatomic, assign) int nodeZLevel;
@@ -576,8 +576,8 @@ static GrowingWebCircle *shareInstance = nil;
             });
             self.statusWindow.onButtonClick = ^{
                 NSString *content = [NSString
-                    stringWithFormat:@"APP版本: %@\nSDK版本: %@", [GrowingDeviceInfo currentDeviceInfo].appShortVersion,
-                                     [NSString stringWithFormat:@"SDK版本: %@", [Growing getVersion]]];
+                    stringWithFormat:@"APP版本: %@\nSDK版本: %@", [GrowingDeviceInfo currentDeviceInfo].platformVersion,
+                                     [NSString stringWithFormat:@"SDK版本: %@", GrowingTrackerVersionName]];
                 GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert
                                                                    title:@"正在进行圈选"
                                                                  message:content];
@@ -597,8 +597,7 @@ static GrowingWebCircle *shareInstance = nil;
         }
         NSString *endPoint = @"";
         endPoint = [GrowingNetworkConfig.sharedInstance wsEndPoint];
-        NSString *urlStr =
-            [NSString stringWithFormat:endPoint, [GrowingInstance sharedInstance].projectID, circleRoomNumber];
+        NSString *urlStr =@"";
         self.webSocket =
             [[GrowingSRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];
         self.webSocket.delegate = self;
@@ -607,7 +606,7 @@ static GrowingWebCircle *shareInstance = nil;
         self.onReadyBlock = readyBlock;
         self.onFinishBlock = finishBlock;
     }
-    
+
     NSDictionary *dict = @{@"msgType" : @"ready"};
     [self webSocket:nil didReceiveMessage:dict.growingHelper_jsonString];
 }
@@ -660,7 +659,7 @@ static GrowingWebCircle *shareInstance = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
     [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
 
-    [[GrowingEventManager shareInstance] removeObserver:self];
+    [[GrowingEventManager shareInstance] removeInterceptor:self];
 
     [self endKeepAlive];
     if (self.webSocket) {
@@ -722,7 +721,7 @@ static GrowingWebCircle *shareInstance = nil;
             // Hybird的布局改变回调代理设置
             [GrowingHybridBridgeProvider sharedInstance].domChangedDelegate = self;
             //监听原生事件，变动时发送
-            [[GrowingEventManager shareInstance] addObserver:self];
+            [[GrowingEventManager shareInstance] addInterceptor:self];
             // webSocket连接成功的速度比viewDidAppear慢,因此page事件没有发送成功
             //解决方式在webSocket链接成功后 再发一次page事件
             [[GrowingPageManager sharedInstance]
@@ -749,13 +748,13 @@ static GrowingWebCircle *shareInstance = nil;
 - (void)webSocketDidOpen:(GrowingSRWebSocket *)webSocket {
     GIOLogDebug(@"websocket已连接");
     CGSize screenSize = [GrowingDeviceInfo deviceScreenSize];
-    NSString *projectId = [GrowingInstance sharedInstance].projectID ?: @"";
+    NSString *projectId = GrowingConfigurationManager.sharedInstance.trackConfiguration.projectId;
     NSDictionary *dict = @{
         @"projectId" : projectId,
         @"msgType" : @"ready",
         @"timestamp" : @([[NSDate date] timeIntervalSince1970]),
         @"domain" : [GrowingDeviceInfo currentDeviceInfo].bundleID,
-        @"sdkVersion" : [Growing getVersion],
+        @"sdkVersion" : GrowingTrackerVersionName,
         @"appVersion" : [GrowingDeviceInfo currentDeviceInfo].appFullVersion,
         @"os" : @"iOS",
         @"screenWidth" : [NSNumber numberWithInteger:screenSize.width],
@@ -806,8 +805,7 @@ static GrowingWebCircle *shareInstance = nil;
                  withPage:(NSString *)page {
     __block CGFloat maxFontSize = 0.0;
     __block NSString *maxFontContent = nil;
-    GrowingNodeManager *manager = [[GrowingEventNodeManager alloc] initWithNode:node
-                                                                      eventType:GrowingEventTypeUIPageShow];
+    GrowingNodeManager *manager = [[GrowingEventNodeManager alloc] initWithNode:node];
     [manager enumerateChildrenUsingBlock:^(id<GrowingNode> aNode, GrowingNodeManagerEnumerateContext *context) {
         NSString *content = [aNode growingNodeContent];
         BOOL userInteractive = [aNode growingNodeUserInteraction];
@@ -839,10 +837,7 @@ static GrowingWebCircle *shareInstance = nil;
 
 #pragma mark - GrowingEventManagerObserver
 
-- (void)growingEventManagerWillAddEvent:(GrowingEvent *_Nullable)event
-                               thisNode:(id<GrowingNode> _Nullable)thisNode
-                            triggerNode:(id<GrowingNode> _Nullable)triggerNode
-                            withContext:(id<GrowingAddEventContext> _Nullable)context {
+- (void)growingEventManagerEventDidBuild:(GrowingBaseEvent* _Nullable)event {
     //this call back run in main thread
     //so not use lock
     if (event && _isReady) {
@@ -857,31 +852,29 @@ static GrowingWebCircle *shareInstance = nil;
             NSMutableArray *eventArray = self.cachedEvents;
             GIOLogDebug(@"[GrowingWebCircle] onProcessing count %lu",(unsigned long)eventArray.count);
             self.cachedEvents = [NSMutableArray array];
-            [eventArray enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(__kindof GrowingEvent*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                if ([obj.eventTypeKey isEqualToString:kEventTypeKeyViewClick] || [obj.eventTypeKey isEqualToString:kEventTypeKeyPage]) {
+            [eventArray enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(__kindof GrowingBaseEvent*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([obj.eventType isEqualToString:GrowingEventTypeViewClick] || [obj.eventType isEqualToString:GrowingEventTypePage]) {
                     [self sendScreenShotWithCallback:nil];
                     *stop = YES;
                 }
             }];
             self.onProcessing = NO;
         });
-        
+
     }
 }
 
-- (BOOL)growingEventManagerShouldAddEvent:(GrowingEvent *_Nullable)event
-                              triggerNode:(id<GrowingNode> _Nullable)triggerNode
-                              withContext:(id<GrowingAddEventContext> _Nullable)context {
-    for (id<GrowingNode> obj in [context contextNodes]) {
-        if ([obj isKindOfClass:[GrowingWindow class]]) {
-            return NO;
-        }
-        if ([obj isKindOfClass:[UIView class]]) {
-            UIView *view = (UIView *)obj;
-            return ![view.window isKindOfClass:[GrowingWindow class]];
-        }
-    }
-    return YES;
-}
+//- (BOOL)growingEventManagerEventShouldSend:(GrowingBaseEvent* _Nullable)event {
+//    for (id<GrowingNode> obj in [context contextNodes]) {
+//        if ([obj isKindOfClass:[GrowingWindow class]]) {
+//            return NO;
+//        }
+//        if ([obj isKindOfClass:[UIView class]]) {
+//            UIView *view = (UIView *)obj;
+//            return ![view.window isKindOfClass:[GrowingWindow class]];
+//        }
+//    }
+//    return YES;
+//}
 
 @end

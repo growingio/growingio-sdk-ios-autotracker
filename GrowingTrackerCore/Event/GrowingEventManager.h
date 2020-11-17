@@ -24,26 +24,26 @@
 #import "GrowingNodeProtocol.h"
 #import "GrowingBaseEvent.h"
 @class GrowingPageEvent;
-
+//拦截者做额外处理
 @protocol GrowingEventInterceptor <NSObject>
-
 @optional
-//观察者不应该能够影响实际的结果，返回值不要设置为BOOL
 //在未完成构造event前，返回builder
 - (void)growingEventManagerEventWillBuild:(GrowingBaseBuilder* _Nullable)builder;
 //在完成构造event之后，返回event
 - (void)growingEventManagerEventDidBuild:(GrowingBaseEvent* _Nullable)event;
-
 @end
+
+////代理对象，决定是否event发送
+//@protocol GrowingEventManagerDelegate <NSObject>
+//- (BOOL)growingEventManagerEventShouldSend:(GrowingBaseEvent* _Nullable)event;
+//- (void)growingEventManagerEventWillSend:(GrowingBaseEvent* _Nullable)event;
+//@end
 
 @interface GrowingEventManager : NSObject
 
-@property (nonatomic, strong) GrowingPageEvent * _Nullable lastPageEvent;
-@property (nonatomic, strong) GrowingVisitEvent * _Nullable visitEvent;
-@property (nonatomic, assign) BOOL shouldCacheEvent;
+//@property (nonatomic, weak) id <GrowingEventManagerDelegate> delegate;
 
 + (_Nonnull instancetype)shareInstance;
-+ (BOOL)hasSharedInstance;
 
 - (void)sendAllChannelEvents;
 
@@ -54,7 +54,5 @@
 
 // 必须在主线程调用
 - (void)postEventBuidler:(GrowingBaseBuilder* _Nullable)builder;
-
-- (void)cleanExpiredData;
 
 @end

@@ -3,7 +3,7 @@
 //
 
 #import "GrowingTracker.h"
-#import "GrowingBaseTrackConfiguration.h"
+#import "GrowingTrackConfiguration.h"
 #import "GrowingTrackConfiguration.h"
 #import "GrowingRealTracker.h"
 #import "GrowingLogMacros.h"

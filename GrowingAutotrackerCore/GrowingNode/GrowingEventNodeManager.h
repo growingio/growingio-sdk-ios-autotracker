@@ -19,9 +19,8 @@
 
 
 #import "GrowingNodeManager.h"
-#import "GrowingEvent.h"
+#import "GrowingBaseEvent.h"
 
 @interface GrowingEventNodeManager : GrowingNodeManager
-- (instancetype _Nullable)initWithNode:(id<GrowingNode> _Nonnull)aNode
-                             eventType:(GrowingEventType)eventType;
+- (instancetype _Nullable)initWithNode:(id<GrowingNode> _Nonnull)aNode;
 @end

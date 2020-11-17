@@ -17,9 +17,9 @@
 #import "GrowingPage.h"
 #import "GrowingPageGroup.h"
 #import "NSString+GrowingHelper.h"
-#import "UIViewController+GrowingAutoTrack.h"
-#import "GrowingInstance.h"
+#import "UIViewController+GrowingAutotracker.h"
 #import "UIViewController+GrowingPageHelper.h"
+#import "GrowingTimeUtil.h"
 
 @interface GrowingPage ()
 @property(nonatomic, copy, readonly) NSString *pathCopy;
@@ -31,7 +31,7 @@
     self = [super init];
     if (self) {
         _carrier = carrier;
-        _showTimestamp = GROWGetTimestamp();
+        _showTimestamp = GrowingTimeUtil.currentTimeMillis;
         _isIgnored = [carrier growingPageHelper_pageDidIgnore];
         _title = [carrier growingPageTitle];
     }
@@ -44,7 +44,7 @@
 }
 
 - (void)refreshShowTimestamp {
-    _showTimestamp = GROWGetTimestamp();
+    _showTimestamp = GrowingTimeUtil.currentTimeMillis;
 }
 
 - (NSString *)name {
