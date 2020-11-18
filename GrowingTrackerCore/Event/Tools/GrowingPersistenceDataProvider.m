@@ -20,14 +20,14 @@
 
 #import "GrowingPersistenceDataProvider.h"
 
-static NSString *GrowingUserdefault_file = @"growingio.userdefault";
-static NSString *GrowingUserdefault_deviceId = @"growingio.userdefault.deviceid";
+static NSString *kGrowingUserdefault_file = @"growingio.userdefault";
+static NSString *kGrowingUserdefault_deviceId = @"growingio.userdefault.deviceid";
 //static NSString *GrowingUserdefault_sessionId = @"growingio.userdefault.sessionId";
-static NSString *GrowingUserdefault_loginUserId = @"growingio.userdefault.loginUserId";
+static NSString *kGrowingUserdefault_loginUserId = @"growingio.userdefault.loginUserId";
 
 
-static NSString *GrowingUserdefault_globalId = @"growingio.userdefault.globalId";
-static NSString *GrowingUserdefault_prefix = @"growingio.userdefault";
+static NSString *kGrowingUserdefault_globalId = @"growingio.userdefault.globalId";
+static NSString *kGrowingUserdefault_prefix = @"growingio.userdefault";
 
 
 @class GrowingEventSequenceObject;
@@ -49,7 +49,7 @@ static GrowingPersistenceDataProvider *persistence = nil;
 
 - (instancetype)init {
     if (self = [super init]) {
-        _growingUserdefault = [[NSUserDefaults alloc] initWithSuiteName:GrowingUserdefault_file];
+        _growingUserdefault = [[NSUserDefaults alloc] initWithSuiteName:kGrowingUserdefault_file];
     }
     return self;
 }
@@ -59,14 +59,14 @@ static GrowingPersistenceDataProvider *persistence = nil;
     if (deviceId.length == 0) {
         return;
     }
-    [_growingUserdefault setValue:deviceId forKey:GrowingUserdefault_deviceId];
+    [_growingUserdefault setValue:deviceId forKey:kGrowingUserdefault_deviceId];
     //write now!
     [_growingUserdefault synchronize];
 }
 
 
 - (NSString *)deviceId {
-    return  [_growingUserdefault valueForKey:GrowingUserdefault_deviceId];;
+    return  [_growingUserdefault valueForKey:kGrowingUserdefault_deviceId];;
 }
 
 - (void)setLoginUserId:(NSString * _Nonnull)loginUserId {
@@ -74,13 +74,13 @@ static GrowingPersistenceDataProvider *persistence = nil;
     if (loginUserId.length == 0) {
         return;
     }
-    [_growingUserdefault setValue:loginUserId forKey:GrowingUserdefault_loginUserId];
+    [_growingUserdefault setValue:loginUserId forKey:kGrowingUserdefault_loginUserId];
     //write now!
     [_growingUserdefault synchronize];
 }
 
 - (NSString *)loginUserId {
-    return  [_growingUserdefault valueForKey:GrowingUserdefault_loginUserId];
+    return  [_growingUserdefault valueForKey:kGrowingUserdefault_loginUserId];
 }
 
 ///设置NSString,NSNumber
@@ -93,8 +93,8 @@ static GrowingPersistenceDataProvider *persistence = nil;
 }
 
 - (GrowingEventSequenceObject*)getAndIncrement:(NSString *)eventType {
-    long long globalId = [self increaseFor:GrowingUserdefault_globalId spanValue:1];
-    long long eventTypeId = [self increaseFor:[NSString stringWithFormat:@"%@.%@",GrowingUserdefault_prefix,eventType] spanValue:1];
+    long long globalId = [self increaseFor:kGrowingUserdefault_globalId spanValue:1];
+    long long eventTypeId = [self increaseFor:[NSString stringWithFormat:@"%@.%@",kGrowingUserdefault_prefix,eventType] spanValue:1];
     GrowingEventSequenceObject* obj = [[GrowingEventSequenceObject alloc] init];
     obj.globalId = globalId;
     obj.eventTypeId = eventTypeId;
