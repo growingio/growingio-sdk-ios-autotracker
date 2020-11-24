@@ -29,7 +29,7 @@
 #import "UITableView+GrowingAutotracker.h"
 #import "UIView+GrowingHelper.h"
 #import "UIView+GrowingNode.h"
-#import "GrowingIMPTrack.h"
+#import "GrowingImpressionTrack.h"
 #import "GrowingConfigurationManager.h"
 
 @interface GrowingMaskView : UIImageView
@@ -428,15 +428,15 @@ GrowingSafeStringPropertyImplementation(growingUniqueTag, setGrowingUniqueTag)
         }
     }
 
-    [GrowingIMPTrack shareInstance].impTrackActive = YES;
+    [GrowingImpressionTrack shareInstance].impTrackActive = YES;
 
     self.growingIMPTrackEventName = eventName;
     self.growingIMPTrackVariable = attributes;
     self.growingIMPTracked = NO;
-    [[GrowingIMPTrack shareInstance] addNode:self inSubView:NO];
+    [[GrowingImpressionTrack shareInstance] addNode:self inSubView:NO];
 }
 
 - (void)growingStopTrackImpression {
-    [[GrowingIMPTrack shareInstance] clearNode:self];
+    [[GrowingImpressionTrack shareInstance] clearNode:self];
 }
 @end

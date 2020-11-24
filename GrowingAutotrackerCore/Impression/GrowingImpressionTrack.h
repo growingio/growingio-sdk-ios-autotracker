@@ -1,5 +1,5 @@
 //
-//  GrowingIMPTrack.h
+//  Impression.h
 //  GrowingAutoTracker
 //
 //  Created by GrowingIO on 2019/5/9.
@@ -20,13 +20,16 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-@interface GrowingIMPTrack : NSObject
+
+@interface GrowingImpressionTrack : NSObject
+
+@property(nonatomic, assign) NSTimeInterval IMPInterval;
+
+@property(nonatomic, assign) BOOL impTrackActive;
 
 + (instancetype)shareInstance;
 
-@property (nonatomic, assign) NSTimeInterval IMPInterval;
-
-@property (nonatomic, assign) BOOL impTrackActive;
+- (void)start;
 
 - (void)markInvisibleNodes;
 
@@ -37,10 +40,6 @@
 - (void)addNode:(UIView *)node inSubView:(BOOL)flag;
 
 - (void)clearNode:(UIView *)node;
-
-- (void)resignActive;
-
-- (void)becomeActive;
 
 @end
 
