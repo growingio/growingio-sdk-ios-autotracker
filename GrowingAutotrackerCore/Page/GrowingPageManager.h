@@ -16,25 +16,31 @@
 
 #import <UIKit/UIKit.h>
 #import "GrowingPageGroup.h"
+#import "GrowingViewControllerLifecycle.h"
+
 @interface GrowingPageManager : NSObject
 
 + (instancetype)sharedInstance;
 
+- (void)start;
+
 - (void)createdViewControllerPage:(UIViewController *)viewController;
 
-- (BOOL)isViewControllerIgnored:(UIViewController *)viewController;
-- (void)addDidAppearController:(UIViewController *)appearVc;
-- (void)removeDidDisappearController:(UIViewController *)disappearVc;
+- (BOOL)isPrivateViewControllerIgnored:(UIViewController *)viewController;
+
 // All ViewControllers that did appeared
 - (NSArray <UIViewController *> *)allDidAppearViewControllers;
+
 // Current ViewController show in window
 - (UIViewController *)currentViewController;
+
 // Root ViewController in DidAppearControllers eg:UIWindow/Root/xxx/xxx/Current
 - (UIViewController *)rootViewController;
+
 // Whether a vc is did appeared
 - (BOOL)isDidAppearController:(UIViewController *)vc;
 
-- (GrowingPageGroup*)findPageByView:(UIView *)view;
+- (GrowingPageGroup *)findPageByView:(UIView *)view;
 
-- (GrowingPageGroup*)currentPage;
+- (GrowingPageGroup *)currentPage;
 @end

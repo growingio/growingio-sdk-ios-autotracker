@@ -14,7 +14,6 @@
 #import "NSString+GrowingHelper.h"
 #import "NSDictionary+GrowingHelper.h"
 #import "GrowingCocoaLumberjack.h"
-#import "GrowingBroadcaster.h"
 #import "GrowingDeviceInfo.h"
 #import "GrowingVisitEvent.h"
 #import "GrowingSession.h"
@@ -26,7 +25,7 @@
 NSString *const GrowingTrackerVersionName = @"3.0.0";
 const int GrowingTrackerVersionCode = 300;
 
-@interface GrowingRealTracker () <GrowingUserIdChangedDelegate>
+@interface GrowingRealTracker ()
 @property(nonatomic, copy, readonly) NSDictionary *launchOptions;
 @property(nonatomic, strong, readonly) GrowingTrackConfiguration *configuration;
 
@@ -44,7 +43,6 @@ const int GrowingTrackerVersionCode = 300;
         GrowingConfigurationManager.sharedInstance.trackConfiguration = self.configuration;
         [GrowingAppLifecycle.sharedInstance setupAppStateNotification];
         [GrowingSession startSession];
-        [[GrowingSession currentSession] addUserIdChangedDelegate:self];
     }
 
     return self;
@@ -145,20 +143,4 @@ const int GrowingTrackerVersionCode = 300;
 - (void)cleanLocation {
     [[GrowingSession currentSession] cleanLocation];
 }
-
-#pragma mark - GrowingUserIdChangedDelegate
-
-- (void)userIdDidChangedFrom:(NSString *)oldUserId to:(NSString *)newUserId {
-    // Notify userId changed
-    [[GrowingBroadcaster sharedInstance] notifyEvent:@protocol(GrowingUserIdChangedMeessage)
-                                          usingBlock:^(id <GrowingMessageProtocol> _Nonnull obj) {
-                                              if ([obj respondsToSelector:@selector(userIdDidChangedFrom:to:)]) {
-                                                  id <GrowingUserIdChangedMeessage> message = (id <GrowingUserIdChangedMeessage>) obj;
-                                                  [message userIdDidChangedFrom:oldUserId to:newUserId];
-                                              }
-                                          }];
-}
-
-
-
 @end

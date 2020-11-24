@@ -1,5 +1,5 @@
 //
-//  GrowingIMPTrack.m
+//  Impression.m
 //  GrowingAutoTracker
 //
 //  Created by GrowingIO on 2019/5/9.
@@ -17,62 +17,43 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingIMPTrack.h"
+#import "GrowingImpressionTrack.h"
 
-#import "GrowingBroadcaster.h"
 #import "GrowingDispatchManager.h"
 #import "UIApplication+GrowingNode.h"
 #import "UIView+GrowingNode.h"
+#import "GrowingAppLifecycle.h"
+#import "GrowingViewControllerLifecycle.h"
 
-@GrowingBroadcasterRegister(GrowingViewControlerLifecycleMessage, GrowingIMPTrack)
-    @GrowingBroadcasterRegister(GrowingApplicationMessage, GrowingIMPTrack)
-        @interface GrowingIMPTrack()<GrowingApplicationMessage, GrowingViewControlerLifecycleMessage>
+@interface GrowingImpressionTrack () <GrowingAppLifecycleDelegate, GrowingViewControllerLifecycleDelegate>
 
-@property (nonatomic, strong) NSHashTable *sourceTable;
-@property (nonatomic, strong) NSHashTable *bgSourceTable;
+@property(nonatomic, strong) NSHashTable *sourceTable;
+@property(nonatomic, strong) NSHashTable *bgSourceTable;
 
 @end
 
 static BOOL isInResignSate;
 
-@implementation GrowingIMPTrack
-
-#pragma mark - GrowingApplicationMessage
-
-+ (void)applicationStateDidChangedWithUserInfo:(NSDictionary *_Nullable)userInfo
-                                     lifecycle:(GrowingApplicationLifecycle)lifecycle {
-    switch (lifecycle) {
-        case GrowingApplicationWillResignActive:
-            [[GrowingIMPTrack shareInstance] resignActive];
-            break;
-        case GrowingApplicationDidBecomeActive:
-            [[GrowingIMPTrack shareInstance] becomeActive];
-            break;
-        default:
-            break;
-    }
+@implementation GrowingImpressionTrack
+- (void)applicationDidBecomeActive {
+    [self becomeActive];
 }
 
-#pragma mark - GrowingViewControlerLifecycleMessage
+- (void)applicationWillResignActive {
+    [self resignActive];
+}
 
-- (void)viewControllerLifecycleDidChanged:(GrowingVCLifecycle)lifecycle {
-    switch (lifecycle) {
-        case GrowingVCLifecycleDidAppear: {
-            [[GrowingIMPTrack shareInstance] markInvisibleNodes];
-            [[GrowingIMPTrack shareInstance] addWindowNodes];
-        } break;
-
-        default:
-            break;
-    }
+- (void)viewControllerDidAppear:(UIViewController *)controller {
+    [self markInvisibleNodes];
+    [self addWindowNodes];
 }
 
 - (void)becomeActive {
     if (isInResignSate) {
         [self.bgSourceTable.allObjects
-            enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-                ((UIView *)obj).growingIMPTracked = NO;
-            }];
+                enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+                    ((UIView *) obj).growingIMPTracked = NO;
+                }];
         isInResignSate = NO;
     }
     [self.bgSourceTable removeAllObjects];
@@ -91,15 +72,14 @@ static BOOL isInResignSate;
         return;
     }
     [self.sourceTable.allObjects enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-        UIView<GrowingNode> *node = obj;
+        UIView <GrowingNode> *node = obj;
         if (![node growingImpNodeIsVisible]) {
             node.growingIMPTracked = NO;
         }
     }];
 }
 
-- (void)markInvisibleNode:(UIView *)node inSubView:(BOOL)flag;
-{
+- (void)markInvisibleNode:(UIView *)node inSubView:(BOOL)flag; {
     if (node.growingIMPTrackEventName > 0) {
         node.growingIMPTracked = NO;
     }
@@ -139,15 +119,22 @@ static BOOL isInResignSate;
     }
 }
 
-static GrowingIMPTrack *impTrack = nil;
+static GrowingImpressionTrack *impTrack = nil;
+
 + (instancetype)shareInstance {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        impTrack = [[GrowingIMPTrack alloc] init];
+        impTrack = [[GrowingImpressionTrack alloc] init];
         impTrack.IMPInterval = 0.0;
     });
     return impTrack;
 }
+
+- (void)start {
+    [GrowingAppLifecycle.sharedInstance addAppLifecycleDelegate:self];
+    [GrowingViewControllerLifecycle.sharedInstance addViewControllerLifecycleDelegate:self];
+}
+
 
 - (instancetype)init {
     if (impTrack != nil) {
@@ -156,13 +143,14 @@ static GrowingIMPTrack *impTrack = nil;
 
     if (self = [super init]) {
         self.sourceTable = [[NSHashTable alloc]
-            initWithOptions:NSPointerFunctionsWeakMemory | NSPointerFunctionsObjectPointerPersonality
-                   capacity:100];
+                initWithOptions:NSPointerFunctionsWeakMemory | NSPointerFunctionsObjectPointerPersonality
+                       capacity:100];
     }
     return self;
 }
 
 static BOOL impTrackIsRegistered = NO;
+
 - (void)setImpTrackActive:(BOOL)impTrackActive {
     _impTrackActive = impTrackActive;
     if (impTrackActive && !impTrackIsRegistered) {
@@ -186,21 +174,21 @@ static BOOL impTrackIsRegistered = NO;
         CFOptionFlags activities = (kCFRunLoopBeforeWaiting | kCFRunLoopExit);
 
         observer = CFRunLoopObserverCreateWithHandler(
-            NULL,         // allocator
-            activities,   // activities
-            YES,          // repeats
-            INT_MAX - 1,  // order after CA transaction commits and before autoreleasepool
-            ^(CFRunLoopObserverRef observer, CFRunLoopActivity activity) {
-                if (self.IMPInterval == 0.0) {
-                    [self impTrack];
-                } else {
-                    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(impTrack) object:nil];
-                    [self performSelector:@selector(impTrack)
-                               withObject:nil
-                               afterDelay:self.IMPInterval
-                                  inModes:@[ NSRunLoopCommonModes ]];
-                }
-            });
+                NULL,         // allocator
+                activities,   // activities
+                YES,          // repeats
+                INT_MAX - 1,  // order after CA transaction commits and before autoreleasepool
+                ^(CFRunLoopObserverRef observer, CFRunLoopActivity activity) {
+                    if (self.IMPInterval == 0.0) {
+                        [self impTrack];
+                    } else {
+                        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(impTrack) object:nil];
+                        [self         performSelector:@selector(impTrack)
+                                   withObject:nil
+                                   afterDelay:self.IMPInterval
+                                      inModes:@[NSRunLoopCommonModes]];
+                    }
+                });
 
         CFRunLoopAddObserver(runLoop, observer, kCFRunLoopCommonModes);
         CFRelease(observer);
@@ -209,13 +197,13 @@ static BOOL impTrackIsRegistered = NO;
 
 - (void)impTrack {
 
-    if (isInResignSate) { return; }
-    
-    if (self.sourceTable.count == 0) { return; }
-    
+    if (isInResignSate) {return;}
+
+    if (self.sourceTable.count == 0) {return;}
+
     [self.sourceTable.allObjects enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx,
-                                                              BOOL *_Nonnull stop) {
-        UIView<GrowingNode> *node = obj;
+            BOOL *_Nonnull stop) {
+        UIView <GrowingNode> *node = obj;
         if ([node growingImpNodeIsVisible]) {
             if (node.growingIMPTracked == NO) {
                 if (node.growingIMPTrackEventName.length > 0) {
@@ -228,9 +216,9 @@ static BOOL impTrackIsRegistered = NO;
     }];
 }
 
-- (void)sendCstm:(UIView<GrowingNode> *)node {
+- (void)sendCstm:(UIView <GrowingNode> *)node {
     node.growingIMPTracked = YES;
-    
+
     NSMutableDictionary *impTrackVariable;
     if (node.growingIMPTrackVariable.count > 0) {
         impTrackVariable = node.growingIMPTrackVariable.mutableCopy;
@@ -246,8 +234,7 @@ static BOOL impTrackIsRegistered = NO;
     }
 }
 
-- (void)addNode:(UIView *)node inSubView:(BOOL)flag;
-{
+- (void)addNode:(UIView *)node inSubView:(BOOL)flag; {
     if (node.growingIMPTrackEventName.length > 0) {
         [self.sourceTable addObject:node];
     }
@@ -276,5 +263,6 @@ static BOOL impTrackIsRegistered = NO;
     node.growingIMPTracked = NO;
     [self.sourceTable removeObject:node];
 }
+
 
 @end
