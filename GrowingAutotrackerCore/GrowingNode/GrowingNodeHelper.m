@@ -58,7 +58,7 @@ static NSTimeInterval kGrowingTrackClickMinTimeInterval = 0.1;
         //当时跟视图时
         if (parent) {
             if ([parent isKindOfClass:[UIViewController class]]) {
-                if ([[GrowingPageManager sharedInstance] isViewControllerIgnored:(UIViewController*)parent]) {
+                if ([[GrowingPageManager sharedInstance] isPrivateViewControllerIgnored:(UIViewController *) parent]) {
                     if (parent.growingNodeSubPath.length > 0) [viewPathArray addObject:parent.growingNodeSubPath];
                 }else {
                     GrowingPageGroup *page = [self getPageObjectWithViewController:(UIViewController*)parent];
@@ -92,7 +92,7 @@ static NSTimeInterval kGrowingTrackClickMinTimeInterval = 0.1;
     id <GrowingNode> parent = current.growingNodeParent;
     //当为 UIAlertController 时，向上寻找没有被忽略的节点
     while (parent) {
-        if ([[GrowingPageManager sharedInstance] isViewControllerIgnored:current]) {
+        if ([[GrowingPageManager sharedInstance] isPrivateViewControllerIgnored:current]) {
             current = (UIViewController<GrowingNode>*)parent;
         }else {
             GrowingPageGroup *page = [self getPageObjectWithViewController:current];

@@ -277,9 +277,10 @@ static GrowingEventManager *shareinstance = nil;
 //}
 
 - (void)writeToDatabaseWithEvent:(GrowingBaseEvent *)event {
-    NSString* eventType = event.eventType;
-    
-    if (!event) { return; }
+    GIOLogDebug(@"Save event, event type is %@\n %@", event.eventType, event.toDictionary);
+    NSString *eventType = event.eventType;
+
+    if (!event) {return;}
 
     
     GrowingEventChannel * eventChannel = self.eventChannelDict[eventType] ?: self.otherEventChannel;

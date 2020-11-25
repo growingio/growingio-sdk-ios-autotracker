@@ -27,12 +27,16 @@
 #import "UITableView+GrowingAutotracker.h"
 #import "UITapGestureRecognizer+GrowingAutotracker.h"
 #import "UIAlertController+GrowingAutotracker.h"
+#import "GrowingPageManager.h"
+#import "GrowingImpressionTrack.h"
 
 @implementation GrowingRealAutotracker
 - (instancetype)initWithConfiguration:(GrowingTrackConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions {
     self = [super initWithConfiguration:configuration launchOptions:launchOptions];
     if (self) {
         [self addAutoTrackSwizzles];
+        [GrowingPageManager.sharedInstance start];
+        [GrowingImpressionTrack.shareInstance start];
     }
 
     return self;

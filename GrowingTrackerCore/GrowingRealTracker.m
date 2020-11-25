@@ -14,7 +14,6 @@
 #import "NSString+GrowingHelper.h"
 #import "NSDictionary+GrowingHelper.h"
 #import "GrowingCocoaLumberjack.h"
-#import "GrowingBroadcaster.h"
 #import "GrowingDeviceInfo.h"
 #import "GrowingVisitEvent.h"
 #import "GrowingSession.h"
@@ -157,7 +156,5 @@ const int GrowingTrackerVersionCode = 300;
                                               }
                                           }];
 }
-
-
 
 @end

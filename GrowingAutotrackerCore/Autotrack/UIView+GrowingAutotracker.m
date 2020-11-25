@@ -19,7 +19,7 @@
 
 
 #import "UIView+GrowingAutotracker.h"
-#import "GrowingIMPTrack.h"
+#import "GrowingImpressionTrack.h"
 
 @implementation UIView (GrowingAutotracker)
 
@@ -27,7 +27,7 @@
     [self growing_didMoveToSuperview];
     
     if (self.superview && self.window) {
-        [[GrowingIMPTrack shareInstance] addNode:self inSubView:YES];
+        [[GrowingImpressionTrack shareInstance] addNode:self inSubView:YES];
     }
 }
 
