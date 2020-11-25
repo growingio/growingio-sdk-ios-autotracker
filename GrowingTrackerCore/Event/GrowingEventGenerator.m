@@ -35,7 +35,7 @@
     }];
 }
 
-+ (void)generateCustomEvent:(NSString * _Nonnull)name attributes:(NSDictionary <NSString *,NSObject *>*_Nonnull)attributes {
++ (void)generateCustomEvent:(NSString * _Nonnull)name attributes:(NSDictionary <NSString *,NSObject *>*_Nullable)attributes {
     [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
         GrowingBaseBuilder *builder = GrowingCustomEvent.builder.setEventName(name);
         [[GrowingEventManager shareInstance] postEventBuidler:builder];

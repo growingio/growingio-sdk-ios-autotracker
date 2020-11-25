@@ -19,7 +19,7 @@
 
 
 #import "GrowingBaseAttributesEvent.h"
-
+#import "GrowingAutotrackEventType.h"
 NS_ASSUME_NONNULL_BEGIN
 @class GrowingPageAttributesBuilder;
 @interface GrowingPageAttributesEvent : GrowingBaseAttributesEvent

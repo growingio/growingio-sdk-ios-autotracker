@@ -38,6 +38,7 @@
 #import "GrowingConfigurationManager.h"
 #import "GrowingTrackConfiguration.h"
 #import "GrowingPersistenceDataProvider.h"
+#import "GrowingSession.h"
 
 static NSUInteger const kGrowingMaxQueueSize = 10000; // default: max event queue size there are 10000 events
 static NSUInteger const kGrowingFillQueueSize = 1000; // default: determine when event queue is filled from DB
@@ -203,6 +204,11 @@ static GrowingEventManager *shareinstance = nil;
 }
 
 - (void)postEventBuidler:(GrowingBaseBuilder* _Nullable)builder {
+    
+    if (![GrowingSession currentSession].createdSession) {
+        [[GrowingSession currentSession] forceReissueVisit];
+    }
+    
     [GrowingDispatchManager dispatchInMainThread:^{
         
         [builder readPropertyInMainThread];

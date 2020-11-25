@@ -26,7 +26,7 @@
 
 + (void)generateVisitEvent:(long long)ts latitude:(double)latitude longitude:(double)longitude;
 
-+ (void)generateCustomEvent:(NSString * _Nonnull)name attributes:(NSDictionary <NSString *,NSObject *>*_Nonnull)attributes;
++ (void)generateCustomEvent:(NSString * _Nonnull)name attributes:(NSDictionary <NSString *,NSObject *>*_Nullable)attributes;
 
 + (void)generateConversionVariablesEvent:(NSDictionary <NSString *,NSObject *>*_Nonnull)variables;
 

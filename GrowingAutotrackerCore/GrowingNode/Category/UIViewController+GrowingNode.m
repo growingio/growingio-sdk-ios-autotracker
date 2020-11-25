@@ -32,6 +32,7 @@
 #import "UIWindow+GrowingNode.h"
 #import "GrowingDispatchManager.h"
 #import "UIApplication+GrowingNode.h"
+#import "GrowingRealAutotracker.h"
 
 @implementation UIViewController (GrowingNode)
 

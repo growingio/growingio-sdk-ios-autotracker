@@ -19,7 +19,7 @@
 
 
 #import <UIKit/UIKit.h>
-
+#import "GrowingRealAutotracker.h"
 #import "GrowingNodeManager.h"
 
 @interface UIViewController (GrowingNode) <GrowingNode>
@@ -28,7 +28,21 @@
 
 @interface UIViewController (GrowingPrivateAttributes)
 
+
 - (void)mergeGrowingAttributesPvar:(NSDictionary<NSString *,NSObject *> *)growingAttributesPvar;
 - (void)removeGrowingAttributesPvar:(NSString *)key;
+
+@end
+
+// 该属性setter方法均使用 objc_setAssociatedObject实现
+// 如果是自定义的UIViewController不要使用重写getter方法来实现,因为SDK在set方法内部有逻辑处理
+@interface UIViewController (GrowingAttributes)
+
+// 手动标识该页面的标题，必须在该UIViewController显示之前设置
+@property (nonatomic, copy) NSString *growingPageAlias;
+
+@property (nonatomic, strong) NSDictionary <NSString *, NSString *> *growingPageAttributes;
+
+@property (nonatomic, assign) GrowingIgnorePolicy growingPageIgnorePolicy;
 
 @end

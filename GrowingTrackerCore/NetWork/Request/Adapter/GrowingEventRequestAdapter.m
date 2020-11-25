@@ -65,9 +65,9 @@
     
     NSString *jsonString = [self buildJSONStringWithEvents:self.events];
     NSData *JSONData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-    
-    [JSONData growingHelper_LZ4String];
-    JSONData = [JSONData growingHelper_xorEncryptWithHint:(self.timestamp & 0xFF)];
+    // TODO:移除lz4加密处理
+//    [JSONData growingHelper_LZ4String];
+//    JSONData = [JSONData growingHelper_xorEncryptWithHint:(self.timestamp & 0xFF)];
     
     if (self.outsizeBlock) {
         self.outsizeBlock(JSONData.length);

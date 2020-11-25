@@ -17,9 +17,9 @@
 
 #import <objc/runtime.h>
 #import "UIViewController+GrowingPageHelper.h"
+#import "UIViewController+GrowingNode.h"
 #import "GrowingPage.h"
-#import "GrowingAutoTracker.h"
-
+#import "GrowingRealAutotracker.h"
 static void *const GROWING_PAGE_OBJECT = "GROWING_PAGE_OBJECT";
 
 @implementation UIViewController (GrowingPageHelper)

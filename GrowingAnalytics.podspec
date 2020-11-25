@@ -19,6 +19,7 @@ TODO: Add long description of the pod here.
   s.author           = { 'GrowingIO' => 'support@growingio.com' }
   s.source           = { :git => 'https://github.com/growingio/growingio-sdk-ios-autotracker.git', :tag => s.version.to_s }
   s.ios.deployment_target = '8.0'
+  s.ios.framework = 'WebKit'
   s.requires_arc = true
   s.default_subspec = "Autotracker"
   

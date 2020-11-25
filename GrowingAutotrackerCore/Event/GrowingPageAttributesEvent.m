@@ -60,4 +60,13 @@
     };
 }
 
+
+- (NSString *)eventType {
+    return GrowingEventTypePageAttributes;
+}
+
+- (GrowingBaseEvent *)build {
+    return [[GrowingPageAttributesEvent alloc] initWithBuilder:self];
+}
+
 @end

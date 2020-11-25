@@ -71,8 +71,7 @@ const int GrowingTrackerVersionCode = 300;
     if ([GrowingArgumentChecker isIllegalEventName:eventName]) {
         return;
     }
-
-    [self trackCustomEvent:eventName withAttributes:nil];
+    [GrowingEventGenerator generateCustomEvent:eventName attributes:nil];
 }
 
 - (void)trackCustomEvent:(NSString *)eventName withAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
