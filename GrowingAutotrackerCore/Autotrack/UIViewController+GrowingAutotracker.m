@@ -27,7 +27,7 @@
 #import "GrowingPageEvent.h"
 #import "GrowingPageManager.h"
 #import "GrowingViewControllerLifecycle.h"
-
+#import "GrowingPrivateCategory.h"
 GrowingPropertyDefine(UIViewController, NSNumber*, growingHook_hasDidAppear, setGrowingHook_hasDidAppear)
 
 @implementation UIViewController (GrowingAutotracker)
@@ -77,5 +77,6 @@ GrowingPropertyDefine(UIViewController, NSNumber*, growingHook_hasDidAppear, set
             && self.parentViewController == nil
             && [UIApplication sharedApplication].keyWindow.rootViewController != self;
 }
+
 
 @end

@@ -148,13 +148,7 @@ const int GrowingTrackerVersionCode = 300;
 
 - (void)userIdDidChangedFrom:(NSString *)oldUserId to:(NSString *)newUserId {
     // Notify userId changed
-    [[GrowingBroadcaster sharedInstance] notifyEvent:@protocol(GrowingUserIdChangedMeessage)
-                                          usingBlock:^(id <GrowingMessageProtocol> _Nonnull obj) {
-                                              if ([obj respondsToSelector:@selector(userIdDidChangedFrom:to:)]) {
-                                                  id <GrowingUserIdChangedMeessage> message = (id <GrowingUserIdChangedMeessage>) obj;
-                                                  [message userIdDidChangedFrom:oldUserId to:newUserId];
-                                              }
-                                          }];
+    
 }
 
 @end

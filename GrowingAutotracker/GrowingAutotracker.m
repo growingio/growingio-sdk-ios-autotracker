@@ -20,17 +20,9 @@
 
 static GrowingAutotracker *sharedInstance = nil;
 
-@interface GrowingAutotracker ()
-@property(nonatomic, strong, readonly) GrowingRealAutotracker *realAutotracker;
-@end
-
 @implementation GrowingAutotracker
 - (instancetype)initWithRealAutotracker:(GrowingRealAutotracker *)realAutotracker {
-    self = [super init];
-    if (self) {
-        _realAutotracker = realAutotracker;
-    }
-
+    self = [super initWithTarget:realAutotracker];
     return self;
 }
 
@@ -57,65 +49,5 @@ static GrowingAutotracker *sharedInstance = nil;
     return sharedInstance;
 }
 
-//- (void)trackCustomEvent:(NSString *)eventName {
-//    [_realAutotracker trackCustomEvent:eventName];
-//}
-//
-//- (void)trackCustomEvent:(NSString *)eventName withAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
-//    [_realAutotracker trackCustomEvent:eventName withAttributes:attributes];
-//}
-//
-//- (void)setLoginUserAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
-//    [_realAutotracker setLoginUserAttributes:attributes];
-//}
-//
-//- (void)setVisitorAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
-//    [_realAutotracker setVisitorAttributes:attributes];
-//}
-//
-//- (void)setConversionVariables:(NSDictionary<NSString *, NSString *> *)variables {
-//    [_realAutotracker setConversionVariables:variables];
-//}
-//
-//- (void)setLoginUserId:(NSString *)userId {
-//    [_realAutotracker setLoginUserId:userId];
-//}
-//
-//- (void)cleanLoginUserId {
-//    [_realAutotracker cleanLoginUserId];
-//}
-//
-//- (void)setDataCollectionEnabled:(BOOL)enabled {
-//    [_realAutotracker setDataCollectionEnabled:enabled];
-//}
-//
-//- (NSString *)getDeviceId {
-//    return [_realAutotracker getDeviceId];
-//}
-///// 设置经纬度坐标
-///// @param latitude 纬度
-///// @param longitude 经度
-//- (void)setLocation:(double)latitude longitude:(double)longitude {
-//    [_realAutotracker setLocation:latitude longitude:longitude];
-//}
-//
-///// 清除地理位置
-//- (void)cleanLocation {
-//    [_realAutotracker cleanLocation];
-//}
-
-#pragma mark - proxy protocol
-
-- (id)forwardingTargetForSelector:(SEL)selector {
-    return _realAutotracker;
-}
-
-- (void)forwardInvocation:(NSInvocation *)invocation {
-    if (![_realAutotracker respondsToSelector:[invocation selector]]) {
-        GIOLogError(@"GrowingAutotracker can't find method name %@",NSStringFromSelector([invocation selector]));
-    }
-    void *null = NULL;
-    [invocation setReturnValue:&null];
-}
 
 @end

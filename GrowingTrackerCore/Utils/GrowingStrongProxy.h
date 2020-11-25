@@ -1,9 +1,9 @@
 //
-//  UIViewController+GrowingNode.m
-//  GrowingTracker
+// GrowingStrongProxy.h
+// GrowingAnalytics
 //
-//  Created by GrowingIO on 15/8/31.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by sheng on 2020/11/25.
+//  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -18,20 +18,17 @@
 //  limitations under the License.
 
 
-#import <UIKit/UIKit.h>
-#import "GrowingRealAutotracker.h"
-#import "GrowingNodeManager.h"
+#import <Foundation/Foundation.h>
 
-@interface UIViewController (GrowingNode) <GrowingNode>
+NS_ASSUME_NONNULL_BEGIN
 
-@end
+@interface GrowingStrongProxy : NSObject
 
-@interface UIViewController (GrowingPrivateAttributes)
+@property (nonatomic, strong, readonly) id target;
 
-
-- (void)mergeGrowingAttributesPvar:(NSDictionary<NSString *,NSObject *> *)growingAttributesPvar;
-- (void)removeGrowingAttributesPvar:(NSString *)key;
+- (nonnull instancetype)initWithTarget:(nonnull id)target;
++ (nonnull instancetype)proxyWithTarget:(nonnull id)target;
 
 @end
 
-
+NS_ASSUME_NONNULL_END

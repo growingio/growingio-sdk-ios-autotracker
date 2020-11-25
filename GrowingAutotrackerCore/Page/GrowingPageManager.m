@@ -31,6 +31,7 @@
 #import "UIViewController+GrowingPageHelper.h"
 #import "UIView+GrowingHelper.h"
 #import "GrowingViewControllerLifecycle.h"
+#import "GrowingPrivateCategory.h"
 
 @interface GrowingPageManager () <GrowingViewControllerLifecycleDelegate>
 
@@ -142,7 +143,7 @@
     }
 
     if (parentVC == nil) {
-        GIOLogError(@"parentVC is nil");
+        GIOLogError(@"%@ you want find parentVC is nil",carrier);
         return nil;
     } else {
         GrowingPageGroup *page = [parentVC growingPageHelper_getPageObject];

@@ -14,11 +14,11 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <Foundation/Foundation.h>
+#import "GrowingStrongProxy.h"
 #import "GrowingTrackConfiguration+GrowingAutotracker.h"
 #import "GrowingRealAutotracker.h"
 
-@interface GrowingAutotracker : NSObject
+@interface GrowingAutotracker : GrowingStrongProxy
 + (void)startWithConfiguration:(GrowingTrackConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions;
 
 + (instancetype)sharedInstance;
