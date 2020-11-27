@@ -19,7 +19,7 @@
 
 
 #import <UIKit/UIKit.h>
-
+#import "GrowingRealAutotracker.h"
 #import "GrowingNodeManager.h"
 
 @interface UIViewController (GrowingNode) <GrowingNode>
@@ -28,7 +28,10 @@
 
 @interface UIViewController (GrowingPrivateAttributes)
 
+
 - (void)mergeGrowingAttributesPvar:(NSDictionary<NSString *,NSObject *> *)growingAttributesPvar;
 - (void)removeGrowingAttributesPvar:(NSString *)key;
 
 @end
+
+

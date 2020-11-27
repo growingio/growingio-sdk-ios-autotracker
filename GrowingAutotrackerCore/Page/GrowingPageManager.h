@@ -42,5 +42,7 @@
 
 - (GrowingPageGroup *)findPageByView:(UIView *)view;
 
+
 - (GrowingPageGroup *)currentPage;
+
 @end

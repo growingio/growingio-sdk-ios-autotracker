@@ -43,6 +43,7 @@ const int GrowingTrackerVersionCode = 300;
         GrowingConfigurationManager.sharedInstance.trackConfiguration = self.configuration;
         [GrowingAppLifecycle.sharedInstance setupAppStateNotification];
         [GrowingSession startSession];
+        [[GrowingSession currentSession] addUserIdChangedDelegate:self];
     }
 
     return self;
@@ -69,8 +70,7 @@ const int GrowingTrackerVersionCode = 300;
     if ([GrowingArgumentChecker isIllegalEventName:eventName]) {
         return;
     }
-
-    [self trackCustomEvent:eventName withAttributes:nil];
+    [GrowingEventGenerator generateCustomEvent:eventName attributes:nil];
 }
 
 - (void)trackCustomEvent:(NSString *)eventName withAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
@@ -143,4 +143,6 @@ const int GrowingTrackerVersionCode = 300;
 - (void)cleanLocation {
     [[GrowingSession currentSession] cleanLocation];
 }
+
+
 @end

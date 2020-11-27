@@ -31,7 +31,8 @@
 #import "UIView+GrowingNode.h"
 #import "GrowingImpressionTrack.h"
 #import "GrowingConfigurationManager.h"
-
+#import "GrowingTrackConfiguration+GrowingAutotracker.h"
+#import "GrowingRealAutotracker.h"
 @interface GrowingMaskView : UIImageView
 @end
 
