@@ -1,9 +1,9 @@
 //
-//  GrowingConfiguration+GrowingAutoTrack.h
-//  GrowingAutoTracker
+// GrowingDynamicProxy.h
+// GrowingAnalytics
 //
-//  Created by GrowingIO on 2020/7/30.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by sheng on 2020/11/25.
+//  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -18,17 +18,17 @@
 //  limitations under the License.
 
 
-#import "GrowingTracker.h"
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-//@interface GrowingConfiguration (GrowingAutoTrack)
-//
-//// 全局设置节点有效曝光的比例
-//// 当可见像素值 / 总像素值 >= scale 则判定该节点可见、有效曝光， 反之不可见
-//// scale 有效曝光比例， 范围[0-1]; 默认值为0, 0：任意像素可见为有效曝光， 1：全部像素可见时为有效曝光
-//@property(nonatomic, assign) double impressionScale;
-//
-//@end
+@interface GrowingDynamicProxy : NSObject
+
+@property (nonatomic, strong, readonly) id target;
+
+- (nonnull instancetype)initWithTarget:(nonnull id)target;
++ (nonnull instancetype)proxyWithTarget:(nonnull id)target;
+
+@end
 
 NS_ASSUME_NONNULL_END

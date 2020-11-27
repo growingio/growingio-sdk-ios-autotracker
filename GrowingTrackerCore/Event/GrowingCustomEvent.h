@@ -36,7 +36,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-- (GrowingBaseBuilder *(^)(NSString *value))setEventName;
+- (GrowingCustomBuilder *(^)(NSString *value))setEventName;
 
+//override
+- (GrowingCustomBuilder *(^)(NSDictionary <NSString *, NSObject *>*value))setAttributes;
 NS_ASSUME_NONNULL_END
 @end

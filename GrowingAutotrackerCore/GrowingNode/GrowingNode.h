@@ -20,7 +20,6 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#import "GrowingAutoTracker.h"
 #import "GrowingNodeItem.h"
 #import "GrowingNodeProtocol.h"
 

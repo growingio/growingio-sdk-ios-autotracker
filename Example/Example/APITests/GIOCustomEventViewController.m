@@ -11,7 +11,7 @@
 #import "GIODataProcessOperation.h"
 #import "GrowingKeyValueCell.h"
 #import "GIODataProcessOperation.h"
-
+#import "GrowingAutotracker.h"
 #define DEFAULT_ATTRIBUTES_COUNT 0
 
 @interface GIOCustomEventViewController () <UITableViewDelegate, UITableViewDataSource>
@@ -52,13 +52,12 @@
     }
     
     if (atts.count > 0) {
-//        [Growing trackCustomEvent:eventName
-//                   withAttributes:atts];
+        [[GrowingAutotracker sharedInstance] trackCustomEvent:eventName withAttributes:atts];
         
         NSLog(@"Track事件，eventName:%@, attributes:%@", eventName, atts);
 
     } else {
-//        [Growing trackCustomEvent:eventName];
+        [[GrowingAutotracker sharedInstance] trackCustomEvent:eventName];
         NSLog(@"Track事件，eventName:%@", eventName);
     }
 }

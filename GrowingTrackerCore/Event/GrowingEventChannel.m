@@ -46,7 +46,7 @@
 }
 
 + (NSArray<GrowingEventChannel *> *)buildAllEventChannels {
-    //TODO:这里删除了page,pageAttributes
+    // TODO:这里删除了page,pageAttributes
     return @[
         [GrowingEventChannel eventChannelWithEventTypes:@[GrowingEventTypeVisit, GrowingEventTypeAppClosed]
                                             urlTemplate:kGrowingEventApiTemplate_PV
@@ -66,7 +66,7 @@
     if (!allEventChannels.count) {
         allEventChannels = [self buildAllEventChannels];
     }
-    
+    // TODO: 添加page以及pageAttributes类型
     return @{
         GrowingEventTypeVisit: allEventChannels[0],
 //        kEventTypeKeyPage: allEventChannels[0],
