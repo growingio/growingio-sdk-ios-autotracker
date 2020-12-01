@@ -29,6 +29,7 @@
 #import "UIAlertController+GrowingAutotracker.h"
 #import "GrowingPageManager.h"
 #import "GrowingImpressionTrack.h"
+#import "GrowingAppDelegateAutotracker.h"
 
 @implementation GrowingRealAutotracker
 - (instancetype)initWithConfiguration:(GrowingTrackConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions {
@@ -67,7 +68,7 @@
         if (applicatonError) {
             GIOLogError(@"Failed to swizzle UIApplication. Details: %@", applicatonError);
         }
-
+        
         // UISegmentControl
         NSError *segmentControlError = NULL;
         [UISegmentedControl growing_swizzleMethod:@selector(initWithCoder:)
@@ -159,6 +160,8 @@
         if (alertError) {
             GIOLogError(@"Failed to swizzle UIAlertController. Details: %@", alertError);
         }
+        
+        [GrowingAppDelegateAutotracker track];
     });
 }
 

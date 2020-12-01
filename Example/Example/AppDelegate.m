@@ -15,7 +15,10 @@
 //使用md5加密
 #import <CommonCrypto/CommonDigest.h>
 #import "GrowingAutotracker.h"
+#import <objc/runtime.h>
+#import <objc/message.h>
 
+#import <CoreServices/CoreServices.h>
 static NSString *const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
 
 @interface AppDelegate () <UNUserNotificationCenterDelegate>
@@ -26,7 +29,6 @@ static NSString *const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 //    [Bugly startWithAppId:@"93004a21ca"];
-
     // Config GrowingIO
     GrowingTrackConfiguration *configuration = [GrowingTrackConfiguration configurationWithProjectId:kGrowingProjectId];
     configuration.debugEnabled = YES;
@@ -112,23 +114,48 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
                                                                                  animated:YES
                                                                                completion:nil];
 }
+//- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
+//    return NO;
+//}
 
-- (BOOL)application:(UIApplication *)application
-            openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation {
-//    if ([Growing handleURL:url]) {
-//        return YES;
-//    }
-    return NO;
-}
+//- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
+//    return NO;
+//}
+
+//- (BOOL)application:(UIApplication *)application
+//            openURL:(NSURL *)url
+//  sourceApplication:(NSString *)sourceApplication
+//         annotation:(id)annotation {
+////    if ([Growing handleURL:url]) {
+////        return YES;
+////    }
+//    return NO;
+//}
 
 // universal Link执行
 - (BOOL) application:(UIApplication *)application
 continueUserActivity:(NSUserActivity *)userActivity
   restorationHandler:(void (^)(NSArray<id <UIUserActivityRestoring>> *_Nullable))restorationHandler {
 //    [Growing handleURL:userActivity.webpageURL];
+    restorationHandler(nil);
     return YES;
+}
+
+#pragma mark - UISceneSession lifecycle
+
+
+- (UISceneConfiguration *)application:(UIApplication *)application configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession options:(UISceneConnectionOptions *)options {
+    // Called when a new scene session is being created.
+    // Use this method to select a configuration to create the new scene with.
+    UISceneConfiguration *config = [[UISceneConfiguration alloc] initWithName:@"Default Configuration" sessionRole:connectingSceneSession.role];
+    return config;
+}
+
+
+- (void)application:(UIApplication *)application didDiscardSceneSessions:(NSSet<UISceneSession *> *)sceneSessions {
+    // Called when the user discards a scene session.
+    // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
+    // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
 }
 
 #pragma mark - 生命周期

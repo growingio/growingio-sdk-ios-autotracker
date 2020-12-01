@@ -1,8 +1,8 @@
 //
-// GrowingDynamicProxy.h
+// GrowingDeepLinkHandler.h
 // GrowingAnalytics
 //
-//  Created by sheng on 2020/11/25.
+//  Created by sheng on 2020/11/30.
 //  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,13 +22,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingDynamicProxy : NSObject
+@interface GrowingDeepLinkHandler : NSObject
 
-@property (nonatomic, strong, readonly) id target;
-
-- (nonnull instancetype)initWithTarget:(nonnull id)target;
-+ (nonnull instancetype)proxyWithTarget:(nonnull id)target;
-
++ (BOOL)handlerUrl:(NSURL *)url;
 
 @end
 

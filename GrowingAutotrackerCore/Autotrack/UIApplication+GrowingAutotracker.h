@@ -29,6 +29,13 @@ NS_ASSUME_NONNULL_BEGIN
                       from:(nullable id)sender
                   forEvent:(nullable UIEvent *)event;
 
+//- (void)growing_setDelegate:(id<UIApplicationDelegate>)delegate;
+
+//- (BOOL)growing_application:(UIApplication *)application
+//                    openURL:(NSURL *)url
+//          sourceApplication:(NSString *)sourceApplication
+//                 annotation:(id)annotation;
+
 @end
 
 NS_ASSUME_NONNULL_END
