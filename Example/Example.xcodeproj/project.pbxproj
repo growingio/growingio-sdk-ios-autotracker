@@ -108,6 +108,7 @@
 		047BF3BC24F655A50028FE94 /* PageEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3B924F655A50028FE94 /* PageEventsTest.m */; };
 		04A6FAF224E662E9006C72F0 /* GIOChildsAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A6FAF124E662E9006C72F0 /* GIOChildsAddViewController.m */; };
 		04A6FAF524E67215006C72F0 /* GIOBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A6FAF424E67215006C72F0 /* GIOBaseViewController.m */; };
+		04E62DF12575E73B00A3638C /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E62DF02575E73A00A3638C /* SceneDelegate.m */; };
 		42ADE26C250B292900CA7268 /* HybirdTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 42ADE26B250B292900CA7268 /* HybirdTests.m */; };
 		4916270F24E157BB00444AF2 /* GIOPresentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916270E24E157BB00444AF2 /* GIOPresentViewController.m */; };
 		4916271224E157CF00444AF2 /* GIOPagingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916271124E157CF00444AF2 /* GIOPagingViewController.m */; };
@@ -264,6 +265,8 @@
 		04A6FAF124E662E9006C72F0 /* GIOChildsAddViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOChildsAddViewController.m; sourceTree = "<group>"; };
 		04A6FAF324E67215006C72F0 /* GIOBaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIOBaseViewController.h; sourceTree = "<group>"; };
 		04A6FAF424E67215006C72F0 /* GIOBaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOBaseViewController.m; sourceTree = "<group>"; };
+		04E62DEF2575E73A00A3638C /* SceneDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
+		04E62DF02575E73A00A3638C /* SceneDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
 		11EA2ABB8F1029820A3234DB /* Pods_ExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ExampleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		42ADE26B250B292900CA7268 /* HybirdTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HybirdTests.m; sourceTree = "<group>"; };
 		48BA0D37888FF209ED84CD0E /* Pods-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.debug.xcconfig"; path = "../../Pods/Target Support Files/Pods-Example/Pods-Example.debug.xcconfig"; sourceTree = "<group>"; };
@@ -341,6 +344,8 @@
 				046530DE24DD4271002D254C /* APITests */,
 				046530BE24DD4271002D254C /* AppDelegate.h */,
 				046530FF24DD4271002D254C /* AppDelegate.m */,
+				04E62DEF2575E73A00A3638C /* SceneDelegate.h */,
+				04E62DF02575E73A00A3638C /* SceneDelegate.m */,
 				046530D124DD4271002D254C /* Assets.xcassets */,
 				04A6FAE024E2BF11006C72F0 /* Example.entitlements */,
 				046530FD24DD4271002D254C /* GrowingIO-Info.plist */,
@@ -985,6 +990,7 @@
 				0465315324DD4272002D254C /* GIOActionSheetViewController.m in Sources */,
 				0465314C24DD4272002D254C /* main.m in Sources */,
 				0465314A24DD4272002D254C /* SecondViewController.m in Sources */,
+				04E62DF12575E73B00A3638C /* SceneDelegate.m in Sources */,
 				0465314224DD4272002D254C /* PageAttributesEventViewController.m in Sources */,
 				0465315724DD4272002D254C /* GIOMultiViewController.m in Sources */,
 				0465314324DD4272002D254C /* GIOClickEventViewController.m in Sources */,
@@ -1231,7 +1237,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Example/GrowingIO-Prefix.pch";
 				INFOPLIST_FILE = "Example/GrowingIO-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "GrowingIO.GrowingIOTest-";
@@ -1254,7 +1260,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Example/GrowingIO-Prefix.pch";
 				INFOPLIST_FILE = "Example/GrowingIO-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "GrowingIO.GrowingIOTest-";

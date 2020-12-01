@@ -75,7 +75,6 @@ static NSString *const kGrowingWebCircleWebView = @"WEB_VIEW";
 
 //表示web和app是否同时准备好数据发送，此时表示可以发送数据
 @property (nonatomic, assign) BOOL isReady;
-@property (nonatomic, retain) NSTimer *keepAliveTimer;
 
 @property (nonatomic, copy) void (^onReadyBlock)(void);
 @property (nonatomic, copy) void (^onFinishBlock)(void);
@@ -112,10 +111,8 @@ static GrowingWebCircle *shareInstance = nil;
     return shareInstance;
 }
 
-+ (void)runWithCircleRoomNumber:(NSString *)circleRoomNumber
-                     readyBlock:(void (^)(void))readyBlock
-                    finishBlock:(void (^)(void))finishBlock {
-    [[self shareInstance] runWithCircleRoomNumber:circleRoomNumber readyBlock:readyBlock finishBlock:finishBlock];
++ (void)runWithCircle:(NSURL *)url readyBlock:(void(^)(void))readyBlock finishBlock:(void(^)(void))finishBlock; {
+    [[self shareInstance] runWithCircle:url readyBlock:readyBlock finishBlock:finishBlock];
 }
 
 + (void)stop {
@@ -163,11 +160,7 @@ static GrowingWebCircle *shareInstance = nil;
 
     UIImage *image = [UIWindow growingHelper_screenshotWithWindows:windows
                                                        andMaxScale:scale
-                                                             block:^(CGContextRef context){
-                                                                 //  CGContextSetStrokeColorWithColor(context,[[UIColor
-                                                                 //  orangeColor] colorWithAlphaComponent:0.4].CGColor);
-                                                                 //  CGContextSetLineWidth(context,1);
-                                                             }];
+                                                             block:nil];
 
     return image;
 }
@@ -543,9 +536,7 @@ static GrowingWebCircle *shareInstance = nil;
     [self sendScreenShot];
 }
 
-- (void)runWithCircleRoomNumber:(NSString *)circleRoomNumber
-                     readyBlock:(void (^)(void))readyBlock
-                    finishBlock:(void (^)(void))finishBlock {
+- (void)runWithCircle:(NSURL *)url readyBlock:(void(^)(void))readyBlock finishBlock:(void(^)(void))finishBlock; {
     if (!self.isReady) {
         [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 
@@ -595,11 +586,8 @@ static GrowingWebCircle *shareInstance = nil;
             self.webSocket.delegate = nil;
             self.webSocket = nil;
         }
-        NSString *endPoint = @"";
-        endPoint = [GrowingNetworkConfig.sharedInstance wsEndPoint];
-        NSString *urlStr =@"";
         self.webSocket =
-            [[GrowingSRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];
+            [[GrowingSRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:url]];
         self.webSocket.delegate = self;
         [self.webSocket open];
 
@@ -621,31 +609,6 @@ static GrowingWebCircle *shareInstance = nil;
     lastRect = rect;
 }
 
-- (void)beginKeepAlive {
-    if (!self.keepAliveTimer) {
-        __weak typeof(self) wself = self;
-        self.keepAliveTimer = [NSTimer scheduledTimerWithTimeInterval:30
-                                                               target:wself
-                                                             selector:@selector(keepAlive)
-                                                             userInfo:nil
-                                                              repeats:YES];
-    }
-}
-
-
-
-- (void)endKeepAlive {
-    if (self.keepAliveTimer) {
-        [self.keepAliveTimer invalidate];
-        self.keepAliveTimer = nil;
-    }
-}
-
-- (void)keepAlive {
-    NSDictionary *dict = @{@"msgType" : @"heartbeat"};
-    [self sendJson:dict];
-}
-
 - (void)stop {
     GIOLogDebug(@"开始断开连接");
     NSDictionary *dict = @{@"msgType" : @"quit"};
@@ -661,7 +624,6 @@ static GrowingWebCircle *shareInstance = nil;
 
     [[GrowingEventManager shareInstance] removeInterceptor:self];
 
-    [self endKeepAlive];
     if (self.webSocket) {
         self.webSocket.delegate = nil;
         [self.webSocket close];
@@ -759,9 +721,9 @@ static GrowingWebCircle *shareInstance = nil;
         @"os" : @"iOS",
         @"screenWidth" : [NSNumber numberWithInteger:screenSize.width],
         @"screenHeight" : [NSNumber numberWithInteger:screenSize.height],
+        @"urlScheme" : [GrowingDeviceInfo currentDeviceInfo].urlScheme
     };
     [self sendJson:dict];
-    [self beginKeepAlive];
 }
 
 - (void)webSocket:(GrowingSRWebSocket *)webSocket
@@ -863,18 +825,5 @@ static GrowingWebCircle *shareInstance = nil;
 
     }
 }
-
-//- (BOOL)growingEventManagerEventShouldSend:(GrowingBaseEvent* _Nullable)event {
-//    for (id<GrowingNode> obj in [context contextNodes]) {
-//        if ([obj isKindOfClass:[GrowingWindow class]]) {
-//            return NO;
-//        }
-//        if ([obj isKindOfClass:[UIView class]]) {
-//            UIView *view = (UIView *)obj;
-//            return ![view.window isKindOfClass:[GrowingWindow class]];
-//        }
-//    }
-//    return YES;
-//}
 
 @end

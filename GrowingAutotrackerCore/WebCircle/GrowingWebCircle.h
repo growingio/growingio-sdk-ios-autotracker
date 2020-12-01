@@ -27,7 +27,7 @@
 + (instancetype)shareInstance;
 
 + (BOOL)isRunning;
-+ (void)runWithCircleRoomNumber:(NSString *)circleRoomNumber readyBlock:(void(^)(void))readyBlock finishBlock:(void(^)(void))finishBlock;
++ (void)runWithCircle:(NSURL *)url readyBlock:(void(^)(void))readyBlock finishBlock:(void(^)(void))finishBlock;
 + (void)stop;
 
 + (void)setNeedUpdateScreen;

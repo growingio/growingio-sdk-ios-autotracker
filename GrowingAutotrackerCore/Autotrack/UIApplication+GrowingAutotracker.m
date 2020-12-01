@@ -23,7 +23,7 @@
 #import "GrowingNodeProtocol.h"
 #import "GrowingNodeHelper.h"
 #import "GrowingViewClickProvider.h"
-
+#import "GrowingAppDelegateAutotracker.h"
 @implementation UIApplication (GrowingAutotracker)
 
 - (BOOL)growing_sendAction:(SEL)action
@@ -80,5 +80,19 @@
         return;
     }
 }
+
+//- (void)growing_setDelegate:(id<UIApplicationDelegate>)delegate {
+//    [GrowingDeepLinkTrack track:delegate];
+//    [self growing_setDelegate:delegate];
+//}
+
+//- (BOOL)growing_application:(UIApplication *)application
+//                    openURL:(NSURL *)url
+//          sourceApplication:(NSString *)sourceApplication
+//                 annotation:(id)annotation {
+//    [GrowingDeepLinkTrack handlerUrl:url];
+//
+//    return [self growing_application:application openURL:url sourceApplication:sourceApplication annotation:annotation];
+//}
 
 @end
