@@ -115,7 +115,7 @@ const int GrowingTrackerVersionCode = 300;
 
 - (void)cleanLoginUserId {
     [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
-        [self setUserIdValue:@""];
+        [self setUserIdValue:nil];
     }];
 }
 
@@ -128,7 +128,7 @@ const int GrowingTrackerVersionCode = 300;
 }
 
 
-- (void)setUserIdValue:(nonnull NSString *)value {
+- (void)setUserIdValue:(NSString *)value {
     [[GrowingSession currentSession] setLoginUserId:value];
 }
 

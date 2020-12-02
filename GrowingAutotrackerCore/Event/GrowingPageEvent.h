@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString * _Nonnull title;
 @property (nonatomic, copy, readonly) NSString * _Nonnull referralPage;
 
-- (GrowingPageBuilder *(^)(NSString *value))setPageName;
+- (GrowingPageBuilder *(^)(NSString *value))setPath;
 - (GrowingPageBuilder *(^)(NSString *value))setOrientation;
 - (GrowingPageBuilder *(^)(NSString *value))setTitle;
 - (GrowingPageBuilder *(^)(NSString *value))setReferralPage;

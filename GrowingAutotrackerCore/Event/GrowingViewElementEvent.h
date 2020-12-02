@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class GrowingViewElementBuilder;
 @interface GrowingViewElementEvent : GrowingBaseEvent
 
-@property (nonatomic, copy, readonly) NSString * _Nonnull pageName;
+@property (nonatomic, copy, readonly) NSString * _Nonnull path;
 @property (nonatomic, assign, readonly) long long pageShowTimestamp;
 @property (nonatomic, copy, readonly) NSString * _Nonnull textValue;
 @property (nonatomic, copy, readonly) NSString * _Nonnull xpath;
@@ -44,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString * _Nonnull xpath;
 @property (nonatomic, assign, readonly) int index;
 
-- (GrowingViewElementBuilder *(^)(NSString *value))setPageName;
+- (GrowingViewElementBuilder *(^)(NSString *value))setPath;
 - (GrowingViewElementBuilder *(^)(long long value))setPageShowTimestamp;
 - (GrowingViewElementBuilder *(^)(NSString *value))setTextValue;
 - (GrowingViewElementBuilder *(^)(NSString *value))setXpath;

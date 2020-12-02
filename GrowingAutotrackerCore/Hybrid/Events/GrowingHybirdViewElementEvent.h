@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (GrowingHybirdViewElementBuilder *(^)(NSString *value))setHyperlink;
 
 //重写
-- (GrowingHybirdViewElementBuilder *(^)(NSString *value))setPageName;
+- (GrowingHybirdViewElementBuilder *(^)(NSString *value))setPath;
 - (GrowingHybirdViewElementBuilder *(^)(long long value))setPageShowTimestamp;
 - (GrowingHybirdViewElementBuilder *(^)(NSString *value))setTextValue;
 - (GrowingHybirdViewElementBuilder *(^)(NSString *value))setXpath;

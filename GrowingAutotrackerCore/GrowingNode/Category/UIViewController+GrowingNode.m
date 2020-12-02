@@ -168,6 +168,10 @@
 }
 
 - (NSString *)growingNodeSubPath {
+    //如果别名存在，则直接返回别名
+    if (self.growingPageAlias) {
+        return self.growingPageAlias;
+    }
     NSInteger index = [self growingNodeKeyIndex];
     NSString *className = NSStringFromClass(self.class);
     return index < 0 ? className : [NSString stringWithFormat:@"%@[%ld]", className, (long)index];

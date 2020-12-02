@@ -24,10 +24,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingNodeHelper : NSObject
 
-+ (BOOL)isValidClickEventForNode:(id<GrowingNode>)node;
-
++ (NSString *)xPathSimilarForNode:(id<GrowingNode>)node;
 + (NSString *)xPathForNode:(id<GrowingNode>)node;
-+ (NSString *)xPathForView:(UIView *)view;
+
++ (NSString *)xPathForView:(UIView *)view similar:(BOOL)isSimilar;
 + (NSString *)xPathForViewController:(UIViewController *)vc;
 @end
 

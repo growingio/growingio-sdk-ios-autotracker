@@ -7,6 +7,7 @@
 #import "GrowingSession.h"
 #import "GrowingTimeUtil.h"
 #import "GrowingPersistenceDataProvider.h"
+#import "GrowingRealTracker.h"
 
 @implementation GrowingBaseEvent
 
@@ -58,12 +59,15 @@
 @implementation GrowingBaseBuilder
 
 - (instancetype)init {
+    
     if (self = [super init]) {
         GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
         _timestamp = [GrowingTimeUtil currentTimeMillis];
         _domain = deviceInfo.bundleID;
         _deviceId = deviceInfo.deviceIDString ?: @"";
         _urlScheme = deviceInfo.urlScheme;
+        _platform = deviceInfo.platform;
+        _platformVersion = deviceInfo.platformVersion;
     }
     return self;
 }
@@ -76,6 +80,7 @@
     GrowingSession *session = [GrowingSession currentSession];
     _userId = session.loginUserId;
     _sessionId =  session.sessionId;
+    
 }
 
 - (GrowingBaseBuilder *(^)(NSString *value))setDeviceId {

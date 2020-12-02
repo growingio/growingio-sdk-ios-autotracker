@@ -95,7 +95,11 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
     if ([NSStringFromClass(self.class) isEqualToString:@"UITableViewWrapperView"]) {
         return @"";
     }
-    
+    //如果手动标识了该view,返回标识
+    if (self.growingUniqueTag.length > 0) {
+        return self.growingUniqueTag;
+    }
+    //返回类型+index
     NSInteger index = [self growingNodeKeyIndex];
     NSString *className = NSStringFromClass(self.class);
     return index < 0

@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (GrowingHybirdPageBuilder *(^)(NSString *value))setProtocolType;
 
 //重写
-- (GrowingHybirdPageBuilder *(^)(NSString *value))setPageName;
+- (GrowingHybirdPageBuilder *(^)(NSString *value))setPath;
 - (GrowingHybirdPageBuilder *(^)(NSString *value))setOrientation;
 - (GrowingHybirdPageBuilder *(^)(NSString *value))setTitle;
 - (GrowingHybirdPageBuilder *(^)(NSString *value))setReferralPage;

@@ -96,12 +96,12 @@
 }
 
 - (void)sendPageEventWithPage:(GrowingPage *)page {
-    GrowingBaseBuilder *builder = GrowingPageEvent.builder.setTitle(page.title).setPageName(page.path).setTimestamp(page.showTimestamp);
+    GrowingBaseBuilder *builder = GrowingPageEvent.builder.setTitle(page.title).setPath(page.path).setTimestamp(page.showTimestamp);
     [[GrowingEventManager shareInstance] postEventBuidler:builder];
 }
 
 - (void)sendPageAttributesEventWithPage:(GrowingPage *)page {
-    GrowingBaseBuilder *builder = GrowingPageAttributesEvent.builder.setPageName(page.path).setTimestamp(page.showTimestamp).setAttributes(page.variables);
+    GrowingBaseBuilder *builder = GrowingPageAttributesEvent.builder.setPath(page.path).setTimestamp(page.showTimestamp).setAttributes(page.variables);
     [[GrowingEventManager shareInstance] postEventBuidler:builder];
 }
 
@@ -257,11 +257,32 @@
 
     return NO;
 }
+- (GrowingPageGroup *)findPageByViewController:(UIViewController *)current {
+    GrowingPageGroup *page = nil;
+    UIViewController *last = nil;
+    while (current) {
+        last = current;
+        if ([[GrowingPageManager sharedInstance] isPrivateViewControllerIgnored:current]) {
+            current = current.growingNodeParent;
+        }else {
+            page = [current growingPageHelper_getPageObject];
+            if (page.isIgnored) {
+                current = current.growingNodeParent;
+            }else {
+                break;
+            }
+        }
+    }
+    if (!page && last) {
+        page = [last growingPageHelper_getPageObject];
+        NSAssert(page, @"error: page is nil");
+    }
+    return page;
+}
 
 - (GrowingPageGroup *)findPageByView:(UIView *)view {
-    UIViewController *parent = [view growingHelper_viewController];
-    GrowingPageGroup *page = [parent growingPageHelper_getPageObject];
-    return page;
+    UIViewController *current = [view growingHelper_viewController];
+    return  [self findPageByViewController:current];
 }
 
 - (GrowingPageGroup *)currentPage {

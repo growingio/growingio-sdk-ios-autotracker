@@ -89,7 +89,9 @@ static GrowingSession *currentSession = nil;
 - (void)dispatchUserIdDidChangedFrom:(NSString *)oldUserId to:(NSString *)newUserId {
     [self.delegateLock lock];
     for (id <GrowingUserIdChangedDelegate> delegate in self.userIdChangedDelegates) {
-        [delegate userIdDidChangedFrom:oldUserId.copy to:newUserId.copy];
+        if ([delegate respondsToSelector:@selector(userIdDidChangedFrom:to:)]) {
+            [delegate userIdDidChangedFrom:oldUserId.copy to:newUserId.copy];
+        }
     }
     [self.delegateLock unlock];
 }

@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (GrowingHybridCustomBuilder *(^)(NSString *value))setQuery;
 
 //override
-- (GrowingHybridCustomBuilder *(^)(NSString *value))setPageName;
+- (GrowingHybridCustomBuilder *(^)(NSString *value))setPath;
 - (GrowingHybridCustomBuilder *(^)(long long value))setPageShowTimestamp;
 - (GrowingHybridCustomBuilder *(^)(NSString *value))setEventName;
 - (GrowingHybridCustomBuilder *(^)(NSDictionary <NSString *, NSObject *>*value))setAttributes;
