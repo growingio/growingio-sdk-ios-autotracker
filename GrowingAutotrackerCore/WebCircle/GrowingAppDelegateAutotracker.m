@@ -84,7 +84,7 @@
                 return tempImp(target,sel,application,url);
             }));
         } else {
-            GIOLogError(@"请在appDelegate实例中实现application:openURL:options:");
+            @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:[NSString stringWithFormat:@"请在%@实例中实现application:openURL:options:以适配UrlScheme跳转",NSStringFromClass(delegate.class)] userInfo:nil];
             //no more anyone imp exist
             // TODO:add method: application:openURL:options:
             // 时序在UIApplicationMain之后，无法干预urlscheme跳转问题
@@ -101,7 +101,7 @@
                 return tempImp(target,sel,application,userActivity,restorationHandler);
             }));
         } else {
-            GIOLogError(@"请在appDelegate实例中实现application:continueUserActivity:restorationHandler:");
+            @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:[NSString stringWithFormat:@"请在%@实例中实现application:continueUserActivity:restorationHandler:以适配DeepLink跳转",NSStringFromClass(delegate.class)] userInfo:nil];
         }
         
     } else {

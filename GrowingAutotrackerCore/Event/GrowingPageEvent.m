@@ -36,7 +36,7 @@
 
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
-    dataDictM[@"pageName"] = self.pageName;
+    dataDictM[@"path"] = self.pageName;
     dataDictM[@"orientation"] = self.orientation;
     dataDictM[@"title"] = self.title;
     dataDictM[@"referralPage"] = self.referralPage;
@@ -56,7 +56,7 @@
     _orientation = [GrowingDeviceInfo deviceOrientation];
 }
 
-- (GrowingPageBuilder *(^)(NSString *value))setPageName {
+- (GrowingPageBuilder *(^)(NSString *value))setPath {
     return ^(NSString *value) {
         self->_pageName = value;
         return self;

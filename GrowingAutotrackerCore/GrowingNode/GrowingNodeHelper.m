@@ -28,55 +28,62 @@
 static NSString * const kGrowingNodeRootPage = @"Page";
 static NSString * const kGrowingNodeRootIgnore = @"IgnorePage";
 
-static NSTimeInterval kGrowingTrackClickMinTimeInterval = 0.1;
-
 @implementation GrowingNodeHelper
 
-
-+ (NSString *)xPathForNode:(id<GrowingNode>)node {
+//当node为列表视图时，返回路径为 TableView/cell[-]，序号在index字段中返回
++ (NSString *)xPathSimilarForNode:(id<GrowingNode>)node {
     if ([node isKindOfClass:[UIView class]]) {
-        return [self xPathForView:(UIView*)node];;
+        return [self xPathForView:(UIView*)node similar:YES];
     }else if ([node isKindOfClass:[UIViewController class]]) {
         return [self xPathForViewController:(UIViewController*)node];;
     }
     return nil;
 }
 
-+ (NSString *)xPathForView:(UIView *)view {
++ (NSString *)xPathForNode:(id<GrowingNode>)node {
+    if ([node isKindOfClass:[UIView class]]) {
+        return [self xPathForView:(UIView*)node similar:NO];
+    }else if ([node isKindOfClass:[UIViewController class]]) {
+        return [self xPathForViewController:(UIViewController*)node];;
+    }
+    return nil;
+}
+
++ (NSString *)xPathForView:(UIView *)view similar:(BOOL)isSimilar{
     NSMutableArray *viewPathArray = [NSMutableArray array];
     id<GrowingNode> node = view;
-    id<GrowingNode> parent = nil;
-    /**
-    1. 先以触发的View向上追溯父View ，直至找到第一个 Page
-    2.如果 Page 没被 ignored，然后替换为 /Page，转到 5
-    3.如果 Page 被忽略，那么向上追溯 Page （中间的View不再追溯），然后首部 插入 /Page ，转到 5
-    4.如果全部被 ignored，首部 插入 /IgnorePage，则转到 5
-    5.生成xpath
-    */
-    do {
-        parent = node.growingNodeParent;
-        //当时跟视图时
-        if (parent) {
-            if ([parent isKindOfClass:[UIViewController class]]) {
-                if ([[GrowingPageManager sharedInstance] isPrivateViewControllerIgnored:(UIViewController *) parent]) {
-                    if (parent.growingNodeSubPath.length > 0) [viewPathArray addObject:parent.growingNodeSubPath];
-                }else {
-                    GrowingPageGroup *page = [self getPageObjectWithViewController:(UIViewController*)parent];
-                    if (page.isIgnored) {
-                        if (parent.growingNodeSubPath.length > 0) [viewPathArray addObject:parent.growingNodeSubPath];
-                    }else {
-                        [viewPathArray addObject:kGrowingNodeRootPage];
-                        break;
-                    }
-                }
-            }else {
-                if (node.growingNodeSubPath.length > 0) [viewPathArray addObject:node.growingNodeSubPath];
-            }
+    
+    while (node && [node isKindOfClass:[UIView class]]) {
+        if (isSimilar) {
+            [viewPathArray addObject:node.growingNodeSubSimilarPath];
+            isSimilar = NO;
         }else {
+            [viewPathArray addObject:node.growingNodeSubPath];
+        }
+        node = node.growingNodeParent;
+    }
+    // 当检测到viewController时，会替换成page字段
+    // 此时则需要判断是否ignored以及过滤
+    if ([node isKindOfClass:[UIViewController class]]) {
+        while (node) {
+            if ([[GrowingPageManager sharedInstance] isPrivateViewControllerIgnored:(UIViewController *) node]) {
+                if (node.growingNodeSubPath.length > 0) [viewPathArray addObject:node.growingNodeSubPath];
+            }else {
+                GrowingPageGroup *page = [(UIViewController*)node growingPageHelper_getPageObject];
+                if (page.isIgnored) {
+                    if (node.growingNodeSubPath.length > 0) [viewPathArray addObject:node.growingNodeSubPath];
+                }else {
+                    [viewPathArray addObject:kGrowingNodeRootPage];
+                    break;
+                }
+            }
+            node = node.growingNodeParent;
+        }
+        //如果遍历到了根节点(即没有parent)，说明所有层级vc都被过滤，则添加IgnorePage
+        if (!node) {
             [viewPathArray addObject:kGrowingNodeRootIgnore];
         }
-        node = parent;
-    } while (node);
+    }
     
     NSString *viewPath = [[[viewPathArray reverseObjectEnumerator] allObjects] componentsJoinedByString:@"/"];
     viewPath = [@"/" stringByAppendingString:viewPath];
@@ -85,39 +92,10 @@ static NSTimeInterval kGrowingTrackClickMinTimeInterval = 0.1;
 
 
 + (NSString *)xPathForViewController:(UIViewController *)vc {
-    if (!vc) {
-        return nil;
-    }
-    UIViewController <GrowingNode>*current = vc;
-    id <GrowingNode> parent = current.growingNodeParent;
-    //当为 UIAlertController 时，向上寻找没有被忽略的节点
-    while (parent) {
-        if ([[GrowingPageManager sharedInstance] isPrivateViewControllerIgnored:current]) {
-            current = (UIViewController<GrowingNode>*)parent;
-        }else {
-            GrowingPageGroup *page = [self getPageObjectWithViewController:current];
-            if (page.isIgnored) {
-                current = (UIViewController<GrowingNode>*)parent;
-            }else {
-                break;
-            }
-        }
-        parent = parent.growingNodeParent;
-    }
-    
-    GrowingPageGroup *page = [self getPageObjectWithViewController:current];
-    
+    NSAssert(vc, @"+xPathForViewController: vc is nil");
+    GrowingPageGroup *page = [[GrowingPageManager sharedInstance] findPageByViewController:vc];
     return page.path;
 }
 
-
-+ (GrowingPageGroup *)getPageObjectWithViewController:(UIViewController *)vc {
-    GrowingPageGroup *page = [vc growingPageHelper_getPageObject];
-    if (!page) {
-        [[GrowingPageManager sharedInstance] createdViewControllerPage:vc];
-        page = [vc growingPageHelper_getPageObject];
-    }
-    return page;
-}
 
 @end

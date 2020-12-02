@@ -31,7 +31,6 @@
 @implementation GrowingSceneDelegateAutotracker
 
 + (void)track:(Class)delegateClass {
-    // TODO: add uisene logic
     if (@available(iOS 13.0, *)) {
         //url scheme 跳转
         SEL sel = @selector(scene:openURLContexts:);
@@ -49,7 +48,7 @@
                 tempImp(target,sel,scene,URLContexts);
             }));
         } else {
-            GIOLogError(@"在iOS13以上，请在%@实例中实现scene:openURLContexts:",NSStringFromClass(delegateClass));
+            @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:[NSString stringWithFormat:@"在iOS13以上，请在%@实例中实现scene:openURLContexts:以适配UrlScheme",NSStringFromClass(delegateClass)] userInfo:nil];
         }
         //hook deeplink method
         sel = @selector(scene:continueUserActivity:);
@@ -68,7 +67,7 @@
                 tempImp(target,sel,scene,userActivity);
             }));
         } else {
-            GIOLogError(@"在iOS13以上，请在%@实例中实现scene:continueUserActivity:",NSStringFromClass(delegateClass));
+            @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:[NSString stringWithFormat:@"在iOS13以上，请在%@实例中实现scene:continueUserActivity:以适配DeepLink",NSStringFromClass(delegateClass)] userInfo:nil];
         }
     }
 }

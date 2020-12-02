@@ -25,7 +25,7 @@
 - (instancetype)initWithBuilder:(GrowingPageAttributesBuilder *)builder {
     if (self = [super initWithBuilder:builder]) {
         GrowingPageAttributesBuilder *subBuilder = (GrowingPageAttributesBuilder*)builder;
-        _pageName = subBuilder.pageName;
+        _path = subBuilder.path;
         _pageShowTimestamp = subBuilder.pageShowTimestamp;
     }
     return self;
@@ -33,7 +33,7 @@
 
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
-    dataDictM[@"pageName"] = self.pageName;
+    dataDictM[@"path"] = self.path;
     dataDictM[@"pageShowTimestamp"] = @(self.pageShowTimestamp);
     return dataDictM;;
 }
@@ -46,9 +46,9 @@
 
 @implementation GrowingPageAttributesBuilder
 
-- (GrowingPageAttributesBuilder *(^)(NSString *value))setPageName {
+- (GrowingPageAttributesBuilder *(^)(NSString *value))setPath {
     return ^(NSString *value) {
-        self->_pageName = value;
+        self->_path = value;
         return self;
     };
 }

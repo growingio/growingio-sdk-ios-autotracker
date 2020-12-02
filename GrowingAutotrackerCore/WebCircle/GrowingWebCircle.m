@@ -243,8 +243,7 @@ static GrowingWebCircle *shareInstance = nil;
     } else {
         v = [v growingHelper_safeSubStringWithLength:50];
     }
-    dict[@"content"] =
-        [v stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+    dict[@"content"] = v;
 
     // 1. 默认 TEXT
     // 2. 判断特殊类型 并赋值
@@ -353,7 +352,7 @@ static GrowingWebCircle *shareInstance = nil;
                    }];
 
     NSMutableDictionary *modifiedPageData = [[NSMutableDictionary alloc] init];
-    modifiedPageData[@"page"] = [[[GrowingPageManager sharedInstance] currentViewController] growingPageName] ?: @"";
+    modifiedPageData[@"page"] = [[GrowingPageManager sharedInstance] currentPage].path;
     modifiedPageData[@"domain"] = [GrowingDeviceInfo currentDeviceInfo].bundleID;
 
     NSMutableDictionary *finalDataDict = [NSMutableDictionary dictionaryWithDictionary:dataDict];
@@ -372,7 +371,7 @@ static GrowingWebCircle *shareInstance = nil;
             NSMutableDictionary *dict = [self dictFromNode:aNode
                                                   pageData:modifiedPageData
                                                   keyIndex:aNode.growingNodeKeyIndex
-                                                     xPath:[GrowingNodeHelper xPathForNode:aNode]
+                                                     xPath:[GrowingNodeHelper xPathSimilarForNode:aNode]
                                                isContainer:[self isContainer:aNode]];
 
             [[GrowingHybridBridgeProvider sharedInstance]
@@ -404,7 +403,7 @@ static GrowingWebCircle *shareInstance = nil;
                 NSMutableDictionary *dict = [self dictFromNode:aNode
                                                       pageData:modifiedPageData
                                                       keyIndex:aNode.growingNodeKeyIndex
-                                                         xPath:[GrowingNodeHelper xPathForNode:aNode]
+                                                         xPath:[GrowingNodeHelper xPathSimilarForNode:aNode]
                                                    isContainer:[self isContainer:aNode]];
 
                 if (dict.count > 0) {
@@ -508,11 +507,20 @@ static GrowingWebCircle *shareInstance = nil;
                                     if (isContainer == nil || ![isContainer boolValue]) {
                                         NSString *eventXPath = event[@"xpath"];
                                         for (NSInteger i = 0; i < allContainers.count; i++) {
-                                            NSString *containerXPath = allContainers[i][@"xpath"];
-                                            if ([eventXPath hasPrefix:containerXPath]) {
-                                                event[@"parentXPath"] = containerXPath;
+                                            NSDictionary *dict = allContainers[i];
+                                            NSString *origin = dict[@"xpath"];
+                                            NSString *target = origin;
+                                            // 由于父节点xpath可能为/TableView/Cell[-]，但是附带index=3
+                                            // 而子节点xpath却为 /TableView/Cell[3]/Button
+                                            if ([origin containsString:@"[-]"]) {
+                                                target = [origin stringByReplacingOccurrencesOfString:@"[-]" withString:[NSString stringWithFormat:@"[%@]",dict[@"index"]]];
+                                            }
+                                            if ([eventXPath hasPrefix:target]) {
+                                                event[@"parentXPath"] = origin;
                                                 // web端仅用index来标识list元素所述，所以子元素index需要和父元素一致
-                                                event[@"index"] = allContainers[i][@"index"];
+                                                event[@"index"] = dict[@"index"];
+                                                // 将xpath中的 /TableView/Cell[3] -> /TableView/Cell[-]
+                                                event[@"xpath"] = [event[@"xpath"] stringByReplacingOccurrencesOfString:target withString:origin];
                                                 break;
                                             }
                                         }

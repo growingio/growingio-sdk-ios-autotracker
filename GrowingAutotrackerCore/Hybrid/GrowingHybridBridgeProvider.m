@@ -34,6 +34,8 @@
 #import "GrowingConversionVariableEvent.h"
 #import "GrowingHybirdEventType.h"
 #import "GrowingTimeUtil.h"
+#import "GrowingSession.h"
+
 NSString *const kGrowingJavascriptMessageTypeKey = @"messageType";
 NSString *const kGrowingJavascriptMessageDataKey = @"data";
 NSString *const kGrowingJavascriptMessageType_dispatchEvent = @"dispatchEvent";
@@ -70,7 +72,6 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
 }
 
 - (void)handleJavascriptBridgeMessage:(NSString *)message {
-    //TODO: 对接事件发送接口
     NSLog(@"handleJavascriptBridgeMessage: %@", message);
     if (message == nil || message.length == 0) {
         return;
@@ -89,11 +90,10 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
 
     if ([kGrowingJavascriptMessageType_dispatchEvent isEqualToString:messageType]) {
         [self parseEventJsonString:messageData];
-
     } else if ([kGrowingJavascriptMessageType_setNativeUserId isEqualToString:messageType]) {
-//        [growing setLoginUserId:messageData];
+        [[GrowingSession currentSession] setLoginUserId:messageData];
     } else if ([kGrowingJavascriptMessageType_clearNativeUserId isEqualToString:messageType]) {
-//        [Growing cleanLoginUserId];
+        [[GrowingSession currentSession] setLoginUserId:nil];
     } else if ([kGrowingJavascriptMessageType_onDomChanged isEqualToString:messageType]) {
         [self dispatchWebViewDomChanged];
     }
@@ -166,28 +166,30 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
         .setQuery(dict[@KEY_QUERY])
         .setTitle(dict[@KEY_TITLE])
         .setReferralPage(dict[@KEY_REFERRAL_PAGE])
-        .setPageName(dict[@KEY_PATH])
+        .setPath(dict[@KEY_PATH])
         .setTimestamp([dict longlongForKey:@KEY_TIMESTAMP fallback:[GrowingTimeUtil currentTimeMillis]])
         .setDomain([self getDomain:dict]);
     } else if ([type isEqualToString:GrowingEventTypePageAttributes]) {
         //TODO:检查@KEY_ATTRIBUTES字段是否符合字典类型
         builder = GrowingHybirdPageAttributesEvent.builder
         .setQuery(dict[@KEY_QUERY])
-        .setPageName(dict[@KEY_PATH])
+        .setPath(dict[@KEY_PATH])
         .setPageShowTimestamp([dict longlongForKey:@KEY_PAGE_SHOW_TIMESTAMP fallback:[GrowingTimeUtil currentTimeMillis]])
         .setAttributes(dict[@KEY_ATTRIBUTES])
         .setDomain([self getDomain:dict]);
 
-    } else if ([type isEqualToString:GrowingEventTypeViewClick]) {
+    } else if ([type isEqualToString:GrowingEventTypeVisit]) {
+        builder = [self transformViewElementBuilder:dict].setEventType(type);
+    }else if ([type isEqualToString:GrowingEventTypeViewClick]) {
         builder = [self transformViewElementBuilder:dict].setEventType(type);
     } else if ([type isEqualToString:GrowingEventTypeViewChange]) {
         builder = [self transformViewElementBuilder:dict].setEventType(type);
-    }else if ([type isEqualToString:GrowingEventTypeFormSubmit]) {
+    } else if ([type isEqualToString:GrowingEventTypeFormSubmit]) {
         builder = [self transformViewElementBuilder:dict].setEventType(type);
     } else if ([type isEqualToString:GrowingEventTypeCustom]) {
         builder = GrowingHybridCustomEvent.builder
         .setQuery(dict[@KEY_QUERY])
-        .setPageName(dict[@KEY_PATH])
+        .setPath(dict[@KEY_PATH])
         .setPageShowTimestamp([dict longlongForKey:@KEY_PAGE_SHOW_TIMESTAMP fallback:[GrowingTimeUtil currentTimeMillis]])
         .setAttributes(dict[@KEY_ATTRIBUTES])
         .setEventName(dict[@KEY_EVENT_NAME])
@@ -199,9 +201,9 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
         builder = GrowingConversionVariableEvent.builder
         .setVariables(dict[@KEY_VARIABLES]);
     }
-
-    [[GrowingEventManager shareInstance] postEventBuidler:builder];
-
+    if (builder) {
+        [[GrowingEventManager shareInstance] postEventBuidler:builder];
+    }
 }
 
 - (GrowingBaseBuilder *)transformViewElementBuilder:(NSDictionary *)dict {
@@ -211,8 +213,8 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
     .setIndex([dict intForKey:@KEY_INDEX fallback:-1])
     .setTextValue(dict[@KEY_TEXT_VALUE])
     .setXpath(dict[@KEY_XPATH])
-    .setPageName(dict[@KEY_PATH])
-    .setPageShowTimestamp(dict[@KEY_PAGE_SHOW_TIMESTAMP])
+    .setPath(dict[@KEY_PATH])
+    .setPageShowTimestamp([dict longlongForKey:@KEY_PAGE_SHOW_TIMESTAMP fallback:[GrowingTimeUtil currentTimeMillis]])
     .setDomain([self getDomain:dict]);
 }
 

@@ -72,7 +72,7 @@ static GrowingPersistenceDataProvider *persistence = nil;
 - (void)setLoginUserId:(NSString * _Nonnull)loginUserId {
     //空值
     if (loginUserId.length == 0) {
-        return;
+        loginUserId = @"";
     }
     [_growingUserdefault setValue:loginUserId forKey:kGrowingUserdefault_loginUserId];
     //write now!
@@ -88,8 +88,8 @@ static GrowingPersistenceDataProvider *persistence = nil;
     [_growingUserdefault setValue:value forKey:key];
 }
 
-- (void)getStringforKey:(NSString *)key {
-    [_growingUserdefault valueForKey:key];
+- (NSString *)getStringforKey:(NSString *)key; {
+    return [_growingUserdefault valueForKey:key];
 }
 
 - (GrowingEventSequenceObject*)getAndIncrement:(NSString *)eventType {

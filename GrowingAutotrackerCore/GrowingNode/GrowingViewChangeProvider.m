@@ -36,7 +36,7 @@
 
 + (void)sendChangeEvent:(GrowingPageGroup *)page viewNode:(GrowingViewNode *)node{
     [[GrowingEventManager shareInstance] postEventBuidler:GrowingViewElementEvent.builder.setEventType(GrowingEventTypeViewChange)
-     .setPageName(page.path)
+     .setPath(page.path)
      .setPageShowTimestamp(page.showTimestamp)
      .setXpath(node.xPath)
      .setIndex(node.index)

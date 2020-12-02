@@ -35,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (GrowingHybirdPageAttributesBuilder *(^)(NSString *value))setQuery;
 
 //重写
-- (GrowingHybirdPageAttributesBuilder *(^)(NSString *value))setPageName;
+- (GrowingHybirdPageAttributesBuilder *(^)(NSString *value))setPath;
 - (GrowingHybirdPageAttributesBuilder *(^)(long long value))setPageShowTimestamp;
 
 @end

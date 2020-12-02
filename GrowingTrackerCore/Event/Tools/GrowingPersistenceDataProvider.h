@@ -37,9 +37,14 @@ NS_ASSUME_NONNULL_BEGIN
 ///设置NSString,NSNumber
 - (void)setString:(NSString *)value forKey:(NSString *)key;
 
-- (void)getStringforKey:(NSString *)key;
+- (NSString *)getStringforKey:(NSString *)key;
 
 - (GrowingEventSequenceObject*)getAndIncrement:(NSString *)eventType;
+
+//防止xcode编码提示使用KVC来获取值
+- (void)setValue:(id)value forKey:(NSString *)key UNAVAILABLE_ATTRIBUTE;
+- (id)valueForKey:(NSString *)key UNAVAILABLE_ATTRIBUTE;
+
 @end
 
 @interface GrowingEventSequenceObject : NSObject
