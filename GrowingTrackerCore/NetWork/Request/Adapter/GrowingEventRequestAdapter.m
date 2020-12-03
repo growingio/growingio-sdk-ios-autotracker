@@ -30,8 +30,9 @@
     // V3.0 先去除数据加密
 //    [needAdaptReq setValue:@"3" forHTTPHeaderField:@"X-Compress-Code"];
 //    [needAdaptReq setValue:@"1" forHTTPHeaderField:@"X-Crypt-Codec"];
+    
 //    [needAdaptReq setValue:@"application/octet-stream" forHTTPHeaderField:@"Content-Type"];
-
+    [needAdaptReq setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     return needAdaptReq;
 }
 
