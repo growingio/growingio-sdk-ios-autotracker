@@ -23,7 +23,7 @@
 #import "GrowingArgumentChecker.h"
 
 NSString *const GrowingTrackerVersionName = @"3.0.0";
-const int GrowingTrackerVersionCode = 300;
+const int GrowingTrackerVersionCode = 30000;
 
 @interface GrowingRealTracker ()
 @property(nonatomic, copy, readonly) NSDictionary *launchOptions;

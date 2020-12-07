@@ -18,23 +18,29 @@
 
 @implementation GrowingWebViewJavascriptBridgeConfiguration
 
-- (instancetype)initWithProjectId:(NSString *)projectId appId:(NSString *)appId nativeSdkVersionCode:(int)nativeSdkVersionCode {
+- (instancetype)initWithProjectId:(NSString *)projectId appId:(NSString *)appId appPackage:(NSString *)appPackage nativeSdkVersion:(NSString *)nativeSdkVersion nativeSdkVersionCode:(int)nativeSdkVersionCode {
     self = [super init];
     if (self) {
         _projectId = [projectId copy];
         _appId = [appId copy];
+        _appPackage = [appPackage copy];
+        _nativeSdkVersion = [nativeSdkVersion copy];
         _nativeSdkVersionCode = nativeSdkVersionCode;
     }
 
     return self;
 }
 
-+ (instancetype)configurationWithProjectId:(NSString *)projectId appId:(NSString *)appId nativeSdkVersionCode:(int)nativeSdkVersionCode {
-    return [[self alloc] initWithProjectId:projectId appId:appId nativeSdkVersionCode:nativeSdkVersionCode];
++ (instancetype)configurationWithProjectId:(NSString *)projectId appId:(NSString *)appId appPackage:(NSString *)appPackage nativeSdkVersion:(NSString *)nativeSdkVersion nativeSdkVersionCode:(int)nativeSdkVersionCode {
+    return [[self alloc] initWithProjectId:projectId
+                                     appId:appId
+                                appPackage:appPackage
+                          nativeSdkVersion:nativeSdkVersion
+                      nativeSdkVersionCode:nativeSdkVersionCode];
 }
 
 - (NSString *)toJsonString {
-    NSDictionary* configuration = [self dictionaryWithValuesForKeys:@[@"projectId",@"appId",@"nativeSdkVersionCode"]];
+    NSDictionary *configuration = [self dictionaryWithValuesForKeys:@[@"projectId", @"appId", @"appPackage", @"nativeSdkVersion", @"nativeSdkVersionCode"]];
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:configuration options:NSJSONWritingPrettyPrinted error:&error];
     if (error) {

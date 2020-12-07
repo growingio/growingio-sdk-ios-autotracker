@@ -19,11 +19,13 @@
 @interface GrowingWebViewJavascriptBridgeConfiguration : NSObject
 @property(nonatomic, readonly, copy) NSString *projectId;
 @property(nonatomic, readonly, copy) NSString *appId;
+@property(nonatomic, readonly, copy) NSString *appPackage;
+@property(nonatomic, readonly, copy) NSString *nativeSdkVersion;
 @property(nonatomic, readonly, assign) int nativeSdkVersionCode;
 
-- (instancetype)initWithProjectId:(NSString *)projectId appId:(NSString *)appId nativeSdkVersionCode:(int)nativeSdkVersionCode;
+- (instancetype)initWithProjectId:(NSString *)projectId appId:(NSString *)appId appPackage:(NSString *)appPackage nativeSdkVersion:(NSString *)nativeSdkVersion nativeSdkVersionCode:(int)nativeSdkVersionCode;
 
-+ (instancetype)configurationWithProjectId:(NSString *)projectId appId:(NSString *)appId nativeSdkVersionCode:(int)nativeSdkVersionCode;
++ (instancetype)configurationWithProjectId:(NSString *)projectId appId:(NSString *)appId appPackage:(NSString *)appPackage nativeSdkVersion:(NSString *)nativeSdkVersion nativeSdkVersionCode:(int)nativeSdkVersionCode;
 
 - (NSString *)toJsonString;
 @end
