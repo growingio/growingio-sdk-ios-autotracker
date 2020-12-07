@@ -22,6 +22,7 @@
 #import "GrowingDeviceInfo.h"
 #import "GrowingConfigurationManager.h"
 #import "GrowingTrackConfiguration.h"
+#import "GrowingRealTracker.h"
 
 static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJavascriptBridge";
 
@@ -33,11 +34,15 @@ static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJav
     GrowingWKWebViewJavascriptBridge *bridge = [[self alloc] init];
     [webView.configuration.userContentController removeScriptMessageHandlerForName:kGrowingWKWebViewJavascriptBridge];
     [webView.configuration.userContentController addScriptMessageHandler:bridge name:kGrowingWKWebViewJavascriptBridge];
-    // TODO: nativeSdkVersionCode
+
     NSString *projectId = GrowingConfigurationManager.sharedInstance.trackConfiguration.projectId;
     NSString *bundleId = [GrowingDeviceInfo currentDeviceInfo].bundleID;
-
-    GrowingWebViewJavascriptBridgeConfiguration *config = [GrowingWebViewJavascriptBridgeConfiguration configurationWithProjectId:projectId appId:bundleId nativeSdkVersionCode:12];
+    NSString *urlScheme = [GrowingDeviceInfo currentDeviceInfo].urlScheme;
+    GrowingWebViewJavascriptBridgeConfiguration *config = [GrowingWebViewJavascriptBridgeConfiguration configurationWithProjectId:projectId
+                                                                                                                            appId:urlScheme
+                                                                                                                       appPackage:bundleId
+                                                                                                                 nativeSdkVersion:GrowingTrackerVersionName
+                                                                                                             nativeSdkVersionCode:GrowingTrackerVersionCode];
 
     WKUserScript *userScript = [[WKUserScript alloc] initWithSource:[GrowingWKWebViewJavascriptBridge_JS createJavascriptBridgeJsWithNativeConfiguration:config]
                                                       injectionTime:WKUserScriptInjectionTimeAtDocumentStart

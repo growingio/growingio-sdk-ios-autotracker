@@ -181,4 +181,9 @@ continueUserActivity:(NSUserActivity *)userActivity
     NSLog(@"状态** 将要退出程序");
 }
 
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
+    return NO;
+}
+
+
 @end
