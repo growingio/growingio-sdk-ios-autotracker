@@ -29,6 +29,27 @@
     return [self growingHelper_jsonDataWithOptions:0];
 }
 
+- (NSString *)growingHelper_beautifulJsonString {
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self options:NSJSONWritingPrettyPrinted error:&error];
+    NSString *jsonString;
+
+    if (!jsonData) {
+        GIOLogError(@"%@", error);
+        return nil;
+    } else {
+        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    }
+    jsonString = [jsonString stringByReplacingOccurrencesOfString:@"\\/" withString:@"/"];
+    NSString *beautifulJsonString = @"╔═══════════════════════════════════════════════════════════════════════════════════════\n";
+    NSArray *lines = [jsonString componentsSeparatedByString:@"\n"];
+    for (NSString *line in lines) {
+        beautifulJsonString = [NSString stringWithFormat:@"%@║ %@\n", beautifulJsonString, line];
+    }
+    beautifulJsonString = [beautifulJsonString stringByAppendingString:@"╚═══════════════════════════════════════════════════════════════════════════════════════"];
+    return beautifulJsonString;
+}
+
 - (NSData *)growingHelper_jsonDataWithOptions:(NSJSONWritingOptions)options {
     NSData *jsonData = nil;
     @try {
@@ -77,7 +98,7 @@
     return query;
 }
 
-- (int)intForKey:(NSString *)key fallback:(int)value{
+- (int)intForKey:(NSString *)key fallback:(int)value {
     id obj = [self valueForKey:key];
     if (obj && ([obj isKindOfClass:[NSNumber class]] || [obj isKindOfClass:[NSString class]])) {
         NSNumber *number = obj;

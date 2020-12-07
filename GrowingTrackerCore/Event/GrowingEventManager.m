@@ -39,6 +39,7 @@
 #import "GrowingTrackConfiguration.h"
 #import "GrowingPersistenceDataProvider.h"
 #import "GrowingSession.h"
+#import "NSDictionary+GrowingHelper.h"
 
 static NSUInteger const kGrowingMaxQueueSize = 10000; // default: max event queue size there are 10000 events
 static NSUInteger const kGrowingFillQueueSize = 1000; // default: determine when event queue is filled from DB
@@ -277,7 +278,7 @@ static GrowingEventManager *shareinstance = nil;
 //}
 
 - (void)writeToDatabaseWithEvent:(GrowingBaseEvent *)event {
-    GIOLogDebug(@"Save event, event type is %@\n %@", event.eventType, event.toDictionary);
+    GIOLogDebug(@"save: event, type is %@\n%@", event.eventType, [event.toDictionary growingHelper_beautifulJsonString]);
     NSString *eventType = event.eventType;
 
     if (!event) {return;}
