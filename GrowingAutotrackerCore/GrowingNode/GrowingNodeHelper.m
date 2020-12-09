@@ -24,6 +24,10 @@
 #import "GrowingPageGroup.h"
 #import "UIViewController+GrowingPageHelper.h"
 #import "GrowingCocoaLumberjack.h"
+#import "NSString+GrowingHelper.h"
+#import "UIView+GrowingHelper.h"
+#import "UIViewController+GrowingNode.h"
+
 
 static NSString * const kGrowingNodeRootPage = @"Page";
 static NSString * const kGrowingNodeRootIgnore = @"IgnorePage";
@@ -49,7 +53,10 @@ static NSString * const kGrowingNodeRootIgnore = @"IgnorePage";
     return nil;
 }
 
-+ (NSString *)xPathForView:(UIView *)view similar:(BOOL)isSimilar{
+/// 获取某个view的xpath
+/// @param view 节点
+/// @param isSimilar 是否返回相似路径
++ (NSString *)xPathForView:(UIView *)view similar:(BOOL)isSimilar {
     NSMutableArray *viewPathArray = [NSMutableArray array];
     id<GrowingNode> node = view;
     
@@ -97,5 +104,102 @@ static NSString * const kGrowingNodeRootIgnore = @"IgnorePage";
     return page.path;
 }
 
+
++ (NSString *)buildElementContentForNode:(id<GrowingNode> _Nonnull)view {
+    NSString *content = [view growingNodeContent];
+    if (!content) {
+        content = @"";
+    } else if ([content isKindOfClass:NSDictionary.class]) {
+        content = [[(NSDictionary *)content allValues] componentsJoinedByString:@""];
+    } else if ([content isKindOfClass:NSArray.class]) {
+        content = [(NSArray *)content componentsJoinedByString:@""];
+    } else {
+        content = content.description;
+    }
+
+    if (![content isKindOfClass:NSString.class]) {
+        content = @"";
+    }
+
+    content = [content growingHelper_safeSubStringWithLength:100];
+
+    if (content.growingHelper_isLegal) {
+        content = @"";
+    } else {
+        content = content.growingHelper_encryptString;
+    }
+
+    return content;
+}
+
++ (GrowingViewNode *)getViewNode:(UIView *)view {
+    NSPointerArray *weakArray = [NSPointerArray weakObjectsPointerArray];
+    GrowingViewNode *viewNode = [self getTopViewNode:view array:weakArray];
+    for (int i = weakArray.count - 2; i >= 0; i--) {
+        viewNode = [viewNode appendNode:(UIView *)[weakArray pointerAtIndex:i] isRecalculate:NO];
+    }
+    return viewNode;
+}
+
++ (GrowingViewNode *)getTopViewNode:(UIView *)view array:(NSPointerArray *)weakArray {
+    if (weakArray == nil) {
+        weakArray = [NSPointerArray weakObjectsPointerArray];
+    }
+    
+    UIView *parent = view;
+    do {
+        [weakArray addPointer:(void*)parent];
+        parent = parent.growingNodeParent;
+    } while ([parent isKindOfClass:[UIView class]]);
+    
+    UIView *rootview = [weakArray pointerAtIndex:weakArray.count - 1];
+    NSString *xpath = nil;
+    NSString *originXPath = nil;
+    
+    xpath = [self xPathForView:rootview similar:YES];
+    originXPath = [self xPathForView:rootview similar:NO];
+    return GrowingViewNode.builder
+    .setView(rootview)
+    .setIndex(-1)
+    .setViewContent([self buildElementContentForNode:rootview])
+    .setXPath(xpath)
+    .setOriginXPath(originXPath)
+    .setNodeType([self getViewNodeType:rootview])
+    .build;
+}
+
+
+//文本
+static NSString *const kGrowingViewNodeText = @"TEXT";
+//按钮
+static NSString *const kGrowingViewNodeButton = @"BUTTON";
+//输入框
+static NSString *const kGrowingViewNodeInput = @"INPUT";
+//列表元素 - 这里指TableView中的cell元素
+static NSString *const kGrowingViewNodeList = @"LIST";
+// WKWebView - webview只做标记用，不参与元素定义。
+static NSString *const kGrowingViewNodeWebView = @"WEB_VIEW";
+
++ (NSString *)getViewNodeType:(UIView *)view {
+    // 1. 默认 TEXT
+    // 2. 判断特殊类型 并赋值
+    // 3. 不属于上述类型，且可以点击，则为 BUTTON
+    // 4. 否则以 TEXT 传入
+    NSString *nodetype = kGrowingViewNodeText;
+    if ([view isKindOfClass:NSClassFromString(@"_UIButtonBarButton")] ||
+        [view isKindOfClass:NSClassFromString(@"_UIModernBarButton")]) {
+        nodetype = kGrowingViewNodeButton;
+    } else if ([view isKindOfClass:[UITextField class]] || [view isKindOfClass:[UISearchBar class]] ||
+               [view isKindOfClass:[UITextView class]]) {
+        nodetype = kGrowingViewNodeInput;
+    } else if ([view isKindOfClass:[UICollectionViewCell class]] || [view isKindOfClass:[UITableViewCell class]]) {
+        nodetype = kGrowingViewNodeList;
+    } else if ([view isKindOfClass:NSClassFromString(@"WKWebView")]) {
+        nodetype = kGrowingViewNodeWebView;
+    } else if ([view growingNodeUserInteraction]) {
+        nodetype = kGrowingViewNodeButton;
+    }
+    return nodetype;
+}
 
 @end

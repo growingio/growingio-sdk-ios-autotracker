@@ -20,6 +20,7 @@
 
 #import "GrowingPageManager.h"
 #import "UIWindow+GrowingNode.h"
+#import "GrowingNode.h"
 
 @implementation UIWindow (GrowingNode)
 
@@ -27,7 +28,7 @@
     if (self.superview) {
         return self.superview;
     } else {
-        return [GrowingRootNode rootNode];
+        return nil;
     }
 }
 

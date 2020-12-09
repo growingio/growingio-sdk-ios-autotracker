@@ -33,6 +33,7 @@
 #import "GrowingConfigurationManager.h"
 #import "GrowingTrackConfiguration+GrowingAutotracker.h"
 #import "GrowingRealAutotracker.h"
+#import "GrowingNode.h"
 @interface GrowingMaskView : UIImageView
 @end
 
@@ -77,7 +78,8 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
 
     NSInteger count = 0;
     NSInteger index = -1;
-    for (UIResponder *res in subResponder) {
+    for (int i = 0; i < subResponder.count; i ++) {
+        UIResponder *res = subResponder[i];
         if ([classString isEqualToString:NSStringFromClass(res.class)]) {
             count++;
         }

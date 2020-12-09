@@ -30,9 +30,6 @@
 #import "GrowingEventOptions.h"
 #import "GrowingEventChannel.h"
 #import "GrowingCocoaLumberjack.h"
-#import "GrowingEventPVRequest.h"
-#import "GrowingEventCstmRequest.h"
-#import "GrowingEventOtherRequest.h"
 #import "GrowingNetworkManager.h"
 #import "GrowingBaseEvent+SendPolicy.h"
 #import "GrowingConfigurationManager.h"
@@ -40,6 +37,7 @@
 #import "GrowingPersistenceDataProvider.h"
 #import "GrowingSession.h"
 #import "NSDictionary+GrowingHelper.h"
+#import "GrowingEventRequest.h"
 
 static NSUInteger const kGrowingMaxQueueSize = 10000; // default: max event queue size there are 10000 events
 static NSUInteger const kGrowingFillQueueSize = 1000; // default: determine when event queue is filled from DB
@@ -116,18 +114,15 @@ static GrowingEventManager *shareinstance = nil;
             self.timingEventDB = [GrowingEventDataBase databaseWithPath:[GrowingFileStorage getTimingDatabasePath]
                                                                    name:[name stringByAppendingString:@"timingevent"]];
             self.timingEventDB.autoFlushCount = kGrowingMaxDBCacheSize;
-
             self.realtimeEventDB = [GrowingEventDataBase databaseWithPath:[GrowingFileStorage getRealtimeDatabasePath]
                                                                      name:[name stringByAppendingString:@"realtimevent"]];
 
             [self.timingEventDB vacuum];
-
             [self cleanExpiredData_unsafe];
         }];
 
         // timer
         self.reportTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, self.eventDispatch);
-//        CGFloat configInterval = [GrowingInstance sharedInstance].configuration.dataUploadInterval;
         CGFloat configInterval = 0;
         CGFloat dataUploadInterval = configInterval >= 5 ? configInterval : 5; // at least 5 seconds
         dispatch_source_set_timer(self.reportTimer,
@@ -234,52 +229,6 @@ static GrowingEventManager *shareinstance = nil;
         [self writeToDatabaseWithEvent:event];
     }];
 }
-
-//- (void)handleEvent:(GrowingBaseEvent *)event {
-//    GrowingBaseEvent *dbEvent = event;
-//    // cstm按函数实际触发为标准
-//    if ([event.eventType isEqualToString:GrowingEventTypeCustom] && [UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
-//        __weak GrowingEventManager *weakSelf = self;
-//        [GrowingDispatchManager dispatchInLowThread:^{
-//            GrowingEventManager *strongSelf = weakSelf;
-//            [strongSelf writeToDatabaseWithEvent:dbEvent];
-//        }];
-//        return;
-//    }
-//
-//    // 因为在app被kill之后,iOS有技术手段可以唤醒app(此时app会relaunched触发vc生命周期,但不会调用didBecomeActive)
-//    // 所以在becomeActive之前 把产生的event缓存起来(因app唤醒后,再到用户打开之前,不确定app是否是被杀掉的),所以需要把之前缓存事件的tm ptm s字段改写,防止访问时长的问题
-//    if (self.shouldCacheEvent) {
-//
-//        [self.cacheArray addObject:dbEvent];
-//
-//    } else {
-//        static BOOL resetPagetm = NO;
-//        //TODO:处理特别情况
-////        if (!resetPagetm && [GrowingEventManager shareInstance].lastPageEvent) {
-////            GrowingPageEvent *lastPageEvent = [GrowingEventManager shareInstance].lastPageEvent;
-////            lastPageEvent.timestamp = event.timestamp;
-////            lastPageEvent.sessionId = event.sessionId;
-////        }
-//        resetPagetm = YES;
-//
-//        __weak GrowingEventManager *weakSelf = self;
-//        [GrowingDispatchManager dispatchInLowThread:^{
-//            GrowingEventManager *strongSelf = weakSelf;
-//            if (strongSelf.cacheArray.count) {
-////                for (GrowingBaseEvent *cacheEvent in strongSelf.cacheArray) {
-////                    cacheEvent.timestamp = dbEvent.timestamp;
-////                    cacheEvent.sessionId = dbEvent.sessionId;
-////
-////                    [strongSelf writeToDatabaseWithEvent:cacheEvent];
-////                }
-//
-//                [strongSelf.cacheArray removeAllObjects];
-//            }
-//            [strongSelf writeToDatabaseWithEvent:dbEvent];
-//        }];
-//    }
-//}
 
 - (void)writeToDatabaseWithEvent:(GrowingBaseEvent *)event {
     GIOLogDebug(@"save: event, type is %@\n%@", event.eventType, [event.toDictionary growingHelper_beautifulJsonString]);
@@ -400,14 +349,7 @@ static GrowingEventManager *shareinstance = nil;
 #endif
 
     GrowingEventRequest *eventRequest = nil;
-    if (channel.isCustomEvent) {
-        eventRequest = [[GrowingEventCstmRequest alloc] initWithEvents:rawEvents];
-    } else if (!channel.isCustomEvent && channel != self.otherEventChannel) {
-        eventRequest = [[GrowingEventPVRequest alloc] initWithEvents:rawEvents];
-    } else {
-        eventRequest = [[GrowingEventOtherRequest alloc] initWithEvents:rawEvents];
-    }
-
+    eventRequest = [[GrowingEventRequest alloc] initWithEvents:rawEvents];
     [[GrowingNetworkManager shareManager] sendRequest:eventRequest
                                               success:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data) {
 

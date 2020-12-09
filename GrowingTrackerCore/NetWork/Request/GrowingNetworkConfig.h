@@ -22,7 +22,7 @@
 
 #ifndef GrowingConstApi_h
 #define GrowingConstApi_h
-
+#define kGrowingEventApiTemplate @"v3/%@/ios/collect?stm=%llu"
 #define kGrowingEventApiTemplate_Custom @"v3/%@/ios/cstm?stm=%llu"
 #define kGrowingEventApiTemplate_PV @"v3/%@/ios/pv?stm=%llu"
 #define kGrowingEventApiTemplate_Imp @"v3/%@/ios/imp?stm=%llu"

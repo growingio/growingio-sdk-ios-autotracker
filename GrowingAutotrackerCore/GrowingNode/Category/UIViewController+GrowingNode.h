@@ -20,7 +20,7 @@
 
 #import <UIKit/UIKit.h>
 #import "GrowingRealAutotracker.h"
-#import "GrowingNodeManager.h"
+#import "GrowingNodeProtocol.h"
 
 @interface UIViewController (GrowingNode) <GrowingNode>
 

@@ -87,6 +87,10 @@
     return [super growingNodeDonotCircle];
 }
 
+- (BOOL)growingNodeUserInteraction {
+    return YES;
+}
+
 - (BOOL)growingViewUserInteraction {
     return YES;
 }
@@ -128,6 +132,14 @@
 
 - (BOOL)growingNodeDonotCircle {
     return [super growingNodeDonotCircle];
+}
+
+- (BOOL)growingNodeUserInteraction {
+    return YES;
+}
+
+- (BOOL)growingViewUserInteraction {
+    return YES;
 }
 
 @end

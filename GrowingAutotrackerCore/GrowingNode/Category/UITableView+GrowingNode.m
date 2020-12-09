@@ -28,6 +28,12 @@
     // 对于collectionView我们仅需要返回可见cell
     NSMutableArray *childs = [NSMutableArray array];
     [childs addObjectsFromArray:self.visibleCells];
+    if (self.tableFooterView) {
+        [childs addObject:self.tableFooterView];
+    }
+    if (self.tableHeaderView) {
+        [childs addObject:self.tableHeaderView];
+    }
     return childs;
 }
 
