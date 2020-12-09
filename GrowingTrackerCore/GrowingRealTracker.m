@@ -43,7 +43,6 @@ const int GrowingTrackerVersionCode = 30000;
         GrowingConfigurationManager.sharedInstance.trackConfiguration = self.configuration;
         [GrowingAppLifecycle.sharedInstance setupAppStateNotification];
         [GrowingSession startSession];
-        [[GrowingSession currentSession] addUserIdChangedDelegate:self];
     }
 
     return self;

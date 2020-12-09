@@ -61,19 +61,21 @@
 - (instancetype)init {
     
     if (self = [super init]) {
-        GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
         _timestamp = [GrowingTimeUtil currentTimeMillis];
-        _domain = deviceInfo.bundleID;
-        _deviceId = deviceInfo.deviceIDString ?: @"";
-        _urlScheme = deviceInfo.urlScheme;
-        _platform = deviceInfo.platform;
-        _platformVersion = deviceInfo.platformVersion;
     }
     return self;
 }
 //赋值属性，eg:deviceId,userId,sessionId,globalSequenceId,eventSequenceId
 - (void)readPropertyInMainThread {
     _appState = [UIApplication sharedApplication].applicationState == UIApplicationStateActive ? 0 : 1;
+
+    GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
+    _domain = deviceInfo.bundleID;
+    _deviceId = deviceInfo.deviceIDString ?: @"";
+    _urlScheme = deviceInfo.urlScheme;
+    _platform = deviceInfo.platform;
+    _platformVersion = deviceInfo.platformVersion;
+
     GrowingEventSequenceObject *sequence = [[GrowingPersistenceDataProvider sharedInstance] getAndIncrement:self.eventType];
     _globalSequenceId = sequence.globalId;
     _eventSequenceId = sequence.eventTypeId;

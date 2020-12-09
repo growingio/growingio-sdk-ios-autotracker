@@ -27,6 +27,7 @@
 - (id)growingHelper_jsonObject;
 
 - (NSDictionary *)growingHelper_dictionaryObject;
+
 - (NSDictionary *)growingHelper_queryObject;
 
 - (NSString *)growingHelper_safeSubStringWithLength:(NSInteger)length;
@@ -47,5 +48,7 @@
 - (NSString *)absoluteURLStringWithPath:(NSString *)path andQuery:(NSDictionary *)query;
 
 - (NSDictionary *)convertToDictFromPasteboard;
+
++ (BOOL)growingHelper_isEqualStringA:(NSString *)strA andStringB:(NSString *)strB;
 
 @end

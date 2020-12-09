@@ -97,6 +97,11 @@ static GrowingSession *currentSession = nil;
 }
 
 - (void)setLoginUserId:(NSString *)loginUserId {
+    if ([NSString growingHelper_isEqualStringA:loginUserId andStringB:self.loginUserId]) {
+        GIOLogWarn(@"setLoginUserId, but loginUserId is equal");
+        return;
+    }
+
     NSString *oldUserId = _loginUserId.copy;
     _loginUserId = loginUserId.copy;
     // loginUserId 持久化
@@ -138,6 +143,7 @@ static GrowingSession *currentSession = nil;
     _latitude = latitude;
     _longitude = longitude;
 }
+
 /// 清除地理位置
 - (void)cleanLocation {
     _latitude = 0;

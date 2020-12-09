@@ -29,13 +29,13 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\[]{},
 
 @implementation NSString (GrowingHelper)
 
-- (NSString*)growingHelper_safeSubStringWithLength:(NSInteger)length {
+- (NSString *)growingHelper_safeSubStringWithLength:(NSInteger)length {
     if (self.length <= length) {
         return self;
     }
-    
+
     NSRange range;
-    for(int i = 0 ; i < self.length ; i += range.length) {
+    for (int i = 0; i < self.length; i += range.length) {
         range = [self rangeOfComposedCharacterSequenceAtIndex:i];
         if (range.location + range.length > length) {
             return [self substringToIndex:range.location];
@@ -44,7 +44,7 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\[]{},
     return self;
 }
 
-- (NSData*)growingHelper_uft8Data {
+- (NSData *)growingHelper_uft8Data {
     return [self dataUsingEncoding:NSUTF8StringEncoding];
 }
 
@@ -54,7 +54,7 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\[]{},
 
 - (NSDictionary *)growingHelper_dictionaryObject {
     id dict = [self growingHelper_jsonObject];
-    if ([dict isKindOfClass:[NSDictionary class]]){
+    if ([dict isKindOfClass:[NSDictionary class]]) {
         return dict;
     } else {
         return nil;
@@ -65,7 +65,7 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\[]{},
     NSData *data = [self dataUsingEncoding:NSUTF8StringEncoding];
     uint8_t digest[CC_SHA1_DIGEST_LENGTH];
 
-    CC_SHA1(data.bytes, (CC_LONG)data.length, digest);
+    CC_SHA1(data.bytes, (CC_LONG) data.length, digest);
 
     NSMutableString *output = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 2];
 
@@ -77,10 +77,10 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\[]{},
 }
 
 - (BOOL)growingHelper_isLegal {
-    if (self.length != 1) { return NO; }
-    
+    if (self.length != 1) {return NO;}
+
     unichar character = [self characterAtIndex:0];
-    
+
     BOOL isNum = isdigit(character);
     BOOL isLetter = (character >= 'a' && character <= 'z') || (character >= 'A' && character <= 'Z');
     BOOL isSpecialCharacter = ([kGrowingSpecialCharactersString rangeOfString:self].location != NSNotFound);
@@ -92,18 +92,18 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\[]{},
 }
 
 - (BOOL)growingHelper_isValidU {
-    if (!self.length) { return NO; }
-    
+    if (!self.length) {return NO;}
+
     NSArray *stringArray = [self componentsSeparatedByString:@"-"];
-    
+
     for (NSString *string in stringArray) {
-        NSString *zero = [NSString stringWithFormat:@"0{%lu}", (unsigned long)string.length];
-        NSPredicate *zeroPre = [NSPredicate predicateWithFormat:@"SELF MATCHES %@",zero];
+        NSString *zero = [NSString stringWithFormat:@"0{%lu}", (unsigned long) string.length];
+        NSPredicate *zeroPre = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", zero];
         if (![zeroPre evaluateWithObject:string]) {
             return YES;
         }
     }
-    
+
     return NO;
 }
 
@@ -120,7 +120,7 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\[]{},
     if (!obj || ![NSJSONSerialization isValidJSONObject:obj]) {
         return nil;
     }
-    
+
     NSData *data = nil;
     @autoreleasepool {
         data = [obj growingHelper_jsonData];
@@ -144,11 +144,11 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\[]{},
 }
 
 - (NSDictionary *)growingHelper_queryObject {
-    if (self.length == 0) { return nil; }
-    
+    if (self.length == 0) {return nil;}
+
     NSArray *stringArray = [self componentsSeparatedByString:@"&"];
-    if (stringArray.count == 0) { return nil; }
-    
+    if (stringArray.count == 0) {return nil;}
+
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     for (NSString *string in stringArray) {
         NSArray *keyValueArray = [string componentsSeparatedByString:@"="];
@@ -161,25 +161,25 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\[]{},
 }
 
 - (NSString *)absoluteURLStringWithPath:(NSString *)path andQuery:(NSDictionary *)query {
-    
+
     NSString *baseUrl = self;
-    
+
     BOOL baseHasSuffix = [baseUrl hasSuffix:@"/"];
     BOOL pathHasPrefix = [path hasPrefix:@"/"];
-    
+
     if (baseHasSuffix && pathHasPrefix) {
         baseUrl = [baseUrl substringWithRange:NSMakeRange(0, [baseUrl length] - 1)];
     } else if (!baseHasSuffix && !pathHasPrefix) {
         baseUrl = [baseUrl stringByAppendingString:@"/"];
     }
-    
+
     NSString *absoluteURLString = [baseUrl stringByAppendingString:path.length ? path : @""];
     if (query.count > 0) {
         NSString *queryString = query.growingHelper_queryString;
         queryString = [@"?" stringByAppendingString:queryString];
         absoluteURLString = [absoluteURLString stringByAppendingString:queryString];
     }
-    
+
     return absoluteURLString;;
 }
 
@@ -187,43 +187,43 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\[]{},
     if (self.length > 2000 * 16) {
         return nil;
     }
-    
+
     NSString *binaryList = @"";
-    
+
     for (int i = 0; i < self.length; i++) {
         char a = [self characterAtIndex:i];
         NSString *charString = @"";
-        if (a == (char)020014) {
+        if (a == (char) 020014) {
             charString = @"0";
         } else {
             charString = @"1";
         }
         binaryList = [binaryList stringByAppendingString:charString];
     }
-    
+
     NSInteger binaryListLength = binaryList.length;
-    
+
     NSInteger SINGLE_CHAR_LENGTH = 16;
-    
+
     if (binaryListLength % SINGLE_CHAR_LENGTH != 0) {
         return nil;
     }
-    
+
     NSMutableArray *bs = [NSMutableArray array];
-    
+
     int i = 0;
     while (i < binaryListLength) {
         [bs addObject:[binaryList substringWithRange:NSMakeRange(i, SINGLE_CHAR_LENGTH)]];
         i += SINGLE_CHAR_LENGTH;
     }
-    
+
     NSString *listString = @"";
-    
+
     for (int i = 0; i < bs.count; i++) {
         NSString *partString = bs[i];
         long long part = [partString longLongValue];
         int partInt = [self convertBinaryToDecimal:part];
-        listString = [listString stringByAppendingString:[NSString stringWithFormat:@"%C", (unichar)partInt]];
+        listString = [listString stringByAppendingString:[NSString stringWithFormat:@"%C", (unichar) partInt]];
     }
     NSDictionary *dict = listString.growingHelper_jsonObject;
     return [dict isKindOfClass:[NSDictionary class]] ? dict : nil;
@@ -232,12 +232,20 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\[]{},
 - (int)convertBinaryToDecimal:(long long)n {
     int decimalNumber = 0, i = 0, remainder;
     while (n != 0) {
-        remainder = n%10;
+        remainder = n % 10;
         n /= 10;
-        decimalNumber += remainder*pow(2,i);
+        decimalNumber += remainder * pow(2, i);
         ++i;
     }
     return decimalNumber;
+}
+
++ (BOOL)growingHelper_isEqualStringA:(NSString *)strA andStringB:(NSString *)strB {
+    if ([self growingHelper_isBlankString:strA]) {
+        return [self growingHelper_isBlankString:strB];
+    } else {
+        return [strA isEqualToString:strB];
+    }
 }
 
 @end
