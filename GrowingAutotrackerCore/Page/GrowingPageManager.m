@@ -275,7 +275,6 @@
     }
     if (!page && last) {
         page = [last growingPageHelper_getPageObject];
-//        NSAssert(page, @"error: page is nil");
     }
     return page;
 }
