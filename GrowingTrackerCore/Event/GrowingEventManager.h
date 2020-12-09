@@ -27,6 +27,8 @@
 //拦截者做额外处理
 @protocol GrowingEventInterceptor <NSObject>
 @optional
+//事件被触发
+- (void)growingEventManagerEventTriggered:(NSString * _Nullable)eventType;
 //在未完成构造event前，返回builder
 - (void)growingEventManagerEventWillBuild:(GrowingBaseBuilder* _Nullable)builder;
 //在完成构造event之后，返回event
