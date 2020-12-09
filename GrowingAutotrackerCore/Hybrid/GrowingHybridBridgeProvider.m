@@ -120,10 +120,8 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
     //方法不会阻塞线程，而且它的回调代码块总是在主线程中运行。
     [webView evaluateJavaScript:javaScript completionHandler:^(id _Nullable result, NSError *error) {
         if ([result isKindOfClass:[NSDictionary class]]) {
-//            completionHandler(result, error);
             resultDic = result;
         } else {
-//            completionHandler(nil, error);
             resultError = error;
         }
         finished = YES;

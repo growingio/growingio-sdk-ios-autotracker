@@ -24,7 +24,8 @@
 #import "GrowingRequestAdapter.h"
 #import "GrowingRequestAdapter.h"
 #import "NSString+GrowingHelper.h"
-
+#import "GrowingConfigurationManager.h"
+#import "GrowingTimeUtil.h"
 @interface GrowingEventRequest ()
 
 @property (nonatomic, strong) NSArray <NSString *> *events;
@@ -38,7 +39,7 @@
 - (instancetype)initWithEvents:(NSArray<NSString *> *)events {
     if (self = [super init]) {
         self.events = events;
-//        self.stm = GROWGetTimestamp().unsignedLongLongValue;
+        self.stm = [GrowingTimeUtil currentTimeMillis];
     }
     return self;
 }
@@ -58,8 +59,11 @@
 }
 
 - (NSString *)path {
-    return nil;
+    NSString *accountId = [GrowingConfigurationManager sharedInstance].trackConfiguration.projectId ? : @"";
+    NSString *path = [NSString stringWithFormat:@"v3/%@/ios/collect", accountId];
+    return path;
 }
+
 
 - (NSArray<id<GrowingRequestAdapter>> *)adapters {
     GrowingEventRequestHeaderAdapter *eventHeaderAdapter = [[GrowingEventRequestHeaderAdapter alloc] init];

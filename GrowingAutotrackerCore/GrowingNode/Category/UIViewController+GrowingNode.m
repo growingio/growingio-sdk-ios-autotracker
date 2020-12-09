@@ -34,6 +34,7 @@
 #import "UIApplication+GrowingNode.h"
 #import "GrowingRealAutotracker.h"
 #import "GrowingPrivateCategory.h"
+#import "GrowingNode.h"
 
 @implementation UIViewController (GrowingNode)
 

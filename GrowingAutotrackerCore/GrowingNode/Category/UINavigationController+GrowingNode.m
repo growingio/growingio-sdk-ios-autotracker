@@ -47,7 +47,6 @@
     if (self.isViewLoaded && [self.navigationBar growingImpNodeIsVisible]) {
         [childs addObject:self.navigationBar];
     }
-    
     return childs;
 }
 

@@ -21,14 +21,14 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#import "GrowingNodeManager.h"
+#import "GrowingNodeProtocol.h"
 
 @interface UIView (GrowingNode) <GrowingNode>
 
 @property (nonatomic, assign) BOOL growingIMPTracked;
 @property (nonatomic, copy) NSString *growingIMPTrackEventName;
 @property (nonatomic, strong) NSDictionary *growingIMPTrackVariable;
-
+@property (nonatomic, copy) NSString *growingUniqueTag;
 - (BOOL)growingViewUserInteraction;
 - (NSString *)growingViewContent;
 

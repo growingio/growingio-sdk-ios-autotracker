@@ -46,7 +46,7 @@
     unsigned int count = 0;
     Method *methods = class_copyMethodList(self, &count);
     NSMutableArray *classes = [[NSMutableArray alloc] init];
-    Class clazz = NSClassFromString([NSString stringWithFormat:@"UI%@ment",@"Seg"]);
+    Class clazz = NSClassFromString(@"UISegment");
     if (clazz) {
         [classes addObject:clazz];
     }
@@ -75,6 +75,21 @@
 - (NSArray<id<GrowingNode>>*)growingNodeChilds {
     return nil;
 }
+
+- (NSString *)growingNodeSubSimilarPath {
+    //如果手动标识了该view,返回标识
+    if ([self respondsToSelector:@selector(growingUniqueTag)]) {
+        if (self.growingUniqueTag.length > 0) {
+            return self.growingUniqueTag;
+        }
+    }
+    
+    NSString *className = NSStringFromClass(self.class);
+    return index < 0
+               ? className
+               : [NSString stringWithFormat:@"%@[-]", className];
+}
+
 
 - (NSString*)growingNodeContent
 {

@@ -23,6 +23,7 @@
 #import "GrowingViewElementEvent.h"
 #import "GrowingViewNode.h"
 #import "GrowingPageManager.h"
+#import "GrowingNodeHelper.h"
 @implementation GrowingViewChangeProvider
 
 + (void)viewOnChange:(UIView *)view {
@@ -30,7 +31,7 @@
     if (!page) {
         page = [[GrowingPageManager sharedInstance] currentPage];
     }
-    GrowingViewNode *node = [[GrowingViewNode alloc] initWithNode:view];
+    GrowingViewNode *node = [GrowingNodeHelper getViewNode:view];
     [self sendChangeEvent:page viewNode:node];
 }
 
@@ -40,7 +41,7 @@
      .setPageShowTimestamp(page.showTimestamp)
      .setXpath(node.xPath)
      .setIndex(node.index)
-     .setTextValue(node.textValue)];
+     .setTextValue(node.viewContent)];
 }
 
 @end
