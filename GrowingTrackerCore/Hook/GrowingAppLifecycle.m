@@ -5,7 +5,7 @@
 #import "GrowingAppLifecycle.h"
 
 @interface GrowingAppLifecycle ()
-@property(strong, nonatomic, readonly) NSHashTable *appLifecycleDelegates;
+@property(strong, nonatomic, readonly) NSPointerArray *appLifecycleDelegates;
 @property(strong, nonatomic, readonly) NSLock *delegateLock;
 @end
 
@@ -13,7 +13,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _appLifecycleDelegates = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+        _appLifecycleDelegates = [NSPointerArray pointerArrayWithOptions:NSPointerFunctionsWeakMemory];
         _delegateLock = [[NSLock alloc] init];
     }
 
@@ -114,13 +114,35 @@
 
 - (void)addAppLifecycleDelegate:(id)delegate {
     [self.delegateLock lock];
-    [self.appLifecycleDelegates addObject:delegate];
+    BOOL isfind = NO;
+    for (id obj in self.appLifecycleDelegates) {
+        if ([delegate isEqual:obj]) {
+            isfind = YES;
+            break;
+        }
+    }
+    if (!isfind) {
+        [self.appLifecycleDelegates addPointer:(void*)delegate];
+    }
     [self.delegateLock unlock];
 }
 
 - (void)removeAppLifecycleDelegate:(id)delegate {
     [self.delegateLock lock];
-    [self.appLifecycleDelegates removeObject:delegate];
+    int index = -1;
+    for (int i = 0; i < self.appLifecycleDelegates.count; i ++) {
+        id obj = (id)[self.appLifecycleDelegates pointerAtIndex:i];
+        if ([obj isEqual:delegate]) {
+            index = i;
+            break;
+        }
+    }
+    if (index >= 0) {
+        [self.appLifecycleDelegates removePointerAtIndex:index];
+        //must addPointer:NULL before compact
+        [self.appLifecycleDelegates addPointer:NULL];
+        [self.appLifecycleDelegates compact];
+    }
     [self.delegateLock unlock];
 }
 

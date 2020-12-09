@@ -256,7 +256,7 @@ static GrowingWebCircle *shareInstance = nil;
     UIView *node = viewNode.view;
     if ([node growingNodeUserInteraction] || [node isKindOfClass:NSClassFromString(@"WKWebView")]) {
         if ([node growingNodeDonotTrack] || [node growingNodeDonotCircle]) {
-            GIOLogDebug(@"过滤节点:%@,DontTrack:%d,DontCircle:%d",[node class],[node growingNodeDonotTrack],[node growingNodeDonotCircle]);
+            GIOLogDebug(@"圈选过滤节点:%@,DontTrack:%d,DontCircle:%d",[node class],[node growingNodeDonotTrack],[node growingNodeDonotCircle]);
         } else {
             NSMutableDictionary *dict = [self dictFromNode:viewNode];
             if ([viewNode.view isKindOfClass:NSClassFromString(@"WKWebView")]) {
@@ -468,6 +468,24 @@ static GrowingWebCircle *shareInstance = nil;
     lastRect = rect;
 }
 
+- (void)start {
+    [self remoteReady];
+    self.statusWindow.statusLable.text = @"正在进行GrowingIO移动端圈选";
+    self.statusWindow.statusLable.textAlignment = NSTextAlignmentCenter;
+    if (self.onReadyBlock) {
+        self.onReadyBlock();
+        self.onReadyBlock = nil;
+    }
+    //序列号置零
+    _snapNumber = 0;
+    self.isReady = YES;
+    // Hybird的布局改变回调代理设置
+    [GrowingHybridBridgeProvider sharedInstance].domChangedDelegate = self;
+    //监听原生事件，变动时发送
+    [[GrowingEventManager shareInstance] addInterceptor:self];
+    [GrowingViewControllerLifecycle.sharedInstance addViewControllerLifecycleDelegate:self];
+}
+
 - (void)stop {
     GIOLogDebug(@"开始断开连接");
     NSDictionary *dict = @{@"msgType" : @"quit"};
@@ -506,6 +524,9 @@ static GrowingWebCircle *shareInstance = nil;
         [alert addOkWithTitle:@"知道了" handler:nil];
         [alert showAlertAnimated:NO];
     }
+    
+    [[GrowingEventManager shareInstance] removeInterceptor:self];
+    [GrowingViewControllerLifecycle.sharedInstance removeViewControllerLifecycleDelegate:self];
 }
 
 - (BOOL)isRunning {
@@ -529,24 +550,7 @@ static GrowingWebCircle *shareInstance = nil;
 
         //如果收到了ready消息，说明可以发送圈选数据了
         if ([[dict objectForKey:@"msgType"] isEqualToString:@"ready"]) {
-            [self remoteReady];
-            self.statusWindow.statusLable.text = @"正在进行GrowingIO移动端圈选";
-            self.statusWindow.statusLable.textAlignment = NSTextAlignmentCenter;
-            if (self.onReadyBlock) {
-                self.onReadyBlock();
-                self.onReadyBlock = nil;
-            }
-            //序列号置零
-            _snapNumber = 0;
-            self.isReady = YES;
-            // Hybird的布局改变回调代理设置
-            [GrowingHybridBridgeProvider sharedInstance].domChangedDelegate = self;
-            //监听原生事件，变动时发送
-            [[GrowingEventManager shareInstance] addInterceptor:self];
-            // webSocket连接成功的速度比viewDidAppear慢,因此page事件没有发送成功
-            //解决方式在webSocket链接成功后 再发一次page事件
-            [[GrowingPageManager sharedInstance]
-                createdViewControllerPage:[[GrowingPageManager sharedInstance] currentViewController]];
+            [self start];
         }
         // 版本号不适配web圈选
         if ([[dict objectForKey:@"msgType"] isEqualToString:@"incompatible_version"]) {
@@ -565,6 +569,8 @@ static GrowingWebCircle *shareInstance = nil;
         }
     }
 }
+
+#pragma mark - websocket delegate
 
 - (void)webSocketDidOpen:(GrowingSRWebSocket *)webSocket {
     GIOLogDebug(@"websocket已连接");
@@ -612,12 +618,20 @@ static GrowingWebCircle *shareInstance = nil;
     [self sendScreenShot];
 }
 
+#pragma mark - ViewController LifeCycle
+//界面出现时发送截图
+- (void)viewControllerDidAppear:(UIViewController *)controller {
+    if (self.isReady) {
+        [self sendScreenShotWithCallback:nil];
+    }
+}
+
 #pragma mark - GrowingEventManagerObserver
 
 - (void)growingEventManagerEventDidBuild:(GrowingBaseEvent* _Nullable)event {
     //this call back run in main thread
     //so not use lock
-    if (event && _isReady) {
+    if ([event.eventType isEqualToString:GrowingEventTypeViewClick] && _isReady) {
         [self.cachedEvents addObject:event];
         if (self.onProcessing) {
             GIOLogDebug(@"[GrowingWebCircle] onProcessing event to webcircle");
@@ -625,12 +639,11 @@ static GrowingWebCircle *shareInstance = nil;
         }
         self.onProcessing = YES;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(200 * NSEC_PER_MSEC)), dispatch_get_main_queue(), ^{
-            if (self.cachedEvents.count == 0) return;
+            if (self.cachedEvents.count == 0 || !self.isReady) return;
             NSMutableArray *eventArray = self.cachedEvents;
-            GIOLogDebug(@"[GrowingWebCircle] onProcessing count %lu",(unsigned long)eventArray.count);
             self.cachedEvents = [NSMutableArray array];
             [eventArray enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(__kindof GrowingBaseEvent*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                if ([obj.eventType isEqualToString:GrowingEventTypeViewClick] || [obj.eventType isEqualToString:GrowingEventTypePage]) {
+                if ([obj.eventType isEqualToString:GrowingEventTypeViewClick]) {
                     [self sendScreenShotWithCallback:nil];
                     *stop = YES;
                 }
@@ -640,5 +653,6 @@ static GrowingWebCircle *shareInstance = nil;
 
     }
 }
+
 
 @end
