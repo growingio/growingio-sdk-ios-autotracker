@@ -61,7 +61,7 @@
 @implementation GrowingWeakObject
 @end
 
-@interface GrowingWebCircle () <GrowingSRWebSocketDelegate, GrowingEventInterceptor,GrowingWebViewDomChangedDelegate>
+@interface GrowingWebCircle () <GrowingSRWebSocketDelegate, GrowingEventInterceptor,GrowingWebViewDomChangedDelegate,GrowingViewControllerLifecycleDelegate>
 
 //表示web和app是否同时准备好数据发送，此时表示可以发送数据
 @property (nonatomic, assign) BOOL isReady;
@@ -71,7 +71,7 @@
 
 @property (nonatomic, retain) GrowingStatusBar *statusWindow;
 
-@property (nonatomic, retain) NSMutableArray<GrowingBaseEvent *> *cachedEvents;
+@property (nonatomic, retain) NSMutableArray<NSString *> *cachedEvents;
 
 @property (nonatomic, assign) int zLevel;
 @property (nonatomic, assign) unsigned long snapNumber;  //数据发出序列号
@@ -284,7 +284,9 @@ static GrowingWebCircle *shareInstance = nil;
 - (void)fillAllViewsForWebCircle:(NSDictionary *)dataDict completion:(void (^)(NSMutableDictionary *dict))completion {
     
     NSMutableDictionary *finalDataDict = [NSMutableDictionary dictionaryWithDictionary:dataDict];
-
+    //初始化数组
+    self.elements = [NSMutableArray array];
+    
     for (UIWindow *window in [UIApplication sharedApplication].windows) {
         if (window.isKeyWindow) {
             self.zLevel = 0;
@@ -298,8 +300,10 @@ static GrowingWebCircle *shareInstance = nil;
              .setNodeType([GrowingNodeHelper getViewNodeType:window])
              .build];
             if (self.isPageDontShow) {
+                completion(nil);
                 return;
             }
+            break;
         }
     }
 
@@ -313,7 +317,6 @@ static GrowingWebCircle *shareInstance = nil;
         [pages addObject:dict];
     }
     finalDataDict[@"elements"] = self.elements;
-    self.elements = [NSMutableArray array];
     finalDataDict[@"pages"] = pages;
     if (completion != nil) {
         completion(finalDataDict);
@@ -355,7 +358,9 @@ static GrowingWebCircle *shareInstance = nil;
 }
 
 - (void)sendScreenShot {
-    [self sendScreenShotWithCallback:nil];
+    if (self.isReady) {
+        [self sendScreenShotWithCallback:nil];
+    }
 }
 
 + (void)retrieveAllElementsAsync:(void (^)(NSString *))callback {
@@ -627,12 +632,12 @@ static GrowingWebCircle *shareInstance = nil;
 }
 
 #pragma mark - GrowingEventManagerObserver
-
-- (void)growingEventManagerEventDidBuild:(GrowingBaseEvent* _Nullable)event {
+//事件被触发
+- (void)growingEventManagerEventTriggered:(NSString * _Nullable)eventType {
     //this call back run in main thread
     //so not use lock
-    if ([event.eventType isEqualToString:GrowingEventTypeViewClick] && _isReady) {
-        [self.cachedEvents addObject:event];
+    if ([eventType isEqualToString:GrowingEventTypeViewClick] && _isReady) {
+        [self.cachedEvents addObject:eventType];
         if (self.onProcessing) {
             GIOLogDebug(@"[GrowingWebCircle] onProcessing event to webcircle");
             return;
@@ -642,8 +647,8 @@ static GrowingWebCircle *shareInstance = nil;
             if (self.cachedEvents.count == 0 || !self.isReady) return;
             NSMutableArray *eventArray = self.cachedEvents;
             self.cachedEvents = [NSMutableArray array];
-            [eventArray enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(__kindof GrowingBaseEvent*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                if ([obj.eventType isEqualToString:GrowingEventTypeViewClick]) {
+            [eventArray enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(__kindof NSString*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([obj isEqualToString:GrowingEventTypeViewClick]) {
                     [self sendScreenShotWithCallback:nil];
                     *stop = YES;
                 }

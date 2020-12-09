@@ -200,6 +200,13 @@ static GrowingEventManager *shareinstance = nil;
 }
 
 - (void)postEventBuidler:(GrowingBaseBuilder *_Nullable)builder {
+    
+    for (NSObject <GrowingEventInterceptor> *obj in self.allInterceptor) {
+        if ([obj respondsToSelector:@selector(growingEventManagerEventTriggered:)]) {
+            [obj growingEventManagerEventTriggered:builder.eventType];
+        }
+    }
+    
     if (!GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionEnabled) {
         GIOLogWarn(@"Data collection is disabled, event can not build");
         return;

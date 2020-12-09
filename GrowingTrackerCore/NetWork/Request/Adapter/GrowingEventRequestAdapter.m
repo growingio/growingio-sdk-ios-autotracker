@@ -64,17 +64,18 @@
     if (!self.events.count) {
         return nil;
     }
-    
-    NSString *jsonString = [self buildJSONStringWithEvents:self.events];
-    NSData *JSONData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-    // TODO:移除lz4加密处理
-//    [JSONData growingHelper_LZ4String];
-//    JSONData = [JSONData growingHelper_xorEncryptWithHint:(self.timestamp & 0xFF)];
-    
+    NSData *JSONData = nil;
+    @autoreleasepool {
+        // jsonString malloc to much
+        NSString *jsonString = [self buildJSONStringWithEvents:self.events];
+        JSONData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+        // TODO:移除lz4加密处理
+    //    [JSONData growingHelper_LZ4String];
+    //    JSONData = [JSONData growingHelper_xorEncryptWithHint:(self.timestamp & 0xFF)];
+    }
     if (self.outsizeBlock) {
         self.outsizeBlock(JSONData.length);
     }
-    
     NSMutableURLRequest *needAdaptReq = request;
     needAdaptReq.HTTPBody = JSONData;
     
