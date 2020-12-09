@@ -42,17 +42,15 @@
 
     NSDictionary *sceneManifestDict = [[NSBundle mainBundle] infoDictionary][@"UIApplicationSceneManifest"];
 
-    // UIApplication: UI Lifecycle
-    if (!sceneManifestDict) {
+    if (sceneManifestDict && UIDevice.currentDevice.systemVersion.doubleValue >= 13.0) {
+        [self addSceneNotification];
+    } else {
         for (NSString *name in @[UIApplicationDidBecomeActiveNotification,
                 UIApplicationWillEnterForegroundNotification,
                 UIApplicationWillResignActiveNotification,
                 UIApplicationDidEnterBackgroundNotification]) {
             [nc addObserver:self selector:@selector(handleUILifecycleNotification:) name:name object:[UIApplication sharedApplication]];
         }
-    } else {
-        // UIScene
-        [self addSceneNotification];
     }
 }
 
