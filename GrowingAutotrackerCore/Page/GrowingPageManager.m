@@ -281,6 +281,9 @@
 
 - (GrowingPageGroup *)findPageByView:(UIView *)view {
     UIViewController *current = [view growingHelper_viewController];
+    if (!current) {
+        current = self.currentViewController;
+    }
     return  [self findPageByViewController:current];
 }
 
