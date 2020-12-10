@@ -443,8 +443,8 @@ static GrowingWebCircle *shareInstance = nil;
             });
             self.statusWindow.onButtonClick = ^{
                 NSString *content = [NSString
-                    stringWithFormat:@"APP版本: %@\nSDK版本: %@", [GrowingDeviceInfo currentDeviceInfo].platformVersion,
-                                     [NSString stringWithFormat:@"SDK版本: %@", GrowingTrackerVersionName]];
+                    stringWithFormat:@"APP版本: %@\nSDK版本: %@", [GrowingDeviceInfo currentDeviceInfo].appFullVersion,
+                                     GrowingTrackerVersionName];
                 GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert
                                                                    title:@"正在进行圈选"
                                                                  message:content];
