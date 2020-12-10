@@ -114,35 +114,22 @@
 
 - (void)addAppLifecycleDelegate:(id)delegate {
     [self.delegateLock lock];
-    BOOL isfind = NO;
-    for (id obj in self.appLifecycleDelegates) {
-        if ([delegate isEqual:obj]) {
-            isfind = YES;
-            break;
-        }
-    }
-    if (!isfind) {
-        [self.appLifecycleDelegates addPointer:(void*)delegate];
+    if (![self.appLifecycleDelegates.allObjects containsObject:delegate]) {
+        [self.appLifecycleDelegates addPointer:(__bridge void *)delegate];
     }
     [self.delegateLock unlock];
 }
 
 - (void)removeAppLifecycleDelegate:(id)delegate {
     [self.delegateLock lock];
-    int index = -1;
-    for (int i = 0; i < self.appLifecycleDelegates.count; i ++) {
-        id obj = (id)[self.appLifecycleDelegates pointerAtIndex:i];
-        if ([obj isEqual:delegate]) {
-            index = i;
-            break;
-        }
-    }
-    if (index >= 0) {
-        [self.appLifecycleDelegates removePointerAtIndex:index];
-        //must addPointer:NULL before compact
-        [self.appLifecycleDelegates addPointer:NULL];
-        [self.appLifecycleDelegates compact];
-    }
+    [self.appLifecycleDelegates.allObjects
+            enumerateObjectsWithOptions:NSEnumerationReverse
+                             usingBlock:^(NSObject *obj, NSUInteger idx, BOOL *_Nonnull stop) {
+                                 if (delegate == obj) {
+                                     [self.appLifecycleDelegates removePointerAtIndex:idx];
+                                     *stop = YES;
+                                 }
+                             }];
     [self.delegateLock unlock];
 }
 

@@ -54,7 +54,7 @@
     dataDict[@"xpath"] = self.xpath;
     dataDict[@"nodeType"] = self.nodeType;
     dataDict[@"isContainer"] = @(self.isContainer);
-    dataDict[@"index"] = @(self.index);
+    dataDict[@"index"] = self.index >= 0 ? @(self.index):nil;
     dataDict[@"parentXPath"] = self.parentXPath;
     dataDict[@"page"] = self.page;
     dataDict[@"domain"] = self.domain;

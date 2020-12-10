@@ -32,36 +32,23 @@
 
 - (void)addViewControllerLifecycleDelegate:(id)delegate {
     [self.delegateLock lock];
-    BOOL isfind = NO;
-    for (id obj in self.viewControllerLifecycleDelegates) {
-        if ([delegate isEqual:obj]) {
-            isfind = YES;
-            break;
-        }
+    if (![self.viewControllerLifecycleDelegates.allObjects containsObject:delegate]) {
+        [self.viewControllerLifecycleDelegates addPointer:(__bridge void *)delegate];
     }
-    if (!isfind) {
-        [self.viewControllerLifecycleDelegates addPointer:(void*)delegate];
-    }
-    
     [self.delegateLock unlock];
 }
 
 - (void)removeViewControllerLifecycleDelegate:(id)delegate {
     [self.delegateLock lock];
-    int index = -1;
-    for (int i = 0; i < self.viewControllerLifecycleDelegates.count; i ++) {
-        id obj = (id)[self.viewControllerLifecycleDelegates pointerAtIndex:i];
-        if ([obj isEqual:delegate]) {
-            index = i;
-            break;
-        }
-    }
-    if (index >= 0) {
-        [self.viewControllerLifecycleDelegates removePointerAtIndex:index];
-        //must addPointer:NULL before compact
-        [self.viewControllerLifecycleDelegates addPointer:NULL];
-        [self.viewControllerLifecycleDelegates compact];
-    }
+    [self.viewControllerLifecycleDelegates.allObjects
+            enumerateObjectsWithOptions:NSEnumerationReverse
+                             usingBlock:^(NSObject *obj, NSUInteger idx, BOOL *_Nonnull stop) {
+                                 if (delegate == obj) {
+                                     [self.viewControllerLifecycleDelegates removePointerAtIndex:idx];
+                                     *stop = YES;
+                                 }
+                             }];
+    
     [self.delegateLock unlock];
 }
 
