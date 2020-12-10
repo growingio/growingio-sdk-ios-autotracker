@@ -95,7 +95,7 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
      UITableViewWrapperView 为 iOS11 以下 UITableView 与 cell 之间的 view
      */
     if ([NSStringFromClass(self.class) isEqualToString:@"UITableViewWrapperView"]) {
-        return @"";
+        return nil;
     }
     //如果手动标识了该view,返回标识
     if (self.growingUniqueTag.length > 0) {

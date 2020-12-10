@@ -71,12 +71,14 @@
     }
     NSString *parentXPath = self.view.growingNodeUserInteraction ? self.xPath : self.clickableParentXPath;
     NSString *content = view.growingNodeContent;
+    NSString *xpath = view.growingNodeSubSimilarPath.length > 0 ? [self.originXPath stringByAppendingFormat:@"/%@",view.growingNodeSubSimilarPath] : nil;
+    NSString *originXPath = view.growingNodeSubPath.length > 0 ? [self.originXPath stringByAppendingFormat:@"/%@",view.growingNodeSubPath] : nil;
     
     return GrowingViewNode.builder
     .setView(view)
     .setIndex(index)
-    .setXPath([self.originXPath stringByAppendingFormat:@"/%@",view.growingNodeSubSimilarPath])
-    .setOriginXPath([self.originXPath stringByAppendingFormat:@"/%@",view.growingNodeSubPath])
+    .setXPath(xpath)
+    .setOriginXPath(originXPath)
     .setClickableParentXPath(parentXPath)
     .setHasListParent(haslistParent)
     .setViewContent(content?[content growingHelper_safeSubStringWithLength:50]:nil)

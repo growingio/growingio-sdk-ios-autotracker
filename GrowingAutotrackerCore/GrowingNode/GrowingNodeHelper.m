@@ -62,10 +62,12 @@ static NSString * const kGrowingNodeRootIgnore = @"IgnorePage";
     
     while (node && [node isKindOfClass:[UIView class]]) {
         if (isSimilar) {
-            [viewPathArray addObject:node.growingNodeSubSimilarPath];
-            isSimilar = NO;
+            if (node.growingNodeSubSimilarPath.length > 0) {
+                [viewPathArray addObject:node.growingNodeSubSimilarPath];
+                isSimilar = NO;
+            }
         }else {
-            [viewPathArray addObject:node.growingNodeSubPath];
+            if (node.growingNodeSubPath.length > 0) [viewPathArray addObject:node.growingNodeSubPath];
         }
         node = node.growingNodeParent;
     }
