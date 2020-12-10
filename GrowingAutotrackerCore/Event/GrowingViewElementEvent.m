@@ -44,7 +44,7 @@
     dataDictM[@"pageShowTimestamp"] = @(self.pageShowTimestamp);
     dataDictM[@"textValue"] = self.textValue;
     dataDictM[@"xpath"] = self.xpath;
-    dataDictM[@"index"] = @(self.index);
+    dataDictM[@"index"] = self.index >= 0 ? @(self.index) : nil;
     return dataDictM;;
 }
 

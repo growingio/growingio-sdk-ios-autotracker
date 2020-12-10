@@ -22,7 +22,7 @@
 
 #ifndef GrowingConstApi_h
 #define GrowingConstApi_h
-#define kGrowingEventApiTemplate @"v3/%@/ios/collect?stm=%llu"
+#define kGrowingEventApiTemplate @"v3/projects/%@/collect?stm=%llu"
 #define kGrowingEventApiV3(Template, AI, STM) [[GrowingNetworkConfig sharedInstance] buildEndPointWithTemplate:(Template) accountId:(AI) andSTM:(STM)]
 
 #define kGrowingReportApi(Template, AI, STM) ([[GrowingNetworkConfig sharedInstance] buildReportEndPointWithTemplate:(Template) accountId:(AI) andSTM:(STM)])

@@ -286,27 +286,39 @@ static GrowingWebCircle *shareInstance = nil;
     NSMutableDictionary *finalDataDict = [NSMutableDictionary dictionaryWithDictionary:dataDict];
     //初始化数组
     self.elements = [NSMutableArray array];
-    
+    CGFloat windowLevel = UIWindowLevelNormal;
+    UIWindow *topwindow = nil;
     for (UIWindow *window in [UIApplication sharedApplication].windows) {
+        if ([window isKindOfClass:[GrowingWindow class]]) {
+            break;
+        }
+        //如果找到了keywindow跳出循环
         if (window.isKeyWindow) {
-            self.zLevel = 0;
-            self.isPageDontShow = NO;
-            [self traverseViewNode:GrowingViewNode.builder
-             .setView(window)
-             .setIndex(-1)
-             .setViewContent([GrowingNodeHelper buildElementContentForNode:window])
-             .setXPath([GrowingNodeHelper xPathForView:window similar:NO])
-             .setOriginXPath([GrowingNodeHelper xPathForView:window similar:NO])
-             .setNodeType([GrowingNodeHelper getViewNodeType:window])
-             .build];
-            if (self.isPageDontShow) {
-                completion(nil);
-                return;
-            }
+            topwindow = window;
+            break;
+        }
+        if (window.windowLevel >= windowLevel) {
+            windowLevel = window.windowLevel;
+            topwindow = window;
             break;
         }
     }
-
+    if (topwindow) {
+        self.zLevel = 0;
+        self.isPageDontShow = NO;
+        [self traverseViewNode:GrowingViewNode.builder
+         .setView(topwindow)
+         .setIndex(-1)
+         .setViewContent([GrowingNodeHelper buildElementContentForNode:topwindow])
+         .setXPath([GrowingNodeHelper xPathForView:topwindow similar:NO])
+         .setOriginXPath([GrowingNodeHelper xPathForView:topwindow similar:NO])
+         .setNodeType([GrowingNodeHelper getViewNodeType:topwindow])
+         .build];
+        if (self.isPageDontShow) {
+            completion(nil);
+            return;
+        }
+    }
     
     NSMutableArray *pages = [NSMutableArray array];
     NSArray *vcs = [[GrowingPageManager sharedInstance] allDidAppearViewControllers];

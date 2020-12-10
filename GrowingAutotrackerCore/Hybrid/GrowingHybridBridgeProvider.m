@@ -36,6 +36,8 @@
 #import "GrowingTimeUtil.h"
 #import "GrowingSession.h"
 
+#import "GrowingCocoaLumberjack.h"
+
 NSString *const kGrowingJavascriptMessageTypeKey = @"messageType";
 NSString *const kGrowingJavascriptMessageDataKey = @"data";
 NSString *const kGrowingJavascriptMessageType_dispatchEvent = @"dispatchEvent";
@@ -72,7 +74,7 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
 }
 
 - (void)handleJavascriptBridgeMessage:(NSString *)message {
-    NSLog(@"handleJavascriptBridgeMessage: %@", message);
+    GIOLogDebug(@"handleJavascriptBridgeMessage: %@", message);
     if (message == nil || message.length == 0) {
         return;
     }
