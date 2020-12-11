@@ -91,9 +91,7 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
 }
 
 - (NSString *)growingNodeSubPath {
-    /* 忽略路径
-     UITableViewWrapperView 为 iOS11 以下 UITableView 与 cell 之间的 view
-     */
+    //UITableViewWrapperView 为 iOS11 以下 UITableView 与 cell 之间的 view
     if ([NSStringFromClass(self.class) isEqualToString:@"UITableViewWrapperView"]) {
         return nil;
     }

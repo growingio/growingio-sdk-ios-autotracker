@@ -60,6 +60,24 @@
 }
 
 - (GrowingViewNode *)appendNode:(UIView *)view isRecalculate:(BOOL)recalculate {
+    
+    NSString *subpath = view.growingNodeSubPath;
+    //如果节点path不存在，说明被过滤了，除了view之外，全部copy父级属性
+    if (!subpath) {
+        return GrowingViewNode.builder
+        .setView(view)
+        .setIndex(self.index)
+        .setXPath(self.xPath)
+        .setOriginXPath(self.originXPath)
+        .setClickableParentXPath(self.clickableParentXPath)
+        .setHasListParent(self.hasListParent)
+        .setViewContent(self.viewContent)
+        .setPosition(self.position)
+        .setNodeType(self.nodeType)
+        .setNeedRecalculate(recalculate)
+        .build;
+    }
+    
     BOOL haslistParent = self.hasListParent || [self.view isKindOfClass:[UITableView class]] || [self.view isKindOfClass:[UICollectionView class]];
     //是否是相似元素
     BOOL isSimilar = [view isKindOfClass:[UITableViewCell class]] || [view isKindOfClass:[UICollectionReusableView class]] || [view isKindOfClass:NSClassFromString(@"UISegment")];
@@ -69,16 +87,16 @@
     } else if (haslistParent) {
         index = self.index;
     }
+    
     NSString *parentXPath = self.view.growingNodeUserInteraction ? self.xPath : self.clickableParentXPath;
     NSString *content = view.growingNodeContent;
-    NSString *xpath = view.growingNodeSubSimilarPath.length > 0 ? [self.originXPath stringByAppendingFormat:@"/%@",view.growingNodeSubSimilarPath] : nil;
-    NSString *originXPath = view.growingNodeSubPath.length > 0 ? [self.originXPath stringByAppendingFormat:@"/%@",view.growingNodeSubPath] : nil;
+    NSString *similar_path = view.growingNodeSubSimilarPath;
     
     return GrowingViewNode.builder
     .setView(view)
     .setIndex(index)
-    .setXPath(xpath)
-    .setOriginXPath(originXPath)
+    .setXPath([self.originXPath stringByAppendingFormat:@"/%@",similar_path])
+    .setOriginXPath([self.originXPath stringByAppendingFormat:@"/%@",subpath])
     .setClickableParentXPath(parentXPath)
     .setHasListParent(haslistParent)
     .setViewContent(content?[content growingHelper_safeSubStringWithLength:50]:nil)
