@@ -119,7 +119,7 @@ const int GrowingTrackerVersionCode = 30000;
 }
 
 - (void)setDataCollectionEnabled:(BOOL)enabled {
-    self.configuration.dataCollectionEnabled = enabled;
+    GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionEnabled = enabled;
 }
 
 - (NSString *)getDeviceId {
