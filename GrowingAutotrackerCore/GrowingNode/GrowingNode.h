@@ -27,8 +27,3 @@
 @property (nonatomic, assign) BOOL growingNodeIsBadNode;
 @end
 
-
-
-@interface GrowingRootNode : NSObject <GrowingNode>
-+ (instancetype)rootNode;
-@end

@@ -157,7 +157,7 @@ typedef void (^Growing_data_callback)(GrowingSRWebSocket *webSocket, NSData *dat
 
 // This class is not thread-safe, and is expected to always be run on the same
 // queue.
-@interface Growing_Growing_SRIOConsumerPool : NSObject
+@interface Growing_SRIOConsumerPool : NSObject
 
 - (id)initWithBufferCapacity:(NSUInteger)poolSize;
 
@@ -234,7 +234,7 @@ typedef void (^Growing_data_callback)(GrowingSRWebSocket *webSocket, NSData *dat
     __strong GrowingSRWebSocket *_selfRetain;
 
     NSArray *_requestedProtocols;
-    Growing_Growing_SRIOConsumerPool *_consumerPool;
+    Growing_SRIOConsumerPool *_consumerPool;
 }
 
 @synthesize delegate = _delegate;
@@ -308,7 +308,7 @@ static __strong NSData *CRLFCRLF;
 
     _consumers = [[NSMutableArray alloc] init];
 
-    _consumerPool = [[Growing_Growing_SRIOConsumerPool alloc] init];
+    _consumerPool = [[Growing_SRIOConsumerPool alloc] init];
 
     _scheduledRunloops = [[NSMutableSet alloc] init];
 
@@ -1586,7 +1586,7 @@ static const size_t SRFrameHeaderOverhead = 32;
 
 @end
 
-@implementation Growing_Growing_SRIOConsumerPool {
+@implementation Growing_SRIOConsumerPool {
     NSUInteger _poolSize;
     NSMutableArray *_bufferedConsumers;
 }
