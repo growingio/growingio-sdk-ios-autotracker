@@ -24,6 +24,7 @@
 #import "UIView+GrowingNode.h"
 #import "GrowingAppLifecycle.h"
 #import "GrowingViewControllerLifecycle.h"
+#import "GrowingEventGenerator.h"
 
 @interface GrowingImpressionTrack () <GrowingAppLifecycleDelegate, GrowingViewControllerLifecycleDelegate>
 
@@ -228,9 +229,9 @@ static BOOL impTrackIsRegistered = NO;
     node.growingIMPTrackVariable = impTrackVariable;
 
     if (node.growingIMPTrackEventName.length > 0 && node.growingIMPTrackVariable.count > 0) {
-//        [Growing trackCustomEvent:node.growingIMPTrackEventName withAttributes:node.growingIMPTrackVariable];
+        [GrowingEventGenerator generateCustomEvent:node.growingIMPTrackEventName attributes:node.growingIMPTrackVariable];
     } else if (node.growingIMPTrackEventName.length > 0) {
-//        [Growing trackCustomEvent:node.growingIMPTrackEventName];
+        [GrowingEventGenerator generateCustomEvent:node.growingIMPTrackEventName attributes:nil];
     }
 }
 

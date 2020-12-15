@@ -35,8 +35,6 @@
             if (tableView && indexPath) {
                 UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
                 [GrowingViewClickProvider viewOnClick:cell];
-//                [GrowingClickEvent sendEventWithNode:cell
-//                                        andEventType:GrowingEventTypeRowSelected];
             }
         };
         

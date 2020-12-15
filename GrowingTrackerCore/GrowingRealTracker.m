@@ -43,6 +43,8 @@ const int GrowingTrackerVersionCode = 30000;
         GrowingConfigurationManager.sharedInstance.trackConfiguration = self.configuration;
         [GrowingAppLifecycle.sharedInstance setupAppStateNotification];
         [GrowingSession startSession];
+        
+        [self versionPrint];
     }
 
     return self;
@@ -62,6 +64,11 @@ const int GrowingTrackerVersionCode = 30000;
 
     [GrowingLog addLogger:[GrowingWSLogger sharedInstance] withLevel:GrowingLogLevelVerbose];
     [GrowingWSLogger sharedInstance].logFormatter = [GrowingWSLoggerFormat new];
+}
+
+- (void)versionPrint {
+    NSString *versionStr = [NSString stringWithFormat:@"Thank you very much for using GrowingIO. We will do our best to provide you with the best service. GrowingIO version: %@",GrowingTrackerVersionName];
+    GIOLogError(@"%@",versionStr);
 }
 
 - (void)trackCustomEvent:(NSString *)eventName {

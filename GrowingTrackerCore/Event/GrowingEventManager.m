@@ -109,6 +109,8 @@ static GrowingEventManager *shareinstance = nil;
         _interceptorLock = [[NSLock alloc] init];
         _packageNum = kGrowingMaxBatchSize;
         _cacheArray = [[NSMutableArray alloc] init];
+        //default is 10MB
+        _uploadLimitOfCellular = [GrowingConfigurationManager sharedInstance].trackConfiguration.cellularDataLimit * 1024 * 1024;
         [GrowingDispatchManager dispatchInLowThread:^{
             // db
             self.timingEventDB = [GrowingEventDataBase databaseWithPath:[GrowingFileStorage getTimingDatabasePath]
@@ -345,7 +347,9 @@ static GrowingEventManager *shareinstance = nil;
     }
 
     NSArray <GrowingEventPersistence *> *events = [self getEventsToBeUploadUnsafe:channel];
-    if (events.count == 0) {return;}
+    if (events.count == 0) {
+        return;
+    }
 
     channel.isUploading = YES;
 
@@ -361,7 +365,6 @@ static GrowingEventManager *shareinstance = nil;
                                               success:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data) {
 
                                                   [GrowingDispatchManager dispatchInLowThread:^{
-
                                                       if (isViaCellular) {
                                                           self.uploadEventSize += eventRequest.outsize;
                                                       }
