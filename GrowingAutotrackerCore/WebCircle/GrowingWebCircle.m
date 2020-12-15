@@ -237,9 +237,15 @@ static GrowingWebCircle *shareInstance = nil;
 
 - (unsigned long)getSnapshotKey {
     @synchronized(self) {
-        _snapNumber++;
+        _snapNumber ++;
     }
     return _snapNumber;
+}
+
+- (void)resetSnapshotKey {
+    @synchronized(self) {
+        _snapNumber = 0;
+    }
 }
 
 - (NSMutableArray *)elements {
@@ -493,8 +499,7 @@ static GrowingWebCircle *shareInstance = nil;
         self.onReadyBlock();
         self.onReadyBlock = nil;
     }
-    //序列号置零
-    _snapNumber = 0;
+    [self resetSnapshotKey];
     self.isReady = YES;
     // Hybird的布局改变回调代理设置
     [GrowingHybridBridgeProvider sharedInstance].domChangedDelegate = self;
@@ -636,19 +641,24 @@ static GrowingWebCircle *shareInstance = nil;
 }
 
 #pragma mark - ViewController LifeCycle
-//界面出现时发送截图
-- (void)viewControllerDidAppear:(UIViewController *)controller {
-    if (self.isReady) {
-        [self sendScreenShotWithCallback:nil];
-    }
+// present视图滑动退出时，也需要发送
+- (void)viewControllerDidDisappear:(UIViewController *)controller {
+    [self sendWebcircleWithType:GrowingEventTypePage];
 }
 
 #pragma mark - GrowingEventManagerObserver
 //事件被触发
 - (void)growingEventManagerEventTriggered:(NSString * _Nullable)eventType {
+    [self sendWebcircleWithType:eventType];
+}
+
+- (void)sendWebcircleWithType:(NSString *)eventType {
     //this call back run in main thread
     //so not use lock
-    if ([eventType isEqualToString:GrowingEventTypeViewClick] && _isReady) {
+    if (!_isReady) {
+        return;
+    }
+    if ([eventType isEqualToString:GrowingEventTypeViewClick] || [eventType isEqualToString:GrowingEventTypePage]) {
         [self.cachedEvents addObject:eventType];
         if (self.onProcessing) {
             GIOLogDebug(@"[GrowingWebCircle] onProcessing event to webcircle");
@@ -660,7 +670,7 @@ static GrowingWebCircle *shareInstance = nil;
             NSMutableArray *eventArray = self.cachedEvents;
             self.cachedEvents = [NSMutableArray array];
             [eventArray enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(__kindof NSString*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                if ([obj isEqualToString:GrowingEventTypeViewClick]) {
+                if ([obj isEqualToString:GrowingEventTypeViewClick] || [obj isEqualToString:GrowingEventTypePage]) {
                     [self sendScreenShotWithCallback:nil];
                     *stop = YES;
                 }
@@ -670,6 +680,5 @@ static GrowingWebCircle *shareInstance = nil;
 
     }
 }
-
 
 @end

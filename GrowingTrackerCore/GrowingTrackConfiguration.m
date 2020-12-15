@@ -20,11 +20,7 @@
         _sessionInterval = 30;
         _dataCollectionEnabled = YES;
         _uploadExceptionEnable = YES;
-#if DEBUG
-        _dataCollectionServerHost = @"https://run.mocky.io/v3/3afa0819-d7b9-4ff7-8d36-65d6653803c8";
-#else
         _dataCollectionServerHost = @"https://api.growingio.com";
-#endif
     }
 
     return self;
