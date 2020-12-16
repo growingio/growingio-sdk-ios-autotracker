@@ -17,14 +17,13 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import "GrowingBaseEvent.h"
 
 NS_ASSUME_NONNULL_BEGIN
 @class GrowingConversionVariableBuidler;
 @interface GrowingConversionVariableEvent : GrowingBaseEvent
 
-@property (nonatomic, copy, readonly) NSDictionary <NSString *, NSObject *> *variables;
+@property (nonatomic, copy, readonly) NSDictionary<NSString *, NSObject *> *attributes;
 
 + (GrowingConversionVariableBuidler *_Nonnull)builder;
 
@@ -32,9 +31,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingConversionVariableBuidler : GrowingBaseBuilder
 
-@property (nonatomic, copy, readonly) NSDictionary <NSString *, NSObject *> *variables;
+@property (nonatomic, copy, readonly) NSDictionary<NSString *, NSObject *> *attributes;
 
-- (GrowingConversionVariableBuidler *(^)(NSDictionary <NSString *, NSObject *> *value))setVariables;
+- (GrowingConversionVariableBuidler * (^)(NSDictionary<NSString *, NSObject *> *value))setAttributes;
 
 @end
 

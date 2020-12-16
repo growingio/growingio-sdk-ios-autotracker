@@ -108,7 +108,7 @@ const int GrowingTrackerVersionCode = 30000;
     if ([GrowingArgumentChecker isIllegalAttributes:variables]) {
         return;
     }
-    [GrowingEventGenerator generateConversionVariablesEvent:variables];
+    [GrowingEventGenerator generateConversionAttributesEvent:variables];
 
     
 }

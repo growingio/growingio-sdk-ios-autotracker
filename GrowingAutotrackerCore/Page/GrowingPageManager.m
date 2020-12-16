@@ -85,6 +85,7 @@
     } else {
         [page refreshShowTimestamp];
     }
+
     if (!page.isIgnored) {
         //发送page事件
         [self sendPageEventWithPage:page];
