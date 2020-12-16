@@ -22,6 +22,8 @@
 #import "GrowingPersistenceDataProvider.h"
 #import "GrowingArgumentChecker.h"
 #import "GrowingAppDelegateAutotracker.h"
+#import "GrowingDeepLinkHandler.h"
+#import "GrowingWebWatcher.h"
 
 NSString *const GrowingTrackerVersionName = @"3.0.0";
 const int GrowingTrackerVersionCode = 30000;
@@ -44,6 +46,7 @@ const int GrowingTrackerVersionCode = 30000;
         GrowingConfigurationManager.sharedInstance.trackConfiguration = self.configuration;
         [GrowingAppLifecycle.sharedInstance setupAppStateNotification];
         [GrowingSession startSession];
+        [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:[GrowingWebWatcher shareInstance]];
         [GrowingAppDelegateAutotracker track];
         [self versionPrint];
     }
