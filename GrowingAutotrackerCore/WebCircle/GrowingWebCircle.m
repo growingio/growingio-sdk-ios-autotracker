@@ -134,6 +134,9 @@ static GrowingWebCircle *shareInstance = nil;
     if (!serviceType.length && !wsurl) {
         return NO;
     }
+    if (![serviceType isEqualToString:@"circle"]) {
+        return NO;
+    }
     [GrowingWebCircle runWithCircle:[NSURL URLWithString:wsurl] readyBlock:nil finishBlock:nil];
     return YES;
 }
