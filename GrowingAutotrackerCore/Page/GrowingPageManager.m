@@ -229,17 +229,7 @@
 }
 
 - (NSArray<UIViewController *> *)growingHook_updateVisiableVC {
-    UIViewController *curVC = self.visiableControllersArray.allObjects.lastObject;
-    NSMutableArray<UIViewController *> *arr = [[NSMutableArray alloc] init];
-    UIView *curView = curVC.view;
-    while (curView) {
-        if ([curView.nextResponder isKindOfClass:[UIViewController class]]) {
-            UIViewController *responderVC = (UIViewController *) curView.nextResponder;
-            [arr insertObject:responderVC atIndex:0];
-        }
-        curView = curView.superview;
-    }
-    return arr;
+    return self.visiableControllersArray.allObjects;
 }
 
 - (BOOL)isDidAppearController:(UIViewController *)vc {
