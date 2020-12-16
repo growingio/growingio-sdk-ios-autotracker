@@ -59,13 +59,19 @@
 }
 
 - (void)showalert {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"UIAlertView"
+    UIAlertController *alert = [UIAlertController  alertControllerWithTitle:@"UIAlertView"
                                                     message:@"弹出式对话框相关测试！"
-                                                   delegate:self
-                                          cancelButtonTitle:@"取消"
-                                          otherButtonTitles:nil, nil];
-    [alert addButtonWithTitle:@"重新弹出"];
-    [alert show];
+                                           preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *cancel=[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
+    UIAlertAction *repopup=[UIAlertAction actionWithTitle:@"重新弹出" style:UIAlertActionStyleDefault handler:nil];
+
+    [alert addAction:cancel];
+    [alert addAction:repopup];
+
+    [self presentViewController:alert animated:YES completion:nil];
+    
+//    [alert addButtonWithTitle:@"重新弹出"];
+//    [alert show];
 }
 
 //设置GIO不采集数据

@@ -7,7 +7,7 @@
 //
 
 #import "GIOVisitEventViewController.h"
-
+#import "GrowingAutotracker.h"
 @import MapKit;
 
 @interface GIOVisitEventViewController () <MKMapViewDelegate>

@@ -9,6 +9,7 @@
 #import "GIOUserIdViewController.h"
 #import "GIOConstants.h"
 #import "GrowingAutotracker.h"
+
 @interface GIOUserIdViewController () <UITextFieldDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *userIdTextField;
@@ -30,16 +31,23 @@
 
 //设置UID为10048
 - (IBAction)setUserId:(id)sender {
+
     [[GrowingAutotracker sharedInstance] setLoginUserId:@"10048"];
+
     NSLog(@"设置用户ID为10048");
+    
 }
 //更新用户ID为10084
 - (IBAction)changeUserId:(id)sender {
+
     [[GrowingAutotracker sharedInstance] setLoginUserId:@"10084"];
+
+
     NSLog(@"设置用户ID为10084");
 }
 //清除用户ID
 - (IBAction)cleanUserId:(id)sender {
+
     [[GrowingAutotracker sharedInstance] cleanLoginUserId];
     NSLog(@"清除用户ID");
 }
@@ -47,6 +55,7 @@
 - (IBAction)customSetUserId:(id)sender {
     NSString *userId = self.userIdTextField.text;
     [[GrowingAutotracker sharedInstance] setLoginUserId:userId];
+
     NSLog(@"设置用户ID为%@", userId);
 }
 //UID超过1000个字符操作
@@ -54,6 +63,7 @@
     NSString *outRangeUid = [GIOConstants getMyInput];
     NSLog(@"GetMyInput length:%ld",outRangeUid.length);
     [[GrowingAutotracker sharedInstance] setLoginUserId:outRangeUid];
+
 }
 
 - (IBAction)tapGestureHandle:(UITapGestureRecognizer *)sender {

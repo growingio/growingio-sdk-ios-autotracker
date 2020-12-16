@@ -9,6 +9,7 @@
 #import "FlushIntervalAPITest.h"
 #import "MockEventQueue.h"
 #import "GrowingTracker.h"
+#import "GrowingAutotracker.h"
 
 @implementation FlushIntervalAPITest
 

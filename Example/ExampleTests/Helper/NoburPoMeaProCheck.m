@@ -92,15 +92,15 @@
         @"deviceBrand",
         @"deviceModel",
         @"deviceType",
-        @"operatingSystem",
-        @"operatingSystemVersion",
+        @"platform",
+        @"platformVersion",
         @"appName",
         @"textValue",
         @"language",
         @"latitude",
         @"longitude",
         @"idfa",
-        @"idfa",
+        @"idfv",
         @"userId",
         @"globalSequenceId",
         @"eventSequenceId",
@@ -118,8 +118,8 @@
 + (NSDictionary *)clickEventCheck:(NSDictionary *)clickevent {
     NSDictionary *clickchres;
     NSArray *clickprome = @[
-        @"userId", @"sessionId", @"eventType", @"timestamp", @"domain", @"pageName", @"textValue", @"xpath", @"index",
-        @"userId", @"globalSequenceId", @"eventSequenceId",@"pageShowTimestamp",@"deviceId",@"urlScheme",@"appState"
+        @"userId", @"sessionId", @"eventType", @"timestamp", @"domain", @"path", @"textValue", @"xpath", @"index",
+        @"userId", @"globalSequenceId", @"eventSequenceId",@"pageShowTimestamp",@"deviceId",@"urlScheme",@"appState",@"platform",@"platformVersion"
     ];
     //对比测量协议结构
     if (clickevent.count > 0) {
@@ -133,8 +133,8 @@
 + (NSDictionary *)viewChangeEventCheck:(NSDictionary *)changeEvent {
     NSDictionary *chngchres;
     NSArray *chngprome = @[
-        @"userId", @"sessionId", @"eventType", @"timestamp", @"domain", @"pageName", @"xpath",
-        @"textValue", @"timestamp", @"userId", @"globalSequenceId", @"eventSequenceId",@"pageShowTimestamp",@"deviceId",@"urlScheme",@"appState"
+        @"userId", @"sessionId", @"eventType", @"timestamp", @"domain", @"path", @"xpath",
+        @"textValue", @"timestamp", @"userId", @"globalSequenceId", @"eventSequenceId",@"pageShowTimestamp",@"deviceId",@"urlScheme",@"appState",@"index",@"platform",@"platformVersion"
     ];
     //对比测量协议结构
     if (changeEvent.count > 0) {
@@ -149,7 +149,7 @@
 + (NSDictionary *)ImpEventCheck:(NSDictionary *)impevent {
     NSDictionary *impchres;
     NSArray *impprome = @[
-        @"userId", @"sessionId", @"eventType", @"timestamp", @"domain", @"pageName", @"timestamp", @"eventName",
+        @"userId", @"sessionId", @"eventType", @"timestamp", @"domain", @"path", @"timestamp", @"eventName",
         @"textValue", @"xpath", @"index", @"userId"
     ];
     //对比测量协议结构

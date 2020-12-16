@@ -24,6 +24,7 @@ target 'ExampleTests' do
    pod 'GrowingAnalytics/Autotracker', :path => './'
    pod 'GrowingAnalytics/Tracker', :path => './'
    pod 'KIF', :configurations => ['Debug']
+#   pod 'OHHTTPStubs', :configurations => ['Debug']
 end
 
 
