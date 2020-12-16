@@ -22,7 +22,22 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol GrowingDeepLinkHandlerProtocol <NSObject>
+
+/// 处理url，如果能够处理则返回YES,否则返回NO
+/// @param url 链接Url
+- (BOOL)growingHandlerUrl:(NSURL *)url;
+
+@end
+
 @interface GrowingDeepLinkHandler : NSObject
+
++ (instancetype)sharedInstance;
+
+/// 添加一个处理者
+/// @param object 处理者
+- (void)addHandlersObject:(id)object;
+- (void)removeHandlersObject:(id)object;
 
 + (BOOL)handlerUrl:(NSURL *)url;
 

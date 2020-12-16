@@ -134,6 +134,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		042F04E92589CD8100DFA3EB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6003F582195388D10070C39A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 04A6FAEB24E50EE0006C72F0;
+			remoteInfo = CodeFormat;
+		};
 		4962652324DA665200032551 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 6003F582195388D10070C39A /* Project object */;
@@ -691,6 +698,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				042F04EA2589CD8100DFA3EB /* PBXTargetDependency */,
 			);
 			name = Example;
 			productName = GrowingIO;
@@ -1002,6 +1010,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		042F04EA2589CD8100DFA3EB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 04A6FAEB24E50EE0006C72F0 /* CodeFormat */;
+			targetProxy = 042F04E92589CD8100DFA3EB /* PBXContainerItemProxy */;
+		};
 		4962652424DA665200032551 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 6003F589195388D20070C39A /* Example */;

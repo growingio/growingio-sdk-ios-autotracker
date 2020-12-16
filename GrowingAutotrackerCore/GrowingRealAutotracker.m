@@ -29,7 +29,8 @@
 #import "UIAlertController+GrowingAutotracker.h"
 #import "GrowingPageManager.h"
 #import "GrowingImpressionTrack.h"
-#import "GrowingAppDelegateAutotracker.h"
+#import "GrowingDeepLinkHandler.h"
+#import "GrowingWebCircle.h"
 
 @implementation GrowingRealAutotracker
 - (instancetype)initWithConfiguration:(GrowingTrackConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions {
@@ -161,7 +162,7 @@
             GIOLogError(@"Failed to swizzle UIAlertController. Details: %@", alertError);
         }
         
-        [GrowingAppDelegateAutotracker track];
+        [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:[GrowingWebCircle shareInstance]];
     });
 }
 
