@@ -17,15 +17,14 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import "GrowingConversionVariableEvent.h"
 
 @implementation GrowingConversionVariableEvent
 
 - (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
     if (self = [super initWithBuilder:builder]) {
-        GrowingConversionVariableBuidler *subBuilder = (GrowingConversionVariableBuidler*)builder;
-        _variables = subBuilder.variables;
+        GrowingConversionVariableBuidler *subBuilder = (GrowingConversionVariableBuidler *)builder;
+        _attributes = subBuilder.attributes;
     }
     return self;
 }
@@ -40,18 +39,18 @@
 
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
-    dataDictM[@"variables"] = self.variables;
-    return dataDictM;;
+    dataDictM[@"attributes"] = self.attributes;
+    return dataDictM;
+    ;
 }
 
 @end
 
-
 @implementation GrowingConversionVariableBuidler
 
-- (GrowingConversionVariableBuidler *(^)(NSDictionary <NSString *, NSObject *> *value))setVariables  {
-    return ^(NSDictionary <NSString *, NSObject *> *value) {
-        self->_variables = value;
+- (GrowingConversionVariableBuidler * (^)(NSDictionary<NSString *, NSObject *> *value))setAttributes {
+    return ^(NSDictionary<NSString *, NSObject *> *value) {
+        self->_attributes = value;
         return self;
     };
 }
