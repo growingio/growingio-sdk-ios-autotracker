@@ -131,14 +131,11 @@ static GrowingWebCircle *shareInstance = nil;
     NSDictionary *params = url.growingHelper_queryDict;
     NSString *serviceType = params[@"serviceType"];
     NSString *wsurl = params[@"wsUrl"];
-    if (!serviceType.length && !wsurl) {
-        return NO;
+    if (serviceType.length > 0 && [serviceType isEqualToString:@"circle"] && wsurl.length > 0) {
+        [self runWithCircle:[NSURL URLWithString:wsurl] readyBlock:nil finishBlock:nil];
+        return YES;
     }
-    if (![serviceType isEqualToString:@"circle"]) {
-        return NO;
-    }
-    [GrowingWebCircle runWithCircle:[NSURL URLWithString:wsurl] readyBlock:nil finishBlock:nil];
-    return YES;
+    return NO;
 }
 
 #pragma mark - actions

@@ -17,20 +17,21 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 //用于AutotrackerCore中引入分类，而这些分类属性对于不同的模块，是可选的
 #import <UIKit/UIKit.h>
 
+#import "GrowingRealAutotracker.h"
+
 // 该属性setter方法均使用 objc_setAssociatedObject实现
 // 如果是自定义的View建议优先使用重写getter方法来实现 以提高性能
-@interface UIView(GrowingAttributes)
+@interface UIView (GrowingAttributes)
 
 // 手动标识该view的忽略策略，请在该view被初始化后立刻赋值
 @property (nonatomic, assign) GrowingIgnorePolicy growingViewIgnorePolicy;
 
 // 手动标识该view的tag
 // 这个tag必须是全局唯一的，在代码结构改变时也请保持不变
-@property (nonatomic, copy)NSString *growingUniqueTag;
+@property (nonatomic, copy) NSString *growingUniqueTag;
 
 @end
 
@@ -41,7 +42,7 @@
 // 手动标识该页面的标题，必须在该UIViewController显示之前设置
 @property (nonatomic, copy) NSString *growingPageAlias;
 
-@property (nonatomic, strong) NSDictionary <NSString *, NSString *> *growingPageAttributes;
+@property (nonatomic, strong) NSDictionary<NSString *, NSString *> *growingPageAttributes;
 
 @property (nonatomic, assign) GrowingIgnorePolicy growingPageIgnorePolicy;
 

@@ -18,37 +18,36 @@
 //  limitations under the License.
 
 #import "GrowingNodeHelper.h"
-#import "UIView+GrowingNode.h"
-#import "UIViewController+GrowingNode.h"
-#import "GrowingPageManager.h"
-#import "GrowingPageGroup.h"
-#import "UIViewController+GrowingPageHelper.h"
+
 #import "GrowingCocoaLumberjack.h"
+#import "GrowingPageGroup.h"
+#import "GrowingPageManager.h"
 #import "NSString+GrowingHelper.h"
 #import "UIView+GrowingHelper.h"
+#import "UIView+GrowingNode.h"
 #import "UIViewController+GrowingNode.h"
+#import "UIViewController+GrowingPageHelper.h"
 
-
-static NSString * const kGrowingNodeRootPage = @"Page";
-static NSString * const kGrowingNodeRootIgnore = @"IgnorePage";
+static NSString *const kGrowingNodeRootPage = @"Page";
+static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
 
 @implementation GrowingNodeHelper
 
 //当node为列表视图时，返回路径为 TableView/cell[-]，序号在index字段中返回
 + (NSString *)xPathSimilarForNode:(id<GrowingNode>)node {
     if ([node isKindOfClass:[UIView class]]) {
-        return [self xPathForView:(UIView*)node similar:YES];
-    }else if ([node isKindOfClass:[UIViewController class]]) {
-        return [self xPathForViewController:(UIViewController*)node];;
+        return [self xPathForView:(UIView *)node similar:YES];
+    } else if ([node isKindOfClass:[UIViewController class]]) {
+        return [self xPathForViewController:(UIViewController *)node];
     }
     return nil;
 }
 
 + (NSString *)xPathForNode:(id<GrowingNode>)node {
     if ([node isKindOfClass:[UIView class]]) {
-        return [self xPathForView:(UIView*)node similar:NO];
-    }else if ([node isKindOfClass:[UIViewController class]]) {
-        return [self xPathForViewController:(UIViewController*)node];;
+        return [self xPathForView:(UIView *)node similar:NO];
+    } else if ([node isKindOfClass:[UIViewController class]]) {
+        return [self xPathForViewController:(UIViewController *)node];
     }
     return nil;
 }
@@ -59,14 +58,14 @@ static NSString * const kGrowingNodeRootIgnore = @"IgnorePage";
 + (NSString *)xPathForView:(UIView *)view similar:(BOOL)isSimilar {
     NSMutableArray *viewPathArray = [NSMutableArray array];
     id<GrowingNode> node = view;
-    
+
     while (node && [node isKindOfClass:[UIView class]]) {
         if (isSimilar) {
             if (node.growingNodeSubSimilarPath.length > 0) {
                 [viewPathArray addObject:node.growingNodeSubSimilarPath];
                 isSimilar = NO;
             }
-        }else {
+        } else {
             if (node.growingNodeSubPath.length > 0) [viewPathArray addObject:node.growingNodeSubPath];
         }
         node = node.growingNodeParent;
@@ -74,14 +73,20 @@ static NSString * const kGrowingNodeRootIgnore = @"IgnorePage";
     // 当检测到viewController时，会替换成page字段
     // 此时则需要判断是否ignored以及过滤
     if ([node isKindOfClass:[UIViewController class]]) {
+        // vc.view不计入xpath
+        // eg:UIViewController/view => /Page/
+        // eg:UIViewController/TableView => /Page/
+        if (viewPathArray.count > 0) {
+            [viewPathArray removeLastObject];
+        }
         while (node) {
-            if ([[GrowingPageManager sharedInstance] isPrivateViewControllerIgnored:(UIViewController *) node]) {
+            if ([[GrowingPageManager sharedInstance] isPrivateViewControllerIgnored:(UIViewController *)node]) {
                 if (node.growingNodeSubPath.length > 0) [viewPathArray addObject:node.growingNodeSubPath];
-            }else {
-                GrowingPageGroup *page = [(UIViewController*)node growingPageHelper_getPageObject];
+            } else {
+                GrowingPageGroup *page = [(UIViewController *)node growingPageHelper_getPageObject];
                 if (page.isIgnored) {
                     if (node.growingNodeSubPath.length > 0) [viewPathArray addObject:node.growingNodeSubPath];
-                }else {
+                } else {
                     [viewPathArray addObject:kGrowingNodeRootPage];
                     break;
                 }
@@ -93,19 +98,17 @@ static NSString * const kGrowingNodeRootIgnore = @"IgnorePage";
             [viewPathArray addObject:kGrowingNodeRootIgnore];
         }
     }
-    
+
     NSString *viewPath = [[[viewPathArray reverseObjectEnumerator] allObjects] componentsJoinedByString:@"/"];
     viewPath = [@"/" stringByAppendingString:viewPath];
     return viewPath;
 }
-
 
 + (NSString *)xPathForViewController:(UIViewController *)vc {
     NSAssert(vc, @"+xPathForViewController: vc is nil");
     GrowingPageGroup *page = [[GrowingPageManager sharedInstance] findPageByViewController:vc];
     return page.path;
 }
-
 
 + (NSString *)buildElementContentForNode:(id<GrowingNode> _Nonnull)view {
     NSString *content = [view growingNodeContent];
@@ -147,29 +150,27 @@ static NSString * const kGrowingNodeRootIgnore = @"IgnorePage";
     if (weakArray == nil) {
         weakArray = [NSPointerArray weakObjectsPointerArray];
     }
-    
+
     UIView *parent = view;
     do {
-        [weakArray addPointer:(void*)parent];
+        [weakArray addPointer:(void *)parent];
         parent = parent.growingNodeParent;
     } while ([parent isKindOfClass:[UIView class]]);
-    
+
     UIView *rootview = [weakArray pointerAtIndex:weakArray.count - 1];
     NSString *xpath = nil;
     NSString *originXPath = nil;
-    
+
     xpath = [self xPathForView:rootview similar:YES];
     originXPath = [self xPathForView:rootview similar:NO];
-    return GrowingViewNode.builder
-    .setView(rootview)
-    .setIndex(-1)
-    .setViewContent([self buildElementContentForNode:rootview])
-    .setXPath(xpath)
-    .setOriginXPath(originXPath)
-    .setNodeType([self getViewNodeType:rootview])
-    .build;
+    return GrowingViewNode.builder.setView(rootview)
+        .setIndex(-1)
+        .setViewContent([self buildElementContentForNode:rootview])
+        .setXPath(xpath)
+        .setOriginXPath(originXPath)
+        .setNodeType([self getViewNodeType:rootview])
+        .build;
 }
-
 
 //文本
 static NSString *const kGrowingViewNodeText = @"TEXT";
