@@ -10,6 +10,7 @@
 
 #import "GrowingTracker.h"
 #import "MockEventQueue.h"
+#import "GrowingAutotracker.h"
 
 @implementation GDPRTest
 
@@ -18,7 +19,7 @@
      function:设置GDPR ， 不采集数据
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    [[GrowingTracker sharedInstance] setDataCollectionEnabled:NO];
+    [[GrowingAutotracker sharedInstance] setDataCollectionEnabled:NO];
     [MockEventQueue.sharedQueue cleanQueue];
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"UI界面"] tap];
@@ -40,7 +41,7 @@
      function:设置GDPR失效
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    [[GrowingTracker sharedInstance] setDataCollectionEnabled:NO];
+    [[GrowingAutotracker sharedInstance] setDataCollectionEnabled:NO];
     [MockEventQueue.sharedQueue cleanQueue];
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"UI界面"] tap];
@@ -48,7 +49,7 @@
     NSArray *clickEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
     XCTAssertEqual(clickEventArray.count, 0);
     // GDPR失效
-    [[GrowingTracker sharedInstance] setDataCollectionEnabled:YES];
+    [[GrowingAutotracker sharedInstance] setDataCollectionEnabled:YES];
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"协议/接口"] tap];
     [[viewTester usingLabel:@"CLICK请求"] tap];

@@ -9,7 +9,7 @@
 #import "VisitEventsTest.h"
 
 #import "GrowingTestHelper.h"
-#import "GrowingTracker.h"
+#import "GrowingAutotracker.h"
 #import "MockEventQueue.h"
 #import "NoburPoMeaProCheck.h"
 
@@ -17,7 +17,7 @@
 
 - (void)beforeEach {
     //设置userid,确保cs1字段不空
-    [[GrowingTracker sharedInstance] setLoginUserId:@"test"];
+    [[GrowingAutotracker sharedInstance] setLoginUserId:@"test"];
     [[viewTester usingLabel:@"UI界面"] tap];
 
 }
@@ -29,11 +29,11 @@
     /**
      function:SetLocation触发，从null -> 非null 发一次。非null - 非null不发visit
      **/
-//    NSString *oldSession = [[GrowingTracker sharedInstance] getSessionId];
+//    NSString *oldSession = [[GrowingAutotracker sharedInstance] getSessionId];
 //    XCTAssertNotNil(oldSession);
-//    [[GrowingTracker sharedInstance] cleanLocation];
+//    [[GrowingAutotracker sharedInstance] cleanLocation];
     [MockEventQueue.sharedQueue cleanQueue];
-//    [[GrowingTracker sharedInstance] setLocation:[@30.11 doubleValue] longitude:[@32.22 doubleValue]];
+//    [[GrowingAutotracker sharedInstance] setLocation:[@30.11 doubleValue] longitude:[@32.22 doubleValue]];
     [tester waitForTimeInterval:1];
     NSArray *visitEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
     if (visitEventArray.count > 0) {

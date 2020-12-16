@@ -134,10 +134,10 @@ static GrowingBaseEvent *originalEvent = nil;
     isMainThread = @"1";
     //  hook 入库方法，在 handleEvent:   GrowingBaseEventManager
     //  设置一个变量进行判断
-    [[GrowingTracker sharedInstance] cleanLoginUserId];
+    [[GrowingAutotracker sharedInstance] cleanLoginUserId];
     XCTestExpectation *expectation = [self expectationWithDescription:@"setUserId: fail"];
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        [[GrowingTracker sharedInstance] setLoginUserId:@"9"];
+        [[GrowingAutotracker sharedInstance] setLoginUserId:@"9"];
         [expectation fulfill];
     });
     
@@ -158,7 +158,7 @@ static GrowingBaseEvent *originalEvent = nil;
     isMainThread = @"1";
     XCTestExpectation *expectation = [self expectationWithDescription:@"clearUserId: fail"];
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        [[GrowingTracker sharedInstance] cleanLoginUserId];
+        [[GrowingAutotracker sharedInstance] cleanLoginUserId];
         [expectation fulfill];
     });
     
@@ -179,7 +179,7 @@ static GrowingBaseEvent *originalEvent = nil;
        isMainThread = @"1";
        XCTestExpectation *expectation = [self expectationWithDescription:@"setEvar: fail"];
        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-           [[GrowingTracker sharedInstance] setConversionVariables:@{@"EvarAutoTest":@"evarAuto"}];
+           [[GrowingAutotracker sharedInstance] setConversionVariables:@{@"EvarAutoTest":@"evarAuto"}];
            [expectation fulfill];
        });
        
@@ -199,7 +199,7 @@ static GrowingBaseEvent *originalEvent = nil;
        isMainThread = @"1";
        XCTestExpectation *expectation = [self expectationWithDescription:@"setEvarWithKey:andStringValue: fail"];
        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-           [[GrowingTracker sharedInstance] setConversionVariables:@{@"EvarKeyAutoTest":@"evarKeyAutoString"}];
+           [[GrowingAutotracker sharedInstance] setConversionVariables:@{@"EvarKeyAutoTest":@"evarKeyAutoString"}];
            [expectation fulfill];
        });
        
@@ -220,7 +220,7 @@ static GrowingBaseEvent *originalEvent = nil;
       isMainThread = @"1";
       XCTestExpectation *expectation = [self expectationWithDescription:@"setEvarWithKey:andNumberValue: fail"];
       dispatch_async(dispatch_get_global_queue(0, 0), ^{
-          [[GrowingTracker sharedInstance] setConversionVariables:@{@"EvarNumberAutoTest" :@22}];
+          [[GrowingAutotracker sharedInstance] setConversionVariables:@{@"EvarNumberAutoTest" :@22}];
           [expectation fulfill];
       });
       
@@ -241,7 +241,7 @@ static GrowingBaseEvent *originalEvent = nil;
        isMainThread = @"1";
        XCTestExpectation *expectation = [self expectationWithDescription:@"setPeopleVariable: fail"];
        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-           [[GrowingTracker sharedInstance] setLoginUserAttributes:@{@"PeopleAutoTest":@"peopleAuto"}];
+           [[GrowingAutotracker sharedInstance] setLoginUserAttributes:@{@"PeopleAutoTest":@"peopleAuto"}];
            [expectation fulfill];
        });
        
@@ -262,7 +262,7 @@ static GrowingBaseEvent *originalEvent = nil;
        isMainThread = @"1";
        XCTestExpectation *expectation = [self expectationWithDescription:@"setPeopleVariableWithKey:andStringValue: fail"];
        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-           [[GrowingTracker sharedInstance] setLoginUserAttributes:@{@"PeopleKeyAutoTest" :@"PeopleKeyAutoString"}];
+           [[GrowingAutotracker sharedInstance] setLoginUserAttributes:@{@"PeopleKeyAutoTest" :@"PeopleKeyAutoString"}];
            [expectation fulfill];
        });
        
@@ -283,7 +283,7 @@ static GrowingBaseEvent *originalEvent = nil;
       isMainThread = @"1";
       XCTestExpectation *expectation = [self expectationWithDescription:@"setPeopleVariableWithKey:andNumberValue: fail"];
       dispatch_async(dispatch_get_global_queue(0, 0), ^{
-          [[GrowingTracker sharedInstance] setLoginUserAttributes:@{@"PeopleNumberAutoTest" :@22}];
+          [[GrowingAutotracker sharedInstance] setLoginUserAttributes:@{@"PeopleNumberAutoTest" :@22}];
           [expectation fulfill];
       });
       
@@ -303,7 +303,7 @@ static GrowingBaseEvent *originalEvent = nil;
         isMainThread = @"1";
        XCTestExpectation *expectation = [self expectationWithDescription:@"track: fail"];
        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-           [[GrowingTracker sharedInstance] trackCustomEvent:@"TrackAutoTest"];
+           [[GrowingAutotracker sharedInstance] trackCustomEvent:@"TrackAutoTest"];
            [expectation fulfill];
        });
        
@@ -324,8 +324,8 @@ static GrowingBaseEvent *originalEvent = nil;
         isMainThread = @"1";
        XCTestExpectation *expectation = [self expectationWithDescription:@"track:withNumber: fail"];
        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-           [[GrowingTracker sharedInstance] trackCustomEvent:@"TrackAutoTest"];
-           [[GrowingTracker sharedInstance] trackCustomEvent:@"TrackAutoTest"];
+           [[GrowingAutotracker sharedInstance] trackCustomEvent:@"TrackAutoTest"];
+           [[GrowingAutotracker sharedInstance] trackCustomEvent:@"TrackAutoTest"];
            [expectation fulfill];
        });
        
@@ -346,7 +346,7 @@ static GrowingBaseEvent *originalEvent = nil;
         isMainThread = @"1";
           XCTestExpectation *expectation = [self expectationWithDescription:@"track:withNumber:andVariable: fail"];
           dispatch_async(dispatch_get_global_queue(0, 0), ^{
-              [[GrowingTracker sharedInstance] trackCustomEvent:@"TrackAutoTest" withAttributes:@{@"TrackAutoTest":@"trackAutoTest"}];
+              [[GrowingAutotracker sharedInstance] trackCustomEvent:@"TrackAutoTest" withAttributes:@{@"TrackAutoTest":@"trackAutoTest"}];
               [expectation fulfill];
           });
           
@@ -367,7 +367,7 @@ static GrowingBaseEvent *originalEvent = nil;
       isMainThread = @"1";
       XCTestExpectation *expectation = [self expectationWithDescription:@"track:withVariable: fail"];
       dispatch_async(dispatch_get_global_queue(0, 0), ^{
-          [[GrowingTracker sharedInstance] trackCustomEvent:@"TrackAutoTest" withAttributes:@{@"TrackAutoTest":@"trackAutoTest"}];
+          [[GrowingAutotracker sharedInstance] trackCustomEvent:@"TrackAutoTest" withAttributes:@{@"TrackAutoTest":@"trackAutoTest"}];
           [expectation fulfill];
       });
       
@@ -388,7 +388,7 @@ static GrowingBaseEvent *originalEvent = nil;
     isMainThread = @"1";
     XCTestExpectation *expectation = [self expectationWithDescription:@"setVisitor: fail"];
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        [[GrowingTracker sharedInstance] setVisitorAttributes:@{@"VisitorAutoTest":@"visitorAutoTest"}];
+        [[GrowingAutotracker sharedInstance] setVisitorAttributes:@{@"VisitorAutoTest":@"visitorAutoTest"}];
         [expectation fulfill];
     });
     
@@ -411,7 +411,7 @@ static GrowingBaseEvent *originalEvent = nil;
        UIViewController *vc = [UIViewController new];
        XCTestExpectation *expectation = [self expectationWithDescription:@"setPageVariable:toViewController: fail"];
        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-  //         [[GrowingTracker sharedInstance] setPageVariable:@{@"PageVariable": @"pageVariable"} toViewController:vc];
+  //         [[GrowingAutotracker sharedInstance] setPageVariable:@{@"PageVariable": @"pageVariable"} toViewController:vc];
            [expectation fulfill];
        });
        
@@ -433,7 +433,7 @@ static GrowingBaseEvent *originalEvent = nil;
        UIViewController *vc = [UIViewController new];
        XCTestExpectation *expectation = [self expectationWithDescription:@"setPageVariableWithKey:andStringValue:toViewController: fail"];
        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-  //         [[GrowingTracker sharedInstance] setPageVariableWithKey:@"PageVariableKey" andStringValue:@"pageVariableKeyString" toViewController:vc];
+  //         [[ sharedInstance] setPageVariableWithKey:@"PageVariableKey" andStringValue:@"pageVariableKeyString" toViewController:vc];
            [expectation fulfill];
        });
        
@@ -455,7 +455,7 @@ static GrowingBaseEvent *originalEvent = nil;
       UIViewController *vc = [UIViewController new];
       XCTestExpectation *expectation = [self expectationWithDescription:@"setPageVariableWithKey:andNumberValue:toViewController: fail"];
       dispatch_async(dispatch_get_global_queue(0, 0), ^{
-    //      [[GrowingTracker sharedInstance] setPageVariableWithKey:@"PageVariableKey" andNumberValue:[NSNumber numberWithInt:55] toViewController:vc];
+    //      [[GrowingAutotracker sharedInstance] setPageVariableWithKey:@"PageVariableKey" andNumberValue:[NSNumber numberWithInt:55] toViewController:vc];
           [expectation fulfill];
       });
       

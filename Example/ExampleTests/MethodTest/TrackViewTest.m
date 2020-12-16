@@ -8,7 +8,7 @@
 
 #import "TrackViewTest.h"
 #import "MockEventQueue.h"
-#import "GrowingTracker.h"
+#import "GrowingAutotracker.h"
 
 @implementation TrackViewTest
 
@@ -16,7 +16,7 @@
     /**
      function:测试enableAllWebViews
      **/
-    [[GrowingTracker sharedInstance] setDataCollectionEnabled:YES];
+    [[GrowingAutotracker sharedInstance] setDataCollectionEnabled:YES];
 
 }
 
@@ -26,7 +26,7 @@
      function:测试enableAllWebViews
      **/
 
-    [[GrowingTracker sharedInstance] setDataCollectionEnabled:NO];
+    [[GrowingAutotracker sharedInstance] setDataCollectionEnabled:NO];
 }
 
 @end

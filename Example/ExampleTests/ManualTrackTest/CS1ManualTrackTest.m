@@ -8,7 +8,7 @@
 
 #import "CS1ManualTrackTest.h"
 
-#import "GrowingTracker.h"
+#import "GrowingAutotracker.h"
 #import "ManualTrackHelper.h"
 #import "MockEventQueue.h"
 #import "GrowingSession.h"
@@ -183,7 +183,7 @@
      function:UID为nil
      ***/
     [MockEventQueue.sharedQueue cleanQueue];
-    [[GrowingTracker sharedInstance] setLoginUserId:NULL];
+    [[GrowingAutotracker sharedInstance] setLoginUserId:NULL];
     [tester waitForTimeInterval:2];
     NSArray *visitEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
 
@@ -253,9 +253,9 @@
         // pageg事件包含cs1字段
         NSDictionary *page2chr = [page2Array objectAtIndex:page2Array.count - 1];
         XCTAssertFalse([ManualTrackHelper CheckContainsKey:page2chr:@"userId"]);
-        NSLog(@"清除UID,page事件中无cs1字段测试通过---passed!");
+        NSLog(@"清除UID,page事件中无userId字段测试通过---passed!");
     } else {
-        NSLog(@"清除UID,page事件中无cs1字段测试失败，page事件为：%@!", page2Array);
+        NSLog(@"清除UID,page事件中无userId字段测试失败，page事件为：%@!", page2Array);
         XCTAssertEqual(1, 0);
     }
 }
@@ -266,13 +266,13 @@
     NSDate *datenow = [NSDate date];
     NSString *timeSp = [NSString stringWithFormat:@"%lld", (long long)[datenow timeIntervalSince1970] * 1000LL];
     // 时间戳setUserId 方便触发事件获取session
-    [[GrowingTracker sharedInstance] setLoginUserId:timeSp];
+    [[GrowingAutotracker sharedInstance] setLoginUserId:timeSp];
     [tester waitForTimeInterval:2];
     NSString *oldSession = [[GrowingSession currentSession] sessionId];
     XCTAssertNotNil(oldSession);
-    [[GrowingTracker sharedInstance] cleanLoginUserId];
+    [[GrowingAutotracker sharedInstance] cleanLoginUserId];
 
-    [[GrowingTracker sharedInstance] setLoginUserId:@"lisi"];
+    [[GrowingAutotracker sharedInstance] setLoginUserId:@"lisi"];
     NSString *newSession = [[GrowingSession currentSession] sessionId];
     XCTAssertNotNil(newSession);
     XCTAssertNotEqual(oldSession, newSession);
@@ -284,14 +284,14 @@
     NSDate *datenow = [NSDate date];
     NSString *timeSp = [NSString stringWithFormat:@"%lld", (long long)[datenow timeIntervalSince1970] * 1000LL];
     // 时间戳setUserId 方便触发事件获取session
-    [[GrowingTracker sharedInstance] setLoginUserId:timeSp];
+    [[GrowingAutotracker sharedInstance] setLoginUserId:timeSp];
     NSString *oldSession = [[GrowingSession currentSession] sessionId];
     XCTAssertNotNil(oldSession);
 
-    [[GrowingTracker sharedInstance] cleanLoginUserId];
+    [[GrowingAutotracker sharedInstance] cleanLoginUserId];
     [self enterBackground];
     [self enterForeground];
-    [[GrowingTracker sharedInstance] setLoginUserId:@"lisi"];
+    [[GrowingAutotracker sharedInstance] setLoginUserId:@"lisi"];
     NSString *newSession = [[GrowingSession currentSession] sessionId];
     XCTAssertNotNil(newSession);
     XCTAssertNotEqual(oldSession, newSession);

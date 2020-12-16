@@ -8,8 +8,9 @@
 //
 
 #import "VisitorAttributesEventsTest.h"
-
 #import "GrowingTracker.h"
+#import "GrowingAutotracker.h"
+
 #import "LogOperHelper.h"
 #import "ManualTrackHelper.h"
 #import "MockEventQueue.h"
@@ -18,7 +19,7 @@
 
 - (void)setUp {
     //设置userid,确保cs1字段不空
-    [[GrowingTracker sharedInstance] setLoginUserId:@"test"];
+    [[GrowingAutotracker sharedInstance] setLoginUserId:@"test"];
     [[viewTester usingLabel:@"UI界面"] tap];
 
 }
@@ -29,7 +30,7 @@
      **/
     [tester waitForTimeInterval:1];
     [MockEventQueue.sharedQueue cleanQueue];
-    [[GrowingTracker sharedInstance] setVisitorAttributes:@{@"var1" : @"good", @"var2" : @"excell"}];
+    [[GrowingAutotracker sharedInstance] setVisitorAttributes:@{@"var1" : @"good", @"var2" : @"excell"}];
     NSArray *visitorAttributesEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISITOR_ATTRIBUTES"];
     NSLog(@"VISITOR_ATTRIBUTES 事件：%@", visitorAttributesEventArray);
     if (visitorAttributesEventArray.count >= 1) {
@@ -40,11 +41,12 @@
         XCTAssertEqualObjects(epvarchr[@"attributes"][@"var2"], @"excell");
 
         NSDictionary *chres = [ManualTrackHelper visitorAttributesEventCheck:epvarchr];
+        NSLog(@"chres ,%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
         XCTAssertEqualObjects(chres[@"ProCheck"][@"chres"], @"same");
-        NSLog(@"CONVERSION_VARIABLES事件，vstr正常情况测试通过-----passed");
+        NSLog(@"VISITOR_ATTRIBUTES事件，vstr正常情况测试通过-----passed");
     } else {
-        NSLog(@"CONVERSION_VARIABLES事件，vstr正常情况测试失败:%@", visitorAttributesEventArray);
+        NSLog(@"VISITOR_ATTRIBUTES事件，vstr正常情况测试失败:%@", visitorAttributesEventArray);
         XCTAssertEqual(1, 0);
     }
 }
