@@ -45,7 +45,7 @@ static GrowingWebWatcher *shareInstance = nil;
     NSDictionary *params = url.growingHelper_queryDict;
     //  open console.app 中的log
     NSString *openConsoleLog = params[@"openConsoleLog"];
-    if ([openConsoleLog caseInsensitiveCompare:@"Yes"] == NSOrderedSame && ![GrowingLog.allLoggers containsObject:[GrowingASLLogger sharedInstance]]) {
+    if (openConsoleLog && [openConsoleLog caseInsensitiveCompare:@"Yes"] == NSOrderedSame && ![GrowingLog.allLoggers containsObject:[GrowingASLLogger sharedInstance]]) {
         [GrowingLog addLogger:[GrowingASLLogger sharedInstance] withLevel:GrowingLogLevelAll];
         [GrowingASLLogger sharedInstance].logFormatter = [GrowingASLLoggerFormat new];
         return YES;
