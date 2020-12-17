@@ -29,14 +29,16 @@
 static NSString *kGrowingUrlScheme = nil;
 NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 
-@import CoreTelephony;
+#import <CoreTelephony/CTTelephonyNetworkInfo.h>
+#import <CoreTelephony/CTCarrier.h>
 
 @implementation GrowingDeviceInfo
 
 static pthread_mutex_t _mutex;
 
 @synthesize deviceIDString = _deviceIDString;
-
+@synthesize idfv = _idfv;
+@synthesize idfa = _idfa;
 // keychain
 - (NSMutableDictionary *)getKeychainQuery:(NSString *)key {
     return [NSMutableDictionary dictionaryWithObjectsAndKeys:(id)kSecClassGenericPassword, (id)kSecClass, key,
@@ -136,8 +138,6 @@ static pthread_mutex_t _mutex;
         pthread_mutex_init(&_mutex, NULL);
         // @property (nonatomic, readonly) NSString *deviceID;
         // 重写getter
-        _idfv = [self getVendorId];
-        _idfa = [self getUserIdentifier];
 
         _bundleID = infoDictionary[@"CFBundleIdentifier"];
 
@@ -191,6 +191,20 @@ static pthread_mutex_t _mutex;
         }];
     }
     return self;
+}
+
+- (NSString *)idfv {
+    if (!_idfv) {
+        _idfv = [self getVendorId];
+    }
+    return _idfv;
+}
+
+- (NSString *)idfa {
+    if (!_idfa) {
+        _idfa = [self getUserIdentifier];
+    }
+    return _idfa;
 }
 
 - (NSString *)getDeviceIdString {

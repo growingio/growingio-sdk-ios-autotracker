@@ -22,10 +22,10 @@
 #import "GrowingConversionVariableEvent.h"
 #import "GrowingDeviceInfo.h"
 #import "GrowingEventManager.h"
-#import "GrowingHybirdEventType.h"
-#import "GrowingHybirdPageAttributesEvent.h"
-#import "GrowingHybirdPageEvent.h"
-#import "GrowingHybirdViewElementEvent.h"
+#import "GrowingHybridEventType.h"
+#import "GrowingHybridPageAttributesEvent.h"
+#import "GrowingHybridPageEvent.h"
+#import "GrowingHybridViewElementEvent.h"
 #import "GrowingHybridCustomEvent.h"
 #import "GrowingLoginUserAttributesEvent.h"
 #import "GrowingPageAttributesEvent.h"
@@ -165,7 +165,7 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
 
     GrowingBaseBuilder *builder = nil;
     if ([type isEqualToString:GrowingEventTypePage]) {
-        builder = GrowingHybirdPageEvent.builder.setProtocolType(dict[@KEY_PROTOCOL_TYPE])
+        builder = GrowingHybridPageEvent.builder.setProtocolType(dict[@KEY_PROTOCOL_TYPE])
                       .setQuery(dict[@KEY_QUERY])
                       .setTitle(dict[@KEY_TITLE])
                       .setReferralPage(dict[@KEY_REFERRAL_PAGE])
@@ -174,13 +174,12 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
                       .setDomain([self getDomain:dict]);
     } else if ([type isEqualToString:GrowingEventTypePageAttributes]) {
         // TODO:检查@KEY_ATTRIBUTES字段是否符合字典类型
-        builder = GrowingHybirdPageAttributesEvent.builder.setQuery(dict[@KEY_QUERY])
+        builder = GrowingHybridPageAttributesEvent.builder.setQuery(dict[@KEY_QUERY])
                       .setPath(dict[@KEY_PATH])
                       .setPageShowTimestamp([dict longlongForKey:@KEY_PAGE_SHOW_TIMESTAMP
                                                         fallback:[GrowingTimeUtil currentTimeMillis]])
                       .setAttributes(dict[@KEY_ATTRIBUTES])
                       .setDomain([self getDomain:dict]);
-
     } else if ([type isEqualToString:GrowingEventTypeVisit]) {
         builder = [self transformViewElementBuilder:dict].setEventType(type);
     } else if ([type isEqualToString:GrowingEventTypeViewClick]) {
@@ -208,7 +207,7 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
 }
 
 - (GrowingBaseBuilder *)transformViewElementBuilder:(NSDictionary *)dict {
-    return GrowingHybirdViewElementEvent.builder.setHyperlink(dict[@KEY_HYPERLINK])
+    return GrowingHybridViewElementEvent.builder.setHyperlink(dict[@KEY_HYPERLINK])
         .setQuery(dict[@KEY_QUERY])
         .setIndex([dict intForKey:@KEY_INDEX fallback:-1])
         .setTextValue(dict[@KEY_TEXT_VALUE])
