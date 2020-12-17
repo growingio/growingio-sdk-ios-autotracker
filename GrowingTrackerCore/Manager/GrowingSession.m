@@ -106,8 +106,10 @@ static GrowingSession *currentSession = nil;
     _loginUserId = loginUserId.copy;
     // loginUserId 持久化
     [[GrowingPersistenceDataProvider sharedInstance] setLoginUserId:_loginUserId];
-    [self resendVisitByUserIdDidChangedFrom:oldUserId to:_loginUserId.copy];
+    //额外的处理者
     [self dispatchUserIdDidChangedFrom:oldUserId to:_loginUserId.copy];
+    //重发visit必须在分发UserIdDidChangedFrom:to:方法之前
+    [self resendVisitByUserIdDidChangedFrom:oldUserId to:_loginUserId.copy];
 }
 
 - (void)resendVisitByUserIdDidChangedFrom:(NSString *)oldUserId to:(NSString *)newUserId {
