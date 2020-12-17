@@ -513,7 +513,7 @@ static GrowingWebCircle *shareInstance = nil;
     }
     [self resetSnapshotKey];
     self.isReady = YES;
-    // Hybird的布局改变回调代理设置
+    // Hybrid的布局改变回调代理设置
     [GrowingHybridBridgeProvider sharedInstance].domChangedDelegate = self;
     //监听原生事件，变动时发送
     [[GrowingEventManager shareInstance] addInterceptor:self];
@@ -646,7 +646,7 @@ static GrowingWebCircle *shareInstance = nil;
 }
 
 #pragma mark - GrowingWebViewDomChangedDelegate
-// hybird变动，重新发送dom tree
+// Hybrid变动，重新发送dom tree
 - (void)webViewDomDidChanged {
     [self sendScreenShot];
 }

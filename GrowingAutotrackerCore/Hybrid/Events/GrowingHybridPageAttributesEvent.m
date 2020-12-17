@@ -1,5 +1,5 @@
 //
-// GrowingHybirdPageAttributesEvent.m
+// GrowingHybridPageAttributesEvent.m
 // GrowingAnalytics-Autotracker-AutotrackerCore-Tracker-TrackerCore
 //
 //  Created by sheng on 2020/11/17.
@@ -18,21 +18,21 @@
 //  limitations under the License.
 
 
-#import "GrowingHybirdPageAttributesEvent.h"
+#import "GrowingHybridPageAttributesEvent.h"
 
-@implementation GrowingHybirdPageAttributesEvent
+@implementation GrowingHybridPageAttributesEvent
 
 - (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
     if (self = [super initWithBuilder:builder]) {
-        GrowingHybirdPageAttributesBuilder *subBuilder = (GrowingHybirdPageAttributesBuilder*)builder;
+        GrowingHybridPageAttributesBuilder *subBuilder = (GrowingHybridPageAttributesBuilder*)builder;
         _query = subBuilder.query;
     }
     return self;
 }
 
 
-+ (GrowingHybirdPageAttributesBuilder*)builder {
-    return [[GrowingHybirdPageAttributesBuilder alloc] init];
++ (GrowingHybridPageAttributesBuilder*)builder {
+    return [[GrowingHybridPageAttributesBuilder alloc] init];
 }
 
 - (NSDictionary *)toDictionary {
@@ -45,9 +45,9 @@
 @end
 
 
-@implementation GrowingHybirdPageAttributesBuilder
+@implementation GrowingHybridPageAttributesBuilder
 
-- (GrowingHybirdPageAttributesBuilder *(^)(NSString *value))setQuery {
+- (GrowingHybridPageAttributesBuilder *(^)(NSString *value))setQuery {
     return  ^(NSString *value){
         self->_query = value;
         return self;
@@ -55,7 +55,7 @@
 }
 
 - (GrowingBaseEvent *)build {
-    return [[GrowingHybirdPageAttributesEvent alloc] initWithBuilder:self];
+    return [[GrowingHybridPageAttributesEvent alloc] initWithBuilder:self];
 }
 
 @end

@@ -1,5 +1,5 @@
 //
-// GrowingHybirdEventType.m
+// GrowingHybridEventType.m
 // GrowingAnalytics-Autotracker-AutotrackerCore-Tracker-TrackerCore
 //
 //  Created by sheng on 2020/11/17.
@@ -18,6 +18,6 @@
 //  limitations under the License.
 
 
-#import "GrowingHybirdEventType.h"
+#import "GrowingHybridEventType.h"
 
 NSString * const GrowingEventTypeFormSubmit = @"FORM_SUBMIT";

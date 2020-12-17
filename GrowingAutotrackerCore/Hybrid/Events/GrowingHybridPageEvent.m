@@ -1,5 +1,5 @@
 //
-// GrowingHybirdViewElementEvent.m
+// GrowingHybridPageEvent.m
 // GrowingAnalytics-Autotracker-AutotrackerCore-Tracker-TrackerCore
 //
 //  Created by sheng on 2020/11/17.
@@ -18,47 +18,50 @@
 //  limitations under the License.
 
 
-#import "GrowingHybirdViewElementEvent.h"
+#import "GrowingHybridPageEvent.h"
 
-@implementation GrowingHybirdViewElementEvent
+@implementation GrowingHybridPageEvent
+
 - (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
     if (self = [super initWithBuilder:builder]) {
-        GrowingHybirdViewElementBuilder *subBuilder = (GrowingHybirdViewElementBuilder*)builder;
+        GrowingHybridPageBuilder *subBuilder = (GrowingHybridPageBuilder*)builder;
         _query = subBuilder.query;
-        _hyperlink = subBuilder.hyperlink;
+        _protocolType = subBuilder.protocolType;
     }
     return self;
 }
 
-+ (GrowingHybirdViewElementBuilder*)builder {
-    return [[GrowingHybirdViewElementBuilder alloc] init];
++ (GrowingHybridPageBuilder*)builder {
+    return [[GrowingHybridPageBuilder alloc] init];
 }
 
 
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
     dataDictM[@"query"] = self.query;
-    dataDictM[@"hyperlink"] = self.hyperlink;
+    dataDictM[@"protocolType"] = self.protocolType;
     return dataDictM;;
 }
 @end
 
-@implementation GrowingHybirdViewElementBuilder
 
-- (GrowingHybirdViewElementBuilder *(^)(NSString *value))setQuery {
+@implementation GrowingHybridPageBuilder
+
+- (GrowingHybridPageBuilder *(^)(NSString *value))setQuery {
     return  ^(NSString *value){
         self->_query = value;
         return self;
     };
 }
-- (GrowingHybirdViewElementBuilder *(^)(NSString *value))setHyperlink {
+- (GrowingHybridPageBuilder *(^)(NSString *value))setProtocolType {
     return  ^(NSString *value){
-        self->_hyperlink = value;
+        self->_protocolType = value;
         return self;
     };
 }
 
 - (GrowingBaseEvent *)build {
-    return [[GrowingHybirdViewElementEvent alloc] initWithBuilder:self];
+    return [[GrowingHybridPageEvent alloc] initWithBuilder:self];
 }
+
 @end

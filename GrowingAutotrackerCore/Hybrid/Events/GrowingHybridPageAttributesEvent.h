@@ -1,5 +1,5 @@
 //
-// GrowingHybirdEventType.h
+// GrowingHybridPageAttributesEvent.h
 // GrowingAnalytics-Autotracker-AutotrackerCore-Tracker-TrackerCore
 //
 //  Created by sheng on 2020/11/17.
@@ -18,6 +18,26 @@
 //  limitations under the License.
 
 
-#import "GrowingTrackEventType.h"
+#import "GrowingPageAttributesEvent.h"
 
-FOUNDATION_EXPORT GrowingEventType const GrowingEventTypeFormSubmit;
+
+NS_ASSUME_NONNULL_BEGIN
+@class GrowingHybridPageAttributesBuilder;
+@interface GrowingHybridPageAttributesEvent : GrowingPageAttributesEvent
+@property (nonatomic, strong, readonly) NSString *query;
+
++ (GrowingHybridPageAttributesBuilder*)builder;
+@end
+
+@interface GrowingHybridPageAttributesBuilder : GrowingPageAttributesBuilder
+@property (nonatomic, strong, readonly) NSString *query;
+
+- (GrowingHybridPageAttributesBuilder *(^)(NSString *value))setQuery;
+
+//重写
+- (GrowingHybridPageAttributesBuilder *(^)(NSString *value))setPath;
+- (GrowingHybridPageAttributesBuilder *(^)(long long value))setPageShowTimestamp;
+
+@end
+
+NS_ASSUME_NONNULL_END
