@@ -18,11 +18,10 @@
 @property(nonatomic, assign) BOOL alreadySendVisitEvent;
 @property(nonatomic, copy) NSString *latestNonNullUserId;
 @property(nonatomic, assign, readonly) long long sessionInterval;
-@property(nonatomic, assign) double latitude;
-@property(nonatomic, assign) double longitude;
 @property(nonatomic, assign) long long latestVisitTime;
 @property(nonatomic, assign) long long latestDidEnterBackgroundTime;
-
+@property(nonatomic, assign) double latitude;
+@property(nonatomic, assign) double longitude;
 @property(strong, nonatomic, readonly) NSHashTable *userIdChangedDelegates;
 @property(strong, nonatomic, readonly) NSLock *delegateLock;
 @end
@@ -146,8 +145,12 @@ static GrowingSession *currentSession = nil;
 /// @param latitude 纬度
 /// @param longitude 经度
 - (void)setLocation:(double)latitude longitude:(double)longitude {
+    //经纬度从无到有会发visit
     if ((_latitude == 0 && (ABS(latitude) > 0)) || (_longitude == 0 && ABS(longitude) > 0)) {
+        _latitude = latitude;
+        _longitude = longitude;
         [self resendVisitEvent];
+        return;
     }
     _latitude = latitude;
     _longitude = longitude;
