@@ -15,9 +15,6 @@
 
 
 - (void)scene:(UIScene *)scene continueUserActivity:(NSUserActivity *)userActivity {
-    if ([userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb]) {
-//        userActivity.webpageURL;
-    }
 }
 
 - (void)scene:(UIScene *)scene openURLContexts:(NSSet<UIOpenURLContext *> *)URLContexts {

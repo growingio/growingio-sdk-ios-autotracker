@@ -33,6 +33,7 @@ static NSString *const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
     GrowingTrackConfiguration *configuration = [GrowingTrackConfiguration configurationWithProjectId:kGrowingProjectId];
     configuration.debugEnabled = YES;
     configuration.impressionScale = 1.0;
+    
     [GrowingAutotracker startWithConfiguration:configuration launchOptions:launchOptions];
 //    [GrowingTracker startWithConfiguration:configuration launchOptions:launchOptions];
     [[GrowingAutotracker sharedInstance] setLocation:[@30.11 doubleValue] longitude:[@32.22 doubleValue]];
