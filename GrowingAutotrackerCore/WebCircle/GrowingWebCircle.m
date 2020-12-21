@@ -308,10 +308,7 @@ static GrowingWebCircle *shareInstance = nil;
     self.elements = [NSMutableArray array];
     CGFloat windowLevel = UIWindowLevelNormal;
     UIWindow *topwindow = nil;
-    for (UIWindow *window in [UIApplication sharedApplication].windows) {
-        if ([window isKindOfClass:[GrowingWindow class]]) {
-            break;
-        }
+    for (UIWindow *window in [UIApplication sharedApplication].growingHelper_allWindowsWithoutGrowingWindow) {
         //如果找到了keywindow跳出循环
         if (window.isKeyWindow) {
             topwindow = window;
@@ -320,7 +317,6 @@ static GrowingWebCircle *shareInstance = nil;
         if (window.windowLevel >= windowLevel) {
             windowLevel = window.windowLevel;
             topwindow = window;
-            break;
         }
     }
     if (topwindow) {
@@ -648,7 +644,7 @@ static GrowingWebCircle *shareInstance = nil;
 #pragma mark - GrowingWebViewDomChangedDelegate
 // Hybrid变动，重新发送dom tree
 - (void)webViewDomDidChanged {
-    [self sendScreenShot];
+    [self sendWebcircleWithType:GrowingEventTypeViewClick];
 }
 
 #pragma mark - ViewController LifeCycle

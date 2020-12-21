@@ -24,6 +24,9 @@
 
 @implementation UIApplication (GrowingHelper)
 
+/// 当使用UIAlertView时，系统会创建一个_UIAlertControllerShimPresenterWindow
+/// 并且调用[self winows]时，该数组中没有这个_UIAlertControllerShimPresenterWindow
+/// 我们需要将其加入数组中
 - (NSArray<UIWindow*>*)growingHelper_allWindows {
     NSArray * array = [self windows];
     UIWindow * keyWindow = [self keyWindow];
