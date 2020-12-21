@@ -24,10 +24,17 @@
 #import "GrowingViewNode.h"
 #import "GrowingPageManager.h"
 #import "GrowingNodeHelper.h"
+#import "UIView+GrowingNode.h"
+#import "GrowingLogMacros.h"
+#import "GrowingCocoaLumberjack.h"
 
 @implementation GrowingViewClickProvider
 
 + (void)viewOnClick:(UIView *)view {
+    if ([view growingNodeDonotTrack]) {
+        GIOLogDebug(@"viewOnClick %@ is donotTrack",view);
+        return;
+    }
     GrowingPageGroup *page = [[GrowingPageManager sharedInstance] findPageByView:view];
     if (!page) {
         page = [[GrowingPageManager sharedInstance] currentPage];
