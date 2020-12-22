@@ -149,7 +149,9 @@ static GrowingSession *currentSession = nil;
     if ((_latitude == 0 && (ABS(latitude) > 0)) || (_longitude == 0 && ABS(longitude) > 0)) {
         _latitude = latitude;
         _longitude = longitude;
-        [self resendVisitEvent];
+        if (self.alreadySendVisitEvent) {
+            [self resendVisitEvent];
+        }
         return;
     }
     _latitude = latitude;
