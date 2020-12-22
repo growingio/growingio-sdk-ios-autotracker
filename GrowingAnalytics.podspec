@@ -9,9 +9,9 @@
 Pod::Spec.new do |s|
   s.name             = 'GrowingAnalytics'
   s.version          = '0.0.1'
-  s.summary          = 'A short description of GrowingIO.'
+  s.summary          = 'iOS SDK of GrowingIO.'
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和行为数据等。目前支持代码埋点、无埋点、可视化圈选、热图等功能。
                        DESC
 
   s.homepage         = 'https://www.growingio.com/'
@@ -25,7 +25,6 @@ TODO: Add long description of the pod here.
   
   s.subspec 'TrackerCore' do |trackerCore|
       trackerCore.source_files = 'GrowingTrackerCore/**/*{.h,.m}'
-      
   end
   
   s.subspec 'Tracker' do |tracker|
