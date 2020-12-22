@@ -25,6 +25,7 @@
 #import <ifaddrs.h>
 
 #import "GrowingAlert.h"
+#import "GrowingApplicationEventManager.h"
 #import "GrowingAttributesConst.h"
 #import "GrowingAutotrackEventType.h"
 #import "GrowingCocoaLumberjack.h"
@@ -66,7 +67,7 @@
 @interface GrowingWebCircle () <GrowingSRWebSocketDelegate,
                                 GrowingEventInterceptor,
                                 GrowingWebViewDomChangedDelegate,
-                                GrowingViewControllerLifecycleDelegate,
+                                GrowingApplicationEventProtocol,
                                 GrowingDeepLinkHandlerProtocol>
 
 //表示web和app是否同时准备好数据发送，此时表示可以发送数据
@@ -90,13 +91,6 @@
 @implementation GrowingWebCircle
 
 static GrowingWebCircle *shareInstance = nil;
-
-+ (void)setNeedUpdateScreen {
-    // 不用self 不会创建实例
-    if ([shareInstance isRunning]) {
-        [shareInstance setNeedUpdateScreen];
-    }
-}
 
 + (instancetype)shareInstance {
     static dispatch_once_t onceToken;
@@ -144,11 +138,6 @@ static GrowingWebCircle *shareInstance = nil;
     [self sendScreenShot];
 }
 
-- (void)setNeedUpdateScreen {
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_setNeedUpdateScreen) object:nil];
-    [self performSelector:@selector(_setNeedUpdateScreen) withObject:nil afterDelay:1];
-}
-
 #pragma mark - screenShot
 
 - (UIImage *)screenShot {
@@ -173,28 +162,6 @@ static GrowingWebCircle *shareInstance = nil;
 + (CGFloat)impressScale {
     CGFloat scale = [UIScreen mainScreen].scale;
     return MIN(scale, 2);
-}
-
-#pragma mark - node
-
-- (BOOL)isContainer:(id<GrowingNode>)node {
-    return [[self class] isContainer:node];
-}
-
-+ (BOOL)isContainer:(id<GrowingNode>)node {
-    // if node is like a button
-    if ([node growingNodeUserInteraction]) {
-        return YES;
-    }
-    // if node is like a text label
-    for (node = [node growingNodeParent]; node != nil; node = [node growingNodeParent]) {
-        if ([node growingNodeUserInteraction]) {
-            // text label is within a button, so it is not container
-            return NO;
-        }
-    }
-    // text label is standalone
-    return YES;
 }
 
 /*
@@ -350,15 +317,10 @@ static GrowingWebCircle *shareInstance = nil;
     }
 }
 
-- (void)onDomChangeWkWebivew {
-    [self setNeedUpdateScreen];
-}
 - (NSDictionary *)dictForUserAction:(NSString *)action {
     if (action.length == 0) {
         return nil;
     }
-
-    //    UIViewController *vc = [[GrowingPageManager sharedInstance] rootViewController];
 
     UIImage *image = [self screenShot];
     NSData *data = [image growingHelper_JPEG:0.8];
@@ -368,10 +330,6 @@ static GrowingWebCircle *shareInstance = nil;
     if (!data.length || !imgBase64Str.length) {
         return nil;
     }
-
-    // TODO：如果要传 avar，pvar，evar 等变量，在这里准备好，然后塞到下面的 dict 中
-    //    CGSize screenSize = [GrowingDeviceInfo deviceScreenSize];
-    //    = (image.size.width * image.scale)/screenSize.width
     NSDictionary *dict = @{
         @"screenWidth" : @(image.size.width * image.scale),
         @"screenHeight" : @(image.size.height * image.scale),
@@ -388,10 +346,6 @@ static GrowingWebCircle *shareInstance = nil;
     if (self.isReady) {
         [self sendScreenShotWithCallback:nil];
     }
-}
-
-+ (void)retrieveAllElementsAsync:(void (^)(NSString *))callback {
-    [[self shareInstance] sendScreenShotWithCallback:callback];
 }
 
 - (void)sendScreenShotWithCallback:(void (^)(NSString *))callback  // in case of error, the
@@ -493,7 +447,7 @@ static GrowingWebCircle *shareInstance = nil;
     static CGRect lastRect;
     CGRect rect = [UIScreen mainScreen].bounds;
     if (!CGRectEqualToRect(lastRect, rect)) {
-        [[self class] setNeedUpdateScreen];
+        [self _setNeedUpdateScreen];
     }
 
     lastRect = rect;
@@ -513,7 +467,7 @@ static GrowingWebCircle *shareInstance = nil;
     [GrowingHybridBridgeProvider sharedInstance].domChangedDelegate = self;
     //监听原生事件，变动时发送
     [[GrowingEventManager shareInstance] addInterceptor:self];
-    [GrowingViewControllerLifecycle.sharedInstance addViewControllerLifecycleDelegate:self];
+    [[GrowingApplicationEventManager sharedInstance] addApplicationEventObserver:self];
 }
 
 - (void)stop {
@@ -530,7 +484,7 @@ static GrowingWebCircle *shareInstance = nil;
     [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
 
     [[GrowingEventManager shareInstance] removeInterceptor:self];
-
+    [[GrowingApplicationEventManager sharedInstance] removeApplicationEventObserver:self];
     if (self.webSocket) {
         self.webSocket.delegate = nil;
         [self.webSocket close];
@@ -556,7 +510,6 @@ static GrowingWebCircle *shareInstance = nil;
     }
 
     [[GrowingEventManager shareInstance] removeInterceptor:self];
-    [GrowingViewControllerLifecycle.sharedInstance removeViewControllerLifecycleDelegate:self];
 }
 
 - (BOOL)isRunning {
@@ -647,10 +600,11 @@ static GrowingWebCircle *shareInstance = nil;
     [self sendWebcircleWithType:GrowingEventTypeViewClick];
 }
 
-#pragma mark - ViewController LifeCycle
-// present视图滑动退出时，也需要发送
-- (void)viewControllerDidDisappear:(UIViewController *)controller {
-    [self sendWebcircleWithType:GrowingEventTypePage];
+#pragma mark - GrowingApplicationEventManager
+
+- (void)growingApplicationEventSendEvent:(UIEvent *)event {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_setNeedUpdateScreen) object:nil];
+    [self performSelector:@selector(_setNeedUpdateScreen) withObject:nil afterDelay:1];
 }
 
 #pragma mark - GrowingEventManagerObserver
@@ -668,7 +622,7 @@ static GrowingWebCircle *shareInstance = nil;
     if ([eventType isEqualToString:GrowingEventTypeViewClick] || [eventType isEqualToString:GrowingEventTypePage]) {
         [self.cachedEvents addObject:eventType];
         if (self.onProcessing) {
-            GIOLogDebug(@"[GrowingWebCircle] cached %lu event to webcircle",(unsigned long)self.cachedEvents.count);
+            GIOLogDebug(@"[GrowingWebCircle] cached %lu event to webcircle", (unsigned long)self.cachedEvents.count);
             return;
         }
         self.onProcessing = YES;

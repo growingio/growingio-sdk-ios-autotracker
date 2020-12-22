@@ -17,6 +17,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import "GrowingApplicationEventManager.h"
 #import "GrowingCocoaLumberjack.h"
 #import "GrowingNodeHelper.h"
 #import "GrowingNodeProtocol.h"
@@ -24,6 +25,12 @@
 #import "UIApplication+GrowingAutotracker.h"
 
 @implementation UIApplication (GrowingAutotracker)
+
+- (void)growing_sendEvent:(UIEvent *)event {
+    [self growing_sendEvent:event];
+    //触摸 滑动都会在这里触发
+    [[GrowingApplicationEventManager sharedInstance] dispatchApplicationEventSendEvent:event];
+}
 
 - (BOOL)growing_sendAction:(SEL)action to:(id)target from:(id)sender forEvent:(UIEvent *)event {
     BOOL result = YES;
@@ -60,14 +67,15 @@
     if ([sender isKindOfClass:UISwitch.class] || [sender isKindOfClass:UIStepper.class] ||
         [sender isKindOfClass:UIPageControl.class]) {
         [GrowingViewClickProvider viewOnClick:node];
-        return;
+    } else if ([event isKindOfClass:[UIEvent class]] && event.type == UIEventTypeTouches &&
+               [[[event allTouches] anyObject] phase] == UITouchPhaseEnded) {
+        [GrowingViewClickProvider viewOnClick:node];
     }
 
-    if ([event isKindOfClass:[UIEvent class]] && event.type == UIEventTypeTouches &&
-        [[[event allTouches] anyObject] phase] == UITouchPhaseEnded) {
-        [GrowingViewClickProvider viewOnClick:node];
-        return;
-    }
+    [[GrowingApplicationEventManager sharedInstance] dispatchApplicationEventSendAction:action
+                                                                                     to:target
+                                                                                   from:sender
+                                                                               forEvent:event];
 }
 
 @end
