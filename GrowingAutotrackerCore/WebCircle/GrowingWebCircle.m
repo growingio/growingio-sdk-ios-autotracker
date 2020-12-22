@@ -668,7 +668,7 @@ static GrowingWebCircle *shareInstance = nil;
     if ([eventType isEqualToString:GrowingEventTypeViewClick] || [eventType isEqualToString:GrowingEventTypePage]) {
         [self.cachedEvents addObject:eventType];
         if (self.onProcessing) {
-            GIOLogDebug(@"[GrowingWebCircle] onProcessing event to webcircle");
+            GIOLogDebug(@"[GrowingWebCircle] cached %lu event to webcircle",(unsigned long)self.cachedEvents.count);
             return;
         }
         self.onProcessing = YES;
