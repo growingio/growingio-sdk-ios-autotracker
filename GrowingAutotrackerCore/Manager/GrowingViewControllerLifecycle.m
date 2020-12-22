@@ -5,8 +5,8 @@
 #import "GrowingViewControllerLifecycle.h"
 
 @interface GrowingViewControllerLifecycle ()
-@property(strong, nonatomic, readonly) NSPointerArray *viewControllerLifecycleDelegates;
-@property(strong, nonatomic, readonly) NSLock *delegateLock;
+@property (strong, nonatomic, readonly) NSPointerArray *viewControllerLifecycleDelegates;
+@property (strong, nonatomic, readonly) NSLock *delegateLock;
 @end
 
 @implementation GrowingViewControllerLifecycle
@@ -24,10 +24,22 @@
     static id _sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _sharedInstance = [[self alloc] init];
+        _sharedInstance = [[super allocWithZone:NULL] init];
     });
 
     return _sharedInstance;
+}
+// for safe sharedInstance
++ (instancetype)allocWithZone:(struct _NSZone *)zone {
+    return [self sharedInstance];
+}
+
+- (id)copyWithZone:(NSZone *)zone {
+    return self;
+}
+
+- (id)mutableCopyWithZone:(NSZone *)zone {
+    return self;
 }
 
 - (void)addViewControllerLifecycleDelegate:(id)delegate {
@@ -41,14 +53,14 @@
 - (void)removeViewControllerLifecycleDelegate:(id)delegate {
     [self.delegateLock lock];
     [self.viewControllerLifecycleDelegates.allObjects
-            enumerateObjectsWithOptions:NSEnumerationReverse
-                             usingBlock:^(NSObject *obj, NSUInteger idx, BOOL *_Nonnull stop) {
-                                 if (delegate == obj) {
-                                     [self.viewControllerLifecycleDelegates removePointerAtIndex:idx];
-                                     *stop = YES;
-                                 }
-                             }];
-    
+        enumerateObjectsWithOptions:NSEnumerationReverse
+                         usingBlock:^(NSObject *obj, NSUInteger idx, BOOL *_Nonnull stop) {
+                             if (delegate == obj) {
+                                 [self.viewControllerLifecycleDelegates removePointerAtIndex:idx];
+                                 *stop = YES;
+                             }
+                         }];
+
     [self.delegateLock unlock];
 }
 

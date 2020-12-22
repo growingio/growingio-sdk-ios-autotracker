@@ -69,7 +69,12 @@
         if (applicatonError) {
             GIOLogError(@"Failed to swizzle UIApplication. Details: %@", applicatonError);
         }
-        
+        [UIApplication growing_swizzleMethod:@selector(sendEvent:)
+                                  withMethod:@selector(growing_sendEvent:)
+                                       error:&applicatonError];
+        if (applicatonError) {
+            GIOLogError(@"Failed to swizzle UIApplication sendEvent. Details: %@", applicatonError);
+        }
         // UISegmentControl
         NSError *segmentControlError = NULL;
         [UISegmentedControl growing_swizzleMethod:@selector(initWithCoder:)
