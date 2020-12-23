@@ -25,8 +25,8 @@
 #import "GrowingDeepLinkHandler.h"
 #import "GrowingWebWatcher.h"
 
-NSString *const GrowingTrackerVersionName = @"0.0.1";
-const int GrowingTrackerVersionCode = 1;
+NSString *const GrowingTrackerVersionName = @"3.0.0";
+const int GrowingTrackerVersionCode = 30000;
 
 @interface GrowingRealTracker ()
 @property(nonatomic, copy, readonly) NSDictionary *launchOptions;
