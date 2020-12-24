@@ -17,16 +17,16 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <Foundation/Foundation.h>
+
 #import "GrowingFileStorage.h"
 
 @interface GrowingDeviceInfo : NSObject
 
 + (instancetype)currentDeviceInfo;
 
-@property (nonatomic, copy)     NSString*(^deviceIDBlock)(void);
-@property (nonatomic, copy)     NSString*(^encryptStringBlock)(NSString *string);
+@property (nonatomic, copy) NSString * (^deviceIDBlock)(void);
+@property (nonatomic, copy) NSString * (^encryptStringBlock)(NSString *string);
 
 @property (nonatomic, readonly) BOOL isNewInstall;
 @property (nonatomic, readonly) BOOL isPastedDeeplinkCallback;
@@ -46,6 +46,8 @@
 @property (nonatomic, readonly) NSString *appVersion;
 @property (nonatomic, readonly) NSString *carrier;
 @property (nonatomic, readonly) NSString *urlScheme;
+@property (nonatomic, readonly) NSString *deviceOrientation;
+@property (nonatomic, readonly) int appState;
 
 + (void)configUrlScheme:(NSString *)urlScheme;
 
@@ -55,6 +57,5 @@
 - (void)deviceInfoReported;
 - (void)pasteboardDeeplinkReported;
 + (CGSize)deviceScreenSize;
-+ (NSString *)deviceOrientation;
 
 @end

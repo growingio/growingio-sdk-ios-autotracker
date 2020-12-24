@@ -17,15 +17,15 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import "GrowingPageEvent.h"
+
 #import "GrowingDeviceInfo.h"
 
 @implementation GrowingPageEvent
 
 - (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
     if (self = [super initWithBuilder:builder]) {
-        GrowingPageBuilder *subBuilder = (GrowingPageBuilder*)builder;
+        GrowingPageBuilder *subBuilder = (GrowingPageBuilder *)builder;
         _pageName = subBuilder.pageName;
         _orientation = subBuilder.orientation;
         _title = subBuilder.title;
@@ -40,7 +40,8 @@
     dataDictM[@"orientation"] = self.orientation;
     dataDictM[@"title"] = self.title;
     dataDictM[@"referralPage"] = self.referralPage;
-    return dataDictM;;
+    return dataDictM;
+    ;
 }
 
 + (GrowingPageBuilder *)builder {
@@ -53,28 +54,28 @@
 
 - (void)readPropertyInMainThread {
     [super readPropertyInMainThread];
-    _orientation = [GrowingDeviceInfo deviceOrientation];
+    _orientation = [GrowingDeviceInfo currentDeviceInfo].deviceOrientation;
 }
 
-- (GrowingPageBuilder *(^)(NSString *value))setPath {
+- (GrowingPageBuilder * (^)(NSString *value))setPath {
     return ^(NSString *value) {
         self->_pageName = value;
         return self;
     };
 }
-- (GrowingPageBuilder *(^)(NSString *value))setOrientation {
+- (GrowingPageBuilder * (^)(NSString *value))setOrientation {
     return ^(NSString *value) {
         self->_orientation = value;
         return self;
     };
 }
-- (GrowingPageBuilder *(^)(NSString *value))setTitle {
+- (GrowingPageBuilder * (^)(NSString *value))setTitle {
     return ^(NSString *value) {
         self->_title = value;
         return self;
     };
 }
-- (GrowingPageBuilder *(^)(NSString *value))setReferralPage {
+- (GrowingPageBuilder * (^)(NSString *value))setReferralPage {
     return ^(NSString *value) {
         self->_referralPage = value;
         return self;
@@ -84,7 +85,6 @@
 - (NSString *)eventType {
     return GrowingEventTypePage;
 }
-
 
 - (GrowingBaseEvent *)build {
     return [[GrowingPageEvent alloc] initWithBuilder:self];
