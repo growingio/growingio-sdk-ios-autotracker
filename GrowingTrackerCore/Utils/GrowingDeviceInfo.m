@@ -34,7 +34,7 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 
 @interface GrowingDeviceInfo () <GrowingAppLifecycleDelegate>
-@property (nonatomic, strong) NSString *deviceOrientation;
+@property (nonatomic, copy) NSString *deviceOrientation;
 @end
 
 @implementation GrowingDeviceInfo
@@ -360,7 +360,7 @@ static pthread_mutex_t _mutex;
             UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
             if (orientation != UIInterfaceOrientationUnknown) {
                 @synchronized(self) {
-                    self.deviceOrientation = UIInterfaceOrientationIsPortrait(orientation) ? @"PORTRAIT" : @"LANDSCAPE";
+                    self->_deviceOrientation = UIInterfaceOrientationIsPortrait(orientation) ? @"PORTRAIT" : @"LANDSCAPE";
                 }
             }
         };
