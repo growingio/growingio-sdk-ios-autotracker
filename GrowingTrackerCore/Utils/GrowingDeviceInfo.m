@@ -22,6 +22,7 @@
 #import <pthread.h>
 #import <sys/utsname.h>
 
+#import "GrowingAppLifecycle.h"
 #import "GrowingCocoaLumberjack.h"
 #import "GrowingDispatchManager.h"
 #import "NSString+GrowingHelper.h"
@@ -29,8 +30,12 @@
 static NSString *kGrowingUrlScheme = nil;
 NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 
-#import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <CoreTelephony/CTCarrier.h>
+#import <CoreTelephony/CTTelephonyNetworkInfo.h>
+
+@interface GrowingDeviceInfo () <GrowingAppLifecycleDelegate>
+@property (nonatomic, strong) NSString *deviceOrientation;
+@end
 
 @implementation GrowingDeviceInfo
 
@@ -189,6 +194,13 @@ static pthread_mutex_t _mutex;
                 [customDict setValue:obj forKey:key.lowercaseString];
             }
         }];
+
+        [[GrowingAppLifecycle sharedInstance] addAppLifecycleDelegate:self];
+
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(handleStatusBarOrientationChange:)
+                                                     name:UIApplicationDidChangeStatusBarOrientationNotification
+                                                   object:nil];
     }
     return self;
 }
@@ -208,7 +220,6 @@ static pthread_mutex_t _mutex;
 }
 
 - (NSString *)getDeviceIdString {
-    
     NSString *deviceIdString = [self keyChainObjectForKey:kGrowingKeychainUserIdKey];
     // 如果取到有效u值，直接返回
     if ([deviceIdString growingHelper_isValidU]) {
@@ -276,7 +287,6 @@ static pthread_mutex_t _mutex;
     }
 }
 
-
 - (NSString *)getVendorId {
     NSString *vendorId = nil;
 
@@ -309,9 +319,9 @@ static pthread_mutex_t _mutex;
 
     // In iOS 10.0 and later, the value of advertisingIdentifier is all zeroes
     // when the user has limited ad tracking; So return @"";
-//    if (IOS10_PLUS && !trackingEnabled) {
-//        return uid;
-//    }
+    //    if (IOS10_PLUS && !trackingEnabled) {
+    //        return uid;
+    //    }
 
     SEL advertisingIdentifierSelector = NSSelectorFromString(@"advertisingIdentifier");
 
@@ -342,12 +352,52 @@ static pthread_mutex_t _mutex;
     return size;
 }
 
-+ (NSString *)deviceOrientation {
+#pragma mark - status bar
+
+- (NSString *)deviceOrientation {
+    if (!_deviceOrientation) {
+        dispatch_block_t block = ^{
+            UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+            if (orientation != UIInterfaceOrientationUnknown) {
+                @synchronized(self) {
+                    self.deviceOrientation = UIInterfaceOrientationIsPortrait(orientation) ? @"PORTRAIT" : @"LANDSCAPE";
+                }
+            }
+        };
+        if ([NSThread isMainThread]) {
+            block();
+        } else {
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                block();
+            });
+        }
+    }
+    return _deviceOrientation;
+}
+
+- (void)handleStatusBarOrientationChange:(NSNotification *)notification {
     UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
     if (orientation != UIInterfaceOrientationUnknown) {
-        return UIInterfaceOrientationIsPortrait(orientation) ? @"PORTRAIT" : @"LANDSCAPE";
+        @synchronized(self) {
+            _deviceOrientation = UIInterfaceOrientationIsPortrait(orientation) ? @"PORTRAIT" : @"LANDSCAPE";
+        }
     }
-    return nil;
+}
+
+#pragma mark - appLifeCycle
+
+- (void)applicationDidBecomeActive {
+    [self updateAppState];
+}
+
+- (void)applicationWillResignActive {
+    [self updateAppState];
+}
+
+- (void)updateAppState {
+    @synchronized(self) {
+        _appState = [UIApplication sharedApplication].applicationState == UIApplicationStateActive ? 0 : 1;
+    }
 }
 
 @end
