@@ -31,7 +31,9 @@
 #import "UIView+GrowingNode.h"
 #import "GrowingImpressionTrack.h"
 #import "GrowingConfigurationManager.h"
-
+#import "GrowingTrackConfiguration+GrowingAutotracker.h"
+#import "GrowingRealAutotracker.h"
+#import "GrowingNode.h"
 @interface GrowingMaskView : UIImageView
 @end
 
@@ -76,7 +78,8 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
 
     NSInteger count = 0;
     NSInteger index = -1;
-    for (UIResponder *res in subResponder) {
+    for (int i = 0; i < subResponder.count; i ++) {
+        UIResponder *res = subResponder[i];
         if ([classString isEqualToString:NSStringFromClass(res.class)]) {
             count++;
         }
@@ -88,13 +91,15 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
 }
 
 - (NSString *)growingNodeSubPath {
-    /* 忽略路径
-     UITableViewWrapperView 为 iOS11 以下 UITableView 与 cell 之间的 view
-     */
+    //UITableViewWrapperView 为 iOS11 以下 UITableView 与 cell 之间的 view
     if ([NSStringFromClass(self.class) isEqualToString:@"UITableViewWrapperView"]) {
-        return @"";
+        return nil;
     }
-    
+    //如果手动标识了该view,返回标识
+    if (self.growingUniqueTag.length > 0) {
+        return self.growingUniqueTag;
+    }
+    //返回类型+index
     NSInteger index = [self growingNodeKeyIndex];
     NSString *className = NSStringFromClass(self.class);
     return index < 0

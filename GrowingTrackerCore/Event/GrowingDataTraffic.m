@@ -54,7 +54,7 @@ static GrowingDataTraffic *_instance;
     self.cellularTrafficStorage = [[GrowingFileStorage alloc] initWithName:@"config"];
     NSDictionary *savedDict = [self.cellularTrafficStorage dictionaryForKey:kGrowingUploadEventFileKey];
     
-    if ([savedDict isKindOfClass:NSDictionary.class]) {
+    if (savedDict == nil || [savedDict isKindOfClass:NSDictionary.class]) {
         self.storeDict = [NSMutableDictionary dictionaryWithDictionary:savedDict];
     }
 }

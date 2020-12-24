@@ -22,8 +22,7 @@
 #import "GrowingEventManager.h"
 #import "GrowingNetworkInterfaceManager.h"
 #import "GrowingRealTracker.h"
-
-@import CoreLocation;
+#import <CoreLocation/CoreLocation.h>
 
 @interface GrowingVisitEvent ()
 
@@ -100,7 +99,6 @@
     
     _idfa = deviceInfo.idfa;
     _idfv = deviceInfo.idfv;
-    
 }
 
 - (GrowingVisitBuidler *(^)(NSString *value))setNetworkState {

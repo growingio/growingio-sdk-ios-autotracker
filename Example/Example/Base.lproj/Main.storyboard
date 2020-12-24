@@ -393,19 +393,10 @@
                         <outlet property="defaultSwitch" destination="8j3-fL-OZa" id="GUi-Do-byc"/>
                         <outlet property="grayStyleActivityIndicatorView" destination="eV6-89-19K" id="tIw-7H-AEU"/>
                         <outlet property="searchBar" destination="zX5-T5-lur" id="IyN-zg-f7b"/>
-                        <outlet property="searchDisplayController" destination="7sv-DI-olW" id="tIT-Y8-Rbj"/>
                         <outlet property="toolbar" destination="gtT-gP-XQK" id="9nJ-hN-GfR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tWu-k3-i3P" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <searchDisplayController id="7sv-DI-olW">
-                    <connections>
-                        <outlet property="delegate" destination="JEZ-64-HdO" id="0aO-e4-q0W"/>
-                        <outlet property="searchContentsController" destination="JEZ-64-HdO" id="dQJ-8h-zDD"/>
-                        <outlet property="searchResultsDataSource" destination="JEZ-64-HdO" id="ti1-CB-k48"/>
-                        <outlet property="searchResultsDelegate" destination="JEZ-64-HdO" id="EM2-SF-LWQ"/>
-                    </connections>
-                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="-490.39999999999998" y="3620.2398800599703"/>
         </scene>

@@ -23,25 +23,33 @@
 #import "GrowingViewElementEvent.h"
 #import "GrowingViewNode.h"
 #import "GrowingPageManager.h"
+#import "GrowingNodeHelper.h"
+#import "UIView+GrowingNode.h"
+#import "GrowingLogMacros.h"
+#import "GrowingCocoaLumberjack.h"
 
 @implementation GrowingViewClickProvider
 
 + (void)viewOnClick:(UIView *)view {
+    if ([view growingNodeDonotTrack]) {
+        GIOLogDebug(@"viewOnClick %@ is donotTrack",view);
+        return;
+    }
     GrowingPageGroup *page = [[GrowingPageManager sharedInstance] findPageByView:view];
     if (!page) {
         page = [[GrowingPageManager sharedInstance] currentPage];
     }
-    GrowingViewNode *node = [[GrowingViewNode alloc] initWithNode:view];
+    GrowingViewNode *node = [GrowingNodeHelper getViewNode:view];
     [self sendClickEvent:page viewNode:node];
 }
 
 + (void)sendClickEvent:(GrowingPageGroup *)page viewNode:(GrowingViewNode *)node{
     [[GrowingEventManager shareInstance] postEventBuidler:GrowingViewElementEvent.builder.setEventType(GrowingEventTypeViewClick)
-     .setPageName(page.path)
+     .setPath(page.path)
      .setPageShowTimestamp(page.showTimestamp)
      .setXpath(node.xPath)
      .setIndex(node.index)
-     .setTextValue(node.textValue)];
+     .setTextValue(node.viewContent)];
 }
 
 @end

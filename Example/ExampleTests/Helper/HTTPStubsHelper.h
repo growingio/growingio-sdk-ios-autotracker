@@ -1,8 +1,8 @@
 //
-//  GrowingEventOtherRequest.m
-//  GrowingTracker
+// HTTPStubsHelper.h
+// ExampleTests
 //
-//  Created by GrowingIO on 2020/6/18.
+//  Created by GrowingIO on 11/25/20.
 //  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,15 +18,17 @@
 //  limitations under the License.
 
 
-#import "GrowingEventOtherRequest.h"
+#import <Foundation/Foundation.h>
+#import "HTTPStubs.h"
+#import "NSURLRequest+HTTPBodyTesting.h"
+NS_ASSUME_NONNULL_BEGIN
 
-@implementation GrowingEventOtherRequest
+@interface HTTPStubsHelper : NSObject
 
-- (NSString *)path {
-//    NSString *accountId = [GrowingInstance sharedInstance].projectID ? : @"";
-//    NSString *path = [NSString stringWithFormat:@"v3/%@/ios/other", accountId];
-//    return path;
-    return nil;
-}
+@property(nonatomic,strong)NSArray *array;
 
+-(void)stubRequests;
+-(NSArray *)checkEvents;
 @end
+
+NS_ASSUME_NONNULL_END

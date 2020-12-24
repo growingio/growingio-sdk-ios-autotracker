@@ -108,7 +108,10 @@
 		047BF3BC24F655A50028FE94 /* PageEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3B924F655A50028FE94 /* PageEventsTest.m */; };
 		04A6FAF224E662E9006C72F0 /* GIOChildsAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A6FAF124E662E9006C72F0 /* GIOChildsAddViewController.m */; };
 		04A6FAF524E67215006C72F0 /* GIOBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A6FAF424E67215006C72F0 /* GIOBaseViewController.m */; };
+		04E62DF12575E73B00A3638C /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E62DF02575E73A00A3638C /* SceneDelegate.m */; };
 		42ADE26C250B292900CA7268 /* HybirdTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 42ADE26B250B292900CA7268 /* HybirdTests.m */; };
+		42F753BD256E2E46002F0D37 /* HTTPStubsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 42F753BC256E2E46002F0D37 /* HTTPStubsHelper.m */; };
+		42F753C1256E3256002F0D37 /* SomeEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 42F753C0256E3256002F0D37 /* SomeEventsTest.m */; };
 		4916270F24E157BB00444AF2 /* GIOPresentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916270E24E157BB00444AF2 /* GIOPresentViewController.m */; };
 		4916271224E157CF00444AF2 /* GIOPagingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916271124E157CF00444AF2 /* GIOPagingViewController.m */; };
 		491D2D8D2500E2D9001CB289 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 491D2D8C2500E2D9001CB289 /* MapKit.framework */; };
@@ -264,8 +267,14 @@
 		04A6FAF124E662E9006C72F0 /* GIOChildsAddViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOChildsAddViewController.m; sourceTree = "<group>"; };
 		04A6FAF324E67215006C72F0 /* GIOBaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIOBaseViewController.h; sourceTree = "<group>"; };
 		04A6FAF424E67215006C72F0 /* GIOBaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOBaseViewController.m; sourceTree = "<group>"; };
+		04E62DEF2575E73A00A3638C /* SceneDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
+		04E62DF02575E73A00A3638C /* SceneDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
 		11EA2ABB8F1029820A3234DB /* Pods_ExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ExampleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		42ADE26B250B292900CA7268 /* HybirdTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HybirdTests.m; sourceTree = "<group>"; };
+		42F753BB256E2E46002F0D37 /* HTTPStubsHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HTTPStubsHelper.h; sourceTree = "<group>"; };
+		42F753BC256E2E46002F0D37 /* HTTPStubsHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HTTPStubsHelper.m; sourceTree = "<group>"; };
+		42F753BF256E3256002F0D37 /* SomeEventsTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SomeEventsTest.h; sourceTree = "<group>"; };
+		42F753C0256E3256002F0D37 /* SomeEventsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SomeEventsTest.m; sourceTree = "<group>"; };
 		48BA0D37888FF209ED84CD0E /* Pods-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.debug.xcconfig"; path = "../../Pods/Target Support Files/Pods-Example/Pods-Example.debug.xcconfig"; sourceTree = "<group>"; };
 		4916270D24E157BB00444AF2 /* GIOPresentViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIOPresentViewController.h; sourceTree = "<group>"; };
 		4916270E24E157BB00444AF2 /* GIOPresentViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOPresentViewController.m; sourceTree = "<group>"; };
@@ -341,6 +350,8 @@
 				046530DE24DD4271002D254C /* APITests */,
 				046530BE24DD4271002D254C /* AppDelegate.h */,
 				046530FF24DD4271002D254C /* AppDelegate.m */,
+				04E62DEF2575E73A00A3638C /* SceneDelegate.h */,
+				04E62DF02575E73A00A3638C /* SceneDelegate.m */,
 				046530D124DD4271002D254C /* Assets.xcassets */,
 				04A6FAE024E2BF11006C72F0 /* Example.entitlements */,
 				046530FD24DD4271002D254C /* GrowingIO-Info.plist */,
@@ -447,27 +458,27 @@
 		0465310024DD4271002D254C /* UICategoryTests */ = {
 			isa = PBXGroup;
 			children = (
-				0465310124DD4271002D254C /* GIOLabelAttributeViewController.m */,
-				0465310224DD4271002D254C /* GIOTextFieldViewController.m */,
-				0465310324DD4271002D254C /* GIOCollectionViewController.m */,
-				0465310424DD4271002D254C /* GIOUICategoryViewController.m */,
-				0465310524DD4271002D254C /* GIOBannerAndTableViewController.h */,
 				0465310624DD4271002D254C /* gio_hybrid.html */,
-				0465310724DD4271002D254C /* GIOButtonViewController.h */,
+				0465312324DD4271002D254C /* GIOActionSheetViewController.h */,
 				0465310824DD4271002D254C /* GIOActionSheetViewController.m */,
-				0465310924DD4271002D254C /* GIOSimpleUIElemtsViewController.m */,
-				0465310A24DD4271002D254C /* GIOHybridViewController.m */,
-				0465310B24DD4271002D254C /* GIOTextFieldViewController.h */,
-				0465310C24DD4271002D254C /* GIOLabelAttributeViewController.h */,
+				0465310524DD4271002D254C /* GIOBannerAndTableViewController.h */,
 				0465310D24DD4271002D254C /* GIOBannerAndTableViewController.m */,
+				0465310724DD4271002D254C /* GIOButtonViewController.h */,
+				0465312024DD4271002D254C /* GIOButtonViewController.m */,
+				0465311F24DD4271002D254C /* GIOCollectionViewController.h */,
+				0465310324DD4271002D254C /* GIOCollectionViewController.m */,
+				0465312124DD4271002D254C /* GIOHybridViewController.h */,
+				0465310A24DD4271002D254C /* GIOHybridViewController.m */,
+				0465310C24DD4271002D254C /* GIOLabelAttributeViewController.h */,
+				0465310124DD4271002D254C /* GIOLabelAttributeViewController.m */,
+				0465312224DD4271002D254C /* GIOSimpleUIElemtsViewController.h */,
+				0465310924DD4271002D254C /* GIOSimpleUIElemtsViewController.m */,
+				0465310B24DD4271002D254C /* GIOTextFieldViewController.h */,
+				0465310224DD4271002D254C /* GIOTextFieldViewController.m */,
 				0465310E24DD4271002D254C /* GIOUICategoryViewController.h */,
+				0465310424DD4271002D254C /* GIOUICategoryViewController.m */,
 				0465310F24DD4271002D254C /* PageStructure */,
 				0465311524DD4271002D254C /* View */,
-				0465311F24DD4271002D254C /* GIOCollectionViewController.h */,
-				0465312024DD4271002D254C /* GIOButtonViewController.m */,
-				0465312124DD4271002D254C /* GIOHybridViewController.h */,
-				0465312224DD4271002D254C /* GIOSimpleUIElemtsViewController.h */,
-				0465312324DD4271002D254C /* GIOActionSheetViewController.h */,
 			);
 			path = UICategoryTests;
 			sourceTree = "<group>";
@@ -518,6 +529,8 @@
 				047BF3B724F655A50028FE94 /* ViewChangeEventsTest.m */,
 				047BF3B224F6551B0028FE94 /* VisitEventsTest.h */,
 				047BF3B324F6551B0028FE94 /* VisitEventsTest.m */,
+				42F753BF256E3256002F0D37 /* SomeEventsTest.h */,
+				42F753C0256E3256002F0D37 /* SomeEventsTest.m */,
 			);
 			path = ProtocolAndApi;
 			sourceTree = "<group>";
@@ -581,6 +594,8 @@
 				4962653624DA66B600032551 /* NoburPoMeaProCheck.m */,
 				4962653824DA66B600032551 /* ManualTrackHelper.h */,
 				4962653224DA66B600032551 /* ManualTrackHelper.m */,
+				42F753BB256E2E46002F0D37 /* HTTPStubsHelper.h */,
+				42F753BC256E2E46002F0D37 /* HTTPStubsHelper.m */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -940,11 +955,13 @@
 				4962657224DA66BF00032551 /* CS1ManualTrackTest.m in Sources */,
 				047BF3AE24F638BB0028FE94 /* FlushIntervalAPITest.m in Sources */,
 				4962652B24DA667900032551 /* GrowingIO_ExampleTests.m in Sources */,
+				42F753C1256E3256002F0D37 /* SomeEventsTest.m in Sources */,
 				047BF3BA24F655A50028FE94 /* ClickEventsTest.m in Sources */,
 				047BF3AD24F638BB0028FE94 /* A1TrackAPIMainThreadTest.m in Sources */,
 				4962657524DA66BF00032551 /* PageAttributesEventsTest.m in Sources */,
 				047BF3BC24F655A50028FE94 /* PageEventsTest.m in Sources */,
 				4962657324DA66BF00032551 /* LoginUserAttributerEventsTest.m in Sources */,
+				42F753BD256E2E46002F0D37 /* HTTPStubsHelper.m in Sources */,
 				42ADE26C250B292900CA7268 /* HybirdTests.m in Sources */,
 				4962657024DA66BF00032551 /* VisitorAttributesEventsTest.m in Sources */,
 			);
@@ -985,6 +1002,7 @@
 				0465315324DD4272002D254C /* GIOActionSheetViewController.m in Sources */,
 				0465314C24DD4272002D254C /* main.m in Sources */,
 				0465314A24DD4272002D254C /* SecondViewController.m in Sources */,
+				04E62DF12575E73B00A3638C /* SceneDelegate.m in Sources */,
 				0465314224DD4272002D254C /* PageAttributesEventViewController.m in Sources */,
 				0465315724DD4272002D254C /* GIOMultiViewController.m in Sources */,
 				0465314324DD4272002D254C /* GIOClickEventViewController.m in Sources */,
@@ -1231,7 +1249,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Example/GrowingIO-Prefix.pch";
 				INFOPLIST_FILE = "Example/GrowingIO-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "GrowingIO.GrowingIOTest-";
@@ -1254,7 +1272,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Example/GrowingIO-Prefix.pch";
 				INFOPLIST_FILE = "Example/GrowingIO-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "GrowingIO.GrowingIOTest-";

@@ -22,6 +22,11 @@
 #import "GrowingDeviceInfo.h"
 #import "GrowingConfigurationManager.h"
 #import "GrowingTrackConfiguration.h"
+#import "GrowingRealTracker.h"
+
+#import "UIView+GrowingNode.h"
+#import "GrowingLogMacros.h"
+#import "GrowingCocoaLumberjack.h"
 
 static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJavascriptBridge";
 
@@ -33,11 +38,15 @@ static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJav
     GrowingWKWebViewJavascriptBridge *bridge = [[self alloc] init];
     [webView.configuration.userContentController removeScriptMessageHandlerForName:kGrowingWKWebViewJavascriptBridge];
     [webView.configuration.userContentController addScriptMessageHandler:bridge name:kGrowingWKWebViewJavascriptBridge];
-    // TODO: nativeSdkVersionCode
+
     NSString *projectId = GrowingConfigurationManager.sharedInstance.trackConfiguration.projectId;
     NSString *bundleId = [GrowingDeviceInfo currentDeviceInfo].bundleID;
-
-    GrowingWebViewJavascriptBridgeConfiguration *config = [GrowingWebViewJavascriptBridgeConfiguration configurationWithProjectId:projectId appId:bundleId nativeSdkVersionCode:12];
+    NSString *urlScheme = [GrowingDeviceInfo currentDeviceInfo].urlScheme;
+    GrowingWebViewJavascriptBridgeConfiguration *config = [GrowingWebViewJavascriptBridgeConfiguration configurationWithProjectId:projectId
+                                                                                                                            appId:urlScheme
+                                                                                                                       appPackage:bundleId
+                                                                                                                 nativeSdkVersion:GrowingTrackerVersionName
+                                                                                                             nativeSdkVersionCode:GrowingTrackerVersionCode];
 
     WKUserScript *userScript = [[WKUserScript alloc] initWithSource:[GrowingWKWebViewJavascriptBridge_JS createJavascriptBridgeJsWithNativeConfiguration:config]
                                                       injectionTime:WKUserScriptInjectionTimeAtDocumentStart
@@ -47,6 +56,10 @@ static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJav
 }
 
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
+    if ([message.webView growingNodeDonotTrack]) {
+        GIOLogDebug(@"WKWebview Bridge %@ is donotTrack",message.webView);
+        return;
+    }
     if ([message.name isEqualToString:kGrowingWKWebViewJavascriptBridge]) {
         [GrowingHybridBridgeProvider.sharedInstance handleJavascriptBridgeMessage:message.body];
     }

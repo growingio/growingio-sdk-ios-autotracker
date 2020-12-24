@@ -7,8 +7,8 @@
 //
 
 #import "ConversionVariablesEventsTest.h"
-
 #import "GrowingTracker.h"
+#import "GrowingAutotracker.h"
 #import "LogOperHelper.h"
 #import "ManualTrackHelper.h"
 #import "MockEventQueue.h"
@@ -17,7 +17,7 @@
 
 - (void)setUp {
     //设置userid,确保cs1字段不空
-    [[GrowingTracker sharedInstance] setLoginUserId:@"test"];
+    [[GrowingAutotracker sharedInstance] setLoginUserId:@"test"];
 }
 
 - (void)test1SetEvarNormal {
@@ -25,7 +25,7 @@
      function:setEvar正常情况
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    [[GrowingTracker sharedInstance] setConversionVariables:@{@"var1" : @"good", @"var2" : @"excell"}];
+    [[GrowingAutotracker sharedInstance] setConversionVariables:@{@"var1" : @"good", @"var2" : @"excell"}];
     [tester waitForTimeInterval:3];
     NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
     NSLog(@"CONVERSION_VARIABLES事件：%@", evarEventArray);
@@ -55,7 +55,7 @@
     //将Log日志写入文件
     [LogOperHelper writeLogToFile];
     //    [[viewTester usingLabel:@"SendEvar"] tap];
-    [[GrowingTracker sharedInstance] setConversionVariables:nil];
+    [[GrowingAutotracker sharedInstance] setConversionVariables:nil];
     //检测日志输出
     Boolean chres = [LogOperHelper CheckLogOutput:[LogOperHelper getFlagErrNsLog]];
     //恢复日志重定向
@@ -75,7 +75,7 @@
      2019-1-7,优化支持传空对象：{}
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    [[GrowingTracker sharedInstance] setConversionVariables:@{}];
+    [[GrowingAutotracker sharedInstance] setConversionVariables:@{}];
     [tester waitForTimeInterval:3];
     NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
     // NSLog(@"CONVERSION_VARIABLES事件：%@",evarEventArray);
@@ -99,7 +99,7 @@
      function:setEvarWithKey:andStringValue设置变量
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    [[GrowingTracker sharedInstance] setConversionVariables:@{@"ekey1" : @"Good"}];
+    [[GrowingAutotracker sharedInstance] setConversionVariables:@{@"ekey1" : @"Good"}];
     [tester waitForTimeInterval:3];
     NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
     // NSLog(@"CONVERSION_VARIABLES事件：%@",evarEventArray);
@@ -125,7 +125,7 @@
      function:setEvarWithKey:andStringValue更新变量
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    [[GrowingTracker sharedInstance] setConversionVariables:@{@"ekey1" : @"Better"}];
+    [[GrowingAutotracker sharedInstance] setConversionVariables:@{@"ekey1" : @"Better"}];
     [tester waitForTimeInterval:3];
     NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
     // NSLog(@"CONVERSION_VARIABLES事件：%@",evarEventArray);
@@ -154,7 +154,7 @@
     //将Log日志写入文件
     [LogOperHelper writeLogToFile];
     //    [[viewTester usingLabel:@"SendESVar"] tap];
-    [[GrowingTracker sharedInstance] setConversionVariables:@{@"" : @"Better"}];
+    [[GrowingAutotracker sharedInstance] setConversionVariables:@{@"" : @"Better"}];
     //检测日志输出
     Boolean chres = [LogOperHelper CheckLogOutput:[LogOperHelper getFlagErrNsLog]];
     //恢复日志重定向
@@ -176,7 +176,7 @@
     //将Log日志写入文件
     [LogOperHelper writeLogToFile];
     //    [[viewTester usingLabel:@"SendESVar"] tap];
-    [[GrowingTracker sharedInstance] setConversionVariables:@{[NSNull null] : @"Better"}];
+    [[GrowingAutotracker sharedInstance] setConversionVariables:@{[NSNull null] : @"Better"}];
     //检测日志输出
     Boolean chres = [LogOperHelper CheckLogOutput:[LogOperHelper getValueErrNsLog]];
     //恢复日志重定向
@@ -198,7 +198,7 @@
     //将Log日志写入文件
     [LogOperHelper writeLogToFile];
     //    [[viewTester usingLabel:@"SendESVar"] tap];
-    [[GrowingTracker sharedInstance] setConversionVariables:@{@"ekey1" : @""}];
+    [[GrowingAutotracker sharedInstance] setConversionVariables:@{@"ekey1" : @""}];
     //检测日志输出
     Boolean chres = [LogOperHelper CheckLogOutput:[LogOperHelper getValueErrNsLog]];
     //恢复日志重定向
@@ -217,7 +217,7 @@
      function:setEvarWithKey:andNumberValue设置变量
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    [[GrowingTracker sharedInstance] setConversionVariables:@{@"evkey1" : @"132"}];
+    [[GrowingAutotracker sharedInstance] setConversionVariables:@{@"evkey1" : @"132"}];
     [tester waitForTimeInterval:3];
     NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
     // NSLog(@"CONVERSION_VARIABLES事件：%@",evarEventArray);
@@ -243,7 +243,7 @@
      function:setEvarWithKey:andNumberValue更新变量
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    [[GrowingTracker sharedInstance] setConversionVariables:@{@"evkey1" : @"43.22"}];
+    [[GrowingAutotracker sharedInstance] setConversionVariables:@{@"evkey1" : @"43.22"}];
     [tester waitForTimeInterval:3];
     NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
     // NSLog(@"CONVERSION_VARIABLES事件：%@",evarEventArray);
@@ -273,7 +273,7 @@
     //将Log日志写入文件
     [LogOperHelper writeLogToFile];
     //   [[viewTester usingLabel:@"SendENVar"] tap];
-    [[GrowingTracker sharedInstance] setConversionVariables:@{@"" : @"43.22"}];
+    [[GrowingAutotracker sharedInstance] setConversionVariables:@{@"" : @"43.22"}];
     //检测日志输出
     Boolean chres = [LogOperHelper CheckLogOutput:[LogOperHelper getFlagErrNsLog]];
     //恢复日志重定向
@@ -295,7 +295,7 @@
     //将Log日志写入文件
     [LogOperHelper writeLogToFile];
     //   [[viewTester usingLabel:@"SendENVar"] tap];
-    [[GrowingTracker sharedInstance] setConversionVariables:@{@"enkey2" : @""}];
+    [[GrowingAutotracker sharedInstance] setConversionVariables:@{@"enkey2" : @""}];
     //检测日志输出
     Boolean chres = [LogOperHelper CheckLogOutput:[LogOperHelper getValueErrNsLog]];
     //恢复日志重定向
@@ -314,7 +314,7 @@
      function:setEvarWithKey:andStringValue关键字和值为中文
      **/
     [MockEventQueue.sharedQueue cleanQueue];
-    [[GrowingTracker sharedInstance] setConversionVariables:@{@"关键字" : @"北京"}];
+    [[GrowingAutotracker sharedInstance] setConversionVariables:@{@"关键字" : @"北京"}];
     [tester waitForTimeInterval:3];
     NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
     // NSLog(@"CONVERSION_VARIABLES事件：%@",evarEventArray);

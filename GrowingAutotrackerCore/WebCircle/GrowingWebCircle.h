@@ -18,6 +18,7 @@
 //  limitations under the License.
 
 #import <Foundation/Foundation.h>
+
 #import "GrowingNode.h"
 #import "GrowingSRWebSocket.h"
 
@@ -27,14 +28,7 @@
 + (instancetype)shareInstance;
 
 + (BOOL)isRunning;
-+ (void)runWithCircleRoomNumber:(NSString *)circleRoomNumber readyBlock:(void(^)(void))readyBlock finishBlock:(void(^)(void))finishBlock;
++ (void)runWithCircle:(NSURL *)url readyBlock:(void (^)(void))readyBlock finishBlock:(void (^)(void))finishBlock;
 + (void)stop;
-
-+ (void)setNeedUpdateScreen;
-
-// for webview based add-tag-menu
-+ (CGFloat)impressScale;
-+ (BOOL)isContainer:(id<GrowingNode>)node;
-+ (void)retrieveAllElementsAsync:(void(^)(NSString *))callback;
 
 @end

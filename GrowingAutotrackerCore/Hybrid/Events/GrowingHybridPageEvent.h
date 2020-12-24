@@ -1,5 +1,5 @@
 //
-// GrowingHybirdPageAttributesEvent.h
+// GrowingHybridPageEvent.h
 // GrowingAnalytics-Autotracker-AutotrackerCore-Tracker-TrackerCore
 //
 //  Created by sheng on 2020/11/17.
@@ -18,26 +18,31 @@
 //  limitations under the License.
 
 
-#import "GrowingPageAttributesEvent.h"
-
+#import "GrowingPageEvent.h"
 
 NS_ASSUME_NONNULL_BEGIN
-@class GrowingHybirdPageAttributesBuilder;
-@interface GrowingHybirdPageAttributesEvent : GrowingPageAttributesEvent
-@property (nonatomic, strong, readonly) NSString *query;
+@class GrowingHybridPageBuilder;
+@interface GrowingHybridPageEvent : GrowingPageEvent
+@property (nonatomic, copy, readonly) NSString *protocolType;
+@property (nonatomic, copy, readonly) NSString *query;
 
-+ (GrowingHybirdPageAttributesBuilder*)builder;
++ (GrowingHybridPageBuilder*)builder;
+
+
 @end
 
-@interface GrowingHybirdPageAttributesBuilder : GrowingPageAttributesBuilder
+@interface GrowingHybridPageBuilder : GrowingPageBuilder
+@property (nonatomic, copy, readonly) NSString *protocolType;
 @property (nonatomic, strong, readonly) NSString *query;
 
-- (GrowingHybirdPageAttributesBuilder *(^)(NSString *value))setQuery;
+- (GrowingHybridPageBuilder *(^)(NSString *value))setQuery;
+- (GrowingHybridPageBuilder *(^)(NSString *value))setProtocolType;
 
 //重写
-- (GrowingHybirdPageAttributesBuilder *(^)(NSString *value))setPageName;
-- (GrowingHybirdPageAttributesBuilder *(^)(long long value))setPageShowTimestamp;
-
+- (GrowingHybridPageBuilder *(^)(NSString *value))setPath;
+- (GrowingHybridPageBuilder *(^)(NSString *value))setOrientation;
+- (GrowingHybridPageBuilder *(^)(NSString *value))setTitle;
+- (GrowingHybridPageBuilder *(^)(NSString *value))setReferralPage;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -25,22 +25,28 @@
 #import <ifaddrs.h>
 
 #import "GrowingAlert.h"
+#import "GrowingApplicationEventManager.h"
 #import "GrowingAttributesConst.h"
+#import "GrowingAutotrackEventType.h"
 #import "GrowingCocoaLumberjack.h"
+#import "GrowingConfigurationManager.h"
+#import "GrowingDeepLinkHandler.h"
 #import "GrowingDeviceInfo.h"
 #import "GrowingDispatchManager.h"
 #import "GrowingEventManager.h"
-#import "GrowingEventNodeManager.h"
 #import "GrowingHybridBridgeProvider.h"
 #import "GrowingNetworkConfig.h"
 #import "GrowingNodeHelper.h"
 #import "GrowingPageGroup.h"
 #import "GrowingPageManager.h"
 #import "GrowingStatusBar.h"
+#import "GrowingWebCircleElement.h"
+#import "GrowingWebViewDomChangedDelegate.h"
 #import "NSArray+GrowingHelper.h"
 #import "NSData+GrowingHelper.h"
 #import "NSDictionary+GrowingHelper.h"
 #import "NSString+GrowingHelper.h"
+#import "NSURL+GrowingHelper.h"
 #import "UIApplication+GrowingHelper.h"
 #import "UIApplication+GrowingNode.h"
 #import "UIImage+GrowingHelper.h"
@@ -50,8 +56,6 @@
 #import "UIWindow+GrowingHelper.h"
 #import "UIWindow+GrowingNode.h"
 #import "WKWebView+GrowingAutotracker.h"
-#import "GrowingConfigurationManager.h"
-#import "GrowingAutotrackEventType.h"
 
 @interface GrowingWeakObject : NSObject
 @property (nonatomic, weak) JSContext *context;
@@ -60,49 +64,33 @@
 @implementation GrowingWeakObject
 @end
 
-//文本
-static NSString *const kGrowingWebCircleText = @"TEXT";
-//按钮
-static NSString *const kGrowingWebCircleButton = @"BUTTON";
-//输入框
-static NSString *const kGrowingWebCircleInput = @"INPUT";
-//列表元素 - 这里指TableView中的cell元素
-static NSString *const kGrowingWebCircleList = @"LIST";
-// WKWebView - webview只做标记用，不参与元素定义。
-static NSString *const kGrowingWebCircleWebView = @"WEB_VIEW";
-
-@interface GrowingWebCircle () <GrowingSRWebSocketDelegate, GrowingEventInterceptor>
+@interface GrowingWebCircle () <GrowingSRWebSocketDelegate,
+                                GrowingEventInterceptor,
+                                GrowingWebViewDomChangedDelegate,
+                                GrowingApplicationEventProtocol,
+                                GrowingDeepLinkHandlerProtocol>
 
 //表示web和app是否同时准备好数据发送，此时表示可以发送数据
 @property (nonatomic, assign) BOOL isReady;
-@property (nonatomic, retain) NSTimer *keepAliveTimer;
 
 @property (nonatomic, copy) void (^onReadyBlock)(void);
 @property (nonatomic, copy) void (^onFinishBlock)(void);
 
 @property (nonatomic, retain) GrowingStatusBar *statusWindow;
 
-@property (nonatomic, retain) NSMutableArray<GrowingBaseEvent *> *cachedEvents;
+@property (nonatomic, retain) NSMutableArray<NSString *> *cachedEvents;
 
-@property (nonatomic, strong) NSMutableArray *gWebViewArray;
-@property (nonatomic, assign) int nodeZLevel;
 @property (nonatomic, assign) int zLevel;
 @property (nonatomic, assign) unsigned long snapNumber;  //数据发出序列号
 @property (nonatomic, assign) BOOL onProcessing;
+//当页面vc的page未生成，即viewDidAppear未执行，此时忽略数据，并不发送
+@property (nonatomic, assign) BOOL isPageDontShow;
+@property (nonatomic, strong) NSMutableArray *elements;
 @end
 
-@implementation GrowingWebCircle {
-    NSMutableArray *tempArray;
-}
+@implementation GrowingWebCircle
 
 static GrowingWebCircle *shareInstance = nil;
-
-+ (void)setNeedUpdateScreen {
-    // 不用self 不会创建实例
-    if ([shareInstance isRunning]) {
-        [shareInstance setNeedUpdateScreen];
-    }
-}
 
 + (instancetype)shareInstance {
     static dispatch_once_t onceToken;
@@ -112,11 +100,8 @@ static GrowingWebCircle *shareInstance = nil;
     return shareInstance;
 }
 
-+ (void)runWithCircleRoomNumber:(NSString *)circleRoomNumber
-                     readyBlock:(void (^)(void))readyBlock
-                    finishBlock:(void (^)(void))finishBlock {
-    [[self shareInstance] runWithCircleRoomNumber:circleRoomNumber readyBlock:readyBlock finishBlock:finishBlock];
-}
++ (void)runWithCircle:(NSURL *)url readyBlock:(void (^)(void))readyBlock finishBlock:(void (^)(void))finishBlock;
+{ [[self shareInstance] runWithCircle:url readyBlock:readyBlock finishBlock:finishBlock]; }
 
 + (void)stop {
     [[self shareInstance] stop];
@@ -134,15 +119,23 @@ static GrowingWebCircle *shareInstance = nil;
     return self;
 }
 
+#pragma mark - GrowingDeepLinkHandlerProtocol
+
+- (BOOL)growingHandlerUrl:(NSURL *)url {
+    NSDictionary *params = url.growingHelper_queryDict;
+    NSString *serviceType = params[@"serviceType"];
+    NSString *wsurl = params[@"wsUrl"];
+    if (serviceType.length > 0 && [serviceType isEqualToString:@"circle"] && wsurl.length > 0) {
+        [self runWithCircle:[NSURL URLWithString:wsurl] readyBlock:nil finishBlock:nil];
+        return YES;
+    }
+    return NO;
+}
+
 #pragma mark - actions
 
 - (void)_setNeedUpdateScreen {
     [self sendScreenShot];
-}
-
-- (void)setNeedUpdateScreen {
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_setNeedUpdateScreen) object:nil];
-    [self performSelector:@selector(_setNeedUpdateScreen) withObject:nil afterDelay:1];
 }
 
 #pragma mark - screenShot
@@ -161,13 +154,7 @@ static GrowingWebCircle *shareInstance = nil;
             }
         }];
 
-    UIImage *image = [UIWindow growingHelper_screenshotWithWindows:windows
-                                                       andMaxScale:scale
-                                                             block:^(CGContextRef context){
-                                                                 //  CGContextSetStrokeColorWithColor(context,[[UIColor
-                                                                 //  orangeColor] colorWithAlphaComponent:0.4].CGColor);
-                                                                 //  CGContextSetLineWidth(context,1);
-                                                             }];
+    UIImage *image = [UIWindow growingHelper_screenshotWithWindows:windows andMaxScale:scale block:nil];
 
     return image;
 }
@@ -175,28 +162,6 @@ static GrowingWebCircle *shareInstance = nil;
 + (CGFloat)impressScale {
     CGFloat scale = [UIScreen mainScreen].scale;
     return MIN(scale, 2);
-}
-
-#pragma mark - node
-
-- (BOOL)isContainer:(id<GrowingNode>)node {
-    return [[self class] isContainer:node];
-}
-
-+ (BOOL)isContainer:(id<GrowingNode>)node {
-    // if node is like a button
-    if ([node growingNodeUserInteraction]) {
-        return YES;
-    }
-    // if node is like a text label
-    for (node = [node growingNodeParent]; node != nil; node = [node growingNodeParent]) {
-        if ([node growingNodeUserInteraction]) {
-            // text label is within a button, so it is not container
-            return NO;
-        }
-    }
-    // text label is standalone
-    return YES;
 }
 
 /*
@@ -232,84 +197,23 @@ static GrowingWebCircle *shareInstance = nil;
     return dict;
 }
 
-- (NSMutableDictionary *)dictFromNode:(id<GrowingNode>)aNode
-                             pageData:(NSDictionary *)pageData
-                             keyIndex:(NSInteger)keyIndex
-                                xPath:(NSString *)xPath
-                          isContainer:(BOOL)isContainer {
-    if (![aNode growingNodeContent].length && ![aNode growingNodeUserInteraction] &&
-        ![aNode isKindOfClass:[WKWebView class]]) {
-        return nil;
+- (NSMutableDictionary *)dictFromNode:(GrowingViewNode *)node {
+    GrowingPage *page = [[GrowingPageManager sharedInstance] findPageByView:node.view];
+    if (!page) {
+        self.isPageDontShow = YES;
+        GIOLogDebug(@"page of view %@ not found", node.view);
     }
+    GrowingWebCircleElement *element = GrowingWebCircleElement.builder.setRect(node.view.growingNodeFrame)
+                                           .setContent(node.viewContent)
+                                           .setZLevel(self.zLevel++)
+                                           .setIndex(node.index)
+                                           .setXpath(node.xPath)
+                                           .setParentXPath(node.clickableParentXPath)
+                                           .setNodeType(node.nodeType)
+                                           .setPage(page.path)
+                                           .build;
 
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-    [dict addEntriesFromDictionary:pageData];
-    NSString *v = [aNode growingNodeContent];
-    if (!v) {
-        v = @"";
-    } else {
-        v = [v growingHelper_safeSubStringWithLength:50];
-    }
-    dict[@"content"] =
-        [v stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
-
-    // 1. 默认 TEXT
-    // 2. 判断特殊类型 并赋值
-    // 3. 不属于上述类型，且可以点击，则为 BUTTON
-    // 4. 否则以 TEXT 传入
-    NSString *nodetype = kGrowingWebCircleText;
-    if ([aNode isKindOfClass:NSClassFromString(@"_UIButtonBarButton")] ||
-        [aNode isKindOfClass:NSClassFromString(@"_UIModernBarButton")]) {
-        nodetype = kGrowingWebCircleButton;
-    } else if ([aNode isKindOfClass:[UITextField class]] || [aNode isKindOfClass:[UISearchBar class]] ||
-               [aNode isKindOfClass:[UITextView class]]) {
-        nodetype = kGrowingWebCircleInput;
-    } else if ([aNode isKindOfClass:[UICollectionViewCell class]] || [aNode isKindOfClass:[UITableViewCell class]]) {
-        nodetype = kGrowingWebCircleList;
-    } else if ([aNode isKindOfClass:[WKWebView class]]) {
-        nodetype = kGrowingWebCircleWebView;
-    } else if ([aNode growingNodeUserInteraction]) {
-        nodetype = kGrowingWebCircleButton;
-    }
-
-    //为anode元素添加 ，层级属性
-    if ([aNode isKindOfClass:[UIView class]]) {
-        self.nodeZLevel = aNode.growingNodeWindow.windowLevel;
-        self.zLevel = 0;
-        [self getElementLevelInWindow:aNode andWindow:aNode.growingNodeWindow];
-        dict[@"zLevel"] = [NSNumber numberWithInt:self.zLevel];
-    }
-
-    if (keyIndex >= 0) {
-        dict[@"index"] = [NSString stringWithFormat:@"%ld", (long)keyIndex];
-    }
-    dict[@"xpath"] = xPath;
-
-    CGRect frame = [aNode growingNodeFrame];
-    if (!CGRectEqualToRect(frame, CGRectZero)) {
-        CGFloat scale = [[self class] impressScale];
-        dict[@"left"] = [NSNumber numberWithInt:(int)(frame.origin.x * scale)];
-        dict[@"top"] = [NSNumber numberWithInt:(int)(frame.origin.y * scale)];
-        dict[@"width"] = [NSNumber numberWithInt:(int)(frame.size.width * scale)];
-        dict[@"height"] = [NSNumber numberWithInt:(int)(frame.size.height * scale)];
-    } else {
-        GIOLogError(@"Node (%@) frame is CGRectZero", aNode);
-        return nil;
-    }
-    dict[@"nodeType"] = nodetype;
-    dict[@"isContainer"] = @(isContainer);
-    return dict;
-}
-
-- (void)getElementLevelInWindow:(id<GrowingNode>)aNode andWindow:(UIView *)superView {
-    for (int i = 0; i < superView.subviews.count; i++) {
-        self.nodeZLevel++;
-        if (superView.subviews[i] == aNode) {
-            self.zLevel = self.nodeZLevel;
-        } else {
-            [self getElementLevelInWindow:aNode andWindow:superView.subviews[i]];
-        }
-    }
+    return [NSMutableDictionary dictionaryWithDictionary:element.toDictionary];
 }
 
 - (unsigned long)getSnapshotKey {
@@ -319,123 +223,104 @@ static GrowingWebCircle *shareInstance = nil;
     return _snapNumber;
 }
 
-//获取 WebView
-- (GrowingWeakObject *)getHitWebview:(CGPoint)point {
-    for (GrowingWeakObject *weakObjc in self.gWebViewArray) {
-        if ([self isInView:weakObjc.webView andPoint:point]) {
-            return weakObjc;
+- (void)resetSnapshotKey {
+    @synchronized(self) {
+        _snapNumber = 0;
+    }
+}
+
+- (NSMutableArray *)elements {
+    if (!_elements) {
+        _elements = [NSMutableArray array];
+    }
+    return _elements;
+}
+
+- (void)traverseViewNode:(GrowingViewNode *)viewNode {
+    if (self.isPageDontShow) {
+        return;
+    }
+    UIView *node = viewNode.view;
+    if ([node growingNodeUserInteraction] || [node isKindOfClass:NSClassFromString(@"WKWebView")]) {
+        if ([node growingNodeDonotTrack] || [node growingNodeDonotCircle]) {
+            GIOLogDebug(@"圈选过滤节点:%@,DontTrack:%d,DontCircle:%d", [node class], [node growingNodeDonotTrack],
+                        [node growingNodeDonotCircle]);
+        } else {
+            NSMutableDictionary *dict = [self dictFromNode:viewNode];
+            if ([viewNode.view isKindOfClass:NSClassFromString(@"WKWebView")]) {
+                [[GrowingHybridBridgeProvider sharedInstance]
+                    getDomTreeForWebView:viewNode.view
+                       completionHandler:^(NSDictionary *_Nullable domTee, NSError *_Nullable error) {
+                           if (domTee.count > 0) {
+                               [dict setValue:domTee forKey:@"webView"];
+                           }
+                       }];
+            }
+            [self.elements addObject:dict];
         }
     }
-    return nil;
-}
 
-//判断点是否在视图内
-- (BOOL)isInView:(UIView *)view andPoint:(CGPoint)point {
-    if (CGRectContainsPoint(view.frame, point)) {
-        return YES;
-    } else {
-        return NO;
+    NSArray *childs = [node growingNodeChilds];
+    if (childs.count > 0) {
+        for (int i = 0; i < childs.count; i++) {
+            GrowingViewNode *tmp = [viewNode appendNode:childs[i] isRecalculate:YES];
+            [self traverseViewNode:tmp];
+        }
     }
-}
-
-//存储webview数组
-- (NSMutableArray *)gWebViewArray {
-    if (!_gWebViewArray) {
-        tempArray = [NSMutableArray array];
-        _gWebViewArray = tempArray;
-    }
-    return _gWebViewArray;
 }
 
 - (void)fillAllViewsForWebCircle:(NSDictionary *)dataDict completion:(void (^)(NSMutableDictionary *dict))completion {
-    NSMutableArray *elements = [[NSMutableArray alloc] init];
-    GrowingNodeManager *manager = [[GrowingNodeManager alloc]
-        initWithNodeAndParent:[GrowingPageManager sharedInstance].rootViewController
-                   checkBlock:^BOOL(id<GrowingNode> node) {
-                       if ([node growingNodeDonotTrack] || [node growingNodeDonotCircle]) {
-                           return NO;
-                       } else {
-                           return YES;
-                       }
-                   }];
-
-    NSMutableDictionary *modifiedPageData = [[NSMutableDictionary alloc] init];
-    modifiedPageData[@"page"] = [[[GrowingPageManager sharedInstance] currentViewController] growingPageName] ?: @"";
-    modifiedPageData[@"domain"] = [GrowingDeviceInfo currentDeviceInfo].bundleID;
-
     NSMutableDictionary *finalDataDict = [NSMutableDictionary dictionaryWithDictionary:dataDict];
-    [self.gWebViewArray removeAllObjects];
-    self.gWebViewArray = nil;
-    NSMutableArray *pages = [[NSMutableArray alloc] init];
-    [manager enumerateChildrenUsingBlock:^(id<GrowingNode> aNode, GrowingNodeManagerEnumerateContext *context) {
-        //支持WKWebview
-        if ([aNode isKindOfClass:[WKWebView class]]) {
-            WKWebView *wkweb = (WKWebView *)aNode;
-            GrowingWeakObject *weakObjc = [[GrowingWeakObject alloc] init];
-            weakObjc.webView = wkweb;
-            if (![self.gWebViewArray containsObject:weakObjc]) {
-                [self.gWebViewArray addObject:weakObjc];
-            }
-            NSMutableDictionary *dict = [self dictFromNode:aNode
-                                                  pageData:modifiedPageData
-                                                  keyIndex:aNode.growingNodeKeyIndex
-                                                     xPath:[GrowingNodeHelper xPathForNode:aNode]
-                                               isContainer:[self isContainer:aNode]];
-
-            [[GrowingHybridBridgeProvider sharedInstance]
-                getDomTreeForWebView:wkweb
-                   completionHandler:^(NSDictionary *_Nullable domTee, NSError *_Nullable error) {
-                       if (domTee.count > 0) {
-                           [dict setValue:domTee forKey:@"webView"];
-                           [elements addObject:dict];
-                       }
-                   }];
-        } else {
-            if ([aNode isKindOfClass:[GrowingWindow class]]) {
-                [context skipThisChilds];
-                return;
-            }
-
-            if ([aNode isKindOfClass:[UIViewController class]]) {
-                UIViewController *current = (UIViewController *)aNode;
-                GrowingPageGroup *page = [current growingPageHelper_getPageObject];
-                if (!page) {
-                    [[GrowingPageManager sharedInstance] createdViewControllerPage:current];
-                    page = [current growingPageHelper_getPageObject];
-                }
-                NSMutableDictionary *dict = [self dictFromPage:aNode xPath:page.path];
-                if (dict.count > 0) {
-                    [pages addObject:dict];
-                }
-            } else {
-                NSMutableDictionary *dict = [self dictFromNode:aNode
-                                                      pageData:modifiedPageData
-                                                      keyIndex:aNode.growingNodeKeyIndex
-                                                         xPath:[GrowingNodeHelper xPathForNode:aNode]
-                                                   isContainer:[self isContainer:aNode]];
-
-                if (dict.count > 0) {
-                    [elements addObject:dict];
-                }
-            }
+    //初始化数组
+    self.elements = [NSMutableArray array];
+    CGFloat windowLevel = UIWindowLevelNormal;
+    UIWindow *topwindow = nil;
+    for (UIWindow *window in [UIApplication sharedApplication].growingHelper_allWindowsWithoutGrowingWindow) {
+        //如果找到了keywindow跳出循环
+        if (window.isKeyWindow) {
+            topwindow = window;
+            break;
         }
-    }];
-    finalDataDict[@"elements"] = elements;
+        if (window.windowLevel >= windowLevel) {
+            windowLevel = window.windowLevel;
+            topwindow = window;
+        }
+    }
+    if (topwindow) {
+        self.zLevel = 0;
+        self.isPageDontShow = NO;
+        [self traverseViewNode:GrowingViewNode.builder.setView(topwindow)
+                                   .setIndex(-1)
+                                   .setViewContent([GrowingNodeHelper buildElementContentForNode:topwindow])
+                                   .setXPath([GrowingNodeHelper xPathForView:topwindow similar:NO])
+                                   .setOriginXPath([GrowingNodeHelper xPathForView:topwindow similar:NO])
+                                   .setNodeType([GrowingNodeHelper getViewNodeType:topwindow])
+                                   .build];
+        if (self.isPageDontShow) {
+            completion(nil);
+            return;
+        }
+    }
+
+    NSMutableArray *pages = [NSMutableArray array];
+    NSArray *vcs = [[GrowingPageManager sharedInstance] allDidAppearViewControllers];
+    for (int i = 0; i < vcs.count; i++) {
+        UIViewController *tmp = vcs[i];
+        GrowingPage *page = [[GrowingPageManager sharedInstance] findPageByViewController:tmp];
+        NSMutableDictionary *dict = [self dictFromPage:tmp xPath:page.path];
+        [pages addObject:dict];
+    }
+    finalDataDict[@"elements"] = self.elements;
     finalDataDict[@"pages"] = pages;
     if (completion != nil) {
         completion(finalDataDict);
     }
 }
 
-- (void)onDomChangeWkWebivew {
-    [self setNeedUpdateScreen];
-}
 - (NSDictionary *)dictForUserAction:(NSString *)action {
     if (action.length == 0) {
         return nil;
     }
-
-    //    UIViewController *vc = [[GrowingPageManager sharedInstance] rootViewController];
 
     UIImage *image = [self screenShot];
     NSData *data = [image growingHelper_JPEG:0.8];
@@ -445,10 +330,6 @@ static GrowingWebCircle *shareInstance = nil;
     if (!data.length || !imgBase64Str.length) {
         return nil;
     }
-
-    // TODO：如果要传 avar，pvar，evar 等变量，在这里准备好，然后塞到下面的 dict 中
-    //    CGSize screenSize = [GrowingDeviceInfo deviceScreenSize];
-    //    = (image.size.width * image.scale)/screenSize.width
     NSDictionary *dict = @{
         @"screenWidth" : @(image.size.width * image.scale),
         @"screenHeight" : @(image.size.height * image.scale),
@@ -462,15 +343,13 @@ static GrowingWebCircle *shareInstance = nil;
 }
 
 - (void)sendScreenShot {
-    [self sendScreenShotWithCallback:nil];
+    if (self.isReady) {
+        [self sendScreenShotWithCallback:nil];
+    }
 }
 
-+ (void)retrieveAllElementsAsync:(void (^)(NSString *))callback {
-    [[self shareInstance] sendScreenShotWithCallback:callback];
-}
-
-- (void)sendScreenShotWithCallback:(void (^)(NSString *))callback      // in case of error, the
-                                                                       // callback parameter is nil
+- (void)sendScreenShotWithCallback:(void (^)(NSString *))callback  // in case of error, the
+                                                                   // callback parameter is nil
 {
     // eventType已经忽略
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
@@ -487,46 +366,7 @@ static GrowingWebCircle *shareInstance = nil;
     [self fillAllViewsForWebCircle:dict
                         completion:^(NSMutableDictionary *dict) {
                             GrowingWebCircle *sself = wself;
-                            // assign parentXPath for each event in "elements", and
-                            // assign targets
-                            {
-                                NSMutableArray<NSDictionary *> *allContainers = [[NSMutableArray alloc] init];
-                                NSArray<NSMutableDictionary *> *allImpressedEvent = dict[@"elements"];
-                                for (NSDictionary *event in allImpressedEvent) {
-                                    NSNumber *isContainer = event[@"isContainer"];
-                                    if (isContainer != nil && [isContainer boolValue]) {
-                                        [allContainers addObject:event];
-                                    }
-                                }
-                                [allContainers
-                                    sortUsingComparator:^NSComparisonResult(id _Nonnull obj1, id _Nonnull obj2) {
-                                        NSDictionary *event1 = obj1;
-                                        NSDictionary *event2 = obj2;
-                                        if ([event1[@"xpath"] length] > [event2[@"xpath"] length]) {
-                                            return NSOrderedAscending;
-                                        } else if ([event1[@"xpath"] length] < [event2[@"xpath"] length]) {
-                                            return NSOrderedDescending;
-                                        } else {
-                                            return NSOrderedSame;
-                                        }
-                                    }];
-                                for (NSMutableDictionary *event in allImpressedEvent) {
-                                    NSNumber *isContainer = event[@"isContainer"];
-                                    if (isContainer == nil || ![isContainer boolValue]) {
-                                        NSString *eventXPath = event[@"xpath"];
-                                        for (NSInteger i = 0; i < allContainers.count; i++) {
-                                            NSString *containerXPath = allContainers[i][@"xpath"];
-                                            if ([eventXPath hasPrefix:containerXPath]) {
-                                                event[@"parentXPath"] = containerXPath;
-                                                // web端仅用index来标识list元素所述，所以子元素index需要和父元素一致
-                                                event[@"index"] = allContainers[i][@"index"];
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            if (sself != nil) {
+                            if (sself != nil && dict) {
                                 [sself sendJson:dict];
                             }
                             if (callback != nil) {
@@ -536,16 +376,12 @@ static GrowingWebCircle *shareInstance = nil;
                         }];
 }
 
-- (void)sendClickOrTouchAction {
-}
-
 - (void)remoteReady {
     [self sendScreenShot];
 }
 
-- (void)runWithCircleRoomNumber:(NSString *)circleRoomNumber
-                     readyBlock:(void (^)(void))readyBlock
-                    finishBlock:(void (^)(void))finishBlock {
+- (void)runWithCircle:(NSURL *)url readyBlock:(void (^)(void))readyBlock finishBlock:(void (^)(void))finishBlock;
+{
     if (!self.isReady) {
         [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 
@@ -575,9 +411,9 @@ static GrowingWebCircle *shareInstance = nil;
                 }
             });
             self.statusWindow.onButtonClick = ^{
-                NSString *content = [NSString
-                    stringWithFormat:@"APP版本: %@\nSDK版本: %@", [GrowingDeviceInfo currentDeviceInfo].platformVersion,
-                                     [NSString stringWithFormat:@"SDK版本: %@", GrowingTrackerVersionName]];
+                NSString *content = [NSString stringWithFormat:@"APP版本: %@\nSDK版本: %@",
+                                                               [GrowingDeviceInfo currentDeviceInfo].appFullVersion,
+                                                               GrowingTrackerVersionName];
                 GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert
                                                                    title:@"正在进行圈选"
                                                                  message:content];
@@ -595,11 +431,7 @@ static GrowingWebCircle *shareInstance = nil;
             self.webSocket.delegate = nil;
             self.webSocket = nil;
         }
-        NSString *endPoint = @"";
-        endPoint = [GrowingNetworkConfig.sharedInstance wsEndPoint];
-        NSString *urlStr =@"";
-        self.webSocket =
-            [[GrowingSRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];
+        self.webSocket = [[GrowingSRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:url]];
         self.webSocket.delegate = self;
         [self.webSocket open];
 
@@ -615,35 +447,27 @@ static GrowingWebCircle *shareInstance = nil;
     static CGRect lastRect;
     CGRect rect = [UIScreen mainScreen].bounds;
     if (!CGRectEqualToRect(lastRect, rect)) {
-        [[self class] setNeedUpdateScreen];
+        [self _setNeedUpdateScreen];
     }
 
     lastRect = rect;
 }
 
-- (void)beginKeepAlive {
-    if (!self.keepAliveTimer) {
-        __weak typeof(self) wself = self;
-        self.keepAliveTimer = [NSTimer scheduledTimerWithTimeInterval:30
-                                                               target:wself
-                                                             selector:@selector(keepAlive)
-                                                             userInfo:nil
-                                                              repeats:YES];
+- (void)start {
+    [self remoteReady];
+    self.statusWindow.statusLable.text = @"正在进行GrowingIO移动端圈选";
+    self.statusWindow.statusLable.textAlignment = NSTextAlignmentCenter;
+    if (self.onReadyBlock) {
+        self.onReadyBlock();
+        self.onReadyBlock = nil;
     }
-}
-
-
-
-- (void)endKeepAlive {
-    if (self.keepAliveTimer) {
-        [self.keepAliveTimer invalidate];
-        self.keepAliveTimer = nil;
-    }
-}
-
-- (void)keepAlive {
-    NSDictionary *dict = @{@"msgType" : @"heartbeat"};
-    [self sendJson:dict];
+    [self resetSnapshotKey];
+    self.isReady = YES;
+    // Hybrid的布局改变回调代理设置
+    [GrowingHybridBridgeProvider sharedInstance].domChangedDelegate = self;
+    //监听原生事件，变动时发送
+    [[GrowingEventManager shareInstance] addInterceptor:self];
+    [[GrowingApplicationEventManager sharedInstance] addApplicationEventObserver:self];
 }
 
 - (void)stop {
@@ -660,8 +484,7 @@ static GrowingWebCircle *shareInstance = nil;
     [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
 
     [[GrowingEventManager shareInstance] removeInterceptor:self];
-
-    [self endKeepAlive];
+    [[GrowingApplicationEventManager sharedInstance] removeApplicationEventObserver:self];
     if (self.webSocket) {
         self.webSocket.delegate = nil;
         [self.webSocket close];
@@ -685,6 +508,8 @@ static GrowingWebCircle *shareInstance = nil;
         [alert addOkWithTitle:@"知道了" handler:nil];
         [alert showAlertAnimated:NO];
     }
+
+    [[GrowingEventManager shareInstance] removeInterceptor:self];
 }
 
 - (BOOL)isRunning {
@@ -702,30 +527,13 @@ static GrowingWebCircle *shareInstance = nil;
 #pragma mark - Websocket Delegate
 
 - (void)webSocket:(GrowingSRWebSocket *)webSocket didReceiveMessage:(id)message {
-    if ([message isKindOfClass:[NSString class]]) {
+    if ([message isKindOfClass:[NSString class]] || ((NSString *)message).length > 0) {
         GIOLogDebug(@"didReceiveMessage: %@", message);
         NSMutableDictionary *dict = [[message growingHelper_jsonObject] mutableCopy];
 
         //如果收到了ready消息，说明可以发送圈选数据了
         if ([[dict objectForKey:@"msgType"] isEqualToString:@"ready"]) {
-            [self remoteReady];
-            self.statusWindow.statusLable.text = @"正在进行GrowingIO移动端圈选";
-            self.statusWindow.statusLable.textAlignment = NSTextAlignmentCenter;
-            if (self.onReadyBlock) {
-                self.onReadyBlock();
-                self.onReadyBlock = nil;
-            }
-            //序列号置零
-            _snapNumber = 0;
-            self.isReady = YES;
-            // Hybird的布局改变回调代理设置
-            [GrowingHybridBridgeProvider sharedInstance].domChangedDelegate = self;
-            //监听原生事件，变动时发送
-            [[GrowingEventManager shareInstance] addInterceptor:self];
-            // webSocket连接成功的速度比viewDidAppear慢,因此page事件没有发送成功
-            //解决方式在webSocket链接成功后 再发一次page事件
-            [[GrowingPageManager sharedInstance]
-                createdViewControllerPage:[[GrowingPageManager sharedInstance] currentViewController]];
+            [self start];
         }
         // 版本号不适配web圈选
         if ([[dict objectForKey:@"msgType"] isEqualToString:@"incompatible_version"]) {
@@ -745,6 +553,8 @@ static GrowingWebCircle *shareInstance = nil;
     }
 }
 
+#pragma mark - websocket delegate
+
 - (void)webSocketDidOpen:(GrowingSRWebSocket *)webSocket {
     GIOLogDebug(@"websocket已连接");
     CGSize screenSize = [GrowingDeviceInfo deviceScreenSize];
@@ -759,9 +569,9 @@ static GrowingWebCircle *shareInstance = nil;
         @"os" : @"iOS",
         @"screenWidth" : [NSNumber numberWithInteger:screenSize.width],
         @"screenHeight" : [NSNumber numberWithInteger:screenSize.height],
+        @"urlScheme" : [GrowingDeviceInfo currentDeviceInfo].urlScheme
     };
     [self sendJson:dict];
-    [self beginKeepAlive];
 }
 
 - (void)webSocket:(GrowingSRWebSocket *)webSocket
@@ -784,97 +594,54 @@ static GrowingWebCircle *shareInstance = nil;
 - (void)webSocket:(GrowingSRWebSocket *)webSocket didReceivePong:(NSData *)pongPayload {
 }
 
-#pragma mark - Nodes
-
-- (NSString *)getViewControllerName:(UIViewController *)viewController {
-    NSString *currentPageName = [viewController growingPageName];
-    if (!currentPageName.length) {
-        currentPageName = [viewController growingPageName];
-    }
-    if (currentPageName.length > 0) {
-        return currentPageName;
-    } else {
-        return @"页面";
-    }
-}
-
-- (NSString *)getNodeName:(id<GrowingNode>)node
-                withXPath:(NSString *)xPath
-             withKeyIndex:(NSInteger)keyIndex
-              withContent:(NSString *)content
-                 withPage:(NSString *)page {
-    __block CGFloat maxFontSize = 0.0;
-    __block NSString *maxFontContent = nil;
-    GrowingNodeManager *manager = [[GrowingEventNodeManager alloc] initWithNode:node];
-    [manager enumerateChildrenUsingBlock:^(id<GrowingNode> aNode, GrowingNodeManagerEnumerateContext *context) {
-        NSString *content = [aNode growingNodeContent];
-        BOOL userInteractive = [aNode growingNodeUserInteraction];
-        if (content.length > 0) {
-            if ([aNode isKindOfClass:[UILabel class]]) {
-                UILabel *lbl = (UILabel *)aNode;
-                CGFloat fontSize = lbl.font.pointSize;
-                if (fontSize > maxFontSize) {
-                    maxFontSize = fontSize;
-                    maxFontContent = content;
-                }
-            }
-        } else if (userInteractive && aNode != node) {
-            [context skipThisChilds];
-        }
-    }];
-    if (maxFontContent.length > 0) {
-        return maxFontContent;
-    }
-
-    return @"按钮";
-}
-
 #pragma mark - GrowingWebViewDomChangedDelegate
-// hybird变动，重新发送dom tree
+// Hybrid变动，重新发送dom tree
 - (void)webViewDomDidChanged {
-    [self sendScreenShot];
+    [self sendWebcircleWithType:GrowingEventTypeViewClick];
+}
+
+#pragma mark - GrowingApplicationEventManager
+
+- (void)growingApplicationEventSendEvent:(UIEvent *)event {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_setNeedUpdateScreen) object:nil];
+    [self performSelector:@selector(_setNeedUpdateScreen) withObject:nil afterDelay:1];
 }
 
 #pragma mark - GrowingEventManagerObserver
+//事件被触发
+- (void)growingEventManagerEventTriggered:(NSString *_Nullable)eventType {
+    [self sendWebcircleWithType:eventType];
+}
 
-- (void)growingEventManagerEventDidBuild:(GrowingBaseEvent* _Nullable)event {
-    //this call back run in main thread
-    //so not use lock
-    if (event && _isReady) {
-        [self.cachedEvents addObject:event];
+- (void)sendWebcircleWithType:(NSString *)eventType {
+    // this call back run in main thread
+    // so not use lock
+    if (!_isReady) {
+        return;
+    }
+    if ([eventType isEqualToString:GrowingEventTypeViewClick] || [eventType isEqualToString:GrowingEventTypePage]) {
+        [self.cachedEvents addObject:eventType];
         if (self.onProcessing) {
-            GIOLogDebug(@"[GrowingWebCircle] onProcessing event to webcircle");
+            GIOLogDebug(@"[GrowingWebCircle] cached %lu event to webcircle", (unsigned long)self.cachedEvents.count);
             return;
         }
         self.onProcessing = YES;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(200 * NSEC_PER_MSEC)), dispatch_get_main_queue(), ^{
-            if (self.cachedEvents.count == 0) return;
+            if (self.cachedEvents.count == 0 || !self.isReady) return;
             NSMutableArray *eventArray = self.cachedEvents;
-            GIOLogDebug(@"[GrowingWebCircle] onProcessing count %lu",(unsigned long)eventArray.count);
             self.cachedEvents = [NSMutableArray array];
-            [eventArray enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(__kindof GrowingBaseEvent*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                if ([obj.eventType isEqualToString:GrowingEventTypeViewClick] || [obj.eventType isEqualToString:GrowingEventTypePage]) {
-                    [self sendScreenShotWithCallback:nil];
-                    *stop = YES;
-                }
-            }];
+            [eventArray
+                enumerateObjectsWithOptions:NSEnumerationReverse
+                                 usingBlock:^(__kindof NSString *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+                                     if ([obj isEqualToString:GrowingEventTypeViewClick] ||
+                                         [obj isEqualToString:GrowingEventTypePage]) {
+                                         [self sendScreenShotWithCallback:nil];
+                                         *stop = YES;
+                                     }
+                                 }];
             self.onProcessing = NO;
         });
-
     }
 }
-
-//- (BOOL)growingEventManagerEventShouldSend:(GrowingBaseEvent* _Nullable)event {
-//    for (id<GrowingNode> obj in [context contextNodes]) {
-//        if ([obj isKindOfClass:[GrowingWindow class]]) {
-//            return NO;
-//        }
-//        if ([obj isKindOfClass:[UIView class]]) {
-//            UIView *view = (UIView *)obj;
-//            return ![view.window isKindOfClass:[GrowingWindow class]];
-//        }
-//    }
-//    return YES;
-//}
 
 @end

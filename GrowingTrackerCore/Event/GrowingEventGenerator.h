@@ -17,24 +17,24 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <Foundation/Foundation.h>
-#import "GrowingVisitEvent.h"
+
 #import "GrowingCustomEvent.h"
+#import "GrowingVisitEvent.h"
 
 @interface GrowingEventGenerator : NSObject
 
 + (void)generateVisitEvent:(long long)ts latitude:(double)latitude longitude:(double)longitude;
 
-+ (void)generateCustomEvent:(NSString * _Nonnull)name attributes:(NSDictionary <NSString *,NSObject *>*_Nonnull)attributes;
++ (void)generateCustomEvent:(NSString *_Nonnull)name
+                 attributes:(NSDictionary<NSString *, NSObject *> *_Nullable)attributes;
 
-+ (void)generateConversionVariablesEvent:(NSDictionary <NSString *,NSObject *>*_Nonnull)variables;
++ (void)generateConversionAttributesEvent:(NSDictionary<NSString *, NSObject *> *_Nonnull)attributes;
 
-+ (void)generateLoginUserAttributesEvent:(NSDictionary <NSString *,NSObject *>*_Nonnull)attributes;
++ (void)generateLoginUserAttributesEvent:(NSDictionary<NSString *, NSObject *> *_Nonnull)attributes;
 
-+ (void)generateVisitorAttributesEvent:(NSDictionary <NSString *,NSObject *>*_Nonnull)attributes;
++ (void)generateVisitorAttributesEvent:(NSDictionary<NSString *, NSObject *> *_Nonnull)attributes;
 
 + (void)generateAppCloseEvent;
 
 @end
-

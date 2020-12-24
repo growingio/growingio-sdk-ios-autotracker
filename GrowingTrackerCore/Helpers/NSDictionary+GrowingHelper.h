@@ -23,7 +23,11 @@
 @interface NSDictionary (GrowingHelper)
 
 - (NSData *)growingHelper_jsonData;
+
+- (NSString *)growingHelper_beautifulJsonString;
+
 - (NSData *)growingHelper_jsonDataWithOptions:(NSJSONWritingOptions)options;
+
 - (NSString *)growingHelper_jsonString;
 
 - (BOOL)isValidDictVariable;

@@ -1,6 +1,18 @@
 //
-// Created by xiangyang on 2020/11/12.
+//  Created by xiangyang on 2020/11/12.
+//  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
 
 #import "GrowingRealAutotracker.h"
 #import "GrowingSwizzle.h"
@@ -17,6 +29,8 @@
 #import "UIAlertController+GrowingAutotracker.h"
 #import "GrowingPageManager.h"
 #import "GrowingImpressionTrack.h"
+#import "GrowingDeepLinkHandler.h"
+#import "GrowingWebCircle.h"
 
 @implementation GrowingRealAutotracker
 - (instancetype)initWithConfiguration:(GrowingTrackConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions {
@@ -55,7 +69,12 @@
         if (applicatonError) {
             GIOLogError(@"Failed to swizzle UIApplication. Details: %@", applicatonError);
         }
-
+        [UIApplication growing_swizzleMethod:@selector(sendEvent:)
+                                  withMethod:@selector(growing_sendEvent:)
+                                       error:&applicatonError];
+        if (applicatonError) {
+            GIOLogError(@"Failed to swizzle UIApplication sendEvent. Details: %@", applicatonError);
+        }
         // UISegmentControl
         NSError *segmentControlError = NULL;
         [UISegmentedControl growing_swizzleMethod:@selector(initWithCoder:)
@@ -147,6 +166,8 @@
         if (alertError) {
             GIOLogError(@"Failed to swizzle UIAlertController. Details: %@", alertError);
         }
+        
+        [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:[GrowingWebCircle shareInstance]];
     });
 }
 

@@ -29,6 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
                       from:(nullable id)sender
                   forEvent:(nullable UIEvent *)event;
 
+- (void)growing_sendEvent:(UIEvent *)event;
+
 @end
 
 NS_ASSUME_NONNULL_END

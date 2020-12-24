@@ -20,7 +20,6 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#import "GrowingAutoTracker.h"
 #import "GrowingNodeItem.h"
 #import "GrowingNodeProtocol.h"
 
@@ -28,8 +27,3 @@
 @property (nonatomic, assign) BOOL growingNodeIsBadNode;
 @end
 
-
-
-@interface GrowingRootNode : NSObject <GrowingNode>
-+ (instancetype)rootNode;
-@end

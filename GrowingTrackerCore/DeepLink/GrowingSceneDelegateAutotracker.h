@@ -1,9 +1,9 @@
 //
-//  GrowingEventCstmRequest.h
-//  GrowingTracker
+// GrowingSceneDelegateAutotracker.h
+// GrowingAnalytics
 //
-//  Created by GrowingIO on 2020/6/18.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by sheng on 2020/11/30.
+//  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -18,11 +18,13 @@
 //  limitations under the License.
 
 
-#import "GrowingEventRequest.h"
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingEventCstmRequest : GrowingEventRequest
+@interface GrowingSceneDelegateAutotracker : NSObject
+
++ (void)track:(Class)delegateClass;
 
 @end
 

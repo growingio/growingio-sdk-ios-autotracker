@@ -1,9 +1,9 @@
 //
-//  GrowingEventCstmRequest.m
-//  GrowingTracker
+// SomeEventsTest.h
+// ExampleTests
 //
-//  Created by GrowingIO on 2020/6/18.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by GrowingIO on 11/25/20.
+//  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -18,15 +18,12 @@
 //  limitations under the License.
 
 
-#import "GrowingEventCstmRequest.h"
+#import <Foundation/Foundation.h>
+#import <KIF/KIF.h>
+NS_ASSUME_NONNULL_BEGIN
 
-@implementation GrowingEventCstmRequest
-
-- (NSString *)path {
-//    NSString *accountId = [GrowingInstance sharedInstance].projectID ? : @"";
-//    NSString *path = [NSString stringWithFormat:@"v3/%@/ios/cstm", accountId];
-//    return path;
-    return nil;
-}
+@interface SomeEventsTest : KIFTestCase
 
 @end
+
+NS_ASSUME_NONNULL_END

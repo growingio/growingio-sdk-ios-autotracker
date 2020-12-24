@@ -17,20 +17,19 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
-#import "UIViewController+GrowingAutotracker.h"
 #import "GrowingEventManager.h"
-#import "GrowingPropertyDefine.h"
-#import "UIViewController+GrowingNode.h"
-#import "GrowingPageManager.h"
 #import "GrowingPage.h"
 #import "GrowingPageEvent.h"
 #import "GrowingPageManager.h"
+#import "GrowingPrivateCategory.h"
+#import "GrowingPropertyDefine.h"
 #import "GrowingViewControllerLifecycle.h"
+#import "UIViewController+GrowingAutotracker.h"
+#import "UIViewController+GrowingNode.h"
 
-GrowingPropertyDefine(UIViewController, NSNumber*, growingHook_hasDidAppear, setGrowingHook_hasDidAppear)
+GrowingPropertyDefine(UIViewController, NSNumber *, growingHook_hasDidAppear, setGrowingHook_hasDidAppear)
 
-@implementation UIViewController (GrowingAutotracker)
+    @implementation UIViewController(GrowingAutotracker)
 
 - (void)growing_viewDidAppear:(BOOL)animated {
     [self setGrowingHook_hasDidAppear:@YES];
@@ -73,10 +72,8 @@ GrowingPropertyDefine(UIViewController, NSNumber*, growingHook_hasDidAppear, set
 }
 
 - (BOOL)growingHookIsCustomAddVC {
-    return !self.growingHook_hasDidAppear.boolValue
-            && self.parentViewController == nil
-            && [UIApplication sharedApplication].keyWindow.rootViewController != self;
+    return !self.growingHook_hasDidAppear.boolValue && self.parentViewController == nil &&
+           [UIApplication sharedApplication].keyWindow.rootViewController != self;
 }
-
 
 @end

@@ -5,7 +5,7 @@
 #import "GrowingAppLifecycle.h"
 
 @interface GrowingAppLifecycle ()
-@property(strong, nonatomic, readonly) NSHashTable *appLifecycleDelegates;
+@property(strong, nonatomic, readonly) NSPointerArray *appLifecycleDelegates;
 @property(strong, nonatomic, readonly) NSLock *delegateLock;
 @end
 
@@ -13,7 +13,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _appLifecycleDelegates = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+        _appLifecycleDelegates = [NSPointerArray pointerArrayWithOptions:NSPointerFunctionsWeakMemory];
         _delegateLock = [[NSLock alloc] init];
     }
 
@@ -42,17 +42,15 @@
 
     NSDictionary *sceneManifestDict = [[NSBundle mainBundle] infoDictionary][@"UIApplicationSceneManifest"];
 
-    // UIApplication: UI Lifecycle
-    if (!sceneManifestDict) {
+    if (sceneManifestDict && UIDevice.currentDevice.systemVersion.doubleValue >= 13.0) {
+        [self addSceneNotification];
+    } else {
         for (NSString *name in @[UIApplicationDidBecomeActiveNotification,
                 UIApplicationWillEnterForegroundNotification,
                 UIApplicationWillResignActiveNotification,
                 UIApplicationDidEnterBackgroundNotification]) {
             [nc addObserver:self selector:@selector(handleUILifecycleNotification:) name:name object:[UIApplication sharedApplication]];
         }
-    } else {
-        // UIScene
-        [self addSceneNotification];
     }
 }
 
@@ -116,13 +114,22 @@
 
 - (void)addAppLifecycleDelegate:(id)delegate {
     [self.delegateLock lock];
-    [self.appLifecycleDelegates addObject:delegate];
+    if (![self.appLifecycleDelegates.allObjects containsObject:delegate]) {
+        [self.appLifecycleDelegates addPointer:(__bridge void *)delegate];
+    }
     [self.delegateLock unlock];
 }
 
 - (void)removeAppLifecycleDelegate:(id)delegate {
     [self.delegateLock lock];
-    [self.appLifecycleDelegates removeObject:delegate];
+    [self.appLifecycleDelegates.allObjects
+            enumerateObjectsWithOptions:NSEnumerationReverse
+                             usingBlock:^(NSObject *obj, NSUInteger idx, BOOL *_Nonnull stop) {
+                                 if (delegate == obj) {
+                                     [self.appLifecycleDelegates removePointerAtIndex:idx];
+                                     *stop = YES;
+                                 }
+                             }];
     [self.delegateLock unlock];
 }
 

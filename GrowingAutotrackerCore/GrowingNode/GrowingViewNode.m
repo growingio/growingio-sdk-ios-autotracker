@@ -21,52 +21,169 @@
 
 #import "GrowingEventManager.h"
 #import "GrowingNodeHelper.h"
-#import "GrowingNodeManager.h"
-#import "NSString+GrowingHelper.h"
-#import "UIView+GrowingHelper.h"
-#import "UIViewController+GrowingNode.h"
+
 #import "GrowingTimeUtil.h"
+#import "UIView+GrowingNode.h"
+#import "GrowingNodeProtocol.h"
+#import "NSString+GrowingHelper.h"
+
 @implementation GrowingViewNode
 
-- (instancetype)initWithNode:(id<GrowingNode>)node {
+- (instancetype)initWithBuilder:(GrowingViewNodeBuilder *)builder {
     if (self = [super init]) {
-        _xPath = [GrowingNodeHelper xPathForNode:node];
-        _textValue = [self buildElementContentForNode:node];
-        _timestamp = [GrowingTimeUtil currentTimeMillis];
-        //对于非列表元素，不添加index字段
-        if (node.growingNodeIndexPath) {
-            _index = node.growingNodeKeyIndex;
+        _view = builder.view;
+        _viewContent = builder.viewContent;
+        _xPath = builder.xPath;
+        _originXPath = builder.originXPath;
+        _clickableParentXPath = builder.clickableParentXPath;
+        _nodeType = builder.nodeType;
+        _index = builder.index;
+        _position = builder.position;
+        _timestamp = builder.timestamp;
+        _hasListParent = builder.hasListParent;
+        _needRecalculate = builder.needRecalculate;
+        if (_needRecalculate) {
+            [self recalculate];
         }
     }
     return self;
 }
 
-- (NSString *)buildElementContentForNode:(id<GrowingNode> _Nonnull)view {
-    NSString *content = [view growingNodeContent];
-    if (!content) {
-        content = @"";
-    } else if ([content isKindOfClass:NSDictionary.class]) {
-        content = [[(NSDictionary *)content allValues] componentsJoinedByString:@""];
-    } else if ([content isKindOfClass:NSArray.class]) {
-        content = [(NSArray *)content componentsJoinedByString:@""];
-    } else {
-        content = content.description;
-    }
-
-    if (![content isKindOfClass:NSString.class]) {
-        content = @"";
-    }
-
-    content = [content growingHelper_safeSubStringWithLength:100];
-
-    if (content.growingHelper_isLegal) {
-        content = @"";
-    } else {
-        content = content.growingHelper_encryptString;
-    }
-
-    return content;
+- (void)recalculate {
+    _xPath = [GrowingNodeHelper xPathForView:self.view similar:YES];
+    _originXPath = [GrowingNodeHelper xPathForView:self.view similar:NO];
 }
 
+
++ (GrowingViewNodeBuilder *)builder {
+    return [[GrowingViewNodeBuilder alloc] init];
+}
+
+- (GrowingViewNode *)appendNode:(UIView *)view isRecalculate:(BOOL)recalculate {
+    
+    NSString *subpath = view.growingNodeSubPath;
+    //如果节点path不存在，说明被过滤了，除了view之外，全部copy父级属性
+    if (!subpath) {
+        return GrowingViewNode.builder
+        .setView(view)
+        .setIndex(self.index)
+        .setXPath(self.xPath)
+        .setOriginXPath(self.originXPath)
+        .setClickableParentXPath(self.clickableParentXPath)
+        .setHasListParent(self.hasListParent)
+        .setViewContent(self.viewContent)
+        .setPosition(self.position)
+        .setNodeType(self.nodeType)
+        .setNeedRecalculate(recalculate)
+        .build;
+    }
+    
+    BOOL haslistParent = self.hasListParent || [self.view isKindOfClass:[UITableView class]] || [self.view isKindOfClass:[UICollectionView class]];
+    //是否是相似元素
+    BOOL isSimilar = [view isKindOfClass:[UITableViewCell class]] || [view isKindOfClass:[UICollectionReusableView class]] || [view isKindOfClass:NSClassFromString(@"UISegment")];
+    int index = -1;
+    if (isSimilar) {
+        index = view.growingNodeKeyIndex;
+    } else if (haslistParent) {
+        index = self.index;
+    }
+    
+    NSString *parentXPath = self.view.growingNodeUserInteraction ? self.xPath : self.clickableParentXPath;
+    NSString *content = view.growingNodeContent;
+    NSString *similar_path = view.growingNodeSubSimilarPath;
+    
+    return GrowingViewNode.builder
+    .setView(view)
+    .setIndex(index)
+    .setXPath([self.originXPath stringByAppendingFormat:@"/%@",similar_path])
+    .setOriginXPath([self.originXPath stringByAppendingFormat:@"/%@",subpath])
+    .setClickableParentXPath(parentXPath)
+    .setHasListParent(haslistParent)
+    .setViewContent(content?[content growingHelper_safeSubStringWithLength:50]:nil)
+    .setPosition(view.growingNodeKeyIndex)
+    .setNodeType([GrowingNodeHelper getViewNodeType:view])
+    .setNeedRecalculate(recalculate)
+    .build;
+}
+
+@end
+
+
+@implementation GrowingViewNodeBuilder
+
+- (GrowingViewNodeBuilder *(^)(UIView *value))setView {
+    return ^(UIView *value) {
+        self->_view = value;
+        return self;
+    };
+}
+
+- (GrowingViewNodeBuilder *(^)(NSString *value))setXPath {
+    return ^(NSString *value) {
+        self->_xPath = value;
+        return self;
+    };
+}
+- (GrowingViewNodeBuilder *(^)(NSString *value))setOriginXPath {
+    return ^(NSString *value) {
+        self->_originXPath = value;
+        return self;
+    };
+}
+- (GrowingViewNodeBuilder *(^)(NSString *value))setClickableParentXPath {
+    return ^(NSString *value) {
+        self->_clickableParentXPath = value;
+        return self;
+    };
+}
+- (GrowingViewNodeBuilder *(^)(int value))setIndex {
+    return ^(int value) {
+        self->_index = value;
+        return self;
+    };
+}
+- (GrowingViewNodeBuilder *(^)(int value))setPosition {
+    return ^(int value) {
+        self->_position = value;
+        return self;
+    };
+}
+- (GrowingViewNodeBuilder *(^)(long long value))setTimestamp {
+    return ^(long long value) {
+        self->_timestamp = value;
+        return self;
+    };
+}
+
+- (GrowingViewNodeBuilder *(^)(NSString *value))setViewContent {
+    return ^(NSString *value) {
+        self->_viewContent = value;
+        return self;
+    };
+}
+- (GrowingViewNodeBuilder *(^)(NSString *value))setNodeType {
+    return ^(NSString *value) {
+        self->_nodeType = value;
+        return self;
+    };
+}
+
+- (GrowingViewNodeBuilder *(^)(BOOL value))setHasListParent {
+    return ^(BOOL value) {
+        self->_hasListParent = value;
+        return self;
+    };
+}
+
+- (GrowingViewNodeBuilder *(^)(BOOL value))setNeedRecalculate {
+    return ^(BOOL value) {
+        self->_needRecalculate = value;
+        return self;
+    };
+}
+
+- (GrowingViewNode *)build {
+    return [[GrowingViewNode alloc] initWithBuilder:self];
+}
 
 @end

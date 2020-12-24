@@ -1,5 +1,5 @@
 //
-// GrowingHybirdViewElementEvent.h
+// GrowingHybridViewElementEvent.h
 // GrowingAnalytics-Autotracker-AutotrackerCore-Tracker-TrackerCore
 //
 //  Created by sheng on 2020/11/17.
@@ -21,32 +21,32 @@
 #import "GrowingViewElementEvent.h"
 
 NS_ASSUME_NONNULL_BEGIN
-@class GrowingHybirdViewElementBuilder;
-@interface GrowingHybirdViewElementEvent : GrowingViewElementEvent
+@class GrowingHybridViewElementBuilder;
+@interface GrowingHybridViewElementEvent : GrowingViewElementEvent
 @property (nonatomic, copy, readonly) NSString *hyperlink;
 @property (nonatomic, copy, readonly) NSString *query;
 
-+ (GrowingHybirdViewElementBuilder*)builder;
++ (GrowingHybridViewElementBuilder*)builder;
 @end
 
-@interface GrowingHybirdViewElementBuilder : GrowingViewElementBuilder
+@interface GrowingHybridViewElementBuilder : GrowingViewElementBuilder
 
 @property (nonatomic, copy, readonly) NSString *hyperlink;
 @property (nonatomic, copy, readonly) NSString *query;
 
 
-- (GrowingHybirdViewElementBuilder *(^)(NSString *value))setQuery;
-- (GrowingHybirdViewElementBuilder *(^)(NSString *value))setHyperlink;
+- (GrowingHybridViewElementBuilder *(^)(NSString *value))setQuery;
+- (GrowingHybridViewElementBuilder *(^)(NSString *value))setHyperlink;
 
 //重写
-- (GrowingHybirdViewElementBuilder *(^)(NSString *value))setPageName;
-- (GrowingHybirdViewElementBuilder *(^)(long long value))setPageShowTimestamp;
-- (GrowingHybirdViewElementBuilder *(^)(NSString *value))setTextValue;
-- (GrowingHybirdViewElementBuilder *(^)(NSString *value))setXpath;
-- (GrowingHybirdViewElementBuilder *(^)(int value))setIndex;
+- (GrowingHybridViewElementBuilder *(^)(NSString *value))setPath;
+- (GrowingHybridViewElementBuilder *(^)(long long value))setPageShowTimestamp;
+- (GrowingHybridViewElementBuilder *(^)(NSString *value))setTextValue;
+- (GrowingHybridViewElementBuilder *(^)(NSString *value))setXpath;
+- (GrowingHybridViewElementBuilder *(^)(int value))setIndex;
 
 //extra add
-- (GrowingHybirdViewElementBuilder *(^)(NSString *value))setEventType;
+- (GrowingHybridViewElementBuilder *(^)(NSString *value))setEventType;
 
 @end
 

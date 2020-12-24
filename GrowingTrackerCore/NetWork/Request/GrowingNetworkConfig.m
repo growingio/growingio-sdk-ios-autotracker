@@ -79,12 +79,12 @@ static NSString * const kGrowingWsHostFormat =  @"wss://ws.growingio.com";
     }
 }
 
-- (void)setCustomWsHost:(NSString *)customHost {
-    // web socket 直接赋值, 不需要调用|generateValidEndPoint|
-    if (customHost && customHost.length > 0) {
-        _customWsHost = customHost;
-    }
-}
+//- (void)setCustomWsHost:(NSString *)customHost {
+//    // web socket 直接赋值, 不需要调用|generateValidEndPoint|
+//    if (customHost && customHost.length > 0) {
+//        _customWsHost = customHost;
+//    }
+//}
 
 - (NSString *)growingApiHostEnd {
     return GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionServerHost;
@@ -98,6 +98,8 @@ static NSString * const kGrowingWsHostFormat =  @"wss://ws.growingio.com";
     return [NSString stringWithFormat:kGrowingTagsHostFormat];
 }
 
+
+//
 - (NSString *)wsEndPoint {
     if (_customWsHost.length > 0) {
         return [_customWsHost stringByAppendingString:@"/app/%@/circle/%@"];

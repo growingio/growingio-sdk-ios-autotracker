@@ -22,22 +22,23 @@
 #import "GrowingCocoaLumberjack.h"
 #import "GrowingEventManager.h"
 #import "GrowingPage.h"
-#import "GrowingPageEvent.h"
 #import "GrowingPageAttributesEvent.h"
+#import "GrowingPageEvent.h"
 #import "GrowingPageGroup.h"
+#import "GrowingPrivateCategory.h"
+#import "GrowingViewControllerLifecycle.h"
 #import "NSString+GrowingHelper.h"
+#import "UIView+GrowingHelper.h"
 #import "UIViewController+GrowingAutotracker.h"
 #import "UIViewController+GrowingNode.h"
 #import "UIViewController+GrowingPageHelper.h"
-#import "UIView+GrowingHelper.h"
-#import "GrowingViewControllerLifecycle.h"
 
 @interface GrowingPageManager () <GrowingViewControllerLifecycleDelegate>
 
-@property(nonatomic, strong) NSHashTable *visiableControllersTable;
-@property(nonatomic, strong) NSPointerArray *visiableControllersArray;
+@property (nonatomic, strong) NSHashTable *visiableControllersTable;
+@property (nonatomic, strong) NSPointerArray *visiableControllersArray;
 
-@property(nonatomic, strong) NSMutableArray<NSString *> *ignoredPrivateControllers;
+@property (nonatomic, strong) NSMutableArray<NSString *> *ignoredPrivateControllers;
 
 @end
 
@@ -71,7 +72,6 @@
     [self removeDidDisappearController:controller];
 }
 
-
 - (void)createdViewControllerPage:(UIViewController *)viewController {
     GrowingPageGroup *page = [viewController growingPageHelper_getPageObject];
     if (page == nil) {
@@ -85,6 +85,7 @@
     } else {
         [page refreshShowTimestamp];
     }
+
     if (!page.isIgnored) {
         //发送page事件
         [self sendPageEventWithPage:page];
@@ -95,12 +96,15 @@
 }
 
 - (void)sendPageEventWithPage:(GrowingPage *)page {
-    GrowingBaseBuilder *builder = GrowingPageEvent.builder.setTitle(page.title).setPageName(page.path).setTimestamp(page.showTimestamp);
+    GrowingBaseBuilder *builder =
+        GrowingPageEvent.builder.setTitle(page.title).setPath(page.path).setTimestamp(page.showTimestamp);
     [[GrowingEventManager shareInstance] postEventBuidler:builder];
 }
 
 - (void)sendPageAttributesEventWithPage:(GrowingPage *)page {
-    GrowingBaseBuilder *builder = GrowingPageAttributesEvent.builder.setPageName(page.path).setTimestamp(page.showTimestamp).setAttributes(page.variables);
+    GrowingBaseBuilder *builder = GrowingPageAttributesEvent.builder.setPath(page.path)
+                                      .setTimestamp(page.showTimestamp)
+                                      .setAttributes(page.variables);
     [[GrowingEventManager shareInstance] postEventBuidler:builder];
 }
 
@@ -142,12 +146,11 @@
     }
 
     if (parentVC == nil) {
-        GIOLogError(@"parentVC is nil");
+        GIOLogError(@"%@ you want find parentVC is nil", carrier);
         return nil;
     } else {
         GrowingPageGroup *page = [parentVC growingPageHelper_getPageObject];
         if (page == nil) {
-            //TODO: why add a class?
             [self.ignoredPrivateControllers addObject:NSStringFromClass(carrier.class)];
             GIOLogError(@"UIViewController: %@ associated page object is nil", carrier);
         }
@@ -163,7 +166,7 @@
         [self sendPageAttributesEventWithPage:page];
     }
     if ([page isKindOfClass:GrowingPageGroup.class]) {
-        GrowingPageGroup *pageGroup = (GrowingPageGroup *) page;
+        GrowingPageGroup *pageGroup = (GrowingPageGroup *)page;
         if (!pageGroup.childPages) {
             return;
         }
@@ -179,7 +182,6 @@
 #pragma mark Visiable ViewController
 
 - (void)addDidAppearController:(UIViewController *)appearVc {
-
     if ([self isPrivateViewControllerIgnored:appearVc]) {
         return;
     }
@@ -193,7 +195,7 @@
 
     [self.visiableControllersTable addObject:appearVc];
     if (![self.visiableControllersArray.allObjects containsObject:appearVc]) {
-        [self.visiableControllersArray addPointer:(__bridge void *) appearVc];
+        [self.visiableControllersArray addPointer:(__bridge void *)appearVc];
     }
 }
 
@@ -203,20 +205,20 @@
     }
     [self.visiableControllersTable removeObject:disappearVc];
     [self.visiableControllersArray.allObjects
-            enumerateObjectsWithOptions:NSEnumerationReverse
-                             usingBlock:^(UIViewController *vc, NSUInteger idx, BOOL *_Nonnull stop) {
-                                 if (disappearVc == vc) {
-                                     [self.visiableControllersArray removePointerAtIndex:idx];
-                                 }
-                             }];
+        enumerateObjectsWithOptions:NSEnumerationReverse
+                         usingBlock:^(UIViewController *vc, NSUInteger idx, BOOL *_Nonnull stop) {
+                             if (disappearVc == vc) {
+                                 [self.visiableControllersArray removePointerAtIndex:idx];
+                             }
+                         }];
 }
 
 - (UIViewController *)currentViewController {
-    return [self growingHook_updateVisiableVC].lastObject;
+    return self.allDidAppearViewControllers.lastObject;
 }
 
 - (UIViewController *)rootViewController {
-    UIViewController *vc = [self growingHook_updateVisiableVC].lastObject;
+    UIViewController *vc = self.allDidAppearViewControllers.lastObject;
     while (vc.parentViewController) {
         vc = vc.parentViewController;
     }
@@ -224,21 +226,7 @@
 }
 
 - (NSArray<UIViewController *> *)allDidAppearViewControllers {
-    return [self growingHook_updateVisiableVC];
-}
-
-- (NSArray<UIViewController *> *)growingHook_updateVisiableVC {
-    UIViewController *curVC = self.visiableControllersArray.allObjects.lastObject;
-    NSMutableArray<UIViewController *> *arr = [[NSMutableArray alloc] init];
-    UIView *curView = curVC.view;
-    while (curView) {
-        if ([curView.nextResponder isKindOfClass:[UIViewController class]]) {
-            UIViewController *responderVC = (UIViewController *) curView.nextResponder;
-            [arr insertObject:responderVC atIndex:0];
-        }
-        curView = curView.superview;
-    }
-    return arr;
+    return self.visiableControllersArray.allObjects;
 }
 
 - (BOOL)isDidAppearController:(UIViewController *)vc {
@@ -256,11 +244,34 @@
 
     return NO;
 }
+- (GrowingPageGroup *)findPageByViewController:(UIViewController *)current {
+    GrowingPageGroup *page = nil;
+    UIViewController *last = nil;
+    while (current) {
+        last = current;
+        if ([[GrowingPageManager sharedInstance] isPrivateViewControllerIgnored:current]) {
+            current = current.growingNodeParent;
+        } else {
+            page = [current growingPageHelper_getPageObject];
+            if (page.isIgnored) {
+                current = current.growingNodeParent;
+            } else {
+                break;
+            }
+        }
+    }
+    if (!page && last) {
+        page = [last growingPageHelper_getPageObject];
+    }
+    return page;
+}
 
 - (GrowingPageGroup *)findPageByView:(UIView *)view {
-    UIViewController *parent = [view growingHelper_viewController];
-    GrowingPageGroup *page = [parent growingPageHelper_getPageObject];
-    return page;
+    UIViewController *current = [view growingHelper_viewController];
+    if (!current) {
+        current = self.currentViewController;
+    }
+    return [self findPageByViewController:current];
 }
 
 - (GrowingPageGroup *)currentPage {
@@ -274,10 +285,10 @@
 - (NSMutableArray *)ignoredPrivateControllers {
     if (!_ignoredPrivateControllers) {
         _ignoredPrivateControllers = [NSMutableArray arrayWithArray:@[
-                @"UIInputWindowController", @"UIActivityGroupViewController", @"UIKeyboardHiddenViewController",
-                @"UICompatibilityInputViewController", @"UISystemInputAssistantViewController",
-                @"UIPredictionViewController", @"GrowingWindowViewController", @"UIApplicationRotationFollowingController",
-                @"UIAlertController"
+            @"UIInputWindowController", @"UIActivityGroupViewController", @"UIKeyboardHiddenViewController",
+            @"UICompatibilityInputViewController", @"UISystemInputAssistantViewController",
+            @"UIPredictionViewController", @"GrowingWindowViewController", @"UIApplicationRotationFollowingController",
+            @"UIAlertController"
         ]];
     }
     return _ignoredPrivateControllers;

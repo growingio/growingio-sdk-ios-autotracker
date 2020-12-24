@@ -5,11 +5,8 @@
 #import "GrowingConfigurationManager.h"
 #import "GrowingTrackConfiguration.h"
 
-@interface GrowingConfigurationManager ()
-@property(nonatomic, strong) GrowingTrackConfiguration *realConfiguration;
-@end
-
 @implementation GrowingConfigurationManager
+@synthesize trackConfiguration = _trackConfiguration;
 @synthesize urlScheme = _urlScheme;
 
 + (instancetype)sharedInstance {
@@ -22,12 +19,8 @@
     return _sharedInstance;
 }
 
-- (GrowingTrackConfiguration *)trackConfiguration {
-    return [_realConfiguration copyWithZone:nil];
-}
-
 - (void)setTrackConfiguration:(GrowingTrackConfiguration *)configuration {
-    _realConfiguration = [configuration copyWithZone:nil];
+    _trackConfiguration = [configuration copyWithZone:nil];
 }
 
 - (NSString *)urlScheme {

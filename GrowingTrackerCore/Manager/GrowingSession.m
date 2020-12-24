@@ -18,11 +18,10 @@
 @property(nonatomic, assign) BOOL alreadySendVisitEvent;
 @property(nonatomic, copy) NSString *latestNonNullUserId;
 @property(nonatomic, assign, readonly) long long sessionInterval;
-@property(nonatomic, assign) double latitude;
-@property(nonatomic, assign) double longitude;
 @property(nonatomic, assign) long long latestVisitTime;
 @property(nonatomic, assign) long long latestDidEnterBackgroundTime;
-
+@property(nonatomic, assign) double latitude;
+@property(nonatomic, assign) double longitude;
 @property(strong, nonatomic, readonly) NSHashTable *userIdChangedDelegates;
 @property(strong, nonatomic, readonly) NSLock *delegateLock;
 @end
@@ -89,18 +88,27 @@ static GrowingSession *currentSession = nil;
 - (void)dispatchUserIdDidChangedFrom:(NSString *)oldUserId to:(NSString *)newUserId {
     [self.delegateLock lock];
     for (id <GrowingUserIdChangedDelegate> delegate in self.userIdChangedDelegates) {
-        [delegate userIdDidChangedFrom:oldUserId.copy to:newUserId.copy];
+        if ([delegate respondsToSelector:@selector(userIdDidChangedFrom:to:)]) {
+            [delegate userIdDidChangedFrom:oldUserId.copy to:newUserId.copy];
+        }
     }
     [self.delegateLock unlock];
 }
 
 - (void)setLoginUserId:(NSString *)loginUserId {
+    if ([NSString growingHelper_isEqualStringA:loginUserId andStringB:self.loginUserId]) {
+        GIOLogWarn(@"setLoginUserId, but loginUserId is equal");
+        return;
+    }
+
     NSString *oldUserId = _loginUserId.copy;
     _loginUserId = loginUserId.copy;
     // loginUserId 持久化
     [[GrowingPersistenceDataProvider sharedInstance] setLoginUserId:_loginUserId];
-    [self resendVisitByUserIdDidChangedFrom:oldUserId to:_loginUserId.copy];
+    //额外的处理者
     [self dispatchUserIdDidChangedFrom:oldUserId to:_loginUserId.copy];
+    //重发visit必须在分发UserIdDidChangedFrom:to:方法之前
+    [self resendVisitByUserIdDidChangedFrom:oldUserId to:_loginUserId.copy];
 }
 
 - (void)resendVisitByUserIdDidChangedFrom:(NSString *)oldUserId to:(NSString *)newUserId {
@@ -118,7 +126,14 @@ static GrowingSession *currentSession = nil;
     }
 }
 
+// ios 11 系统上面VC的viewDidAppear生命周期会早于AppDelegate的applicationDidBecomeActive，这样会造成Page事件早于visit事件
 - (void)applicationDidBecomeActive {
+    // 第一次启动，且已经发送过visit事件，说明visit事件被强制补发了，这里就不在发送visit事件了
+    if (self.latestDidEnterBackgroundTime == 0 && self.alreadySendVisitEvent) {
+        GIOLogWarn(@"First launched and already send visit");
+        return;
+    }
+
     long long now = GrowingTimeUtil.currentTimeMillis;
     if (now - self.latestDidEnterBackgroundTime >= self.sessionInterval) {
         [self refreshSessionId];
@@ -130,12 +145,19 @@ static GrowingSession *currentSession = nil;
 /// @param latitude 纬度
 /// @param longitude 经度
 - (void)setLocation:(double)latitude longitude:(double)longitude {
+    //经纬度从无到有会发visit
     if ((_latitude == 0 && (ABS(latitude) > 0)) || (_longitude == 0 && ABS(longitude) > 0)) {
-        [self resendVisitEvent];
+        _latitude = latitude;
+        _longitude = longitude;
+        if (self.alreadySendVisitEvent) {
+            [self resendVisitEvent];
+        }
+        return;
     }
     _latitude = latitude;
     _longitude = longitude;
 }
+
 /// 清除地理位置
 - (void)cleanLocation {
     _latitude = 0;

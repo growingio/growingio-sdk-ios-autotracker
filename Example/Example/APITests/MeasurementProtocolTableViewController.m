@@ -7,15 +7,12 @@
 //
 
 #import "MeasurementProtocolTableViewController.h"
+
 #import "GIOAttributesTrackViewController.h"
 #import "GIOConstants.h"
-
+#import "GrowingAutotracker.h"
 //测量协议规定的数据分类：埋点、无埋点和API测试
-typedef NS_ENUM(NSInteger, GIOMeasurementProtocolCount) {
-    GIOAutoTrack = 0,
-    GIOManualTrack,
-    GIOAPI
-};
+typedef NS_ENUM(NSInteger, GIOMeasurementProtocolCount) { GIOAutoTrack = 0, GIOManualTrack, GIOAPI };
 
 @interface MeasurementProtocolTableViewController ()
 
@@ -25,7 +22,9 @@ typedef NS_ENUM(NSInteger, GIOMeasurementProtocolCount) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    self.growingPageAttributes = @{@"xxx" : @"mmm"};
+
+    self.growingPageAttributes = @{@"xxx" : @"111mmm"};
     self.tableView.accessibilityIdentifier = @"MeasurementProtocolTableView";
 }
 
@@ -37,7 +36,6 @@ typedef NS_ENUM(NSInteger, GIOMeasurementProtocolCount) {
 #pragma mark - Table view data source
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     NSLog(@"测试类型--测量协议之：%@", cell.textLabel.text);
 }
@@ -52,22 +50,22 @@ typedef NS_ENUM(NSInteger, GIOMeasurementProtocolCount) {
 //更新列表头颜色
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     static NSString *kGrowingheaderId = @"customHeader";
-    
+
     UITableViewHeaderFooterView *vHeader;
-    
+
     vHeader = [tableView dequeueReusableHeaderFooterViewWithIdentifier:kGrowingheaderId];
-    
+
     if (!vHeader) {
         vHeader = [GIOConstants globalSectionHeaderForIdentifier:kGrowingheaderId];
     }
-    
+
     vHeader.textLabel.text = [self tableView:tableView titleForHeaderInSection:section];
-    
+
     return vHeader;
 }
 
 //表头高度
--(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return TableView_Section_Height;
 }
 

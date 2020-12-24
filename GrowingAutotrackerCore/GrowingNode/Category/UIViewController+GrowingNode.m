@@ -17,21 +17,23 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
-#import "GrowingPropertyDefine.h"
+#import "GrowingDispatchManager.h"
+#import "GrowingNode.h"
+#import "GrowingPageGroup.h"
 #import "GrowingPageManager.h"
+#import "GrowingPrivateCategory.h"
+#import "GrowingPropertyDefine.h"
+#import "GrowingRealAutotracker.h"
 #import "NSDictionary+GrowingHelper.h"
 #import "NSObject+GrowingIvarHelper.h"
+#import "UIApplication+GrowingNode.h"
 #import "UIImage+GrowingHelper.h"
 #import "UIView+GrowingHelper.h"
 #import "UIView+GrowingNode.h"
 #import "UIViewController+GrowingAutotracker.h"
 #import "UIViewController+GrowingNode.h"
 #import "UIViewController+GrowingPageHelper.h"
-#import "GrowingPageGroup.h"
 #import "UIWindow+GrowingNode.h"
-#import "GrowingDispatchManager.h"
-#import "UIApplication+GrowingNode.h"
 
 @implementation UIViewController (GrowingNode)
 
@@ -47,23 +49,31 @@
     CGRect rect = self.view.growingNodeFrame;
     //是否全屏显示
     //当ViewController全屏显示时，如果被NavigationController包裹,其frame大小高度应减去导航栏的高度
-    BOOL isFullScreenShow = CGPointEqualToPoint(rect.origin, CGPointMake(0, 0)) && CGSizeEqualToSize(rect.size, [UIApplication sharedApplication].growingMainWindow.bounds.size);
+    BOOL isFullScreenShow =
+        CGPointEqualToPoint(rect.origin, CGPointMake(0, 0)) &&
+        CGSizeEqualToSize(rect.size, [UIApplication sharedApplication].growingMainWindow.bounds.size);
     if (isFullScreenShow) {
         UIViewController *parentVC = self.parentViewController;
         while (parentVC) {
             if ([parentVC isKindOfClass:[UINavigationController class]]) {
-                UINavigationController *navi = (UINavigationController*)parentVC;
-                if (!navi.navigationBar.window || navi.navigationBar.hidden || navi.navigationBar.alpha < 0.001 || !navi.navigationBar.superview) {
-                    break;;
+                UINavigationController *navi = (UINavigationController *)parentVC;
+                if (!navi.navigationBar.window || navi.navigationBar.hidden || navi.navigationBar.alpha < 0.001 ||
+                    !navi.navigationBar.superview) {
+                    break;
+                    ;
                 }
-                rect.origin.y += (navi.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height);
-                rect.size.height -= (navi.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height);
+                rect.origin.y += (navi.navigationBar.frame.size.height +
+                                  [[UIApplication sharedApplication] statusBarFrame].size.height);
+                rect.size.height -= (navi.navigationBar.frame.size.height +
+                                     [[UIApplication sharedApplication] statusBarFrame].size.height);
             }
-            
+
             if ([parentVC isKindOfClass:[UITabBarController class]]) {
-                UITabBarController *tabbarvc = (UITabBarController*)parentVC;
-                if (!tabbarvc.tabBar.window || tabbarvc.tabBar.hidden || tabbarvc.tabBar.alpha < 0.001 || !tabbarvc.tabBar.superview) {
-                    break;;
+                UITabBarController *tabbarvc = (UITabBarController *)parentVC;
+                if (!tabbarvc.tabBar.window || tabbarvc.tabBar.hidden || tabbarvc.tabBar.alpha < 0.001 ||
+                    !tabbarvc.tabBar.superview) {
+                    break;
+                    ;
                 }
                 rect.size.height -= tabbarvc.tabBar.frame.size.height;
             }
@@ -77,8 +87,9 @@
     if (![self isViewLoaded]) {
         return nil;
     }
-    //UIResponder关系为 UIApplication/UIWindowScene/_UIAlertControllerShimPresenterWindow/UITransitionView/UIAlertController/AlertView
-    //UIAlertController的presentingViewController 为 UIApplicationRotationFollowingController
+    // UIResponder关系为
+    // UIApplication/UIWindowScene/_UIAlertControllerShimPresenterWindow/UITransitionView/UIAlertController/AlertView
+    // UIAlertController的presentingViewController 为 UIApplicationRotationFollowingController
     //取最上层的视图控制器，则无法使用上面两种方式。
     if ([self isKindOfClass:UIAlertController.class]) {
         return [[GrowingPageManager sharedInstance] currentViewController];
@@ -106,9 +117,8 @@
 
 - (BOOL)growingNodeDonotTrack {
     DonotrackCheck(![self isViewLoaded]) DonotrackCheck(!self.view.window)
-    DonotrackCheck(self.view.window.growingNodeIsBadNode)
-    DonotrackCheck(self.growingNodeIsBadNode)
-    DonotrackCheck(![self growingAppearStateCanTrack]) return NO;
+        DonotrackCheck(self.view.window.growingNodeIsBadNode) DonotrackCheck(self.growingNodeIsBadNode)
+            DonotrackCheck(![self growingAppearStateCanTrack]) return NO;
 }
 
 - (BOOL)growingNodeDonotCircle {
@@ -141,13 +151,11 @@
     return self.growingPageAlias;
 }
 
-
 #pragma mark - xpath
 - (NSInteger)growingNodeKeyIndex {
     NSString *classString = NSStringFromClass(self.class);
-    NSArray *subResponder =
-    [(UIViewController *)self parentViewController].childViewControllers;
-    
+    NSArray *subResponder = [(UIViewController *)self parentViewController].childViewControllers;
+
     NSInteger count = 0;
     NSInteger index = -1;
     for (UIResponder *res in subResponder) {
@@ -166,6 +174,10 @@
 }
 
 - (NSString *)growingNodeSubPath {
+    //如果别名存在，则直接返回别名
+    if (self.growingPageAlias) {
+        return self.growingPageAlias;
+    }
     NSInteger index = [self growingNodeKeyIndex];
     NSString *className = NSStringFromClass(self.class);
     return index < 0 ? className : [NSString stringWithFormat:@"%@[%ld]", className, (long)index];
@@ -179,7 +191,7 @@
     return nil;
 }
 
-- (NSArray<id<GrowingNode>>*)growingNodeChilds {
+- (NSArray<id<GrowingNode>> *)growingNodeChilds {
     NSMutableArray *childs = [NSMutableArray array];
 
     if (self.presentedViewController) {
@@ -190,59 +202,64 @@
     // 这里仅去除self.view上的重复,self.view.view的重复暂不考虑
     UIView *currentView = self.view;
     if (currentView && self.isViewLoaded && currentView.growingImpNodeIsVisible) {
-        
         [childs addObjectsFromArray:self.view.subviews];
         if (self.childViewControllers.count > 0 && ![self isKindOfClass:UIAlertController.class]) {
             // 是否包含全屏视图
             __block BOOL isContainFullScreen = NO;
-            
-            NSArray <UIViewController *> *childViewControllers = self.childViewControllers;
-            [childViewControllers enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(__kindof UIViewController*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                if (obj.isViewLoaded) {
-                    UIView *objSuperview = obj.view;
-                    for (long i = (long)(childs.count - 1); i >= 0; i--) {
-                        UIView *childview = childs[i];
-                        //如果childview包含或者等于objsuperview
-                        if ([objSuperview isDescendantOfView:childview]) {
-                            // xib拖拽的viewController会被一个自定义的view包裹，判断其subviews数量是否为1
-                            if ([childview isEqual:objSuperview] || (childview.subviews.count == 1 && [childview.subviews.lastObject isEqual:objSuperview])) {
-                                //                            NSInteger index = [childs indexOfObject:objSuperview];
-                                if ([objSuperview growingImpNodeIsVisible] && !isContainFullScreen) {
-                                    [childs replaceObjectAtIndex:i withObject:obj];
-                                } else {
-                                    [childs removeObject:childview];
-                                }
-                            }
-                        }
-                    }
-                    
-                    CGRect rect = [obj.view convertRect:obj.view.bounds toView:nil];
-                    // 是否全屏
-                    BOOL isFullScreenShow = CGPointEqualToPoint(rect.origin, CGPointMake(0, 0)) && CGSizeEqualToSize(rect.size, [UIApplication sharedApplication].growingMainWindow.bounds.size);
-                    // 正在全屏显示
-                    if (isFullScreenShow && [obj.view growingImpNodeIsVisible]) {
-                        isContainFullScreen = YES;
-                    }
-                }
-            }];
+
+            NSArray<UIViewController *> *childViewControllers = self.childViewControllers;
+            [childViewControllers
+                enumerateObjectsWithOptions:NSEnumerationReverse
+                                 usingBlock:^(__kindof UIViewController *_Nonnull obj, NSUInteger idx,
+                                              BOOL *_Nonnull stop) {
+                                     if (obj.isViewLoaded) {
+                                         UIView *objSuperview = obj.view;
+                                         for (long i = (long)(childs.count - 1); i >= 0; i--) {
+                                             UIView *childview = childs[i];
+                                             //如果childview包含或者等于objsuperview
+                                             if ([objSuperview isDescendantOfView:childview]) {
+                                                 // xib拖拽的viewController会被一个自定义的view包裹，判断其subviews数量是否为1
+                                                 if ([childview isEqual:objSuperview] ||
+                                                     (childview.subviews.count == 1 &&
+                                                      [childview.subviews.lastObject isEqual:objSuperview])) {
+                                                     //                            NSInteger index = [childs
+                                                     //                            indexOfObject:objSuperview];
+                                                     if ([objSuperview growingImpNodeIsVisible] &&
+                                                         !isContainFullScreen) {
+                                                         [childs replaceObjectAtIndex:i withObject:obj];
+                                                     } else {
+                                                         [childs removeObject:childview];
+                                                     }
+                                                 }
+                                             }
+                                         }
+
+                                         CGRect rect = [obj.view convertRect:obj.view.bounds toView:nil];
+                                         // 是否全屏
+                                         BOOL isFullScreenShow =
+                                             CGPointEqualToPoint(rect.origin, CGPointMake(0, 0)) &&
+                                             CGSizeEqualToSize(
+                                                 rect.size,
+                                                 [UIApplication sharedApplication].growingMainWindow.bounds.size);
+                                         // 正在全屏显示
+                                         if (isFullScreenShow && [obj.view growingImpNodeIsVisible]) {
+                                             isContainFullScreen = YES;
+                                         }
+                                     }
+                                 }];
         }
-        
+
         [childs addObject:currentView];
         return childs;
     }
-    
-    
-    
+
     if ([self isKindOfClass:UIPageViewController.class]) {
         UIPageViewController *pageViewController = (UIPageViewController *)self;
         [childs addObject:pageViewController.viewControllers];
     }
-    
-    
+
     return childs;
 }
-
-
 
 @end
 
@@ -251,16 +268,13 @@
 static char kGrowingPageIgnorePolicyKey;
 static char kGrowingPageAttributesKey;
 
-GrowingSafeStringPropertyImplementation(growingPageAlias,
-                                        setGrowingPageAlias)
+GrowingSafeStringPropertyImplementation(growingPageAlias, setGrowingPageAlias)
 
 - (void)mergeGrowingAttributesPvar:(NSDictionary<NSString *, NSObject *> *)growingAttributesPvar {
-    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:growingAttributesPvar];
     //为GrowingMobileDebugger缓存用户设置 - pvar
-    if (growingAttributesPvar.count != 0 ) {
-        //TODO: mobiledebuger需要缓存？
-//        [[GrowingMobileDebugger shareDebugger] cacheValue:growingAttributesPvar
-//                                                   ofType:NSStringFromClass([self class])];
+    if (growingAttributesPvar.count != 0) {
+        NSMutableDictionary<NSString *, NSObject *> *pvar = [self growingAttributesMutablePvar];
+        [pvar addEntriesFromDictionary:growingAttributesPvar];
     }
 }
 
@@ -269,42 +283,36 @@ GrowingSafeStringPropertyImplementation(growingPageAlias,
 }
 
 - (NSMutableDictionary<NSString *, NSObject *> *)growingAttributesMutablePvar {
-    NSMutableDictionary<NSString *, NSObject *> * pvar = objc_getAssociatedObject(self, &kGrowingPageAttributesKey);
+    NSMutableDictionary<NSString *, NSObject *> *pvar = objc_getAssociatedObject(self, &kGrowingPageAttributesKey);
     if (pvar == nil) {
         pvar = [[NSMutableDictionary alloc] init];
-        objc_setAssociatedObject(self,
-                                 &kGrowingPageAttributesKey,
-                                 pvar,
-                                 OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self, &kGrowingPageAttributesKey, pvar, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return pvar;
 }
 
-- (void)setGrowingPageAttributes:(NSDictionary<NSString *,NSString *> *)growingPageAttributes {
+- (void)setGrowingPageAttributes:(NSDictionary<NSString *, NSString *> *)growingPageAttributes {
     [GrowingDispatchManager trackApiSel:_cmd
                    dispatchInMainThread:^{
-        
-        if (!growingPageAttributes || ([growingPageAttributes isKindOfClass:NSDictionary.class]
-                                       && growingPageAttributes.count == 0)) {
-            
-            [self removeGrowingAttributesPvar:nil]; // remove all
-            
-        } else {
-            if (![growingPageAttributes isValidDictVariable]) {
-                return ;
-            }
-            [self mergeGrowingAttributesPvar:growingPageAttributes];
-        }
-    }];
+                       if (!growingPageAttributes || ([growingPageAttributes isKindOfClass:NSDictionary.class] &&
+                                                      growingPageAttributes.count == 0)) {
+                           [self removeGrowingAttributesPvar:nil];  // remove all
+
+                       } else {
+                           if (![growingPageAttributes isValidDictVariable]) {
+                               return;
+                           }
+                           [self mergeGrowingAttributesPvar:growingPageAttributes];
+                       }
+                   }];
 }
 
-- (NSDictionary<NSString *,NSString *> *)growingPageAttributes {
+- (NSDictionary<NSString *, NSString *> *)growingPageAttributes {
     return [[self growingAttributesMutablePvar] copy];
 }
 
 - (void)setGrowingPageIgnorePolicy:(GrowingIgnorePolicy)growingPageIgnorePolicy {
-    objc_setAssociatedObject(self,
-                             &kGrowingPageIgnorePolicyKey,
+    objc_setAssociatedObject(self, &kGrowingPageIgnorePolicyKey,
                              [NSNumber numberWithUnsignedInteger:growingPageIgnorePolicy],
                              OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
@@ -314,12 +322,12 @@ GrowingSafeStringPropertyImplementation(growingPageAlias,
     if (!policyObjc) {
         return GrowingIgnoreNone;
     }
-    
+
     if ([policyObjc isKindOfClass:NSNumber.class]) {
         NSNumber *policyNum = (NSNumber *)policyObjc;
         return policyNum.unsignedIntegerValue;
     }
-    
+
     return GrowingIgnoreNone;
 }
 

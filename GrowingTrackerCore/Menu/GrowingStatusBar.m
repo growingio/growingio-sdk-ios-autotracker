@@ -52,7 +52,7 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.statusLable.frame = CGRectMake(0,0,self.bounds.size.width, 20);
+    self.statusLable.frame = CGRectMake(0,0,self.bounds.size.width, [[UIApplication sharedApplication] statusBarFrame].size.height);
     self.btn.frame = self.statusLable.bounds;
 }
 

@@ -46,16 +46,16 @@
 }
 
 + (NSArray<GrowingEventChannel *> *)buildAllEventChannels {
-    //TODO:这里删除了page,pageAttributes
+    // TODO:这里删除了page,pageAttributes
     return @[
         [GrowingEventChannel eventChannelWithEventTypes:@[GrowingEventTypeVisit, GrowingEventTypeAppClosed]
-                                            urlTemplate:kGrowingEventApiTemplate_PV
+                                            urlTemplate:kGrowingEventApiTemplate
                                           isCustomEvent:NO],
         [GrowingEventChannel eventChannelWithEventTypes:@[GrowingEventTypeCustom, GrowingEventTypeConversionVariables, GrowingEventTypeLoginUserAttributes, GrowingEventTypeVisitorAttributes]
-                                            urlTemplate:kGrowingEventApiTemplate_Custom
+                                            urlTemplate:kGrowingEventApiTemplate
                                           isCustomEvent:YES],
         [GrowingEventChannel eventChannelWithEventTypes:nil
-                                            urlTemplate:kGrowingEventApiTemplate_Other
+                                            urlTemplate:kGrowingEventApiTemplate
                                           isCustomEvent:NO],
     ];
 }
@@ -66,7 +66,7 @@
     if (!allEventChannels.count) {
         allEventChannels = [self buildAllEventChannels];
     }
-    
+    // TODO: 添加page以及pageAttributes类型
     return @{
         GrowingEventTypeVisit: allEventChannels[0],
 //        kEventTypeKeyPage: allEventChannels[0],

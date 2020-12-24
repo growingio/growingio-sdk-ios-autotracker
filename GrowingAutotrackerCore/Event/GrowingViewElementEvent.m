@@ -29,7 +29,7 @@
 - (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
     if (self = [super initWithBuilder:builder]) {
         GrowingViewElementBuilder *subBuilder = (GrowingViewElementBuilder*)builder;
-        _pageName = subBuilder.pageName;
+        _path = subBuilder.pageName;
         _pageShowTimestamp = subBuilder.pageShowTimestamp;
         _textValue = subBuilder.textValue;
         _xpath = subBuilder.xpath;
@@ -40,11 +40,11 @@
 
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
-    dataDictM[@"pageName"] = self.pageName;
+    dataDictM[@"path"] = self.path;
     dataDictM[@"pageShowTimestamp"] = @(self.pageShowTimestamp);
     dataDictM[@"textValue"] = self.textValue;
     dataDictM[@"xpath"] = self.xpath;
-    dataDictM[@"index"] = @(self.index);
+    dataDictM[@"index"] = self.index >= 0 ? @(self.index) : nil;
     return dataDictM;;
 }
 
@@ -52,7 +52,7 @@
 
 @implementation GrowingViewElementBuilder
 
-- (GrowingViewElementBuilder *(^)(NSString *value))setPageName {
+- (GrowingViewElementBuilder *(^)(NSString *value))setPath {
     return ^(NSString *value) {
         self->_pageName = value;
         return self;

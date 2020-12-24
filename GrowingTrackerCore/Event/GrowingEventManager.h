@@ -27,6 +27,8 @@
 //拦截者做额外处理
 @protocol GrowingEventInterceptor <NSObject>
 @optional
+//事件被触发
+- (void)growingEventManagerEventTriggered:(NSString * _Nullable)eventType;
 //在未完成构造event前，返回builder
 - (void)growingEventManagerEventWillBuild:(GrowingBaseBuilder* _Nullable)builder;
 //在完成构造event之后，返回event
@@ -35,15 +37,18 @@
 
 @interface GrowingEventManager : NSObject
 
-//@property (nonatomic, weak) id <GrowingEventManagerDelegate> delegate;
-
 + (_Nonnull instancetype)shareInstance;
 
 - (void)sendAllChannelEvents;
 
 - (void)clearAllEvents;
 
+/// 添加拦截者 - 执行顺序不保证有序
+/// @param interceptor 拦截者
 - (void)addInterceptor:(NSObject<GrowingEventInterceptor>* _Nonnull)interceptor;
+
+/// 删除拦截者
+/// @param interceptor 拦截者
 - (void)removeInterceptor:(NSObject<GrowingEventInterceptor> *_Nonnull)interceptor;
 
 // 必须在主线程调用

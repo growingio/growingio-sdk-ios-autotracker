@@ -1,9 +1,9 @@
 //
-//  GrowingEventNodeManager.m
-//  GrowingTracker
+// GrowingDeepLinkTrack.h
+// GrowingAnalytics
 //
-//  Created by GrowingIO on 2018/5/10.
-//  Copyright (C) 2018 Beijing Yishu Technology Co., Ltd.
+//  Created by sheng on 2020/11/27.
+//  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -18,9 +18,13 @@
 //  limitations under the License.
 
 
-#import "GrowingNodeManager.h"
-#import "GrowingBaseEvent.h"
+#import <Foundation/Foundation.h>
+NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingEventNodeManager : GrowingNodeManager
-- (instancetype _Nullable)initWithNode:(id<GrowingNode> _Nonnull)aNode;
+@interface GrowingAppDelegateAutotracker : NSObject
+
++ (void)track;
+
 @end
+
+NS_ASSUME_NONNULL_END

@@ -19,16 +19,23 @@
 
 #import <Foundation/Foundation.h>
 #import "GrowingNode.h"
-
+#import "GrowingViewNode.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingNodeHelper : NSObject
 
-+ (BOOL)isValidClickEventForNode:(id<GrowingNode>)node;
-
++ (NSString *)xPathSimilarForNode:(id<GrowingNode>)node;
 + (NSString *)xPathForNode:(id<GrowingNode>)node;
-+ (NSString *)xPathForView:(UIView *)view;
+
++ (NSString *)xPathForView:(UIView *)view similar:(BOOL)isSimilar;
 + (NSString *)xPathForViewController:(UIViewController *)vc;
+
++ (NSString *)buildElementContentForNode:(id<GrowingNode> _Nonnull)view;
+
++ (GrowingViewNode *)getViewNode:(UIView *)view;
++ (NSString *)getViewNodeType:(UIView *)view;
+
+
 @end
 
 NS_ASSUME_NONNULL_END

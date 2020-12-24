@@ -11,7 +11,7 @@
 #import "GIODataProcessOperation.h"
 #import "GrowingKeyValueCell.h"
 #import "GIODataProcessOperation.h"
-
+#import "GrowingAutotracker.h"
 #define DEFAULT_ATTRIBUTES_COUNT 0
 
 @interface GIOCustomEventViewController () <UITableViewDelegate, UITableViewDataSource>
@@ -52,13 +52,14 @@
     }
     
     if (atts.count > 0) {
-//        [Growing trackCustomEvent:eventName
-//                   withAttributes:atts];
+
+        [[GrowingAutotracker sharedInstance] trackCustomEvent:eventName
+                   withAttributes:atts];
         
         NSLog(@"Track事件，eventName:%@, attributes:%@", eventName, atts);
 
     } else {
-//        [Growing trackCustomEvent:eventName];
+        [[GrowingAutotracker sharedInstance] trackCustomEvent:eventName];
         NSLog(@"Track事件，eventName:%@", eventName);
     }
 }
@@ -66,7 +67,7 @@
 //发送track请求，测试event长度越界
 - (IBAction)eventNameOutRange:(id)sender {
     NSString *check = [GIOConstants getMyInput];
-//    [Growing trackCustomEvent:check];
+    [[GrowingAutotracker sharedInstance] trackCustomEvent:check];
     NSLog(@"Track eventName超界，数据长度为：%ld",[check length]);
 }
 
@@ -75,7 +76,7 @@
     NSString *eid = self.eventNameTextField.text;
     NSDictionary *tvar=[GIOConstants getLargeDictionary];
     NSLog(@"Large Dict length is :%ld",tvar.count);
-//    [Growing trackCustomEvent:eid withAttributes:tvar];
+    [[GrowingAutotracker sharedInstance] trackCustomEvent:eid withAttributes:tvar];
 }
 
 - (IBAction)tapGestureHandle:(UITapGestureRecognizer *)sender {

@@ -21,9 +21,12 @@
 #import "GrowingEventGenerator.h"
 #import "GrowingPersistenceDataProvider.h"
 #import "GrowingArgumentChecker.h"
+#import "GrowingAppDelegateAutotracker.h"
+#import "GrowingDeepLinkHandler.h"
+#import "GrowingWebWatcher.h"
 
 NSString *const GrowingTrackerVersionName = @"3.0.0";
-const int GrowingTrackerVersionCode = 300;
+const int GrowingTrackerVersionCode = 30000;
 
 @interface GrowingRealTracker ()
 @property(nonatomic, copy, readonly) NSDictionary *launchOptions;
@@ -43,6 +46,9 @@ const int GrowingTrackerVersionCode = 300;
         GrowingConfigurationManager.sharedInstance.trackConfiguration = self.configuration;
         [GrowingAppLifecycle.sharedInstance setupAppStateNotification];
         [GrowingSession startSession];
+        [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:[GrowingWebWatcher shareInstance]];
+        [GrowingAppDelegateAutotracker track];
+        [self versionPrint];
     }
 
     return self;
@@ -64,13 +70,17 @@ const int GrowingTrackerVersionCode = 300;
     [GrowingWSLogger sharedInstance].logFormatter = [GrowingWSLoggerFormat new];
 }
 
+- (void)versionPrint {
+    NSString *versionStr = [NSString stringWithFormat:@"Thank you very much for using GrowingIO. We will do our best to provide you with the best service. GrowingIO version: %@",GrowingTrackerVersionName];
+    GIOLogError(@"%@",versionStr);
+}
+
 - (void)trackCustomEvent:(NSString *)eventName {
 
     if ([GrowingArgumentChecker isIllegalEventName:eventName]) {
         return;
     }
-
-    [self trackCustomEvent:eventName withAttributes:nil];
+    [GrowingEventGenerator generateCustomEvent:eventName attributes:nil];
 }
 
 - (void)trackCustomEvent:(NSString *)eventName withAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
@@ -98,7 +108,7 @@ const int GrowingTrackerVersionCode = 300;
     if ([GrowingArgumentChecker isIllegalAttributes:variables]) {
         return;
     }
-    [GrowingEventGenerator generateConversionVariablesEvent:variables];
+    [GrowingEventGenerator generateConversionAttributesEvent:variables];
 
     
 }
@@ -115,12 +125,12 @@ const int GrowingTrackerVersionCode = 300;
 
 - (void)cleanLoginUserId {
     [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
-        [self setUserIdValue:@""];
+        [self setUserIdValue:nil];
     }];
 }
 
 - (void)setDataCollectionEnabled:(BOOL)enabled {
-    self.configuration.dataCollectionEnabled = enabled;
+    GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionEnabled = enabled;
 }
 
 - (NSString *)getDeviceId {
@@ -128,7 +138,7 @@ const int GrowingTrackerVersionCode = 300;
 }
 
 
-- (void)setUserIdValue:(nonnull NSString *)value {
+- (void)setUserIdValue:(NSString *)value {
     [[GrowingSession currentSession] setLoginUserId:value];
 }
 
@@ -143,4 +153,6 @@ const int GrowingTrackerVersionCode = 300;
 - (void)cleanLocation {
     [[GrowingSession currentSession] cleanLocation];
 }
+
+
 @end

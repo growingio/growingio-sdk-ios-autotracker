@@ -11,17 +11,9 @@
 
 static GrowingTracker *sharedInstance = nil;
 
-@interface GrowingTracker ()
-@property(nonatomic, strong, readonly) GrowingRealTracker *realTracker;
-@end
-
 @implementation GrowingTracker
 - (instancetype)initWithRealTracker:(GrowingRealTracker *)realTracker {
-    self = [super init];
-    if (self) {
-        _realTracker = realTracker;
-    }
-
+    self = [super initWithTarget:realTracker];
     return self;
 }
 
@@ -46,42 +38,6 @@ static GrowingTracker *sharedInstance = nil;
         @throw [NSException exceptionWithName:@"GrowingTracker未初始化" reason:@"请在applicationDidFinishLaunching中调用startWithConfiguration函数,并且确保在主线程中" userInfo:nil];
     }
     return sharedInstance;
-}
-
-- (void)trackCustomEvent:(NSString *)eventName {
-    [_realTracker trackCustomEvent:eventName];
-}
-
-- (void)trackCustomEvent:(NSString *)eventName withAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
-    [_realTracker trackCustomEvent:eventName withAttributes:attributes];
-}
-
-- (void)setLoginUserAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
-    [_realTracker setLoginUserAttributes:attributes];
-}
-
-- (void)setVisitorAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
-    [_realTracker setVisitorAttributes:attributes];
-}
-
-- (void)setConversionVariables:(NSDictionary<NSString *, NSString *> *)variables {
-    [_realTracker setConversionVariables:variables];
-}
-
-- (void)setLoginUserId:(NSString *)userId {
-    [_realTracker setLoginUserId:userId];
-}
-
-- (void)cleanLoginUserId {
-    [_realTracker cleanLoginUserId];
-}
-
-- (void)setDataCollectionEnabled:(BOOL)enabled {
-    [_realTracker setDataCollectionEnabled:enabled];
-}
-
-- (NSString *)getDeviceId {
-    return [_realTracker getDeviceId];
 }
 
 @end

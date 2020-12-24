@@ -24,6 +24,9 @@
 #import "UIView+GrowingNode.h"
 #import "GrowingAppLifecycle.h"
 #import "GrowingViewControllerLifecycle.h"
+#import "GrowingEventGenerator.h"
+#import "GrowingLogMacros.h"
+#import "GrowingCocoaLumberjack.h"
 
 @interface GrowingImpressionTrack () <GrowingAppLifecycleDelegate, GrowingViewControllerLifecycleDelegate>
 
@@ -228,13 +231,18 @@ static BOOL impTrackIsRegistered = NO;
     node.growingIMPTrackVariable = impTrackVariable;
 
     if (node.growingIMPTrackEventName.length > 0 && node.growingIMPTrackVariable.count > 0) {
-//        [Growing trackCustomEvent:node.growingIMPTrackEventName withAttributes:node.growingIMPTrackVariable];
+        [GrowingEventGenerator generateCustomEvent:node.growingIMPTrackEventName attributes:node.growingIMPTrackVariable];
     } else if (node.growingIMPTrackEventName.length > 0) {
-//        [Growing trackCustomEvent:node.growingIMPTrackEventName];
+        [GrowingEventGenerator generateCustomEvent:node.growingIMPTrackEventName attributes:nil];
     }
 }
 
 - (void)addNode:(UIView *)node inSubView:(BOOL)flag; {
+    //如果不可见或者忽略，则不可track
+    if ([node growingNodeDonotTrack]) {
+        GIOLogDebug(@"imp track view %@ is donotTrack",node);
+        return;
+    }
     if (node.growingIMPTrackEventName.length > 0) {
         [self.sourceTable addObject:node];
     }
@@ -252,6 +260,11 @@ static BOOL impTrackIsRegistered = NO;
 }
 
 - (void)addNode:(UIView *)node {
+    //如果不可见或者忽略，则不可track
+    if ([node growingNodeDonotTrack]) {
+        GIOLogDebug(@"imp track view %@ is donotTrack",node);
+        return;
+    }
     if (node.growingIMPTrackEventName.length > 0) {
         [self.sourceTable addObject:node];
     }

@@ -41,6 +41,8 @@
 - (BOOL)isDidAppearController:(UIViewController *)vc;
 
 - (GrowingPageGroup *)findPageByView:(UIView *)view;
+- (GrowingPageGroup *)findPageByViewController:(UIViewController *)current;
 
 - (GrowingPageGroup *)currentPage;
+
 @end

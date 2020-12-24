@@ -1,9 +1,9 @@
 //
-//  GrowingConfiguration+GrowingAutoTrack.m
-//  GrowingAutoTracker
+// GrowingDynamicProxy.h
+// GrowingAnalytics
 //
-//  Created by GrowingIO on 2020/7/30.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by sheng on 2020/11/25.
+//  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -18,18 +18,18 @@
 //  limitations under the License.
 
 
-#import "GrowingConfiguration+GrowingAutoTrack.h"
+#import <Foundation/Foundation.h>
 
-//@implementation GrowingConfiguration (GrowingAutoTrack)
-//
-//static double gImpressionScale = 0.0;
-//
-//- (void)setImpressionScale:(double)impressionScale {
-//    gImpressionScale = impressionScale;
-//}
-//
-//- (double)impressionScale {
-//    return gImpressionScale;
-//}
-//
-//@end
+NS_ASSUME_NONNULL_BEGIN
+
+@interface GrowingDynamicProxy : NSObject
+
+@property (nonatomic, strong, readonly) id target;
+
+- (nonnull instancetype)initWithTarget:(nonnull id)target;
++ (nonnull instancetype)proxyWithTarget:(nonnull id)target;
+
+
+@end
+
+NS_ASSUME_NONNULL_END
