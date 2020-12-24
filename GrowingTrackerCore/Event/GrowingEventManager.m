@@ -27,7 +27,6 @@
 #import "GrowingDispatchManager.h"
 #import "GrowingDataTraffic.h"
 #import "GrowingFileStorage.h"
-#import "GrowingEventOptions.h"
 #import "GrowingEventChannel.h"
 #import "GrowingCocoaLumberjack.h"
 #import "GrowingNetworkManager.h"
@@ -67,7 +66,6 @@ static const NSUInteger kGrowingUnit_MB = 1024 * 1024;
 @property(nonatomic, copy) NSString *projectId;
 @property(nonatomic, assign) NSUInteger packageNum;
 
-@property(nonatomic, strong) GrowingEventOptions *eventOptions;
 @property(nonatomic, strong) NSMutableArray *cacheArray;
 
 @end
@@ -110,7 +108,7 @@ static GrowingEventManager *shareinstance = nil;
         _packageNum = kGrowingMaxBatchSize;
         _cacheArray = [[NSMutableArray alloc] init];
         //default is 10MB
-        _uploadLimitOfCellular = [GrowingConfigurationManager sharedInstance].trackConfiguration.cellularDataLimit * 1024 * 1024;
+        _uploadLimitOfCellular = [GrowingConfigurationManager sharedInstance].trackConfiguration.cellularDataLimit * kGrowingUnit_MB;
         [GrowingDispatchManager dispatchInLowThread:^{
             // db
             self.timingEventDB = [GrowingEventDataBase databaseWithPath:[GrowingFileStorage getTimingDatabasePath]
@@ -145,9 +143,6 @@ static GrowingEventManager *shareinstance = nil;
         _eventChannelDict = [GrowingEventChannel eventChannelMapFromAllChannels:_allEventChannels];
         // all other events got to this category
         _otherEventChannel = [GrowingEventChannel otherEventChannelFromAllChannels:_allEventChannels];
-        _eventOptions = [[GrowingEventOptions alloc] init];
-        [_eventOptions readEventOptions];
-
     }
     return self;
 }
