@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Publish beta
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
@@ -28,7 +28,8 @@ jobs:
         run: |
           set -eo pipefail
           pod repo update
-          sh cocoapods-beta.sh
+          chmod +x Scripts/cocoapods-beta.sh
+          sh Scripts/cocoapods-beta.sh
         env:
           COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
