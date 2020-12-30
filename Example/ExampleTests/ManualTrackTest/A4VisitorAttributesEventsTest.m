@@ -7,7 +7,7 @@
 //  Function:vstr事件的测试
 //
 
-#import "VisitorAttributesEventsTest.h"
+#import "A4VisitorAttributesEventsTest.h"
 #import "GrowingTracker.h"
 #import "GrowingAutotracker.h"
 
@@ -15,7 +15,7 @@
 #import "ManualTrackHelper.h"
 #import "MockEventQueue.h"
 
-@implementation VisitorAttributesEventsTest
+@implementation A4VisitorAttributesEventsTest
 
 - (void)setUp {
     //设置userid,确保cs1字段不空

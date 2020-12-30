@@ -1,13 +1,13 @@
 //
-//  ChgEventsTest.h
+//  VisitEventsTest.h
 //  GIOAutoTests
 //
-//  Created by GrowingIO on 2018/5/28.
+//  Created by GrowingIO on 2018/5/22.
 //  Copyright (C) 2018 Beijing Yishu Technology Co., Ltd.
 //
 
 #import <KIF/KIF.h>
 
-@interface ViewChangeEventsTest : KIFTestCase
+@interface A3VisitEventsTest : KIFTestCase
 
 @end

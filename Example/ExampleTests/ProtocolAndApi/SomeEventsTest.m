@@ -23,7 +23,7 @@
 #import "GrowingAutotracker.h"
 #import "MockEventQueue.h"
 #import "NoburPoMeaProCheck.h"
-#import "HTTPStubsHelper.h"
+//#import "HTTPStubsHelper.h"
 
 @implementation SomeEventsTest
 

@@ -6,12 +6,12 @@
 //  Copyright (C) 2018 Beijing Yishu Technology Co., Ltd.
 //
 
-#import "ViewChangeEventsTest.h"
+#import "A2ViewChangeEventsTest.h"
 #import "MockEventQueue.h"
 #import "NoburPoMeaProCheck.h"
 #import "GrowingAutotracker.h"
 
-@implementation ViewChangeEventsTest
+@implementation A2ViewChangeEventsTest
 
 
 - (void)setUp{

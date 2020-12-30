@@ -42,11 +42,11 @@
 //#import "GrowingSRWebSocket.h" 
 
 
-@interface HybirdTests : KIFTestCase
+@interface HybridTests : KIFTestCase
 
 @end
 
-@implementation HybirdTests
+@implementation HybridTests
 
 - (void)setUp {
     [[GrowingAutotracker sharedInstance] setLoginUserId:@"test"];
@@ -106,12 +106,12 @@
 //        page = [current growingPageHelper_getPageObject];
 //    }
 //    NSMutableDictionary *dict = [[GrowingWebCircle shareInstance] dictFromPage:current xPath:page.path];
-    [GrowingWebCircle retrieveAllElementsAsync:nil];
+//    [GrowingWebCircle retrieveAllElementsAsync:nil];
     [GrowingWebCircle isRunning];
     [GrowingWebCircle stop];
-    [GrowingWebCircle setNeedUpdateScreen];
-    [GrowingWebCircle impressScale];
-    [GrowingWebCircle isContainer:nil];
+//    [GrowingWebCircle setNeedUpdateScreen];
+//    [GrowingWebCircle impressScale];
+//    [GrowingWebCircle isContainer:nil];
 
     
 }
