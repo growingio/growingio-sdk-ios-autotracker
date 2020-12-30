@@ -19,7 +19,6 @@
 
 
 #import "GrowingBaseEvent.h"
-#import <CoreLocation/CoreLocation.h>
 
 typedef NS_ENUM(NSUInteger, GrowingDeviceType) {
     GrowingDeviceTypePhone, GrowingDeviceTypePad
