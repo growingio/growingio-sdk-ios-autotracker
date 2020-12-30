@@ -19,16 +19,16 @@
 
 
 #import <Foundation/Foundation.h>
-#import "HTTPStubs.h"
-#import "NSURLRequest+HTTPBodyTesting.h"
+//#import "HTTPStubs.h"
+//#import "NSURLRequest+HTTPBodyTesting.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HTTPStubsHelper : NSObject
 
 @property(nonatomic,strong)NSArray *array;
 
--(void)stubRequests;
--(NSArray *)checkEvents;
+//-(void)stubRequests;
+//-(NSArray *)checkEvents;
 @end
 
 NS_ASSUME_NONNULL_END
