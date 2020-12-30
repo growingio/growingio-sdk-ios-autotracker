@@ -22,7 +22,6 @@
 #import "GrowingEventManager.h"
 #import "GrowingNetworkInterfaceManager.h"
 #import "GrowingRealTracker.h"
-#import <CoreLocation/CoreLocation.h>
 
 @interface GrowingVisitEvent ()
 

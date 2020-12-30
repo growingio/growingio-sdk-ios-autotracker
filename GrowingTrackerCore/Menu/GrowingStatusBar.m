@@ -20,8 +20,9 @@
 
 #import "GrowingStatusBar.h"
 #import "UIControl+GrowingHelper.h"
+#import "GrowingStatusBarEventManager.h"
 
-@interface GrowingStatusBar ()
+@interface GrowingStatusBar () <GrowingStatusBarEventProtocol>
 
 @property (nonatomic, retain) UIControl * btn;
 
@@ -46,6 +47,10 @@
         self.btn.growingHelper_onClick = self.onButtonClick;
 
         self.growingViewLevel = 0;
+        
+        if (@available(iOS 13.0, *)) {
+            [[GrowingStatusBarEventManager sharedInstance] addStatusBarObserver:self];
+        }
     }
     return self;
 }
@@ -71,6 +76,16 @@
 
 - (BOOL)growingNodeIsBadNode {
     return NO;
+}
+
+- (void)didTapStatusBar:(id)gesture {
+    if (self.onButtonClick) self.onButtonClick();
+}
+
+- (void)dealloc {
+    if (@available(iOS 13.0, *)) {
+        [[GrowingStatusBarEventManager sharedInstance] removeStatusBarObserver:self];
+    }
 }
 
 @end

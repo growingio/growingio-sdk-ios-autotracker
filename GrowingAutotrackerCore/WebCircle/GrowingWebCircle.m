@@ -56,6 +56,7 @@
 #import "UIWindow+GrowingHelper.h"
 #import "UIWindow+GrowingNode.h"
 #import "WKWebView+GrowingAutotracker.h"
+#import "GrowingStatusBarAutotracker.h"
 
 @interface GrowingWeakObject : NSObject
 @property (nonatomic, weak) JSContext *context;
@@ -96,6 +97,7 @@ static GrowingWebCircle *shareInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         shareInstance = [[GrowingWebCircle alloc] init];
+        [GrowingStatusBarAutotracker track];
     });
     return shareInstance;
 }
