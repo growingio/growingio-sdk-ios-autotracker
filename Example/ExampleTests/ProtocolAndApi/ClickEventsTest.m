@@ -20,6 +20,7 @@
  
     //设置userid,确保cs1字段不空
     [[GrowingAutotracker sharedInstance] setLoginUserId:@"test"];
+    [[viewTester usingLabel:@"UI界面"] tap];
 }
 
 - (void)afterEach {
@@ -110,9 +111,10 @@
     [tester scrollViewWithAccessibilityLabel:@"CollectionView" byFractionOfSizeHorizontal:0.0f vertical:10.0f];
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"Simple UI Elements"] tap];
-    [tester waitForTimeInterval:5];
-    CGPoint point = CGPointMake(50, 500);
-    [tester tapScreenAtPoint:point];
+//    [tester waitForTimeInterval:5];
+//    CGPoint point = CGPointMake(50, 500);
+//    [tester tapScreenAtPoint:point];
+    [[viewTester usingLabel:@"Fire"] tap];
     [tester waitForTimeInterval:3];
     [[viewTester usingLabel:@"好的"] tap];
     NSArray *clickEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
@@ -139,8 +141,9 @@
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"Simple UI Elements"] tap];
     [tester waitForTimeInterval:1];
-    CGPoint point = CGPointMake(130, 500);
-    [tester tapScreenAtPoint:point];
+//    CGPoint point = CGPointMake(130, 500);
+//    [tester tapScreenAtPoint:point];
+    [[viewTester usingLabel:@"Food"] tap];
     [tester waitForTimeInterval:3];
     [[viewTester usingLabel:@"好的"] tap];
     NSArray *clickEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];

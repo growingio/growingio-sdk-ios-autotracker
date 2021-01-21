@@ -55,6 +55,9 @@
     /**
      function:日期控件操作，不发送chng事件
      **/
+    NSString *version = [UIDevice currentDevice].systemVersion;
+    // iOS14 日期控件变化
+    if (version.doubleValue < 14.0){
     [[viewTester usingLabel:@"协议/接口"] tap];
     //单击两次返回列表页
     [[viewTester usingLabel:@"协议/接口"] tap];
@@ -71,5 +74,6 @@
         NSLog(@"日期控件操作，不发送chng事件,测试不通过！发送了chng事件");
         XCTAssertEqual(0, 1);
     }
+}
 }
 @end
