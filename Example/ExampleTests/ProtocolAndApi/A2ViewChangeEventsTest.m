@@ -24,6 +24,8 @@
     /**
      function:TextField输出内容，检测chng事件
      **/
+    NSString *version = [UIDevice currentDevice].systemVersion;
+    if (version.doubleValue < 14.0){
     [MockEventQueue.sharedQueue cleanQueue];
     [[viewTester usingLabel:@"UI界面"] tap];
     [[viewTester usingLabel:@"Text Fields"] tap];
@@ -49,6 +51,7 @@
         XCTAssertEqual(0, 1);
     }
 
+}
 }
 
 -(void)test2DataPicker{
