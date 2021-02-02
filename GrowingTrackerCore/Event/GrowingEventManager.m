@@ -110,7 +110,7 @@ static GrowingEventManager *shareinstance = nil;
         // default is 10MB
         _uploadLimitOfCellular =
             [GrowingConfigurationManager sharedInstance].trackConfiguration.cellularDataLimit * kGrowingUnit_MB;
-        [GrowingDispatchManager dispatchInLowThread:^{
+        [GrowingDispatchManager dispatchInGrowingThread:^{
             // db
             self.timingEventDB = [GrowingEventDataBase databaseWithPath:[GrowingFileStorage getTimingDatabasePath]
                                                                    name:[name stringByAppendingString:@"timingevent"]];
@@ -134,7 +134,7 @@ static GrowingEventManager *shareinstance = nil;
         });
         dispatch_resume(_reportTimer);
 
-        [GrowingDispatchManager dispatchInLowThread:^{
+        [GrowingDispatchManager dispatchInGrowingThread:^{
             // load eventQueue for the first time
             [self reloadFromDB_unsafe];
         }];
@@ -295,7 +295,7 @@ static GrowingEventManager *shareinstance = nil;
 
 // 外部调用
 - (void)sendAllChannelEvents {
-    [GrowingDispatchManager dispatchInLowThread:^{
+    [GrowingDispatchManager dispatchInGrowingThread:^{
         [self flushDB];
         for (GrowingEventChannel *channel in self.allEventChannels) {
             [self sendEventsOfChannel_unsafe:channel];
@@ -304,7 +304,7 @@ static GrowingEventManager *shareinstance = nil;
 }
 
 - (void)sendEventsInstantWithChannel:(GrowingEventChannel *)channel {
-    [GrowingDispatchManager dispatchInLowThread:^{
+    [GrowingDispatchManager dispatchInGrowingThread:^{
         [self flushDB];
         [self sendEventsOfChannel_unsafe:channel];
     }];
@@ -365,7 +365,7 @@ static GrowingEventManager *shareinstance = nil;
     eventRequest = [[GrowingEventRequest alloc] initWithEvents:rawEvents];
     [[GrowingNetworkManager shareManager] sendRequest:eventRequest
         success:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data) {
-            [GrowingDispatchManager dispatchInLowThread:^{
+            [GrowingDispatchManager dispatchInGrowingThread:^{
                 if (isViaCellular) {
                     self.uploadEventSize += eventRequest.outsize;
                 }
@@ -383,7 +383,7 @@ static GrowingEventManager *shareinstance = nil;
             }];
         }
         failure:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data, NSError *_Nonnull error) {
-            [GrowingDispatchManager dispatchInLowThread:^{
+            [GrowingDispatchManager dispatchInGrowingThread:^{
                 channel.isUploading = NO;
             }];
         }];
@@ -425,7 +425,7 @@ static GrowingEventManager *shareinstance = nil;
 
 - (void)clearAllEvents {
     self.eventQueue = [[NSMutableArray alloc] init];
-    [GrowingDispatchManager dispatchInLowThread:^() {
+    [GrowingDispatchManager dispatchInGrowingThread:^() {
         [self.timingEventDB clearAllItems];
         [self.realtimeEventDB clearAllItems];
     }];
