@@ -37,7 +37,7 @@ jobs:
           oclint-json-compilation-database -e Pods -- -rc GIO_METHOD_ALLOW_UPPERCASE="URL,FMG3DB,TXT,UTF,STM,IMP" -rc GIO_CATEGORY_PREFIX=Growing -rc GIO_CLASS_PREFIX=Growing -max-priority-2=0
 
       - name: Run Tests
-        run: xcodebuild test -workspace  GrowingAnalytics.xcworkspace -scheme Example -destination 'platform=iOS Simulator,name=iPhone 12 Pro,OS=14.2' GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES
+        run: xcodebuild test -workspace  GrowingAnalytics.xcworkspace -scheme Example -destination 'platform=iOS Simulator,name=iPhone 12 Pro' GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES
 
       - name: Upload coverage to Codecov
         if: always()
