@@ -149,7 +149,9 @@ static GrowingBaseEvent *originalEvent = nil;
         [expectation fulfill];
     });
     
+
     [self waitForExpectationsWithTimeout:1 handler:^(NSError *error) {
+
         if (error) {
             NSLog(@"Test failed——%@",expectation.description);
             XCTAssertEqual(@"1", @"0");
@@ -196,6 +198,8 @@ static GrowingBaseEvent *originalEvent = nil;
     }];
     [self eventTest];
 }
+
+
 
 - (void)test4SetEvarAndStringTest {
     isGrowingThread = @"1";

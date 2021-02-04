@@ -99,7 +99,6 @@
 		047BF3AC24F638BB0028FE94 /* TrackViewTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3A124F638BB0028FE94 /* TrackViewTest.m */; };
 		047BF3AD24F638BB0028FE94 /* A1TrackAPIMainThreadTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3A224F638BB0028FE94 /* A1TrackAPIMainThreadTest.m */; };
 		047BF3AE24F638BB0028FE94 /* FlushIntervalAPITest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3A324F638BB0028FE94 /* FlushIntervalAPITest.m */; };
-		047BF3AF24F638BB0028FE94 /* DailyDataLimit.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3A424F638BB0028FE94 /* DailyDataLimit.m */; };
 		047BF3B024F638BB0028FE94 /* GetEnableLogTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3A624F638BB0028FE94 /* GetEnableLogTest.m */; };
 		047BF3B124F638BB0028FE94 /* GetConfigurationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3A824F638BB0028FE94 /* GetConfigurationTest.m */; };
 		047BF3B424F6551B0028FE94 /* A3VisitEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3B324F6551B0028FE94 /* A3VisitEventsTest.m */; };
@@ -108,8 +107,11 @@
 		047BF3BC24F655A50028FE94 /* PageEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3B924F655A50028FE94 /* PageEventsTest.m */; };
 		04A6FAF224E662E9006C72F0 /* GIOChildsAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A6FAF124E662E9006C72F0 /* GIOChildsAddViewController.m */; };
 		04A6FAF524E67215006C72F0 /* GIOBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A6FAF424E67215006C72F0 /* GIOBaseViewController.m */; };
-
-		42ADE26C250B292900CA7268 /* HybirdTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 42ADE26B250B292900CA7268 /* HybirdTests.m */; };
+		3F0F22EB25C40609007E1C98 /* HybridEventTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F0F22EA25C40609007E1C98 /* HybridEventTest.m */; };
+		3F0F22FF25C4061B007E1C98 /* UtilsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F0F22FE25C4061B007E1C98 /* UtilsTest.m */; };
+		3F727F8325CBB80000D39D03 /* GrowingHelpsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F727F7B25CBB80000D39D03 /* GrowingHelpsTest.m */; };
+		3F727F8625CBB80000D39D03 /* NetWorkTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F727F7F25CBB80000D39D03 /* NetWorkTest.m */; };
+		3F727F8725CBB80000D39D03 /* WebCircleTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F727F8025CBB80000D39D03 /* WebCircleTest.m */; };
 		42F753BD256E2E46002F0D37 /* HTTPStubsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 42F753BC256E2E46002F0D37 /* HTTPStubsHelper.m */; };
 		42F753C1256E3256002F0D37 /* SomeEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 42F753C0256E3256002F0D37 /* SomeEventsTest.m */; };
 		4916270F24E157BB00444AF2 /* GIOPresentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916270E24E157BB00444AF2 /* GIOPresentViewController.m */; };
@@ -240,7 +242,6 @@
 		0465312124DD4271002D254C /* GIOHybridViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOHybridViewController.h; sourceTree = "<group>"; };
 		0465312224DD4271002D254C /* GIOSimpleUIElemtsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOSimpleUIElemtsViewController.h; sourceTree = "<group>"; };
 		0465312324DD4271002D254C /* GIOActionSheetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOActionSheetViewController.h; sourceTree = "<group>"; };
-		047BF39A24F638BB0028FE94 /* DailyDataLimit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DailyDataLimit.h; sourceTree = "<group>"; };
 		047BF39B24F638BB0028FE94 /* FlushIntervalAPITest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlushIntervalAPITest.h; sourceTree = "<group>"; };
 		047BF39C24F638BB0028FE94 /* MediatorTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MediatorTest.m; sourceTree = "<group>"; };
 		047BF39D24F638BB0028FE94 /* TrackViewTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackViewTest.h; sourceTree = "<group>"; };
@@ -250,7 +251,6 @@
 		047BF3A124F638BB0028FE94 /* TrackViewTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackViewTest.m; sourceTree = "<group>"; };
 		047BF3A224F638BB0028FE94 /* A1TrackAPIMainThreadTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = A1TrackAPIMainThreadTest.m; sourceTree = "<group>"; };
 		047BF3A324F638BB0028FE94 /* FlushIntervalAPITest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FlushIntervalAPITest.m; sourceTree = "<group>"; };
-		047BF3A424F638BB0028FE94 /* DailyDataLimit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DailyDataLimit.m; sourceTree = "<group>"; };
 		047BF3A524F638BB0028FE94 /* GetIDsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetIDsTest.h; sourceTree = "<group>"; };
 		047BF3A624F638BB0028FE94 /* GetEnableLogTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetEnableLogTest.m; sourceTree = "<group>"; };
 		047BF3A724F638BB0028FE94 /* GDPRTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDPRTest.h; sourceTree = "<group>"; };
@@ -268,8 +268,16 @@
 		04A6FAF324E67215006C72F0 /* GIOBaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIOBaseViewController.h; sourceTree = "<group>"; };
 		04A6FAF424E67215006C72F0 /* GIOBaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOBaseViewController.m; sourceTree = "<group>"; };
 		11EA2ABB8F1029820A3234DB /* Pods_ExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ExampleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		42ADE26B250B292900CA7268 /* HybridTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HybridTests.m; sourceTree = "<group>"; };
-		42F753BB256E2E46002F0D37 /* HTTPStubsHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HTTPStubsHelper.h; sourceTree = "<group>"; };
+		3F0F22EA25C40609007E1C98 /* HybridEventTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HybridEventTest.m; sourceTree = "<group>"; };
+		3F0F22FE25C4061B007E1C98 /* UtilsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UtilsTest.m; sourceTree = "<group>"; };
+		3F450B7B25C430EC00909301 /* HybridEventTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HybridEventTest.h; sourceTree = "<group>"; };
+		3F450B7D25C4311700909301 /* UtilsTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UtilsTest.h; sourceTree = "<group>"; };
+		3F727F7B25CBB80000D39D03 /* GrowingHelpsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingHelpsTest.m; sourceTree = "<group>"; };
+		3F727F7D25CBB80000D39D03 /* GrowingHelpsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrowingHelpsTest.h; sourceTree = "<group>"; };
+		3F727F7F25CBB80000D39D03 /* NetWorkTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetWorkTest.m; sourceTree = "<group>"; };
+		3F727F8025CBB80000D39D03 /* WebCircleTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebCircleTest.m; sourceTree = "<group>"; };
+		3F727F8125CBB80000D39D03 /* NetWorkTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetWorkTest.h; sourceTree = "<group>"; };
+		3F727F8225CBB80000D39D03 /* WebCircleTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebCircleTest.h; sourceTree = "<group>"; };
 		42F753BC256E2E46002F0D37 /* HTTPStubsHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HTTPStubsHelper.m; sourceTree = "<group>"; };
 		42F753BF256E3256002F0D37 /* SomeEventsTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SomeEventsTest.h; sourceTree = "<group>"; };
 		42F753C0256E3256002F0D37 /* SomeEventsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SomeEventsTest.m; sourceTree = "<group>"; };
@@ -455,8 +463,8 @@
 			isa = PBXGroup;
 			children = (
 				0465310624DD4271002D254C /* gio_hybrid.html */,
-				0465312324DD4271002D254C /* GIOActionSheetViewController.h */,
 				0465310824DD4271002D254C /* GIOActionSheetViewController.m */,
+				0465312324DD4271002D254C /* GIOActionSheetViewController.h */,
 				0465310524DD4271002D254C /* GIOBannerAndTableViewController.h */,
 				0465310D24DD4271002D254C /* GIOBannerAndTableViewController.m */,
 				0465310724DD4271002D254C /* GIOButtonViewController.h */,
@@ -535,8 +543,6 @@
 			isa = PBXGroup;
 			children = (
 				047BF3A224F638BB0028FE94 /* A1TrackAPIMainThreadTest.m */,
-				047BF39A24F638BB0028FE94 /* DailyDataLimit.h */,
-				047BF3A424F638BB0028FE94 /* DailyDataLimit.m */,
 				047BF39B24F638BB0028FE94 /* FlushIntervalAPITest.h */,
 				047BF3A324F638BB0028FE94 /* FlushIntervalAPITest.m */,
 				047BF3A724F638BB0028FE94 /* GDPRTest.h */,
@@ -554,10 +560,27 @@
 			path = ExampleTests/MethodTest;
 			sourceTree = "<group>";
 		};
+		3F727F7A25CBB7BC00D39D03 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				42F753BC256E2E46002F0D37 /* HTTPStubsHelper.m */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		42ADE26A250B28BC00CA7268 /* OtherTests */ = {
 			isa = PBXGroup;
 			children = (
-				42ADE26B250B292900CA7268 /* HybridTests.m */,
+				3F727F7D25CBB80000D39D03 /* GrowingHelpsTest.h */,
+				3F727F7B25CBB80000D39D03 /* GrowingHelpsTest.m */,
+				3F727F8125CBB80000D39D03 /* NetWorkTest.h */,
+				3F727F7F25CBB80000D39D03 /* NetWorkTest.m */,
+				3F727F8225CBB80000D39D03 /* WebCircleTest.h */,
+				3F727F8025CBB80000D39D03 /* WebCircleTest.m */,
+				3F450B7D25C4311700909301 /* UtilsTest.h */,
+				3F0F22FE25C4061B007E1C98 /* UtilsTest.m */,
+				3F450B7B25C430EC00909301 /* HybridEventTest.h */,
+				3F0F22EA25C40609007E1C98 /* HybridEventTest.m */,
 			);
 			path = OtherTests;
 			sourceTree = "<group>";
@@ -590,8 +613,6 @@
 				4962653624DA66B600032551 /* NoburPoMeaProCheck.m */,
 				4962653824DA66B600032551 /* ManualTrackHelper.h */,
 				4962653224DA66B600032551 /* ManualTrackHelper.m */,
-				42F753BB256E2E46002F0D37 /* HTTPStubsHelper.h */,
-				42F753BC256E2E46002F0D37 /* HTTPStubsHelper.m */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -624,6 +645,7 @@
 				6003F58C195388D20070C39A /* Frameworks */,
 				6003F58B195388D20070C39A /* Products */,
 				7D103DEFD312B6151DF0F9EA /* Pods */,
+				3F727F7A25CBB7BC00D39D03 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -931,25 +953,29 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F727F8725CBB80000D39D03 /* WebCircleTest.m in Sources */,
 				047BF3A924F638BB0028FE94 /* MediatorTest.m in Sources */,
 				4962653B24DA66B600032551 /* MockEventQueue.m in Sources */,
 				4962653924DA66B600032551 /* LogOperHelper.m in Sources */,
+				3F0F22FF25C4061B007E1C98 /* UtilsTest.m in Sources */,
 				4962653D24DA66B600032551 /* NoburPoMeaProCheck.m in Sources */,
 				4962653A24DA66B600032551 /* ManualTrackHelper.m in Sources */,
 				047BF3BB24F655A50028FE94 /* A2ViewChangeEventsTest.m in Sources */,
 				047BF3B424F6551B0028FE94 /* A3VisitEventsTest.m in Sources */,
 				047BF3AA24F638BB0028FE94 /* GetIDsTest.m in Sources */,
 				047BF3B024F638BB0028FE94 /* GetEnableLogTest.m in Sources */,
+				3F727F8625CBB80000D39D03 /* NetWorkTest.m in Sources */,
 				4962653E24DA66B600032551 /* NSURLSession+TestHook.m in Sources */,
 				4962653C24DA66B600032551 /* GrowingTestHelper.m in Sources */,
+				3F0F22EB25C40609007E1C98 /* HybridEventTest.m in Sources */,
 				4962657124DA66BF00032551 /* CustomEventsTest.m in Sources */,
-				047BF3AF24F638BB0028FE94 /* DailyDataLimit.m in Sources */,
 				4962656F24DA66BF00032551 /* ConversionVariablesEventsTest.m in Sources */,
 				047BF3AC24F638BB0028FE94 /* TrackViewTest.m in Sources */,
 				047BF3B124F638BB0028FE94 /* GetConfigurationTest.m in Sources */,
 				047BF3AB24F638BB0028FE94 /* GDPRTest.m in Sources */,
 				4962657224DA66BF00032551 /* CS1ManualTrackTest.m in Sources */,
 				047BF3AE24F638BB0028FE94 /* FlushIntervalAPITest.m in Sources */,
+				3F727F8325CBB80000D39D03 /* GrowingHelpsTest.m in Sources */,
 				4962652B24DA667900032551 /* GrowingIO_ExampleTests.m in Sources */,
 				42F753C1256E3256002F0D37 /* SomeEventsTest.m in Sources */,
 				047BF3BA24F655A50028FE94 /* ClickEventsTest.m in Sources */,
@@ -958,7 +984,6 @@
 				047BF3BC24F655A50028FE94 /* PageEventsTest.m in Sources */,
 				4962657324DA66BF00032551 /* LoginUserAttributerEventsTest.m in Sources */,
 				42F753BD256E2E46002F0D37 /* HTTPStubsHelper.m in Sources */,
-				42ADE26C250B292900CA7268 /* HybridTests.m in Sources */,
 				4962657024DA66BF00032551 /* A4VisitorAttributesEventsTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

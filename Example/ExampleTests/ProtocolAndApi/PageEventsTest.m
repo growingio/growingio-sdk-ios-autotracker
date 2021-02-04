@@ -47,4 +47,9 @@ static NSString *pageType = @"PAGE";
     return eventsCount;
 }
 
+- (void)test1PageEvents{
+    
+}
+
 @end
+

@@ -200,7 +200,7 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
         builder = GrowingLoginUserAttributesEvent.builder.setAttributes(dict[@KEY_ATTRIBUTES]);
     } else if ([type isEqualToString:GrowingEventTypeConversionVariables]) {
         builder = GrowingConversionVariableEvent.builder.setAttributes(dict[@KEY_ATTRIBUTES]);
-    }
+    }//TODO VISITOR_ATTRIBUTES事件H5目前未添加处理，后续补充
     if (builder) {
         [[GrowingEventManager shareInstance] postEventBuidler:builder];
     }

@@ -7,7 +7,31 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <WebKit/WebKit.h>
+
 
 @interface GIOHybridViewController : UIViewController
 
+@end
+
+
+@interface testobj : NSObject
+
+@property (nonatomic, strong) WKWebView *webView;
++ (instancetype)sharedInstance;
+- (void)TestSendCustomEvent;
+- (void)TestSendCustomEventWithAttributes;
+- (void)TestSendVisitorAttributesEvent;
+- (void)TestSendLoginUserAttributesEvent;
+- (void)TestSendConversionVariablesEvent;
+- (void)TestSendPageEvent;
+- (void)TestSendPageEventWithQuery;
+- (void)TestSendFilePageEvent;
+- (void)TestSendPageAttributesEvent;
+- (void)TestSendViewClickEvent;
+- (void)TestSendViewChangeEvent;
+- (void)TestSendFormSubmitEvent;
+- (void)TestsetUserId;
+- (void)TestclearUserId;
+- (void)TestmockDomChanged;
 @end
