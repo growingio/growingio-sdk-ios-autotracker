@@ -77,10 +77,12 @@
     //判断有无网络
     if (![GrowingNetworkInterfaceManager sharedInstance].isReachable) {
         NSLog(@"没有网络");
+        XCTAssertEqual(1, 0);
     }
 
     if ([GrowingNetworkInterfaceManager sharedInstance].WiFiValid) {
         // do nothing
+        
     }
     NSLog(@"networkType: %@",[[GrowingNetworkInterfaceManager sharedInstance] networkType]);
 }

@@ -16,11 +16,51 @@
 //  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
-
 #import "WebCircleTest.h"
 #import "GrowingWebCircle.h"
 #import "GrowingNetworkInterfaceManager.h"
 #import "GrowingDeepLinkHandler.h"
+
+@interface GrowingWebCircletest : GrowingWebCircle
+
+- (NSDictionary *)dictForUserAction:(NSString *)action;
++(GrowingWebCircletest *)sharedManager;
+- (void)sendJson:(id)json;
+@end
+ 
+ 
+ 
+ 
+@implementation GrowingWebCircletest
+
+- (NSDictionary *)dictForUserAction:(NSString *)action {
+    return [self dictForUserAction:action];
+}
+
+- (void)sendJson:(id)json
+{
+    [self sendJson:json];
+}
+
++(GrowingWebCircletest *)sharedManager
+{
+    static GrowingWebCircletest *sharedManager;
+    static dispatch_once_t onceTest;
+    dispatch_once(&onceTest, ^{
+        sharedManager = [[GrowingWebCircletest alloc] init];
+    });
+    return sharedManager;
+    
+}
+ 
+@end
+
+
+
+
+
+
+
 @implementation WebCircleTest
 
 - (void)setUp {
@@ -33,11 +73,16 @@
 
 
 
-- (void)test1 {
-    [[GrowingWebCircle shareInstance] sendScreenShotWithCallback:nil];
-    
-    
-    
+- (void)test1dictForUserAction {
+    //[[GrowingWebCircletest shareInstance] sendScreenShotWithCallback:nil];
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    NSString *userAction = @"refreshScreenshot";
+    [dict addEntriesFromDictionary:[[GrowingWebCircletest shareInstance] dictForUserAction:userAction]];
+    if (dict.count == 0) {
+        XCTAssertEqual(1, 0);
+    }
+    XCTAssertNotNil(dict[@"screenshot"]);
+    [[GrowingWebCircletest shareInstance] sendJson:dict];
 }
 
 

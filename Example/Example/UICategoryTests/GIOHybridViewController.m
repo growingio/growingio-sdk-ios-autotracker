@@ -7,7 +7,6 @@
 //
 
 #import "GIOHybridViewController.h"
-//#import "GrowingWKWebViewJavascriptBridge.h"
 @import WebKit;
 
 @interface GIOHybridViewController () <WKUIDelegate, WKNavigationDelegate>
@@ -61,9 +60,15 @@
     //    NSURLRequest *request = [NSURLRequest requestWithURL:requestURL];
     //    [self.webView loadRequest:request];
 
-    NSURL *url = [NSURL URLWithString:@"https://www.baidu.com"];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    [self.webView loadRequest:request];
+    //NSURL *url = [NSURL URLWithString:@"https://www.baidu.com"];
+    //NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    //[self.webView loadRequest:request];
+    
+    NSString *bundleStr = [[NSBundle mainBundle] pathForResource:@"gio_hybrid" ofType:@"html"];
+        
+    NSURL *requestURL = [NSURL fileURLWithPath:bundleStr];
+        
+    [self.webView loadRequest:[NSURLRequest requestWithURL:requestURL]];
 }
 
 - (IBAction)refreshPage:(UIBarButtonItem *)sender {
@@ -96,6 +101,7 @@
 
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
     NSLog(@"webViewDidFinishLoad");
+    [testobj sharedInstance].webView = self.webView;
 }
 
 - (void)dealloc {
@@ -116,3 +122,130 @@
 }
 
 @end
+
+
+@implementation testobj
+
++ (instancetype)sharedInstance {
+    static id _sharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _sharedInstance = [[self alloc] init];
+    });
+
+    return _sharedInstance;
+}
+
+- (void)TestSendCustomEvent{
+    NSString * jsStr = [NSString stringWithFormat:@"sendMockCustomEvent()"];
+    [self.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+        NSLog(@"error: %@  result: %@",error,result);
+    }];
+}
+
+- (void)TestSendCustomEventWithAttributes{
+    NSString * jsStr = [NSString stringWithFormat:@"sendMockCustomEventWithAttributes()"];
+    [self.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+        NSLog(@"error: %@  result: %@",error,result);
+    }];
+}
+
+- (void)TestSendVisitorAttributesEvent{
+    NSString * jsStr = [NSString stringWithFormat:@"sendMockVisitorAttributesEvent()"];
+    [self.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+        NSLog(@"error: %@  result: %@",error,result);
+    }];
+}
+
+- (void)TestSendLoginUserAttributesEvent{
+    NSString * jsStr = [NSString stringWithFormat:@"sendMockLoginUserAttributesEvent()"];
+    [self.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+        NSLog(@"error: %@  result: %@",error,result);
+    }];
+}
+
+- (void)TestSendConversionVariablesEvent{
+    NSString * jsStr = [NSString stringWithFormat:@"sendMockConversionVariablesEvent()"];
+    [self.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+        NSLog(@"error: %@  result: %@",error,result);
+    }];
+}
+
+
+- (void)TestSendPageEvent{
+    NSString * jsStr = [NSString stringWithFormat:@"sendMockPageEvent()"];
+    [self.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+        NSLog(@"error: %@  result: %@",error,result);
+    }];
+}
+
+
+- (void)TestSendPageEventWithQuery{
+    NSString * jsStr = [NSString stringWithFormat:@"sendMockPageEventWithQuery()"];
+    [self.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+        NSLog(@"error: %@  result: %@",error,result);
+    }];
+}
+
+- (void)TestSendFilePageEvent{
+    NSString * jsStr = [NSString stringWithFormat:@"sendMockFilePageEvent()"];
+    [self.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+        NSLog(@"error: %@  result: %@",error,result);
+    }];
+}
+
+- (void)TestSendPageAttributesEvent{
+    NSString * jsStr = [NSString stringWithFormat:@"sendMockPageAttributesEvent()"];
+    [self.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+        NSLog(@"error: %@  result: %@",error,result);
+    }];
+}
+
+
+- (void)TestSendViewClickEvent{
+    NSString * jsStr = [NSString stringWithFormat:@"sendMockViewClickEvent()"];
+    [self.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+        NSLog(@"error: %@  result: %@",error,result);
+    }];
+}
+
+
+- (void)TestSendViewChangeEvent{
+    NSString * jsStr = [NSString stringWithFormat:@"sendMockViewChangeEvent()"];
+    [self.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+        NSLog(@"error: %@  result: %@",error,result);
+    }];
+}
+
+- (void)TestSendFormSubmitEvent{
+    NSString * jsStr = [NSString stringWithFormat:@"sendMockFormSubmitEvent()"];
+    [self.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+        NSLog(@"error: %@  result: %@",error,result);
+    }];
+}
+
+
+- (void)TestsetUserId{
+    NSString * jsStr = [NSString stringWithFormat:@"setUserId('test_name_jsStr')"];
+    [self.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+        NSLog(@"error: %@  result: %@",error,result);
+    }];
+}
+
+
+- (void)TestclearUserId{
+    NSString * jsStr = [NSString stringWithFormat:@"clearUserId()"];
+    [self.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+        NSLog(@"error: %@  result: %@",error,result);
+    }];
+}
+
+- (void)TestmockDomChanged{
+    NSString * jsStr = [NSString stringWithFormat:@"mockDomChanged()"];
+    [self.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+        NSLog(@"error: %@  result: %@",error,result);
+    }];
+}
+@end
+
+

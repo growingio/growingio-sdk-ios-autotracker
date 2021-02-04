@@ -7,13 +7,13 @@ PODS:
   - AlicloudUTDID (1.5.0.94)
   - AlicloudUtils (1.3.9):
     - AlicloudUTDID
-  - GrowingAnalytics/Autotracker (3.0.1-beta):
+  - GrowingAnalytics/Autotracker (3.0.1):
     - GrowingAnalytics/AutotrackerCore
-  - GrowingAnalytics/AutotrackerCore (3.0.1-beta):
+  - GrowingAnalytics/AutotrackerCore (3.0.1):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/Tracker (3.0.1-beta):
+  - GrowingAnalytics/Tracker (3.0.1):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/TrackerCore (3.0.1-beta)
+  - GrowingAnalytics/TrackerCore (3.0.1)
   - KIF (3.7.11):
     - KIF/Core (= 3.7.11)
   - KIF/Core (3.7.11)
@@ -40,9 +40,10 @@ SPEC REPOS:
     - AlicloudUT
     - AlicloudUTDID
     - AlicloudUtils
-  https://github.com/CocoaPods/Specs.git:
-    - KIF
+  https://github.com/growingio/giospec.git:
     - MBProgressHUD
+  trunk:
+    - KIF
     - MJRefresh
     - SDCycleScrollView
     - SDWebImage
@@ -56,13 +57,13 @@ SPEC CHECKSUMS:
   AlicloudUT: 6d1cf30d57d096b7e9bb4b069dd0ba6ad59a3338
   AlicloudUTDID: 7323c443dcdf9a73e2224dc6ce51703671d7a765
   AlicloudUtils: 66e0ba6ece62d7dd05e9dd95674b2c7811624c2f
-  GrowingAnalytics: ed03aee81d775810fafa77af0e9ba8ad93cc69ac
+  GrowingAnalytics: db289128e54cf49d6aa01060149f3ce02b2df1fc
   KIF: 927c502455cd746771c57e9b3a5123c67c7fa0b5
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   MJRefresh: 6afc955813966afb08305477dd7a0d9ad5e79a16
   SDCycleScrollView: a0d74c3384caa72bdfc81470bdbc8c14b3e1fbcf
   SDWebImage: 0b2ba0d56479bf6a45ecddbfd5558bea93150d25
 
-PODFILE CHECKSUM: 2c93f11b96cf71fac68bc2ea9a4b4afb552d29cf
+PODFILE CHECKSUM: 4a78908f4f327efe6100ee28b987239c4549a3bc
 
-COCOAPODS: 1.9.1
+COCOAPODS: 1.10.1
