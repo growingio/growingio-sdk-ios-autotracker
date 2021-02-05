@@ -72,7 +72,7 @@
 }
 
 - (NSURL *)absoluteURL {
-    NSString *baseUrl = @"https://mock.mengxuegu.com/mock/601ac857298655584171053e/sendRequest/grtinfo#!method=get";
+    NSString *baseUrl = @"https://run.mocky.io/v3/d5aabbac-2b02-4e69-9891-f6a62f99d47f";
     if (!baseUrl.length) {
         return nil;
     }
@@ -124,7 +124,7 @@
 }
 
 //目前https://api.growingio.com返回404 测试不通过
-//使用https://mock.mengxuegu.com/mock/601ac857298655584171053e/sendRequest/grtinfo#!method=get测试
+//使用https://run.mocky.io/v3/d5aabbac-2b02-4e69-9891-f6a62f99d47f
 - (void)test2sSendRequest{
     //判断有无网络
     [[GrowingNetworkInterfaceManager sharedInstance] updateInterfaceInfo];
