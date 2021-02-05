@@ -137,7 +137,7 @@
 }
 
 
-- (void)TestHybirdEventSender:(NSString *)jsStr{
+- (void)testHybirdEventSender:(NSString *)jsStr{
     [self.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable result, NSError * _Nullable error) {
         NSLog(@"error: %@  result: %@",error,result);
     }];
