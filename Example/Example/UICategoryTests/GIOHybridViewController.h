@@ -15,10 +15,12 @@
 @end
 
 
-@interface testobj : NSObject
+@interface HybirdEventSender : NSObject
 
 @property (nonatomic, strong) WKWebView *webView;
 + (instancetype)sharedInstance;
+- (void)TestHybirdEventSender:(NSString *)jsStr;
+
 - (void)TestSendCustomEvent;
 - (void)TestSendCustomEventWithAttributes;
 - (void)TestSendVisitorAttributesEvent;

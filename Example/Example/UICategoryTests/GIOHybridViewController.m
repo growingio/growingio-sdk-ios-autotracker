@@ -101,7 +101,7 @@
 
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
     NSLog(@"webViewDidFinishLoad");
-    [testobj sharedInstance].webView = self.webView;
+    [HybirdEventSender sharedInstance].webView = self.webView;
 }
 
 - (void)dealloc {
@@ -124,7 +124,7 @@
 @end
 
 
-@implementation testobj
+@implementation HybirdEventSender
 
 + (instancetype)sharedInstance {
     static id _sharedInstance = nil;
@@ -136,6 +136,13 @@
     return _sharedInstance;
 }
 
+
+- (void)TestHybirdEventSender:(NSString *)jsStr{
+    [self.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+        NSLog(@"error: %@  result: %@",error,result);
+    }];
+}
+/*
 - (void)TestSendCustomEvent{
     NSString * jsStr = [NSString stringWithFormat:@"sendMockCustomEvent()"];
     [self.webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable result, NSError * _Nullable error) {
@@ -223,7 +230,7 @@
         NSLog(@"error: %@  result: %@",error,result);
     }];
 }
-
+ 
 
 - (void)TestsetUserId{
     NSString * jsStr = [NSString stringWithFormat:@"setUserId('test_name_jsStr')"];
@@ -246,6 +253,7 @@
         NSLog(@"error: %@  result: %@",error,result);
     }];
 }
+*/
 @end
 
 

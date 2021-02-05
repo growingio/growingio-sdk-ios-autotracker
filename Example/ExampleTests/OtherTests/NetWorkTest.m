@@ -19,11 +19,46 @@
 
 
 #import "NetWorkTest.h"
-#import "MockEventQueue.h"
+#import <objc/runtime.h>
 #import "GrowingEventRequest.h"
 #import "GrowingNetworkManager.h"
 #import "GrowingNetworkConfig.h"
 #import "GrowingNetworkInterfaceManager.h"
+#import "GrowingConfigurationManager.h"
+@interface GrowingEventRequestTest : GrowingEventRequest
+
++ (instancetype)sharedManager;
+- (NSURL *)absoluteURL;
+@end
+
+@implementation GrowingEventRequestTest
+
+
+
++ (instancetype)sharedManager
+{
+    static GrowingEventRequestTest *sharedManager;
+    static dispatch_once_t onceTest;
+    dispatch_once(&onceTest, ^{
+        sharedManager = [[GrowingEventRequestTest alloc] init];
+    });
+    return sharedManager;
+    
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    return self;
+}
+
+- (NSURL *)absoluteURL
+{
+    return [self absoluteURL];
+}
+@end
+
+
 
 
 @implementation NetWorkTest
@@ -36,32 +71,75 @@
     // Put teardown code here. This method is called after the invocation of each test method in the class.
 }
 
+- (NSURL *)absoluteURL {
+    NSString *baseUrl = @"https://mock.mengxuegu.com/mock/601ac857298655584171053e/sendRequest/grtinfo#!method=get";
+    if (!baseUrl.length) {
+        return nil;
+    }
+    return [NSURL URLWithString:baseUrl];
+}
 
+- (BOOL) isGio:(NSString *)url
+{
+    if([url rangeOfString:@"growingio"].location !=NSNotFound)
+    {
+        return TRUE;
+    }
+    return FALSE;
+}
 - (void)test1NetworkConfig{
-    NSLog(@"growingApiHostEnd:%@",[[GrowingNetworkConfig sharedInstance] growingApiHostEnd]);//https://api.growingio.com
-    XCTAssertEqualObjects(@"https://api.growingio.com",([[GrowingNetworkConfig sharedInstance] growingApiHostEnd]));
-    NSLog(@"growingDataHostEnd:%@",[[GrowingNetworkConfig sharedInstance] growingDataHostEnd]);//https://www.growingio.com
-    XCTAssertEqualObjects(@"https://www.growingio.com",([[GrowingNetworkConfig sharedInstance] growingDataHostEnd]));
-    NSLog(@"customtagsHostWsHost:%@",[[GrowingNetworkConfig sharedInstance] tagsHost]);//https://tags.growingio.com
-    XCTAssertEqualObjects(@"https://tags.growingio.com",([[GrowingNetworkConfig sharedInstance] tagsHost]));
-    NSLog(@"customWsHost:%@",[[GrowingNetworkConfig sharedInstance] wsEndPoint]);//wss://ws.growingio.com/app/%@/circle/%@
-    XCTAssertEqualObjects(@"wss://ws.growingio.com/app/%@/circle/%@",([[GrowingNetworkConfig sharedInstance] wsEndPoint]));
-    NSLog(@"customWsHost:%@",[[GrowingNetworkConfig sharedInstance] dataCheckEndPoint]);//wss://ws.growingio.com/feeds/apps/%@/exchanges/data-check/%@?clientType=sdk
-    XCTAssertEqualObjects(@"wss://ws.growingio.com/feeds/apps/%@/exchanges/data-check/%@?clientType=sdk",([[GrowingNetworkConfig sharedInstance] dataCheckEndPoint]));
+    
+    if(![self isGio:[[GrowingNetworkConfig sharedInstance] growingApiHostEnd]])
+    {
+        NSLog(@"growingApiHostEnd:%@",[[GrowingNetworkConfig sharedInstance] growingApiHostEnd]);
+        XCTAssertEqual(1, 0);
+    }
+   
+    if(![self isGio:[[GrowingNetworkConfig sharedInstance] growingApiHostEnd]])
+    {
+        NSLog(@"growingApiHostEnd:%@",[[GrowingNetworkConfig sharedInstance] growingApiHostEnd]);
+        XCTAssertEqual(1, 0);
+    }
+    if(![self isGio:[[GrowingNetworkConfig sharedInstance] growingDataHostEnd]])
+    {
+        NSLog(@"growingDataHostEnd:%@",[[GrowingNetworkConfig sharedInstance] growingDataHostEnd]);
+        XCTAssertEqual(1, 0);
+    }
+    if(![self isGio:[[GrowingNetworkConfig sharedInstance] tagsHost]])
+    {
+        NSLog(@"tagsHost:%@",[[GrowingNetworkConfig sharedInstance] tagsHost]);
+        XCTAssertEqual(1, 0);
+    }
+    if(![self isGio:[[GrowingNetworkConfig sharedInstance] wsEndPoint]])
+    {
+        NSLog(@"customWsHost:%@",[[GrowingNetworkConfig sharedInstance] wsEndPoint]);
+        XCTAssertEqual(1, 0);
+    }
+    
+    if(![self isGio:[[GrowingNetworkConfig sharedInstance] dataCheckEndPoint]])
+    {
+        NSLog(@"customWsHost:%@",[[GrowingNetworkConfig sharedInstance] dataCheckEndPoint]);
+        XCTAssertEqual(1, 0);
+    }
 }
 
 //目前https://api.growingio.com返回404 测试不通过
 //使用https://mock.mengxuegu.com/mock/601ac857298655584171053e/sendRequest/grtinfo#!method=get测试
 - (void)test2sSendRequest{
     //判断有无网络
+    [[GrowingNetworkInterfaceManager sharedInstance] updateInterfaceInfo];
     if (![GrowingNetworkInterfaceManager sharedInstance].isReachable) {
         NSLog(@"没有网络");
         XCTAssertEqual(1, 0);
     }
+        
+        //Method m1 = class_getInstanceMethod([[GrowingEventRequestTest sharedManager] class], @selector(printDZL));
+    //[GrowingNetworkConfig.sharedInstance setCustomDataHost:@"https://run.mocky.io/v3/d5aabbac-2b02-4e69-9891-f6a62f99d47f"];
+    [GrowingConfigurationManager.sharedInstance.trackConfiguration setDataCollectionServerHost:@"https://run.mocky.io/v3/d5aabbac-2b02-4e69-9891-f6a62f99d47f"];
     NSArray<NSString *> *rawEvents = @[@"{\"idfa\":\"\",\"eventType\":\"VISIT\",\"language\":\"en\",\"deviceBrand\":\"Apple\",\"deviceId\":\"10460045-ECE0-40CF-A197-8202272AA0DE\",\"globalSequenceId\":22,\"urlScheme\":\"growing.530c8231345c492d\",\"deviceType\":\"iPhone\",\"appVersion\":\"1.0\",\"latitude\":30.109999999999999,\"screenHeight\":2436,\"sessionId\":\"CB16D3FB-91EF-45D6-BEFF-92453528C6CB\",\"networkState\":\"WIFI\",\"domain\":\"GrowingIO.GrowingIOTest-\",\"platform\":\"iOS\",\"appName\":\"Example\",\"timestamp\":1611814475720,\"appState\":\"FOREGROUND\",\"longitude\":32.219999999999999,\"deviceModel\":\"x86_64\",\"screenWidth\":1125,\"idfv\":\"10460045-ECE0-40CF-A197-8202272AA0DE\",\"sdkVersion\":\"3.0.0\",\"platformVersion\":\"13.7\",\"eventSequenceId\":3}"];
     GrowingEventRequest *eventRequest = nil;
     eventRequest = [[GrowingEventRequest alloc] initWithEvents:rawEvents];
-    [[GrowingNetworkManager shareManager]sendRequest:eventRequest success:^(NSHTTPURLResponse * _Nonnull httpResponse, NSData * _Nonnull data) {
+    [[GrowingNetworkManager shareManager] sendRequest:eventRequest success:^(NSHTTPURLResponse * _Nonnull httpResponse, NSData * _Nonnull data) {
         NSLog(@"sendRequest测试通过---Passed！");
         XCTAssertEqual(1, 1);
         } failure:^(NSHTTPURLResponse * _Nonnull httpResponse, NSData * _Nonnull data, NSError * _Nonnull error) {

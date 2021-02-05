@@ -45,12 +45,33 @@
     XCTAssertEqualObjects(@"[\"1\",\"2\",\"3\",\"4\"]",jsonString);
 }
 
+
+
+
+
 - (void)test2growingHelper_base64String {
-    UIImage *bookmarkImage = [UIImage imageNamed:@"cycle_01.jpg"];
-    NSData *data = UIImageJPEGRepresentation(bookmarkImage, 0.5);
-    NSString *imgBase64Str = [data growingHelper_base64String];
-    NSLog(@"%@",imgBase64Str);
-    XCTAssertNotNil(imgBase64Str);
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"imagetobase64:failed"];
+    
+    NSDate* tmpStartData = [NSDate date] ;
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        UIImage *bookmarkImage = [UIImage imageNamed:@"cycle_01.jpg"];
+        NSData *data = UIImageJPEGRepresentation(bookmarkImage, 0.5);
+        NSString *imgBase64Str = [data growingHelper_base64String];
+        NSLog(@"%@",imgBase64Str);
+        XCTAssertNotNil(imgBase64Str);
+        [expectation fulfill];
+    });
+    [self waitForExpectationsWithTimeout:1 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Test failed——%@",expectation.description);
+            double failedTime = [[NSDate date] timeIntervalSinceDate:tmpStartData];
+            NSLog(@"－－－－－－cost time = %f ms(毫秒)", failedTime*1000);
+            XCTAssertEqual(@"1", @"0");
+        }
+    }];
+    double successTime = [[NSDate date] timeIntervalSinceDate:tmpStartData];
+    NSLog(@"－－－－－－cost time = %f ms(毫秒)", successTime*1000);
 }
 
 - (void)test3growingHelper_utf8String {
@@ -102,25 +123,59 @@
 }
 
 - (void)test8imageBase64JPEG {
-    UIImage *bookmarkImage = [UIImage imageNamed:@"cycle_01.jpg"];
-    NSString *imgBase64Str = [bookmarkImage growingHelper_Base64JPEG:0.5];
-    NSLog(@"%@",imgBase64Str);
-    XCTAssertNotNil(imgBase64Str);
-    UIImage * image = [bookmarkImage growingHelper_getSubImage:CGRectMake(0, 0, 40, 40)];
-    NSString *imageStr = [image growingHelper_Base64JPEG:0.5];
-    NSLog(@"%@",imageStr);
-    XCTAssertNotNil(imageStr);
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"imagetobase64:failed"];
+    
+    NSDate* tmpStartData = [NSDate date] ;
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        UIImage *bookmarkImage = [UIImage imageNamed:@"cycle_01.jpg"];
+        NSString *imgBase64Str = [bookmarkImage growingHelper_Base64JPEG:0.5];
+        NSLog(@"%@",imgBase64Str);
+        XCTAssertNotNil(imgBase64Str);
+        UIImage * image = [bookmarkImage growingHelper_getSubImage:CGRectMake(0, 0, 40, 40)];
+        NSString *imageStr = [image growingHelper_Base64JPEG:0.5];
+        NSLog(@"%@",imageStr);
+        XCTAssertNotNil(imageStr);
+        [expectation fulfill];
+    });
+    [self waitForExpectationsWithTimeout:0.5 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Test failed——%@",expectation.description);
+            double failedTime = [[NSDate date] timeIntervalSinceDate:tmpStartData];
+            NSLog(@"－－－－－－cost time = %f ms(毫秒)", failedTime*1000);
+            XCTAssertEqual(@"1", @"0");
+        }
+    }];
+    double successTime = [[NSDate date] timeIntervalSinceDate:tmpStartData];
+    NSLog(@"－－－－－－cost time = %f ms(毫秒)", successTime*1000);
 }
 
 - (void)test9imagehelper  {
-    UIImage *bookmarkImage = [UIImage imageNamed:@"cycle_01.jpg"];
-    NSString *imgBase64Str = [bookmarkImage growingHelper_Base64JPEG:0.5];
-    NSLog(@"%@",imgBase64Str);
-    XCTAssertNotNil(imgBase64Str);
-    UIImage * image = [bookmarkImage growingHelper_getSubImage:CGRectMake(0, 0, 40, 40)];
-    NSString *imageStr = [image growingHelper_Base64JPEG:0.5];
-    NSLog(@"%@",imageStr);
-    XCTAssertNotNil(imageStr);
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"imagetobase64:failed"];
+    
+    NSDate* tmpStartData = [NSDate date] ;
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        UIImage *bookmarkImage = [UIImage imageNamed:@"cycle_01.jpg"];
+        NSString *imgBase64Str = [bookmarkImage growingHelper_Base64JPEG:0.5];
+        NSLog(@"%@",imgBase64Str);
+        XCTAssertNotNil(imgBase64Str);
+        UIImage * image = [bookmarkImage growingHelper_getSubImage:CGRectMake(0, 0, 40, 40)];
+        NSString *imageStr = [image growingHelper_Base64JPEG:0.5];
+        NSLog(@"%@",imageStr);
+        XCTAssertNotNil(imageStr);
+        [expectation fulfill];
+    });
+    [self waitForExpectationsWithTimeout:1 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Test failed——%@",expectation.description);
+            double failedTime = [[NSDate date] timeIntervalSinceDate:tmpStartData];
+            NSLog(@"－－－－－－cost time = %f ms(毫秒)", failedTime*1000);
+            XCTAssertEqual(@"1", @"0");
+        }
+    }];
+    double successTime = [[NSDate date] timeIntervalSinceDate:tmpStartData];
+    NSLog(@"－－－－－－cost time = %f ms(毫秒)", successTime*1000);
 }
 
 - (void)test10windowshelper {

@@ -26,6 +26,7 @@
 - (NSDictionary *)dictForUserAction:(NSString *)action;
 +(GrowingWebCircletest *)sharedManager;
 - (void)sendJson:(id)json;
+
 @end
  
  
@@ -83,6 +84,7 @@
     }
     XCTAssertNotNil(dict[@"screenshot"]);
     [[GrowingWebCircletest shareInstance] sendJson:dict];
+    
 }
 
 
