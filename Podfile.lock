@@ -7,13 +7,13 @@ PODS:
   - AlicloudUTDID (1.5.0.94)
   - AlicloudUtils (1.3.9):
     - AlicloudUTDID
-  - GrowingAnalytics/Autotracker (3.0.1-beta):
+  - GrowingAnalytics/Autotracker (3.0.2):
     - GrowingAnalytics/AutotrackerCore
-  - GrowingAnalytics/AutotrackerCore (3.0.1-beta):
+  - GrowingAnalytics/AutotrackerCore (3.0.2):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/Tracker (3.0.1-beta):
+  - GrowingAnalytics/Tracker (3.0.2):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/TrackerCore (3.0.1-beta)
+  - GrowingAnalytics/TrackerCore (3.0.2)
   - KIF (3.7.11):
     - KIF/Core (= 3.7.11)
   - KIF/Core (3.7.11)
@@ -56,7 +56,7 @@ SPEC CHECKSUMS:
   AlicloudUT: 6d1cf30d57d096b7e9bb4b069dd0ba6ad59a3338
   AlicloudUTDID: 7323c443dcdf9a73e2224dc6ce51703671d7a765
   AlicloudUtils: 66e0ba6ece62d7dd05e9dd95674b2c7811624c2f
-  GrowingAnalytics: ed03aee81d775810fafa77af0e9ba8ad93cc69ac
+  GrowingAnalytics: 636180a7b1d6da4e7a2f1bd11274c25cb7fd8f25
   KIF: 927c502455cd746771c57e9b3a5123c67c7fa0b5
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   MJRefresh: 6afc955813966afb08305477dd7a0d9ad5e79a16
