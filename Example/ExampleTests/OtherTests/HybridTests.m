@@ -35,11 +35,12 @@
 #import "GrowingDataTraffic.h"
 #import "GrowingLoggerDebugger.h"
 #import "GrowingAppCloseEvent.h"
+#import "GrowingWebCircleElement.h"
+#import "GrowingHybridPageAttributesEvent.h"
 //#import "GrowingMobileDebugger.h"
 
 
-//#import "GrowingWebCircle.h"
-//#import "GrowingSRWebSocket.h" 
+//#import "GrowingSRWebSocket.h"
 
 
 @interface HybridTests : KIFTestCase
@@ -107,6 +108,7 @@
 //    }
 //    NSMutableDictionary *dict = [[GrowingWebCircle shareInstance] dictFromPage:current xPath:page.path];
 //    [GrowingWebCircle retrieveAllElementsAsync:nil];
+    [GrowingWebCircle  runWithCircle:[NSURL URLWithString:@"ws://testws"] readyBlock:nil finishBlock:nil];
     [GrowingWebCircle isRunning];
     [GrowingWebCircle stop];
 //    [GrowingWebCircle setNeedUpdateScreen];
@@ -116,28 +118,7 @@
     
 }
 
--(void)testGrowingSRWebSocket{
-    NSURL *url = [NSURL URLWithString:@"https://www.growingio.com"];
-    GrowingSRWebSocket *webSocket = [[GrowingSRWebSocket alloc]initWithURL:url];
-    [webSocket open];
-    XCTAssertNotNil(webSocket.url);
-//    XCTAssertNotNil(webSocket.readyState);
-//    XCTAssertNotNil(webSocket.protocol);
-//    [webSocket send:nil];
-//    [webSocket sendPing:nil];
-    [webSocket.delegate webSocketDidOpen:webSocket];
-    [webSocket.delegate webSocket:webSocket didReceivePong:nil];
-    [webSocket.delegate webSocket:webSocket didReceiveMessage:nil];
-    [webSocket.delegate webSocket:webSocket didFailWithError:nil];
-    [webSocket.delegate webSocket:webSocket didCloseWithCode:@10086 reason:@"fail" wasClean:YES];
-    [webSocket scheduleInRunLoop:NSRunLoop.currentRunLoop forMode:NSRunLoopCommonModes];
-    [webSocket unscheduleFromRunLoop:NSRunLoop.currentRunLoop forMode:NSRunLoopCommonModes];
-    [NSRunLoop growing_SR_networkRunLoop];
-    [webSocket close];
-    [webSocket closeWithCode:@502 reason:@"fail"];
 
-
-}
 -(void)testGrowingHandleUrl{
     NSURL *url = [NSURL URLWithString: @"growing.9683a369c615f77d://growing/oauth2/token?messageId=GPnmM2RY&gtouchType=preview&msgType=popupWindow&"];
 //    [Growing handleURL:url];
@@ -169,14 +150,27 @@
 
 -(void)testGrowingHybridBridgeProvider{
     [GrowingHybridBridgeProvider.sharedInstance handleJavascriptBridgeMessage:@"testHibrid"];
+    
+    GrowingHybridPageAttributesEvent.builder.setQuery(@"QUERY")
+    .setPath(@"KEY_PATH")
+    .setPageShowTimestamp(@"KEY_PAGE_SHOW_TIMESTAMP")
+    .setAttributes(@"KEY_ATTRIBUTES")
+    .setDomain(@"domain");
     XCTAssertEqual(1, 1);
 
 }
+-(void)testGrowingWebCircleElement{
+    
+    [GrowingWebCircleElement builder];
+   GrowingWebCircleElementBuilder *WebCircleElement = [[GrowingWebCircleElementBuilder alloc] init];
+    [[GrowingWebCircleElement alloc]initWithBuilder:WebCircleElement];
+    [[GrowingWebCircleElement alloc]toDictionary];
 
+}
 
 -(void)testGrowingDataTraffic{
-//    [GrowingDataTraffic cellularNetworkUploadEventSize];
-//    NSString *date = [GrowingDataTraffic getTodayKey];
+    [GrowingDataTraffic cellularNetworkStorgeEventSize:1024*1024];
+    [GrowingDataTraffic cellularNetworkUploadEventSize];
 //    XCTAssertEqual(1, 1);
     
 }
