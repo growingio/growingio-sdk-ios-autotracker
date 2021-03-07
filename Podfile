@@ -27,4 +27,7 @@ target 'ExampleTests' do
 #   pod 'OHHTTPStubs', :configurations => ['Debug']
 end
 
-
+target 'ExampleShareExtension' do
+   project 'Example/Example'
+   pod 'GrowingAnalytics/Extension', :path => './'
+end

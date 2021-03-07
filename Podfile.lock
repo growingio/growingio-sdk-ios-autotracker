@@ -11,9 +11,11 @@ PODS:
     - GrowingAnalytics/AutotrackerCore
   - GrowingAnalytics/AutotrackerCore (3.0.2):
     - GrowingAnalytics/TrackerCore
+  - GrowingAnalytics/Extension (3.0.2)
   - GrowingAnalytics/Tracker (3.0.2):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/TrackerCore (3.0.2)
+  - GrowingAnalytics/TrackerCore (3.0.2):
+    - GrowingAnalytics/Extension
   - KIF (3.7.11):
     - KIF/Core (= 3.7.11)
   - KIF/Core (3.7.11)
@@ -28,6 +30,7 @@ PODS:
 DEPENDENCIES:
   - AlicloudPush (~> 1.9.8)
   - GrowingAnalytics/Autotracker (from `./`)
+  - GrowingAnalytics/Extension (from `./`)
   - GrowingAnalytics/Tracker (from `./`)
   - KIF
   - MBProgressHUD
@@ -56,13 +59,13 @@ SPEC CHECKSUMS:
   AlicloudUT: 6d1cf30d57d096b7e9bb4b069dd0ba6ad59a3338
   AlicloudUTDID: 7323c443dcdf9a73e2224dc6ce51703671d7a765
   AlicloudUtils: 66e0ba6ece62d7dd05e9dd95674b2c7811624c2f
-  GrowingAnalytics: 636180a7b1d6da4e7a2f1bd11274c25cb7fd8f25
+  GrowingAnalytics: 98c477377226017238ab376e07e5ed41b09b71b2
   KIF: 927c502455cd746771c57e9b3a5123c67c7fa0b5
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   MJRefresh: 6afc955813966afb08305477dd7a0d9ad5e79a16
   SDCycleScrollView: a0d74c3384caa72bdfc81470bdbc8c14b3e1fbcf
   SDWebImage: 0b2ba0d56479bf6a45ecddbfd5558bea93150d25
 
-PODFILE CHECKSUM: 2c93f11b96cf71fac68bc2ea9a4b4afb552d29cf
+PODFILE CHECKSUM: 252f3063f088ae24c00d0370fd23b9f9857a1253
 
 COCOAPODS: 1.9.1

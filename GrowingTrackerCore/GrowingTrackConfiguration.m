@@ -40,6 +40,7 @@
     configuration.dataCollectionEnabled = _dataCollectionEnabled;
     configuration.uploadExceptionEnable = _uploadExceptionEnable;
     configuration.dataCollectionServerHost = [_dataCollectionServerHost copy];
+    configuration.extensionAppIdentifiers = [_extensionAppIdentifiers copy];
     return configuration;
 }
 

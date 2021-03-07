@@ -16,6 +16,9 @@
 @property(nonatomic, assign) BOOL uploadExceptionEnable;
 @property(nonatomic, copy) NSString *dataCollectionServerHost;
 
+/// 如果你使用了Extension,依赖了AppGroup,请设置好你的Group ID,没有设置则不会进行Extension数据传输至App
+@property(nonatomic, copy) NSArray *extensionAppIdentifiers;
+
 - (instancetype)initWithProjectId:(NSString *)projectId;
 
 + (instancetype)configurationWithProjectId:(NSString *)projectId;
