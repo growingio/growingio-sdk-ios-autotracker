@@ -19,7 +19,6 @@
 
 
 #import <XCTest/XCTest.h>
-#import "GrowingSRWebSocket.h"
 #import <KIF/KIF.h>
 #import "UIImage+GrowingHelper.h"
 #import "UIWindow+GrowingHelper.h"
@@ -28,12 +27,13 @@
 #import "GrowingHybridCustomEvent.h"
 #import "GrowingPageCustomEvent.h"
 #import "GrowingHybridViewElementEvent.h"
-#import "GrowingFMDatabaseQueue.h"
-#import "GrowingFMDatabase.h"
-#import "GrowingFMDatabasePool.h"
 #import "GrowingLoginRequest.h"
 #import "GrowingNodeItem.h"
-
+#import "GrowingDeepLinkHandler.h"
+#import "UIViewController+GrowingNode.h"
+#import "UICollectionView+GrowingNode.h"
+#import "UIView+GrowingNode.h"
+#import "FirstViewController.h"
 @interface WebSocketTests : KIFTestCase
 
 @end
@@ -48,35 +48,6 @@
     // Put teardown code here. This method is called after the invocation of each test method in the class.
 }
 
--(void)testGrowingSRWebSocket{
-    NSURL *url = [NSURL URLWithString:@"https://www.growingio.com"];
-    GrowingSRWebSocket *webSocket = [[GrowingSRWebSocket alloc]initWithURL:url];
-    [webSocket open];
-    XCTAssertNotNil(webSocket.url);
-    //    XCTAssertNotNil(webSocket.readyState);
-    //    XCTAssertNotNil(webSocket.protocol);
-    webSocket.readyState;
-    
-    //    [webSocket send:[[NSData alloc]init] ];
-    //    [webSocket sendPing:nil];
-    //    [webSocket _sendFrameWithOpcode:GrowingSROpCodePing data:nil];
-    
-    //    [webSocket setDelegate:self];
-    [webSocket setDelegateDispatchQueue:dispatch_get_main_queue()];
-    [webSocket setDelegateOperationQueue:nil];
-    [webSocket.delegate webSocketDidOpen:webSocket];
-    [webSocket.delegate webSocket:webSocket didReceivePong:nil];
-    [webSocket.delegate webSocket:webSocket didReceiveMessage:nil];
-    [webSocket.delegate webSocket:nil didReceiveMessage:@{@"a":@"value"}];
-    [webSocket.delegate webSocketDidOpen:self];
-    [webSocket.delegate webSocket:webSocket didFailWithError:nil];
-    [webSocket.delegate webSocket:webSocket didCloseWithCode:@1001 reason:@"fail" wasClean:YES];
-    [webSocket scheduleInRunLoop:NSRunLoop.currentRunLoop forMode:NSRunLoopCommonModes];
-    [webSocket unscheduleFromRunLoop:NSRunLoop.currentRunLoop forMode:NSRunLoopCommonModes];
-    [NSRunLoop growing_SR_networkRunLoop];
-    [webSocket close];
-    [webSocket closeWithCode:@502 reason:@"fail"];
-}
 
 -(void)testImageHelper{
     UIImage *image = [[UIImage alloc]init];
@@ -140,81 +111,6 @@
     .setDomain(@"domain");
 }
 
--(void)testGrowingFMDatabaseQueue{
-    [GrowingFMDatabaseQueue databaseQueueWithPath:@"testpath"];
-    [GrowingFMDatabaseQueue databaseQueueWithPath:@"testpath" flags:@1];
-    [[GrowingFMDatabaseQueue databaseQueueWithPath:@"testpath"] initWithPath:@"testpath"];
-    [[GrowingFMDatabaseQueue databaseQueueWithPath:@"testpath"] initWithPath:@"testpath" flags:@2];
-    [[GrowingFMDatabaseQueue databaseQueueWithPath:@"testpath"] initWithPath:@"testpath" flags:@3 vfs:@"vfs"];
-    [GrowingFMDatabaseQueue databaseClass];
-    [[GrowingFMDatabaseQueue databaseQueueWithPath:@"testpath"] close];
-    [[GrowingFMDatabaseQueue databaseQueueWithPath:@"testpath"] inDatabase:nil];
-    [[GrowingFMDatabaseQueue databaseQueueWithPath:@"testpath"] inTransaction:nil];
-    [[GrowingFMDatabaseQueue databaseQueueWithPath:@"testpath"] inDeferredTransaction:nil];
-}
-
--(void)testGrowingFMDatabase{
-    [GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] initWithPath:@"/tmp/tmp.db"];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] open];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] openWithFlags:@1];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] openWithFlags:@2 vfs:@"virtual file system (VFS)"];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] close];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] goodConnection];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] executeUpdate:@"test" withErrorAndBindings:nil];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] executeUpdate:@"test" withErrorAndBindings:nil];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] executeUpdate:@"test"];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] executeUpdateWithFormat:@"testFormat"];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] executeUpdate:@"testsql" withVAList:nil];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] executeUpdate:@"testsql" withArgumentsInArray:nil];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] executeUpdate:@"testsql" withParameterDictionary:nil];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] executeStatements:@"sql"];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] executeStatements:@"sql" withResultBlock:nil];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] changes];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] executeQuery:@"test"];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] executeQuery:@"test" withParameterDictionary:nil];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] executeQuery:@"test" withArgumentsInArray:nil];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] executeQuery:@"test" withVAList:nil];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] beginTransaction];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] beginDeferredTransaction];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] commit];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] rollback];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] inTransaction];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] closeOpenResultSets];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] hasOpenResultSets];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] shouldCacheStatements];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] setKey:@"testKey"];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] rekey:@"testKey"];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] setCheckedOut:YES];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] setLogsErrors:YES];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] setCrashOnErrors:YES];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] setTraceExecution:YES];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] setShouldCacheStatements:YES];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] lastError];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] lastErrorCode];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] lastInsertRowId];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] lastErrorMessage];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] logsErrors];
-    [GrowingFMDatabase isSQLiteThreadSafe];
-    [GrowingFMDatabase sqliteLibVersion];
-    [GrowingFMDatabase FMG3DBUserVersion];
-    [GrowingFMDatabase FMG3DBVersion];
-    [[GrowingFMDatabase databaseWithPath:@"/tmp/tmp.db"] close];
-    
-}
-
--(void)testGrowingFMDatabasePool{
-    [GrowingFMDatabasePool databasePoolWithPath:@"test"];
-    [GrowingFMDatabasePool databasePoolWithPath:@"test" flags:@1];
-    [[GrowingFMDatabasePool databasePoolWithPath:@"test"] initWithPath:@"testpath"];
-    [[GrowingFMDatabasePool databasePoolWithPath:@"test"] initWithPath:@"testpath" flags:@2];
-    [[GrowingFMDatabasePool databasePoolWithPath:@"test"] initWithPath:@"testpath" flags:@2];
-    [[GrowingFMDatabasePool databasePoolWithPath:@"test"] countOfCheckedInDatabases];
-    [[GrowingFMDatabasePool databasePoolWithPath:@"test"] countOfCheckedOutDatabases];
-    [[GrowingFMDatabasePool databasePoolWithPath:@"test"] releaseAllDatabases];
-    [[GrowingFMDatabasePool databasePoolWithPath:@"test"] inSavePoint:nil];
-}
-
 -(void)testGrowingLoginRequest{
     
     [GrowingLoginRequest loginRequestWithHeader:@{@"header":@"h1"} parameter:@{@"parameter":@"p1"}];
@@ -225,5 +121,84 @@
     [GrowingNodeItemComponent indexNotDefine];
     
 }
+-(void)testGrowingDeepLinkHandler{
+    NSURL *url1 = [NSURL URLWithString:@"http://test.growingio.com/oauth2/qrcode.html?URLScheme=growing.test&productId=test&circleRoomNumber=test0f4cfa51ff3f&serviceType=circle&appName=GrowingIO&wsUrl=    ws://cdp.growingio.com/app/test/circle/test0f4cfa51ff3f"];
 
+    [GrowingDeepLinkHandler handlerUrl:url1];
+}
+-(void)testGrowingUIViewController{
+    UIViewController *vc1 = [[FirstViewController alloc]init];
+    [vc1 performSelector:@selector(growingNodeParent)];
+    //growingAppearStateCanTrack
+    [vc1 performSelector:@selector(growingAppearStateCanTrack)];
+    [vc1 performSelector:@selector(growingNodeDonotTrack)];
+    [vc1 performSelector:@selector(growingNodeDonotCircle)];
+    [vc1 performSelector:@selector(growingNodeUserInteraction)];
+    [vc1 performSelector:@selector(growingNodeName)];
+    [vc1 performSelector:@selector(growingNodeContent)];
+    [vc1 performSelector:@selector(growingNodeDataDict)];
+    [vc1 performSelector:@selector(growingNodeWindow)];
+    [vc1 performSelector:@selector(growingNodeUniqueTag)];
+    [vc1 performSelector:@selector(growingNodeKeyIndex)];
+    [vc1 performSelector:@selector(growingNodeSubPath)];
+    [vc1 performSelector:@selector(growingNodeSubSimilarPath)];
+    [vc1 performSelector:@selector(growingNodeIndexPath)];
+    [vc1 performSelector:@selector(growingNodeChilds)];
+    [vc1 performSelector:@selector(growingPageIgnorePolicy)];
+
+}
+
+-(void)testGrowingUICollectionView{
+    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+    //设置collectionView滚动方向
+    //[layout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
+    //设置headerView的尺寸大小
+    layout.headerReferenceSize = CGSizeMake(10, 10);
+    //该方法也可以设置itemSize
+    layout.itemSize = CGSizeMake(110, 150);
+
+    UICollectionView *view1 = [[UICollectionView alloc] initWithFrame:UIScreen.mainScreen.accessibilityFrame collectionViewLayout:layout];
+    UICollectionViewCell *cell = [[UICollectionViewCell alloc]init];
+    [view1 performSelector:@selector(growingNodeChilds)];
+    [cell performSelector:@selector(growingNodeKeyIndex)];
+    [cell performSelector:@selector(growingNodeIndexPath)];
+    [cell performSelector:@selector(growingNodeSubPath)];
+    [cell performSelector:@selector(growingNodeSubSimilarPath)];
+    [cell performSelector:@selector(growingNodeDonotCircle)];
+    [cell performSelector:@selector(growingNodeUserInteraction)];
+    [cell performSelector:@selector(growingViewUserInteraction)];
+    [cell performSelector:@selector(growingNodeName)];
+    [cell performSelector:@selector(growingNodeDonotCircle)];
+    [cell performSelector:@selector(growingNodeUserInteraction)];
+    [cell performSelector:@selector(growingViewUserInteraction)];
+
+}
+
+-(void)testGrowingUIView{
+    UIView *view2 = [[UIView alloc]init];
+    [view2 performSelector:@selector(growingNodeIndexPath)];
+    [view2 performSelector:@selector(growingNodeKeyIndex)];
+    [view2 performSelector:@selector(growingNodeSubPath)];
+    [view2 performSelector:@selector(growingNodeSubSimilarPath)];
+    [view2 performSelector:@selector(growingNodeChilds)];
+    [view2 performSelector:@selector(growingNodeParent)];
+    [view2 performSelector:@selector(growingViewNodeIsInvisiable)];
+    [view2 performSelector:@selector(growingImpNodeIsVisible)];
+    [view2 performSelector:@selector(growingNodeDonotTrack)];
+    [view2 performSelector:@selector(growingViewDontTrack)];
+    [view2 performSelector:@selector(growingNodeDonotCircle)];
+    [view2 performSelector:@selector(growingNodeName)];
+    [view2 performSelector:@selector(growingViewContent)];
+    [view2 performSelector:@selector(growingNodeUserInteraction)];
+    [view2 performSelector:@selector(growingViewUserInteraction)];
+    [view2 performSelector:@selector(growingNodeDataDict)];
+    [view2 performSelector:@selector(growingNodeWindow)];
+    [view2 performSelector:@selector(growingNodeUniqueTag)];
+    [view2 performSelector:@selector(growingViewCustomContent)];
+    [view2 performSelector:@selector(growingIMPTracked)];
+    [view2 performSelector:@selector(growingIMPTrackEventName)];
+    [view2 performSelector:@selector(growingIMPTrackVariable)];
+    [view2 performSelector:@selector(growingViewIgnorePolicy)];
+
+}
 @end
