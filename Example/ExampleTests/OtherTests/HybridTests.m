@@ -25,7 +25,6 @@
 #import <KIF/KIF.h>
 #import "GrowingAppCloseEvent.h"
 #import "GrowingWebCircle.h"
-#import "GrowingSRWebSocket.h"
 #import "NSURL+GrowingHelper.h"
 #import "UIView+GrowingHelper.h"
 #import "GrowingNode.h"
@@ -38,9 +37,6 @@
 #import "GrowingWebCircleElement.h"
 #import "GrowingHybridPageAttributesEvent.h"
 //#import "GrowingMobileDebugger.h"
-
-
-//#import "GrowingSRWebSocket.h"
 
 
 @interface HybridTests : KIFTestCase
@@ -108,14 +104,18 @@
 //    }
 //    NSMutableDictionary *dict = [[GrowingWebCircle shareInstance] dictFromPage:current xPath:page.path];
 //    [GrowingWebCircle retrieveAllElementsAsync:nil];
+    [GrowingWebCircle shareInstance];
     [GrowingWebCircle  runWithCircle:[NSURL URLWithString:@"ws://testws"] readyBlock:nil finishBlock:nil];
     [GrowingWebCircle isRunning];
     [GrowingWebCircle stop];
-//    [GrowingWebCircle setNeedUpdateScreen];
-//    [GrowingWebCircle impressScale];
 //    [GrowingWebCircle isContainer:nil];
 
-    
+    Class realClazz = NSClassFromString(@"GrowingWebCircle");
+//    [realClazz respondsToSelector:@selector(setNeedUpdateScreen)];
+    [realClazz performSelector:@selector(impressScale)];
+    [[realClazz performSelector:@selector(shareInstance)] performSelector:@selector(_setNeedUpdateScreen)];;
+    [[realClazz performSelector:@selector(shareInstance)] performSelector:@selector(sendWebcircleWithType:)withObject:@"eventType"];;
+
 }
 
 
