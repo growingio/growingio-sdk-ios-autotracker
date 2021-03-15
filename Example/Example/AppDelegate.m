@@ -19,7 +19,7 @@
 #import <objc/message.h>
 
 #import <CoreServices/CoreServices.h>
-static NSString *const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
+static NSString *const kGrowingProjectId = @"91eaf9b283361032";
 
 @interface AppDelegate () <UNUserNotificationCenterDelegate>
 
@@ -159,6 +159,13 @@ continueUserActivity:(NSUserActivity *)userActivity
 //    // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
 //}
 
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation {
+
+    return NO;
+}
 #pragma mark - 生命周期
 
 // xcode11 以后 AppDelegate.m文件没有了APP的生命周期,为了自动化测试用例添加
@@ -183,6 +190,7 @@ continueUserActivity:(NSUserActivity *)userActivity
 }
 
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
+    
     return NO;
 }
 

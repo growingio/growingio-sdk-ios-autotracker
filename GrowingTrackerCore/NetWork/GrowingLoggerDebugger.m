@@ -27,7 +27,6 @@
 #import "GrowingWSLogger.h"
 #import "NSString+GrowingHelper.h"
 #import "GrowingDeviceInfo.h"
-
 static NSString * const kGrowingWebSocketMsgType = @"msgType";
 static NSString * const kGrowingLoggerWsEndPoint = @"wss://gta1.growingio.com/app/%@/circle/%@";
 
@@ -56,6 +55,7 @@ static GrowingLoggerDebugger* _loggerDebugger = nil;
 //        _loggerDebugger.webSocket = [[GrowingSRWebSocket alloc] initWithURLRequest: [NSURLRequest requestWithURL: [NSURL URLWithString:urlStr]]];
 //        _loggerDebugger.webSocket.delegate = _loggerDebugger;
 //        [_loggerDebugger.webSocket open];
+        
     }
 }
 

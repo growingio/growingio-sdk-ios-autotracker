@@ -29,14 +29,14 @@
 			<string>GrowingIO</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>growing.530c8231345c492d</string>
+				<string>growing.3612b67ce562c755</string>
 			</array>
 		</dict>
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string></string>
+			<string>GrowingIO</string>
 			<key>CFBundleURLSchemes</key>
 			<array/>
 		</dict>
