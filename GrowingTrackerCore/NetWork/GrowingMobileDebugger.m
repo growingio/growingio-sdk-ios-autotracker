@@ -77,8 +77,6 @@ static GrowingMobileDebugger *shareInstance = nil;
     return shareInstance;
 }
 
-
-
 + (void)stop {
     [[self shareInstance] stop];
 }
@@ -110,22 +108,16 @@ static GrowingMobileDebugger *shareInstance = nil;
     return NO;
 }
 
-
 #pragma mark - actions
 
 - (void)_setNeedUpdateScreen {
     [self sendScreenShot];
 }
 
-
-
 + (CGFloat)impressScale {
     CGFloat scale = [UIScreen mainScreen].scale;
     return MIN(scale, 2);
 }
-
-
-
 
 - (unsigned long)getSnapshotKey {
     @synchronized(self) {
@@ -180,7 +172,7 @@ static GrowingMobileDebugger *shareInstance = nil;
     return image;
 }
 - (void)remoteReady {
-    [self sendJson:[self userInfo]];//发送应用信息
+    [self sendJson:[self userInfo]];
     [self sendScreenShot];
 }
 
@@ -190,7 +182,6 @@ static GrowingMobileDebugger *shareInstance = nil;
     self.statusWindow.statusLable.text = @"正在进行调试";
     self.statusWindow.statusLable.textAlignment = NSTextAlignmentCenter;
     self.isReady = YES;
-    //监听原生事件，变动时发送
     [[GrowingEventManager shareInstance] addInterceptor:self];
     [[GrowingApplicationEventManager sharedInstance] addApplicationEventObserver:self];
 }
@@ -210,11 +201,6 @@ static GrowingMobileDebugger *shareInstance = nil;
 
     [[GrowingEventManager shareInstance] removeInterceptor:self];
     [[GrowingApplicationEventManager sharedInstance] removeApplicationEventObserver:self];
-//    if (self.webSocket) {
-//        self.webSocket.delegate = nil;
-//        [self.webSocket close];
-//        self.webSocket = nil;
-//    }
     if (self.statusWindow) {
         self.statusWindow.hidden = YES;
         self.statusWindow = nil;
@@ -368,18 +354,16 @@ static GrowingMobileDebugger *shareInstance = nil;
 }
 
 //获取url字段
-- (NSString *)absoluteURL {
++ (NSString *)absoluteURL {
     NSString *baseUrl = [GrowingNetworkConfig sharedInstance].growingApiHostEnd;
     if (!baseUrl.length) {
         return nil;
     }
-    
-    //NSString *absoluteURLString = [baseUrl absoluteURLStringWithPath:self.path ];
     NSString *absoluteURLString = [baseUrl absoluteURLStringWithPath:self.path andQuery:nil ];
     return absoluteURLString;
 }
 
-- (NSString *)path {
++ (NSString *)path {
     NSString *accountId = [GrowingConfigurationManager sharedInstance].trackConfiguration.projectId ? : @"";
     NSString *path = [NSString stringWithFormat:@"v3/projects/%@/collect", accountId];
     return path;
@@ -387,8 +371,6 @@ static GrowingMobileDebugger *shareInstance = nil;
 
 //发送用户行为信息
 - (void)sendEventDidBuild:(GrowingBaseEvent *)event {
-    // this call back run in main thread
-    // so not use lock
     if (!_isReady) {
         return;
     }
@@ -398,7 +380,7 @@ static GrowingMobileDebugger *shareInstance = nil;
         @"sdkVersion" : GrowingTrackerVersionName,
         @"data" :event.toDictionary
     };
-    dict[@"data"][@"url"] = [self absoluteURL];
+    dict[@"data"][@"url"] = [[self class] absoluteURL];
     [self sendJson:dict];
 }
 

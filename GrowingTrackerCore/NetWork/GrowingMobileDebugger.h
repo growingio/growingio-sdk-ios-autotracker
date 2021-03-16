@@ -28,7 +28,8 @@
 + (instancetype)shareInstance;
 + (void)stop;
 + (BOOL)isRunning;
-
+- (void)start;
++ (NSString *)absoluteURL;
 @end
 
 

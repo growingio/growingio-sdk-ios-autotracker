@@ -36,8 +36,9 @@
 #import "GrowingAppCloseEvent.h"
 #import "GrowingWebCircleElement.h"
 #import "GrowingHybridPageAttributesEvent.h"
-//#import "GrowingMobileDebugger.h"
-
+#import "GrowingMobileDebugger.h"
+#import "GrowingMobileDebugger.h"
+#import "GrowingDeepLinkHandler.h"
 
 @interface HybridTests : KIFTestCase
 
@@ -181,7 +182,20 @@
 
 }
 
+-(void)testGrowingMobileDebugger{
+    
+    NSURL *url1 = [NSURL URLWithString:@"growing.3612b67ce562c755://growingio/webservice?serviceType=debugger&wsUrl=wss://gta0.growingio.com/app/0wDaZmQ1/circle/ec7f5925458f458b8ae6f3901cacaa92"];
+    [GrowingDeepLinkHandler handlerUrl:url1];
+    [[GrowingMobileDebugger shareInstance] start];
+    if([GrowingMobileDebugger isRunning]) {
+        [GrowingMobileDebugger stop];
+    }
+}
 
+-(void)testGrowingabsoluteURL{
+    NSString * url = [GrowingMobileDebugger absoluteURL];
+    XCTAssertEqualObjects(url, @"https://api.growingio.com/v3/projects/91eaf9b283361032/collect");
+}
 
 -(void)testGrowingAppCloseEvent{
     [GrowingAppCloseEvent builder] ;
