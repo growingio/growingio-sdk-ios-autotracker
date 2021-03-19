@@ -34,6 +34,13 @@
 #import "UICollectionView+GrowingNode.h"
 #import "UIView+GrowingNode.h"
 #import "FirstViewController.h"
+#import "GrowingDeviceInfo.h"
+#import "NSString+GrowingHelper.h"
+#import "GrowingHybridBridgeProvider.h"
+#import "GrowingFileStorage.h"
+
+
+
 @interface WebSocketTests : KIFTestCase
 
 @end
@@ -186,6 +193,7 @@
     [view2 performSelector:@selector(growingImpNodeIsVisible)];
     [view2 performSelector:@selector(growingNodeDonotTrack)];
     [view2 performSelector:@selector(growingViewDontTrack)];
+    [view2 performSelector:@selector(growingNodeSubPath)];
     [view2 performSelector:@selector(growingNodeDonotCircle)];
     [view2 performSelector:@selector(growingNodeName)];
     [view2 performSelector:@selector(growingViewContent)];
@@ -199,6 +207,43 @@
     [view2 performSelector:@selector(growingIMPTrackEventName)];
     [view2 performSelector:@selector(growingIMPTrackVariable)];
     [view2 performSelector:@selector(growingViewIgnorePolicy)];
+    [view2 performSelector:@selector(growingStopTrackImpression)];
 
 }
+
+
+-(void)testGrowingDeviceInfo{
+    [[GrowingDeviceInfo currentDeviceInfo] deviceInfoReported];
+    [[GrowingDeviceInfo currentDeviceInfo] pasteboardDeeplinkReported];
+    [GrowingDeviceInfo deviceScreenSize];
+}
+
+-(void)testGrowingHelperString{
+    NSString *a = @"teststring";
+    [a growingHelper_uft8Data];
+    [a growingHelper_jsonObject];
+    [a growingHelper_dictionaryObject];
+    [a growingHelper_safeSubStringWithLength:@1];
+    [a growingHelper_sha1];
+    [a growingHelper_isLegal];
+    [a growingHelper_isValidU];
+    [a growingHelper_encryptString];
+    XCTAssertFalse([NSString growingHelper_isBlankString:@"t"]);
+    [a convertToDictFromPasteboard];
+    XCTAssertFalse([NSString growingHelper_isEqualStringA:@"A" andStringB:@"B"]);
+    
+}
+-(void)testGrowingHybridBridgeProvider{
+    [[GrowingHybridBridgeProvider sharedInstance] handleJavascriptBridgeMessage:@"{@'messageType':@'messagedata'}"];
+    [[GrowingHybridBridgeProvider sharedInstance] performSelector:@selector(dispatchWebViewDomChanged)];
+
+
+}
+-(void)testGrowingFileStorage{
+    [[[GrowingFileStorage alloc]initWithName:@"testGrowingFileStorage"] resetAll];
+    [[[GrowingFileStorage alloc]initWithName:@"testGrowingFileStorage"] removeKey:@"testKey"];
+
+
+}
+
 @end
