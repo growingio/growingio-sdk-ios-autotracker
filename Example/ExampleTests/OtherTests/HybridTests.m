@@ -155,7 +155,17 @@
     .setPath(@"KEY_PATH")
     .setPageShowTimestamp(@"KEY_PAGE_SHOW_TIMESTAMP")
     .setAttributes(@"KEY_ATTRIBUTES")
-    .setDomain(@"domain");
+    .setDomain(@"domain")
+    .setUserId(@"testUserId")
+    .setPlatform(@"testPlatform")
+    .setDeviceId(@"testDeviceId")
+    .setUrlScheme(@"testUrlScheme")
+    .setAppState(@"testAppState")
+    .setExtraParams(@"testExtraParams")
+    .setSessionId(@"testSessionId")
+    .setGlobalSequenceId(@"testGlobalSequenceId")
+    .setEventSequenceId(@"testEventSequenceId")
+    .setPlatformVersion(@"testPlatformVersion");
     XCTAssertEqual(1, 1);
 
 }
