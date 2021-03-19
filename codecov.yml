@@ -3,4 +3,4 @@ codecov:
 ignore:
   - "GrowingTrackerCore/Thirdparty"  # ignore Thirdparty
   - "Example"  # ignore demo
-  - "GrowingTrackerCore/NetWork/SocketRocket" # ignore websocket
+  - "GrowingTrackerCore/NetWork" # ignore network ,websocket
