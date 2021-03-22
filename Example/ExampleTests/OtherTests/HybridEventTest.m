@@ -90,7 +90,7 @@
     [tester waitForTimeInterval:3];
     NSString * jsStr = [NSString stringWithFormat:@"sendMockCustomEventWithAttributes()"];
     [[HybirdEventSender sharedInstance] testHybirdEventSender:jsStr];
-
+    [tester waitForTimeInterval:3];
     NSArray *EventArray = [MockEventQueue.sharedQueue eventsFor:@"CUSTOM"];
     
     if (EventArray.count > 0) {
