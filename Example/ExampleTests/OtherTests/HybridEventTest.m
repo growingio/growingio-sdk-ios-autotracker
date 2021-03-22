@@ -86,7 +86,7 @@
     [[viewTester usingLabel:@"UI界面"] tap];
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"UI界面"] tap];
-    [[viewTester usingLabel:@"Hybrid"] tap];
+    [[viewTester usingLabel:@"HybridEventTest"] tap];
     [tester waitForTimeInterval:3];
     NSString * jsStr = [NSString stringWithFormat:@"sendMockCustomEventWithAttributes()"];
     [[HybirdEventSender sharedInstance] testHybirdEventSender:jsStr];
@@ -144,7 +144,7 @@
     [[viewTester usingLabel:@"UI界面"] tap];
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"UI界面"] tap];
-    [[viewTester usingLabel:@"Hybrid"] tap];
+    [[viewTester usingLabel:@"HybridEventTest"] tap];
     [tester waitForTimeInterval:3];
     
     NSString * jsStr = [NSString stringWithFormat:@"sendMockLoginUserAttributesEvent()"];
@@ -172,7 +172,7 @@
     [[viewTester usingLabel:@"UI界面"] tap];
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"UI界面"] tap];
-    [[viewTester usingLabel:@"Hybrid"] tap];
+    [[viewTester usingLabel:@"HybridEventTest"] tap];
     [tester waitForTimeInterval:3];
     
     NSString * jsStr = [NSString stringWithFormat:@"sendMockConversionVariablesEvent()"];
@@ -197,7 +197,7 @@
     [[viewTester usingLabel:@"UI界面"] tap];
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"UI界面"] tap];
-    [[viewTester usingLabel:@"Hybrid"] tap];
+    [[viewTester usingLabel:@"HybridEventTest"] tap];
     [tester waitForTimeInterval:3];
     NSString * jsStr = [NSString stringWithFormat:@"sendMockPageEvent()"];
     [[HybirdEventSender sharedInstance] testHybirdEventSender:jsStr];
@@ -224,7 +224,7 @@
     [[viewTester usingLabel:@"UI界面"] tap];
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"UI界面"] tap];
-    [[viewTester usingLabel:@"Hybrid"] tap];
+    [[viewTester usingLabel:@"HybridEventTest"] tap];
     [tester waitForTimeInterval:3];
     NSString * jsStr = [NSString stringWithFormat:@"sendMockPageEventWithQuery()"];
     [[HybirdEventSender sharedInstance] testHybirdEventSender:jsStr];
@@ -252,7 +252,7 @@
     [[viewTester usingLabel:@"UI界面"] tap];
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"UI界面"] tap];
-    [[viewTester usingLabel:@"Hybrid"] tap];
+    [[viewTester usingLabel:@"HybridEventTest"] tap];
     [tester waitForTimeInterval:3];
     NSString * jsStr = [NSString stringWithFormat:@"sendMockPageAttributesEvent()"];
     [[HybirdEventSender sharedInstance] testHybirdEventSender:jsStr];
@@ -278,7 +278,7 @@
     [[viewTester usingLabel:@"UI界面"] tap];
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"UI界面"] tap];
-    [[viewTester usingLabel:@"Hybrid"] tap];
+    [[viewTester usingLabel:@"HybridEventTest"] tap];
     [tester waitForTimeInterval:3];
     NSString * jsStr = [NSString stringWithFormat:@"sendMockViewClickEvent()"];
     [[HybirdEventSender sharedInstance] testHybirdEventSender:jsStr];
@@ -308,7 +308,7 @@
     [[viewTester usingLabel:@"UI界面"] tap];
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"UI界面"] tap];
-    [[viewTester usingLabel:@"Hybrid"] tap];
+    [[viewTester usingLabel:@"HybridEventTest"] tap];
     [tester waitForTimeInterval:3];
     NSString * jsStr = [NSString stringWithFormat:@"sendMockViewChangeEvent()"];
     [[HybirdEventSender sharedInstance] testHybirdEventSender:jsStr];
@@ -335,7 +335,7 @@
     [[viewTester usingLabel:@"UI界面"] tap];
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"UI界面"] tap];
-    [[viewTester usingLabel:@"Hybrid"] tap];
+    [[viewTester usingLabel:@"HybridEventTest"] tap];
     [tester waitForTimeInterval:3];
     NSString * jsStr = [NSString stringWithFormat:@"sendMockFormSubmitEvent()"];
     [[HybirdEventSender sharedInstance] testHybirdEventSender:jsStr];
@@ -362,7 +362,7 @@
     [[viewTester usingLabel:@"UI界面"] tap];
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"UI界面"] tap];
-    [[viewTester usingLabel:@"Hybrid"] tap];
+    [[viewTester usingLabel:@"HybridEventTest"] tap];
     [tester waitForTimeInterval:3];
     NSString * jsStr = [NSString stringWithFormat:@"setUserId('test_name_jsStr')"];
     [[HybirdEventSender sharedInstance] testHybirdEventSender:jsStr];
@@ -376,7 +376,7 @@
     [[viewTester usingLabel:@"UI界面"] tap];
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"UI界面"] tap];
-    [[viewTester usingLabel:@"Hybrid"] tap];
+    [[viewTester usingLabel:@"HybridEventTest"] tap];
     [tester waitForTimeInterval:3];
     NSString * jsStr = [NSString stringWithFormat:@"clearUserId()"];
     [[HybirdEventSender sharedInstance] testHybirdEventSender:jsStr];
@@ -390,7 +390,7 @@
     [[viewTester usingLabel:@"UI界面"] tap];
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"UI界面"] tap];
-    [[viewTester usingLabel:@"Hybrid"] tap];
+    [[viewTester usingLabel:@"HybridEventTest"] tap];
     [tester waitForTimeInterval:3];
     NSString * jsStr = [NSString stringWithFormat:@"mockDomChanged()"];
     [[HybirdEventSender sharedInstance] testHybirdEventSender:jsStr];
