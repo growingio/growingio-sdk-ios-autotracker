@@ -108,6 +108,10 @@
 		047BF3BC24F655A50028FE94 /* PageEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3B924F655A50028FE94 /* PageEventsTest.m */; };
 		04A6FAF224E662E9006C72F0 /* GIOChildsAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A6FAF124E662E9006C72F0 /* GIOChildsAddViewController.m */; };
 		04A6FAF524E67215006C72F0 /* GIOBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A6FAF424E67215006C72F0 /* GIOBaseViewController.m */; };
+		3FCEDB4A2608A13C00B54222 /* GrowingHelpsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCEDB462608A13C00B54222 /* GrowingHelpsTest.m */; };
+		3FCEDB4B2608A13C00B54222 /* HybridEventTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCEDB492608A13C00B54222 /* HybridEventTest.m */; };
+		3FCEDB572608A15800B54222 /* GIOHybridEventTestController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCEDB542608A15800B54222 /* GIOHybridEventTestController.m */; };
+		3FCEDB582608A15800B54222 /* gio_hybrideventtest.html in Resources */ = {isa = PBXBuildFile; fileRef = 3FCEDB552608A15800B54222 /* gio_hybrideventtest.html */; };
 		4223513425ED0B130082B431 /* WebSocketTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4223513325ED0B130082B431 /* WebSocketTests.m */; };
 		42ADE26C250B292900CA7268 /* HybridTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 42ADE26B250B292900CA7268 /* HybridTests.m */; };
 		42F753BD256E2E46002F0D37 /* HTTPStubsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 42F753BC256E2E46002F0D37 /* HTTPStubsHelper.m */; };
@@ -268,6 +272,13 @@
 		04A6FAF324E67215006C72F0 /* GIOBaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIOBaseViewController.h; sourceTree = "<group>"; };
 		04A6FAF424E67215006C72F0 /* GIOBaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOBaseViewController.m; sourceTree = "<group>"; };
 		11EA2ABB8F1029820A3234DB /* Pods_ExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ExampleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3FCEDB462608A13C00B54222 /* GrowingHelpsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingHelpsTest.m; sourceTree = "<group>"; };
+		3FCEDB472608A13C00B54222 /* HybridEventTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HybridEventTest.h; sourceTree = "<group>"; };
+		3FCEDB482608A13C00B54222 /* GrowingHelpsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrowingHelpsTest.h; sourceTree = "<group>"; };
+		3FCEDB492608A13C00B54222 /* HybridEventTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HybridEventTest.m; sourceTree = "<group>"; };
+		3FCEDB542608A15800B54222 /* GIOHybridEventTestController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOHybridEventTestController.m; sourceTree = "<group>"; };
+		3FCEDB552608A15800B54222 /* gio_hybrideventtest.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = gio_hybrideventtest.html; sourceTree = "<group>"; };
+		3FCEDB562608A15800B54222 /* GIOHybridEventTestController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOHybridEventTestController.h; sourceTree = "<group>"; };
 		4223513325ED0B130082B431 /* WebSocketTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WebSocketTests.m; sourceTree = "<group>"; };
 		42ADE26B250B292900CA7268 /* HybridTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HybridTests.m; sourceTree = "<group>"; };
 		42F753BB256E2E46002F0D37 /* HTTPStubsHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HTTPStubsHelper.h; sourceTree = "<group>"; };
@@ -455,6 +466,9 @@
 		0465310024DD4271002D254C /* UICategoryTests */ = {
 			isa = PBXGroup;
 			children = (
+				3FCEDB552608A15800B54222 /* gio_hybrideventtest.html */,
+				3FCEDB562608A15800B54222 /* GIOHybridEventTestController.h */,
+				3FCEDB542608A15800B54222 /* GIOHybridEventTestController.m */,
 				0465310624DD4271002D254C /* gio_hybrid.html */,
 				0465312324DD4271002D254C /* GIOActionSheetViewController.h */,
 				0465310824DD4271002D254C /* GIOActionSheetViewController.m */,
@@ -558,6 +572,10 @@
 		42ADE26A250B28BC00CA7268 /* OtherTests */ = {
 			isa = PBXGroup;
 			children = (
+				3FCEDB482608A13C00B54222 /* GrowingHelpsTest.h */,
+				3FCEDB462608A13C00B54222 /* GrowingHelpsTest.m */,
+				3FCEDB472608A13C00B54222 /* HybridEventTest.h */,
+				3FCEDB492608A13C00B54222 /* HybridEventTest.m */,
 				42ADE26B250B292900CA7268 /* HybridTests.m */,
 				4223513325ED0B130082B431 /* WebSocketTests.m */,
 			);
@@ -796,6 +814,7 @@
 				0465312C24DD4271002D254C /* fire.ico in Resources */,
 				0465313024DD4272002D254C /* cycle_06.jpg in Resources */,
 				0465314124DD4272002D254C /* GrowingKeyValueCell.xib in Resources */,
+				3FCEDB582608A15800B54222 /* gio_hybrideventtest.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -940,6 +959,7 @@
 				4962653A24DA66B600032551 /* ManualTrackHelper.m in Sources */,
 				047BF3BB24F655A50028FE94 /* A2ViewChangeEventsTest.m in Sources */,
 				047BF3B424F6551B0028FE94 /* A3VisitEventsTest.m in Sources */,
+				3FCEDB4A2608A13C00B54222 /* GrowingHelpsTest.m in Sources */,
 				047BF3AA24F638BB0028FE94 /* GetIDsTest.m in Sources */,
 				047BF3B024F638BB0028FE94 /* GetEnableLogTest.m in Sources */,
 				4962653E24DA66B600032551 /* NSURLSession+TestHook.m in Sources */,
@@ -948,6 +968,7 @@
 				047BF3AF24F638BB0028FE94 /* DailyDataLimit.m in Sources */,
 				4962656F24DA66BF00032551 /* ConversionVariablesEventsTest.m in Sources */,
 				047BF3AC24F638BB0028FE94 /* TrackViewTest.m in Sources */,
+				3FCEDB4B2608A13C00B54222 /* HybridEventTest.m in Sources */,
 				4223513425ED0B130082B431 /* WebSocketTests.m in Sources */,
 				047BF3B124F638BB0028FE94 /* GetConfigurationTest.m in Sources */,
 				047BF3AB24F638BB0028FE94 /* GDPRTest.m in Sources */,
@@ -1002,6 +1023,7 @@
 				0465314C24DD4272002D254C /* main.m in Sources */,
 				0465314A24DD4272002D254C /* SecondViewController.m in Sources */,
 				0465314224DD4272002D254C /* PageAttributesEventViewController.m in Sources */,
+				3FCEDB572608A15800B54222 /* GIOHybridEventTestController.m in Sources */,
 				0465315724DD4272002D254C /* GIOMultiViewController.m in Sources */,
 				0465314324DD4272002D254C /* GIOClickEventViewController.m in Sources */,
 				0465313824DD4272002D254C /* MBProgressHUD+GrowingHelper.m in Sources */,
