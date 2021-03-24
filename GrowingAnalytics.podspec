@@ -23,8 +23,13 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   s.requires_arc = true
   s.default_subspec = "Autotracker"
   
+  s.subspec 'Extension' do |extension|
+      extension.source_files = 'Extension/**/*{.h,.m}'
+  end
+
   s.subspec 'TrackerCore' do |trackerCore|
       trackerCore.source_files = 'GrowingTrackerCore/**/*{.h,.m}'
+      trackerCore.dependency 'GrowingAnalytics/Extension'
   end
   
   s.subspec 'Tracker' do |tracker|
