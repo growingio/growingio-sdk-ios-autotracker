@@ -59,6 +59,7 @@
 //表示web和app是否同时准备好数据发送，此时表示可以发送数据
 @property (nonatomic, assign) BOOL isReady;
 @property (nonatomic, strong) NSMutableArray * cacheArray;
+@property (nonatomic, strong) NSMutableArray * cacheEvent;
 @property (nonatomic, strong) NSTimer *timer;
 @property(strong, nonatomic, readonly) NSLock *lock;
 @property (nonatomic, retain) GrowingStatusBar *statusWindow;
@@ -82,6 +83,7 @@ static GrowingMobileDebugger *shareInstance = nil;
 {
     if (self = [super init]) {
         _lock = [[NSLock alloc] init];
+        self.cacheEvent =  [NSMutableArray arrayWithCapacity:0];
     }
     return self;
 }
@@ -107,6 +109,7 @@ static GrowingMobileDebugger *shareInstance = nil;
 #pragma mark - GrowingDeepLinkHandlerProtocol
 
 - (BOOL)growingHandlerUrl:(NSURL *)url {
+    [[GrowingEventManager shareInstance] addInterceptor:self];
     NSDictionary *params = url.growingHelper_queryDict;
     NSString *serviceType = params[@"serviceType"];
     NSString *wsurl = params[@"wsUrl"];
@@ -180,9 +183,24 @@ static GrowingMobileDebugger *shareInstance = nil;
                                                              }];
     return image;
 }
+
+- (void)reissueEvent
+{
+    if(self.cacheEvent.count>0)
+    {
+        
+        for(int i = 0;i<self.cacheEvent.count;++i)
+        {
+            [self sendJson:self.cacheEvent[i]];
+        }
+        [self.cacheEvent removeAllObjects];
+    }
+}
+
 - (void)remoteReady {
     [self sendJson:[self userInfo]];
     [self sendScreenShot];
+    [self reissueEvent];
 }
 
 
@@ -195,7 +213,6 @@ static GrowingMobileDebugger *shareInstance = nil;
         self.statusWindow.statusLable.text = @"正在进行Debugger";
         self.statusWindow.statusLable.textAlignment = NSTextAlignmentCenter;
     }
-    [[GrowingEventManager shareInstance] addInterceptor:self];
     [[GrowingApplicationEventManager sharedInstance] addApplicationEventObserver:self];
 }
 
@@ -255,10 +272,13 @@ static GrowingMobileDebugger *shareInstance = nil;
        [self sendJson:cacheDic];
    }
 }
+
+
 - (void)startTimer
 {
     if(!self.timer)
     {
+        
     self.cacheArray =  [NSMutableArray arrayWithCapacity:0];
     self.timer =  [NSTimer timerWithTimeInterval:1.0 target:self selector:@selector(nextOne) userInfo:nil repeats:YES];
     [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
@@ -394,7 +414,9 @@ static GrowingMobileDebugger *shareInstance = nil;
 //#pragma mark - GrowingEventInterceptor
 
 - (void)growingEventManagerEventDidBuild:(GrowingBaseEvent* _Nullable)event{
+    [self.lock lock];
     [self sendEventDidBuild:event];
+    [self.lock unlock];
 }
 
 //获取url字段
@@ -415,9 +437,6 @@ static GrowingMobileDebugger *shareInstance = nil;
 
 //发送用户行为信息
 - (void)sendEventDidBuild:(GrowingBaseEvent *)event {
-    if (!_isReady) {
-        return;
-    }
     NSMutableDictionary *atts = [[NSMutableDictionary alloc] initWithDictionary:event.toDictionary];
     NSDictionary *dict = @{
         @"msgType" : @"debugger_data",
@@ -425,7 +444,13 @@ static GrowingMobileDebugger *shareInstance = nil;
         @"data" :atts
     };
     dict[@"data"][@"url"] = [[self class] absoluteURL];
-    [self sendJson:dict];
+    if(self.isReady)
+    {
+        [self sendJson:dict];
+    }
+    else{
+        [self.cacheEvent addObject:dict.copy];
+    }
 
 }
 

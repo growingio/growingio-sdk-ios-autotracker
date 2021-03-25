@@ -40,14 +40,13 @@ const int GrowingTrackerVersionCode = 30000;
     if (self) {
         _configuration = [configuration copyWithZone:nil];
         _launchOptions = [launchOptions copy];
-
+        [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:[GrowingWebWatcher shareInstance]];
+        [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:[GrowingMobileDebugger shareInstance]];
         [self loggerSetting];
 
         GrowingConfigurationManager.sharedInstance.trackConfiguration = self.configuration;
         [GrowingAppLifecycle.sharedInstance setupAppStateNotification];
         [GrowingSession startSession];
-        [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:[GrowingWebWatcher shareInstance]];
-        [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:[GrowingMobileDebugger shareInstance]];
         [GrowingAppDelegateAutotracker track];
         [self versionPrint];
     }
