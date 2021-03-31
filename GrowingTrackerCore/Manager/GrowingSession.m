@@ -2,7 +2,6 @@
 // Created by xiangyang on 2020/11/10.
 //
 
-#import <CoreLocation/CoreLocation.h>
 #import "GrowingSession.h"
 #import "GrowingAppLifecycle.h"
 #import "GrowingConfigurationManager.h"

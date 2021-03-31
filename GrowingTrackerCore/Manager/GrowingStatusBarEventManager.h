@@ -1,9 +1,9 @@
 //
-// HTTPStubsHelper.h
-// ExampleTests
+// GrowingStatusBarEventManager.h
+// GrowingAnalytics
 //
-//  Created by GrowingIO on 11/25/20.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by sheng on 2020/12/28.
+//  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -19,16 +19,25 @@
 
 
 #import <Foundation/Foundation.h>
-//#import "HTTPStubs.h"
-//#import "NSURLRequest+HTTPBodyTesting.h"
+
 NS_ASSUME_NONNULL_BEGIN
+@protocol GrowingStatusBarEventProtocol <NSObject>
 
-@interface HTTPStubsHelper : NSObject
+- (void)didTapStatusBar:(id)gesture;
 
-@property(nonatomic,strong)NSArray *array;
+@end
 
-//-(void)stubRequests;
-//-(NSArray *)checkEvents;
+
+@interface GrowingStatusBarEventManager : NSObject
+
++ (instancetype)sharedInstance;
+
+- (void)addStatusBarObserver:(id<GrowingStatusBarEventProtocol>)delegate;
+
+- (void)removeStatusBarObserver:(id<GrowingStatusBarEventProtocol>)delegate;
+
+- (void)dispatchTapStatusBar:(id)gesture;
+
 @end
 
 NS_ASSUME_NONNULL_END

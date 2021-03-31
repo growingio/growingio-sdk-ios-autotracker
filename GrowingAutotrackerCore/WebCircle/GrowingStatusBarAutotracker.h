@@ -1,9 +1,9 @@
 //
-//  GrowingEventOptions.h
-//  GrowingTracker
+// GrowingStatusAutotracker.h
+// GrowingAnalytics
 //
-//  Created by GrowingIO on 2020/4/14.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by sheng on 2020/12/28.
+//  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -22,9 +22,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingEventOptions : NSObject
+@interface GrowingStatusBarAutotracker : NSObject
 
-- (void)readEventOptions;
++ (void)track;
 
 @end
 

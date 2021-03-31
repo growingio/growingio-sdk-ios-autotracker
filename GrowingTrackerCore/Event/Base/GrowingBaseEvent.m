@@ -3,15 +3,16 @@
 //
 
 #import "GrowingBaseEvent.h"
+
 #import "GrowingDeviceInfo.h"
-#import "GrowingSession.h"
-#import "GrowingTimeUtil.h"
 #import "GrowingPersistenceDataProvider.h"
 #import "GrowingRealTracker.h"
+#import "GrowingSession.h"
+#import "GrowingTimeUtil.h"
 
 @implementation GrowingBaseEvent
 
-- (instancetype)initWithBuilder:(GrowingBaseBuilder*)builder {
+- (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
     self = [super init];
     if (self) {
         _deviceId = builder.deviceId;
@@ -32,7 +33,6 @@
 }
 
 - (NSDictionary *)toDictionary {
-    
     NSMutableDictionary *dataDict = [NSMutableDictionary dictionary];
     //如果有额外参数添加
     if (self.extraParams.count > 0) {
@@ -55,7 +55,6 @@
 
 @end
 
-
 @implementation GrowingBaseBuilder
 
 - (instancetype)init {
@@ -68,101 +67,100 @@
 }
 //赋值属性，eg:deviceId,userId,sessionId,globalSequenceId,eventSequenceId
 - (void)readPropertyInMainThread {
-    _appState = [UIApplication sharedApplication].applicationState == UIApplicationStateActive ? 0 : 1;
-    
     GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
+    _appState = deviceInfo.appState;
     _deviceId = deviceInfo.deviceIDString ?: @"";
     _urlScheme = deviceInfo.urlScheme;
     _platform = deviceInfo.platform;
     _platformVersion = deviceInfo.platformVersion;
-    
-    GrowingEventSequenceObject *sequence = [[GrowingPersistenceDataProvider sharedInstance] getAndIncrement:self.eventType];
+
+    GrowingEventSequenceObject *sequence =
+        [[GrowingPersistenceDataProvider sharedInstance] getAndIncrement:self.eventType];
     _globalSequenceId = sequence.globalId;
     _eventSequenceId = sequence.eventTypeId;
     GrowingSession *session = [GrowingSession currentSession];
     _userId = session.loginUserId;
-    _sessionId =  session.sessionId;
-    
+    _sessionId = session.sessionId;
 }
 
-- (GrowingBaseBuilder *(^)(NSString *value))setDeviceId {
+- (GrowingBaseBuilder * (^)(NSString *value))setDeviceId {
     return ^(NSString *value) {
         self->_deviceId = value;
         return self;
     };
 }
-- (GrowingBaseBuilder *(^)(NSString *value))setUserId {
+- (GrowingBaseBuilder * (^)(NSString *value))setUserId {
     return ^(NSString *value) {
         self->_userId = value;
         return self;
     };
 }
-- (GrowingBaseBuilder *(^)(NSString *value))setSessionId {
+- (GrowingBaseBuilder * (^)(NSString *value))setSessionId {
     return ^(NSString *value) {
         self->_sessionId = value;
         return self;
     };
 }
 
-- (GrowingBaseBuilder *(^)(long long value))setTimestamp; {
+- (GrowingBaseBuilder * (^)(long long value))setTimestamp;
+{
     return ^(long long value) {
         self->_timestamp = value;
         return self;
     };
 }
-- (GrowingBaseBuilder *(^)(NSString *value))setDomain {
+- (GrowingBaseBuilder * (^)(NSString *value))setDomain {
     return ^(NSString *value) {
         self->_domain = value;
         return self;
     };
 }
-- (GrowingBaseBuilder *(^)(NSString *value))setUrlScheme {
+- (GrowingBaseBuilder * (^)(NSString *value))setUrlScheme {
     return ^(NSString *value) {
         self->_urlScheme = value;
         return self;
     };
 }
-- (GrowingBaseBuilder *(^)(int value))setAppState {
+- (GrowingBaseBuilder * (^)(int value))setAppState {
     return ^(int value) {
         self->_appState = value;
         return self;
     };
 }
-- (GrowingBaseBuilder *(^)(long long value))setGlobalSequenceId {
+- (GrowingBaseBuilder * (^)(long long value))setGlobalSequenceId {
     return ^(long long value) {
         self->_globalSequenceId = value;
         return self;
     };
 }
-- (GrowingBaseBuilder *(^)(long long value))setEventSequenceId {
+- (GrowingBaseBuilder * (^)(long long value))setEventSequenceId {
     return ^(long long value) {
         self->_eventSequenceId = value;
         return self;
     };
 }
 
-- (GrowingBaseBuilder *(^)(NSString *value))setPlatform {
+- (GrowingBaseBuilder * (^)(NSString *value))setPlatform {
     return ^(NSString *value) {
         self->_platform = value;
         return self;
     };
 }
-- (GrowingBaseBuilder *(^)(NSString *value))setPlatformVersion {
+- (GrowingBaseBuilder * (^)(NSString *value))setPlatformVersion {
     return ^(NSString *value) {
         self->_platformVersion = value;
         return self;
     };
 }
 
-- (GrowingBaseBuilder *(^)(NSDictionary *value))setExtraParams {
+- (GrowingBaseBuilder * (^)(NSDictionary *value))setExtraParams {
     return ^(NSDictionary *value) {
         self->_extraParams = value;
         return self;
     };
 }
 
-
-- (GrowingBaseBuilder *(^)(NSString *value))setEventType {
+- (GrowingBaseBuilder * (^)(NSString *value))setEventType {
     return ^(NSString *value) {
         self->_eventType = value;
         return self;
@@ -170,9 +168,10 @@
 }
 
 - (GrowingBaseEvent *)build {
-    @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                   reason:[NSString stringWithFormat:@"You must override %@ in a subclass.", NSStringFromSelector(_cmd)]
-                                 userInfo:nil];
+    @throw [NSException
+        exceptionWithName:NSInternalInconsistencyException
+                   reason:[NSString stringWithFormat:@"You must override %@ in a subclass.", NSStringFromSelector(_cmd)]
+                 userInfo:nil];
 }
 
 @end

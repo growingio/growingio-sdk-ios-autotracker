@@ -30,54 +30,47 @@
 
 + (void)generateVisitEvent:(long long)ts latitude:(double)latitude longitude:(double)longitude;
 {
-    [GrowingDispatchManager trackApiSel:_cmd
-                   dispatchInMainThread:^{
-                       GrowingBaseBuilder *builder =
-                           GrowingVisitEvent.builder.setTimestamp(ts).setLatitude(latitude).setLongitude(longitude);
-                       [[GrowingEventManager shareInstance] postEventBuidler:builder];
-                   }];
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        GrowingBaseBuilder *builder =
+            GrowingVisitEvent.builder.setTimestamp(ts).setLatitude(latitude).setLongitude(longitude);
+        [[GrowingEventManager shareInstance] postEventBuidler:builder];
+    }];
 }
 
 + (void)generateCustomEvent:(NSString *_Nonnull)name
                  attributes:(NSDictionary<NSString *, NSObject *> *_Nullable)attributes {
-    [GrowingDispatchManager trackApiSel:_cmd
-                   dispatchInMainThread:^{
-                       GrowingBaseBuilder *builder =
-                           GrowingCustomEvent.builder.setEventName(name).setAttributes(attributes);
-                       [[GrowingEventManager shareInstance] postEventBuidler:builder];
-                   }];
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        GrowingBaseBuilder *builder = GrowingCustomEvent.builder.setEventName(name).setAttributes(attributes);
+        [[GrowingEventManager shareInstance] postEventBuidler:builder];
+    }];
 }
 
 + (void)generateConversionAttributesEvent:(NSDictionary<NSString *, NSObject *> *_Nonnull)variables {
-    [GrowingDispatchManager trackApiSel:_cmd
-                   dispatchInMainThread:^{
-                       GrowingBaseBuilder *builder = GrowingConversionVariableEvent.builder.setAttributes(variables);
-                       [[GrowingEventManager shareInstance] postEventBuidler:builder];
-                   }];
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        GrowingBaseBuilder *builder = GrowingConversionVariableEvent.builder.setAttributes(variables);
+        [[GrowingEventManager shareInstance] postEventBuidler:builder];
+    }];
 }
 
 + (void)generateLoginUserAttributesEvent:(NSDictionary<NSString *, NSObject *> *_Nonnull)attributes {
-    [GrowingDispatchManager trackApiSel:_cmd
-                   dispatchInMainThread:^{
-                       GrowingBaseBuilder *builder = GrowingLoginUserAttributesEvent.builder.setAttributes(attributes);
-                       [[GrowingEventManager shareInstance] postEventBuidler:builder];
-                   }];
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        GrowingBaseBuilder *builder = GrowingLoginUserAttributesEvent.builder.setAttributes(attributes);
+        [[GrowingEventManager shareInstance] postEventBuidler:builder];
+    }];
 }
 
 + (void)generateVisitorAttributesEvent:(NSDictionary<NSString *, NSObject *> *_Nonnull)attributes {
-    [GrowingDispatchManager trackApiSel:_cmd
-                   dispatchInMainThread:^{
-                       GrowingBaseBuilder *builder = GrowingVisitorAttributesEvent.builder.setAttributes(attributes);
-                       [[GrowingEventManager shareInstance] postEventBuidler:builder];
-                   }];
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        GrowingBaseBuilder *builder = GrowingVisitorAttributesEvent.builder.setAttributes(attributes);
+        [[GrowingEventManager shareInstance] postEventBuidler:builder];
+    }];
 }
 
 + (void)generateAppCloseEvent {
-    [GrowingDispatchManager trackApiSel:_cmd
-                   dispatchInMainThread:^{
-                       GrowingBaseBuilder *builder = GrowingAppCloseEvent.builder;
-                       [[GrowingEventManager shareInstance] postEventBuidler:builder];
-                   }];
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        GrowingBaseBuilder *builder = GrowingAppCloseEvent.builder;
+        [[GrowingEventManager shareInstance] postEventBuidler:builder];
+    }];
 }
 
 @end

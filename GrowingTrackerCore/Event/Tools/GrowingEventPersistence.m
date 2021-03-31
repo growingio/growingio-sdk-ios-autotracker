@@ -43,7 +43,10 @@
 + (NSArray<NSString *> *)buildRawEventsFromEvents:(NSArray<GrowingEventPersistence *> *)events {
     NSMutableArray *raws = [NSMutableArray array];
     for (GrowingEventPersistence *e in events) {
-        [raws addObject:e.rawJsonString];
+        NSString *rawStr = e.rawJsonString;
+        if (rawStr && rawStr.length > 0) {
+            [raws addObject:rawStr];
+        }
     }
     return raws;
 }

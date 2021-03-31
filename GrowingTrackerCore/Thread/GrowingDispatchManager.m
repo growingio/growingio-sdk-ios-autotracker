@@ -17,11 +17,29 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import "GrowingDispatchManager.h"
+
 #import "GrowingCocoaLumberjack.h"
+#import "GrowingThread.h"
 
 @implementation GrowingDispatchManager
+
++ (void)dispatchInGrowingThread:(void (^_Nullable)(void))block {
+    if ([[NSThread currentThread] isEqual:[GrowingThread sharedThread]]) {
+        block();
+    } else {
+        [GrowingDispatchManager performSelector:@selector(dispatchBlock:)
+                                       onThread:[GrowingThread sharedThread]
+                                     withObject:block
+                                  waitUntilDone:NO];
+    }
+}
+
++ (void)dispatchBlock:(void (^_Nullable)(void))block {
+    if (block) {
+        block();
+    }
+}
 
 + (void)dispatchInMainThread:(void (^_Nullable)(void))block {
     if ([NSThread isMainThread]) {
@@ -36,8 +54,8 @@
 }
 
 + (void)trackApiSel:(SEL)selector dispatchInMainThread:(void (^_Nullable)(void))block {
-    
-    if (strcmp(dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL), dispatch_queue_get_label(dispatch_get_main_queue())) == 0) {
+    if (strcmp(dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL),
+               dispatch_queue_get_label(dispatch_get_main_queue())) == 0) {
         block();
     } else {
         GIOLogWarn(@"!!!: 埋点相关API-\"%@\"，请在主线程里调用.", NSStringFromSelector(selector));
@@ -46,16 +64,14 @@
 }
 
 + (dispatch_queue_t)lowDispatch {
-    static dispatch_queue_t  lowDispatch = nil;
+    static dispatch_queue_t lowDispatch = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         lowDispatch = dispatch_queue_create("io.growing.low", NULL);
-        dispatch_set_target_queue(lowDispatch,
-                                  dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0));
+        dispatch_set_target_queue(lowDispatch, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0));
     });
-    
+
     return lowDispatch;
 }
-
 
 @end

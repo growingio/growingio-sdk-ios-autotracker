@@ -17,15 +17,16 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <Foundation/Foundation.h>
 
 @interface GrowingDispatchManager : NSObject
+
++ (void)dispatchInGrowingThread:(void (^_Nullable)(void))block;
 
 + (void)dispatchInMainThread:(void (^_Nullable)(void))block;
 
 + (void)dispatchInLowThread:(void (^_Nullable)(void))block;
 
-+ (void)trackApiSel:(SEL _Nonnull )selector dispatchInMainThread:(void (^_Nullable)(void))block;
++ (void)trackApiSel:(SEL _Nonnull)selector dispatchInMainThread:(void (^_Nullable)(void))block;
 
 @end

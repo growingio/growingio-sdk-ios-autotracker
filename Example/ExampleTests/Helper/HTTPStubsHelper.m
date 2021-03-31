@@ -23,28 +23,28 @@
 @implementation HTTPStubsHelper
 
 
--(void)stubRequests{
-    [HTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest * _Nonnull request) {
-        return [request.URL.host isEqualToString:@"run.mocky.io"];
-    } withStubResponse:^HTTPStubsResponse * _Nonnull(NSURLRequest * _Nonnull request) {
-        // NSArray *array = @[@"Hello", @"world"];
-        // NSLog(@"testbody %@",[request OHHTTPStubs_HTTPBody]);
-        NSData* stubData = [@"hello world" dataUsingEncoding:NSUTF8StringEncoding];
-        
-        return [HTTPStubsResponse responseWithData:stubData statusCode:205 headers:nil];
-    }];
-};
-
--(NSArray *)checkEvents{
-    
-    
-    [HTTPStubs onStubActivation:^(NSURLRequest * _Nonnull request, id<HTTPStubsDescriptor>  _Nonnull stub, HTTPStubsResponse * _Nonnull responseStub)   {
-        self.array =[NSJSONSerialization JSONObjectWithData:request.OHHTTPStubs_HTTPBody options:0 error:NULL];
-        
-        NSLog(@"[OHHTTPStubs] Request boby is  %@ ", self.array[0]);
-        }];
-    
-    return self.array;
-};
+//-(void)stubRequests{
+//    [HTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest * _Nonnull request) {
+//        return [request.URL.host isEqualToString:@"run.mocky.io"];
+//    } withStubResponse:^HTTPStubsResponse * _Nonnull(NSURLRequest * _Nonnull request) {
+//        // NSArray *array = @[@"Hello", @"world"];
+//        // NSLog(@"testbody %@",[request OHHTTPStubs_HTTPBody]);
+//        NSData* stubData = [@"hello world" dataUsingEncoding:NSUTF8StringEncoding];
+//        
+//        return [HTTPStubsResponse responseWithData:stubData statusCode:205 headers:nil];
+//    }];
+//};
+//
+//-(NSArray *)checkEvents{
+//    
+//    
+//    [HTTPStubs onStubActivation:^(NSURLRequest * _Nonnull request, id<HTTPStubsDescriptor>  _Nonnull stub, HTTPStubsResponse * _Nonnull responseStub)   {
+//        self.array =[NSJSONSerialization JSONObjectWithData:request.OHHTTPStubs_HTTPBody options:0 error:NULL];
+//        
+//        NSLog(@"[OHHTTPStubs] Request boby is  %@ ", self.array[0]);
+//        }];
+//    
+//    return self.array;
+//};
 
 @end

@@ -1,9 +1,9 @@
 //
-// HTTPStubsHelper.h
-// ExampleTests
+// GIOHybridEventTestController.h
+// Example
 //
-//  Created by GrowingIO on 11/25/20.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by gio on 2021/3/22.
+//  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -18,17 +18,19 @@
 //  limitations under the License.
 
 
-#import <Foundation/Foundation.h>
-//#import "HTTPStubs.h"
-//#import "NSURLRequest+HTTPBodyTesting.h"
-NS_ASSUME_NONNULL_BEGIN
+#import <UIKit/UIKit.h>
+#import <WebKit/WebKit.h>
 
-@interface HTTPStubsHelper : NSObject
 
-@property(nonatomic,strong)NSArray *array;
+@interface GIOHybridEventTestController : UIViewController
 
-//-(void)stubRequests;
-//-(NSArray *)checkEvents;
 @end
 
-NS_ASSUME_NONNULL_END
+
+@interface HybirdEventSender : NSObject
+
+@property (nonatomic, strong) WKWebView *webView;
++ (instancetype)sharedInstance;
+- (void)testHybirdEventSender:(NSString *)jsStr;
+
+@end

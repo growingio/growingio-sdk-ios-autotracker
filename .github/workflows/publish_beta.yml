@@ -1,0 +1,35 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Publish beta
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: macos-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Install Cocoapods
+        run: gem install cocoapods
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          
+      - name: Create CocoaPods beta
+        run: |
+          set -eo pipefail
+          pod repo update
+          chmod +x Scripts/cocoapods-beta.sh
+          sh Scripts/cocoapods-beta.sh
+        env:
+          COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}

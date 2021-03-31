@@ -6,12 +6,12 @@
 //  Copyright (C) 2018 Beijing Yishu Technology Co., Ltd.
 //
 
-#import "ViewChangeEventsTest.h"
+#import "A2ViewChangeEventsTest.h"
 #import "MockEventQueue.h"
 #import "NoburPoMeaProCheck.h"
 #import "GrowingAutotracker.h"
 
-@implementation ViewChangeEventsTest
+@implementation A2ViewChangeEventsTest
 
 
 - (void)setUp{
@@ -24,6 +24,8 @@
     /**
      function:TextField输出内容，检测chng事件
      **/
+    NSString *version = [UIDevice currentDevice].systemVersion;
+    if (version.doubleValue < 14.0){
     [MockEventQueue.sharedQueue cleanQueue];
     [[viewTester usingLabel:@"UI界面"] tap];
     [[viewTester usingLabel:@"Text Fields"] tap];
@@ -50,11 +52,15 @@
     }
 
 }
+}
 
 -(void)test2DataPicker{
     /**
      function:日期控件操作，不发送chng事件
      **/
+    NSString *version = [UIDevice currentDevice].systemVersion;
+    // iOS14 日期控件变化
+    if (version.doubleValue < 14.0){
     [[viewTester usingLabel:@"协议/接口"] tap];
     //单击两次返回列表页
     [[viewTester usingLabel:@"协议/接口"] tap];
@@ -71,5 +77,6 @@
         NSLog(@"日期控件操作，不发送chng事件,测试不通过！发送了chng事件");
         XCTAssertEqual(0, 1);
     }
+}
 }
 @end

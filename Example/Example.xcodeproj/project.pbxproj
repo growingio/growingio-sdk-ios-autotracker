@@ -102,14 +102,14 @@
 		047BF3AF24F638BB0028FE94 /* DailyDataLimit.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3A424F638BB0028FE94 /* DailyDataLimit.m */; };
 		047BF3B024F638BB0028FE94 /* GetEnableLogTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3A624F638BB0028FE94 /* GetEnableLogTest.m */; };
 		047BF3B124F638BB0028FE94 /* GetConfigurationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3A824F638BB0028FE94 /* GetConfigurationTest.m */; };
-		047BF3B424F6551B0028FE94 /* VisitEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3B324F6551B0028FE94 /* VisitEventsTest.m */; };
+		047BF3B424F6551B0028FE94 /* A3VisitEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3B324F6551B0028FE94 /* A3VisitEventsTest.m */; };
 		047BF3BA24F655A50028FE94 /* ClickEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3B624F655A50028FE94 /* ClickEventsTest.m */; };
-		047BF3BB24F655A50028FE94 /* ViewChangeEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3B724F655A50028FE94 /* ViewChangeEventsTest.m */; };
+		047BF3BB24F655A50028FE94 /* A2ViewChangeEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3B724F655A50028FE94 /* A2ViewChangeEventsTest.m */; };
 		047BF3BC24F655A50028FE94 /* PageEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3B924F655A50028FE94 /* PageEventsTest.m */; };
 		04A6FAF224E662E9006C72F0 /* GIOChildsAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A6FAF124E662E9006C72F0 /* GIOChildsAddViewController.m */; };
 		04A6FAF524E67215006C72F0 /* GIOBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A6FAF424E67215006C72F0 /* GIOBaseViewController.m */; };
-		04E62DF12575E73B00A3638C /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E62DF02575E73A00A3638C /* SceneDelegate.m */; };
-		42ADE26C250B292900CA7268 /* HybirdTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 42ADE26B250B292900CA7268 /* HybirdTests.m */; };
+		4223513425ED0B130082B431 /* WebSocketTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4223513325ED0B130082B431 /* WebSocketTests.m */; };
+		42ADE26C250B292900CA7268 /* HybridTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 42ADE26B250B292900CA7268 /* HybridTests.m */; };
 		42F753BD256E2E46002F0D37 /* HTTPStubsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 42F753BC256E2E46002F0D37 /* HTTPStubsHelper.m */; };
 		42F753C1256E3256002F0D37 /* SomeEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 42F753C0256E3256002F0D37 /* SomeEventsTest.m */; };
 		4916270F24E157BB00444AF2 /* GIOPresentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916270E24E157BB00444AF2 /* GIOPresentViewController.m */; };
@@ -123,7 +123,7 @@
 		4962653D24DA66B600032551 /* NoburPoMeaProCheck.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962653624DA66B600032551 /* NoburPoMeaProCheck.m */; };
 		4962653E24DA66B600032551 /* NSURLSession+TestHook.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962653724DA66B600032551 /* NSURLSession+TestHook.m */; };
 		4962656F24DA66BF00032551 /* ConversionVariablesEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962655224DA66BF00032551 /* ConversionVariablesEventsTest.m */; };
-		4962657024DA66BF00032551 /* VisitorAttributesEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962655424DA66BF00032551 /* VisitorAttributesEventsTest.m */; };
+		4962657024DA66BF00032551 /* A4VisitorAttributesEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962655424DA66BF00032551 /* A4VisitorAttributesEventsTest.m */; };
 		4962657124DA66BF00032551 /* CustomEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962655724DA66BF00032551 /* CustomEventsTest.m */; };
 		4962657224DA66BF00032551 /* CS1ManualTrackTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962655824DA66BF00032551 /* CS1ManualTrackTest.m */; };
 		4962657324DA66BF00032551 /* LoginUserAttributerEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962655A24DA66BF00032551 /* LoginUserAttributerEventsTest.m */; };
@@ -255,22 +255,21 @@
 		047BF3A624F638BB0028FE94 /* GetEnableLogTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetEnableLogTest.m; sourceTree = "<group>"; };
 		047BF3A724F638BB0028FE94 /* GDPRTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDPRTest.h; sourceTree = "<group>"; };
 		047BF3A824F638BB0028FE94 /* GetConfigurationTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetConfigurationTest.m; sourceTree = "<group>"; };
-		047BF3B224F6551B0028FE94 /* VisitEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VisitEventsTest.h; sourceTree = "<group>"; };
-		047BF3B324F6551B0028FE94 /* VisitEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VisitEventsTest.m; sourceTree = "<group>"; };
+		047BF3B224F6551B0028FE94 /* A3VisitEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = A3VisitEventsTest.h; sourceTree = "<group>"; };
+		047BF3B324F6551B0028FE94 /* A3VisitEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = A3VisitEventsTest.m; sourceTree = "<group>"; };
 		047BF3B524F655A50028FE94 /* ClickEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClickEventsTest.h; sourceTree = "<group>"; };
 		047BF3B624F655A50028FE94 /* ClickEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClickEventsTest.m; sourceTree = "<group>"; };
-		047BF3B724F655A50028FE94 /* ViewChangeEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewChangeEventsTest.m; sourceTree = "<group>"; };
-		047BF3B824F655A50028FE94 /* ViewChangeEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewChangeEventsTest.h; sourceTree = "<group>"; };
+		047BF3B724F655A50028FE94 /* A2ViewChangeEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = A2ViewChangeEventsTest.m; sourceTree = "<group>"; };
+		047BF3B824F655A50028FE94 /* A2ViewChangeEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = A2ViewChangeEventsTest.h; sourceTree = "<group>"; };
 		047BF3B924F655A50028FE94 /* PageEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PageEventsTest.m; sourceTree = "<group>"; };
 		04A6FAE024E2BF11006C72F0 /* Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Example.entitlements; sourceTree = "<group>"; };
 		04A6FAF024E662E8006C72F0 /* GIOChildsAddViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIOChildsAddViewController.h; sourceTree = "<group>"; };
 		04A6FAF124E662E9006C72F0 /* GIOChildsAddViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOChildsAddViewController.m; sourceTree = "<group>"; };
 		04A6FAF324E67215006C72F0 /* GIOBaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIOBaseViewController.h; sourceTree = "<group>"; };
 		04A6FAF424E67215006C72F0 /* GIOBaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOBaseViewController.m; sourceTree = "<group>"; };
-		04E62DEF2575E73A00A3638C /* SceneDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
-		04E62DF02575E73A00A3638C /* SceneDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
 		11EA2ABB8F1029820A3234DB /* Pods_ExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ExampleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		42ADE26B250B292900CA7268 /* HybirdTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HybirdTests.m; sourceTree = "<group>"; };
+		4223513325ED0B130082B431 /* WebSocketTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WebSocketTests.m; sourceTree = "<group>"; };
+		42ADE26B250B292900CA7268 /* HybridTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HybridTests.m; sourceTree = "<group>"; };
 		42F753BB256E2E46002F0D37 /* HTTPStubsHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HTTPStubsHelper.h; sourceTree = "<group>"; };
 		42F753BC256E2E46002F0D37 /* HTTPStubsHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HTTPStubsHelper.m; sourceTree = "<group>"; };
 		42F753BF256E3256002F0D37 /* SomeEventsTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SomeEventsTest.h; sourceTree = "<group>"; };
@@ -299,14 +298,14 @@
 		4962655024DA66BF00032551 /* CS1ManualTrackTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CS1ManualTrackTest.h; sourceTree = "<group>"; };
 		4962655124DA66BF00032551 /* CustomEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomEventsTest.h; sourceTree = "<group>"; };
 		4962655224DA66BF00032551 /* ConversionVariablesEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConversionVariablesEventsTest.m; sourceTree = "<group>"; };
-		4962655424DA66BF00032551 /* VisitorAttributesEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VisitorAttributesEventsTest.m; sourceTree = "<group>"; };
+		4962655424DA66BF00032551 /* A4VisitorAttributesEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = A4VisitorAttributesEventsTest.m; sourceTree = "<group>"; };
 		4962655524DA66BF00032551 /* LoginUserAttributerEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginUserAttributerEventsTest.h; sourceTree = "<group>"; };
 		4962655624DA66BF00032551 /* PageAttributesEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PageAttributesEventsTest.h; sourceTree = "<group>"; };
 		4962655724DA66BF00032551 /* CustomEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomEventsTest.m; sourceTree = "<group>"; };
 		4962655824DA66BF00032551 /* CS1ManualTrackTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CS1ManualTrackTest.m; sourceTree = "<group>"; };
 		4962655924DA66BF00032551 /* ConversionVariablesEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConversionVariablesEventsTest.h; sourceTree = "<group>"; };
 		4962655A24DA66BF00032551 /* LoginUserAttributerEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginUserAttributerEventsTest.m; sourceTree = "<group>"; };
-		4962655B24DA66BF00032551 /* VisitorAttributesEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VisitorAttributesEventsTest.h; sourceTree = "<group>"; };
+		4962655B24DA66BF00032551 /* A4VisitorAttributesEventsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = A4VisitorAttributesEventsTest.h; sourceTree = "<group>"; };
 		4962655D24DA66BF00032551 /* PageAttributesEventsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PageAttributesEventsTest.m; sourceTree = "<group>"; };
 		6003F58A195388D20070C39A /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -350,8 +349,6 @@
 				046530DE24DD4271002D254C /* APITests */,
 				046530BE24DD4271002D254C /* AppDelegate.h */,
 				046530FF24DD4271002D254C /* AppDelegate.m */,
-				04E62DEF2575E73A00A3638C /* SceneDelegate.h */,
-				04E62DF02575E73A00A3638C /* SceneDelegate.m */,
 				046530D124DD4271002D254C /* Assets.xcassets */,
 				04A6FAE024E2BF11006C72F0 /* Example.entitlements */,
 				046530FD24DD4271002D254C /* GrowingIO-Info.plist */,
@@ -525,10 +522,10 @@
 				047BF3B524F655A50028FE94 /* ClickEventsTest.h */,
 				047BF3B624F655A50028FE94 /* ClickEventsTest.m */,
 				047BF3B924F655A50028FE94 /* PageEventsTest.m */,
-				047BF3B824F655A50028FE94 /* ViewChangeEventsTest.h */,
-				047BF3B724F655A50028FE94 /* ViewChangeEventsTest.m */,
-				047BF3B224F6551B0028FE94 /* VisitEventsTest.h */,
-				047BF3B324F6551B0028FE94 /* VisitEventsTest.m */,
+				047BF3B824F655A50028FE94 /* A2ViewChangeEventsTest.h */,
+				047BF3B724F655A50028FE94 /* A2ViewChangeEventsTest.m */,
+				047BF3B224F6551B0028FE94 /* A3VisitEventsTest.h */,
+				047BF3B324F6551B0028FE94 /* A3VisitEventsTest.m */,
 				42F753BF256E3256002F0D37 /* SomeEventsTest.h */,
 				42F753C0256E3256002F0D37 /* SomeEventsTest.m */,
 			);
@@ -561,7 +558,8 @@
 		42ADE26A250B28BC00CA7268 /* OtherTests */ = {
 			isa = PBXGroup;
 			children = (
-				42ADE26B250B292900CA7268 /* HybirdTests.m */,
+				42ADE26B250B292900CA7268 /* HybridTests.m */,
+				4223513325ED0B130082B431 /* WebSocketTests.m */,
 			);
 			path = OtherTests;
 			sourceTree = "<group>";
@@ -613,8 +611,8 @@
 				4962655D24DA66BF00032551 /* PageAttributesEventsTest.m */,
 				4962655124DA66BF00032551 /* CustomEventsTest.h */,
 				4962655724DA66BF00032551 /* CustomEventsTest.m */,
-				4962655B24DA66BF00032551 /* VisitorAttributesEventsTest.h */,
-				4962655424DA66BF00032551 /* VisitorAttributesEventsTest.m */,
+				4962655B24DA66BF00032551 /* A4VisitorAttributesEventsTest.h */,
+				4962655424DA66BF00032551 /* A4VisitorAttributesEventsTest.m */,
 			);
 			path = ManualTrackTest;
 			sourceTree = "<group>";
@@ -940,8 +938,8 @@
 				4962653924DA66B600032551 /* LogOperHelper.m in Sources */,
 				4962653D24DA66B600032551 /* NoburPoMeaProCheck.m in Sources */,
 				4962653A24DA66B600032551 /* ManualTrackHelper.m in Sources */,
-				047BF3BB24F655A50028FE94 /* ViewChangeEventsTest.m in Sources */,
-				047BF3B424F6551B0028FE94 /* VisitEventsTest.m in Sources */,
+				047BF3BB24F655A50028FE94 /* A2ViewChangeEventsTest.m in Sources */,
+				047BF3B424F6551B0028FE94 /* A3VisitEventsTest.m in Sources */,
 				047BF3AA24F638BB0028FE94 /* GetIDsTest.m in Sources */,
 				047BF3B024F638BB0028FE94 /* GetEnableLogTest.m in Sources */,
 				4962653E24DA66B600032551 /* NSURLSession+TestHook.m in Sources */,
@@ -950,6 +948,7 @@
 				047BF3AF24F638BB0028FE94 /* DailyDataLimit.m in Sources */,
 				4962656F24DA66BF00032551 /* ConversionVariablesEventsTest.m in Sources */,
 				047BF3AC24F638BB0028FE94 /* TrackViewTest.m in Sources */,
+				4223513425ED0B130082B431 /* WebSocketTests.m in Sources */,
 				047BF3B124F638BB0028FE94 /* GetConfigurationTest.m in Sources */,
 				047BF3AB24F638BB0028FE94 /* GDPRTest.m in Sources */,
 				4962657224DA66BF00032551 /* CS1ManualTrackTest.m in Sources */,
@@ -962,8 +961,8 @@
 				047BF3BC24F655A50028FE94 /* PageEventsTest.m in Sources */,
 				4962657324DA66BF00032551 /* LoginUserAttributerEventsTest.m in Sources */,
 				42F753BD256E2E46002F0D37 /* HTTPStubsHelper.m in Sources */,
-				42ADE26C250B292900CA7268 /* HybirdTests.m in Sources */,
-				4962657024DA66BF00032551 /* VisitorAttributesEventsTest.m in Sources */,
+				42ADE26C250B292900CA7268 /* HybridTests.m in Sources */,
+				4962657024DA66BF00032551 /* A4VisitorAttributesEventsTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1002,7 +1001,6 @@
 				0465315324DD4272002D254C /* GIOActionSheetViewController.m in Sources */,
 				0465314C24DD4272002D254C /* main.m in Sources */,
 				0465314A24DD4272002D254C /* SecondViewController.m in Sources */,
-				04E62DF12575E73B00A3638C /* SceneDelegate.m in Sources */,
 				0465314224DD4272002D254C /* PageAttributesEventViewController.m in Sources */,
 				0465315724DD4272002D254C /* GIOMultiViewController.m in Sources */,
 				0465314324DD4272002D254C /* GIOClickEventViewController.m in Sources */,

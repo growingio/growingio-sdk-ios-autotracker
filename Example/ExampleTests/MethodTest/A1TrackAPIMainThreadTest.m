@@ -14,6 +14,8 @@
 #import "GrowingEventManager.h"
 #import <UIKit/UIKit.h>
 
+#import "GrowingSession.h"
+#import "GrowingDispatchManager.h"
 @interface GrowingEventManager (GrowingAutoTest)
 
 @end
@@ -21,7 +23,7 @@
 
 @implementation GrowingEventManager (GrowingAutoTest)
 
-static NSString *isMainThread = @"1";
+static NSString *isGrowingThread = @"1";
 static NSMutableArray *originalEventArray = nil;
 static NSMutableArray *dbEventArray = nil;
 static GrowingBaseEvent *originalEvent = nil;
@@ -32,7 +34,7 @@ static GrowingBaseEvent *originalEvent = nil;
     dispatch_once(&onceToken, ^{
         Class clazz = NSClassFromString(@"GrowingEventManager");
         
-        NSDictionary *swizzleDic = @{@"handleEvent:":@"mainThreadHandleEvent:", @"writeToDatabaseWithEvent:":@"writeToDBWithEventTest:"};
+        NSDictionary *swizzleDic = @{@"sendEventsOfChannel_unsafe:":@"sendEventsOfChannel_unsafeProxy:", @"writeToDatabaseWithEvent:":@"writeToDBWithEventTest:"};
         
         for (NSString *key in swizzleDic) {
             
@@ -62,27 +64,20 @@ static GrowingBaseEvent *originalEvent = nil;
     });
 }
 
-- (void)mainThreadHandleEvent:(GrowingBaseEvent *)event {
+- (void)sendEventsOfChannel_unsafeProxy:(id)channel {
     
-    originalEvent = event;
+    [self sendEventsOfChannel_unsafeProxy:channel];
     
-    [self mainThreadHandleEvent:event];
-    
-    if (!originalEventArray) {
-        originalEventArray = [NSMutableArray array];
-    }
-    [originalEventArray addObject:event];
-  
-    //  判断是否在主线程
-    if (strcmp(dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL), dispatch_queue_get_label(dispatch_get_main_queue())) != 0) {
-        //  非主线程
-        isMainThread = @"0";
+    //  判断是否在Growing线程
+    if (![[NSThread currentThread].name hasPrefix:@"com.growing"]) {
+        isGrowingThread = @"0";
     }
 }
 
 
 //  判断入库事件带上 gesid 和 esid
 - (void)writeToDBWithEventTest:(GrowingBaseEvent *)event {
+    
     
     [self writeToDBWithEventTest:event];
     
@@ -91,20 +86,18 @@ static GrowingBaseEvent *originalEvent = nil;
     }
     [dbEventArray addObject:event];
     
+    //  判断是否在Growing线程
+    if (![[NSThread currentThread].name hasPrefix:@"com.growing"]) {
+
+        isGrowingThread = @"0";
+    }
 }
 
-- (NSArray <NSString *> *)getEventTypes {
-//    GrowingBaseEventManager *eventManager = [GrowingBaseEventManager shareInstance];
-//    GrowingBaseEventCounter * eventCounter = [eventManager valueForKey:@"eventCounter"];
-//    NSDictionary *eventTypeIdMap = [eventCounter valueForKey:@"eventSequenceIdMap"];
-//    return eventTypeIdMap.allKeys;
-    return  nil;
-}
 
 @end
 
 
-@interface A1TrackAPIMainThreadTest : KIFTestCase
+@interface A1TrackAPIMainThreadTest : KIFTestCase <GrowingEventInterceptor>
 
 @end
 
@@ -112,6 +105,7 @@ static GrowingBaseEvent *originalEvent = nil;
 
 + (void)setUp {
     [super setUp];
+    [[GrowingEventManager shareInstance] addInterceptor:self];
 }
 
 + (void)tearDown {
@@ -129,41 +123,108 @@ static GrowingBaseEvent *originalEvent = nil;
     [super tearDown];
 }
 
+#pragma mark - GrowingEventInterceptor
+
+- (void)growingEventManagerEventDidBuild:(GrowingBaseEvent *)event {
+    originalEvent = event;
+    if (!originalEventArray) {
+        originalEventArray = [NSMutableArray array];
+    }
+    [originalEventArray addObject:event];
+}
+
 #pragma mark -GrowingCoreKit API Test
 - (void)test1SetUserIdTest {
-    isMainThread = @"1";
+    isGrowingThread = @"1";
     //  hook 入库方法，在 handleEvent:   GrowingBaseEventManager
     //  设置一个变量进行判断
     [[GrowingAutotracker sharedInstance] cleanLoginUserId];
     XCTestExpectation *expectation = [self expectationWithDescription:@"setUserId: fail"];
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        [[GrowingAutotracker sharedInstance] setLoginUserId:@"9"];
+        NSString *userId = @"123456789";
+        [[GrowingAutotracker sharedInstance] setLoginUserId:userId];
+        [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
+            XCTAssertEqual([GrowingSession currentSession].loginUserId,userId);
+        }];
         [expectation fulfill];
     });
     
-    [self waitForExpectationsWithTimeout:15 handler:^(NSError *error) {
-    //  操作15秒超时，支持不通过
+    [self waitForExpectationsWithTimeout:1 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Test failed——%@",expectation.description);
             XCTAssertEqual(@"1", @"0");
         }
     }];
-    
     [self eventTest];
-
 }
 
 - (void)test2ClearUserIdTest {
     
-    isMainThread = @"1";
+    isGrowingThread = @"1";
     XCTestExpectation *expectation = [self expectationWithDescription:@"clearUserId: fail"];
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         [[GrowingAutotracker sharedInstance] cleanLoginUserId];
+        [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
+            XCTAssertEqual([GrowingSession currentSession].loginUserId,nil);
+        }];
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:1 handler:^(NSError *error) {
+    //  操作15秒超时，支持不通过
+        if (error) {
+            NSLog(@"Test failed——%@",expectation.description);
+            XCTAssertEqual(@"1", @"0");
+        }
+    }];
+    [self eventTest];
+}
+
+- (void)test3SetConversionVariablesTest {
+    isGrowingThread = @"1";
+    XCTestExpectation *expectation = [self expectationWithDescription:@"setConversionVariables: fail"];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [[GrowingAutotracker sharedInstance] setConversionVariables:@{@"EvarAutoTest":@"evarAuto"}];
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:2 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Test failed——%@",expectation.description);
+            XCTAssertEqual(@"1", @"0");
+        }
+    }];
+    [self eventTest];
+}
+
+- (void)test4SetEvarAndStringTest {
+    isGrowingThread = @"1";
+    XCTestExpectation *expectation = [self expectationWithDescription:@"setEvarWithKey:andStringValue: fail"];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [[GrowingAutotracker sharedInstance] setConversionVariables:@{@"EvarKeyAutoTest":@"evarKeyAutoString"}];
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:2 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Test failed——%@",expectation.description);
+            XCTAssertEqual(@"1", @"0");
+        }
+    }];
+    [self eventTest];
+}
+
+- (void)test5SetEvarAndNumberTest {
+    
+    isGrowingThread = @"1";
+    XCTestExpectation *expectation = [self expectationWithDescription:@"setEvarWithKey:andNumberValue: fail"];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [[GrowingAutotracker sharedInstance] setConversionVariables:@{@"EvarNumberAutoTest" :@22}];
         [expectation fulfill];
     });
     
     [self waitForExpectationsWithTimeout:15 handler:^(NSError *error) {
-    //  操作15秒超时，支持不通过
+        //  操作15秒超时，支持不通过
         if (error) {
             NSLog(@"Test failed——%@",expectation.description);
             XCTAssertEqual(@"1", @"0");
@@ -171,200 +232,138 @@ static GrowingBaseEvent *originalEvent = nil;
     }];
     
     [self eventTest];
-
-}
-
-- (void)test3SetEvarTest {
-    
-       isMainThread = @"1";
-       XCTestExpectation *expectation = [self expectationWithDescription:@"setEvar: fail"];
-       dispatch_async(dispatch_get_global_queue(0, 0), ^{
-           [[GrowingAutotracker sharedInstance] setConversionVariables:@{@"EvarAutoTest":@"evarAuto"}];
-           [expectation fulfill];
-       });
-       
-       [self waitForExpectationsWithTimeout:15 handler:^(NSError *error) {
-       //  操作15秒超时，支持不通过
-           if (error) {
-               NSLog(@"Test failed——%@",expectation.description);
-               XCTAssertEqual(@"1", @"0");
-           }
-       }];
-       
-      [self eventTest];
-}
-
-- (void)test4SetEvarAndStringTest {
-    
-       isMainThread = @"1";
-       XCTestExpectation *expectation = [self expectationWithDescription:@"setEvarWithKey:andStringValue: fail"];
-       dispatch_async(dispatch_get_global_queue(0, 0), ^{
-           [[GrowingAutotracker sharedInstance] setConversionVariables:@{@"EvarKeyAutoTest":@"evarKeyAutoString"}];
-           [expectation fulfill];
-       });
-       
-       [self waitForExpectationsWithTimeout:15 handler:^(NSError *error) {
-       //  操作15秒超时，支持不通过
-           if (error) {
-               NSLog(@"Test failed——%@",expectation.description);
-               XCTAssertEqual(@"1", @"0");
-           }
-       }];
-      
-        [self eventTest];
-        
-}
-
-- (void)test5SetEvarAndNumberTest {
-    
-      isMainThread = @"1";
-      XCTestExpectation *expectation = [self expectationWithDescription:@"setEvarWithKey:andNumberValue: fail"];
-      dispatch_async(dispatch_get_global_queue(0, 0), ^{
-          [[GrowingAutotracker sharedInstance] setConversionVariables:@{@"EvarNumberAutoTest" :@22}];
-          [expectation fulfill];
-      });
-      
-      [self waitForExpectationsWithTimeout:15 handler:^(NSError *error) {
-      //  操作15秒超时，支持不通过
-          if (error) {
-              NSLog(@"Test failed——%@",expectation.description);
-              XCTAssertEqual(@"1", @"0");
-          }
-      }];
-      
-      [self eventTest];
     
 }
 
 - (void)test6SetPeopleTest {
     
-       isMainThread = @"1";
-       XCTestExpectation *expectation = [self expectationWithDescription:@"setPeopleVariable: fail"];
-       dispatch_async(dispatch_get_global_queue(0, 0), ^{
-           [[GrowingAutotracker sharedInstance] setLoginUserAttributes:@{@"PeopleAutoTest":@"peopleAuto"}];
-           [expectation fulfill];
-       });
-       
-       [self waitForExpectationsWithTimeout:15 handler:^(NSError *error) {
-       //  操作15秒超时，支持不通过
-           if (error) {
-               NSLog(@"Test failed——%@",expectation.description);
-               XCTAssertEqual(@"1", @"0");
-           }
-       }];
-       
-     [self eventTest];
+    isGrowingThread = @"1";
+    XCTestExpectation *expectation = [self expectationWithDescription:@"setPeopleVariable: fail"];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [[GrowingAutotracker sharedInstance] setLoginUserAttributes:@{@"PeopleAutoTest":@"peopleAuto"}];
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:15 handler:^(NSError *error) {
+        //  操作15秒超时，支持不通过
+        if (error) {
+            NSLog(@"Test failed——%@",expectation.description);
+            XCTAssertEqual(@"1", @"0");
+        }
+    }];
+    
+    [self eventTest];
     
 }
 
 - (void)test7SetPeopleAndStringTest {
     
-       isMainThread = @"1";
-       XCTestExpectation *expectation = [self expectationWithDescription:@"setPeopleVariableWithKey:andStringValue: fail"];
-       dispatch_async(dispatch_get_global_queue(0, 0), ^{
-           [[GrowingAutotracker sharedInstance] setLoginUserAttributes:@{@"PeopleKeyAutoTest" :@"PeopleKeyAutoString"}];
-           [expectation fulfill];
-       });
-       
-       [self waitForExpectationsWithTimeout:15 handler:^(NSError *error) {
-       //  操作15秒超时，支持不通过
-           if (error) {
-               NSLog(@"Test failed——%@",expectation.description);
-               XCTAssertEqual(@"1", @"0");
-           }
-       }];
-       
-      [self eventTest];
+    isGrowingThread = @"1";
+    XCTestExpectation *expectation = [self expectationWithDescription:@"setPeopleVariableWithKey:andStringValue: fail"];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [[GrowingAutotracker sharedInstance] setLoginUserAttributes:@{@"PeopleKeyAutoTest" :@"PeopleKeyAutoString"}];
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:15 handler:^(NSError *error) {
+        //  操作15秒超时，支持不通过
+        if (error) {
+            NSLog(@"Test failed——%@",expectation.description);
+            XCTAssertEqual(@"1", @"0");
+        }
+    }];
+    
+    [self eventTest];
     
 }
 
 - (void)test8SetPeopleAndNumberTest {
     
-      isMainThread = @"1";
-      XCTestExpectation *expectation = [self expectationWithDescription:@"setPeopleVariableWithKey:andNumberValue: fail"];
-      dispatch_async(dispatch_get_global_queue(0, 0), ^{
-          [[GrowingAutotracker sharedInstance] setLoginUserAttributes:@{@"PeopleNumberAutoTest" :@22}];
-          [expectation fulfill];
-      });
-      
-      [self waitForExpectationsWithTimeout:15 handler:^(NSError *error) {
-      //  操作15秒超时，支持不通过
-          if (error) {
-              NSLog(@"Test failed——%@",expectation.description);
-              XCTAssertEqual(@"1", @"0");
-          }
-      }];
-      
-     [self eventTest];
+    isGrowingThread = @"1";
+    XCTestExpectation *expectation = [self expectationWithDescription:@"setPeopleVariableWithKey:andNumberValue: fail"];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [[GrowingAutotracker sharedInstance] setLoginUserAttributes:@{@"PeopleNumberAutoTest" :@22}];
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:15 handler:^(NSError *error) {
+        //  操作15秒超时，支持不通过
+        if (error) {
+            NSLog(@"Test failed——%@",expectation.description);
+            XCTAssertEqual(@"1", @"0");
+        }
+    }];
+    
+    [self eventTest];
 }
 
 - (void)test9TrackTest {
     
-        isMainThread = @"1";
-       XCTestExpectation *expectation = [self expectationWithDescription:@"track: fail"];
-       dispatch_async(dispatch_get_global_queue(0, 0), ^{
-           [[GrowingAutotracker sharedInstance] trackCustomEvent:@"TrackAutoTest"];
-           [expectation fulfill];
-       });
-       
-       [self waitForExpectationsWithTimeout:15 handler:^(NSError *error) {
-       //  操作15秒超时，支持不通过
-           if (error) {
-               NSLog(@"Test failed——%@",expectation.description);
-               XCTAssertEqual(@"1", @"0");
-           }
-       }];
-       
-      [self eventTest];
+    isGrowingThread = @"1";
+    XCTestExpectation *expectation = [self expectationWithDescription:@"track: fail"];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [[GrowingAutotracker sharedInstance] trackCustomEvent:@"TrackAutoTest"];
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:15 handler:^(NSError *error) {
+        //  操作15秒超时，支持不通过
+        if (error) {
+            NSLog(@"Test failed——%@",expectation.description);
+            XCTAssertEqual(@"1", @"0");
+        }
+    }];
+    
+    [self eventTest];
     
 }
 
 - (void)test10TrackAndNumberTest {
     
-        isMainThread = @"1";
-       XCTestExpectation *expectation = [self expectationWithDescription:@"track:withNumber: fail"];
-       dispatch_async(dispatch_get_global_queue(0, 0), ^{
-           [[GrowingAutotracker sharedInstance] trackCustomEvent:@"TrackAutoTest"];
-           [[GrowingAutotracker sharedInstance] trackCustomEvent:@"TrackAutoTest"];
-           [expectation fulfill];
-       });
-       
-       [self waitForExpectationsWithTimeout:15 handler:^(NSError *error) {
-       //  操作15秒超时，支持不通过
-           if (error) {
-               NSLog(@"Test failed——%@",expectation.description);
-               XCTAssertEqual(@"1", @"0");
-           }
-       }];
-       
-       [self eventTest];
+    isGrowingThread = @"1";
+    XCTestExpectation *expectation = [self expectationWithDescription:@"track:withNumber: fail"];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [[GrowingAutotracker sharedInstance] trackCustomEvent:@"TrackAutoTest"];
+        [[GrowingAutotracker sharedInstance] trackCustomEvent:@"TrackAutoTest"];
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:15 handler:^(NSError *error) {
+        //  操作15秒超时，支持不通过
+        if (error) {
+            NSLog(@"Test failed——%@",expectation.description);
+            XCTAssertEqual(@"1", @"0");
+        }
+    }];
+    
+    [self eventTest];
     
 }
 
 - (void)test11TrackAndNumberAndVariableTest {
     
-        isMainThread = @"1";
-          XCTestExpectation *expectation = [self expectationWithDescription:@"track:withNumber:andVariable: fail"];
-          dispatch_async(dispatch_get_global_queue(0, 0), ^{
-              [[GrowingAutotracker sharedInstance] trackCustomEvent:@"TrackAutoTest" withAttributes:@{@"TrackAutoTest":@"trackAutoTest"}];
-              [expectation fulfill];
-          });
-          
-          [self waitForExpectationsWithTimeout:15 handler:^(NSError *error) {
-          //  操作15秒超时，支持不通过
-              if (error) {
-                  NSLog(@"Test failed——%@",expectation.description);
-                  XCTAssertEqual(@"1", @"0");
-              }
-          }];
-          
-          [self eventTest];
+    isGrowingThread = @"1";
+    XCTestExpectation *expectation = [self expectationWithDescription:@"track:withNumber:andVariable: fail"];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [[GrowingAutotracker sharedInstance] trackCustomEvent:@"TrackAutoTest" withAttributes:@{@"TrackAutoTest":@"trackAutoTest"}];
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:15 handler:^(NSError *error) {
+        //  操作15秒超时，支持不通过
+        if (error) {
+            NSLog(@"Test failed——%@",expectation.description);
+            XCTAssertEqual(@"1", @"0");
+        }
+    }];
+    
+    [self eventTest];
     
 }
 
 - (void)test11TrackAndVariableTest {
     
-      isMainThread = @"1";
+      isGrowingThread = @"1";
       XCTestExpectation *expectation = [self expectationWithDescription:@"track:withVariable: fail"];
       dispatch_async(dispatch_get_global_queue(0, 0), ^{
           [[GrowingAutotracker sharedInstance] trackCustomEvent:@"TrackAutoTest" withAttributes:@{@"TrackAutoTest":@"trackAutoTest"}];
@@ -385,7 +384,7 @@ static GrowingBaseEvent *originalEvent = nil;
 
 - (void)test12SetVisitorTest {
     
-    isMainThread = @"1";
+    isGrowingThread = @"1";
     XCTestExpectation *expectation = [self expectationWithDescription:@"setVisitor: fail"];
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         [[GrowingAutotracker sharedInstance] setVisitorAttributes:@{@"VisitorAutoTest":@"visitorAutoTest"}];
@@ -406,102 +405,33 @@ static GrowingBaseEvent *originalEvent = nil;
 
 #pragma mark - GrowingAutoTracker API Test
 - (void)test13PageVariableToViewControllerTest {
+    isGrowingThread = @"1";
+    UIViewController *vc = [UIViewController new];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"setPageVariable:toViewController: fail"];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        vc.growingPageAttributes = @{@"PageVariable": @"pageVariable"};
+        [expectation fulfill];
+    });
     
-       isMainThread = @"1";
-       UIViewController *vc = [UIViewController new];
-       XCTestExpectation *expectation = [self expectationWithDescription:@"setPageVariable:toViewController: fail"];
-       dispatch_async(dispatch_get_global_queue(0, 0), ^{
-  //         [[GrowingAutotracker sharedInstance] setPageVariable:@{@"PageVariable": @"pageVariable"} toViewController:vc];
-           [expectation fulfill];
-       });
-       
-       [self waitForExpectationsWithTimeout:15 handler:^(NSError *error) {
-       //  操作15秒超时，支持不通过
-           if (error) {
-               NSLog(@"Test failed——%@",expectation.description);
-               XCTAssertEqual(@"1", @"0");
-           }
-       }];
-       
-       [self eventTest];
+    [self waitForExpectationsWithTimeout:15 handler:^(NSError *error) {
+        //  操作15秒超时，支持不通过
+        if (error) {
+            NSLog(@"Test failed——%@",expectation.description);
+            XCTAssertEqual(@"1", @"0");
+        }
+    }];
     
-}
-
-- (void)test14SetPageVariableWithKeyAndStringValueToViewControllerTest {
-    
-       isMainThread = @"1";
-       UIViewController *vc = [UIViewController new];
-       XCTestExpectation *expectation = [self expectationWithDescription:@"setPageVariableWithKey:andStringValue:toViewController: fail"];
-       dispatch_async(dispatch_get_global_queue(0, 0), ^{
-  //         [[ sharedInstance] setPageVariableWithKey:@"PageVariableKey" andStringValue:@"pageVariableKeyString" toViewController:vc];
-           [expectation fulfill];
-       });
-       
-       [self waitForExpectationsWithTimeout:15 handler:^(NSError *error) {
-       //  操作15秒超时，支持不通过
-           if (error) {
-               NSLog(@"Test failed——%@",expectation.description);
-               XCTAssertEqual(@"1", @"0");
-           }
-       }];
-       
-       [self eventTest];
-    
-}
-
-- (void)test15SetPageVariableWithKeyAndNumberValueToViewControllerTest {
-    
-      isMainThread = @"1";
-      UIViewController *vc = [UIViewController new];
-      XCTestExpectation *expectation = [self expectationWithDescription:@"setPageVariableWithKey:andNumberValue:toViewController: fail"];
-      dispatch_async(dispatch_get_global_queue(0, 0), ^{
-    //      [[GrowingAutotracker sharedInstance] setPageVariableWithKey:@"PageVariableKey" andNumberValue:[NSNumber numberWithInt:55] toViewController:vc];
-          [expectation fulfill];
-      });
-      
-      [self waitForExpectationsWithTimeout:15 handler:^(NSError *error) {
-      //  操作15秒超时，支持不通过
-          if (error) {
-              NSLog(@"Test failed——%@",expectation.description);
-              XCTAssertEqual(@"1", @"0");
-          }
-      }];
-      
-      [self eventTest];
-    
+    [self eventTest];
 }
 
 #pragma mark - private methods
 - (void)eventTest {
-    
-//    //  不允许出现子线程调用API
-//    XCTAssertEqual(isMainThread, @"1");
-//    XCTAssertNotNil(originalEvent);
-//    XCTAssertTrue(originalEvent.eventType.length > 0);
-//    [originalEventArray enumerateObjectsUsingBlock:^(GrowingBaseEvent *event, NSUInteger idx, BOOL * _Nonnull stop) {
-//
-//    }];
-//
-//    [dbEventArray enumerateObjectsUsingBlock:^(GrowingBaseEvent *event, NSUInteger idx, BOOL * _Nonnull stop) {
-//        [self eventCounterTestEvent:event];
-//    }];
-
+    sleep(1);
+    //  不允许出现子线程调用API
+    XCTAssertEqual(isGrowingThread, @"1");
 }
 
-- (void)eventCounterTestEvent:(GrowingBaseEvent *)event {
-    
-//    NSArray *eventTypes = [[GrowingEventManager shareInstance] getEventTypes];
-//    if ([eventTypes containsObject:event.eventTypeKey]) {
-//
-//        XCTAssertNotNil(event.globalSequenceId);
-//        XCTAssertNotNil(event.eventSequenceId);
-//
-//    } else {
-//
-//        XCTAssertNil(event.globalSequenceId);
-//        XCTAssertNil(event.eventSequenceId);
-//    }
-}
+
 
 
 @end

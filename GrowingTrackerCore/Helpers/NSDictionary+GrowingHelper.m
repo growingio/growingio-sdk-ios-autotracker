@@ -30,12 +30,10 @@
 }
 
 - (NSString *)growingHelper_beautifulJsonString {
-    NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:self options:NSJSONWritingPrettyPrinted error:&error];
+    NSData *jsonData = [self growingHelper_jsonDataWithOptions:NSJSONWritingPrettyPrinted];
     NSString *jsonString;
 
     if (!jsonData) {
-        GIOLogError(@"%@", error);
         return nil;
     } else {
         jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];

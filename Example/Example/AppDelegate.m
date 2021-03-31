@@ -37,7 +37,7 @@ static NSString *const kGrowingProjectId = @"0a1b4118dd954ec3bcc69da5138bdb96";
     [GrowingAutotracker startWithConfiguration:configuration launchOptions:launchOptions];
 //    [GrowingTracker startWithConfiguration:configuration launchOptions:launchOptions];
     [[GrowingAutotracker sharedInstance] setLocation:[@30.11 doubleValue] longitude:[@32.22 doubleValue]];
-    [self registerRemoteNotification];
+ //   [self registerRemoteNotification];
 
     return YES;
 }
@@ -145,19 +145,19 @@ continueUserActivity:(NSUserActivity *)userActivity
 #pragma mark - UISceneSession lifecycle
 
 
-- (UISceneConfiguration *)application:(UIApplication *)application configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession options:(UISceneConnectionOptions *)options {
-    // Called when a new scene session is being created.
-    // Use this method to select a configuration to create the new scene with.
-    UISceneConfiguration *config = [[UISceneConfiguration alloc] initWithName:@"Default Configuration" sessionRole:connectingSceneSession.role];
-    return config;
-}
-
-
-- (void)application:(UIApplication *)application didDiscardSceneSessions:(NSSet<UISceneSession *> *)sceneSessions {
-    // Called when the user discards a scene session.
-    // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
-    // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
-}
+//- (UISceneConfiguration *)application:(UIApplication *)application configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession options:(UISceneConnectionOptions *)options {
+//    // Called when a new scene session is being created.
+//    // Use this method to select a configuration to create the new scene with.
+//    UISceneConfiguration *config = [[UISceneConfiguration alloc] initWithName:@"Default Configuration" sessionRole:connectingSceneSession.role];
+//    return config;
+//}
+//
+//
+//- (void)application:(UIApplication *)application didDiscardSceneSessions:(NSSet<UISceneSession *> *)sceneSessions {
+//    // Called when the user discards a scene session.
+//    // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
+//    // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
+//}
 
 #pragma mark - 生命周期
 

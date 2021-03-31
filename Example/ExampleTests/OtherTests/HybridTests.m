@@ -25,7 +25,6 @@
 #import <KIF/KIF.h>
 #import "GrowingAppCloseEvent.h"
 #import "GrowingWebCircle.h"
-#import "GrowingSRWebSocket.h"
 #import "NSURL+GrowingHelper.h"
 #import "UIView+GrowingHelper.h"
 #import "GrowingNode.h"
@@ -35,18 +34,16 @@
 #import "GrowingDataTraffic.h"
 #import "GrowingLoggerDebugger.h"
 #import "GrowingAppCloseEvent.h"
+#import "GrowingWebCircleElement.h"
+#import "GrowingHybridPageAttributesEvent.h"
 //#import "GrowingMobileDebugger.h"
 
 
-//#import "GrowingWebCircle.h"
-//#import "GrowingSRWebSocket.h" 
-
-
-@interface HybirdTests : KIFTestCase
+@interface HybridTests : KIFTestCase
 
 @end
 
-@implementation HybirdTests
+@implementation HybridTests
 
 - (void)setUp {
     [[GrowingAutotracker sharedInstance] setLoginUserId:@"test"];
@@ -106,38 +103,22 @@
 //        page = [current growingPageHelper_getPageObject];
 //    }
 //    NSMutableDictionary *dict = [[GrowingWebCircle shareInstance] dictFromPage:current xPath:page.path];
-    [GrowingWebCircle retrieveAllElementsAsync:nil];
+//    [GrowingWebCircle retrieveAllElementsAsync:nil];
+    [GrowingWebCircle shareInstance];
+    [GrowingWebCircle  runWithCircle:[NSURL URLWithString:@"ws://testws"] readyBlock:nil finishBlock:nil];
     [GrowingWebCircle isRunning];
     [GrowingWebCircle stop];
-    [GrowingWebCircle setNeedUpdateScreen];
-    [GrowingWebCircle impressScale];
-    [GrowingWebCircle isContainer:nil];
+//    [GrowingWebCircle isContainer:nil];
 
-    
-}
-
--(void)testGrowingSRWebSocket{
-    NSURL *url = [NSURL URLWithString:@"https://www.growingio.com"];
-    GrowingSRWebSocket *webSocket = [[GrowingSRWebSocket alloc]initWithURL:url];
-    [webSocket open];
-    XCTAssertNotNil(webSocket.url);
-//    XCTAssertNotNil(webSocket.readyState);
-//    XCTAssertNotNil(webSocket.protocol);
-//    [webSocket send:nil];
-//    [webSocket sendPing:nil];
-    [webSocket.delegate webSocketDidOpen:webSocket];
-    [webSocket.delegate webSocket:webSocket didReceivePong:nil];
-    [webSocket.delegate webSocket:webSocket didReceiveMessage:nil];
-    [webSocket.delegate webSocket:webSocket didFailWithError:nil];
-    [webSocket.delegate webSocket:webSocket didCloseWithCode:@10086 reason:@"fail" wasClean:YES];
-    [webSocket scheduleInRunLoop:NSRunLoop.currentRunLoop forMode:NSRunLoopCommonModes];
-    [webSocket unscheduleFromRunLoop:NSRunLoop.currentRunLoop forMode:NSRunLoopCommonModes];
-    [NSRunLoop growing_SR_networkRunLoop];
-    [webSocket close];
-    [webSocket closeWithCode:@502 reason:@"fail"];
-
+    Class realClazz = NSClassFromString(@"GrowingWebCircle");
+//    [realClazz respondsToSelector:@selector(setNeedUpdateScreen)];
+    [realClazz performSelector:@selector(impressScale)];
+    [[realClazz performSelector:@selector(shareInstance)] performSelector:@selector(_setNeedUpdateScreen)];;
+    [[realClazz performSelector:@selector(shareInstance)] performSelector:@selector(sendWebcircleWithType:)withObject:@"eventType"];;
 
 }
+
+
 -(void)testGrowingHandleUrl{
     NSURL *url = [NSURL URLWithString: @"growing.9683a369c615f77d://growing/oauth2/token?messageId=GPnmM2RY&gtouchType=preview&msgType=popupWindow&"];
 //    [Growing handleURL:url];
@@ -169,14 +150,37 @@
 
 -(void)testGrowingHybridBridgeProvider{
     [GrowingHybridBridgeProvider.sharedInstance handleJavascriptBridgeMessage:@"testHibrid"];
+    
+    GrowingHybridPageAttributesEvent.builder.setQuery(@"QUERY")
+    .setPath(@"KEY_PATH")
+    .setPageShowTimestamp(@"KEY_PAGE_SHOW_TIMESTAMP")
+    .setAttributes(@"KEY_ATTRIBUTES")
+    .setDomain(@"domain")
+    .setUserId(@"testUserId")
+    .setPlatform(@"testPlatform")
+    .setDeviceId(@"testDeviceId")
+    .setUrlScheme(@"testUrlScheme")
+    .setAppState(@"testAppState")
+    .setExtraParams(@"testExtraParams")
+    .setSessionId(@"testSessionId")
+    .setGlobalSequenceId(@"testGlobalSequenceId")
+    .setEventSequenceId(@"testEventSequenceId")
+    .setPlatformVersion(@"testPlatformVersion");
     XCTAssertEqual(1, 1);
 
 }
+-(void)testGrowingWebCircleElement{
+    
+    [GrowingWebCircleElement builder];
+   GrowingWebCircleElementBuilder *WebCircleElement = [[GrowingWebCircleElementBuilder alloc] init];
+    [[GrowingWebCircleElement alloc]initWithBuilder:WebCircleElement];
+    [[GrowingWebCircleElement alloc]toDictionary];
 
+}
 
 -(void)testGrowingDataTraffic{
-//    [GrowingDataTraffic cellularNetworkUploadEventSize];
-//    NSString *date = [GrowingDataTraffic getTodayKey];
+    [GrowingDataTraffic cellularNetworkStorgeEventSize:1024*1024];
+    [GrowingDataTraffic cellularNetworkUploadEventSize];
 //    XCTAssertEqual(1, 1);
     
 }

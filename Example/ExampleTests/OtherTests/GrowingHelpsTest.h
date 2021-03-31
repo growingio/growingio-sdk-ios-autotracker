@@ -1,9 +1,9 @@
 //
-// HTTPStubsHelper.h
-// ExampleTests
+// Header.h
+// Example
 //
-//  Created by GrowingIO on 11/25/20.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by gio on 2021/2/2.
+//  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,18 +17,8 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import <KIF/KIF.h>
 
-#import <Foundation/Foundation.h>
-//#import "HTTPStubs.h"
-//#import "NSURLRequest+HTTPBodyTesting.h"
-NS_ASSUME_NONNULL_BEGIN
+@interface GrowingHelpsTest : KIFTestCase
 
-@interface HTTPStubsHelper : NSObject
-
-@property(nonatomic,strong)NSArray *array;
-
-//-(void)stubRequests;
-//-(NSArray *)checkEvents;
 @end
-
-NS_ASSUME_NONNULL_END
