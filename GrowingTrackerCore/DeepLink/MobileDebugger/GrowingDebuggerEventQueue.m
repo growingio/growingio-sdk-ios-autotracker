@@ -61,11 +61,19 @@ static GrowingDebuggerEventQueue *shareInstance = nil;
     return self;
 }
 
+- (void)dequeue {
+    if (self.debuggerBlock) {
+        LOCK(NSArray *arr = self.cacheArray.copy);
+        self.debuggerBlock(arr);
+        LOCK([self.cacheArray removeAllObjects]);
+    }
+}
 
 - (void)enqueue:(id)anObject {
     if (self.debuggerBlock) {
-        LOCK([self.cacheArray addObject:anObject]);
-        self.debuggerBlock(self.cacheArray.copy);
+        LOCK([self.cacheArray addObject:anObject];
+             NSArray *arr = self.cacheArray.copy;);
+        self.debuggerBlock(arr);
         LOCK([self.cacheArray removeAllObjects]);
     } else {
         while ((NSInteger)self.cacheArray.count >= self.maxCachesNumber) {
