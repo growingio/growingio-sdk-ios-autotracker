@@ -169,7 +169,6 @@
         }
         
         [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:[GrowingWebCircle shareInstance]];
-        [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:[GrowingMobileDebugger shareInstance]];
     });
 }
 

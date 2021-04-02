@@ -26,6 +26,9 @@
 #import "GrowingLoginUserAttributesEvent.h"
 #import "GrowingVisitEvent.h"
 #import "GrowingVisitorAttributesEvent.h"
+
+#import "GrowingLogMacros.h"
+#import "GrowingCocoaLumberjack.h"
 @implementation GrowingEventGenerator
 
 + (void)generateVisitEvent:(long long)ts latitude:(double)latitude longitude:(double)longitude;
