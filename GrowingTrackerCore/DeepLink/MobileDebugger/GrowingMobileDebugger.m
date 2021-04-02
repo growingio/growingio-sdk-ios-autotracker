@@ -64,7 +64,6 @@ dispatch_semaphore_signal(self->_lock);
 //表示web和app是否同时准备好数据发送，此时表示可以发送数据
 @property (nonatomic, assign) BOOL isReady;
 @property (nonatomic, strong) NSMutableArray * cacheArray;
-@property (nonatomic, assign) BOOL isShouldCache;
 @property (nonatomic, strong) NSMutableArray * cacheEvent;
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, retain) GrowingStatusBar *statusWindow;
@@ -104,7 +103,6 @@ static GrowingMobileDebugger *shareInstance = nil;
 }
 
 - (void)runWithMobileDebugger:(NSURL *)url{
-    self.isShouldCache = YES;
     [[GrowingEventManager shareInstance] addInterceptor:self];
     
     
@@ -265,16 +263,18 @@ static GrowingMobileDebugger *shareInstance = nil;
     }
     
     if (self.cacheEvent.count > 0) {
-        for (int i = 0; i < self.cacheEvent.count; i++) {
-            NSMutableDictionary *attrs = [[NSMutableDictionary alloc] initWithDictionary:self.cacheEvent[i]];
+        //防止遍历的时候进行增删改查
+        LOCK(NSArray *events = self.cacheEvent.copy;
+             [self.cacheEvent removeAllObjects];);
+        for (int i = 0; i < events.count; i++) {
+            NSMutableDictionary *attrs = [[NSMutableDictionary alloc] initWithDictionary:events[i]];
             NSMutableDictionary *cacheDic = [NSMutableDictionary dictionary];
             cacheDic[@"msgType"] = @"debugger_data";
             cacheDic[@"sdkVersion"] = GrowingTrackerVersionName;
-            LOCK(cacheDic[@"data"] = attrs;
-            cacheDic[@"data"][@"url"] = [[self class] absoluteURL]);
+            cacheDic[@"data"] = attrs;
+            cacheDic[@"data"][@"url"] = [[self class] absoluteURL];
             [self sendJson:cacheDic];
         }
-        [self.cacheEvent removeAllObjects];
     }
 }
 
@@ -397,7 +397,6 @@ static GrowingMobileDebugger *shareInstance = nil;
             wasClean:(BOOL)wasClean {
     GIOLogDebug(@"已断开链接");
     _isReady = NO;
-    _isShouldCache = NO;
     if (code != GrowingSRStatusCodeNormal) {
         [self _stopWithError:@"当前设备已与Web端断开连接,如需继续调试请扫码重新连接。"];
     }
@@ -406,7 +405,6 @@ static GrowingMobileDebugger *shareInstance = nil;
 - (void)webSocket:(GrowingSRWebSocket *)webSocket didFailWithError:(NSError *)error {
     GIOLogDebug(@"error : %@", error);
     _isReady = NO;
-    _isShouldCache = NO;
     [self _stopWithError:@"服务器链接失败"];
 }
 
