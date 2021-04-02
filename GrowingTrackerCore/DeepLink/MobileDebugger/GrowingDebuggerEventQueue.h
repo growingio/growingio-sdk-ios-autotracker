@@ -30,6 +30,8 @@ typedef void(^debuggerBlock)(NSArray *events);
 
 + (instancetype)currentQueue;
 
+- (void)dequeue;
+
 @property (nonatomic, copy, nullable) debuggerBlock debuggerBlock;
 
 @end

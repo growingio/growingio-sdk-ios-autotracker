@@ -308,6 +308,8 @@ static GrowingMobileDebugger *shareInstance = nil;
                     LOCK([self.cacheEvent addObjectsFromArray:events]);
                 }
             };
+            //队列出队
+            [[GrowingDebuggerEventQueue currentQueue] dequeue];
             return;
         }
         //发送log信息

@@ -32,11 +32,9 @@
 #import "GrowingASLLogger.h"
 #import "GrowingHybridBridgeProvider.h"
 #import "GrowingDataTraffic.h"
-#import "GrowingLoggerDebugger.h"
 #import "GrowingAppCloseEvent.h"
 #import "GrowingWebCircleElement.h"
 #import "GrowingHybridPageAttributesEvent.h"
-#import "GrowingMobileDebugger.h"
 #import "GrowingMobileDebugger.h"
 #import "GrowingDeepLinkHandler.h"
 
@@ -186,11 +184,6 @@
     
 }
 
--(void)testGrowingLoggerDebugger{
-    [GrowingLoggerDebugger startLoggerDebuggerWithKey:@"testGrowingLoggerDebugger"];
-    [GrowingLoggerDebugger stopLoggerDebugger];
-
-}
 
 -(void)testGrowingMobileDebugger{
     
