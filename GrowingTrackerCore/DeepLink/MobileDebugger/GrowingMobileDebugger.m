@@ -50,6 +50,11 @@
 #import "UIWindow+GrowingNode.h"
 #import "GrowingStatusBarAutotracker.h"
 #import "GrowingTimeUtil.h"
+#import "GrowingDebuggerEventQueue.h"
+
+#define LOCK(...) dispatch_semaphore_wait(self->_lock, DISPATCH_TIME_FOREVER); \
+__VA_ARGS__; \
+dispatch_semaphore_signal(self->_lock);
 
 @interface GrowingMobileDebugger () <GrowingSRWebSocketDelegate,
                                 GrowingEventInterceptor,
@@ -59,15 +64,17 @@
 //表示web和app是否同时准备好数据发送，此时表示可以发送数据
 @property (nonatomic, assign) BOOL isReady;
 @property (nonatomic, strong) NSMutableArray * cacheArray;
+@property (nonatomic, assign) BOOL isShouldCache;
 @property (nonatomic, strong) NSMutableArray * cacheEvent;
 @property (nonatomic, strong) NSTimer *timer;
-@property(strong, nonatomic, readonly) NSLock *lock;
 @property (nonatomic, retain) GrowingStatusBar *statusWindow;
 @property (nonatomic, assign) unsigned long snapNumber;  //数据发出序列号
 
 @end
 
-@implementation GrowingMobileDebugger
+@implementation GrowingMobileDebugger {
+    dispatch_semaphore_t _lock;
+}
 
 static GrowingMobileDebugger *shareInstance = nil;
 
@@ -82,8 +89,8 @@ static GrowingMobileDebugger *shareInstance = nil;
 - (instancetype)init
 {
     if (self = [super init]) {
-        _lock = [[NSLock alloc] init];
-        self.cacheEvent =  [NSMutableArray arrayWithCapacity:0];
+        _lock = dispatch_semaphore_create(1);
+        _cacheEvent =  [NSMutableArray arrayWithCapacity:0];
     }
     return self;
 }
@@ -97,6 +104,10 @@ static GrowingMobileDebugger *shareInstance = nil;
 }
 
 - (void)runWithMobileDebugger:(NSURL *)url{
+    self.isShouldCache = YES;
+    [[GrowingEventManager shareInstance] addInterceptor:self];
+    
+    
     if (self.webSocket) {
         [self.webSocket close];
         self.webSocket.delegate = nil;
@@ -109,7 +120,6 @@ static GrowingMobileDebugger *shareInstance = nil;
 #pragma mark - GrowingDeepLinkHandlerProtocol
 
 - (BOOL)growingHandlerUrl:(NSURL *)url {
-    [[GrowingEventManager shareInstance] addInterceptor:self];
     NSDictionary *params = url.growingHelper_queryDict;
     NSString *serviceType = params[@"serviceType"];
     NSString *wsurl = params[@"wsUrl"];
@@ -184,23 +194,9 @@ static GrowingMobileDebugger *shareInstance = nil;
     return image;
 }
 
-- (void)reissueEvent
-{
-    if(self.cacheEvent.count>0)
-    {
-        
-        for(int i = 0;i<self.cacheEvent.count;++i)
-        {
-            [self sendJson:self.cacheEvent[i]];
-        }
-        [self.cacheEvent removeAllObjects];
-    }
-}
-
 - (void)remoteReady {
     [self sendJson:[self userInfo]];
     [self sendScreenShot];
-    [self reissueEvent];
 }
 
 
@@ -229,7 +225,6 @@ static GrowingMobileDebugger *shareInstance = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
     [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
 
-    [[GrowingEventManager shareInstance] removeInterceptor:self];
     [[GrowingApplicationEventManager sharedInstance] removeApplicationEventObserver:self];
     if (self.statusWindow) {
         self.statusWindow.hidden = YES;
@@ -251,6 +246,7 @@ static GrowingMobileDebugger *shareInstance = nil;
 }
 
 - (void)sendJson:(id)json {
+    NSLog(@"sendJson : %@", json);
     if (self.webSocket.readyState == Growing_SR_OPEN &&
         ([json isKindOfClass:[NSDictionary class]] || [json isKindOfClass:[NSArray class]])) {
         NSString *jsonString = [json growingHelper_jsonString];
@@ -258,40 +254,46 @@ static GrowingMobileDebugger *shareInstance = nil;
     }
 }
 
-- (void)nextOne
-{
-   if(self.cacheArray.count > 0)
-   {
-       NSMutableDictionary *cacheDic = [NSMutableDictionary dictionary];
-       cacheDic[@"msgType"] = @"logger_data";
-       cacheDic[@"sdkVersion"] = GrowingTrackerVersionName;
-       [self.lock lock];
-       cacheDic[@"data"] = self.cacheArray.copy;
-       [self.cacheArray removeAllObjects];
-       [self.lock unlock];
-       [self sendJson:cacheDic];
-   }
+- (void)nextOne {
+    if (self.cacheArray.count > 0) {
+        NSMutableDictionary *cacheDic = [NSMutableDictionary dictionary];
+        cacheDic[@"msgType"] = @"logger_data";
+        cacheDic[@"sdkVersion"] = GrowingTrackerVersionName;
+        LOCK(cacheDic[@"data"] = self.cacheArray.copy;
+        [self.cacheArray removeAllObjects]);
+        [self sendJson:cacheDic];
+    }
+    
+    if (self.cacheEvent.count > 0) {
+        for (int i = 0; i < self.cacheEvent.count; i++) {
+            NSMutableDictionary *attrs = [[NSMutableDictionary alloc] initWithDictionary:self.cacheEvent[i]];
+            NSMutableDictionary *cacheDic = [NSMutableDictionary dictionary];
+            cacheDic[@"msgType"] = @"debugger_data";
+            cacheDic[@"sdkVersion"] = GrowingTrackerVersionName;
+            LOCK(cacheDic[@"data"] = attrs;
+            cacheDic[@"data"][@"url"] = [[self class] absoluteURL]);
+            [self sendJson:cacheDic];
+        }
+        [self.cacheEvent removeAllObjects];
+    }
 }
 
 
-- (void)startTimer
-{
-    if(!self.timer)
-    {
-        
-    self.cacheArray =  [NSMutableArray arrayWithCapacity:0];
-    self.timer =  [NSTimer timerWithTimeInterval:1.0 target:self selector:@selector(nextOne) userInfo:nil repeats:YES];
-    [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
+- (void)startTimer {
+    if (!self.timer) {
+        self.cacheArray = [NSMutableArray arrayWithCapacity:0];
+        self.timer =  [NSTimer timerWithTimeInterval:1.0 target:self selector:@selector(nextOne) userInfo:nil repeats:YES];
+        [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
     }
 }
--(void)stopTimer
-{
-    if(self.timer)
-    {
-    [self.timer invalidate];
-    self.timer = nil;
+
+- (void)stopTimer {
+    if (self.timer) {
+        [self.timer invalidate];
+        self.timer = nil;
     }
 }
+
 - (void)webSocket:(GrowingSRWebSocket *)webSocket didReceiveMessage:(id)message {
     if ([message isKindOfClass:[NSString class]] || ((NSString *)message).length > 0) {
         GIOLogDebug(@"didReceiveMessage: %@", message);
@@ -300,19 +302,23 @@ static GrowingMobileDebugger *shareInstance = nil;
         //如果收到了ready消息，说明可以发送数据了
         if ([[dict objectForKey:@"msgType"] isEqualToString:@"ready"]) {
             [self start];
+            [self startTimer];
+            [GrowingDebuggerEventQueue currentQueue].debuggerBlock = ^(NSArray * _Nonnull events) {
+                if (events.count > 0) {
+                    LOCK([self.cacheEvent addObjectsFromArray:events]);
+                }
+            };
             return;
         }
         //发送log信息
         NSString *msg = dict[@"msgType"];
         if ([msg isKindOfClass:NSString.class]) {
              if ([msg isEqualToString:@"logger_open"]) {
-                 
                 [self startTimer];
                 [GrowingWSLogger sharedInstance].loggerBlock = ^(NSArray * logMessageArray) {
                        if (logMessageArray.count > 0) {
-                           [self.cacheArray addObjectsFromArray:logMessageArray];
+                           LOCK([self.cacheArray addObjectsFromArray:logMessageArray]);
                        }
-                    
                 };
              }
              else if ([msg isEqualToString:@"logger_close"]) {
@@ -343,7 +349,6 @@ static GrowingMobileDebugger *shareInstance = nil;
 
 #pragma mark 应用信息
 - (NSDictionary *)userInfo {
-    
     GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
     NSDictionary *dict = @{
         @"msgType" : @"client_info",
@@ -383,12 +388,14 @@ static GrowingMobileDebugger *shareInstance = nil;
     };
     [self sendJson:dict];
 }
+
 - (void)webSocket:(GrowingSRWebSocket *)webSocket
     didCloseWithCode:(NSInteger)code
               reason:(NSString *)reason
             wasClean:(BOOL)wasClean {
     GIOLogDebug(@"已断开链接");
     _isReady = NO;
+    _isShouldCache = NO;
     if (code != GrowingSRStatusCodeNormal) {
         [self _stopWithError:@"当前设备已与Web端断开连接,如需继续调试请扫码重新连接。"];
     }
@@ -397,6 +404,7 @@ static GrowingMobileDebugger *shareInstance = nil;
 - (void)webSocket:(GrowingSRWebSocket *)webSocket didFailWithError:(NSError *)error {
     GIOLogDebug(@"error : %@", error);
     _isReady = NO;
+    _isShouldCache = NO;
     [self _stopWithError:@"服务器链接失败"];
 }
 
@@ -411,13 +419,7 @@ static GrowingMobileDebugger *shareInstance = nil;
     [self performSelector:@selector(_setNeedUpdateScreen) withObject:nil afterDelay:1];
 }
 
-//#pragma mark - GrowingEventInterceptor
-
-- (void)growingEventManagerEventDidBuild:(GrowingBaseEvent* _Nullable)event{
-    [self.lock lock];
-    [self sendEventDidBuild:event];
-    [self.lock unlock];
-}
+#pragma mark - GrowingEventInterceptor
 
 //获取url字段
 + (NSString *)absoluteURL {
@@ -433,25 +435,6 @@ static GrowingMobileDebugger *shareInstance = nil;
     NSString *accountId = [GrowingConfigurationManager sharedInstance].trackConfiguration.projectId ? : @"";
     NSString *path = [NSString stringWithFormat:@"v3/projects/%@/collect", accountId];
     return path;
-}
-
-//发送用户行为信息
-- (void)sendEventDidBuild:(GrowingBaseEvent *)event {
-    NSMutableDictionary *atts = [[NSMutableDictionary alloc] initWithDictionary:event.toDictionary];
-    NSDictionary *dict = @{
-        @"msgType" : @"debugger_data",
-        @"sdkVersion" : GrowingTrackerVersionName,
-        @"data" :atts
-    };
-    dict[@"data"][@"url"] = [[self class] absoluteURL];
-    if(self.isReady)
-    {
-        [self sendJson:dict];
-    }
-    else{
-        [self.cacheEvent addObject:dict.copy];
-    }
-
 }
 
 @end

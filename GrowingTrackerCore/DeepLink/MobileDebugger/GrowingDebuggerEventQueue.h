@@ -1,8 +1,8 @@
 //
-// GrowingLoggerDebugger.h
+// GrowingDebuggerEventPool.h
 // GrowingAnalytics
 //
-//  Created by GrowingIO on 2020/8/13.
+//  Created by sheng on 2021/3/31.
 //  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,11 +22,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingLoggerDebugger : NSObject
+typedef void(^debuggerBlock)(NSArray *events);
 
-+ (void)startLoggerDebuggerWithKey:(NSString *)key;
+@interface GrowingDebuggerEventQueue : NSObject
 
-+ (void)stopLoggerDebugger;
++ (void)startQueue;
+
++ (instancetype)currentQueue;
+
+@property (nonatomic, copy, nullable) debuggerBlock debuggerBlock;
 
 @end
 
