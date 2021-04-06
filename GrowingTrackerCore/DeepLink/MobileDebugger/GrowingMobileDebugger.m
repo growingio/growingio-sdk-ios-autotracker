@@ -25,7 +25,6 @@
 #import "GrowingAlert.h"
 #import "GrowingApplicationEventManager.h"
 #import "GrowingAttributesConst.h"
-#import "GrowingAutotrackEventType.h"
 #import "GrowingCocoaLumberjack.h"
 #import "GrowingConfigurationManager.h"
 #import "GrowingDeepLinkHandler.h"
@@ -33,9 +32,6 @@
 #import "GrowingDispatchManager.h"
 #import "GrowingEventManager.h"
 #import "GrowingNetworkConfig.h"
-#import "GrowingNodeHelper.h"
-#import "GrowingPageGroup.h"
-#import "GrowingPageManager.h"
 #import "GrowingStatusBar.h"
 #import "NSArray+GrowingHelper.h"
 #import "NSData+GrowingHelper.h"
@@ -44,14 +40,11 @@
 #import "NSURL+GrowingHelper.h"
 #import "UIApplication+GrowingHelper.h"
 #import "UIImage+GrowingHelper.h"
-#import "UIViewController+GrowingNode.h"
-#import "UIViewController+GrowingPageHelper.h"
 #import "UIWindow+GrowingHelper.h"
-#import "UIWindow+GrowingNode.h"
-#import "GrowingStatusBarAutotracker.h"
 #import "GrowingTimeUtil.h"
 #import "GrowingDebuggerEventQueue.h"
 #import "GrowingNetworkConfig.h"
+#import "GrowingRealTracker.h"
 
 #define LOCK(...) dispatch_semaphore_wait(self->_lock, DISPATCH_TIME_FOREVER); \
 __VA_ARGS__; \
