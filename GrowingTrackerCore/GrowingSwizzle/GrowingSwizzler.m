@@ -20,6 +20,7 @@
 
 #import "GrowingSwizzler.h"
 #import <objc/runtime.h>
+#import <objc/message.h>
 
 #define GROWING_MIN_ARGS 2
 #define GROWING_MAX_ARGS 5
@@ -184,6 +185,22 @@ static void (*growing_swizzledMethods[GROWING_MAX_ARGS - GROWING_MIN_ARGS + 1])(
     }
     free(methods);
     return isLocal;
+}
+
++ (id)realDelegateFromSelector:(SEL)selector proxy:(id)proxy {
+    if (!proxy) {
+        return nil;
+    }
+    //如果使用了NSProxy或者快速转发,判断forwardingTargetForSelector是否实现
+    //默认forwardingTargetForSelector都有实现，只是返回为nil
+    id realDelegate = proxy;
+    id obj = nil;
+    do {
+        obj = ((id(*)(id, SEL, SEL))objc_msgSend)(realDelegate, @selector(forwardingTargetForSelector:), selector);
+        if (!obj) break;
+        realDelegate = obj;
+    } while (obj);
+    return realDelegate;
 }
 
 + (void)growing_swizzleSelector:(SEL)aSelector

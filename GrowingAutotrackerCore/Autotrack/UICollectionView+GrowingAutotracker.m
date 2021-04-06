@@ -23,24 +23,25 @@
 #import "GrowingSwizzler.h"
 #import "UIView+GrowingNode.h"
 #import "GrowingViewClickProvider.h"
+
 @implementation UICollectionView (GrowingAutotracker)
 
 - (void)growing_setDelegate:(id<UICollectionViewDelegate>)delegate {
+    SEL selector = @selector(collectionView:didSelectItemAtIndexPath:);
+    id realDelegate = [GrowingSwizzler realDelegateFromSelector:selector proxy:delegate];
     
-    if ([delegate respondsToSelector:@selector(collectionView:didSelectItemAtIndexPath:)]) {
+    if ([realDelegate respondsToSelector:selector]) {
         
         void (^didSelectItemBlock)(id, SEL, id, id) = ^(id view, SEL command, UICollectionView *collectionView, NSIndexPath *indexPath) {
                                                  
             if (collectionView && indexPath) {
                 UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
                 [GrowingViewClickProvider viewOnClick:cell];
-//                [GrowingClickEvent sendEventWithNode:cell
-//                                        andEventType:GrowingEventTypeRowSelected];
             }
         };
         
-        [GrowingSwizzler growing_swizzleSelector:@selector(collectionView:didSelectItemAtIndexPath:)
-                                         onClass:delegate.class
+        [GrowingSwizzler growing_swizzleSelector:selector
+                                         onClass:[realDelegate class]
                                        withBlock:didSelectItemBlock
                                            named:@"growing_collectionView_didSelect"];
     }

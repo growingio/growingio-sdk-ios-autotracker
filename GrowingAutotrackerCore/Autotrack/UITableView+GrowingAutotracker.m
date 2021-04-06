@@ -27,8 +27,9 @@
 @implementation UITableView (GrowingAutotracker)
 
 - (void)growing_setDelegate:(id<UITableViewDelegate>)delegate {
-    
-    if ([delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)]) {
+    SEL selector = @selector(tableView:didSelectRowAtIndexPath:);
+    id realDelegate = [GrowingSwizzler realDelegateFromSelector:selector proxy:delegate];
+    if ([realDelegate respondsToSelector:selector]) {
         
         void (^didSelectBlock)(id, SEL, id, id) = ^(id view, SEL command, UITableView *tableView, NSIndexPath *indexPath) {
                                                  
@@ -37,9 +38,8 @@
                 [GrowingViewClickProvider viewOnClick:cell];
             }
         };
-        
-        [GrowingSwizzler growing_swizzleSelector:@selector(tableView:didSelectRowAtIndexPath:)
-                                         onClass:delegate.class
+        [GrowingSwizzler growing_swizzleSelector:selector
+                                         onClass:[realDelegate class]
                                        withBlock:didSelectBlock
                                            named:@"growing_tableView_didSelect"];
     }

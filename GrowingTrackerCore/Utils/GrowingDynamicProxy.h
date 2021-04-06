@@ -22,7 +22,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingDynamicProxy : NSObject
+@interface GrowingDynamicProxy : NSProxy
 
 @property (nonatomic, strong, readonly) id target;
 
