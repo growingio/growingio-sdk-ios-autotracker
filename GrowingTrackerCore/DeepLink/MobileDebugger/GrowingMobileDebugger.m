@@ -51,6 +51,7 @@
 #import "GrowingStatusBarAutotracker.h"
 #import "GrowingTimeUtil.h"
 #import "GrowingDebuggerEventQueue.h"
+#import "GrowingNetworkConfig.h"
 
 #define LOCK(...) dispatch_semaphore_wait(self->_lock, DISPATCH_TIME_FOREVER); \
 __VA_ARGS__; \
@@ -68,7 +69,7 @@ dispatch_semaphore_signal(self->_lock);
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, retain) GrowingStatusBar *statusWindow;
 @property (nonatomic, assign) unsigned long snapNumber;  //数据发出序列号
-
+@property (nonatomic, copy) NSString *absoluteURL;
 @end
 
 @implementation GrowingMobileDebugger {
@@ -92,6 +93,14 @@ static GrowingMobileDebugger *shareInstance = nil;
         _cacheEvent =  [NSMutableArray arrayWithCapacity:0];
     }
     return self;
+}
+
+//获取url字段
+- (NSString *)absoluteURL {
+    if (!_absoluteURL) {
+        _absoluteURL = [GrowingNetworkConfig absoluteURL];;
+    }
+    return _absoluteURL;
 }
 
 + (void)stop {
@@ -272,7 +281,7 @@ static GrowingMobileDebugger *shareInstance = nil;
             cacheDic[@"msgType"] = @"debugger_data";
             cacheDic[@"sdkVersion"] = GrowingTrackerVersionName;
             cacheDic[@"data"] = attrs;
-            cacheDic[@"data"][@"url"] = [[self class] absoluteURL];
+            cacheDic[@"data"][@"url"] = self.absoluteURL;
             [self sendJson:cacheDic];
         }
     }
@@ -419,23 +428,6 @@ static GrowingMobileDebugger *shareInstance = nil;
     [self performSelector:@selector(_setNeedUpdateScreen) withObject:nil afterDelay:1];
 }
 
-#pragma mark - GrowingEventInterceptor
-
-//获取url字段
-+ (NSString *)absoluteURL {
-    NSString *baseUrl = [GrowingNetworkConfig sharedInstance].growingApiHostEnd;
-    if (!baseUrl.length) {
-        return nil;
-    }
-    NSString *absoluteURLString = [baseUrl absoluteURLStringWithPath:self.path andQuery:nil ];
-    return absoluteURLString;
-}
-
-+ (NSString *)path {
-    NSString *accountId = [GrowingConfigurationManager sharedInstance].trackConfiguration.projectId ? : @"";
-    NSString *path = [NSString stringWithFormat:@"v3/projects/%@/collect", accountId];
-    return path;
-}
 
 @end
 
