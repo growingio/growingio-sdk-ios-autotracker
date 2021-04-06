@@ -196,7 +196,7 @@
 }
 
 -(void)testGrowingabsoluteURL{
-    NSString * url = [GrowingMobileDebugger absoluteURL];
+    NSString * url = [[GrowingMobileDebugger shareInstance] absoluteURL];
     XCTAssertEqualObjects(url, @"https://api.growingio.com/v3/projects/91eaf9b283361032/collect");
 }
 

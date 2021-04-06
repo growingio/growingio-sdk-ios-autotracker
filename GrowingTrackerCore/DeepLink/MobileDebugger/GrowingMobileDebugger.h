@@ -30,7 +30,8 @@
 + (void)stop;
 + (BOOL)isRunning;
 - (void)start;
-+ (NSString *)absoluteURL;
+- (NSString *)absoluteURL;
+
 @end
 
 
