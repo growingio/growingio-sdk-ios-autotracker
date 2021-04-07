@@ -230,7 +230,6 @@
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"+ (void)clearUserId;"] tap];
     [[viewTester usingLabel:@"SetUserId"] tap];
-    [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"UI界面"] tap];
     [tester waitForTimeInterval:2];
     NSArray *page1Array = [MockEventQueue.sharedQueue eventsFor:@"PAGE"];

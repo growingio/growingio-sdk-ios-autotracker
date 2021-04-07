@@ -34,7 +34,7 @@
     [[GrowingAutotracker sharedInstance] cleanLocation];
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] setLocation:[@30.11 doubleValue] longitude:[@32.22 doubleValue]];
-    [tester waitForTimeInterval:1];
+    [tester waitForTimeInterval:2];
     NSArray *visitEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
     if (visitEventArray.count > 0) {
         NSDictionary *visit_chr = [visitEventArray objectAtIndex:visitEventArray.count - 1];

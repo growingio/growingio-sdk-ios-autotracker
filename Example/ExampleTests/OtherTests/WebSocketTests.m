@@ -35,10 +35,9 @@
 #import "UIView+GrowingNode.h"
 #import "FirstViewController.h"
 #import "GrowingDeviceInfo.h"
-#import "NSString+GrowingHelper.h"
 #import "GrowingHybridBridgeProvider.h"
 #import "GrowingFileStorage.h"
-
+#import <WebKit/WebKit.h>
 
 
 @interface WebSocketTests : KIFTestCase
@@ -218,30 +217,25 @@
     [GrowingDeviceInfo deviceScreenSize];
 }
 
--(void)testGrowingHelperString{
-    NSString *a = @"teststring";
-    [a growingHelper_uft8Data];
-    [a growingHelper_jsonObject];
-    [a growingHelper_dictionaryObject];
-    [a growingHelper_safeSubStringWithLength:@1];
-    [a growingHelper_sha1];
-    [a growingHelper_isLegal];
-    [a growingHelper_isValidU];
-    [a growingHelper_encryptString];
-    XCTAssertFalse([NSString growingHelper_isBlankString:@"t"]);
-    [a convertToDictFromPasteboard];
-    XCTAssertFalse([NSString growingHelper_isEqualStringA:@"A" andStringB:@"B"]);
-    
-}
 -(void)testGrowingHybridBridgeProvider{
     [[GrowingHybridBridgeProvider sharedInstance] handleJavascriptBridgeMessage:@"{@'messageType':@'messagedata'}"];
     [[GrowingHybridBridgeProvider sharedInstance] performSelector:@selector(dispatchWebViewDomChanged)];
+    WKWebView *_webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+    [[GrowingHybridBridgeProvider sharedInstance] getDomTreeForWebView:_webView completionHandler:^(NSDictionary *_Nullable dom, NSError *_Nullable error) {
+        NSLog(@"test");
+    }
+     ];
 
 
 }
 -(void)testGrowingFileStorage{
     [[[GrowingFileStorage alloc]initWithName:@"testGrowingFileStorage"] resetAll];
     [[[GrowingFileStorage alloc]initWithName:@"testGrowingFileStorage"] removeKey:@"testKey"];
+    [[[GrowingFileStorage alloc]initWithName:@"testGrowingFileStorage"] setArray:@[@"testa",@"testb"] forKey:@"testKey"];
+    [[[GrowingFileStorage alloc]initWithName:@"testGrowingFileStorage"] arrayForKey:@"testKey"];
+    [[[GrowingFileStorage alloc]initWithName:@"testGrowingFileStorage"] setNumber:@1 forKey:@"testKeyNum"];
+    XCTAssertNotNil( [[[GrowingFileStorage alloc]initWithName:@"testGrowingFileStorage"] numberForKey:@"testKeyNum"]);
+
 
 
 }
