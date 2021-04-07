@@ -14,8 +14,6 @@
 
 @property (nonatomic, weak, readonly, nullable) id target;
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath;
-
 @end
 
 @implementation GrowingCollectionDelegateProxy

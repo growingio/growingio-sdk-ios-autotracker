@@ -26,7 +26,7 @@
 - (void)afterEach {
 }
 
-- (void)test7DialogBtnCheck {
+- (void)test07DialogBtnCheck {
     /**
      function:对话框按钮点击，检测click事件，
      **/
@@ -39,7 +39,7 @@
     [[viewTester usingLabel:@"AttributeLabel"] tap];
     [[viewTester usingLabel:@"ShowAlert"] tap];
     [[viewTester usingLabel:@"取消"] tap];
-    [tester waitForTimeInterval:3];
+    [tester waitForTimeInterval:2];
     NSArray *clickEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
     //是否发送click事件，需要确认
     if (clickEventArray.count >= 2) {
@@ -101,19 +101,20 @@
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[viewTester usingLabel:@"UI界面"] tap];
-    [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"UI界面"] tap];
     //添加向下滚动操作，减少用例间相互影响
-//    [tester scrollViewWithAccessibilityLabel:@"CollectionView" byFractionOfSizeHorizontal:0.0f vertical:10.0f];
+    //    [tester scrollViewWithAccessibilityLabel:@"CollectionView" byFractionOfSizeHorizontal:0.0f vertical:10.0f];
+    [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"Simple UI Elements"] tap];
-//    [tester waitForTimeInterval:5];
-//    CGPoint point = CGPointMake(50, 500);
-//    [tester tapScreenAtPoint:point];
+    //    [tester waitForTimeInterval:5];
+    //    CGPoint point = CGPointMake(50, 500);
+    //    [tester tapScreenAtPoint:point];
+    [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"Fire"] tap];
-    [tester waitForTimeInterval:3];
+    [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"好的"] tap];
     NSArray *clickEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
-    if (clickEventArray.count > 4) {
+    if (clickEventArray.count >= 4) {
         // TODO:3.0 测量协议修改
         XCTAssertEqual(1, 1);
         NSLog(@"单击ColorButton，发送click事件测试通过---Passed！");

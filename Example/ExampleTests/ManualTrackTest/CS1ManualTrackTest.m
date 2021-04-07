@@ -39,6 +39,7 @@
 
     NSString *newestUserId = @"newest_user_id";
     [tester enterTextIntoCurrentFirstResponder:newestUserId];
+    [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"CustomSet"] tap];
     [tester waitForTimeInterval:2];
     NSArray<NSDictionary *> *visitEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
@@ -108,9 +109,13 @@
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"+ (void)setUserId:(NSString *)userId;"] tap];
     //设置初值
-    [tester tapViewWithAccessibilityLabel:@"userIdTextField"];
-    [tester clearTextFromAndThenEnterTextIntoCurrentFirstResponder:@"%$#./"];
-    [[viewTester usingLabel:@"CustomSet"] tap];
+    [tester waitForTimeInterval:1];
+//    [tester tapViewWithAccessibilityLabel:@"userIdTextField"];
+//    [tester clearTextFromAndThenEnterTextIntoCurrentFirstResponder:@"%$#./"];
+
+//    [[viewTester usingLabel:@"CustomSet"] tap];
+    [[GrowingAutotracker sharedInstance] setLoginUserId:@"%$#./"];
+
     [tester waitForTimeInterval:2];
     NSArray *visitEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
 
@@ -130,15 +135,17 @@
      function:UID为中文字符
      ***/
     [MockEventQueue.sharedQueue cleanQueue];
-    [tester scrollViewWithAccessibilityIdentifier:@"MeasurementProtocolTableView"
-                       byFractionOfSizeHorizontal:0.0f
-                                         vertical:-0.3f];
-    [tester waitForTimeInterval:1];
-    [[viewTester usingLabel:@"+ (void)setUserId:(NSString *)userId;"] tap];
+    //    [tester scrollViewWithAccessibilityIdentifier:@"MeasurementProtocolTableView"
+    //                       byFractionOfSizeHorizontal:0.0f
+    //                                         vertical:-0.3f];
+    //    [tester waitForTimeInterval:1];
+    [[GrowingAutotracker sharedInstance] setLoginUserId:@"10048"];
     //设置初值
-    [tester tapViewWithAccessibilityLabel:@"userIdTextField"];
-    [tester clearTextFromAndThenEnterTextIntoCurrentFirstResponder:@"数据分析"];
-    [[viewTester usingLabel:@"CustomSet"] tap];
+    [tester waitForTimeInterval:1];
+    //    [tester tapViewWithAccessibilityLabel:@"userIdTextField"];
+    [[GrowingAutotracker sharedInstance] setLoginUserId:@"数据分析"];
+    //    [tester clearTextFromAndThenEnterTextIntoCurrentFirstResponder:@"数据分析"];
+    //    [[viewTester usingLabel:@"CustomSet"] tap];
     [tester waitForTimeInterval:2];
     NSArray *visitEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
 

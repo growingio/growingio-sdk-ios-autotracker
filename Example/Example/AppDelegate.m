@@ -34,12 +34,13 @@ static NSString *const kGrowingProjectId = @"91eaf9b283361032";
     configuration.debugEnabled = YES;
     configuration.impressionScale = 1.0;
     // 暂时设置host为mocky链接，防止请求404，实际是没有上传到服务器的，正式使用请去掉，或设置正确的host
-    configuration.dataCollectionServerHost = @"https://run.mocky.io/v3/08999138-a180-431d-a136-051f3c6bd306";
+//    configuration.dataCollectionServerHost = @"https://run.mocky.io/v3/08999138-a180-431d-a136-051f3c6bd306";
 
     [GrowingAutotracker startWithConfiguration:configuration launchOptions:launchOptions];
 //    [GrowingTracker startWithConfiguration:configuration launchOptions:launchOptions];
     [[GrowingAutotracker sharedInstance] setLocation:[@30.11 doubleValue] longitude:[@32.22 doubleValue]];
-    [self registerRemoteNotification];
+    // 自动化测试会有授权弹窗
+ //   [self registerRemoteNotification];
 
     return YES;
 }
