@@ -31,7 +31,7 @@
     [tester waitForTimeInterval:1];
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] setVisitorAttributes:@{@"var1" : @"good", @"var2" : @"excell"}];
-    [tester waitForTimeInterval:1];
+    [tester waitForTimeInterval:2];
     NSArray *visitorAttributesEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISITOR_ATTRIBUTES"];
     NSLog(@"VISITOR_ATTRIBUTES 事件：%@", visitorAttributesEventArray);
     if (visitorAttributesEventArray.count >= 1) {

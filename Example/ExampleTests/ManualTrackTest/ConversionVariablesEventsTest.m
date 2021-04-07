@@ -76,7 +76,7 @@
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] setConversionVariables:@{}];
-    [tester waitForTimeInterval:3];
+    [tester waitForTimeInterval:1];
     NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
     // NSLog(@"CONVERSION_VARIABLES事件：%@",evarEventArray);
 
@@ -100,7 +100,7 @@
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] setConversionVariables:@{@"ekey1" : @"Good"}];
-    [tester waitForTimeInterval:3];
+    [tester waitForTimeInterval:1];
     NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
     // NSLog(@"CONVERSION_VARIABLES事件：%@",evarEventArray);
     if (evarEventArray.count >= 1) {
@@ -126,7 +126,7 @@
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] setConversionVariables:@{@"ekey1" : @"Better"}];
-    [tester waitForTimeInterval:3];
+    [tester waitForTimeInterval:1];
     NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
     // NSLog(@"CONVERSION_VARIABLES事件：%@",evarEventArray);
     if (evarEventArray.count >= 1) {
@@ -218,7 +218,7 @@
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] setConversionVariables:@{@"evkey1" : @"132"}];
-    [tester waitForTimeInterval:3];
+    [tester waitForTimeInterval:1];
     NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
     // NSLog(@"CONVERSION_VARIABLES事件：%@",evarEventArray);
     if (evarEventArray.count >= 1) {

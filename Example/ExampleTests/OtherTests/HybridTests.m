@@ -37,7 +37,9 @@
 #import "GrowingHybridPageAttributesEvent.h"
 #import "GrowingMobileDebugger.h"
 #import "GrowingDeepLinkHandler.h"
-
+#import "GrowingVisitEvent.h"
+#import "NSData+GrowingHelper.h"
+#import "NSString+GrowingHelper.h"
 @interface HybridTests : KIFTestCase
 
 @end
@@ -211,5 +213,54 @@
 //
 //
 //}
+-(void)testGrowingVisitEvent{
+    GrowingVisitEvent.builder.setNetworkState(@"testNetworkState")
+    .setAppChannel(@"testAppChannel")
+    .setScreenHeight(@1920)
+    .setScreenWidth(@1280)
+    .setDeviceBrand(@"testDeviceBrand")
+    .setDeviceModel(@"testDeviceModel")
+    .setDeviceType(@"testDeviceType")
+    .setAppName(@"testAppName")
+    .setAppVersion(@"testAppVersion")
+    .setLanguage(@"testLanguage")
+    .setIdfa(@"testIdfa")
+    .setIdfv(@"testIdfv")
+    .setSdkVersion(@"testSdkVersion")
+    .setExtraSdk(@{@"testkey":@"value"});
+    XCTAssertNotNil(GrowingVisitEvent.builder);
+}
+
+
+-(void)testNSDataGrowingHelper{
+    NSString *testString = @"123测试";
+    NSData *testData = [testString dataUsingEncoding: NSUTF8StringEncoding];
+    XCTAssertNil([testData growingHelper_LZ4String]);
+    XCTAssertNil([testData growingHelper_dictionaryObject]);
+    XCTAssertNil([testData growingHelper_arrayObject]);
+    XCTAssertNotNil([testData growingHelper_md5String]);
+    XCTAssertNotNil([testData growingHelper_xorEncryptWithHint:@"a"]);
+
+}
+
+-(void)testNSStringGrowingHelper{
+    NSString *testString1 = @"12测试";
+    XCTAssertNil([testString1 growingHelper_queryObject]);
+    NSString *a = @"teststring";
+    [a growingHelper_uft8Data];
+    [a growingHelper_jsonObject];
+    [a growingHelper_dictionaryObject];
+    [a growingHelper_safeSubStringWithLength:@1];
+    [a growingHelper_sha1];
+    [a growingHelper_isLegal];
+    [a growingHelper_isValidU];
+    [a growingHelper_encryptString];
+    XCTAssertFalse([NSString growingHelper_isBlankString:@"t"]);
+    [a convertToDictFromPasteboard];
+    XCTAssertFalse([NSString growingHelper_isEqualStringA:@"A" andStringB:@"B"]);
+    
+
+}
+
 
 @end
