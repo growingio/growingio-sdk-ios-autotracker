@@ -39,7 +39,7 @@
     [[viewTester usingLabel:@"AttributeLabel"] tap];
     [[viewTester usingLabel:@"ShowAlert"] tap];
     [[viewTester usingLabel:@"取消"] tap];
-    [tester waitForTimeInterval:2];
+    [tester waitForTimeInterval:3];
     NSArray *clickEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
     //是否发送click事件，需要确认
     if (clickEventArray.count >= 2) {
@@ -82,7 +82,7 @@
     [[viewTester usingLabel:@"AttributeLabel"] tap];
     [MockEventQueue.sharedQueue cleanQueue];
     [[viewTester usingLabel:@"GIODontTrackBtn"] tap];
-    [tester waitForTimeInterval:2];
+    [tester waitForTimeInterval:3];
     NSArray *clickEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
     if (clickEventArray == NULL) {
         XCTAssertEqual(1, 1);
@@ -110,7 +110,7 @@
 //    CGPoint point = CGPointMake(50, 500);
 //    [tester tapScreenAtPoint:point];
     [[viewTester usingLabel:@"Fire"] tap];
-    [tester waitForTimeInterval:2];
+    [tester waitForTimeInterval:3];
     [[viewTester usingLabel:@"好的"] tap];
     NSArray *clickEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
     if (clickEventArray.count > 4) {
@@ -138,8 +138,8 @@
 //    CGPoint point = CGPointMake(130, 500);
 //    [tester tapScreenAtPoint:point];
     [[viewTester usingLabel:@"Food"] tap];
-    [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"好的"] tap];
+    [tester waitForTimeInterval:2];
     NSArray *clickEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
     if (clickEventArray.count > 4) {
         NSDictionary *chevent = [clickEventArray objectAtIndex:clickEventArray.count-2];
@@ -165,7 +165,7 @@
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"Simple UI Elements"] tap];
     [[viewTester usingLabel:@"Fire"] tap];
-    [tester waitForTimeInterval:1];
+    [tester waitForTimeInterval:2];
     [[viewTester usingLabel:@"好的"] tap];
     NSArray *clickEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
     if (clickEventArray.count > 3) {

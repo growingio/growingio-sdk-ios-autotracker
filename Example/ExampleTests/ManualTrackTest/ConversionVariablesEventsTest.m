@@ -218,7 +218,7 @@
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] setConversionVariables:@{@"evkey1" : @"132"}];
-    [tester waitForTimeInterval:1];
+    [tester waitForTimeInterval:2];
     NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
     // NSLog(@"CONVERSION_VARIABLES事件：%@",evarEventArray);
     if (evarEventArray.count >= 1) {

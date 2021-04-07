@@ -25,8 +25,8 @@
 #import "GrowingDeepLinkHandler.h"
 #import "GrowingDebuggerEventQueue.h"
 
-NSString *const GrowingTrackerVersionName = @"3.0.0";
-const int GrowingTrackerVersionCode = 30000;
+NSString *const GrowingTrackerVersionName = @"3.1.0";
+const int GrowingTrackerVersionCode = 30100;
 
 @interface GrowingRealTracker ()
 @property(nonatomic, copy, readonly) NSDictionary *launchOptions;
