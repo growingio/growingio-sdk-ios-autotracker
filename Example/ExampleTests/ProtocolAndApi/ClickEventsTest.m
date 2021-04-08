@@ -32,14 +32,12 @@
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[viewTester usingLabel:@"UI界面"] tap];
-    [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"UI界面"] tap];
     //添加向下滚动操作，减少用例间相互影响
-    [tester scrollViewWithAccessibilityLabel:@"CollectionView" byFractionOfSizeHorizontal:0.0f vertical:10.0f];
+//    [tester scrollViewWithAccessibilityLabel:@"CollectionView" byFractionOfSizeHorizontal:0.0f vertical:10.0f];
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"AttributeLabel"] tap];
     [[viewTester usingLabel:@"ShowAlert"] tap];
-    [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"取消"] tap];
     [tester waitForTimeInterval:3];
     NSArray *clickEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
@@ -78,11 +76,9 @@
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] setDataCollectionEnabled:NO];
     [[viewTester usingLabel:@"UI界面"] tap];
-    [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"UI界面"] tap];
     //添加向下滚动操作，减少用例间相互影响
-    [tester scrollViewWithAccessibilityLabel:@"CollectionView" byFractionOfSizeHorizontal:0.0f vertical:10.0f];
-    [tester waitForTimeInterval:1];
+//    [tester scrollViewWithAccessibilityLabel:@"CollectionView" byFractionOfSizeHorizontal:0.0f vertical:10.0f];
     [[viewTester usingLabel:@"AttributeLabel"] tap];
     [MockEventQueue.sharedQueue cleanQueue];
     [[viewTester usingLabel:@"GIODontTrackBtn"] tap];
@@ -108,8 +104,7 @@
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"UI界面"] tap];
     //添加向下滚动操作，减少用例间相互影响
-    [tester scrollViewWithAccessibilityLabel:@"CollectionView" byFractionOfSizeHorizontal:0.0f vertical:10.0f];
-    [tester waitForTimeInterval:1];
+//    [tester scrollViewWithAccessibilityLabel:@"CollectionView" byFractionOfSizeHorizontal:0.0f vertical:10.0f];
     [[viewTester usingLabel:@"Simple UI Elements"] tap];
 //    [tester waitForTimeInterval:5];
 //    CGPoint point = CGPointMake(50, 500);
@@ -137,15 +132,14 @@
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"UI界面"] tap];
     //添加向下滚动操作，减少用例间相互影响
-    [tester scrollViewWithAccessibilityLabel:@"CollectionView" byFractionOfSizeHorizontal:0.0f vertical:10.0f];
-    [tester waitForTimeInterval:1];
+//    [tester scrollViewWithAccessibilityLabel:@"CollectionView" byFractionOfSizeHorizontal:0.0f vertical:10.0f];
     [[viewTester usingLabel:@"Simple UI Elements"] tap];
     [tester waitForTimeInterval:1];
 //    CGPoint point = CGPointMake(130, 500);
 //    [tester tapScreenAtPoint:point];
     [[viewTester usingLabel:@"Food"] tap];
-    [tester waitForTimeInterval:3];
     [[viewTester usingLabel:@"好的"] tap];
+    [tester waitForTimeInterval:2];
     NSArray *clickEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
     if (clickEventArray.count > 4) {
         NSDictionary *chevent = [clickEventArray objectAtIndex:clickEventArray.count-2];
@@ -167,12 +161,11 @@
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"UI界面"] tap];
     //添加向下滚动操作，减少用例间相互影响
-    [tester scrollViewWithAccessibilityLabel:@"CollectionView" byFractionOfSizeHorizontal:0.0f vertical:10.0f];
+//    [tester scrollViewWithAccessibilityLabel:@"CollectionView" byFractionOfSizeHorizontal:0.0f vertical:10.0f];
     [tester waitForTimeInterval:1];
     [[viewTester usingLabel:@"Simple UI Elements"] tap];
-    [tester waitForTimeInterval:5];
     [[viewTester usingLabel:@"Fire"] tap];
-    [tester waitForTimeInterval:3];
+    [tester waitForTimeInterval:2];
     [[viewTester usingLabel:@"好的"] tap];
     NSArray *clickEventArray = [MockEventQueue.sharedQueue eventsFor:@"VIEW_CLICK"];
     if (clickEventArray.count > 3) {

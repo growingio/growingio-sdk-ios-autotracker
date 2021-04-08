@@ -19,6 +19,8 @@
 
 
 #import <Foundation/Foundation.h>
+#import "NSString+GrowingHelper.h"
+#import "NSURL+GrowingHelper.h"
 #import "GrowingNetworkConfig.h"
 #import "GrowingCocoaLumberjack.h"
 #import "GrowingConfigurationManager.h"
@@ -57,19 +59,20 @@ static NSString * const kGrowingWsHostFormat =  @"wss://ws.growingio.com";
     return validEndPoint;
 }
 
-- (NSString *)buildEndPointWithTemplate:(NSString *)template
-                              accountId:(NSString *)accountId
-                                 andSTM:(unsigned long long)stm {
-    return [NSString stringWithFormat:@"%@/%@",
-                         (_customTrackerHost.length > 0 ? _customTrackerHost : [self growingApiHostEnd]),
-                         [NSString stringWithFormat:template, accountId, stm]];
+//获取url字段
++ (NSString *)absoluteURL {
+    NSString *baseUrl = [GrowingNetworkConfig sharedInstance].growingApiHostEnd;
+    if (!baseUrl.length) {
+        return nil;
+    }
+    NSString *absoluteURLString = [baseUrl absoluteURLStringWithPath:self.path andQuery:nil];
+    return absoluteURLString;
 }
 
-- (void)setCustomTrackerHost:(NSString *)customHost {
-    NSString *validEndPoint = [GrowingNetworkConfig generateValidEndPoint:customHost];
-    if (validEndPoint.length) {
-        _customTrackerHost = validEndPoint;
-    }
++ (NSString *)path {
+    NSString *accountId = [GrowingConfigurationManager sharedInstance].trackConfiguration.projectId ? : @"";
+    NSString *path = [NSString stringWithFormat:@"v3/projects/%@/collect", accountId];
+    return path;
 }
 
 - (void)setCustomDataHost:(NSString *)customHost {
@@ -78,13 +81,6 @@ static NSString * const kGrowingWsHostFormat =  @"wss://ws.growingio.com";
         _customDataHost = validEndPoint;
     }
 }
-
-//- (void)setCustomWsHost:(NSString *)customHost {
-//    // web socket 直接赋值, 不需要调用|generateValidEndPoint|
-//    if (customHost && customHost.length > 0) {
-//        _customWsHost = customHost;
-//    }
-//}
 
 - (NSString *)growingApiHostEnd {
     return GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionServerHost;
@@ -96,24 +92,6 @@ static NSString * const kGrowingWsHostFormat =  @"wss://ws.growingio.com";
 
 - (NSString *)tagsHost {
     return [NSString stringWithFormat:kGrowingTagsHostFormat];
-}
-
-
-//
-- (NSString *)wsEndPoint {
-    if (_customWsHost.length > 0) {
-        return [_customWsHost stringByAppendingString:@"/app/%@/circle/%@"];
-    } else {
-        return [kGrowingWsHostFormat stringByAppendingString:@"/app/%@/circle/%@"];
-    }
-}
-
-- (NSString *)dataCheckEndPoint {
-    if (_customWsHost.length > 0) {
-        return [_customWsHost stringByAppendingString:kGrowingDataCheckAddress];
-    } else {
-        return [kGrowingWsHostFormat stringByAppendingString:kGrowingDataCheckAddress];
-    }
 }
 
 @end

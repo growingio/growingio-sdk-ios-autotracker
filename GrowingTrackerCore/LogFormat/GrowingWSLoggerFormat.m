@@ -44,7 +44,7 @@ NS_INLINE NSString* logLevel(GrowingLogFlag level) {
     
     long long epoch = [logMessage->_timestamp timeIntervalSince1970] * 1000;
     NSMutableDictionary *logDic = [NSMutableDictionary dictionary];
-    [logDic setValue:logLevel(logMessage->_flag) forKey:@"type"];
+    [logDic setValue:[logLevel(logMessage->_flag) uppercaseString] forKey:@"type"];
     [logDic setValue:@"" forKey:@"subType"];
     [logDic setValue:logMessage->_message forKey:@"message"];
     [logDic setValue:[NSNumber numberWithLongLong:epoch] forKey:@"time"];

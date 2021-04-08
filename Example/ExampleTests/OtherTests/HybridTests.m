@@ -32,13 +32,14 @@
 #import "GrowingASLLogger.h"
 #import "GrowingHybridBridgeProvider.h"
 #import "GrowingDataTraffic.h"
-#import "GrowingLoggerDebugger.h"
 #import "GrowingAppCloseEvent.h"
 #import "GrowingWebCircleElement.h"
 #import "GrowingHybridPageAttributesEvent.h"
-//#import "GrowingMobileDebugger.h"
-
-
+#import "GrowingMobileDebugger.h"
+#import "GrowingDeepLinkHandler.h"
+#import "GrowingVisitEvent.h"
+#import "NSData+GrowingHelper.h"
+#import "NSString+GrowingHelper.h"
 @interface HybridTests : KIFTestCase
 
 @end
@@ -185,13 +186,21 @@
     
 }
 
--(void)testGrowingLoggerDebugger{
-    [GrowingLoggerDebugger startLoggerDebuggerWithKey:@"testGrowingLoggerDebugger"];
-    [GrowingLoggerDebugger stopLoggerDebugger];
 
+-(void)testGrowingMobileDebugger{
+    
+    NSURL *url1 = [NSURL URLWithString:@"growing.3612b67ce562c755://growingio/webservice?serviceType=debugger&wsUrl=wss://gta0.growingio.com/app/0wDaZmQ1/circle/ec7f5925458f458b8ae6f3901cacaa92"];
+    [GrowingDeepLinkHandler handlerUrl:url1];
+    [[GrowingMobileDebugger shareInstance] start];
+    if([GrowingMobileDebugger isRunning]) {
+        [GrowingMobileDebugger stop];
+    }
 }
 
-
+-(void)testGrowingabsoluteURL{
+    NSString * url = [[GrowingMobileDebugger shareInstance] absoluteURL];
+    XCTAssertEqualObjects(url, @"https://api.growingio.com/v3/projects/91eaf9b283361032/collect");
+}
 
 -(void)testGrowingAppCloseEvent{
     [GrowingAppCloseEvent builder] ;
@@ -204,5 +213,54 @@
 //
 //
 //}
+-(void)testGrowingVisitEvent{
+    GrowingVisitEvent.builder.setNetworkState(@"testNetworkState")
+    .setAppChannel(@"testAppChannel")
+    .setScreenHeight(@1920)
+    .setScreenWidth(@1280)
+    .setDeviceBrand(@"testDeviceBrand")
+    .setDeviceModel(@"testDeviceModel")
+    .setDeviceType(@"testDeviceType")
+    .setAppName(@"testAppName")
+    .setAppVersion(@"testAppVersion")
+    .setLanguage(@"testLanguage")
+    .setIdfa(@"testIdfa")
+    .setIdfv(@"testIdfv")
+    .setSdkVersion(@"testSdkVersion")
+    .setExtraSdk(@{@"testkey":@"value"});
+    XCTAssertNotNil(GrowingVisitEvent.builder);
+}
+
+
+-(void)testNSDataGrowingHelper{
+    NSString *testString = @"123测试";
+    NSData *testData = [testString dataUsingEncoding: NSUTF8StringEncoding];
+    XCTAssertNil([testData growingHelper_LZ4String]);
+    XCTAssertNil([testData growingHelper_dictionaryObject]);
+    XCTAssertNil([testData growingHelper_arrayObject]);
+    XCTAssertNotNil([testData growingHelper_md5String]);
+    XCTAssertNotNil([testData growingHelper_xorEncryptWithHint:@"a"]);
+
+}
+
+-(void)testNSStringGrowingHelper{
+    NSString *testString1 = @"12测试";
+    XCTAssertNil([testString1 growingHelper_queryObject]);
+    NSString *a = @"teststring";
+    [a growingHelper_uft8Data];
+    [a growingHelper_jsonObject];
+    [a growingHelper_dictionaryObject];
+    [a growingHelper_safeSubStringWithLength:@1];
+    [a growingHelper_sha1];
+    [a growingHelper_isLegal];
+    [a growingHelper_isValidU];
+    [a growingHelper_encryptString];
+    XCTAssertFalse([NSString growingHelper_isBlankString:@"t"]);
+    [a convertToDictFromPasteboard];
+    XCTAssertFalse([NSString growingHelper_isEqualStringA:@"A" andStringB:@"B"]);
+    
+
+}
+
 
 @end

@@ -1,8 +1,8 @@
 //
-// GrowingLoggerDebugger.h
-// GrowingAnalytics
+// GrowingMobileDebugger.h
+// Pods
 //
-//  Created by GrowingIO on 2020/8/13.
+//  Created by gio on 2021/3/2.
 //  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,17 +17,21 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <Foundation/Foundation.h>
+#import "GrowingSRWebSocket.h"
 
-NS_ASSUME_NONNULL_BEGIN
+@interface GrowingMobileDebugger : NSObject
 
-@interface GrowingLoggerDebugger : NSObject
 
-+ (void)startLoggerDebuggerWithKey:(NSString *)key;
+@property (nonatomic, retain) GrowingSRWebSocket *webSocket;
 
-+ (void)stopLoggerDebugger;
+
++ (instancetype)shareInstance;
++ (void)stop;
++ (BOOL)isRunning;
+- (void)start;
+- (NSString *)absoluteURL;
 
 @end
 
-NS_ASSUME_NONNULL_END
+

@@ -22,6 +22,7 @@
 
 #ifndef GrowingConstApi_h
 #define GrowingConstApi_h
+
 #define kGrowingEventApiTemplate @"v3/projects/%@/collect?stm=%llu"
 #define kGrowingEventApiV3(Template, AI, STM) [[GrowingNetworkConfig sharedInstance] buildEndPointWithTemplate:(Template) accountId:(AI) andSTM:(STM)]
 
@@ -31,8 +32,6 @@
 
 #define kGrowingLoginApiV2              kGrowingDataApiHost(@"oauth2/token")
 
-#define kGrowingDataCheckAddress      @"/feeds/apps/%@/exchanges/data-check/%@?clientType=sdk"
-
 #endif /* GrowingConstApi_h */
 
 
@@ -40,24 +39,23 @@
 
 @interface GrowingNetworkConfig : NSObject
 
-@property (nonatomic, copy) NSString *customTrackerHost;
 @property (nonatomic, copy) NSString *customDataHost;
-@property (nonatomic, copy) NSString *customWsHost;
 
 + (instancetype)sharedInstance;
 
-- (NSString *)buildEndPointWithTemplate:(NSString *)path
-                              accountId:(NSString *)accountId
-                                 andSTM:(unsigned long long)stm;
+/// 返回 growingApiHostEnd 拼接的事件上传地址 eg:https://api.growingio.com/v3/projects/91eaf9b283361032/collect
++ (NSString *)absoluteURL;
+/// 返回url path eg:v3/projects/91eaf9b283361032/collect
++ (NSString *)path;
 
+/// 返回GrowingTrackConfiguration配置的dataCollectionServerHost，如果没有额外配置该参数的话，默认返回 https://api.growingio.com
 - (NSString *)growingApiHostEnd;
 
+/// 1. 如果设置了 customDataHost，则使用customDataHost，否则使用 https://www.growingio.com
 - (NSString *)growingDataHostEnd;
 
+/// 固定值，为 https://tags.growingio.com
 - (NSString *)tagsHost;
 
-- (NSString *)wsEndPoint;
-
-- (NSString *)dataCheckEndPoint;
 
 @end
