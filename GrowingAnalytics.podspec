@@ -43,5 +43,10 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
       autotracker.dependency 'GrowingAnalytics/AutotrackerCore'
   end
   
+  # 配置项 - 禁用idfa
+  s.subspec 'DISABLE_IDFA' do |config|
+      config.dependency 'GrowingAnalytics/TrackerCore'
+      config.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'GROWING_ANALYSIS_DISABLE_IDFA=1'}
+  end
 
 end

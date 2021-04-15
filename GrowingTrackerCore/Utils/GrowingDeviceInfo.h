@@ -53,7 +53,6 @@
 
 @property (nonatomic, strong) GrowingFileStorage *deviceStorage;
 
-- (void)resetSessionID;
 - (void)deviceInfoReported;
 - (void)pasteboardDeeplinkReported;
 + (CGSize)deviceScreenSize;
