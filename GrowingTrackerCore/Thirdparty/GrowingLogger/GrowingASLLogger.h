@@ -25,10 +25,10 @@
 NS_ASSUME_NONNULL_BEGIN
 
 // Custom key set on messages sent to ASL
-extern const char* const kDDASLKeyDDLog;
+extern const char* const kGrowingDDASLKeyDDLog;
 
 // Value set for kDDASLKeyDDLog
-extern const char* const kDDASLDDLogValue;
+extern const char* const kGrowingDDASLDDLogValue;
 
 /**
  * This class provides a logger for the Apple System Log facility.
