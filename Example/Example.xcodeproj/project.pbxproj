@@ -108,6 +108,7 @@
 		047BF3BC24F655A50028FE94 /* PageEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3B924F655A50028FE94 /* PageEventsTest.m */; };
 		04A6FAF224E662E9006C72F0 /* GIOChildsAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A6FAF124E662E9006C72F0 /* GIOChildsAddViewController.m */; };
 		04A6FAF524E67215006C72F0 /* GIOBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A6FAF424E67215006C72F0 /* GIOBaseViewController.m */; };
+		04F675662628293800077374 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04F675652628293800077374 /* AdSupport.framework */; };
 		4223513425ED0B130082B431 /* WebSocketTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4223513325ED0B130082B431 /* WebSocketTests.m */; };
 		42ADE26C250B292900CA7268 /* HybridTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 42ADE26B250B292900CA7268 /* HybridTests.m */; };
 		42F753BD256E2E46002F0D37 /* HTTPStubsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 42F753BC256E2E46002F0D37 /* HTTPStubsHelper.m */; };
@@ -267,6 +268,7 @@
 		04A6FAF124E662E9006C72F0 /* GIOChildsAddViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOChildsAddViewController.m; sourceTree = "<group>"; };
 		04A6FAF324E67215006C72F0 /* GIOBaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIOBaseViewController.h; sourceTree = "<group>"; };
 		04A6FAF424E67215006C72F0 /* GIOBaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOBaseViewController.m; sourceTree = "<group>"; };
+		04F675652628293800077374 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		11EA2ABB8F1029820A3234DB /* Pods_ExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ExampleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4223513325ED0B130082B431 /* WebSocketTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WebSocketTests.m; sourceTree = "<group>"; };
 		42ADE26B250B292900CA7268 /* HybridTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HybridTests.m; sourceTree = "<group>"; };
@@ -336,6 +338,7 @@
 				491D2D8D2500E2D9001CB289 /* MapKit.framework in Frameworks */,
 				6003F58E195388D20070C39A /* Foundation.framework in Frameworks */,
 				DB4A57BCAF407C6A96A7BA4F /* Pods_Example.framework in Frameworks */,
+				04F675662628293800077374 /* AdSupport.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -641,6 +644,7 @@
 		6003F58C195388D20070C39A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				04F675652628293800077374 /* AdSupport.framework */,
 				491D2D8C2500E2D9001CB289 /* MapKit.framework */,
 				6003F58D195388D20070C39A /* Foundation.framework */,
 				6003F58F195388D20070C39A /* CoreGraphics.framework */,

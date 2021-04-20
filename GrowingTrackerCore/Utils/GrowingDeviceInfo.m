@@ -19,6 +19,8 @@
 
 #import "GrowingDeviceInfo.h"
 
+#import <CoreTelephony/CTCarrier.h>
+#import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <pthread.h>
 #import <sys/utsname.h>
 
@@ -27,19 +29,21 @@
 #import "GrowingDispatchManager.h"
 #import "NSString+GrowingHelper.h"
 
+#define LOCK(...)                                                \
+    dispatch_semaphore_wait(self->_lock, DISPATCH_TIME_FOREVER); \
+    __VA_ARGS__;                                                 \
+    dispatch_semaphore_signal(self->_lock);
+
 static NSString *kGrowingUrlScheme = nil;
 NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
-
-#import <CoreTelephony/CTCarrier.h>
-#import <CoreTelephony/CTTelephonyNetworkInfo.h>
 
 @interface GrowingDeviceInfo () <GrowingAppLifecycleDelegate>
 @property (nonatomic, copy) NSString *deviceOrientation;
 @end
 
-@implementation GrowingDeviceInfo
-
-static pthread_mutex_t _mutex;
+@implementation GrowingDeviceInfo {
+    dispatch_semaphore_t _lock;
+}
 
 @synthesize deviceIDString = _deviceIDString;
 @synthesize idfv = _idfv;
@@ -108,11 +112,7 @@ static pthread_mutex_t _mutex;
 }
 
 - (NSString *)deviceIDString {
-    pthread_mutex_lock(&_mutex);
-    if (!_deviceIDString) {
-        _deviceIDString = [self getDeviceIdString];
-    }
-    pthread_mutex_unlock(&_mutex);
+    LOCK(if (!_deviceIDString) _deviceIDString = [self getDeviceIdString];)
     return _deviceIDString;
 }
 
@@ -140,10 +140,7 @@ static pthread_mutex_t _mutex;
             }
         } copy];
 
-        pthread_mutex_init(&_mutex, NULL);
-        // @property (nonatomic, readonly) NSString *deviceID;
-        // 重写getter
-
+        _lock = dispatch_semaphore_create(1);
         _bundleID = infoDictionary[@"CFBundleIdentifier"];
 
         // @property (nonatomic, readonly) NSString *displayName;
@@ -302,34 +299,31 @@ static pthread_mutex_t _mutex;
 }
 
 - (NSString *)getUserIdentifier {
-    NSString *uid = @"";
-#if !defined(GROWINGIO_NO_IFA)
+    NSString *idfa = @"";
+#ifndef GROWING_ANALYSIS_DISABLE_IDFA
     Class ASIdentifierManagerClass = NSClassFromString(@"ASIdentifierManager");
     if (!ASIdentifierManagerClass) {
-        return uid;
+        return idfa;
     }
 
     SEL sharedManagerSelector = NSSelectorFromString(@"sharedManager");
     id sharedManager = ((id(*)(id, SEL))[ASIdentifierManagerClass methodForSelector:sharedManagerSelector])(
         ASIdentifierManagerClass, sharedManagerSelector);
-
-    SEL trackingEnabledSelector = NSSelectorFromString(@"isAdvertisingTrackingEnabled");
-    BOOL trackingEnabled = ((BOOL(*)(id, SEL))[sharedManager methodForSelector:trackingEnabledSelector])(
-        sharedManager, trackingEnabledSelector);
-
-    // In iOS 10.0 and later, the value of advertisingIdentifier is all zeroes
-    // when the user has limited ad tracking; So return @"";
-    //    if (IOS10_PLUS && !trackingEnabled) {
-    //        return uid;
-    //    }
-
+    //    SEL trackingEnabledSelector = NSSelectorFromString(@"isAdvertisingTrackingEnabled");
+    //    BOOL trackingEnabled = ((BOOL(*)(id, SEL))[sharedManager methodForSelector:trackingEnabledSelector])(
+    //        sharedManager, trackingEnabledSelector);
     SEL advertisingIdentifierSelector = NSSelectorFromString(@"advertisingIdentifier");
 
     NSUUID *uuid = ((NSUUID * (*)(id, SEL))[sharedManager methodForSelector:advertisingIdentifierSelector])(
         sharedManager, advertisingIdentifierSelector);
-    uid = [uuid UUIDString];
+    idfa = [uuid UUIDString];
+    // In iOS 10.0 and later, the value of advertisingIdentifier is all zeroes
+    // when the user has limited ad tracking; So return @"";
+    if ([idfa hasPrefix:@"00000000"]) {
+        idfa = @"";
+    }
 #endif
-    return uid;
+    return idfa;
 }
 
 + (CGSize)deviceScreenSize {
@@ -359,9 +353,8 @@ static pthread_mutex_t _mutex;
         dispatch_block_t block = ^{
             UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
             if (orientation != UIInterfaceOrientationUnknown) {
-                @synchronized(self) {
-                    self->_deviceOrientation = UIInterfaceOrientationIsPortrait(orientation) ? @"PORTRAIT" : @"LANDSCAPE";
-                }
+                LOCK(self->_deviceOrientation =
+                         UIInterfaceOrientationIsPortrait(orientation) ? @"PORTRAIT" : @"LANDSCAPE";)
             }
         };
         if ([NSThread isMainThread]) {
@@ -378,9 +371,7 @@ static pthread_mutex_t _mutex;
 - (void)handleStatusBarOrientationChange:(NSNotification *)notification {
     UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
     if (orientation != UIInterfaceOrientationUnknown) {
-        @synchronized(self) {
-            _deviceOrientation = UIInterfaceOrientationIsPortrait(orientation) ? @"PORTRAIT" : @"LANDSCAPE";
-        }
+        LOCK(_deviceOrientation = UIInterfaceOrientationIsPortrait(orientation) ? @"PORTRAIT" : @"LANDSCAPE";)
     }
 }
 
@@ -395,9 +386,7 @@ static pthread_mutex_t _mutex;
 }
 
 - (void)updateAppState {
-    @synchronized(self) {
-        _appState = [UIApplication sharedApplication].applicationState == UIApplicationStateActive ? 0 : 1;
-    }
+    LOCK(_appState = [UIApplication sharedApplication].applicationState == UIApplicationStateActive ? 0 : 1;)
 }
 
 @end
