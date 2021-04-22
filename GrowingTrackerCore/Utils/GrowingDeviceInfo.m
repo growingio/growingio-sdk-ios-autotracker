@@ -27,6 +27,8 @@
 #import "GrowingAppLifecycle.h"
 #import "GrowingCocoaLumberjack.h"
 #import "GrowingDispatchManager.h"
+#import "GrowingKeyChainWrapper.h"
+#import "GrowingUserIdentifier.h"
 #import "NSString+GrowingHelper.h"
 
 #define LOCK(...)                                                \
@@ -48,54 +50,7 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 @synthesize deviceIDString = _deviceIDString;
 @synthesize idfv = _idfv;
 @synthesize idfa = _idfa;
-// keychain
-- (NSMutableDictionary *)getKeychainQuery:(NSString *)key {
-    return [NSMutableDictionary dictionaryWithObjectsAndKeys:(id)kSecClassGenericPassword, (id)kSecClass, key,
-                                                             (id)kSecAttrService, key, (id)kSecAttrAccount,
-                                                             (id)kSecAttrAccessibleAlwaysThisDeviceOnly,
-                                                             (id)kSecAttrAccessible, nil];
-}
 
-- (void)setKeychainObject:(id)value forKey:(NSString *)service {
-    // Get search dictionary
-    NSMutableDictionary *keychainQuery = [self getKeychainQuery:service];
-
-    // Delete old item before add new item
-    SecItemDelete((CFDictionaryRef)keychainQuery);
-
-    // Add new object to search dictionary(Attention:the data format)
-    [keychainQuery setObject:[NSKeyedArchiver archivedDataWithRootObject:value] forKey:(id)kSecValueData];
-
-    // Add item to keychain with the search dictionary
-    SecItemAdd((CFDictionaryRef)keychainQuery, NULL);
-}
-
-- (id)keyChainObjectForKey:(NSString *)key {
-    id ret = nil;
-    NSMutableDictionary *keychainQuery = [self getKeychainQuery:key];
-    // Configure the search setting
-    // Since in our simple case we are expecting only a single attribute to be
-    // returned (the password) we can set the attribute kSecReturnData to
-    // kCFBooleanTrue
-    [keychainQuery setObject:(id)kCFBooleanTrue forKey:(id)kSecReturnData];
-    [keychainQuery setObject:(id)kSecMatchLimitOne forKey:(id)kSecMatchLimit];
-    CFDataRef keyData = NULL;
-    if (SecItemCopyMatching((CFDictionaryRef)keychainQuery, (CFTypeRef *)&keyData) == noErr) {
-        @try {
-            ret = [NSKeyedUnarchiver unarchiveObjectWithData:(__bridge NSData *)keyData];
-        } @catch (NSException *e) {
-            GIOLogError(@"GrowingIO Unarchive of %@ failed: %@", key, e);
-        } @finally {
-        }
-    }
-    if (keyData) CFRelease(keyData);
-    return ret;
-}
-
-- (void)removeKeyChainObjectForKey:(NSString *)service {
-    NSMutableDictionary *keychainQuery = [self getKeychainQuery:service];
-    SecItemDelete((CFDictionaryRef)keychainQuery);
-}
 
 - (NSString *)getCurrentUrlScheme {
     NSArray *urlSchemeGroup = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleURLTypes"];
@@ -129,17 +84,6 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
         NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
 
         _deviceStorage = [[GrowingFileStorage alloc] initWithName:@"config"];
-
-        __weak typeof(self) wself = self;
-        _deviceIDBlock = [^NSString * {
-            NSString *idfaString = [wself getUserIdentifier];
-            if (idfaString.growingHelper_isValidU) {
-                return idfaString;
-            } else {
-                return [[[UIDevice currentDevice] identifierForVendor] UUIDString];
-            }
-        } copy];
-
         _lock = dispatch_semaphore_create(1);
         _bundleID = infoDictionary[@"CFBundleIdentifier"];
 
@@ -204,41 +148,29 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 
 - (NSString *)idfv {
     if (!_idfv) {
-        _idfv = [self getVendorId];
+        _idfv = [GrowingUserIdentifier idfv];
     }
     return _idfv;
 }
 
 - (NSString *)idfa {
     if (!_idfa) {
-        _idfa = [self getUserIdentifier];
+        // 必须每次获取idfa，以防idfa变动
+        _idfa = [GrowingUserIdentifier idfa];
     }
     return _idfa;
 }
 
 - (NSString *)getDeviceIdString {
-    NSString *deviceIdString = [self keyChainObjectForKey:kGrowingKeychainUserIdKey];
+    NSString *deviceIdString = [GrowingKeyChainWrapper keyChainObjectForKey:kGrowingKeychainUserIdKey];
     // 如果取到有效u值，直接返回
     if ([deviceIdString growingHelper_isValidU]) {
         return deviceIdString;
     }
 
-    NSString *uuid = nil;
-
-    // 尝试取block
-    if (self.deviceIDBlock) {
-        NSString *blockUUID = self.deviceIDBlock();
-        if ([blockUUID isKindOfClass:[NSString class]] && blockUUID.length > 0 && blockUUID.length <= 64) {
-            uuid = blockUUID;
-        }
-    }
-
-    // 失败了随机生成
-    if (!uuid.length || !uuid.growingHelper_isValidU) {
-        uuid = [[NSUUID UUID] UUIDString];
-    }
+    NSString *uuid = [GrowingUserIdentifier idfa];
     // 保存
-    [self setKeychainObject:uuid forKey:kGrowingKeychainUserIdKey];
+    [GrowingKeyChainWrapper setKeychainObject:uuid forKey:kGrowingKeychainUserIdKey];
 
     return uuid;
 }
@@ -284,46 +216,9 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
     }
 }
 
-- (NSString *)getVendorId {
-    NSString *vendorId = nil;
-
-    if (NSClassFromString(@"UIDevice")) {
-        vendorId = [[UIDevice currentDevice].identifierForVendor UUIDString];
-    }
-
-    return vendorId;
-}
 
 + (void)configUrlScheme:(NSString *)urlScheme {
     kGrowingUrlScheme = urlScheme;
-}
-
-- (NSString *)getUserIdentifier {
-    NSString *idfa = @"";
-#ifndef GROWING_ANALYSIS_DISABLE_IDFA
-    Class ASIdentifierManagerClass = NSClassFromString(@"ASIdentifierManager");
-    if (!ASIdentifierManagerClass) {
-        return idfa;
-    }
-
-    SEL sharedManagerSelector = NSSelectorFromString(@"sharedManager");
-    id sharedManager = ((id(*)(id, SEL))[ASIdentifierManagerClass methodForSelector:sharedManagerSelector])(
-        ASIdentifierManagerClass, sharedManagerSelector);
-    //    SEL trackingEnabledSelector = NSSelectorFromString(@"isAdvertisingTrackingEnabled");
-    //    BOOL trackingEnabled = ((BOOL(*)(id, SEL))[sharedManager methodForSelector:trackingEnabledSelector])(
-    //        sharedManager, trackingEnabledSelector);
-    SEL advertisingIdentifierSelector = NSSelectorFromString(@"advertisingIdentifier");
-
-    NSUUID *uuid = ((NSUUID * (*)(id, SEL))[sharedManager methodForSelector:advertisingIdentifierSelector])(
-        sharedManager, advertisingIdentifierSelector);
-    idfa = [uuid UUIDString];
-    // In iOS 10.0 and later, the value of advertisingIdentifier is all zeroes
-    // when the user has limited ad tracking; So return @"";
-    if ([idfa hasPrefix:@"00000000"]) {
-        idfa = @"";
-    }
-#endif
-    return idfa;
 }
 
 + (CGSize)deviceScreenSize {
