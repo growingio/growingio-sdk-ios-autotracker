@@ -6,6 +6,32 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
+  sonar:
+    name: Sonar scan
+    needs: [lint, unit_test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Restore lint reports
+        uses: actions/cache@v2.1.4
+        with:
+          path: |
+            stylelint-report.json
+            eslint-report.json
+          key: lint-reports-${{ github.sha }}
+      - name: Restore test report
+        uses: actions/cache@v2.1.4
+        with:
+          path: coverage/lcov.info
+          key: test-report-${{ github.sha }}
+      - name: Upload reports to SonarCloud
+        uses: sonarsource/sonarcloud-github-action@v1.6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   sonarcloud:
     name: SonarCloud
     runs-on: ubuntu-latest
