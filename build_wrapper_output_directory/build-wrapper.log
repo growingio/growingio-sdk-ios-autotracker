@@ -1,0 +1,49 @@
+Mon Apr 26 11:33:55 2021: build-wrapper, version 6.19 (macosx-x86)
+Mon Apr 26 11:33:55 2021: System name: Darwin Nodename: giodeMacBook-Pro.local Release: 19.6.0 Version: Darwin Kernel Version 19.6.0: Thu Jun 18 20:49:00 PDT 2020; root:xnu-6153.141.1~1/RELEASE_X86_64 Machine: x86_64
+Mon Apr 26 11:33:55 2021: socket path: /tmp/build-wrapper-socket.67fgjO
+Mon Apr 26 11:33:55 2021: dynamic library found: /Users/gio/Documents/Growingio/sdk3.0/growingio-sdk-ios-autotracker/build-wrapper-macosx-x86/libinterceptor.dylib
+Mon Apr 26 11:33:55 2021: command executed as: </Users/gio/Documents/Growingio/sdk3.0/growingio-sdk-ios-autotracker/build-wrapper-macosx-x86/build-wrapper-macosx-x86>
+Mon Apr 26 11:33:55 2021: command line received: <xcodebuild clean build>
+Mon Apr 26 11:33:55 2021: env 0: <TMPDIR=/var/folders/yd/trr1cmzj63354hgcmc80kqyw0000gn/T/>
+Mon Apr 26 11:33:55 2021: env 1: <XPC_FLAGS=0x0>
+Mon Apr 26 11:33:55 2021: env 2: <TERM_PROGRAM_VERSION=433>
+Mon Apr 26 11:33:55 2021: env 3: <LANG=zh_CN.UTF-8>
+Mon Apr 26 11:33:55 2021: env 4: <TERM_PROGRAM=Apple_Terminal>
+Mon Apr 26 11:33:55 2021: env 5: <XPC_SERVICE_NAME=0>
+Mon Apr 26 11:33:55 2021: env 6: <TERM_SESSION_ID=33D416DC-E7FB-42BD-BBA5-A4F8730E1ABB>
+Mon Apr 26 11:33:55 2021: env 7: <TERM=xterm-256color>
+Mon Apr 26 11:33:55 2021: env 8: <SSH_AUTH_SOCK=/private/tmp/com.apple.launchd.rG6asHfWv9/Listeners>
+Mon Apr 26 11:33:55 2021: env 9: <SHELL=/bin/zsh>
+Mon Apr 26 11:33:55 2021: env 10: <HOME=/Users/gio>
+Mon Apr 26 11:33:55 2021: env 11: <LOGNAME=gio>
+Mon Apr 26 11:33:55 2021: env 12: <USER=gio>
+Mon Apr 26 11:33:55 2021: env 13: <PATH=/Users/gio/APP/flutter/bin:/Users/gio/.poetry/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin>
+Mon Apr 26 11:33:55 2021: env 14: <SHLVL=1>
+Mon Apr 26 11:33:55 2021: env 15: <PWD=/Users/gio/Documents/Growingio/sdk3.0/growingio-sdk-ios-autotracker>
+Mon Apr 26 11:33:55 2021: env 16: <OLDPWD=/Users/gio/Documents/Growingio/sdk3.0/growingio-sdk-ios-autotracker/build-wrapper-macosx-x86 2>
+Mon Apr 26 11:33:55 2021: env 17: <PUB_HOSTED_URL=https://pub.flutter-io.cn>
+Mon Apr 26 11:33:55 2021: env 18: <FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn>
+Mon Apr 26 11:33:55 2021: env 19: <_=/Users/gio/Documents/Growingio/sdk3.0/growingio-sdk-ios-autotracker/build-wrapper-macosx-x86/build-wrapper-macosx-x86>
+Mon Apr 26 11:33:55 2021: executing: <xcodebuild clean build>
+Mon Apr 26 11:33:55 2021: initializing json file
+Mon Apr 26 11:33:55 2021: process created with pid: 47213
+Mon Apr 26 11:33:55 2021: parent pid: 47212
+Mon Apr 26 11:33:55 2021: working directory: </Users/gio/Documents/Growingio/sdk3.0/growingio-sdk-ios-autotracker>
+Mon Apr 26 11:33:55 2021: executable: </Users/gio/Documents/Growingio/sdk3.0/growingio-sdk-ios-autotracker/build-wrapper-macosx-x86/build-wrapper-macosx-x86>
+Mon Apr 26 11:33:55 2021: argv[0]: </Users/gio/Documents/Growingio/sdk3.0/growingio-sdk-ios-autotracker/build-wrapper-macosx-x86/build-wrapper-macosx-x86>
+Mon Apr 26 11:33:55 2021: argv[1]: <-c>
+Mon Apr 26 11:33:55 2021: argv[2]: <>
+Mon Apr 26 11:33:55 2021: argv[3]: <xcodebuild>
+Mon Apr 26 11:33:55 2021: argv[4]: <clean>
+Mon Apr 26 11:33:55 2021: argv[5]: <build>
+Mon Apr 26 11:33:55 2021: skipping process with pid: 47213
+Mon Apr 26 11:33:56 2021: process created with pid: 47214
+Mon Apr 26 11:33:56 2021: parent pid: 47213
+Mon Apr 26 11:33:56 2021: working directory: </Users/gio/Documents/Growingio/sdk3.0/growingio-sdk-ios-autotracker>
+Mon Apr 26 11:33:56 2021: executable: </private/tmp/sonarsource-build-wrapper-cache-501/usr/bin/xcodebuild>
+Mon Apr 26 11:33:56 2021: argv[0]: <xcodebuild>
+Mon Apr 26 11:33:56 2021: argv[1]: <clean>
+Mon Apr 26 11:33:56 2021: argv[2]: <build>
+Mon Apr 26 11:33:56 2021: skipping process with pid: 47214
+Mon Apr 26 11:33:59 2021: finalizing json file
+Mon Apr 26 11:33:59 2021: returned with code: 1
