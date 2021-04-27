@@ -35,7 +35,10 @@ jobs:
 #        brew install sonar-scanner
 #        bundle exec fastlane metrics
       - name: Run SonarScanner Analysis
-        run: SonarCloud/sonar-scanner-4.6.0.2311-macosx/bin/sonar-scanner -X -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION_KEY }} -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} -Dsonar.coverageReportPaths=sonarqube-generic-coverage.xml 
+        run: |
+          curl -L -O https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.4.0.2170-macosx.zip
+          unzip -o sonar-scanner-cli-4.4.0.2170-macosx.zip
+          /Users/runner/work/growingio-sdk-ios-autotracker/growingio-sdk-ios-autotracker/sonar-scanner-cli-4.4.0.2170-macosx/sonar-scanner -X -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION_KEY }} -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} -Dsonar.coverageReportPaths=sonarqube-generic-coverage.xml 
         env:
            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
