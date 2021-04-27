@@ -29,11 +29,11 @@ jobs:
         with:
           java-version: 11
          
-      - name: SonarCloud Analysis
-        run: |
-          gem install slather  
-          brew install sonar-scanner
-          bundle exec fastlane metrics
+#      - name: SonarCloud Analysis
+#        run: |
+#        gem install slather  
+#        brew install sonar-scanner
+#        bundle exec fastlane metrics
           
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
