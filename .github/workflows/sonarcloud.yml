@@ -22,6 +22,7 @@ jobs:
         run: |
           curl -L -O https://sonarcloud.io/static/cpp/build-wrapper-macosx-x86.zip
           unzip -o build-wrapper-macosx-x86.zip
+          pod install
           /Users/runner/work/growingio-sdk-ios-autotracker/growingio-sdk-ios-autotracker/build-wrapper-macosx-x86/build-wrapper-macosx-x86 --out-dir build_wrapper_output_directory /Applications/Xcode_12.4.app/Contents/Developer/usr/bin/xcodebuild -workspace GrowingAnalytics.xcworkspace -scheme Example -allowProvisioningUpdates -derivedDataPath DerivedData
       - name: Set up JDK 11
         uses: actions/setup-java@v1
