@@ -28,20 +28,32 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
+  sonaranalysis:
+    name: SonarCloud Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
          
 #      - name: SonarCloud Analysis
 #        run: |
 #        gem install slather  
 #        brew install sonar-scanner
 #        bundle exec fastlane metrics
-      - name: Run SonarScanner Analysis
-        run: |
-          curl -L -O https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.4.0.2170-macosx.zip
-          unzip -o sonar-scanner-cli-4.4.0.2170-macosx.zip
-          ./sonar-scanner-cli-4.4.0.2170-macosx/bin/sonar-scanner -X -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION_KEY }} -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} -Dsonar.coverageReportPaths=sonarqube-generic-coverage.xml 
-        env:
-           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#      - name: Run SonarScanner Analysis
+#        run: |
+#          curl -L -O https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.4.0.2170-macosx.zip
+#          unzip -o sonar-scanner-cli-4.4.0.2170-macosx.zip
+#          ./sonar-scanner-cli-4.4.0.2170-macosx/bin/sonar-scanner -X -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION_KEY }} -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} -Dsonar.coverageReportPaths=sonarqube-generic-coverage.xml 
+#        env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+#           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 #      - name: SonarCloud Scan
 #        uses: SonarSource/sonarcloud-github-action@master
 #        env:
