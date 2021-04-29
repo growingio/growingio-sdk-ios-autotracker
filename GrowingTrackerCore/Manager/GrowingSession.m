@@ -31,8 +31,6 @@
 @property(nonatomic, assign, readonly) long long sessionInterval;
 @property(nonatomic, assign) long long latestVisitTime;
 @property(nonatomic, assign) long long latestDidEnterBackgroundTime;
-@property(nonatomic, assign) double latitude;
-@property(nonatomic, assign) double longitude;
 @property(strong, nonatomic, readonly) NSHashTable *userIdChangedDelegates;
 @property(strong, nonatomic, readonly) NSLock *delegateLock;
 @end
@@ -186,7 +184,7 @@ static GrowingSession *currentSession = nil;
     }
     self.latestVisitTime = timestamp;
     // 发送VisitEvent
-    [GrowingEventGenerator generateVisitEvent:timestamp latitude:_latitude longitude:_longitude];
+    [GrowingEventGenerator generateVisitEvent:timestamp];
 }
 
 - (void)refreshSessionId {
