@@ -26,23 +26,10 @@ typedef NS_ENUM(NSUInteger, GrowingDeviceType) {
 @class GrowingVisitBuidler;
 @interface GrowingVisitEvent : GrowingBaseEvent
 
-@property(nonatomic, copy, readonly) NSString *_Nullable networkState;
-@property(nonatomic, copy, readonly) NSString *_Nullable appChannel;
-@property(nonatomic, assign, readonly) NSInteger screenHeight;
-@property(nonatomic, assign, readonly) NSInteger screenWidth;
-@property(nonatomic, copy, readonly) NSString *_Nonnull deviceBrand;
-@property(nonatomic, copy, readonly) NSString *_Nonnull deviceModel;
-@property(nonatomic, copy, readonly) NSString *_Nonnull deviceType;
 @property(nonatomic, copy, readonly) NSString *_Nonnull platform;
 @property(nonatomic, copy, readonly) NSString *_Nonnull platformVersion;
-@property(nonatomic, copy, readonly) NSString *_Nonnull appName;
-@property(nonatomic, copy, readonly) NSString *_Nonnull appVersion;
-@property(nonatomic, copy, readonly) NSString *_Nonnull language;
-@property(nonatomic, assign, readonly) double latitude;
-@property(nonatomic, assign, readonly) double longitude;
 @property(nonatomic, copy, readonly) NSString *_Nonnull idfa;
 @property(nonatomic, copy, readonly) NSString *_Nonnull idfv;
-@property(nonatomic, copy, readonly) NSString *_Nonnull sdkVersion;
 @property(nonatomic, strong, readonly) NSDictionary<NSString *,NSString*> *_Nonnull extraSdk;
 
 //@property(nonatomic, copy, readwrite) NSString *_Nullable sessionId;
@@ -57,21 +44,8 @@ typedef NS_ENUM(NSUInteger, GrowingDeviceType) {
 
 @interface GrowingVisitBuidler : GrowingBaseBuilder
 
-@property(nonatomic, copy, readonly) NSString *_Nullable networkState;
-@property(nonatomic, copy, readonly) NSString *_Nullable appChannel;
-@property(nonatomic, assign, readonly) NSInteger screenHeight;
-@property(nonatomic, assign, readonly) NSInteger screenWidth;
-@property(nonatomic, copy, readonly) NSString *_Nonnull deviceBrand;
-@property(nonatomic, copy, readonly) NSString *_Nonnull deviceModel;
-@property(nonatomic, copy, readonly) NSString *_Nonnull deviceType;
-@property(nonatomic, copy, readonly) NSString *_Nonnull appName;
-@property(nonatomic, copy, readonly) NSString *_Nonnull appVersion;
-@property(nonatomic, copy, readonly) NSString *_Nonnull language;
-@property(nonatomic, assign, readonly) double latitude;
-@property(nonatomic, assign, readonly) double longitude;
 @property(nonatomic, copy, readonly) NSString *_Nonnull idfa;
 @property(nonatomic, copy, readonly) NSString *_Nonnull idfv;
-@property(nonatomic, copy, readonly) NSString *_Nonnull sdkVersion;
 @property(nonatomic, strong, readonly) NSDictionary<NSString *,NSString*> *_Nonnull extraSdk;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -81,21 +55,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (GrowingVisitBuidler *(^)(NSString *value))setPlatformVersion;
 
 //new set methods
-- (GrowingVisitBuidler *(^)(NSString *value))setNetworkState;
-- (GrowingVisitBuidler *(^)(NSString *value))setAppChannel;
-- (GrowingVisitBuidler *(^)(NSInteger value))setScreenHeight;
-- (GrowingVisitBuidler *(^)(NSInteger value))setScreenWidth;
-- (GrowingVisitBuidler *(^)(NSString *value))setDeviceBrand;
-- (GrowingVisitBuidler *(^)(NSString *value))setDeviceModel;
-- (GrowingVisitBuidler *(^)(NSString *value))setDeviceType;
-- (GrowingVisitBuidler *(^)(NSString *value))setAppName;
-- (GrowingVisitBuidler *(^)(NSString *value))setAppVersion;
-- (GrowingVisitBuidler *(^)(NSString *value))setLanguage;
-- (GrowingVisitBuidler *(^)(double value))setLatitude;
-- (GrowingVisitBuidler *(^)(double value))setLongitude;
 - (GrowingVisitBuidler *(^)(NSString *value))setIdfa;
 - (GrowingVisitBuidler *(^)(NSString *value))setIdfv;
-- (GrowingVisitBuidler *(^)(NSString *value))setSdkVersion;
 - (GrowingVisitBuidler *(^)(NSDictionary<NSString *,NSString*> *value))setExtraSdk;
 
 NS_ASSUME_NONNULL_END

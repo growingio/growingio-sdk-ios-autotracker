@@ -34,7 +34,6 @@
 - (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
     if (self = [super initWithBuilder:builder]) {
         GrowingAppCloseBuidler *subBuilder = (GrowingAppCloseBuidler*)builder;
-        _networkState = subBuilder.networkState;
     }
     return self;
 }
@@ -48,7 +47,6 @@
 
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
-    dataDictM[@"networkState"] = self.networkState;
     return dataDictM;;
 }
 
@@ -56,13 +54,6 @@
 
 
 @implementation GrowingAppCloseBuidler
-
-- (GrowingAppCloseBuidler *(^)(NSString *value))setNetworkState {
-    return ^(NSString *value) {
-        self->_networkState = value;
-        return self;
-    };
-}
 
 - (GrowingBaseEvent *)build {
     return [[GrowingAppCloseEvent alloc] initWithBuilder:self];

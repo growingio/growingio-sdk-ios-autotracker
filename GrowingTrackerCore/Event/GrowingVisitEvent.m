@@ -32,20 +32,8 @@
 - (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
     if (self = [super initWithBuilder:builder]) {
         GrowingVisitBuidler *subBuilder = (GrowingVisitBuidler*)builder;
-        _networkState = subBuilder.networkState;
-        _screenWidth = subBuilder.screenWidth;
-        _screenHeight = subBuilder.screenHeight;
-        _deviceBrand = subBuilder.deviceBrand;
-        _deviceModel = subBuilder.deviceModel;
-        _deviceType = subBuilder.deviceType;
-        _appName = subBuilder.appName;
-        _appVersion = subBuilder.appVersion;
-        _language = subBuilder.language;
-        _latitude = subBuilder.latitude;
-        _longitude = subBuilder.longitude;
         _idfa = subBuilder.idfa;
         _idfv = subBuilder.idfv;
-        _sdkVersion = subBuilder.sdkVersion;
         _extraSdk = subBuilder.extraSdk;
     }
     return self;
@@ -59,20 +47,8 @@
 
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
-    dataDictM[@"networkState"] = self.networkState;
-    dataDictM[@"screenWidth"] = @(self.screenWidth);
-    dataDictM[@"screenHeight"] = @(self.screenHeight);
-    dataDictM[@"deviceBrand"] = self.deviceBrand;
-    dataDictM[@"deviceModel"] = self.deviceModel;
-    dataDictM[@"deviceType"] = self.deviceType;
-    dataDictM[@"appName"] = self.appName;
-    dataDictM[@"appVersion"] = self.appVersion;
-    dataDictM[@"language"] = self.language;
-    dataDictM[@"latitude"] = ABS(self.latitude) > 0 ? @(self.latitude) : nil;
-    dataDictM[@"longitude"] = ABS(self.longitude) > 0 ? @(self.longitude) : nil;
     dataDictM[@"idfa"] = self.idfa;
     dataDictM[@"idfv"] = self.idfv;
-    dataDictM[@"sdkVersion"] = self.sdkVersion;
     return dataDictM;
 }
 
@@ -84,95 +60,10 @@
 - (void)readPropertyInMainThread {
     [super readPropertyInMainThread];
     GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
-    CGSize screenSize = [GrowingDeviceInfo deviceScreenSize];
-    _screenWidth = screenSize.width;
-    _screenHeight = screenSize.height;
-    _networkState = [[GrowingNetworkInterfaceManager sharedInstance] networkType];
-    _sdkVersion = GrowingTrackerVersionName;
-    _deviceBrand = deviceInfo.deviceBrand;
-    _deviceModel = deviceInfo.deviceModel;
-    _deviceType = deviceInfo.deviceType;
-    _appName = deviceInfo.displayName;
-    _appVersion = deviceInfo.appVersion;
-    _language = deviceInfo.language;
-    
     _idfa = deviceInfo.idfa;
     _idfv = deviceInfo.idfv;
 }
 
-- (GrowingVisitBuidler *(^)(NSString *value))setNetworkState {
-    return ^(NSString *value) {
-        self->_networkState = value;
-        return self;
-    };
-}
-- (GrowingVisitBuidler *(^)(NSString *value))setAppChannel {
-    return ^(NSString *value) {
-        self->_appChannel = value;
-        return self;
-    };
-}
-- (GrowingVisitBuidler *(^)(NSInteger value))setScreenHeight {
-    return ^(NSInteger value) {
-        self->_screenHeight = value;
-        return self;
-    };
-}
-- (GrowingVisitBuidler *(^)(NSInteger value))setScreenWidth {
-    return ^(NSInteger value) {
-        self->_screenWidth = value;
-        return self;
-    };
-}
-- (GrowingVisitBuidler *(^)(NSString *value))setDeviceBrand {
-    return ^(NSString *value) {
-        self->_deviceBrand = value;
-        return self;
-    };
-}
-- (GrowingVisitBuidler *(^)(NSString *value))setDeviceModel {
-    return ^(NSString *value) {
-        self->_deviceModel = value;
-        return self;
-    };
-}
-- (GrowingVisitBuidler *(^)(NSString *value))setDeviceType {
-    return ^(NSString *value) {
-        self->_deviceType = value;
-        return self;
-    };
-}
-
-- (GrowingVisitBuidler *(^)(NSString *value))setAppName {
-    return ^(NSString *value) {
-        self->_appName = value;
-        return self;
-    };
-}
-- (GrowingVisitBuidler *(^)(NSString *value))setAppVersion {
-    return ^(NSString *value) {
-        self->_appVersion = value;
-        return self;
-    };
-}
-- (GrowingVisitBuidler *(^)(NSString *value))setLanguage {
-    return ^(NSString *value) {
-        self->_language = value;
-        return self;
-    };
-}
-- (GrowingVisitBuidler *(^)(double value))setLatitude {
-    return ^(double value) {
-        self->_latitude = value;
-        return self;
-    };
-}
-- (GrowingVisitBuidler *(^)(double value))setLongitude {
-    return ^(double value) {
-        self->_longitude = value;
-        return self;
-    };
-}
 - (GrowingVisitBuidler *(^)(NSString *value))setIdfa {
     return ^(NSString *value) {
         self->_idfa = value;
@@ -182,12 +73,6 @@
 - (GrowingVisitBuidler *(^)(NSString *value))setIdfv {
     return ^(NSString *value) {
         self->_idfv = value;
-        return self;
-    };
-}
-- (GrowingVisitBuidler *(^)(NSString *value))setSdkVersion {
-    return ^(NSString *value) {
-        self->_sdkVersion = value;
         return self;
     };
 }

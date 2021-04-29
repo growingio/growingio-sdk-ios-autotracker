@@ -24,7 +24,7 @@
 
 @interface GrowingEventGenerator : NSObject
 
-+ (void)generateVisitEvent:(long long)ts latitude:(double)latitude longitude:(double)longitude;
++ (void)generateVisitEvent:(long long)ts;
 
 + (void)generateCustomEvent:(NSString *_Nonnull)name
                  attributes:(NSDictionary<NSString *, NSObject *> *_Nullable)attributes;
