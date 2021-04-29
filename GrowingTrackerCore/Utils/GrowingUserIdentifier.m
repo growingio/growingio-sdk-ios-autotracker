@@ -23,10 +23,10 @@
 
 @implementation GrowingUserIdentifier
 
-+ (NSString *)idfa {
++ (NSString *)getUserIdentifier {
     NSString *uuid = nil;
     // 尝试取block
-    NSString *idfaString = [self getUserIdentifier];
+    NSString *idfaString = [self idfa];
     if (!idfaString.growingHelper_isValidU) {
         idfaString = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
     }
@@ -48,7 +48,7 @@
     return vendorId;
 }
 
-+ (NSString *)getUserIdentifier {
++ (NSString *)idfa {
     NSString *idfa = @"";
 #ifndef GROWING_ANALYSIS_DISABLE_IDFA
     Class ASIdentifierManagerClass = NSClassFromString(@"ASIdentifierManager");

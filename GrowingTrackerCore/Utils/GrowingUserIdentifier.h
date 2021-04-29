@@ -35,6 +35,11 @@ NS_ASSUME_NONNULL_BEGIN
  @return idfv
  */
 + (nullable NSString *)idfv;
+/**
+ 获取用户标识 idfa > idfv > UUID
+ @return 用户标识
+ */
++ (NSString *)getUserIdentifier;
 
 @end
 
