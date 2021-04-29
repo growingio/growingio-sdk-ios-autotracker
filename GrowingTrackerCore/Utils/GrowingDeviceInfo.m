@@ -168,7 +168,7 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
         return deviceIdString;
     }
 
-    NSString *uuid = [GrowingUserIdentifier idfa];
+    NSString *uuid = [GrowingUserIdentifier getUserIdentifier];
     // 保存
     [GrowingKeyChainWrapper setKeychainObject:uuid forKey:kGrowingKeychainUserIdKey];
 
