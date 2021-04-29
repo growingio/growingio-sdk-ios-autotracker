@@ -108,8 +108,8 @@
     GrowingSession *session = [GrowingSession currentSession];
     _userId = session.loginUserId;
     _sessionId = session.sessionId;
-    _latitude = session.getLatitude;
-    _longitude = session.getLongitude;
+    _latitude = session.latitude;
+    _longitude = session.longitude;
     
     CGSize screenSize = [GrowingDeviceInfo deviceScreenSize];
     _screenWidth = screenSize.width;
