@@ -9,6 +9,7 @@
 #import "GrowingRealTracker.h"
 #import "GrowingSession.h"
 #import "GrowingTimeUtil.h"
+#import "GrowingNetworkInterfaceManager.h"
 
 @implementation GrowingBaseEvent
 
@@ -28,6 +29,19 @@
         _platform = builder.platform;
         _platformVersion = builder.platformVersion;
         _extraParams = builder.extraParams;
+        _networkState = builder.networkState;
+        _screenHeight = builder.screenHeight;
+        _screenWidth = builder.screenWidth;
+        _deviceBrand = builder.deviceBrand;
+        _deviceModel = builder.deviceModel;
+        _deviceType = builder.deviceType;
+        _appName = builder.appName;
+        _appVersion = builder.appVersion;
+        _language = builder.language;
+        _latitude = builder.latitude;
+        _longitude = builder.longitude;
+        _sdkVersion = builder.sdkVersion;
+
     }
     return self;
 }
@@ -50,6 +64,19 @@
     dataDict[@"eventSequenceId"] = @(self.eventSequenceId);
     dataDict[@"appState"] = (self.appState == GrowingAppStateForeground) ? @"FOREGROUND" : @"BACKGROUND";
     dataDict[@"urlScheme"] = self.urlScheme;
+    dataDict[@"networkState"] = self.networkState;
+    dataDict[@"screenWidth"] = @(self.screenWidth);
+    dataDict[@"screenHeight"] = @(self.screenHeight);
+    dataDict[@"deviceBrand"] = self.deviceBrand;
+    dataDict[@"deviceModel"] = self.deviceModel;
+    dataDict[@"deviceType"] = self.deviceType;
+    dataDict[@"appName"] = self.appName;
+    dataDict[@"appVersion"] = self.appVersion;
+    dataDict[@"language"] = self.language;
+    dataDict[@"latitude"] = ABS(self.latitude) > 0 ? @(self.latitude) : nil;
+    dataDict[@"longitude"] = ABS(self.longitude) > 0 ? @(self.longitude) : nil;
+    dataDict[@"sdkVersion"] =  self.sdkVersion;
+    
     return [dataDict copy];
 }
 
@@ -81,6 +108,20 @@
     GrowingSession *session = [GrowingSession currentSession];
     _userId = session.loginUserId;
     _sessionId = session.sessionId;
+    _latitude = session.getLatitude;
+    _longitude = session.getLongitude;
+    
+    CGSize screenSize = [GrowingDeviceInfo deviceScreenSize];
+    _screenWidth = screenSize.width;
+    _screenHeight = screenSize.height;
+    _networkState = [[GrowingNetworkInterfaceManager sharedInstance] networkType];
+    _sdkVersion = GrowingTrackerVersionName;
+    _deviceBrand = deviceInfo.deviceBrand;
+    _deviceModel = deviceInfo.deviceModel;
+    _deviceType = deviceInfo.deviceType;
+    _appName = deviceInfo.displayName;
+    _appVersion = deviceInfo.appVersion;
+    _language = deviceInfo.language;
 }
 
 - (GrowingBaseBuilder * (^)(NSString *value))setDeviceId {
@@ -163,6 +204,84 @@
 - (GrowingBaseBuilder * (^)(NSString *value))setEventType {
     return ^(NSString *value) {
         self->_eventType = value;
+        return self;
+    };
+}
+
+
+- (GrowingBaseBuilder *(^)(NSString *value))setNetworkState {
+    return ^(NSString *value) {
+        self->_networkState = value;
+        return self;
+    };
+}
+
+- (GrowingBaseBuilder *(^)(NSInteger value))setScreenHeight {
+    return ^(NSInteger value) {
+        self->_screenHeight = value;
+        return self;
+    };
+}
+
+- (GrowingBaseBuilder *(^)(NSInteger value))setScreenWidth {
+    return ^(NSInteger value) {
+        self->_screenWidth = value;
+        return self;
+    };
+}
+- (GrowingBaseBuilder *(^)(NSString *value))setDeviceBrand {
+    return ^(NSString *value) {
+        self->_deviceBrand = value;
+        return self;
+    };
+}
+- (GrowingBaseBuilder *(^)(NSString *value))setDeviceModel {
+    return ^(NSString *value) {
+        self->_deviceModel = value;
+        return self;
+    };
+}
+- (GrowingBaseBuilder *(^)(NSString *value))setDeviceType {
+    return ^(NSString *value) {
+        self->_deviceType = value;
+        return self;
+    };
+}
+
+- (GrowingBaseBuilder *(^)(NSString *value))setAppName {
+    return ^(NSString *value) {
+        self->_appName = value;
+        return self;
+    };
+}
+- (GrowingBaseBuilder *(^)(NSString *value))setAppVersion {
+    return ^(NSString *value) {
+        self->_appVersion = value;
+        return self;
+    };
+}
+- (GrowingBaseBuilder *(^)(NSString *value))setLanguage {
+    return ^(NSString *value) {
+        self->_language = value;
+        return self;
+    };
+}
+- (GrowingBaseBuilder *(^)(double value))setLatitude {
+    return ^(double value) {
+        self->_latitude = value;
+        return self;
+    };
+}
+- (GrowingBaseBuilder *(^)(double value))setLongitude {
+    return ^(double value) {
+        self->_longitude = value;
+        return self;
+    };
+}
+
+- (GrowingBaseBuilder *(^)(NSString *value))setSdkVersion {
+    return ^(NSString *value) {
+        self->_sdkVersion = value;
         return self;
     };
 }

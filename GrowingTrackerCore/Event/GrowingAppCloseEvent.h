@@ -24,17 +24,11 @@ NS_ASSUME_NONNULL_BEGIN
 @class GrowingAppCloseBuidler;
 @interface GrowingAppCloseEvent : GrowingBaseEvent
 
-@property (nonatomic, copy, readonly) NSString * _Nonnull networkState;
-
 + (GrowingAppCloseBuidler *_Nonnull)builder;
 
 @end
 
 @interface GrowingAppCloseBuidler : GrowingBaseBuilder
-
-@property (nonatomic, copy, readonly) NSString * _Nonnull networkState;
-
-- (GrowingAppCloseBuidler *(^)(NSString *value))setNetworkState;
 
 @end
 

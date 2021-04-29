@@ -175,6 +175,13 @@ static GrowingSession *currentSession = nil;
     _longitude = 0;
 }
 
+- (double)getLatitude {
+    return _latitude;
+}
+
+- (double)getLongitude {
+    return _longitude;
+}
 
 - (void)resendVisitEvent {
     GIOLogDebug(@"resendVisitEvent");

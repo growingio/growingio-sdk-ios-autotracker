@@ -44,4 +44,8 @@
 /// 清除地理位置
 - (void)cleanLocation;
 
+-(double)getLatitude;
+
+-(double)getLongitude;
+
 @end
