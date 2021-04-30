@@ -214,8 +214,11 @@
 //
 //}
 -(void)testGrowingVisitEvent{
-    GrowingVisitEvent.builder.setNetworkState(@"testNetworkState")
-    .setAppChannel(@"testAppChannel")
+    GrowingVisitEvent.builder
+    .setIdfa(@"testIdfa")
+    .setIdfv(@"testIdfv")
+    .setExtraSdk(@{@"testkey":@"value"})
+    .setNetworkState(@"testNetworkState")
     .setScreenHeight(@1920)
     .setScreenWidth(@1280)
     .setDeviceBrand(@"testDeviceBrand")
@@ -224,11 +227,7 @@
     .setAppName(@"testAppName")
     .setAppVersion(@"testAppVersion")
     .setLanguage(@"testLanguage")
-    .setIdfa(@"testIdfa")
-    .setIdfv(@"testIdfv")
-    .setSdkVersion(@"testSdkVersion")
-    .setExtraSdk(@{@"testkey":@"value"});
-    XCTAssertNotNil(GrowingVisitEvent.builder);
+    .setSdkVersion(@"testSdkVersion");
 }
 
 

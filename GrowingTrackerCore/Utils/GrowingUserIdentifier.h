@@ -1,9 +1,9 @@
 //
-//  GrowingCloseEvent.h
-//  GrowingTracker
+// GrowingIDFAWrapper.h
+// GrowingAnalytics
 //
-//  Created by GrowingIO on 2020/5/18.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by sheng on 2021/4/21.
+//  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -18,17 +18,28 @@
 //  limitations under the License.
 
 
-#import "GrowingBaseEvent.h"
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
-@class GrowingAppCloseBuidler;
-@interface GrowingAppCloseEvent : GrowingBaseEvent
 
-+ (GrowingAppCloseBuidler *_Nonnull)builder;
+@interface GrowingUserIdentifier : NSObject
 
-@end
+/**
+ 获取设备的 IDFA
+ @return idfa
+ */
++ (nullable NSString *)idfa;
 
-@interface GrowingAppCloseBuidler : GrowingBaseBuilder
+/**
+ 获取设备的 IDFV
+ @return idfv
+ */
++ (nullable NSString *)idfv;
+/**
+ 获取用户标识 idfa > idfv > UUID
+ @return 用户标识
+ */
++ (NSString *)getUserIdentifier;
 
 @end
 

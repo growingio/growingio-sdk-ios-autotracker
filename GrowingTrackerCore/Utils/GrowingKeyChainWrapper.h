@@ -1,9 +1,9 @@
 //
-//  GrowingCloseEvent.h
-//  GrowingTracker
+// GrowingKeyChainWrapper.h
+// GrowingAnalytics
 //
-//  Created by GrowingIO on 2020/5/18.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by sheng on 2021/4/21.
+//  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -18,17 +18,25 @@
 //  limitations under the License.
 
 
-#import "GrowingBaseEvent.h"
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
-@class GrowingAppCloseBuidler;
-@interface GrowingAppCloseEvent : GrowingBaseEvent
 
-+ (GrowingAppCloseBuidler *_Nonnull)builder;
+@interface GrowingKeyChainWrapper : NSObject
 
-@end
+/**
+ 往KeyChain中根据key存储一个object
+ @param service 对应的key值
+ @param value 存储的对象
+ */
++ (void)setKeychainObject:(id)value forKey:(NSString *)service;
 
-@interface GrowingAppCloseBuidler : GrowingBaseBuilder
+/**
+ 获取KeyChain中对应key的对象
+ @param key 对应的key值
+ @return 存储的对象
+ */
++ (id)keyChainObjectForKey:(NSString *)key;
 
 @end
 

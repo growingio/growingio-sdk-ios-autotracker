@@ -31,11 +31,11 @@
 #import "GrowingCocoaLumberjack.h"
 @implementation GrowingEventGenerator
 
-+ (void)generateVisitEvent:(long long)ts latitude:(double)latitude longitude:(double)longitude;
++ (void)generateVisitEvent:(long long)ts
 {
     [GrowingDispatchManager dispatchInGrowingThread:^{
         GrowingBaseBuilder *builder =
-            GrowingVisitEvent.builder.setTimestamp(ts).setLatitude(latitude).setLongitude(longitude);
+            GrowingVisitEvent.builder.setTimestamp(ts);
         [[GrowingEventManager shareInstance] postEventBuidler:builder];
     }];
 }
