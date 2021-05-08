@@ -1,5 +1,8 @@
 //
-//  Created by xiangyang on 2020/11/12.
+// GrowingAutotrackConfiguration.h
+// GrowingAnalytics
+//
+//  Created by sheng on 2021/5/8.
 //  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,18 +17,13 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <objc/runtime.h>
-#import "GrowingTrackConfiguration+GrowingAutotracker.h"
 
-static void *const kKeyImpressionScale = "GrowingAutotrackerKeyImpressionScale";
+#import <GrowingAnalytics/GrowingAnalytics.h>
 
-@implementation GrowingTrackConfiguration (GrowingAutotracker)
-- (float)impressionScale {
-    return [objc_getAssociatedObject(self, kKeyImpressionScale) floatValue];
-}
+NS_ASSUME_NONNULL_BEGIN
 
-- (void)setImpressionScale:(float)impressionScale {
-    objc_setAssociatedObject(self, kKeyImpressionScale, @(impressionScale), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
+@interface GrowingAutotrackConfiguration : GrowingTrackConfiguration
 
 @end
+
+NS_ASSUME_NONNULL_END

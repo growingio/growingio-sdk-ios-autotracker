@@ -15,7 +15,7 @@
 //  limitations under the License.
 
 #import "GrowingDynamicProxy.h"
-#import "GrowingTrackConfiguration+GrowingAutotracker.h"
+#import "GrowingAutotrackConfiguration.h"
 #import "GrowingRealAutotracker.h"
 
 @interface GrowingAutotracker : GrowingDynamicProxy
