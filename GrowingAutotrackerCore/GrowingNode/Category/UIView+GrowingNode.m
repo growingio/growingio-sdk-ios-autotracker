@@ -31,9 +31,10 @@
 #import "UIView+GrowingNode.h"
 #import "GrowingImpressionTrack.h"
 #import "GrowingConfigurationManager.h"
-#import "GrowingTrackConfiguration+GrowingAutotracker.h"
 #import "GrowingRealAutotracker.h"
 #import "GrowingNode.h"
+#import "GrowingAutotrackConfiguration.h"
+
 @interface GrowingMaskView : UIImageView
 @end
 
@@ -162,7 +163,11 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
     }
     
     BOOL isInScreen;
-    double impScale = GrowingConfigurationManager.sharedInstance.trackConfiguration.impressionScale;
+    double impScale = 0.0;
+    GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    if ([configuration isKindOfClass:NSClassFromString(@"GrowingAutotrackConfiguration")]) {
+        impScale = ((GrowingAutotrackConfiguration*)configuration).impressionScale;
+    }
     
     if (impScale == 0.0) {
         isInScreen = YES;

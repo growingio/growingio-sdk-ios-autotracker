@@ -32,6 +32,7 @@
 #import "GrowingDeepLinkHandler.h"
 #import "GrowingWebCircle.h"
 #import "GrowingMobileDebugger.h"
+#import "GrowingAutotrackConfiguration.h"
 
 @implementation GrowingRealAutotracker
 - (instancetype)initWithConfiguration:(GrowingTrackConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions {
