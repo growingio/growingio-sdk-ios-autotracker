@@ -16,21 +16,46 @@
 
 #import "GrowingPageGroup.h"
 
-
-@implementation GrowingPageGroup
+@implementation GrowingPageGroup {
+    dispatch_semaphore_t _lock;
+}
 
 - (void)addChildrenPage:(GrowingPage *)page {
-    [_childPages addObject:page];
+    dispatch_semaphore_wait(_lock, DISPATCH_TIME_FOREVER);
+    if (![self.childPages.allObjects containsObject:page]) {
+        [self.childPages addPointer:(__bridge void *)page];
+    }
+    dispatch_semaphore_signal(_lock);
+}
+
+- (void)removeChildrenPage:(GrowingPage *)page {
+    dispatch_semaphore_wait(_lock, DISPATCH_TIME_FOREVER);
+    [self.childPages.allObjects enumerateObjectsWithOptions:NSEnumerationReverse
+                                                 usingBlock:^(NSObject *obj, NSUInteger idx, BOOL *_Nonnull stop) {
+        if (page == obj) {
+            [self.childPages removePointerAtIndex:idx];
+            *stop = YES;
+        }
+    }];
+    dispatch_semaphore_signal(_lock);
+}
+
+- (instancetype)initWithCarrier:(UIViewController *)carrier {
+    if (self = [super initWithCarrier:carrier]) {
+        _childPages = [NSPointerArray pointerArrayWithOptions:NSPointerFunctionsWeakMemory];
+        _lock = dispatch_semaphore_create(1);
+    }
+    return self;
 }
 
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _childPages = [NSMutableArray array];
+        _childPages = [NSPointerArray pointerArrayWithOptions:NSPointerFunctionsWeakMemory];
+        _lock = dispatch_semaphore_create(1);
     }
 
     return self;
 }
-
 
 @end
