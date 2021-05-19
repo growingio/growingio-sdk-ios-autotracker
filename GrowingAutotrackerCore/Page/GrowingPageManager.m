@@ -69,7 +69,9 @@
 }
 
 - (void)viewControllerDidDisappear:(UIViewController *)controller {
-    [self removeDidDisappearController:controller];
+    if (![self isPrivateViewControllerIgnored:controller]) {
+        [self removeDidDisappearController:controller];
+    }
 }
 
 - (void)createdViewControllerPage:(UIViewController *)viewController {
@@ -94,6 +96,7 @@
     }
     [self reissuePageVariable:page];
 }
+
 
 - (void)sendPageEventWithPage:(GrowingPage *)page {
     GrowingBaseBuilder *builder =
@@ -167,11 +170,11 @@
     }
     if ([page isKindOfClass:GrowingPageGroup.class]) {
         GrowingPageGroup *pageGroup = (GrowingPageGroup *)page;
-        if (!pageGroup.childPages) {
+        if (!pageGroup.childPages.allObjects) {
             return;
         }
 
-        for (GrowingPage *child in pageGroup.childPages) {
+        for (GrowingPage *child in pageGroup.childPages.allObjects) {
             if (child.showTimestamp >= pageGroup.showTimestamp) {
                 [self setPage:child variable:variable];
             }

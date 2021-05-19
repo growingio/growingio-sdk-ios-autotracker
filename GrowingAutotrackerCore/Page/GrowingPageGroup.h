@@ -19,8 +19,11 @@
 
 
 @interface GrowingPageGroup : GrowingPage
-@property(nonatomic, readonly, strong) NSMutableArray<GrowingPage *> *childPages;
+
+@property(nonatomic, readonly, strong) NSPointerArray *childPages;
 
 - (void)addChildrenPage:(GrowingPage *)page;
+
+- (void)removeChildrenPage:(GrowingPage *)page;
 
 @end
