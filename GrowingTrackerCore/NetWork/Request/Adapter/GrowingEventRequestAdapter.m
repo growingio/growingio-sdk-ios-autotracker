@@ -21,17 +21,16 @@
 #import "GrowingEventRequestAdapter.h"
 #import "GrowingEventRequest.h"
 #import "NSData+GrowingHelper.h"
+#import "GrowingTimeUtil.h"
 
 @implementation GrowingEventRequestHeaderAdapter
 
 - (NSMutableURLRequest *)adaptedRequest:(NSMutableURLRequest *)request {
     
     NSMutableURLRequest *needAdaptReq = request;
-    // V3.0 先去除数据加密
-//    [needAdaptReq setValue:@"3" forHTTPHeaderField:@"X-Compress-Code"];
-//    [needAdaptReq setValue:@"1" forHTTPHeaderField:@"X-Crypt-Codec"];
-    
-//    [needAdaptReq setValue:@"application/octet-stream" forHTTPHeaderField:@"Content-Type"];
+    [needAdaptReq setValue:@"3" forHTTPHeaderField:@"X-Compress-Code"];
+    [needAdaptReq setValue:@"1" forHTTPHeaderField:@"X-Crypt-Codec"];
+    [needAdaptReq setValue:[NSString stringWithFormat:@"%lld",[GrowingTimeUtil currentTimeMillis]] forHTTPHeaderField:@"X-Timestamp"];
     [needAdaptReq setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     return needAdaptReq;
 }
@@ -69,9 +68,8 @@
         // jsonString malloc to much
         NSString *jsonString = [self buildJSONStringWithEvents:self.events];
         JSONData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-        // TODO:移除lz4加密处理
-    //    [JSONData growingHelper_LZ4String];
-    //    JSONData = [JSONData growingHelper_xorEncryptWithHint:(self.timestamp & 0xFF)];
+        [JSONData growingHelper_LZ4String];
+        JSONData = [JSONData growingHelper_xorEncryptWithHint:(self.timestamp & 0xFF)];
     }
     if (self.outsizeBlock) {
         self.outsizeBlock(JSONData.length);

@@ -23,6 +23,7 @@
 #import "NSData+GrowingHelper.h"
 #import "NSDictionary+GrowingHelper.h"
 
+
 @interface GrowingRequestHeaderAdapter ()
 
 @property (nonatomic, strong) NSDictionary *header;
@@ -38,8 +39,7 @@
 }
 
 - (NSMutableURLRequest *)adaptedRequest:(NSMutableURLRequest *)request {
-    NSMutableURLRequest *needAdaptReq = request ;
-//    [needAdaptReq setValue:[GROWGetTimestamp() stringValue] forHTTPHeaderField:@"X-Timestamp"];
+    NSMutableURLRequest *needAdaptReq = request;
     [needAdaptReq setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     
     if (!self.header.count) {
