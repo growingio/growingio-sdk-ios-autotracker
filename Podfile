@@ -13,7 +13,7 @@ target 'Example' do
   project 'Example/Example'
   pod 'GrowingAnalytics/Autotracker', :path => './'
   pod 'GrowingAnalytics/Tracker', :path => './'
-#  pod 'GrowingAnalytics/ENABLE_ENCRYPTION', :path => './' #禁用加密
+#  pod 'GrowingAnalytics/ENABLE_ENCRYPTION', :path => './' #启用加密
 #  pod 'GrowingAnalytics/DISABLE_IDFA', :path => './' #禁用idfa
   pod 'SDCycleScrollView', '~> 1.75'
   pod 'MJRefresh'
