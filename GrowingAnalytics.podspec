@@ -24,22 +24,22 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   s.default_subspec = "Autotracker"
   
   s.subspec 'TrackerCore' do |trackerCore|
-      trackerCore.source_files = 'GrowingTrackerCore/**/*{.h,.m}'
+      trackerCore.source_files = 'GrowingTrackerCore/**/*{.h,.m,.c,.cpp,.mm}'
   end
   
   s.subspec 'Tracker' do |tracker|
-      tracker.source_files = 'GrowingTracker/**/*{.h,.m}'
+      tracker.source_files = 'GrowingTracker/**/*{.h,.m,.c,.cpp,.mm}'
       tracker.dependency 'GrowingAnalytics/TrackerCore'
   end
   
   s.subspec 'AutotrackerCore' do |autotrackerCore|
-      autotrackerCore.source_files = 'GrowingAutotrackerCore/**/*{.h,.m}'
+      autotrackerCore.source_files = 'GrowingAutotrackerCore/**/*{.h,.m,.c,.cpp,.mm}'
       autotrackerCore.dependency 'GrowingAnalytics/TrackerCore'
-      autotrackerCore.private_header_files = 'GrowingAutotrackerCore/Private/*{.h,.m}'
+      autotrackerCore.private_header_files = 'GrowingAutotrackerCore/Private/*{.h,.m,.c,.cpp,.mm}'
   end
   
   s.subspec 'Autotracker' do |autotracker|
-      autotracker.source_files = 'GrowingAutotracker/**/*{.h,.m}'
+      autotracker.source_files = 'GrowingAutotracker/**/*{.h,.m,.c,.cpp,.mm}'
       autotracker.dependency 'GrowingAnalytics/AutotrackerCore'
   end
   
