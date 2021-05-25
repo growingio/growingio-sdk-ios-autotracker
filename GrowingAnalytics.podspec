@@ -49,4 +49,10 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
       config.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'GROWING_ANALYSIS_DISABLE_IDFA=1'}
   end
 
+  # 配置项 - 禁用数据加密，使用明文
+  s.subspec 'ENABLE_ENCRYPTION' do |config|
+      config.dependency 'GrowingAnalytics/TrackerCore'
+      config.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'GROWING_ANALYSIS_ENABLE_ENCRYPTION=1'}
+  end
+
 end
