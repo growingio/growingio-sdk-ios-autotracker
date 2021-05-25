@@ -28,8 +28,10 @@
 - (NSMutableURLRequest *)adaptedRequest:(NSMutableURLRequest *)request {
     
     NSMutableURLRequest *needAdaptReq = request;
+#ifdef GROWING_ANALYSIS_ENABLE_ENCRYPTION
     [needAdaptReq setValue:@"3" forHTTPHeaderField:@"X-Compress-Codec"];
     [needAdaptReq setValue:@"1" forHTTPHeaderField:@"X-Crypt-Codec"];
+#endif
     [needAdaptReq setValue:[NSString stringWithFormat:@"%lld",[GrowingTimeUtil currentTimeMillis]] forHTTPHeaderField:@"X-Timestamp"];
     [needAdaptReq setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     return needAdaptReq;
@@ -68,8 +70,10 @@
         // jsonString malloc to much
         NSString *jsonString = [self buildJSONStringWithEvents:self.events];
         JSONData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+#ifdef GROWING_ANALYSIS_ENABLE_ENCRYPTION
         JSONData = [JSONData growingHelper_LZ4String];
         JSONData = [JSONData growingHelper_xorEncryptWithHint:(self.timestamp & 0xFF)];
+#endif
     }
     if (self.outsizeBlock) {
         self.outsizeBlock(JSONData.length);
