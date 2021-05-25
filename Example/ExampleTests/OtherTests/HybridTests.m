@@ -234,7 +234,7 @@
 -(void)testNSDataGrowingHelper{
     NSString *testString = @"123测试";
     NSData *testData = [testString dataUsingEncoding: NSUTF8StringEncoding];
-    XCTAssertNil([testData growingHelper_LZ4String]);
+    XCTAssertNotNil([testData growingHelper_LZ4String]);
     XCTAssertNil([testData growingHelper_dictionaryObject]);
     XCTAssertNil([testData growingHelper_arrayObject]);
     XCTAssertNotNil([testData growingHelper_md5String]);
