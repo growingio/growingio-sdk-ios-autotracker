@@ -1,5 +1,8 @@
 //
-//  Created by xiangyang on 2020/11/12.
+// GrowingAutotrackConfiguration.h
+// GrowingAnalytics
+//
+//  Created by sheng on 2021/5/8.
 //  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,9 +17,15 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <Foundation/Foundation.h>
+
 #import "GrowingTrackConfiguration.h"
 
-@interface GrowingTrackConfiguration (GrowingAutotracker)
+NS_ASSUME_NONNULL_BEGIN
+
+@interface GrowingAutotrackConfiguration : GrowingTrackConfiguration
+
 @property(nonatomic, assign) float impressionScale;
+
 @end
+
+NS_ASSUME_NONNULL_END

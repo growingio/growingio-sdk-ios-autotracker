@@ -31,8 +31,7 @@
 
 - (NSData*)growingHelper_LZ4String {
     void *out_buff = malloc(LZ4_compressBound((int)self.length));
-//    int out_size = GROW_LZ4_compress(self.bytes, out_buff, (int)self.length);
-    int out_size = -1;
+    int out_size = GROW_LZ4_compress(self.bytes, out_buff, (int)self.length);
     if (out_size < 0) {
         free(out_buff);
         return nil;
