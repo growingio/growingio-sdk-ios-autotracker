@@ -45,7 +45,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
       autotrackerCore.private_header_files = 'GrowingAutotrackerCore/Private/*{.h,.m,.c,.cpp,.mm}'
       autotrackerCore.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'GROWING_ANALYSIS_AUTOTRACKERCORE=1'}
   end
-  
+
   s.subspec 'Autotracker' do |autotracker|
       autotracker.source_files = 'GrowingAutotracker/**/*{.h,.m,.c,.cpp,.mm}'
       autotracker.dependency 'GrowingAnalytics/AutotrackerCore'
@@ -95,6 +95,12 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
       hybrid.dependency 'GrowingAnalytics/TrackerCore'
   end
   
+
+  s.subspec 'Advertising' do |advertising|
+      advertising.source_files = 'Modules/Advertising/**/*{.h,.m,.c,.cpp,.mm}'
+      advertising.dependency 'GrowingAnalytics/TrackerCore'
+  end
+
   # 配置项 - 禁用idfa
   s.subspec 'DISABLE_IDFA' do |config|
       config.dependency 'GrowingAnalytics/TrackerCore'

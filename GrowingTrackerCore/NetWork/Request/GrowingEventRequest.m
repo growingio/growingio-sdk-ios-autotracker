@@ -26,15 +26,13 @@
 #import "NSString+GrowingHelper.h"
 #import "GrowingConfigurationManager.h"
 #import "GrowingTimeUtil.h"
-@interface GrowingEventRequest ()
 
-@property (nonatomic, strong) NSArray <NSString *> *events;
-@property (nonatomic, assign, readwrite) unsigned long long outsize;
-@property (nonatomic, assign) unsigned long long stm;
-
-@end
 
 @implementation GrowingEventRequest
+
+@synthesize events;
+@synthesize outsize;
+@synthesize stm;
 
 - (instancetype)initWithEvents:(NSArray<NSString *> *)events {
     if (self = [super init]) {

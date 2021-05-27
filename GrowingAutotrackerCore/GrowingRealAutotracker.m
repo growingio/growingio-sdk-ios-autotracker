@@ -30,6 +30,9 @@
 #import "GrowingImpressionTrack.h"
 #import "GrowingDeepLinkHandler.h"
 #import "GrowingAutotrackConfiguration.h"
+#import "GrowingTrackEventType.h"
+#import "GrowingAutotrackEventType.h"
+#import "GrowingNetworkConfig.h"
 
 @implementation GrowingRealAutotracker
 - (instancetype)initWithConfiguration:(GrowingTrackConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions {

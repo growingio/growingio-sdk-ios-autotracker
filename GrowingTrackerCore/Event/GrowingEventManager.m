@@ -128,6 +128,20 @@ static GrowingEventManager *sharedInstance = nil;
 
         // timer
         self.reportTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, self.eventDispatch);
+        
+
+        [GrowingDispatchManager dispatchInGrowingThread:^{
+            // load eventQueue for the first time
+            [self reloadFromDB_unsafe];
+        }];
+        
+    }
+    return self;
+}
+
+- (void)startTimerSend {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
         CGFloat configInterval = 0;
         CGFloat dataUploadInterval = configInterval >= 5 ? configInterval : 5;  // at least 5 seconds
         dispatch_source_set_timer(self.reportTimer, dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC * 5),  // first upload
@@ -136,18 +150,19 @@ static GrowingEventManager *sharedInstance = nil;
             [self timerSendEvent];
         });
         dispatch_resume(_reportTimer);
-
-        [GrowingDispatchManager dispatchInGrowingThread:^{
-            // load eventQueue for the first time
-            [self reloadFromDB_unsafe];
-        }];
+        
+        for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
+            if ([obj respondsToSelector:@selector(growingEventManagerChannels:)]) {
+                [obj growingEventManagerChannels:[GrowingEventChannel eventChannels]];
+            }
+        }
+        
         _allEventChannels = [GrowingEventChannel buildAllEventChannels];
 
         _eventChannelDict = [GrowingEventChannel eventChannelMapFromAllChannels:_allEventChannels];
         // all other events got to this category
         _otherEventChannel = [GrowingEventChannel otherEventChannelFromAllChannels:_allEventChannels];
-    }
-    return self;
+    });
 }
 
 - (void)cleanExpiredData_unsafe {
@@ -196,6 +211,7 @@ static GrowingEventManager *sharedInstance = nil;
 
 - (void)postEventBuidler:(GrowingBaseBuilder *_Nullable)builder {
     dispatch_block_t block = ^{
+        
         for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
             if ([obj respondsToSelector:@selector(growingEventManagerEventTriggered:)]) {
                 [obj growingEventManagerEventTriggered:builder.eventType];
@@ -285,10 +301,13 @@ static GrowingEventManager *sharedInstance = nil;
     }
 }
 
-// 外部调用
+
 - (void)sendAllChannelEvents {
     [GrowingDispatchManager dispatchInGrowingThread:^{
         [self flushDB];
+        if (!self.allEventChannels) {
+            return;
+        }
         for (GrowingEventChannel *channel in self.allEventChannels) {
             [self sendEventsOfChannel_unsafe:channel];
         }
@@ -352,10 +371,22 @@ static GrowingEventManager *sharedInstance = nil;
 #ifdef DEBUG
     [self prettyLogForEvents:rawEvents withChannel:channel];
 #endif
+    /// 如果需要改变发送地址以及请求参数
+    NSObject<GrowingRequestProtocol> *eventRequest = nil;
+    for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
+        if ([obj respondsToSelector:@selector(growingEventManagerRequestWithChannel:)]) {
+            eventRequest = [obj growingEventManagerRequestWithChannel:channel];
+            if (eventRequest) {
+                break;
+            }
+        }
+    }
+    if (!eventRequest) {
+        eventRequest = [[GrowingEventRequest alloc] initWithEvents:rawEvents];
+    } else {
+        eventRequest.events = rawEvents;
+    }
 
-    GrowingEventRequest *eventRequest = nil;
-    eventRequest = [[GrowingEventRequest alloc] initWithEvents:rawEvents];
-    
     id <GrowingEventNetworkService> service = [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingEventNetworkService)];
     if (!service) {
         GIOLogError(@"-sendEventsOfChannel_unsafe: error : no network service support");
@@ -390,30 +421,6 @@ static GrowingEventManager *sharedInstance = nil;
             }];
         }
     }];
-//    [[GrowingNetworkManager sharedInstance] sendRequest:eventRequest
-//        success:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data) {
-//            [GrowingDispatchManager dispatchInGrowingThread:^{
-//                if (isViaCellular) {
-//                    self.uploadEventSize += eventRequest.outsize;
-//                }
-//                [self removeEvents_unsafe:events forChannel:channel];
-//                channel.isUploading = NO;
-//
-//                // 如果剩余数量 大于单包数量  则直接发送
-//                if (channel.isCustomEvent && self.realtimeEventDB.countOfEvents >= self.packageNum) {
-//                    [self sendAllChannelEvents];
-//                }
-//
-//                if (!channel.isCustomEvent && self.eventQueue.count >= self.packageNum) {
-//                    [self sendAllChannelEvents];
-//                }
-//            }];
-//        }
-//        failure:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data, NSError *_Nonnull error) {
-//            [GrowingDispatchManager dispatchInGrowingThread:^{
-//                channel.isUploading = NO;
-//            }];
-//        }];
 }
 
 - (void)prettyLogForEvents:(NSArray<NSString *> *)events withChannel:(GrowingEventChannel *)channel {

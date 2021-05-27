@@ -44,9 +44,13 @@ typedef NS_ENUM(NSUInteger, GrowingHTTPMethod) {
 @property (nonatomic, copy, readonly) NSString *path;
 @property (nonatomic, strong, readonly) NSArray <id <GrowingRequestAdapter>> *adapters;
 
+
+
 @optional
-
-@property (nonatomic, strong, readonly) NSDictionary *query;
+///event property
+@property (nonatomic, strong) NSArray <NSString *> *events;
+@property (nonatomic, assign, readwrite) unsigned long long outsize;
+@property (nonatomic, assign) unsigned long long stm;
 @property (nonatomic, assign, readonly) NSTimeInterval timeoutInSeconds;
-
+@property (nonatomic, strong, readonly) NSDictionary *query;
 @end
