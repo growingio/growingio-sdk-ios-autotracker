@@ -26,8 +26,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithEvents:(NSArray <NSString *> *)events;
 
-@property (nonatomic, assign, readonly) unsigned long long outsize;
-
 @end
 
 NS_ASSUME_NONNULL_END

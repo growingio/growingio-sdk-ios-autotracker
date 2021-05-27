@@ -24,13 +24,24 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingEventChannel : NSObject
 
-@property (nonatomic, readonly, copy)   NSArray<NSString *> * eventTypes;
-@property (nonatomic, readonly, copy)   NSString * urlTemplate;
-@property (nonatomic, readonly, assign) BOOL isCustomEvent;
-@property (nonatomic,           assign) BOOL isUploading;
+@property (nonatomic, copy)   NSArray<NSString *> * eventTypes;
+@property (nonatomic, copy)   NSString * urlTemplate;
+@property (nonatomic, assign) BOOL isCustomEvent;
+@property (nonatomic, assign) BOOL isUploading;
 
+- (instancetype)initWithTypes:(NSArray<NSString *> * _Nullable)eventTypes
+                  urlTemplate:(NSString *)urlTemplate
+                isCustomEvent:(BOOL)isCustomEvent
+                  isUploading:(BOOL)isUploading;
+
++ (instancetype)eventChannelWithEventTypes:(NSArray<NSString *> * _Nullable)eventTypes
+                               urlTemplate:(NSString *)urlTemplate
+                             isCustomEvent:(BOOL)isCustomEvent;
+/// 所有的channels集合
++ (NSMutableArray<GrowingEventChannel *> *)eventChannels;
+/// 深拷贝Channels集合，并自动添加一个EventType为nil的Channels
 + (NSArray<GrowingEventChannel *> *)buildAllEventChannels;
-
+/// 根据channels数组，返回 eventType 为key，channel对象为object的字典
 + (NSDictionary *)eventChannelMapFromAllChannels:(NSArray <GrowingEventChannel *> *)channels;
 
 + (GrowingEventChannel *)otherEventChannelFromAllChannels:(NSArray <GrowingEventChannel *> *)allEventChannels;

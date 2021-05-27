@@ -4,8 +4,6 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
-	<key>LSApplicationCategoryType</key>
-	<string></string>
 	<key>CFBundleDisplayName</key>
 	<string>${PRODUCT_NAME}</string>
 	<key>CFBundleExecutable</key>
@@ -38,20 +36,26 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string></string>
+			<string>GrowingIO 2.0</string>
 			<key>CFBundleURLSchemes</key>
-			<array/>
+			<array>
+				<string>growing.530c8231345c492d</string>
+			</array>
 		</dict>
 		<dict/>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocationUsageDescription</key>
 	<string>GrowingIO测试demo 需要访问你的 位置信息</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>GrowingIO测试demo 需要访问你的 位置信息</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>GrowingIO测试demo 需要使用你的广告标识信息以用于数据追踪分析</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

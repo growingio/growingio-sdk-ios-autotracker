@@ -23,25 +23,34 @@
 #import "GrowingVisitEvent.h"
 #import "GrowingNodeProtocol.h"
 #import "GrowingBaseEvent.h"
+#import "GrowingRequestProtocol.h"
+#import "GrowingEventChannel.h"
+
 @class GrowingPageEvent;
 //拦截者做额外处理
 @protocol GrowingEventInterceptor <NSObject>
 @optional
+- (void)growingEventManagerChannels:(NSMutableArray<GrowingEventChannel *> *)channels;
 //事件被触发
 - (void)growingEventManagerEventTriggered:(NSString * _Nullable)eventType;
 //在未完成构造event前，返回builder
 - (void)growingEventManagerEventWillBuild:(GrowingBaseBuilder* _Nullable)builder;
 //在完成构造event之后，返回event
 - (void)growingEventManagerEventDidBuild:(GrowingBaseEvent* _Nullable)event;
+//频段事件的网络请求request对象
+- (id<GrowingRequestProtocol>_Nullable)growingEventManagerRequestWithChannel:(GrowingEventChannel* _Nullable)channel;
 @end
 
 @interface GrowingEventManager : NSObject
+
 
 + (_Nonnull instancetype)sharedInstance;
 
 - (void)sendAllChannelEvents;
 
 - (void)clearAllEvents;
+/// 开启定时器发送事件
+- (void)startTimerSend;
 
 /// 添加拦截者 - 执行顺序不保证有序
 /// @param interceptor 拦截者
@@ -53,5 +62,7 @@
 
 // 必须在主线程调用
 - (void)postEventBuidler:(GrowingBaseBuilder* _Nullable)builder;
+
+- (void)writeToDatabaseWithEvent:(GrowingBaseEvent *)event;
 
 @end

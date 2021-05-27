@@ -4,6 +4,7 @@
 
 #import <Foundation/Foundation.h>
 
+FOUNDATION_EXPORT NSString * const defaultDataCollectionServerHost;
 
 @interface GrowingTrackConfiguration : NSObject <NSCopying>
 @property(nonatomic, copy, readonly) NSString *projectId;

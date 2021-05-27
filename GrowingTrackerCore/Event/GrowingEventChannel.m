@@ -20,7 +20,8 @@
 
 #import "GrowingEventChannel.h"
 #import "GrowingNetworkConfig.h"
-#import "GrowingTrackEventType.h"
+#import "GrowingAutotrackEventType.h"
+
 @implementation GrowingEventChannel
 
 - (instancetype)initWithTypes:(NSArray<NSString *> *)eventTypes
@@ -45,19 +46,28 @@
                                           isUploading:NO];
 }
 
+static NSMutableArray *eventChannels = nil;
+
++ (NSMutableArray<GrowingEventChannel *> *)eventChannels {
+    if (!eventChannels) {
+        eventChannels = [NSMutableArray array];
+        [eventChannels addObject:[GrowingEventChannel eventChannelWithEventTypes:@[GrowingEventTypeVisit, GrowingEventTypeAppClosed,GrowingEventTypePage]
+                                                                            urlTemplate:kGrowingEventApiTemplate
+                                                                   isCustomEvent:NO]];
+        [eventChannels addObject:[GrowingEventChannel eventChannelWithEventTypes:@[GrowingEventTypeCustom, GrowingEventTypeConversionVariables, GrowingEventTypeLoginUserAttributes, GrowingEventTypeVisitorAttributes,GrowingEventTypePageAttributes]
+                                                                     urlTemplate:kGrowingEventApiTemplate
+                                                                   isCustomEvent:YES]];
+    }
+    return eventChannels;
+}
+
 + (NSArray<GrowingEventChannel *> *)buildAllEventChannels {
-    // TODO:这里删除了page,pageAttributes
-    return @[
-        [GrowingEventChannel eventChannelWithEventTypes:@[GrowingEventTypeVisit, GrowingEventTypeAppClosed]
-                                            urlTemplate:kGrowingEventApiTemplate
-                                          isCustomEvent:NO],
-        [GrowingEventChannel eventChannelWithEventTypes:@[GrowingEventTypeCustom, GrowingEventTypeConversionVariables, GrowingEventTypeLoginUserAttributes, GrowingEventTypeVisitorAttributes]
-                                            urlTemplate:kGrowingEventApiTemplate
-                                          isCustomEvent:YES],
-        [GrowingEventChannel eventChannelWithEventTypes:nil
-                                            urlTemplate:kGrowingEventApiTemplate
-                                          isCustomEvent:NO],
-    ];
+    NSMutableArray *channels = [[self eventChannels] mutableCopy];
+    eventChannels = nil;
+    [channels addObject:[GrowingEventChannel eventChannelWithEventTypes:nil
+                                                                    urlTemplate:kGrowingEventApiTemplate
+                                                               isCustomEvent:NO]];
+    return channels;
 }
 
 + (NSDictionary *)eventChannelMapFromAllChannels:(NSArray <GrowingEventChannel *> *)channels {
@@ -67,16 +77,13 @@
         allEventChannels = [self buildAllEventChannels];
     }
     // TODO: 添加page以及pageAttributes类型
-    return @{
-        GrowingEventTypeVisit: allEventChannels[0],
-//        kEventTypeKeyPage: allEventChannels[0],
-        GrowingEventTypeAppClosed: allEventChannels[0],
-        GrowingEventTypeCustom: allEventChannels[1],
-//        kEventTypeKeyPageAttributes: allEventChannels[1],
-        GrowingEventTypeConversionVariables: allEventChannels[1],
-        GrowingEventTypeLoginUserAttributes: allEventChannels[1],
-        GrowingEventTypeVisitorAttributes: allEventChannels[1],
-    };
+    NSMutableDictionary *dictM = [NSMutableDictionary dictionary];
+    for (GrowingEventChannel *obj in channels) {
+        for (NSString *key in obj.eventTypes) {
+            [dictM setObject:obj forKey:key];
+        }
+    }
+    return dictM;
 }
 
 + (GrowingEventChannel *)otherEventChannelFromAllChannels:(NSArray <GrowingEventChannel *> *)allEventChannels {

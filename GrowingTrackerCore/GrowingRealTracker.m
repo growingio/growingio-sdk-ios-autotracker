@@ -24,9 +24,10 @@
 #import "GrowingAppDelegateAutotracker.h"
 #import "GrowingDeepLinkHandler.h"
 #import "GrowingModuleManager.h"
+#import "GrowingEventManager.h"
 
-NSString *const GrowingTrackerVersionName = @"3.2.0";
-const int GrowingTrackerVersionCode = 30200;
+NSString *const GrowingTrackerVersionName = @"3.2.1";
+const int GrowingTrackerVersionCode = 30201;
 
 @interface GrowingRealTracker ()
 @property(nonatomic, copy, readonly) NSDictionary *launchOptions;
@@ -44,6 +45,7 @@ const int GrowingTrackerVersionCode = 30200;
         [self loggerSetting];
         GrowingConfigurationManager.sharedInstance.trackConfiguration = self.configuration;
         [GrowingAppLifecycle.sharedInstance setupAppStateNotification];
+        [[GrowingEventManager sharedInstance] startTimerSend];
         [GrowingSession startSession];
         [GrowingAppDelegateAutotracker track];
         [[GrowingModuleManager sharedInstance] triggerEvent:GrowingMInitEvent];
