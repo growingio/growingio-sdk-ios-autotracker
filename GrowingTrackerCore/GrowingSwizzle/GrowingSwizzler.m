@@ -187,20 +187,32 @@ static void (*growing_swizzledMethods[GROWING_MAX_ARGS - GROWING_MIN_ARGS + 1])(
     return isLocal;
 }
 
-+ (id)realDelegateFromSelector:(SEL)selector proxy:(id)proxy {
++ (Class)realDelegateClassFromSelector:(SEL)selector proxy:(id)proxy {
     if (!proxy) {
         return nil;
     }
-    //如果使用了NSProxy或者快速转发,判断forwardingTargetForSelector是否实现
-    //默认forwardingTargetForSelector都有实现，只是返回为nil
+    
     id realDelegate = proxy;
     id obj = nil;
     do {
+        //避免proxy本身实现了该方法或通过resolveInstanceMethod添加了方法实现
+        if (class_getInstanceMethod(object_getClass(realDelegate), selector)) {
+            break;
+        }
+        
+        //如果使用了NSProxy或者快速转发,判断forwardingTargetForSelector是否实现
+        //默认forwardingTargetForSelector都有实现，只是返回为nil
         obj = ((id(*)(id, SEL, SEL))objc_msgSend)(realDelegate, @selector(forwardingTargetForSelector:), selector);
         if (!obj) break;
         realDelegate = obj;
     } while (obj);
-    return realDelegate;
+    return object_getClass(realDelegate);
+}
+
++ (BOOL)realDelegateClass:(Class)cls respondsToSelector:(SEL)sel {
+    //如果cls继承自NSProxy，使用respondsToSelector来判断会崩溃
+    //因为NSProxy本身未实现respondsToSelector
+    return class_respondsToSelector(cls, sel);
 }
 
 + (void)growing_swizzleSelector:(SEL)aSelector

@@ -28,9 +28,10 @@
 
 - (void)growing_setDelegate:(id<UITableViewDelegate>)delegate {
     SEL selector = @selector(tableView:didSelectRowAtIndexPath:);
-    id realDelegate = [GrowingSwizzler realDelegateFromSelector:selector proxy:delegate];
-    if ([realDelegate respondsToSelector:selector]) {
-        
+    Class class = [GrowingSwizzler realDelegateClassFromSelector:selector proxy:delegate];
+    
+    if ([GrowingSwizzler realDelegateClass:class respondsToSelector:selector]) {
+
         void (^didSelectBlock)(id, SEL, id, id) = ^(id view, SEL command, UITableView *tableView, NSIndexPath *indexPath) {
                                                  
             if (tableView && indexPath) {
@@ -39,7 +40,7 @@
             }
         };
         [GrowingSwizzler growing_swizzleSelector:selector
-                                         onClass:[realDelegate class]
+                                         onClass:class
                                        withBlock:didSelectBlock
                                            named:@"growing_tableView_didSelect"];
     }
