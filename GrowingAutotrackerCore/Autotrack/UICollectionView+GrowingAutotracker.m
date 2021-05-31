@@ -28,9 +28,9 @@
 
 - (void)growing_setDelegate:(id<UICollectionViewDelegate>)delegate {
     SEL selector = @selector(collectionView:didSelectItemAtIndexPath:);
-    id realDelegate = [GrowingSwizzler realDelegateFromSelector:selector proxy:delegate];
+    Class class = [GrowingSwizzler realDelegateClassFromSelector:selector proxy:delegate];
     
-    if ([realDelegate respondsToSelector:selector]) {
+    if ([GrowingSwizzler realDelegateClass:class respondsToSelector:selector]) {
         
         void (^didSelectItemBlock)(id, SEL, id, id) = ^(id view, SEL command, UICollectionView *collectionView, NSIndexPath *indexPath) {
                                                  
@@ -41,7 +41,7 @@
         };
         
         [GrowingSwizzler growing_swizzleSelector:selector
-                                         onClass:[realDelegate class]
+                                         onClass:class
                                        withBlock:didSelectItemBlock
                                            named:@"growing_collectionView_didSelect"];
     }
