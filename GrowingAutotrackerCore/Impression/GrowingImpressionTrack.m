@@ -148,6 +148,9 @@ static GrowingImpressionTrack *impTrack = nil;
         self.sourceTable = [[NSHashTable alloc]
                 initWithOptions:NSPointerFunctionsWeakMemory | NSPointerFunctionsObjectPointerPersonality
                        capacity:100];
+        self.bgSourceTable = [[NSHashTable alloc]
+                initWithOptions:NSPointerFunctionsWeakMemory | NSPointerFunctionsObjectPointerPersonality
+                       capacity:100];
     }
     return self;
 }

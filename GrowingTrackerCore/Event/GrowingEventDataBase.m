@@ -136,13 +136,13 @@ static  NSMapTable *dbMap = nil;
     return self;
 }
 
-static BOOL isExecuteVaccum(NSString *name)
+static BOOL isExecuteVacuum(NSString *name)
 {
     if (name.length == 0) {
         return NO;
     }
-    NSUserDefaults *userDefalut = [NSUserDefaults standardUserDefaults];
-    NSDate *beforeDate = [userDefalut objectForKey:VACUUM_DATE(name)];
+    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
+    NSDate *beforeDate = [userDefault objectForKey:VACUUM_DATE(name)];
 
     NSDate *nowDate = [NSDate date];
 
@@ -160,11 +160,11 @@ static BOOL isExecuteVaccum(NSString *name)
         }
         
         if (flag) {
-            [userDefalut setObject:nowDate forKey:VACUUM_DATE(name)];
+            [userDefault setObject:nowDate forKey:VACUUM_DATE(name)];
         }
         return flag;
     } else {
-        [userDefalut setObject:nowDate forKey:VACUUM_DATE(name)];
+        [userDefault setObject:nowDate forKey:VACUUM_DATE(name)];
         return YES;
     }
 }
@@ -455,7 +455,7 @@ static BOOL isExecuteVaccum(NSString *name)
 
 - (NSError*)vacuum
 {
-    if (!isExecuteVaccum(self.sqliteName)) {
+    if (!isExecuteVacuum(self.sqliteName)) {
         return nil;
     }
     
