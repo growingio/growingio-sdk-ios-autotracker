@@ -105,9 +105,6 @@ static GrowingMobileDebugger *shareInstance = nil;
 }
 
 - (void)runWithMobileDebugger:(NSURL *)url{
-    [[GrowingEventManager shareInstance] addInterceptor:self];
-    
-    
     if (self.webSocket) {
         [self.webSocket close];
         self.webSocket.delegate = nil;
@@ -238,7 +235,6 @@ static GrowingMobileDebugger *shareInstance = nil;
         [alert showAlertAnimated:NO];
     }
     [GrowingWSLogger sharedInstance].loggerBlock = nil;
-    [[GrowingEventManager shareInstance] removeInterceptor:self];
 }
 
 - (BOOL)isRunning {
