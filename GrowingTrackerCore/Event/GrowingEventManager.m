@@ -119,6 +119,7 @@ static GrowingEventManager *shareinstance = nil;
                 [GrowingEventDataBase databaseWithPath:[GrowingFileStorage getRealtimeDatabasePath]
                                                   name:[name stringByAppendingString:@"realtimevent"]];
 
+            [self.realtimeEventDB vacuum];
             [self.timingEventDB vacuum];
             [self cleanExpiredData_unsafe];
         }];
