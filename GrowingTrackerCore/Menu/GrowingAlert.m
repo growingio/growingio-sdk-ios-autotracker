@@ -17,7 +17,7 @@
 //  limitations under the License.
 
 #import "GrowingAlert.h"
-#import "GrowingCocoaLumberjack.h"
+#import "GrowingLogger.h"
 typedef NS_ENUM(NSUInteger, GrowingAlertError) {
     alertControllerNil = 0,
     popoverNotSet = 1,

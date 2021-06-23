@@ -21,7 +21,7 @@
 #import "GrowingFileStorage.h"
 #import "NSArray+GrowingHelper.h"
 #import "NSDictionary+GrowingHelper.h"
-#import "GrowingCocoaLumberjack.h"
+#import "GrowingLogger.h"
 
 NSString *const kGrowingResidentDirName = @"com.growingio.core";
 NSString *const kGrowingDirCommonPrefix = @"com.growingio.";

@@ -19,7 +19,10 @@
 
 
 #import <Foundation/Foundation.h>
-@protocol GrowingRequestProtocol;
+#import "GrowingRequestProtocol.h"
+#import "GrowingEventNetworkService.h"
+
+//@protocol GrowingEventNetworkService;
 @protocol GrowingURLSessionProtocol;
 @protocol GrowingURLSessionDataTaskProtocol;
 
@@ -28,15 +31,16 @@ typedef void ( ^GrowingNetworkFailureBlock ) ( NSHTTPURLResponse * _Nonnull http
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingNetworkManager : NSObject
+@interface GrowingNetworkManager : NSObject <GrowingEventNetworkService>
 
-+ (instancetype)shareManager;
++ (instancetype)sharedInstance;
 
 + (instancetype)shareManagerURLSession:(id <GrowingURLSessionProtocol>)session;
 
 - (id <GrowingURLSessionDataTaskProtocol>_Nullable)sendRequest:(id <GrowingRequestProtocol>)request
                                                        success:(GrowingNetworkSuccessBlock)success
                                                        failure:(GrowingNetworkFailureBlock)failure;
+
 
 @end
 

@@ -22,7 +22,7 @@
 #import <UIKit/UIKit.h>
 
 #import "GrowingBaseEvent+SendPolicy.h"
-#import "GrowingCocoaLumberjack.h"
+#import "GrowingLogger.h"
 #import "GrowingConfigurationManager.h"
 #import "GrowingDataTraffic.h"
 #import "GrowingDeviceInfo.h"
@@ -32,12 +32,14 @@
 #import "GrowingEventRequest.h"
 #import "GrowingFileStorage.h"
 #import "GrowingNetworkInterfaceManager.h"
-#import "GrowingNetworkManager.h"
 #import "GrowingPersistenceDataProvider.h"
 #import "GrowingSession.h"
 #import "GrowingTrackConfiguration.h"
 #import "NSDictionary+GrowingHelper.h"
 #import "NSString+GrowingHelper.h"
+
+#import "GrowingEventNetworkService.h"
+#import "GrowingServiceManager.h"
 
 static NSUInteger const kGrowingMaxQueueSize = 10000;  // default: max event queue size there are 10000 events
 static NSUInteger const kGrowingFillQueueSize = 1000;  // default: determine when event queue is filled from DB
@@ -91,14 +93,14 @@ static const NSUInteger kGrowingUnit_MB = 1024 * 1024;
     [self.interceptorLock unlock];
 }
 
-static GrowingEventManager *shareinstance = nil;
+static GrowingEventManager *sharedInstance = nil;
 
-+ (instancetype)shareInstance {
++ (instancetype)sharedInstance {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        shareinstance = [[self alloc] initWithName:@"growing"];
+        sharedInstance = [[self alloc] initWithName:@"growing"];
     });
-    return shareinstance;
+    return sharedInstance;
 }
 
 - (instancetype)initWithName:(NSString *)name {
@@ -364,8 +366,19 @@ static GrowingEventManager *shareinstance = nil;
 
     GrowingEventRequest *eventRequest = nil;
     eventRequest = [[GrowingEventRequest alloc] initWithEvents:rawEvents];
-    [[GrowingNetworkManager shareManager] sendRequest:eventRequest
-        success:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data) {
+    
+    id <GrowingEventNetworkService> service = [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingEventNetworkService)];
+    if (!service) {
+        GIOLogError(@"-sendEventsOfChannel_unsafe: error : no network service support");
+        return;
+    }
+    [service sendRequest:eventRequest completion:^(NSHTTPURLResponse * _Nonnull httpResponse, NSData * _Nonnull data, NSError * _Nonnull error) {
+        if (error) {
+            [GrowingDispatchManager dispatchInGrowingThread:^{
+                channel.isUploading = NO;
+            }];
+        }
+        if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
             [GrowingDispatchManager dispatchInGrowingThread:^{
                 if (isViaCellular) {
                     self.uploadEventSize += eventRequest.outsize;
@@ -382,12 +395,36 @@ static GrowingEventManager *shareinstance = nil;
                     [self sendAllChannelEvents];
                 }
             }];
-        }
-        failure:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data, NSError *_Nonnull error) {
+        } else {
             [GrowingDispatchManager dispatchInGrowingThread:^{
                 channel.isUploading = NO;
             }];
-        }];
+        }
+    }];
+//    [[GrowingNetworkManager sharedInstance] sendRequest:eventRequest
+//        success:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data) {
+//            [GrowingDispatchManager dispatchInGrowingThread:^{
+//                if (isViaCellular) {
+//                    self.uploadEventSize += eventRequest.outsize;
+//                }
+//                [self removeEvents_unsafe:events forChannel:channel];
+//                channel.isUploading = NO;
+//
+//                // 如果剩余数量 大于单包数量  则直接发送
+//                if (channel.isCustomEvent && self.realtimeEventDB.countOfEvents >= self.packageNum) {
+//                    [self sendAllChannelEvents];
+//                }
+//
+//                if (!channel.isCustomEvent && self.eventQueue.count >= self.packageNum) {
+//                    [self sendAllChannelEvents];
+//                }
+//            }];
+//        }
+//        failure:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data, NSError *_Nonnull error) {
+//            [GrowingDispatchManager dispatchInGrowingThread:^{
+//                channel.isUploading = NO;
+//            }];
+//        }];
 }
 
 - (void)prettyLogForEvents:(NSArray<NSString *> *)events withChannel:(GrowingEventChannel *)channel {

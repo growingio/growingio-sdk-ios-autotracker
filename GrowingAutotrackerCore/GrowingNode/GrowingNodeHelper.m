@@ -19,7 +19,7 @@
 
 #import "GrowingNodeHelper.h"
 
-#import "GrowingCocoaLumberjack.h"
+#import "GrowingLogger.h"
 #import "GrowingPageGroup.h"
 #import "GrowingPageManager.h"
 #import "NSString+GrowingHelper.h"

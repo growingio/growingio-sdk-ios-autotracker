@@ -8,7 +8,6 @@
 
 #import "GIOUserIdViewController.h"
 #import "GIOConstants.h"
-#import "GrowingAutotracker.h"
 
 @interface GIOUserIdViewController () <UITextFieldDelegate>
 
@@ -32,7 +31,7 @@
 //设置UID为10048
 - (IBAction)setUserId:(id)sender {
 
-    [[GrowingAutotracker sharedInstance] setLoginUserId:@"10048"];
+    [[GrowingSDK sharedInstance] setLoginUserId:@"10048"];
 
     NSLog(@"设置用户ID为10048");
     
@@ -40,7 +39,7 @@
 //更新用户ID为10084
 - (IBAction)changeUserId:(id)sender {
 
-    [[GrowingAutotracker sharedInstance] setLoginUserId:@"10084"];
+    [[GrowingSDK sharedInstance] setLoginUserId:@"10084"];
 
 
     NSLog(@"设置用户ID为10084");
@@ -48,13 +47,13 @@
 //清除用户ID
 - (IBAction)cleanUserId:(id)sender {
 
-    [[GrowingAutotracker sharedInstance] cleanLoginUserId];
+    [[GrowingSDK sharedInstance] cleanLoginUserId];
     NSLog(@"清除用户ID");
 }
 //自定义UID操作
 - (IBAction)customSetUserId:(id)sender {
     NSString *userId = self.userIdTextField.text;
-    [[GrowingAutotracker sharedInstance] setLoginUserId:userId];
+    [[GrowingSDK sharedInstance] setLoginUserId:userId];
 
     NSLog(@"设置用户ID为%@", userId);
 }
@@ -62,7 +61,7 @@
 - (IBAction)setOutRangeUserId:(id)sender {
     NSString *outRangeUid = [GIOConstants getMyInput];
     NSLog(@"GetMyInput length:%ld",outRangeUid.length);
-    [[GrowingAutotracker sharedInstance] setLoginUserId:outRangeUid];
+    [[GrowingSDK sharedInstance] setLoginUserId:outRangeUid];
 
 }
 
@@ -75,7 +74,7 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     if (textField == self.userIdTextField && textField.text) {
-        [[GrowingAutotracker sharedInstance] setLoginUserId:textField.text];
+        [[GrowingSDK sharedInstance] setLoginUserId:textField.text];
         [textField resignFirstResponder];
     }
     

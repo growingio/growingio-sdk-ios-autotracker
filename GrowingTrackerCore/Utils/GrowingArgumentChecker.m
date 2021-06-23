@@ -5,7 +5,7 @@
 #import "GrowingArgumentChecker.h"
 #import "NSString+GrowingHelper.h"
 #import "GrowingLogMacros.h"
-#import "GrowingCocoaLumberjack.h"
+#import "GrowingLogger.h"
 
 @implementation GrowingArgumentChecker
 + (BOOL)isIllegalEventName:(NSString *)eventName {

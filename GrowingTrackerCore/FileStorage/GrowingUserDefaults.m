@@ -37,13 +37,13 @@
     return self;
 }
 
-+ (instancetype)shareInstance {
-    static GrowingUserDefaults *_shareInstance = nil;
++ (instancetype)sharedInstance {
+    static GrowingUserDefaults *_sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _shareInstance = [[self alloc] init];
+        _sharedInstance = [[self alloc] init];
     });
-    return _shareInstance;
+    return _sharedInstance;
 }
 
 - (void)setValue:(NSString *)value forKey:(NSString *)key {

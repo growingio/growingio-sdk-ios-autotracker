@@ -21,7 +21,7 @@
 #import "GrowingWebWatcher.h"
 #import "GrowingDeepLinkHandler.h"
 #import "NSURL+GrowingHelper.h"
-#import "GrowingCocoaLumberjack.h"
+#import "GrowingLogger.h"
 #import "GrowingASLLoggerFormat.h"
 
 @interface GrowingWebWatcher () <GrowingDeepLinkHandlerProtocol>
@@ -29,14 +29,14 @@
 
 @implementation GrowingWebWatcher
 
-static GrowingWebWatcher *shareInstance = nil;
+static GrowingWebWatcher *sharedInstance = nil;
 
-+ (instancetype)shareInstance {
++ (instancetype)sharedInstance {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        shareInstance = [[GrowingWebWatcher alloc] init];
+        sharedInstance = [[GrowingWebWatcher alloc] init];
     });
-    return shareInstance;
+    return sharedInstance;
 }
 
 #pragma mark - GrowingDeepLinkHandlerProtocol

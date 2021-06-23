@@ -30,7 +30,7 @@ static MockEventQueue *queue = nil;
 
 - (instancetype)init {
     if (self = [super init]) {
-        [[GrowingEventManager shareInstance] addInterceptor:self];
+        [[GrowingEventManager sharedInstance] addInterceptor:self];
         self.eventQueue = [NSMutableArray arrayWithCapacity:5];
     }
     return self;

@@ -1,5 +1,5 @@
 //
-//  GrowingURLSessionProtocol.h
+//  NSURLSession+GrowingURLSessionHelper.m
 //  GrowingTracker
 //
 //  Created by GrowingIO on 2020/6/18.
@@ -17,15 +17,24 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <Foundation/Foundation.h>
-#import "GrowingURLSessionDataTaskProtocol.h"
+
 #import "NSURLSession+GrowingURLSessionHelper.h"
+#import "NSURLSessionDataTask+GrowingURLSessionDataTaskHelper.h"
 
-@protocol GrowingURLSessionProtocol <NSObject>
 
-@required
+@implementation NSURLSession (GrowingURLSessionHelper)
 
-- (id <GrowingURLSessionDataTaskProtocol>_Nullable)dataTaskWithRequest:(NSURLRequest *_Nonnull)request
-                                                            completion:(void (^_Nonnull)(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error))completion;
+- (id<GrowingURLSessionDataTaskProtocol>)dataTaskWithRequest:(NSURLRequest * _Nonnull)request
+                                           completion:(void (^ _Nonnull)(NSData * _Nullable, NSURLResponse * _Nullable, NSError * _Nullable))completion {
+    
+    NSURLSessionTask *task = [self dataTaskWithRequest:request
+                                     completionHandler:completion];
+    
+    if ([task isKindOfClass:NSURLSessionDataTask.class]) {
+        return (NSURLSessionDataTask *)task;
+    }
+    
+    return nil;
+}
 
 @end

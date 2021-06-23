@@ -1,9 +1,5 @@
-//
-// GrowingMobileDebugger.h
-// Pods
-//
-//  Created by gio on 2021/3/2.
-//  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
+//  Created by GrowingIO on 2020/5/27.
+//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -18,20 +14,18 @@
 //  limitations under the License.
 
 #import <Foundation/Foundation.h>
-#import "GrowingSRWebSocket.h"
 
-@interface GrowingMobileDebugger : NSObject
+@protocol GrowingWebViewDomChangedDelegate;
+@class WKWebView;
 
+@interface GrowingHybridBridgeProvider : NSObject
 
-@property (nonatomic, retain) GrowingSRWebSocket *webSocket;
+@property(nullable, nonatomic, weak) id <GrowingWebViewDomChangedDelegate> domChangedDelegate;
 
++ (instancetype _Nonnull)sharedInstance;
 
-+ (instancetype)shareInstance;
-+ (void)stop;
-+ (BOOL)isRunning;
-- (void)start;
-- (NSString *)absoluteURL;
+- (void)handleJavascriptBridgeMessage:(NSString *_Nullable)message;
 
+- (void)getDomTreeForWebView:(WKWebView *_Nonnull)webView
+           completionHandler:(void (^ _Nonnull)(NSDictionary *_Nullable domTee, NSError *_Nullable error))completionHandler;
 @end
-
-

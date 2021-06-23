@@ -1,9 +1,9 @@
 //
-//  GrowingWebCircle.h
-//  Growing
+// GrowingDataEncoder.h
+// GrowingAnalytics
 //
-//  Created by 陈曦 on 15/8/26.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by sheng on 2021/6/17.
+//  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,18 +17,18 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+
 #import <Foundation/Foundation.h>
+#import "GrowingEncryptionService.h"
+#import "GrowingCompressService.h"
+NS_ASSUME_NONNULL_BEGIN
 
-#import "GrowingNode.h"
-#import "GrowingSRWebSocket.h"
+@interface GrowingDataEncoder : NSObject <GrowingCompressService,GrowingEncryptionService>
 
-@interface GrowingWebCircle : NSObject
+- (NSData*)compressedData:(NSData*)data;
 
-@property (nonatomic, retain) GrowingSRWebSocket *webSocket;
-+ (instancetype)shareInstance;
-
-+ (BOOL)isRunning;
-+ (void)runWithCircle:(NSURL *)url readyBlock:(void (^)(void))readyBlock finishBlock:(void (^)(void))finishBlock;
-+ (void)stop;
+- (NSData*)encryptData:(NSData*)data factor:(unsigned char)hint;
 
 @end
+
+NS_ASSUME_NONNULL_END

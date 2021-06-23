@@ -20,7 +20,7 @@
 
 #import "GrowingDynamicProxy.h"
 #import "GrowingLogMacros.h"
-#import "GrowingCocoaLumberjack.h"
+#import "GrowingLogger.h"
 
 @implementation GrowingDynamicProxy
 

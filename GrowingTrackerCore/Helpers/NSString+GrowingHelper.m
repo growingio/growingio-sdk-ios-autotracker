@@ -23,7 +23,7 @@
 #import "NSDictionary+GrowingHelper.h"
 #import <CommonCrypto/CommonDigest.h>
 #import "GrowingDeviceInfo.h"
-#import "GrowingCocoaLumberjack.h"
+#import "GrowingLogger.h"
 
 static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\[]{},.<>/?";
 

@@ -23,10 +23,13 @@
 #import "GrowingConfigurationManager.h"
 #import "GrowingTrackConfiguration.h"
 #import "GrowingRealTracker.h"
-
-#import "UIView+GrowingNode.h"
+#import "GrowingNodeProtocol.h"
 #import "GrowingLogMacros.h"
-#import "GrowingCocoaLumberjack.h"
+#import "GrowingLogger.h"
+
+#if GROWING_ANALYSIS_AUTOTRACKERCORE
+#import "UIView+GrowingNode.h"
+#endif
 
 static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJavascriptBridge";
 
@@ -56,10 +59,12 @@ static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJav
 }
 
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
+#if GROWING_ANALYSIS_AUTOTRACKERCORE
     if ([message.webView growingNodeDonotTrack]) {
         GIOLogDebug(@"WKWebview Bridge %@ is donotTrack",message.webView);
         return;
     }
+#endif
     if ([message.name isEqualToString:kGrowingWKWebViewJavascriptBridge]) {
         [GrowingHybridBridgeProvider.sharedInstance handleJavascriptBridgeMessage:message.body];
     }

@@ -17,6 +17,7 @@
 #import "GrowingDynamicProxy.h"
 #import "GrowingAutotrackConfiguration.h"
 #import "GrowingRealAutotracker.h"
+#import <UIKit/UIKit.h>
 
 @interface GrowingAutotracker : GrowingDynamicProxy
 

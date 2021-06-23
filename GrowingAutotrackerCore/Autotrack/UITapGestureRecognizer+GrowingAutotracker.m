@@ -28,7 +28,7 @@
 
 @implementation GrowingUIGestureRecognizerObserver
 
-+ (instancetype)shareInstance {
++ (instancetype)sharedInstance {
     static id instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -69,7 +69,7 @@
 
 - (instancetype)growing_initWithTarget:(id)target action:(SEL)action {
     
-    UITapGestureRecognizer *gesture = [self growing_initWithTarget:[GrowingUIGestureRecognizerObserver shareInstance]
+    UITapGestureRecognizer *gesture = [self growing_initWithTarget:[GrowingUIGestureRecognizerObserver sharedInstance]
                                                             action:@selector(growingHandleGesture:)];
     [gesture addTarget:target action:action];
     return gesture;
@@ -77,14 +77,14 @@
 
 - (instancetype)growing_initWithCoder:(NSCoder *)coder {
     UITapGestureRecognizer *gesture = [self growing_initWithCoder:coder];
-    [gesture addTarget:[GrowingUIGestureRecognizerObserver shareInstance]
+    [gesture addTarget:[GrowingUIGestureRecognizerObserver sharedInstance]
                 action:@selector(growingHandleGesture:)];
     return gesture;
 }
 
 + (BOOL)growingGestureRecognizerCanHandleView:(UIView *)view {
     for (UIGestureRecognizer *gest in view.gestureRecognizers) {
-        if ([[GrowingUIGestureRecognizerObserver shareInstance] getSelectorByGesture:gest]) {
+        if ([[GrowingUIGestureRecognizerObserver sharedInstance] getSelectorByGesture:gest]) {
             return YES;
         }
     }

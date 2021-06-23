@@ -13,7 +13,7 @@
 #import "GrowingDispatchManager.h"
 #import "NSString+GrowingHelper.h"
 #import "NSDictionary+GrowingHelper.h"
-#import "GrowingCocoaLumberjack.h"
+#import "GrowingLogger.h"
 #import "GrowingDeviceInfo.h"
 #import "GrowingVisitEvent.h"
 #import "GrowingSession.h"
@@ -23,7 +23,7 @@
 #import "GrowingArgumentChecker.h"
 #import "GrowingAppDelegateAutotracker.h"
 #import "GrowingDeepLinkHandler.h"
-#import "GrowingDebuggerEventQueue.h"
+#import "GrowingModuleManager.h"
 
 NSString *const GrowingTrackerVersionName = @"3.2.0";
 const int GrowingTrackerVersionCode = 30200;
@@ -44,9 +44,9 @@ const int GrowingTrackerVersionCode = 30200;
         [self loggerSetting];
         GrowingConfigurationManager.sharedInstance.trackConfiguration = self.configuration;
         [GrowingAppLifecycle.sharedInstance setupAppStateNotification];
-        [GrowingDebuggerEventQueue startQueue];
         [GrowingSession startSession];
         [GrowingAppDelegateAutotracker track];
+        [[GrowingModuleManager sharedInstance] triggerEvent:GrowingMInitEvent];
         [self versionPrint];
     }
 

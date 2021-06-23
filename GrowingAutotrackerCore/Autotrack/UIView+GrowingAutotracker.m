@@ -27,7 +27,7 @@
     [self growing_didMoveToSuperview];
     
     if (self.superview && self.window) {
-        [[GrowingImpressionTrack shareInstance] addNode:self inSubView:YES];
+        [[GrowingImpressionTrack sharedInstance] addNode:self inSubView:YES];
     }
 }
 

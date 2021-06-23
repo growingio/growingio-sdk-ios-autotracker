@@ -18,7 +18,7 @@
 #import <WebKit/WebKit.h>
 
 #import "GrowingBaseEvent.h"
-#import "GrowingCocoaLumberjack.h"
+#import "GrowingLogger.h"
 #import "GrowingConversionVariableEvent.h"
 #import "GrowingDeviceInfo.h"
 #import "GrowingEventManager.h"
@@ -36,7 +36,10 @@
 #import "GrowingWebViewDomChangedDelegate.h"
 #import "NSDictionary+GrowingHelper.h"
 #import "NSString+GrowingHelper.h"
-#import "UIView+GrowingNode.h"
+//#import "UIView+GrowingNode.h"
+#import "GrowingAnnotationCore.h"
+
+
 
 NSString *const kGrowingJavascriptMessageTypeKey = @"messageType";
 NSString *const kGrowingJavascriptMessageDataKey = @"data";
@@ -62,6 +65,9 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
 #define KEY_TEXT_VALUE "textValue"
 #define KEY_XPATH "xpath"
 
+@interface UIView (GrowingNode) <GrowingNode>
+@end
+
 @implementation GrowingHybridBridgeProvider
 + (instancetype)sharedInstance {
     static id _sharedInstance = nil;
@@ -72,6 +78,8 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
 
     return _sharedInstance;
 }
+
+
 
 - (void)handleJavascriptBridgeMessage:(NSString *)message {
     GIOLogDebug(@"handleJavascriptBridgeMessage: %@", message);
@@ -202,7 +210,7 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
         builder = GrowingConversionVariableEvent.builder.setAttributes(dict[@KEY_ATTRIBUTES]);
     }
     if (builder) {
-        [[GrowingEventManager shareInstance] postEventBuidler:builder];
+        [[GrowingEventManager sharedInstance] postEventBuidler:builder];
     }
 }
 

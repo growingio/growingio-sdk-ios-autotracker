@@ -20,10 +20,10 @@
 
 #import "GrowingNetworkManager.h"
 #import "NSURLSession+GrowingURLSessionHelper.h"
-#import "GrowingURLSessionDataTaskProtocol.h"
-#import "GrowingURLSessionProtocol.h"
-#import "GrowingRequestProtocol.h"
-#import "GrowingCocoaLumberjack.h"
+#import "GrowingAnnotationCore.h"
+#import "GrowingLogger.h"
+
+@GrowingService(GrowingEventNetworkService,GrowingNetworkManager)
 
 @interface GrowingNetworkManager ()
 
@@ -33,7 +33,7 @@
 
 @implementation GrowingNetworkManager
 
-+ (instancetype)shareManager {
++ (instancetype)sharedInstance {
     return [self shareManagerURLSession:[NSURLSession sharedSession]];
 }
 
@@ -119,6 +119,27 @@
     }
 
     return resultReq;
+}
+
+#pragma mark - service protocol
+
++ (BOOL)async {
+    return YES;
+}
+
++ (BOOL)singleton {
+    return YES;
+}
+
+- (void)sendRequest:(id <GrowingRequestProtocol> _Nonnull)request
+         completion:(void(^_Nullable)(NSHTTPURLResponse * _Nonnull httpResponse,
+                                      NSData * _Nonnull data,
+                                      NSError * _Nonnull error))callback {
+    [self sendRequest:request success:^(NSHTTPURLResponse * _Nonnull httpResponse, NSData * _Nonnull data) {
+        if (callback) callback(httpResponse,data,nil);
+    } failure:^(NSHTTPURLResponse * _Nonnull httpResponse, NSData * _Nonnull data, NSError * _Nonnull error) {
+        if (callback) callback(httpResponse,data,error);
+    }];
 }
 
 @end

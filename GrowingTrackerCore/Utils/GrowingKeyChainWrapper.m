@@ -19,7 +19,7 @@
 
 
 #import "GrowingKeyChainWrapper.h"
-#import "GrowingCocoaLumberjack.h"
+#import "GrowingLogger.h"
 
 @implementation GrowingKeyChainWrapper
 

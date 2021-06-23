@@ -38,18 +38,18 @@ static const NSInteger kGIOMaxCachesLogNumber = 50;
     dispatch_semaphore_t _lock;
 }
 
-static GrowingDebuggerEventQueue *shareInstance = nil;
+static GrowingDebuggerEventQueue *sharedInstance = nil;
 
 + (void)startQueue {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        shareInstance = [[GrowingDebuggerEventQueue alloc] init];
+        sharedInstance = [[GrowingDebuggerEventQueue alloc] init];
     });
-    [[GrowingEventManager shareInstance] addInterceptor:shareInstance];
+    [[GrowingEventManager sharedInstance] addInterceptor:sharedInstance];
 }
 
 + (instancetype)currentQueue {
-    return shareInstance;
+    return sharedInstance;
 }
 
 - (instancetype)init {

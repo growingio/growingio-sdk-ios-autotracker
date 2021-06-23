@@ -10,7 +10,7 @@
 
 #import "GIOAttributesTrackViewController.h"
 #import "GIOConstants.h"
-#import "GrowingAutotracker.h"
+
 //测量协议规定的数据分类：埋点、无埋点和API测试
 typedef NS_ENUM(NSInteger, GIOMeasurementProtocolCount) { GIOAutoTrack = 0, GIOManualTrack, GIOAPI };
 
@@ -22,9 +22,9 @@ typedef NS_ENUM(NSInteger, GIOMeasurementProtocolCount) { GIOAutoTrack = 0, GIOM
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.growingPageAttributes = @{@"xxx" : @"mmm"};
-
+#if Autotracker
     self.growingPageAttributes = @{@"xxx" : @"111mmm"};
+#endif
     self.tableView.accessibilityIdentifier = @"MeasurementProtocolTableView";
 }
 

@@ -19,7 +19,7 @@
 #import <UIKit/UIKit.h>
 
 #import "GrowingAppLifecycle.h"
-#import "GrowingCocoaLumberjack.h"
+#import "GrowingLogger.h"
 #import "GrowingEventManager.h"
 #import "GrowingPage.h"
 #import "GrowingPageAttributesEvent.h"
@@ -101,14 +101,14 @@
 - (void)sendPageEventWithPage:(GrowingPage *)page {
     GrowingBaseBuilder *builder =
         GrowingPageEvent.builder.setTitle(page.title).setPath(page.path).setTimestamp(page.showTimestamp);
-    [[GrowingEventManager shareInstance] postEventBuidler:builder];
+    [[GrowingEventManager sharedInstance] postEventBuidler:builder];
 }
 
 - (void)sendPageAttributesEventWithPage:(GrowingPage *)page {
     GrowingBaseBuilder *builder = GrowingPageAttributesEvent.builder.setPath(page.path)
                                       .setTimestamp(page.showTimestamp)
                                       .setAttributes(page.variables);
-    [[GrowingEventManager shareInstance] postEventBuidler:builder];
+    [[GrowingEventManager sharedInstance] postEventBuidler:builder];
 }
 
 - (void)addPageAlias:(GrowingPage *)page {

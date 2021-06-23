@@ -86,7 +86,7 @@
     self.frame = [UIScreen mainScreen].bounds;
 }
 
-+ (instancetype)shareInstance {
++ (instancetype)sharedInstance {
     static __strong id instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -148,7 +148,7 @@
     }];
     
     if (!added) {
-        [[GrowingWindowContentView shareInstance] addSubview:view];
+        [[GrowingWindowContentView sharedInstance] addSubview:view];
     }
 }
 
@@ -181,9 +181,9 @@
 - (void)setHidden:(BOOL)hidden {
     [super setHidden:hidden];
     if (!hidden) {
-        [[GrowingWindowContentView shareInstance] addWindowView:self];
+        [[GrowingWindowContentView sharedInstance] addWindowView:self];
     } else {
-        [[GrowingWindowContentView shareInstance] removeWindowView:self];
+        [[GrowingWindowContentView sharedInstance] removeWindowView:self];
     }
 }
 

@@ -22,7 +22,7 @@
 #import "NSString+GrowingHelper.h"
 #import "NSURL+GrowingHelper.h"
 #import "GrowingNetworkConfig.h"
-#import "GrowingCocoaLumberjack.h"
+#import "GrowingLogger.h"
 #import "GrowingConfigurationManager.h"
 @implementation GrowingNetworkConfig
 

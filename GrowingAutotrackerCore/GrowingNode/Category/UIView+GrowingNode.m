@@ -438,15 +438,15 @@ GrowingSafeStringPropertyImplementation(growingUniqueTag, setGrowingUniqueTag)
         }
     }
 
-    [GrowingImpressionTrack shareInstance].impTrackActive = YES;
+    [GrowingImpressionTrack sharedInstance].impTrackActive = YES;
 
     self.growingIMPTrackEventName = eventName;
     self.growingIMPTrackVariable = attributes;
     self.growingIMPTracked = NO;
-    [[GrowingImpressionTrack shareInstance] addNode:self inSubView:NO];
+    [[GrowingImpressionTrack sharedInstance] addNode:self inSubView:NO];
 }
 
 - (void)growingStopTrackImpression {
-    [[GrowingImpressionTrack shareInstance] clearNode:self];
+    [[GrowingImpressionTrack sharedInstance] clearNode:self];
 }
 @end

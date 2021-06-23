@@ -26,7 +26,7 @@
 #import "GrowingViewControllerLifecycle.h"
 #import "GrowingEventGenerator.h"
 #import "GrowingLogMacros.h"
-#import "GrowingCocoaLumberjack.h"
+#import "GrowingLogger.h"
 
 @interface GrowingImpressionTrack () <GrowingAppLifecycleDelegate, GrowingViewControllerLifecycleDelegate>
 
@@ -124,7 +124,7 @@ static BOOL isInResignSate;
 
 static GrowingImpressionTrack *impTrack = nil;
 
-+ (instancetype)shareInstance {
++ (instancetype)sharedInstance {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         impTrack = [[GrowingImpressionTrack alloc] init];

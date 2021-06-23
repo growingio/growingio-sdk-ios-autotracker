@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <GrowingTracker.h>
+
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 

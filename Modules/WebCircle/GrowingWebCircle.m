@@ -28,13 +28,12 @@
 #import "GrowingApplicationEventManager.h"
 #import "GrowingAttributesConst.h"
 #import "GrowingAutotrackEventType.h"
-#import "GrowingCocoaLumberjack.h"
+#import "GrowingLogger.h"
 #import "GrowingConfigurationManager.h"
 #import "GrowingDeepLinkHandler.h"
 #import "GrowingDeviceInfo.h"
 #import "GrowingDispatchManager.h"
 #import "GrowingEventManager.h"
-#import "GrowingHybridBridgeProvider.h"
 #import "GrowingNetworkConfig.h"
 #import "GrowingNodeHelper.h"
 #import "GrowingPageGroup.h"
@@ -55,8 +54,12 @@
 #import "UIViewController+GrowingPageHelper.h"
 #import "UIWindow+GrowingHelper.h"
 #import "UIWindow+GrowingNode.h"
-#import "WKWebView+GrowingAutotracker.h"
+//#import "WKWebView+GrowingAutotracker.h"
 #import "GrowingStatusBarAutotracker.h"
+#import "GrowingServiceManager.h"
+#import "GrowingHybridBridgeProvider.h"
+
+@GrowingMod(GrowingWebCircle)
 
 @interface GrowingWeakObject : NSObject
 @property (nonatomic, weak) JSContext *context;
@@ -91,26 +94,31 @@
 
 @implementation GrowingWebCircle
 
-static GrowingWebCircle *shareInstance = nil;
+//static GrowingWebCircle *sharedInstance = nil;
+//
+//+ (instancetype)sharedInstance {
+//    static dispatch_once_t onceToken;
+//    dispatch_once(&onceToken, ^{
+//        sharedInstance = [[GrowingWebCircle alloc] init];
+//        [GrowingStatusBarAutotracker track];
+//    });
+//    return sharedInstance;
+//}
 
-+ (instancetype)shareInstance {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        shareInstance = [[GrowingWebCircle alloc] init];
-        [GrowingStatusBarAutotracker track];
-    });
-    return shareInstance;
-}
+//+ (void)runWithCircle:(NSURL *)url readyBlock:(void (^)(void))readyBlock finishBlock:(void (^)(void))finishBlock;
+//{ [[self sharedInstance] runWithCircle:url readyBlock:readyBlock finishBlock:finishBlock]; }
+//
+//+ (void)stop {
+//    [[self sharedInstance] stop];
+//}
+//
+//+ (BOOL)isRunning {
+//    return [[self sharedInstance] isRunning];
+//}
 
-+ (void)runWithCircle:(NSURL *)url readyBlock:(void (^)(void))readyBlock finishBlock:(void (^)(void))finishBlock;
-{ [[self shareInstance] runWithCircle:url readyBlock:readyBlock finishBlock:finishBlock]; }
-
-+ (void)stop {
-    [[self shareInstance] stop];
-}
-
-+ (BOOL)isRunning {
-    return [[self shareInstance] isRunning];
+- (void)growingModInit:(GrowingContext *)context {
+    [GrowingStatusBarAutotracker track];
+    [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:self];
 }
 
 - (instancetype)init {
@@ -384,6 +392,12 @@ static GrowingWebCircle *shareInstance = nil;
 
 - (void)runWithCircle:(NSURL *)url readyBlock:(void (^)(void))readyBlock finishBlock:(void (^)(void))finishBlock;
 {
+    if (self.webSocket) {
+        [self.webSocket close];
+        self.webSocket.delegate = nil;
+        self.webSocket = nil;
+    }
+    
     if (!self.isReady) {
         [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 
@@ -423,16 +437,12 @@ static GrowingWebCircle *shareInstance = nil;
                 [alert
                     addCancelWithTitle:@"退出圈选"
                                handler:^(UIAlertAction *_Nonnull action, NSArray<UITextField *> *_Nonnull textFields) {
-                                   [GrowingWebCircle stop];
+                                   [wself stop];
                                }];
                 [alert showAlertAnimated:NO];
             };
         }
-        if (self.webSocket) {
-            [self.webSocket close];
-            self.webSocket.delegate = nil;
-            self.webSocket = nil;
-        }
+        
         self.webSocket = [[GrowingSRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:url]];
         self.webSocket.delegate = self;
         [self.webSocket open];
@@ -468,7 +478,7 @@ static GrowingWebCircle *shareInstance = nil;
     // Hybrid的布局改变回调代理设置
     [GrowingHybridBridgeProvider sharedInstance].domChangedDelegate = self;
     //监听原生事件，变动时发送
-    [[GrowingEventManager shareInstance] addInterceptor:self];
+    [[GrowingEventManager sharedInstance] addInterceptor:self];
     [[GrowingApplicationEventManager sharedInstance] addApplicationEventObserver:self];
 }
 
@@ -485,7 +495,7 @@ static GrowingWebCircle *shareInstance = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
     [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
 
-    [[GrowingEventManager shareInstance] removeInterceptor:self];
+    [[GrowingEventManager sharedInstance] removeInterceptor:self];
     [[GrowingApplicationEventManager sharedInstance] removeApplicationEventObserver:self];
     if (self.webSocket) {
         self.webSocket.delegate = nil;
@@ -511,7 +521,7 @@ static GrowingWebCircle *shareInstance = nil;
         [alert showAlertAnimated:NO];
     }
 
-    [[GrowingEventManager shareInstance] removeInterceptor:self];
+    [[GrowingEventManager sharedInstance] removeInterceptor:self];
 }
 
 - (BOOL)isRunning {

@@ -23,7 +23,7 @@
 #import "GrowingDeepLinkHandler.h"
 #import "GrowingSwizzle.h"
 
-#import "GrowingCocoaLumberjack.h"
+#import "GrowingLogger.h"
 #import "GrowingASLLoggerFormat.h"
 
 #import <UIKit/UIKit.h>
