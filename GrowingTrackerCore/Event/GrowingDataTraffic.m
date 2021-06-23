@@ -39,7 +39,7 @@ static NSString *const kGrowingCellularUploadEventSize = @"GrowingCellularUpload
 static pthread_mutex_t _mutex;
 static GrowingDataTraffic *_instance;
 
-+ (instancetype)shareInstance {
++ (instancetype)sharedInstance {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _instance = [[self alloc] init];
@@ -62,7 +62,7 @@ static GrowingDataTraffic *_instance;
 
 + (unsigned long long)cellularNetworkUploadEventSize {
     
-    NSString *todayUploadEvent = [[GrowingDataTraffic shareInstance].storeDict valueForKey:kGrowingCellularUploadEventSize];
+    NSString *todayUploadEvent = [[GrowingDataTraffic sharedInstance].storeDict valueForKey:kGrowingCellularUploadEventSize];
     NSArray *todayUploadEventArray = [todayUploadEvent componentsSeparatedByString:@"/"];
     if (todayUploadEventArray.count >= 2 && [[todayUploadEventArray objectAtIndex:1] isEqualToString:[self getTodayKey]]) {
         return [todayUploadEventArray.firstObject longLongValue];
@@ -75,8 +75,8 @@ static GrowingDataTraffic *_instance;
     
     pthread_mutex_lock(&_mutex);
     NSString *todayUploadEvent = [NSString stringWithFormat:@"%@/%@", [NSString stringWithFormat:@"%llu",uploadEventSize], [self getTodayKey]];
-    [[GrowingDataTraffic shareInstance].storeDict setObject:todayUploadEvent forKey:kGrowingCellularUploadEventSize];
-    [[GrowingDataTraffic shareInstance].cellularTrafficStorage setDictionary:[GrowingDataTraffic shareInstance].storeDict forKey:kGrowingUploadEventFileKey];
+    [[GrowingDataTraffic sharedInstance].storeDict setObject:todayUploadEvent forKey:kGrowingCellularUploadEventSize];
+    [[GrowingDataTraffic sharedInstance].cellularTrafficStorage setDictionary:[GrowingDataTraffic sharedInstance].storeDict forKey:kGrowingUploadEventFileKey];
     pthread_mutex_unlock(&_mutex);
     
 }

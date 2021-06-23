@@ -27,7 +27,7 @@
 
 @property(nonatomic, assign) BOOL impTrackActive;
 
-+ (instancetype)shareInstance;
++ (instancetype)sharedInstance;
 
 - (void)start;
 

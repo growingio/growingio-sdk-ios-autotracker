@@ -1,4 +1,8 @@
-//  Created by GrowingIO on 2020/5/27.
+//
+//  GrowingWebCircle.h
+//  Growing
+//
+//  Created by 陈曦 on 15/8/26.
 //  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,17 +18,17 @@
 //  limitations under the License.
 
 #import <Foundation/Foundation.h>
+#import "GrowingModuleProtocol.h"
+#import "GrowingNode.h"
+#import "GrowingSRWebSocket.h"
 
-@protocol GrowingWebViewDomChangedDelegate;
-@class WKWebView;
+@interface GrowingWebCircle : NSObject <GrowingModuleProtocol>
 
-@interface GrowingHybridBridgeProvider : NSObject
-@property(nullable, nonatomic, weak) id <GrowingWebViewDomChangedDelegate> domChangedDelegate;
+@property (nonatomic, retain) GrowingSRWebSocket *webSocket;
+//+ (instancetype)sharedInstance;
 
-+ (instancetype _Nonnull)sharedInstance;
+//+ (BOOL)isRunning;
+//+ (void)runWithCircle:(NSURL *)url readyBlock:(void (^)(void))readyBlock finishBlock:(void (^)(void))finishBlock;
+//+ (void)stop;
 
-- (void)handleJavascriptBridgeMessage:(NSString *_Nullable)message;
-
-- (void)getDomTreeForWebView:(WKWebView *_Nonnull)webView
-           completionHandler:(void (^ _Nonnull)(NSDictionary *_Nullable domTee, NSError *_Nullable error))completionHandler;
 @end

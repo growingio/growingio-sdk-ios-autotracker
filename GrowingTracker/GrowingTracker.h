@@ -14,9 +14,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 #import "GrowingDynamicProxy.h"
-
-@class GrowingTrackConfiguration;
-@class GrowingRealTracker;
+#import "GrowingTrackConfiguration.h"
 
 
 @interface GrowingTracker : GrowingDynamicProxy

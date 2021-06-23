@@ -19,7 +19,7 @@
 #import "GrowingConfigurationManager.h"
 #import "GrowingTrackConfiguration.h"
 #import "GrowingLogMacros.h"
-#import "GrowingCocoaLumberjack.h"
+#import "GrowingLogger.h"
 #import "GrowingTimeUtil.h"
 #import "NSString+GrowingHelper.h"
 #import "GrowingPersistenceDataProvider.h"

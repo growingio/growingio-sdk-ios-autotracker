@@ -22,7 +22,7 @@
 
 @interface GrowingUserDefaults : NSObject
 
-+ (instancetype)shareInstance;
++ (instancetype)sharedInstance;
 
 - (NSString *)valueForKey:(NSString*)key;
 - (void)setValue:(NSString*)value forKey:(NSString *)key;

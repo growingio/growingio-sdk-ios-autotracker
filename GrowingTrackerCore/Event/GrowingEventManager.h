@@ -37,7 +37,7 @@
 
 @interface GrowingEventManager : NSObject
 
-+ (_Nonnull instancetype)shareInstance;
++ (_Nonnull instancetype)sharedInstance;
 
 - (void)sendAllChannelEvents;
 

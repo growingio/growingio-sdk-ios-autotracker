@@ -30,7 +30,7 @@
 #import "GrowingNode.h"
 #import "GrowingUserDefaults.h"
 #import "GrowingASLLogger.h"
-#import "GrowingHybridBridgeProvider.h"
+//#import "GrowingHybridBridgeProvider.h"
 #import "GrowingDataTraffic.h"
 #import "GrowingAppCloseEvent.h"
 #import "GrowingWebCircleElement.h"
@@ -95,7 +95,7 @@
 
 }
 -(void)testWebCircle{
-//    [[GrowingWebCircle shareInstance] screenShot];
+//    [[GrowingWebCircle sharedInstance] screenShot];
 
 //    UIViewController *current = [[UIViewController  alloc] init];
 //    GrowingPageGroup *page = [current growingPageHelper_getPageObject];
@@ -103,19 +103,19 @@
 //        [[GrowingPageManager sharedInstance] createdViewControllerPage:current];
 //        page = [current growingPageHelper_getPageObject];
 //    }
-//    NSMutableDictionary *dict = [[GrowingWebCircle shareInstance] dictFromPage:current xPath:page.path];
+//    NSMutableDictionary *dict = [[GrowingWebCircle sharedInstance] dictFromPage:current xPath:page.path];
 //    [GrowingWebCircle retrieveAllElementsAsync:nil];
-    [GrowingWebCircle shareInstance];
-    [GrowingWebCircle  runWithCircle:[NSURL URLWithString:@"ws://testws"] readyBlock:nil finishBlock:nil];
-    [GrowingWebCircle isRunning];
-    [GrowingWebCircle stop];
+//    [GrowingWebCircle sharedInstance];
+//    [GrowingWebCircle  runWithCircle:[NSURL URLWithString:@"ws://testws"] readyBlock:nil finishBlock:nil];
+//    [GrowingWebCircle isRunning];
+//    [GrowingWebCircle stop];
 //    [GrowingWebCircle isContainer:nil];
 
-    Class realClazz = NSClassFromString(@"GrowingWebCircle");
-//    [realClazz respondsToSelector:@selector(setNeedUpdateScreen)];
-    [realClazz performSelector:@selector(impressScale)];
-    [[realClazz performSelector:@selector(shareInstance)] performSelector:@selector(_setNeedUpdateScreen)];;
-    [[realClazz performSelector:@selector(shareInstance)] performSelector:@selector(sendWebcircleWithType:)withObject:@"eventType"];;
+//    Class realClazz = NSClassFromString(@"GrowingWebCircle");
+////    [realClazz respondsToSelector:@selector(setNeedUpdateScreen)];
+//    [realClazz performSelector:@selector(impressScale)];
+//    [[realClazz performSelector:@selector(sharedInstance)] performSelector:@selector(_setNeedUpdateScreen)];;
+//    [[realClazz performSelector:@selector(sharedInstance)] performSelector:@selector(sendWebcircleWithType:)withObject:@"eventType"];;
 
 }
 
@@ -137,8 +137,8 @@
 }
 
 -(void)testGrowingUserDefaults{
-    [[GrowingUserDefaults shareInstance] setValue:@"testToken" forKey:@"_refreshToken"];
-    NSString *_refreshToken = [[GrowingUserDefaults shareInstance] valueForKey:@"_refreshToken"];
+    [[GrowingUserDefaults sharedInstance] setValue:@"testToken" forKey:@"_refreshToken"];
+    NSString *_refreshToken = [[GrowingUserDefaults sharedInstance] valueForKey:@"_refreshToken"];
     //((_refreshToken) equal to (@"testToken")) failed: ("{length = 8, bytes = 0x0000000000000000}") is not equal to ("{length = 8, bytes = 0xe82abb2801000000}")
  //   XCTAssertEqual(_refreshToken, @"testToken");
     
@@ -150,24 +150,24 @@
 }
 
 -(void)testGrowingHybridBridgeProvider{
-    [GrowingHybridBridgeProvider.sharedInstance handleJavascriptBridgeMessage:@"testHibrid"];
+//    [GrowingHybridBridgeProvider.sharedInstance handleJavascriptBridgeMessage:@"testHibrid"];
     
-    GrowingHybridPageAttributesEvent.builder.setQuery(@"QUERY")
-    .setPath(@"KEY_PATH")
-    .setPageShowTimestamp(@"KEY_PAGE_SHOW_TIMESTAMP")
-    .setAttributes(@"KEY_ATTRIBUTES")
-    .setDomain(@"domain")
-    .setUserId(@"testUserId")
-    .setPlatform(@"testPlatform")
-    .setDeviceId(@"testDeviceId")
-    .setUrlScheme(@"testUrlScheme")
-    .setAppState(@"testAppState")
-    .setExtraParams(@"testExtraParams")
-    .setSessionId(@"testSessionId")
-    .setGlobalSequenceId(@"testGlobalSequenceId")
-    .setEventSequenceId(@"testEventSequenceId")
-    .setPlatformVersion(@"testPlatformVersion");
-    XCTAssertEqual(1, 1);
+//    GrowingHybridPageAttributesEvent.builder.setQuery(@"QUERY")
+//    .setPath(@"KEY_PATH")
+//    .setPageShowTimestamp(@"KEY_PAGE_SHOW_TIMESTAMP")
+//    .setAttributes(@"KEY_ATTRIBUTES")
+//    .setDomain(@"domain")
+//    .setUserId(@"testUserId")
+//    .setPlatform(@"testPlatform")
+//    .setDeviceId(@"testDeviceId")
+//    .setUrlScheme(@"testUrlScheme")
+//    .setAppState(@"testAppState")
+//    .setExtraParams(@"testExtraParams")
+//    .setSessionId(@"testSessionId")
+//    .setGlobalSequenceId(@"testGlobalSequenceId")
+//    .setEventSequenceId(@"testEventSequenceId")
+//    .setPlatformVersion(@"testPlatformVersion");
+//    XCTAssertEqual(1, 1);
 
 }
 -(void)testGrowingWebCircleElement{
@@ -191,14 +191,18 @@
     
     NSURL *url1 = [NSURL URLWithString:@"growing.3612b67ce562c755://growingio/webservice?serviceType=debugger&wsUrl=wss://gta0.growingio.com/app/0wDaZmQ1/circle/ec7f5925458f458b8ae6f3901cacaa92"];
     [GrowingDeepLinkHandler handlerUrl:url1];
-    [[GrowingMobileDebugger shareInstance] start];
-    if([GrowingMobileDebugger isRunning]) {
-        [GrowingMobileDebugger stop];
-    }
+    id mobileDebugger = [[GrowingMobileDebugger alloc] init];
+    [mobileDebugger performSelector:@selector(start)];
+    [mobileDebugger performSelector:@selector(stop)];
+    
+//    [[GrowingMobileDebugger sharedInstance] start];
+//    if([GrowingMobileDebugger isRunning]) {
+//        [GrowingMobileDebugger stop];
+//    }
 }
 
 -(void)testGrowingabsoluteURL{
-    NSString * url = [[GrowingMobileDebugger shareInstance] absoluteURL];
+    NSString * url = [[[GrowingMobileDebugger alloc] init] absoluteURL];
     XCTAssertEqualObjects(url, @"https://api.growingio.com/v3/projects/91eaf9b283361032/collect");
 }
 

@@ -7,9 +7,8 @@
 //
 
 #import "GIOClickEventViewController.h"
-#import <GrowingTracker.h>
 #import "AppDelegate.h"
-#import "GrowingAutotracker.h"
+
 @interface GIOClickEventViewController ()
 
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentControl;
@@ -23,6 +22,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+#if Autotracker
      self.segmentControl.growingUniqueTag = @"language-selector";
 
      self.growingPageAttributes = @{@"greet": @"hello"};
@@ -31,7 +31,7 @@
    self.parentViewController.growingPageIgnorePolicy = GrowingIgnoreAll;
     [self.sendEventButton growingTrackImpression:@"hello_track_impression"];
     [self.view growingTrackImpression:@"self_view_imp_track" attributes:@{@"self_view_key": @"self_view_value"}];
-    
+#endif
     if ([UIApplication.sharedApplication.delegate isKindOfClass:AppDelegate.class]) {
         AppDelegate *appDelegate = (AppDelegate *)UIApplication.sharedApplication.delegate;
 //        [self.trackEnabledSwitch setOn:appDelegate.configuation.dataTrackEnabled animated:YES];

@@ -16,7 +16,7 @@
 
 #import "GrowingAutotracker.h"
 #import "GrowingLogMacros.h"
-#import "GrowingCocoaLumberjack.h"
+#import "GrowingLogger.h"
 
 static GrowingAutotracker *sharedInstance = nil;
 

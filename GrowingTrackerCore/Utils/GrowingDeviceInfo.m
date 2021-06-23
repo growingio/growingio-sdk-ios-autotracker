@@ -25,7 +25,7 @@
 #import <sys/utsname.h>
 
 #import "GrowingAppLifecycle.h"
-#import "GrowingCocoaLumberjack.h"
+#import "GrowingLogger.h"
 #import "GrowingDispatchManager.h"
 #import "GrowingKeyChainWrapper.h"
 #import "GrowingUserIdentifier.h"

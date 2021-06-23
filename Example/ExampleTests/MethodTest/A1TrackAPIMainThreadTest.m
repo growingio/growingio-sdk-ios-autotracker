@@ -105,7 +105,7 @@ static GrowingBaseEvent *originalEvent = nil;
 
 + (void)setUp {
     [super setUp];
-    [[GrowingEventManager shareInstance] addInterceptor:self];
+    [[GrowingEventManager sharedInstance] addInterceptor:self];
 }
 
 + (void)tearDown {

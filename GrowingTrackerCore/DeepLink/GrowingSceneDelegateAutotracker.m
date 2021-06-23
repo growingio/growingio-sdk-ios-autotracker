@@ -21,7 +21,7 @@
 #import "GrowingSceneDelegateAutotracker.h"
 #import <GrowingDeepLinkHandler.h>
 
-#import "GrowingCocoaLumberjack.h"
+#import "GrowingLogger.h"
 #import "GrowingASLLoggerFormat.h"
 
 

@@ -1,9 +1,9 @@
 //
-//  NSURLSession+GrowingURLSessionHelper.h
-//  GrowingTracker
+// GrowingHybridModule.h
+// GrowingAnalytics
 //
-//  Created by GrowingIO on 2020/6/18.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by sheng on 2021/6/22.
+//  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -19,11 +19,10 @@
 
 
 #import <Foundation/Foundation.h>
-#import "GrowingURLSessionProtocol.h"
-
+#import "GrowingModuleProtocol.h"
 NS_ASSUME_NONNULL_BEGIN
 
-@interface NSURLSession (GrowingURLSessionHelper) <GrowingURLSessionProtocol>
+@interface GrowingHybridModule : NSObject <GrowingModuleProtocol>
 
 @end
 

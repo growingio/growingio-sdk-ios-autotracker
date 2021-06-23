@@ -19,9 +19,12 @@
 
 
 #import "NSData+GrowingHelper.h"
-#import "GrowingLZ4.h"
 #import "NSString+GrowingHelper.h"
 #import <CommonCrypto/CommonCrypto.h>
+#import "GrowingServiceManager.h"
+#import "GrowingEncryptionService.h"
+#import "GrowingCompressService.h"
+#import "GrowingLogger.h"
 
 @implementation NSData (GrowingHelper)
 
@@ -30,14 +33,12 @@
 }
 
 - (NSData*)growingHelper_LZ4String {
-    void *out_buff = malloc(LZ4_compressBound((int)self.length));
-    int out_size = GROW_LZ4_compress(self.bytes, out_buff, (int)self.length);
-    if (out_size < 0) {
-        free(out_buff);
-        return nil;
+    id <GrowingCompressService> compressImpl = [[GrowingServiceManager sharedInstance] createService:NSProtocolFromString(@"GrowingCompressService")];
+    if (compressImpl) {
+        return [compressImpl compressedData:self];
     }
-    
-    return [[NSData alloc] initWithBytesNoCopy:out_buff length:out_size freeWhenDone:YES];
+    GIOLogDebug(@"NSData -growingHelper_LZ4String compressed error : no compress service support");
+    return self;
 }
 
 - (NSString*)growingHelper_base64String {
@@ -140,14 +141,12 @@
 }
 
 - (NSData *)growingHelper_xorEncryptWithHint:(unsigned char)hint {
-    NSMutableData * data = [[NSMutableData alloc] initWithLength:self.length];
-    const unsigned char * p = self.bytes;
-    unsigned char * q = data.mutableBytes;
-    
-    for (NSUInteger i = 0; i < self.length; i++, p++, q++) {
-        *q = (*p ^ hint);
+    id <GrowingEncryptionService> impl = [[GrowingServiceManager sharedInstance] createService:NSProtocolFromString(@"GrowingEncryptionService")];
+    if (impl) {
+        return [impl encryptData:self factor:hint];
     }
-    return data;
+    GIOLogDebug(@"NSData -growingHelper_xorEncryptWithHint Encrypt error : no encrypt service support");
+    return self;
 }
 
 @end

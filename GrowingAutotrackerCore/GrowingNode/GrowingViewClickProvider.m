@@ -26,7 +26,7 @@
 #import "GrowingNodeHelper.h"
 #import "UIView+GrowingNode.h"
 #import "GrowingLogMacros.h"
-#import "GrowingCocoaLumberjack.h"
+#import "GrowingLogger.h"
 
 @implementation GrowingViewClickProvider
 
@@ -44,7 +44,7 @@
 }
 
 + (void)sendClickEvent:(GrowingPageGroup *)page viewNode:(GrowingViewNode *)node{
-    [[GrowingEventManager shareInstance] postEventBuidler:GrowingViewElementEvent.builder.setEventType(GrowingEventTypeViewClick)
+    [[GrowingEventManager sharedInstance] postEventBuidler:GrowingViewElementEvent.builder.setEventType(GrowingEventTypeViewClick)
      .setPath(page.path)
      .setPageShowTimestamp(page.showTimestamp)
      .setXpath(node.xPath)

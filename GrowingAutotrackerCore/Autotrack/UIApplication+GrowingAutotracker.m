@@ -18,7 +18,7 @@
 //  limitations under the License.
 
 #import "GrowingApplicationEventManager.h"
-#import "GrowingCocoaLumberjack.h"
+#import "GrowingLogger.h"
 #import "GrowingNodeHelper.h"
 #import "GrowingNodeProtocol.h"
 #import "GrowingViewClickProvider.h"

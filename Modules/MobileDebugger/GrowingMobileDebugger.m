@@ -25,7 +25,7 @@
 #import "GrowingAlert.h"
 #import "GrowingApplicationEventManager.h"
 #import "GrowingAttributesConst.h"
-#import "GrowingCocoaLumberjack.h"
+#import "GrowingLogger.h"
 #import "GrowingConfigurationManager.h"
 #import "GrowingDeepLinkHandler.h"
 #import "GrowingDeviceInfo.h"
@@ -45,10 +45,14 @@
 #import "GrowingDebuggerEventQueue.h"
 #import "GrowingNetworkConfig.h"
 #import "GrowingRealTracker.h"
+#import "GrowingAnnotationCore.h"
+#import "GrowingDebuggerEventQueue.h"
 
 #define LOCK(...) dispatch_semaphore_wait(self->_lock, DISPATCH_TIME_FOREVER); \
 __VA_ARGS__; \
 dispatch_semaphore_signal(self->_lock);
+
+@GrowingMod(GrowingMobileDebugger)
 
 @interface GrowingMobileDebugger () <GrowingSRWebSocketDelegate,
                                 GrowingEventInterceptor,
@@ -69,14 +73,29 @@ dispatch_semaphore_signal(self->_lock);
     dispatch_semaphore_t _lock;
 }
 
-static GrowingMobileDebugger *shareInstance = nil;
+static GrowingMobileDebugger *sharedInstance = nil;
 
-+ (instancetype)shareInstance {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        shareInstance = [[GrowingMobileDebugger alloc] init];
-    });
-    return shareInstance;
+
+- (BOOL)async {
+    return NO;
+}
+
+//+ (instancetype)sharedInstance {
+//    static dispatch_once_t onceToken;
+//    dispatch_once(&onceToken, ^{
+//        sharedInstance = [[GrowingMobileDebugger alloc] init];
+//        [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:sharedInstance];
+//    });
+//    return sharedInstance;
+//}
+
+- (NSInteger)modulePriority {
+    return 100;
+}
+
+- (void)growingModInit:(GrowingContext *)context {
+    [GrowingDebuggerEventQueue startQueue];
+    [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:self];
 }
 
 - (instancetype)init
@@ -96,18 +115,18 @@ static GrowingMobileDebugger *shareInstance = nil;
     return _absoluteURL;
 }
 
-+ (void)stop {
-    [[self shareInstance] stop];
-}
-
-+ (BOOL)isRunning {
-    return [[self shareInstance] isRunning];
-}
+//+ (void)stop {
+//    [[self sharedInstance] stop];
+//}
+//
+//+ (BOOL)isRunning {
+//    return [[self sharedInstance] isRunning];
+//}
 
 - (void)runWithMobileDebugger:(NSURL *)url{
     if (self.webSocket) {
-        [self.webSocket close];
         self.webSocket.delegate = nil;
+        [self.webSocket close];
         self.webSocket = nil;
     }
     self.webSocket = [[GrowingSRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:url]];
@@ -209,6 +228,7 @@ static GrowingMobileDebugger *shareInstance = nil;
     [[GrowingApplicationEventManager sharedInstance] addApplicationEventObserver:self];
 }
 
+
 - (void)stop {
     GIOLogDebug(@"开始断开连接");
     NSDictionary *dict = @{@"msgType" : @"quit"};
@@ -217,6 +237,11 @@ static GrowingMobileDebugger *shareInstance = nil;
     self.statusWindow.statusLable.textAlignment = NSTextAlignmentCenter;
     [self _stopWithError:nil];
 }
+
+- (void)dealloc {
+    [self stop];
+}
+
 
 - (void)_stopWithError:(NSString *)error {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];

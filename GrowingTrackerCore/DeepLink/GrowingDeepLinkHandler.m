@@ -21,10 +21,10 @@
 #import "GrowingDeepLinkHandler.h"
 #import "NSURL+GrowingHelper.h"
 #import "GrowingNetworkConfig.h"
-#import "GrowingCocoaLumberjack.h"
+#import "GrowingLogger.h"
 #import "GrowingASLLoggerFormat.h"
 #import "GrowingWebWatcher.h"
-#import "GrowingMobileDebugger.h"
+//#import "GrowingMobileDebugger.h"
 
 @interface GrowingDeepLinkHandler ()
 
@@ -89,8 +89,7 @@
 + (BOOL)handlerUrl:(NSURL *)url {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:[GrowingWebWatcher shareInstance]];
-        [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:[GrowingMobileDebugger shareInstance]];
+        [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:[GrowingWebWatcher sharedInstance]];
     });
     return [[self sharedInstance] dispatchHandlerUrl:url];;
 }

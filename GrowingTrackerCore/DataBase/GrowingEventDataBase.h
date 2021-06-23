@@ -21,8 +21,7 @@
 #import <Foundation/Foundation.h>
 @class GrowingEventPersistence;
 
-typedef NS_ENUM(NSInteger , GrowingEventDataBaseError)
-{
+typedef NS_ENUM(NSInteger , GrowingEventDataBaseError) {
     GrowingEventDataBaseOpenError,
     GrowingEventDataBaseWriteError,
     GrowingEventDataBaseReadError,

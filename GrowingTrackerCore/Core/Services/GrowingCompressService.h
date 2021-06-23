@@ -1,8 +1,8 @@
 //
-// GrowingAutotrackConfiguration.h
+// GrowingCompressService.h
 // GrowingAnalytics
 //
-//  Created by sheng on 2021/5/8.
+//  Created by sheng on 2021/6/17.
 //  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,12 +18,10 @@
 //  limitations under the License.
 
 
-#import <GrowingAnalytics/GrowingAnalytics.h>
+#import "GrowingBaseService.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
-@interface GrowingAutotrackConfiguration : GrowingTrackConfiguration
+@protocol GrowingCompressService <GrowingBaseService>
+@required
+- (NSData*)compressedData:(NSData*)data;
 
 @end
-
-NS_ASSUME_NONNULL_END

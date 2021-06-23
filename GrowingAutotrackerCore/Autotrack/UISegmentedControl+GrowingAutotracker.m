@@ -24,7 +24,7 @@
 #import "GrowingViewClickProvider.h"
 @interface GrowingUISegmentedControlObserver : NSObject
 
-+ (instancetype)shareInstance;
++ (instancetype)sharedInstance;
 - (void)growingSegmentAction:(UISegmentedControl *)segmentControl;
 
 @end
@@ -66,10 +66,10 @@ void growingUISegmentedControlSetUp(UISegmentedControl *self) {
         allTargets = self.allTargets;
     }
     
-    if ([allTargets containsObject:[GrowingUISegmentedControlObserver shareInstance]]) {
+    if ([allTargets containsObject:[GrowingUISegmentedControlObserver sharedInstance]]) {
         return;
     }
-    [self addTarget:[GrowingUISegmentedControlObserver shareInstance]
+    [self addTarget:[GrowingUISegmentedControlObserver sharedInstance]
              action:@selector(growingSegmentAction:)
    forControlEvents:UIControlEventValueChanged];
 }
@@ -99,7 +99,7 @@ void growingUISegmentedControlSetUp(UISegmentedControl *self) {
 
 @implementation GrowingUISegmentedControlObserver
 
-+ (instancetype)shareInstance {
++ (instancetype)sharedInstance {
     static id instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{

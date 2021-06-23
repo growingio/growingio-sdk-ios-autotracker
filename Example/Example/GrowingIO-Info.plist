@@ -75,5 +75,10 @@
 	</array>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>GrowingIO测试demo 需要使用你的广告标识信息以用于数据追踪分析</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 </dict>
 </plist>

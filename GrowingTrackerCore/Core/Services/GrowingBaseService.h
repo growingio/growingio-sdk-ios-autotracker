@@ -1,8 +1,8 @@
 //
-// GrowingAutotrackConfiguration.m
+// GrowingBaseService.h
 // GrowingAnalytics
 //
-//  Created by sheng on 2021/5/8.
+//  Created by sheng on 2021/6/8.
 //  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,9 +17,15 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import <Foundation/Foundation.h>
+#import "GrowingAnnotationCore.h"
 
-#import "GrowingAutotrackConfiguration.h"
+@protocol GrowingBaseService <NSObject>
 
-@implementation GrowingAutotrackConfiguration
+@optional
+
++ (BOOL)singleton;
+
++ (id)sharedInstance;
 
 @end

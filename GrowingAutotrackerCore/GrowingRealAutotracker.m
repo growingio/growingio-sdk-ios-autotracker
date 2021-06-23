@@ -17,21 +17,18 @@
 #import "GrowingRealAutotracker.h"
 #import "GrowingSwizzle.h"
 #import "GrowingLogMacros.h"
-#import "GrowingCocoaLumberjack.h"
+#import "GrowingLogger.h"
 #import "UIViewController+GrowingAutotracker.h"
 #import "UIApplication+GrowingAutotracker.h"
 #import "UISegmentedControl+GrowingAutotracker.h"
 #import "UIView+GrowingAutotracker.h"
 #import "NSNotificationCenter+GrowingAutotracker.h"
-#import "WKWebView+GrowingAutotracker.h"
 #import "UITableView+GrowingAutotracker.h"
 #import "UITapGestureRecognizer+GrowingAutotracker.h"
 #import "UIAlertController+GrowingAutotracker.h"
 #import "GrowingPageManager.h"
 #import "GrowingImpressionTrack.h"
 #import "GrowingDeepLinkHandler.h"
-#import "GrowingWebCircle.h"
-#import "GrowingMobileDebugger.h"
 #import "GrowingAutotrackConfiguration.h"
 
 @implementation GrowingRealAutotracker
@@ -40,7 +37,7 @@
     if (self) {
         [self addAutoTrackSwizzles];
         [GrowingPageManager.sharedInstance start];
-        [GrowingImpressionTrack.shareInstance start];
+        [GrowingImpressionTrack.sharedInstance start];
     }
 
     return self;
@@ -110,14 +107,7 @@
             GIOLogError(@"Failed to swizzle NSNotificationCenter. Details: %@", notiError);
         }
 
-        // WKWebView
-        NSError *webViewError = NULL;
-        [WKWebView growing_swizzleMethod:@selector(initWithFrame:configuration:)
-                              withMethod:@selector(growing_initWithFrame:configuration:)
-                                   error:&webViewError];
-        if (webViewError) {
-            GIOLogError(@"Failed to swizzle WKWebView. Details: %@", webViewError);
-        }
+        
 
         // ListView
         NSError *listViewError = NULL;
@@ -168,8 +158,6 @@
         if (alertError) {
             GIOLogError(@"Failed to swizzle UIAlertController. Details: %@", alertError);
         }
-        
-        [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:[GrowingWebCircle shareInstance]];
     });
 }
 

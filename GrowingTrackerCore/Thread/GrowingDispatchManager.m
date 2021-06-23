@@ -19,7 +19,7 @@
 
 #import "GrowingDispatchManager.h"
 
-#import "GrowingCocoaLumberjack.h"
+#import "GrowingLogger.h"
 #import "GrowingThread.h"
 
 @implementation GrowingDispatchManager

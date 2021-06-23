@@ -28,7 +28,7 @@
 #import "GrowingVisitorAttributesEvent.h"
 
 #import "GrowingLogMacros.h"
-#import "GrowingCocoaLumberjack.h"
+#import "GrowingLogger.h"
 @implementation GrowingEventGenerator
 
 + (void)generateVisitEvent:(long long)ts
@@ -36,7 +36,7 @@
     [GrowingDispatchManager dispatchInGrowingThread:^{
         GrowingBaseBuilder *builder =
             GrowingVisitEvent.builder.setTimestamp(ts);
-        [[GrowingEventManager shareInstance] postEventBuidler:builder];
+        [[GrowingEventManager sharedInstance] postEventBuidler:builder];
     }];
 }
 
@@ -44,35 +44,35 @@
                  attributes:(NSDictionary<NSString *, NSObject *> *_Nullable)attributes {
     [GrowingDispatchManager dispatchInGrowingThread:^{
         GrowingBaseBuilder *builder = GrowingCustomEvent.builder.setEventName(name).setAttributes(attributes);
-        [[GrowingEventManager shareInstance] postEventBuidler:builder];
+        [[GrowingEventManager sharedInstance] postEventBuidler:builder];
     }];
 }
 
 + (void)generateConversionAttributesEvent:(NSDictionary<NSString *, NSObject *> *_Nonnull)variables {
     [GrowingDispatchManager dispatchInGrowingThread:^{
         GrowingBaseBuilder *builder = GrowingConversionVariableEvent.builder.setAttributes(variables);
-        [[GrowingEventManager shareInstance] postEventBuidler:builder];
+        [[GrowingEventManager sharedInstance] postEventBuidler:builder];
     }];
 }
 
 + (void)generateLoginUserAttributesEvent:(NSDictionary<NSString *, NSObject *> *_Nonnull)attributes {
     [GrowingDispatchManager dispatchInGrowingThread:^{
         GrowingBaseBuilder *builder = GrowingLoginUserAttributesEvent.builder.setAttributes(attributes);
-        [[GrowingEventManager shareInstance] postEventBuidler:builder];
+        [[GrowingEventManager sharedInstance] postEventBuidler:builder];
     }];
 }
 
 + (void)generateVisitorAttributesEvent:(NSDictionary<NSString *, NSObject *> *_Nonnull)attributes {
     [GrowingDispatchManager dispatchInGrowingThread:^{
         GrowingBaseBuilder *builder = GrowingVisitorAttributesEvent.builder.setAttributes(attributes);
-        [[GrowingEventManager shareInstance] postEventBuidler:builder];
+        [[GrowingEventManager sharedInstance] postEventBuidler:builder];
     }];
 }
 
 + (void)generateAppCloseEvent {
     [GrowingDispatchManager dispatchInGrowingThread:^{
         GrowingBaseBuilder *builder = GrowingAppCloseEvent.builder;
-        [[GrowingEventManager shareInstance] postEventBuidler:builder];
+        [[GrowingEventManager sharedInstance] postEventBuidler:builder];
     }];
 }
 

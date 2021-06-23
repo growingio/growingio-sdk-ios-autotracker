@@ -22,6 +22,6 @@
 
 @interface GrowingWebWatcher : NSObject
 
-+ (instancetype)shareInstance;
++ (instancetype)sharedInstance;
 
 @end

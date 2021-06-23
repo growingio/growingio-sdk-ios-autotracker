@@ -22,7 +22,7 @@
 #import "GrowingFMDB.h"
 #import <pthread.h>
 #import "NSString+GrowingHelper.h"
-#import "GrowingCocoaLumberjack.h"
+#import "GrowingLogger.h"
 #import "GrowingEventPersistence.h"
 #import "GrowingTimeUtil.h"
 
@@ -467,20 +467,16 @@ static BOOL isExecuteVacuum(NSString *name)
 }
 
 - (NSError *)cleanExpiredDataIfNeeded {
-    
-//    NSNumber *now = GROWGetTimestamp();
-    NSNumber *now =0;
-    NSNumber *sevenDayBefore = [NSNumber numberWithLong:(now.longValue - DAY_IN_MILLISECOND * 7)]; // (now.longValue - now.longValue);
-    
+    NSDate *dateNow = [NSDate date];
+    NSNumber *now = [NSNumber numberWithLongLong:([dateNow timeIntervalSince1970] * 1000LL)];
+    NSNumber *sevenDayBefore = [NSNumber numberWithLong:(now.longValue - DAY_IN_MILLISECOND * 7)];
     __block NSError *deleteError = nil;
-    
     NSError *openError = [self performDataBaseBlock:^(GrowingFMDatabase *db) {
         BOOL result = [db executeUpdate:@"delete from namedcachetable where name=? and createAt<=?;", self.name, sevenDayBefore];
         if (!result) {
             deleteError = [db lastError];
         }
     }];
-    
     return openError ? openError : deleteError;
 }
 
