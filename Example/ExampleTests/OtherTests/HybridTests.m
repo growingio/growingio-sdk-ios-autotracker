@@ -202,13 +202,8 @@
 }
 
 -(void)testGrowingabsoluteURL{
-<<<<<<< HEAD
     NSString * url = [[[GrowingMobileDebugger alloc] init] absoluteURL];
     XCTAssertEqualObjects(url, @"https://api.growingio.com/v3/projects/91eaf9b283361032/collect");
-=======
-    NSString * url = [[GrowingMobileDebugger shareInstance] absoluteURL];
-    XCTAssertNotNil(url);
->>>>>>> feat: 广告sdk适配，适配GrowingAdvertising
 }
 
 -(void)testGrowingAppCloseEvent{
