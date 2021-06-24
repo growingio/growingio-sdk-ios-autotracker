@@ -139,7 +139,7 @@ static GrowingSession *currentSession = nil;
 - (void)applicationDidBecomeActive {
     // 第一次启动，且已经发送过visit事件，说明visit事件被强制补发了，这里就不在发送visit事件了
     if (self.latestDidEnterBackgroundTime == 0 && self.alreadySendVisitEvent) {
-        GIOLogWarn(@"First launched and already send visit");
+        GIOLogDebug(@"First launched and already send visit");
         return;
     }
 
