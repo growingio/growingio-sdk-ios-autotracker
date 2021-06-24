@@ -21,6 +21,8 @@
 #import "GrowingModuleManager.h"
 #import "GrowingModuleProtocol.h"
 #import "GrowingContext.h"
+#import <objc/runtime.h>
+#import <objc/message.h>
 
 #define kModuleArrayKey     @"moduleClasses"
 #define kModuleInfoNameKey  @"moduleClass"
@@ -83,13 +85,9 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
 
 - (void)registerDynamicModule:(Class)moduleClass
 {
-    [self registerDynamicModule:moduleClass shouldTriggerInitEvent:NO];
+    [self addModuleFromObject:moduleClass];
 }
-- (void)registerDynamicModule:(Class)moduleClass
-       shouldTriggerInitEvent:(BOOL)shouldTriggerInitEvent
-{
-    [self addModuleFromObject:moduleClass shouldTriggerInitEvent:shouldTriggerInitEvent];
-}
+
 
 - (void)unRegisterDynamicModule:(Class)moduleClass {
     if (!moduleClass) {
@@ -145,17 +143,35 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
         Class moduleClass = NSClassFromString(classStr);
         BOOL hasInstantiated = ((NSNumber *)[module objectForKey:kModuleInfoHasInstantiatedKey]).boolValue;
         if (NSStringFromClass(moduleClass) && !hasInstantiated) {
-            id<GrowingModuleProtocol> moduleInstance = [[moduleClass alloc] init];
+            id<GrowingModuleProtocol> moduleInstance = [self getModuleInstanceByClass:moduleClass];
+            [self registerEventsByModuleInstance:moduleInstance];
             [tmpArray addObject:moduleInstance];
         }
         
     }];
     
-//    [self.GrowingModules removeAllObjects];
+    [self.GrowingModules removeAllObjects];
 
     [self.GrowingModules addObjectsFromArray:tmpArray];
     
     [self registerAllSystemEvents];
+}
+
+- (id <GrowingModuleProtocol>)getModuleInstanceByClass:(Class) moduleClass{
+    id<GrowingModuleProtocol> moduleInstance = nil;
+    if ([[moduleClass class] respondsToSelector:@selector(singleton)]) {
+        BOOL (*sigletonImp)(id,SEL) = (BOOL(*)(id, SEL))objc_msgSend;
+        BOOL isSingleton = sigletonImp([moduleClass class], @selector(singleton));
+        if (isSingleton) {
+            if ([[moduleClass class] respondsToSelector:@selector(sharedInstance)])
+                moduleInstance = [[moduleClass class] performSelector:@selector(sharedInstance)];
+            else
+                moduleInstance = [[moduleClass alloc] init];
+        }
+    }else {
+        moduleInstance = [[moduleClass alloc] init];
+    }
+    return moduleInstance;
 }
 
 - (void)registerCustomEvent:(NSInteger)eventType
@@ -210,7 +226,6 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
 
 
 - (void)addModuleFromObject:(id)object
-     shouldTriggerInitEvent:(BOOL)shouldTriggerInitEvent
 {
     Class class;
     NSString *moduleName = nil;
@@ -250,10 +265,8 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
         }
 
         [self.GrowingModuleInfos addObject:moduleInfo];
-        
-        id<GrowingModuleProtocol> moduleInstance = [[class alloc] init];
-        [self.GrowingModules addObject:moduleInstance];
-        [moduleInfo setObject:@(YES) forKey:kModuleInfoHasInstantiatedKey];
+    
+        [moduleInfo setObject:@(NO) forKey:kModuleInfoHasInstantiatedKey];
         [self.GrowingModules sortUsingComparator:^NSComparisonResult(id<GrowingModuleProtocol> moduleInstance1, id<GrowingModuleProtocol> moduleInstance2) {
             NSNumber *module1Level = @(GrowingModuleNormal);
             NSNumber *module2Level = @(GrowingModuleNormal);
@@ -277,12 +290,6 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
                 return module1Priority < module2Priority;
             }
         }];
-        [self registerEventsByModuleInstance:moduleInstance];
-        
-        if (shouldTriggerInitEvent) {
-            [self handleModuleEvent:GrowingMSetupEvent forTarget:moduleInstance withSeletorStr:nil andCustomParam:nil];
-            [self handleModulesInitEventForTarget:moduleInstance withCustomParam:nil];
-        }
     }
 }
 

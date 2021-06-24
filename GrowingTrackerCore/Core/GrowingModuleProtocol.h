@@ -31,6 +31,7 @@
 
 @optional
 
++ (BOOL)singleton;
 //越大越优先
 - (NSInteger)modulePriority;
 

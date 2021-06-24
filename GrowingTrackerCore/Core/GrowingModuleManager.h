@@ -65,9 +65,6 @@ NS_ASSUME_NONNULL_BEGIN
 // If you do not comply with set Level protocol, the default Normal
 - (void)registerDynamicModule:(Class)moduleClass;
 
-- (void)registerDynamicModule:(Class)moduleClass
-       shouldTriggerInitEvent:(BOOL)shouldTriggerInitEvent;
-
 - (void)unRegisterDynamicModule:(Class)moduleClass;
 
 //- (void)loadLocalModules;
