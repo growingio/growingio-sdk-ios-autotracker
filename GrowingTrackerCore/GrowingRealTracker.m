@@ -45,10 +45,12 @@ const int GrowingTrackerVersionCode = 30201;
         [self loggerSetting];
         GrowingConfigurationManager.sharedInstance.trackConfiguration = self.configuration;
         [GrowingAppLifecycle.sharedInstance setupAppStateNotification];
-        [[GrowingEventManager sharedInstance] startTimerSend];
         [GrowingSession startSession];
         [GrowingAppDelegateAutotracker track];
+        [[GrowingModuleManager sharedInstance] registedAllModules];
         [[GrowingModuleManager sharedInstance] triggerEvent:GrowingMInitEvent];
+        // 各个Module初始化init之后再进行事件定时发送
+        [[GrowingEventManager sharedInstance] startTimerSend];
         [self versionPrint];
     }
 

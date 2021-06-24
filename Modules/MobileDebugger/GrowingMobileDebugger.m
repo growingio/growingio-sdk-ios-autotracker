@@ -74,7 +74,7 @@ dispatch_semaphore_signal(self->_lock);
     dispatch_semaphore_t _lock;
 }
 
-static GrowingMobileDebugger *sharedInstance = nil;
+//static GrowingMobileDebugger *sharedInstance = nil;
 
 - (void)growingModInit:(GrowingContext *)context {
     [GrowingDebuggerEventQueue startQueue];
