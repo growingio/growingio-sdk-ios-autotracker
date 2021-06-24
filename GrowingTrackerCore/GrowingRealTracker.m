@@ -58,20 +58,14 @@ const int GrowingTrackerVersionCode = 30200;
 }
 
 - (void)loggerSetting {
-    if (self.configuration.debugEnabled) {
-        [GrowingLog addLogger:[GrowingTTYLogger sharedInstance] withLevel:GrowingLogLevelDebug];
-    } else {
-        [GrowingLog removeLogger:[GrowingTTYLogger sharedInstance]];
-        [GrowingLog addLogger:[GrowingTTYLogger sharedInstance] withLevel:GrowingLogLevelError];
-    }
-
+    [GrowingLog addLogger:[GrowingTTYLogger sharedInstance] withLevel:self.configuration.debugEnabled ? GrowingLogLevelDebug : GrowingLogLevelInfo];
     [GrowingLog addLogger:[GrowingWSLogger sharedInstance] withLevel:GrowingLogLevelVerbose];
     [GrowingWSLogger sharedInstance].logFormatter = [GrowingWSLoggerFormat new];
 }
 
 - (void)versionPrint {
     NSString *versionStr = [NSString stringWithFormat:@"Thank you very much for using GrowingIO. We will do our best to provide you with the best service. GrowingIO version: %@",GrowingTrackerVersionName];
-    GIOLogError(@"%@",versionStr);
+    GIOLogInfo(@"%@", versionStr);
 }
 
 - (void)trackCustomEvent:(NSString *)eventName {

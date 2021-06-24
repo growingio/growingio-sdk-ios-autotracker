@@ -212,7 +212,7 @@ static GrowingEventManager *sharedInstance = nil;
         }
 
         if (!GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionEnabled) {
-            GIOLogWarn(@"Data collection is disabled, event can not build");
+            GIOLogDebug(@"Data collection is disabled, event can not build");
             return;
         }
 
