@@ -26,7 +26,7 @@ NS_INLINE NSString* logLevel(GrowingLogFlag level) {
         case GrowingLogFlagError:
             return @"Error";
         case GrowingLogFlagWarning:
-            return @"Warning";
+            return @"Warn";
         case GrowingLogFlagInfo:
             return @"Info";
         case GrowingLogFlagDebug:
