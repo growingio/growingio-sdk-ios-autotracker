@@ -16,6 +16,7 @@
 
 #import <Foundation/Foundation.h>
 #import <Security/SecCertificate.h>
+#import "GrowingWebSocketService.h"
 
 typedef NS_ENUM(NSInteger, GrowingSRReadyState) {
     Growing_SR_CONNECTING   = 0,
@@ -48,7 +49,7 @@ extern NSString *const kGrowingSRHTTPResponseErrorKey;
 
 #pragma mark - GrowingSRWebSocket
 
-@interface GrowingSRWebSocket : NSObject <NSStreamDelegate>
+@interface GrowingSRWebSocket : NSObject <GrowingWebSocketService, NSStreamDelegate>
 
 @property (nonatomic, weak) id <GrowingSRWebSocketDelegate> delegate;
 

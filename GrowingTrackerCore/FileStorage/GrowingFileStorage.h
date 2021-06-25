@@ -19,11 +19,11 @@
 
 
 #import <Foundation/Foundation.h>
-#import "GrowingCrypto.h"
+#import "GrowingEncryptionService.h"
 
 @protocol GrowingStorage <NSObject>
 
-@property (nonatomic, strong, nullable) id<GrowingCrypto> crypto;
+@property (nonatomic, strong, nullable) id<GrowingEncryptionService> crypto;
 
 - (void)removeKey:(NSString *_Nonnull)key;
 - (void)resetAll;
@@ -58,7 +58,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingFileStorage : NSObject <GrowingStorage>
 
-@property (nonatomic, strong, nullable) id <GrowingCrypto> crypto;
+@property (nonatomic, strong, nullable) id<GrowingEncryptionService> crypto;
 
 @property (nonatomic, strong, nonnull, readonly) NSURL *folderURL;
 
@@ -66,14 +66,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype _Nonnull)initWithName:(NSString *_Nonnull)name directory:(GrowingUserDirectory)directory;
 
-- (instancetype _Nonnull)initWithName:(NSString *_Nonnull)name directory:(GrowingUserDirectory)directory crypto:(id<GrowingCrypto> _Nullable)crypto;
+- (instancetype _Nonnull)initWithName:(NSString *_Nonnull)name directory:(GrowingUserDirectory)directory crypto:(id<GrowingEncryptionService> _Nullable)crypto;
 
 - (NSURL *_Nonnull)urlForKey:(NSString *_Nonnull)key;
 
 + (NSString *)getTimingDatabasePath;
 
 + (NSString *)getRealtimeDatabasePath;
-
 
 @end
 

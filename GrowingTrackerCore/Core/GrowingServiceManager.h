@@ -33,6 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (id)createService:(Protocol*)service;
 
+- (id)serviceImplClass:(Protocol *)service;
+
 - (id)getServiceInstanceForServiceName:(NSString *)serviceName;
 
 - (void)removeServiceInstanceForServiceName:(NSString *)serviceName;

@@ -58,6 +58,7 @@
 #import "GrowingStatusBarAutotracker.h"
 #import "GrowingServiceManager.h"
 #import "GrowingHybridBridgeProvider.h"
+#import "GrowingWebSocketService.h"
 
 @GrowingMod(GrowingWebCircle)
 
@@ -68,7 +69,7 @@
 @implementation GrowingWeakObject
 @end
 
-@interface GrowingWebCircle () <GrowingSRWebSocketDelegate,
+@interface GrowingWebCircle () <GrowingWebSocketDelegate,
                                 GrowingEventInterceptor,
                                 GrowingWebViewDomChangedDelegate,
                                 GrowingApplicationEventProtocol,
@@ -93,28 +94,6 @@
 @end
 
 @implementation GrowingWebCircle
-
-//static GrowingWebCircle *sharedInstance = nil;
-//
-//+ (instancetype)sharedInstance {
-//    static dispatch_once_t onceToken;
-//    dispatch_once(&onceToken, ^{
-//        sharedInstance = [[GrowingWebCircle alloc] init];
-//        [GrowingStatusBarAutotracker track];
-//    });
-//    return sharedInstance;
-//}
-
-//+ (void)runWithCircle:(NSURL *)url readyBlock:(void (^)(void))readyBlock finishBlock:(void (^)(void))finishBlock;
-//{ [[self sharedInstance] runWithCircle:url readyBlock:readyBlock finishBlock:finishBlock]; }
-//
-//+ (void)stop {
-//    [[self sharedInstance] stop];
-//}
-//
-//+ (BOOL)isRunning {
-//    return [[self sharedInstance] isRunning];
-//}
 
 - (void)growingModInit:(GrowingContext *)context {
     [GrowingStatusBarAutotracker track];
@@ -392,6 +371,7 @@
 
 - (void)runWithCircle:(NSURL *)url readyBlock:(void (^)(void))readyBlock finishBlock:(void (^)(void))finishBlock;
 {
+    
     if (self.webSocket) {
         [self.webSocket close];
         self.webSocket.delegate = nil;
@@ -408,6 +388,17 @@
 
         [UIApplication sharedApplication].idleTimerDisabled = YES;
         GIOLogDebug(@"开始起服务");
+        
+        Class <GrowingWebSocketService> serviceClass = [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingWebSocketService)];
+        if (!serviceClass) {
+            GIOLogError(@"-runWithCircle:readyBlock:finishBlock: web circle error : no websocket service support");
+            return;
+        }
+        
+        self.webSocket = [[(Class)serviceClass alloc] initWithURLRequest:[NSURLRequest requestWithURL:url]];
+        self.webSocket.delegate = self;
+        [self.webSocket open];
+        
         if (!self.statusWindow) {
             self.statusWindow = [[GrowingStatusBar alloc] initWithFrame:[UIScreen mainScreen].bounds];
             self.statusWindow.hidden = NO;
@@ -442,10 +433,6 @@
                 [alert showAlertAnimated:NO];
             };
         }
-        
-        self.webSocket = [[GrowingSRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:url]];
-        self.webSocket.delegate = self;
-        [self.webSocket open];
 
         self.onReadyBlock = readyBlock;
         self.onFinishBlock = finishBlock;
@@ -529,7 +516,7 @@
 }
 
 - (void)sendJson:(id)json {
-    if (self.webSocket.readyState == Growing_SR_OPEN &&
+    if (self.webSocket.readyState == Growing_WS_OPEN &&
         ([json isKindOfClass:[NSDictionary class]] || [json isKindOfClass:[NSArray class]])) {
         NSString *jsonString = [json growingHelper_jsonString];
         [self.webSocket send:jsonString];
@@ -538,7 +525,7 @@
 
 #pragma mark - Websocket Delegate
 
-- (void)webSocket:(GrowingSRWebSocket *)webSocket didReceiveMessage:(id)message {
+- (void)webSocket:(id <GrowingWebSocketService>)webSocket didReceiveMessage:(id)message {
     if ([message isKindOfClass:[NSString class]] || ((NSString *)message).length > 0) {
         GIOLogDebug(@"didReceiveMessage: %@", message);
         NSMutableDictionary *dict = [[message growingHelper_jsonObject] mutableCopy];
@@ -567,7 +554,7 @@
 
 #pragma mark - websocket delegate
 
-- (void)webSocketDidOpen:(GrowingSRWebSocket *)webSocket {
+- (void)webSocketDidOpen:(id <GrowingWebSocketService>)webSocket {
     GIOLogDebug(@"websocket已连接");
     CGSize screenSize = [GrowingDeviceInfo deviceScreenSize];
     NSString *projectId = GrowingConfigurationManager.sharedInstance.trackConfiguration.projectId;
@@ -586,24 +573,24 @@
     [self sendJson:dict];
 }
 
-- (void)webSocket:(GrowingSRWebSocket *)webSocket
+- (void)webSocket:(id <GrowingWebSocketService>)webSocket
     didCloseWithCode:(NSInteger)code
               reason:(NSString *)reason
             wasClean:(BOOL)wasClean {
     GIOLogDebug(@"已断开链接");
     _isReady = NO;
-    if (code != GrowingSRStatusCodeNormal) {
+    if (code != GrowingWebSocketStatusCodeNormal) {
         [self _stopWithError:@"当前设备已与Web端断开连接,如需继续圈选请扫码重新连接。"];
     }
 }
 
-- (void)webSocket:(GrowingSRWebSocket *)webSocket didFailWithError:(NSError *)error {
+- (void)webSocket:(id <GrowingWebSocketService>)webSocket didFailWithError:(NSError *)error {
     GIOLogDebug(@"error : %@", error);
     _isReady = NO;
     [self _stopWithError:@"服务器链接失败"];
 }
 
-- (void)webSocket:(GrowingSRWebSocket *)webSocket didReceivePong:(NSData *)pongPayload {
+- (void)webSocket:(id <GrowingWebSocketService>)webSocket didReceivePong:(NSData *)pongPayload {
 }
 
 #pragma mark - GrowingWebViewDomChangedDelegate

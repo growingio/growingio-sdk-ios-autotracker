@@ -1,9 +1,9 @@
 //
-//  GrowingCrypto.h
-//  GrowingTracker
+// GrowingDataCompression.h
+// Pods
 //
-//  Created by GrowingIO on 2020/3/3.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2021/6/24.
+//  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -18,10 +18,15 @@
 //  limitations under the License.
 
 
-@protocol GrowingCrypto <NSObject>
+#import <Foundation/Foundation.h>
+#import "GrowingCompressService.h"
 
-- (NSData *_Nullable)encrypt:(NSData *_Nonnull)data;
-- (NSData *_Nullable)decrypt:(NSData *_Nonnull)data;
+NS_ASSUME_NONNULL_BEGIN
+
+@interface GrowingDataCompression : NSObject <GrowingCompressService>
+
+- (NSData *_Nonnull)compressedEventData:(NSData *_Nonnull)data;
 
 @end
 
+NS_ASSUME_NONNULL_END
