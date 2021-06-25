@@ -234,17 +234,6 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
         class = object;
         moduleName = NSStringFromClass(class);
     } else {
-        return ;
-    }
-    
-    __block BOOL flag = YES;
-    [self.GrowingModules enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj isKindOfClass:class]) {
-            flag = NO;
-            *stop = YES;
-        }
-    }];
-    if (!flag) {
         return;
     }
     
@@ -267,29 +256,6 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
         [self.GrowingModuleInfos addObject:moduleInfo];
     
         [moduleInfo setObject:@(NO) forKey:kModuleInfoHasInstantiatedKey];
-        [self.GrowingModules sortUsingComparator:^NSComparisonResult(id<GrowingModuleProtocol> moduleInstance1, id<GrowingModuleProtocol> moduleInstance2) {
-            NSNumber *module1Level = @(GrowingModuleNormal);
-            NSNumber *module2Level = @(GrowingModuleNormal);
-            if ([moduleInstance1 respondsToSelector:@selector(basicModuleLevel)]) {
-                module1Level = @(GrowingModuleBasic);
-            }
-            if ([moduleInstance2 respondsToSelector:@selector(basicModuleLevel)]) {
-                module2Level = @(GrowingModuleBasic);
-            }
-            if (module1Level.integerValue != module2Level.integerValue) {
-                return module1Level.integerValue > module2Level.integerValue;
-            } else {
-                NSInteger module1Priority = 0;
-                NSInteger module2Priority = 0;
-                if ([moduleInstance1 respondsToSelector:@selector(modulePriority)]) {
-                    module1Priority = [moduleInstance1 modulePriority];
-                }
-                if ([moduleInstance2 respondsToSelector:@selector(modulePriority)]) {
-                    module2Priority = [moduleInstance2 modulePriority];
-                }
-                return module1Priority < module2Priority;
-            }
-        }];
     }
 }
 
