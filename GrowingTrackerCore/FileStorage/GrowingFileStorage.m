@@ -22,6 +22,7 @@
 #import "NSArray+GrowingHelper.h"
 #import "NSDictionary+GrowingHelper.h"
 #import "GrowingLogger.h"
+#import "GrowingServiceManager.h"
 
 NSString *const kGrowingResidentDirName = @"com.growingio.core";
 NSString *const kGrowingDirCommonPrefix = @"com.growingio.";
@@ -40,14 +41,16 @@ NSString *const kGrowingDirCommonPrefix = @"com.growingio.";
 }
 
 - (instancetype)initWithName:(NSString *)name {
-    return [self initWithName:name directory:GrowingUserDirectoryLibrary crypto:nil];
+    id <GrowingEncryptionService> impl = [[GrowingServiceManager sharedInstance] createService:NSProtocolFromString(@"GrowingEncryptionService")];
+    return [self initWithName:name directory:GrowingUserDirectoryLibrary crypto:impl];
 }
 
 - (instancetype)initWithName:(NSString *)name directory:(GrowingUserDirectory)directory {
-    return [self initWithName:name directory:directory crypto:nil];
+    id <GrowingEncryptionService> impl = [[GrowingServiceManager sharedInstance] createService:NSProtocolFromString(@"GrowingEncryptionService")];
+    return [self initWithName:name directory:directory crypto:impl];
 }
 
-- (instancetype)initWithName:(NSString *)name directory:(GrowingUserDirectory)directory crypto:(id<GrowingCrypto>)crypto {
+- (instancetype)initWithName:(NSString *)name directory:(GrowingUserDirectory)directory crypto:(id<GrowingEncryptionService>)crypto {
     if (self = [super init]) {
         NSString *fullPath = [NSString stringWithFormat:@"%@/%@%@", kGrowingResidentDirName, kGrowingDirCommonPrefix, name];
         NSURL *userDir = [GrowingFileStorage userDirectoryURL:directory];
@@ -152,8 +155,8 @@ NSString *const kGrowingDirCommonPrefix = @"com.growingio.";
         return;
     }
     
-    if (self.crypto) {
-        NSData *encryptedData = [self.crypto encrypt:data];
+    if (self.crypto && [self.crypto respondsToSelector:@selector(encryptLocalData:)]) {
+        NSData *encryptedData = [self.crypto encryptLocalData:data];
         [encryptedData writeToURL:url atomically:YES];
     } else {
         [data writeToURL:url atomically:YES];
@@ -167,8 +170,8 @@ NSString *const kGrowingDirCommonPrefix = @"com.growingio.";
         GIOLogDebug(@"WARNING: No data file for key %@", key);
         return nil;
     }
-    if (self.crypto) {
-        return [self.crypto decrypt:data];
+    if (self.crypto && [self.crypto respondsToSelector:@selector(decryptLocalData:)]) {
+        return [self.crypto decryptLocalData:data];
     }
     return data;
 }

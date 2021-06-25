@@ -21,7 +21,12 @@
 #import "GrowingRequestProtocol.h"
 
 @protocol GrowingEventNetworkService <GrowingBaseService>
+
 @required
+
+/// event相关数据上传的网络请求
+/// @param request request对象，需遵循GrowingRequestProtocol协议
+/// @param callback 请求回调
 - (void)sendRequest:(id <GrowingRequestProtocol> _Nonnull)request
          completion:(void(^_Nullable)(NSHTTPURLResponse * _Nonnull httpResponse,
                                       NSData * _Nonnull data,

@@ -31,9 +31,11 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   s.subspec 'Tracker' do |tracker|
       tracker.source_files = 'GrowingTracker/**/*{.h,.m,.c,.cpp,.mm}'
       tracker.dependency 'GrowingAnalytics/TrackerCore'
-      tracker.dependency 'GrowingAnalytics/Network'
       tracker.dependency 'GrowingAnalytics/MobileDebugger'
+      
+      tracker.dependency 'GrowingAnalytics/Network'
       tracker.dependency 'GrowingAnalytics/Encryption'
+      tracker.dependency 'GrowingAnalytics/Compression'
   end
   
   s.subspec 'AutotrackerCore' do |autotrackerCore|
@@ -47,18 +49,28 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   s.subspec 'Autotracker' do |autotracker|
       autotracker.source_files = 'GrowingAutotracker/**/*{.h,.m,.c,.cpp,.mm}'
       autotracker.dependency 'GrowingAnalytics/AutotrackerCore'
-      autotracker.dependency 'GrowingAnalytics/Network'
       autotracker.dependency 'GrowingAnalytics/MobileDebugger'
-      autotracker.dependency 'GrowingAnalytics/Encryption'
-
       autotracker.dependency 'GrowingAnalytics/WebCircle'
+      
+      autotracker.dependency 'GrowingAnalytics/Network'
+      autotracker.dependency 'GrowingAnalytics/Encryption'
+      autotracker.dependency 'GrowingAnalytics/Compression'
   end
 
   s.subspec 'Network' do |service|
       service.source_files = 'Services/Network/**/*{.h,.m,.c,.cpp,.mm}'
       service.dependency 'GrowingAnalytics/TrackerCore'
   end
-
+  
+  s.subspec 'WebSocket' do |service|
+      service.source_files = 'Services/WebSocket/**/*{.h,.m,.c,.cpp,.mm}'
+      service.dependency 'GrowingAnalytics/TrackerCore'
+  end
+  
+  s.subspec 'Compression' do |service|
+      service.source_files = 'Services/Compression/**/*{.h,.m,.c,.cpp,.mm}'
+      service.dependency 'GrowingAnalytics/TrackerCore'
+  end
 
   s.subspec 'Encryption' do |service|
       service.source_files = 'Services/Encryption/**/*{.h,.m,.c,.cpp,.mm}'
@@ -68,12 +80,14 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   s.subspec 'MobileDebugger' do |debugger|
       debugger.source_files = 'Modules/MobileDebugger/**/*{.h,.m,.c,.cpp,.mm}'
       debugger.dependency 'GrowingAnalytics/TrackerCore'
+      debugger.dependency 'GrowingAnalytics/WebSocket'
   end
 
   s.subspec 'WebCircle' do |webcircle|
       webcircle.source_files = 'Modules/WebCircle/**/*{.h,.m,.c,.cpp,.mm}'
       webcircle.dependency 'GrowingAnalytics/AutotrackerCore'
       webcircle.dependency 'GrowingAnalytics/Hybrid'
+      webcircle.dependency 'GrowingAnalytics/WebSocket'
   end
 
   s.subspec 'Hybrid' do |hybrid|

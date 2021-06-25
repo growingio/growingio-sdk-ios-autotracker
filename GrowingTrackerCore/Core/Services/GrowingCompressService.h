@@ -21,7 +21,11 @@
 #import "GrowingBaseService.h"
 
 @protocol GrowingCompressService <GrowingBaseService>
+
 @required
-- (NSData*)compressedData:(NSData*)data;
+
+/// event相关数据在上传之前的压缩处理
+/// @param data 将要压缩的NSData对象
+- (NSData *_Nonnull)compressedEventData:(NSData *_Nonnull)data;
 
 @end

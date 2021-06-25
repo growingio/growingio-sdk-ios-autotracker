@@ -21,7 +21,20 @@
 #import "GrowingBaseService.h"
 
 @protocol GrowingEncryptionService <GrowingBaseService>
-@required
-- (NSData*)encryptData:(NSData*)data factor:(unsigned char)hint;
+
+@optional
+
+/// event相关数据在上传之前的加密处理
+/// @param data 将要加密的NSData对象
+/// @param hint 盐值
+- (NSData *_Nonnull)encryptEventData:(NSData *_Nonnull)data factor:(unsigned char)hint;
+
+/// 本地数据存储加密（如当天已使用数据网络上传的数据量等）
+/// @param data 将要加密的NSData对象
+- (NSData *_Nonnull)encryptLocalData:(NSData *_Nonnull)data;
+
+/// 本地数据存储解密（如当天已使用数据网络上传的数据量等）
+/// @param data 将要解密的NSData对象
+- (NSData *_Nonnull)decryptLocalData:(NSData *_Nonnull)data;
 
 @end

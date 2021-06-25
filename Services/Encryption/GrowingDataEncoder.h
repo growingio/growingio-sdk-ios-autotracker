@@ -20,14 +20,12 @@
 
 #import <Foundation/Foundation.h>
 #import "GrowingEncryptionService.h"
-#import "GrowingCompressService.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingDataEncoder : NSObject <GrowingCompressService,GrowingEncryptionService>
+@interface GrowingDataEncoder : NSObject <GrowingEncryptionService>
 
-- (NSData*)compressedData:(NSData*)data;
-
-- (NSData*)encryptData:(NSData*)data factor:(unsigned char)hint;
+- (NSData *_Nonnull)encryptEventData:(NSData *_Nonnull)data factor:(unsigned char)hint;
 
 @end
 

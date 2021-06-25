@@ -18,18 +18,16 @@
 //  limitations under the License.
 
 #import <Foundation/Foundation.h>
-#import "GrowingSRWebSocket.h"
 #import "GrowingModuleProtocol.h"
+
+@protocol GrowingWebSocketService;
+
 @interface GrowingMobileDebugger : NSObject <GrowingModuleProtocol>
 
+@property (nonatomic, strong) id <GrowingWebSocketService> webSocket;
 
-@property (nonatomic, retain) GrowingSRWebSocket *webSocket;
-
-
-//+ (instancetype)sharedInstance;
-//+ (void)stop;
-//+ (BOOL)isRunning;
 - (void)start;
+
 - (NSString *)absoluteURL;
 
 @end

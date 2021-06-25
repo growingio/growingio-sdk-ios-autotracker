@@ -20,15 +20,11 @@
 #import <Foundation/Foundation.h>
 #import "GrowingModuleProtocol.h"
 #import "GrowingNode.h"
-#import "GrowingSRWebSocket.h"
+
+@protocol GrowingWebSocketService;
 
 @interface GrowingWebCircle : NSObject <GrowingModuleProtocol>
 
-@property (nonatomic, retain) GrowingSRWebSocket *webSocket;
-//+ (instancetype)sharedInstance;
-
-//+ (BOOL)isRunning;
-//+ (void)runWithCircle:(NSURL *)url readyBlock:(void (^)(void))readyBlock finishBlock:(void (^)(void))finishBlock;
-//+ (void)stop;
+@property (nonatomic, strong) id <GrowingWebSocketService> webSocket;
 
 @end

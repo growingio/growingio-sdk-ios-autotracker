@@ -30,7 +30,6 @@
 #import "GrowingDeepLinkHandler.h"
 #import "GrowingDeviceInfo.h"
 #import "GrowingDispatchManager.h"
-#import "GrowingEventManager.h"
 #import "GrowingNetworkConfig.h"
 #import "GrowingStatusBar.h"
 #import "NSArray+GrowingHelper.h"
@@ -47,6 +46,8 @@
 #import "GrowingRealTracker.h"
 #import "GrowingAnnotationCore.h"
 #import "GrowingDebuggerEventQueue.h"
+#import "GrowingServiceManager.h"
+#import "GrowingWebSocketService.h"
 
 #define LOCK(...) dispatch_semaphore_wait(self->_lock, DISPATCH_TIME_FOREVER); \
 __VA_ARGS__; \
@@ -54,8 +55,7 @@ dispatch_semaphore_signal(self->_lock);
 
 @GrowingMod(GrowingMobileDebugger)
 
-@interface GrowingMobileDebugger () <GrowingSRWebSocketDelegate,
-                                GrowingEventInterceptor,
+@interface GrowingMobileDebugger () <GrowingWebSocketDelegate,
                                 GrowingApplicationEventProtocol,
                                 GrowingDeepLinkHandlerProtocol>
 
@@ -67,6 +67,7 @@ dispatch_semaphore_signal(self->_lock);
 @property (nonatomic, retain) GrowingStatusBar *statusWindow;
 @property (nonatomic, assign) unsigned long snapNumber;  //数据发出序列号
 @property (nonatomic, copy) NSString *absoluteURL;
+
 @end
 
 @implementation GrowingMobileDebugger {
@@ -75,31 +76,12 @@ dispatch_semaphore_signal(self->_lock);
 
 static GrowingMobileDebugger *sharedInstance = nil;
 
-
-- (BOOL)async {
-    return NO;
-}
-
-//+ (instancetype)sharedInstance {
-//    static dispatch_once_t onceToken;
-//    dispatch_once(&onceToken, ^{
-//        sharedInstance = [[GrowingMobileDebugger alloc] init];
-//        [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:sharedInstance];
-//    });
-//    return sharedInstance;
-//}
-
-- (NSInteger)modulePriority {
-    return 100;
-}
-
 - (void)growingModInit:(GrowingContext *)context {
     [GrowingDebuggerEventQueue startQueue];
     [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:self];
 }
 
-- (instancetype)init
-{
+- (instancetype)init {
     if (self = [super init]) {
         _lock = dispatch_semaphore_create(1);
         _cacheEvent =  [NSMutableArray arrayWithCapacity:0];
@@ -115,24 +97,24 @@ static GrowingMobileDebugger *sharedInstance = nil;
     return _absoluteURL;
 }
 
-//+ (void)stop {
-//    [[self sharedInstance] stop];
-//}
-//
-//+ (BOOL)isRunning {
-//    return [[self sharedInstance] isRunning];
-//}
-
-- (void)runWithMobileDebugger:(NSURL *)url{
+- (void)runWithMobileDebugger:(NSURL *)url {
+    Class <GrowingWebSocketService> serviceClass = [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingWebSocketService)];
+    if (!serviceClass) {
+        GIOLogError(@"-runWithMobileDebugger: mobile debugger error : no websocket service support");
+        return;
+    }
+    
     if (self.webSocket) {
         self.webSocket.delegate = nil;
         [self.webSocket close];
         self.webSocket = nil;
     }
-    self.webSocket = [[GrowingSRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:url]];
+    
+    self.webSocket = [[(Class)serviceClass alloc] initWithURLRequest:[NSURLRequest requestWithURL:url]];
     self.webSocket.delegate = self;
     [self.webSocket open];
 }
+
 #pragma mark - GrowingDeepLinkHandlerProtocol
 
 - (BOOL)growingHandlerUrl:(NSURL *)url {
@@ -268,7 +250,7 @@ static GrowingMobileDebugger *sharedInstance = nil;
 
 - (void)sendJson:(id)json {
     NSLog(@"sendJson : %@", json);
-    if (self.webSocket.readyState == Growing_SR_OPEN &&
+    if (self.webSocket.readyState == Growing_WS_OPEN &&
         ([json isKindOfClass:[NSDictionary class]] || [json isKindOfClass:[NSArray class]])) {
         NSString *jsonString = [json growingHelper_jsonString];
         [self.webSocket send:jsonString];
@@ -317,7 +299,7 @@ static GrowingMobileDebugger *sharedInstance = nil;
     }
 }
 
-- (void)webSocket:(GrowingSRWebSocket *)webSocket didReceiveMessage:(id)message {
+- (void)webSocket:(id <GrowingWebSocketService>)webSocket didReceiveMessage:(id)message {
     if ([message isKindOfClass:[NSString class]] || ((NSString *)message).length > 0) {
         GIOLogDebug(@"didReceiveMessage: %@", message);
         NSMutableDictionary *dict = [message growingHelper_jsonObject];
@@ -395,7 +377,7 @@ static GrowingMobileDebugger *sharedInstance = nil;
 
 #pragma mark - websocket delegate
 
-- (void)webSocketDidOpen:(GrowingSRWebSocket *)webSocket {
+- (void)webSocketDidOpen:(id <GrowingWebSocketService>)webSocket {
     GIOLogDebug(@"websocket已连接");
     CGSize screenSize = [GrowingDeviceInfo deviceScreenSize];
     NSString *projectId = GrowingConfigurationManager.sharedInstance.trackConfiguration.projectId;
@@ -414,26 +396,22 @@ static GrowingMobileDebugger *sharedInstance = nil;
     [self sendJson:dict];
 }
 
-- (void)webSocket:(GrowingSRWebSocket *)webSocket
+- (void)webSocket:(id <GrowingWebSocketService>)webSocket
     didCloseWithCode:(NSInteger)code
               reason:(NSString *)reason
             wasClean:(BOOL)wasClean {
     GIOLogDebug(@"已断开链接");
     _isReady = NO;
-    if (code != GrowingSRStatusCodeNormal) {
+    if (code != GrowingWebSocketStatusCodeNormal) {
         [self _stopWithError:@"当前设备已与Web端断开连接,如需继续调试请扫码重新连接。"];
     }
 }
 
-- (void)webSocket:(GrowingSRWebSocket *)webSocket didFailWithError:(NSError *)error {
+- (void)webSocket:(id <GrowingWebSocketService>)webSocket didFailWithError:(NSError *)error {
     GIOLogDebug(@"error : %@", error);
     _isReady = NO;
     [self _stopWithError:@"服务器链接失败"];
 }
-
-- (void)webSocket:(GrowingSRWebSocket *)webSocket didReceivePong:(NSData *)pongPayload {
-}
-
 
 #pragma mark - GrowingApplicationEventManager
 
