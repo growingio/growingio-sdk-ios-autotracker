@@ -19,7 +19,7 @@
 
 
 #import <Foundation/Foundation.h>
-#import "GrowingEventDataBase.h"
+#import "GrowingEventDatabase.h"
 #import "GrowingVisitEvent.h"
 #import "GrowingNodeProtocol.h"
 #import "GrowingBaseEvent.h"

@@ -1,5 +1,5 @@
 //
-//  GrowingEventDataBase.h
+//  GrowingEventDatabase.h
 //  GrowingTracker
 //
 //  Created by GrowingIO on 15/11/25.
@@ -19,41 +19,38 @@
 
 
 #import <Foundation/Foundation.h>
+
 @class GrowingEventPersistence;
 
-typedef NS_ENUM(NSInteger , GrowingEventDataBaseError) {
-    GrowingEventDataBaseOpenError,
-    GrowingEventDataBaseWriteError,
-    GrowingEventDataBaseReadError,
-    GrowingEventDataBaseCreateDBError, // for future use
-    
+typedef NS_ENUM(NSInteger , GrowingEventDatabaseError) {
+    GrowingEventDatabaseOpenError = 500,
+    GrowingEventDatabaseWriteError,
+    GrowingEventDatabaseReadError,
+    GrowingEventDatabaseCreateDBError,
 };
 
-
-@interface GrowingEventDataBase : NSObject
+@interface GrowingEventDatabase : NSObject
 
 @property (nonatomic, assign) NSUInteger autoFlushCount;
 
-+ (instancetype)databaseWithPath:(NSString*)path name:(NSString *)name;
+@property (nonatomic, copy, readonly) NSString *name;
 
-@property (nonatomic, readonly) NSString *name;
++ (instancetype)databaseWithPath:(NSString *)path name:(NSString *)name;
 
-- (NSError*)enumerateKeysAndValuesUsingBlock:(void (^)(NSString *, NSString *, NSString *, BOOL *))block;
 - (NSUInteger)countOfEvents;
 
-- (void)setEvent:(GrowingEventPersistence *)event forKey:(NSString *)key error:(NSError **)error;
+- (BOOL)flush;
+
+- (BOOL)vacuum;
+
+- (BOOL)clearAllItems;
+
+- (BOOL)cleanExpiredDataIfNeeded;
+
 - (void)setEvent:(GrowingEventPersistence *)event forKey:(NSString *)key;
 
-- (NSError*)clearAllItems;
+- (void)enumerateKeysAndValuesUsingBlock:(void (^)(NSString *key, NSString *value, NSString *type, BOOL *stop))block;
 
-- (NSError*)flush;
-
-- (NSError*)vacuum;
-
-- (NSError *)cleanExpiredDataIfNeeded;
-
-- (NSArray <GrowingEventPersistence *>*)getEventsWithPackageNum:(NSUInteger)packageNum;
-
-- (void)handleDatabaseError:(NSError *)error;
+- (NSArray <GrowingEventPersistence *> *)getEventsWithPackageNum:(NSUInteger)packageNum;
 
 @end
