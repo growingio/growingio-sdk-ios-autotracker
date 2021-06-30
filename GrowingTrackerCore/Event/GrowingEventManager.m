@@ -60,8 +60,8 @@ static const NSUInteger kGrowingUnit_MB = 1024 * 1024;
 @property (nonatomic, readonly) dispatch_queue_t eventDispatch;
 @property (nonatomic, strong) dispatch_source_t reportTimer;
 
-@property (nonatomic, strong) GrowingEventDataBase *timingEventDB;
-@property (nonatomic, strong) GrowingEventDataBase *realtimeEventDB;
+@property (nonatomic, strong) GrowingEventDatabase *timingEventDB;
+@property (nonatomic, strong) GrowingEventDatabase *realtimeEventDB;
 
 @property (nonatomic, assign) unsigned long long uploadEventSize;
 @property (nonatomic, assign) unsigned long long uploadLimitOfCellular;
@@ -114,11 +114,11 @@ static GrowingEventManager *sharedInstance = nil;
             [GrowingConfigurationManager sharedInstance].trackConfiguration.cellularDataLimit * kGrowingUnit_MB;
         [GrowingDispatchManager dispatchInGrowingThread:^{
             // db
-            self.timingEventDB = [GrowingEventDataBase databaseWithPath:[GrowingFileStorage getTimingDatabasePath]
+            self.timingEventDB = [GrowingEventDatabase databaseWithPath:[GrowingFileStorage getTimingDatabasePath]
                                                                    name:[name stringByAppendingString:@"timingevent"]];
             self.timingEventDB.autoFlushCount = kGrowingMaxDBCacheSize;
             self.realtimeEventDB =
-                [GrowingEventDataBase databaseWithPath:[GrowingFileStorage getRealtimeDatabasePath]
+                [GrowingEventDatabase databaseWithPath:[GrowingFileStorage getRealtimeDatabasePath]
                                                   name:[name stringByAppendingString:@"realtimevent"]];
 
             [self.realtimeEventDB vacuum];
@@ -168,13 +168,6 @@ static GrowingEventManager *sharedInstance = nil;
     [GrowingDataTraffic cellularNetworkStorgeEventSize:uploadEventSize];
 }
 
-- (void)dbErrorWithError:(NSError *)error {
-    if (!error) {
-        return;
-    }
-    GIOLogError(@"dbError: %@", error.localizedDescription);
-}
-
 - (void)loadFromDB_unsafe {
     NSInteger keyCount = self.timingEventDB.countOfEvents;
     NSInteger qCount = self.eventQueue.count;
@@ -185,18 +178,16 @@ static GrowingEventManager *sharedInstance = nil;
 
     self.eventQueue = [[NSMutableArray alloc] init];
 
-    NSError *error1 = [self.timingEventDB
-        enumerateKeysAndValuesUsingBlock:^(NSString *key, NSString *value, NSString *type, BOOL *stop) {
-            GrowingEventPersistence *event = [[GrowingEventPersistence alloc] initWithUUID:key
-                                                                                 eventType:type
-                                                                                jsonString:value];
-            [self.eventQueue addObject:event];
+    [self.timingEventDB enumerateKeysAndValuesUsingBlock:^(NSString *key, NSString *value, NSString *type, BOOL *stop) {
+        GrowingEventPersistence *event = [[GrowingEventPersistence alloc] initWithUUID:key
+                                                                             eventType:type
+                                                                            jsonString:value];
+        [self.eventQueue addObject:event];
 
-            if (self.eventQueue.count >= kGrowingMaxQueueSize) {
-                *stop = YES;
-            }
-        }];
-    [self.timingEventDB handleDatabaseError:error1];
+        if (self.eventQueue.count >= kGrowingMaxQueueSize) {
+            *stop = YES;
+        }
+    }];
 }
 
 - (void)timerSendEvent {
@@ -261,11 +252,9 @@ static GrowingEventManager *sharedInstance = nil;
 
     NSError *error = nil;
 
-    GrowingEventDataBase *db = (isCustomEvent ? self.realtimeEventDB : self.timingEventDB);
+    GrowingEventDatabase *db = (isCustomEvent ? self.realtimeEventDB : self.timingEventDB);
 
-    [db setEvent:waitForPersist forKey:uuidString error:&error];
-
-    [db handleDatabaseError:error];
+    [db setEvent:waitForPersist forKey:uuidString];
 
     if (GrowingEventSendPolicyInstant == event.sendPolicy) {  // send event instantly
         [self sendEventsInstantWithChannel:eventChannel];

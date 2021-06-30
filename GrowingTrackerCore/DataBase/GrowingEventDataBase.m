@@ -1,5 +1,5 @@
 //
-//  GrowingEventDataBase.m
+//  GrowingEventDatabase.m
 //  GrowingTracker
 //
 //  Created by GrowingIO on 15/11/25.
@@ -17,8 +17,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
-#import "GrowingEventDataBase.h"
+#import "GrowingEventDatabase.h"
 #import "GrowingFMDB.h"
 #import <pthread.h>
 #import "NSString+GrowingHelper.h"
@@ -29,233 +28,276 @@
 #define DAY_IN_MILLISECOND (86400000)
 #define VACUUM_DATE(name) [NSString stringWithFormat:@"GIO_VACUUM_DATE_E7B96C4E-6EE2-49CD-87F0-B2E62D4EE96A-%@",name]
 
-@interface _GrowingDataBaseWithMutex : GrowingFMDatabase
-{
-    pthread_mutex_t _databaseMutex;
+NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.error";
+
+@interface GrowingEventDatabase () {
+    pthread_mutex_t _updateArrayMutex;
 }
 
-@property (nonatomic, readonly) pthread_mutex_t *dbMutex;
-
-@end
-
-@implementation _GrowingDataBaseWithMutex
-
-- (instancetype)initWithPath:(NSString *)inPath
-{
-    self = [super initWithPath:inPath];
-    if (self)
-    {
-        pthread_mutex_init(&_databaseMutex,NULL);
-    }
-    return self;
-}
-
-- (pthread_mutex_t*)dbMutex
-{
-    return &_databaseMutex;
-}
-
-@end
-
-
-@interface GrowingEventDataBase()
-{
-    BOOL _stopAutoUpdate;
-    pthread_mutex_t updateArrayMutext;
-
-}
-
-@property (nonatomic, retain) _GrowingDataBaseWithMutex *db;
-
-@property (nonatomic, retain) NSMutableArray *updateKeys;
-@property (nonatomic, retain) NSMutableArray *updateValues;
-
+@property (nonatomic, strong) GrowingFMDatabaseQueue *db;
+@property (nonatomic, strong) NSMutableArray *updateKeys;
+@property (nonatomic, strong) NSMutableArray *updateValues;
 @property (nonatomic, copy, readonly) NSString *sqliteName;
 
 @end
 
-@implementation GrowingEventDataBase
+@implementation GrowingEventDatabase
 
-+ (instancetype)databaseWithPath:(NSString *)path name:(NSString *)name
-{
+#pragma mark - Init
+
++ (instancetype)databaseWithPath:(NSString *)path name:(NSString *)name {
     return [[self alloc] initWithFilePath:path andName:name];
 }
 
-
-- (void)makeDirByFileName:(NSString*)filePath
-{
-    [[NSFileManager defaultManager] createDirectoryAtPath:[filePath stringByDeletingLastPathComponent]
-                              withIntermediateDirectories:YES
-                                               attributes:nil
-                                                    error:nil];
-}
-
-static  NSMapTable *dbMap = nil;
-
-- (instancetype)initWithFilePath:(NSString*)filePath andName:(NSString*)name
-{
-    self = [super init];
-    if (self)
-    {
+- (instancetype)initWithFilePath:(NSString *)filePath andName:(NSString *)name {
+    if (self = [super init]) {
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
             [self makeDirByFileName:filePath];
         });
-        
-        pthread_mutex_init(&updateArrayMutext,NULL);
-        _name = name;
-        
+
         if (filePath.length > 0) {
             NSArray *cArray = [filePath componentsSeparatedByString:@"/"];
             if (cArray.count > 0) {
                 _sqliteName = cArray.lastObject;
             }
         }
-        
-        
-        self.updateValues = [[NSMutableArray alloc] init];
-        self.updateKeys = [[NSMutableArray alloc] init];
-        
-        if (!dbMap)
-        {
-            dbMap = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsStrongMemory
-                                                            | NSPointerFunctionsObjectPersonality
-                                              valueOptions:NSPointerFunctionsWeakMemory
-                                                  capacity:2];
-        }
-        _GrowingDataBaseWithMutex *db = [dbMap objectForKey:filePath];
-        if (!db)
-        {
-            db = [[_GrowingDataBaseWithMutex alloc] initWithPath:filePath];
-            [dbMap setObject:db forKey:filePath];
-        }
-        
-        self.db = db;
+
+        _name = name;
+        _updateValues = [[NSMutableArray alloc] init];
+        _updateKeys = [[NSMutableArray alloc] init];
+        pthread_mutex_init(&_updateArrayMutex, NULL);
+        _db = [GrowingFMDatabaseQueue databaseQueueWithPath:filePath];
+
         [self initDB];
     }
+
     return self;
 }
 
-static BOOL isExecuteVacuum(NSString *name)
-{
-    if (name.length == 0) {
-        return NO;
-    }
-    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-    NSDate *beforeDate = [userDefault objectForKey:VACUUM_DATE(name)];
+#pragma mark - Public Methods
 
-    NSDate *nowDate = [NSDate date];
+- (NSUInteger)countOfEvents {
+    [self flush];
 
-    if (beforeDate) {
-        NSCalendar *calendar = [NSCalendar currentCalendar];
-        NSCalendarUnit unit = NSCalendarUnitDay;
-        NSDateComponents *delta = [calendar components:unit fromDate:beforeDate toDate:nowDate options:0];
-        BOOL flag;
-        if (delta.day > 30) {
-            flag = YES;
-        } else if (delta.day < 0) {
-            flag = YES;
-        } else {
-            flag = NO;
+    __block NSInteger count = 0;
+    __block NSError *readError = nil;
+
+    [self performDatabaseBlock:^(GrowingFMDatabase *db, NSError *error) {
+        if (error) {
+            readError = error;
+            return;
         }
-        
-        if (flag) {
-            [userDefault setObject:nowDate forKey:VACUUM_DATE(name)];
+        GrowingFMResultSet *set = [db executeQuery:@"select count(*) from namedcachetable where name=?"
+                                            values:@[self.name]
+                                             error:nil];
+        if (!set) {
+            readError = [self readErrorInDatabase:db];
+            return;
         }
-        return flag;
-    } else {
-        [userDefault setObject:nowDate forKey:VACUUM_DATE(name)];
-        return YES;
+
+        if ([set next]) {
+            count = (NSUInteger)[set longLongIntForColumnIndex:0];
+        }
+
+        [set close];
+    }];
+
+    if (readError) {
+        [self handleDatabaseError:readError];
     }
+
+    return count;
 }
 
-- (void)initDB
-{
-    [self performDataBaseBlock:^(GrowingFMDatabase *db) {
-        NSString* sql = @"create table if not exists namedcachetable("
-        @"id INTEGER PRIMARY KEY,"
-        @"name text,"
-        @"key text,"
-        @"value text,"
-        @"createAt INTEGER NOT NULL,"
-        @"type text);";
-        NSString * sqlCreateIndexNameKey = @"create index if not exists namedcachetable_name_key on namedcachetable (name, key);";
-        NSString * sqlCreateIndexNameId = @"create index if not exists namedcachetable_name_id on namedcachetable (name, id);";
-        NSError *error = nil;
-        [db beginTransaction];
-        [db executeUpdate:sql values:nil error:&error];
-        [db executeUpdate:sqlCreateIndexNameKey values:nil error:&error];
-        [db executeUpdate:sqlCreateIndexNameId values:nil error:&error];
-        [db commit];
+- (BOOL)flush {
+    NSMutableArray *removeArr = [[NSMutableArray alloc] init];
+    NSMutableArray *updateKeyArr = [[NSMutableArray alloc] init];
+    NSMutableArray *updateValueArr = [[NSMutableArray alloc] init];
+
+    [self performModifyArrayBlock:^{
+        if (!self.updateKeys.count) {
+            return;
+        }
+        
+        // 如果一个key被更改多次 则以最后一次为准 从后向前遍历一个key只用一次 该table用来记录使用过的key
+        NSHashTable *checkTable = [[NSHashTable alloc] initWithOptions:NSPointerFunctionsObjectPersonality
+                                   | NSPointerFunctionsStrongMemory
+                                                              capacity:self.updateValues.count];
+        NSString *key = nil;
+        NSString *value = nil;
+
+        // 从后往前遍历
+        for (NSInteger i = self.updateValues.count - 1; i >= 0; i--) {
+            key = self.updateKeys[i];
+            value = self.updateValues[i];
+            // 如果已经使用过 则继续 否则添加到使用过的key里
+            if ([checkTable containsObject:key]) {
+                continue;
+            } else {
+                [checkTable addObject:key];
+            }
+
+            if (value != nil && ![value isKindOfClass:[NSNull class]]) {
+                // 保持顺序
+                [updateKeyArr insertObject:key atIndex:0];
+                [updateValueArr insertObject:value atIndex:0];
+            }else {
+                [removeArr addObject:key];
+            }
+        }
+
+        [self.updateValues removeAllObjects];
+        [self.updateKeys removeAllObjects];
     }];
+
+    // 缓存中无数据，无需flush
+    if (removeArr.count == 0 && updateKeyArr.count == 0 && updateValueArr.count == 0) {
+        return YES;
+    }
+
+    __block NSError *writeError = nil;
+    [self performTransactionBlock:^(GrowingFMDatabase *db, BOOL *rollback, NSError *error) {
+        if (error) {
+            writeError = error;
+            return;
+        }
+        BOOL result = [self flush_deleteDatabaseV2:db byKeys:removeArr];
+        if (!result) {
+            writeError = [self writeErrorInDatabase:db];
+            return;
+        }
+        result = [self flush_insertDatabaseV2:db byKeys:updateKeyArr values:updateValueArr];
+        if (!result) {
+            writeError = [self writeErrorInDatabase:db];
+            return;
+        }
+    }];
+
+    if (writeError) {
+        [self handleDatabaseError:writeError];
+        return NO;
+    }
+
+    return YES;
+}
+
+- (BOOL)vacuum {
+    if (!isExecuteVacuum(self.sqliteName)) {
+        return YES;
+    }
+
+    __block NSError *vacuumError = nil;
+    [self performDatabaseBlock:^(GrowingFMDatabase *db, NSError *error) {
+        if (error) {
+            vacuumError = error;
+            return;
+        }
+        BOOL result = [db executeUpdate:@"VACUUM namedcachetable"];
+        if (!result) {
+            vacuumError = [self writeErrorInDatabase:db];
+            return;
+        }
+    }];
+
+    if (vacuumError) {
+        [self handleDatabaseError:vacuumError];
+        return NO;
+    }
+
+    return YES;
+}
+
+- (BOOL)clearAllItems {
+    if (![self flush]) {
+        return NO;
+    }
+
+    __block NSError *clearError = nil;
+    [self performDatabaseBlock:^(GrowingFMDatabase *db, NSError *error) {
+        if (error) {
+            clearError = error;
+            return;
+        }
+        BOOL result = [db executeUpdate:@"delete from namedcachetable where name=?" values:@[self.name] error:nil];
+        if (!result) {
+            clearError = [self writeErrorInDatabase:db];
+            return;
+        }
+    }];
+
+    if (clearError) {
+        [self handleDatabaseError:clearError];
+        return NO;
+    }
+
+    return YES;
+}
+
+- (BOOL)cleanExpiredDataIfNeeded {
+    NSDate *dateNow = [NSDate date];
+    NSNumber *now = [NSNumber numberWithLongLong:([dateNow timeIntervalSince1970] * 1000LL)];
+    NSNumber *sevenDayBefore = [NSNumber numberWithLongLong:(now.longValue - DAY_IN_MILLISECOND * 7)];
+    
+    __block NSError *deleteError = nil;
+    [self performDatabaseBlock:^(GrowingFMDatabase *db, NSError *error) {
+        if (error) {
+            deleteError = error;
+            return;
+        }
+        BOOL result = [db executeUpdate:@"delete from namedcachetable where name=? and createAt<=?;", self.name, sevenDayBefore];
+        if (!result) {
+            deleteError = [self writeErrorInDatabase:db];
+            return;
+        }
+    }];
+
+    if (deleteError) {
+        [self handleDatabaseError:deleteError];
+        return NO;
+    }
+
+    return YES;
 }
 
 - (void)setEvent:(GrowingEventPersistence *)event forKey:(NSString *)key {
-    [self setEvent:event forKey:key error:nil];
-}
-
-- (void)setEvent:(GrowingEventPersistence *)event forKey:(NSString *)key error:(NSError *__autoreleasing *)outError {
-    
     if (!key.length) {
         return;
     }
-    
+
     __block NSUInteger count = 0;
     [self performModifyArrayBlock:^{
         [self.updateKeys addObject:key];
         [self.updateValues addObject:event ? event : [NSNull null]];
         count = self.updateValues.count;
     }];
-    if (count >= self.autoFlushCount)
-    {
-        NSError *error = [self flush];
-        if (error && outError)
-        {
-            *outError = error;
-        }
+
+    if (count >= self.autoFlushCount) {
+        [self flush];
     }
 }
 
-
-- (NSUInteger)countOfEvents
-{
-    [self flush];
-    __block NSInteger count = 0;
-    [self performDataBaseBlock:^(GrowingFMDatabase *db) {
-        GrowingFMResultSet *set =
-        [db executeQuery:@"select count(*) from namedcachetable where name=?"
-                  values:@[self.name]
-                   error:nil];
-        if ([set next])
-        {
-            count = (NSUInteger)[set longLongIntForColumnIndex:0];
-        }
-        [set close];
-    }];
-    return count;
-}
-
-- (NSError*)enumerateKeysAndValuesUsingBlock:(void (^)(NSString *, NSString *, NSString *, BOOL *))block
-{
-    if (!block)
-    {
-        return nil;
+- (void)enumerateKeysAndValuesUsingBlock:(void (^)(NSString *key, NSString *value, NSString *type, BOOL *stop))block {
+    if (!block) {
+        return;
     }
+
     [self flush];
-    
+
     __block NSError *readError = nil;
-    NSError *openErr =
-    [self performDataBaseBlock:^(GrowingFMDatabase *db) {
-        NSError *dbErr = nil;
-        GrowingFMResultSet *set =
-        [db executeQuery:@"select * from namedcachetable where name=? order by id asc"
-                  values:@[self.name]
-                   error:&dbErr];
-        if (dbErr && readError)
-        {
-            readError = dbErr;
+    [self performDatabaseBlock:^(GrowingFMDatabase *db, NSError *error) {
+        if (error) {
+            readError = error;
+            return;
         }
-        
+        GrowingFMResultSet *set = [db executeQuery:@"select * from namedcachetable where name=? order by id asc"
+                                            values:@[self.name]
+                                             error:nil];
+        if (!set) {
+            readError = [self readErrorInDatabase:db];
+            return;
+        }
+
         BOOL stop = NO;
         while (!stop && [set next]) {
             NSString *key = [set stringForColumn:@"key"];
@@ -263,22 +305,13 @@ static BOOL isExecuteVacuum(NSString *name)
             NSString *type = [set stringForColumn:@"type"];
             block(key, value, type, &stop);
         }
+
         [set close];
     }];
-        
-    return openErr ? openErr : readError;
-}
 
-- (NSError*)clearAllItems
-{
-    NSError *err1 = [self flush];
-    NSError *err2 =
-    [self performDataBaseBlock:^(GrowingFMDatabase *db) {
-        [db executeUpdate:@"delete from namedcachetable where name=?"
-                        values:@[self.name]
-                         error:nil];
-    }];
-    return err1 ? err1 : err2;
+    if (readError) {
+        [self handleDatabaseError:readError];
+    }
 }
 
 - (NSArray<GrowingEventPersistence *> *)getEventsWithPackageNum:(NSUInteger)packageNum {
@@ -288,7 +321,6 @@ static BOOL isExecuteVacuum(NSString *name)
     
     NSMutableArray <GrowingEventPersistence *> *eventQueue = [[NSMutableArray alloc] init];
     
-    NSError *error =
     [self enumerateKeysAndValuesUsingBlock:^(NSString *key, NSString *value, NSString *type, BOOL *stop) {
         
         GrowingEventPersistence *event = [[GrowingEventPersistence alloc] initWithUUID:key eventType:type jsonString:value];
@@ -298,186 +330,184 @@ static BOOL isExecuteVacuum(NSString *name)
             *stop = YES;
         }
     }];
-    
-    [self handleDatabaseError:error];
-    
+
     return eventQueue;
 }
 
-- (void)handleDatabaseError:(NSError *)error {
-    if (!error) { return; }
-    GIOLogError(@"error = %@", error);
+#pragma mark - Private Methods
+
+- (void)initDB {
+    __block NSError *createError = nil;
+    [self performTransactionBlock:^(GrowingFMDatabase *db, BOOL *rollback, NSError *error) {
+        if (error) {
+            createError = error;
+            return;
+        }
+        
+        NSString *sql = @"create table if not exists namedcachetable("
+        @"id INTEGER PRIMARY KEY,"
+        @"name text,"
+        @"key text,"
+        @"value text,"
+        @"createAt INTEGER NOT NULL,"
+        @"type text);";
+        NSString *sqlCreateIndexNameKey = @"create index if not exists namedcachetable_name_key on namedcachetable (name, key);";
+        NSString *sqlCreateIndexNameId = @"create index if not exists namedcachetable_name_id on namedcachetable (name, id);";
+        
+        if (![db executeUpdate:sql]) {
+            createError = [self createDBErrorInDatabase:db];
+            return;
+        }
+        if (![db executeUpdate:sqlCreateIndexNameKey]) {
+            createError = [self createDBErrorInDatabase:db];
+            return;
+        }
+        if (![db executeUpdate:sqlCreateIndexNameId]) {
+            createError = [self createDBErrorInDatabase:db];
+            return;
+        }
+    }];
+
+    if (createError) {
+        [self handleDatabaseError:createError];
+    }
 }
 
-#pragma mark - perform
-- (NSError*)performDataBaseBlock:(void(^)(GrowingFMDatabase *db))block
-{
-    NSError *err = nil;
-    pthread_mutex_lock(self.db.dbMutex);
-    
-    if ([self.db open])
-    {
-        block(self.db);
-        [self.db close];
+static BOOL isExecuteVacuum(NSString *name) {
+    if (name.length == 0) {
+        return NO;
     }
-    else
-    {
-        err = [NSError errorWithDomain:@"open db error" code:GrowingEventDataBaseOpenError userInfo:nil];
+    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
+    NSDate *beforeDate = [userDefault objectForKey:VACUUM_DATE(name)];
+    NSDate *nowDate = [NSDate date];
+
+    if (beforeDate) {
+        NSDateComponents *delta = [[NSCalendar currentCalendar] components:NSCalendarUnitDay
+                                                                  fromDate:beforeDate
+                                                                    toDate:nowDate
+                                                                   options:0];
+        BOOL flag = delta.day > 7 || delta.day < 0;
+        if (flag) {
+            [userDefault setObject:nowDate forKey:VACUUM_DATE(name)];
+            [userDefault synchronize];
+        }
+        return flag;
+    } else {
+        [userDefault setObject:nowDate forKey:VACUUM_DATE(name)];
+        [userDefault synchronize];
+        return YES;
     }
-    pthread_mutex_unlock(self.db.dbMutex);
-    return err;
 }
 
-- (void)performModifyArrayBlock:(void(^)(void))block
-{
-    pthread_mutex_lock(&updateArrayMutext);
+- (void)makeDirByFileName:(NSString*)filePath {
+    [[NSFileManager defaultManager] createDirectoryAtPath:[filePath stringByDeletingLastPathComponent]
+                              withIntermediateDirectories:YES
+                                               attributes:nil
+                                                    error:nil];
+}
+
+#pragma mark - Perform Block
+
+- (void)performDatabaseBlock:(void(^)(GrowingFMDatabase *db, NSError *error))block {
+    [self.db inDatabase:^(GrowingFMDatabase *db) {
+        if (!db) {
+            block(db, [self openErrorInDatabase:db]);
+        } else {
+            block(db, nil);
+        }
+    }];
+}
+
+- (void)performTransactionBlock:(void(^)(GrowingFMDatabase *db, BOOL *rollback, NSError *error))block {
+    [self.db inTransaction:^(GrowingFMDatabase *db, BOOL *rollback) {
+        if (!db) {
+            block(db, rollback, [self openErrorInDatabase:db]);
+        } else {
+            block(db, rollback, nil);
+        }
+    }];
+}
+
+- (void)performModifyArrayBlock:(void (^)(void))block {
+    pthread_mutex_lock(&_updateArrayMutex);
     block();
-    pthread_mutex_unlock(&updateArrayMutext);
+    pthread_mutex_unlock(&_updateArrayMutex);
 }
 
-#pragma mark - flush
+#pragma mark - Flush
 
 // 采用循环的方式进行数据库插入操作
-- (NSError *)flush_insertDataBaseV2:(GrowingFMDatabase *)db byKeys:(NSArray *)keys values:(NSArray *)values {
-    if (!keys || keys.count == 0) {
-        return nil;
+- (BOOL)flush_insertDatabaseV2:(GrowingFMDatabase *)db byKeys:(NSArray *)keys values:(NSArray *)values {
+    if (!keys || keys.count == 0 || !values || values.count == 0 || keys.count != values.count) {
+        return YES;
     }
-    
-    if (!values || values.count == 0) {
-        return nil;
-    }
-    
-    if (keys.count != values.count) {
-        return nil;
-    }
-    
-    NSError *error = nil;
-    for (NSInteger i = 0 ; i < keys.count ; i++) {
+
+    for (NSInteger i = 0; i < keys.count; i++) {
         id value = values[i];
         if ([value isKindOfClass:GrowingEventPersistence.class]) {
             GrowingEventPersistence *event = (GrowingEventPersistence *)value;
             NSString *type = event.eventType;
             NSString *eventString = event.rawJsonString;
-            //传入的值不能是int,long这种常量类型，需要转为NSNumber or NSString
-            BOOL result = [db executeUpdate:@"insert into namedcachetable(name,key,value,createAt,type) values(?,?,?,?,?)", self.name, keys[i], eventString, @([GrowingTimeUtil currentTimeMillis]), type];
+            BOOL result = [db executeUpdate:@"insert into namedcachetable(name,key,value,createAt,type) values(?,?,?,?,?)",
+                           self.name,
+                           keys[i],
+                           eventString,
+                           @([GrowingTimeUtil currentTimeMillis]),
+                           type];
             if (!result) {
-                error = [db lastError];
-                break;
+                return NO;
             }
         }
     }
-    return error;
+    return YES;
 }
 
 // 采用循环的方式进行数据库删除操作
-- (NSError *)flush_deleteDataBaseV2:(GrowingFMDatabase *)db byKeys:(NSArray *)keys {
+- (BOOL)flush_deleteDatabaseV2:(GrowingFMDatabase *)db byKeys:(NSArray *)keys {
     if (!keys || keys.count == 0) {
-        return nil;
+        return YES;
     }
-    
-    NSError *error = nil;
+
     for (NSString *key in keys) {
         BOOL result = [db executeUpdate:@"delete from namedcachetable where name=? and key=?;", self.name, key];
         if (!result) {
-            error = [db lastError];
-            break;
+            return NO;
         }
     }
-    return error;
+    return YES;
 }
 
-- (NSError*)flush
-{
-    NSMutableArray *removeArr = [[NSMutableArray alloc] init];
-    NSMutableArray *updateKeyArr = [[NSMutableArray alloc] init];
-    NSMutableArray *updateValueArr = [[NSMutableArray alloc] init];
-    
-    [self performModifyArrayBlock:^{
-        if (!self.updateKeys.count)
-        {
-            return ;
-        }
-        
-        // 如果一个key被更改多次 则以最后一次为准 从后向前遍历一个key只用一次 该table用来记录使用过的key
-        NSHashTable *checkTable = [[NSHashTable alloc] initWithOptions:NSPointerFunctionsObjectPersonality
-                                   | NSPointerFunctionsStrongMemory
-                                                              capacity:self.updateValues.count];
-        NSString *key = nil;
-        NSString *value = nil;
-        
-        // 从后往前遍历
-        for (NSInteger i = self.updateValues.count - 1 ; i >= 0 ; i--)
-        {
-            key = self.updateKeys[i];
-            value = self.updateValues[i];
-            // 如果已经使用过 则继续 否则添加到使用过的key里
-            if ([checkTable containsObject:key])
-            {
-                continue;
-            }
-            else
-            {
-                [checkTable addObject:key];
-            }
-            
-            // 每个key都需要先remove 后insert
-            [removeArr addObject:key];
-            
-            if (value != nil && ![value isKindOfClass:[NSNull class]])
-            {
-                // 保持顺序
-                [updateKeyArr insertObject:key atIndex:0];
-                [updateValueArr insertObject:value atIndex:0];
-            }
-            
-        }
-        
-        [self.updateValues removeAllObjects];
-        [self.updateKeys removeAllObjects];
-    }];
-    
-    __block NSError *writeError = nil;
-    NSError *openError =
-    [self performDataBaseBlock:^(GrowingFMDatabase *db) {
-        // 采用事务的方式批量操作, 减少单词操作生成超长的字符串
-        [db beginTransaction];
-        NSError *err1 = [self flush_deleteDataBaseV2:db byKeys:removeArr];
-        NSError *err2 = [self flush_insertDataBaseV2:db byKeys:updateKeyArr values:updateValueArr];
-        [db commit];
-        
-        if (err1 || err2) {
-            writeError = [NSError errorWithDomain:@"db write error" code:GrowingEventDataBaseWriteError userInfo:nil];
-        }
-    }];
-    
-    return openError ? openError : writeError;
-}
+#pragma mark - Error
 
-- (NSError*)vacuum
-{
-    if (!isExecuteVacuum(self.sqliteName)) {
-        return nil;
+- (void)handleDatabaseError:(NSError *)error {
+    if (!error) {
+        return;
     }
-    
-    NSError *vacuumError =
-    [self performDataBaseBlock:^(GrowingFMDatabase *db) {
-        [db executeUpdate:@"VACUUM namedcachetable"];
-    }];
-    return vacuumError;
+    GIOLogError(@"DB Error: %@, code: %ld, detail: %@", error.domain, (long)error.code, error.localizedDescription);
 }
 
-- (NSError *)cleanExpiredDataIfNeeded {
-    NSDate *dateNow = [NSDate date];
-    NSNumber *now = [NSNumber numberWithLongLong:([dateNow timeIntervalSince1970] * 1000LL)];
-    NSNumber *sevenDayBefore = [NSNumber numberWithLong:(now.longValue - DAY_IN_MILLISECOND * 7)];
-    __block NSError *deleteError = nil;
-    NSError *openError = [self performDataBaseBlock:^(GrowingFMDatabase *db) {
-        BOOL result = [db executeUpdate:@"delete from namedcachetable where name=? and createAt<=?;", self.name, sevenDayBefore];
-        if (!result) {
-            deleteError = [db lastError];
-        }
-    }];
-    return openError ? openError : deleteError;
+- (NSError *)openErrorInDatabase:(GrowingFMDatabase *)db {
+    return [NSError errorWithDomain:GrowingEventDatabaseErrorDomain
+                               code:GrowingEventDatabaseOpenError
+                           userInfo:@{NSLocalizedDescriptionKey : @"open database error"}];
+}
+
+- (NSError *)readErrorInDatabase:(GrowingFMDatabase *)db {
+    return [NSError errorWithDomain:GrowingEventDatabaseErrorDomain
+                               code:GrowingEventDatabaseReadError
+                           userInfo:@{NSLocalizedDescriptionKey : ([db lastErrorMessage] ?: @"")}];
+}
+
+- (NSError *)writeErrorInDatabase:(GrowingFMDatabase *)db {
+    return [NSError errorWithDomain:GrowingEventDatabaseErrorDomain
+                               code:GrowingEventDatabaseWriteError
+                           userInfo:@{NSLocalizedDescriptionKey : ([db lastErrorMessage] ?: @"")}];
+}
+
+- (NSError *)createDBErrorInDatabase:(GrowingFMDatabase *)db {
+    return [NSError errorWithDomain:GrowingEventDatabaseErrorDomain
+                               code:GrowingEventDatabaseCreateDBError
+                           userInfo:@{NSLocalizedDescriptionKey : ([db lastErrorMessage] ?: @"")}];
 }
 
 @end
