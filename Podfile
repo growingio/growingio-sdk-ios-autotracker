@@ -15,7 +15,7 @@ target 'Example' do
 #  pod 'GrowingAnalytics/Tracker', :path => './'
 #  pod 'GrowingAnalytics/Hybrid', :path => './'
   pod 'GrowingAnalytics/ENABLE_ENCRYPTION', :path => './' #启用加密
-  pod 'GrowingAnalytics/Advertising', :path => './'
+#  pod 'GrowingAnalytics/Advertising', :path => './'
 #  pod 'GrowingAnalytics/DISABLE_IDFA', :path => './' #禁用idfa
   pod 'SDCycleScrollView', '~> 1.75'
   pod 'MJRefresh'
