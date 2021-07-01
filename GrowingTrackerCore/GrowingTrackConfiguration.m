@@ -4,7 +4,7 @@
 
 #import "GrowingTrackConfiguration.h"
 
-NSString * const defaultDataCollectionServerHost = @"https://api.growingio.com";
+NSString * const kGrowingDefaultDataCollectionServerHost = @"https://api.growingio.com";
 
 @interface GrowingTrackConfiguration ()
 @property(nonatomic, copy, readwrite) NSString *projectId;
@@ -22,7 +22,7 @@ NSString * const defaultDataCollectionServerHost = @"https://api.growingio.com";
         _sessionInterval = 30;
         _dataCollectionEnabled = YES;
         _uploadExceptionEnable = YES;
-        _dataCollectionServerHost = defaultDataCollectionServerHost;
+        _dataCollectionServerHost = kGrowingDefaultDataCollectionServerHost;
     }
 
     return self;
