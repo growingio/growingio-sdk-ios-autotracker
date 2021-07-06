@@ -3,6 +3,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "GrowingEventFilter.h"
 
 FOUNDATION_EXPORT NSString * const kGrowingDefaultDataCollectionServerHost;
 
@@ -16,6 +17,7 @@ FOUNDATION_EXPORT NSString * const kGrowingDefaultDataCollectionServerHost;
 @property(nonatomic, assign) BOOL dataCollectionEnabled;
 @property(nonatomic, assign) BOOL uploadExceptionEnable;
 @property(nonatomic, copy) NSString *dataCollectionServerHost;
+@property(nonatomic, assign) NSUInteger filterEventMask;
 
 - (instancetype)initWithProjectId:(NSString *)projectId;
 

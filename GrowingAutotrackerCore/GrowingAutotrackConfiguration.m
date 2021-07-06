@@ -34,6 +34,7 @@
     configuration.dataCollectionServerHost = [self.dataCollectionServerHost copy];
     // GrowingAutotrackConfiguration add
     configuration.impressionScale = self.impressionScale;
+    configuration.filterEventMask = self.filterEventMask;
     return configuration;
 }
 
