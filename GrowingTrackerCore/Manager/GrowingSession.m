@@ -40,6 +40,7 @@ static GrowingSession *currentSession = nil;
 @implementation GrowingSession
 @synthesize sessionId = _sessionId;
 @synthesize loginUserId = _loginUserId;
+@synthesize loginUserKey = _loginUserKey;
 
 - (instancetype)initWithSessionInterval:(NSTimeInterval)sessionInterval {
     self = [super init];
@@ -49,6 +50,8 @@ static GrowingSession *currentSession = nil;
         _alreadySendVisitEvent = NO;
         _latestVisitTime = 0;
         _latestDidEnterBackgroundTime = 0;
+        _loginUserId = [GrowingPersistenceDataProvider sharedInstance].loginUserId;
+        _loginUserKey = [GrowingPersistenceDataProvider sharedInstance].loginUserKey;
         _latestNonNullUserId = [GrowingPersistenceDataProvider sharedInstance].loginUserId;
         _userIdChangedDelegates = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
         _delegateLock = [[NSLock alloc] init];
@@ -104,6 +107,22 @@ static GrowingSession *currentSession = nil;
     [self.delegateLock unlock];
 }
 
+- (void)setLoginUserId:(NSString *)loginUserId userKey:(NSString *)userKey {
+    if ([NSString growingHelper_isEqualStringA:loginUserId andStringB:self.loginUserId] && [NSString growingHelper_isEqualStringA:userKey andStringB:self.loginUserKey]) {
+        GIOLogWarn(@"setLoginUserId:userKey:, but loginUserId and loginUserKey is equal");
+        return;
+    }
+
+    NSString *oldUserId = _loginUserId.copy;
+    _loginUserId = loginUserId.copy;
+    
+    NSString *oldUserKey = _loginUserKey.copy;
+    _loginUserKey = userKey.copy;
+    // 持久化
+    [[GrowingPersistenceDataProvider sharedInstance] setLoginUserId:_loginUserId];
+    [[GrowingPersistenceDataProvider sharedInstance] setLoginUserKey:_loginUserKey];
+}
+
 - (void)setLoginUserId:(NSString *)loginUserId {
     if ([NSString growingHelper_isEqualStringA:loginUserId andStringB:self.loginUserId]) {
         GIOLogWarn(@"setLoginUserId, but loginUserId is equal");
@@ -112,6 +131,9 @@ static GrowingSession *currentSession = nil;
 
     NSString *oldUserId = _loginUserId.copy;
     _loginUserId = loginUserId.copy;
+    //调用setLoginUserId说明userKey不再需要
+    _loginUserKey = nil;
+    [[GrowingPersistenceDataProvider sharedInstance] setLoginUserKey:nil];
     // loginUserId 持久化
     [[GrowingPersistenceDataProvider sharedInstance] setLoginUserId:_loginUserId];
     //额外的处理者
