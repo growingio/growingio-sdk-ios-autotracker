@@ -37,6 +37,7 @@
 #import "GrowingTrackConfiguration.h"
 #import "NSDictionary+GrowingHelper.h"
 #import "NSString+GrowingHelper.h"
+#import "GrowingEventFilter.h"
 
 #import "GrowingEventNetworkService.h"
 #import "GrowingServiceManager.h"
@@ -207,6 +208,13 @@ static GrowingEventManager *sharedInstance = nil;
 
         if (!GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionEnabled) {
             GIOLogDebug(@"Data collection is disabled, event can not build");
+            return;
+        }
+        
+        // 判断当前事件是否被过滤，否则不发送
+        NSUInteger mask = GrowingConfigurationManager.sharedInstance.trackConfiguration.filterEventMask;
+        NSUInteger value = [GrowingEventFilter getFilterMask:builder.eventType];
+        if(mask && (mask & value) > 0 ) {
             return;
         }
 
