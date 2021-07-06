@@ -39,7 +39,7 @@ typedef NS_ENUM(NSUInteger, GrowingAppState) {
 @property(nonatomic, assign, readonly) double latitude;
 @property(nonatomic, assign, readonly) double longitude;
 @property(nonatomic, copy, readonly) NSString *_Nonnull sdkVersion;
-
+@property(nonatomic, copy, readonly) NSString *_Nullable userKey;
 
 
 - (NSDictionary *_Nonnull)toDictionary;
@@ -81,6 +81,7 @@ typedef NS_ENUM(NSUInteger, GrowingAppState) {
 @property(nonatomic, assign, readonly) double latitude;
 @property(nonatomic, assign, readonly) double longitude;
 @property(nonatomic, copy, readonly) NSString *_Nonnull sdkVersion;
+@property(nonatomic, copy, readonly) NSString *_Nullable userKey;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -111,6 +112,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (GrowingBaseBuilder *(^)(double value))setLatitude;
 - (GrowingBaseBuilder *(^)(double value))setLongitude;
 - (GrowingBaseBuilder *(^)(NSString *value))setSdkVersion;
+- (GrowingBaseBuilder *(^)(NSString *value))setUserKey;
 
 - (GrowingBaseBuilder *(^)(NSString *value))setEventType;
 - (GrowingBaseEvent *)build;
