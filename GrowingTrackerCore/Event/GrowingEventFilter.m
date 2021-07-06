@@ -42,32 +42,27 @@ NSUInteger const GrowingFilterClickChangeSubmit = (GrowingFilterEventViewClick |
 }
 
 + (BOOL)isFilterEvent:(NSString *)eventType {
-    NSUInteger filterEventMask = GrowingConfigurationManager.sharedInstance.trackConfiguration.filterEventMask;
+    NSUInteger excludeEventMask = GrowingConfigurationManager.sharedInstance.trackConfiguration.excludeEvent;
     NSUInteger typeMask = [GrowingEventFilter getFilterMask:eventType];
-    if(filterEventMask && (filterEventMask & typeMask) > 0 ) {
+    if(excludeEventMask && (excludeEventMask & typeMask) > 0 ) {
         return true;
     }
     return false;
 }
 
 + (NSString*) getFilterEventLog {
-    NSUInteger filterEventMask = [GrowingConfigurationManager sharedInstance].trackConfiguration.filterEventMask;
-    NSString* logStr = @"";
-    NSInteger index = 0;
-    
-    while(filterEventMask > 0){
-        if(filterEventMask % 2 > 0) {
-            logStr = [logStr stringByAppendingFormat:@"%@",[[[self class] filterEventItems] objectAtIndex:index]];
-            logStr = [logStr stringByAppendingFormat:@"%@",@","];
+    NSUInteger excludeEventMask = [GrowingConfigurationManager sharedInstance].trackConfiguration.excludeEvent;
+    if (excludeEventMask <= 0) {
+        return nil;
+    }
+    NSMutableArray *events = [NSMutableArray array];
+    for (int i = 0; i < [[self class] filterEventItems].count; i++) {
+        if (excludeEventMask & (1 << i)) {
+            [events addObject:[[[self class] filterEventItems] objectAtIndex:i]];
         }
-        filterEventMask = filterEventMask / 2;
-        index++;
     }
     
-    if([logStr length] > 0){
-        logStr = [logStr substringToIndex:([logStr length]-1)];
-        logStr = [logStr stringByAppendingFormat:@"%@", @" not tracking ..."];
-    }
+    NSString *logStr = [NSString stringWithFormat:@"[Debug] Filter Events : %@",[events componentsJoinedByString:@","]];
     return logStr;
 }
 

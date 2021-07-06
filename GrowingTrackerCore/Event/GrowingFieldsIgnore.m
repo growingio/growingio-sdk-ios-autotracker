@@ -42,7 +42,7 @@ NSUInteger const GrowingIgnoreFieldsAll = (GrowingIgnoreFieldsNetworkState | Gro
 }
 
 + (BOOL)isIgnoreFields:(NSString *)fieldsType {
-    NSUInteger ignoreFieldsMask = [GrowingConfigurationManager sharedInstance].trackConfiguration.ignoreFieldsMask;
+    NSUInteger ignoreFieldsMask = [GrowingConfigurationManager sharedInstance].trackConfiguration.ignoreField;
     NSUInteger typeMask = [GrowingFieldsIgnore getIgnoreFieldsMask:fieldsType];
     if(ignoreFieldsMask && (ignoreFieldsMask & typeMask) > 0 ) {
         return true;
@@ -50,24 +50,18 @@ NSUInteger const GrowingIgnoreFieldsAll = (GrowingIgnoreFieldsNetworkState | Gro
     return false;
 }
 
-+ (NSString*)getIgnoreFieldsLog {
-    NSUInteger ignoreFieldsMask = [GrowingConfigurationManager sharedInstance].trackConfiguration.ignoreFieldsMask;
-    NSString* logStr = @"";
-    NSInteger index = 0;
-    
-    while(ignoreFieldsMask > 0){
-        if(ignoreFieldsMask % 2 > 0) {
-            logStr = [logStr stringByAppendingFormat:@"%@", [[[self class] ignoreFieldsItems] objectAtIndex:index]];
-            logStr = [logStr stringByAppendingFormat:@"%@", @","];
++ (NSString *)getIgnoreFieldsLog {
+    NSUInteger ignoreFieldsMask = [GrowingConfigurationManager sharedInstance].trackConfiguration.ignoreField;
+    if (ignoreFieldsMask <= 0) {
+        return nil;
+    }
+    NSMutableArray *fields = [NSMutableArray array];
+    for (int i = 0; i < [[self class] ignoreFieldsItems].count; i++) {
+        if (ignoreFieldsMask & (1 << i)) {
+            [fields addObject:[[[self class] ignoreFieldsItems] objectAtIndex:i]];
         }
-        ignoreFieldsMask = ignoreFieldsMask / 2;
-        index++;
     }
-    
-    if([logStr length] > 0){
-        logStr = [logStr substringToIndex:([logStr length]-1)];
-        logStr = [logStr stringByAppendingFormat:@"%@", @" is ignoring ..."];
-    }
+    NSString *logStr = [NSString stringWithFormat:@"[Debug] Ignored Fields : %@",[fields componentsJoinedByString:@","]];
     return logStr;
 }
 

@@ -74,11 +74,11 @@ const int GrowingTrackerVersionCode = 30201;
 }
 
 - (void)filterLogPrint {
-    if(GrowingConfigurationManager.sharedInstance.trackConfiguration.filterEventMask > 0) {
-        GIOLogDebug(@"%@", [GrowingEventFilter getFilterEventLog]);
+    if(GrowingConfigurationManager.sharedInstance.trackConfiguration.excludeEvent > 0) {
+        GIOLogInfo(@"%@", [GrowingEventFilter getFilterEventLog]);
     }
-    if(GrowingConfigurationManager.sharedInstance.trackConfiguration.ignoreFieldsMask > 0) {
-        GIOLogDebug(@"%@", [GrowingFieldsIgnore getIgnoreFieldsLog]);
+    if(GrowingConfigurationManager.sharedInstance.trackConfiguration.ignoreField > 0) {
+        GIOLogInfo(@"%@", [GrowingFieldsIgnore getIgnoreFieldsLog]);
     }
 }
 
