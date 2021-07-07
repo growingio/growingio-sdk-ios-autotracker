@@ -20,64 +20,61 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NS_OPTIONS(NSUInteger, FilterEventType) {
+typedef NS_OPTIONS(NSUInteger, GrowingFilterEventType) {
     /**
      *  0...000000000001 visit
      */
-    VISIT                     = (1 << 0),
+    GROWING_VISIT                     = (1 << 0),
     /**
      *  0...000000000010 custom
      */
-    CUSTOM                    = (1 << 1),
+    GROWING_CUSTOM                    = (1 << 1),
     /**
      *  0...000000000100 visitor attributes
      */
-    VISITOR_ATTRIBUTES        = (1 << 2),
+    GROWING_VISITOR_ATTRIBUTES        = (1 << 2),
     /**
      *  0...000000001000 login user attributes
      */
-    LOGIN_USER_ATTRIBUTES     = (1 << 3),
+    GROWING_LOGIN_USER_ATTRIBUTES     = (1 << 3),
     /**
      *  0...000000010000 conversion variables
      */
-    CONVERSION_VARIABLES      = (1 << 4),
+    GROWING_CONVERSION_VARIABLES      = (1 << 4),
     /**
      *  0...000000100000 app closed
      */
-    APP_CLOSED                = (1 << 5),
+    GROWING_APP_CLOSED                = (1 << 5),
     /**
      *  0...000001000000 page
      */
-    PAGE                      = (1 << 6),
+    GROWING_PAGE                      = (1 << 6),
     /**
      *  0...000010000000 page attributes
      */
-    PAGE_ATTRIBUTES           = (1 << 7),
+    GROWING_PAGE_ATTRIBUTES           = (1 << 7),
     /**
      *  0...000100000000 view click
      */
-    VIEW_CLICK                = (1 << 8),
+    GROWING_VIEW_CLICK                = (1 << 8),
     /**
      *  0...001000000000 view change
      */
-    VIEW_CHANGE               = (1 << 9),
+    GROWING_VIEW_CHANGE               = (1 << 9),
     /**
      *  0...010000000000 form submit
      */
-    FORM_SUBMIT               = (1 << 10),
+    GROWING_FORM_SUBMIT               = (1 << 10),
     /**
      *  0...100000000000 reengage
      */
-    REENGAGE                  = (1 << 11),
+    GROWING_REENGAGE                  = (1 << 11),
 };
 
 
 @interface GrowingEventFilter : NSObject
 
-extern NSUInteger const filterClickChangeSubmit;
-
-//获取过滤 VIEW_CLICK、VIEW_CHANGE、FORM_SUBMIT 事件的值
-+ (NSUInteger)getFilterClickChangeSubmit;
+extern NSUInteger const GrowingFilterClickChangeSubmit;
 
 // 通过类型名称获取其对应的掩码值
 + (NSUInteger)getFilterMask:(NSString *)typeName;

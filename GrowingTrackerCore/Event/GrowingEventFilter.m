@@ -22,6 +22,9 @@
 
 @implementation GrowingEventFilter
 
+//过滤 VIEW_CLICK、VIEW_CHANGE、FORM_SUBMIT 事件的掩码值
+NSUInteger const GrowingFilterClickChangeSubmit = (GROWING_VIEW_CLICK | GROWING_VIEW_CHANGE | GROWING_FORM_SUBMIT);
+
 + (NSUInteger)getFilterMask:(NSString *)typeName {
     
     NSArray *items = @[@"VISIT", @"CUSTOM", @"VISITOR_ATTRIBUTES", @"LOGIN_USER_ATTRIBUTES",
@@ -32,40 +35,35 @@
 
     switch (item) {
         case 0:
-            return  VISIT;
+            return  GROWING_VISIT;
         case 1:
-            return  CUSTOM;
+            return  GROWING_CUSTOM;
         case 2:
-            return  VISITOR_ATTRIBUTES;
+            return  GROWING_VISITOR_ATTRIBUTES;
         case 3:
-            return  LOGIN_USER_ATTRIBUTES;
+            return  GROWING_LOGIN_USER_ATTRIBUTES;
         case 4:
-            return  CONVERSION_VARIABLES;
+            return  GROWING_CONVERSION_VARIABLES;
         case 5:
-            return  APP_CLOSED;
+            return  GROWING_APP_CLOSED;
         case 6:
-            return  PAGE;
+            return  GROWING_PAGE;
         case 7:
-            return  PAGE_ATTRIBUTES;
+            return  GROWING_PAGE_ATTRIBUTES;
         case 8:
-            return  VIEW_CLICK;
+            return  GROWING_VIEW_CLICK;
         case 9:
-            return  VIEW_CHANGE;
+            return  GROWING_VIEW_CHANGE;
         case 10:
-            return  FORM_SUBMIT;
+            return  GROWING_FORM_SUBMIT;
         case 11:
-            return  REENGAGE;
+            return  GROWING_REENGAGE;
         default :
             return 0;
         
     }
     return 0;
     
-}
-
-+ (NSUInteger)getFilterClickChangeSubmit {
-    NSUInteger const filterClickChangeSubmit = (VIEW_CLICK | VIEW_CHANGE | FORM_SUBMIT);
-    return filterClickChangeSubmit;
 }
 
 @end
