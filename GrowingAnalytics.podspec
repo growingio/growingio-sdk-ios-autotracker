@@ -33,6 +33,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
       tracker.dependency 'GrowingAnalytics/TrackerCore'
       tracker.dependency 'GrowingAnalytics/MobileDebugger'
       
+      tracker.dependency 'GrowingAnalytics/Database'
       tracker.dependency 'GrowingAnalytics/Network'
       tracker.dependency 'GrowingAnalytics/Encryption'
       tracker.dependency 'GrowingAnalytics/Compression'
@@ -41,7 +42,6 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   s.subspec 'AutotrackerCore' do |autotrackerCore|
       autotrackerCore.source_files = 'GrowingAutotrackerCore/**/*{.h,.m,.c,.cpp,.mm}'
       autotrackerCore.dependency 'GrowingAnalytics/TrackerCore'
-      autotrackerCore.dependency 'GrowingAnalytics/Hybrid'
       autotrackerCore.private_header_files = 'GrowingAutotrackerCore/Private/*{.h,.m,.c,.cpp,.mm}'
       autotrackerCore.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'GROWING_ANALYSIS_AUTOTRACKERCORE=1'}
   end
@@ -49,14 +49,21 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   s.subspec 'Autotracker' do |autotracker|
       autotracker.source_files = 'GrowingAutotracker/**/*{.h,.m,.c,.cpp,.mm}'
       autotracker.dependency 'GrowingAnalytics/AutotrackerCore'
+      autotracker.dependency 'GrowingAnalytics/Hybrid'
       autotracker.dependency 'GrowingAnalytics/MobileDebugger'
       autotracker.dependency 'GrowingAnalytics/WebCircle'
       
+      autotracker.dependency 'GrowingAnalytics/Database'
       autotracker.dependency 'GrowingAnalytics/Network'
       autotracker.dependency 'GrowingAnalytics/Encryption'
       autotracker.dependency 'GrowingAnalytics/Compression'
   end
 
+  s.subspec 'Database' do |service|
+      service.source_files = 'Services/Database/**/*{.h,.m,.c,.cpp,.mm}'
+      service.dependency 'GrowingAnalytics/TrackerCore'
+  end
+  
   s.subspec 'Network' do |service|
       service.source_files = 'Services/Network/**/*{.h,.m,.c,.cpp,.mm}'
       service.dependency 'GrowingAnalytics/TrackerCore'
@@ -94,7 +101,6 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
       hybrid.source_files = 'Modules/Hybrid/**/*{.h,.m,.c,.cpp,.mm}'
       hybrid.dependency 'GrowingAnalytics/TrackerCore'
   end
-  
 
   s.subspec 'Advertising' do |advertising|
       advertising.source_files = 'Modules/Advertising/**/*{.h,.m,.c,.cpp,.mm}'
