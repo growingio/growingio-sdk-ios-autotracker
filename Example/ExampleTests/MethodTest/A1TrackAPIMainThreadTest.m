@@ -424,6 +424,34 @@ static GrowingBaseEvent *originalEvent = nil;
     [self eventTest];
 }
 
+- (void)test14SetUserIdAndUserKeyTest {
+    isGrowingThread = @"1";
+    //  hook 入库方法，在 handleEvent:   GrowingBaseEventManager
+    //  设置一个变量进行判断
+    [[GrowingAutotracker sharedInstance] cleanLoginUserId];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"setUserId:userKey: fail"];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        
+        [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
+            NSString *userId = @"123456789";
+            [[GrowingAutotracker sharedInstance] setLoginUserId:userId userKey:@"number"];
+            XCTAssertEqual([GrowingSession currentSession].loginUserId,userId);
+            XCTAssertEqual([GrowingSession currentSession].loginUserKey,@"number");
+            [[GrowingAutotracker sharedInstance] setLoginUserId:@"223344"];
+            XCTAssertEqual([GrowingSession currentSession].loginUserKey,nil);
+        }];
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:1 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Test failed——%@",expectation.description);
+            XCTAssertEqual(@"1", @"0");
+        }
+    }];
+    [self eventTest];
+}
+
 #pragma mark - private methods
 - (void)eventTest {
     sleep(1);
