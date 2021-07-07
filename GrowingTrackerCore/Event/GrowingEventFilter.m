@@ -23,7 +23,7 @@
 @implementation GrowingEventFilter
 
 //过滤 VIEW_CLICK、VIEW_CHANGE、FORM_SUBMIT 事件的掩码值
-NSUInteger const GrowingFilterClickChangeSubmit = (GROWING_VIEW_CLICK | GROWING_VIEW_CHANGE | GROWING_FORM_SUBMIT);
+NSUInteger const GrowingFilterClickChangeSubmit = (GrowingFilterEventViewClick | GrowingFilterEventViewChange | GrowingFilterEventFormSubmit);
 
 + (NSUInteger)getFilterMask:(NSString *)typeName {
     
@@ -35,35 +35,45 @@ NSUInteger const GrowingFilterClickChangeSubmit = (GROWING_VIEW_CLICK | GROWING_
 
     switch (item) {
         case 0:
-            return  GROWING_VISIT;
+            return  GrowingFilterEventVisit;
         case 1:
-            return  GROWING_CUSTOM;
+            return  GrowingFilterEventCustom;
         case 2:
-            return  GROWING_VISITOR_ATTRIBUTES;
+            return  GrowingFilterEventVisitorAttributes;
         case 3:
-            return  GROWING_LOGIN_USER_ATTRIBUTES;
+            return  GrowingFilterEventLoginUserAttributes;
         case 4:
-            return  GROWING_CONVERSION_VARIABLES;
+            return  GrowingFilterEventConversionVariables;
         case 5:
-            return  GROWING_APP_CLOSED;
+            return  GrowingFilterEventAppClosed;
         case 6:
-            return  GROWING_PAGE;
+            return  GrowingFilterEventPage;
         case 7:
-            return  GROWING_PAGE_ATTRIBUTES;
+            return  GrowingFilterEventPageAttributes;
         case 8:
-            return  GROWING_VIEW_CLICK;
+            return  GrowingFilterEventViewClick;
         case 9:
-            return  GROWING_VIEW_CHANGE;
+            return  GrowingFilterEventViewChange;
         case 10:
-            return  GROWING_FORM_SUBMIT;
+            return  GrowingFilterEventFormSubmit;
         case 11:
-            return  GROWING_REENGAGE;
+            return  GrowingFilterEventReengage;
         default :
             return 0;
         
     }
     return 0;
-    
 }
+
++ (BOOL)isFilterEvent:(NSUInteger)filterEventMask
+            eventType:(NSString *)eventType {
+    
+    NSUInteger typeMask = [GrowingEventFilter getFilterMask:eventType];
+    if(filterEventMask && (filterEventMask & typeMask) > 0 ) {
+        return true;
+    }
+    return false;
+}
+
 
 @end

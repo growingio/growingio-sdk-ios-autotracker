@@ -20,20 +20,20 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NS_OPTIONS(NSUInteger, GrowingFilterEventType) {
+typedef NS_OPTIONS(NSUInteger, GrowingFilterEvent) {
     
-    GROWING_VISIT                     = (1 << 0),
-    GROWING_CUSTOM                    = (1 << 1),
-    GROWING_VISITOR_ATTRIBUTES        = (1 << 2),
-    GROWING_LOGIN_USER_ATTRIBUTES     = (1 << 3),
-    GROWING_CONVERSION_VARIABLES      = (1 << 4),
-    GROWING_APP_CLOSED                = (1 << 5),
-    GROWING_PAGE                      = (1 << 6),
-    GROWING_PAGE_ATTRIBUTES           = (1 << 7),
-    GROWING_VIEW_CLICK                = (1 << 8),
-    GROWING_VIEW_CHANGE               = (1 << 9),
-    GROWING_FORM_SUBMIT               = (1 << 10),
-    GROWING_REENGAGE                  = (1 << 11),
+    GrowingFilterEventVisit                     = (1 << 0),
+    GrowingFilterEventCustom                    = (1 << 1),
+    GrowingFilterEventVisitorAttributes         = (1 << 2),
+    GrowingFilterEventLoginUserAttributes       = (1 << 3),
+    GrowingFilterEventConversionVariables       = (1 << 4),
+    GrowingFilterEventAppClosed                 = (1 << 5),
+    GrowingFilterEventPage                      = (1 << 6),
+    GrowingFilterEventPageAttributes            = (1 << 7),
+    GrowingFilterEventViewClick                 = (1 << 8),
+    GrowingFilterEventViewChange                = (1 << 9),
+    GrowingFilterEventFormSubmit                = (1 << 10),
+    GrowingFilterEventReengage                  = (1 << 11),
 };
 
 
@@ -43,6 +43,10 @@ extern NSUInteger const GrowingFilterClickChangeSubmit;
 
 // 通过类型名称获取其对应的掩码值
 + (NSUInteger)getFilterMask:(NSString *)typeName;
+
++ (BOOL)isFilterEvent:(NSUInteger)filterEventMask
+             eventType:(NSString *)eventType;
+
 
 @end
 

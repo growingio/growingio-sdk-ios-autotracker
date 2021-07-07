@@ -212,9 +212,8 @@ static GrowingEventManager *sharedInstance = nil;
         }
         
         // 判断当前事件是否被过滤，否则不发送
-        NSUInteger mask = GrowingConfigurationManager.sharedInstance.trackConfiguration.filterEventMask;
-        NSUInteger value = [GrowingEventFilter getFilterMask:builder.eventType];
-        if(mask && (mask & value) > 0 ) {
+        NSUInteger filterEventMask = GrowingConfigurationManager.sharedInstance.trackConfiguration.filterEventMask;
+        if([GrowingEventFilter isFilterEvent:filterEventMask eventType:builder.eventType]){
             return;
         }
 

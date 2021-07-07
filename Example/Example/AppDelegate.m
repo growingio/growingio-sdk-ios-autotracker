@@ -33,7 +33,7 @@ static NSString *const kGrowingProjectId = @"91eaf9b283361032";
     GrowingSDKConfiguration *configuration = [GrowingSDKConfiguration configurationWithProjectId:kGrowingProjectId];
     configuration.debugEnabled = YES;
 //    configuration.impressionScale = 1.0;
-//    configuration.filterEventMask = GROWING_VIEW_CLICK | GROWING_VIEW_CHANGE | GROWING_FORM_SUBMIT;
+//    configuration.filterEventMask = GrowingFilterEventViewClick | GrowingFilterEventViewChange | GrowingFilterEventFormSubmit;
     
     // 暂时设置host为mocky链接，防止请求404，实际是没有上传到服务器的，正式使用请去掉，或设置正确的host
 //    configuration.dataCollectionServerHost = @"https://run.mocky.io/v3/08999138-a180-431d-a136-051f3c6bd306";
