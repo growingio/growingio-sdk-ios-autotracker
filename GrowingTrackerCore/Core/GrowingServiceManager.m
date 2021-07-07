@@ -45,8 +45,6 @@ static GrowingServiceManager *manager = nil;
     return self;
 }
 
-
-
 #pragma mark - private
 
 - (void)registerService:(Protocol*)service implClass:(Class)serviceClass {

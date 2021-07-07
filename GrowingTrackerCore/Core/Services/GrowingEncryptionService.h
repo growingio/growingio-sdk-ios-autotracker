@@ -17,17 +17,18 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import "GrowingBaseService.h"
 
 @protocol GrowingEncryptionService <GrowingBaseService>
 
-@optional
+@required
 
 /// event相关数据在上传之前的加密处理
 /// @param data 将要加密的NSData对象
 /// @param hint 盐值
 - (NSData *_Nonnull)encryptEventData:(NSData *_Nonnull)data factor:(unsigned char)hint;
+
+@optional
 
 /// 本地数据存储加密（如当天已使用数据网络上传的数据量等）
 /// @param data 将要加密的NSData对象
