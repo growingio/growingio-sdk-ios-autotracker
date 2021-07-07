@@ -102,11 +102,6 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
       hybrid.dependency 'GrowingAnalytics/TrackerCore'
   end
 
-  s.subspec 'Advertising' do |advertising|
-      advertising.source_files = 'Modules/Advertising/**/*{.h,.m,.c,.cpp,.mm}'
-      advertising.dependency 'GrowingAnalytics/TrackerCore'
-  end
-
   # 配置项 - 禁用idfa
   s.subspec 'DISABLE_IDFA' do |config|
       config.dependency 'GrowingAnalytics/TrackerCore'
