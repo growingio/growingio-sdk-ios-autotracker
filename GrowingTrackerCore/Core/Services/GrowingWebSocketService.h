@@ -17,23 +17,22 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <Foundation/Foundation.h>
 #import "GrowingAnnotationCore.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-//websocket当前运行状态
+/// websocket当前运行状态
 typedef NS_ENUM(NSInteger, GrowingWebSocketReadyState) {
-    Growing_WS_CONNECTING   = 0, //正在连接
-    Growing_WS_OPEN         = 1, //已打开
-    Growing_WS_CLOSING      = 2, //正在关闭
-    Growing_WS_CLOSED       = 3, //已关闭
+    Growing_WS_CONNECTING   = 0, /// 正在连接
+    Growing_WS_OPEN         = 1, /// 已打开
+    Growing_WS_CLOSING      = 2, /// 正在关闭
+    Growing_WS_CLOSED       = 3, /// 已关闭
 };
 
-//websocket当前状态码
-//可参考：https://datatracker.ietf.org/doc/html/rfc6455
-//可参考：https://github.com/Luka967/websocket-close-codes
+/// websocket当前状态码
+/// 可参考：https://datatracker.ietf.org/doc/html/rfc6455
+/// 可参考：https://github.com/Luka967/websocket-close-codes
 typedef NS_ENUM(NSInteger, GrowingWebSocketStatusCode) {
     // 0-999: Reserved and not used.
     GrowingWebSocketStatusCodeNormal = 1000,

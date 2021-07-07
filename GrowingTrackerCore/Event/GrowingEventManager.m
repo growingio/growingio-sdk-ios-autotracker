@@ -98,12 +98,12 @@ static GrowingEventManager *sharedInstance = nil;
 + (instancetype)sharedInstance {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        sharedInstance = [[self alloc] initWithName:@"growing"];
+        sharedInstance = [[self alloc] init];
     });
     return sharedInstance;
 }
 
-- (instancetype)initWithName:(NSString *)name {
+- (instancetype)init {
     if (self = [super init]) {
         _allInterceptor = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
         _interceptorLock = [[NSLock alloc] init];
@@ -114,15 +114,11 @@ static GrowingEventManager *sharedInstance = nil;
             [GrowingConfigurationManager sharedInstance].trackConfiguration.cellularDataLimit * kGrowingUnit_MB;
         [GrowingDispatchManager dispatchInGrowingThread:^{
             // db
-            self.timingEventDB = [GrowingEventDatabase databaseWithPath:[GrowingFileStorage getTimingDatabasePath]
-                                                                   name:[name stringByAppendingString:@"timingevent"]];
+            self.timingEventDB = [GrowingEventDatabase databaseWithPath:[GrowingFileStorage getTimingDatabasePath]];
             self.timingEventDB.autoFlushCount = kGrowingMaxDBCacheSize;
             self.realtimeEventDB =
-                [GrowingEventDatabase databaseWithPath:[GrowingFileStorage getRealtimeDatabasePath]
-                                                  name:[name stringByAppendingString:@"realtimevent"]];
+                [GrowingEventDatabase databaseWithPath:[GrowingFileStorage getRealtimeDatabasePath]];
 
-            [self.realtimeEventDB vacuum];
-            [self.timingEventDB vacuum];
             [self cleanExpiredData_unsafe];
         }];
 
@@ -192,17 +188,8 @@ static GrowingEventManager *sharedInstance = nil;
     }
 
     self.eventQueue = [[NSMutableArray alloc] init];
-
-    [self.timingEventDB enumerateKeysAndValuesUsingBlock:^(NSString *key, NSString *value, NSString *type, BOOL *stop) {
-        GrowingEventPersistence *event = [[GrowingEventPersistence alloc] initWithUUID:key
-                                                                             eventType:type
-                                                                            jsonString:value];
-        [self.eventQueue addObject:event];
-
-        if (self.eventQueue.count >= kGrowingMaxQueueSize) {
-            *stop = YES;
-        }
-    }];
+    NSArray *array = [self.timingEventDB getEventsWithPackageNum:kGrowingMaxQueueSize];
+    [self.eventQueue addObjectsFromArray:array];
 }
 
 - (void)timerSendEvent {
@@ -265,8 +252,6 @@ static GrowingEventManager *sharedInstance = nil;
     {
         [self.eventQueue addObject:waitForPersist];
     }
-
-    NSError *error = nil;
 
     GrowingEventDatabase *db = (isCustomEvent ? self.realtimeEventDB : self.timingEventDB);
 
