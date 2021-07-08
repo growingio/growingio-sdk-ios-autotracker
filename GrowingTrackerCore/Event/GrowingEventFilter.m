@@ -31,38 +31,9 @@ NSUInteger const GrowingFilterClickChangeSubmit = (GrowingFilterEventViewClick |
                        @"CONVERSION_VARIABLES", @"APP_CLOSED", @"PAGE", @"PAGE_ATTRIBUTES",
                        @"VIEW_CLICK", @"VIEW_CHANGE", @"FORM_SUBMIT", @"REENGAGE"];
 
-    NSUInteger item = [items indexOfObject : typeName];
+    NSUInteger index = [items indexOfObject : typeName];
+    return index == NSNotFound ? 0 : 1 << index;
 
-    switch (item) {
-        case 0:
-            return  GrowingFilterEventVisit;
-        case 1:
-            return  GrowingFilterEventCustom;
-        case 2:
-            return  GrowingFilterEventVisitorAttributes;
-        case 3:
-            return  GrowingFilterEventLoginUserAttributes;
-        case 4:
-            return  GrowingFilterEventConversionVariables;
-        case 5:
-            return  GrowingFilterEventAppClosed;
-        case 6:
-            return  GrowingFilterEventPage;
-        case 7:
-            return  GrowingFilterEventPageAttributes;
-        case 8:
-            return  GrowingFilterEventViewClick;
-        case 9:
-            return  GrowingFilterEventViewChange;
-        case 10:
-            return  GrowingFilterEventFormSubmit;
-        case 11:
-            return  GrowingFilterEventReengage;
-        default :
-            return 0;
-        
-    }
-    return 0;
 }
 
 + (BOOL)isFilterEvent:(NSUInteger)filterEventMask
