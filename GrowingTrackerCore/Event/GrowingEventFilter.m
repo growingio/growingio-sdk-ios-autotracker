@@ -20,31 +20,23 @@
 
 #import "GrowingEventFilter.h"
 
-@implementation GrowingEventFilter
-
-//过滤 VIEW_CLICK、VIEW_CHANGE、FORM_SUBMIT 事件的掩码值
 NSUInteger const GrowingFilterClickChangeSubmit = (GrowingFilterEventViewClick | GrowingFilterEventViewChange | GrowingFilterEventFormSubmit);
 
+@implementation GrowingEventFilter
+
 + (NSUInteger)getFilterMask:(NSString *)typeName {
-    
     NSArray *items = @[@"VISIT", @"CUSTOM", @"VISITOR_ATTRIBUTES", @"LOGIN_USER_ATTRIBUTES",
                        @"CONVERSION_VARIABLES", @"APP_CLOSED", @"PAGE", @"PAGE_ATTRIBUTES",
                        @"VIEW_CLICK", @"VIEW_CHANGE", @"FORM_SUBMIT", @"REENGAGE"];
 
-    NSUInteger index = [items indexOfObject : typeName];
+    NSUInteger index = [items indexOfObject:typeName];
     return index == NSNotFound ? 0 : 1 << index;
-
 }
 
 + (BOOL)isFilterEvent:(NSUInteger)filterEventMask
             eventType:(NSString *)eventType {
-    
     NSUInteger typeMask = [GrowingEventFilter getFilterMask:eventType];
-    if(filterEventMask && (filterEventMask & typeMask) > 0 ) {
-        return true;
-    }
-    return false;
+    return filterEventMask && (filterEventMask & typeMask) > 0;
 }
-
 
 @end

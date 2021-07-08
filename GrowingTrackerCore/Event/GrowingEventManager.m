@@ -206,14 +206,14 @@ static GrowingEventManager *sharedInstance = nil;
             }
         }
 
-        if (!GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionEnabled) {
+        GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+        if (!trackConfiguration.dataCollectionEnabled) {
             GIOLogDebug(@"Data collection is disabled, event can not build");
             return;
         }
         
         // 判断当前事件是否被过滤，否则不发送
-        NSUInteger filterEventMask = GrowingConfigurationManager.sharedInstance.trackConfiguration.filterEventMask;
-        if([GrowingEventFilter isFilterEvent:filterEventMask eventType:builder.eventType]){
+        if ([GrowingEventFilter isFilterEvent:trackConfiguration.filterEventMask eventType:builder.eventType]) {
             GIOLogDebug(@"%@ event is filtered, event can not send", builder.eventType);
             return;
         }

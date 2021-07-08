@@ -20,8 +20,10 @@
 
 #import <Foundation/Foundation.h>
 
+//过滤 VIEW_CLICK、VIEW_CHANGE、FORM_SUBMIT 事件的掩码值
+extern NSUInteger const GrowingFilterClickChangeSubmit;
+
 typedef NS_OPTIONS(NSUInteger, GrowingFilterEvent) {
-    
     GrowingFilterEventVisit                     = (1 << 0),
     GrowingFilterEventCustom                    = (1 << 1),
     GrowingFilterEventVisitorAttributes         = (1 << 2),
@@ -36,17 +38,13 @@ typedef NS_OPTIONS(NSUInteger, GrowingFilterEvent) {
     GrowingFilterEventReengage                  = (1 << 11),
 };
 
-
 @interface GrowingEventFilter : NSObject
 
-extern NSUInteger const GrowingFilterClickChangeSubmit;
-
-// 通过类型名称获取其对应的掩码值
-+ (NSUInteger)getFilterMask:(NSString *)typeName;
-
+/// 判断当前事件类型是否被过滤
+/// @param filterEventMask 事件过滤掩码，如 (GrowingFilterEventViewClick | GrowingFilterEventViewChange | GrowingFilterEventFormSubmit)
+/// @param eventType 当前事件类型
 + (BOOL)isFilterEvent:(NSUInteger)filterEventMask
-             eventType:(NSString *)eventType;
-
+            eventType:(NSString *)eventType;
 
 @end
 
