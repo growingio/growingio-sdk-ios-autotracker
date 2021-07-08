@@ -46,6 +46,11 @@ FOUNDATION_EXPORT const int GrowingTrackerVersionCode;
 /// @param userId 用户ID
 - (void)setLoginUserId:(NSString *)userId;
 
+/// 支持设置userId的类型, 存储方式与userId保持一致, userKey默认为null
+/// @param userId 用户ID
+/// @param userKey 用户ID对应的key值
+- (void)setLoginUserId:(NSString *)userId userKey:(NSString *)userKey;
+
 /// 当用户登出之后调用cleanLoginUserId，清除已经设置的登录用户ID。
 - (void)cleanLoginUserId;
 

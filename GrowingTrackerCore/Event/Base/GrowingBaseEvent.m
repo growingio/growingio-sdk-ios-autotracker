@@ -41,7 +41,7 @@
         _latitude = builder.latitude;
         _longitude = builder.longitude;
         _sdkVersion = builder.sdkVersion;
-
+        _userKey = builder.userKey;
     }
     return self;
 }
@@ -76,7 +76,7 @@
     dataDict[@"latitude"] = ABS(self.latitude) > 0 ? @(self.latitude) : nil;
     dataDict[@"longitude"] = ABS(self.longitude) > 0 ? @(self.longitude) : nil;
     dataDict[@"sdkVersion"] =  self.sdkVersion;
-    
+    dataDict[@"userKey"] =  self.userKey;
     return [dataDict copy];
 }
 
@@ -110,6 +110,7 @@
     _sessionId = session.sessionId;
     _latitude = session.latitude;
     _longitude = session.longitude;
+    _userKey = session.loginUserKey;
     
     CGSize screenSize = [GrowingDeviceInfo deviceScreenSize];
     _screenWidth = screenSize.width;
@@ -282,6 +283,13 @@
 - (GrowingBaseBuilder *(^)(NSString *value))setSdkVersion {
     return ^(NSString *value) {
         self->_sdkVersion = value;
+        return self;
+    };
+}
+
+- (GrowingBaseBuilder *(^)(NSString *value))setUserKey {
+    return ^(NSString *value) {
+        self->_userKey = value;
         return self;
     };
 }
