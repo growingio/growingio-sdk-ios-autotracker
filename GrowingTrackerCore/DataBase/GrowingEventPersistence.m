@@ -23,13 +23,21 @@
 
 @implementation GrowingEventPersistence
 
-- (instancetype)initWithUUID:(NSString *)uuid eventType:(NSString *)evnetType jsonString:(NSString *)jsonString {
+- (instancetype _Nonnull)initWithUUID:(NSString *_Nonnull)uuid
+                            eventType:(NSString *_Nonnull)eventType
+                           jsonString:(NSString *_Nonnull)jsonString
+                               policy:(GrowingEventSendPolicy)policy {
     if (self = [super init]) {
         _eventUUID = uuid;
-        _eventType = evnetType;
+        _eventType = eventType;
         _rawJsonString = jsonString;
+        _policy = policy;
     }
     return self;
+}
+
+- (instancetype)initWithUUID:(NSString *)uuid eventType:(NSString *)eventType jsonString:(NSString *)jsonString {
+    return [self initWithUUID:uuid eventType:eventType jsonString:jsonString policy:GrowingEventSendPolicyInstant];
 }
 
 + (instancetype)persistenceEventWithEvent:(GrowingBaseEvent *)event uuid:(NSString *)uuid{

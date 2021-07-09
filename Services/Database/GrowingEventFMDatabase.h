@@ -31,6 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSArray<GrowingEventPersistence *> *)getEventsByCount:(NSUInteger)count;
 
+- (NSArray<GrowingEventPersistence *> *)getEventsByCount:(NSUInteger)count policy:(NSUInteger)mask;
+
 - (BOOL)insertEvent:(GrowingEventPersistence *)event;
 
 - (BOOL)insertEvents:(NSArray<GrowingEventPersistence *> *)events;
