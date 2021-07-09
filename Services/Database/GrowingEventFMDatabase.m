@@ -102,11 +102,30 @@
     }
     
     NSMutableArray<GrowingEventPersistence *> *events = [[NSMutableArray alloc] init];
-    [self enumerateKeysAndValuesUsingBlock:^(NSString *key, NSString *value, NSString *type, BOOL *stop) {
-        GrowingEventPersistence *event = [[GrowingEventPersistence alloc] initWithUUID:key eventType:type jsonString:value];
+    [self enumerateKeysAndValuesUsingBlock:^(NSString *key, NSString *value, NSString *type, NSUInteger policy, BOOL *stop) {
+        GrowingEventPersistence *event = [[GrowingEventPersistence alloc] initWithUUID:key eventType:type jsonString:value policy:policy];
         [events addObject:event];
         if (events.count >= count) {
             *stop = YES;
+        }
+    }];
+
+    return events.count != 0 ? events : nil;
+}
+
+- (NSArray<GrowingEventPersistence *> *)getEventsByCount:(NSUInteger)count policy:(NSUInteger)mask {
+    if (self.countOfEvents == 0) {
+        return [[NSArray alloc] init];
+    }
+    
+    NSMutableArray<GrowingEventPersistence *> *events = [[NSMutableArray alloc] init];
+    [self enumerateKeysAndValuesUsingBlock:^(NSString *key, NSString *value, NSString *type, NSUInteger policy, BOOL *stop) {
+        if (mask & policy) {
+            GrowingEventPersistence *event = [[GrowingEventPersistence alloc] initWithUUID:key eventType:type jsonString:value policy:policy];
+            [events addObject:event];
+            if (events.count >= count) {
+                *stop = YES;
+            }
         }
     }];
 
@@ -120,12 +139,13 @@
             self.databaseError = error;
             return;
         }
-        result = [db executeUpdate:@"insert into namedcachetable(name,key,value,createAt,type) values(?,?,?,?,?)",
+        result = [db executeUpdate:@"insert into namedcachetable(name,key,value,createAt,type,policy) values(?,?,?,?,?,?)",
                   self.name,
                   event.eventUUID,
                   event.rawJsonString,
                   @([GrowingTimeUtil currentTimeMillis]),
-                  event.eventType];
+                  event.eventType,
+                  @(event.policy)];
         
         if (!result) {
             self.databaseError = [self writeErrorInDatabase:db];
@@ -148,12 +168,13 @@
         }
         for (int i = 0; i < events.count; i++) {
             GrowingEventPersistence *event = events[i];
-            result = [db executeUpdate:@"insert into namedcachetable(name,key,value,createAt,type) values(?,?,?,?,?)",
+            result = [db executeUpdate:@"insert into namedcachetable(name,key,value,createAt,type,policy) values(?,?,?,?,?,?)",
                       self.name,
                       event.eventUUID,
                       event.rawJsonString,
                       @([GrowingTimeUtil currentTimeMillis]),
-                      event.eventType];
+                      event.eventType,
+                      @(event.policy)];
             
             if (!result) {
                 self.databaseError = [self writeErrorInDatabase:db];
@@ -261,10 +282,11 @@
         @"key text,"
         @"value text,"
         @"createAt INTEGER NOT NULL,"
-        @"type text);";
+        @"type text,"
+        @"policy INTEGER);";
         NSString *sqlCreateIndexNameKey = @"create index if not exists namedcachetable_name_key on namedcachetable (name, key);";
         NSString *sqlCreateIndexNameId = @"create index if not exists namedcachetable_name_id on namedcachetable (name, id);";
-        
+        NSString *sqlCreateColumnIfNotExist = @"ALTER TABLE namedcachetable ADD policy INTEGER default 6";
         if (![db executeUpdate:sql]) {
             self.databaseError = [self createDBErrorInDatabase:db];
             return;
@@ -277,7 +299,12 @@
             self.databaseError = [self createDBErrorInDatabase:db];
             return;
         }
-        
+        if (![db columnExists:@"policy" inTableWithName:@"namedcachetable"]) {
+            if (![db executeUpdate:sqlCreateColumnIfNotExist]) {
+                self.databaseError = [self createDBErrorInDatabase:db];
+                return;
+            }
+        }
         result = YES;
     }];
     
@@ -341,7 +368,7 @@ static BOOL isExecuteVacuum(NSString *name) {
                                                     error:nil];
 }
 
-- (void)enumerateKeysAndValuesUsingBlock:(void (^)(NSString *key, NSString *value, NSString *type, BOOL *stop))block {
+- (void)enumerateKeysAndValuesUsingBlock:(void (^)(NSString *key, NSString *value, NSString *type, NSUInteger policy, BOOL *stop))block {
     if (!block) {
         return;
     }
@@ -364,7 +391,8 @@ static BOOL isExecuteVacuum(NSString *name) {
             NSString *key = [set stringForColumn:@"key"];
             NSString *value = [set stringForColumn:@"value"];
             NSString *type = [set stringForColumn:@"type"];
-            block(key, value, type, &stop);
+            NSUInteger policy = [set intForColumn:@"policy"];
+            block(key, value, type, policy,&stop);
         }
 
         [set close];

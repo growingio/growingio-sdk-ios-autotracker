@@ -145,7 +145,7 @@ static GrowingSession *currentSession = nil;
 
     //额外的处理者
     [self dispatchUserIdDidChangedFrom:oldUserId to:_loginUserId.copy];
-    //重发visit必须在分发UserIdDidChangedFrom:to:方法之前
+    //重发visit事件，必须在分发UserIdDidChangedFrom:to:方法之后，处理者可能修改visit中的数据内容
     [self resendVisitByUserIdDidChangedFrom:oldUserId to:_loginUserId.copy];
 }
 

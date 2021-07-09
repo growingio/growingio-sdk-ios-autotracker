@@ -47,6 +47,10 @@
     return self;
 }
 
+- (GrowingEventSendPolicy)sendPolicy {
+    return GrowingEventSendPolicyMobileData | GrowingEventSendPolicyWIFI;
+}
+
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDict = [NSMutableDictionary dictionary];
     //如果有额外参数添加

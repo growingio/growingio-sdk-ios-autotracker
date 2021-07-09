@@ -43,6 +43,10 @@
     return [[GrowingVisitBuidler alloc] init];
 }
 
+- (GrowingEventSendPolicy)sendPolicy {
+    return GrowingEventSendPolicyInstant;
+}
+
 #pragma mark GrowingEventTransformable
 
 - (NSDictionary *)toDictionary {

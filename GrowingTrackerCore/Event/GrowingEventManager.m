@@ -21,7 +21,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "GrowingBaseEvent+SendPolicy.h"
+#import "GrowingBaseEvent.h"
 #import "GrowingLogger.h"
 #import "GrowingConfigurationManager.h"
 #import "GrowingDataTraffic.h"
@@ -231,7 +231,6 @@ static GrowingEventManager *sharedInstance = nil;
     }
 
     [[GrowingNetworkInterfaceManager sharedInstance] updateInterfaceInfo];
-
     BOOL isViaCellular = NO;
     // 没网络 直接返回
     if (![GrowingNetworkInterfaceManager sharedInstance].isReachable) {
@@ -240,20 +239,24 @@ static GrowingEventManager *sharedInstance = nil;
                     [self.allEventChannels indexOfObject:channel]);
         return;
     }
-
+    NSUInteger policyMask = GrowingEventSendPolicyInstant;
     if ([GrowingNetworkInterfaceManager sharedInstance].WiFiValid) {
-        // do nothing
-    } else if (self.uploadEventSize < self.uploadLimitOfCellular) {
-        GIOLogDebug(@"Upload key data with mobile network (channel = %zd).",
-                    [self.allEventChannels indexOfObject:channel]);
-        isViaCellular = YES;
-    } else {
-        GIOLogDebug(@"Mobile network is forbidden. upload later (channel = %zd).",
-                    [self.allEventChannels indexOfObject:channel]);
-        return;
+        policyMask = GrowingEventSendPolicyInstant|GrowingEventSendPolicyMobileData|GrowingEventSendPolicyWIFI;
+    } else if ([GrowingNetworkInterfaceManager sharedInstance].WWANValid){
+        policyMask = GrowingEventSendPolicyInstant|GrowingEventSendPolicyMobileData;
+        if (self.uploadEventSize < self.uploadLimitOfCellular) {
+            GIOLogDebug(@"Upload key data with mobile network (channel = %zd).",
+                        [self.allEventChannels indexOfObject:channel]);
+            isViaCellular = YES;
+        } else {
+            GIOLogDebug(@"Mobile network is forbidden. upload later (channel = %zd).",
+                        [self.allEventChannels indexOfObject:channel]);
+            //实时发送策略无视流量限制
+            policyMask = GrowingEventSendPolicyInstant;;
+        }
     }
 
-    NSArray<GrowingEventPersistence *> *events = [self getEventsToBeUploadUnsafe:channel];
+    NSArray<GrowingEventPersistence *> *events = [self getEventsToBeUploadUnsafe:channel policy:policyMask];
     if (events.count == 0) {
         return;
     }
@@ -384,9 +387,9 @@ static GrowingEventManager *sharedInstance = nil;
     }
 }
 
-- (NSArray<GrowingEventPersistence *> *)getEventsToBeUploadUnsafe:(GrowingEventChannel *)channel {
+- (NSArray<GrowingEventPersistence *> *)getEventsToBeUploadUnsafe:(GrowingEventChannel *)channel policy:(NSUInteger)mask{
     if (channel.isCustomEvent) {
-        return [self.realtimeEventDB getEventsWithPackageNum:self.packageNum];
+        return [self.realtimeEventDB getEventsWithPackageNum:self.packageNum policy:mask];
     } else {
         NSMutableArray<GrowingEventPersistence *> *events =
             [[NSMutableArray alloc] initWithCapacity:self.eventQueue.count];
@@ -394,15 +397,17 @@ static GrowingEventManager *sharedInstance = nil;
         const NSUInteger eventTypesCount = eventTypes.count;
         NSUInteger count = 0;
         for (GrowingEventPersistence *e in self.eventQueue) {
-            NSString *type = e.eventType;
-            // 反向匹配（排除法）event of other type not match eventChannelDict`s all t
-            if ((eventTypesCount == 0 && self.eventChannelDict[type] == nil) ||
-                (eventTypesCount > 0 && [eventTypes indexOfObject:type] != NSNotFound))  // 正向匹配
-            {
-                [events addObject:e];
-                count++;
-                if (count >= self.packageNum) {
-                    break;
+            if (e.policy & mask) {
+                NSString *type = e.eventType;
+                // 反向匹配（排除法）event of other type not match eventChannelDict`s all t
+                if ((eventTypesCount == 0 && self.eventChannelDict[type] == nil) ||
+                    (eventTypesCount > 0 && [eventTypes indexOfObject:type] != NSNotFound))  // 正向匹配
+                {
+                    [events addObject:e];
+                    count++;
+                    if (count >= self.packageNum) {
+                        break;
+                    }
                 }
             }
         }
