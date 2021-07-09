@@ -38,6 +38,8 @@
 
 - (void)setEvent:(GrowingEventPersistence *)event forKey:(NSString *)key;
 
+- (NSArray <GrowingEventPersistence *> *)getEventsWithPackageNum:(NSUInteger)packageNum policy:(NSUInteger)mask;
+
 - (NSArray <GrowingEventPersistence *> *)getEventsWithPackageNum:(NSUInteger)packageNum;
 
 @end
