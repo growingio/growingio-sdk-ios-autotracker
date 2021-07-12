@@ -6,4 +6,5 @@ ignore:
   - "GrowingTrackerCore/NetWork" # ignore network ,websocket
   - "Services/WebSocket"
   - "Services/Database"
+  - "Services/Compression"
 
