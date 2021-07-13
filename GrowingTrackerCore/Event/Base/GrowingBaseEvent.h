@@ -7,8 +7,15 @@
 
 
 @class GrowingBaseBuilder;
+
 typedef NS_ENUM(NSUInteger, GrowingAppState) {
     GrowingAppStateForeground, GrowingAppStateBackground
+};
+
+typedef NS_OPTIONS(NSUInteger, GrowingEventSendPolicy) {
+    GrowingEventSendPolicyInstant = 1 << 0,///实时发送
+    GrowingEventSendPolicyMobileData = 1 << 1,///移动网络流量发送
+    GrowingEventSendPolicyWIFI = 1 << 2,///wif情况下发送
 };
 
 
@@ -41,6 +48,7 @@ typedef NS_ENUM(NSUInteger, GrowingAppState) {
 @property(nonatomic, copy, readonly) NSString *_Nonnull sdkVersion;
 @property(nonatomic, copy, readonly) NSString *_Nullable userKey;
 
+@property (nonatomic, assign) GrowingEventSendPolicy sendPolicy;
 
 - (NSDictionary *_Nonnull)toDictionary;
 

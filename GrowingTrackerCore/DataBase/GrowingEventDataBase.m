@@ -175,6 +175,15 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
     }
 }
 
+- (NSArray<GrowingEventPersistence *> *)getEventsWithPackageNum:(NSUInteger)packageNum policy:(NSUInteger)mask {
+    NSArray *events = [self.db getEventsByCount:packageNum policy:mask];
+    
+    if (!events) {
+        [self handleDatabaseError:[self.db lastError]];
+    }
+    return events ?: [[NSArray alloc] init];
+}
+
 - (NSArray<GrowingEventPersistence *> *)getEventsWithPackageNum:(NSUInteger)packageNum {
     NSArray *events = [self.db getEventsByCount:packageNum];
     
