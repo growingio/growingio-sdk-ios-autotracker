@@ -45,7 +45,8 @@
 
     return [[GrowingEventPersistence alloc] initWithUUID:uuid
                                                eventType:event.eventType
-                                              jsonString:eventJsonString];
+                                              jsonString:eventJsonString
+                                                  policy:event.sendPolicy];
 }
 
 + (NSArray<NSString *> *)buildRawEventsFromEvents:(NSArray<GrowingEventPersistence *> *)events {
