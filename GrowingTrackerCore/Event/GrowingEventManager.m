@@ -358,7 +358,7 @@ static GrowingEventManager *sharedInstance = nil;
 
     [db setEvent:waitForPersist forKey:uuidString];
 
-    if (GrowingEventSendPolicyInstant == event.sendPolicy) {  // send event instantly
+    if (GrowingEventSendPolicyInstant & event.sendPolicy) {  // send event instantly
         [self sendEventsInstantWithChannel:eventChannel];
     }
 }
