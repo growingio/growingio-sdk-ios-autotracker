@@ -10,6 +10,7 @@
 #import "GrowingSession.h"
 #import "GrowingTimeUtil.h"
 #import "GrowingNetworkInterfaceManager.h"
+#import "GrowingFieldsIgnore.h"
 
 @implementation GrowingBaseEvent
 
@@ -64,12 +65,24 @@
     dataDict[@"eventSequenceId"] = @(self.eventSequenceId);
     dataDict[@"appState"] = (self.appState == GrowingAppStateForeground) ? @"FOREGROUND" : @"BACKGROUND";
     dataDict[@"urlScheme"] = self.urlScheme;
-    dataDict[@"networkState"] = self.networkState;
-    dataDict[@"screenWidth"] = @(self.screenWidth);
-    dataDict[@"screenHeight"] = @(self.screenHeight);
-    dataDict[@"deviceBrand"] = self.deviceBrand;
-    dataDict[@"deviceModel"] = self.deviceModel;
-    dataDict[@"deviceType"] = self.deviceType;
+    if(self.networkState != nil) {
+        dataDict[@"networkState"] = self.networkState;
+    }
+    if(self.screenWidth > 0) {
+        dataDict[@"screenWidth"] = @(self.screenWidth);
+    }
+    if(self.screenWidth > 0) {
+        dataDict[@"screenHeight"] = @(self.screenHeight);
+    }
+    if(self.deviceBrand != nil) {
+        dataDict[@"deviceBrand"] = self.deviceBrand;
+    }
+    if(self.deviceModel != nil) {
+        dataDict[@"deviceModel"] = self.deviceModel;
+    }
+    if(self.deviceType != nil) {
+        dataDict[@"deviceType"] = self.deviceType;
+    }
     dataDict[@"appName"] = self.appName;
     dataDict[@"appVersion"] = self.appVersion;
     dataDict[@"language"] = self.language;
@@ -113,13 +126,13 @@
     _userKey = session.loginUserKey;
     
     CGSize screenSize = [GrowingDeviceInfo deviceScreenSize];
-    _screenWidth = screenSize.width;
-    _screenHeight = screenSize.height;
-    _networkState = [[GrowingNetworkInterfaceManager sharedInstance] networkType];
+    _screenWidth = [GrowingFieldsIgnore isIgnoreFields:@"screenWidth"] ? 0 : screenSize.width;
+    _screenHeight = [GrowingFieldsIgnore isIgnoreFields:@"screenHeight"] ? 0 : screenSize.height;
+    _networkState = [GrowingFieldsIgnore isIgnoreFields:@"networkState"] ? nil : [[GrowingNetworkInterfaceManager sharedInstance] networkType];
     _sdkVersion = GrowingTrackerVersionName;
-    _deviceBrand = deviceInfo.deviceBrand;
-    _deviceModel = deviceInfo.deviceModel;
-    _deviceType = deviceInfo.deviceType;
+    _deviceBrand = [GrowingFieldsIgnore isIgnoreFields:@"deviceBrand"] ? nil : deviceInfo.deviceBrand;
+    _deviceModel = [GrowingFieldsIgnore isIgnoreFields:@"deviceModel"] ? nil : deviceInfo.deviceModel;
+    _deviceType = [GrowingFieldsIgnore isIgnoreFields:@"deviceType"] ? nil : deviceInfo.deviceType;
     _appName = deviceInfo.displayName;
     _appVersion = deviceInfo.appVersion;
     _language = deviceInfo.language;

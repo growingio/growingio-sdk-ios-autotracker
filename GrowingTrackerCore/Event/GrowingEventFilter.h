@@ -40,11 +40,14 @@ typedef NS_OPTIONS(NSUInteger, GrowingFilterEvent) {
 
 @interface GrowingEventFilter : NSObject
 
-/// 判断当前事件类型是否被过滤
-/// @param filterEventMask 事件过滤掩码，如 (GrowingFilterEventViewClick | GrowingFilterEventViewChange | GrowingFilterEventFormSubmit)
-/// @param eventType 当前事件类型
-+ (BOOL)isFilterEvent:(NSUInteger)filterEventMask
-            eventType:(NSString *)eventType;
++ (NSArray*)filterEventItems;
+
+// 通过类型名称获取其对应的掩码值
++ (NSUInteger)getFilterMask:(NSString *)typeName;
+
++ (BOOL)isFilterEvent:(NSString *)eventType;
+
++ (NSString*)getFilterEventLog;
 
 @end
 

@@ -213,8 +213,7 @@ static GrowingEventManager *sharedInstance = nil;
         }
         
         // 判断当前事件是否被过滤，否则不发送
-        if ([GrowingEventFilter isFilterEvent:trackConfiguration.filterEventMask eventType:builder.eventType]) {
-            GIOLogDebug(@"%@ event is filtered, event can not send", builder.eventType);
+        if([GrowingEventFilter isFilterEvent:builder.eventType]){
             return;
         }
 

@@ -33,6 +33,7 @@
     configuration.uploadExceptionEnable = self.uploadExceptionEnable;
     configuration.dataCollectionServerHost = [self.dataCollectionServerHost copy];
     configuration.filterEventMask = self.filterEventMask;
+    configuration.ignoreFieldsMask = self.ignoreFieldsMask;
 
     // GrowingAutotrackConfiguration add
     configuration.impressionScale = self.impressionScale;
