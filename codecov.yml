@@ -4,3 +4,7 @@ ignore:
   - "GrowingTrackerCore/Thirdparty"  # ignore Thirdparty
   - "Example"  # ignore demo
   - "GrowingTrackerCore/NetWork" # ignore network ,websocket
+  - "Services/WebSocket"
+  - "Services/Database"
+  - "Services/Compression"
+

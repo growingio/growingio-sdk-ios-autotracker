@@ -22,34 +22,21 @@
 
 @class GrowingEventPersistence;
 
-typedef NS_ENUM(NSInteger , GrowingEventDatabaseError) {
-    GrowingEventDatabaseOpenError = 500,
-    GrowingEventDatabaseWriteError,
-    GrowingEventDatabaseReadError,
-    GrowingEventDatabaseCreateDBError,
-};
-
 @interface GrowingEventDatabase : NSObject
 
 @property (nonatomic, assign) NSUInteger autoFlushCount;
 
-@property (nonatomic, copy, readonly) NSString *name;
-
-+ (instancetype)databaseWithPath:(NSString *)path name:(NSString *)name;
++ (instancetype)databaseWithPath:(NSString *)path;
 
 - (NSUInteger)countOfEvents;
 
 - (BOOL)flush;
-
-- (BOOL)vacuum;
 
 - (BOOL)clearAllItems;
 
 - (BOOL)cleanExpiredDataIfNeeded;
 
 - (void)setEvent:(GrowingEventPersistence *)event forKey:(NSString *)key;
-
-- (void)enumerateKeysAndValuesUsingBlock:(void (^)(NSString *key, NSString *value, NSString *type, BOOL *stop))block;
 
 - (NSArray <GrowingEventPersistence *> *)getEventsWithPackageNum:(NSUInteger)packageNum;
 

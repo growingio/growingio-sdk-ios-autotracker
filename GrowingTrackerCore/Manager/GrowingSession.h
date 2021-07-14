@@ -25,6 +25,7 @@
 @interface GrowingSession : NSObject
 @property(nonatomic, copy, readonly) NSString *sessionId;
 @property(nonatomic, copy, readwrite) NSString *loginUserId;
+@property(nonatomic, copy, readwrite) NSString *loginUserKey;
 @property(nonatomic, assign, readonly) BOOL createdSession;
 @property(nonatomic, assign, readonly) double latitude;
 @property(nonatomic, assign, readonly) double longitude;
@@ -45,5 +46,7 @@
 - (void)setLocation:(double)latitude longitude:(double)longitude;
 /// 清除地理位置
 - (void)cleanLocation;
+
+- (void)setLoginUserId:(NSString *)loginUserId userKey:(NSString *)userKey;
 
 @end

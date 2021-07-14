@@ -65,6 +65,16 @@
 
 }
 
+-(IBAction)setUserKey1:(id)sender{
+    [[GrowingSDK sharedInstance] setLoginUserId:@"10048" userKey:@"phone"];
+
+    NSLog(@"设置用户ID为10048,userkey为phone");
+}
+-(IBAction)setUserKey2:(id)sender{
+    [[GrowingSDK sharedInstance] setLoginUserId:@"10084" userKey:@"weixin"];
+
+    NSLog(@"设置用户ID为10084,userkey为phone");
+}
 - (IBAction)tapGestureHandle:(UITapGestureRecognizer *)sender {
     [self.userIdTextField resignFirstResponder];
     [self.view endEditing:YES];

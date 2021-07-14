@@ -229,7 +229,7 @@
 
 - (void)test8ClearUIDCheck {
     /**
-     function:清除UID,page事件中无cs1字段
+     function:清除UID,page事件中无cs1字段,无userkey
      记录：重构后的打点事件，没有page事件   2018-07-24
      ***/
     [MockEventQueue.sharedQueue cleanQueue];
@@ -256,9 +256,11 @@
     NSArray *page2Array = [MockEventQueue.sharedQueue eventsFor:@"PAGE"];
     // NSLog(@"VST事件：%@",page2Array);
     if (page2Array.count > 0) {
-        // pageg事件包含cs1字段
+        // page事件包含cs1字段
         NSDictionary *page2chr = [page2Array objectAtIndex:page2Array.count - 1];
         XCTAssertFalse([ManualTrackHelper CheckContainsKey:page2chr:@"userId"]);
+        XCTAssertFalse([ManualTrackHelper CheckContainsKey:page2chr:@"userKey"]);
+
         NSLog(@"清除UID,page事件中无userId字段测试通过---passed!");
     } else {
         NSLog(@"清除UID,page事件中无userId字段测试失败，page事件为：%@!", page2Array);
@@ -302,6 +304,64 @@
     XCTAssertNotNil(newSession);
     XCTAssertNotEqual(oldSession, newSession);
     NSLog(@"old:%@,new:%@", oldSession, newSession);
+}
+-(void)test11CheckUserkey{
+    /**
+     function:Userkey为phone
+     ***/
+    [[GrowingAutotracker sharedInstance] setLoginUserId:@"zhangsan"];
+    [MockEventQueue.sharedQueue cleanQueue];
+    [[GrowingAutotracker sharedInstance] setLoginUserId:@"autotest" userKey:@"phone"];
+    [tester waitForTimeInterval:2];
+    NSArray *visitEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
+
+    if (visitEventArray.count > 0) {
+        NSDictionary *vstchr = visitEventArray.lastObject;
+        XCTAssertEqualObjects(vstchr[@"userKey"], @"phone");
+        NSLog(@"userKey为nil,测试通过---passed!");
+    } else {
+        NSLog(@" 检测nil测试失败，VST中的userKey为：%@", visitEventArray.firstObject[@"userKey"]);
+        XCTAssertEqual(1, 0);
+    }
+    
+}
+-(void)test12ChangeUserkey{
+    /**
+     function:Userkey 更改为email
+     ***/
+    [[GrowingAutotracker sharedInstance] setLoginUserId:@"autotest1" userKey:@"phone"];
+    [MockEventQueue.sharedQueue cleanQueue];
+    [[GrowingAutotracker sharedInstance] setLoginUserId:@"autotest2" userKey:@"email"];
+    [tester waitForTimeInterval:2];
+    NSArray *visitEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
+
+    if (visitEventArray.count > 0) {
+        NSDictionary *vstchr = visitEventArray.lastObject;
+        XCTAssertEqualObjects(vstchr[@"userKey"], @"email");
+        NSLog(@"测试通过---passed!");
+    } else {
+        NSLog(@"测试失败，VST中的userKey为：%@", visitEventArray.firstObject[@"userKey"]);
+        XCTAssertEqual(1, 0);
+    }
+    
+}
+-(void)test13ChangeUserkeynil{
+
+    [[GrowingAutotracker sharedInstance] setLoginUserId:@"autotest1" userKey:@"phone"];
+    [MockEventQueue.sharedQueue cleanQueue];
+    [[GrowingAutotracker sharedInstance] setLoginUserId:@"autotest2"];
+    [tester waitForTimeInterval:2];
+    NSArray *visitEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
+
+    if (visitEventArray.count > 0) {
+        NSDictionary *vstchr = visitEventArray.lastObject;
+        XCTAssertFalse([ManualTrackHelper CheckContainsKey:vstchr:@"userKey"]);
+        NSLog(@"测试通过---passed!");
+    } else {
+        NSLog(@"测试失败，VST中的userKey为：%@", visitEventArray.firstObject[@"userKey"]);
+        XCTAssertEqual(1, 0);
+    }
+    
 }
 
 - (void)enterBackground {

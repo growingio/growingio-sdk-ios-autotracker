@@ -34,6 +34,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setLoginUserId:(NSString * _Nonnull)loginUserId;
 - (NSString *)loginUserId;
 
+- (void)setLoginUserKey:(NSString * _Nonnull)loginUserId;
+- (NSString *)loginUserKey;
+
 ///设置NSString,NSNumber
 - (void)setString:(NSString *)value forKey:(NSString *)key;
 

@@ -19,53 +19,56 @@
 
 
 #import "GrowingEventFilter.h"
+#import "GrowingConfigurationManager.h"
+
+NSUInteger const GrowingFilterClickChangeSubmit = (GrowingFilterEventViewClick | GrowingFilterEventViewChange | GrowingFilterEventFormSubmit);
 
 @implementation GrowingEventFilter
 
-+ (NSUInteger)getFilterMask:(NSString *)typeName {
-    
-    NSArray *items = @[@"VISIT", @"CUSTOM", @"VISITOR_ATTRIBUTES", @"LOGIN_USER_ATTRIBUTES",
-                       @"CONVERSION_VARIABLES", @"APP_CLOSED", @"PAGE", @"PAGE_ATTRIBUTES",
-                       @"VIEW_CLICK", @"VIEW_CHANGE", @"FORM_SUBMIT", @"REENGAGE"];
-
-    NSUInteger item = [items indexOfObject : typeName];
-
-    switch (item) {
-        case 0:
-            return  VISIT;
-        case 1:
-            return  CUSTOM;
-        case 2:
-            return  VISITOR_ATTRIBUTES;
-        case 3:
-            return  LOGIN_USER_ATTRIBUTES;
-        case 4:
-            return  CONVERSION_VARIABLES;
-        case 5:
-            return  APP_CLOSED;
-        case 6:
-            return  PAGE;
-        case 7:
-            return  PAGE_ATTRIBUTES;
-        case 8:
-            return  VIEW_CLICK;
-        case 9:
-            return  VIEW_CHANGE;
-        case 10:
-            return  FORM_SUBMIT;
-        case 11:
-            return  REENGAGE;
-        default :
-            return 0;
-        
-    }
-    return 0;
-    
++ (NSArray *)filterEventItems {
+    static NSArray *_filterEventItems;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _filterEventItems = @[@"VISIT", @"CUSTOM", @"VISITOR_ATTRIBUTES", @"LOGIN_USER_ATTRIBUTES",
+                              @"CONVERSION_VARIABLES", @"APP_CLOSED", @"PAGE", @"PAGE_ATTRIBUTES",
+                              @"VIEW_CLICK", @"VIEW_CHANGE", @"FORM_SUBMIT", @"REENGAGE"];
+    });
+    return _filterEventItems;
 }
 
-+ (NSUInteger)getFilterClickChangeSubmit {
-    NSUInteger const filterClickChangeSubmit = (VIEW_CLICK | VIEW_CHANGE | FORM_SUBMIT);
-    return filterClickChangeSubmit;
++ (NSUInteger)getFilterMask:(NSString *)typeName {
+    NSUInteger index = [[[self class] filterEventItems] indexOfObject : typeName];
+    return index == NSNotFound ? 0 : 1 << index;
+}
+
++ (BOOL)isFilterEvent:(NSString *)eventType {
+    NSUInteger filterEventMask = GrowingConfigurationManager.sharedInstance.trackConfiguration.filterEventMask;
+    NSUInteger typeMask = [GrowingEventFilter getFilterMask:eventType];
+    if(filterEventMask && (filterEventMask & typeMask) > 0 ) {
+        return true;
+    }
+    return false;
+}
+
++ (NSString*) getFilterEventLog {
+    NSUInteger filterEventMask = [GrowingConfigurationManager sharedInstance].trackConfiguration.filterEventMask;
+    NSString* logStr = @"";
+    NSInteger index = 0;
+    
+    while(filterEventMask > 0){
+        if(filterEventMask % 2 > 0) {
+            logStr = [logStr stringByAppendingFormat:@"%@",[[[self class] filterEventItems] objectAtIndex:index]];
+            logStr = [logStr stringByAppendingFormat:@"%@",@","];
+        }
+        filterEventMask = filterEventMask / 2;
+        index++;
+    }
+    
+    if([logStr length] > 0){
+        logStr = [logStr substringToIndex:([logStr length]-1)];
+        logStr = [logStr stringByAppendingFormat:@"%@", @" not tracking ..."];
+    }
+    return logStr;
 }
 
 @end

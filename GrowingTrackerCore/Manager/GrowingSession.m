@@ -40,6 +40,7 @@ static GrowingSession *currentSession = nil;
 @implementation GrowingSession
 @synthesize sessionId = _sessionId;
 @synthesize loginUserId = _loginUserId;
+@synthesize loginUserKey = _loginUserKey;
 
 - (instancetype)initWithSessionInterval:(NSTimeInterval)sessionInterval {
     self = [super init];
@@ -49,6 +50,8 @@ static GrowingSession *currentSession = nil;
         _alreadySendVisitEvent = NO;
         _latestVisitTime = 0;
         _latestDidEnterBackgroundTime = 0;
+        _loginUserId = [GrowingPersistenceDataProvider sharedInstance].loginUserId;
+        _loginUserKey = [GrowingPersistenceDataProvider sharedInstance].loginUserKey;
         _latestNonNullUserId = [GrowingPersistenceDataProvider sharedInstance].loginUserId;
         _userIdChangedDelegates = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
         _delegateLock = [[NSLock alloc] init];
@@ -104,20 +107,50 @@ static GrowingSession *currentSession = nil;
     [self.delegateLock unlock];
 }
 
-- (void)setLoginUserId:(NSString *)loginUserId {
-    if ([NSString growingHelper_isEqualStringA:loginUserId andStringB:self.loginUserId]) {
-        GIOLogWarn(@"setLoginUserId, but loginUserId is equal");
+- (void)setLoginUserId:(NSString *)loginUserId userKey:(NSString *)userKey {
+    if (loginUserId && loginUserId.length > 1000) {
+        GIOLogError(@"setLoginUserId:userKey:, loginUserId is too long");
+        return;
+    }
+    if (userKey && userKey.length > 1000) {
+        GIOLogError(@"setLoginUserId:userKey:, userKey is too long");
+        return;
+    }
+    if (!loginUserId || loginUserId.length == 0) {
+        NSString *oldUserId = _loginUserId.copy;
+        _loginUserId = nil;
+        _loginUserKey = nil;
+        [[GrowingPersistenceDataProvider sharedInstance] setLoginUserId:nil];
+        [[GrowingPersistenceDataProvider sharedInstance] setLoginUserKey:nil];
+        //额外的处理者
+        if (oldUserId && oldUserId.length > 0) {
+            [self dispatchUserIdDidChangedFrom:oldUserId to:nil];
+        }
+        GIOLogDebug(@"setLoginUserId:userKey:, clean loginUserId and userKey");
+        return;
+    }
+    
+    if ([NSString growingHelper_isEqualStringA:loginUserId andStringB:self.loginUserId] && [NSString growingHelper_isEqualStringA:userKey andStringB:self.loginUserKey]) {
+        GIOLogWarn(@"setLoginUserId:userKey:, but loginUserId and loginUserKey is equal");
         return;
     }
 
     NSString *oldUserId = _loginUserId.copy;
     _loginUserId = loginUserId.copy;
-    // loginUserId 持久化
+    
+    _loginUserKey = userKey.copy;
+    // 持久化
     [[GrowingPersistenceDataProvider sharedInstance] setLoginUserId:_loginUserId];
+    [[GrowingPersistenceDataProvider sharedInstance] setLoginUserKey:_loginUserKey];
+
     //额外的处理者
     [self dispatchUserIdDidChangedFrom:oldUserId to:_loginUserId.copy];
     //重发visit必须在分发UserIdDidChangedFrom:to:方法之前
     [self resendVisitByUserIdDidChangedFrom:oldUserId to:_loginUserId.copy];
+}
+
+- (void)setLoginUserId:(NSString *)loginUserId {
+    [self setLoginUserId:loginUserId userKey:nil];
 }
 
 - (void)resendVisitByUserIdDidChangedFrom:(NSString *)oldUserId to:(NSString *)newUserId {
