@@ -52,6 +52,7 @@ const int GrowingTrackerVersionCode = 30201;
         // 各个Module初始化init之后再进行事件定时发送
         [[GrowingEventManager sharedInstance] startTimerSend];
         [self versionPrint];
+        [self filterLogPrint];
     }
 
     return self;
@@ -70,6 +71,15 @@ const int GrowingTrackerVersionCode = 30201;
 - (void)versionPrint {
     NSString *versionStr = [NSString stringWithFormat:@"Thank you very much for using GrowingIO. We will do our best to provide you with the best service. GrowingIO version: %@",GrowingTrackerVersionName];
     GIOLogInfo(@"%@", versionStr);
+}
+
+- (void)filterLogPrint {
+    if(GrowingConfigurationManager.sharedInstance.trackConfiguration.filterEventMask > 0) {
+        GIOLogDebug(@"%@", [GrowingEventFilter getFilterEventLog]);
+    }
+    if(GrowingConfigurationManager.sharedInstance.trackConfiguration.ignoreFieldsMask > 0) {
+        GIOLogDebug(@"%@", [GrowingFieldsIgnore getIgnoreFieldsLog]);
+    }
 }
 
 - (void)trackCustomEvent:(NSString *)eventName {
