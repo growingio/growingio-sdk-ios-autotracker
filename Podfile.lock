@@ -7,16 +7,20 @@ PODS:
   - AlicloudUTDID (1.5.0.94)
   - AlicloudUtils (1.3.9):
     - AlicloudUTDID
-  - GrowingAnalytics/Advertising (3.2.1-beta):
-    - GrowingAnalytics/TrackerCore
   - GrowingAnalytics/Autotracker (3.2.1-beta):
     - GrowingAnalytics/AutotrackerCore
+    - GrowingAnalytics/Compression
+    - GrowingAnalytics/Database
     - GrowingAnalytics/Encryption
+    - GrowingAnalytics/Hybrid
     - GrowingAnalytics/MobileDebugger
     - GrowingAnalytics/Network
     - GrowingAnalytics/WebCircle
   - GrowingAnalytics/AutotrackerCore (3.2.1-beta):
-    - GrowingAnalytics/Hybrid
+    - GrowingAnalytics/TrackerCore
+  - GrowingAnalytics/Compression (3.2.1-beta):
+    - GrowingAnalytics/TrackerCore
+  - GrowingAnalytics/Database (3.2.1-beta):
     - GrowingAnalytics/TrackerCore
   - GrowingAnalytics/ENABLE_ENCRYPTION (3.2.1-beta):
     - GrowingAnalytics/TrackerCore
@@ -26,9 +30,12 @@ PODS:
     - GrowingAnalytics/TrackerCore
   - GrowingAnalytics/MobileDebugger (3.2.1-beta):
     - GrowingAnalytics/TrackerCore
+    - GrowingAnalytics/WebSocket
   - GrowingAnalytics/Network (3.2.1-beta):
     - GrowingAnalytics/TrackerCore
   - GrowingAnalytics/Tracker (3.2.1-beta):
+    - GrowingAnalytics/Compression
+    - GrowingAnalytics/Database
     - GrowingAnalytics/Encryption
     - GrowingAnalytics/MobileDebugger
     - GrowingAnalytics/Network
@@ -37,6 +44,9 @@ PODS:
   - GrowingAnalytics/WebCircle (3.2.1-beta):
     - GrowingAnalytics/AutotrackerCore
     - GrowingAnalytics/Hybrid
+    - GrowingAnalytics/WebSocket
+  - GrowingAnalytics/WebSocket (3.2.1-beta):
+    - GrowingAnalytics/TrackerCore
   - KIF (3.7.11):
     - KIF/Core (= 3.7.11)
   - KIF/Core (3.7.11)
@@ -50,7 +60,6 @@ PODS:
 
 DEPENDENCIES:
   - AlicloudPush (~> 1.9.8)
-  - GrowingAnalytics/Advertising (from `./`)
   - GrowingAnalytics/Autotracker (from `./`)
   - GrowingAnalytics/ENABLE_ENCRYPTION (from `./`)
   - GrowingAnalytics/Tracker (from `./`)
@@ -81,13 +90,13 @@ SPEC CHECKSUMS:
   AlicloudUT: 6d1cf30d57d096b7e9bb4b069dd0ba6ad59a3338
   AlicloudUTDID: 7323c443dcdf9a73e2224dc6ce51703671d7a765
   AlicloudUtils: 66e0ba6ece62d7dd05e9dd95674b2c7811624c2f
-  GrowingAnalytics: 6620463d81f5f47e13d0200bd774a26dcbbb42dd
+  GrowingAnalytics: 7272ed7725e6f7f7ad4c96ac2395642a50229564
   KIF: 927c502455cd746771c57e9b3a5123c67c7fa0b5
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   MJRefresh: 6afc955813966afb08305477dd7a0d9ad5e79a16
   SDCycleScrollView: a0d74c3384caa72bdfc81470bdbc8c14b3e1fbcf
   SDWebImage: 0b2ba0d56479bf6a45ecddbfd5558bea93150d25
 
-PODFILE CHECKSUM: f2b3df3a049e5b23daf1aaaad153b8650303ab69
+PODFILE CHECKSUM: 31b78158b972e46b33aedc472cb7fe24255bdbb1
 
-COCOAPODS: 1.9.1
+COCOAPODS: 1.10.1

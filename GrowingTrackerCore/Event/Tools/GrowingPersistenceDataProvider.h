@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setLoginUserId:(NSString * _Nullable)loginUserId;
 - (NSString *)loginUserId;
 
-- (void)setLoginUserKey:(NSString * _Nullable)loginUserId;
+- (void)setLoginUserKey:(NSString * _Nullable)loginUserKey;
 - (NSString *)loginUserKey;
 
 ///设置NSString,NSNumber

@@ -24,6 +24,7 @@ NSString * const kGrowingDefaultDataCollectionServerHost = @"https://api.growing
         _uploadExceptionEnable = YES;
         _dataCollectionServerHost = kGrowingDefaultDataCollectionServerHost;
         _filterEventMask = 0;
+        _ignoreFieldsMask = 0;
     }
 
     return self;
@@ -44,6 +45,7 @@ NSString * const kGrowingDefaultDataCollectionServerHost = @"https://api.growing
     configuration.uploadExceptionEnable = _uploadExceptionEnable;
     configuration.dataCollectionServerHost = [_dataCollectionServerHost copy];
     configuration.filterEventMask = _filterEventMask;
+    configuration.ignoreFieldsMask = _ignoreFieldsMask;
     return configuration;
 }
 

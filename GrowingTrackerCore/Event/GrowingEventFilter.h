@@ -20,67 +20,34 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NS_OPTIONS(NSUInteger, FilterEventType) {
-    /**
-     *  0...000000000001 visit
-     */
-    VISIT                     = (1 << 0),
-    /**
-     *  0...000000000010 custom
-     */
-    CUSTOM                    = (1 << 1),
-    /**
-     *  0...000000000100 visitor attributes
-     */
-    VISITOR_ATTRIBUTES        = (1 << 2),
-    /**
-     *  0...000000001000 login user attributes
-     */
-    LOGIN_USER_ATTRIBUTES     = (1 << 3),
-    /**
-     *  0...000000010000 conversion variables
-     */
-    CONVERSION_VARIABLES      = (1 << 4),
-    /**
-     *  0...000000100000 app closed
-     */
-    APP_CLOSED                = (1 << 5),
-    /**
-     *  0...000001000000 page
-     */
-    PAGE                      = (1 << 6),
-    /**
-     *  0...000010000000 page attributes
-     */
-    PAGE_ATTRIBUTES           = (1 << 7),
-    /**
-     *  0...000100000000 view click
-     */
-    VIEW_CLICK                = (1 << 8),
-    /**
-     *  0...001000000000 view change
-     */
-    VIEW_CHANGE               = (1 << 9),
-    /**
-     *  0...010000000000 form submit
-     */
-    FORM_SUBMIT               = (1 << 10),
-    /**
-     *  0...100000000000 reengage
-     */
-    REENGAGE                  = (1 << 11),
-};
+//过滤 VIEW_CLICK、VIEW_CHANGE、FORM_SUBMIT 事件的掩码值
+extern NSUInteger const GrowingFilterClickChangeSubmit;
 
+typedef NS_OPTIONS(NSUInteger, GrowingFilterEvent) {
+    GrowingFilterEventVisit                     = (1 << 0),
+    GrowingFilterEventCustom                    = (1 << 1),
+    GrowingFilterEventVisitorAttributes         = (1 << 2),
+    GrowingFilterEventLoginUserAttributes       = (1 << 3),
+    GrowingFilterEventConversionVariables       = (1 << 4),
+    GrowingFilterEventAppClosed                 = (1 << 5),
+    GrowingFilterEventPage                      = (1 << 6),
+    GrowingFilterEventPageAttributes            = (1 << 7),
+    GrowingFilterEventViewClick                 = (1 << 8),
+    GrowingFilterEventViewChange                = (1 << 9),
+    GrowingFilterEventFormSubmit                = (1 << 10),
+    GrowingFilterEventReengage                  = (1 << 11),
+};
 
 @interface GrowingEventFilter : NSObject
 
-extern NSUInteger const filterClickChangeSubmit;
-
-//获取过滤 VIEW_CLICK、VIEW_CHANGE、FORM_SUBMIT 事件的值
-+ (NSUInteger)getFilterClickChangeSubmit;
++ (NSArray*)filterEventItems;
 
 // 通过类型名称获取其对应的掩码值
 + (NSUInteger)getFilterMask:(NSString *)typeName;
+
++ (BOOL)isFilterEvent:(NSString *)eventType;
+
++ (NSString*)getFilterEventLog;
 
 @end
 

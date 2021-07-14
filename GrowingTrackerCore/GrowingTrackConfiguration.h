@@ -4,6 +4,7 @@
 
 #import <Foundation/Foundation.h>
 #import "GrowingEventFilter.h"
+#import "GrowingFieldsIgnore.h"
 
 FOUNDATION_EXPORT NSString * const kGrowingDefaultDataCollectionServerHost;
 
@@ -18,6 +19,7 @@ FOUNDATION_EXPORT NSString * const kGrowingDefaultDataCollectionServerHost;
 @property(nonatomic, assign) BOOL uploadExceptionEnable;
 @property(nonatomic, copy) NSString *dataCollectionServerHost;
 @property(nonatomic, assign) NSUInteger filterEventMask;
+@property(nonatomic, assign) NSUInteger ignoreFieldsMask;
 
 - (instancetype)initWithProjectId:(NSString *)projectId;
 
