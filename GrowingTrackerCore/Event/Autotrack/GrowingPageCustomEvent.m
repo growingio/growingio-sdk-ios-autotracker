@@ -44,7 +44,8 @@
 
 @end
 
-
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wincomplete-implementation"
 @implementation GrowingPageCustomBuilder
 
 - (GrowingPageCustomBuilder *(^)(NSString *value))setPath {
@@ -66,3 +67,4 @@
 }
 
 @end
+#pragma clang diagnostic pop

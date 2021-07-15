@@ -129,8 +129,8 @@
 
 - (void)sendRequest:(id <GrowingRequestProtocol> _Nonnull)request
          completion:(void(^_Nullable)(NSHTTPURLResponse * _Nonnull httpResponse,
-                                      NSData * _Nonnull data,
-                                      NSError * _Nonnull error))callback {
+                                      NSData * _Nullable data,
+                                      NSError * _Nullable error))callback {
     [self sendRequest:request success:^(NSHTTPURLResponse * _Nonnull httpResponse, NSData * _Nonnull data) {
         if (callback) callback(httpResponse,data,nil);
     } failure:^(NSHTTPURLResponse * _Nonnull httpResponse, NSData * _Nonnull data, NSError * _Nonnull error) {

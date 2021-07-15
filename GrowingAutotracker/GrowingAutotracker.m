@@ -20,6 +20,9 @@
 
 static GrowingAutotracker *sharedInstance = nil;
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wincomplete-implementation"
+
 @implementation GrowingAutotracker
 - (instancetype)initWithRealAutotracker:(GrowingRealAutotracker *)realAutotracker {
     self = [super initWithTarget:realAutotracker];
@@ -51,3 +54,5 @@ static GrowingAutotracker *sharedInstance = nil;
 
 
 @end
+
+#pragma clang diagnostic pop

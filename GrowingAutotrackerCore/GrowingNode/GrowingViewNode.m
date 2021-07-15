@@ -81,7 +81,7 @@
     BOOL haslistParent = self.hasListParent || [self.view isKindOfClass:[UITableView class]] || [self.view isKindOfClass:[UICollectionView class]];
     //是否是相似元素
     BOOL isSimilar = [view isKindOfClass:[UITableViewCell class]] || [view isKindOfClass:[UICollectionReusableView class]] || [view isKindOfClass:NSClassFromString(@"UISegment")];
-    int index = -1;
+    long index = -1;
     if (isSimilar) {
         index = view.growingNodeKeyIndex;
     } else if (haslistParent) {
@@ -94,13 +94,13 @@
     
     return GrowingViewNode.builder
     .setView(view)
-    .setIndex(index)
+    .setIndex((int)index)
     .setXPath([self.originXPath stringByAppendingFormat:@"/%@",similar_path])
     .setOriginXPath([self.originXPath stringByAppendingFormat:@"/%@",subpath])
     .setClickableParentXPath(parentXPath)
     .setHasListParent(haslistParent)
     .setViewContent(content?[content growingHelper_safeSubStringWithLength:50]:nil)
-    .setPosition(view.growingNodeKeyIndex)
+    .setPosition((int)view.growingNodeKeyIndex)
     .setNodeType([GrowingNodeHelper getViewNodeType:view])
     .setNeedRecalculate(recalculate)
     .build;

@@ -140,7 +140,7 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
 + (GrowingViewNode *)getViewNode:(UIView *)view {
     NSPointerArray *weakArray = [NSPointerArray weakObjectsPointerArray];
     GrowingViewNode *viewNode = [self getTopViewNode:view array:weakArray];
-    for (int i = weakArray.count - 2; i >= 0; i--) {
+    for (int i = (int)weakArray.count - 2; i >= 0; i--) {
         viewNode = [viewNode appendNode:(UIView *)[weakArray pointerAtIndex:i] isRecalculate:NO];
     }
     return viewNode;
@@ -151,7 +151,7 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
         weakArray = [NSPointerArray weakObjectsPointerArray];
     }
 
-    UIView *parent = view;
+    id<GrowingNode> parent = view;
     do {
         [weakArray addPointer:(void *)parent];
         parent = parent.growingNodeParent;

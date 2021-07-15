@@ -67,9 +67,9 @@ GrowingPropertyDefine(UIViewController, NSNumber *, growingHook_hasDidAppear, se
     return currentPageName;
 }
 
-- (NSString *)growingNodeName {
-    return @"页面";
-}
+//- (NSString *)growingNodeName {
+//    return @"页面";
+//}
 
 - (BOOL)growingHookIsCustomAddVC {
     return !self.growingHook_hasDidAppear.boolValue && self.parentViewController == nil &&

@@ -50,6 +50,8 @@
 
 @end
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wincomplete-implementation"
 @implementation GrowingViewElementBuilder
 
 - (GrowingViewElementBuilder *(^)(NSString *value))setPath {
@@ -89,3 +91,4 @@
 
 
 @end
+#pragma clang diagnostic pop

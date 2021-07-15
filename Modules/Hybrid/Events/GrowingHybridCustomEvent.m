@@ -43,6 +43,8 @@
 
 @end
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wincomplete-implementation"
 @implementation GrowingHybridCustomBuilder
 
 - (GrowingHybridCustomBuilder *(^)(NSString *value))setQuery {
@@ -57,3 +59,4 @@
 }
 
 @end
+#pragma clang diagnostic pop

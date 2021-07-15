@@ -51,11 +51,13 @@ extern NSString *const kGrowingSRHTTPResponseErrorKey;
 
 @interface GrowingSRWebSocket : NSObject <GrowingWebSocketService, NSStreamDelegate>
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wincompatible-property-type"
 @property (nonatomic, weak) id <GrowingSRWebSocketDelegate> delegate;
-
 @property (nonatomic, readonly) GrowingSRReadyState readyState;
-@property (nonatomic, readonly, retain) NSURL *url;
+#pragma clang diagnostic pop
 
+@property (nonatomic, readonly, retain) NSURL *url;
 // This returns the negotiated protocol.
 // It will be nil until after the handshake completes.
 @property (nonatomic, readonly, copy) NSString *protocol;

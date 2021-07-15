@@ -43,6 +43,8 @@
 }
 @end
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wincomplete-implementation"
 @implementation GrowingHybridViewElementBuilder
 
 - (GrowingHybridViewElementBuilder *(^)(NSString *value))setQuery {
@@ -62,3 +64,4 @@
     return [[GrowingHybridViewElementEvent alloc] initWithBuilder:self];
 }
 @end
+#pragma clang diagnostic pop

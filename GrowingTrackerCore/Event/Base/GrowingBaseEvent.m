@@ -80,6 +80,10 @@
     return [dataDict copy];
 }
 
++ (GrowingBaseBuilder *_Nonnull)builder {
+    return [[GrowingBaseBuilder alloc] init];
+}
+
 @end
 
 @implementation GrowingBaseBuilder

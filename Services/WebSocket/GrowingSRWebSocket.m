@@ -473,11 +473,11 @@ static __strong NSData *CRLFCRLF;
     }
 
     [self _readUntilHeaderCompleteWithCallback:^(GrowingSRWebSocket *self, NSData *data) {
-        CFHTTPMessageAppendBytes(_receivedHTTPHeaders, (const UInt8 *)data.bytes, data.length);
+        CFHTTPMessageAppendBytes(self->_receivedHTTPHeaders, (const UInt8 *)data.bytes, data.length);
 
-        if (CFHTTPMessageIsHeaderComplete(_receivedHTTPHeaders)) {
+        if (CFHTTPMessageIsHeaderComplete(self->_receivedHTTPHeaders)) {
             GrowingSRFastLog(@"Finished reading headers %@",
-                             CFBridgingRelease(CFHTTPMessageCopyAllHeaderFields(_receivedHTTPHeaders)));
+                             CFBridgingRelease(CFHTTPMessageCopyAllHeaderFields(self->_receivedHTTPHeaders)));
             [self _HTTPHeadersDidFinish];
         } else {
             [self _readHTTPHeader];
@@ -669,7 +669,7 @@ static __strong NSData *CRLFCRLF;
     // any messages
     [self _performDelegateBlock:^{
         [self closeWithCode:GrowingSRStatusCodeProtocolError reason:message];
-        dispatch_async(_workQueue, ^{
+        dispatch_async(self->_workQueue, ^{
             [self _closeConnection];
         });
     }];
@@ -741,7 +741,7 @@ static __strong NSData *CRLFCRLF;
     // Need to pingpong this off _callbackQueue first to make sure messages
     // happen in order
     [self _performDelegateBlock:^{
-        dispatch_async(_workQueue, ^{
+        dispatch_async(self->_workQueue, ^{
             [self _sendFrameWithOpcode:GrowingSROpCodePong data:pingData];
         });
     }];
