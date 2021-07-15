@@ -19,7 +19,7 @@
 
 @implementation GrowingWKWebViewJavascriptBridge_JS
 
-NSString *WKWebViewJavascriptBridge_js() {
+NSString *WKWebViewJavascriptBridge_js(void) {
 #define __WKWebViewJavascriptBridge_js_func__(x) #x
 
     // BEGIN preprocessorJSCode

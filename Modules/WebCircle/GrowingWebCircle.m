@@ -238,7 +238,7 @@
             NSMutableDictionary *dict = [self dictFromNode:viewNode];
             if ([viewNode.view isKindOfClass:NSClassFromString(@"WKWebView")]) {
                 [[GrowingHybridBridgeProvider sharedInstance]
-                    getDomTreeForWebView:viewNode.view
+                    getDomTreeForWebView:(WKWebView *)viewNode.view
                        completionHandler:^(NSDictionary *_Nullable domTee, NSError *_Nullable error) {
                            if (domTee.count > 0) {
                                [dict setValue:domTee forKey:@"webView"];
@@ -437,9 +437,6 @@
         self.onReadyBlock = readyBlock;
         self.onFinishBlock = finishBlock;
     }
-
-    NSDictionary *dict = @{@"msgType" : @"ready"};
-    [self webSocket:nil didReceiveMessage:dict.growingHelper_jsonString];
 }
 
 - (void)handleDeviceOrientationDidChange:(UIInterfaceOrientation)interfaceOrientation {
