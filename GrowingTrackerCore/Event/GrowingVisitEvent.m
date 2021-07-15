@@ -54,7 +54,8 @@
 
 @end
 
-
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wincomplete-implementation"
 @implementation GrowingVisitBuidler
 
 - (void)readPropertyInMainThread {
@@ -93,3 +94,4 @@
 
 
 @end
+#pragma clang diagnostic pop

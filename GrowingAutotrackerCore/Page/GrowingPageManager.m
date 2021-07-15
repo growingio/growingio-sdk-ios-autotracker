@@ -253,11 +253,11 @@
     while (current) {
         last = current;
         if ([[GrowingPageManager sharedInstance] isPrivateViewControllerIgnored:current]) {
-            current = current.growingNodeParent;
+            current = (UIViewController*)current.growingNodeParent;
         } else {
             page = [current growingPageHelper_getPageObject];
             if (page.isIgnored) {
-                current = current.growingNodeParent;
+                current = (UIViewController*)current.growingNodeParent;
             } else {
                 break;
             }

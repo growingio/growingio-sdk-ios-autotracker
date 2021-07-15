@@ -66,10 +66,10 @@
 
     if ([sender isKindOfClass:UISwitch.class] || [sender isKindOfClass:UIStepper.class] ||
         [sender isKindOfClass:UIPageControl.class]) {
-        [GrowingViewClickProvider viewOnClick:node];
+        [GrowingViewClickProvider viewOnClick:(UIView*)node];
     } else if ([event isKindOfClass:[UIEvent class]] && event.type == UIEventTypeTouches &&
                [[[event allTouches] anyObject] phase] == UITouchPhaseEnded) {
-        [GrowingViewClickProvider viewOnClick:node];
+        [GrowingViewClickProvider viewOnClick:(UIView*)node];
     }
 
     [[GrowingApplicationEventManager sharedInstance] dispatchApplicationEventSendAction:action

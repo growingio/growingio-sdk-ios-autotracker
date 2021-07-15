@@ -29,7 +29,7 @@
 /// @param callback 请求回调
 - (void)sendRequest:(id <GrowingRequestProtocol> _Nonnull)request
          completion:(void(^_Nullable)(NSHTTPURLResponse * _Nonnull httpResponse,
-                                      NSData * _Nonnull data,
-                                      NSError * _Nonnull error))callback;
+                                      NSData * _Nullable data,
+                                      NSError * _Nullable error))callback;
 
 @end

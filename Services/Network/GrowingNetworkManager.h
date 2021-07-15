@@ -26,8 +26,8 @@
 @protocol GrowingURLSessionProtocol;
 @protocol GrowingURLSessionDataTaskProtocol;
 
-typedef void ( ^GrowingNetworkSuccessBlock ) ( NSHTTPURLResponse * _Nonnull httpResponse , NSData * _Nonnull data);
-typedef void ( ^GrowingNetworkFailureBlock ) ( NSHTTPURLResponse * _Nonnull httpResponse , NSData * _Nonnull data, NSError * _Nonnull error );
+typedef void ( ^GrowingNetworkSuccessBlock ) ( NSHTTPURLResponse * _Nonnull httpResponse , NSData * _Nullable data);
+typedef void ( ^GrowingNetworkFailureBlock ) ( NSHTTPURLResponse * _Nonnull httpResponse , NSData * _Nullable data, NSError * _Nullable error );
 
 NS_ASSUME_NONNULL_BEGIN
 

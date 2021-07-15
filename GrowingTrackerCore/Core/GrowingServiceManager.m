@@ -93,6 +93,8 @@ static GrowingServiceManager *manager = nil;
     }
     
     Class implClass = [self serviceImplClass:service];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
     if ([[implClass class] respondsToSelector:@selector(singleton)]) {
         BOOL (*sigletonImp)(id,SEL) = (BOOL(*)(id, SEL))objc_msgSend;
         BOOL isSingleton = sigletonImp([implClass class], @selector(singleton));
@@ -109,6 +111,7 @@ static GrowingServiceManager *manager = nil;
             }
         }
     }
+#pragma clang diagnostic pop
     return [[implClass alloc] init];
 }
 

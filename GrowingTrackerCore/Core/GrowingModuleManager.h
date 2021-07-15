@@ -78,7 +78,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)triggerEvent:(NSInteger)eventType;
 
 - (void)triggerEvent:(NSInteger)eventType
-     withCustomParam:(NSDictionary *)customParam;
+     withCustomParam:(NSDictionary * _Nullable)customParam;
 
 @end
 

@@ -30,7 +30,7 @@
 //拦截者做额外处理
 @protocol GrowingEventInterceptor <NSObject>
 @optional
-- (void)growingEventManagerChannels:(NSMutableArray<GrowingEventChannel *> *)channels;
+- (void)growingEventManagerChannels:(NSMutableArray<GrowingEventChannel *> * _Nullable)channels;
 //事件被触发
 - (void)growingEventManagerEventTriggered:(NSString * _Nullable)eventType;
 //在未完成构造event前，返回builder
@@ -63,6 +63,6 @@
 // 必须在主线程调用
 - (void)postEventBuidler:(GrowingBaseBuilder* _Nullable)builder;
 
-- (void)writeToDatabaseWithEvent:(GrowingBaseEvent *)event;
+- (void)writeToDatabaseWithEvent:(GrowingBaseEvent * _Nullable)event;
 
 @end
