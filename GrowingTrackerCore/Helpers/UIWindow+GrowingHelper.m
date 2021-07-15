@@ -39,21 +39,9 @@
         scale = maxScale;
     }
 
-    CGSize imageSize = CGSizeZero;
-
-    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
-//    if (!IOS8_PLUS) {
-    if (NO) {
-        if (UIInterfaceOrientationIsPortrait(orientation)) {
-            imageSize = [UIScreen mainScreen].bounds.size;
-        } else {
-            imageSize = CGSizeMake([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
-        }
-    } else {
-        // the orientation is correct so we don't have to adjust it
-        imageSize = [UIScreen mainScreen].bounds.size;
-    }
-
+    // SDK support version >= ios 8.0
+    // the orientation is correct so we don't have to adjust it
+    CGSize imageSize = [UIScreen mainScreen].bounds.size;
     UIGraphicsBeginImageContextWithOptions(imageSize, NO, scale);
     CGContextRef context = UIGraphicsGetCurrentContext();
     
@@ -62,19 +50,6 @@
         CGContextTranslateCTM(context, window.center.x, window.center.y);
         CGContextConcatCTM(context, window.transform);
         CGContextTranslateCTM(context, -window.bounds.size.width * window.layer.anchorPoint.x, -window.bounds.size.height * window.layer.anchorPoint.y);
-//        if (!IOS8_PLUS) {
-        if (NO) {
-            if (orientation == UIInterfaceOrientationLandscapeLeft) {
-                CGContextRotateCTM(context, M_PI_2);
-                CGContextTranslateCTM(context, 0, -imageSize.width);
-            } else if (orientation == UIInterfaceOrientationLandscapeRight) {
-                CGContextRotateCTM(context, -M_PI_2);
-                CGContextTranslateCTM(context, -imageSize.height, 0);
-            } else if (orientation == UIInterfaceOrientationPortraitUpsideDown) {
-                CGContextRotateCTM(context, M_PI);
-                CGContextTranslateCTM(context, -imageSize.width, -imageSize.height);
-            }
-        }
         if ([window respondsToSelector:@selector(drawViewHierarchyInRect:afterScreenUpdates:)]) {
             [window drawViewHierarchyInRect:window.bounds afterScreenUpdates:NO];
         } else {
