@@ -26,8 +26,8 @@ typedef NS_ENUM(NSUInteger, GrowingDeviceType) {
 @class GrowingVisitBuidler;
 @interface GrowingVisitEvent : GrowingBaseEvent
 
-@property(nonatomic, copy, readonly) NSString *_Nonnull platform;
-@property(nonatomic, copy, readonly) NSString *_Nonnull platformVersion;
+//@property(nonatomic, copy, readonly) NSString *_Nonnull platform;
+//@property(nonatomic, copy, readonly) NSString *_Nonnull platformVersion;
 @property(nonatomic, copy, readonly) NSString *_Nonnull idfa;
 @property(nonatomic, copy, readonly) NSString *_Nonnull idfv;
 @property(nonatomic, strong, readonly) NSDictionary<NSString *,NSString*> *_Nonnull extraSdk;

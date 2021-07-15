@@ -28,13 +28,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedInstance;
 
-- (void)setDeviceId:(NSString * _Nonnull)deviceId;
+- (void)setDeviceId:(NSString * _Nullable)deviceId;
 - (NSString *)deviceId;
 
-- (void)setLoginUserId:(NSString * _Nonnull)loginUserId;
+- (void)setLoginUserId:(NSString * _Nullable)loginUserId;
 - (NSString *)loginUserId;
 
-- (void)setLoginUserKey:(NSString * _Nonnull)loginUserId;
+- (void)setLoginUserKey:(NSString * _Nullable)loginUserId;
 - (NSString *)loginUserKey;
 
 ///设置NSString,NSNumber
@@ -45,8 +45,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (GrowingEventSequenceObject*)getAndIncrement:(NSString *)eventType;
 
 //防止xcode编码提示使用KVC来获取值
-- (void)setValue:(id)value forKey:(NSString *)key UNAVAILABLE_ATTRIBUTE;
-- (id)valueForKey:(NSString *)key UNAVAILABLE_ATTRIBUTE;
+- (void)setValue:(id _Nullable)value forKey:(NSString * _Nonnull)key UNAVAILABLE_ATTRIBUTE;
+- (id)valueForKey:(NSString * _Nonnull)key UNAVAILABLE_ATTRIBUTE;
 
 @end
 

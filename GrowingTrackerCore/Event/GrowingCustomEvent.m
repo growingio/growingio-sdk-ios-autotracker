@@ -42,15 +42,20 @@
 
 @end
 
-
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wincomplete-implementation"
 @implementation GrowingCustomBuilder
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmethod-signatures"
+#pragma clang diagnostic ignored "-Wmismatched-return-types"
 - (GrowingBaseBuilder *(^)(NSString *value))setEventName {
     return ^(NSString *value) {
         self->_eventName = value;
         return self;
     };
 }
+#pragma clang diagnostic pop
 
 - (NSString *)eventType {
     return GrowingEventTypeCustom;
@@ -62,3 +67,4 @@
 
 
 @end
+#pragma clang diagnostic pop

@@ -28,6 +28,8 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         if (@available(iOS 13.0, *)) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
             SEL sel = @selector(handleTapAction:);
             Method method = class_getInstanceMethod(NSClassFromString(@"UIStatusBarManager"),sel);
             if (method) {
@@ -38,6 +40,7 @@
                     [[GrowingStatusBarEventManager sharedInstance] dispatchTapStatusBar:obj];
                 }));
             }
+#pragma clang diagnostic pop
         }
         
     });

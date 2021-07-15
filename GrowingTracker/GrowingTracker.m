@@ -11,6 +11,9 @@
 
 static GrowingTracker *sharedInstance = nil;
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wincomplete-implementation"
+
 @implementation GrowingTracker
 - (instancetype)initWithRealTracker:(GrowingRealTracker *)realTracker {
     self = [super initWithTarget:realTracker];
@@ -41,3 +44,5 @@ static GrowingTracker *sharedInstance = nil;
 }
 
 @end
+
+#pragma clang diagnostic pop

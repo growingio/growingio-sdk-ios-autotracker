@@ -33,7 +33,7 @@
 
 - (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
     if (self = [super initWithBuilder:builder]) {
-        GrowingAppCloseBuidler *subBuilder = (GrowingAppCloseBuidler*)builder;
+//        GrowingAppCloseBuidler *subBuilder = (GrowingAppCloseBuidler*)builder;
     }
     return self;
 }

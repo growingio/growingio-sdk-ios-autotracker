@@ -56,7 +56,7 @@ static GrowingPersistenceDataProvider *persistence = nil;
 
 - (void)setDeviceId:(NSString *)deviceId {
     //空值
-    if (deviceId.length == 0) {
+    if (!deviceId || deviceId.length == 0) {
         return;
     }
     [_growingUserdefault setValue:deviceId forKey:kGrowingUserdefault_deviceId];
@@ -69,9 +69,9 @@ static GrowingPersistenceDataProvider *persistence = nil;
     return  [_growingUserdefault valueForKey:kGrowingUserdefault_deviceId];;
 }
 
-- (void)setLoginUserId:(NSString * _Nonnull)loginUserId {
+- (void)setLoginUserId:(NSString * _Nullable)loginUserId {
     //空值
-    if (loginUserId.length == 0) {
+    if (!loginUserId || loginUserId.length == 0) {
         loginUserId = @"";
     }
     [_growingUserdefault setValue:loginUserId forKey:kGrowingUserdefault_loginUserId];
@@ -83,9 +83,9 @@ static GrowingPersistenceDataProvider *persistence = nil;
     return  [_growingUserdefault valueForKey:kGrowingUserdefault_loginUserId];
 }
 
-- (void)setLoginUserKey:(NSString * _Nonnull)loginUserKey {
+- (void)setLoginUserKey:(NSString * _Nullable)loginUserKey {
     //空值
-    if (loginUserKey.length == 0) {
+    if (!loginUserKey || loginUserKey.length == 0) {
         loginUserKey = @"";
     }
     [_growingUserdefault setValue:loginUserKey forKey:kGrowingUserdefault_loginUserKey];

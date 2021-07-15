@@ -166,7 +166,7 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
     __block NSUInteger count = 0;
     [self performModifyArrayBlock:^{
         [self.updateKeys addObject:key];
-        [self.updateValues addObject:event ? event : [NSNull null]];
+        [self.updateValues addObject:event ? event : (id)[NSNull null]];
         count = self.updateValues.count;
     }];
 
