@@ -53,6 +53,9 @@
     if (self.extraParams.count > 0) {
         [dataDict addEntriesFromDictionary:self.extraParams];
     }
+    // NSMutableDictionary class dataDict[key] = nil
+    // Passing nil will cause any object corresponding to aKey to be removed from the dictionary.
+    // actually use method (setObject:forKeyedSubscript:)
     dataDict[@"sessionId"] = self.sessionId;
     dataDict[@"timestamp"] = @(self.timestamp);
     dataDict[@"eventType"] = self.eventType;
@@ -65,24 +68,12 @@
     dataDict[@"eventSequenceId"] = @(self.eventSequenceId);
     dataDict[@"appState"] = (self.appState == GrowingAppStateForeground) ? @"FOREGROUND" : @"BACKGROUND";
     dataDict[@"urlScheme"] = self.urlScheme;
-    if(self.networkState != nil) {
-        dataDict[@"networkState"] = self.networkState;
-    }
-    if(self.screenWidth > 0) {
-        dataDict[@"screenWidth"] = @(self.screenWidth);
-    }
-    if(self.screenWidth > 0) {
-        dataDict[@"screenHeight"] = @(self.screenHeight);
-    }
-    if(self.deviceBrand != nil) {
-        dataDict[@"deviceBrand"] = self.deviceBrand;
-    }
-    if(self.deviceModel != nil) {
-        dataDict[@"deviceModel"] = self.deviceModel;
-    }
-    if(self.deviceType != nil) {
-        dataDict[@"deviceType"] = self.deviceType;
-    }
+    dataDict[@"networkState"] = self.networkState ? self.networkState : nil;
+    dataDict[@"screenWidth"] = self.screenWidth > 0 ? @(self.screenWidth) : nil;
+    dataDict[@"screenHeight"] = self.screenHeight > 0 ? @(self.screenHeight) : nil;
+    dataDict[@"deviceBrand"] = self.deviceBrand ? self.deviceBrand : nil;
+    dataDict[@"deviceModel"] = self.deviceModel ? self.deviceModel : nil;
+    dataDict[@"deviceType"] = self.deviceType ? self.deviceType : nil;
     dataDict[@"appName"] = self.appName;
     dataDict[@"appVersion"] = self.appVersion;
     dataDict[@"language"] = self.language;
