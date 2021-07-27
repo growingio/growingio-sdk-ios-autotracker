@@ -38,27 +38,26 @@
 #import "NSDictionary+GrowingHelper.h"
 #import "NSString+GrowingHelper.h"
 #import "GrowingEventFilter.h"
-
+#import "GrowingAppLifecycle.h"
 #import "GrowingEventNetworkService.h"
 #import "GrowingServiceManager.h"
 
-static NSUInteger const kGrowingMaxQueueSize = 10000;  // default: max event queue size there are 10000 events
-static NSUInteger const kGrowingFillQueueSize = 1000;  // default: determine when event queue is filled from DB
-static NSUInteger const kGrowingMaxDBCacheSize = 100;  // default: write to DB as soon as there are 300 events
-static NSUInteger const kGrowingMaxBatchSize = 500;    // default: send no more than 500 events in every batch;
+static const NSUInteger kGrowingMaxQueueSize = 10000;  // default: max event queue size there are 10000 events
+static const NSUInteger kGrowingFillQueueSize = 1000;  // default: determine when event queue is filled from DB
+static const NSUInteger kGrowingMaxDBCacheSize = 100;  // default: write to DB as soon as there are 300 events
+static const NSUInteger kGrowingMaxBatchSize = 500;    // default: send no more than 500 events in every batch;
 
 static const NSUInteger kGrowingUnit_MB = 1024 * 1024;
 
-@interface GrowingEventManager ()
+@interface GrowingEventManager () <GrowingAppLifecycleDelegate>
 
 @property (nonatomic, strong) NSHashTable *allInterceptor;
 @property (nonatomic, strong) NSLock *interceptorLock;
 
 @property (nonatomic, strong) NSMutableArray<GrowingEventPersistence *> *eventQueue;
-@property (nonatomic, readonly, strong) NSArray<GrowingEventChannel *> *allEventChannels;
-@property (nonatomic, readonly, strong) NSDictionary<NSString *, GrowingEventChannel *> *eventChannelDict;
-@property (nonatomic, readonly, strong) GrowingEventChannel *otherEventChannel;
-@property (nonatomic, readonly) dispatch_queue_t eventDispatch;
+@property (nonatomic, strong, readonly) NSArray<GrowingEventChannel *> *allEventChannels;
+@property (nonatomic, strong, readonly) NSDictionary<NSString *, GrowingEventChannel *> *eventChannelDict;
+@property (nonatomic, strong, readonly) GrowingEventChannel *otherEventChannel;
 @property (nonatomic, strong) dispatch_source_t reportTimer;
 
 @property (nonatomic, strong) GrowingEventDatabase *timingEventDB;
@@ -66,33 +65,13 @@ static const NSUInteger kGrowingUnit_MB = 1024 * 1024;
 
 @property (nonatomic, assign) unsigned long long uploadEventSize;
 @property (nonatomic, assign) unsigned long long uploadLimitOfCellular;
-
-@property (nonatomic, copy) NSString *projectId;
 @property (nonatomic, assign) NSUInteger packageNum;
-
-@property (nonatomic, strong) NSMutableArray *cacheArray;
 
 @end
 
 @implementation GrowingEventManager
 
-- (void)addInterceptor:(NSObject<GrowingEventInterceptor> *_Nonnull)interceptor {
-    if (!interceptor) {
-        return;
-    }
-    [self.interceptorLock lock];
-    [self.allInterceptor addObject:interceptor];
-    [self.interceptorLock unlock];
-}
-
-- (void)removeInterceptor:(NSObject<GrowingEventInterceptor> *_Nonnull)interceptor {
-    if (!interceptor) {
-        return;
-    }
-    [self.interceptorLock lock];
-    [self.allInterceptor removeObject:interceptor];
-    [self.interceptorLock unlock];
-}
+#pragma mark - Init
 
 static GrowingEventManager *sharedInstance = nil;
 
@@ -109,45 +88,30 @@ static GrowingEventManager *sharedInstance = nil;
         _allInterceptor = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
         _interceptorLock = [[NSLock alloc] init];
         _packageNum = kGrowingMaxBatchSize;
-        _cacheArray = [[NSMutableArray alloc] init];
         // default is 10MB
-        _uploadLimitOfCellular =
-            [GrowingConfigurationManager sharedInstance].trackConfiguration.cellularDataLimit * kGrowingUnit_MB;
+        _uploadLimitOfCellular = [GrowingConfigurationManager sharedInstance].trackConfiguration.cellularDataLimit * kGrowingUnit_MB;
         [GrowingDispatchManager dispatchInGrowingThread:^{
-            // db
-            self.timingEventDB = [GrowingEventDatabase databaseWithPath:[GrowingFileStorage getTimingDatabasePath]];
-            self.timingEventDB.autoFlushCount = kGrowingMaxDBCacheSize;
-            self.realtimeEventDB =
-                [GrowingEventDatabase databaseWithPath:[GrowingFileStorage getRealtimeDatabasePath]];
+            self->_timingEventDB = [GrowingEventDatabase databaseWithPath:[GrowingFileStorage getTimingDatabasePath]];
+            self->_timingEventDB.autoFlushCount = kGrowingMaxDBCacheSize;
+            
+            self->_realtimeEventDB = [GrowingEventDatabase databaseWithPath:[GrowingFileStorage getRealtimeDatabasePath]];
 
+            // clean expired event data
             [self cleanExpiredData_unsafe];
-        }];
-
-        // timer
-        self.reportTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, self.eventDispatch);
-        
-
-        [GrowingDispatchManager dispatchInGrowingThread:^{
             // load eventQueue for the first time
             [self reloadFromDB_unsafe];
+            
+            [[GrowingAppLifecycle sharedInstance] addAppLifecycleDelegate:self];
         }];
-        
     }
     return self;
 }
 
-- (void)startTimerSend {
+#pragma mark - Configure Channels
+
+- (void)configChannels {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        CGFloat configInterval = 0;
-        CGFloat dataUploadInterval = configInterval >= 5 ? configInterval : 5;  // at least 5 seconds
-        dispatch_source_set_timer(self.reportTimer, dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC * 5),  // first upload
-                                  NSEC_PER_SEC * dataUploadInterval, NSEC_PER_SEC * 1);
-        dispatch_source_set_event_handler(self.reportTimer, ^{
-            [self timerSendEvent];
-        });
-        dispatch_resume(_reportTimer);
-        
         for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
             if ([obj respondsToSelector:@selector(growingEventManagerChannels:)]) {
                 [obj growingEventManagerChannels:[GrowingEventChannel eventChannels]];
@@ -162,40 +126,30 @@ static GrowingEventManager *sharedInstance = nil;
     });
 }
 
-- (void)cleanExpiredData_unsafe {
-    [self.timingEventDB cleanExpiredDataIfNeeded];
-    [self.realtimeEventDB cleanExpiredDataIfNeeded];
+#pragma mark - Start Timer
+
+- (void)startTimerSend {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        CGFloat configInterval = GrowingConfigurationManager.sharedInstance.trackConfiguration.dataUploadInterval;
+        CGFloat dataUploadInterval = MAX(configInterval, 5); // at least 5 seconds
+        
+        dispatch_queue_t queue = dispatch_queue_create("io.growing", NULL);
+        dispatch_set_target_queue(queue, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0));
+        self.reportTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
+        dispatch_source_set_timer(self.reportTimer,
+                                  dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC * 5),  // first upload
+                                  NSEC_PER_SEC * dataUploadInterval,
+                                  NSEC_PER_SEC * 1);
+        dispatch_source_set_event_handler(self.reportTimer, ^{
+            [self sendAllChannelEvents];
+        });
+        dispatch_resume(_reportTimer);
+    });
 }
 
-- (void)reloadFromDB_unsafe {
-    self.eventQueue = nil;
-    [self loadFromDB_unsafe];
-}
-
-- (unsigned long long)uploadEventSize {
-    return [GrowingDataTraffic cellularNetworkUploadEventSize];
-}
-
-- (void)setUploadEventSize:(unsigned long long)uploadEventSize {
-    [GrowingDataTraffic cellularNetworkStorgeEventSize:uploadEventSize];
-}
-
-- (void)loadFromDB_unsafe {
-    NSInteger keyCount = self.timingEventDB.countOfEvents;
-    NSInteger qCount = self.eventQueue.count;
-
-    if (self.eventQueue && qCount == keyCount) {
-        return;
-    }
-
-    self.eventQueue = [[NSMutableArray alloc] init];
-    NSArray *array = [self.timingEventDB getEventsWithPackageNum:kGrowingMaxQueueSize];
-    [self.eventQueue addObjectsFromArray:array];
-}
-
-- (void)timerSendEvent {
-    [self sendAllChannelEvents];
-}
+#pragma mark - Event
+#pragma mark Event Send
 
 - (void)postEventBuidler:(GrowingBaseBuilder *_Nullable)builder {
     dispatch_block_t block = ^{
@@ -241,59 +195,6 @@ static GrowingEventManager *sharedInstance = nil;
     [GrowingDispatchManager dispatchInGrowingThread:block];
 }
 
-- (void)writeToDatabaseWithEvent:(GrowingBaseEvent *)event {
-    GIOLogDebug(@"save: event, type is %@\n%@", event.eventType,
-                [event.toDictionary growingHelper_beautifulJsonString]);
-    NSString *eventType = event.eventType;
-
-    if (!event) {
-        return;
-    }
-
-    GrowingEventChannel *eventChannel = self.eventChannelDict[eventType] ?: self.otherEventChannel;
-    BOOL isCustomEvent = eventChannel.isCustomEvent;
-    NSString *uuidString = [NSUUID UUID].UUIDString;
-    GrowingEventPersistence *waitForPersist = [GrowingEventPersistence persistenceEventWithEvent:event uuid:uuidString];
-
-    if (!isCustomEvent)  // custom event never goes into self.eventQueue, event can not be nil
-    {
-        [self.eventQueue addObject:waitForPersist];
-    }
-
-    GrowingEventDatabase *db = (isCustomEvent ? self.realtimeEventDB : self.timingEventDB);
-
-    [db setEvent:waitForPersist forKey:uuidString];
-
-    if (GrowingEventSendPolicyInstant == event.sendPolicy) {  // send event instantly
-        [self sendEventsInstantWithChannel:eventChannel];
-    }
-}
-
-- (void)flushDB {
-    [self.timingEventDB flush];
-}
-
-- (void)removeEvents_unsafe:(NSArray<__kindof GrowingEventPersistence *> *)events
-                 forChannel:(GrowingEventChannel *)channel {
-    if (channel.isCustomEvent) {
-        for (NSInteger i = 0; i < events.count; i++) {
-            [self.realtimeEventDB setEvent:nil forKey:events[i].eventUUID];
-        }
-
-    } else {
-        [self.eventQueue removeObjectsInArray:events];
-
-        for (NSInteger i = 0; i < events.count; i++) {
-            [self.timingEventDB setEvent:nil forKey:events[i].eventUUID];
-        }
-
-        if (self.eventQueue.count <= kGrowingFillQueueSize) {
-            [self loadFromDB_unsafe];
-        }
-    }
-}
-
-
 - (void)sendAllChannelEvents {
     [GrowingDispatchManager dispatchInGrowingThread:^{
         [self flushDB];
@@ -315,7 +216,8 @@ static GrowingEventManager *sharedInstance = nil;
 
 // 非安全 发送日志
 - (void)sendEventsOfChannel_unsafe:(GrowingEventChannel *)channel {
-    if (self.ai.length == 0) {
+    NSString *projectId = GrowingConfigurationManager.sharedInstance.trackConfiguration.projectId;
+    if (projectId.length == 0) {
         GIOLogError(@"No valid ProjectId (channel = %zd).", [self.allEventChannels indexOfObject:channel]);
         return;
     }
@@ -415,12 +317,71 @@ static GrowingEventManager *sharedInstance = nil;
     }];
 }
 
-- (void)prettyLogForEvents:(NSArray<NSString *> *)events withChannel:(GrowingEventChannel *)channel {
-    NSMutableArray *arrayM = [NSMutableArray array];
-    for (NSString *rawEvent in events) {
-        [arrayM addObject:[rawEvent growingHelper_jsonObject]];
+#pragma mark Event Persist
+
+- (void)loadFromDB_unsafe {
+    NSInteger keyCount = self.timingEventDB.countOfEvents;
+    NSInteger qCount = self.eventQueue.count;
+
+    if (self.eventQueue && qCount == keyCount) {
+        return;
     }
-    GIOLogDebug(@"(channel = %@, events = %@)\n", channel.urlTemplate, arrayM);
+
+    self.eventQueue = [[NSMutableArray alloc] init];
+    NSArray *array = [self.timingEventDB getEventsWithPackageNum:kGrowingMaxQueueSize];
+    [self.eventQueue addObjectsFromArray:array];
+}
+
+- (void)writeToDatabaseWithEvent:(GrowingBaseEvent *)event {
+    GIOLogDebug(@"save: event, type is %@\n%@", event.eventType,
+                [event.toDictionary growingHelper_beautifulJsonString]);
+    NSString *eventType = event.eventType;
+
+    if (!event) {
+        return;
+    }
+
+    GrowingEventChannel *eventChannel = self.eventChannelDict[eventType] ?: self.otherEventChannel;
+    BOOL isCustomEvent = eventChannel.isCustomEvent;
+    NSString *uuidString = [NSUUID UUID].UUIDString;
+    GrowingEventPersistence *waitForPersist = [GrowingEventPersistence persistenceEventWithEvent:event uuid:uuidString];
+
+    if (!isCustomEvent)  // custom event never goes into self.eventQueue, event can not be nil
+    {
+        [self.eventQueue addObject:waitForPersist];
+    }
+
+    GrowingEventDatabase *db = (isCustomEvent ? self.realtimeEventDB : self.timingEventDB);
+
+    [db setEvent:waitForPersist forKey:uuidString];
+
+    if (GrowingEventSendPolicyInstant == event.sendPolicy) {  // send event instantly
+        [self sendEventsInstantWithChannel:eventChannel];
+    }
+}
+
+- (void)flushDB {
+    [self.timingEventDB flush];
+}
+
+- (void)removeEvents_unsafe:(NSArray<__kindof GrowingEventPersistence *> *)events
+                 forChannel:(GrowingEventChannel *)channel {
+    if (channel.isCustomEvent) {
+        for (NSInteger i = 0; i < events.count; i++) {
+            [self.realtimeEventDB setEvent:nil forKey:events[i].eventUUID];
+        }
+
+    } else {
+        [self.eventQueue removeObjectsInArray:events];
+
+        for (NSInteger i = 0; i < events.count; i++) {
+            [self.timingEventDB setEvent:nil forKey:events[i].eventUUID];
+        }
+
+        if (self.eventQueue.count <= kGrowingFillQueueSize) {
+            [self loadFromDB_unsafe];
+        }
+    }
 }
 
 - (NSArray<GrowingEventPersistence *> *)getEventsToBeUploadUnsafe:(GrowingEventChannel *)channel {
@@ -449,6 +410,16 @@ static GrowingEventManager *sharedInstance = nil;
     }
 }
 
+- (void)cleanExpiredData_unsafe {
+    [self.timingEventDB cleanExpiredDataIfNeeded];
+    [self.realtimeEventDB cleanExpiredDataIfNeeded];
+}
+
+- (void)reloadFromDB_unsafe {
+    self.eventQueue = nil;
+    [self loadFromDB_unsafe];
+}
+
 - (void)clearAllEvents {
     self.eventQueue = [[NSMutableArray alloc] init];
     [GrowingDispatchManager dispatchInGrowingThread:^() {
@@ -457,19 +428,50 @@ static GrowingEventManager *sharedInstance = nil;
     }];
 }
 
-- (NSString *)ai {
-    return GrowingConfigurationManager.sharedInstance.trackConfiguration.projectId;
+#pragma mark Event Log
+
+- (void)prettyLogForEvents:(NSArray<NSString *> *)events withChannel:(GrowingEventChannel *)channel {
+    NSMutableArray *arrayM = [NSMutableArray array];
+    for (NSString *rawEvent in events) {
+        [arrayM addObject:[rawEvent growingHelper_jsonObject]];
+    }
+    GIOLogDebug(@"(channel = %@, events = %@)\n", channel.urlTemplate, arrayM);
 }
 
-- (dispatch_queue_t)eventDispatch {
-    static dispatch_queue_t _eventDispatch = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _eventDispatch = dispatch_queue_create("io.growing", NULL);
-        dispatch_set_target_queue(_eventDispatch, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0));
-    });
+#pragma mark - Interceptor
 
-    return _eventDispatch;
+- (void)addInterceptor:(NSObject<GrowingEventInterceptor> *_Nonnull)interceptor {
+    if (!interceptor) {
+        return;
+    }
+    [self.interceptorLock lock];
+    [self.allInterceptor addObject:interceptor];
+    [self.interceptorLock unlock];
+}
+
+- (void)removeInterceptor:(NSObject<GrowingEventInterceptor> *_Nonnull)interceptor {
+    if (!interceptor) {
+        return;
+    }
+    [self.interceptorLock lock];
+    [self.allInterceptor removeObject:interceptor];
+    [self.interceptorLock unlock];
+}
+
+#pragma mark - GrowingAppLifecycleDelegate
+
+- (void)applicationDidEnterBackground {
+    [self flushDB];
+}
+
+#pragma mark - Setter & Getter
+
+- (unsigned long long)uploadEventSize {
+    return [GrowingDataTraffic cellularNetworkUploadEventSize];
+}
+
+- (void)setUploadEventSize:(unsigned long long)uploadEventSize {
+    [GrowingDataTraffic cellularNetworkStorgeEventSize:uploadEventSize];
 }
 
 @end
