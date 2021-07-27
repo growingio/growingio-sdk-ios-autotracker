@@ -26,43 +26,53 @@
 #import "GrowingRequestProtocol.h"
 #import "GrowingEventChannel.h"
 
-@class GrowingPageEvent;
 //拦截者做额外处理
 @protocol GrowingEventInterceptor <NSObject>
+
 @optional
-- (void)growingEventManagerChannels:(NSMutableArray<GrowingEventChannel *> * _Nullable)channels;
-//事件被触发
-- (void)growingEventManagerEventTriggered:(NSString * _Nullable)eventType;
-//在未完成构造event前，返回builder
-- (void)growingEventManagerEventWillBuild:(GrowingBaseBuilder* _Nullable)builder;
-//在完成构造event之后，返回event
-- (void)growingEventManagerEventDidBuild:(GrowingBaseEvent* _Nullable)event;
-//频段事件的网络请求request对象
-- (id<GrowingRequestProtocol>_Nullable)growingEventManagerRequestWithChannel:(GrowingEventChannel* _Nullable)channel;
+
+/// 可配置事件发送通道
+/// @param channels 默认的事件发送通道
+- (void)growingEventManagerChannels:(NSMutableArray<GrowingEventChannel *> *_Nullable)channels;
+
+/// 事件被触发
+/// @param eventType 当前事件类型
+- (void)growingEventManagerEventTriggered:(NSString *_Nullable)eventType;
+
+/// 即将构造事件
+/// @param builder 事件构造器
+- (void)growingEventManagerEventWillBuild:(GrowingBaseBuilder *_Nullable)builder;
+
+/// 事件构造完毕
+/// @param event 当前事件
+- (void)growingEventManagerEventDidBuild:(GrowingBaseEvent *_Nullable)event;
+
+/// 自定义event发送请求
+/// @param channel 事件发送通道
+- (id<GrowingRequestProtocol> _Nullable)growingEventManagerRequestWithChannel:(GrowingEventChannel *_Nullable)channel;
+
 @end
 
 @interface GrowingEventManager : NSObject
 
-
 + (_Nonnull instancetype)sharedInstance;
 
-- (void)sendAllChannelEvents;
+/// 配置事件发送通道
+- (void)configChannels;
 
-- (void)clearAllEvents;
-/// 开启定时器发送事件
+/// 开启事件发送定时器
 - (void)startTimerSend;
+
+/// 发送event，必须在主线程调用
+/// @param builder event构造器
+- (void)postEventBuidler:(GrowingBaseBuilder *_Nullable)builder;
 
 /// 添加拦截者 - 执行顺序不保证有序
 /// @param interceptor 拦截者
-- (void)addInterceptor:(NSObject<GrowingEventInterceptor>* _Nonnull)interceptor;
+- (void)addInterceptor:(NSObject<GrowingEventInterceptor> *_Nonnull)interceptor;
 
 /// 删除拦截者
 /// @param interceptor 拦截者
 - (void)removeInterceptor:(NSObject<GrowingEventInterceptor> *_Nonnull)interceptor;
-
-// 必须在主线程调用
-- (void)postEventBuidler:(GrowingBaseBuilder* _Nullable)builder;
-
-- (void)writeToDatabaseWithEvent:(GrowingBaseEvent * _Nullable)event;
 
 @end
