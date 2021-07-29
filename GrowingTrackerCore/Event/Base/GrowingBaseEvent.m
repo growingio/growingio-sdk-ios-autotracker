@@ -48,7 +48,7 @@
 }
 
 - (GrowingEventSendPolicy)sendPolicy {
-    return GrowingEventSendPolicyMobileData | GrowingEventSendPolicyWIFI;
+    return GrowingEventSendPolicyMobileData;
 }
 
 - (NSDictionary *)toDictionary {
