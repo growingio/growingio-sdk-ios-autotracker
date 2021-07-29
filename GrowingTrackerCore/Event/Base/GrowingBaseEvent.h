@@ -13,9 +13,9 @@ typedef NS_ENUM(NSUInteger, GrowingAppState) {
 };
 
 typedef NS_OPTIONS(NSUInteger, GrowingEventSendPolicy) {
-    GrowingEventSendPolicyInstant = 1 << 0,///实时发送
-    GrowingEventSendPolicyMobileData = 1 << 1,///移动网络流量发送
-    GrowingEventSendPolicyWIFI = 1 << 2,///wif情况下发送
+    GrowingEventSendPolicyInstant = 1 << 0,    /// 实时发送（目前仅VISIT事件为实时发送策略）
+    GrowingEventSendPolicyMobileData = 1 << 1, /// 移动网络流量发送
+    GrowingEventSendPolicyWiFi = 1 << 2,       /// 仅WiFi可发送（特殊事件数据，如大文件等）
 };
 
 

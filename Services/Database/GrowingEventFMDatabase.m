@@ -392,7 +392,7 @@ static BOOL isExecuteVacuum(NSString *name) {
             NSString *value = [set stringForColumn:@"value"];
             NSString *type = [set stringForColumn:@"type"];
             NSUInteger policy = [set intForColumn:@"policy"];
-            block(key, value, type, policy,&stop);
+            block(key, value, type, policy, &stop);
         }
 
         [set close];

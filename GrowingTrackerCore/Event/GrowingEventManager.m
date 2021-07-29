@@ -131,6 +131,12 @@ static GrowingEventManager *sharedInstance = nil;
 - (void)startTimerSend {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
+        BOOL debugEnabled = GrowingConfigurationManager.sharedInstance.trackConfiguration.debugEnabled;
+        if (debugEnabled) {
+            // send event instantly
+            return;
+        }
+        
         CGFloat configInterval = GrowingConfigurationManager.sharedInstance.trackConfiguration.dataUploadInterval;
         CGFloat dataUploadInterval = MAX(configInterval, 5); // at least 5 seconds
         
@@ -138,7 +144,7 @@ static GrowingEventManager *sharedInstance = nil;
         dispatch_set_target_queue(queue, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0));
         self.reportTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
         dispatch_source_set_timer(self.reportTimer,
-                                  dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC * 5),  // first upload
+                                  dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC * dataUploadInterval),  // first upload
                                   NSEC_PER_SEC * dataUploadInterval,
                                   NSEC_PER_SEC * 1);
         dispatch_source_set_event_handler(self.reportTimer, ^{
@@ -241,18 +247,19 @@ static GrowingEventManager *sharedInstance = nil;
     }
     NSUInteger policyMask = GrowingEventSendPolicyInstant;
     if ([GrowingNetworkInterfaceManager sharedInstance].WiFiValid) {
-        policyMask = GrowingEventSendPolicyInstant|GrowingEventSendPolicyMobileData|GrowingEventSendPolicyWIFI;
-    } else if ([GrowingNetworkInterfaceManager sharedInstance].WWANValid){
-        policyMask = GrowingEventSendPolicyInstant|GrowingEventSendPolicyMobileData;
+        policyMask = GrowingEventSendPolicyInstant | GrowingEventSendPolicyMobileData | GrowingEventSendPolicyWiFi;
+        
+    } else if ([GrowingNetworkInterfaceManager sharedInstance].WWANValid) {
         if (self.uploadEventSize < self.uploadLimitOfCellular) {
             GIOLogDebug(@"Upload key data with mobile network (channel = %zd).",
                         [self.allEventChannels indexOfObject:channel]);
+            policyMask = GrowingEventSendPolicyInstant | GrowingEventSendPolicyMobileData;
             isViaCellular = YES;
         } else {
             GIOLogDebug(@"Mobile network is forbidden. upload later (channel = %zd).",
                         [self.allEventChannels indexOfObject:channel]);
             //实时发送策略无视流量限制
-            policyMask = GrowingEventSendPolicyInstant;;
+            policyMask = GrowingEventSendPolicyInstant;
         }
     }
 
@@ -358,7 +365,8 @@ static GrowingEventManager *sharedInstance = nil;
 
     [db setEvent:waitForPersist forKey:uuidString];
 
-    if (GrowingEventSendPolicyInstant & event.sendPolicy) {  // send event instantly
+    BOOL debugEnabled = GrowingConfigurationManager.sharedInstance.trackConfiguration.debugEnabled;
+    if (GrowingEventSendPolicyInstant & event.sendPolicy || debugEnabled) {  // send event instantly
         [self sendEventsInstantWithChannel:eventChannel];
     }
 }
@@ -387,7 +395,7 @@ static GrowingEventManager *sharedInstance = nil;
     }
 }
 
-- (NSArray<GrowingEventPersistence *> *)getEventsToBeUploadUnsafe:(GrowingEventChannel *)channel policy:(NSUInteger)mask{
+- (NSArray<GrowingEventPersistence *> *)getEventsToBeUploadUnsafe:(GrowingEventChannel *)channel policy:(NSUInteger)mask {
     if (channel.isCustomEvent) {
         return [self.realtimeEventDB getEventsWithPackageNum:self.packageNum policy:mask];
     } else {
