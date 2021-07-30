@@ -24,19 +24,8 @@
 @implementation GrowingAutotrackConfiguration
 
 - (id)copyWithZone:(NSZone *)zone {
-    GrowingAutotrackConfiguration *configuration = [[GrowingAutotrackConfiguration alloc] initWithProjectId:self.projectId];
-    configuration.debugEnabled = self.debugEnabled;
-    configuration.cellularDataLimit = self.cellularDataLimit;
-    configuration.dataUploadInterval = self.dataUploadInterval;
-    configuration.sessionInterval = self.sessionInterval;
-    configuration.dataCollectionEnabled = self.dataCollectionEnabled;
-    configuration.uploadExceptionEnable = self.uploadExceptionEnable;
-    configuration.dataCollectionServerHost = [self.dataCollectionServerHost copy];
-    configuration.excludeEvent = self.excludeEvent;
-    configuration.ignoreField= self.ignoreField;
-
-    // GrowingAutotrackConfiguration add
-    configuration.impressionScale = self.impressionScale;
+    GrowingAutotrackConfiguration *configuration = (GrowingAutotrackConfiguration *)[super copyWithZone:zone];
+    configuration->_impressionScale = _impressionScale;
     return configuration;
 }
 
