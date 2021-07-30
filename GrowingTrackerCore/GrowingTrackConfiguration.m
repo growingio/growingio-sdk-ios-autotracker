@@ -6,16 +6,13 @@
 
 NSString * const kGrowingDefaultDataCollectionServerHost = @"https://api.growingio.com";
 
-@interface GrowingTrackConfiguration ()
-@property(nonatomic, copy, readwrite) NSString *projectId;
-@end
-
 @implementation GrowingTrackConfiguration
+
 - (instancetype)initWithProjectId:(NSString *)projectId {
     self = [super init];
     if (self) {
         _projectId = [projectId copy];
-
+        
         _debugEnabled = NO;
         _cellularDataLimit = 10;
         _dataUploadInterval = 15;
@@ -35,17 +32,17 @@ NSString * const kGrowingDefaultDataCollectionServerHost = @"https://api.growing
 }
 
 - (id)copyWithZone:(NSZone *)zone {
-    GrowingTrackConfiguration *configuration = [[[self class] alloc] init];
-    configuration.projectId = [_projectId copy];
-    configuration.debugEnabled = _debugEnabled;
-    configuration.cellularDataLimit = _cellularDataLimit;
-    configuration.dataUploadInterval = _dataUploadInterval;
-    configuration.sessionInterval = _sessionInterval;
-    configuration.dataCollectionEnabled = _dataCollectionEnabled;
-    configuration.uploadExceptionEnable = _uploadExceptionEnable;
-    configuration.dataCollectionServerHost = [_dataCollectionServerHost copy];
-    configuration.excludeEvent = _excludeEvent;
-    configuration.ignoreField = _ignoreField;
+    GrowingTrackConfiguration *configuration = [[[self class] allocWithZone:zone] init];
+    configuration->_projectId = [_projectId copy];
+    configuration->_debugEnabled = _debugEnabled;
+    configuration->_cellularDataLimit = _cellularDataLimit;
+    configuration->_dataUploadInterval = _dataUploadInterval;
+    configuration->_sessionInterval = _sessionInterval;
+    configuration->_dataCollectionEnabled = _dataCollectionEnabled;
+    configuration->_uploadExceptionEnable = _uploadExceptionEnable;
+    configuration->_dataCollectionServerHost = [_dataCollectionServerHost copy];
+    configuration->_excludeEvent = _excludeEvent;
+    configuration->_ignoreField = _ignoreField;
     return configuration;
 }
 

@@ -9,8 +9,8 @@
 FOUNDATION_EXPORT NSString * const kGrowingDefaultDataCollectionServerHost;
 
 @interface GrowingTrackConfiguration : NSObject <NSCopying>
-@property(nonatomic, copy, readonly) NSString *projectId;
 
+@property(nonatomic, copy, readonly) NSString *projectId;
 @property(nonatomic, assign) BOOL debugEnabled;
 @property(nonatomic, assign) NSUInteger cellularDataLimit;
 @property(nonatomic, assign) NSTimeInterval dataUploadInterval;
@@ -24,6 +24,5 @@ FOUNDATION_EXPORT NSString * const kGrowingDefaultDataCollectionServerHost;
 - (instancetype)initWithProjectId:(NSString *)projectId;
 
 + (instancetype)configurationWithProjectId:(NSString *)projectId;
-
 
 @end
