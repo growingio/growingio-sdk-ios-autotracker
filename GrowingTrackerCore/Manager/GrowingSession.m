@@ -137,8 +137,8 @@ static GrowingSession *currentSession = nil;
 
     NSString *oldUserId = _loginUserId.copy;
     _loginUserId = loginUserId.copy;
-    
     _loginUserKey = userKey.copy;
+    
     // 持久化
     [[GrowingPersistenceDataProvider sharedInstance] setLoginUserId:_loginUserId];
     [[GrowingPersistenceDataProvider sharedInstance] setLoginUserKey:_loginUserKey];

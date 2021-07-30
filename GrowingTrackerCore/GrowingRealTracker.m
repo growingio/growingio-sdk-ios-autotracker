@@ -124,12 +124,8 @@ const int GrowingTrackerVersionCode = 30201;
 }
 
 - (void)setLoginUserId:(NSString *)userId {
-    if (userId.length == 0 || userId.length > 1000) {
-        return;
-    }
-
     [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
-        [self setUserIdValue:userId];
+        [[GrowingSession currentSession] setLoginUserId:userId];
     }];
 }
 
@@ -137,19 +133,14 @@ const int GrowingTrackerVersionCode = 30201;
 /// @param userId 用户ID
 /// @param userKey 用户ID对应的key值
 - (void)setLoginUserId:(NSString *)userId userKey:(NSString *)userKey {
-    if (userKey == nil || userKey.length == 0) {
-        [self setLoginUserId:userId];
-        return;
-    } else {
-        [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
-            [[GrowingSession currentSession] setLoginUserId:userId userKey:userKey];
-        }];
-    }
+    [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
+        [[GrowingSession currentSession] setLoginUserId:userId userKey:userKey];
+    }];
 }
 
 - (void)cleanLoginUserId {
     [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
-        [self setUserIdValue:nil];
+        [[GrowingSession currentSession] setLoginUserId:nil];
     }];
 }
 
@@ -159,11 +150,6 @@ const int GrowingTrackerVersionCode = 30201;
 
 - (NSString *)getDeviceId {
     return [GrowingDeviceInfo currentDeviceInfo].deviceIDString;
-}
-
-
-- (void)setUserIdValue:(NSString *)value {
-    [[GrowingSession currentSession] setLoginUserId:value];
 }
 
 /// 设置经纬度坐标
