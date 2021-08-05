@@ -65,6 +65,8 @@ const int GrowingTrackerVersionCode = 30201;
 
 - (void)loggerSetting {
     [GrowingLog addLogger:[GrowingTTYLogger sharedInstance] withLevel:self.configuration.debugEnabled ? GrowingLogLevelDebug : GrowingLogLevelInfo];
+    // flutter use this console
+    [GrowingLog addLogger:[GrowingASLLogger sharedInstance] withLevel:self.configuration.debugEnabled ? GrowingLogLevelDebug : GrowingLogLevelInfo];
     [GrowingLog addLogger:[GrowingWSLogger sharedInstance] withLevel:GrowingLogLevelVerbose];
     [GrowingWSLogger sharedInstance].logFormatter = [GrowingWSLoggerFormat new];
 }
