@@ -291,7 +291,8 @@
             @"UIInputWindowController", @"UIActivityGroupViewController", @"UIKeyboardHiddenViewController",
             @"UICompatibilityInputViewController", @"UISystemInputAssistantViewController",
             @"UIPredictionViewController", @"GrowingWindowViewController", @"UIApplicationRotationFollowingController",
-            @"UIAlertController"
+            @"UIAlertController",
+            @"FlutterViewController",
         ]];
     }
     return _ignoredPrivateControllers;
