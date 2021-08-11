@@ -82,5 +82,6 @@ FOUNDATION_EXPORT const unsigned char GrowingCocoaLumberjackVersionString[];
 #import "GrowingTTYLogger.h"
 #import "GrowingASLLogger.h"
 #import "GrowingWSLogger.h"
+#import "GrowingOSLogger.h"
 
 static GrowingLogLevel gioLogLevel = GrowingLogLevelAll;
