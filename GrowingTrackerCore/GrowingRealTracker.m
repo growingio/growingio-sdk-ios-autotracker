@@ -5,15 +5,11 @@
 #import "GrowingRealTracker.h"
 #import "GrowingTrackConfiguration.h"
 #import "GrowingAppLifecycle.h"
-#import "GrowingLog.h"
-#import "GrowingTTYLogger.h"
-#import "GrowingWSLogger.h"
+#import "GrowingLogger.h"
 #import "GrowingWSLoggerFormat.h"
-#import "GrowingLogMacros.h"
 #import "GrowingDispatchManager.h"
 #import "NSString+GrowingHelper.h"
 #import "NSDictionary+GrowingHelper.h"
-#import "GrowingLogger.h"
 #import "GrowingDeviceInfo.h"
 #import "GrowingVisitEvent.h"
 #import "GrowingSession.h"
@@ -64,11 +60,23 @@ const int GrowingTrackerVersionCode = 30201;
 }
 
 - (void)loggerSetting {
-    [GrowingLog addLogger:[GrowingTTYLogger sharedInstance] withLevel:self.configuration.debugEnabled ? GrowingLogLevelDebug : GrowingLogLevelInfo];
-    // flutter use this console
-    [GrowingLog addLogger:[GrowingASLLogger sharedInstance] withLevel:self.configuration.debugEnabled ? GrowingLogLevelDebug : GrowingLogLevelInfo];
+    GrowingLogLevel level = self.logLevel;
+    if (@available(iOS 10.0, *)) {
+        [GrowingLog addLogger:[GrowingOSLogger sharedInstance] withLevel:level];
+    }else {
+        [GrowingLog addLogger:[GrowingTTYLogger sharedInstance] withLevel:level];
+        [GrowingLog addLogger:[GrowingASLLogger sharedInstance] withLevel:level];
+    }
     [GrowingLog addLogger:[GrowingWSLogger sharedInstance] withLevel:GrowingLogLevelVerbose];
     [GrowingWSLogger sharedInstance].logFormatter = [GrowingWSLoggerFormat new];
+}
+
+- (GrowingLogLevel)logLevel {
+    GrowingLogLevel level = GrowingLogLevelOff;
+#if defined(DEBUG) && DEBUG
+    level = self.configuration.debugEnabled ? GrowingLogLevelDebug : GrowingLogLevelInfo;
+#endif
+    return level;
 }
 
 - (void)versionPrint {
