@@ -183,17 +183,19 @@ static GrowingTTYLogger *sharedInstance;
         NSUInteger msgLen = [logMsg lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
         const BOOL useStack = msgLen < (1024 * 4);
 
-        char msgStack[useStack ? (msgLen + 1) : 1]; // Analyzer doesn't like zero-size array, hence the 1
-        char *msg = useStack ? msgStack : (char *)calloc(msgLen + 1, sizeof(char));
-
+        char *msg;
+        if (useStack) {
+            msg = (char *)alloca(msgLen + 1);
+        } else {
+            msg = (char *)calloc(msgLen + 1, sizeof(char));
+        }
         if (msg == NULL) {
             return;
         }
 
         BOOL logMsgEnc = [logMsg getCString:msg maxLength:(msgLen + 1) encoding:NSUTF8StringEncoding];
-
         if (!logMsgEnc) {
-            if (!useStack && msg != NULL) {
+            if (!useStack) {
                 free(msg);
             }
 
@@ -204,7 +206,7 @@ static GrowingTTYLogger *sharedInstance;
 
         if (isFormatted) {
             // The log message has already been formatted.
-            int iovec_len = (_automaticallyAppendNewlineForCustomFormatters) ? 5 : 4;
+            const int iovec_len = (_automaticallyAppendNewlineForCustomFormatters) ? 5 : 4;
             struct iovec v[iovec_len];
 
             v[0].iov_base = "";
@@ -216,7 +218,7 @@ static GrowingTTYLogger *sharedInstance;
             v[iovec_len - 1].iov_base = "";
             v[iovec_len - 1].iov_len = 0;
 
-            v[2].iov_base = (char *)msg;
+            v[2].iov_base = msg;
             v[2].iov_len = msgLen;
 
             if (iovec_len == 5) {
