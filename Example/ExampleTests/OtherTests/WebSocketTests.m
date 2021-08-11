@@ -35,7 +35,6 @@
 #import "UIView+GrowingNode.h"
 #import "FirstViewController.h"
 #import "GrowingDeviceInfo.h"
-#import "GrowingHybridBridgeProvider.h"
 #import "GrowingFileStorage.h"
 #import <WebKit/WebKit.h>
 
@@ -217,17 +216,7 @@
     [GrowingDeviceInfo deviceScreenSize];
 }
 
--(void)testGrowingHybridBridgeProvider{
-    [[GrowingHybridBridgeProvider sharedInstance] handleJavascriptBridgeMessage:@"{@'messageType':@'messagedata'}"];
-    [[GrowingHybridBridgeProvider sharedInstance] performSelector:@selector(dispatchWebViewDomChanged)];
-    WKWebView *_webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
-    [[GrowingHybridBridgeProvider sharedInstance] getDomTreeForWebView:_webView completionHandler:^(NSDictionary *_Nullable dom, NSError *_Nullable error) {
-        NSLog(@"test");
-    }
-     ];
 
-
-}
 -(void)testGrowingFileStorage{
     [[[GrowingFileStorage alloc]initWithName:@"testGrowingFileStorage"] resetAll];
     [[[GrowingFileStorage alloc]initWithName:@"testGrowingFileStorage"] removeKey:@"testKey"];

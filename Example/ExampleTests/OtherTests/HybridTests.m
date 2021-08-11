@@ -42,6 +42,8 @@
 #import "NSString+GrowingHelper.h"
 #import "UIViewController+GrowingPageHelper.h"
 #import "GrowingPageManager.h"
+#import "GrowingHybridBridgeProvider.h"
+#import <WebKit/WebKit.h>
 @interface HybridTests : KIFTestCase
 
 @end
@@ -57,7 +59,7 @@
 }
 
 - (void)tearDown {
-    [[viewTester usingLabel:@"UI界面"] tap];
+  //  [[viewTester usingLabel:@"UI界面"] tap];
     
 }
 
@@ -115,7 +117,19 @@
     [[[GrowingWebCircle alloc]init] performSelector:@selector(runWithCircle:readyBlock:finishBlock:)withObject:[NSURL URLWithString:@"ws://testws"] withObject:nil];
     [[[GrowingWebCircle alloc]init] performSelector:@selector(start)];
     [[[GrowingWebCircle alloc]init] performSelector:@selector(stop)];
+    [[[GrowingWebCircle alloc]init] performSelector:@selector(sendScreenShotWithCallback:)withObject:nil];
+    NSURL *urltest = [[NSURL alloc]initWithString:@"http://testxxx.growingio.com/qrcode.html?URLScheme=growing.XXX&productId=XXX&circleRoomNumber=8ebd86b3fac64b64ae09a9ce1450e015&serviceType=circle&appName=XXX"];
+    [[[GrowingWebCircle alloc]init] performSelector:@selector(growingHandlerUrl:)withObject:urltest];
+    [[[GrowingWebCircle alloc]init] performSelector:@selector(webSocketDidOpen:)withObject:nil];
+    NSString *messageready = @"{@\"msgType\":@\"ready\"}";
+    NSString *messageincompatible = @"{@\"msgType\":@\"incompatible_version\"}";
+  //  NSString *messagequit = @"{@\"msgType\":@\"quit\"}";
+    [[[GrowingWebCircle alloc]init] performSelector:@selector(webSocketDidOpen:)withObject:nil];
 
+    [[[GrowingWebCircle alloc]init] performSelector:@selector(webSocket:didReceiveMessage:)withObject:nil withObject:messageready];
+    [[[GrowingWebCircle alloc]init] performSelector:@selector(webSocket:didReceiveMessage:)withObject:nil withObject:messageincompatible];
+
+ //   [[[GrowingWebCircle alloc]init] performSelector:@selector(webSocket:didReceiveMessage:)withObject:nil withObject:messagequit];
     //    NSMutableDictionary *dict = [[GrowingWebCircle sharedInstance] dictFromPage:current xPath:page.path];
 //    [GrowingWebCircle retrieveAllElementsAsync:nil];
 //    [GrowingWebCircle isRunning];
@@ -162,7 +176,7 @@
 -(void)testGrowingHybridBridgeProvider{
     [GrowingHybridBridgeProvider.sharedInstance handleJavascriptBridgeMessage:@"testHibrid"];
     
-    GrowingHybridPageAttributesEvent.builder.setQuery(@"QUERY")
+    GrowingBaseBuilder *builder =GrowingHybridPageAttributesEvent.builder.setQuery(@"QUERY")
     .setPath(@"KEY_PATH")
     .setPageShowTimestamp(@"KEY_PAGE_SHOW_TIMESTAMP")
     .setAttributes(@"KEY_ATTRIBUTES")
@@ -177,9 +191,22 @@
     .setGlobalSequenceId(@"testGlobalSequenceId")
     .setEventSequenceId(@"testEventSequenceId")
     .setPlatformVersion(@"testPlatformVersion");
-    XCTAssertEqual(1, 1);
+    XCTAssertNotNil(builder);
+    [[GrowingHybridBridgeProvider sharedInstance] handleJavascriptBridgeMessage:@"{@'messageType':@'messagedata'}"];
+    [[GrowingHybridBridgeProvider sharedInstance] performSelector:@selector(dispatchWebViewDomChanged)];
+    WKWebView *_webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+    [[GrowingHybridBridgeProvider sharedInstance] getDomTreeForWebView:_webView completionHandler:^(NSDictionary *_Nullable dom, NSError *_Nullable error) {
+        NSLog(@"test");
+    }
+     ];
+    NSString *jsonString = @"{\"messageType\":\"dispatchEvent\",\"data\":\"{\"eventType\":\"PAGE\",\"protocolType\":\"http\",\"deviceId\":\"4a6e5b29-3a32-42f6-abc0-5bf81beecff9\",\"sessionId\":\"485de03a-7188-49a3-bae2-d915bf17847d\",\"dataSourceId\":\"955a56011f29a378\",\"timestamp\":1628650812710,\"domain\":\"release-messages.growingio.cn\",\"path\":\"/push/cdp/uat.html\",\"platform\":\"web\",\"screenHeight\":844,\"screenWidth\":390,\"sdkVersion\":\"3.3.0\",\"language\":\"en-us\",\"title\":\"SDKAutoCheck\",\"globalSequenceId\":2,\"eventSequenceId\":1}\"}";
+    id dict = [jsonString growingHelper_jsonObject];
+    NSDictionary *evetDataDict = (NSDictionary *)dict;
+   builder= [[GrowingHybridBridgeProvider sharedInstance] performSelector:@selector(transformViewElementBuilder:)withObject: evetDataDict];
+   XCTAssertNotNil(builder);
 
 }
+
 -(void)testGrowingWebCircleElement{
     
     [GrowingWebCircleElement builder];
@@ -204,7 +231,14 @@
     id mobileDebugger = [[GrowingMobileDebugger alloc] init];
     [mobileDebugger performSelector:@selector(start)];
     [mobileDebugger performSelector:@selector(stop)];
-    
+    [mobileDebugger performSelector:@selector(nextOne)];
+    [mobileDebugger performSelector:@selector(startTimer)];
+    [mobileDebugger performSelector:@selector(stopTimer)];
+    [mobileDebugger performSelector:@selector(webSocket:didFailWithError:)withObject:nil withObject:nil];
+    // 断开链接有个弹框
+    [[viewTester usingLabel:@"知道了"] tap];
+    [mobileDebugger performSelector:@selector(growingApplicationEventSendEvent:)withObject:nil];
+
 //    [[GrowingMobileDebugger sharedInstance] start];
 //    if([GrowingMobileDebugger isRunning]) {
 //        [GrowingMobileDebugger stop];
