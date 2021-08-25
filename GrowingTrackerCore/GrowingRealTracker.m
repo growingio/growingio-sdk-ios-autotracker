@@ -26,20 +26,22 @@ NSString *const GrowingTrackerVersionName = @"3.2.1";
 const int GrowingTrackerVersionCode = 30201;
 
 @interface GrowingRealTracker ()
+
 @property(nonatomic, copy, readonly) NSDictionary *launchOptions;
 @property(nonatomic, strong, readonly) GrowingTrackConfiguration *configuration;
 
 @end
 
 @implementation GrowingRealTracker
+
 - (instancetype)initWithConfiguration:(GrowingTrackConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions {
     self = [super init];
     if (self) {
         _configuration = [configuration copyWithZone:nil];
         _launchOptions = [launchOptions copy];
+        GrowingConfigurationManager.sharedInstance.trackConfiguration = self.configuration;
         
         [self loggerSetting];
-        GrowingConfigurationManager.sharedInstance.trackConfiguration = self.configuration;
         [GrowingAppLifecycle.sharedInstance setupAppStateNotification];
         [GrowingSession startSession];
         [GrowingAppDelegateAutotracker track];
@@ -74,7 +76,8 @@ const int GrowingTrackerVersionCode = 30201;
 - (GrowingLogLevel)logLevel {
     GrowingLogLevel level = GrowingLogLevelOff;
 #if defined(DEBUG) && DEBUG
-    level = self.configuration.debugEnabled ? GrowingLogLevelDebug : GrowingLogLevelInfo;
+    BOOL debugEnabled = GrowingConfigurationManager.sharedInstance.trackConfiguration.debugEnabled;
+    level = debugEnabled ? GrowingLogLevelDebug : GrowingLogLevelInfo;
 #endif
     return level;
 }
@@ -94,7 +97,6 @@ const int GrowingTrackerVersionCode = 30201;
 }
 
 - (void)trackCustomEvent:(NSString *)eventName {
-
     if ([GrowingArgumentChecker isIllegalEventName:eventName]) {
         return;
     }
@@ -127,12 +129,10 @@ const int GrowingTrackerVersionCode = 30201;
         return;
     }
     [GrowingEventGenerator generateConversionAttributesEvent:variables];
-
-    
 }
 
 - (void)setLoginUserId:(NSString *)userId {
-    [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
+    [GrowingDispatchManager dispatchInGrowingThread:^{
         [[GrowingSession currentSession] setLoginUserId:userId];
     }];
 }
@@ -141,35 +141,37 @@ const int GrowingTrackerVersionCode = 30201;
 /// @param userId 用户ID
 /// @param userKey 用户ID对应的key值
 - (void)setLoginUserId:(NSString *)userId userKey:(NSString *)userKey {
-    [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
+    [GrowingDispatchManager dispatchInGrowingThread:^{
         [[GrowingSession currentSession] setLoginUserId:userId userKey:userKey];
     }];
 }
 
 - (void)cleanLoginUserId {
-    [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
+    [GrowingDispatchManager dispatchInGrowingThread:^{
         [[GrowingSession currentSession] setLoginUserId:nil];
     }];
 }
 
 - (void)setDataCollectionEnabled:(BOOL)enabled {
-    GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionEnabled = enabled;
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionEnabled = enabled;
+    }];
 }
 
 - (NSString *)getDeviceId {
     return [GrowingDeviceInfo currentDeviceInfo].deviceIDString;
 }
 
-/// 设置经纬度坐标
-/// @param latitude 纬度
-/// @param longitude 经度
 - (void)setLocation:(double)latitude longitude:(double)longitude {
-    [[GrowingSession currentSession] setLocation:latitude longitude:longitude];
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        [[GrowingSession currentSession] setLocation:latitude longitude:longitude];
+    }];
 }
 
-/// 清除地理位置
 - (void)cleanLocation {
-    [[GrowingSession currentSession] cleanLocation];
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        [[GrowingSession currentSession] cleanLocation];
+    }];
 }
 
 

@@ -83,8 +83,8 @@
     dataDict[@"language"] = self.language;
     dataDict[@"latitude"] = ABS(self.latitude) > 0 ? @(self.latitude) : nil;
     dataDict[@"longitude"] = ABS(self.longitude) > 0 ? @(self.longitude) : nil;
-    dataDict[@"sdkVersion"] =  self.sdkVersion;
-    dataDict[@"userKey"] =  self.userKey.length > 0 ? self.userKey : nil;
+    dataDict[@"sdkVersion"] = self.sdkVersion;
+    dataDict[@"userKey"] = self.userKey.length > 0 ? self.userKey : nil;
     return [dataDict copy];
 }
 
@@ -96,17 +96,12 @@
 
 @implementation GrowingBaseBuilder
 
-- (instancetype)init {
-    if (self = [super init]) {
-        _timestamp = [GrowingTimeUtil currentTimeMillis];
-        GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
-        _domain = deviceInfo.bundleID;
-    }
-    return self;
-}
 //赋值属性，eg:deviceId,userId,sessionId,globalSequenceId,eventSequenceId
-- (void)readPropertyInMainThread {
+- (void)readPropertyInTrackThread {
+    _timestamp = _timestamp > 0 ? _timestamp : [GrowingTimeUtil currentTimeMillis];
+
     GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
+    _domain = deviceInfo.bundleID;
     _appState = deviceInfo.appState;
     _deviceId = deviceInfo.deviceIDString ?: @"";
     _urlScheme = deviceInfo.urlScheme;
@@ -123,7 +118,7 @@
     _latitude = session.latitude;
     _longitude = session.longitude;
     _userKey = session.loginUserKey;
-    
+
     CGSize screenSize = [GrowingDeviceInfo deviceScreenSize];
     _screenWidth = [GrowingFieldsIgnore isIgnoreFields:@"screenWidth"] ? 0 : screenSize.width;
     _screenHeight = [GrowingFieldsIgnore isIgnoreFields:@"screenHeight"] ? 0 : screenSize.height;
@@ -143,12 +138,14 @@
         return self;
     };
 }
+
 - (GrowingBaseBuilder * (^)(NSString *value))setUserId {
     return ^(NSString *value) {
         self->_userId = value;
         return self;
     };
 }
+
 - (GrowingBaseBuilder * (^)(NSString *value))setSessionId {
     return ^(NSString *value) {
         self->_sessionId = value;
@@ -156,37 +153,41 @@
     };
 }
 
-- (GrowingBaseBuilder * (^)(long long value))setTimestamp;
-{
+- (GrowingBaseBuilder * (^)(long long value))setTimestamp {
     return ^(long long value) {
         self->_timestamp = value;
         return self;
     };
 }
+
 - (GrowingBaseBuilder * (^)(NSString *value))setDomain {
     return ^(NSString *value) {
         self->_domain = value;
         return self;
     };
 }
+
 - (GrowingBaseBuilder * (^)(NSString *value))setUrlScheme {
     return ^(NSString *value) {
         self->_urlScheme = value;
         return self;
     };
 }
+
 - (GrowingBaseBuilder * (^)(int value))setAppState {
     return ^(int value) {
         self->_appState = value;
         return self;
     };
 }
+
 - (GrowingBaseBuilder * (^)(long long value))setGlobalSequenceId {
     return ^(long long value) {
         self->_globalSequenceId = value;
         return self;
     };
 }
+
 - (GrowingBaseBuilder * (^)(long long value))setEventSequenceId {
     return ^(long long value) {
         self->_eventSequenceId = value;
@@ -200,6 +201,7 @@
         return self;
     };
 }
+
 - (GrowingBaseBuilder * (^)(NSString *value))setPlatformVersion {
     return ^(NSString *value) {
         self->_platformVersion = value;
@@ -221,85 +223,91 @@
     };
 }
 
-
-- (GrowingBaseBuilder *(^)(NSString *value))setNetworkState {
+- (GrowingBaseBuilder * (^)(NSString *value))setNetworkState {
     return ^(NSString *value) {
         self->_networkState = value;
         return self;
     };
 }
 
-- (GrowingBaseBuilder *(^)(NSInteger value))setScreenHeight {
+- (GrowingBaseBuilder * (^)(NSInteger value))setScreenHeight {
     return ^(NSInteger value) {
         self->_screenHeight = value;
         return self;
     };
 }
 
-- (GrowingBaseBuilder *(^)(NSInteger value))setScreenWidth {
+- (GrowingBaseBuilder * (^)(NSInteger value))setScreenWidth {
     return ^(NSInteger value) {
         self->_screenWidth = value;
         return self;
     };
 }
-- (GrowingBaseBuilder *(^)(NSString *value))setDeviceBrand {
+
+- (GrowingBaseBuilder * (^)(NSString *value))setDeviceBrand {
     return ^(NSString *value) {
         self->_deviceBrand = value;
         return self;
     };
 }
-- (GrowingBaseBuilder *(^)(NSString *value))setDeviceModel {
+
+- (GrowingBaseBuilder * (^)(NSString *value))setDeviceModel {
     return ^(NSString *value) {
         self->_deviceModel = value;
         return self;
     };
 }
-- (GrowingBaseBuilder *(^)(NSString *value))setDeviceType {
+
+- (GrowingBaseBuilder * (^)(NSString *value))setDeviceType {
     return ^(NSString *value) {
         self->_deviceType = value;
         return self;
     };
 }
 
-- (GrowingBaseBuilder *(^)(NSString *value))setAppName {
+- (GrowingBaseBuilder * (^)(NSString *value))setAppName {
     return ^(NSString *value) {
         self->_appName = value;
         return self;
     };
 }
-- (GrowingBaseBuilder *(^)(NSString *value))setAppVersion {
+
+- (GrowingBaseBuilder * (^)(NSString *value))setAppVersion {
     return ^(NSString *value) {
         self->_appVersion = value;
         return self;
     };
 }
-- (GrowingBaseBuilder *(^)(NSString *value))setLanguage {
+
+- (GrowingBaseBuilder * (^)(NSString *value))setLanguage {
     return ^(NSString *value) {
         self->_language = value;
         return self;
     };
 }
-- (GrowingBaseBuilder *(^)(double value))setLatitude {
+
+- (GrowingBaseBuilder * (^)(double value))setLatitude {
     return ^(double value) {
         self->_latitude = value;
         return self;
     };
 }
-- (GrowingBaseBuilder *(^)(double value))setLongitude {
+
+- (GrowingBaseBuilder * (^)(double value))setLongitude {
     return ^(double value) {
         self->_longitude = value;
         return self;
     };
 }
 
-- (GrowingBaseBuilder *(^)(NSString *value))setSdkVersion {
+- (GrowingBaseBuilder * (^)(NSString *value))setSdkVersion {
     return ^(NSString *value) {
         self->_sdkVersion = value;
         return self;
     };
 }
 
-- (GrowingBaseBuilder *(^)(NSString *value))setUserKey {
+- (GrowingBaseBuilder * (^)(NSString *value))setUserKey {
     return ^(NSString *value) {
         self->_userKey = value;
         return self;

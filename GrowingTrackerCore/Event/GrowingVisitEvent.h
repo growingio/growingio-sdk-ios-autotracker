@@ -23,26 +23,21 @@
 typedef NS_ENUM(NSUInteger, GrowingDeviceType) {
     GrowingDeviceTypePhone, GrowingDeviceTypePad
 };
-@class GrowingVisitBuidler;
+@class GrowingVisitBuilder;
 @interface GrowingVisitEvent : GrowingBaseEvent
 
-//@property(nonatomic, copy, readonly) NSString *_Nonnull platform;
-//@property(nonatomic, copy, readonly) NSString *_Nonnull platformVersion;
 @property(nonatomic, copy, readonly) NSString *_Nonnull idfa;
 @property(nonatomic, copy, readonly) NSString *_Nonnull idfv;
 @property(nonatomic, strong, readonly) NSDictionary<NSString *,NSString*> *_Nonnull extraSdk;
 
-//@property(nonatomic, copy, readwrite) NSString *_Nullable sessionId;
-//@property(nonatomic, strong, readwrite) NSNumber *_Nonnull timestamp;
-
 - (instancetype _Nonnull)init NS_UNAVAILABLE;
 + (instancetype _Nonnull)new NS_UNAVAILABLE;
 
-+ (GrowingVisitBuidler *_Nonnull)builder;
++ (GrowingVisitBuilder *_Nonnull)builder;
 
 @end
 
-@interface GrowingVisitBuidler : GrowingBaseBuilder
+@interface GrowingVisitBuilder : GrowingBaseBuilder
 
 @property(nonatomic, copy, readonly) NSString *_Nonnull idfa;
 @property(nonatomic, copy, readonly) NSString *_Nonnull idfv;
@@ -50,14 +45,14 @@ typedef NS_ENUM(NSUInteger, GrowingDeviceType) {
 
 NS_ASSUME_NONNULL_BEGIN
 //override set method return type
-- (GrowingVisitBuidler *(^)(long long value))setTimestamp;
-- (GrowingVisitBuidler *(^)(NSString *value))setPlatform;
-- (GrowingVisitBuidler *(^)(NSString *value))setPlatformVersion;
+- (GrowingVisitBuilder *(^)(long long value))setTimestamp;
+- (GrowingVisitBuilder *(^)(NSString *value))setPlatform;
+- (GrowingVisitBuilder *(^)(NSString *value))setPlatformVersion;
 
 //new set methods
-- (GrowingVisitBuidler *(^)(NSString *value))setIdfa;
-- (GrowingVisitBuidler *(^)(NSString *value))setIdfv;
-- (GrowingVisitBuidler *(^)(NSDictionary<NSString *,NSString*> *value))setExtraSdk;
+- (GrowingVisitBuilder *(^)(NSString *value))setIdfa;
+- (GrowingVisitBuilder *(^)(NSString *value))setIdfv;
+- (GrowingVisitBuilder *(^)(NSDictionary<NSString *,NSString*> *value))setExtraSdk;
 
 NS_ASSUME_NONNULL_END
 @end

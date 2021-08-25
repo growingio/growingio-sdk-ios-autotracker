@@ -281,6 +281,7 @@
     [[GrowingAutotracker sharedInstance] cleanLoginUserId];
 
     [[GrowingAutotracker sharedInstance] setLoginUserId:@"lisi"];
+    [tester waitForTimeInterval:1];
     NSString *newSession = [[GrowingSession currentSession] sessionId];
     XCTAssertNotNil(newSession);
     XCTAssertNotEqual(oldSession, newSession);
@@ -293,6 +294,7 @@
     NSString *timeSp = [NSString stringWithFormat:@"%lld", (long long)[datenow timeIntervalSince1970] * 1000LL];
     // 时间戳setUserId 方便触发事件获取session
     [[GrowingAutotracker sharedInstance] setLoginUserId:timeSp];
+    [tester waitForTimeInterval:1];
     NSString *oldSession = [[GrowingSession currentSession] sessionId];
     XCTAssertNotNil(oldSession);
 
@@ -300,6 +302,7 @@
     [self enterBackground];
     [self enterForeground];
     [[GrowingAutotracker sharedInstance] setLoginUserId:@"lisi"];
+    [tester waitForTimeInterval:1];
     NSString *newSession = [[GrowingSession currentSession] sessionId];
     XCTAssertNotNil(newSession);
     XCTAssertNotEqual(oldSession, newSession);

@@ -24,9 +24,9 @@
 #import "NSString+GrowingHelper.h"
 #import "GrowingPersistenceDataProvider.h"
 #import "GrowingEventGenerator.h"
+#import "GrowingDispatchManager.h"
 
 @interface GrowingSession () <GrowingAppLifecycleDelegate>
-@property(nonatomic, assign) BOOL alreadySendVisitEvent;
 @property(nonatomic, copy) NSString *latestNonNullUserId;
 @property(nonatomic, assign, readonly) long long sessionInterval;
 @property(nonatomic, assign) long long latestVisitTime;
@@ -47,7 +47,6 @@ static GrowingSession *currentSession = nil;
     if (self) {
         _sessionInterval = (long long) (sessionInterval * 1000LL);
 
-        _alreadySendVisitEvent = NO;
         _latestVisitTime = 0;
         _latestDidEnterBackgroundTime = 0;
         _loginUserId = [GrowingPersistenceDataProvider sharedInstance].loginUserId;
@@ -61,7 +60,7 @@ static GrowingSession *currentSession = nil;
 }
 
 - (BOOL)createdSession {
-    return self.alreadySendVisitEvent;
+    return self.latestVisitTime > 0;
 }
 
 + (void)startSession {
@@ -78,7 +77,7 @@ static GrowingSession *currentSession = nil;
 }
 
 - (void)forceReissueVisit {
-    if (self.alreadySendVisitEvent) {
+    if (self.createdSession) {
         return;
     }
     [self refreshSessionId];
@@ -170,28 +169,27 @@ static GrowingSession *currentSession = nil;
 
 // ios 11 系统上面VC的viewDidAppear生命周期会早于AppDelegate的applicationDidBecomeActive，这样会造成Page事件早于visit事件
 - (void)applicationDidBecomeActive {
-    // 第一次启动，且已经发送过visit事件，说明visit事件被强制补发了，这里就不在发送visit事件了
-    if (self.latestDidEnterBackgroundTime == 0 && self.alreadySendVisitEvent) {
-        GIOLogDebug(@"First launched and already send visit");
-        return;
-    }
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        // 第一次启动，且已经发送过visit事件，说明visit事件被强制补发了，这里就不在发送visit事件了
+        if (self.latestDidEnterBackgroundTime == 0 && self.createdSession) {
+            GIOLogDebug(@"First launched and already send visit");
+            return;
+        }
 
-    long long now = GrowingTimeUtil.currentTimeMillis;
-    if (now - self.latestDidEnterBackgroundTime >= self.sessionInterval) {
-        [self refreshSessionId];
-        [self sendVisitEventWithTimestamp:now];
-    }
+        long long now = GrowingTimeUtil.currentTimeMillis;
+        if (now - self.latestDidEnterBackgroundTime >= self.sessionInterval) {
+            [self refreshSessionId];
+            [self sendVisitEventWithTimestamp:now];
+        }
+    }];
 }
 
-/// 设置经纬度坐标
-/// @param latitude 纬度
-/// @param longitude 经度
 - (void)setLocation:(double)latitude longitude:(double)longitude {
     //经纬度从无到有会发visit
     if ((_latitude == 0 && (ABS(latitude) > 0)) || (_longitude == 0 && ABS(longitude) > 0)) {
         _latitude = latitude;
         _longitude = longitude;
-        if (self.alreadySendVisitEvent) {
+        if (self.createdSession) {
             [self resendVisitEvent];
         }
         return;
@@ -200,23 +198,25 @@ static GrowingSession *currentSession = nil;
     _longitude = longitude;
 }
 
-/// 清除地理位置
 - (void)cleanLocation {
     _latitude = 0;
     _longitude = 0;
 }
 
 - (void)resendVisitEvent {
-    GIOLogDebug(@"resendVisitEvent");
+    if (!self.createdSession) {
+        [self forceReissueVisit];
+        return;
+    }
     [self sendVisitEventWithTimestamp:self.latestVisitTime];
 }
 
 - (void)sendVisitEventWithTimestamp:(long long)timestamp {
-    if (!self.alreadySendVisitEvent) {
-        self.alreadySendVisitEvent = YES;
+    GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    if (!trackConfiguration.dataCollectionEnabled) {
+        return;
     }
     self.latestVisitTime = timestamp;
-    // 发送VisitEvent
     [GrowingEventGenerator generateVisitEvent:timestamp];
 }
 
@@ -225,14 +225,14 @@ static GrowingSession *currentSession = nil;
 }
 
 - (void)applicationDidEnterBackground {
-    self.latestDidEnterBackgroundTime = GrowingTimeUtil.currentTimeMillis;
-    [self sendAppClosedEventWithTimestamp:self.latestDidEnterBackgroundTime];
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+        if (!trackConfiguration.dataCollectionEnabled) {
+            return;
+        }
+        [GrowingEventGenerator generateAppCloseEvent];
+        self.latestDidEnterBackgroundTime = GrowingTimeUtil.currentTimeMillis;
+    }];
 }
-
-- (void)sendAppClosedEventWithTimestamp:(NSTimeInterval)timestamp {
-    // 发送AppClosedEvent
-    [GrowingEventGenerator generateAppCloseEvent];
-}
-
 
 @end

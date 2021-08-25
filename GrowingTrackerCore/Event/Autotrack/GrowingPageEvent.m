@@ -52,8 +52,8 @@
 
 @implementation GrowingPageBuilder
 
-- (void)readPropertyInMainThread {
-    [super readPropertyInMainThread];
+- (void)readPropertyInTrackThread {
+    [super readPropertyInTrackThread];
     _orientation = [GrowingDeviceInfo currentDeviceInfo].deviceOrientation;
 }
 

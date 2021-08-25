@@ -29,6 +29,7 @@ static NSString *const kGrowingProjectId = @"91eaf9b283361032";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 //    [Bugly startWithAppId:@"93004a21ca"];
+    
     // Config GrowingIO
     GrowingSDKConfiguration *configuration = [GrowingSDKConfiguration configurationWithProjectId:kGrowingProjectId];
     configuration.debugEnabled = YES;
@@ -42,8 +43,19 @@ static NSString *const kGrowingProjectId = @"91eaf9b283361032";
     [GrowingSDK startWithConfiguration:configuration launchOptions:launchOptions];
 //    [GrowingTracker startWithConfiguration:configuration launchOptions:launchOptions];
     [[GrowingSDK sharedInstance] setLocation:[@30.11 doubleValue] longitude:[@32.22 doubleValue]];
+    
+//    for (int i = 1; i < 30; i++) {
+//        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+//            [GrowingAutotracker.sharedInstance trackCustomEvent:[NSString stringWithFormat:@"event%d", i]];
+//        });
+//    }
+//
+//    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+//        [GrowingAutotracker.sharedInstance setLoginUserId:[NSString stringWithFormat:@"user%d", (arc4random() % 100)]];
+//    });
+    
     // 自动化测试会有授权弹窗
- //   [self registerRemoteNotification];
+//    [self registerRemoteNotification];
 
     return YES;
 }

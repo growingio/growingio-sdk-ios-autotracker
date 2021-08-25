@@ -3,6 +3,7 @@
 //
 
 #import "GrowingTrackConfiguration.h"
+#import "GrowingSession.h"
 
 NSString * const kGrowingDefaultDataCollectionServerHost = @"https://api.growingio.com";
 
@@ -46,5 +47,14 @@ NSString * const kGrowingDefaultDataCollectionServerHost = @"https://api.growing
     return configuration;
 }
 
+- (void)setDataCollectionEnabled:(BOOL)dataCollectionEnabled {
+    if (dataCollectionEnabled == _dataCollectionEnabled) {
+        return;
+    }
+    _dataCollectionEnabled = dataCollectionEnabled;
+    if (dataCollectionEnabled) {
+        [[GrowingSession currentSession] forceReissueVisit];
+    }
+}
 
 @end
