@@ -31,7 +31,7 @@
 
 - (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
     if (self = [super initWithBuilder:builder]) {
-        GrowingVisitBuidler *subBuilder = (GrowingVisitBuidler*)builder;
+        GrowingVisitBuilder *subBuilder = (GrowingVisitBuilder*)builder;
         _idfa = subBuilder.idfa;
         _idfv = subBuilder.idfv;
         _extraSdk = subBuilder.extraSdk;
@@ -39,8 +39,8 @@
     return self;
 }
 
-+ (GrowingVisitBuidler *_Nonnull)builder {
-    return [[GrowingVisitBuidler alloc] init];
++ (GrowingVisitBuilder *_Nonnull)builder {
+    return [[GrowingVisitBuilder alloc] init];
 }
 
 - (GrowingEventSendPolicy)sendPolicy {
@@ -60,28 +60,28 @@
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wincomplete-implementation"
-@implementation GrowingVisitBuidler
+@implementation GrowingVisitBuilder
 
-- (void)readPropertyInMainThread {
-    [super readPropertyInMainThread];
+- (void)readPropertyInTrackThread {
+    [super readPropertyInTrackThread];
     GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
     _idfa = deviceInfo.idfa;
     _idfv = deviceInfo.idfv;
 }
 
-- (GrowingVisitBuidler *(^)(NSString *value))setIdfa {
+- (GrowingVisitBuilder *(^)(NSString *value))setIdfa {
     return ^(NSString *value) {
         self->_idfa = value;
         return self;
     };
 }
-- (GrowingVisitBuidler *(^)(NSString *value))setIdfv {
+- (GrowingVisitBuilder *(^)(NSString *value))setIdfv {
     return ^(NSString *value) {
         self->_idfv = value;
         return self;
     };
 }
-- (GrowingVisitBuidler *(^)(NSDictionary<NSString *,NSString*> *value))setExtraSdk {
+- (GrowingVisitBuilder *(^)(NSDictionary<NSString *,NSString*> *value))setExtraSdk {
     return ^(NSDictionary<NSString *,NSString*> *value) {
         self->_extraSdk = value;
         return self;

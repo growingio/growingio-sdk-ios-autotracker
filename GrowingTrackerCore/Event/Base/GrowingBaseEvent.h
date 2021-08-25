@@ -94,7 +94,7 @@ typedef NS_OPTIONS(NSUInteger, GrowingEventSendPolicy) {
 NS_ASSUME_NONNULL_BEGIN
 
 //赋值属性，eg:deviceId,userId,sessionId,globalSequenceId,eventSequenceId
-- (void)readPropertyInMainThread;
+- (void)readPropertyInTrackThread;
 
 - (GrowingBaseBuilder *(^)(NSString *value))setDeviceId;
 - (GrowingBaseBuilder *(^)(NSString *value))setUserId;

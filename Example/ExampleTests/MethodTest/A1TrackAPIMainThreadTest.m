@@ -143,7 +143,7 @@ static GrowingBaseEvent *originalEvent = nil;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         NSString *userId = @"123456789";
         [[GrowingAutotracker sharedInstance] setLoginUserId:userId];
-        [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
+        [GrowingDispatchManager dispatchInGrowingThread:^{
             XCTAssertEqual([GrowingSession currentSession].loginUserId,userId);
         }];
         [expectation fulfill];
@@ -164,7 +164,7 @@ static GrowingBaseEvent *originalEvent = nil;
     XCTestExpectation *expectation = [self expectationWithDescription:@"clearUserId: fail"];
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         [[GrowingAutotracker sharedInstance] cleanLoginUserId];
-        [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
+        [GrowingDispatchManager dispatchInGrowingThread:^{
             XCTAssertEqual([GrowingSession currentSession].loginUserId,nil);
         }];
         [expectation fulfill];
@@ -432,7 +432,7 @@ static GrowingBaseEvent *originalEvent = nil;
     XCTestExpectation *expectation = [self expectationWithDescription:@"setUserId:userKey: fail"];
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         
-        [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
+        [GrowingDispatchManager dispatchInGrowingThread:^{
             NSString *userId = @"123456789";
             [[GrowingAutotracker sharedInstance] setLoginUserId:userId userKey:@"number"];
             XCTAssertEqual([GrowingSession currentSession].loginUserId,userId);

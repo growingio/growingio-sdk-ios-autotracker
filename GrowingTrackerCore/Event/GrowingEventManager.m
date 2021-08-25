@@ -131,12 +131,6 @@ static GrowingEventManager *sharedInstance = nil;
 - (void)startTimerSend {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        BOOL debugEnabled = GrowingConfigurationManager.sharedInstance.trackConfiguration.debugEnabled;
-        if (debugEnabled) {
-            // send event instantly
-            return;
-        }
-        
         CGFloat configInterval = GrowingConfigurationManager.sharedInstance.trackConfiguration.dataUploadInterval;
         CGFloat dataUploadInterval = MAX(configInterval, 5); // at least 5 seconds
         
@@ -144,7 +138,7 @@ static GrowingEventManager *sharedInstance = nil;
         dispatch_set_target_queue(queue, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0));
         self.reportTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
         dispatch_source_set_timer(self.reportTimer,
-                                  dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC * dataUploadInterval),  // first upload
+                                  dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC * 5),  // first upload
                                   NSEC_PER_SEC * dataUploadInterval,
                                   NSEC_PER_SEC * 1);
         dispatch_source_set_event_handler(self.reportTimer, ^{
@@ -181,7 +175,7 @@ static GrowingEventManager *sharedInstance = nil;
             [[GrowingSession currentSession] forceReissueVisit];
         }
 
-        [builder readPropertyInMainThread];
+        [builder readPropertyInTrackThread];
 
         for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
             if ([obj respondsToSelector:@selector(growingEventManagerEventWillBuild:)]) {
