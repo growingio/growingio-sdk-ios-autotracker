@@ -31,10 +31,9 @@
 #import "GrowingLogger.h"
 @implementation GrowingEventGenerator
 
-+ (void)generateVisitEvent:(long long)timestamp {
++ (void)generateVisitEvent {
     [GrowingDispatchManager dispatchInGrowingThread:^{
-        GrowingBaseBuilder *builder =
-            GrowingVisitEvent.builder.setTimestamp(timestamp);
+        GrowingBaseBuilder *builder = GrowingVisitEvent.builder;
         [[GrowingEventManager sharedInstance] postEventBuidler:builder];
     }];
 }

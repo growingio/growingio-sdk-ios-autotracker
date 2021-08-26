@@ -27,9 +27,9 @@
 #import "GrowingDispatchManager.h"
 
 @interface GrowingSession () <GrowingAppLifecycleDelegate>
+@property(nonatomic, assign) BOOL alreadySendVisitEvent;
 @property(nonatomic, copy) NSString *latestNonNullUserId;
 @property(nonatomic, assign, readonly) long long sessionInterval;
-@property(nonatomic, assign) long long latestVisitTime;
 @property(nonatomic, assign) long long latestDidEnterBackgroundTime;
 @property(strong, nonatomic, readonly) NSHashTable *userIdChangedDelegates;
 @property(strong, nonatomic, readonly) NSLock *delegateLock;
@@ -46,8 +46,8 @@ static GrowingSession *currentSession = nil;
     self = [super init];
     if (self) {
         _sessionInterval = (long long) (sessionInterval * 1000LL);
-
-        _latestVisitTime = 0;
+        
+        _alreadySendVisitEvent = NO;
         _latestDidEnterBackgroundTime = 0;
         _loginUserId = [GrowingPersistenceDataProvider sharedInstance].loginUserId;
         _loginUserKey = [GrowingPersistenceDataProvider sharedInstance].loginUserKey;
@@ -60,7 +60,7 @@ static GrowingSession *currentSession = nil;
 }
 
 - (BOOL)createdSession {
-    return self.latestVisitTime > 0;
+    return self.alreadySendVisitEvent;
 }
 
 + (void)startSession {
@@ -81,7 +81,7 @@ static GrowingSession *currentSession = nil;
         return;
     }
     [self refreshSessionId];
-    [self sendVisitEventWithTimestamp:GrowingTimeUtil.currentTimeMillis];
+    [self sendVisitEvent];
 }
 
 - (void)addUserIdChangedDelegate:(id <GrowingUserIdChangedDelegate>)delegate {
@@ -160,7 +160,7 @@ static GrowingSession *currentSession = nil;
         } else {
             if (![newUserId isEqualToString:self.latestNonNullUserId]) {
                 [self refreshSessionId];
-                [self sendVisitEventWithTimestamp:GrowingTimeUtil.currentTimeMillis];
+                [self sendVisitEvent];
             }
         }
         self.latestNonNullUserId = newUserId;
@@ -179,7 +179,7 @@ static GrowingSession *currentSession = nil;
         long long now = GrowingTimeUtil.currentTimeMillis;
         if (now - self.latestDidEnterBackgroundTime >= self.sessionInterval) {
             [self refreshSessionId];
-            [self sendVisitEventWithTimestamp:now];
+            [self sendVisitEvent];
         }
     }];
 }
@@ -189,9 +189,7 @@ static GrowingSession *currentSession = nil;
     if ((_latitude == 0 && (ABS(latitude) > 0)) || (_longitude == 0 && ABS(longitude) > 0)) {
         _latitude = latitude;
         _longitude = longitude;
-        if (self.createdSession) {
-            [self resendVisitEvent];
-        }
+        [self resendVisitEvent];
         return;
     }
     _latitude = latitude;
@@ -208,16 +206,16 @@ static GrowingSession *currentSession = nil;
         [self forceReissueVisit];
         return;
     }
-    [self sendVisitEventWithTimestamp:self.latestVisitTime];
+    [self sendVisitEvent];
 }
 
-- (void)sendVisitEventWithTimestamp:(long long)timestamp {
+- (void)sendVisitEvent {
     GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
     if (!trackConfiguration.dataCollectionEnabled) {
         return;
     }
-    self.latestVisitTime = timestamp;
-    [GrowingEventGenerator generateVisitEvent:timestamp];
+    self.alreadySendVisitEvent = YES;
+    [GrowingEventGenerator generateVisitEvent];
 }
 
 - (void)refreshSessionId {
@@ -226,12 +224,12 @@ static GrowingSession *currentSession = nil;
 
 - (void)applicationDidEnterBackground {
     [GrowingDispatchManager dispatchInGrowingThread:^{
+        self.latestDidEnterBackgroundTime = GrowingTimeUtil.currentTimeMillis;
         GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
         if (!trackConfiguration.dataCollectionEnabled) {
             return;
         }
         [GrowingEventGenerator generateAppCloseEvent];
-        self.latestDidEnterBackgroundTime = GrowingTimeUtil.currentTimeMillis;
     }];
 }
 
