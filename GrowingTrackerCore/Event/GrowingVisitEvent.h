@@ -44,10 +44,6 @@ typedef NS_ENUM(NSUInteger, GrowingDeviceType) {
 @property(nonatomic, strong, readonly) NSDictionary<NSString *,NSString*> *_Nonnull extraSdk;
 
 NS_ASSUME_NONNULL_BEGIN
-//override set method return type
-- (GrowingVisitBuilder *(^)(long long value))setTimestamp;
-- (GrowingVisitBuilder *(^)(NSString *value))setPlatform;
-- (GrowingVisitBuilder *(^)(NSString *value))setPlatformVersion;
 
 //new set methods
 - (GrowingVisitBuilder *(^)(NSString *value))setIdfa;

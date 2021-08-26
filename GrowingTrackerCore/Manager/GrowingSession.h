@@ -40,6 +40,8 @@
 
 - (void)forceReissueVisit;
 
+- (void)resendVisitEvent;
+
 /// 设置经纬度坐标
 /// @param latitude 纬度
 /// @param longitude 经度

@@ -24,7 +24,7 @@
 
 @interface GrowingEventGenerator : NSObject
 
-+ (void)generateVisitEvent:(long long)timestamp;
++ (void)generateVisitEvent;
 
 + (void)generateCustomEvent:(NSString *_Nonnull)name
                  attributes:(NSDictionary<NSString *, NSObject *> *_Nullable)attributes;

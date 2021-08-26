@@ -109,6 +109,7 @@
 		04A6FAF224E662E9006C72F0 /* GIOChildsAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A6FAF124E662E9006C72F0 /* GIOChildsAddViewController.m */; };
 		04A6FAF524E67215006C72F0 /* GIOBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A6FAF424E67215006C72F0 /* GIOBaseViewController.m */; };
 		04F675662628293800077374 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04F675652628293800077374 /* AdSupport.framework */; };
+		349C1D3626D77D92005DB00C /* GIODataCollectionEnabledViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 349C1D3526D77D92005DB00C /* GIODataCollectionEnabledViewController.m */; };
 		4223513425ED0B130082B431 /* WebSocketTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4223513325ED0B130082B431 /* WebSocketTests.m */; };
 		42ADE26C250B292900CA7268 /* HybridTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 42ADE26B250B292900CA7268 /* HybridTests.m */; };
 		42F753BD256E2E46002F0D37 /* HTTPStubsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 42F753BC256E2E46002F0D37 /* HTTPStubsHelper.m */; };
@@ -270,6 +271,8 @@
 		04A6FAF424E67215006C72F0 /* GIOBaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOBaseViewController.m; sourceTree = "<group>"; };
 		04F675652628293800077374 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		11EA2ABB8F1029820A3234DB /* Pods_ExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ExampleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		349C1D3426D77D92005DB00C /* GIODataCollectionEnabledViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIODataCollectionEnabledViewController.h; sourceTree = "<group>"; };
+		349C1D3526D77D92005DB00C /* GIODataCollectionEnabledViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIODataCollectionEnabledViewController.m; sourceTree = "<group>"; };
 		4223513325ED0B130082B431 /* WebSocketTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WebSocketTests.m; sourceTree = "<group>"; };
 		42ADE26B250B292900CA7268 /* HybridTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HybridTests.m; sourceTree = "<group>"; };
 		42F753BB256E2E46002F0D37 /* HTTPStubsHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HTTPStubsHelper.h; sourceTree = "<group>"; };
@@ -424,6 +427,8 @@
 				046530E824DD4271002D254C /* GIOInputChangeEventViewController.m */,
 				046530E624DD4271002D254C /* PageAttributesEventViewController.h */,
 				046530ED24DD4271002D254C /* PageAttributesEventViewController.m */,
+				349C1D3426D77D92005DB00C /* GIODataCollectionEnabledViewController.h */,
+				349C1D3526D77D92005DB00C /* GIODataCollectionEnabledViewController.m */,
 				046530E924DD4271002D254C /* View */,
 				046530F324DD4271002D254C /* PageEvent */,
 			);
@@ -978,6 +983,7 @@
 				0465314424DD4272002D254C /* MeasurementProtocolTableViewController.m in Sources */,
 				0465314024DD4272002D254C /* GrowingKeyValueCell.m in Sources */,
 				0465314D24DD4272002D254C /* AppDelegate.m in Sources */,
+				349C1D3626D77D92005DB00C /* GIODataCollectionEnabledViewController.m in Sources */,
 				0465315024DD4272002D254C /* GIOCollectionViewController.m in Sources */,
 				0465315424DD4272002D254C /* GIOSimpleUIElemtsViewController.m in Sources */,
 				0465315624DD4272002D254C /* GIOBannerAndTableViewController.m in Sources */,

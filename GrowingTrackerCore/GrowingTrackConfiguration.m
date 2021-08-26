@@ -53,7 +53,7 @@ NSString * const kGrowingDefaultDataCollectionServerHost = @"https://api.growing
     }
     _dataCollectionEnabled = dataCollectionEnabled;
     if (dataCollectionEnabled) {
-        [[GrowingSession currentSession] forceReissueVisit];
+        [[GrowingSession currentSession] resendVisitEvent];
     }
 }
 
