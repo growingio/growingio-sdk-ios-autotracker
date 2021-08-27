@@ -1,4 +1,7 @@
 //
+//  GrowingPageManager.h
+//  GrowingAnalytics
+//
 // Created by xiangyang on 2020/4/27.
 // Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
 //

@@ -1,3 +1,7 @@
+//
+// GrowingHybridBridgeProvider.m
+// GrowingAnalytics
+//
 //  Created by GrowingIO on 2020/5/27.
 //  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
 //

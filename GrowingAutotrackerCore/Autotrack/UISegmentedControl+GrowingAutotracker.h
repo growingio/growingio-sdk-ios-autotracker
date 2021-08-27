@@ -1,6 +1,6 @@
 //
 //  UISegmentedControl+UISegmentedControl_GrowingAutoTrack.h
-//  GrowingAutoTracker
+//  GrowingAnalytics
 //
 //  Created by GrowingIO on 2020/7/23.
 //  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.

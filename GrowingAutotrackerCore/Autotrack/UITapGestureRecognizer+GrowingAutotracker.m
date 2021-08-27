@@ -1,6 +1,6 @@
 //
 //  UITapGestureRecognizer+GrowingAutoTrack.m
-//  GrowingAutoTracker
+//  GrowingAnalytics
 //
 //  Created by GrowingIO on 2020/7/27.
 //  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.

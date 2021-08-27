@@ -1,6 +1,10 @@
+//  Created by Alex Hofsteede on 1/5/14.
+//  Copyright (c) 2014 Mixpanel. All rights reserved.
+//  Methods and Category have been renamed to namespace to GrowingIO iOS SDK
+//  Add some Methods to adapt other cases
 //
 //  GrowingSwizzler.m
-//  GrowingTracker
+//  GrowingAnalytics
 //
 //  Created by GrowingIO on 2020/7/23.
 //  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.

@@ -1,6 +1,6 @@
 //
 //  UISegmentedControl+GrowingNode.h
-//  
+//  GrowingAnalytics
 //
 //  Created by GrowingIO on 15/10/7.
 //  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.

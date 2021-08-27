@@ -1,6 +1,6 @@
 //
 //  GrowingWebCircle.m
-//  Growing
+//  GrowingAnalytics
 //
 //  Created by GrowingIO on 2020.
 //  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.

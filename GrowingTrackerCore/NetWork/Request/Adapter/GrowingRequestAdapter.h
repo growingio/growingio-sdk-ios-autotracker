@@ -1,6 +1,6 @@
 //
 //  GrowingRequestAdapter.h
-//  GrowingTracker
+//  GrowingAnalytics
 //
 //  Created by GrowingIO on 2020/6/22.
 //  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.

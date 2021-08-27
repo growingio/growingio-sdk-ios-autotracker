@@ -1,4 +1,7 @@
 //
+//  UIViewController+GrowingPageHelper.h
+//  GrowingAnalytics
+//
 // Created by xiangyang on 2020/5/20.
 // Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
 //

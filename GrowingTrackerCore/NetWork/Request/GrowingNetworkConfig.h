@@ -1,6 +1,6 @@
 //
 //  GrowingConstApi.h
-//  GrowingTracker
+//  GrowingAnalytics
 //
 //  Created by GrowingIO on 15/10/27.
 //  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
@@ -17,9 +17,6 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
-
-
 #ifndef GrowingConstApi_h
 #define GrowingConstApi_h
 
@@ -33,9 +30,6 @@
 #define kGrowingLoginApiV2              kGrowingDataApiHost(@"oauth2/token")
 
 #endif /* GrowingConstApi_h */
-
-
-
 
 @interface GrowingNetworkConfig : NSObject
 

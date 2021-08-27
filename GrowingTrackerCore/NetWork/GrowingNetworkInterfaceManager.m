@@ -1,6 +1,6 @@
 //
 //  GrowingNetworkInterfaceManager.m
-//  GrowingTracker
+//  GrowingAnalytics
 //
 //  Created by GrowingIO on 4/23/15.
 //  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.

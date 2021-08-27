@@ -1,4 +1,7 @@
 //
+//  GrowingAutotracker.h
+//  GrowingAnalytics
+//
 //  Created by xiangyang on 2020/11/6.
 //  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //

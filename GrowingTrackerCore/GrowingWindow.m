@@ -1,6 +1,6 @@
 //
 //  GrowingWindow.m
-//  GrowingTracker
+//  GrowingAnalytics
 //
 //  Created by GrowingIO on 16/3/5.
 //  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
