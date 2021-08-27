@@ -1,6 +1,6 @@
 //
-// GrowingAutotrackConfiguration.m
-// GrowingAnalytics
+//  GrowingAutotrackConfiguration.m
+//  GrowingAnalytics
 //
 //  Created by sheng on 2021/5/8.
 //  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.

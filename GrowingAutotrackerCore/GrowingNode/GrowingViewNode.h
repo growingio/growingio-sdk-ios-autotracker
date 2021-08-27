@@ -1,6 +1,6 @@
 //
 //  GrowingActionEventElement.h
-//  GrowingAutoTracker
+//  GrowingAnalytics
 //
 //  Created by GrowingIO on 2020/5/29.
 //  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.

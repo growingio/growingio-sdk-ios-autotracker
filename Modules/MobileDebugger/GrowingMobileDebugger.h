@@ -1,6 +1,6 @@
 //
 // GrowingMobileDebugger.h
-// Pods
+// GrowingAnalytics
 //
 //  Created by gio on 2021/3/2.
 //  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.

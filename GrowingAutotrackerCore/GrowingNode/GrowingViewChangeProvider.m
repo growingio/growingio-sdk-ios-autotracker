@@ -1,6 +1,6 @@
 //
-// GrowingViewChangeProvider.m
-// GrowingAnalytics-Autotracker-AutotrackerCore-Tracker-TrackerCore
+//  GrowingViewChangeProvider.m
+//  GrowingAnalytics
 //
 //  Created by sheng on 2020/11/16.
 //  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.

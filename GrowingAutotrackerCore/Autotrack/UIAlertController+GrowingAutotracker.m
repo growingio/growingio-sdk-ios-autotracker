@@ -1,6 +1,6 @@
 //
 //  UIAlertController+GrowingAutoTrack.m
-//  GrowingAutoTracker
+//  GrowingAnalytics
 //
 //  Created by GrowingIO on 2020/7/30.
 //  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.

@@ -1,6 +1,6 @@
 //
 //  NSURL+GrowingHelper.h
-//  GrowingTracker
+//  GrowingAnalytics
 //
 //  Created by GrowingIO on 16/2/24.
 //  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.

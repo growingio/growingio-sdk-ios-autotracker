@@ -1,6 +1,6 @@
 //
 //  GrowingCollectionViewAndCell.m
-//  GrowingTracker
+//  GrowingAnalytics
 //
 //  Created by GrowingIO on 15/8/27.
 //  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.

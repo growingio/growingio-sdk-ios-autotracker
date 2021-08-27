@@ -1,6 +1,6 @@
 //
-//  Impression.h
-//  GrowingAutoTracker
+//  GrowingImpressionTrack.h
+//  GrowingAnalytics
 //
 //  Created by GrowingIO on 2019/5/9.
 //  Copyright (C) 2019 Beijing Yishu Technology Co., Ltd.

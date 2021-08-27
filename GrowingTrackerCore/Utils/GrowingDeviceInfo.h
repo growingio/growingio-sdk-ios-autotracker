@@ -1,6 +1,6 @@
 //
 //  GrowingDeviceInfo.h
-//  GrowingTracker
+//  GrowingAnalytics
 //
 //  Created by GrowingIO on 15/11/19.
 //  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.

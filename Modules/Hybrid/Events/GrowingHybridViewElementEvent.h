@@ -1,6 +1,6 @@
 //
 // GrowingHybridViewElementEvent.h
-// GrowingAnalytics-Autotracker-AutotrackerCore-Tracker-TrackerCore
+// GrowingAnalytics
 //
 //  Created by sheng on 2020/11/17.
 //  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.

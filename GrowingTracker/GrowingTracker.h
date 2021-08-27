@@ -1,4 +1,7 @@
 //
+//  GrowingTracker.h
+//  GrowingAnalytics
+//
 //  Created by xiangyang on 2020/11/6.
 //  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
@@ -13,6 +16,7 @@
 //  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
+
 #import "GrowingDynamicProxy.h"
 #import "GrowingTrackConfiguration.h"
 

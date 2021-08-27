@@ -1,6 +1,6 @@
 //
 //  GrowingFileStorage.h
-//  GrowingTracker
+//  GrowingAnalytics
 //
 //  Created by GrowingIO on 2020/3/3.
 //  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.

@@ -1,6 +1,6 @@
 //
 //  GrowingASLLoggerFormat.m
-//  GrowingTracker
+//  GrowingAnalytics
 //
 //  Created by GrowingIO on 2020/5/19.
 //  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
