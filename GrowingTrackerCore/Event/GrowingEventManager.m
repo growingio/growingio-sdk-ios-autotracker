@@ -166,13 +166,12 @@ static GrowingEventManager *sharedInstance = nil;
             return;
         }
         
-        // 判断当前事件是否被过滤，否则不发送
-        if([GrowingEventFilter isFilterEvent:builder.eventType]){
+        if ([GrowingEventFilter isFilterEvent:builder.eventType]) {
             return;
         }
 
-        if (![GrowingSession currentSession].createdSession) {
-            [[GrowingSession currentSession] forceReissueVisit];
+        if (![GrowingSession currentSession].isSentVisitAfterRefreshSessionId) {
+            [[GrowingSession currentSession] generateVisit];
         }
 
         [builder readPropertyInTrackThread];
