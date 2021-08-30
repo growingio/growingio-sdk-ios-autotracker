@@ -107,6 +107,13 @@ static GrowingSession *currentSession = nil;
     }];
 }
 
+// 下拉显示通知中心/系统权限授权弹窗显示
+- (void)applicationWillResignActive {
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        self.latestDidEnterBackgroundTime = GrowingTimeUtil.currentTimeMillis;
+    }];
+}
+
 - (void)applicationDidEnterBackground {
     [GrowingDispatchManager dispatchInGrowingThread:^{
         self.latestDidEnterBackgroundTime = GrowingTimeUtil.currentTimeMillis;
