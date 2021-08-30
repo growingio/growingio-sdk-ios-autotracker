@@ -19,39 +19,38 @@
 
 #import <Foundation/Foundation.h>
 
-
 @protocol GrowingUserIdChangedDelegate <NSObject>
+
 @required
 - (void)userIdDidChangedFrom:(NSString *)oldUserId to:(NSString *)newUserId;
+
 @end
 
 @interface GrowingSession : NSObject
-@property(nonatomic, copy, readonly) NSString *sessionId;
-@property(nonatomic, copy, readwrite) NSString *loginUserId;
-@property(nonatomic, copy, readwrite) NSString *loginUserKey;
-@property(nonatomic, assign, readonly) BOOL createdSession;
-@property(nonatomic, assign, readonly) double latitude;
-@property(nonatomic, assign, readonly) double longitude;
+
+@property (nonatomic, assign, readonly, getter=isSentVisitAfterRefreshSessionId) BOOL sentVisitAfterRefreshSessionId;
+@property (nonatomic, copy, readonly) NSString *sessionId;
+@property (nonatomic, copy, readonly) NSString *loginUserId;
+@property (nonatomic, copy, readonly) NSString *loginUserKey;
+@property (nonatomic, assign, readonly) double latitude;
+@property (nonatomic, assign, readonly) double longitude;
 
 + (void)startSession;
 
 + (instancetype)currentSession;
 
+- (void)generateVisit;
+
 - (void)addUserIdChangedDelegate:(id <GrowingUserIdChangedDelegate>)delegate;
 
 - (void)removeUserIdChangedDelegate:(id <GrowingUserIdChangedDelegate>)delegate;
 
-- (void)forceReissueVisit;
-
-- (void)resendVisitEvent;
-
-/// 设置经纬度坐标
-/// @param latitude 纬度
-/// @param longitude 经度
-- (void)setLocation:(double)latitude longitude:(double)longitude;
-/// 清除地理位置
-- (void)cleanLocation;
+- (void)setLoginUserId:(NSString *)loginUserId;
 
 - (void)setLoginUserId:(NSString *)loginUserId userKey:(NSString *)userKey;
+
+- (void)setLocation:(double)latitude longitude:(double)longitude;
+
+- (void)cleanLocation;
 
 @end

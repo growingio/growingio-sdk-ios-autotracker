@@ -30,12 +30,13 @@
 #import "GrowingDispatchManager.h"
 
 @interface GrowingSession () <GrowingAppLifecycleDelegate>
-@property(nonatomic, assign) BOOL alreadySendVisitEvent;
-@property(nonatomic, copy) NSString *latestNonNullUserId;
-@property(nonatomic, assign, readonly) long long sessionInterval;
-@property(nonatomic, assign) long long latestDidEnterBackgroundTime;
-@property(strong, nonatomic, readonly) NSHashTable *userIdChangedDelegates;
-@property(strong, nonatomic, readonly) NSLock *delegateLock;
+
+@property (nonatomic, copy) NSString *latestNonNullUserId;
+@property (nonatomic, assign, readonly) long long sessionInterval;
+@property (nonatomic, assign) long long latestDidEnterBackgroundTime;
+@property (nonatomic, strong, readonly) NSHashTable *userIdChangedDelegates;
+@property (nonatomic, strong, readonly) NSLock *delegateLock;
+
 @end
 
 static GrowingSession *currentSession = nil;
@@ -48,9 +49,8 @@ static GrowingSession *currentSession = nil;
 - (instancetype)initWithSessionInterval:(NSTimeInterval)sessionInterval {
     self = [super init];
     if (self) {
-        _sessionInterval = (long long) (sessionInterval * 1000LL);
-        
-        _alreadySendVisitEvent = NO;
+        _sentVisitAfterRefreshSessionId = NO;
+        _sessionInterval = (long long)(sessionInterval * 1000LL);
         _latestDidEnterBackgroundTime = 0;
         _loginUserId = [GrowingPersistenceDataProvider sharedInstance].loginUserId;
         _loginUserKey = [GrowingPersistenceDataProvider sharedInstance].loginUserKey;
@@ -62,38 +62,69 @@ static GrowingSession *currentSession = nil;
     return self;
 }
 
-- (BOOL)createdSession {
-    return self.alreadySendVisitEvent;
-}
-
 + (void)startSession {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         NSTimeInterval sessionInterval = GrowingConfigurationManager.sharedInstance.trackConfiguration.sessionInterval;
         currentSession = [[self alloc] initWithSessionInterval:sessionInterval];
     });
+    
     [GrowingAppLifecycle.sharedInstance addAppLifecycleDelegate:currentSession];
+    [currentSession refreshSessionId];
+    [currentSession generateVisit];
 }
 
 + (instancetype)currentSession {
     return currentSession;
 }
 
-- (void)forceReissueVisit {
-    if (self.createdSession) {
+- (void)generateVisit {
+    GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    if (!trackConfiguration.dataCollectionEnabled) {
         return;
     }
-    [self refreshSessionId];
-    [self sendVisitEvent];
+    _sentVisitAfterRefreshSessionId = YES;
+    [GrowingEventGenerator generateVisitEvent];
 }
 
-- (void)addUserIdChangedDelegate:(id <GrowingUserIdChangedDelegate>)delegate {
+- (void)refreshSessionId {
+    _sessionId = NSUUID.UUID.UUIDString;
+    _sentVisitAfterRefreshSessionId = NO;
+}
+
+// iOS 11系统上面VC的viewDidAppear生命周期会早于AppDelegate的applicationDidBecomeActive，这样会造成Page事件早于Visit事件
+- (void)applicationDidBecomeActive {
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        if (self.latestDidEnterBackgroundTime == 0) {
+            //首次启动，在SDK初始化时，即发送visit事件
+            return;
+        }
+        long long now = GrowingTimeUtil.currentTimeMillis;
+        if (now - self.latestDidEnterBackgroundTime >= self.sessionInterval) {
+            [self refreshSessionId];
+            [self generateVisit];
+        }
+    }];
+}
+
+- (void)applicationDidEnterBackground {
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        self.latestDidEnterBackgroundTime = GrowingTimeUtil.currentTimeMillis;
+        GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+        if (!trackConfiguration.dataCollectionEnabled) {
+            return;
+        }
+        [GrowingEventGenerator generateAppCloseEvent];
+    }];
+}
+
+- (void)addUserIdChangedDelegate:(id<GrowingUserIdChangedDelegate>)delegate {
     [self.delegateLock lock];
     [self.userIdChangedDelegates addObject:delegate];
     [self.delegateLock unlock];
 }
 
-- (void)removeUserIdChangedDelegate:(id <GrowingUserIdChangedDelegate>)delegate {
+- (void)removeUserIdChangedDelegate:(id<GrowingUserIdChangedDelegate>)delegate {
     [self.delegateLock lock];
     [self.userIdChangedDelegates removeObject:delegate];
     [self.delegateLock unlock];
@@ -101,7 +132,7 @@ static GrowingSession *currentSession = nil;
 
 - (void)dispatchUserIdDidChangedFrom:(NSString *)oldUserId to:(NSString *)newUserId {
     [self.delegateLock lock];
-    for (id <GrowingUserIdChangedDelegate> delegate in self.userIdChangedDelegates) {
+    for (id<GrowingUserIdChangedDelegate> delegate in self.userIdChangedDelegates) {
         if ([delegate respondsToSelector:@selector(userIdDidChangedFrom:to:)]) {
             [delegate userIdDidChangedFrom:oldUserId.copy to:newUserId.copy];
         }
@@ -131,8 +162,9 @@ static GrowingSession *currentSession = nil;
         GIOLogDebug(@"setLoginUserId:userKey:, clean loginUserId and userKey");
         return;
     }
-    
-    if ([NSString growingHelper_isEqualStringA:loginUserId andStringB:self.loginUserId] && [NSString growingHelper_isEqualStringA:userKey andStringB:self.loginUserKey]) {
+
+    if ([NSString growingHelper_isEqualStringA:loginUserId andStringB:self.loginUserId]
+        && [NSString growingHelper_isEqualStringA:userKey andStringB:self.loginUserKey]) {
         GIOLogWarn(@"setLoginUserId:userKey:, but loginUserId and loginUserKey is equal");
         return;
     }
@@ -140,7 +172,7 @@ static GrowingSession *currentSession = nil;
     NSString *oldUserId = _loginUserId.copy;
     _loginUserId = loginUserId.copy;
     _loginUserKey = userKey.copy;
-    
+
     // 持久化
     [[GrowingPersistenceDataProvider sharedInstance] setLoginUserId:_loginUserId];
     [[GrowingPersistenceDataProvider sharedInstance] setLoginUserKey:_loginUserKey];
@@ -159,32 +191,15 @@ static GrowingSession *currentSession = nil;
     GIOLogDebug(@"resendVisitByUserIdDidChangedFrom %@ to %@", oldUserId, newUserId);
     if (![NSString growingHelper_isBlankString:newUserId]) {
         if ([NSString growingHelper_isBlankString:self.latestNonNullUserId]) {
-            [self resendVisitEvent];
+            [self generateVisit];
         } else {
             if (![newUserId isEqualToString:self.latestNonNullUserId]) {
                 [self refreshSessionId];
-                [self sendVisitEvent];
+                [self generateVisit];
             }
         }
         self.latestNonNullUserId = newUserId;
     }
-}
-
-// ios 11 系统上面VC的viewDidAppear生命周期会早于AppDelegate的applicationDidBecomeActive，这样会造成Page事件早于visit事件
-- (void)applicationDidBecomeActive {
-    [GrowingDispatchManager dispatchInGrowingThread:^{
-        // 第一次启动，且已经发送过visit事件，说明visit事件被强制补发了，这里就不在发送visit事件了
-        if (self.latestDidEnterBackgroundTime == 0 && self.createdSession) {
-            GIOLogDebug(@"First launched and already send visit");
-            return;
-        }
-
-        long long now = GrowingTimeUtil.currentTimeMillis;
-        if (now - self.latestDidEnterBackgroundTime >= self.sessionInterval) {
-            [self refreshSessionId];
-            [self sendVisitEvent];
-        }
-    }];
 }
 
 - (void)setLocation:(double)latitude longitude:(double)longitude {
@@ -192,7 +207,7 @@ static GrowingSession *currentSession = nil;
     if ((_latitude == 0 && (ABS(latitude) > 0)) || (_longitude == 0 && ABS(longitude) > 0)) {
         _latitude = latitude;
         _longitude = longitude;
-        [self resendVisitEvent];
+        [self generateVisit];
         return;
     }
     _latitude = latitude;
@@ -202,38 +217,6 @@ static GrowingSession *currentSession = nil;
 - (void)cleanLocation {
     _latitude = 0;
     _longitude = 0;
-}
-
-- (void)resendVisitEvent {
-    if (!self.createdSession) {
-        [self forceReissueVisit];
-        return;
-    }
-    [self sendVisitEvent];
-}
-
-- (void)sendVisitEvent {
-    GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
-    if (!trackConfiguration.dataCollectionEnabled) {
-        return;
-    }
-    self.alreadySendVisitEvent = YES;
-    [GrowingEventGenerator generateVisitEvent];
-}
-
-- (void)refreshSessionId {
-    _sessionId = NSUUID.UUID.UUIDString;
-}
-
-- (void)applicationDidEnterBackground {
-    [GrowingDispatchManager dispatchInGrowingThread:^{
-        self.latestDidEnterBackgroundTime = GrowingTimeUtil.currentTimeMillis;
-        GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
-        if (!trackConfiguration.dataCollectionEnabled) {
-            return;
-        }
-        [GrowingEventGenerator generateAppCloseEvent];
-    }];
 }
 
 @end
