@@ -99,7 +99,7 @@
     dataDict[@"latitude"] = ABS(self.latitude) > 0 ? @(self.latitude) : nil;
     dataDict[@"longitude"] = ABS(self.longitude) > 0 ? @(self.longitude) : nil;
     dataDict[@"sdkVersion"] = self.sdkVersion;
-    dataDict[@"userKey"] = self.userKey.length > 0 ? self.userKey : nil;
+//    dataDict[@"userKey"] = self.userKey.length > 0 ? self.userKey : nil;
     return [dataDict copy];
 }
 
