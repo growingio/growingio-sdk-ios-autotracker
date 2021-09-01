@@ -1,9 +1,114 @@
-#  (2021-04-07)
+#  [3.2.1](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.2.1-beta...3.2.1)(2021-09-01)
 
 
 ### Bug Fixes
 
-* 修改头文件导入 ([2f759f1](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/2f759f150916bb99857ecee0affc28818f132c6c))
+* App 退到后台 flush 一次，避免 Page 事件丢失 ([edcabe4](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/edcabe45fbd7f7dd3892f570b9534371829926c0))
+* Configuration copyWithZone: 重写 ([72ee125](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/72ee125b0fb1f2a4b0703761547440b449628b5a))
+* debugEnabled 配置为 YES 时实时发送 event 数据 ([cfd27b5](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/cfd27b54315fcdbea7630f69e0057d10d8aadeb2))
+* fix工厂方法未赋值policy ([cbe3794](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/cbe3794f0e59805d550d221f27330aa2fc31a59c))
+* flutter下控制台不输出问题以及多余的page事件 ([8a39206](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/8a392062f13c3cb731c31486e63e0228062fb397))
+* sdk版本最低8.0，移除ios8.0以下逻辑代码 ([b890bd1](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/b890bd1efa8c24309f0051db8aceeb01d13ba4f3))
+* SessionId 刷新、VISIT 事件发送与安卓 SDK 保持一致 ([36ba895](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/36ba895f180fc44af5e05dcc221ffa16a25a03de))
+* setDataCollectionEnabled 补发 VISIT，对外接口统一在 Growing Thread 中处理 ([fbd98b9](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/fbd98b9fc086387f4dcf87ed4f21a27d3df0edf2))
+* 位运算逻辑fix ([4671ef1](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/4671ef107e864be2197d72d0b5cd5dbf03e35edf))
+* 修改setUserId接口逻辑 ([34a4e84](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/34a4e8434c042cab66a60568e9140b55a760469f))
+* 去除无用的AlicloudPush ([40195c3](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/40195c3c9d6d05d011cb9a15b8a67637f489a6de))
+* 去除编译器的warning警告 ([7b0fdae](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/7b0fdae94fa03162db22d505349c7d98c4259574))
+* 去除警告以及删除圈选的废弃代码 ([2b95f87](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/2b95f87c9320047afe9e206d873a8fa26d8900cd))
+* 对nil判断格式进行调整 ([1c93e84](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/1c93e84f3a6048fe7565735d1e0bc76eb58e475e))
+* 日志重复打印问题（Xcode console），且在 Release 环境下需不可见（console.app） ([c1a1dfa](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/c1a1dfa8b6c6f8159607c293d0d17b267ba9f8f7))
+* 显示通知中心/系统权限授权弹窗显示应重新计算 backgroundTime ([261433b](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/261433b4ef3c2dd3a9df04fea853eb07069f5e06))
+* 移除Spec文件中多余的库 ([904a605](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/904a60551855880a66db1a2cce1dc8e320a6a997))
+* 适配更多场景，添加测试界面 GIODataCollectionEnabledViewController ([c0623da](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/c0623da8e00ed577fba17bd66dd294fc78d0b6c5))
+
+
+### Features
+
+* 3.2.1版本发布 ([55b9c96](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/55b9c9690be2128caa8fe4268f72ec4a871b5982))
+* FMDB 数据库 Service ([cd80916](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/cd8091667bc18759544c831f94cdae53ca735e39))
+* 事件Policy逻辑添加，sql数据库添加policy字段 ([c2bc063](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/c2bc0636356a796597f040c3fd40941c929abcc7))
+
+
+### Performance Improvements
+
+* merge commit ba74014 and 4abd0e3 in CocoaLumberjack ([4da828e](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/4da828e23dc1c0b5907db8b2af727d14bbfcd958)), closes [/github.com/CocoaLumberjack/CocoaLumberjack/commit/ba74014d32e0c26b3e00cf4893847e780f2fdef3#diff-af07a16b889f7a248164a64385de1d447a607a17c274f7c3d555b3c3c2bfec1](https://github.com//github.com/CocoaLumberjack/CocoaLumberjack/commit/ba74014d32e0c26b3e00cf4893847e780f2fdef3/issues/diff-af07a16b889f7a248164a64385de1d447a607a17c274f7c3d555b3c3c2bfec1) [/github.com/CocoaLumberjack/CocoaLumberjack/commit/4abd0e31ed04790f789b15fc2605ade7d0241304#diff-af07a16b889f7a248164a64385de1d447a607a17c274f7c3d555b3c3c2bfec1](https://github.com//github.com/CocoaLumberjack/CocoaLumberjack/commit/4abd0e31ed04790f789b15fc2605ade7d0241304/issues/diff-af07a16b889f7a248164a64385de1d447a607a17c274f7c3d555b3c3c2bfec1)
+
+
+
+## [3.2.1-beta](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.2.0...3.2.1-beta) (2021-07-02)
+
+
+### Bug Fixes
+
+* fix logflag ([50a11f6](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/50a11f602f81e45644f887a26cdf837595455755))
+* GrowingSwizzler 修改 realDelegateFromSelector:proxy: ([8e6c829](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/8e6c82943dca57242fb31b9f4785850f3f082ca6))
+* imp track 备份数据源未初始化 ([5818bfc](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/5818bfc6ba151004a19e78e34983a994de8fdcfb))
+* ModuleManager 删除无用的去重处理代码 ([0f71af5](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/0f71af5261f5928ba697ace7aa262926f78b53e2))
+* SDK 初始化时的版本日志 level 改成 info，并兼容 debugEnabled 配置 ([1c5dcb9](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/1c5dcb9a98ae5c656a662199db4141ace23d1714))
+* 修改Module在dyld链接阶段就会初始化问题，移至SDK初始化时进行同步初始化Module ([7636db1](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/7636db11496727b26c7c7867d4560d3ebea3cc96))
+* 修改常量字符串命名 ([c75ee1d](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/c75ee1d3904596a3fd1a9aa26aa35ac5faf61271))
+* 没有释放 realtimeEventDB 数据库的空间 ([70cfabc](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/70cfabc3e934bccfdfc8f5adaa2ce4a638b8379c))
+
+
+### Features
+
+* 加密、压缩、WebSocket Service ([60816ee](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/60816ee078af0f8278033e1238159f2b9cecfd89))
+* 广告sdk适配，适配GrowingAdvertising ([e39a206](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/e39a206a77af5797aec5fea861187eefadafdd5f))
+* 添加模块以及服务，修改工程结构，拆分组件 ([1a33a6b](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/1a33a6b87f2d43246fedb3505808ab0baa2f3d29))
+
+
+
+# [3.2.0](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.2.0-beta...3.2.0) (2021-06-01)
+
+
+### Features
+
+* 3.2.0版本发布 ([fafc165](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/fafc165648834fc006d580aa932d4e8ea5f4a5af))
+
+
+
+# [3.2.0-beta](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.1.1-beta...3.2.0-beta) (2021-05-26)
+
+
+### Features
+
+* release 3.2.0-beta ([115d234](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/115d23402fc8e714dc212fbc3bc2cf3e1c16e0b1))
+
+
+
+## [3.1.1-beta](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.1.0...3.1.1-beta) (2021-05-25)
+
+
+### Bug Fixes
+
+* 3.1.1-beta版本发布 ([bb65cb4](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/bb65cb4f28231b8fb5825ae2d0c5932d3cb400f4))
+* pageGroup的初始化问题以及childpages变更为弱引用 ([147b3fc](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/147b3fc5d051101746c31b29beeed8480980d0ca)), closes [#103](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/103) [#104](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/104)
+* pod spec添加对加密的配置项，默认不开启加密 ([6661fc3](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/6661fc33fa9480800a3b61e52d05a0e7dfd26526))
+* 修改idfa逻辑沿用了userIdentifier的问题 ([eb8db84](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/eb8db841c85b1af966197eaa1cd9e90631abe8ab))
+* 修改location获取方式 ([4ecf484](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/4ecf4843870581b2b60b2b59334fa21cb3cefa57))
+* 修改LZ4未加载，以及未经过LZ4压缩的问题 ([13651c3](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/13651c3e8bd6e6f6bc24c0933eda5dc58df34634))
+* 修改setDelegate对象为Proxy时，crash以及hook失效问题 ([21ba793](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/21ba793982b2151ebd17c7fa6e33edd6dc69cf56))
+* 修改TrackConfiguration的impressionScale未在CopyWithZone赋值问题 ([cfe22dd](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/cfe22dd4611c114bb46415e30007155840a96ab7)), closes [#98](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/98)
+* 删除无效参数 ([548ba97](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/548ba971946fecab335c0c4f85d9c3936aa127ee))
+* 和CocoaLumberjack重复定义常量问题处理 ([428e847](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/428e8477203083e04f2bdae148261002abb6de57))
+* 添加对HTTP请求的数据加密，使用LZ4以及位运算 ([88c0709](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/88c0709ac1d1a805e9c700d102efc89b398c6bd5))
+* 添加对IDFA的配置项，用户可以自行配置是否获取idfa ([a75cd23](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/a75cd2374998403cf81570d888db004ecc166e82))
+
+
+### Features
+
+* iDFA获取模块重整 ([02bab81](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/02bab816d94bf87bd4504639870c1b08d5b9d1ba))
+* 增加sonarcloud ([60f905e](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/60f905e831e98479e8f09912107be847379e55cb))
+
+
+
+# [3.1.0](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.1.0-beta...3.1.0) (2021-04-07)
+
+
+### Bug Fixes
+
+* 修改版本号，刷新CHANGELOG.md ([c28008a](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/c28008ac09ad227751bc5950b189f0058dbd778a))
 
 
 ### Features
