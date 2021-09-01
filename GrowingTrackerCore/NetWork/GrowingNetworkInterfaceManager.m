@@ -66,47 +66,68 @@
 }
 
 - (NSString *)networkType {
-    
     [self updateInterfaceInfo];
-    
+
     NSString *netType = @"UNKNOWN";
     if (self.isUnknown) {
         netType = @"UNKNOWN";
     } else if (self.WiFiValid) {
         netType = @"WIFI";
     } else if (self.WWANValid) {
-        NSArray *typeStrings2G = @[CTRadioAccessTechnologyEdge,
-                                   CTRadioAccessTechnologyGPRS,
-                                   CTRadioAccessTechnologyCDMA1x];
-        
-        NSArray *typeStrings3G = @[CTRadioAccessTechnologyHSDPA,
-                                   CTRadioAccessTechnologyWCDMA,
-                                   CTRadioAccessTechnologyHSUPA,
-                                   CTRadioAccessTechnologyCDMAEVDORev0,
-                                   CTRadioAccessTechnologyCDMAEVDORevA,
-                                   CTRadioAccessTechnologyCDMAEVDORevB,
-                                   CTRadioAccessTechnologyeHRPD];
-        
+        NSArray *typeStrings2G = @[
+            CTRadioAccessTechnologyEdge,
+            CTRadioAccessTechnologyGPRS,
+            CTRadioAccessTechnologyCDMA1x
+        ];
+
+        NSArray *typeStrings3G = @[
+            CTRadioAccessTechnologyHSDPA,
+            CTRadioAccessTechnologyWCDMA,
+            CTRadioAccessTechnologyHSUPA,
+            CTRadioAccessTechnologyCDMAEVDORev0,
+            CTRadioAccessTechnologyCDMAEVDORevA,
+            CTRadioAccessTechnologyCDMAEVDORevB,
+            CTRadioAccessTechnologyeHRPD
+        ];
+
         NSArray *typeStrings4G = @[CTRadioAccessTechnologyLTE];
-        
-        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
-            CTTelephonyNetworkInfo *teleInfo= [[CTTelephonyNetworkInfo alloc] init];
-            NSString *accessString = teleInfo.currentRadioAccessTechnology;
-            //TODO: 5G还未公开变量
-            if ([typeStrings4G containsObject:accessString]) {
-                netType = @"4G";
-            } else if ([typeStrings3G containsObject:accessString]) {
-                netType = @"3G";
-            } else if ([typeStrings2G containsObject:accessString]) {
-                netType = @"2G";
-            } else {
-                netType = @"UNKNOW";
+
+        NSString *accessString = CTRadioAccessTechnologyLTE;  // default 4G
+        CTTelephonyNetworkInfo *teleInfo = [[CTTelephonyNetworkInfo alloc] init];
+        if (@available(iOS 12.0, *)) {
+            if ([teleInfo respondsToSelector:@selector(serviceCurrentRadioAccessTechnology)]) {
+                NSDictionary *radioDic = teleInfo.serviceCurrentRadioAccessTechnology;
+                if (radioDic.count) {
+                    accessString = radioDic[radioDic.allKeys.firstObject];
+                }
             }
         } else {
-            netType = @"UNKNOW";
+            accessString = teleInfo.currentRadioAccessTechnology;
+        }
+        
+        if ([typeStrings4G containsObject:accessString]) {
+            netType = @"4G";
+        } else if ([typeStrings3G containsObject:accessString]) {
+            netType = @"3G";
+        } else if ([typeStrings2G containsObject:accessString]) {
+            netType = @"2G";
+#if defined(__IPHONE_14_1) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_14_1)
+        } else if (@available(iOS 14.1, *)) {
+            NSArray *typeStrings5G = @[
+                CTRadioAccessTechnologyNR,
+                CTRadioAccessTechnologyNRNSA
+            ];
+            if ([typeStrings5G containsObject:accessString]) {
+                netType = @"5G";
+            } else {
+                netType = @"UNKNOWN";
+            }
+#endif
+        } else {
+            netType = @"UNKNOWN";
         }
     } else {
-        netType = @"UNKNOW";
+        netType = @"UNKNOWN";
     }
     return netType;
 }
