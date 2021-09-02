@@ -71,7 +71,6 @@ static GrowingSession *currentSession = nil;
     
     [GrowingAppLifecycle.sharedInstance addAppLifecycleDelegate:currentSession];
     [currentSession refreshSessionId];
-    [currentSession generateVisit];
 }
 
 + (instancetype)currentSession {
