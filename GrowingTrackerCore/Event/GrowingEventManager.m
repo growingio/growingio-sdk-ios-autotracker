@@ -38,7 +38,6 @@
 #import "NSDictionary+GrowingHelper.h"
 #import "NSString+GrowingHelper.h"
 #import "GrowingEventFilter.h"
-#import "GrowingAppLifecycle.h"
 #import "GrowingEventNetworkService.h"
 #import "GrowingServiceManager.h"
 
@@ -49,7 +48,7 @@ static const NSUInteger kGrowingMaxBatchSize = 500;    // default: send no more 
 
 static const NSUInteger kGrowingUnit_MB = 1024 * 1024;
 
-@interface GrowingEventManager () <GrowingAppLifecycleDelegate>
+@interface GrowingEventManager ()
 
 @property (nonatomic, strong) NSHashTable *allInterceptor;
 @property (nonatomic, strong) NSLock *interceptorLock;
@@ -100,8 +99,6 @@ static GrowingEventManager *sharedInstance = nil;
             [self cleanExpiredData_unsafe];
             // load eventQueue for the first time
             [self reloadFromDB_unsafe];
-            
-            [[GrowingAppLifecycle sharedInstance] addAppLifecycleDelegate:self];
         }];
     }
     return self;
@@ -462,12 +459,6 @@ static GrowingEventManager *sharedInstance = nil;
     [self.interceptorLock lock];
     [self.allInterceptor removeObject:interceptor];
     [self.interceptorLock unlock];
-}
-
-#pragma mark - GrowingAppLifecycleDelegate
-
-- (void)applicationDidEnterBackground {
-    [self flushDB];
 }
 
 #pragma mark - Setter & Getter
