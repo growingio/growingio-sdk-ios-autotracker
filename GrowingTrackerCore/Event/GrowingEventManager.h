@@ -63,6 +63,9 @@
 /// 开启事件发送定时器
 - (void)startTimerSend;
 
+/// 事件入库
+- (void)flushDB;
+
 /// 发送event，必须在主线程调用
 /// @param builder event构造器
 - (void)postEventBuidler:(GrowingBaseBuilder *_Nullable)builder;

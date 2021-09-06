@@ -25,13 +25,17 @@
 @implementation GrowingDispatchManager
 
 + (void)dispatchInGrowingThread:(void (^_Nullable)(void))block {
+    [self dispatchInGrowingThread:block waitUntilDone:NO];
+}
+
++ (void)dispatchInGrowingThread:(void (^_Nullable)(void))block waitUntilDone:(BOOL)waitUntilDone {
     if ([[NSThread currentThread] isEqual:[GrowingThread sharedThread]]) {
         block();
     } else {
         [GrowingDispatchManager performSelector:@selector(dispatchBlock:)
                                        onThread:[GrowingThread sharedThread]
                                      withObject:block
-                                  waitUntilDone:NO];
+                                  waitUntilDone:waitUntilDone];
     }
 }
 
