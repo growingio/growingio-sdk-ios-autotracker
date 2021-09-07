@@ -28,6 +28,7 @@
 #import "GrowingPersistenceDataProvider.h"
 #import "GrowingEventGenerator.h"
 #import "GrowingDispatchManager.h"
+#import "GrowingEventManager.h"
 
 @interface GrowingSession () <GrowingAppLifecycleDelegate>
 
@@ -71,7 +72,6 @@ static GrowingSession *currentSession = nil;
     
     [GrowingAppLifecycle.sharedInstance addAppLifecycleDelegate:currentSession];
     [currentSession refreshSessionId];
-    [currentSession generateVisit];
 }
 
 + (instancetype)currentSession {
@@ -117,12 +117,15 @@ static GrowingSession *currentSession = nil;
 - (void)applicationDidEnterBackground {
     [GrowingDispatchManager dispatchInGrowingThread:^{
         self.latestDidEnterBackgroundTime = GrowingTimeUtil.currentTimeMillis;
-        GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
-        if (!trackConfiguration.dataCollectionEnabled) {
-            return;
-        }
         [GrowingEventGenerator generateAppCloseEvent];
+        [[GrowingEventManager sharedInstance] flushDB];
     }];
+}
+
+- (void)applicationWillTerminate {
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        // make sure APP_CLOSED event did saved, and all events did flush to database
+    } waitUntilDone:YES];
 }
 
 - (void)addUserIdChangedDelegate:(id<GrowingUserIdChangedDelegate>)delegate {

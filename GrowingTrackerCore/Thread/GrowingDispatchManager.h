@@ -23,6 +23,8 @@
 
 + (void)dispatchInGrowingThread:(void (^_Nullable)(void))block;
 
++ (void)dispatchInGrowingThread:(void (^_Nullable)(void))block waitUntilDone:(BOOL)waitUntilDone;
+
 + (void)dispatchInMainThread:(void (^_Nullable)(void))block;
 
 + (void)dispatchInLowThread:(void (^_Nullable)(void))block;
