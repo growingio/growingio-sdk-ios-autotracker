@@ -18,6 +18,7 @@
 //  limitations under the License.
 
 #import "GrowingAutotracker.h"
+#import "GrowingSession.h"
 #import "GrowingLogMacros.h"
 #import "GrowingLogger.h"
 
@@ -45,6 +46,7 @@ static GrowingAutotracker *sharedInstance = nil;
     dispatch_once(&onceToken, ^{
         GrowingRealAutotracker *autotracker = [GrowingRealAutotracker trackerWithConfiguration:configuration launchOptions:launchOptions];
         sharedInstance = [[self alloc] initWithRealAutotracker:autotracker];
+        [[GrowingSession currentSession] generateVisit];
     });
 }
 

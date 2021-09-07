@@ -20,7 +20,6 @@
 #import "GrowingDynamicProxy.h"
 #import "GrowingTrackConfiguration.h"
 
-
 @interface GrowingTracker : GrowingDynamicProxy
 
 /// 初始化方法
