@@ -16,10 +16,10 @@
 //  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
+
 #import "GrowingTracker.h"
-#import "GrowingTrackConfiguration.h"
-#import "GrowingTrackConfiguration.h"
 #import "GrowingRealTracker.h"
+#import "GrowingSession.h"
 #import "GrowingLogMacros.h"
 #import "GrowingLogger.h"
 
@@ -47,6 +47,7 @@ static GrowingTracker *sharedInstance = nil;
     dispatch_once(&onceToken, ^{
         GrowingRealTracker *realTracker = [GrowingRealTracker trackerWithConfiguration:configuration launchOptions:launchOptions];
         sharedInstance = [[self alloc] initWithRealTracker:realTracker];
+        [[GrowingSession currentSession] generateVisit];
     });
 }
 

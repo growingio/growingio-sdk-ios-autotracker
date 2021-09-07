@@ -67,8 +67,6 @@ const int GrowingTrackerVersionCode = 30201;
         [[GrowingEventManager sharedInstance] startTimerSend];
         [self versionPrint];
         [self filterLogPrint];
-        
-        [[GrowingSession currentSession] generateVisit];
     }
 
     return self;
