@@ -20,7 +20,6 @@
 
 #import "GrowingAutotrackConfiguration.h"
 
-
 @implementation GrowingAutotrackConfiguration
 
 - (id)copyWithZone:(NSZone *)zone {

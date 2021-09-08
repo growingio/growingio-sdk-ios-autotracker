@@ -38,6 +38,7 @@
 #import "GrowingNetworkConfig.h"
 
 @implementation GrowingRealAutotracker
+
 - (instancetype)initWithConfiguration:(GrowingTrackConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions {
     self = [super initWithConfiguration:configuration launchOptions:launchOptions];
     if (self) {

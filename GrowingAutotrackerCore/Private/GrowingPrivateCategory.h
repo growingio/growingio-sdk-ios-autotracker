@@ -19,8 +19,7 @@
 
 //用于AutotrackerCore中引入分类，而这些分类属性对于不同的模块，是可选的
 #import <UIKit/UIKit.h>
-
-#import "GrowingRealAutotracker.h"
+#import "GrowingAutotrackConfiguration.h"
 
 // 该属性setter方法均使用 objc_setAssociatedObject实现
 // 如果是自定义的View建议优先使用重写getter方法来实现 以提高性能

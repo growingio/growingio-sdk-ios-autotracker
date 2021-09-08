@@ -23,7 +23,7 @@
 #import "GrowingPageManager.h"
 #import "GrowingPrivateCategory.h"
 #import "GrowingPropertyDefine.h"
-#import "GrowingRealAutotracker.h"
+#import "GrowingAutotrackConfiguration.h"
 #import "NSDictionary+GrowingHelper.h"
 #import "NSObject+GrowingIvarHelper.h"
 #import "UIApplication+GrowingNode.h"
