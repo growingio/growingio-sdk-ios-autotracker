@@ -59,6 +59,7 @@
 #import "GrowingServiceManager.h"
 #import "GrowingHybridBridgeProvider.h"
 #import "GrowingWebSocketService.h"
+#import "GrowingRealTracker.h"
 
 @GrowingMod(GrowingWebCircle)
 

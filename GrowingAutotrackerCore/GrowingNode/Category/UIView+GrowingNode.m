@@ -31,7 +31,6 @@
 #import "UIView+GrowingNode.h"
 #import "GrowingImpressionTrack.h"
 #import "GrowingConfigurationManager.h"
-#import "GrowingRealAutotracker.h"
 #import "GrowingNode.h"
 #import "GrowingAutotrackConfiguration.h"
 

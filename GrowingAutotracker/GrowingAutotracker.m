@@ -18,6 +18,7 @@
 //  limitations under the License.
 
 #import "GrowingAutotracker.h"
+#import "GrowingRealAutotracker.h"
 #import "GrowingSession.h"
 #import "GrowingLogMacros.h"
 #import "GrowingLogger.h"
