@@ -151,6 +151,10 @@ static GrowingSession *currentSession = nil;
 }
 
 - (void)setLoginUserId:(NSString *)loginUserId userKey:(NSString *)userKey {
+    GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    if (!trackConfiguration.idMappingEnabled) {
+        userKey = nil;
+    }
     if (loginUserId && loginUserId.length > 1000) {
         GIOLogError(@"setLoginUserId:userKey:, loginUserId is too long");
         return;

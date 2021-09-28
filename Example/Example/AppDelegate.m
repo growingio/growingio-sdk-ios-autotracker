@@ -33,6 +33,7 @@ static NSString *const kGrowingProjectId = @"91eaf9b283361032";
     // Config GrowingIO
     GrowingSDKConfiguration *configuration = [GrowingSDKConfiguration configurationWithProjectId:kGrowingProjectId];
     configuration.debugEnabled = YES;
+    configuration.idMappingEnabled = YES;
 //    configuration.impressionScale = 1.0;
 //    configuration.excludeEvent = GrowingFilterClickChangeSubmit;
 //    configuration.ignoreField = GrowingIgnoreFieldsAll;
