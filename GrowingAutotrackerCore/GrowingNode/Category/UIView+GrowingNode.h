@@ -31,6 +31,7 @@
 @property (nonatomic, copy) NSString *growingUniqueTag;
 - (BOOL)growingViewUserInteraction;
 - (NSString *)growingViewContent;
+- (BOOL)growingViewDontTrack;
 
 @end
 

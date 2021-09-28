@@ -21,7 +21,8 @@
 
 @class WKWebView;
 
-
 @interface GrowingWKWebViewJavascriptBridge : NSObject
+
 + (void)bridgeForWebView:(WKWebView *)webView;
+
 @end
