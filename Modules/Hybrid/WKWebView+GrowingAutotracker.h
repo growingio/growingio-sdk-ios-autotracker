@@ -17,14 +17,16 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <WebKit/WebKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface WKWebView (GrowingAutotracker)
 
-- (instancetype)growing_initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration *)configuration;
+- (WKNavigation *)growing_loadRequest:(NSURLRequest *)request;
+- (WKNavigation *)growing_loadHTMLString:(NSString *)string baseURL:(NSURL *)baseURL;
+- (WKNavigation *)growing_loadFileURL:(NSURL *)URL allowingReadAccessToURL:(NSURL *)readAccessURL;
+- (WKNavigation *)growing_loadData:(NSData *)data MIMEType:(NSString *)MIMEType characterEncodingName:(NSString *)characterEncodingName baseURL:(NSURL *)baseURL;
 
 @end
 

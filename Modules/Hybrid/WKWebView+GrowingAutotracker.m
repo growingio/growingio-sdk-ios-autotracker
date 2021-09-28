@@ -17,16 +17,29 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import "WKWebView+GrowingAutotracker.h"
 #import "GrowingWKWebViewJavascriptBridge.h"
 
 @implementation WKWebView (GrowingAutotracker)
 
-- (instancetype)growing_initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration *)configuration {
-    __strong WKWebView *wkWebView = [self growing_initWithFrame:frame configuration:configuration];
-    [GrowingWKWebViewJavascriptBridge bridgeForWebView:wkWebView];
-    return wkWebView;
+- (WKNavigation *)growing_loadRequest:(NSURLRequest *)request {
+    [GrowingWKWebViewJavascriptBridge bridgeForWebView:self];
+    return [self growing_loadRequest:request];
+}
+
+- (WKNavigation *)growing_loadHTMLString:(NSString *)string baseURL:(NSURL *)baseURL {
+    [GrowingWKWebViewJavascriptBridge bridgeForWebView:self];
+    return [self growing_loadHTMLString:string baseURL:baseURL];
+}
+
+- (WKNavigation *)growing_loadFileURL:(NSURL *)URL allowingReadAccessToURL:(NSURL *)readAccessURL {
+    [GrowingWKWebViewJavascriptBridge bridgeForWebView:self];
+    return [self growing_loadFileURL:URL allowingReadAccessToURL:readAccessURL];
+}
+
+- (WKNavigation *)growing_loadData:(NSData *)data MIMEType:(NSString *)MIMEType characterEncodingName:(NSString *)characterEncodingName baseURL:(NSURL *)baseURL {
+    [GrowingWKWebViewJavascriptBridge bridgeForWebView:self];
+    return [self growing_loadData:data MIMEType:MIMEType characterEncodingName:characterEncodingName baseURL:baseURL];
 }
 
 @end
