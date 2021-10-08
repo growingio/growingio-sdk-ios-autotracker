@@ -102,6 +102,16 @@ const int GrowingTrackerVersionCode = 30202;
     GIOLogInfo(@"%@", versionStr);
 }
 
++ (NSString *)versionName {
+    // give support to GrowingToolsKit
+    return [NSString stringWithFormat:@"%@", GrowingTrackerVersionName];
+}
+
++ (NSString *)versionCode {
+    // give support to GrowingToolsKit
+    return [NSString stringWithFormat:@"%d", GrowingTrackerVersionCode];
+}
+
 - (void)filterLogPrint {
     if(GrowingConfigurationManager.sharedInstance.trackConfiguration.excludeEvent > 0) {
         GIOLogInfo(@"%@", [GrowingEventFilter getFilterEventLog]);
