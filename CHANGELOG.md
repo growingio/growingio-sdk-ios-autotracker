@@ -1,3 +1,51 @@
+#  [3.3.0](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.3.0-beta...3.3.0) (2021-10-13)
+
+* 3.3.0 正式版发布
+
+
+
+# [3.3.0-beta](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.2.2...3.3.0-beta) (2021-10-08)
+
+
+### Bug Fixes
+
+* WebView Bridge 注入延后至 loadRequest: ([af0cbd0](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/af0cbd017c9d0340332334e96ebfe47962c489c3))
+
+
+### Features
+
+* release 3.3.0-beta ([9419dea](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/9419dea94975e29e305d822b87b83dabf32930b6))
+* 新增 Id Mapping 开关 ([4bfc426](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/4bfc426194b787520e285ec9cb983373ced4c7b9))
+* 新增 version 相关接口 (Private)，提供给 GrowingToolsKit 调用 ([e826d4f](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/e826d4fdf1646480085626d7215abdf0760b5383))
+
+
+
+## [3.2.2](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.2.2-beta...3.2.2) (2021-09-09)
+
+
+### Features
+
+* 3.2.2 正式版发布 ([eaf54f8](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/eaf54f8f4b68494a91b7cfab58cd096d99cbbe26))
+
+
+
+## [3.2.2-beta](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.2.1...3.2.2-beta) (2021-09-09)
+
+
+### Bug Fixes
+
+* cdp Interceptor 添加 gioId 失效 ([d2261bf](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/d2261bf86e95d57c45dee5b8ca7c9c1c4dac81b5))
+* GrowingIgnorePolicy 声明移到 Configuration 中，GrowingAutotracker.h 隐藏 RealAutotracker 导入 ([27b1ac7](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/27b1ac7c385ad05a6dcf72790bce3b394fc8db92))
+* 杀死进程 APP_CLOSED 未发送 ([18666a3](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/18666a32758189f5d03fe8cb8b870d6a25913e48))
+
+
+### Features
+
+* release 3.2.2-beta ([6cb2cbe](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/6cb2cbe0c59174c50eb3c448c3c81cba2a37d7c4))
+* 增加 5G networkType 判断 ([d41ee08](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/d41ee0839476349f463f42ec82f3db25f87111ac))
+
+
+
 #  [3.2.1](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.2.1-beta...3.2.1)(2021-09-01)
 
 
