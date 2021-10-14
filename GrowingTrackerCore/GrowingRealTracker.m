@@ -182,7 +182,14 @@ const int GrowingTrackerVersionCode = 30300;
 
 - (void)setDataCollectionEnabled:(BOOL)enabled {
     [GrowingDispatchManager dispatchInGrowingThread:^{
-        GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionEnabled = enabled;
+        GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+        if (enabled == trackConfiguration.dataCollectionEnabled) {
+            return;
+        }
+        trackConfiguration.dataCollectionEnabled = enabled;
+        if (enabled) {
+            [[GrowingSession currentSession] generateVisit];
+        }
     }];
 }
 
