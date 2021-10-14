@@ -66,14 +66,4 @@ NSString * const kGrowingDefaultDataCollectionServerHost = @"https://api.growing
     return configuration;
 }
 
-- (void)setDataCollectionEnabled:(BOOL)dataCollectionEnabled {
-    if (dataCollectionEnabled == _dataCollectionEnabled) {
-        return;
-    }
-    _dataCollectionEnabled = dataCollectionEnabled;
-    if (dataCollectionEnabled) {
-        [[GrowingSession currentSession] generateVisit];
-    }
-}
-
 @end
