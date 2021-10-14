@@ -36,6 +36,7 @@ FOUNDATION_EXPORT NSString * const kGrowingDefaultDataCollectionServerHost;
 @property (nonatomic, assign) NSUInteger excludeEvent;
 @property (nonatomic, assign) NSUInteger ignoreField;
 @property (nonatomic, assign) BOOL idMappingEnabled;
+@property (nonatomic, copy) NSString *urlScheme;
 
 - (instancetype)initWithProjectId:(NSString *)projectId;
 

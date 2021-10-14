@@ -39,6 +39,7 @@ NSString * const kGrowingDefaultDataCollectionServerHost = @"https://api.growing
         _excludeEvent = 0;
         _ignoreField = 0;
         _idMappingEnabled = NO;
+        _urlScheme = nil;
     }
 
     return self;
@@ -61,6 +62,7 @@ NSString * const kGrowingDefaultDataCollectionServerHost = @"https://api.growing
     configuration->_excludeEvent = _excludeEvent;
     configuration->_ignoreField = _ignoreField;
     configuration->_idMappingEnabled = _idMappingEnabled;
+    configuration->_urlScheme = _urlScheme;
     return configuration;
 }
 
