@@ -55,6 +55,9 @@ const int GrowingTrackerVersionCode = 30300;
         _configuration = [configuration copyWithZone:nil];
         _launchOptions = [launchOptions copy];
         GrowingConfigurationManager.sharedInstance.trackConfiguration = self.configuration;
+        if (configuration.urlScheme.length > 0) {
+            [GrowingDeviceInfo configUrlScheme:configuration.urlScheme.copy];
+        }
         
         [self loggerSetting];
         [GrowingAppLifecycle.sharedInstance setupAppStateNotification];
@@ -179,7 +182,14 @@ const int GrowingTrackerVersionCode = 30300;
 
 - (void)setDataCollectionEnabled:(BOOL)enabled {
     [GrowingDispatchManager dispatchInGrowingThread:^{
-        GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionEnabled = enabled;
+        GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+        if (enabled == trackConfiguration.dataCollectionEnabled) {
+            return;
+        }
+        trackConfiguration.dataCollectionEnabled = enabled;
+        if (enabled) {
+            [[GrowingSession currentSession] generateVisit];
+        }
     }];
 }
 
