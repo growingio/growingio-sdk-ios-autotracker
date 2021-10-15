@@ -25,14 +25,14 @@
 @implementation GrowingDataEncoder
 
 - (NSData *_Nonnull)encryptEventData:(NSData *_Nonnull)data factor:(unsigned char)hint {
-    NSMutableData *dataM = [[NSMutableData alloc] initWithLength:data.length];
+    NSMutableData *result = [[NSMutableData alloc] initWithLength:data.length];
     const unsigned char *p = data.bytes;
-    unsigned char *q = dataM.mutableBytes;
+    unsigned char *q = result.mutableBytes;
 
     for (NSUInteger i = 0; i < data.length; i++, p++, q++) {
         *q = (*p ^ hint);
     }
-    return data;
+    return result;
 }
 
 @end
