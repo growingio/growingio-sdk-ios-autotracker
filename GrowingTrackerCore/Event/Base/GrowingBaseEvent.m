@@ -116,7 +116,7 @@
     _timestamp = _timestamp > 0 ? _timestamp : [GrowingTimeUtil currentTimeMillis];
 
     GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
-    _domain = deviceInfo.bundleID;
+    _domain = _domain.length > 0 ? _domain : deviceInfo.bundleID;
     _appState = deviceInfo.appState;
     _deviceId = deviceInfo.deviceIDString ?: @"";
     _urlScheme = deviceInfo.urlScheme;
