@@ -73,7 +73,7 @@
 /**
  * Ready to use log macros with no context or tag.
  **/
-#define GIOLogError(frmt, ...)   GIO_LOG_MAYBE(NO,                GIO_LOG_LEVEL_DEF, GrowingLogFlagError,   0, nil, __PRETTY_FUNCTION__, frmt, ##__VA_ARGS__)
+#define GIOLogError(frmt, ...)   GIO_LOG_MAYBE(LOG_ASYNC_ENABLED, GIO_LOG_LEVEL_DEF, GrowingLogFlagError,   0, nil, __PRETTY_FUNCTION__, frmt, ##__VA_ARGS__)
 #define GIOLogWarn(frmt, ...)    GIO_LOG_MAYBE(LOG_ASYNC_ENABLED, GIO_LOG_LEVEL_DEF, GrowingLogFlagWarning, 0, nil, __PRETTY_FUNCTION__, frmt, ##__VA_ARGS__)
 #define GIOLogInfo(frmt, ...)    GIO_LOG_MAYBE(LOG_ASYNC_ENABLED, GIO_LOG_LEVEL_DEF, GrowingLogFlagInfo,    0, nil, __PRETTY_FUNCTION__, frmt, ##__VA_ARGS__)
 #define GIOLogDebug(frmt, ...)   GIO_LOG_MAYBE(LOG_ASYNC_ENABLED, GIO_LOG_LEVEL_DEF, GrowingLogFlagDebug,   0, nil, __PRETTY_FUNCTION__, frmt, ##__VA_ARGS__)
