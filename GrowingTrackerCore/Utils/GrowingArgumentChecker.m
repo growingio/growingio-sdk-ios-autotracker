@@ -50,14 +50,14 @@
 
     for (NSString *key in attributes) {
         if (![key isKindOfClass:NSString.class]) {
-            GIOLogError(@"Key %@ is not kind of NSDictionary class", key);
+            GIOLogError(@"Key %@ is not kind of NSString class", key);
             return YES;
         }
 
         NSString *stringValue = attributes[key];
 
         if (![stringValue isKindOfClass:NSString.class]) {
-            GIOLogError(@"value for key %@ is not kind of NSDictionary class", key);
+            GIOLogError(@"value for key %@ is not kind of NSString class", stringValue);
             return YES;
         }
     }
