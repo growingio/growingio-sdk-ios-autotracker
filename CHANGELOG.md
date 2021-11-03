@@ -1,3 +1,25 @@
+#  [3.3.1](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.3.1-beta...3.3.1) (2021-11-03)
+
+### Features
+
+* 3.3.1 正式版发布
+
+### Bug Fixes
+
+* 错误的注释、日志内容 ([817c9bf](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/817c9bf833b0e6b9ceab57502fae1558517e8c90))
+
+
+
+## [3.3.1-beta](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.3.0...3.3.1-beta) (2021-10-20)
+
+
+### Bug Fixes
+
+* error log 改为 async，避免线程卡顿 ([07fc1d3](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/07fc1d3430138ec200625849dcf071c545b19688))
+* hybrid event domain 设置失效 ([6e871eb](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/6e871eb9555d1ddb77fe782328ee7276084be945))
+
+
+
 #  [3.3.0](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.3.0-beta...3.3.0) (2021-10-13)
 
 * 3.3.0 正式版发布
