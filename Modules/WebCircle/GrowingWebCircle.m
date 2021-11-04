@@ -61,6 +61,11 @@
 #import "GrowingWebSocketService.h"
 #import "GrowingRealTracker.h"
 
+// 如果flutter混合开发
+#if GROWING_ANALYSIS_FLUTTER_MIX
+#import "GrowingFlutterPlugin.h"
+#endif
+
 @GrowingMod(GrowingWebCircle)
 
 @interface GrowingWeakObject : NSObject
@@ -92,6 +97,9 @@
 //当页面vc的page未生成，即viewDidAppear未执行，此时忽略数据，并不发送
 @property (nonatomic, assign) BOOL isPageDontShow;
 @property (nonatomic, strong) NSMutableArray *elements;
+#if GROWING_ANALYSIS_FLUTTER_MIX
+@property (atomic, strong) NSMutableDictionary *flutterDict;
+#endif
 @end
 
 @implementation GrowingWebCircle
@@ -291,7 +299,12 @@
             return;
         }
     }
-
+#if GROWING_ANALYSIS_FLUTTER_MIX
+    if ([[GrowingPageManager sharedInstance].currentViewController isKindOfClass:NSClassFromString(@"FlutterViewController")] && self.flutterDict.count > 0) {
+        [finalDataDict addEntriesFromDictionary:self.flutterDict];
+        self.flutterDict = nil;
+    } else {
+#endif
     NSMutableArray *pages = [NSMutableArray array];
     NSArray *vcs = [[GrowingPageManager sharedInstance] allDidAppearViewControllers];
     for (int i = 0; i < vcs.count; i++) {
@@ -300,12 +313,17 @@
         NSMutableDictionary *dict = [self dictFromPage:tmp xPath:page.path];
         [pages addObject:dict];
     }
-    finalDataDict[@"elements"] = self.elements;
-    finalDataDict[@"pages"] = pages;
+    finalDataDict[@"elements"] = self.elements ?: @[];
+    finalDataDict[@"pages"] = pages?:@[];
+#if GROWING_ANALYSIS_FLUTTER_MIX
+    }
+#endif
+    
     if (completion != nil) {
         completion(finalDataDict);
     }
 }
+
 
 - (NSDictionary *)dictForUserAction:(NSString *)action {
     if (action.length == 0) {
@@ -437,6 +455,7 @@
 
         self.onReadyBlock = readyBlock;
         self.onFinishBlock = finishBlock;
+//        [self webSocket:nil didReceiveMessage:@{@"msgType":@"ready"}];
     }
 }
 
@@ -452,6 +471,17 @@
 
 - (void)start {
     [self remoteReady];
+#if GROWING_ANALYSIS_FLUTTER_MIX
+    if ([GrowingFlutterPlugin sharedInstance].onNativeCircleStart) {
+        [GrowingFlutterPlugin sharedInstance].onNativeCircleStart();
+    }
+    __weak typeof(self) wself = self;
+    [GrowingFlutterPlugin sharedInstance].onFlutterCircleData = ^(NSDictionary * _Nonnull dataDict) {
+        wself.flutterDict = dataDict;
+        GIOLogDebug(@"native receive flutter : \n %@",[dataDict growingHelper_jsonString]);
+    };
+#endif
+    
     self.statusWindow.statusLable.text = @"正在进行GrowingIO移动端圈选";
     self.statusWindow.statusLable.textAlignment = NSTextAlignmentCenter;
     if (self.onReadyBlock) {
@@ -465,10 +495,18 @@
     //监听原生事件，变动时发送
     [[GrowingEventManager sharedInstance] addInterceptor:self];
     [[GrowingApplicationEventManager sharedInstance] addApplicationEventObserver:self];
+    
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_setNeedUpdateScreen) object:nil];
+    [self performSelector:@selector(_setNeedUpdateScreen) withObject:nil afterDelay:1];
 }
 
 - (void)stop {
     GIOLogDebug(@"开始断开连接");
+#if GROWING_ANALYSIS_FLUTTER_MIX
+    if ([GrowingFlutterPlugin sharedInstance].onNativeCircleStop) {
+        [GrowingFlutterPlugin sharedInstance].onNativeCircleStop();
+    }
+#endif
     NSDictionary *dict = @{@"msgType" : @"quit"};
     [self sendJson:dict];
     self.statusWindow.statusLable.text = @"正在关闭web圈选...";
@@ -524,29 +562,33 @@
 #pragma mark - Websocket Delegate
 
 - (void)webSocket:(id <GrowingWebSocketService>)webSocket didReceiveMessage:(id)message {
-    if ([message isKindOfClass:[NSString class]] || ((NSString *)message).length > 0) {
+    NSMutableDictionary *dict = nil;
+    if ([message isKindOfClass:[NSString class]] && ((NSString *)message).length > 0) {
         GIOLogDebug(@"didReceiveMessage: %@", message);
-        NSMutableDictionary *dict = [[message growingHelper_jsonObject] mutableCopy];
+        dict = [[message growingHelper_jsonObject] mutableCopy];
 
-        //如果收到了ready消息，说明可以发送圈选数据了
-        if ([[dict objectForKey:@"msgType"] isEqualToString:@"ready"]) {
-            [self start];
-        }
-        // 版本号不适配web圈选
-        if ([[dict objectForKey:@"msgType"] isEqualToString:@"incompatible_version"]) {
-            GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert
-                                                               title:@"抱歉"
-                                                             message:@"您使用的SDK版本号过低,请升级SDK后再使用"];
-            [alert addOkWithTitle:@"知道了" handler:nil];
-            [alert showAlertAnimated:NO];
-            [self stop];
-        }
+    }else if ([message isKindOfClass:[NSDictionary class]]) {
+        dict = [NSMutableDictionary dictionaryWithDictionary:(NSDictionary*)message];
+    }
+    
+    //如果收到了ready消息，说明可以发送圈选数据了
+    if ([[dict objectForKey:@"msgType"] isEqualToString:@"ready"]) {
+        [self start];
+    }
+    // 版本号不适配web圈选
+    if ([[dict objectForKey:@"msgType"] isEqualToString:@"incompatible_version"]) {
+        GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert
+                                                           title:@"抱歉"
+                                                         message:@"您使用的SDK版本号过低,请升级SDK后再使用"];
+        [alert addOkWithTitle:@"知道了" handler:nil];
+        [alert showAlertAnimated:NO];
+        [self stop];
+    }
 
-        // web端退出了圈选
-        if ([[dict objectForKey:@"msgType"] isEqualToString:@"quit"]) {
-            self.isReady = NO;
-            [self _stopWithError:@"当前设备已与Web端断开连接,如需继续圈选请扫码重新连接。"];
-        }
+    // web端退出了圈选
+    if ([[dict objectForKey:@"msgType"] isEqualToString:@"quit"]) {
+        self.isReady = NO;
+        [self _stopWithError:@"当前设备已与Web端断开连接,如需继续圈选请扫码重新连接。"];
     }
 }
 
@@ -571,6 +613,7 @@
     [self sendJson:dict];
 }
 
+/// TIPS:如果发送数据后，ws链接直接断开，可能是数据格式不正确导致，请自查
 - (void)webSocket:(id <GrowingWebSocketService>)webSocket
     didCloseWithCode:(NSInteger)code
               reason:(NSString *)reason
@@ -616,6 +659,7 @@
     if (!_isReady) {
         return;
     }
+    
     if ([eventType isEqualToString:GrowingEventTypeViewClick] || [eventType isEqualToString:GrowingEventTypePage]) {
         [self.cachedEvents addObject:eventType];
         if (self.onProcessing) {

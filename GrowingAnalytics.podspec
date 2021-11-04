@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'GrowingAnalytics'
-  s.version          = '3.3.1'
+  s.version          = '3.3.2-beta'
   s.summary          = 'iOS SDK of GrowingIO.'
   s.description      = <<-DESC
 GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和行为数据等。目前支持代码埋点、无埋点、可视化圈选、热图等功能。
@@ -100,6 +100,12 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   s.subspec 'Hybrid' do |hybrid|
       hybrid.source_files = 'Modules/Hybrid/**/*{.h,.m,.c,.cpp,.mm}'
       hybrid.dependency 'GrowingAnalytics/TrackerCore'
+  end
+  # 使用flutter无埋点插件时，将自动导入该库，正常情况下请勿手动导入
+  s.subspec 'Flutter' do |flutter|
+    flutter.source_files = 'Modules/Flutter/**/*{.h,.m,.c,.cpp,.mm}'
+      flutter.dependency 'GrowingAnalytics/WebCircle'
+      flutter.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'GROWING_ANALYSIS_FLUTTER_MIX=1'}
   end
 
   s.subspec 'DISABLE_IDFA' do |config|
