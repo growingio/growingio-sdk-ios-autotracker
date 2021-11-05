@@ -61,6 +61,11 @@
 #import "GrowingWebSocketService.h"
 #import "GrowingRealTracker.h"
 
+// 如果flutter混合开发
+#if GROWING_ANALYSIS_FLUTTER_MIX
+#import "GrowingFlutterPlugin.h"
+#endif
+
 @GrowingMod(GrowingWebCircle)
 
 @interface GrowingWeakObject : NSObject
@@ -92,6 +97,9 @@
 //当页面vc的page未生成，即viewDidAppear未执行，此时忽略数据，并不发送
 @property (nonatomic, assign) BOOL isPageDontShow;
 @property (nonatomic, strong) NSMutableArray *elements;
+#if GROWING_ANALYSIS_FLUTTER_MIX
+@property (atomic, strong) NSMutableDictionary *flutterDict;
+#endif
 @end
 
 @implementation GrowingWebCircle
@@ -191,7 +199,7 @@
     GrowingPage *page = [[GrowingPageManager sharedInstance] findPageByView:node.view];
     if (!page) {
         self.isPageDontShow = YES;
-        GIOLogDebug(@"page of view %@ not found", node.view);
+        GIOLogDebug(@"[GrowingWebCircle] page of view %@ not found", node.view);
     }
     GrowingWebCircleElement *element = GrowingWebCircleElement.builder.setRect(node.view.growingNodeFrame)
                                            .setContent(node.viewContent)
@@ -233,7 +241,7 @@
     UIView *node = viewNode.view;
     if ([node growingNodeUserInteraction] || [node isKindOfClass:NSClassFromString(@"WKWebView")]) {
         if ([node growingNodeDonotTrack] || [node growingNodeDonotCircle]) {
-            GIOLogDebug(@"圈选过滤节点:%@,DontTrack:%d,DontCircle:%d", [node class], [node growingNodeDonotTrack],
+            GIOLogDebug(@"[GrowingWebCircle] 圈选过滤节点:%@,DontTrack:%d,DontCircle:%d", [node class], [node growingNodeDonotTrack],
                         [node growingNodeDonotCircle]);
         } else {
             NSMutableDictionary *dict = [self dictFromNode:viewNode];
@@ -291,7 +299,16 @@
             return;
         }
     }
-
+#if GROWING_ANALYSIS_FLUTTER_MIX
+    if ([[GrowingPageManager sharedInstance].currentViewController isKindOfClass:NSClassFromString(@"FlutterViewController")]) {
+        if (self.flutterDict.count > 0) {
+            [finalDataDict addEntriesFromDictionary:self.flutterDict];
+            self.flutterDict = nil;
+        } else {
+            return;
+        }
+    } else {
+#endif
     NSMutableArray *pages = [NSMutableArray array];
     NSArray *vcs = [[GrowingPageManager sharedInstance] allDidAppearViewControllers];
     for (int i = 0; i < vcs.count; i++) {
@@ -300,12 +317,17 @@
         NSMutableDictionary *dict = [self dictFromPage:tmp xPath:page.path];
         [pages addObject:dict];
     }
-    finalDataDict[@"elements"] = self.elements;
-    finalDataDict[@"pages"] = pages;
+    finalDataDict[@"elements"] = self.elements ?: @[];
+    finalDataDict[@"pages"] = pages?:@[];
+#if GROWING_ANALYSIS_FLUTTER_MIX
+    }
+#endif
+    
     if (completion != nil) {
         completion(finalDataDict);
     }
 }
+
 
 - (NSDictionary *)dictForUserAction:(NSString *)action {
     if (action.length == 0) {
@@ -373,71 +395,67 @@
 - (void)runWithCircle:(NSURL *)url readyBlock:(void (^)(void))readyBlock finishBlock:(void (^)(void))finishBlock;
 {
     
-    if (self.webSocket) {
-        [self.webSocket close];
-        self.webSocket.delegate = nil;
-        self.webSocket = nil;
+    if (self.isReady) {
+        [self _stopWithError:nil];
     }
     
-    if (!self.isReady) {
-        [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(handleDeviceOrientationDidChange:)
-                                                     name:UIDeviceOrientationDidChangeNotification
-                                                   object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleDeviceOrientationDidChange:)
+                                                 name:UIDeviceOrientationDidChangeNotification
+                                               object:nil];
 
-        [UIApplication sharedApplication].idleTimerDisabled = YES;
-        GIOLogDebug(@"开始起服务");
-        
-        Class <GrowingWebSocketService> serviceClass = [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingWebSocketService)];
-        if (!serviceClass) {
-            GIOLogError(@"-runWithCircle:readyBlock:finishBlock: web circle error : no websocket service support");
-            return;
-        }
-        
-        self.webSocket = [[(Class)serviceClass alloc] initWithURLRequest:[NSURLRequest requestWithURL:url]];
-        self.webSocket.delegate = self;
-        [self.webSocket open];
-        
-        if (!self.statusWindow) {
-            self.statusWindow = [[GrowingStatusBar alloc] initWithFrame:[UIScreen mainScreen].bounds];
-            self.statusWindow.hidden = NO;
-            self.statusWindow.statusLable.text = @"正在等待web链接";
-            self.statusWindow.statusLable.textAlignment = NSTextAlignmentCenter;
-
-            __weak typeof(self) wself = self;
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                if (wself && [wself.statusWindow.statusLable.text isEqualToString:@"正在等待web链接"]) {
-                    GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert
-                                                                       title:@"提示"
-                                                                     message:
-                                                                         @"电脑端连接超时，请刷新电脑页面，"
-                                                                         @"再次尝试扫码圈选。"];
-                    [alert addOkWithTitle:@"知道了" handler:nil];
-                    [alert showAlertAnimated:NO];
-                }
-            });
-            self.statusWindow.onButtonClick = ^{
-                NSString *content = [NSString stringWithFormat:@"APP版本: %@\nSDK版本: %@",
-                                                               [GrowingDeviceInfo currentDeviceInfo].appFullVersion,
-                                                               GrowingTrackerVersionName];
-                GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert
-                                                                   title:@"正在进行圈选"
-                                                                 message:content];
-                [alert addOkWithTitle:@"继续圈选" handler:nil];
-                [alert
-                    addCancelWithTitle:@"退出圈选"
-                               handler:^(UIAlertAction *_Nonnull action, NSArray<UITextField *> *_Nonnull textFields) {
-                                   [wself stop];
-                               }];
-                [alert showAlertAnimated:NO];
-            };
-        }
-
-        self.onReadyBlock = readyBlock;
-        self.onFinishBlock = finishBlock;
+    [UIApplication sharedApplication].idleTimerDisabled = YES;
+    GIOLogDebug(@"开始起服务");
+    
+    Class <GrowingWebSocketService> serviceClass = [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingWebSocketService)];
+    if (!serviceClass) {
+        GIOLogError(@"-runWithCircle:readyBlock:finishBlock: web circle error : no websocket service support");
+        return;
     }
+    
+    self.webSocket = [[(Class)serviceClass alloc] initWithURLRequest:[NSURLRequest requestWithURL:url]];
+    self.webSocket.delegate = self;
+    [self.webSocket open];
+    
+    if (!self.statusWindow) {
+        self.statusWindow = [[GrowingStatusBar alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        self.statusWindow.hidden = NO;
+        self.statusWindow.statusLable.text = @"正在等待web链接";
+        self.statusWindow.statusLable.textAlignment = NSTextAlignmentCenter;
+
+        __weak typeof(self) wself = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if (wself && [wself.statusWindow.statusLable.text isEqualToString:@"正在等待web链接"]) {
+                GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert
+                                                                   title:@"提示"
+                                                                 message:
+                                                                     @"电脑端连接超时，请刷新电脑页面，"
+                                                                     @"再次尝试扫码圈选。"];
+                [alert addOkWithTitle:@"知道了" handler:nil];
+                [alert showAlertAnimated:NO];
+            }
+        });
+        self.statusWindow.onButtonClick = ^{
+            NSString *content = [NSString stringWithFormat:@"APP版本: %@\nSDK版本: %@",
+                                                           [GrowingDeviceInfo currentDeviceInfo].appFullVersion,
+                                                           GrowingTrackerVersionName];
+            GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert
+                                                               title:@"正在进行圈选"
+                                                             message:content];
+            [alert addOkWithTitle:@"继续圈选" handler:nil];
+            [alert
+                addCancelWithTitle:@"退出圈选"
+                           handler:^(UIAlertAction *_Nonnull action, NSArray<UITextField *> *_Nonnull textFields) {
+                               [wself stop];
+                           }];
+            [alert showAlertAnimated:NO];
+        };
+    }
+
+    self.onReadyBlock = readyBlock;
+    self.onFinishBlock = finishBlock;
 }
 
 - (void)handleDeviceOrientationDidChange:(UIInterfaceOrientation)interfaceOrientation {
@@ -452,6 +470,22 @@
 
 - (void)start {
     [self remoteReady];
+#if GROWING_ANALYSIS_FLUTTER_MIX
+    if ([GrowingFlutterPlugin sharedInstance].onNativeCircleStart) {
+        [GrowingFlutterPlugin sharedInstance].onNativeCircleStart();
+    }
+    __weak typeof(self) wself = self;
+    [GrowingFlutterPlugin sharedInstance].onFlutterCircleData = ^(NSDictionary * _Nonnull dataDict) {
+        wself.flutterDict = [NSMutableDictionary dictionaryWithDictionary:dataDict];
+        NSMutableArray *elements = dataDict[@"elements"];
+        NSMutableArray *pages = dataDict[@"pages"];
+        if (elements.count > 0 && pages.count > 0) {
+            /// 如果都有值，触发一次 wss，以保证数据上传
+            [wself webViewDomDidChanged];
+        }
+    };
+#endif
+    
     self.statusWindow.statusLable.text = @"正在进行GrowingIO移动端圈选";
     self.statusWindow.statusLable.textAlignment = NSTextAlignmentCenter;
     if (self.onReadyBlock) {
@@ -465,10 +499,18 @@
     //监听原生事件，变动时发送
     [[GrowingEventManager sharedInstance] addInterceptor:self];
     [[GrowingApplicationEventManager sharedInstance] addApplicationEventObserver:self];
+    
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_setNeedUpdateScreen) object:nil];
+    [self performSelector:@selector(_setNeedUpdateScreen) withObject:nil afterDelay:1];
 }
 
 - (void)stop {
-    GIOLogDebug(@"开始断开连接");
+    GIOLogDebug(@"[GrowingWebCircle] 断开连接");
+#if GROWING_ANALYSIS_FLUTTER_MIX
+    if ([GrowingFlutterPlugin sharedInstance].onNativeCircleStop) {
+        [GrowingFlutterPlugin sharedInstance].onNativeCircleStop();
+    }
+#endif
     NSDictionary *dict = @{@"msgType" : @"quit"};
     [self sendJson:dict];
     self.statusWindow.statusLable.text = @"正在关闭web圈选...";
@@ -477,11 +519,14 @@
 }
 
 - (void)_stopWithError:(NSString *)error {
+    self.isReady = NO;
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
     [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
 
     [[GrowingEventManager sharedInstance] removeInterceptor:self];
     [[GrowingApplicationEventManager sharedInstance] removeApplicationEventObserver:self];
+    
     if (self.webSocket) {
         self.webSocket.delegate = nil;
         [self.webSocket close];
@@ -524,36 +569,40 @@
 #pragma mark - Websocket Delegate
 
 - (void)webSocket:(id <GrowingWebSocketService>)webSocket didReceiveMessage:(id)message {
-    if ([message isKindOfClass:[NSString class]] || ((NSString *)message).length > 0) {
-        GIOLogDebug(@"didReceiveMessage: %@", message);
-        NSMutableDictionary *dict = [[message growingHelper_jsonObject] mutableCopy];
+    NSMutableDictionary *dict = nil;
+    if ([message isKindOfClass:[NSString class]] && ((NSString *)message).length > 0) {
+        GIOLogDebug(@"[GrowingWebCircle] didReceiveMessage: %@", message);
+        dict = [[message growingHelper_jsonObject] mutableCopy];
 
-        //如果收到了ready消息，说明可以发送圈选数据了
-        if ([[dict objectForKey:@"msgType"] isEqualToString:@"ready"]) {
-            [self start];
-        }
-        // 版本号不适配web圈选
-        if ([[dict objectForKey:@"msgType"] isEqualToString:@"incompatible_version"]) {
-            GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert
-                                                               title:@"抱歉"
-                                                             message:@"您使用的SDK版本号过低,请升级SDK后再使用"];
-            [alert addOkWithTitle:@"知道了" handler:nil];
-            [alert showAlertAnimated:NO];
-            [self stop];
-        }
+    }else if ([message isKindOfClass:[NSDictionary class]]) {
+        dict = [NSMutableDictionary dictionaryWithDictionary:(NSDictionary*)message];
+    }
+    
+    //如果收到了ready消息，说明可以发送圈选数据了
+    if ([[dict objectForKey:@"msgType"] isEqualToString:@"ready"]) {
+        [self start];
+    }
+    // 版本号不适配web圈选
+    if ([[dict objectForKey:@"msgType"] isEqualToString:@"incompatible_version"]) {
+        GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert
+                                                           title:@"抱歉"
+                                                         message:@"您使用的SDK版本号过低,请升级SDK后再使用"];
+        [alert addOkWithTitle:@"知道了" handler:nil];
+        [alert showAlertAnimated:NO];
+        [self stop];
+    }
 
-        // web端退出了圈选
-        if ([[dict objectForKey:@"msgType"] isEqualToString:@"quit"]) {
-            self.isReady = NO;
-            [self _stopWithError:@"当前设备已与Web端断开连接,如需继续圈选请扫码重新连接。"];
-        }
+    // web端退出了圈选
+    if ([[dict objectForKey:@"msgType"] isEqualToString:@"quit"]) {
+        self.isReady = NO;
+        [self _stopWithError:@"当前设备已与Web端断开连接,如需继续圈选请扫码重新连接。"];
     }
 }
 
 #pragma mark - websocket delegate
 
 - (void)webSocketDidOpen:(id <GrowingWebSocketService>)webSocket {
-    GIOLogDebug(@"websocket已连接");
+    GIOLogDebug(@"[GrowingWebCircle] websocket已连接");
     CGSize screenSize = [GrowingDeviceInfo deviceScreenSize];
     NSString *projectId = GrowingConfigurationManager.sharedInstance.trackConfiguration.projectId;
     NSDictionary *dict = @{
@@ -571,20 +620,21 @@
     [self sendJson:dict];
 }
 
+/// TIPS:如果发送数据后，ws链接直接断开，可能是数据格式不正确导致，请自查
 - (void)webSocket:(id <GrowingWebSocketService>)webSocket
     didCloseWithCode:(NSInteger)code
               reason:(NSString *)reason
             wasClean:(BOOL)wasClean {
-    GIOLogDebug(@"已断开链接");
-    _isReady = NO;
+    GIOLogDebug(@"[GrowingWebCircle] 已断开链接");
     if (code != GrowingWebSocketStatusCodeNormal) {
         [self _stopWithError:@"当前设备已与Web端断开连接,如需继续圈选请扫码重新连接。"];
+    } else {
+        [self _stopWithError:nil];
     }
 }
 
 - (void)webSocket:(id <GrowingWebSocketService>)webSocket didFailWithError:(NSError *)error {
-    GIOLogDebug(@"error : %@", error);
-    _isReady = NO;
+    GIOLogDebug(@"[GrowingWebCircle] webSocket didFailWithError : %@", error);
     [self _stopWithError:@"服务器链接失败"];
 }
 
@@ -616,6 +666,7 @@
     if (!_isReady) {
         return;
     }
+    
     if ([eventType isEqualToString:GrowingEventTypeViewClick] || [eventType isEqualToString:GrowingEventTypePage]) {
         [self.cachedEvents addObject:eventType];
         if (self.onProcessing) {

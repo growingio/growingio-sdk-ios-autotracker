@@ -37,6 +37,7 @@
 #import "GrowingTrackConfiguration.h"
 #import "NSDictionary+GrowingHelper.h"
 #import "NSString+GrowingHelper.h"
+#import "NSArray+GrowingHelper.h"
 #import "GrowingEventFilter.h"
 #import "GrowingEventNetworkService.h"
 #import "GrowingServiceManager.h"
@@ -438,7 +439,7 @@ static GrowingEventManager *sharedInstance = nil;
     for (NSString *rawEvent in events) {
         [arrayM addObject:[rawEvent growingHelper_jsonObject]];
     }
-    GIOLogDebug(@"(channel = %@, events = %@)\n", channel.urlTemplate, arrayM);
+    GIOLogDebug(@"(channel = %@, events = %@)\n", channel.urlTemplate, [arrayM growingHelper_jsonString]);
 }
 
 #pragma mark - Interceptor
