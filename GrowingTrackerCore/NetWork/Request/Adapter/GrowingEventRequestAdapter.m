@@ -17,20 +17,27 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import "GrowingEventRequestAdapter.h"
 #import "GrowingEventRequest.h"
 #import "NSData+GrowingHelper.h"
 #import "GrowingTimeUtil.h"
+#import "GrowingConfigurationManager.h"
+#import "GrowingLogger.h"
 
 @implementation GrowingEventRequestHeaderAdapter
 
 - (NSMutableURLRequest *)adaptedRequest:(NSMutableURLRequest *)request {
-    
     NSMutableURLRequest *needAdaptReq = request;
 #ifdef GROWING_ANALYSIS_ENABLE_ENCRYPTION
+    // deprecated
     [needAdaptReq setValue:@"3" forHTTPHeaderField:@"X-Compress-Codec"];
     [needAdaptReq setValue:@"1" forHTTPHeaderField:@"X-Crypt-Codec"];
+#else
+    BOOL encryptEnabled = GrowingConfigurationManager.sharedInstance.trackConfiguration.encryptEnabled;
+    if (encryptEnabled) {
+        [needAdaptReq setValue:@"3" forHTTPHeaderField:@"X-Compress-Codec"];
+        [needAdaptReq setValue:@"1" forHTTPHeaderField:@"X-Crypt-Codec"];
+    }
 #endif
     [needAdaptReq setValue:[NSString stringWithFormat:@"%lld",[GrowingTimeUtil currentTimeMillis]] forHTTPHeaderField:@"X-Timestamp"];
     [needAdaptReq setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
@@ -71,8 +78,15 @@
         NSString *jsonString = [self buildJSONStringWithEvents:self.events];
         JSONData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
 #ifdef GROWING_ANALYSIS_ENABLE_ENCRYPTION
+        // deprecated
         JSONData = [JSONData growingHelper_LZ4String];
         JSONData = [JSONData growingHelper_xorEncryptWithHint:(self.timestamp & 0xFF)];
+#else
+        BOOL encryptEnabled = GrowingConfigurationManager.sharedInstance.trackConfiguration.encryptEnabled;
+        if (encryptEnabled) {
+            JSONData = [JSONData growingHelper_LZ4String];
+            JSONData = [JSONData growingHelper_xorEncryptWithHint:(self.timestamp & 0xFF)];
+        }
 #endif
     }
     if (self.outsizeBlock) {
