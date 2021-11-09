@@ -37,7 +37,7 @@
 #import "GrowingModuleManager.h"
 #import "GrowingEventManager.h"
 
-NSString *const GrowingTrackerVersionName = @"3.3.1";
+NSString *const GrowingTrackerVersionName = @"3.3.1-hotfix.1";
 const int GrowingTrackerVersionCode = 30301;
 
 @interface GrowingRealTracker ()
@@ -103,6 +103,16 @@ const int GrowingTrackerVersionCode = 30301;
 - (void)versionPrint {
     NSString *versionStr = [NSString stringWithFormat:@"Thank you very much for using GrowingIO. We will do our best to provide you with the best service. GrowingIO version: %@",GrowingTrackerVersionName];
     GIOLogInfo(@"%@", versionStr);
+    
+#ifdef GROWING_ANALYSIS_ENABLE_ENCRYPTION
+    GIOLogWarn(@"\n"
+               @"╔═══════════════════════════════════════════════════════════════════════════════════════\n"
+               @"║ \n"
+               @"║ WARNING: pod ENABLE_ENCRYPTION is deprecated, please use -[GrowingTrackConfiguration setEncryptEnabled]\n"
+               @"║ 警告: pod ENABLE_ENCRYPTION 已被废弃, 请使用 -[GrowingTrackConfiguration setEncryptEnabled] 进行配置\n"
+               @"║ \n"
+               @"╚═══════════════════════════════════════════════════════════════════════════════════════");
+#endif
 }
 
 + (NSString *)versionName {
