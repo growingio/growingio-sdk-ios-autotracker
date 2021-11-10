@@ -47,6 +47,12 @@ static GrowingServiceManager *manager = nil;
 
 #pragma mark - private
 
+- (void)registerServiceName:(NSString *)serviceName implClassName:(NSString *)serviceClassName {
+    dispatch_semaphore_wait(_signallock, DISPATCH_TIME_FOREVER);
+    [_allServiceDict setValue:serviceClassName forKey:serviceName];
+    dispatch_semaphore_signal(_signallock);
+}
+
 - (void)registerService:(Protocol*)service implClass:(Class)serviceClass {
     dispatch_semaphore_wait(_signallock, DISPATCH_TIME_FOREVER);
     [_allServiceDict setValue:NSStringFromClass(serviceClass) forKey:NSStringFromProtocol(service)];
