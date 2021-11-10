@@ -34,7 +34,6 @@
 #endif
 
 NSArray<NSString *> *GrowingReadConfiguration(char *sectionName, const struct mach_header *mhp) {
-    NSMutableArray *configs = [NSMutableArray array];
     unsigned long size = 0;
 #ifndef __LP64__
     uintptr_t *memory = (uintptr_t *)getsectiondata(mhp, SEG_DATA, sectionName, &size);
@@ -44,11 +43,15 @@ NSArray<NSString *> *GrowingReadConfiguration(char *sectionName, const struct ma
 #endif
 
     unsigned long counter = size / sizeof(void *);
+    if (counter == 0) {
+        return nil;
+    }
+    NSMutableArray *configs = [NSMutableArray array];
     for (int idx = 0; idx < counter; ++idx) {
         char *string = (char *)memory[idx];
         NSString *str = [NSString stringWithUTF8String:string];
         if (!str) continue;
-        GrowingLog(@"config = %@", str);
+        GrowingLog(@"[Growing] %@", str);
         if (str) [configs addObject:str];
     }
 
@@ -56,15 +59,12 @@ NSArray<NSString *> *GrowingReadConfiguration(char *sectionName, const struct ma
 }
 
 static void dyld_callback(const struct mach_header *mhp, intptr_t vmaddr_slide) {
+    
     NSArray *mods = GrowingReadConfiguration(GrowingModSectName, mhp);
     for (NSString *modName in mods) {
-        Class cls;
         if (modName) {
-            cls = NSClassFromString(modName);
-
-            if (cls) {
-                [[GrowingModuleManager sharedInstance] registerDynamicModule:cls];
-            }
+            // 这里不进行 name -> class 转换,且只存储NSString
+            [[GrowingModuleManager sharedInstance] addLocalModule:modName];
         }
     }
 
@@ -78,16 +78,15 @@ static void dyld_callback(const struct mach_header *mhp, intptr_t vmaddr_slide) 
             if ([json isKindOfClass:[NSDictionary class]] && [json allKeys].count) {
                 NSString *protocol = [json allKeys][0];
                 NSString *clsName = [json allValues][0];
-
                 if (protocol && clsName) {
-                    [[GrowingServiceManager sharedInstance] registerService:NSProtocolFromString(protocol)
-                                                                 implClass:NSClassFromString(clsName)];
+                    // 这里不进行 name -> class 转换,且只存储NSString
+                    [[GrowingServiceManager sharedInstance] registerServiceName:protocol implClassName:clsName];
                 }
             }
         }
     }
 }
-
+// add callback before main()
 __attribute__((constructor)) void GrowingInitProphet(void) {
     _dyld_register_func_for_add_image(dyld_callback);
 }

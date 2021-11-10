@@ -58,14 +58,16 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
 
 
 @interface GrowingModuleManager()
+/// 存module名，load之后清空
+@property(nonatomic, strong) NSMutableArray     *growingModuleNames;
+/// 存module class
+@property(nonatomic, strong) NSMutableArray     *growingModuleDynamicClasses;
+/// 存封装有module class的info类
+@property(nonatomic, strong) NSMutableArray<NSDictionary *>     *growingModuleInfos;
+@property(nonatomic, strong) NSMutableArray     *growingModules;
 
-@property(nonatomic, strong) NSMutableArray     *GrowingModuleDynamicClasses;
-
-@property(nonatomic, strong) NSMutableArray<NSDictionary *>     *GrowingModuleInfos;
-@property(nonatomic, strong) NSMutableArray     *GrowingModules;
-
-@property(nonatomic, strong) NSMutableDictionary<NSNumber *, NSMutableArray<id<GrowingModuleProtocol>> *> *GrowingModulesByEvent;
-@property(nonatomic, strong) NSMutableDictionary<NSNumber *, NSString *> *GrowingSelectorByEvent;
+@property(nonatomic, strong) NSMutableDictionary<NSNumber *, NSMutableArray<id<GrowingModuleProtocol>> *> *growingModulesByEvent;
+@property(nonatomic, strong) NSMutableDictionary<NSNumber *, NSString *> *growingSelectorByEvent;
 
 @end
 
@@ -81,7 +83,18 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
     });
     return sharedManager;
 }
+// 仅添加string，规避运行时转换class
+- (void)addLocalModule:(NSString *)modulename {
+    [self.growingModuleNames addObject:modulename];
+}
 
+// 从存储的name数组中读取所有的module
+- (void)loadLocalModules {
+    for (NSString *name in self.growingModuleNames) {
+        [self registerDynamicModule:NSClassFromString(name)];
+    }
+    [self.growingModuleNames removeAllObjects];
+}
 
 - (void)registerDynamicModule:(Class)moduleClass
 {
@@ -93,18 +106,18 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
     if (!moduleClass) {
         return;
     }
-    [self.GrowingModuleInfos filterUsingPredicate:[NSPredicate predicateWithFormat:@"%@!=%@", kModuleInfoNameKey, NSStringFromClass(moduleClass)]];
+    [self.growingModuleInfos filterUsingPredicate:[NSPredicate predicateWithFormat:@"%@!=%@", kModuleInfoNameKey, NSStringFromClass(moduleClass)]];
     __block NSInteger index = -1;
-    [self.GrowingModules enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [self.growingModules enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([obj isKindOfClass:moduleClass]) {
             index = idx;
             *stop = YES;
         }
     }];
     if (index >= 0) {
-        [self.GrowingModules removeObjectAtIndex:index];
+        [self.growingModules removeObjectAtIndex:index];
     }
-    [self.GrowingModulesByEvent enumerateKeysAndObjectsUsingBlock:^(NSNumber * _Nonnull key, NSMutableArray<id<GrowingModuleProtocol>> * _Nonnull obj, BOOL * _Nonnull stop) {
+    [self.growingModulesByEvent enumerateKeysAndObjectsUsingBlock:^(NSNumber * _Nonnull key, NSMutableArray<id<GrowingModuleProtocol>> * _Nonnull obj, BOOL * _Nonnull stop) {
         __block NSInteger index = -1;
         [obj enumerateObjectsUsingBlock:^(id<GrowingModuleProtocol>  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if ([obj isKindOfClass:moduleClass]) {
@@ -120,8 +133,8 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
 
 - (void)registedAllModules
 {
-
-    [self.GrowingModuleInfos sortUsingComparator:^NSComparisonResult(NSDictionary *module1, NSDictionary *module2) {
+    [self loadLocalModules];
+    [self.growingModuleInfos sortUsingComparator:^NSComparisonResult(NSDictionary *module1, NSDictionary *module2) {
         NSNumber *module1Level = (NSNumber *)[module1 objectForKey:kModuleInfoLevelKey];
         NSNumber *module2Level =  (NSNumber *)[module2 objectForKey:kModuleInfoLevelKey];
         if (module1Level.integerValue != module2Level.integerValue) {
@@ -136,7 +149,7 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
     NSMutableArray *tmpArray = [NSMutableArray array];
     
     //module init
-    [self.GrowingModuleInfos enumerateObjectsUsingBlock:^(NSDictionary *module, NSUInteger idx, BOOL * _Nonnull stop) {
+    [self.growingModuleInfos enumerateObjectsUsingBlock:^(NSDictionary *module, NSUInteger idx, BOOL * _Nonnull stop) {
         
         NSString *classStr = [module objectForKey:kModuleInfoNameKey];
         
@@ -150,9 +163,9 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
         
     }];
     
-    [self.GrowingModules removeAllObjects];
+    [self.growingModules removeAllObjects];
 
-    [self.GrowingModules addObjectsFromArray:tmpArray];
+    [self.growingModules addObjectsFromArray:tmpArray];
     
     [self registerAllSystemEvents];
 }
@@ -200,7 +213,7 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
 {
     self = [super init];
     if (self) {
-        self.GrowingModuleDynamicClasses = [NSMutableArray array];
+        self.growingModuleDynamicClasses = [NSMutableArray array];
     }
     return self;
 }
@@ -253,7 +266,7 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
             [moduleInfo setObject:moduleName forKey:kModuleInfoNameKey];
         }
 
-        [self.GrowingModuleInfos addObject:moduleInfo];
+        [self.growingModuleInfos addObject:moduleInfo];
     
         [moduleInfo setObject:@(NO) forKey:kModuleInfoHasInstantiatedKey];
     }
@@ -261,16 +274,16 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
 
 - (void)registerAllSystemEvents
 {
-    [self.GrowingModules enumerateObjectsUsingBlock:^(id<GrowingModuleProtocol> moduleInstance, NSUInteger idx, BOOL * _Nonnull stop) {
+    [self.growingModules enumerateObjectsUsingBlock:^(id<GrowingModuleProtocol> moduleInstance, NSUInteger idx, BOOL * _Nonnull stop) {
         [self registerEventsByModuleInstance:moduleInstance];
     }];
 }
 
 - (void)registerEventsByModuleInstance:(id<GrowingModuleProtocol>)moduleInstance
 {
-    NSArray<NSNumber *> *events = self.GrowingSelectorByEvent.allKeys;
+    NSArray<NSNumber *> *events = self.growingSelectorByEvent.allKeys;
     [events enumerateObjectsUsingBlock:^(NSNumber * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [self registerEvent:obj.integerValue withModuleInstance:moduleInstance andSelectorStr:self.GrowingSelectorByEvent[obj]];
+        [self registerEvent:obj.integerValue withModuleInstance:moduleInstance andSelectorStr:self.growingSelectorByEvent[obj]];
     }];
 }
 
@@ -282,13 +295,13 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
         return;
     }
     NSNumber *eventTypeNumber = @(eventType);
-    if (!self.GrowingSelectorByEvent[eventTypeNumber]) {
-        [self.GrowingSelectorByEvent setObject:selectorStr forKey:eventTypeNumber];
+    if (!self.growingSelectorByEvent[eventTypeNumber]) {
+        [self.growingSelectorByEvent setObject:selectorStr forKey:eventTypeNumber];
     }
-    if (!self.GrowingModulesByEvent[eventTypeNumber]) {
-        [self.GrowingModulesByEvent setObject:@[].mutableCopy forKey:eventTypeNumber];
+    if (!self.growingModulesByEvent[eventTypeNumber]) {
+        [self.growingModulesByEvent setObject:@[].mutableCopy forKey:eventTypeNumber];
     }
-    NSMutableArray *eventModules = [self.GrowingModulesByEvent objectForKey:eventTypeNumber];
+    NSMutableArray *eventModules = [self.growingModulesByEvent objectForKey:eventTypeNumber];
     if (![eventModules containsObject:moduleInstance]) {
         [eventModules addObject:moduleInstance];
         [eventModules sortUsingComparator:^NSComparisonResult(id<GrowingModuleProtocol> moduleInstance1, id<GrowingModuleProtocol> moduleInstance2) {
@@ -318,33 +331,41 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
 }
 
 #pragma mark - property setter or getter
-- (NSMutableArray<NSDictionary *> *)GrowingModuleInfos {
-    if (!_GrowingModuleInfos) {
-        _GrowingModuleInfos = @[].mutableCopy;
+
+- (NSMutableArray *)growingModuleNames {
+    if (!_growingModuleNames) {
+        _growingModuleNames = @[].mutableCopy;
     }
-    return _GrowingModuleInfos;
+    return _growingModuleNames;
 }
 
-- (NSMutableArray *)GrowingModules
-{
-    if (!_GrowingModules) {
-        _GrowingModules = [NSMutableArray array];
+- (NSMutableArray<NSDictionary *> *)growingModuleInfos {
+    if (!_growingModuleInfos) {
+        _growingModuleInfos = @[].mutableCopy;
     }
-    return _GrowingModules;
+    return _growingModuleInfos;
 }
 
-- (NSMutableDictionary<NSNumber *, NSMutableArray<id<GrowingModuleProtocol>> *> *)GrowingModulesByEvent
+- (NSMutableArray *)growingModules
 {
-    if (!_GrowingModulesByEvent) {
-        _GrowingModulesByEvent = @{}.mutableCopy;
+    if (!_growingModules) {
+        _growingModules = [NSMutableArray array];
     }
-    return _GrowingModulesByEvent;
+    return _growingModules;
 }
 
-- (NSMutableDictionary<NSNumber *, NSString *> *)GrowingSelectorByEvent
+- (NSMutableDictionary<NSNumber *, NSMutableArray<id<GrowingModuleProtocol>> *> *)growingModulesByEvent
 {
-    if (!_GrowingSelectorByEvent) {
-        _GrowingSelectorByEvent = @{
+    if (!_growingModulesByEvent) {
+        _growingModulesByEvent = @{}.mutableCopy;
+    }
+    return _growingModulesByEvent;
+}
+
+- (NSMutableDictionary<NSNumber *, NSString *> *)growingSelectorByEvent
+{
+    if (!_growingSelectorByEvent) {
+        _growingSelectorByEvent = @{
                                @(GrowingMSetupEvent):kSetupSelector,
                                @(GrowingMInitEvent):kInitSelector,
                                @(GrowingMTearDownEvent):kTearDownSelector,
@@ -380,7 +401,7 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
                                @(GrowingMDidCustomEvent):kAppCustomSelector,
                                }.mutableCopy;
     }
-    return _GrowingSelectorByEvent;
+    return _growingSelectorByEvent;
 }
 
 #pragma mark - module protocol
@@ -398,7 +419,7 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
             [self handleModulesTearDownEventForTarget:nil withCustomParam:customParam];
             break;
         default: {
-            NSString *selectorStr = [self.GrowingSelectorByEvent objectForKey:@(eventType)];
+            NSString *selectorStr = [self.growingSelectorByEvent objectForKey:@(eventType)];
             [self handleModuleEvent:eventType forTarget:nil withSeletorStr:selectorStr andCustomParam:customParam];
         }
             break;
@@ -417,7 +438,7 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
     if (target) {
         moduleInstances = @[target];
     } else {
-        moduleInstances = [self.GrowingModulesByEvent objectForKey:@(GrowingMInitEvent)];
+        moduleInstances = [self.growingModulesByEvent objectForKey:@(GrowingMInitEvent)];
     }
     
     [moduleInstances enumerateObjectsUsingBlock:^(id<GrowingModuleProtocol> moduleInstance, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -460,7 +481,7 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
     if (target) {
         moduleInstances = @[target];
     } else {
-        moduleInstances = [self.GrowingModulesByEvent objectForKey:@(GrowingMTearDownEvent)];
+        moduleInstances = [self.growingModulesByEvent objectForKey:@(GrowingMTearDownEvent)];
     }
 
     //Reverse Order to unload
@@ -478,18 +499,18 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
            andCustomParam:(NSDictionary *)customParam
 {
     if (!selectorStr.length) {
-        selectorStr = [self.GrowingSelectorByEvent objectForKey:@(eventType)];
+        selectorStr = [self.growingSelectorByEvent objectForKey:@(eventType)];
     }
     SEL seletor = NSSelectorFromString(selectorStr);
     if (!seletor) {
-        selectorStr = [self.GrowingSelectorByEvent objectForKey:@(eventType)];
+        selectorStr = [self.growingSelectorByEvent objectForKey:@(eventType)];
         seletor = NSSelectorFromString(selectorStr);
     }
     NSArray<id<GrowingModuleProtocol>> *moduleInstances;
     if (target) {
         moduleInstances = @[target];
     } else {
-        moduleInstances = [self.GrowingModulesByEvent objectForKey:@(eventType)];
+        moduleInstances = [self.growingModulesByEvent objectForKey:@(eventType)];
     }
     [moduleInstances enumerateObjectsUsingBlock:^(id<GrowingModuleProtocol> moduleInstance, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([moduleInstance respondsToSelector:seletor]) {
