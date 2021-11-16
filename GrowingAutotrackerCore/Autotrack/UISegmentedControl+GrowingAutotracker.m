@@ -52,9 +52,9 @@
     return [self growing_labelForSegment:segment].text;
 }
 
-- (NSArray*)growing_segmentViews {
+- (nullable NSArray *)growing_segmentViews {
     NSArray *array = nil;
-    if([self growingHelper_getIvar:"_segments" outObj:&array]) {
+    if ([self growingHelper_getIvar:"_segments" outObj:&array]) {
         return array;
     }
     return nil;

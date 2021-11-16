@@ -39,9 +39,9 @@
         }
     } @catch (NSException *exception) {
         jsonData = nil;
-    } @finally {
-        return jsonData;
     }
+    
+    return jsonData;
 }
 
 - (NSString*)growingHelper_jsonString {

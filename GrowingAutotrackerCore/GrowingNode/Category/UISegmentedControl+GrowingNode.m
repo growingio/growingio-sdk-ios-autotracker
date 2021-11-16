@@ -33,7 +33,7 @@
     return NO;  // the UISegmentControl itself is not interactive
 }
 
-- (NSArray<id<GrowingNode>>*)growingNodeChilds {
+- (NSArray <id<GrowingNode>> * _Nullable)growingNodeChilds {
     return self.growing_segmentViews;
 }
 
@@ -50,13 +50,15 @@
     if (clazz) {
         [classes addObject:clazz];
     }
-    for (unsigned int i = 0 ; i < count ; i++) {
-        Method method = methods[i];
-        for (Class clazz in classes) {
-            class_addMethod(clazz,
-                            method_getName(method),
-                            method_getImplementation(method),
-                            method_getTypeEncoding(method));
+    if (methods) {
+        for (unsigned int i = 0; i < count; i++) {
+            Method method = methods[i];
+            for (Class clazz in classes) {
+                class_addMethod(clazz,
+                                method_getName(method),
+                                method_getImplementation(method),
+                                method_getTypeEncoding(method));
+            }
         }
     }
     free(methods);

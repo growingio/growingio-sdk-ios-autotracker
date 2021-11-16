@@ -26,11 +26,13 @@
     unsigned count = 0;
     Ivar var = nil;
     Ivar *ivars = class_copyIvarList(self.class, &count);
-    for (unsigned int i = 0; i < count; ++i) {
-        const char *name = ivar_getName(ivars[i]);
-        if (strcmp(name, ivarName) == 0) {
-            var = ivars[i];
-            break;
+    if (ivars) {
+        for (unsigned int i = 0; i < count; ++i) {
+            const char *name = ivar_getName(ivars[i]);
+            if (strcmp(name, ivarName) == 0) {
+                var = ivars[i];
+                break;
+            }
         }
     }
     free(ivars);

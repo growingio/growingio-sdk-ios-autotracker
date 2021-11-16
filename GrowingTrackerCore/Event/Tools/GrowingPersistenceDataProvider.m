@@ -79,7 +79,7 @@ static GrowingPersistenceDataProvider *persistence = nil;
     [_growingUserdefault synchronize];
 }
 
-- (NSString *)loginUserId {
+- (nullable NSString *)loginUserId {
     return  [_growingUserdefault valueForKey:kGrowingUserdefault_loginUserId];
 }
 
@@ -92,7 +92,7 @@ static GrowingPersistenceDataProvider *persistence = nil;
     //write now!
     [_growingUserdefault synchronize];
 }
-- (NSString *)loginUserKey {
+- (nullable NSString *)loginUserKey {
     return  [_growingUserdefault valueForKey:kGrowingUserdefault_loginUserKey];
 }
 

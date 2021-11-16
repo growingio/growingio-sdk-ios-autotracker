@@ -24,8 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingEventChannel : NSObject
 
-@property (nonatomic, copy)   NSArray<NSString *> * eventTypes;
-@property (nonatomic, copy)   NSString * urlTemplate;
+@property (nonatomic, copy, nullable) NSArray<NSString *> *eventTypes;
+@property (nonatomic, copy) NSString *urlTemplate;
 @property (nonatomic, assign) BOOL isCustomEvent;
 @property (nonatomic, assign) BOOL isUploading;
 

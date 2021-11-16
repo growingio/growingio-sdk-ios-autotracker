@@ -36,7 +36,9 @@
                                                  
             if (collectionView && indexPath) {
                 UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-                [GrowingViewClickProvider viewOnClick:cell];
+                if (cell) {
+                    [GrowingViewClickProvider viewOnClick:cell];
+                }
             }
         };
         

@@ -36,7 +36,9 @@
                                                  
             if (tableView && indexPath) {
                 UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                [GrowingViewClickProvider viewOnClick:cell];
+                if (cell) {
+                    [GrowingViewClickProvider viewOnClick:cell];
+                }
             }
         };
         [GrowingSwizzler growing_swizzleSelector:selector
