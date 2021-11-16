@@ -41,20 +41,28 @@ NSString *const kGrowingDirCommonPrefix = @"com.growingio.";
 }
 
 - (instancetype)initWithName:(NSString *)name {
-    id <GrowingEncryptionService> impl = [[GrowingServiceManager sharedInstance] createService:NSProtocolFromString(@"GrowingEncryptionService")];
+    Protocol *proto = NSProtocolFromString(@"GrowingEncryptionService");
+    id <GrowingEncryptionService> impl;
+    if (proto) {
+        impl = [[GrowingServiceManager sharedInstance] createService:proto];
+    }
     return [self initWithName:name directory:GrowingUserDirectoryLibrary crypto:impl];
 }
 
 - (instancetype)initWithName:(NSString *)name directory:(GrowingUserDirectory)directory {
-    id <GrowingEncryptionService> impl = [[GrowingServiceManager sharedInstance] createService:NSProtocolFromString(@"GrowingEncryptionService")];
+    Protocol *proto = NSProtocolFromString(@"GrowingEncryptionService");
+    id <GrowingEncryptionService> impl;
+    if (proto) {
+        impl = [[GrowingServiceManager sharedInstance] createService:proto];
+    }
     return [self initWithName:name directory:directory crypto:impl];
 }
 
-- (instancetype)initWithName:(NSString *)name directory:(GrowingUserDirectory)directory crypto:(id<GrowingEncryptionService>)crypto {
+- (instancetype)initWithName:(NSString *)name directory:(GrowingUserDirectory)directory crypto:(id<GrowingEncryptionService> _Nullable)crypto {
     if (self = [super init]) {
         NSString *fullPath = [NSString stringWithFormat:@"%@/%@%@", kGrowingResidentDirName, kGrowingDirCommonPrefix, name];
         NSURL *userDir = [GrowingFileStorage userDirectoryURL:directory];
-        _folderURL = [userDir URLByAppendingPathComponent:fullPath];;
+        _folderURL = [userDir URLByAppendingPathComponent:fullPath];
         _crypto = crypto;
         [self createDirectoryAtURLIfNeeded:_folderURL];
         return self;

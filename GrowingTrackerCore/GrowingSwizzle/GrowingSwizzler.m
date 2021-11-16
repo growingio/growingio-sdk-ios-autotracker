@@ -181,10 +181,12 @@ static void (*growing_swizzledMethods[GROWING_MAX_ARGS - GROWING_MIN_ARGS + 1])(
     uint count;
     BOOL isLocal = NO;
     Method *methods = class_copyMethodList(aClass, &count);
-    for (NSUInteger i = 0; i < count; i++) {
-        if (aMethod == methods[i]) {
-            isLocal = YES;
-            break;
+    if (methods) {
+        for (NSUInteger i = 0; i < count; i++) {
+            if (aMethod == methods[i]) {
+                isLocal = YES;
+                break;
+            }
         }
     }
     free(methods);

@@ -57,7 +57,7 @@
     }
 }
 
-+ (UIAlertAction *)growing_actionForActionView:(UIView*)actionView {
++ (nullable UIAlertAction *)growing_actionForActionView:(UIView*)actionView {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     NSString *viewSelectorString = [NSString stringWithFormat:@"a%@ion%@w", @"ct", @"Vie"];

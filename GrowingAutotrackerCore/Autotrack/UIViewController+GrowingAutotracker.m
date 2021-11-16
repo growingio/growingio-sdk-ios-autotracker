@@ -56,7 +56,7 @@ GrowingPropertyDefine(UIViewController, NSNumber *, growingHook_hasDidAppear, se
     return pageName;
 }
 
-- (NSString *)growingPageTitle {
+- (nullable NSString *)growingPageTitle {
     NSString *currentPageName = self.title;
     if (!currentPageName.length) {
         currentPageName = self.navigationItem.title;

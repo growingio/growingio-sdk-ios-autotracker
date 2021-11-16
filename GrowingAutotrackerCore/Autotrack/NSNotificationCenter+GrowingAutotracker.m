@@ -47,7 +47,7 @@ GrowingPropertyDefine(UITextView, NSString *, growingHookOldText, setGrowingHook
         if (inputView.isSecureTextEntry) { return; }
         
         NSString *text = inputView.text;
-        if (![inputView.growingHookOldText isEqualToString:text]) {
+        if (text && ![inputView.growingHookOldText isEqualToString:text]) {
             inputView.growingHookOldText = text;
             [GrowingViewChangeProvider viewOnChange:inputView];
 //            [GrowingTextEditContentChangeEvent sendEventWithNode:inputView andEventType:GrowingEventTypeUIChangeText];

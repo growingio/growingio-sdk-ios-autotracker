@@ -95,9 +95,9 @@ typedef NS_OPTIONS(NSUInteger, GrowingEventSendPolicy) {
 @property(nonatomic, copy, readonly) NSString *_Nullable appChannel;
 @property(nonatomic, assign, readonly) NSInteger screenHeight;
 @property(nonatomic, assign, readonly) NSInteger screenWidth;
-@property(nonatomic, copy, readonly) NSString *_Nonnull deviceBrand;
-@property(nonatomic, copy, readonly) NSString *_Nonnull deviceModel;
-@property(nonatomic, copy, readonly) NSString *_Nonnull deviceType;
+@property(nonatomic, copy, readonly) NSString *_Nullable deviceBrand;
+@property(nonatomic, copy, readonly) NSString *_Nullable deviceModel;
+@property(nonatomic, copy, readonly) NSString *_Nullable deviceType;
 @property(nonatomic, copy, readonly) NSString *_Nonnull appName;
 @property(nonatomic, copy, readonly) NSString *_Nonnull appVersion;
 @property(nonatomic, copy, readonly) NSString *_Nonnull language;

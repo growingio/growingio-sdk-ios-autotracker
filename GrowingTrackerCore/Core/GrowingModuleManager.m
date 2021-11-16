@@ -226,10 +226,8 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
     switch (level) {
         case 0:
             return GrowingModuleBasic;
-            break;
         case 1:
             return GrowingModuleNormal;
-            break;
         default:
             break;
     }

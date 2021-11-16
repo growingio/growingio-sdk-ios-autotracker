@@ -430,7 +430,7 @@ GrowingSafeStringPropertyImplementation(growingUniqueTag, setGrowingUniqueTag)
         return;
     }
 
-    if ([eventName isEqualToString:self.growingIMPTrackEventName]) {
+    if (self.growingIMPTrackEventName && [eventName isEqualToString:self.growingIMPTrackEventName]) {
         if ((attributes && [attributes isEqualToDictionary:self.growingIMPTrackVariable]) ||
                 attributes == self.growingIMPTrackVariable) {
             return;

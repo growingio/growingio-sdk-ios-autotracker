@@ -61,6 +61,9 @@
             if ([delegate respondsToSelector:@selector(application:openURL:options:)]) {
                 SEL sel = @selector(application:openURL:options:);
                 Method method = class_getInstanceMethod(delegate.class,sel);
+                if (!method) {
+                    return;
+                }
                 IMP originImp = method_getImplementation(method);
                 method_setImplementation(method, imp_implementationWithBlock(^(id target,UIApplication *application,NSURL *url,NSDictionary<UIApplicationOpenURLOptionsKey, id> * options) {
                     [GrowingDeepLinkHandler handlerUrl:url];
@@ -70,6 +73,9 @@
             }else if ([delegate respondsToSelector:@selector(application:openURL:sourceApplication:annotation:)]) {
                 SEL sel = @selector(application:openURL:sourceApplication:annotation:);
                 Method method = class_getInstanceMethod(delegate.class,sel);
+                if (!method) {
+                    return;
+                }
                 IMP originImp = method_getImplementation(method);
                 method_setImplementation(method, imp_implementationWithBlock(^(id target,UIApplication *application,NSURL *url,NSString* sourceApplication,id annotation) {
                     [GrowingDeepLinkHandler handlerUrl:url];
@@ -79,6 +85,9 @@
             } else if ([delegate respondsToSelector:@selector(application:handleOpenURL:)]) {
                 SEL sel = @selector(application:handleOpenURL:);
                 Method method = class_getInstanceMethod(delegate.class,sel);
+                if (!method) {
+                    return;
+                }
                 IMP originImp = method_getImplementation(method);
                 method_setImplementation(method, imp_implementationWithBlock(^(id target,UIApplication *application,NSURL *url) {
                     [GrowingDeepLinkHandler handlerUrl:url];
@@ -96,6 +105,9 @@
             if ([delegate respondsToSelector:@selector(application:continueUserActivity:restorationHandler:)]) {
                 SEL sel = @selector(application:continueUserActivity:restorationHandler:);
                 Method method = class_getInstanceMethod(delegate.class,sel);
+                if (!method) {
+                    return;
+                }
                 IMP originImp = method_getImplementation(method);
                 method_setImplementation(method, imp_implementationWithBlock(^(id target,UIApplication *application,NSUserActivity *userActivity,void (^restorationHandler)(NSArray<id <UIUserActivityRestoring>> *)) {
                     [GrowingDeepLinkHandler handlerUrl:userActivity.webpageURL];
@@ -119,7 +131,9 @@
                     NSString *classname = [dic objectForKey:@"UISceneDelegateClassName"];
                     if (classname) {
                         Class cls = NSClassFromString(classname);
-                        [GrowingSceneDelegateAutotracker track:cls];
+                        if (cls) {
+                            [GrowingSceneDelegateAutotracker track:cls];
+                        }
                     }
                 }
 

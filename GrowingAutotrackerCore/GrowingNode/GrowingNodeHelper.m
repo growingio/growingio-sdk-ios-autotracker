@@ -34,7 +34,7 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
 @implementation GrowingNodeHelper
 
 //当node为列表视图时，返回路径为 TableView/cell[-]，序号在index字段中返回
-+ (NSString *)xPathSimilarForNode:(id<GrowingNode>)node {
++ (nullable NSString *)xPathSimilarForNode:(id<GrowingNode>)node {
     if ([node isKindOfClass:[UIView class]]) {
         return [self xPathForView:(UIView *)node similar:YES];
     } else if ([node isKindOfClass:[UIViewController class]]) {
@@ -43,7 +43,7 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
     return nil;
 }
 
-+ (NSString *)xPathForNode:(id<GrowingNode>)node {
++ (nullable NSString *)xPathForNode:(id<GrowingNode>)node {
     if ([node isKindOfClass:[UIView class]]) {
         return [self xPathForView:(UIView *)node similar:NO];
     } else if ([node isKindOfClass:[UIViewController class]]) {
@@ -55,7 +55,7 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
 /// 获取某个view的xpath
 /// @param view 节点
 /// @param isSimilar 是否返回相似路径
-+ (NSString *)xPathForView:(UIView *)view similar:(BOOL)isSimilar {
++ (NSString *)xPathForView:(nullable UIView *)view similar:(BOOL)isSimilar {
     NSMutableArray *viewPathArray = [NSMutableArray array];
     id<GrowingNode> node = view;
 
@@ -110,7 +110,7 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
     return page.path;
 }
 
-+ (NSString *)buildElementContentForNode:(id<GrowingNode> _Nonnull)view {
++ (NSString *)buildElementContentForNode:(id<GrowingNode> _Nullable)view {
     NSString *content = [view growingNodeContent];
     if (!content) {
         content = @"";
@@ -141,7 +141,10 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
     NSPointerArray *weakArray = [NSPointerArray weakObjectsPointerArray];
     GrowingViewNode *viewNode = [self getTopViewNode:view array:weakArray];
     for (int i = (int)weakArray.count - 2; i >= 0; i--) {
-        viewNode = [viewNode appendNode:(UIView *)[weakArray pointerAtIndex:i] isRecalculate:NO];
+        UIView *parent = [weakArray pointerAtIndex:i];
+        if (parent) {
+            viewNode = [viewNode appendNode:parent isRecalculate:NO];
+        }
     }
     return viewNode;
 }
@@ -158,11 +161,8 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
     } while ([parent isKindOfClass:[UIView class]]);
 
     UIView *rootview = [weakArray pointerAtIndex:weakArray.count - 1];
-    NSString *xpath = nil;
-    NSString *originXPath = nil;
-
-    xpath = [self xPathForView:rootview similar:YES];
-    originXPath = [self xPathForView:rootview similar:NO];
+    NSString *xpath = [self xPathForView:rootview similar:YES];
+    NSString *originXPath = [self xPathForView:rootview similar:NO];
     return GrowingViewNode.builder.setView(rootview)
         .setIndex(-1)
         .setViewContent([self buildElementContentForNode:rootview])

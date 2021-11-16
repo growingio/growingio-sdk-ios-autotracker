@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)growingHookIsCustomAddVC;
 
 - (NSString *)growingPageName;
-- (NSString *)growingPageTitle;
+- (nullable NSString *)growingPageTitle;
 
 - (void)growing_viewDidAppear:(BOOL)animated;
 - (void)growing_viewDidDisappear:(BOOL)animated;
