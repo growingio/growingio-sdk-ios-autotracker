@@ -35,16 +35,16 @@
 #endif
 
 #define GrowingService(servicename,impl) \
-class GrowingAnnotationCore; char * k##servicename##_service GrowingDATA(GrowingServices) = "{ \""#servicename"\" : \""#impl"\"}";
+char * k##servicename##_service GrowingDATA(GrowingServices) = "{ \""#servicename"\" : \""#impl"\"}";
 
 
 #define GrowingMod(name) \
-class GrowingAnnotationCore; char * k##name##_mod GrowingDATA(GrowingMods) = ""#name"";
+char * k##name##_mod GrowingDATA(GrowingMods) = ""#name"";
 
 #define GrowingDATA(sectname) __attribute((used, section("__DATA,"#sectname"")))
 
-//最大支持 module service 数量限制
-#define growing_section_size 128
+//最大支持 module/service 数量限制
+#define growing_section_size 64
 
 struct _growing_section {
     uintptr_t charAddress[growing_section_size];

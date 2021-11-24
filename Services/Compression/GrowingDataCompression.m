@@ -21,7 +21,7 @@
 #import "GrowingDataCompression.h"
 #import "GrowingLZ4.h"
 
-@GrowingService(GrowingCompressService, GrowingDataCompression)
+GrowingService(GrowingCompressService, GrowingDataCompression)
 
 @implementation GrowingDataCompression
 

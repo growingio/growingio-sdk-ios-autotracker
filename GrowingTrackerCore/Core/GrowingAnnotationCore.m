@@ -22,11 +22,7 @@
 #include <mach-o/loader.h>
 #include <mach-o/dyld.h>
 #include <dlfcn.h>
-#import <objc/runtime.h>
-#import <objc/message.h>
 #include <mach-o/ldsyms.h>
-
-
 
 static growing_section growing_modules;
 static growing_section growing_services;
@@ -39,14 +35,13 @@ growing_section growingSectionDataService(void) {
     return growing_services;
 }
 
-
-void GrowingReadModuleConfiguration(const struct mach_header *mhp) {
+void GrowingReadConfiguration(growing_section* msection, char *sectionName, const struct mach_header *mhp) {
     unsigned long size = 0;
 #ifndef __LP64__
-    uintptr_t *memory = (uintptr_t *)getsectiondata(mhp, SEG_DATA, GrowingModSectName, &size);
+    uintptr_t *memory = (uintptr_t *)getsectiondata(mhp, SEG_DATA, sectionName, &size);
 #else
     const struct mach_header_64 *mhp64 = (const struct mach_header_64 *)mhp;
-    uintptr_t *memory = (uintptr_t *)getsectiondata(mhp64, SEG_DATA, GrowingModSectName, &size);
+    uintptr_t *memory = (uintptr_t *)getsectiondata(mhp64, SEG_DATA, sectionName, &size);
 #endif
 
     unsigned long counter = size / sizeof(void *);
@@ -54,49 +49,26 @@ void GrowingReadModuleConfiguration(const struct mach_header *mhp) {
         return;
     }
     
-    if (growing_modules.count == 0) {
-        memset(growing_modules.charAddress, 0, growing_section_size);
-    }
-    
     for (int idx = 0; idx < counter; ++idx) {
-        if (growing_modules.count < growing_section_size) {
-            growing_modules.charAddress[growing_modules.count] = (uintptr_t)(memory[idx]);
-            growing_modules.count ++;
+        if (msection->count < growing_section_size) {
+            msection->charAddress[msection->count] = (uintptr_t)(memory[idx]);
+            msection->count ++;
         }
     }
     return;
 }
 
-void GrowingReadServiceConfiguration(const struct mach_header *mhp) {
-    unsigned long size = 0;
-#ifndef __LP64__
-    uintptr_t *memory = (uintptr_t *)getsectiondata(mhp, SEG_DATA, GrowingServiceSectName, &size);
-#else
-    const struct mach_header_64 *mhp64 = (const struct mach_header_64 *)mhp;
-    uintptr_t *memory = (uintptr_t *)getsectiondata(mhp64, SEG_DATA, GrowingServiceSectName, &size);
-#endif
-
-    unsigned long counter = size / sizeof(void *);
-    if (counter == 0) {
-        return;
-    }
-    
-    if (growing_services.count == 0) {
-        memset(growing_services.charAddress, 0, growing_section_size);
-    }
-    
-    for (int idx = 0; idx < counter; ++idx) {
-        if (growing_services.count < growing_section_size) {
-            growing_services.charAddress[growing_services.count] = (uintptr_t)(memory[idx]);
-            growing_services.count ++;
-        }
-    }
-    return;
-}
 
 static void dyld_callback(const struct mach_header *mhp, intptr_t vmaddr_slide) {
-    GrowingReadModuleConfiguration(mhp);
-    GrowingReadServiceConfiguration(mhp);
+    switch (mhp->filetype) {
+        case MH_EXECUTE:
+        case MH_DYLIB:
+            GrowingReadConfiguration(&growing_modules,GrowingModSectName,mhp);
+            GrowingReadConfiguration(&growing_services,GrowingServiceSectName,mhp);
+        default:
+            // do nothing
+            break;
+    }
 }
 // add callback before main()
 __attribute__((constructor)) void GrowingInitProphet(void) {

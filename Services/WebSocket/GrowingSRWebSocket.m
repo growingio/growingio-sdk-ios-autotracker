@@ -49,7 +49,7 @@
 
 #import "GrowingSRWebSocket.h"
 
-@GrowingService(GrowingWebSocketService, GrowingSRWebSocket)
+GrowingService(GrowingWebSocketService, GrowingSRWebSocket)
 
 #if TARGET_OS_IPHONE
 #define HAS_ICU

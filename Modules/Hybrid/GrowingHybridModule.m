@@ -23,7 +23,7 @@
 #import "WKWebView+GrowingAutotracker.h"
 #import "GrowingLogger.h"
 
-@GrowingMod(GrowingHybridModule)
+GrowingMod(GrowingHybridModule)
 
 @implementation GrowingHybridModule
 

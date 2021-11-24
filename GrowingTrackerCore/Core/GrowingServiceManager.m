@@ -82,7 +82,7 @@ static GrowingServiceManager *manager = nil;
                 NSString *protocol = [json allKeys][0];
                 NSString *clsName = [json allValues][0];
                 if (protocol && clsName) {
-                    GIOLogDebug(@"[GrowingServiceManager] load protocl %@ clsname %@",protocol,clsName);
+                    GIOLogDebug(@"[GrowingServiceManager] load protocol %@ clsname %@",protocol,clsName);
                     [[GrowingServiceManager sharedInstance] registerServiceName:protocol implClassName:clsName];
                 }
             }
