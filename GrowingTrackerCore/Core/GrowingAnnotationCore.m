@@ -26,71 +26,79 @@
 #import <objc/message.h>
 #include <mach-o/ldsyms.h>
 
-// Debug Logging
-#ifdef DEBUG
-#define GrowingLog(x, ...) NSLog(x, ##__VA_ARGS__);
-#else
-#define GrowingLog(x, ...)
-#endif
 
-NSArray<NSString *> *GrowingReadConfiguration(char *sectionName, const struct mach_header *mhp) {
+
+static growing_section growing_modules;
+static growing_section growing_services;
+
+growing_section growingSectionDataModule(void) {
+    return growing_modules;
+}
+
+growing_section growingSectionDataService(void) {
+    return growing_services;
+}
+
+
+void GrowingReadModuleConfiguration(const struct mach_header *mhp) {
     unsigned long size = 0;
 #ifndef __LP64__
-    uintptr_t *memory = (uintptr_t *)getsectiondata(mhp, SEG_DATA, sectionName, &size);
+    uintptr_t *memory = (uintptr_t *)getsectiondata(mhp, SEG_DATA, GrowingModSectName, &size);
 #else
     const struct mach_header_64 *mhp64 = (const struct mach_header_64 *)mhp;
-    uintptr_t *memory = (uintptr_t *)getsectiondata(mhp64, SEG_DATA, sectionName, &size);
+    uintptr_t *memory = (uintptr_t *)getsectiondata(mhp64, SEG_DATA, GrowingModSectName, &size);
 #endif
 
     unsigned long counter = size / sizeof(void *);
     if (counter == 0) {
-        return nil;
+        return;
     }
-    NSMutableArray *configs = [NSMutableArray array];
+    
+    if (growing_modules.count == 0) {
+        memset(growing_modules.charAddress, 0, growing_section_size);
+    }
+    
     for (int idx = 0; idx < counter; ++idx) {
-        char *string = (char *)memory[idx];
-        NSString *str = [NSString stringWithUTF8String:string];
-        if (!str) continue;
-        GrowingLog(@"[Growing] %@", str);
-        if (str) [configs addObject:str];
+        if (growing_modules.count < growing_section_size) {
+            growing_modules.charAddress[growing_modules.count] = (uintptr_t)(memory[idx]);
+            growing_modules.count ++;
+        }
     }
+    return;
+}
 
-    return configs;
+void GrowingReadServiceConfiguration(const struct mach_header *mhp) {
+    unsigned long size = 0;
+#ifndef __LP64__
+    uintptr_t *memory = (uintptr_t *)getsectiondata(mhp, SEG_DATA, GrowingServiceSectName, &size);
+#else
+    const struct mach_header_64 *mhp64 = (const struct mach_header_64 *)mhp;
+    uintptr_t *memory = (uintptr_t *)getsectiondata(mhp64, SEG_DATA, GrowingServiceSectName, &size);
+#endif
+
+    unsigned long counter = size / sizeof(void *);
+    if (counter == 0) {
+        return;
+    }
+    
+    if (growing_services.count == 0) {
+        memset(growing_services.charAddress, 0, growing_section_size);
+    }
+    
+    for (int idx = 0; idx < counter; ++idx) {
+        if (growing_services.count < growing_section_size) {
+            growing_services.charAddress[growing_services.count] = (uintptr_t)(memory[idx]);
+            growing_services.count ++;
+        }
+    }
+    return;
 }
 
 static void dyld_callback(const struct mach_header *mhp, intptr_t vmaddr_slide) {
-    
-    NSArray *mods = GrowingReadConfiguration(GrowingModSectName, mhp);
-    for (NSString *modName in mods) {
-        if (modName) {
-            // 这里不进行 name -> class 转换,且只存储NSString
-            [[GrowingModuleManager sharedInstance] addLocalModule:modName];
-        }
-    }
-
-    // register services
-    NSArray<NSString *> *services = GrowingReadConfiguration(GrowingServiceSectName, mhp);
-    for (NSString *map in services) {
-        NSData *jsonData = [map dataUsingEncoding:NSUTF8StringEncoding];
-        NSError *error = nil;
-        id json = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
-        if (!error) {
-            if ([json isKindOfClass:[NSDictionary class]] && [json allKeys].count) {
-                NSString *protocol = [json allKeys][0];
-                NSString *clsName = [json allValues][0];
-                if (protocol && clsName) {
-                    // 这里不进行 name -> class 转换,且只存储NSString
-                    [[GrowingServiceManager sharedInstance] registerServiceName:protocol implClassName:clsName];
-                }
-            }
-        }
-    }
+    GrowingReadModuleConfiguration(mhp);
+    GrowingReadServiceConfiguration(mhp);
 }
 // add callback before main()
 __attribute__((constructor)) void GrowingInitProphet(void) {
     _dyld_register_func_for_add_image(dyld_callback);
 }
-
-@implementation GrowingAnnotationCore
-
-@end

@@ -35,6 +35,7 @@
 #import "GrowingAppDelegateAutotracker.h"
 #import "GrowingDeepLinkHandler.h"
 #import "GrowingModuleManager.h"
+#import "GrowingServiceManager.h"
 #import "GrowingEventManager.h"
 
 NSString *const GrowingTrackerVersionName = @"3.3.1-hotfix.2";
@@ -64,6 +65,7 @@ const int GrowingTrackerVersionCode = 30301;
         [GrowingSession startSession];
         [GrowingAppDelegateAutotracker track];
         [[GrowingModuleManager sharedInstance] registedAllModules];
+        [[GrowingServiceManager sharedInstance] loadLocalServices];
         [[GrowingModuleManager sharedInstance] triggerEvent:GrowingMInitEvent];
         // 各个Module初始化init之后再进行事件定时发送
         [[GrowingEventManager sharedInstance] configChannels];

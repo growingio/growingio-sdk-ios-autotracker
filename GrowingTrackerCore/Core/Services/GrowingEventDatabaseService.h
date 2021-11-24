@@ -56,7 +56,7 @@ extern NSString *const GrowingEventDatabaseErrorDomain;
 
 /// 获取事件
 /// @param count 数量
-/// @param sendPolicys 允许的发送协议（数组）
+/// @param mask 允许的发送协议（数组）
 /// @return 事件对象数组，可为空；若返回值为nil，表示读取错误
 - (NSArray<GrowingEventPersistence *> *)getEventsByCount:(NSUInteger)count policy:(NSUInteger)mask;
 
