@@ -29,6 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedInstance;
 
+- (void)loadLocalServices;
+
 - (void)registerServiceName:(NSString *)serviceName implClassName:(NSString *)serviceClassName;
 
 - (void)registerService:(Protocol*)service implClass:(Class)serviceClass;

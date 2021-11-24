@@ -21,6 +21,7 @@
 #import <pthread.h>
 #import "GrowingLogger.h"
 #import "GrowingEventDatabaseService.h"
+#import "GrowingServiceManager.h"
 
 long long const GrowingEventDatabaseExpirationTime = 86400000 * 7;
 NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.error";

@@ -21,6 +21,8 @@
 #import "GrowingModuleManager.h"
 #import "GrowingModuleProtocol.h"
 #import "GrowingContext.h"
+#import "GrowingAnnotationCore.h"
+#import "GrowingLogger.h"
 #import <objc/runtime.h>
 #import <objc/message.h>
 
@@ -90,6 +92,16 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
 
 // 从存储的name数组中读取所有的module
 - (void)loadLocalModules {
+    // add form section data
+    growing_section section = growingSectionDataModule();
+    for (int i = 0; i < section.count; i++) {
+        char *string = (char *)section.charAddress[i];
+        NSString *str = [NSString stringWithUTF8String:string];
+        if (!str) continue;
+        GIOLogDebug(@"[GrowingModuleManager] load %@",str);
+        if (str) [self.growingModuleNames addObject:str];
+    }
+    
     for (NSString *name in self.growingModuleNames) {
         [self registerDynamicModule:NSClassFromString(name)];
     }

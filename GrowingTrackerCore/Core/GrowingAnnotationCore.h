@@ -19,8 +19,8 @@
 
 
 #import <Foundation/Foundation.h>
-#import "GrowingServiceManager.h"
 #import "GrowingModuleManager.h"
+#import "GrowingServiceManager.h"
 
 #ifndef GrowingModSectName
 
@@ -43,11 +43,15 @@ class GrowingAnnotationCore; char * k##name##_mod GrowingDATA(GrowingMods) = ""#
 
 #define GrowingDATA(sectname) __attribute((used, section("__DATA,"#sectname"")))
 
+//最大支持 module service 数量限制
+#define growing_section_size 128
 
-NS_ASSUME_NONNULL_BEGIN
+struct _growing_section {
+    uintptr_t charAddress[growing_section_size];
+    uint count;
+};
 
-@interface GrowingAnnotationCore : NSObject
+typedef struct _growing_section growing_section;
 
-@end
-
-NS_ASSUME_NONNULL_END
+extern growing_section growingSectionDataModule(void);
+extern growing_section growingSectionDataService(void);

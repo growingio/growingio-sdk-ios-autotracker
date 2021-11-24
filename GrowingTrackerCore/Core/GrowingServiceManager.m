@@ -19,12 +19,12 @@
 
 
 #import "GrowingServiceManager.h"
+#import "GrowingAnnotationCore.h"
+#import "GrowingLogger.h"
 #import <objc/runtime.h>
 #import <objc/message.h>
 
-@implementation GrowingServiceManager {
-    dispatch_semaphore_t _signallock;
-}
+@implementation GrowingServiceManager 
 
 static GrowingServiceManager *manager = nil;
 
@@ -37,26 +37,26 @@ static GrowingServiceManager *manager = nil;
 }
 
 - (instancetype)init {
-    if (self = [super init]) {
-        _allServiceDict = [[NSMutableDictionary alloc] init];
-        _allServiceInstanceDict = [[NSMutableDictionary alloc] init];
-        _signallock = dispatch_semaphore_create(1);
-    }
+    self = [super init];
+    if (!self) return nil;
+    _allServiceDict = [[NSMutableDictionary alloc] init];
+    _allServiceInstanceDict = [[NSMutableDictionary alloc] init];
+//    _signallock = dispatch_semaphore_create(1);
     return self;
 }
 
 #pragma mark - private
 
 - (void)registerServiceName:(NSString *)serviceName implClassName:(NSString *)serviceClassName {
-    dispatch_semaphore_wait(_signallock, DISPATCH_TIME_FOREVER);
+//    dispatch_semaphore_wait(_signallock, DISPATCH_TIME_FOREVER);
     [_allServiceDict setValue:serviceClassName forKey:serviceName];
-    dispatch_semaphore_signal(_signallock);
+//    dispatch_semaphore_signal(_signallock);
 }
 
 - (void)registerService:(Protocol*)service implClass:(Class)serviceClass {
-    dispatch_semaphore_wait(_signallock, DISPATCH_TIME_FOREVER);
+//    dispatch_semaphore_wait(_signallock, DISPATCH_TIME_FOREVER);
     [_allServiceDict setValue:NSStringFromClass(serviceClass) forKey:NSStringFromProtocol(service)];
-    dispatch_semaphore_signal(_signallock);
+//    dispatch_semaphore_signal(_signallock);
 }
 
 - (id)createService:(Protocol *)service {
@@ -67,11 +67,34 @@ static GrowingServiceManager *manager = nil;
     return [self createService:service withServiceName:serviceName shouldCache:YES];
 }
 
+
+- (void)loadLocalServices {
+    // register services
+    growing_section section = growingSectionDataService();
+    for (int i = 0; i < section.count; i++) {
+        char *string = (char *)section.charAddress[i];
+        NSString *map = [NSString stringWithUTF8String:string];
+        NSData *jsonData = [map dataUsingEncoding:NSUTF8StringEncoding];
+        NSError *error = nil;
+        id json = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
+        if (!error) {
+            if ([json isKindOfClass:[NSDictionary class]] && [json allKeys].count) {
+                NSString *protocol = [json allKeys][0];
+                NSString *clsName = [json allValues][0];
+                if (protocol && clsName) {
+                    GIOLogDebug(@"[GrowingServiceManager] load protocl %@ clsname %@",protocol,clsName);
+                    [[GrowingServiceManager sharedInstance] registerServiceName:protocol implClassName:clsName];
+                }
+            }
+        }
+    }
+}
+
 - (BOOL)checkValidService:(Protocol *)service {
     id class = nil;
-    dispatch_semaphore_wait(_signallock, DISPATCH_TIME_FOREVER);
+//    dispatch_semaphore_wait(_signallock, DISPATCH_TIME_FOREVER);
     class = [_allServiceDict valueForKey:NSStringFromProtocol(service)];
-    dispatch_semaphore_signal(_signallock);
+//    dispatch_semaphore_signal(_signallock);
     if (class) {
         return YES;
     }
