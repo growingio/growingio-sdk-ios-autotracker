@@ -20,7 +20,7 @@
 
 #import "GrowingDataEncoder.h"
 
-@GrowingService(GrowingEncryptionService, GrowingDataEncoder)
+GrowingService(GrowingEncryptionService, GrowingDataEncoder)
 
 @implementation GrowingDataEncoder
 

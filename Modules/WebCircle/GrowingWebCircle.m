@@ -61,7 +61,7 @@
 #import "GrowingWebSocketService.h"
 #import "GrowingRealTracker.h"
 
-@GrowingMod(GrowingWebCircle)
+GrowingMod(GrowingWebCircle)
 
 @interface GrowingWeakObject : NSObject
 @property (nonatomic, weak) JSContext *context;

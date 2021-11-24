@@ -85,10 +85,6 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
     });
     return sharedManager;
 }
-// 仅添加string，规避运行时转换class
-- (void)addLocalModule:(NSString *)modulename {
-    [self.growingModuleNames addObject:modulename];
-}
 
 // 从存储的name数组中读取所有的module
 - (void)loadLocalModules {

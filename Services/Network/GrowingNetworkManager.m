@@ -23,7 +23,7 @@
 #import "GrowingAnnotationCore.h"
 #import "GrowingLogger.h"
 
-@GrowingService(GrowingEventNetworkService, GrowingNetworkManager)
+GrowingService(GrowingEventNetworkService, GrowingNetworkManager)
 
 @interface GrowingNetworkManager ()
 

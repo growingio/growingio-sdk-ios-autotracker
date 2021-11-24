@@ -53,7 +53,7 @@
 __VA_ARGS__; \
 dispatch_semaphore_signal(self->_lock);
 
-@GrowingMod(GrowingMobileDebugger)
+GrowingMod(GrowingMobileDebugger)
 
 @interface GrowingMobileDebugger () <GrowingWebSocketDelegate,
                                 GrowingApplicationEventProtocol,

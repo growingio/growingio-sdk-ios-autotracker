@@ -24,7 +24,7 @@
 #import "GrowingEventPersistence.h"
 #import "GrowingTimeUtil.h"
 
-@GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
+GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
 
 #define VACUUM_DATE(name) [NSString stringWithFormat:@"GIO_VACUUM_DATE_E7B96C4E-6EE2-49CD-87F0-B2E62D4EE96A-%@", name]
 

@@ -62,10 +62,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedInstance;
 
-#pragma mark - dyld期间添加module信息
-
-- (void)addLocalModule:(NSString *)modulename;
-
 #pragma mark - 调用方法
 // If you do not comply with set Level protocol, the default Normal
 // 将 class 存入Module Info，并不会初始化
