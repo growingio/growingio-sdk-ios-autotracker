@@ -55,37 +55,27 @@
 }
 //弹出浮层测试
 - (IBAction)showAlertTest:(id)sender {
-    [self showalert];
+    [self showAlert];
 }
 
-- (void)showalert {
-    UIAlertController *alert = [UIAlertController  alertControllerWithTitle:@"UIAlertView"
-                                                    message:@"弹出式对话框相关测试！"
-                                           preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *cancel=[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
-    UIAlertAction *repopup=[UIAlertAction actionWithTitle:@"重新弹出" style:UIAlertActionStyleDefault handler:nil];
-
-    [alert addAction:cancel];
-    [alert addAction:repopup];
-
-    [self presentViewController:alert animated:YES completion:nil];
-    
-//    [alert addButtonWithTitle:@"重新弹出"];
-//    [alert show];
+- (void)showAlert {
+    UIAlertController *controller = [UIAlertController alertControllerWithTitle:@"UIAlertController"
+                                                                        message:@"弹出式对话框相关测试！"
+                                                                 preferredStyle:UIAlertControllerStyleAlert];
+    __weak typeof(self) weakSelf = self;
+    [controller addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+        NSLog(@"弹出框，单击了按钮：%@", action.title);
+    }]];
+    [controller addAction:[UIAlertAction actionWithTitle:@"重新弹出" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        NSLog(@"弹出框，单击了按钮：%@", action.title);
+        [weakSelf showAlert];
+    }]];
+    [self presentViewController:controller animated:YES completion:nil];
 }
 
 //设置GIO不采集数据
 - (IBAction)growingNotTrack:(id)sender {
     NSLog(@"GrowingIO 不采集点击事件！");
-}
-
-//监听点击事件 代理方法
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == 1) {
-        [self showalert];
-    }
-    NSString *btnTitle = [alertView buttonTitleAtIndex:buttonIndex];
-    NSLog(@"弹出框，单击了按钮：%@", btnTitle);
 }
 
 @end
