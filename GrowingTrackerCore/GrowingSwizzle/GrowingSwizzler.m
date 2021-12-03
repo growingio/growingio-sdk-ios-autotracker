@@ -280,7 +280,7 @@ static void (*growing_swizzledMethods[GROWING_MAX_ARGS - GROWING_MIN_ARGS + 1])(
 + (void)growing_unswizzleSelector:(SEL)aSelector onClass:(Class)aClass {
     Method aMethod = class_getInstanceMethod(aClass, aSelector);
     GrowingSwizzleEntity *swizzle = [self swizzleForMethod:aMethod];
-    if (swizzle) {
+    if (swizzle && aMethod) {
         method_setImplementation(aMethod, swizzle.originalMethod);
         [self removeSwizzleForMethod:aMethod];
     }
@@ -297,7 +297,7 @@ static void (*growing_swizzledMethods[GROWING_MAX_ARGS - GROWING_MIN_ARGS + 1])(
            if (aName) {
                [swizzle.blocks removeObjectForKey:aName];
            }
-           if (!aName || swizzle.blocks.count == 0) {
+           if (aMethod && (!aName || swizzle.blocks.count == 0)) {
                method_setImplementation(aMethod, swizzle.originalMethod);
                [self removeSwizzleForMethod:aMethod];
            }

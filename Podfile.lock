@@ -1,0 +1,84 @@
+PODS:
+  - GrowingAnalytics/Autotracker (3.3.1-hotfix.3):
+    - GrowingAnalytics/AutotrackerCore
+    - GrowingAnalytics/Compression
+    - GrowingAnalytics/Database
+    - GrowingAnalytics/Encryption
+    - GrowingAnalytics/Hybrid
+    - GrowingAnalytics/MobileDebugger
+    - GrowingAnalytics/Network
+    - GrowingAnalytics/WebCircle
+  - GrowingAnalytics/AutotrackerCore (3.3.1-hotfix.3):
+    - GrowingAnalytics/TrackerCore
+  - GrowingAnalytics/Compression (3.3.1-hotfix.3):
+    - GrowingAnalytics/TrackerCore
+  - GrowingAnalytics/Database (3.3.1-hotfix.3):
+    - GrowingAnalytics/TrackerCore
+  - GrowingAnalytics/ENABLE_ENCRYPTION (3.3.1-hotfix.3):
+    - GrowingAnalytics/TrackerCore
+  - GrowingAnalytics/Encryption (3.3.1-hotfix.3):
+    - GrowingAnalytics/TrackerCore
+  - GrowingAnalytics/Hybrid (3.3.1-hotfix.3):
+    - GrowingAnalytics/TrackerCore
+  - GrowingAnalytics/MobileDebugger (3.3.1-hotfix.3):
+    - GrowingAnalytics/TrackerCore
+    - GrowingAnalytics/WebSocket
+  - GrowingAnalytics/Network (3.3.1-hotfix.3):
+    - GrowingAnalytics/TrackerCore
+  - GrowingAnalytics/Tracker (3.3.1-hotfix.3):
+    - GrowingAnalytics/Compression
+    - GrowingAnalytics/Database
+    - GrowingAnalytics/Encryption
+    - GrowingAnalytics/MobileDebugger
+    - GrowingAnalytics/Network
+    - GrowingAnalytics/TrackerCore
+  - GrowingAnalytics/TrackerCore (3.3.1-hotfix.3)
+  - GrowingAnalytics/WebCircle (3.3.1-hotfix.3):
+    - GrowingAnalytics/AutotrackerCore
+    - GrowingAnalytics/Hybrid
+    - GrowingAnalytics/WebSocket
+  - GrowingAnalytics/WebSocket (3.3.1-hotfix.3):
+    - GrowingAnalytics/TrackerCore
+  - KIF (3.8.5):
+    - KIF/Core (= 3.8.5)
+  - KIF/Core (3.8.5)
+  - MBProgressHUD (1.2.0)
+  - MJRefresh (3.7.3)
+  - SDCycleScrollView (1.82):
+    - SDWebImage (>= 5.0.0)
+  - SDWebImage (5.12.1):
+    - SDWebImage/Core (= 5.12.1)
+  - SDWebImage/Core (5.12.1)
+
+DEPENDENCIES:
+  - GrowingAnalytics/Autotracker (from `./`)
+  - GrowingAnalytics/ENABLE_ENCRYPTION (from `./`)
+  - GrowingAnalytics/Tracker (from `./`)
+  - KIF
+  - MBProgressHUD
+  - MJRefresh
+  - SDCycleScrollView (~> 1.75)
+
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - KIF
+    - MBProgressHUD
+    - MJRefresh
+    - SDCycleScrollView
+    - SDWebImage
+
+EXTERNAL SOURCES:
+  GrowingAnalytics:
+    :path: "./"
+
+SPEC CHECKSUMS:
+  GrowingAnalytics: c33725cc2c569f03ee4095c0d7a780c4c4d04e1d
+  KIF: b7fe836710720f84e4804767fba0a35ffc770b78
+  MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
+  MJRefresh: ec9c53ff4abf3a9237b4283862f1bd51c2ee3fdb
+  SDCycleScrollView: a0d74c3384caa72bdfc81470bdbc8c14b3e1fbcf
+  SDWebImage: 4dc3e42d9ec0c1028b960a33ac6b637bb432207b
+
+PODFILE CHECKSUM: eee938b46b639999f1a457b38fc7f7cd33b7d290
+
+COCOAPODS: 1.11.2

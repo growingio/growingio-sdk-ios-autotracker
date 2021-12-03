@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Singleton instance. Returns `nil` if the initialization of the GrowingTTYLogger fails.
  */
-@property (nonatomic, class, readonly, strong, nullable) GrowingTTYLogger *sharedInstance;
+@property (nonatomic, class, readonly, strong) GrowingTTYLogger *sharedInstance;
 
 /* Inherited from the GrowingLogger protocol:
  *
