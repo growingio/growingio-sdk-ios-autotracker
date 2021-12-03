@@ -31,7 +31,9 @@
     }
     UIGraphicsBeginImageContextWithOptions(self.bounds.size, NO, scale);
     CGContextRef context = UIGraphicsGetCurrentContext();
-    [view.layer renderInContext:context];
+    if (context) {
+        [view.layer renderInContext:context];
+    }
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
 

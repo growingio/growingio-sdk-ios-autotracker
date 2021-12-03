@@ -25,7 +25,7 @@
 #import "GrowingDeviceInfo.h"
 #import "GrowingLogger.h"
 
-static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\[]{},.<>/?";
+static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\\[]{},.<>/?";
 
 @implementation NSString (GrowingHelper)
 

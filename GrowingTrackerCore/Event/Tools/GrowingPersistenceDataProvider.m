@@ -66,7 +66,7 @@ static GrowingPersistenceDataProvider *persistence = nil;
 
 
 - (NSString *)deviceId {
-    return  [_growingUserdefault valueForKey:kGrowingUserdefault_deviceId];;
+    return [_growingUserdefault valueForKey:kGrowingUserdefault_deviceId];
 }
 
 - (void)setLoginUserId:(NSString * _Nullable)loginUserId {

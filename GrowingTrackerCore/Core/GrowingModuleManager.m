@@ -99,7 +99,10 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
     }
     
     for (NSString *name in self.growingModuleNames) {
-        [self registerDynamicModule:NSClassFromString(name)];
+        Class classname = NSClassFromString(name);
+        if (classname) {
+            [self registerDynamicModule:classname];
+        }
     }
     [self.growingModuleNames removeAllObjects];
 }
@@ -163,7 +166,7 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
         
         Class moduleClass = NSClassFromString(classStr);
         BOOL hasInstantiated = ((NSNumber *)[module objectForKey:kModuleInfoHasInstantiatedKey]).boolValue;
-        if (NSStringFromClass(moduleClass) && !hasInstantiated) {
+        if (moduleClass && NSStringFromClass(moduleClass) && !hasInstantiated) {
             id<GrowingModuleProtocol> moduleInstance = [self getModuleInstanceByClass:moduleClass];
             [self registerEventsByModuleInstance:moduleInstance];
             [tmpArray addObject:moduleInstance];
@@ -437,7 +440,9 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
                         withCustomParam:(NSDictionary *)customParam
 {
     GrowingContext *context = [GrowingContext sharedInstance].copy;
-    context.customParam = customParam;
+    if (customParam) {
+        context.customParam = customParam;
+    }
     context.customEvent = GrowingMInitEvent;
     
     NSArray<id<GrowingModuleProtocol>> *moduleInstances;
@@ -480,7 +485,9 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
                             withCustomParam:(NSDictionary *)customParam
 {
     GrowingContext *context = [GrowingContext sharedInstance].copy;
-    context.customParam = customParam;
+    if (customParam) {
+        context.customParam = customParam;
+    }
     context.customEvent = GrowingMTearDownEvent;
     
     NSArray<id<GrowingModuleProtocol>> *moduleInstances;

@@ -104,7 +104,9 @@
         } else {
             accessString = teleInfo.currentRadioAccessTechnology;
         }
-        
+        if (!accessString) {
+            return @"UNKNOWN";
+        }
         if ([typeStrings4G containsObject:accessString]) {
             netType = @"4G";
         } else if ([typeStrings3G containsObject:accessString]) {

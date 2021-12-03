@@ -51,8 +51,10 @@
         NSLog(@"json解析失败:%@", error);
         return nil;
     }
-    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    return jsonString;
+    if (jsonData) {
+        return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    }
+    return nil;
 }
 
 

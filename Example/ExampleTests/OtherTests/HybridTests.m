@@ -303,7 +303,7 @@
 -(void)testNSStringGrowingHelper{
     NSString *testString1 = @"12测试";
     XCTAssertNil([testString1 growingHelper_queryObject]);
-    NSString *a = @"teststring";
+    NSString *a = @"\\";
     [a growingHelper_uft8Data];
     [a growingHelper_jsonObject];
     [a growingHelper_dictionaryObject];

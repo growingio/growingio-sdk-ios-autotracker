@@ -53,7 +53,9 @@
         if ([window respondsToSelector:@selector(drawViewHierarchyInRect:afterScreenUpdates:)]) {
             [window drawViewHierarchyInRect:window.bounds afterScreenUpdates:NO];
         } else {
-            [window.layer renderInContext:context];
+            if (context) {
+                [window.layer renderInContext:context];
+            }
         }
         CGContextRestoreGState(context);
     }

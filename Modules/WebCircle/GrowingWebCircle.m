@@ -395,10 +395,11 @@ GrowingMod(GrowingWebCircle)
             GIOLogError(@"-runWithCircle:readyBlock:finishBlock: web circle error : no websocket service support");
             return;
         }
-        
-        self.webSocket = [[(Class)serviceClass alloc] initWithURLRequest:[NSURLRequest requestWithURL:url]];
-        self.webSocket.delegate = self;
-        [self.webSocket open];
+        if (url) {
+            self.webSocket = [[(Class)serviceClass alloc] initWithURLRequest:[NSURLRequest requestWithURL:url]];
+            self.webSocket.delegate = self;
+            [self.webSocket open];
+        }
         
         if (!self.statusWindow) {
             self.statusWindow = [[GrowingStatusBar alloc] initWithFrame:[UIScreen mainScreen].bounds];
