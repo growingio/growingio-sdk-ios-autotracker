@@ -5,7 +5,7 @@ source 'https://github.com/aliyun/aliyun-specs.git'
 use_frameworks!
 
 install!'cocoapods',:deterministic_uuids=>false
-platform :ios, '8.0'
+platform :ios, '10.0'
 
 workspace 'GrowingAnalytics.xcworkspace'
 

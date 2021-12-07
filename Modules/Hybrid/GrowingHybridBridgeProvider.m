@@ -50,6 +50,8 @@ NSString *const kGrowingJavascriptMessageDataKey = @"data";
 NSString *const kGrowingJavascriptMessageType_dispatchEvent = @"dispatchEvent";
 NSString *const kGrowingJavascriptMessageType_setNativeUserId = @"setNativeUserId";
 NSString *const kGrowingJavascriptMessageType_clearNativeUserId = @"clearNativeUserId";
+NSString *const kGrowingJavascriptMessageType_setNativeUserIdAndUserKey = @"setNativeUserIdAndUserKey";
+NSString *const kGrowingJavascriptMessageType_clearNativeUserIdAndUserKey = @"clearNativeUserIdAndUserKey";
 NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
 
 #define KEY_EVENT_TYPE "eventType"
@@ -107,6 +109,17 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
     } else if ([kGrowingJavascriptMessageType_setNativeUserId isEqualToString:messageType]) {
         [[GrowingSession currentSession] setLoginUserId:messageData];
     } else if ([kGrowingJavascriptMessageType_clearNativeUserId isEqualToString:messageType]) {
+        [[GrowingSession currentSession] setLoginUserId:nil];
+    } else if ([kGrowingJavascriptMessageType_setNativeUserIdAndUserKey isEqualToString:messageType]) {
+        if (!messageData) {
+            return;
+        }
+        id dict = [messageData growingHelper_jsonObject];
+        NSDictionary *evetDataDict = (NSDictionary *)dict;
+        NSString *userId = evetDataDict[@"userId"];
+        NSString *userKey = evetDataDict[@"userKey"];
+        [[GrowingSession currentSession] setLoginUserId:userId userKey:userKey];
+    } else if ([kGrowingJavascriptMessageType_clearNativeUserIdAndUserKey isEqualToString:messageType]) {
         [[GrowingSession currentSession] setLoginUserId:nil];
     } else if ([kGrowingJavascriptMessageType_onDomChanged isEqualToString:messageType]) {
         [self dispatchWebViewDomChanged];

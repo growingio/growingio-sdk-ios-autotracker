@@ -37,6 +37,8 @@ NSString *WKWebViewJavascriptBridge_js(void) {
                 dispatchEvent: dispatchEvent,
                 setNativeUserId: setNativeUserId,
                 clearNativeUserId: clearNativeUserId,
+                setNativeUserIdAndUserKey: setNativeUserIdAndUserKey,
+                clearNativeUserIdAndUserKey: clearNativeUserIdAndUserKey,
                 onDomChanged: onDomChanged
         };
 
@@ -50,6 +52,18 @@ NSString *WKWebViewJavascriptBridge_js(void) {
 
         function clearNativeUserId() {
             _doSend("clearNativeUserId", null);
+        }
+        
+        function setNativeUserIdAndUserKey(userId,userKey) {
+            let data = {
+                "userId": userId,
+                "userKey": userKey
+            };
+            _doSend("setNativeUserIdAndUserKey", JSON.stringify(data));
+        }
+
+        function clearNativeUserIdAndUserKey() {
+            _doSend("clearNativeUserIdAndUserKey", null);
         }
 
         function onDomChanged() {

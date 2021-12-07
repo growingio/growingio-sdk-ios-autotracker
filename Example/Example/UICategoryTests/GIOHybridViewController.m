@@ -60,10 +60,18 @@
     //    NSURL *requestURL = [NSURL URLWithString:@"https://dn-sharebaidu.qbox.me/gio_hybrid.html"];
     //    NSURLRequest *request = [NSURLRequest requestWithURL:requestURL];
     //    [self.webView loadRequest:request];
-
-    NSURL *url = [NSURL URLWithString:@"http://release-messages.growingio.cn/push/cdp/webcircel.html"];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    [self.webView loadRequest:request];
+    //直接加载html文件 userkey打通测试
+     NSString *path = [[NSBundle mainBundle] bundlePath];
+     NSURL *baseURL = [NSURL fileURLWithPath:path];
+     NSString * htmlPath = [[NSBundle mainBundle] pathForResource:@"testweb copy"
+                                                                  ofType:@"html"];
+      NSString * htmlCont = [NSString stringWithContentsOfFile:htmlPath
+                                                            encoding:NSUTF8StringEncoding
+                                                               error:nil];
+    [self.webView loadHTMLString:htmlCont baseURL:baseURL];
+//    NSURL *url = [NSURL URLWithString:@"http://release-messages.growingio.cn/push/cdp/webcircel.html"];
+//    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+//    [self.webView loadRequest:request];
 }
 
 - (IBAction)refreshPage:(UIBarButtonItem *)sender {
