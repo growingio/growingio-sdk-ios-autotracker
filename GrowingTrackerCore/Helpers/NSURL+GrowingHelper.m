@@ -31,7 +31,9 @@
         if (kv.count == 2) {
             NSString * key = [kv objectAtIndex:0];
             NSString * val = [[kv objectAtIndex:1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-            [params setObject:val forKey:key];
+            if (val) {
+                [params setObject:val forKey:key];
+            }
         }
     }
     return params;

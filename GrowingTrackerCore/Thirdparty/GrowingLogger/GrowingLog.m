@@ -695,7 +695,9 @@ static NSUInteger _numProcessors;
 
 + (void)setLevel:(GrowingLogLevel)level forClassWithName:(NSString *)aClassName {
     Class aClass = NSClassFromString(aClassName);
-    [self setLevel:level forClass:aClass];
+    if (aClass) {
+        [self setLevel:level forClass:aClass];
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

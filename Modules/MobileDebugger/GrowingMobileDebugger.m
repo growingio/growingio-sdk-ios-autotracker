@@ -109,10 +109,11 @@ GrowingMod(GrowingMobileDebugger)
         [self.webSocket close];
         self.webSocket = nil;
     }
-    
-    self.webSocket = [[(Class)serviceClass alloc] initWithURLRequest:[NSURLRequest requestWithURL:url]];
-    self.webSocket.delegate = self;
-    [self.webSocket open];
+    if (url) {
+        self.webSocket = [[(Class)serviceClass alloc] initWithURLRequest:[NSURLRequest requestWithURL:url]];
+        self.webSocket.delegate = self;
+        [self.webSocket open];
+    }
 }
 
 #pragma mark - GrowingDeepLinkHandlerProtocol
