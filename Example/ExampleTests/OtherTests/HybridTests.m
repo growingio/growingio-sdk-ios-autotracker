@@ -27,6 +27,7 @@
 #import "GrowingWebCircle.h"
 #import "NSURL+GrowingHelper.h"
 #import "UIView+GrowingHelper.h"
+#import "NSDictionary+GrowingHelper.h"
 #import "GrowingNode.h"
 #import "GrowingUserDefaults.h"
 #import "GrowingASLLogger.h"
@@ -38,6 +39,7 @@
 #import "GrowingMobileDebugger.h"
 #import "GrowingDeepLinkHandler.h"
 #import "GrowingVisitEvent.h"
+#import "GrowingPersistenceDataProvider.h"
 #import "NSData+GrowingHelper.h"
 #import "NSString+GrowingHelper.h"
 #import "UIViewController+GrowingPageHelper.h"
@@ -319,5 +321,20 @@
 
 }
 
+-(void)testSetNativeUserIdAndUserKey{
+    NSString *dict =@"{\"messageType\":\"setNativeUserIdAndUserKey\",\"data\":\"{\\\"userId\\\":\\\"zhangsan2\\\",\\\"userKey\\\":\\\"邮箱\\\"}\"}";
+ 
+    [[GrowingHybridBridgeProvider sharedInstance] handleJavascriptBridgeMessage:dict];
+    [tester waitForTimeInterval:5];
+    XCTAssertEqualObjects([[GrowingPersistenceDataProvider sharedInstance] loginUserId], @"zhangsan2");
+    XCTAssertEqualObjects([[GrowingPersistenceDataProvider sharedInstance] loginUserKey], @"邮箱");
+}
 
+-(void)testClearNativeUserIdAndUserKey{
+    NSDictionary *dict = @{@"messageType":@"clearNativeUserIdAndUserKey",@"data":@""};
+    [[GrowingHybridBridgeProvider sharedInstance] handleJavascriptBridgeMessage:[dict growingHelper_jsonString]];
+    [tester waitForTimeInterval:5];
+    XCTAssertEqualObjects([[GrowingPersistenceDataProvider sharedInstance] loginUserId],@"");
+    XCTAssertEqualObjects([[GrowingPersistenceDataProvider sharedInstance] loginUserKey],@"");
+}
 @end

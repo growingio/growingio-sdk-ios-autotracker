@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>first html5 page</title>
+		
+		<!-- GrowingIO Analytics code version 2.1 -->
+		<!-- Copyright 2015-2021 GrowingIO, Inc. More info available at http://www.growingio.com -->
+		<!-- SAAS -->
+		<!-- <script type='text/javascript'>
+			// window._gr_ignore_local_rule=true;
+			// window.webViewRequestSend=false;
+			!function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}
+			(window,document,"script","assets.giocdn.com/2.1/gio.js","gio");
+			gio('init', '0a1b4118dd954ec3bcc69da5138bdb96', {
+				"scheme": "https",
+				// "host": "apifwd.growingio.com",
+				"dynamicPlatform": true,
+				"manualImp":true
+			});
+			
+			// gio('setUserId','wangxin0804');
+			gio('send');
+			// gio('track', 'testImp', { foo: 'bar', baz: 'qux'})
+			// var ua = window.navigator.userAgent.toLowerCase() || ''
+
+			// document.write('ios:', !!window._vds_ios || (!!window.GrowingWebViewJavascriptBridge && /(ipad|iphone|ipod)/.test(ua)))
+		</script> -->
+		<!-- End GrowingIO Analytics code version: 2.1 -->
+
+		<!-- CDP 3.2-->
+		<script type="text/javascript">
+		  //http://assets.giocdn.com/sdk/cdp/gio.js
+			//new cdp js https://cdn.jsdelivr.net/npm/gio-web-autotracker/cdp.js
+			//http://10.20.20.42:1992/cdp.js
+			//http://10.20.20.42:10095/gio-cdp.js
+			//配置后file协议才能产生事件
+			window._gr_ignore_local_rule = true
+	
+			!function(e,t,n,g,i){e[i]=e[i]||function(){
+				(e[i].q=e[i].q||[]).push(arguments)},
+				n=t.createElement("script"),
+				tag=t.getElementsByTagName("script")[0],
+				n.async=1,
+				n.src=g,tag.parentNode.insertBefore(n,tag)
+			}(window,document,"script","http://10.20.20.42:10095/gio-cdp.js","gdp");
+			gdp('init', '91eaf9b283361032', 'ae45f95742195faa','wx123456', {
+				host: 'uat-api.growingio.com', 
+				debug: true, 
+				scheme: 'http',
+				version: '1.0.1',
+				enableIdMapping: true,
+				// host: 'uat-api.growingio.com',
+				// compress: true,
+				hashtag: true,
+				// dataCollect: false,
+				// platform: 'alip',
+				// autotrack: false,
+				// ignoreFields: ['screenHeight', 'screenWidth']
+			});  //uat-gdp 14.0
+
+			// gdp('init', 'ac04dfef4a1b6ec7', 'b802d55b2c2dd04a', { host: 'collector-opdemo.growingio.com', debug: true, scheme: 'http'});  //opdemo 14.0
+			// gdp('init', '91eaf9b283361032', '8f0376e6a79db40b', { host: '117.50.60.38:8080', debug: true, scheme: 'http'});  //qa-opt 13.6
+			// gdp('setUserId', 'th')x
+			// gdp('setUserAttributes', {
+			// 'gender': 'male',
+			// 'age': '25.5'
+			// });
+
+			// 弹窗 SDK
+			// gdp('plugin', {
+			// 	id: 'gio_plugin_gtouch-inject',
+			// 	src: "https://assets.giocdn.com/sdk/cdp/marketing/access.latest.js",
+			// 	dataHost: 'uat-gdp.growingio.com'
+    	// });
+			gdp('send');
+		</script>
+
+		<!-- op h5 -->
+			<!-- <script type="text/javascript">
+				!function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.giocdn.com/cdp/hybrid/gio_hybrid_cdp.js","gio");
+				gio('init', '91eaf9b283361032', {debug: true, platform:'hybrid'});
+				gio('send');
+	</script> -->
+
+		<!-- GrowingIO Analytics code version 1.0 -->
+		<!-- Copyright 2015-2020 GrowingIO, Inc. More info available at http://www.growingio.com -->
+		<!-- <script type='text/javascript'>
+			!function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","https://assets.giocdn.com/cdp/1.0/gio.js","gdp");
+			gdp('init', '91eaf9b283361032', '8f33ebef3646ccb7', { host: '117.50.60.38:8080', debug: true, scheme: 'http' });
+			
+			//custom page code begin here
+			//custom page code end here
+			gdp('send');
+		</script> -->
+	<!-- End GrowingIO Analytics code version: 1.0 -->
+
+
+		
+		<style type="text/css">
+			body {
+				margin: 0 auto;
+				width: 900px;
+				background: #fff;
+				font: 100%/1.4 helvetica, arial, sans-serif;
+			}
+			
+			header {
+				background: #ccc;
+				padding: 20px;
+			}
+			
+			header h1 {
+				margin: 0;
+			}
+			
+			nav {
+				float: left;
+				width: 900px;
+				background: #333;
+			}
+			
+			nav ul {
+				margin: 0;
+				padding: 0;
+			}
+			
+			nav ul li {
+				list-style-type: none;
+				display: inline;
+			}
+			
+			nav li a {
+				display: block;
+				float: left;
+				padding: 5px 10px;
+				color: #fff;
+				text-decoration: none;
+				border-right: 1px solid #fff;
+			}
+			
+			article {
+				clear: left;
+				float: left;
+				width: 560px;
+				padding: 20px 0;
+				margin: 0 0 0 30px;
+				display: inline;
+			}
+			
+			article h2 {
+				margin: 0;
+			}
+			
+			aside {
+				float: right;
+				width: 240px;
+				padding: 20px 0;
+				margin: 0 20px 0 0;
+				display: inline;
+			}
+			
+			aside h3 {
+				margin: 0;
+			}
+			
+			footer {
+				clear: both;
+				background: #ccc;
+				text-align: right;
+				padding: 20px;
+				height: 1%;
+			}
+		</style>
+		<script>
+			function setUserId1() {
+				gdp('setUserId','lisi', 'phone');
+			}
+			function setUserId2() {
+				gdp('setUserId','zhangsan2', '邮箱');
+			}
+			function setUserId3() {
+				gdp('setUserId','wangwu');
+			}
+			function clearUserId() {
+				gdp('clearUserId');
+			}
+			function sendCstm(){
+				gdp('track','cstm0915')
+			}
+			function sendAttributes(){
+				gdp('track', 'testEvent', {"goods": "鞋子", "brand": "鸿星尔克"}, {id: "123456", key: "order_id"})
+			}
+			function sendUserAttributes(){
+				gdp('setUserAttributes',{name:'用户属性', value:'123456'})
+			}
+			function enableDataCollect(){
+				gdp('setDataCollect', true)
+			}
+			function disableDatacollect(){
+				gdp('setDataCollect', false)
+			}
+			function autotrack(){
+				gdp('setAutoTrack', true)
+			}
+			function disableAutotrack(){
+				gdp('setAutoTrack', false)
+			}
+
+		</script>
+	</head>
+ 
+	<body>
+		<!-- 头部 -->
+		<header>
+			<h1>头部</h1>
+		</header>
+		<!-- 导航 -->
+		<nav>
+			<ul>
+				<li>Home</li>
+				<li>About</li>
+				<li>Contact</li>
+			</ul>
+		</nav>
+		
+		<p>first</p>
+		<div id="second_item">second, click on this link to open baidu
+			<a href="https://www.baidu.com/">baidu</a>
+			<p></p>
+			<p>third</p>
+			<p>fourth</p>
+			<a href="https://www.baidu.com/">
+				<button>点我跳转到百度！</button>
+			</a>
+			<form>
+				First Name:<br>
+				<input type="text" name="firstname">
+				<br>Last Name:<br>
+				<input type="text" name="lastname">
+				<br><br>
+				<button>Submit</button>
+			</form>
+		</div>
+		
+		<div data-growing-idx="1">
+			<div class="left-container">
+			  <img height="80" src="./html_newjs_files/src=http___b-ssl.duitang.com_uploads_item_201710_08_20171008221134_tFAiM.thumb.400_0.jpeg&amp;refer=http___b-ssl.duitang.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg" alt="图片1">
+			</div>
+			<div class="right-container">
+			  <h3 class="title">
+					触发事件
+			  </h3>
+			</div>
+		</div>
+		<button onclick="setUserId1()">
+			设置userid为lisi，phone
+		</button>
+		<button onclick="setUserId2()">
+			设置userid为zhangsan2，邮箱
+		</button>
+		<button onclick="setUserId3()">
+			设置userid为wangwu
+		</button>
+		<button onclick="clearUserId()">
+			清除userid
+		</button>
+		<button onclick="sendCstm()">
+			发送cstm
+		</button>
+		<button onclick="sendAttributes()">
+			设置物品模型
+		</button>
+		<button onclick="sendUserAttributes()">
+			发送用户属性事件
+		</button><br><br>
+		<button onclick="enableDataCollect()">
+			开启数据sdk采集
+		</button>
+		<button onclick="disableDatacollect()">
+			关闭sdk数据采集
+		</button>
+		<button onclick="autotrack()">
+			开启autotrack
+		</button>
+		<button onclick="disableAutotrack()">
+			关闭autotrack
+		</button><br><br>
+
+		<div>
+			<h2 data-gio-imp-track='testImp' 
+			data-gio-track-foo='bar' 
+			data-gio-track-Baz='QUX'
+			>标记元素并带上两个事件变量</h2>
+	</div>
+		<!-- <iframe id="uat" name="uat" width="500" height="500" src="http://release-messages.growingio.cn/push/cdp/uat.html"></iframe> -->
+		<aside ></aside>
+		<!-- 尾部 -->
+		<footer class="footer1">
+			<p>
+				<a href="mailto:tianhui@growingio.com">tianhui@growingio.com</a> ||
+				<a href="https://pvp.qq.com/">王者荣耀</a>
+			</p>
+		</footer>
+</body>
+</html>
