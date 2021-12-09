@@ -28,7 +28,6 @@
 #import "GrowingDeviceInfo.h"
 #import "GrowingDispatchManager.h"
 #import "GrowingEventChannel.h"
-#import "GrowingEventPersistence.h"
 #import "GrowingEventRequest.h"
 #import "GrowingFileStorage.h"
 #import "GrowingNetworkInterfaceManager.h"
@@ -53,7 +52,7 @@ static const NSUInteger kGrowingUnit_MB = 1024 * 1024;
 @property (nonatomic, strong) NSHashTable *allInterceptor;
 @property (nonatomic, strong) NSLock *interceptorLock;
 
-@property (nonatomic, strong) NSMutableArray<GrowingEventPersistence *> *eventQueue;
+@property (nonatomic, strong) NSMutableArray<id <GrowingEventPersistenceProtocol>> *eventQueue;
 @property (nonatomic, strong, readonly) NSArray<GrowingEventChannel *> *allEventChannels;
 @property (nonatomic, strong, readonly) NSDictionary<NSString *, GrowingEventChannel *> *eventChannelDict;
 @property (nonatomic, strong, readonly) GrowingEventChannel *otherEventChannel;
@@ -253,17 +252,15 @@ static GrowingEventManager *sharedInstance = nil;
         }
     }
 
-    NSArray<GrowingEventPersistence *> *events = [self getEventsToBeUploadUnsafe:channel policy:policyMask];
+    NSArray<id <GrowingEventPersistenceProtocol>> *events = [self getEventsToBeUploadUnsafe:channel policy:policyMask];
     if (events.count == 0) {
         return;
     }
 
     channel.isUploading = YES;
 
-    NSArray<NSString *> *rawEvents = [GrowingEventPersistence buildRawEventsFromEvents:events];
-
 #ifdef DEBUG
-    [self prettyLogForEvents:rawEvents withChannel:channel];
+    [self prettyLogForEvents:events withChannel:channel];
 #endif
     /// 如果需要改变发送地址以及请求参数
     NSObject<GrowingRequestProtocol> *eventRequest = nil;
@@ -275,6 +272,8 @@ static GrowingEventManager *sharedInstance = nil;
             }
         }
     }
+    
+    NSData *rawEvents = [GrowingEventDatabase buildRawEventsFromEvents:events];
     if (!eventRequest) {
         eventRequest = [[GrowingEventRequest alloc] initWithEvents:rawEvents];
     } else {
@@ -344,7 +343,7 @@ static GrowingEventManager *sharedInstance = nil;
     GrowingEventChannel *eventChannel = self.eventChannelDict[eventType] ?: self.otherEventChannel;
     BOOL isCustomEvent = eventChannel.isCustomEvent;
     NSString *uuidString = [NSUUID UUID].UUIDString;
-    GrowingEventPersistence *waitForPersist = [GrowingEventPersistence persistenceEventWithEvent:event uuid:uuidString];
+    id <GrowingEventPersistenceProtocol>waitForPersist = [GrowingEventDatabase persistenceEventWithEvent:event uuid:uuidString];
 
     if (!isCustomEvent)  // custom event never goes into self.eventQueue, event can not be nil
     {
@@ -365,7 +364,7 @@ static GrowingEventManager *sharedInstance = nil;
     [self.timingEventDB flush];
 }
 
-- (void)removeEvents_unsafe:(NSArray<__kindof GrowingEventPersistence *> *)events
+- (void)removeEvents_unsafe:(NSArray<__kindof id <GrowingEventPersistenceProtocol>> *)events
                  forChannel:(GrowingEventChannel *)channel {
     if (channel.isCustomEvent) {
         for (NSInteger i = 0; i < events.count; i++) {
@@ -385,19 +384,19 @@ static GrowingEventManager *sharedInstance = nil;
     }
 }
 
-- (NSArray<GrowingEventPersistence *> *)getEventsToBeUploadUnsafe:(GrowingEventChannel *)channel policy:(NSUInteger)mask {
+- (NSArray<id <GrowingEventPersistenceProtocol>> *)getEventsToBeUploadUnsafe:(GrowingEventChannel *)channel policy:(NSUInteger)mask {
     if (channel.isCustomEvent) {
         return [self.realtimeEventDB getEventsWithPackageNum:self.packageNum policy:mask];
     } else {
-        NSMutableArray<GrowingEventPersistence *> *events =
+        NSMutableArray<id <GrowingEventPersistenceProtocol>> *events =
             [[NSMutableArray alloc] initWithCapacity:self.eventQueue.count];
         NSArray<NSString *> *eventTypes = channel.eventTypes;
         const NSUInteger eventTypesCount = eventTypes.count;
         NSUInteger count = 0;
-        for (GrowingEventPersistence *e in self.eventQueue) {
+        for (id <GrowingEventPersistenceProtocol>e in self.eventQueue) {
             if (e.policy & mask) {
                 NSString *type = e.eventType;
-                // 反向匹配（排除法）event of other type not match eventChannelDict`s all t
+                // 反向匹配（排除法）event of other type not match eventChannelDict`s all type
                 if ((eventTypesCount == 0 && self.eventChannelDict[type] == nil) ||
                     (eventTypesCount > 0 && [eventTypes indexOfObject:type] != NSNotFound))  // 正向匹配
                 {
@@ -433,10 +432,10 @@ static GrowingEventManager *sharedInstance = nil;
 
 #pragma mark Event Log
 
-- (void)prettyLogForEvents:(NSArray<NSString *> *)events withChannel:(GrowingEventChannel *)channel {
+- (void)prettyLogForEvents:(NSArray<id <GrowingEventPersistenceProtocol>> *)events withChannel:(GrowingEventChannel *)channel {
     NSMutableArray *arrayM = [NSMutableArray array];
-    for (NSString *rawEvent in events) {
-        [arrayM addObject:[rawEvent growingHelper_jsonObject]];
+    for (id <GrowingEventPersistenceProtocol> event in events) {
+        [arrayM addObject:event.toJSONObject];
     }
     GIOLogDebug(@"(channel = %@, events = %@)\n", channel.urlTemplate, arrayM);
 }

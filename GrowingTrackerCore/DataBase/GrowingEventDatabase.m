@@ -20,7 +20,6 @@
 #import "GrowingEventDatabase.h"
 #import <pthread.h>
 #import "GrowingLogger.h"
-#import "GrowingEventDatabaseService.h"
 #import "GrowingServiceManager.h"
 
 long long const GrowingEventDatabaseExpirationTime = 86400000 * 7;
@@ -159,7 +158,7 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
     return result;
 }
 
-- (void)setEvent:(GrowingEventPersistence *)event forKey:(NSString *)key {
+- (void)setEvent:(id <GrowingEventPersistenceProtocol>)event forKey:(NSString *)key {
     if (!key.length) {
         return;
     }
@@ -176,7 +175,7 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
     }
 }
 
-- (NSArray<GrowingEventPersistence *> *)getEventsWithPackageNum:(NSUInteger)packageNum policy:(NSUInteger)mask {
+- (NSArray<id <GrowingEventPersistenceProtocol>> *)getEventsWithPackageNum:(NSUInteger)packageNum policy:(NSUInteger)mask {
     NSArray *events = [self.db getEventsByCount:packageNum policy:mask];
     
     if (!events) {
@@ -185,13 +184,31 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
     return events ?: [[NSArray alloc] init];
 }
 
-- (NSArray<GrowingEventPersistence *> *)getEventsWithPackageNum:(NSUInteger)packageNum {
+- (NSArray<id <GrowingEventPersistenceProtocol>> *)getEventsWithPackageNum:(NSUInteger)packageNum {
     NSArray *events = [self.db getEventsByCount:packageNum];
     
     if (!events) {
         [self handleDatabaseError:[self.db lastError]];
     }
     return events ?: [[NSArray alloc] init];
+}
+
++ (NSData *)buildRawEventsFromEvents:(NSArray<id <GrowingEventPersistenceProtocol>> *)events {
+    Class <GrowingEventDatabaseService> serviceClass = [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingEventDatabaseService)];
+    if (!serviceClass) {
+        return nil;
+    }
+    
+    return [serviceClass buildRawEventsFromEvents:events];
+}
+
++ (id <GrowingEventPersistenceProtocol>)persistenceEventWithEvent:(GrowingBaseEvent *)event uuid:(NSString *)uuid {
+    Class <GrowingEventDatabaseService> serviceClass = [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingEventDatabaseService)];
+    if (!serviceClass) {
+        return nil;
+    }
+    
+    return [serviceClass persistenceEventWithEvent:event uuid:uuid];
 }
 
 #pragma mark - Perform Block

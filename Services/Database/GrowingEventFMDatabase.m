@@ -21,7 +21,7 @@
 #import "GrowingEventFMDatabase.h"
 #import "GrowingFMDB.h"
 #import "GrowingFileStorage.h"
-#import "GrowingEventPersistence.h"
+#import "GrowingEventJSONPersistence.h"
 #import "GrowingTimeUtil.h"
 
 GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
@@ -30,9 +30,7 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
 
 @interface GrowingEventFMDatabase ()
 
-@property (nonatomic, strong) GrowingFMDatabaseQueue *db;
 @property (nonatomic, copy, readonly) NSString *name;
-@property (nonatomic, strong) NSError *databaseError;
 
 @end
 
@@ -58,16 +56,29 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
         }
 
         _db = [GrowingFMDatabaseQueue databaseQueueWithPath:filePath];
-    }
-    
-    if (![self initDB]) {
-        *error = self.databaseError;
+        if (!_db) {
+            _databaseError = [self createDBErrorInDatabase:nil];
+        } else {
+            [self initDB];
+        }
+        
+        if (error) {
+            *error = _databaseError;
+        }
     }
     
     return self;
 }
 
 #pragma mark - Public Methods
+
++ (NSData *)buildRawEventsFromEvents:(NSArray<GrowingEventJSONPersistence *> *)events {
+    return [GrowingEventJSONPersistence buildRawEventsFromEvents:events];
+}
+
++ (GrowingEventJSONPersistence *)persistenceEventWithEvent:(GrowingBaseEvent *)event uuid:(NSString *)uuid {
+    return [GrowingEventJSONPersistence persistenceEventWithEvent:event uuid:uuid];
+}
 
 - (NSInteger)countOfEvents {
     __block NSInteger count = 0;
@@ -96,14 +107,14 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
     return count;
 }
 
-- (NSArray<GrowingEventPersistence *> *)getEventsByCount:(NSUInteger)count {
+- (nullable NSArray<GrowingEventJSONPersistence *> *)getEventsByCount:(NSUInteger)count {
     if (self.countOfEvents == 0) {
         return [[NSArray alloc] init];
     }
     
-    NSMutableArray<GrowingEventPersistence *> *events = [[NSMutableArray alloc] init];
+    NSMutableArray<GrowingEventJSONPersistence *> *events = [[NSMutableArray alloc] init];
     [self enumerateKeysAndValuesUsingBlock:^(NSString *key, NSString *value, NSString *type, NSUInteger policy, BOOL *stop) {
-        GrowingEventPersistence *event = [[GrowingEventPersistence alloc] initWithUUID:key eventType:type jsonString:value policy:policy];
+        GrowingEventJSONPersistence *event = [[GrowingEventJSONPersistence alloc] initWithUUID:key eventType:type jsonString:value policy:policy];
         [events addObject:event];
         if (events.count >= count) {
             *stop = YES;
@@ -113,15 +124,15 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
     return events.count != 0 ? events : nil;
 }
 
-- (NSArray<GrowingEventPersistence *> *)getEventsByCount:(NSUInteger)count policy:(NSUInteger)mask {
+- (nullable NSArray<GrowingEventJSONPersistence *> *)getEventsByCount:(NSUInteger)count policy:(NSUInteger)mask {
     if (self.countOfEvents == 0) {
         return [[NSArray alloc] init];
     }
     
-    NSMutableArray<GrowingEventPersistence *> *events = [[NSMutableArray alloc] init];
+    NSMutableArray<GrowingEventJSONPersistence *> *events = [[NSMutableArray alloc] init];
     [self enumerateKeysAndValuesUsingBlock:^(NSString *key, NSString *value, NSString *type, NSUInteger policy, BOOL *stop) {
         if (mask & policy) {
-            GrowingEventPersistence *event = [[GrowingEventPersistence alloc] initWithUUID:key eventType:type jsonString:value policy:policy];
+            GrowingEventJSONPersistence *event = [[GrowingEventJSONPersistence alloc] initWithUUID:key eventType:type jsonString:value policy:policy];
             [events addObject:event];
             if (events.count >= count) {
                 *stop = YES;
@@ -132,7 +143,7 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
     return events.count != 0 ? events : nil;
 }
 
-- (BOOL)insertEvent:(GrowingEventPersistence *)event {
+- (BOOL)insertEvent:(GrowingEventJSONPersistence *)event {
     __block BOOL result = NO;
     [self performDatabaseBlock:^(GrowingFMDatabase *db, NSError *error) {
         if (error) {
@@ -142,7 +153,7 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
         result = [db executeUpdate:@"insert into namedcachetable(name,key,value,createAt,type,policy) values(?,?,?,?,?,?)",
                   self.name,
                   event.eventUUID,
-                  event.rawJsonString,
+                  ((GrowingEventJSONPersistence *)event).rawJsonString,
                   @([GrowingTimeUtil currentTimeMillis]),
                   event.eventType,
                   @(event.policy)];
@@ -155,7 +166,7 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
     return result;
 }
 
-- (BOOL)insertEvents:(NSArray<GrowingEventPersistence *> *)events {
+- (BOOL)insertEvents:(NSArray<GrowingEventJSONPersistence *> *)events {
     if (!events || events.count == 0) {
         return YES;
     }
@@ -167,7 +178,7 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
             return;
         }
         for (int i = 0; i < events.count; i++) {
-            GrowingEventPersistence *event = events[i];
+            GrowingEventJSONPersistence *event = (GrowingEventJSONPersistence *)events[i];
             result = [db executeUpdate:@"insert into namedcachetable(name,key,value,createAt,type,policy) values(?,?,?,?,?,?)",
                       self.name,
                       event.eventUUID,
@@ -444,7 +455,7 @@ static BOOL isExecuteVacuum(NSString *name) {
 - (NSError *)createDBErrorInDatabase:(GrowingFMDatabase *)db {
     return [NSError errorWithDomain:GrowingEventDatabaseErrorDomain
                                code:GrowingEventDatabaseCreateDBError
-                           userInfo:@{NSLocalizedDescriptionKey : ([db lastErrorMessage] ?: @"")}];
+                           userInfo:@{NSLocalizedDescriptionKey : ([db lastErrorMessage] ?: @"Could not create database")}];
 }
 
 @end

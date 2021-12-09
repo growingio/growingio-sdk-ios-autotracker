@@ -1,9 +1,9 @@
 //
-// GrowingEventPersistence.m
-// GrowingAnalytics
+//  GrowingEventJSONPersistence.m
+//  GrowingAnalytics
 //
-//  Created by sheng on 2020/11/13.
-//  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2021/11/30.
+//  Copyright (C) 2021 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,16 +17,15 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
-#import "GrowingEventPersistence.h"
+#import "GrowingEventJSONPersistence.h"
 #import "NSString+GrowingHelper.h"
 
-@implementation GrowingEventPersistence
+@implementation GrowingEventJSONPersistence
 
-- (instancetype _Nonnull)initWithUUID:(NSString *_Nonnull)uuid
-                            eventType:(NSString *_Nonnull)eventType
-                           jsonString:(NSString *_Nonnull)jsonString
-                               policy:(GrowingEventSendPolicy)policy {
+- (instancetype)initWithUUID:(NSString *)uuid
+                   eventType:(NSString *)eventType
+                  jsonString:(NSString *)jsonString
+                      policy:(GrowingEventSendPolicy)policy {
     if (self = [super init]) {
         _eventUUID = uuid;
         _eventType = eventType;
@@ -36,29 +35,30 @@
     return self;
 }
 
-- (instancetype)initWithUUID:(NSString *)uuid eventType:(NSString *)eventType jsonString:(NSString *)jsonString {
-    return [self initWithUUID:uuid eventType:eventType jsonString:jsonString policy:GrowingEventSendPolicyInstant];
-}
-
-+ (instancetype)persistenceEventWithEvent:(GrowingBaseEvent *)event uuid:(NSString *)uuid{
++ (instancetype)persistenceEventWithEvent:(GrowingBaseEvent *)event uuid:(NSString *)uuid {
     NSString *eventJsonString = [[NSString alloc] initWithJsonObject_growingHelper:event.toDictionary];
 
-    return [[GrowingEventPersistence alloc] initWithUUID:uuid
+    return [[GrowingEventJSONPersistence alloc] initWithUUID:uuid
                                                eventType:event.eventType
                                               jsonString:eventJsonString
                                                   policy:event.sendPolicy];
 }
 
-+ (NSArray<NSString *> *)buildRawEventsFromEvents:(NSArray<GrowingEventPersistence *> *)events {
++ (NSData *)buildRawEventsFromEvents:(NSArray<GrowingEventJSONPersistence *> *)events {
     NSMutableArray *raws = [NSMutableArray array];
-    for (GrowingEventPersistence *e in events) {
+    for (GrowingEventJSONPersistence *e in events) {
         NSString *rawStr = e.rawJsonString;
         if (rawStr && rawStr.length > 0) {
             [raws addObject:rawStr];
         }
     }
-    return raws;
+    NSString *jsonString = [NSString stringWithFormat:@"[%@]", [raws componentsJoinedByString:@","]];
+    NSData *JSONData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    return JSONData;
+}
+
+- (id)toJSONObject {
+    return self.rawJsonString.growingHelper_jsonObject;
 }
 
 @end
-

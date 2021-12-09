@@ -17,10 +17,8 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <Foundation/Foundation.h>
-
-@class GrowingEventPersistence;
+#import "GrowingEventDatabaseService.h"
 
 @interface GrowingEventDatabase : NSObject
 
@@ -36,10 +34,14 @@
 
 - (BOOL)cleanExpiredDataIfNeeded;
 
-- (void)setEvent:(GrowingEventPersistence *)event forKey:(NSString *)key;
+- (void)setEvent:(id <GrowingEventPersistenceProtocol>)event forKey:(NSString *)key;
 
-- (NSArray <GrowingEventPersistence *> *)getEventsWithPackageNum:(NSUInteger)packageNum policy:(NSUInteger)mask;
+- (NSArray <id <GrowingEventPersistenceProtocol>> *)getEventsWithPackageNum:(NSUInteger)packageNum policy:(NSUInteger)mask;
 
-- (NSArray <GrowingEventPersistence *> *)getEventsWithPackageNum:(NSUInteger)packageNum;
+- (NSArray <id <GrowingEventPersistenceProtocol>> *)getEventsWithPackageNum:(NSUInteger)packageNum;
+
++ (NSData *)buildRawEventsFromEvents:(NSArray<id <GrowingEventPersistenceProtocol>> *)events;
+
++ (id <GrowingEventPersistenceProtocol>)persistenceEventWithEvent:(GrowingBaseEvent *)event uuid:(NSString *)uuid;
 
 @end

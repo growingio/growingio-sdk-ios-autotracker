@@ -34,7 +34,7 @@
 @synthesize outsize;
 @synthesize stm;
 
-- (instancetype)initWithEvents:(NSArray<NSString *> *)events {
+- (instancetype)initWithEvents:(NSData *)events {
     if (self = [super init]) {
         self.events = events;
         self.stm = [GrowingTimeUtil currentTimeMillis];

@@ -41,7 +41,6 @@
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
     dataDictM[@"attributes"] = self.attributes;
     return dataDictM;
-    ;
 }
 
 @end
