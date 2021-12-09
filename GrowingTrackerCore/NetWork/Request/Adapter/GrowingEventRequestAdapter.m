@@ -50,15 +50,15 @@
 
 @interface GrowingEventRequestJsonBodyAdpter ()
 
-@property (nonatomic, strong) NSArray <NSString *> *events;
+@property (nonatomic, copy) NSData *events;
 @property (nonatomic, assign, readwrite) unsigned long long timestamp;
-@property (nonatomic, copy) void(^outsizeBlock)(unsigned long long) ;
+@property (nonatomic, copy) void(^outsizeBlock)(unsigned long long);
 
 @end
 
 @implementation GrowingEventRequestJsonBodyAdpter
 
-+ (instancetype)eventJsonBodyAdpter:(NSArray<NSString *> *)events
++ (instancetype)eventJsonBodyAdpter:(NSData *)events
                           timestamp:(unsigned long long)timestamp
                        outsizeBlock:(nonnull void (^)(unsigned long long))outsizeBlock {
     GrowingEventRequestJsonBodyAdpter *bodyAdapter = [[GrowingEventRequestJsonBodyAdpter alloc] init];
@@ -69,14 +69,12 @@
 }
 
 - (NSMutableURLRequest *)adaptedRequest:(NSMutableURLRequest *)request {
-    if (!self.events.count) {
+    if (self.events.length == 0) {
         return nil;
     }
-    NSData *JSONData = nil;
+    NSData *JSONData = self.events.copy;
     @autoreleasepool {
         // jsonString malloc to much
-        NSString *jsonString = [self buildJSONStringWithEvents:self.events];
-        JSONData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
 #ifdef GROWING_ANALYSIS_ENABLE_ENCRYPTION
         // deprecated
         JSONData = [JSONData growingHelper_LZ4String];
@@ -96,10 +94,6 @@
     needAdaptReq.HTTPBody = JSONData;
     
     return needAdaptReq;
-}
-
-- (NSString *)buildJSONStringWithEvents:(NSArray<NSString *> *)events {
-    return [NSString stringWithFormat:@"[%@]", [events componentsJoinedByString:@","]];
 }
 
 @end

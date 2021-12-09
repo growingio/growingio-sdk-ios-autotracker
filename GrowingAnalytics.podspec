@@ -100,6 +100,19 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   s.subspec 'Hybrid' do |hybrid|
       hybrid.source_files = 'Modules/Hybrid/**/*{.h,.m,.c,.cpp,.mm}'
       hybrid.dependency 'GrowingAnalytics/TrackerCore'
+      hybrid.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'GROWING_ANALYSIS_HYBRID=1'}
+  end
+  
+  s.subspec 'Protobuf' do |protobuf|
+      protobuf.source_files = 'Modules/Protobuf/**/*{.h,.m,.c,.cpp,.mm}'
+      protobuf.dependency 'GrowingAnalytics/TrackerCore'
+      protobuf.exclude_files = 'Modules/Protobuf/Proto/**/*{.h,.m,.c,.cpp,.mm}'
+      
+      protobuf.subspec 'Proto' do |proto|
+        proto.source_files = 'Modules/Protobuf/Proto/*{.h,.m}'
+        proto.dependency 'Protobuf'
+        proto.requires_arc = false
+      end
   end
 
   s.subspec 'DISABLE_IDFA' do |config|

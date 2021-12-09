@@ -47,7 +47,7 @@
 
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
-    return dataDictM;;
+    return dataDictM;
 }
 
 @end

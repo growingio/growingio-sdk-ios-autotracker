@@ -23,29 +23,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class GrowingFMDatabaseQueue;
+
 @interface GrowingEventFMDatabase : NSObject <GrowingEventDatabaseService>
 
-+ (instancetype)databaseWithPath:(NSString *)path error:(NSError **)error;
-
-- (NSInteger)countOfEvents;
-
-- (NSArray<GrowingEventPersistence *> *)getEventsByCount:(NSUInteger)count;
-
-- (NSArray<GrowingEventPersistence *> *)getEventsByCount:(NSUInteger)count policy:(NSUInteger)mask;
-
-- (BOOL)insertEvent:(GrowingEventPersistence *)event;
-
-- (BOOL)insertEvents:(NSArray<GrowingEventPersistence *> *)events;
-
-- (BOOL)deleteEvent:(NSString *)key;
-
-- (BOOL)deleteEvents:(NSArray<NSString *> *)keys;
-
-- (BOOL)clearAllEvents;
-
-- (BOOL)cleanExpiredEventIfNeeded;
-
-- (NSError *)lastError;
+@property (nonatomic, strong) GrowingFMDatabaseQueue *db;
+@property (nonatomic, strong) NSError *databaseError;
 
 @end
 

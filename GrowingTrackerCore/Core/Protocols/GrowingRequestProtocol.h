@@ -48,7 +48,7 @@ typedef NS_ENUM(NSUInteger, GrowingHTTPMethod) {
 
 @optional
 ///event property
-@property (nonatomic, strong) NSArray <NSString *> *events;
+@property (nonatomic, copy) NSData *events;
 @property (nonatomic, assign, readwrite) unsigned long long outsize;
 @property (nonatomic, assign) unsigned long long stm;
 @property (nonatomic, assign, readonly) NSTimeInterval timeoutInSeconds;

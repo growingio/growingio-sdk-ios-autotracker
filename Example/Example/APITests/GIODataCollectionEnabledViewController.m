@@ -39,7 +39,9 @@
 #pragma mark - Action
 
 - (IBAction)dataCollectionSwitchChange:(UISwitch *)sender {
+#if Autotracker
     [[GrowingAutotracker sharedInstance] setDataCollectionEnabled:sender.isOn];
+#endif
 }
 
 #pragma mark - Getter & Setter

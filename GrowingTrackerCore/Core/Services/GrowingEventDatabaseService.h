@@ -19,6 +19,8 @@
 
 #import <Foundation/Foundation.h>
 #import "GrowingAnnotationCore.h"
+#import "GrowingBaseEvent.h"
+#import "GrowingEventPersistenceProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -33,8 +35,6 @@ typedef NS_ENUM(NSInteger , GrowingEventDatabaseError) {
 extern long long const GrowingEventDatabaseExpirationTime;
 extern NSString *const GrowingEventDatabaseErrorDomain;
 
-@class GrowingEventPersistence;
-
 @protocol GrowingEventDatabaseService <NSObject>
 
 @required
@@ -45,6 +45,15 @@ extern NSString *const GrowingEventDatabaseErrorDomain;
 /// @return 事件数据库实例对象
 + (instancetype)databaseWithPath:(NSString *)path error:(NSError **)error;
 
+/// 生成事件数组的二进制数据
+/// @param events 事件数据数组
++ (NSData *)buildRawEventsFromEvents:(NSArray<id <GrowingEventPersistenceProtocol>> *)events;
+
+/// 生成持久化事件对象
+/// @param event 事件数据
+/// @param uuid 唯一key
++ (id <GrowingEventPersistenceProtocol>)persistenceEventWithEvent:(GrowingBaseEvent *)event uuid:(NSString *)uuid;
+
 /// 获取已存储的事件数量
 /// @return 事件数量，大于等于0；若返回值为-1，表示读取错误
 - (NSInteger)countOfEvents;
@@ -52,23 +61,23 @@ extern NSString *const GrowingEventDatabaseErrorDomain;
 /// 获取事件
 /// @param count 数量
 /// @return 事件对象数组，可为空；若返回值为nil，表示读取错误
-- (NSArray<GrowingEventPersistence *> *)getEventsByCount:(NSUInteger)count;
+- (nullable NSArray<id <GrowingEventPersistenceProtocol>> *)getEventsByCount:(NSUInteger)count;
 
 /// 获取事件
 /// @param count 数量
 /// @param mask 允许的发送协议（数组）
 /// @return 事件对象数组，可为空；若返回值为nil，表示读取错误
-- (NSArray<GrowingEventPersistence *> *)getEventsByCount:(NSUInteger)count policy:(NSUInteger)mask;
+- (nullable NSArray<id <GrowingEventPersistenceProtocol>> *)getEventsByCount:(NSUInteger)count policy:(NSUInteger)mask;
 
 /// 写入事件数据
 /// @param event 事件数据
 /// @return 写入成功/失败；若返回值为NO，表示写入错误
-- (BOOL)insertEvent:(GrowingEventPersistence *)event;
+- (BOOL)insertEvent:(id <GrowingEventPersistenceProtocol>)event;
 
 /// 写入事件数据数组
 /// @param events 事件数据数组
 /// @return 写入成功/失败；若返回值为NO，表示写入错误
-- (BOOL)insertEvents:(NSArray<GrowingEventPersistence *> *)events;
+- (BOOL)insertEvents:(NSArray<id <GrowingEventPersistenceProtocol>> *)events;
 
 /// 删除事件
 /// @param key 事件唯一key
