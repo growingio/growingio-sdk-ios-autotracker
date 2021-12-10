@@ -12,6 +12,7 @@
 #import "LogOperHelper.h"
 #import "ManualTrackHelper.h"
 #import "MockEventQueue.h"
+#import "GrowingAutotrackEventType.h"
 
 @implementation ConversionVariablesEventsTest
 
@@ -26,7 +27,6 @@
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] setConversionVariables:@{@"var1" : @"good", @"var2" : @"excell"}];
-    [tester waitForTimeInterval:3];
     NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
     NSLog(@"CONVERSION_VARIABLES事件：%@", evarEventArray);
     if (evarEventArray.count >= 1) {
@@ -76,13 +76,12 @@
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] setConversionVariables:@{}];
-    [tester waitForTimeInterval:1];
-    NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
+    NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeConversionVariables];
     // NSLog(@"CONVERSION_VARIABLES事件：%@",evarEventArray);
 
     if (evarEventArray.count >= 1) {
         NSDictionary *epvarchr = [evarEventArray objectAtIndex:evarEventArray.count - 1];
-        XCTAssertEqualObjects(epvarchr[@"eventType"], @"CONVERSION_VARIABLES");
+        XCTAssertEqualObjects(epvarchr[@"eventType"], GrowingEventTypeConversionVariables);
         NSDictionary *chres = [ManualTrackHelper conversionVariablesEventCheck:epvarchr];
         // NSLog(@"Check Result:%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
@@ -100,12 +99,11 @@
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] setConversionVariables:@{@"ekey1" : @"Good"}];
-    [tester waitForTimeInterval:1];
-    NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
+    NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeConversionVariables];
     // NSLog(@"CONVERSION_VARIABLES事件：%@",evarEventArray);
     if (evarEventArray.count >= 1) {
         NSDictionary *epvarchr = [evarEventArray objectAtIndex:evarEventArray.count - 1];
-        XCTAssertEqualObjects(epvarchr[@"eventType"], @"CONVERSION_VARIABLES");
+        XCTAssertEqualObjects(epvarchr[@"eventType"], GrowingEventTypeConversionVariables);
         XCTAssertTrue([ManualTrackHelper CheckContainsKey:epvarchr:@"attributes"]);
         XCTAssertEqualObjects(epvarchr[@"attributes"][@"ekey1"], @"Good");
 
@@ -126,12 +124,11 @@
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] setConversionVariables:@{@"ekey1" : @"Better"}];
-    [tester waitForTimeInterval:1];
-    NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
+    NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeConversionVariables];
     // NSLog(@"CONVERSION_VARIABLES事件：%@",evarEventArray);
     if (evarEventArray.count >= 1) {
         NSDictionary *epvarchr = [evarEventArray objectAtIndex:evarEventArray.count - 1];
-        XCTAssertEqualObjects(epvarchr[@"eventType"], @"CONVERSION_VARIABLES");
+        XCTAssertEqualObjects(epvarchr[@"eventType"], GrowingEventTypeConversionVariables);
         XCTAssertTrue([ManualTrackHelper CheckContainsKey:epvarchr:@"attributes"]);
         XCTAssertEqualObjects(epvarchr[@"attributes"][@"ekey1"], @"Better");
 
@@ -218,12 +215,11 @@
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] setConversionVariables:@{@"evkey1" : @"132"}];
-    [tester waitForTimeInterval:2];
-    NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
+    NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeConversionVariables];
     // NSLog(@"CONVERSION_VARIABLES事件：%@",evarEventArray);
     if (evarEventArray.count >= 1) {
         NSDictionary *epvarchr = [evarEventArray objectAtIndex:evarEventArray.count - 1];
-        XCTAssertEqualObjects(epvarchr[@"eventType"], @"CONVERSION_VARIABLES");
+        XCTAssertEqualObjects(epvarchr[@"eventType"], GrowingEventTypeConversionVariables);
         XCTAssertTrue([ManualTrackHelper CheckContainsKey:epvarchr:@"attributes"]);
         XCTAssertEqual([epvarchr[@"attributes"][@"evkey1"] intValue], 132);
 
@@ -244,12 +240,11 @@
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] setConversionVariables:@{@"evkey1" : @"43.22"}];
-    [tester waitForTimeInterval:3];
-    NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
+    NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeConversionVariables];
     // NSLog(@"CONVERSION_VARIABLES事件：%@",evarEventArray);
     if (evarEventArray.count >= 1) {
         NSDictionary *epvarchr = [evarEventArray objectAtIndex:evarEventArray.count - 1];
-        XCTAssertEqualObjects(epvarchr[@"eventType"], @"CONVERSION_VARIABLES");
+        XCTAssertEqualObjects(epvarchr[@"eventType"], GrowingEventTypeConversionVariables);
         XCTAssertTrue([ManualTrackHelper CheckContainsKey:epvarchr:@"attributes"]);
         NSString *fvalue = @"43.22";
         XCTAssertEqual([epvarchr[@"attributes"][@"evkey1"] floatValue], [fvalue floatValue]);
@@ -315,12 +310,11 @@
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] setConversionVariables:@{@"关键字" : @"北京"}];
-    [tester waitForTimeInterval:3];
-    NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:@"CONVERSION_VARIABLES"];
+    NSArray *evarEventArray = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeConversionVariables];
     // NSLog(@"CONVERSION_VARIABLES事件：%@",evarEventArray);
     if (evarEventArray.count >= 1) {
         NSDictionary *epvarchr = [evarEventArray objectAtIndex:evarEventArray.count - 1];
-        XCTAssertEqualObjects(epvarchr[@"eventType"], @"CONVERSION_VARIABLES");
+        XCTAssertEqualObjects(epvarchr[@"eventType"], GrowingEventTypeConversionVariables);
         XCTAssertTrue([ManualTrackHelper CheckContainsKey:epvarchr:@"attributes"]);
         XCTAssertEqualObjects(epvarchr[@"attributes"][@"关键字"], @"北京");
 

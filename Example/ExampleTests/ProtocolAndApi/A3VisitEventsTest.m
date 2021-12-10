@@ -12,6 +12,7 @@
 #import "GrowingAutotracker.h"
 #import "MockEventQueue.h"
 #import "NoburPoMeaProCheck.h"
+#import "GrowingAutotrackEventType.h"
 
 @implementation A3VisitEventsTest
 
@@ -34,16 +35,15 @@
     [[GrowingAutotracker sharedInstance] cleanLocation];
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] setLocation:[@30.11 doubleValue] longitude:[@32.22 doubleValue]];
-    [tester waitForTimeInterval:2];
-    NSArray *visitEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
+    NSArray *visitEventArray = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeVisit];
     if (visitEventArray.count > 0) {
         NSDictionary *visit_chr = [visitEventArray objectAtIndex:visitEventArray.count - 1];
         NSLog(@"Check Result:%@", visit_chr);
         XCTAssertEqualObjects(visit_chr[@"latitude"], @30.11);
         XCTAssertEqualObjects(visit_chr[@"longitude"], @32.22);
-        NSLog(@"setLocation 从null -> 非null 发visit，测试通过--Passed！");
+        TestLog(@"setLocation 从null -> 非null 发visit，测试通过--Passed！");
     } else {
-        NSLog(@"setLocation 从null -> 非null 发visit，测试不通过:%@", visitEventArray);
+        TestLog(@"setLocation 从null -> 非null 发visit，测试不通过:%@", visitEventArray);
         XCTAssertEqual(1, 0);
     }
 }

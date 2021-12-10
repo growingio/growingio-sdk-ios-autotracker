@@ -11,6 +11,7 @@
 #import "LogOperHelper.h"
 #import "ManualTrackHelper.h"
 #import "MockEventQueue.h"
+#import "GrowingAutotrackEventType.h"
 
 @implementation PageAttributesEventsTest
 
@@ -25,14 +26,13 @@
     [MockEventQueue.sharedQueue cleanQueue];
     [[viewTester usingLabel:@"协议/接口"] tap];
     [[viewTester usingLabel:@"PAGE_ATTRIBUTES请求"] tap];
-    [tester waitForTimeInterval:2];
-    NSArray *pvarEventArray = [MockEventQueue.sharedQueue eventsFor:@"PAGE_ATTRIBUTES"];
+    NSArray *pvarEventArray = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypePageAttributes];
     if (pvarEventArray.count >= 1) {
         NSDictionary *pvarchr = [pvarEventArray objectAtIndex:pvarEventArray.count - 1];
-        XCTAssertEqualObjects(pvarchr[@"eventType"], @"PAGE_ATTRIBUTES");
-        NSLog(@"PAGE_ATTRIBUTES事件， 测试通过-----passed");
+        XCTAssertEqualObjects(pvarchr[@"eventType"], GrowingEventTypePageAttributes);
+        TestSuccess(@"PAGE_ATTRIBUTES事件， 测试通过-----passed");
     } else {
-        NSLog(@"PAGE_ATTRIBUTES事件， 测试失败:%@", pvarEventArray);
+        TestFailed(@"PAGE_ATTRIBUTES事件， 测试失败:%@", pvarEventArray);
         XCTAssertEqual(1, 0);
     }
 }

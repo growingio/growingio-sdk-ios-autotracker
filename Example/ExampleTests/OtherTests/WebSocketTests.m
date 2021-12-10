@@ -39,6 +39,18 @@
 #import <WebKit/WebKit.h>
 
 
+#define KEY_PROTOCOL_TYPE @"UnitTest-protocoltype"
+#define KEY_QUERY @"UnitTest-query"
+#define KEY_TITLE @"UnitTest-title"
+#define KEY_PATH @"UnitTest-path"
+
+#define KEY_TIMESTAMP 11111111
+#define KEY_PAGE_SHOW_TIMESTAMP 22222222
+#define KEY_DOMAIN @"UnitTest-domain"
+#define KEY_ATTRIBUTES @{@"UnitTest-attributes":@"TEST"}
+#define KEY_REFERRAL_PAGE @"UnitTest-refferalpage"
+#define KEY_EVENT_NAME @"UnitTest-eventname"
+
 @interface WebSocketTests : KIFTestCase
 
 @end
@@ -76,44 +88,44 @@
 -(void)testGrowingHybridPageEvent{
     [GrowingHybridPageEvent builder];
     
-    GrowingHybridPageEvent.builder.setProtocolType(@"KEY_PROTOCOL_TYPE")
-    .setQuery(@"KEY_QUERY")
-    .setTitle(@"KEY_TITLE")
-    .setReferralPage(@"KEY_REFERRAL_PAGE")
-    .setPath(@"KEY_PATH")
-    .setTimestamp(@"KEY_TIMESTAMP")
-    .setDomain(@"domain");
+    GrowingHybridPageEvent.builder.setProtocolType(KEY_PROTOCOL_TYPE)
+    .setQuery(KEY_QUERY)
+    .setTitle(KEY_TITLE)
+    .setReferralPage(KEY_REFERRAL_PAGE)
+    .setPath(KEY_PATH)
+    .setTimestamp(KEY_TIMESTAMP)
+    .setDomain(KEY_DOMAIN);
 }
 
 
 -(void)testGrowingHybridCustomEvent{
     [GrowingHybridCustomEvent builder];
-    GrowingHybridCustomEvent.builder.setQuery(@"KEY_QUERY")
-    .setPath(@"KEY_PATH")
-    .setPageShowTimestamp(@"KEY_PAGE_SHOW_TIMESTAMP")
-    .setAttributes(@"KEY_ATTRIBUTES")
-    .setEventName(@"KEY_EVENT_NAME")
-    .setDomain(@"domain");
+    GrowingHybridCustomEvent.builder.setQuery(KEY_QUERY)
+    .setPath(KEY_PATH)
+    .setPageShowTimestamp(KEY_PAGE_SHOW_TIMESTAMP)
+    .setAttributes(KEY_ATTRIBUTES)
+    .setEventName(KEY_EVENT_NAME)
+    .setDomain(KEY_DOMAIN);
 }
 
 -(void)testGrowingPageCustomEvent{
     [GrowingPageCustomEvent builder];
-    [GrowingPageCustomEvent builder].setPath(@"KEY_PATH")
-    .setEventName(@"KEY_EVENT_NAME")
-    .setAttributes(@"KEY_ATTRIBUTES")
-    .setPageShowTimestamp(@"KEY_PAGE_SHOW_TIMESTAMP");
+    [GrowingPageCustomEvent builder].setPath(KEY_PATH)
+    .setEventName(KEY_EVENT_NAME)
+    .setAttributes(KEY_ATTRIBUTES)
+    .setPageShowTimestamp(KEY_PAGE_SHOW_TIMESTAMP);
 }
 
 -(void)testGrowingHybridViewElementEvent{
     [GrowingHybridViewElementEvent builder];
-    GrowingHybridViewElementEvent.builder.setQuery(@"KEY_QUERY")
-    .setPath(@"KEY_PATH")
-    .setPageShowTimestamp(@"KEY_PAGE_SHOW_TIMESTAMP")
+    GrowingHybridViewElementEvent.builder.setQuery(KEY_QUERY)
+    .setPath(KEY_PATH)
+    .setPageShowTimestamp(KEY_PAGE_SHOW_TIMESTAMP)
     .setHyperlink(@"Hyperlink")
     .setEventType(@"KEY_EVENT_Type")
     .setXpath(@"Xpath")
-    .setIndex(@"Index")
-    .setDomain(@"domain");
+    .setIndex(0)
+    .setDomain(KEY_DOMAIN);
 }
 
 -(void)testGrowingLoginRequest{
