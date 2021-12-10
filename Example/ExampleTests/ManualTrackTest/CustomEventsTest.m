@@ -15,6 +15,7 @@
 #import "LogOperHelper.h"
 #import "ManualTrackHelper.h"
 #import "MockEventQueue.h"
+#import "GrowingAutotrackEventType.h"
 
 @implementation CustomEventsTest
 
@@ -32,27 +33,16 @@
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] trackCustomEvent:@"GrowingIO2018"];
-    [tester waitForTimeInterval:2];
-    NSArray *cstmEventArray = [MockEventQueue.sharedQueue eventsFor:@"CUSTOM"];
-    // NSLog(@"Cstm事件：%@",cstmEventArray);
+    NSArray *cstmEventArray = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
     if (cstmEventArray.count >= 1) {
         NSDictionary *cstmchr = [cstmEventArray objectAtIndex:cstmEventArray.count - 1];
-        // NSLog(@"Cstm事件：%@",cstmchr);
-        XCTAssertEqualObjects(cstmchr[@"eventType"], @"CUSTOM");
+        XCTAssertEqualObjects(cstmchr[@"eventType"], GrowingEventTypeCustom);
         XCTAssertEqualObjects(cstmchr[@"eventName"], @"GrowingIO2018");
         NSDictionary *chres = [ManualTrackHelper customEventCheck:cstmchr];
-        // NSLog(@"Check Result:%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
-        //存在着与测量协议不一致的情况
-
-//        NSArray *redu=chres[@"ProCheck"][@"reduce"];
-//        XCTAssertEqual(redu.count, 2);
-//        XCTAssertEqualObjects(chres[@"ProCheck"][@"reduce"][0],@"num");
-//        XCTAssertEqualObjects(chres[@"ProCheck"][@"reduce"][1],@"var");
-
-        NSLog(@"cstm事件，EventId合法测试通过-----passed");
+        TestSuccess(@"cstm事件，EventId合法测试通过-----passed");
     } else {
-        NSLog(@"cstm事件，EventId合法测试通过:%@", cstmEventArray);
+        TestFailed(@"cstm事件，EventId合法测试通过:%@", cstmEventArray);
         XCTAssertEqual(1, 0);
     }
 }
@@ -63,26 +53,16 @@
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] trackCustomEvent:@"GIO%#*/"];
-    [tester waitForTimeInterval:2];
-    NSArray *cstmEventArray = [MockEventQueue.sharedQueue eventsFor:@"CUSTOM"];
-    // NSLog(@"Cstm事件：%@",cstmEventArray);
+    NSArray *cstmEventArray = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
     if (cstmEventArray.count >= 1) {
         NSDictionary *cstmchr = [cstmEventArray objectAtIndex:cstmEventArray.count - 1];
-        XCTAssertEqualObjects(cstmchr[@"eventType"], @"CUSTOM");
+        XCTAssertEqualObjects(cstmchr[@"eventType"], GrowingEventTypeCustom);
         XCTAssertEqualObjects(cstmchr[@"eventName"], @"GIO%#*/");
         NSDictionary *chres = [ManualTrackHelper customEventCheck:cstmchr];
-        // NSLog(@"Check Result:%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
-        //存在着与测量协议不一致的情况
-
-//        NSArray *redu=chres[@"ProCheck"][@"reduce"];
-//        XCTAssertEqual(redu.count, 2);
-//        XCTAssertEqualObjects(chres[@"ProCheck"][@"reduce"][0],@"num");
-//        XCTAssertEqualObjects(chres[@"ProCheck"][@"reduce"][1],@"var");
-
-        NSLog(@"cstm事件,EventId为特殊字符测试通过---passed!");
+        TestSuccess(@"cstm事件,EventId为特殊字符测试通过---passed!");
     } else {
-        NSLog(@"cstm事件,EventId为特殊字符测试失败，cstm的n为：%@", cstmEventArray[0][@"eventName"]);
+        TestFailed(@"cstm事件,EventId为特殊字符测试失败，cstm的n为：%@", cstmEventArray[0][@"eventName"]);
         XCTAssertEqual(1, 0);
     }
 }
@@ -93,26 +73,18 @@
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] trackCustomEvent:@"企业增长"];
-    [tester waitForTimeInterval:2];
-    NSArray *cstmEventArray = [MockEventQueue.sharedQueue eventsFor:@"CUSTOM"];
+    NSArray *cstmEventArray = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
     // NSLog(@"Cstm事件：%@",cstmEventArray);
     if (cstmEventArray.count >= 1) {
         NSDictionary *cstmchr = [cstmEventArray objectAtIndex:cstmEventArray.count - 1];
-        XCTAssertEqualObjects(cstmchr[@"eventType"], @"CUSTOM");
+        XCTAssertEqualObjects(cstmchr[@"eventType"], GrowingEventTypeCustom);
         XCTAssertEqualObjects(cstmchr[@"eventName"], @"企业增长");
         NSDictionary *chres = [ManualTrackHelper customEventCheck:cstmchr];
         // NSLog(@"Check Result:%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
-        //存在着与测量协议不一致的情况
-
-//        NSArray *redu=chres[@"ProCheck"][@"reduce"];
-//        XCTAssertEqual(redu.count, 2);
-//        XCTAssertEqualObjects(chres[@"ProCheck"][@"reduce"][0],@"num");
-//        XCTAssertEqualObjects(chres[@"ProCheck"][@"reduce"][1],@"var");
-
-        NSLog(@"cstm事件,EventId为中文测试通过---passed!");
+        TestSuccess(@"cstm事件,EventId为中文测试通过---passed!");
     } else {
-        NSLog(@"cstm事件,EventId为中文测试失败，cstm的n为：%@", cstmEventArray[0][@"eventName"]);
+        TestFailed(@"cstm事件,EventId为中文测试失败，cstm的n为：%@", cstmEventArray[0][@"eventName"]);
         XCTAssertEqual(1, 0);
     }
 }
@@ -236,31 +208,21 @@
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] trackCustomEvent:@"GIO" withAttributes:@{@"name" : @"GIO", @"title" : @"QA"}];
-
-    [tester waitForTimeInterval:2];
-    NSArray *cstmEventArray = [MockEventQueue.sharedQueue eventsFor:@"CUSTOM"];
-    // NSLog(@"Cstm事件：%@",cstmEventArray);
+    NSArray *cstmEventArray = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
     if (cstmEventArray.count >= 1) {
         NSDictionary *cstmchr = [cstmEventArray objectAtIndex:cstmEventArray.count - 1];
         //判断关键字段
-        XCTAssertEqualObjects(cstmchr[@"eventType"], @"CUSTOM");
+        XCTAssertEqualObjects(cstmchr[@"eventType"], GrowingEventTypeCustom);
         XCTAssertEqualObjects(cstmchr[@"eventName"], @"GIO");
         XCTAssertTrue([ManualTrackHelper CheckContainsKey:cstmchr:@"attributes"]);
         XCTAssertEqualObjects(cstmchr[@"attributes"][@"name"], @"GIO");
         XCTAssertEqualObjects(cstmchr[@"attributes"][@"title"], @"QA");
         //判断测量协议
         NSDictionary *chres = [ManualTrackHelper customEventCheck:cstmchr];
-        // NSLog(@"Check Result:%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
-        //存在着与测量协议不一致的情况
-
-//        NSArray *incr=chres[@"ProCheck"][@"reduce"];
-//        XCTAssertEqual(incr.count, 1);
-//        XCTAssertEqualObjects(chres[@"ProCheck"][@"reduce"][0],@"num");
-
-        NSLog(@"cstm事件,WithVariable，正常情况测试通过---passed!");
+        TestSuccess(@"cstm事件,WithVariable，正常情况测试通过---passed!");
     } else {
-        NSLog(@"cstm事件,WithVariable，正常情况测试失败，cstm的n为：%@", cstmEventArray[0][@"num"]);
+        TestFailed(@"cstm事件,WithVariable，正常情况测试失败，cstm的n为：%@", cstmEventArray[0][@"num"]);
         XCTAssertEqual(1, 0);
     }
 }
@@ -271,13 +233,12 @@
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] trackCustomEvent:@"GIO" withAttributes:@{@"name" : @"GrowingIO", @"title" : @"RD"}];
-    [tester waitForTimeInterval:2];
-    NSArray *cstmEventArray = [MockEventQueue.sharedQueue eventsFor:@"CUSTOM"];
+    NSArray *cstmEventArray = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
     // NSLog(@"Cstm事件：%@",cstmEventArray);
     if (cstmEventArray.count >= 1) {
         NSDictionary *cstmchr = [cstmEventArray objectAtIndex:cstmEventArray.count - 1];
         //判断关键字段
-        XCTAssertEqualObjects(cstmchr[@"eventType"], @"CUSTOM");
+        XCTAssertEqualObjects(cstmchr[@"eventType"], GrowingEventTypeCustom);
         XCTAssertEqualObjects(cstmchr[@"eventName"], @"GIO");
         XCTAssertTrue([ManualTrackHelper CheckContainsKey:cstmchr:@"attributes"]);
         XCTAssertEqualObjects(cstmchr[@"attributes"][@"name"], @"GrowingIO");
@@ -292,9 +253,9 @@
 //        XCTAssertEqual(incr.count, 1);
 //        XCTAssertEqualObjects(chres[@"ProCheck"][@"reduce"][0],@"num");
 
-        NSLog(@"cstm事件,WithVariable，更新数据测试通过---passed!");
+        TestLog(@"cstm事件,WithVariable，更新数据测试通过---passed!");
     } else {
-        NSLog(@"cstm事件,WithVariable，更新数据测试失败，cstm的n为：%@", cstmEventArray[0][@"num"]);
+        TestLog(@"cstm事件,WithVariable，更新数据测试失败，cstm的n为：%@", cstmEventArray[0][@"num"]);
         XCTAssertEqual(1, 0);
     }
 }
@@ -328,28 +289,20 @@
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] trackCustomEvent:@"北京"];
-    [tester waitForTimeInterval:2];
-    NSArray *cstmEventArray = [MockEventQueue.sharedQueue eventsFor:@"CUSTOM"];
-    // NSLog(@"Cstm事件：%@",cstmEventArray);
+    NSArray *cstmEventArray = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
     if (cstmEventArray.count >= 1) {
         NSDictionary *cstmchr = [cstmEventArray objectAtIndex:cstmEventArray.count - 1];
         //判断关键字段
-        XCTAssertEqualObjects(cstmchr[@"eventType"], @"CUSTOM");
+        XCTAssertEqualObjects(cstmchr[@"eventType"], GrowingEventTypeCustom);
         XCTAssertEqualObjects(cstmchr[@"eventName"], @"北京");
         //判断测量协议
         NSDictionary *chres = [ManualTrackHelper customEventCheck:cstmchr];
-        // NSLog(@"Check Result:%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
-        //存在着与测量协议不一致的情况
 
         NSArray *redu=chres[@"ProCheck"][@"reduce"];
-//        XCTAssertEqual(redu.count, 2);
-//        XCTAssertEqualObjects(chres[@"ProCheck"][@"reduce"][0],@"num");
-//        XCTAssertEqualObjects(chres[@"ProCheck"][@"reduce"][1],@"var");
-
-        NSLog(@"cstm事件,EventId中文测试通过---passed!");
+        TestLog(@"cstm事件,EventId中文测试通过---passed!");
     } else {
-        NSLog(@"cstm事件,EventId中文测试失败，cstm的n为：%@", cstmEventArray[0][@"eventName"]);
+        TestLog(@"cstm事件,EventId中文测试失败，cstm的n为：%@", cstmEventArray[0][@"eventName"]);
         XCTAssertEqual(1, 0);
     }
 }

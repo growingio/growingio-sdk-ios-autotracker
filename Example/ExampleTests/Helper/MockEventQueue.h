@@ -9,6 +9,19 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+#define TestLog(fmt, ...) NSLog((@"%@ " fmt),NSStringFromSelector(_cmd),##__VA_ARGS__);
+#define TestSuccess(fmt, ...) TestLog(@",test passed! " fmt,##__VA_ARGS__)
+#define TestFailed(fmt, ...) TestLog(@",test failed: " fmt,##__VA_ARGS__)
+
+
+
+#define TestRun(...) XCTestExpectation * expectation = [self expectationWithDescription:[NSString stringWithFormat:@"%@ failed : timeout",NSStringFromSelector(_cmd)]];\
+[GrowingDispatchManager dispatchInGrowingThread:^{\
+    __VA_ARGS__;\
+    [expectation fulfill];\
+}];\
+[self waitForExpectationsWithTimeout:10.0 handler:nil];\
+
 @interface MockEventQueue : NSObject
 
 + (instancetype)sharedQueue;

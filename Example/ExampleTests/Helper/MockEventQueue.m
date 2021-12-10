@@ -8,6 +8,7 @@
 
 #import "MockEventQueue.h"
 #import "GrowingEventManager.h"
+#import "GrowingDispatchManager.h"
 
 @interface MockEventQueue () <GrowingEventInterceptor>
 
@@ -37,17 +38,22 @@ static MockEventQueue *queue = nil;
 }
 
 - (void)cleanQueue {
-    [self.eventQueue removeAllObjects];
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        [self.eventQueue removeAllObjects];
+    } waitUntilDone:YES];
 }
 
 - (NSArray <NSDictionary *> *)eventsFor:(NSString *)eventType {
     __block NSMutableArray <NSDictionary *> *events = [[NSMutableArray alloc] init];
-    [self.eventQueue enumerateObjectsUsingBlock:^(GrowingBaseEvent *event, NSUInteger idx, BOOL *stop) {
-        
-        if ([event.eventType isEqualToString:eventType]) {
-            [events addObject:event.toDictionary];
-        }
-    }];
+    
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        [self.eventQueue enumerateObjectsUsingBlock:^(GrowingBaseEvent *event, NSUInteger idx, BOOL *stop) {
+            
+            if ([event.eventType isEqualToString:eventType]) {
+                [events addObject:event.toDictionary];
+            }
+        }];
+    } waitUntilDone:YES];
     
     if ([events count] > 0) {
         return events;
@@ -58,28 +64,35 @@ static MockEventQueue *queue = nil;
 
 - (NSDictionary *)firstEventFor:(NSString *)eventType {
     __block NSDictionary *dataDict;
-    [self.eventQueue enumerateObjectsUsingBlock:^(GrowingBaseEvent *event, NSUInteger idx, BOOL *stop) {
-        if ([event.eventType isEqualToString:eventType]) {
-            dataDict = event.toDictionary;
-            *stop = YES;
-        }
-    }];
-    
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        [self.eventQueue enumerateObjectsUsingBlock:^(GrowingBaseEvent *event, NSUInteger idx, BOOL *stop) {
+            if ([event.eventType isEqualToString:eventType]) {
+                dataDict = event.toDictionary;
+                *stop = YES;
+            }
+        }];
+    } waitUntilDone:YES];
     return dataDict;
 }
 
 - (NSUInteger)eventCount {
-    return self.eventQueue.count;
+    __block int count = 0;
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        count = self.eventQueue.count;
+    } waitUntilDone:YES];
+    return count;
 }
 
 - (NSUInteger)eventCountFor:(NSString *)eventType {
     __block NSUInteger eventCount = 0;
-    [self.eventQueue enumerateObjectsUsingBlock:^(GrowingBaseEvent *event, NSUInteger idx, BOOL *stop) {
-        
-        if ([event.eventType isEqualToString:eventType]) {
-            eventCount++;
-        }
-    }];
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        [self.eventQueue enumerateObjectsUsingBlock:^(GrowingBaseEvent *event, NSUInteger idx, BOOL *stop) {
+            
+            if ([event.eventType isEqualToString:eventType]) {
+                eventCount++;
+            }
+        }];
+    } waitUntilDone:YES];
     return eventCount;
 }
 
