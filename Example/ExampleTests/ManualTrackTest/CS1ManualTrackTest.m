@@ -12,6 +12,7 @@
 #import "ManualTrackHelper.h"
 #import "MockEventQueue.h"
 #import "GrowingSession.h"
+#import "GrowingDispatchManager.h"
 
 @implementation CS1ManualTrackTest
 
@@ -135,26 +136,16 @@
      function:UID为中文字符
      ***/
     [MockEventQueue.sharedQueue cleanQueue];
-    //    [tester scrollViewWithAccessibilityIdentifier:@"MeasurementProtocolTableView"
-    //                       byFractionOfSizeHorizontal:0.0f
-    //                                         vertical:-0.3f];
-    //    [tester waitForTimeInterval:1];
     [[GrowingAutotracker sharedInstance] setLoginUserId:@"10048"];
-    //设置初值
-    [tester waitForTimeInterval:1];
-    //    [tester tapViewWithAccessibilityLabel:@"userIdTextField"];
     [[GrowingAutotracker sharedInstance] setLoginUserId:@"数据分析"];
-    //    [tester clearTextFromAndThenEnterTextIntoCurrentFirstResponder:@"数据分析"];
-    //    [[viewTester usingLabel:@"CustomSet"] tap];
-    [tester waitForTimeInterval:2];
     NSArray *visitEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
 
     if (visitEventArray.count >= 1) {
         NSDictionary *vstchr = visitEventArray.lastObject;
         XCTAssertEqualObjects(vstchr[@"userId"], @"数据分析");
-        NSLog(@"UID为中文字符，检测cs1测试通过-----passed");
+        TestSuccess(@"UID为中文字符，检测cs1测试通过");
     } else {
-        NSLog(@"UID为中文字符，检测cs1测试失败!Problems:%@", visitEventArray);
+        TestFailed(@"UID为中文字符，检测cs1测试失败!Problems:%@", visitEventArray);
         XCTAssertEqual(1, 0);
     }
 }
@@ -173,14 +164,13 @@
     [tester tapViewWithAccessibilityLabel:@"userIdTextField"];
     [tester clearTextFromAndThenEnterTextIntoCurrentFirstResponder:@""];
     [[viewTester usingLabel:@"CustomSet"] tap];
-    [tester waitForTimeInterval:2];
     NSArray *visitEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
 
     if (visitEventArray.count == 0) {
         XCTAssertEqual(1, 1);
-        NSLog(@"UID为空,检测CS1测试通过---passed!");
+        TestSuccess(@"UID为空,检测CS1测试通过---passed!");
     } else {
-        NSLog(@"UID为空,检测CS1测试失败，VST中的CS1为：%@", visitEventArray.firstObject[@"userId"]);
+        TestFailed(@"UID为空,检测CS1测试失败，VST中的CS1为：%@", visitEventArray.firstObject[@"userId"]);
         XCTAssertEqual(1, 0);
     }
 }
@@ -191,14 +181,13 @@
      ***/
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] setLoginUserId:NULL];
-    [tester waitForTimeInterval:2];
     NSArray *visitEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
 
     if (visitEventArray.count == 0) {
         XCTAssertEqual(1, 1);
-        NSLog(@"UID为nil,检测CS1测试通过---passed!");
+        TestSuccess(@"UID为nil,检测CS1测试通过---passed!");
     } else {
-        NSLog(@"UID为nil,检测CS1测试失败，VST中的CS1为：%@", visitEventArray.firstObject[@"userId"]);
+        TestFailed(@"UID为nil,检测CS1测试失败，VST中的CS1为：%@", visitEventArray.firstObject[@"userId"]);
         XCTAssertEqual(1, 0);
     }
 }
@@ -220,9 +209,9 @@
 
     if (visitEventArray.count == 0) {
         XCTAssertEqual(1, 1);
-        NSLog(@"UID为超过1000个字符,检测CS1测试通过---passed!");
+        TestSuccess(@"UID为超过1000个字符,检测CS1测试通过---passed!");
     } else {
-        NSLog(@"UID为超过1000个字符,检测CS1测试失败，VST中的CS1为：%@", visitEventArray.firstObject[@"userId"]);
+        TestFailed(@"UID为超过1000个字符,检测CS1测试失败，VST中的CS1为：%@", visitEventArray.firstObject[@"userId"]);
         XCTAssertEqual(1, 0);
     }
 }
@@ -302,48 +291,39 @@
     [self enterBackground];
     [self enterForeground];
     [[GrowingAutotracker sharedInstance] setLoginUserId:@"lisi"];
-    [tester waitForTimeInterval:1];
-    NSString *newSession = [[GrowingSession currentSession] sessionId];
-    XCTAssertNotNil(newSession);
-    XCTAssertNotEqual(oldSession, newSession);
-    NSLog(@"old:%@,new:%@", oldSession, newSession);
+    TestRun(NSString *newSession = [[GrowingSession currentSession] sessionId];
+            XCTAssertNotNil(newSession);
+            XCTAssertNotEqual(oldSession, newSession);
+            NSLog(@"old:%@,new:%@", oldSession, newSession);)
+    
+    
 }
 -(void)test11CheckUserkey{
-    /**
-     function:Userkey为phone
-     ***/
     [[GrowingAutotracker sharedInstance] setLoginUserId:@"zhangsan"];
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] setLoginUserId:@"autotest" userKey:@"phone"];
-    [tester waitForTimeInterval:2];
     NSArray *visitEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
-
     if (visitEventArray.count > 0) {
         NSDictionary *vstchr = visitEventArray.lastObject;
         XCTAssertEqualObjects(vstchr[@"userKey"], @"phone");
-        NSLog(@"userKey为nil,测试通过---passed!");
+        TestSuccess(@"");
     } else {
-        NSLog(@" 检测nil测试失败，VST中的userKey为：%@", visitEventArray.firstObject[@"userKey"]);
+        TestFailed(@"VST中的userKey为：%@",visitEventArray.firstObject[@"userKey"]);
         XCTAssertEqual(1, 0);
     }
-    
 }
+
 -(void)test12ChangeUserkey{
-    /**
-     function:Userkey 更改为email
-     ***/
     [[GrowingAutotracker sharedInstance] setLoginUserId:@"autotest1" userKey:@"phone"];
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] setLoginUserId:@"autotest2" userKey:@"email"];
-    [tester waitForTimeInterval:2];
     NSArray *visitEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
-
     if (visitEventArray.count > 0) {
         NSDictionary *vstchr = visitEventArray.lastObject;
         XCTAssertEqualObjects(vstchr[@"userKey"], @"email");
-        NSLog(@"测试通过---passed!");
+        TestSuccess(@"");
     } else {
-        NSLog(@"测试失败，VST中的userKey为：%@", visitEventArray.firstObject[@"userKey"]);
+        TestFailed(@"VST中的userKey为：%@", visitEventArray.firstObject[@"userKey"]);
         XCTAssertEqual(1, 0);
     }
     
@@ -353,7 +333,6 @@
     [[GrowingAutotracker sharedInstance] setLoginUserId:@"autotest1" userKey:@"phone"];
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] setLoginUserId:@"autotest2"];
-    [tester waitForTimeInterval:2];
     NSArray *visitEventArray = [MockEventQueue.sharedQueue eventsFor:@"VISIT"];
 
     if (visitEventArray.count > 0) {

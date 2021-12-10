@@ -13,7 +13,7 @@
 #import "ManualTrackHelper.h"
 #import "MockEventQueue.h"
 #import "GrowingAutotracker.h"
-
+#import "GrowingAutotrackEventType.h"
 
 @implementation LoginUserAttributerEventsTest
 
@@ -27,12 +27,11 @@
     [[GrowingAutotracker sharedInstance] setLoginUserId:@"test"];
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] setLoginUserAttributes:@{@"name" : @"测试名字", @"title" : @"QA"}];
-    [tester waitForTimeInterval:2];
-    NSArray *pplEventArray = [MockEventQueue.sharedQueue eventsFor:@"LOGIN_USER_ATTRIBUTES"];
+    NSArray *pplEventArray = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeLoginUserAttributes];
     NSLog(@"LOGIN_USER_ATTRIBUTES事件：%@", pplEventArray);
     if (pplEventArray.count >= 1) {
         NSDictionary *customchr = [pplEventArray objectAtIndex:pplEventArray.count - 1];
-        XCTAssertEqualObjects(customchr[@"eventType"], @"LOGIN_USER_ATTRIBUTES");
+        XCTAssertEqualObjects(customchr[@"eventType"], GrowingEventTypeLoginUserAttributes);
         XCTAssertTrue([ManualTrackHelper CheckContainsKey:customchr:@"attributes"]);
         XCTAssertEqualObjects(customchr[@"attributes"][@"name"], @"测试名字");
         XCTAssertEqualObjects(customchr[@"attributes"][@"title"], @"QA");
@@ -76,19 +75,18 @@
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] setLoginUserAttributes:@{}];
-    [tester waitForTimeInterval:2];
-    NSArray *pplEventArray = [MockEventQueue.sharedQueue eventsFor:@"LOGIN_USER_ATTRIBUTES"];
+    NSArray *pplEventArray = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeLoginUserAttributes];
     NSLog(@"PPL事件：%@", pplEventArray);
     if (pplEventArray.count >= 1) {
         NSDictionary *customchr = [pplEventArray objectAtIndex:pplEventArray.count - 1];
-        XCTAssertEqualObjects(customchr[@"eventType"], @"LOGIN_USER_ATTRIBUTES");
+        XCTAssertEqualObjects(customchr[@"eventType"], GrowingEventTypeLoginUserAttributes);
         NSDictionary *chres = [ManualTrackHelper PplEventCheck:customchr];
         // NSLog(@"Check Result:%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
         XCTAssertEqualObjects(chres[@"ProCheck"][@"chres"], @"same");
-        NSLog(@"LOGIN_USER_ATTRIBUTES事件，setPeopleVariable为空测试通过-----passed");
+        TestSuccess(@"LOGIN_USER_ATTRIBUTES事件，setPeopleVariable为空测试通过-----passed");
     } else {
-        NSLog(@"LOGIN_USER_ATTRIBUTES事件，setPeopleVariable为空测试失败:%@", pplEventArray);
+        TestFailed(@"LOGIN_USER_ATTRIBUTES事件，setPeopleVariable为空测试失败:%@", pplEventArray);
         XCTAssertEqual(1, 0);
     }
 }
@@ -99,21 +97,20 @@
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] setLoginUserAttributes:@{@"name" : @"GrowingIO"}];
-    [tester waitForTimeInterval:2];
-    NSArray *pplEventArray = [MockEventQueue.sharedQueue eventsFor:@"LOGIN_USER_ATTRIBUTES"];
+    NSArray *pplEventArray = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeLoginUserAttributes];
     // NSLog(@"LOGIN_USER_ATTRIBUTES事件：%@",pplEventArray);
     if (pplEventArray.count >= 1) {
         NSDictionary *customchr = [pplEventArray objectAtIndex:pplEventArray.count - 1];
-        XCTAssertEqualObjects(customchr[@"eventType"], @"LOGIN_USER_ATTRIBUTES");
+        XCTAssertEqualObjects(customchr[@"eventType"], GrowingEventTypeLoginUserAttributes);
         XCTAssertTrue([ManualTrackHelper CheckContainsKey:customchr:@"attributes"]);
         XCTAssertEqualObjects(customchr[@"attributes"][@"name"], @"GrowingIO");
         NSDictionary *chres = [ManualTrackHelper PplEventCheck:customchr];
         // NSLog(@"Check Result:%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
         XCTAssertEqualObjects(chres[@"ProCheck"][@"chres"], @"same");
-        NSLog(@"LOGIN_USER_ATTRIBUTES事件,setPeopleVariableWithKey:andStringValue,发送正常数据测试通过-----passed");
+        TestSuccess(@"LOGIN_USER_ATTRIBUTES事件,setPeopleVariableWithKey:andStringValue,发送正常数据测试通过-----passed");
     } else {
-        NSLog(@"LOGIN_USER_ATTRIBUTES事件,setPeopleVariableWithKey:andStringValue,发送正常数据测试失败:%@",
+        TestFailed(@"LOGIN_USER_ATTRIBUTES事件,setPeopleVariableWithKey:andStringValue,发送正常数据测试失败:%@",
               pplEventArray);
         XCTAssertEqual(1, 0);
     }
@@ -125,21 +122,20 @@
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] setLoginUserAttributes:@{@"name" : @"GIO"}];
-    [tester waitForTimeInterval:2];
-    NSArray *pplEventArray = [MockEventQueue.sharedQueue eventsFor:@"LOGIN_USER_ATTRIBUTES"];
+    NSArray *pplEventArray = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeLoginUserAttributes];
     // NSLog(@"LOGIN_USER_ATTRIBUTES事件：%@",pplEventArray);
     if (pplEventArray.count >= 1) {
         NSDictionary *customchr = [pplEventArray objectAtIndex:pplEventArray.count - 1];
-        XCTAssertEqualObjects(customchr[@"eventType"], @"LOGIN_USER_ATTRIBUTES");
+        XCTAssertEqualObjects(customchr[@"eventType"], GrowingEventTypeLoginUserAttributes);
         XCTAssertTrue([ManualTrackHelper CheckContainsKey:customchr:@"attributes"]);
         XCTAssertEqualObjects(customchr[@"attributes"][@"name"], @"GIO");
         NSDictionary *chres = [ManualTrackHelper PplEventCheck:customchr];
         // NSLog(@"Check Result:%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
         XCTAssertEqualObjects(chres[@"ProCheck"][@"chres"], @"same");
-        NSLog(@"LOGIN_USER_ATTRIBUTES事件,setPeopleVariableWithKey:andStringValue,更新数据测试通过-----passed");
+        TestSuccess(@"LOGIN_USER_ATTRIBUTES事件,setPeopleVariableWithKey:andStringValue,更新数据测试通过-----passed");
     } else {
-        NSLog(@"LOGIN_USER_ATTRIBUTES事件,setPeopleVariableWithKey:andStringValue,更新数据测试失败:%@", pplEventArray);
+        TestFailed(@"LOGIN_USER_ATTRIBUTES事件,setPeopleVariableWithKey:andStringValue,更新数据测试失败:%@", pplEventArray);
         XCTAssertEqual(1, 0);
     }
 }
@@ -247,13 +243,12 @@
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] setLoginUserAttributes:@{@"score" : @"98"}];
-    [tester waitForTimeInterval:2];
-    NSArray *pplEventArray = [MockEventQueue.sharedQueue eventsFor:@"LOGIN_USER_ATTRIBUTES"];
+    NSArray *pplEventArray = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeLoginUserAttributes];
     // NSLog(@"LOGIN_USER_ATTRIBUTES事件：%@",pplEventArray);
     if (pplEventArray.count >= 1) {
         NSDictionary *customchr = [pplEventArray objectAtIndex:pplEventArray.count - 1];
         NSLog(@"LOGIN_USER_ATTRIBUTES Result:%@", customchr);
-        XCTAssertEqualObjects(customchr[@"eventType"], @"LOGIN_USER_ATTRIBUTES");
+        XCTAssertEqualObjects(customchr[@"eventType"], GrowingEventTypeLoginUserAttributes);
         XCTAssertTrue([ManualTrackHelper CheckContainsKey:customchr:@"attributes"]);
         NSString *customnum = customchr[@"attributes"][@"score"];
         XCTAssertEqual([customnum intValue], 98);
@@ -261,9 +256,9 @@
         NSLog(@"Check Result:%@", chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
         XCTAssertEqualObjects(chres[@"ProCheck"][@"chres"], @"same");
-        NSLog(@"LOGIN_USER_ATTRIBUTES事件,setPeopleVariableWithKey:andNumberValue正整数测试通过-----passed");
+        TestSuccess(@"LOGIN_USER_ATTRIBUTES事件,setPeopleVariableWithKey:andNumberValue正整数测试通过-----passed");
     } else {
-        NSLog(@"LOGIN_USER_ATTRIBUTES事件,setPeopleVariableWithKey:andNumberValue正整数测试失败:%@", pplEventArray);
+        TestFailed(@"LOGIN_USER_ATTRIBUTES事件,setPeopleVariableWithKey:andNumberValue正整数测试失败:%@", pplEventArray);
         XCTAssertEqual(1, 0);
     }
 }
@@ -274,12 +269,11 @@
      **/
     [MockEventQueue.sharedQueue cleanQueue];
     [[GrowingAutotracker sharedInstance] setLoginUserAttributes:@{@"score" : @"23.62"}];
-    [tester waitForTimeInterval:2];
-    NSArray *pplEventArray = [MockEventQueue.sharedQueue eventsFor:@"LOGIN_USER_ATTRIBUTES"];
+    NSArray *pplEventArray = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeLoginUserAttributes];
     // NSLog(@"LOGIN_USER_ATTRIBUTES事件：%@",pplEventArray);
     if (pplEventArray.count >= 1) {
         NSDictionary *customchr = [pplEventArray objectAtIndex:pplEventArray.count - 1];
-        XCTAssertEqualObjects(customchr[@"eventType"], @"LOGIN_USER_ATTRIBUTES");
+        XCTAssertEqualObjects(customchr[@"eventType"], GrowingEventTypeLoginUserAttributes);
         XCTAssertTrue([ManualTrackHelper CheckContainsKey:customchr:@"attributes"]);
         NSString *customnum = customchr[@"attributes"][@"score"];
         NSString *floatchr = @"23.62";
@@ -288,9 +282,9 @@
         // NSLog(@"Check Result:%@",chres);
         XCTAssertEqualObjects(chres[@"KeysCheck"][@"chres"], @"Passed");
         XCTAssertEqualObjects(chres[@"ProCheck"][@"chres"], @"same");
-        NSLog(@"LOGIN_USER_ATTRIBUTES事件,setPeopleVariableWithKey:andNumberValue更新为浮点数测试通过-----passed");
+        TestSuccess(@"LOGIN_USER_ATTRIBUTES事件,setPeopleVariableWithKey:andNumberValue更新为浮点数测试通过-----passed");
     } else {
-        NSLog(@"LOGIN_USER_ATTRIBUTES事件,setPeopleVariableWithKey:andNumberValue更新为浮点数测试失败:%@",
+        TestFailed(@"LOGIN_USER_ATTRIBUTES事件,setPeopleVariableWithKey:andNumberValue更新为浮点数测试失败:%@",
               pplEventArray);
         XCTAssertEqual(1, 0);
     }
