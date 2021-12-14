@@ -105,7 +105,8 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   
   s.subspec 'Protobuf' do |protobuf|
       protobuf.source_files = 'Modules/Protobuf/**/*{.h,.m,.c,.cpp,.mm}'
-      protobuf.dependency 'GrowingAnalytics/TrackerCore'
+      protobuf.dependency 'GrowingAnalytics/TrackerCore'   
+      protobuf.dependency 'GrowingAnalytics/Database'
       protobuf.exclude_files = 'Modules/Protobuf/Proto/**/*{.h,.m,.c,.cpp,.mm}'
       
       protobuf.subspec 'Proto' do |proto|
