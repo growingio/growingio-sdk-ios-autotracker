@@ -1,6 +1,5 @@
 # source 'https://github.com/growingio/giospec.git'
 source 'https://github.com/CocoaPods/Specs.git'
-source 'https://github.com/aliyun/aliyun-specs.git'
 
 use_frameworks!
 
@@ -18,9 +17,8 @@ target 'Example' do
 #  pod 'GrowingAnalytics/Advertising', :path => './'
 #  pod 'GrowingAnalytics/DISABLE_IDFA', :path => './' #禁用idfa
   pod 'SDCycleScrollView', '~> 1.75'
-  pod 'MJRefresh'
-  pod 'MBProgressHUD'
-#  pod 'AlicloudPush', '~> 1.9.8'
+#  pod 'MJRefresh'
+#  pod 'MBProgressHUD'
 end
 
 target 'ExampleTests' do

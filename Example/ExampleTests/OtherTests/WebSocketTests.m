@@ -33,7 +33,7 @@
 #import "UIViewController+GrowingNode.h"
 #import "UICollectionView+GrowingNode.h"
 #import "UIView+GrowingNode.h"
-#import "FirstViewController.h"
+#import "GIOFirstViewController.h"
 #import "GrowingDeviceInfo.h"
 #import "GrowingFileStorage.h"
 #import <WebKit/WebKit.h>
@@ -144,7 +144,7 @@
     [GrowingDeepLinkHandler handlerUrl:url1];
 }
 -(void)testGrowingUIViewController{
-    UIViewController *vc1 = [[FirstViewController alloc]init];
+    UIViewController *vc1 = [[GIOFirstViewController alloc]init];
     [vc1 performSelector:@selector(growingNodeParent)];
     //growingAppearStateCanTrack
     [vc1 performSelector:@selector(growingAppearStateCanTrack)];

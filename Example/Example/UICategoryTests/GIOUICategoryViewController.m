@@ -67,7 +67,7 @@ typedef NS_ENUM(NSInteger, GIOElementType) {
 
 //表头高度
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return TableView_Section_Height;
+    return 44.0f;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
