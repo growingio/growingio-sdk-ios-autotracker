@@ -29,7 +29,7 @@
     [MockEventQueue.sharedQueue cleanQueue];
     [[viewTester usingLabel:@"协议/接口"] tap];
     [tester waitForTimeInterval:1];
-    // Find MeasurementProtocolTableViewController tableView with accessibilityIdentifier and scroll it.
+    // Find GIOMeasurementProtocolTableViewController tableView with accessibilityIdentifier and scroll it.
     [tester scrollViewWithAccessibilityIdentifier:@"MeasurementProtocolTableView"
                        byFractionOfSizeHorizontal:0.0f
                                          vertical:-0.3f];
