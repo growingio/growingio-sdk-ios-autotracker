@@ -6,7 +6,7 @@ name: CI
 # events but only for the master branch
 on:
   push:
-  
+    branches: [ master ]
   pull_request:
     branches: [ master ]
 
@@ -22,6 +22,16 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       # Runs a single command using the runners shell
+        with:
+          fetch-depth: 0
+      - name: Cache cocoapods
+        uses: actions/cache@v2
+        with:
+          path: Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+
       - name: Before script
         run: |
           pod install
