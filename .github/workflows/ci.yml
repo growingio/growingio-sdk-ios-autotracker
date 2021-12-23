@@ -35,8 +35,12 @@ jobs:
       - name: Before script
         run: |
           pod install
-      - name: Run Tests
-        run: xcodebuild test -workspace  GrowingAnalytics.xcworkspace -scheme Example -destination 'platform=iOS Simulator,name=iPhone 12 Pro' GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES
+          
+      - name: Run ExampleTests
+        run: xcodebuild test -workspace GrowingAnalytics.xcworkspace -scheme ExampleTests -destination 'platform=iOS Simulator,name=iPhone 13' GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES | xcpretty
+        
+      - name: Run ExampleTests-Protobuf
+        run: xcodebuild test -workspace GrowingAnalytics.xcworkspace -scheme ExampleTests-Protobuf -destination 'platform=iOS Simulator,name=iPhone 13' GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES | xcpretty
 
       - name: Upload coverage to Codecov
         if: always()

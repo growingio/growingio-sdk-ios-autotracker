@@ -32,7 +32,6 @@ target 'ExampleTests-Protobuf' do
    project 'Example/Example'
    pod 'GrowingAnalytics/Autotracker', :path => './'
    pod 'GrowingAnalytics/Protobuf', :path => './'
-   pod 'KIF', :configurations => ['Debug']
 #   pod 'OHHTTPStubs', :configurations => ['Debug']
 end
 
