@@ -27,9 +27,6 @@
 
 @interface UIViewController (GrowingPrivateAttributes)
 
-- (void)mergeGrowingAttributesPvar:(NSDictionary<NSString *,NSObject *> *)growingAttributesPvar;
-- (void)removeGrowingAttributesPvar:(NSString *)key;
-
 @end
 
 

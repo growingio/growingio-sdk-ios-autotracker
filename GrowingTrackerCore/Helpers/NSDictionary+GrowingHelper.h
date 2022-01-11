@@ -30,20 +30,10 @@
 
 - (NSString *)growingHelper_jsonString;
 
-- (BOOL)isValidDictVariable;
-
 - (NSString *)growingHelper_queryString;
 
 - (int)intForKey:(NSString *)key fallback:(int)value;
 
 - (long long)longlongForKey:(NSString *)key fallback:(long long)value;
-
-@end
-
-@interface NSMutableDictionary (GrowingHelper)
-
-// return YES: something was changed;
-// return NO: nothing was changed.
-- (BOOL)removeGrowingAttributesVar:(NSString *)key;
 
 @end

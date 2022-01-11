@@ -32,32 +32,36 @@
 
 @implementation GrowingAppDelegateAutotracker
 
-+ (BOOL)isUseScene {
-    NSDictionary *sceneManifest = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"UIApplicationSceneManifest"];
-    NSArray *rols = [[sceneManifest objectForKey:@"UISceneConfigurations"] objectForKey:@"UIWindowSceneSessionRoleApplication"];
-    if (rols.count == 0) {
-        return NO;
-    }
-    for (NSDictionary *dic in rols) {
-        NSString *class = [dic objectForKey:@"UISceneDelegateClassName"];
-        if (class) {
-            return YES;
++ (nullable Class)sceneDelegateClass {
+    if (@available(iOS 13.0, *)) {
+        NSDictionary *sceneManifest = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"UIApplicationSceneManifest"];
+        NSArray *rols = [[sceneManifest objectForKey:@"UISceneConfigurations"] objectForKey:@"UIWindowSceneSessionRoleApplication"];
+        if (rols.count == 0) {
+            return nil;
+        }
+        for (NSDictionary *dic in rols) {
+            NSString *classname = [dic objectForKey:@"UISceneDelegateClassName"];
+            if (classname) {
+                Class cls = NSClassFromString(classname);
+                if (cls) {
+                    return cls;
+                }
+            }
         }
     }
-    return NO;
+    return nil;
 }
 
 + (void)track {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSObject* delegate = [UIApplication sharedApplication].delegate;
-        BOOL useUIScene = NO;
-        if (@available(iOS 13.0, *)) {
-            useUIScene = [self isUseScene];
-        }
-        
-        if (!useUIScene) {
+        Class sceneDelegateClass = self.sceneDelegateClass;
+        if (!sceneDelegateClass) {
             //url scheme 跳转
+            NSObject *delegate = [UIApplication sharedApplication].delegate;
+            if (!delegate) {
+                return;
+            }
             if ([delegate respondsToSelector:@selector(application:openURL:options:)]) {
                 SEL sel = @selector(application:openURL:options:);
                 Method method = class_getInstanceMethod(delegate.class,sel);
@@ -121,28 +125,9 @@
         } else {
             //为什么不hook方法 application:configurationForConnectingSceneSession:options:
             //https://stackoverflow.com/questions/63520008/why-is-uiapplicationdelegate-method-application-configurationforconnectingop
-            if (@available(iOS 13.0, *)) {
-                NSDictionary *sceneManifest = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"UIApplicationSceneManifest"];
-                NSArray *rols = [[sceneManifest objectForKey:@"UISceneConfigurations"] objectForKey:@"UIWindowSceneSessionRoleApplication"];
-                if (rols.count == 0) {
-                    return;
-                }
-                for (NSDictionary *dic in rols) {
-                    NSString *classname = [dic objectForKey:@"UISceneDelegateClassName"];
-                    if (classname) {
-                        Class cls = NSClassFromString(classname);
-                        if (cls) {
-                            [GrowingSceneDelegateAutotracker track:cls];
-                        }
-                    }
-                }
-
-            }
+            [GrowingSceneDelegateAutotracker track:sceneDelegateClass];
         }
     });
 }
-
-
-
 
 @end
