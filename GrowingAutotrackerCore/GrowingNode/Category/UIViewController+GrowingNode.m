@@ -34,6 +34,7 @@
 #import "UIViewController+GrowingNode.h"
 #import "UIViewController+GrowingPageHelper.h"
 #import "UIWindow+GrowingNode.h"
+#import "GrowingArgumentChecker.h"
 
 @implementation UIViewController (GrowingNode)
 
@@ -279,7 +280,11 @@ GrowingSafeStringPropertyImplementation(growingPageAlias, setGrowingPageAlias)
 }
 
 - (void)removeGrowingAttributesPvar:(NSString *)key {
-    [self.growingAttributesMutablePvar removeGrowingAttributesVar:key];
+    if (key == nil) {
+        [self.growingAttributesMutablePvar removeAllObjects];
+    } else if (key.length > 0) {
+        [self.growingAttributesMutablePvar removeObjectForKey:key];
+    }
 }
 
 - (NSMutableDictionary<NSString *, NSObject *> *)growingAttributesMutablePvar {
@@ -299,7 +304,7 @@ GrowingSafeStringPropertyImplementation(growingPageAlias, setGrowingPageAlias)
                            [self removeGrowingAttributesPvar:nil];  // remove all
 
                        } else {
-                           if (![growingPageAttributes isValidDictVariable]) {
+                           if ([GrowingArgumentChecker isIllegalAttributes:growingPageAttributes]) {
                                return;
                            }
                            [self mergeGrowingAttributesPvar:growingPageAttributes];

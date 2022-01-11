@@ -67,17 +67,6 @@
     return [[self growingHelper_jsonData] growingHelper_utf8String];
 }
 
-- (BOOL)isValidDictVariable {
-    for (NSString *k in self) {
-        NSString *key = k;
-        if (![self[key] isKindOfClass:[NSString class]] && ![self[key] isKindOfClass:[NSNumber class]]) {
-            GIOLogError(@"%@ value is not NSString class", key);
-            return NO;
-        }
-    }
-    return YES;
-}
-
 - (NSString *)growingHelper_queryString {
     NSString *query = @"";
 
