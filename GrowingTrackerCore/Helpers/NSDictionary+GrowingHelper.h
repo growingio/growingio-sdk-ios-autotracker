@@ -32,8 +32,8 @@
 
 - (NSString *)growingHelper_queryString;
 
-- (int)intForKey:(NSString *)key fallback:(int)value;
+- (int)growingHelper_intForKey:(NSString *)key fallback:(int)value;
 
-- (long long)longlongForKey:(NSString *)key fallback:(long long)value;
+- (long long)growingHelper_longlongForKey:(NSString *)key fallback:(long long)value;
 
 @end

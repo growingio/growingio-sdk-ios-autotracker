@@ -60,7 +60,7 @@
     return nil;
 }
 
-void growingUISegmentedControlSetUp(UISegmentedControl *self) {
+static void growingUISegmentedControlSetUp(UISegmentedControl *self) {
     NSSet *allTargets = nil;
     @autoreleasepool {
         allTargets = self.allTargets;
@@ -114,7 +114,6 @@ void growingUISegmentedControlSetUp(UISegmentedControl *self) {
     
     if (index >= 0 && index < arr.count) {
         UIView *segment = arr[index];
-//        [GrowingClickEvent sendEventWithNode:segment andEventType:GrowingEventTypeSegmentControlSelect];
         [GrowingViewClickProvider viewOnClick:segment];
     }
 }

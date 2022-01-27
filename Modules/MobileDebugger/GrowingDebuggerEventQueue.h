@@ -22,7 +22,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^debuggerBlock)(NSArray *events);
+typedef void(^GrowingDebuggerEventQueueBlock)(NSArray *events);
 
 @interface GrowingDebuggerEventQueue : NSObject
 
@@ -32,7 +32,7 @@ typedef void(^debuggerBlock)(NSArray *events);
 
 - (void)dequeue;
 
-@property (nonatomic, copy, nullable) debuggerBlock debuggerBlock;
+@property (nonatomic, copy, nullable) GrowingDebuggerEventQueueBlock debuggerBlock;
 
 @end
 

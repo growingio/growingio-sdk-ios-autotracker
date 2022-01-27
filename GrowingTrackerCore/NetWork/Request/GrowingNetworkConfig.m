@@ -65,7 +65,7 @@ static NSString * const kGrowingWsHostFormat =  @"wss://ws.growingio.com";
     if (!baseUrl.length) {
         return nil;
     }
-    NSString *absoluteURLString = [baseUrl absoluteURLStringWithPath:self.path andQuery:nil];
+    NSString *absoluteURLString = [baseUrl growingHelper_absoluteURLStringWithPath:self.path andQuery:nil];
     return absoluteURLString;
 }
 

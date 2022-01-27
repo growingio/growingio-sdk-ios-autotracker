@@ -21,12 +21,10 @@
 #import "NSURLSession+GrowingURLSessionHelper.h"
 #import "NSURLSessionDataTask+GrowingURLSessionDataTaskHelper.h"
 
-
 @implementation NSURLSession (GrowingURLSessionHelper)
 
-- (id<GrowingURLSessionDataTaskProtocol>)dataTaskWithRequest:(NSURLRequest * _Nonnull)request
-                                           completion:(void (^ _Nonnull)(NSData * _Nullable, NSURLResponse * _Nullable, NSError * _Nullable))completion {
-    
+- (id <GrowingURLSessionDataTaskProtocol>_Nullable)growing_dataTaskWithRequest:(NSURLRequest *_Nonnull)request
+                                                                    completion:(GrowingNetworkDataTaskBlock _Nonnull)completion {
     NSURLSessionTask *task = [self dataTaskWithRequest:request
                                      completionHandler:completion];
     

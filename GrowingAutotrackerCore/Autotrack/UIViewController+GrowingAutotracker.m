@@ -29,7 +29,7 @@
 
 GrowingPropertyDefine(UIViewController, NSNumber *, growingHook_hasDidAppear, setGrowingHook_hasDidAppear)
 
-    @implementation UIViewController(GrowingAutotracker)
+@implementation UIViewController (GrowingAutotracker)
 
 - (void)growing_viewDidAppear:(BOOL)animated {
     [self setGrowingHook_hasDidAppear:@YES];

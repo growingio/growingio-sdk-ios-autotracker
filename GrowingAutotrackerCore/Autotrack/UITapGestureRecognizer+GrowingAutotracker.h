@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UITapGestureRecognizer (GrowingAutotracker)
 
-+ (BOOL)growingGestureRecognizerCanHandleView:(UIView*)view;
++ (BOOL)growing_hasSingleTapGestureRecognizerInView:(UIView *)view;
 
 - (instancetype)growing_initWithTarget:(id)target action:(SEL)action;
 - (instancetype)growing_initWithCoder:(NSCoder *)coder;

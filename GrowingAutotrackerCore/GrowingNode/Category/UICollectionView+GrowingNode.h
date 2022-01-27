@@ -21,6 +21,6 @@
 #import <Foundation/Foundation.h>
 #import "UIView+GrowingNode.h"
 
-@interface UICollectionView(GrowingNode)
+@interface UICollectionView (GrowingNode)
 
 @end

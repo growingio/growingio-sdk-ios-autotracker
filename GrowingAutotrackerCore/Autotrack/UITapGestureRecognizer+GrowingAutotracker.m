@@ -59,8 +59,6 @@
 
 - (void)growingClickEvent:(UIGestureRecognizer *)gesture {
     [GrowingViewClickProvider viewOnClick:gesture.view];
-//    [GrowingClickEvent sendEventWithNode:gesture.view
-//                          andEventType:GrowingEventTypeTapGest];
 }
 
 @end
@@ -82,7 +80,7 @@
     return gesture;
 }
 
-+ (BOOL)growingGestureRecognizerCanHandleView:(UIView *)view {
++ (BOOL)growing_hasSingleTapGestureRecognizerInView:(UIView *)view {
     for (UIGestureRecognizer *gest in view.gestureRecognizers) {
         if ([[GrowingUIGestureRecognizerObserver sharedInstance] getSelectorByGesture:gest]) {
             return YES;

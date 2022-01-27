@@ -315,7 +315,7 @@
     [a growingHelper_isValidU];
     [a growingHelper_encryptString];
     XCTAssertFalse([NSString growingHelper_isBlankString:@"t"]);
-    [a convertToDictFromPasteboard];
+    [a growingHelper_convertToDictFromPasteboard];
     XCTAssertFalse([NSString growingHelper_isEqualStringA:@"A" andStringB:@"B"]);
     
 

@@ -45,7 +45,7 @@
         return nil;
     }
     
-    NSString *absoluteURLString = [baseUrl absoluteURLStringWithPath:self.path andQuery:self.query];
+    NSString *absoluteURLString = [baseUrl growingHelper_absoluteURLStringWithPath:self.path andQuery:self.query];
     return [NSURL URLWithString:absoluteURLString];
 }
 

@@ -21,7 +21,6 @@
 #import <Foundation/Foundation.h>
 #import "GrowingURLSessionProtocol.h"
 
-
 NS_ASSUME_NONNULL_BEGIN
 
 @interface NSURLSession (GrowingURLSessionHelper) <GrowingURLSessionProtocol>
