@@ -29,7 +29,7 @@
 
 - (void)growing_dismissAnimated:(BOOL)animated triggeringAction:(UIAlertAction *)action {
     
-    [self sendClickEventForAction:action];
+    [self growing_sendClickEventForAction:action];
 
     [self growing_dismissAnimated:animated triggeringAction:action];
 }
@@ -39,7 +39,7 @@
   triggeredByPopoverDimmingView:(UIView *)view
               dismissCompletion:(id)completion {
     
-    [self sendClickEventForAction:action];
+    [self growing_sendClickEventForAction:action];
     
     [self growing_dismissAnimated:animated
                  triggeringAction:action
@@ -47,7 +47,7 @@
                 dismissCompletion:completion];
 }
 
-- (void)sendClickEventForAction:(UIAlertAction *)action {
+- (void)growing_sendClickEventForAction:(UIAlertAction *)action {
     NSMapTable *allButton = [self growing_allActionViews];
     for (UIView *btn in allButton.keyEnumerator) {
         if (action == [UIAlertController growing_actionForActionView:btn]) {

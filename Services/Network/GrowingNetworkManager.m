@@ -53,14 +53,17 @@ GrowingService(GrowingEventNetworkService, GrowingNetworkManager)
     
     NSURLRequest *urlRequest = [self createRequest:request];
     
-    if (![self.session respondsToSelector:@selector(dataTaskWithRequest:completion:)]) {
-        GIOLogError(@"Session(%@) cannot respond to dataTaskWithRequest:completion method.", self.session);
+    SEL selector = @selector(growing_dataTaskWithRequest:completion:);
+    if (![self.session respondsToSelector:selector]) {
+        GIOLogError(@"Session(%@) cannot respond to %@ method.", self.session, NSStringFromSelector(selector));
         return nil;
     }
     
     id <GrowingURLSessionDataTaskProtocol> task =
-    [self.session dataTaskWithRequest:urlRequest
-                           completion:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    [self.session growing_dataTaskWithRequest:urlRequest
+                                   completion:^(NSData * _Nullable data,
+                                                NSURLResponse * _Nullable response,
+                                                NSError * _Nullable error) {
         
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         

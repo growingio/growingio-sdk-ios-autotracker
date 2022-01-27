@@ -34,13 +34,13 @@ GrowingPropertyDefine(UITextView, NSString *, growingHookOldText, setGrowingHook
 - (void)growing_postNotificationName:(NSNotificationName)aName object:(id)anObject userInfo:(NSDictionary *)aUserInfo {
     
     if ([aName isEqualToString:UITextFieldTextDidEndEditingNotification]) {
-        [self handleInputViewDidEndingEditing:anObject];
+        [self growing_handleInputViewDidEndingEditing:anObject];
     }
     
     [self growing_postNotificationName:aName object:anObject userInfo:aUserInfo];
 }
 
-- (void)handleInputViewDidEndingEditing:(id)anObject {
+- (void)growing_handleInputViewDidEndingEditing:(id)anObject {
     if ([anObject isKindOfClass:UITextField.class]) {
         UITextField *inputView = (UITextField *)anObject;
         
@@ -50,7 +50,6 @@ GrowingPropertyDefine(UITextView, NSString *, growingHookOldText, setGrowingHook
         if (text && ![inputView.growingHookOldText isEqualToString:text]) {
             inputView.growingHookOldText = text;
             [GrowingViewChangeProvider viewOnChange:inputView];
-//            [GrowingTextEditContentChangeEvent sendEventWithNode:inputView andEventType:GrowingEventTypeUIChangeText];
         }
         
     } else if ([anObject isKindOfClass:UITextView.class]) {
@@ -63,7 +62,6 @@ GrowingPropertyDefine(UITextView, NSString *, growingHookOldText, setGrowingHook
         if (![inputView.growingHookOldText isEqualToString:text]) {
             inputView.growingHookOldText = text;
             [GrowingViewChangeProvider viewOnChange:inputView];
-//            [GrowingTextEditContentChangeEvent sendEventWithNode:inputView andEventType:GrowingEventTypeUIChangeText];
         }
     }
 }

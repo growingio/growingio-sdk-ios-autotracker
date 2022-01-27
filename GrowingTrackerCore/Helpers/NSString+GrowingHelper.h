@@ -45,9 +45,9 @@
 
 + (BOOL)growingHelper_isBlankString:(NSString *)string;
 
-- (NSString *)absoluteURLStringWithPath:(NSString *)path andQuery:(NSDictionary *)query;
+- (NSString *)growingHelper_absoluteURLStringWithPath:(NSString *)path andQuery:(NSDictionary *)query;
 
-- (NSDictionary *)convertToDictFromPasteboard;
+- (NSDictionary *)growingHelper_convertToDictFromPasteboard;
 
 + (BOOL)growingHelper_isEqualStringA:(NSString *)strA andStringB:(NSString *)strB;
 

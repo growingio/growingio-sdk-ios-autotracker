@@ -85,7 +85,7 @@
     return query;
 }
 
-- (int)intForKey:(NSString *)key fallback:(int)value {
+- (int)growingHelper_intForKey:(NSString *)key fallback:(int)value {
     id obj = [self valueForKey:key];
     if (obj && ([obj isKindOfClass:[NSNumber class]] || [obj isKindOfClass:[NSString class]])) {
         NSNumber *number = obj;
@@ -94,7 +94,7 @@
     return value;
 }
 
-- (long long)longlongForKey:(NSString *)key fallback:(long long)value {
+- (long long)growingHelper_longlongForKey:(NSString *)key fallback:(long long)value {
     id obj = [self valueForKey:key];
     if (obj && ([obj isKindOfClass:[NSNumber class]] || [obj isKindOfClass:[NSString class]])) {
         NSNumber *number = obj;

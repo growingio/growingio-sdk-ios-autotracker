@@ -195,14 +195,14 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
                       .setTitle(dict[@KEY_TITLE])
                       .setReferralPage(dict[@KEY_REFERRAL_PAGE])
                       .setPath(dict[@KEY_PATH])
-                      .setTimestamp([dict longlongForKey:@KEY_TIMESTAMP fallback:[GrowingTimeUtil currentTimeMillis]])
+                      .setTimestamp([dict growingHelper_longlongForKey:@KEY_TIMESTAMP fallback:[GrowingTimeUtil currentTimeMillis]])
                       .setDomain([self getDomain:dict]);
     } else if ([type isEqualToString:GrowingEventTypePageAttributes]) {
         // TODO:检查@KEY_ATTRIBUTES字段是否符合字典类型
         builder = GrowingHybridPageAttributesEvent.builder.setQuery(dict[@KEY_QUERY])
                       .setPath(dict[@KEY_PATH])
-                      .setPageShowTimestamp([dict longlongForKey:@KEY_PAGE_SHOW_TIMESTAMP
-                                                        fallback:[GrowingTimeUtil currentTimeMillis]])
+                      .setPageShowTimestamp([dict growingHelper_longlongForKey:@KEY_PAGE_SHOW_TIMESTAMP
+                                                                      fallback:[GrowingTimeUtil currentTimeMillis]])
                       .setAttributes(dict[@KEY_ATTRIBUTES])
                       .setDomain([self getDomain:dict]);
     } else if ([type isEqualToString:GrowingEventTypeVisit]) {
@@ -216,8 +216,8 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
     } else if ([type isEqualToString:GrowingEventTypeCustom]) {
         builder = GrowingHybridCustomEvent.builder.setQuery(dict[@KEY_QUERY])
                       .setPath(dict[@KEY_PATH])
-                      .setPageShowTimestamp([dict longlongForKey:@KEY_PAGE_SHOW_TIMESTAMP
-                                                        fallback:[GrowingTimeUtil currentTimeMillis]])
+                      .setPageShowTimestamp([dict growingHelper_longlongForKey:@KEY_PAGE_SHOW_TIMESTAMP
+                                                                      fallback:[GrowingTimeUtil currentTimeMillis]])
                       .setAttributes(dict[@KEY_ATTRIBUTES])
                       .setEventName(dict[@KEY_EVENT_NAME])
                       .setDomain([self getDomain:dict]);
@@ -234,12 +234,12 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
 - (GrowingBaseBuilder *)transformViewElementBuilder:(NSDictionary *)dict {
     return GrowingHybridViewElementEvent.builder.setHyperlink(dict[@KEY_HYPERLINK])
         .setQuery(dict[@KEY_QUERY])
-        .setIndex([dict intForKey:@KEY_INDEX fallback:-1])
+        .setIndex([dict growingHelper_intForKey:@KEY_INDEX fallback:-1])
         .setTextValue(dict[@KEY_TEXT_VALUE])
         .setXpath(dict[@KEY_XPATH])
         .setPath(dict[@KEY_PATH])
-        .setPageShowTimestamp([dict longlongForKey:@KEY_PAGE_SHOW_TIMESTAMP
-                                          fallback:[GrowingTimeUtil currentTimeMillis]])
+        .setPageShowTimestamp([dict growingHelper_longlongForKey:@KEY_PAGE_SHOW_TIMESTAMP
+                                                        fallback:[GrowingTimeUtil currentTimeMillis]])
         .setDomain([self getDomain:dict]);
 }
 

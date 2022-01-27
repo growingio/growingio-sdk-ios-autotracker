@@ -21,6 +21,6 @@
 #import <UIKit/UIKit.h>
 #import "UIView+GrowingNode.h"
 
-@interface UIWindow (GrowingNode)<GrowingNode>
+@interface UIWindow (GrowingNode) <GrowingNode>
 
 @end

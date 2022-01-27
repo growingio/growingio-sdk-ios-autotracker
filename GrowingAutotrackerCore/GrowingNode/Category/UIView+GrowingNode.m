@@ -48,7 +48,7 @@
 
 GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowingHighlightView)
 
-@implementation UIView(GrowingNode)
+@implementation UIView (GrowingNode)
 
 - (UIImage *)growingNodeScreenShot:(UIImage *)fullScreenImage {
     return [fullScreenImage growingHelper_getSubImage:[self growingNodeFrame]];
@@ -293,7 +293,7 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
     
     return self.userInteractionEnabled &&
            ([self growingViewUserInteraction] ||
-            [UITapGestureRecognizer growingGestureRecognizerCanHandleView:self]);
+            [UITapGestureRecognizer growing_hasSingleTapGestureRecognizerInView:self]);
 }
 
 #pragma mark - Public Method

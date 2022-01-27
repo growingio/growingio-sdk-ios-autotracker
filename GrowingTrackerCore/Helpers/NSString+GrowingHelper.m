@@ -160,7 +160,7 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\\[]{}
     return dict;
 }
 
-- (NSString *)absoluteURLStringWithPath:(NSString *)path andQuery:(NSDictionary *)query {
+- (NSString *)growingHelper_absoluteURLStringWithPath:(NSString *)path andQuery:(NSDictionary *)query {
 
     NSString *baseUrl = self;
 
@@ -183,7 +183,7 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\\[]{}
     return absoluteURLString;;
 }
 
-- (NSDictionary *)convertToDictFromPasteboard {
+- (NSDictionary *)growingHelper_convertToDictFromPasteboard {
     if (self.length > 2000 * 16) {
         return nil;
     }
@@ -222,14 +222,14 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\\[]{}
     for (int i = 0; i < bs.count; i++) {
         NSString *partString = bs[i];
         long long part = [partString longLongValue];
-        int partInt = [self convertBinaryToDecimal:part];
+        int partInt = [self growingHelper_convertBinaryToDecimal:part];
         listString = [listString stringByAppendingString:[NSString stringWithFormat:@"%C", (unichar) partInt]];
     }
     NSDictionary *dict = listString.growingHelper_jsonObject;
     return [dict isKindOfClass:[NSDictionary class]] ? dict : nil;
 }
 
-- (int)convertBinaryToDecimal:(long long)n {
+- (int)growingHelper_convertBinaryToDecimal:(long long)n {
     int decimalNumber = 0, i = 0, remainder;
     while (n != 0) {
         remainder = n % 10;
