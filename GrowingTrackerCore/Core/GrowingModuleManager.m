@@ -117,7 +117,7 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
     if (!moduleClass) {
         return;
     }
-    [self.growingModuleInfos filterUsingPredicate:[NSPredicate predicateWithFormat:@"%@!=%@", kModuleInfoNameKey, NSStringFromClass(moduleClass)]];
+    [self.growingModuleInfos filterUsingPredicate:[NSPredicate predicateWithFormat:@"self.%@!=%@", kModuleInfoNameKey, NSStringFromClass(moduleClass)]];
     __block NSInteger index = -1;
     [self.growingModules enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([obj isKindOfClass:moduleClass]) {
