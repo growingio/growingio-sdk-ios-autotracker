@@ -24,13 +24,13 @@
 
 @implementation GrowingArgumentChecker
 + (BOOL)isIllegalEventName:(NSString *)eventName {
-    if ([NSString growingHelper_isBlankString:eventName]) {
-        GIOLogError(@"event name is NULL");
-        return YES;
-    }
-
     if (![eventName isKindOfClass:[NSString class]]) {
         GIOLogError(@"event name is not kind of NSString class");
+        return YES;
+    }
+    
+    if ([NSString growingHelper_isBlankString:eventName]) {
+        GIOLogError(@"event name is NULL");
         return YES;
     }
 
