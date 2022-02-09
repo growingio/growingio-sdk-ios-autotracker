@@ -39,7 +39,7 @@
 
 //慢速转发
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {
-    NSMethodSignature *ms = [super methodSignatureForSelector:aSelector];
+    NSMethodSignature *ms = [_target methodSignatureForSelector:aSelector];
     if (ms) {
         return ms;
     }
