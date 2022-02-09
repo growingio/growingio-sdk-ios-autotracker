@@ -65,9 +65,8 @@ NSString *const kGrowingDirCommonPrefix = @"com.growingio.";
         _folderURL = [userDir URLByAppendingPathComponent:fullPath];
         _crypto = crypto;
         [self createDirectoryAtURLIfNeeded:_folderURL];
-        return self;
     }
-    return nil;
+    return self;
 }
 
 - (void)createDirectoryAtURLIfNeeded:(NSURL *)url {

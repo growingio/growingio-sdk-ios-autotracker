@@ -29,31 +29,6 @@ typedef NS_ENUM(NSUInteger, GrowingAlertResult) {
     failure = 1,
 };
 
-@interface GrowingAlertConfiguration : NSObject
-
-@property (nonatomic, copy) NSString *okTitle;
-@property (nonatomic, copy) NSString *cancelTitle;
-@property (nonatomic, strong) UIColor *tintColor;
-
-@end
-
-@implementation GrowingAlertConfiguration
-
-- (instancetype)initWithTintColor:(UIColor *)tintColor
-                          okTitle:(NSString *)okTitle
-                      cancelTitle:(NSString *)cancelTitle {
-    if (self = [super init]) {
-        self.tintColor = tintColor;
-        self.okTitle = okTitle;
-        self.cancelTitle = cancelTitle;
-    }
-    return self;
-}
-
-@end
-
-static GrowingAlertConfiguration *defaultConfiguration = nil;
-
 @interface UIViewController (GrowingAlertHelper)
 
 - (UIViewController *)growing_topMostViewController;

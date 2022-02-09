@@ -25,6 +25,7 @@
 #import "GrowingSwizzler.h"
 #import <objc/runtime.h>
 #import <objc/message.h>
+#import "GrowingLogger.h"
 
 #define GROWING_MIN_ARGS 2
 #define GROWING_MAX_ARGS 5
@@ -161,7 +162,7 @@ static void (*growing_swizzledMethods[GROWING_MAX_ARGS - GROWING_MIN_ARGS + 1])(
     NSEnumerator *en = [growingSwizzles objectEnumerator];
     GrowingSwizzleEntity *swizzle;
     while ((swizzle = (GrowingSwizzleEntity *)[en nextObject])) {
-//        MPLogError(@"%@", swizzle);
+        GIOLogInfo(@"%@", swizzle);
     }
 }
 
