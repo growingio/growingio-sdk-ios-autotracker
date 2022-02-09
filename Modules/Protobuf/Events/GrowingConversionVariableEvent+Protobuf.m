@@ -21,12 +21,13 @@
 #import "GrowingConversionVariableEvent+Protobuf.h"
 #import "GrowingBaseEvent+Protobuf.h"
 #import "GrowingEvent.pbobjc.h"
+#import "GrowingPBEventV3Dto+GrowingHelper.h"
 
 @implementation GrowingConversionVariableEvent (Protobuf)
 
 - (GrowingPBEventV3Dto *)toProtobuf {
     GrowingPBEventV3Dto *dto = [super toProtobuf];
-    dto.attributes = self.attributes.mutableCopy;
+    dto.attributes = [dto growingHelper_safeMap:self.attributes];
     return dto;
 }
 
