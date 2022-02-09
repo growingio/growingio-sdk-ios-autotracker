@@ -35,13 +35,13 @@
 }
 
 - (GrowingPBEventType)pbEventType {
-    if (self.eventType == GrowingEventTypeVisit) {
+    if ([self.eventType isEqualToString:GrowingEventTypeVisit]) {
         return GrowingPBEventType_Visit;
-    } else if (self.eventType == GrowingEventTypeViewClick) {
+    } else if ([self.eventType isEqualToString:GrowingEventTypeViewClick]) {
         return GrowingPBEventType_ViewClick;
-    } else if (self.eventType == GrowingEventTypeViewChange) {
+    } else if ([self.eventType isEqualToString:GrowingEventTypeViewChange]) {
         return GrowingPBEventType_ViewChange;
-    } else if (self.eventType == GrowingEventTypeFormSubmit) {
+    } else if ([self.eventType isEqualToString:GrowingEventTypeFormSubmit]) {
         return GrowingPBEventType_FormSubmit;
     }
     
