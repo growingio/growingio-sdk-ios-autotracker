@@ -215,4 +215,16 @@
     return dic;
 }
 
+- (NSDictionary<NSString*, NSString*> *)growingHelper_safeMap:(NSDictionary<NSString*, NSString*> *)originMap {
+    NSMutableDictionary<NSString*, NSString*> *map = originMap.mutableCopy;
+    for (NSString *key in map.allKeys) {
+        if ([map[key] isKindOfClass:[NSNull class]]) {
+            // NSNull will crash
+            map[key] = nil;
+        }
+    }
+    
+    return map;
+}
+
 @end

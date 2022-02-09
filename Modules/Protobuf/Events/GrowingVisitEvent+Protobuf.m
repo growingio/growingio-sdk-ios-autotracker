@@ -21,6 +21,7 @@
 #import "GrowingVisitEvent+Protobuf.h"
 #import "GrowingBaseEvent+Protobuf.h"
 #import "GrowingEvent.pbobjc.h"
+#import "GrowingPBEventV3Dto+GrowingHelper.h"
 
 @implementation GrowingVisitEvent (Protobuf)
 
@@ -28,7 +29,7 @@
     GrowingPBEventV3Dto *dto = [super toProtobuf];
     dto.idfa = self.idfa;
     dto.idfv = self.idfv;
-    dto.extraSdk = self.extraSdk.mutableCopy;
+    dto.extraSdk = [dto growingHelper_safeMap:self.extraSdk];
     return dto;
 }
 
