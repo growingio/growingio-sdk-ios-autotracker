@@ -35,9 +35,9 @@
 }
 
 - (GrowingPBEventType)pbEventType {
-    if (self.eventType == GrowingEventTypeViewClick) {
+    if ([self.eventType isEqualToString:GrowingEventTypeViewClick]) {
         return GrowingPBEventType_ViewClick;
-    } else if (self.eventType == GrowingEventTypeViewChange) {
+    } else if ([self.eventType isEqualToString:GrowingEventTypeViewChange]) {
         return GrowingPBEventType_ViewChange;
     }
     
