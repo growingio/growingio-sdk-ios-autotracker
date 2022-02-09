@@ -41,7 +41,6 @@
     dataDictM[@"title"] = self.title;
     dataDictM[@"referralPage"] = self.referralPage;
     return dataDictM;
-    ;
 }
 
 + (GrowingPageBuilder *)builder {

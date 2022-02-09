@@ -29,24 +29,19 @@
 
 @implementation GrowingStatusBarEventManager
 
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        _observers = [NSPointerArray pointerArrayWithOptions:NSPointerFunctionsWeakMemory];
-        _observerLock = [[NSLock alloc] init];
-    }
-    return self;
-}
-
 + (instancetype)sharedInstance {
-    static id _sharedInstance = nil;
+    static GrowingStatusBarEventManager *_sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _sharedInstance = [[super allocWithZone:NULL] init];
+        
+        _sharedInstance->_observers = [NSPointerArray pointerArrayWithOptions:NSPointerFunctionsWeakMemory];
+        _sharedInstance->_observerLock = [[NSLock alloc] init];
     });
 
     return _sharedInstance;
 }
+
 // for safe sharedInstance
 + (instancetype)allocWithZone:(struct _NSZone *)zone {
     return [self sharedInstance];

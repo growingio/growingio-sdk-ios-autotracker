@@ -48,7 +48,6 @@
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:configuration options:NSJSONWritingPrettyPrinted error:&error];
     if (error) {
-        NSLog(@"json解析失败:%@", error);
         return nil;
     }
     if (jsonData) {
