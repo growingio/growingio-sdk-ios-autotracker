@@ -1,4 +1,4 @@
-# source 'https://github.com/growingio/giospec.git'
+#source 'https://github.com/growingio/giospec.git'
 #source 'https://github.com/CocoaPods/Specs.git'
 
 use_frameworks!
@@ -17,23 +17,30 @@ target 'Example' do
 #  pod 'GrowingAnalytics/Advertising', :path => './'
 #  pod 'GrowingAnalytics/DISABLE_IDFA', :path => './' #禁用idfa
   pod 'SDCycleScrollView', '~> 1.75'
-#  pod 'MJRefresh'
-#  pod 'MBProgressHUD'
 end
 
-target 'ExampleTests' do
+target 'GrowingAnalyticsTests' do
+   project 'Example/Example'
+   pod 'GrowingAnalytics/Autotracker', :path => './'
+end
+
+target 'GrowingAnalyticsStartTests' do
+   project 'Example/Example'
+   pod 'GrowingAnalytics/Autotracker', :path => './'
+   pod 'GrowingAnalytics/Tracker', :path => './'
+end
+
+target 'HostApplicationTests' do
    project 'Example/Example'
    pod 'GrowingAnalytics/Autotracker', :path => './'
    pod 'KIF', :configurations => ['Debug']
-#   pod 'OHHTTPStubs', :configurations => ['Debug']
 end
 
-target 'ExampleTests-Protobuf' do
+target 'ProtobufTests' do
    project 'Example/Example'
    pod 'GrowingAnalytics/Autotracker', :path => './'
    pod 'GrowingAnalytics/Protobuf', :path => './'
-   pod 'KIF', :configurations => ['Debug']
-#   pod 'OHHTTPStubs', :configurations => ['Debug']
 end
+
 
 

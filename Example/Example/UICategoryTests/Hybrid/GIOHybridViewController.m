@@ -63,7 +63,7 @@
     //直接加载html文件 userkey打通测试
      NSString *path = [[NSBundle mainBundle] bundlePath];
      NSURL *baseURL = [NSURL fileURLWithPath:path];
-     NSString * htmlPath = [[NSBundle mainBundle] pathForResource:@"gio_hybrid"
+     NSString * htmlPath = [[NSBundle mainBundle] pathForResource:@"gio_hybrideventtest"
                                                                   ofType:@"html"];
       NSString * htmlCont = [NSString stringWithContentsOfFile:htmlPath
                                                             encoding:NSUTF8StringEncoding
@@ -119,6 +119,7 @@
         _webView.UIDelegate = self;
         _webView.navigationDelegate = self;
         _webView.backgroundColor = [UIColor whiteColor];
+        _webView.accessibilityLabel = @"HybridWebView";
     }
     return _webView;
 }

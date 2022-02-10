@@ -491,6 +491,9 @@
                                     </label>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemTealColor"/>
+                                <accessibility key="accessibilityConfiguration" label="singleTapView">
+                                    <bool key="isElement" value="YES"/>
+                                </accessibility>
                                 <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstItem="CwU-OF-kYH" firstAttribute="centerY" secondItem="gXZ-Cl-SSk" secondAttribute="centerY" id="RbM-0v-DZ5"/>
@@ -512,6 +515,9 @@
                                     </label>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemIndigoColor"/>
+                                <accessibility key="accessibilityConfiguration" label="doubleTapView">
+                                    <bool key="isElement" value="YES"/>
+                                </accessibility>
                                 <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstItem="hJc-EM-38i" firstAttribute="centerX" secondItem="e3Z-lp-NKP" secondAttribute="centerX" id="baU-kr-2aZ"/>
