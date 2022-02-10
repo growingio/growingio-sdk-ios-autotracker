@@ -29,6 +29,7 @@ const NSUInteger kProgressViewControllerMaxProgress = 100;
     
     [self configureRightNavButtonItem];
     [self configureSearchBar];
+    [self configureSegmentedControl];
 }
 
 - (IBAction)imageBtnClick:(UIButton *)sender {
@@ -62,6 +63,18 @@ const NSUInteger kProgressViewControllerMaxProgress = 100;
     self.navigationItem.rightBarButtonItem = rightItem;
     [button addTarget:self action:@selector(scanQR) forControlEvents:UIControlEventTouchUpInside];
     button.accessibilityLabel = @"ScanQRCode";
+}
+
+- (void)configureSegmentedControl {
+    __weak typeof(self) weakSelf = self;
+    void(^block)(NSUInteger, NSString *) = ^(NSUInteger index, NSString *accessibilityLabel) {
+        __strong typeof(weakSelf) self = weakSelf;
+        UIView *view = (self.defaultSegmentedControl.subviews)[self.defaultSegmentedControl.subviews.count - index - 1];
+        view.accessibilityLabel = accessibilityLabel;
+    };
+    block(0, @"FirstSegment");
+    block(2, @"SecondSegment");
+    block(1, @"ThirdSegment");
 }
 
 - (void)scanQR {

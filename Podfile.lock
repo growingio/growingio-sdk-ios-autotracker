@@ -1,5 +1,5 @@
 PODS:
-  - GrowingAnalytics/Autotracker (3.3.3-beta):
+  - GrowingAnalytics/Autotracker (3.3.3):
     - GrowingAnalytics/AutotrackerCore
     - GrowingAnalytics/Compression
     - GrowingAnalytics/Database
@@ -8,39 +8,46 @@ PODS:
     - GrowingAnalytics/MobileDebugger
     - GrowingAnalytics/Network
     - GrowingAnalytics/WebCircle
-  - GrowingAnalytics/AutotrackerCore (3.3.3-beta):
+  - GrowingAnalytics/AutotrackerCore (3.3.3):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/Compression (3.3.3-beta):
+  - GrowingAnalytics/Compression (3.3.3):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/Database (3.3.3-beta):
+  - GrowingAnalytics/Database (3.3.3):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/Encryption (3.3.3-beta):
+  - GrowingAnalytics/Encryption (3.3.3):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/Hybrid (3.3.3-beta):
+  - GrowingAnalytics/Hybrid (3.3.3):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/MobileDebugger (3.3.3-beta):
+  - GrowingAnalytics/MobileDebugger (3.3.3):
     - GrowingAnalytics/TrackerCore
     - GrowingAnalytics/WebSocket
-  - GrowingAnalytics/Network (3.3.3-beta):
+  - GrowingAnalytics/Network (3.3.3):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/Protobuf (3.3.3-beta):
+  - GrowingAnalytics/Protobuf (3.3.3):
     - GrowingAnalytics/Database
-    - GrowingAnalytics/Protobuf/Proto (= 3.3.3-beta)
+    - GrowingAnalytics/Protobuf/Proto (= 3.3.3)
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/Protobuf/Proto (3.3.3-beta):
+  - GrowingAnalytics/Protobuf/Proto (3.3.3):
     - GrowingAnalytics/Database
     - GrowingAnalytics/TrackerCore
     - Protobuf
-  - GrowingAnalytics/TrackerCore (3.3.3-beta)
-  - GrowingAnalytics/WebCircle (3.3.3-beta):
+  - GrowingAnalytics/Tracker (3.3.3):
+    - GrowingAnalytics/Compression
+    - GrowingAnalytics/Database
+    - GrowingAnalytics/Encryption
+    - GrowingAnalytics/MobileDebugger
+    - GrowingAnalytics/Network
+    - GrowingAnalytics/TrackerCore
+  - GrowingAnalytics/TrackerCore (3.3.3)
+  - GrowingAnalytics/WebCircle (3.3.3):
     - GrowingAnalytics/AutotrackerCore
     - GrowingAnalytics/Hybrid
     - GrowingAnalytics/WebSocket
-  - GrowingAnalytics/WebSocket (3.3.3-beta):
+  - GrowingAnalytics/WebSocket (3.3.3):
     - GrowingAnalytics/TrackerCore
-  - KIF (3.8.5):
-    - KIF/Core (= 3.8.5)
-  - KIF/Core (3.8.5)
+  - KIF (3.8.6):
+    - KIF/Core (= 3.8.6)
+  - KIF/Core (3.8.6)
   - Protobuf (3.19.1)
   - SDCycleScrollView (1.82):
     - SDWebImage (>= 5.0.0)
@@ -51,11 +58,12 @@ PODS:
 DEPENDENCIES:
   - GrowingAnalytics/Autotracker (from `./`)
   - GrowingAnalytics/Protobuf (from `./`)
+  - GrowingAnalytics/Tracker (from `./`)
   - KIF
   - SDCycleScrollView (~> 1.75)
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  trunk:
     - KIF
     - Protobuf
     - SDCycleScrollView
@@ -66,12 +74,12 @@ EXTERNAL SOURCES:
     :path: "./"
 
 SPEC CHECKSUMS:
-  GrowingAnalytics: 7d59b089e3865e6eda6394b27e5dc472cb983f7b
-  KIF: b7fe836710720f84e4804767fba0a35ffc770b78
+  GrowingAnalytics: a9962929c1e8366c511eb0247b77bbf04b1bfffc
+  KIF: e2e1bab222b6c9523a0a88caab31f8524fe82404
   Protobuf: 3724efa50cb2846d7ccebc8691c574e85fd74471
   SDCycleScrollView: a0d74c3384caa72bdfc81470bdbc8c14b3e1fbcf
   SDWebImage: 4dc3e42d9ec0c1028b960a33ac6b637bb432207b
 
-PODFILE CHECKSUM: 246c0d1f79ff5c3761ad59358388e2f38f6f4ff2
+PODFILE CHECKSUM: 688f7feb2a6517dbc4a83fe9a13cbd26040a20c1
 
 COCOAPODS: 1.11.2

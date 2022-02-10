@@ -30,6 +30,7 @@
     self.searchbartest.delegate = self;
     //日期选择
     self.dataPickerOper.datePickerMode = UIDatePickerModeDate;
+    self.dataPickerOper.accessibilityLabel = @"dataPickerOper";
     [self.dataPickerOper addTarget:self action:@selector(dateChange:) forControlEvents:UIControlEventValueChanged];
     
 }

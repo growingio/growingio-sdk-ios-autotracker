@@ -261,7 +261,7 @@
                                 <segments>
                                     <segment title="First"/>
                                     <segment title="Second"/>
-                                    <segment title="Thrid"/>
+                                    <segment title="Third"/>
                                 </segments>
                                 <color key="selectedSegmentTintColor" systemColor="systemGreenColor"/>
                                 <connections>

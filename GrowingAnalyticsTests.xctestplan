@@ -1,0 +1,45 @@
+{
+  "configurations" : [
+    {
+      "id" : "D85DC526-A014-4B32-B03C-39E15A6D3704",
+      "name" : "GrowingAnalyticsTests",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Example.xcodeproj",
+        "identifier" : "34BA7B16277C61250030AC21",
+        "name" : "GrowingAnalyticsTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Example.xcodeproj",
+        "identifier" : "34AB4E46279000F5002549FF",
+        "name" : "GrowingAnalyticsStartTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Example.xcodeproj",
+        "identifier" : "34BF77B72795561300CA18BA",
+        "name" : "HostApplicationTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Example.xcodeproj",
+        "identifier" : "34BA7B2E277C63D00030AC21",
+        "name" : "ProtobufTests"
+      }
+    }
+  ],
+  "version" : 1
+}

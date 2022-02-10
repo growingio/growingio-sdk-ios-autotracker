@@ -29,20 +29,9 @@
 			<string>GrowingIO</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>growing.530c8231345c492d</string>
+				<string>growing.54e804b6de39cd4a</string>
 			</array>
 		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>GrowingIO 2.0</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>growing.530c8231345c492d</string>
-			</array>
-		</dict>
-		<dict/>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
@@ -50,6 +39,11 @@
 	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>NSLocationUsageDescription</key>
 	<string>GrowingIO测试demo 需要访问您的位置信息以用于数据追踪分析</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
@@ -77,10 +71,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-	</dict>
 </dict>
 </plist>
