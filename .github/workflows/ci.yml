@@ -21,9 +21,9 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      # Runs a single command using the runners shell
         with:
           fetch-depth: 0
+
       - name: Cache cocoapods
         uses: actions/cache@v2
         with:
@@ -32,11 +32,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pods-
 
-      - name: Before script
+      - name: Pod Install
         run: |
           pod install
-      - name: Run Tests
-        run: xcodebuild test -workspace  GrowingAnalytics.xcworkspace -scheme Example -destination 'platform=iOS Simulator,name=iPhone 12 Pro' GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES
+
+      - name: Run Logic Tests
+        run: |
+          xcodebuild test -workspace GrowingAnalytics.xcworkspace \
+          -scheme GrowingAnalyticsTests \
+          -testPlan GrowingAnalyticsTests \
+          -destination 'platform=iOS Simulator,name=iPhone 13' \
+          -enableCodeCoverage YES
 
       - name: Upload coverage to Codecov
         if: always()
