@@ -1,10 +1,13 @@
 codecov:
   token: "ba961ca1-57a7-4a22-ad2e-5819eea559da"
 ignore:
-  - "GrowingTrackerCore/Thirdparty"  # ignore Thirdparty
-  - "Example"  # ignore demo
-  - "GrowingTrackerCore/NetWork" # ignore network ,websocket
+  - "Example"
+  - "GrowingTrackerCore/NetWork"
+  - "GrowingTrackerCore/Thirdparty"
+  - "Modules/Protobuf/Proto"
+  - "Services/Compression/LZ4"
+  - "Services/Database/FMDB"
   - "Services/WebSocket"
-  - "Services/Database"
-  - "Services/Compression"
+  - "**/*.h"
+  - "Pods/"
 
