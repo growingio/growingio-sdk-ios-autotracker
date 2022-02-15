@@ -474,6 +474,7 @@ GrowingMod(GrowingWebCircle)
     [self sendJson:dict];
     self.statusWindow.statusLable.text = @"正在关闭web圈选...";
     self.statusWindow.statusLable.textAlignment = NSTextAlignmentCenter;
+    self.isReady = NO;
     [self _stopWithError:nil];
 }
 
