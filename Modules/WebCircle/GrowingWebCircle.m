@@ -452,7 +452,6 @@ GrowingMod(GrowingWebCircle)
 }
 
 - (void)start {
-    [self remoteReady];
     self.statusWindow.statusLable.text = @"正在进行GrowingIO移动端圈选";
     self.statusWindow.statusLable.textAlignment = NSTextAlignmentCenter;
     if (self.onReadyBlock) {
@@ -461,6 +460,7 @@ GrowingMod(GrowingWebCircle)
     }
     [self resetSnapshotKey];
     self.isReady = YES;
+    [self remoteReady];
     // Hybrid的布局改变回调代理设置
     [GrowingHybridBridgeProvider sharedInstance].domChangedDelegate = self;
     //监听原生事件，变动时发送
