@@ -50,7 +50,6 @@ static const NSUInteger kGrowingUnit_MB = 1024 * 1024;
 @interface GrowingEventManager ()
 
 @property (nonatomic, strong) NSHashTable *allInterceptor;
-@property (nonatomic, strong) NSLock *interceptorLock;
 
 @property (nonatomic, strong) NSMutableArray<id <GrowingEventPersistenceProtocol>> *eventQueue;
 @property (nonatomic, strong, readonly) NSArray<GrowingEventChannel *> *allEventChannels;
@@ -84,7 +83,6 @@ static GrowingEventManager *sharedInstance = nil;
 - (instancetype)init {
     if (self = [super init]) {
         _allInterceptor = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
-        _interceptorLock = [[NSLock alloc] init];
         _packageNum = kGrowingMaxBatchSize;
         // default is 10MB
         _uploadLimitOfCellular = [GrowingConfigurationManager sharedInstance].trackConfiguration.cellularDataLimit * kGrowingUnit_MB;
@@ -108,17 +106,19 @@ static GrowingEventManager *sharedInstance = nil;
 - (void)configChannels {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
-            if ([obj respondsToSelector:@selector(growingEventManagerChannels:)]) {
-                [obj growingEventManagerChannels:[GrowingEventChannel eventChannels]];
+        [GrowingDispatchManager dispatchInGrowingThread:^{
+            for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
+                if ([obj respondsToSelector:@selector(growingEventManagerChannels:)]) {
+                    [obj growingEventManagerChannels:[GrowingEventChannel eventChannels]];
+                }
             }
-        }
-        
-        _allEventChannels = [GrowingEventChannel buildAllEventChannels];
+            
+            self->_allEventChannels = [GrowingEventChannel buildAllEventChannels];
 
-        _eventChannelDict = [GrowingEventChannel eventChannelMapFromAllChannels:_allEventChannels];
-        // all other events got to this category
-        _otherEventChannel = [GrowingEventChannel otherEventChannelFromAllChannels:_allEventChannels];
+            self->_eventChannelDict = [GrowingEventChannel eventChannelMapFromAllChannels:self->_allEventChannels];
+            // all other events got to this category
+            self->_otherEventChannel = [GrowingEventChannel otherEventChannelFromAllChannels:self->_allEventChannels];
+        }];
     });
 }
 
@@ -446,18 +446,18 @@ static GrowingEventManager *sharedInstance = nil;
     if (!interceptor) {
         return;
     }
-    [self.interceptorLock lock];
-    [self.allInterceptor addObject:interceptor];
-    [self.interceptorLock unlock];
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        [self.allInterceptor addObject:interceptor];
+    }];
 }
 
 - (void)removeInterceptor:(NSObject<GrowingEventInterceptor> *_Nonnull)interceptor {
     if (!interceptor) {
         return;
     }
-    [self.interceptorLock lock];
-    [self.allInterceptor removeObject:interceptor];
-    [self.interceptorLock unlock];
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        [self.allInterceptor removeObject:interceptor];
+    }];
 }
 
 #pragma mark - Setter & Getter

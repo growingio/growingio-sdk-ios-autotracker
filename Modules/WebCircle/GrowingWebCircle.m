@@ -482,6 +482,7 @@ GrowingMod(GrowingWebCircle)
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
     [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
 
+    [GrowingHybridBridgeProvider sharedInstance].domChangedDelegate = nil;
     [[GrowingEventManager sharedInstance] removeInterceptor:self];
     [[GrowingApplicationEventManager sharedInstance] removeApplicationEventObserver:self];
     if (self.webSocket) {
@@ -507,8 +508,6 @@ GrowingMod(GrowingWebCircle)
         [alert addOkWithTitle:@"知道了" handler:nil];
         [alert showAlertAnimated:NO];
     }
-
-    [[GrowingEventManager sharedInstance] removeInterceptor:self];
 }
 
 - (BOOL)isRunning {
@@ -551,8 +550,6 @@ GrowingMod(GrowingWebCircle)
         }
     }
 }
-
-#pragma mark - websocket delegate
 
 - (void)webSocketDidOpen:(id <GrowingWebSocketService>)webSocket {
     GIOLogDebug(@"websocket已连接");
@@ -613,8 +610,6 @@ GrowingMod(GrowingWebCircle)
 }
 
 - (void)sendWebcircleWithType:(NSString *)eventType {
-    // this call back run in main thread
-    // so not use lock
     if (!_isReady) {
         return;
     }
