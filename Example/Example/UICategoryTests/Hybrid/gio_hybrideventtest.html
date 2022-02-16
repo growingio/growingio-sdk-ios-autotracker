@@ -8,6 +8,26 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover">
     <title>GrowingIO Hybrid In App</title>
+    
+    <script type='text/javascript'>
+      (function(window, document, script, src, namespace) {
+        window[namespace] = window[namespace] || function() {
+          (window[namespace].q = window[namespace].q || []).push(arguments)
+        };
+        script = document.createElement('script');
+        let tag = document.getElementsByTagName('script')[0];
+        script.async = true;
+        script.src = src;
+        tag.parentNode.insertBefore(script, tag);
+      })(window, document, 'script', 'https://assets.giocdn.com/sdk/cdp/gio.js', 'gdp');
+
+      gdp('init', 'bc675c65b3b0290e', 'your dataSourceId', {
+        host: 'api.growingio.com',
+        version: '1.0.0'
+      });
+      gdp('send');
+    </script>
+    
     <script>
         function getWebViewJavascriptBridgeConfiguration() {
             return GrowingWebViewJavascriptBridge.configuration = JSON.parse(window.GrowingWebViewJavascriptBridge.getConfiguration());
@@ -323,13 +343,6 @@
 
         function mockDomChanged() {
             GrowingWebViewJavascriptBridge.onDomChanged();
-        }
-
-        window.GrowingWebViewJavascriptBridge.getDomTree = function (left, top, width, height, zLevel) {
-            console.log("left = " + left + ", top = " + top + ", width = " + width + ", height = " + height + ", zLevel = " + zLevel);
-            return {
-                domtree: "mock"
-            };
         }
     </script>
 </head>
