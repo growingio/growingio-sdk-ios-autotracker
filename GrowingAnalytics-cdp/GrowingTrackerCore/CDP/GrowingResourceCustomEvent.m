@@ -1,8 +1,8 @@
 //
-// GrowingHybridCustomEvent.m
-// GrowingAnalytics
+//  GrowingResourceCustomEvent.m
+//  GrowingAnalytics-cdp
 //
-//  Created by sheng on 2020/11/17.
+//  Created by sheng on 2020/11/24.
 //  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,46 +17,58 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import "GrowingResourceCustomEvent.h"
 
-#import "GrowingHybridCustomEvent.h"
+@implementation GrowingCdpResourceItem
 
-@implementation GrowingHybridCustomEvent
+- (NSDictionary *)toDictionary {
+    NSMutableDictionary *dataDictM = [NSMutableDictionary dictionary];
+    dataDictM[@"id"] = self.itemId;
+    dataDictM[@"key"] = self.itemKey;
+    dataDictM[@"attributes"] = self.attributes;
+    return dataDictM;
+}
+
+@end
+
+@implementation GrowingResourceCustomEvent
 
 - (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
     if (self = [super initWithBuilder:builder]) {
-        GrowingHybridCustomBuilder *subBuilder = (GrowingHybridCustomBuilder*)builder;
-        _query = subBuilder.query;
+        GrowingResourceCustomBuilder *subBuilder = (GrowingResourceCustomBuilder*)builder;
+        _resourceItem = subBuilder.resourceItem;
     }
     return self;
 }
 
-
-+ (GrowingHybridCustomBuilder*)builder {
-    return [[GrowingHybridCustomBuilder alloc] init];
++ (GrowingResourceCustomBuilder *)builder {
+    return [[GrowingResourceCustomBuilder alloc] init];
 }
 
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
-    dataDictM[@"query"] = self.query;
-    return dataDictM;;
+    dataDictM[@"resourceItem"] = self.resourceItem.toDictionary;
+    return dataDictM;
 }
 
 @end
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wincomplete-implementation"
-@implementation GrowingHybridCustomBuilder
 
-- (GrowingHybridCustomBuilder *(^)(NSString *value))setQuery {
-    return  ^(NSString *value){
-        self->_query = value;
+@implementation GrowingResourceCustomBuilder
+
+- (GrowingResourceCustomBuilder *(^)(GrowingCdpResourceItem *value))setResourceItem {
+    return ^(GrowingCdpResourceItem *value) {
+        self->_resourceItem = value;
         return self;
     };
 }
 
 - (GrowingBaseEvent *)build {
-    return [[GrowingHybridCustomEvent alloc] initWithBuilder:self];
+    return [[GrowingResourceCustomEvent alloc] initWithBuilder:self];
 }
 
 @end
+
 #pragma clang diagnostic pop

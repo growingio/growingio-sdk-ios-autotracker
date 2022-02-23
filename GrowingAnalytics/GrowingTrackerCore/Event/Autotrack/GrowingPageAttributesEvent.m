@@ -35,7 +35,7 @@
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
     dataDictM[@"path"] = self.path;
     dataDictM[@"pageShowTimestamp"] = @(self.pageShowTimestamp);
-    return dataDictM;;
+    return dataDictM;
 }
 
 + (GrowingPageAttributesBuilder *)builder {

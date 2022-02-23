@@ -20,14 +20,14 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GrowingRealAutotracker.h"
-#import "GrowingRealTracker.h"
-#import "GrowingAutotrackConfiguration.h"
-#import "GrowingTrackConfiguration.h"
-#import "GrowingConfigurationManager.h"
-#import "GrowingTracker.h"
-#import "GrowingAutotracker.h"
-#import "GrowingDispatchManager.h"
+@import GrowingAnalytics.GrowingRealAutotracker;
+@import GrowingAnalytics.GrowingRealTracker;
+@import GrowingAnalytics.GrowingAutotrackConfiguration;
+@import GrowingAnalytics.GrowingTrackConfiguration;
+@import GrowingAnalytics.GrowingConfigurationManager;
+@import GrowingAnalytics.GrowingDispatchManager;
+@import GrowingAnalytics_cdp.GrowingTracker;
+@import GrowingAnalytics_cdp.GrowingAutotracker;
 
 @interface GrowingAnalyticsStartTests : XCTestCase
 
@@ -42,6 +42,9 @@
 - (void)tearDown {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
 }
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
 
 - (void)testGrowingTrackerStart {
     XCTAssertThrowsSpecificNamed(GrowingTracker.sharedInstance,
@@ -83,6 +86,8 @@
                                  @"初始化异常");
 }
 
+#pragma clang diagnostic pop
+
 - (void)testDefaultConfiguration_Autotracker {
     GrowingAutotrackConfiguration *config = [GrowingAutotrackConfiguration configurationWithProjectId:@"test"];
     [GrowingRealAutotracker trackerWithConfiguration:config launchOptions:nil];
@@ -101,6 +106,7 @@
     XCTAssertEqualObjects(configuration.urlScheme, nil);
     XCTAssertEqual(configuration.encryptEnabled, NO);
     XCTAssertEqual(configuration.impressionScale, 0);
+    XCTAssertEqualObjects(configuration.dataSourceId, nil);
 }
 
 - (void)testSetConfiguration_Autotracker {
@@ -118,6 +124,7 @@
     config.urlScheme = @"growing.autotracker";
     config.encryptEnabled = YES;
     config.impressionScale = 0.5;
+    config.dataSourceId = @"12345";
     [GrowingRealAutotracker trackerWithConfiguration:config launchOptions:nil];
 
     GrowingAutotrackConfiguration *configuration = (GrowingAutotrackConfiguration *)GrowingConfigurationManager.sharedInstance.trackConfiguration;
@@ -134,6 +141,7 @@
     XCTAssertEqualObjects(configuration.urlScheme, @"growing.autotracker");
     XCTAssertEqual(configuration.encryptEnabled, YES);
     XCTAssertEqual(configuration.impressionScale, 0.5);
+    XCTAssertEqualObjects(configuration.dataSourceId, @"12345");
 }
 
 - (void)testDefaultConfiguration_Tracker {
@@ -153,6 +161,7 @@
     XCTAssertEqual(configuration.idMappingEnabled, NO);
     XCTAssertEqualObjects(configuration.urlScheme, nil);
     XCTAssertEqual(configuration.encryptEnabled, NO);
+    XCTAssertEqualObjects(configuration.dataSourceId, nil);
 }
 
 - (void)testSetConfiguration_Tracker {
@@ -169,6 +178,7 @@
     config.idMappingEnabled = YES;
     config.urlScheme = @"growing.tracker";
     config.encryptEnabled = YES;
+    config.dataSourceId = @"12345";
     [GrowingRealTracker trackerWithConfiguration:config launchOptions:nil];
 
     GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
@@ -184,6 +194,7 @@
     XCTAssertEqual(configuration.idMappingEnabled, YES);
     XCTAssertEqualObjects(configuration.urlScheme, @"growing.tracker");
     XCTAssertEqual(configuration.encryptEnabled, YES);
+    XCTAssertEqualObjects(configuration.dataSourceId, @"12345");
 }
 
 - (void)testVersionNameAndVersionCode {

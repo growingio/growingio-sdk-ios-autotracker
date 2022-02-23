@@ -1,24 +1,16 @@
 #!/bin/bash
 set -x
 
-pod repo update
-
 POD_BETA_VERSOIN=`cat GrowingAnalytics.podspec | grep 's.version\s*=' | grep -Eo '[0-9]+.[0-9]+.[0-9]+'-beta`
+POD_BETA_VERSOIN_CDP=`cat GrowingAnalytics-cdp.podspec | grep 's.version\s*=' | grep -Eo '[0-9]+.[0-9]+.[0-9]+'-beta`
 BETA='beta'
 
-if [[ $POD_BETA_VERSOIN == *$BETA* ]]
+if [[ $POD_BETA_VERSOIN == *$BETA* && $POD_BETA_VERSOIN_CDP == *$BETA* && $POD_BETA_VERSOIN == $POD_BETA_VERSOIN_CDP ]]
 then
-    echo "spec文件中，版本号包含beta,继续"
+    echo "spec文件中，版本号包含beta，且配置正确，继续"
 else
-    echo "spec文件中，版本号不包含beta,无法进行beta版本发布"
+    echo "spec文件中，版本号配置beta错误，无法进行beta版本发布"
     exit 0;
-fi
-
-if  [ ! -n "$POD_BETA_VERSOIN" ] ;then
-    echo "you have not input a word!"
-    exit 1;
-else
-    echo "the word you input is $POD_BETA_VERSOIN"
 fi
 
 TAG_VERSION=$(git tag | grep $POD_BETA_VERSOIN)
@@ -34,9 +26,10 @@ fi
 
 echo "删除trunk上的cocoapods库"
 echo y | pod trunk delete GrowingAnalytics $POD_BETA_VERSOIN 
+echo y | pod trunk delete GrowingAnalytics-cdp $POD_BETA_VERSOIN 
 
 git tag $POD_BETA_VERSOIN
 git push --tags
 
-pod lib lint --allow-warnings --use-libraries
-pod trunk push --allow-warnings --use-libraries
+pod trunk push GrowingAnalytics.podspec --allow-warnings --use-libraries
+pod trunk push GrowingAnalytics-cdp.podspec --allow-warnings --use-libraries --synchronous

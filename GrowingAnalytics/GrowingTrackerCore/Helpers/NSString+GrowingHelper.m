@@ -180,7 +180,7 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\\[]{}
         absoluteURLString = [absoluteURLString stringByAppendingString:queryString];
     }
 
-    return absoluteURLString;;
+    return absoluteURLString;
 }
 
 - (NSDictionary *)growingHelper_convertToDictFromPasteboard {

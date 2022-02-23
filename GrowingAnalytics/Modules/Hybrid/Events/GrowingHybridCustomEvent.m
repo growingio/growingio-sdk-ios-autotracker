@@ -1,8 +1,8 @@
 //
-// GrowingPageCustomEvent.m
+// GrowingHybridCustomEvent.m
 // GrowingAnalytics
 //
-//  Created by sheng on 2020/11/16.
+//  Created by sheng on 2020/11/17.
 //  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,52 +18,44 @@
 //  limitations under the License.
 
 
-#import "GrowingPageCustomEvent.h"
+#import "GrowingHybridCustomEvent.h"
 
-@implementation GrowingPageCustomEvent
-
-+ (GrowingPageCustomBuilder *)builder {
-    return [[GrowingPageCustomBuilder alloc] init];
-}
+@implementation GrowingHybridCustomEvent
 
 - (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
     if (self = [super initWithBuilder:builder]) {
-        GrowingPageCustomBuilder *subBuilder = (GrowingPageCustomBuilder*)builder;
-        _path = subBuilder.pageName;
-        _pageShowTimestamp = subBuilder.pageShowTimestamp;
+        GrowingHybridCustomBuilder *subBuilder = (GrowingHybridCustomBuilder*)builder;
+        _query = subBuilder.query;
     }
     return self;
 }
 
+
++ (GrowingHybridCustomBuilder*)builder {
+    return [[GrowingHybridCustomBuilder alloc] init];
+}
+
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
-    dataDictM[@"path"] = self.path;
-    dataDictM[@"pageShowTimestamp"] = @(self.pageShowTimestamp);
-    return dataDictM;;
+    dataDictM[@"query"] = self.query;
+    return dataDictM;
 }
 
 @end
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wincomplete-implementation"
-@implementation GrowingPageCustomBuilder
+@implementation GrowingHybridCustomBuilder
 
-- (GrowingPageCustomBuilder *(^)(NSString *value))setPath {
-    return ^(NSString *value) {
-        self->_pageName = value;
-        return self;
-    };
-}
-
-- (GrowingPageCustomBuilder *(^)(long long value))setPageShowTimestamp {
-    return ^(long long value) {
-        self->_pageShowTimestamp = value;
+- (GrowingHybridCustomBuilder *(^)(NSString *value))setQuery {
+    return  ^(NSString *value){
+        self->_query = value;
         return self;
     };
 }
 
 - (GrowingBaseEvent *)build {
-    return [[GrowingPageCustomEvent alloc] initWithBuilder:self];
+    return [[GrowingHybridCustomEvent alloc] initWithBuilder:self];
 }
 
 @end

@@ -96,7 +96,7 @@
     {
         [GrowingSession.currentSession performSelector:@selector(applicationWillResignActive)];
         NSNumber *sessionInterval = [GrowingSession.currentSession safePerformSelector:@selector(sessionInterval)];
-        sleep((int)(sessionInterval.longLongValue / 1000LL));
+        sleep((int)(sessionInterval.longLongValue / 1000LL) + 1);
         
         NSString *oldSessionId = GrowingSession.currentSession.sessionId;
         [GrowingSession.currentSession performSelector:@selector(applicationDidBecomeActive)];
