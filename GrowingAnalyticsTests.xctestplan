@@ -39,6 +39,13 @@
         "identifier" : "34BA7B2E277C63D00030AC21",
         "name" : "ProtobufTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Example.xcodeproj",
+        "identifier" : "34D932F627BF8A400038430E",
+        "name" : "GrowingAnalyticsCDPTests"
+      }
     }
   ],
   "version" : 1

@@ -16,17 +16,19 @@ jobs:
     if: ${{ github.ref != 'refs/heads/master' }}
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Install Cocoapods
-        run: gem install cocoapods
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
           
+      # https://github.com/CocoaPods/CocoaPods/issues/9497
+      # https://github.com/CocoaPods/cocoapods-trunk/pull/147
+      - name: Install cocoapods-trunk
+        run: gem install cocoapods-trunk
+
       - name: Create CocoaPods beta
         run: |
           set -eo pipefail
-          pod repo update
           chmod +x Scripts/cocoapods-beta.sh
           sh Scripts/cocoapods-beta.sh
         env:

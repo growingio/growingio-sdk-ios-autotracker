@@ -14,7 +14,7 @@ target 'Example' do
 #  pod 'GrowingAnalytics/Tracker', :path => './'
 #  pod 'GrowingAnalytics/Hybrid', :path => './'
   pod 'GrowingAnalytics/Protobuf', :path => './'
-#  pod 'GrowingAnalytics/Advertising', :path => './'
+#  pod 'GrowingAnalytics/Advertising'
 #  pod 'GrowingAnalytics/DISABLE_IDFA', :path => './' #禁用idfa
   pod 'SDCycleScrollView', '~> 1.75'
 end
@@ -22,12 +22,19 @@ end
 target 'GrowingAnalyticsTests' do
    project 'Example/Example'
    pod 'GrowingAnalytics/Autotracker', :path => './'
+   pod 'GrowingAnalytics/Tracker', :path => './'
+end
+
+target 'GrowingAnalyticsCDPTests' do
+   project 'Example/Example'
+   pod 'GrowingAnalytics-cdp/Autotracker', :path => './'
+   pod 'GrowingAnalytics-cdp/Tracker', :path => './'
 end
 
 target 'GrowingAnalyticsStartTests' do
    project 'Example/Example'
-   pod 'GrowingAnalytics/Autotracker', :path => './'
-   pod 'GrowingAnalytics/Tracker', :path => './'
+   pod 'GrowingAnalytics-cdp/Autotracker', :path => './'
+   pod 'GrowingAnalytics-cdp/Tracker', :path => './'
 end
 
 target 'HostApplicationTests' do

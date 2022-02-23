@@ -92,7 +92,7 @@ GrowingMod(GrowingMobileDebugger)
 //获取url字段
 - (NSString *)absoluteURL {
     if (!_absoluteURL) {
-        _absoluteURL = [GrowingNetworkConfig absoluteURL];;
+        _absoluteURL = [GrowingNetworkConfig absoluteURL];
     }
     return _absoluteURL;
 }

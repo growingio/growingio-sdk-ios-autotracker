@@ -91,8 +91,7 @@
     dispatch_once(&onceToken, ^{
         [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:[GrowingWebWatcher sharedInstance]];
     });
-    return [[self sharedInstance] dispatchHandlerUrl:url];;
+    return [[self sharedInstance] dispatchHandlerUrl:url];
 }
-
 
 @end

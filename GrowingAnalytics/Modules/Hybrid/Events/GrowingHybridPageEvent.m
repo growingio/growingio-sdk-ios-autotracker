@@ -35,13 +35,13 @@
     return [[GrowingHybridPageBuilder alloc] init];
 }
 
-
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
     dataDictM[@"query"] = self.query;
     dataDictM[@"protocolType"] = self.protocolType;
-    return dataDictM;;
+    return dataDictM;
 }
+
 @end
 
 #pragma clang diagnostic push

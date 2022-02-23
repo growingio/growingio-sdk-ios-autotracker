@@ -1,5 +1,5 @@
 //
-// GrowingViewElementEvent.m
+// GrowingPageCustomEvent.m
 // GrowingAnalytics
 //
 //  Created by sheng on 2020/11/16.
@@ -18,22 +18,19 @@
 //  limitations under the License.
 
 
-#import "GrowingViewElementEvent.h"
+#import "GrowingPageCustomEvent.h"
 
-@implementation GrowingViewElementEvent
+@implementation GrowingPageCustomEvent
 
-+ (GrowingViewElementBuilder *)builder {
-    return [[GrowingViewElementBuilder alloc] init];
++ (GrowingPageCustomBuilder *)builder {
+    return [[GrowingPageCustomBuilder alloc] init];
 }
 
 - (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
     if (self = [super initWithBuilder:builder]) {
-        GrowingViewElementBuilder *subBuilder = (GrowingViewElementBuilder*)builder;
+        GrowingPageCustomBuilder *subBuilder = (GrowingPageCustomBuilder*)builder;
         _path = subBuilder.pageName;
         _pageShowTimestamp = subBuilder.pageShowTimestamp;
-        _textValue = subBuilder.textValue;
-        _xpath = subBuilder.xpath;
-        _index = subBuilder.index;
     }
     return self;
 }
@@ -42,53 +39,32 @@
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
     dataDictM[@"path"] = self.path;
     dataDictM[@"pageShowTimestamp"] = @(self.pageShowTimestamp);
-    dataDictM[@"textValue"] = self.textValue;
-    dataDictM[@"xpath"] = self.xpath;
-    dataDictM[@"index"] = self.index >= 0 ? @(self.index) : nil;
-    return dataDictM;;
+    return dataDictM;
 }
 
 @end
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wincomplete-implementation"
-@implementation GrowingViewElementBuilder
+@implementation GrowingPageCustomBuilder
 
-- (GrowingViewElementBuilder *(^)(NSString *value))setPath {
+- (GrowingPageCustomBuilder *(^)(NSString *value))setPath {
     return ^(NSString *value) {
         self->_pageName = value;
         return self;
     };
 }
-- (GrowingViewElementBuilder *(^)(long long value))setPageShowTimestamp {
+
+- (GrowingPageCustomBuilder *(^)(long long value))setPageShowTimestamp {
     return ^(long long value) {
         self->_pageShowTimestamp = value;
         return self;
     };
 }
-- (GrowingViewElementBuilder *(^)(NSString *value))setTextValue {
-    return ^(NSString *value) {
-        self->_textValue = value;
-        return self;
-    };
-}
-- (GrowingViewElementBuilder *(^)(NSString *value))setXpath {
-    return ^(NSString *value) {
-        self->_xpath = value;
-        return self;
-    };
-}
-- (GrowingViewElementBuilder *(^)(int value))setIndex {
-    return ^(int value) {
-        self->_index = value;
-        return self;
-    };
-}
 
 - (GrowingBaseEvent *)build {
-    return [[GrowingViewElementEvent alloc] initWithBuilder:self];
+    return [[GrowingPageCustomEvent alloc] initWithBuilder:self];
 }
-
 
 @end
 #pragma clang diagnostic pop

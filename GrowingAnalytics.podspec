@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'GrowingAnalytics'
-  s.version          = '3.3.3'
+  s.version          = '3.3.4-beta'
   s.summary          = 'iOS SDK of GrowingIO.'
   s.description      = <<-DESC
 GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和行为数据等。目前支持代码埋点、无埋点、可视化圈选、热图等功能。
@@ -24,12 +24,12 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   s.default_subspec = "Autotracker"
   
   s.subspec 'TrackerCore' do |trackerCore|
-      trackerCore.source_files = 'GrowingTrackerCore/**/*{.h,.m,.c,.cpp,.mm}'
+      trackerCore.source_files = 'GrowingAnalytics/GrowingTrackerCore/**/*{.h,.m,.c,.cpp,.mm}'
       trackerCore.libraries = 'c++'
   end
   
   s.subspec 'Tracker' do |tracker|
-      tracker.source_files = 'GrowingTracker/**/*{.h,.m,.c,.cpp,.mm}'
+      tracker.source_files = 'GrowingAnalytics/GrowingTracker/**/*{.h,.m,.c,.cpp,.mm}'
       tracker.dependency 'GrowingAnalytics/TrackerCore'
       tracker.dependency 'GrowingAnalytics/MobileDebugger'
       
@@ -40,14 +40,14 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   end
   
   s.subspec 'AutotrackerCore' do |autotrackerCore|
-      autotrackerCore.source_files = 'GrowingAutotrackerCore/**/*{.h,.m,.c,.cpp,.mm}'
+      autotrackerCore.source_files = 'GrowingAnalytics/GrowingAutotrackerCore/**/*{.h,.m,.c,.cpp,.mm}'
       autotrackerCore.dependency 'GrowingAnalytics/TrackerCore'
-      autotrackerCore.private_header_files = 'GrowingAutotrackerCore/Private/*{.h,.m,.c,.cpp,.mm}'
+      autotrackerCore.private_header_files = 'GrowingAnalytics/GrowingAutotrackerCore/Private/*{.h,.m,.c,.cpp,.mm}'
       autotrackerCore.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'GROWING_ANALYSIS_AUTOTRACKERCORE=1'}
   end
 
   s.subspec 'Autotracker' do |autotracker|
-      autotracker.source_files = 'GrowingAutotracker/**/*{.h,.m,.c,.cpp,.mm}'
+      autotracker.source_files = 'GrowingAnalytics/GrowingAutotracker/**/*{.h,.m,.c,.cpp,.mm}'
       autotracker.dependency 'GrowingAnalytics/AutotrackerCore'
       autotracker.dependency 'GrowingAnalytics/Hybrid'
       autotracker.dependency 'GrowingAnalytics/MobileDebugger'
@@ -60,57 +60,57 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   end
 
   s.subspec 'Database' do |service|
-      service.source_files = 'Services/Database/**/*{.h,.m,.c,.cpp,.mm}'
+      service.source_files = 'GrowingAnalytics/Services/Database/**/*{.h,.m,.c,.cpp,.mm}'
       service.dependency 'GrowingAnalytics/TrackerCore'
   end
   
   s.subspec 'Network' do |service|
-      service.source_files = 'Services/Network/**/*{.h,.m,.c,.cpp,.mm}'
+      service.source_files = 'GrowingAnalytics/Services/Network/**/*{.h,.m,.c,.cpp,.mm}'
       service.dependency 'GrowingAnalytics/TrackerCore'
   end
   
   s.subspec 'WebSocket' do |service|
-      service.source_files = 'Services/WebSocket/**/*{.h,.m,.c,.cpp,.mm}'
+      service.source_files = 'GrowingAnalytics/Services/WebSocket/**/*{.h,.m,.c,.cpp,.mm}'
       service.dependency 'GrowingAnalytics/TrackerCore'
   end
   
   s.subspec 'Compression' do |service|
-      service.source_files = 'Services/Compression/**/*{.h,.m,.c,.cpp,.mm}'
+      service.source_files = 'GrowingAnalytics/Services/Compression/**/*{.h,.m,.c,.cpp,.mm}'
       service.dependency 'GrowingAnalytics/TrackerCore'
   end
 
   s.subspec 'Encryption' do |service|
-      service.source_files = 'Services/Encryption/**/*{.h,.m,.c,.cpp,.mm}'
+      service.source_files = 'GrowingAnalytics/Services/Encryption/**/*{.h,.m,.c,.cpp,.mm}'
       service.dependency 'GrowingAnalytics/TrackerCore'
   end
 
   s.subspec 'MobileDebugger' do |debugger|
-      debugger.source_files = 'Modules/MobileDebugger/**/*{.h,.m,.c,.cpp,.mm}'
+      debugger.source_files = 'GrowingAnalytics/Modules/MobileDebugger/**/*{.h,.m,.c,.cpp,.mm}'
       debugger.dependency 'GrowingAnalytics/TrackerCore'
       debugger.dependency 'GrowingAnalytics/WebSocket'
   end
 
   s.subspec 'WebCircle' do |webcircle|
-      webcircle.source_files = 'Modules/WebCircle/**/*{.h,.m,.c,.cpp,.mm}'
+      webcircle.source_files = 'GrowingAnalytics/Modules/WebCircle/**/*{.h,.m,.c,.cpp,.mm}'
       webcircle.dependency 'GrowingAnalytics/AutotrackerCore'
       webcircle.dependency 'GrowingAnalytics/Hybrid'
       webcircle.dependency 'GrowingAnalytics/WebSocket'
   end
 
   s.subspec 'Hybrid' do |hybrid|
-      hybrid.source_files = 'Modules/Hybrid/**/*{.h,.m,.c,.cpp,.mm}'
+      hybrid.source_files = 'GrowingAnalytics/Modules/Hybrid/**/*{.h,.m,.c,.cpp,.mm}'
       hybrid.dependency 'GrowingAnalytics/TrackerCore'
       hybrid.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'GROWING_ANALYSIS_HYBRID=1'}
   end
   
   s.subspec 'Protobuf' do |protobuf|
-      protobuf.source_files = 'Modules/Protobuf/**/*{.h,.m,.c,.cpp,.mm}'
+      protobuf.source_files = 'GrowingAnalytics/Modules/Protobuf/**/*{.h,.m,.c,.cpp,.mm}'
       protobuf.dependency 'GrowingAnalytics/TrackerCore'   
       protobuf.dependency 'GrowingAnalytics/Database'
-      protobuf.exclude_files = 'Modules/Protobuf/Proto/**/*{.h,.m,.c,.cpp,.mm}'
+      protobuf.exclude_files = 'GrowingAnalytics/Modules/Protobuf/Proto/**/*{.h,.m,.c,.cpp,.mm}'
       
       protobuf.subspec 'Proto' do |proto|
-        proto.source_files = 'Modules/Protobuf/Proto/*{.h,.m}'
+        proto.source_files = 'GrowingAnalytics/Modules/Protobuf/Proto/*{.h,.m}'
         proto.dependency 'Protobuf'
         proto.requires_arc = false
       end

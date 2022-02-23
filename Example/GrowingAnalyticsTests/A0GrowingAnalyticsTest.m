@@ -23,6 +23,9 @@
 
 @end
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
+
 @implementation A0GrowingAnalyticsTest
 
 + (void)setUp {
@@ -322,3 +325,5 @@
 }
 
 @end
+
+#pragma clang diagnostic pop

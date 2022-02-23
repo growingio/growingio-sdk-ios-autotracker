@@ -1,5 +1,5 @@
 //
-// GrowingHybridPageAttributesEvent.m
+// GrowingHybridViewElementEvent.m
 // GrowingAnalytics
 //
 //  Created by sheng on 2020/11/17.
@@ -18,46 +18,50 @@
 //  limitations under the License.
 
 
-#import "GrowingHybridPageAttributesEvent.h"
+#import "GrowingHybridViewElementEvent.h"
 
-@implementation GrowingHybridPageAttributesEvent
-
+@implementation GrowingHybridViewElementEvent
 - (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
     if (self = [super initWithBuilder:builder]) {
-        GrowingHybridPageAttributesBuilder *subBuilder = (GrowingHybridPageAttributesBuilder*)builder;
+        GrowingHybridViewElementBuilder *subBuilder = (GrowingHybridViewElementBuilder*)builder;
         _query = subBuilder.query;
+        _hyperlink = subBuilder.hyperlink;
     }
     return self;
 }
 
-
-+ (GrowingHybridPageAttributesBuilder*)builder {
-    return [[GrowingHybridPageAttributesBuilder alloc] init];
++ (GrowingHybridViewElementBuilder*)builder {
+    return [[GrowingHybridViewElementBuilder alloc] init];
 }
 
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
     dataDictM[@"query"] = self.query;
-    return dataDictM;;
+    dataDictM[@"hyperlink"] = self.hyperlink;
+    return dataDictM;
 }
-
 
 @end
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wincomplete-implementation"
-@implementation GrowingHybridPageAttributesBuilder
+@implementation GrowingHybridViewElementBuilder
 
-- (GrowingHybridPageAttributesBuilder *(^)(NSString *value))setQuery {
+- (GrowingHybridViewElementBuilder *(^)(NSString *value))setQuery {
     return  ^(NSString *value){
         self->_query = value;
         return self;
     };
 }
-
-- (GrowingBaseEvent *)build {
-    return [[GrowingHybridPageAttributesEvent alloc] initWithBuilder:self];
+- (GrowingHybridViewElementBuilder *(^)(NSString *value))setHyperlink {
+    return  ^(NSString *value){
+        self->_hyperlink = value;
+        return self;
+    };
 }
 
+- (GrowingBaseEvent *)build {
+    return [[GrowingHybridViewElementEvent alloc] initWithBuilder:self];
+}
 @end
 #pragma clang diagnostic pop
