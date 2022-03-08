@@ -38,8 +38,8 @@
 #import "GrowingServiceManager.h"
 #import "GrowingEventManager.h"
 
-NSString *const GrowingTrackerVersionName = @"3.3.3";
-const int GrowingTrackerVersionCode = 30303;
+NSString *const GrowingTrackerVersionName = @"3.3.4";
+const int GrowingTrackerVersionCode = 30304;
 
 @interface GrowingRealTracker ()
 
