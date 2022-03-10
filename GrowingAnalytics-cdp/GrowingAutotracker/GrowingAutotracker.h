@@ -91,14 +91,14 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param eventName 自定义事件名称
 /// @param itemKey 事件发生关联的物品模型Key
 /// @param itemId 事件发生关联的物品模型ID
-- (void)trackCustomEvent:(NSString *)eventName itemKey:(NSString *)itemKey itemId:(NSString *)itemId;
+- (void)trackCustomEvent:(NSString *)eventName itemKey:(NSString *)itemKey itemId:(NSString *)itemId DEPRECATED_MSG_ATTRIBUTE("新版本仅需在属性中关联itemId, 参见维度表数据上报");
 
 /// 发送一个自定义事件
 /// @param eventName 自定义事件名称
 /// @param itemKey 事件发生关联的物品模型Key
 /// @param itemId 事件发生关联的物品模型ID
 /// @param attributes 事件发生时所伴随的维度信息
-- (void)trackCustomEvent:(NSString *)eventName itemKey:(NSString *)itemKey itemId:(NSString *)itemId withAttributes:(NSDictionary <NSString *, NSString *> * _Nullable)attributes;
+- (void)trackCustomEvent:(NSString *)eventName itemKey:(NSString *)itemKey itemId:(NSString *)itemId withAttributes:(NSDictionary <NSString *, NSString *> * _Nullable)attributes DEPRECATED_MSG_ATTRIBUTE("新版本仅需在属性中关联itemId, 参见维度表数据上报");
 
 /// 发送一个自定义事件
 /// @param eventName 自定义事件名称
