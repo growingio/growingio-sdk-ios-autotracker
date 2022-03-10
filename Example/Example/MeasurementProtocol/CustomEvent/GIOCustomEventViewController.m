@@ -31,6 +31,11 @@
     self.eventNameTextField.text = [self randomEventName];
         
     [self setupTableView];
+    
+    GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+    [builder setString:@"value" forKey:@"key"];
+    [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@"key2"];
+    [GrowingSDK.sharedInstance trackCustomEvent:@"eventName" withAttributesBuilder:builder];
 }
 
 - (void)setupTableView {

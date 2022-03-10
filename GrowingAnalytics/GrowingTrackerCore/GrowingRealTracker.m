@@ -37,6 +37,7 @@
 #import "GrowingModuleManager.h"
 #import "GrowingServiceManager.h"
 #import "GrowingEventManager.h"
+#import "GrowingAttributesBuilder.h"
 
 NSString *const GrowingTrackerVersionName = @"3.3.4";
 const int GrowingTrackerVersionCode = 30304;
@@ -148,6 +149,11 @@ const int GrowingTrackerVersionCode = 30304;
         return;
     }
     [GrowingEventGenerator generateCustomEvent:eventName attributes:attributes];
+}
+
+- (void)trackCustomEvent:(NSString *)eventName withAttributesBuilder:(GrowingAttributesBuilder *)attributesBuilder {
+    NSDictionary *attributes = attributesBuilder.build;
+    [self trackCustomEvent:eventName withAttributes:attributes];
 }
 
 - (void)setLoginUserAttributes:(NSDictionary<NSString *, NSString *> *)attributes {

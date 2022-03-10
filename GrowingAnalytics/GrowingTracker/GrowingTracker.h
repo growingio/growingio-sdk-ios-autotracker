@@ -19,6 +19,7 @@
 
 #import "GrowingDynamicProxy.h"
 #import "GrowingTrackConfiguration.h"
+#import "GrowingAttributesBuilder.h"
 
 @interface GrowingTracker : GrowingDynamicProxy
 
@@ -38,6 +39,11 @@
 /// @param eventName 自定义事件名称
 /// @param attributes 事件发生时所伴随的维度信息
 - (void)trackCustomEvent:(NSString *)eventName withAttributes:(NSDictionary <NSString *, NSString *> *)attributes;
+
+/// 发送一个自定义事件
+/// @param eventName 自定义事件名称
+/// @param attributesBuilder 事件发生时所伴随的维度信息构造器
+- (void)trackCustomEvent:(NSString *)eventName withAttributesBuilder:(GrowingAttributesBuilder *)attributesBuilder;
 
 /// 以登录用户的身份定义用户属性变量，用于用户信息相关分析。
 /// @param attributes 用户属性信息
