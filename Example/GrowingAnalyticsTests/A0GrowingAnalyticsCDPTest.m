@@ -132,7 +132,7 @@
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setLoginUserAttributes:@"value"]);
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setLoginUserAttributes:@{@1 : @"value"}]);
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setLoginUserAttributes:@{@"key" : @1}]);
-#pragma clang diagnostic push
+#pragma clang diagnostic pop
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeLoginUserAttributes];
         XCTAssertEqual(events.count, 0);
     }
@@ -153,10 +153,11 @@
         [MockEventQueue.sharedQueue cleanQueue];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wobjc-literal-conversion"
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:nil]);
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@""]);
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@1]);
-#pragma clang diagnostic push
+#pragma clang diagnostic pop
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
         XCTAssertEqual(events.count, 0);
     }
@@ -193,7 +194,66 @@
                                                                 withAttributes:@{@1 : @"value"}]);
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
                                                                 withAttributes:@{@"key" : @1}]);
+#pragma clang diagnostic pop
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+        XCTAssertEqual(events.count, 0);
+    }
+}
+
+- (void)testTrackCustomEventWithAttributesBuilder {
+    {
+        GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+        [builder setString:@"value" forKey:@"key"];
+        [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@"key2"];
+        [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
+                                        withAttributesBuilder:builder];
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+        XCTAssertEqual(events.count, 1);
+        
+        GrowingCustomEvent *event = (GrowingCustomEvent *)events.firstObject;
+        XCTAssertEqualObjects(event.eventName, @"eventName");
+        XCTAssertEqualObjects(event.attributes[@"key"], @"value");
+        XCTAssertEqualObjects(event.attributes[@"key2"], @"value1||value2||value3");
+    }
+    
+    {
+        [MockEventQueue.sharedQueue cleanQueue];
 #pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+#pragma clang diagnostic ignored "-Wobjc-literal-conversion"
+        GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+        [builder setString:@"value" forKey:@"key"];
+        [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@"key2"];
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:nil
+                                                         withAttributesBuilder:builder]);
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@""
+                                                         withAttributesBuilder:builder]);
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@1
+                                                         withAttributesBuilder:builder]);
+        
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
+                                                         withAttributesBuilder:nil]);
+        
+        GrowingAttributesBuilder *builder2 = GrowingAttributesBuilder.new;
+        [builder2 setString:@1 forKey:@"key"];
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
+                                                         withAttributesBuilder:builder2]);
+        [builder2 setString:@"value" forKey:@1];
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
+                                                         withAttributesBuilder:builder2]);
+        [builder2 setArray:@"value" forKey:@"key2"];
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
+                                                         withAttributesBuilder:builder2]);
+        [builder2 setArray:@[] forKey:@"key2"];
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
+                                                         withAttributesBuilder:builder2]);
+        [builder2 setArray:@[@"value1", @"value2", @"value3"] forKey:@1];
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
+                                                         withAttributesBuilder:builder2]);
+        [builder2 setArray:@[@1, @2, @3] forKey:@"key2"];
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
+                                                         withAttributesBuilder:builder2]);
+#pragma clang diagnostic pop
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
         XCTAssertEqual(events.count, 0);
     }
@@ -247,7 +307,7 @@
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
                                                                        itemKey:@"itemKey"
                                                                         itemId:@1]);
-#pragma clang diagnostic push
+#pragma clang diagnostic pop
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
         XCTAssertEqual(events.count, 0);
     }
@@ -299,7 +359,7 @@
         XCTAssertNoThrow([[GrowingTracker sharedInstance] trackCustomEvent:@"eventName"
                                                                    itemKey:@"itemKey"
                                                                     itemId:@1]);
-#pragma clang diagnostic push
+#pragma clang diagnostic pop
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
         XCTAssertEqual(events.count, 0);
     }
@@ -375,7 +435,7 @@
                                                                        itemKey:@"itemKey"
                                                                         itemId:@"itemId"
                                                                 withAttributes:@{@"key" : @1}]);
-#pragma clang diagnostic push
+#pragma clang diagnostic pop
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
         XCTAssertEqual(events.count, 0);
     }
@@ -449,7 +509,7 @@
                                                                    itemKey:@"itemKey"
                                                                     itemId:@"itemId"
                                                             withAttributes:@{@"key": @1}]);
-#pragma clang diagnostic push
+#pragma clang diagnostic pop
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
         XCTAssertEqual(events.count, 0);
     }
