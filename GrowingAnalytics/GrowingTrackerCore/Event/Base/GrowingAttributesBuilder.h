@@ -21,13 +21,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingAttributesBuilder : NSObject
+@interface GrowingAttributesBuilder<__covariant ObjectType> : NSObject
 
 - (void)setString:(NSString *)value forKey:(NSString *)key;
 
-- (void)setArray:(NSArray<NSString *> *)values forKey:(NSString *)key;
+- (void)setArray:(NSArray<ObjectType> *)values forKey:(NSString *)key;
 
-- (NSDictionary *)build;
+- (nullable NSDictionary *)build;
 
 @end
 
