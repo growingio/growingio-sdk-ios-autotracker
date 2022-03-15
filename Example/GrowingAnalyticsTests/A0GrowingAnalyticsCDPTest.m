@@ -205,6 +205,10 @@
         GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
         [builder setString:@"value" forKey:@"key"];
         [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@"key2"];
+        [builder setArray:@[@1, @2, @3] forKey:@"key3"];
+        [builder setArray:@[@[@"1"], @[@"2"], @[@"3"]] forKey:@"key4"];
+        [builder setArray:@[@{@"value":@"key"}, @{@"value":@"key"}, @{@"value":@"key"}] forKey:@"key5"];
+        [builder setArray:@[NSObject.new, NSObject.new, NSObject.new] forKey:@"key6"];
         [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
                                         withAttributesBuilder:builder];
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
@@ -214,6 +218,12 @@
         XCTAssertEqualObjects(event.eventName, @"eventName");
         XCTAssertEqualObjects(event.attributes[@"key"], @"value");
         XCTAssertEqualObjects(event.attributes[@"key2"], @"value1||value2||value3");
+        XCTAssertEqualObjects(event.attributes[@"key3"], @"1||2||3");
+        XCTAssertEqualObjects(event.attributes[@"key4"], @"(\n    1\n)||(\n    2\n)||(\n    3\n)");
+        XCTAssertEqualObjects(event.attributes[@"key5"], @"{\n    value = key;\n}"
+                                                         @"||{\n    value = key;\n}"
+                                                         @"||{\n    value = key;\n}");
+        XCTAssertNotNil(event.attributes[@"key6"]);
     }
     
     {
@@ -234,31 +244,80 @@
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
                                                          withAttributesBuilder:nil]);
         
-        GrowingAttributesBuilder *builder2 = GrowingAttributesBuilder.new;
-        [builder2 setString:@1 forKey:@"key"];
-        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
-                                                         withAttributesBuilder:builder2]);
-        [builder2 setString:@"value" forKey:@1];
-        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
-                                                         withAttributesBuilder:builder2]);
-        [builder2 setArray:@"value" forKey:@"key2"];
-        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
-                                                         withAttributesBuilder:builder2]);
-        [builder2 setArray:@[] forKey:@"key2"];
-        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
-                                                         withAttributesBuilder:builder2]);
-        [builder2 setArray:@[@"value1", @"value2", @"value3"] forKey:@1];
-        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
-                                                         withAttributesBuilder:builder2]);
-        [builder2 setArray:@[@1, @2, @3] forKey:@"key2"];
-        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
-                                                         withAttributesBuilder:builder2]);
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setString:nil forKey:@"key"];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
+                                                             withAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setString:@1 forKey:@"key"];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
+                                                             withAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setString:@"value" forKey:nil];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
+                                                             withAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setString:@"value" forKey:@""];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
+                                                             withAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setString:@"value" forKey:@1];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
+                                                             withAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setArray:nil forKey:@"key"];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
+                                                             withAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setArray:@[] forKey:@"key"];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
+                                                             withAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setArray:@"value" forKey:@"key"];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
+                                                             withAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setArray:@[@"value1", @"value2", @"value3"] forKey:nil];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
+                                                             withAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@""];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
+                                                             withAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@1];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
+                                                             withAttributesBuilder:builder]);
+        }
 #pragma clang diagnostic pop
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
         XCTAssertEqual(events.count, 0);
     }
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)testTrackCustomEventWithItem {
     // Autotracker
     {
@@ -514,6 +573,7 @@
         XCTAssertEqual(events.count, 0);
     }
 }
+#pragma clang diagnostic pop
 
 - (void)testGetDeviceId {
     XCTAssertNotNil([[GrowingAutotracker sharedInstance] getDeviceId]);

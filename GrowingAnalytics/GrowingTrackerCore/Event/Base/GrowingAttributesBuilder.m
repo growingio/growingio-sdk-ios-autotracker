@@ -29,26 +29,42 @@
 @implementation GrowingAttributesBuilder
 
 - (void)setString:(NSString *)value forKey:(NSString *)key {
-    [self.dictionary setObject:value forKey:key];
-}
-
-- (void)setArray:(NSArray<NSString *> *)values forKey:(NSString *)key {
-    if (![values isKindOfClass:[NSArray class]]) {
+    if (![key isKindOfClass:[NSString class]]
+        || key.length == 0
+        || ![value isKindOfClass:[NSString class]]) {
         return;
     }
     
-    for (NSString *value in values) {
-        if (![value isKindOfClass:NSString.class]) {
-            GIOLogError(@"element in array is not kind of NSString class");
-            return;
+    [self.dictionary setObject:value forKey:key];
+}
+
+- (void)setArray:(NSArray<NSObject *> *)values forKey:(NSString *)key {
+    if (![key isKindOfClass:[NSString class]]
+        || key.length == 0
+        || ![values isKindOfClass:[NSArray class]]
+        || values.count == 0) {
+        return;
+    }
+    
+    NSMutableArray *array = NSMutableArray.array;
+    for (NSObject *value in values) {
+        if ([value isKindOfClass:NSString.class]) {
+            [array addObject:value];
+        } else if ([value isKindOfClass:NSNumber.class]) {
+            [array addObject:value];
+        } else {
+            [array addObject:value.description];
         }
     }
     
-    NSString *valueString = [values componentsJoinedByString:self.separate];
+    NSString *valueString = [array componentsJoinedByString:self.separate];
     [self.dictionary setObject:valueString forKey:key];
 }
 
-- (NSDictionary *)build {
+- (nullable NSDictionary *)build {
+    if (self.dictionary.count == 0) {
+        return nil;
+    }
     return [NSDictionary dictionaryWithDictionary:self.dictionary];
 }
 
