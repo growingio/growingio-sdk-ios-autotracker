@@ -509,7 +509,7 @@ static NSUInteger _numProcessors;
    function:(const char *)function
        line:(NSUInteger)line
         tag:(id)tag {
-    GrowingLogMessage *logMessage = [[GrowingLogMessage alloc] initWithMessage:message
+    GrowingLogMessage *logMessage = [[GrowingLogMessage alloc] initWithMessage:[NSString stringWithFormat:@"[GrowingAnalytics] %@", message]
                                                                level:level
                                                                 flag:flag
                                                              context:context
