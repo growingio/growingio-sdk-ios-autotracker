@@ -20,7 +20,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GrowingNodeItem.h"
+#import "GrowingAutotrackerCore/GrowingNode/GrowingNodeItem.h"
 
 @interface NodeTest : XCTestCase
 

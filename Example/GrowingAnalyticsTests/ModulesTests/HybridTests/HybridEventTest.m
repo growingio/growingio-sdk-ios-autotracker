@@ -20,10 +20,10 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GrowingHybridCustomEvent.h"
-#import "GrowingHybridPageAttributesEvent.h"
-#import "GrowingHybridPageEvent.h"
-#import "GrowingHybridViewElementEvent.h"
+#import "Modules/Hybrid/Events/GrowingHybridCustomEvent.h"
+#import "Modules/Hybrid/Events/GrowingHybridPageAttributesEvent.h"
+#import "Modules/Hybrid/Events/GrowingHybridPageEvent.h"
+#import "Modules/Hybrid/Events/GrowingHybridViewElementEvent.h"
 
 @interface HybridEventTest : XCTestCase
 

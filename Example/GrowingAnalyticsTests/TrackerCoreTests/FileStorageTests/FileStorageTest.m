@@ -20,9 +20,9 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GrowingDispatchManager.h"
-#import "GrowingUserDefaults.h"
-#import "GrowingFileStorage.h"
+#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
+#import "GrowingTrackerCore/FileStorage/GrowingUserDefaults.h"
+#import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
 
 @interface FileStorageTest : XCTestCase
 

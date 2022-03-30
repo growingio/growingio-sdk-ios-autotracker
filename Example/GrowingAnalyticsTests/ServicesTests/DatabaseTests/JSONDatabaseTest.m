@@ -20,11 +20,11 @@
 #import <XCTest/XCTest.h>
 
 #import "InvocationHelper.h"
-#import "GrowingEventFMDatabase.h"
-#import "GrowingEventJSONPersistence.h"
-#import "GrowingVisitEvent.h"
-#import "GrowingCustomEvent.h"
-#import "GrowingFileStorage.h"
+#import "Services/Database/GrowingEventFMDatabase.h"
+#import "Services/Database/GrowingEventJSONPersistence.h"
+#import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
+#import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
+#import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
 
 @interface JSONDatabaseTest : XCTestCase
 

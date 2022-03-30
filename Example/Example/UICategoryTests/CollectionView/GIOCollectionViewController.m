@@ -7,7 +7,6 @@
 //
 
 #import "GIOCollectionViewController.h"
-
 #import "GIOCollectionViewCell.h"
 
 @interface GrowingCollectionDelegateProxy : NSProxy

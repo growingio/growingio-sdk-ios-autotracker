@@ -20,17 +20,17 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GrowingConfigurationManager.h"
-#import "GrowingSession.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingServiceManager.h"
 #import "GrowingEventDatabaseService.h"
-#import "GrowingEventFMDatabase.h"
-#import "UIApplication+GrowingAutotracker.h"
+#import "Services/Database/GrowingEventFMDatabase.h"
+#import "GrowingAutotrackerCore/Autotrack/UIApplication+GrowingAutotracker.h"
 #import "MockEventQueue.h"
-#import "GrowingViewElementEvent.h"
+#import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
 #import "InvocationHelper.h"
-#import "GrowingRealAutotracker.h"
-#import "GrowingApplicationEventManager.h"
+#import "GrowingAutotrackerCore/GrowingRealAutotracker.h"
+#import "GrowingTrackerCore/Manager/GrowingApplicationEventManager.h"
 
 // 需要有HostApplication，不然UIApplication.sharedApplication为nil
 

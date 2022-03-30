@@ -19,6 +19,8 @@ profile
 DerivedData
 .idea/
 
+# Swift Package Manager
+.swiftpm/
 
 Pods/
 Pods/

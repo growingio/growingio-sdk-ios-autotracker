@@ -20,7 +20,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GrowingLoginRequest.h"
+#import "GrowingTrackerCore/Network/Request/GrowingLoginRequest.h"
 
 @interface RequestTest : XCTestCase
 

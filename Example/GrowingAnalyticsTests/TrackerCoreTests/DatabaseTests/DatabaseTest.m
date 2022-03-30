@@ -23,12 +23,13 @@
 #import "InvocationHelper.h"
 #import "GrowingServiceManager.h"
 #import "GrowingEventDatabaseService.h"
-#import "GrowingEventFMDatabase.h"
-#import "GrowingEventDatabase.h"
-#import "GrowingEventJSONPersistence.h"
-#import "GrowingVisitEvent.h"
-#import "NSDictionary+GrowingHelper.h"
-#import "GrowingFileStorage.h"
+#import "Services/Database/GrowingEventFMDatabase.h"
+#import "GrowingTrackerCore/Database/GrowingEventDatabase.h"
+#import "Services/Database/GrowingEventJSONPersistence.h"
+#import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
+#import "GrowingTrackerCore/Helpers/NSDictionary+GrowingHelper.h"
+#import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
+#import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
 
 @interface DatabaseTest : XCTestCase
 

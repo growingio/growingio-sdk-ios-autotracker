@@ -19,7 +19,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GrowingKeyChainWrapper.h"
+#import "GrowingTrackerCore/Utils/GrowingKeyChainWrapper.h"
 
 @interface GrowingKeyChainTest : XCTestCase
 

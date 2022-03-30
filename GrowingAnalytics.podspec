@@ -1,19 +1,10 @@
-#
-# Be sure to run `pod lib lint GrowingIO.podspec' to ensure this is a
-# valid spec before submitting.
-#
-# Any lines starting with a # are optional, but their use is encouraged
-# To learn more about a Podspec see https://guides.cocoapods.org/syntax/podspec.html
-#
-
 Pod::Spec.new do |s|
   s.name             = 'GrowingAnalytics'
-  s.version          = '3.3.4'
+  s.version          = '3.3.5-beta'
   s.summary          = 'iOS SDK of GrowingIO.'
   s.description      = <<-DESC
 GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和行为数据等。目前支持代码埋点、无埋点、可视化圈选、热图等功能。
                        DESC
-
   s.homepage         = 'https://www.growingio.com/'
   s.license          = { :type => 'Apache2.0', :file => 'LICENSE' }
   s.author           = { 'GrowingIO' => 'support@growingio.com' }
@@ -22,109 +13,127 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   s.ios.framework = 'WebKit'
   s.requires_arc = true
   s.default_subspec = "Autotracker"
-  
-  s.subspec 'TrackerCore' do |trackerCore|
-      trackerCore.source_files = 'GrowingAnalytics/GrowingTrackerCore/**/*{.h,.m,.c,.cpp,.mm}'
-      trackerCore.libraries = 'c++'
+  s.pod_target_xcconfig = { 'HEADER_SEARCH_PATHS' => '"${PODS_TARGET_SRCROOT}"' }
+
+  s.subspec 'Autotracker' do |autotracker|
+    autotracker.source_files = 'GrowingAutotracker/**/*{.h,.m,.c,.cpp,.mm}'
+    autotracker.public_header_files = 'GrowingAutotracker/*.h'
+    autotracker.dependency 'GrowingAnalytics/AutotrackerCore'
+
+    # Modules
+    autotracker.dependency 'GrowingAnalytics/Hybrid'
+    autotracker.dependency 'GrowingAnalytics/MobileDebugger'
+    autotracker.dependency 'GrowingAnalytics/WebCircle'
+    
+    # Services
+    autotracker.dependency 'GrowingAnalytics/Database'
+    autotracker.dependency 'GrowingAnalytics/Network'
+    autotracker.dependency 'GrowingAnalytics/Encryption'
+    autotracker.dependency 'GrowingAnalytics/Compression'
   end
   
   s.subspec 'Tracker' do |tracker|
-      tracker.source_files = 'GrowingAnalytics/GrowingTracker/**/*{.h,.m,.c,.cpp,.mm}'
-      tracker.dependency 'GrowingAnalytics/TrackerCore'
-      tracker.dependency 'GrowingAnalytics/MobileDebugger'
-      
-      tracker.dependency 'GrowingAnalytics/Database'
-      tracker.dependency 'GrowingAnalytics/Network'
-      tracker.dependency 'GrowingAnalytics/Encryption'
-      tracker.dependency 'GrowingAnalytics/Compression'
+    tracker.source_files = 'GrowingTracker/**/*{.h,.m,.c,.cpp,.mm}'
+    tracker.public_header_files = 'GrowingTracker/*.h'
+    tracker.dependency 'GrowingAnalytics/TrackerCore'
+
+    # Modules
+    tracker.dependency 'GrowingAnalytics/MobileDebugger'
+    
+    # Services
+    tracker.dependency 'GrowingAnalytics/Database'
+    tracker.dependency 'GrowingAnalytics/Network'
+    tracker.dependency 'GrowingAnalytics/Encryption'
+    tracker.dependency 'GrowingAnalytics/Compression'
+  end
+
+  s.subspec 'TrackerCore' do |trackerCore|
+    trackerCore.source_files = 'GrowingTrackerCore/**/*{.h,.m,.c,.cpp,.mm}'
+    trackerCore.exclude_files = 'GrowingTrackerCore/Utils/UserIdentifier/GrowingUserIdentifier_NoIDFA.m'
+    trackerCore.public_header_files = 'GrowingTrackerCore/Public/*.h'
+    trackerCore.libraries = 'c++'
   end
   
   s.subspec 'AutotrackerCore' do |autotrackerCore|
-      autotrackerCore.source_files = 'GrowingAnalytics/GrowingAutotrackerCore/**/*{.h,.m,.c,.cpp,.mm}'
-      autotrackerCore.dependency 'GrowingAnalytics/TrackerCore'
-      autotrackerCore.private_header_files = 'GrowingAnalytics/GrowingAutotrackerCore/Private/*{.h,.m,.c,.cpp,.mm}'
-      autotrackerCore.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'GROWING_ANALYSIS_AUTOTRACKERCORE=1'}
-  end
-
-  s.subspec 'Autotracker' do |autotracker|
-      autotracker.source_files = 'GrowingAnalytics/GrowingAutotracker/**/*{.h,.m,.c,.cpp,.mm}'
-      autotracker.dependency 'GrowingAnalytics/AutotrackerCore'
-      autotracker.dependency 'GrowingAnalytics/Hybrid'
-      autotracker.dependency 'GrowingAnalytics/MobileDebugger'
-      autotracker.dependency 'GrowingAnalytics/WebCircle'
-      
-      autotracker.dependency 'GrowingAnalytics/Database'
-      autotracker.dependency 'GrowingAnalytics/Network'
-      autotracker.dependency 'GrowingAnalytics/Encryption'
-      autotracker.dependency 'GrowingAnalytics/Compression'
+    autotrackerCore.source_files = 'GrowingAutotrackerCore/**/*{.h,.m,.c,.cpp,.mm}'
+    autotrackerCore.private_header_files = 'GrowingAutotrackerCore/Private/*{.h,.m,.c,.cpp,.mm}'
+    autotrackerCore.public_header_files = 'GrowingAutotrackerCore/Public/*.h'
+    autotrackerCore.dependency 'GrowingAnalytics/TrackerCore'
   end
 
   s.subspec 'Database' do |service|
-      service.source_files = 'GrowingAnalytics/Services/Database/**/*{.h,.m,.c,.cpp,.mm}'
-      service.dependency 'GrowingAnalytics/TrackerCore'
+    service.source_files = 'Services/Database/**/*{.h,.m,.c,.cpp,.mm}'
+    service.public_header_files = 'Services/Database/Public/*.h'
+    service.dependency 'GrowingAnalytics/TrackerCore'
   end
   
   s.subspec 'Network' do |service|
-      service.source_files = 'GrowingAnalytics/Services/Network/**/*{.h,.m,.c,.cpp,.mm}'
-      service.dependency 'GrowingAnalytics/TrackerCore'
+    service.source_files = 'Services/Network/**/*{.h,.m,.c,.cpp,.mm}'
+    service.public_header_files = 'Services/Network/Public/*.h'
+    service.dependency 'GrowingAnalytics/TrackerCore'
   end
   
   s.subspec 'WebSocket' do |service|
-      service.source_files = 'GrowingAnalytics/Services/WebSocket/**/*{.h,.m,.c,.cpp,.mm}'
-      service.dependency 'GrowingAnalytics/TrackerCore'
+    service.source_files = 'Services/WebSocket/**/*{.h,.m,.c,.cpp,.mm}'
+    service.public_header_files = 'Services/WebSocket/Public/*.h'
+    service.dependency 'GrowingAnalytics/TrackerCore'
   end
   
   s.subspec 'Compression' do |service|
-      service.source_files = 'GrowingAnalytics/Services/Compression/**/*{.h,.m,.c,.cpp,.mm}'
-      service.dependency 'GrowingAnalytics/TrackerCore'
+    service.source_files = 'Services/Compression/**/*{.h,.m,.c,.cpp,.mm}'
+    service.public_header_files = 'Services/Compression/Public/*.h'
+    service.dependency 'GrowingAnalytics/TrackerCore'
   end
 
   s.subspec 'Encryption' do |service|
-      service.source_files = 'GrowingAnalytics/Services/Encryption/**/*{.h,.m,.c,.cpp,.mm}'
-      service.dependency 'GrowingAnalytics/TrackerCore'
+    service.source_files = 'Services/Encryption/**/*{.h,.m,.c,.cpp,.mm}'
+    service.public_header_files = 'Services/Encryption/Public/*.h'
+    service.dependency 'GrowingAnalytics/TrackerCore'
   end
 
   s.subspec 'MobileDebugger' do |debugger|
-      debugger.source_files = 'GrowingAnalytics/Modules/MobileDebugger/**/*{.h,.m,.c,.cpp,.mm}'
-      debugger.dependency 'GrowingAnalytics/TrackerCore'
-      debugger.dependency 'GrowingAnalytics/WebSocket'
+    debugger.source_files = 'Modules/MobileDebugger/**/*{.h,.m,.c,.cpp,.mm}'
+    debugger.public_header_files = 'Modules/MobileDebugger/Public/*.h'
+    debugger.dependency 'GrowingAnalytics/TrackerCore'
+    debugger.dependency 'GrowingAnalytics/WebSocket'
   end
 
   s.subspec 'WebCircle' do |webcircle|
-      webcircle.source_files = 'GrowingAnalytics/Modules/WebCircle/**/*{.h,.m,.c,.cpp,.mm}'
-      webcircle.dependency 'GrowingAnalytics/AutotrackerCore'
-      webcircle.dependency 'GrowingAnalytics/Hybrid'
-      webcircle.dependency 'GrowingAnalytics/WebSocket'
+    webcircle.source_files = 'Modules/WebCircle/**/*{.h,.m,.c,.cpp,.mm}'
+    webcircle.public_header_files = 'Modules/WebCircle/Public/*.h'
+    webcircle.dependency 'GrowingAnalytics/AutotrackerCore'
+    webcircle.dependency 'GrowingAnalytics/Hybrid'
+    webcircle.dependency 'GrowingAnalytics/WebSocket'
   end
 
   s.subspec 'Hybrid' do |hybrid|
-      hybrid.source_files = 'GrowingAnalytics/Modules/Hybrid/**/*{.h,.m,.c,.cpp,.mm}'
-      hybrid.dependency 'GrowingAnalytics/TrackerCore'
-      hybrid.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'GROWING_ANALYSIS_HYBRID=1'}
+    hybrid.source_files = 'Modules/Hybrid/**/*{.h,.m,.c,.cpp,.mm}'
+    hybrid.public_header_files = 'Modules/Hybrid/Public/*.h'
+    hybrid.dependency 'GrowingAnalytics/TrackerCore'
   end
   
   s.subspec 'Protobuf' do |protobuf|
-      protobuf.source_files = 'GrowingAnalytics/Modules/Protobuf/**/*{.h,.m,.c,.cpp,.mm}'
-      protobuf.dependency 'GrowingAnalytics/TrackerCore'   
-      protobuf.dependency 'GrowingAnalytics/Database'
-      protobuf.exclude_files = 'GrowingAnalytics/Modules/Protobuf/Proto/**/*{.h,.m,.c,.cpp,.mm}'
-      
-      protobuf.subspec 'Proto' do |proto|
-        proto.source_files = 'GrowingAnalytics/Modules/Protobuf/Proto/*{.h,.m}'
-        proto.dependency 'Protobuf'
-        proto.requires_arc = false
-      end
+    protobuf.source_files = 'Modules/Protobuf/**/*{.h,.m,.c,.cpp,.mm}'
+    protobuf.exclude_files = 'Modules/Protobuf/Proto/**/*{.h,.m,.c,.cpp,.mm}'
+    protobuf.public_header_files = 'Modules/Protobuf/Public/*.h'
+    protobuf.dependency 'GrowingAnalytics/TrackerCore'
+    protobuf.dependency 'GrowingAnalytics/Database'
+    
+    protobuf.subspec 'Proto' do |proto|
+      proto.source_files = 'Modules/Protobuf/Proto/*{.h,.m,.c,.cpp,.mm}'
+      proto.requires_arc = false
+      proto.dependency 'Protobuf'
+    end
   end
 
   s.subspec 'DISABLE_IDFA' do |config|
-      config.dependency 'GrowingAnalytics/TrackerCore'
-      config.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'GROWING_ANALYSIS_DISABLE_IDFA=1'}
+    config.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'GROWING_ANALYSIS_DISABLE_IDFA=1'}
+    config.dependency 'GrowingAnalytics/TrackerCore'
   end
 
   # deprecated
   s.subspec 'ENABLE_ENCRYPTION' do |config|
-      config.dependency 'GrowingAnalytics/TrackerCore'
-      config.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'GROWING_ANALYSIS_ENABLE_ENCRYPTION=1'}
+    config.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'GROWING_ANALYSIS_ENABLE_ENCRYPTION=1'}
+    config.dependency 'GrowingAnalytics/TrackerCore'
   end
-
 end

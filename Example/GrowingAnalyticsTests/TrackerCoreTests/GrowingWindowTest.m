@@ -19,7 +19,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GrowingWindow.h"
+#import "GrowingTrackerCore/GrowingWindow.h"
 
 @interface GrowingWindowTest : XCTestCase
 

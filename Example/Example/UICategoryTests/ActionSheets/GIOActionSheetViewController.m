@@ -7,10 +7,8 @@
 //
 
 #import "GIOActionSheetViewController.h"
-#import <GrowingAlert.h>
+#import "GrowingTrackerCore/Menu/GrowingAlert.h"
 
-
-// Corresponds to the row in the action sheet section.
 typedef NS_ENUM(NSInteger, GIOActionSheetsViewControllerTableRow) {
     GIOAlertsViewControllerActionSheetRowOkayCancel = 0,
     GIOAlertsViewControllerActionSheetRowOther,

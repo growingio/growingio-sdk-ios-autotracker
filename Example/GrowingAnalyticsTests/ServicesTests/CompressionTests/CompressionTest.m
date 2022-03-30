@@ -19,10 +19,10 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GrowingDataCompression.h"
-#import "GrowingVisitEvent.h"
-#import "NSData+GrowingHelper.h"
-#import "NSDictionary+GrowingHelper.h"
+#import "Services/Compression/GrowingDataCompression.h"
+#import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
+#import "GrowingTrackerCore/Helpers/NSData+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/NSDictionary+GrowingHelper.h"
 
 @interface CompressionTest : XCTestCase
 

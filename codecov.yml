@@ -2,8 +2,8 @@ codecov:
   token: "ba961ca1-57a7-4a22-ad2e-5819eea559da"
 ignore:
   - "Example"
-  - "GrowingAnalytics/GrowingTrackerCore/Thirdparty"
-  - "GrowingAnalytics/Modules/Protobuf/Proto/*.pbobjc.m"
-  - "GrowingAnalytics/Services/Compression/LZ4"
-  - "GrowingAnalytics/Services/Database/FMDB"
-  - "GrowingAnalytics/Services/WebSocket"
+  - "GrowingTrackerCore/Thirdparty"
+  - "Modules/Protobuf/Proto/*.pbobjc.m"
+  - "Services/Compression/LZ4"
+  - "Services/Database/FMDB"
+  - "Services/WebSocket"

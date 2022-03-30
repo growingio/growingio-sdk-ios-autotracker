@@ -19,8 +19,8 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GrowingDispatchManager.h"
-#import "GrowingThread.h"
+#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
+#import "GrowingTrackerCore/Thread/GrowingThread.h"
 
 @interface GrowingDispatchManagerTest : XCTestCase
 

@@ -7,7 +7,6 @@
 //
 
 #import "GIOMeasurementProtocolTableViewController.h"
-
 #import "GIOAttributesTrackViewController.h"
 #import "GIOConstants.h"
 

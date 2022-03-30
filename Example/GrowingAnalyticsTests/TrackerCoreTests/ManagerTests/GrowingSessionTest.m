@@ -20,13 +20,13 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GrowingSession.h"
-#import "GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Manager/GrowingSession.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingServiceManager.h"
 #import "GrowingEventDatabaseService.h"
-#import "GrowingEventFMDatabase.h"
+#import "Services/Database/GrowingEventFMDatabase.h"
 #import "MockEventQueue.h"
-#import "GrowingTrackEventType.h"
+#import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
 #import "InvocationHelper.h"
 
 @interface GrowingSessionTest : XCTestCase <GrowingUserIdChangedDelegate>

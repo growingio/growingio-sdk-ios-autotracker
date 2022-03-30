@@ -19,7 +19,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GrowingApplicationEventManager.h"
+#import "GrowingTrackerCore/Manager/GrowingApplicationEventManager.h"
 
 @interface ApplicationEventManagerTest : XCTestCase <GrowingApplicationEventProtocol>
 

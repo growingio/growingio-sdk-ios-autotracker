@@ -20,16 +20,16 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GrowingConfigurationManager.h"
-#import "GrowingSession.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingServiceManager.h"
 #import "GrowingEventDatabaseService.h"
-#import "GrowingEventFMDatabase.h"
-#import "UITableView+GrowingAutotracker.h"
+#import "Services/Database/GrowingEventFMDatabase.h"
+#import "GrowingAutotrackerCore/Autotrack/UITableView+GrowingAutotracker.h"
 #import "MockEventQueue.h"
-#import "GrowingViewElementEvent.h"
+#import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
 #import "InvocationHelper.h"
-#import "GrowingRealAutotracker.h"
+#import "GrowingAutotrackerCore/GrowingRealAutotracker.h"
 
 // 可配置growingNodeDonotTrack，从而配置可否生成VIEW_CLICK，以供测试
 
