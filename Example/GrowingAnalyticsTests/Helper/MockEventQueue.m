@@ -7,9 +7,8 @@
 //
 
 #import "MockEventQueue.h"
-
-@import GrowingAnalytics.GrowingDispatchManager;
-@import GrowingAnalytics.GrowingEventManager;
+#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
+#import "GrowingTrackerCore/Event/GrowingEventManager.h"
 
 @interface MockEventQueue () <GrowingEventInterceptor>
 

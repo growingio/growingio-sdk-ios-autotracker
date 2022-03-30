@@ -20,7 +20,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GrowingStatusBarEventManager.h"
+#import "GrowingTrackerCore/Manager/GrowingStatusBarEventManager.h"
 
 @interface StatusBarEventManagerTest : XCTestCase <GrowingStatusBarEventProtocol>
 

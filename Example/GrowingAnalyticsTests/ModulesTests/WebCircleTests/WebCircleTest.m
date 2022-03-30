@@ -22,14 +22,14 @@
 
 #import "GrowingAutotracker.h"
 #import "GrowingAutotrackConfiguration.h"
-#import "GrowingConfigurationManager.h"
-#import "GrowingDeviceInfo.h"
-#import "GrowingDeepLinkHandler.h"
-#import "GrowingWebCircle.h"
-#import "GrowingPageGroup.h"
-#import "GrowingPageManager.h"
-#import "UIViewController+GrowingPageHelper.h"
-#import "GrowingWebCircleElement.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
+#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
+#import "Modules/WebCircle/GrowingWebCircle.h"
+#import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
+#import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
+#import "GrowingAutotrackerCore/Page/UIViewController+GrowingPageHelper.h"
+#import "Modules/WebCircle/GrowingWebCircleElement.h"
 
 @interface GrowingWebCircle (XCTest)
 

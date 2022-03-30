@@ -21,9 +21,9 @@
 #import <XCTest/XCTest.h>
 
 #import "GrowingAutotrackConfiguration.h"
-#import "GrowingConfigurationManager.h"
-#import "GrowingDeviceInfo.h"
-#import "GrowingMobileDebugger.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
+#import "Modules/MobileDebugger/GrowingMobileDebugger.h"
 
 @interface GrowingMobileDebugger (XCTest)
 

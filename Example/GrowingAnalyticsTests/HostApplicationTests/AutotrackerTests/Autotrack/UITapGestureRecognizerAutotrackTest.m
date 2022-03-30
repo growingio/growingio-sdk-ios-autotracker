@@ -23,8 +23,8 @@
 #import "GrowingAutotracker.h"
 #import "MockEventQueue.h"
 #import "ManualTrackHelper.h"
-#import "GrowingViewElementEvent.h"
-#import "UITapGestureRecognizer+GrowingAutotracker.h"
+#import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
+#import "GrowingAutotrackerCore/Autotrack/UITapGestureRecognizer+GrowingAutotracker.h"
 
 // 使用"click请求"页面，测试-[UITapGestureRecognizer growing_initWithCoder:]函数
 

@@ -20,7 +20,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GrowingDeviceInfo.h"
+#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "InvocationHelper.h"
 
 @interface DeviceInfoTest : XCTestCase

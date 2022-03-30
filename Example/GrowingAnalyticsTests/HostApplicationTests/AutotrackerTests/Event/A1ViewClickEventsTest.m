@@ -11,7 +11,7 @@
 #import "GrowingAutotracker.h"
 #import "MockEventQueue.h"
 #import "ManualTrackHelper.h"
-#import "GrowingViewElementEvent.h"
+#import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
 
 @interface A1ViewClickEventsTest : KIFTestCase
 

@@ -1,24 +1,24 @@
 PODS:
-  - GrowingAnalytics-cdp/Autotracker (3.3.4):
-    - GrowingAnalytics-cdp/TrackerCore (= 3.3.4)
-    - GrowingAnalytics/AutotrackerCore (= 3.3.4)
-    - GrowingAnalytics/Compression (= 3.3.4)
-    - GrowingAnalytics/Database (= 3.3.4)
-    - GrowingAnalytics/Encryption (= 3.3.4)
-    - GrowingAnalytics/Hybrid (= 3.3.4)
-    - GrowingAnalytics/MobileDebugger (= 3.3.4)
-    - GrowingAnalytics/Network (= 3.3.4)
-    - GrowingAnalytics/WebCircle (= 3.3.4)
-  - GrowingAnalytics-cdp/Tracker (3.3.4):
-    - GrowingAnalytics-cdp/TrackerCore (= 3.3.4)
-    - GrowingAnalytics/Compression (= 3.3.4)
-    - GrowingAnalytics/Database (= 3.3.4)
-    - GrowingAnalytics/Encryption (= 3.3.4)
-    - GrowingAnalytics/MobileDebugger (= 3.3.4)
-    - GrowingAnalytics/Network (= 3.3.4)
-  - GrowingAnalytics-cdp/TrackerCore (3.3.4):
-    - GrowingAnalytics/TrackerCore (= 3.3.4)
-  - GrowingAnalytics/Autotracker (3.3.4):
+  - GrowingAnalytics-cdp/Autotracker (3.3.5-beta):
+    - GrowingAnalytics-cdp/TrackerCore (= 3.3.5-beta)
+    - GrowingAnalytics/AutotrackerCore (= 3.3.5-beta)
+    - GrowingAnalytics/Compression (= 3.3.5-beta)
+    - GrowingAnalytics/Database (= 3.3.5-beta)
+    - GrowingAnalytics/Encryption (= 3.3.5-beta)
+    - GrowingAnalytics/Hybrid (= 3.3.5-beta)
+    - GrowingAnalytics/MobileDebugger (= 3.3.5-beta)
+    - GrowingAnalytics/Network (= 3.3.5-beta)
+    - GrowingAnalytics/WebCircle (= 3.3.5-beta)
+  - GrowingAnalytics-cdp/Tracker (3.3.5-beta):
+    - GrowingAnalytics-cdp/TrackerCore (= 3.3.5-beta)
+    - GrowingAnalytics/Compression (= 3.3.5-beta)
+    - GrowingAnalytics/Database (= 3.3.5-beta)
+    - GrowingAnalytics/Encryption (= 3.3.5-beta)
+    - GrowingAnalytics/MobileDebugger (= 3.3.5-beta)
+    - GrowingAnalytics/Network (= 3.3.5-beta)
+  - GrowingAnalytics-cdp/TrackerCore (3.3.5-beta):
+    - GrowingAnalytics/TrackerCore (= 3.3.5-beta)
+  - GrowingAnalytics/Autotracker (3.3.5-beta):
     - GrowingAnalytics/AutotrackerCore
     - GrowingAnalytics/Compression
     - GrowingAnalytics/Database
@@ -27,42 +27,42 @@ PODS:
     - GrowingAnalytics/MobileDebugger
     - GrowingAnalytics/Network
     - GrowingAnalytics/WebCircle
-  - GrowingAnalytics/AutotrackerCore (3.3.4):
+  - GrowingAnalytics/AutotrackerCore (3.3.5-beta):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/Compression (3.3.4):
+  - GrowingAnalytics/Compression (3.3.5-beta):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/Database (3.3.4):
+  - GrowingAnalytics/Database (3.3.5-beta):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/Encryption (3.3.4):
+  - GrowingAnalytics/Encryption (3.3.5-beta):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/Hybrid (3.3.4):
+  - GrowingAnalytics/Hybrid (3.3.5-beta):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/MobileDebugger (3.3.4):
+  - GrowingAnalytics/MobileDebugger (3.3.5-beta):
     - GrowingAnalytics/TrackerCore
     - GrowingAnalytics/WebSocket
-  - GrowingAnalytics/Network (3.3.4):
+  - GrowingAnalytics/Network (3.3.5-beta):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/Protobuf (3.3.4):
+  - GrowingAnalytics/Protobuf (3.3.5-beta):
     - GrowingAnalytics/Database
-    - GrowingAnalytics/Protobuf/Proto (= 3.3.4)
+    - GrowingAnalytics/Protobuf/Proto (= 3.3.5-beta)
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/Protobuf/Proto (3.3.4):
+  - GrowingAnalytics/Protobuf/Proto (3.3.5-beta):
     - GrowingAnalytics/Database
     - GrowingAnalytics/TrackerCore
     - Protobuf
-  - GrowingAnalytics/Tracker (3.3.4):
+  - GrowingAnalytics/Tracker (3.3.5-beta):
     - GrowingAnalytics/Compression
     - GrowingAnalytics/Database
     - GrowingAnalytics/Encryption
     - GrowingAnalytics/MobileDebugger
     - GrowingAnalytics/Network
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/TrackerCore (3.3.4)
-  - GrowingAnalytics/WebCircle (3.3.4):
+  - GrowingAnalytics/TrackerCore (3.3.5-beta)
+  - GrowingAnalytics/WebCircle (3.3.5-beta):
     - GrowingAnalytics/AutotrackerCore
     - GrowingAnalytics/Hybrid
     - GrowingAnalytics/WebSocket
-  - GrowingAnalytics/WebSocket (3.3.4):
+  - GrowingAnalytics/WebSocket (3.3.5-beta):
     - GrowingAnalytics/TrackerCore
   - KIF (3.8.6):
     - KIF/Core (= 3.8.6)
@@ -70,9 +70,9 @@ PODS:
   - Protobuf (3.19.4)
   - SDCycleScrollView (1.82):
     - SDWebImage (>= 5.0.0)
-  - SDWebImage (5.12.3):
-    - SDWebImage/Core (= 5.12.3)
-  - SDWebImage/Core (5.12.3)
+  - SDWebImage (5.12.5):
+    - SDWebImage/Core (= 5.12.5)
+  - SDWebImage/Core (5.12.5)
 
 DEPENDENCIES:
   - GrowingAnalytics-cdp/Autotracker (from `./`)
@@ -97,13 +97,13 @@ EXTERNAL SOURCES:
     :path: "./"
 
 SPEC CHECKSUMS:
-  GrowingAnalytics: 6799952a68799fe1630c7d8e86a9afaba7538dd1
-  GrowingAnalytics-cdp: e04501ed6a2a8a9676ccb75b3e80629ad475deb6
+  GrowingAnalytics: f35717ba5481c7e0f579ab821959d0ff4bb20408
+  GrowingAnalytics-cdp: 779bf481efdba316356c0f5e89c994f473cca604
   KIF: e2e1bab222b6c9523a0a88caab31f8524fe82404
   Protobuf: 235750e4696ff59fb07d949a9dbbc92b3c0700fe
   SDCycleScrollView: a0d74c3384caa72bdfc81470bdbc8c14b3e1fbcf
-  SDWebImage: 53179a2dba77246efa8a9b85f5c5b21f8f43e38f
+  SDWebImage: 0905f1b7760fc8ac4198cae0036600d67478751e
 
-PODFILE CHECKSUM: c9ebcd4488771cb3f47bc6b7a409665cf0eaa3e5
+PODFILE CHECKSUM: c1fa72efd4f1c5e6a3b6f1ee91650b289290795e
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.11.3

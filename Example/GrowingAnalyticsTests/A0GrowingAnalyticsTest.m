@@ -8,16 +8,16 @@
 
 #import <XCTest/XCTest.h>
 #import "GrowingAutotracker.h"
-#import "GrowingDispatchManager.h"
-#import "GrowingEventManager.h"
-#import "GrowingSession.h"
-#import "GrowingThread.h"
+#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
+#import "GrowingTrackerCore/Event/GrowingEventManager.h"
+#import "GrowingTrackerCore/Manager/GrowingSession.h"
+#import "GrowingTrackerCore/Thread/GrowingThread.h"
 #import "MockEventQueue.h"
-#import "GrowingCustomEvent.h"
-#import "GrowingConversionVariableEvent.h"
-#import "GrowingLoginUserAttributesEvent.h"
-#import "GrowingVisitorAttributesEvent.h"
-#import "GrowingTrackEventType.h"
+#import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
+#import "GrowingTrackerCore/Event/GrowingConversionVariableEvent.h"
+#import "GrowingTrackerCore/Event/GrowingLoginUserAttributesEvent.h"
+#import "GrowingTrackerCore/Event/GrowingVisitorAttributesEvent.h"
+#import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
 
 @interface A0GrowingAnalyticsTest : XCTestCase <GrowingEventInterceptor>
 

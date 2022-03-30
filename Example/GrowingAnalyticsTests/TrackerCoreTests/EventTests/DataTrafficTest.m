@@ -20,7 +20,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GrowingDataTraffic.h"
+#import "GrowingTrackerCore/Event/GrowingDataTraffic.h"
 
 @interface DataTrafficTest : XCTestCase
 

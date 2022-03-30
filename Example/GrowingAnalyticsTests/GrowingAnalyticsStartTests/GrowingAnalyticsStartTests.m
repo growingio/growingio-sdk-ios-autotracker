@@ -20,14 +20,14 @@
 
 #import <XCTest/XCTest.h>
 
-@import GrowingAnalytics.GrowingRealAutotracker;
-@import GrowingAnalytics.GrowingRealTracker;
-@import GrowingAnalytics.GrowingAutotrackConfiguration;
-@import GrowingAnalytics.GrowingTrackConfiguration;
-@import GrowingAnalytics.GrowingConfigurationManager;
-@import GrowingAnalytics.GrowingDispatchManager;
-@import GrowingAnalytics_cdp.GrowingTracker;
-@import GrowingAnalytics_cdp.GrowingAutotracker;
+#import "GrowingAutotrackerCore/GrowingRealAutotracker.h"
+#import "GrowingTrackerCore/GrowingRealTracker.h"
+#import "GrowingAutotrackConfiguration.h"
+#import "GrowingTrackConfiguration.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
+#import "GrowingTracker.h"
+#import "GrowingAutotracker.h"
 
 @interface GrowingAnalyticsStartTests : XCTestCase
 

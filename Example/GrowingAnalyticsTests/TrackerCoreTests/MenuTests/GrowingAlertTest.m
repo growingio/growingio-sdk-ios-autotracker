@@ -19,7 +19,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GrowingAlert.h"
+#import "GrowingTrackerCore/Menu/GrowingAlert.h"
 
 @interface GrowingAlertTest : XCTestCase
 

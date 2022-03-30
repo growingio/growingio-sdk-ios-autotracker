@@ -19,8 +19,8 @@
 
 
 #import <XCTest/XCTest.h>
-#import "GrowingEventRequestHeaderAdapter+Protobuf.h"
-#import "GrowingConfigurationManager.h"
+#import "Modules/Protobuf/GrowingEventRequestHeaderAdapter+Protobuf.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 
 @interface ProtobufRequestHeaderTest : XCTestCase
 

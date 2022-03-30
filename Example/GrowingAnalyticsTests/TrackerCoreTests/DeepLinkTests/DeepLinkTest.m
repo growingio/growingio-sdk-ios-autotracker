@@ -20,8 +20,8 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GrowingDeepLinkHandler.h"
-#import "GrowingSceneDelegateAutotracker.h"
+#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
+#import "GrowingTrackerCore/DeepLink/GrowingSceneDelegateAutotracker.h"
 
 @interface SceneDelegate_XCTest : UIResponder
 

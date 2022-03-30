@@ -7,7 +7,6 @@
 //
 
 #import "GIOLabelAttributeViewController.h"
-//#import "GrowingAutoTracker.h"
 #import <CoreLocation/CoreLocation.h>
 
 @interface GIOLabelAttributeViewController ()

@@ -20,7 +20,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GrowingStatusBar.h"
+#import "GrowingTrackerCore/Menu/GrowingStatusBar.h"
 #import "InvocationHelper.h"
 
 @interface GrowingStatusBarTest : XCTestCase

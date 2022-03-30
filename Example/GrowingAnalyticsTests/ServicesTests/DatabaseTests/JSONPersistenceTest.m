@@ -19,10 +19,10 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GrowingEventJSONPersistence.h"
-#import "GrowingCustomEvent.h"
-#import "NSDictionary+GrowingHelper.h"
-#import "NSString+GrowingHelper.h"
+#import "Services/Database/GrowingEventJSONPersistence.h"
+#import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
+#import "GrowingTrackerCore/Helpers/NSDictionary+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
 
 @interface JSONPersistenceTest : XCTestCase
 

@@ -21,18 +21,18 @@
 #import <XCTest/XCTest.h>
 
 #import <WebKit/WebKit.h>
-#import "GrowingDispatchManager.h"
-#import "GrowingHybridBridgeProvider.h"
-#import "GrowingPersistenceDataProvider.h"
-#import "GrowingHybridPageAttributesEvent.h"
-#import "NSDictionary+GrowingHelper.h"
-#import "NSString+GrowingHelper.h"
-#import "GrowingSession.h"
-#import "GrowingConfigurationManager.h"
-#import "GrowingEventGenerator.h"
+#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
+#import "Modules/Hybrid/GrowingHybridBridgeProvider.h"
+#import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
+#import "Modules/Hybrid/Events/GrowingHybridPageAttributesEvent.h"
+#import "GrowingTrackerCore/Helpers/NSDictionary+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
+#import "GrowingTrackerCore/Manager/GrowingSession.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
 #import "GrowingServiceManager.h"
 #import "GrowingEventDatabaseService.h"
-#import "GrowingEventFMDatabase.h"
+#import "Services/Database/GrowingEventFMDatabase.h"
 
 @interface GrowingHybridBridgeProvider (XCTest)
 

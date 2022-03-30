@@ -20,11 +20,11 @@
 
 #import <XCTest/XCTest.h>
 
-#import "UIApplication+GrowingHelper.h"
-#import "UIControl+GrowingHelper.h"
-#import "UIImage+GrowingHelper.h"
-#import "UIWindow+GrowingHelper.h"
-#import "UIView+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/UIApplication+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/UIControl+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/UIImage+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/UIWindow+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/UIView+GrowingHelper.h"
 #import "InvocationHelper.h"
 
 @interface GrowingUIKitHelpersTest : XCTestCase

@@ -20,24 +20,24 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GrowingConfigurationManager.h"
-#import "GrowingSession.h"
-#import "GrowingDeviceInfo.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Manager/GrowingSession.h"
+#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "GrowingServiceManager.h"
 #import "GrowingEventDatabaseService.h"
-#import "GrowingEventFMDatabase.h"
-#import "GrowingEventManager.h"
+#import "Services/Database/GrowingEventFMDatabase.h"
+#import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "MockEventQueue.h"
 #import "ManualTrackHelper.h"
-#import "GrowingAutotrackEventType.h"
-#import "GrowingVisitEvent.h"
-#import "GrowingCustomEvent.h"
-#import "GrowingAppCloseEvent.h"
-#import "GrowingPageEvent.h"
-#import "GrowingVisitorAttributesEvent.h"
-#import "GrowingConversionVariableEvent.h"
-#import "GrowingLoginUserAttributesEvent.h"
-#import "GrowingPageAttributesEvent.h"
+#import "GrowingTrackerCore/Event/Autotrack/GrowingAutotrackEventType.h"
+#import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
+#import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
+#import "GrowingTrackerCore/Event/GrowingAppCloseEvent.h"
+#import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
+#import "GrowingTrackerCore/Event/GrowingVisitorAttributesEvent.h"
+#import "GrowingTrackerCore/Event/GrowingConversionVariableEvent.h"
+#import "GrowingTrackerCore/Event/GrowingLoginUserAttributesEvent.h"
+#import "GrowingTrackerCore/Event/Autotrack/GrowingPageAttributesEvent.h"
 
 @interface EventTest : XCTestCase
 

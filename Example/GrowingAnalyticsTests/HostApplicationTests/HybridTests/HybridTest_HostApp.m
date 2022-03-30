@@ -17,25 +17,23 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <KIF/KIF.h>
-
 #import <WebKit/WebKit.h>
 #import "GrowingAutotracker.h"
 #import "MockEventQueue.h"
-#import "GrowingTrackEventType.h"
-#import "GrowingLoginUserAttributesEvent.h"
-#import "GrowingConversionVariableEvent.h"
-#import "GrowingHybridEventType.h"
-#import "GrowingHybridViewElementEvent.h"
-#import "GrowingHybridPageEvent.h"
-#import "GrowingHybridCustomEvent.h"
-#import "GrowingHybridPageAttributesEvent.h"
+#import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
+#import "GrowingTrackerCore/Event/GrowingLoginUserAttributesEvent.h"
+#import "GrowingTrackerCore/Event/GrowingConversionVariableEvent.h"
+#import "Modules/Hybrid/Events/GrowingHybridEventType.h"
+#import "Modules/Hybrid/Events/GrowingHybridViewElementEvent.h"
+#import "Modules/Hybrid/Events/GrowingHybridPageEvent.h"
+#import "Modules/Hybrid/Events/GrowingHybridCustomEvent.h"
+#import "Modules/Hybrid/Events/GrowingHybridPageAttributesEvent.h"
 #import "ManualTrackHelper.h"
-#import "GrowingDispatchManager.h"
-#import "GrowingPersistenceDataProvider.h"
-#import "GrowingHybridBridgeProvider.h"
-#import "GrowingWebViewDomChangedDelegate.h"
+#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
+#import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
+#import "Modules/Hybrid/GrowingHybridBridgeProvider.h"
+#import "Modules/Hybrid/GrowingWebViewDomChangedDelegate.h"
 
 @interface HybridTest_HostApp : KIFTestCase <GrowingWebViewDomChangedDelegate>
 

@@ -48,6 +48,3 @@ target 'ProtobufTests' do
    pod 'GrowingAnalytics/Autotracker', :path => './'
    pod 'GrowingAnalytics/Protobuf', :path => './'
 end
-
-
-

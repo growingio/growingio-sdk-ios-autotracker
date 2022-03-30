@@ -18,7 +18,7 @@ jobs:
       - name: Deploy to Cocoapods
         run: |
           set -eo pipefail
-          pod trunk push GrowingAnalytics.podspec --allow-warnings --use-libraries
-          pod trunk push GrowingAnalytics-cdp.podspec --allow-warnings --use-libraries --synchronous
+          pod trunk push GrowingAnalytics.podspec --verbose --allow-warnings --use-libraries
+          pod trunk push GrowingAnalytics-cdp.podspec --verbose --allow-warnings --use-libraries --synchronous
         env:
           COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}

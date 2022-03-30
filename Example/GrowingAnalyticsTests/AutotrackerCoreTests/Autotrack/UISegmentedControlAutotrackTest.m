@@ -21,8 +21,8 @@
 #import <XCTest/XCTest.h>
 
 #import "InvocationHelper.h"
-#import "GrowingRealAutotracker.h"
-#import "UISegmentedControl+GrowingAutotracker.h"
+#import "GrowingAutotrackerCore/GrowingRealAutotracker.h"
+#import "GrowingAutotrackerCore/Autotrack/UISegmentedControl+GrowingAutotracker.h"
 
 @interface UISegmentedControlAutotrackTest : XCTestCase
 
