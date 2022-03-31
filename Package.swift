@@ -58,6 +58,10 @@ let package = Package(
             name: "GrowingTracker_NoIDFA",
             targets: ["GrowingTracker_NoIDFA_Wrapper"]
         ),
+        .library(
+            name: "GrowingModule_Hybrid",
+            targets: ["GrowingModule_Hybrid"]
+        ),
     ],
     dependencies: [],
     targets: [
@@ -170,7 +174,6 @@ let package = Package(
             dependencies: [],
             path: "GrowingTrackerCore/Utils/UserIdentifier",
             exclude: ["GrowingUserIdentifier_NoIDFA.m"],
-            publicHeadersPath: ".",
             cSettings: [
                 .headerSearchPath("../../.."),
             ]
@@ -180,7 +183,6 @@ let package = Package(
             dependencies: [],
             path: "GrowingTrackerCore/Utils/UserIdentifier",
             exclude: ["GrowingUserIdentifier.m"],
-            publicHeadersPath: ".",
             cSettings: [
                 .headerSearchPath("../../.."),
             ]

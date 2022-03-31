@@ -29,11 +29,8 @@
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogMacros.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import <WebKit/WebKit.h>
-
-#if __has_include("GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h")
-#import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
-#define GROWING_ANALYSIS_AUTOTRACKERCORE
-#endif
+#import <objc/runtime.h>
+#import <objc/message.h>
 
 static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJavascriptBridge";
 
@@ -52,13 +49,19 @@ static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJav
     return instance;
 }
 
++ (BOOL)webViewDontTrackCheck:(WKWebView *)webView {
+    SEL selector = NSSelectorFromString(@"growingViewDontTrack");
+    if ([webView respondsToSelector:selector]) {
+        return ((BOOL(*)(id, SEL))objc_msgSend)(webView, selector);
+    }
+    return NO;
+}
+
 + (void)bridgeForWebView:(WKWebView *)webView {
-#ifdef GROWING_ANALYSIS_AUTOTRACKERCORE
-    if (webView.growingViewDontTrack) {
+    if ([self webViewDontTrackCheck:webView]) {
         GIOLogDebug(@"WKWebview Bridge %@ is donotTrack", webView);
         return;
     }
-#endif
     
     WKUserContentController *contentController = webView.configuration.userContentController;
     [self addScriptMessageHandler:contentController];
@@ -103,12 +106,11 @@ static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJav
 }
 
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
-#ifdef GROWING_ANALYSIS_AUTOTRACKERCORE
-    if ([message.webView growingViewDontTrack]) {
+    if ([GrowingWKWebViewJavascriptBridge webViewDontTrackCheck:message.webView]) {
         GIOLogDebug(@"WKWebview Bridge %@ is donotTrack",message.webView);
         return;
     }
-#endif
+
     if ([message.name isEqualToString:kGrowingWKWebViewJavascriptBridge]) {
         [GrowingHybridBridgeProvider.sharedInstance handleJavascriptBridgeMessage:message.body];
     }
