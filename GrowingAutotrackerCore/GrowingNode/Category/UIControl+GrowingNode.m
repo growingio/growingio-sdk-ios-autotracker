@@ -19,7 +19,7 @@
 
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIControl+GrowingNode.h"
 #import "GrowingTrackerCore/Helpers/UIView+GrowingHelper.h"
-#import "GrowingTrackerCore/Event/Base/GrowingBaseEvent.h"
+#import "GrowingTrackerCore/Public/GrowingBaseEvent.h"
 
 @implementation UIControl(Growing)
 

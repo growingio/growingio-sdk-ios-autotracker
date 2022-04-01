@@ -19,7 +19,7 @@
 
 #import <UIKit/UIKit.h>
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
-#import "GrowingTrackerCore/Event/Base/GrowingBaseEvent.h"
+#import "GrowingTrackerCore/Public/GrowingBaseEvent.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Event/GrowingDataTraffic.h"
@@ -31,12 +31,12 @@
 #import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
 #import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
-#import "GrowingTrackerCore/GrowingTrackConfiguration.h"
+#import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
 #import "GrowingTrackerCore/Helpers/NSDictionary+GrowingHelper.h"
 #import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
-#import "GrowingTrackerCore/Event/GrowingEventFilter.h"
-#import "GrowingTrackerCore/Core/Services/GrowingEventNetworkService.h"
-#import "GrowingTrackerCore/Core/GrowingServiceManager.h"
+#import "GrowingTrackerCore/Public/GrowingEventFilter.h"
+#import "GrowingTrackerCore/Public/GrowingEventNetworkService.h"
+#import "GrowingTrackerCore/Public/GrowingServiceManager.h"
 
 static const NSUInteger kGrowingMaxQueueSize = 10000;  // default: max event queue size there are 10000 events
 static const NSUInteger kGrowingFillQueueSize = 1000;  // default: determine when event queue is filled from DB

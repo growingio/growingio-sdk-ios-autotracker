@@ -18,8 +18,8 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/GrowingRealTracker.h"
-#import "GrowingTrackerCore/GrowingTrackConfiguration.h"
-#import "GrowingTrackerCore/Event/Base/GrowingAttributesBuilder.h"
+#import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
+#import "GrowingTrackerCore/Public/GrowingAttributesBuilder.h"
 #import "GrowingTrackerCore/Hook/GrowingAppLifecycle.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/LogFormat/GrowingWSLoggerFormat.h"
@@ -35,8 +35,8 @@
 #import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
 #import "GrowingTrackerCore/DeepLink/GrowingAppDelegateAutotracker.h"
 #import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
-#import "GrowingTrackerCore/Core/GrowingModuleManager.h"
-#import "GrowingTrackerCore/Core/GrowingServiceManager.h"
+#import "GrowingTrackerCore/Public/GrowingModuleManager.h"
+#import "GrowingTrackerCore/Public/GrowingServiceManager.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 
 NSString *const GrowingTrackerVersionName = @"3.3.5";

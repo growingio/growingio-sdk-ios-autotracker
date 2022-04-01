@@ -32,7 +32,7 @@
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
 #import "GrowingAutotrackerCore/Impression/GrowingImpressionTrack.h"
 #import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
-#import "GrowingAutotrackerCore/GrowingAutotrackConfiguration.h"
+#import "GrowingAutotrackerCore/Public/GrowingAutotrackConfiguration.h"
 #import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingAutotrackEventType.h"
 #import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"

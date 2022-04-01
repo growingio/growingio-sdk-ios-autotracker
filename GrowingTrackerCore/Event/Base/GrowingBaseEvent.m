@@ -17,14 +17,14 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Event/Base/GrowingBaseEvent.h"
+#import "GrowingTrackerCore/Public/GrowingBaseEvent.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
 #import "GrowingTrackerCore/GrowingRealTracker.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Utils/GrowingTimeUtil.h"
 #import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
-#import "GrowingTrackerCore/Event/GrowingFieldsIgnore.h"
+#import "GrowingTrackerCore/Public/GrowingFieldsIgnore.h"
 
 @implementation GrowingBaseEvent
 

@@ -17,7 +17,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore-cdp/GrowingTrackConfiguration+CdpTracker.h"
+#import "GrowingTrackerCore-cdp/Public/GrowingTrackConfiguration+CdpTracker.h"
 #import <objc/runtime.h>
 
 @implementation GrowingTrackConfiguration (CdpTracker)

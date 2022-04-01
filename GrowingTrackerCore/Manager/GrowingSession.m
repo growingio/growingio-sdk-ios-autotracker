@@ -20,7 +20,7 @@
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Hook/GrowingAppLifecycle.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
-#import "GrowingTrackerCore/GrowingTrackConfiguration.h"
+#import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogMacros.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Utils/GrowingTimeUtil.h"

@@ -17,10 +17,10 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Core/GrowingModuleManager.h"
-#import "GrowingTrackerCore/Core/GrowingModuleProtocol.h"
+#import "GrowingTrackerCore/Public/GrowingModuleManager.h"
+#import "GrowingTrackerCore/Public/GrowingModuleProtocol.h"
 #import "GrowingTrackerCore/Core/GrowingContext.h"
-#import "GrowingTrackerCore/Core/GrowingAnnotationCore.h"
+#import "GrowingTrackerCore/Public/GrowingAnnotationCore.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import <objc/runtime.h>
 #import <objc/message.h>

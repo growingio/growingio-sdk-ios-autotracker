@@ -43,10 +43,10 @@
 #import "Modules/MobileDebugger/GrowingDebuggerEventQueue.h"
 #import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
 #import "GrowingTrackerCore/GrowingRealTracker.h"
-#import "GrowingTrackerCore/Core/GrowingAnnotationCore.h"
+#import "GrowingTrackerCore/Public/GrowingAnnotationCore.h"
 #import "Modules/MobileDebugger/GrowingDebuggerEventQueue.h"
-#import "GrowingTrackerCore/Core/GrowingServiceManager.h"
-#import "GrowingTrackerCore/Core/Services/GrowingWebSocketService.h"
+#import "GrowingTrackerCore/Public/GrowingServiceManager.h"
+#import "GrowingTrackerCore/Public/GrowingWebSocketService.h"
 
 #define LOCK(...) dispatch_semaphore_wait(self->_lock, DISPATCH_TIME_FOREVER); \
 __VA_ARGS__; \

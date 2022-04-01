@@ -20,7 +20,7 @@
 #import "GrowingAutotrackerCore/Autotrack/GrowingPropertyDefine.h"
 #import "GrowingAutotrackerCore/Autotrack/UITapGestureRecognizer+GrowingAutotracker.h"
 #import "GrowingTrackerCore/Helpers/UIImage+GrowingHelper.h"
-#import "GrowingTrackerCore/Event/Base/GrowingBaseEvent.h"
+#import "GrowingTrackerCore/Public/GrowingBaseEvent.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
 #import "GrowingTrackerCore/Helpers/NSObject+GrowingIvarHelper.h"
 #import "GrowingTrackerCore/Hook/UIApplication+GrowingNode.h"
@@ -31,7 +31,7 @@
 #import "GrowingAutotrackerCore/Impression/GrowingImpressionTrack.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingAutotrackerCore/GrowingNode/GrowingNode.h"
-#import "GrowingAutotrackerCore/GrowingAutotrackConfiguration.h"
+#import "GrowingAutotrackerCore/Public/GrowingAutotrackConfiguration.h"
 
 @interface GrowingMaskView : UIImageView
 @end
