@@ -18,7 +18,7 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
-#import "GrowingTrackerCore/GrowingTrackConfiguration.h"
+#import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
 
 @implementation GrowingConfigurationManager
 @synthesize trackConfiguration = _trackConfiguration;

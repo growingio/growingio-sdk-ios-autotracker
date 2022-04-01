@@ -21,7 +21,7 @@
 #import "GrowingTrackerCore/Helpers/NSArray+GrowingHelper.h"
 #import "GrowingTrackerCore/Helpers/NSDictionary+GrowingHelper.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
-#import "GrowingTrackerCore/Core/GrowingServiceManager.h"
+#import "GrowingTrackerCore/Public/GrowingServiceManager.h"
 
 NSString *const kGrowingResidentDirName = @"com.growingio.core";
 NSString *const kGrowingDirCommonPrefix = @"com.growingio.";

@@ -17,7 +17,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/GrowingTrackConfiguration.h"
+#import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 
 NSString * const kGrowingDefaultDataCollectionServerHost = @"https://api.growingio.com";

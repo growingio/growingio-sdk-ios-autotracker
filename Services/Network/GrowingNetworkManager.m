@@ -19,7 +19,7 @@
 
 #import "Services/Network/GrowingNetworkManager.h"
 #import "Services/Network/NSURLSession+GrowingURLSessionHelper.h"
-#import "GrowingTrackerCore/Core/GrowingAnnotationCore.h"
+#import "GrowingTrackerCore/Public/GrowingAnnotationCore.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 
 GrowingService(GrowingEventNetworkService, GrowingNetworkManager)

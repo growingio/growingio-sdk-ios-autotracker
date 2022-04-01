@@ -23,7 +23,7 @@
 #import "Modules/Hybrid/GrowingHybridBridgeProvider.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
-#import "GrowingTrackerCore/GrowingTrackConfiguration.h"
+#import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
 #import "GrowingTrackerCore/GrowingRealTracker.h"
 #import "GrowingTrackerCore/Event/GrowingNodeProtocol.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogMacros.h"

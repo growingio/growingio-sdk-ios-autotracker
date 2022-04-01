@@ -18,7 +18,7 @@
 //  limitations under the License.
 
 #import "Modules/Hybrid/GrowingHybridBridgeProvider.h"
-#import "GrowingTrackerCore/Event/Base/GrowingBaseEvent.h"
+#import "GrowingTrackerCore/Public/GrowingBaseEvent.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Event/GrowingConversionVariableEvent.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
@@ -37,7 +37,7 @@
 #import "Modules/Hybrid/GrowingWebViewDomChangedDelegate.h"
 #import "GrowingTrackerCore/Helpers/NSDictionary+GrowingHelper.h"
 #import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
-#import "GrowingTrackerCore/Core/GrowingAnnotationCore.h"
+#import "GrowingTrackerCore/Public/GrowingAnnotationCore.h"
 #import <WebKit/WebKit.h>
 
 NSString *const kGrowingJavascriptMessageTypeKey = @"messageType";

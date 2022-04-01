@@ -23,7 +23,7 @@
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
 #import "GrowingAutotrackerCore/Private/GrowingPrivateCategory.h"
 #import "GrowingAutotrackerCore/Autotrack/GrowingPropertyDefine.h"
-#import "GrowingAutotrackerCore/GrowingAutotrackConfiguration.h"
+#import "GrowingAutotrackerCore/Public/GrowingAutotrackConfiguration.h"
 #import "GrowingTrackerCore/Helpers/NSDictionary+GrowingHelper.h"
 #import "GrowingTrackerCore/Helpers/NSObject+GrowingIvarHelper.h"
 #import "GrowingTrackerCore/Hook/UIApplication+GrowingNode.h"

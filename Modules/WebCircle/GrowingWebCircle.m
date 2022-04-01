@@ -55,9 +55,9 @@
 #import "GrowingTrackerCore/Helpers/UIWindow+GrowingHelper.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIWindow+GrowingNode.h"
 #import "Modules/WebCircle/GrowingStatusBarAutotracker.h"
-#import "GrowingTrackerCore/Core/GrowingServiceManager.h"
+#import "GrowingTrackerCore/Public/GrowingServiceManager.h"
 #import "Modules/Hybrid/GrowingHybridBridgeProvider.h"
-#import "GrowingTrackerCore/Core/Services/GrowingWebSocketService.h"
+#import "GrowingTrackerCore/Public/GrowingWebSocketService.h"
 #import "GrowingTrackerCore/GrowingRealTracker.h"
 
 GrowingMod(GrowingWebCircle)

@@ -17,7 +17,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Core/GrowingAnnotationCore.h"
+#import "GrowingTrackerCore/Public/GrowingAnnotationCore.h"
 #include <mach-o/getsect.h>
 #include <mach-o/loader.h>
 #include <mach-o/dyld.h>

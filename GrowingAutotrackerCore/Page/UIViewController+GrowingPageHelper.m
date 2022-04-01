@@ -20,7 +20,7 @@
 #import "GrowingAutotrackerCore/Page/UIViewController+GrowingPageHelper.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIViewController+GrowingNode.h"
 #import "GrowingAutotrackerCore/Page/GrowingPage.h"
-#import "GrowingAutotrackerCore/GrowingAutotrackConfiguration.h"
+#import "GrowingAutotrackerCore/Public/GrowingAutotrackConfiguration.h"
 #import "GrowingAutotrackerCore/Private/GrowingPrivateCategory.h"
 #import <objc/runtime.h>
 
