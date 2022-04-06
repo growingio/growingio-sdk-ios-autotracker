@@ -56,8 +56,8 @@
 
 + (_Nonnull instancetype)sharedInstance;
 
-/// 配置事件发送通道
-- (void)configChannels;
+/// 配置事件管理者
+- (void)configManager;
 
 /// 开启事件发送定时器
 - (void)startTimerSend;
