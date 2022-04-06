@@ -81,30 +81,28 @@ static GrowingEventManager *sharedInstance = nil;
 - (instancetype)init {
     if (self = [super init]) {
         _allInterceptor = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
-        _packageNum = kGrowingMaxBatchSize;
-        // default is 10MB
-        _uploadLimitOfCellular = [GrowingConfigurationManager sharedInstance].trackConfiguration.cellularDataLimit * kGrowingUnit_MB;
-        [GrowingDispatchManager dispatchInGrowingThread:^{
-            self->_timingEventDB = [GrowingEventDatabase databaseWithPath:[GrowingFileStorage getTimingDatabasePath]];
-            self->_timingEventDB.autoFlushCount = kGrowingMaxDBCacheSize;
-            
-            self->_realtimeEventDB = [GrowingEventDatabase databaseWithPath:[GrowingFileStorage getRealtimeDatabasePath]];
-
-            // clean expired event data
-            [self cleanExpiredData_unsafe];
-            // load eventQueue for the first time
-            [self reloadFromDB_unsafe];
-        }];
     }
     return self;
 }
 
-#pragma mark - Configure Channels
+#pragma mark - Configure Manager
 
-- (void)configChannels {
+- (void)configManager {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         [GrowingDispatchManager dispatchInGrowingThread:^{
+            self->_packageNum = kGrowingMaxBatchSize;
+            // default is 10MB
+            self->_uploadLimitOfCellular = [GrowingConfigurationManager sharedInstance].trackConfiguration.cellularDataLimit * kGrowingUnit_MB;
+            
+            self->_timingEventDB = [GrowingEventDatabase databaseWithPath:[GrowingFileStorage getTimingDatabasePath]];
+            self->_timingEventDB.autoFlushCount = kGrowingMaxDBCacheSize;
+            self->_realtimeEventDB = [GrowingEventDatabase databaseWithPath:[GrowingFileStorage getRealtimeDatabasePath]];
+            // clean expired event data
+            [self cleanExpiredData_unsafe];
+            // load eventQueue for the first time
+            [self reloadFromDB_unsafe];
+            
             for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
                 if ([obj respondsToSelector:@selector(growingEventManagerChannels:)]) {
                     [obj growingEventManagerChannels:[GrowingEventChannel eventChannels]];
@@ -112,7 +110,6 @@ static GrowingEventManager *sharedInstance = nil;
             }
             
             self->_allEventChannels = [GrowingEventChannel buildAllEventChannels];
-
             self->_eventChannelDict = [GrowingEventChannel eventChannelMapFromAllChannels:self->_allEventChannels];
             // all other events got to this category
             self->_otherEventChannel = [GrowingEventChannel otherEventChannelFromAllChannels:self->_allEventChannels];

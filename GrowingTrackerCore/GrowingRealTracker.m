@@ -69,7 +69,7 @@ const int GrowingTrackerVersionCode = 30305;
         [[GrowingServiceManager sharedInstance] loadLocalServices];
         [[GrowingModuleManager sharedInstance] triggerEvent:GrowingMInitEvent];
         // 各个Module初始化init之后再进行事件定时发送
-        [[GrowingEventManager sharedInstance] configChannels];
+        [[GrowingEventManager sharedInstance] configManager];
         [[GrowingEventManager sharedInstance] startTimerSend];
         [self versionPrint];
         [self filterLogPrint];
