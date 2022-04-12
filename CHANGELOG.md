@@ -1,4 +1,20 @@
-# [3.3.4](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.3.3...3.3.4) (2022-03-08)
+# [3.3.5](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.3.4...3.3.5) (2022-04-12)
+
+
+### Bug Fixes
+
+* GrowingEventManager 在 loadLocalServices 之前初始化将导致数据库创建失败，事件无法入库 ([758a063](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/758a063966ad06a594c0a1e053b1ae322777e575))
+* 日志输出添加前缀 ([190e39a](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/190e39a6b470399fb64d219cb27adb57160fb5f9))
+
+
+### Features
+
+* CUSTOM 事件属性支持 NSArray<ObjectType>，优化参数判断，补充单元测试 ([d2838ab](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/d2838ab42b875c9c6d52cf30b1531f5a10f39051))
+* 废弃 CUSTOM 事件物品模型关联接口 ([7f15aad](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/7f15aadb8ab9066bd02d0ca8e54520040f2b5d9c))
+* 支持 SwiftPM ([1a56430](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/1a56430b05cd2ab1c91d1bcaa3dfbaef3a14bd14))
+* Hybrid 模块也作为 SwiftPM library 提供给外部，以便仅集成埋点 SDK 时打通 H5 ([67dad16](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/67dad1698d6c2a7dada0ec9002c76559e46a302f))
+
+## [3.3.4](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.3.3...3.3.4) (2022-03-08)
 
 ### Bug Fixes
 
