@@ -9,7 +9,7 @@
 
 ### Features
 
-* CUSTOM 事件属性支持 NSArray<ObjectType>，优化参数判断，补充单元测试 ([d2838ab](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/d2838ab42b875c9c6d52cf30b1531f5a10f39051))
+* CUSTOM 事件属性支持 `NSArray<ObjectType>`，优化参数判断，补充单元测试 ([d2838ab](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/d2838ab42b875c9c6d52cf30b1531f5a10f39051))
 * 废弃 CUSTOM 事件物品模型关联接口 ([7f15aad](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/7f15aadb8ab9066bd02d0ca8e54520040f2b5d9c))
 * 支持 SwiftPM ([1a56430](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/1a56430b05cd2ab1c91d1bcaa3dfbaef3a14bd14))
 * Hybrid 模块也作为 SwiftPM library 提供给外部，以便仅集成埋点 SDK 时打通 H5 ([67dad16](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/67dad1698d6c2a7dada0ec9002c76559e46a302f))
