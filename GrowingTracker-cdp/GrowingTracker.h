@@ -69,6 +69,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param attributes 用户属性信息
 - (void)setLoginUserAttributes:(NSDictionary<NSString *, NSString *> *)attributes;
 
+/// 以登录用户的身份定义用户属性变量，用于用户信息相关分析。
+/// @param attributesBuilder 用户属性信息构造器
+- (void)setLoginUserAttributesWithAttributesBuilder:(GrowingAttributesBuilder *)attributesBuilder;
+
 /// 同步获取设备id，又称为匿名用户id，SDK 自动生成用来定义唯一设备。
 - (NSString *)getDeviceId;
 

@@ -163,6 +163,11 @@ const int GrowingTrackerVersionCode = 30305;
     [GrowingEventGenerator generateLoginUserAttributesEvent:attributes];
 }
 
+- (void)setLoginUserAttributesWithAttributesBuilder:(GrowingAttributesBuilder *)attributesBuilder {
+    NSDictionary *attributes = attributesBuilder.build;
+    [self setLoginUserAttributes:attributes];
+}
+
 - (void)setVisitorAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
     if ([GrowingArgumentChecker isIllegalAttributes:attributes]) {
         return;
@@ -170,11 +175,21 @@ const int GrowingTrackerVersionCode = 30305;
     [GrowingEventGenerator generateVisitorAttributesEvent:attributes];
 }
 
+- (void)setVisitorAttributesWithAttributesBuilder:(GrowingAttributesBuilder *)attributesBuilder {
+    NSDictionary *attributes = attributesBuilder.build;
+    [self setVisitorAttributes:attributes];
+}
+
 - (void)setConversionVariables:(NSDictionary<NSString *, NSString *> *)variables {
     if ([GrowingArgumentChecker isIllegalAttributes:variables]) {
         return;
     }
     [GrowingEventGenerator generateConversionAttributesEvent:variables];
+}
+
+- (void)setConversionVariablesWithAttributesBuilder:(GrowingAttributesBuilder *)attributesBuilder {
+    NSDictionary *attributes = attributesBuilder.build;
+    [self setConversionVariables:attributes];
 }
 
 - (void)setLoginUserId:(NSString *)userId {
