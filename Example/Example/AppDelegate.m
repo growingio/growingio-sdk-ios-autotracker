@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import <AppTrackingTransparency/AppTrackingTransparency.h>
+#import <GrowingToolsKit/GrowingToolsKit.h>
 
 static NSString *const kGrowingProjectId = @"bc675c65b3b0290e";
 
@@ -18,6 +19,8 @@ static NSString *const kGrowingProjectId = @"bc675c65b3b0290e";
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [GrowingToolsKit start];
+    
     // Config GrowingIO
     GrowingSDKConfiguration *configuration = [GrowingSDKConfiguration configurationWithProjectId:kGrowingProjectId];
     configuration.debugEnabled = YES;
