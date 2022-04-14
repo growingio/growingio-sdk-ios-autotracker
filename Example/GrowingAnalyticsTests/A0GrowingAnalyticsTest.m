@@ -123,6 +123,99 @@
     }
 }
 
+- (void)testSetConversionVariablesWithAttributesBuilder {
+    {
+        GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+        [builder setString:@"value" forKey:@"key"];
+        [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@"key2"];
+        [builder setArray:@[@1, @2, @3] forKey:@"key3"];
+        [builder setArray:@[@[@"1"], @[@"2"], @[@"3"]] forKey:@"key4"];
+        [builder setArray:@[@{@"value":@"key"}, @{@"value":@"key"}, @{@"value":@"key"}] forKey:@"key5"];
+        [builder setArray:@[NSObject.new, NSObject.new, NSObject.new] forKey:@"key6"];
+        [[GrowingAutotracker sharedInstance] setConversionVariablesWithAttributesBuilder:builder];
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeConversionVariables];
+        XCTAssertEqual(events.count, 1);
+        
+        GrowingConversionVariableEvent *event = (GrowingConversionVariableEvent *)events.firstObject;
+        XCTAssertEqualObjects(event.attributes[@"key"], @"value");
+        XCTAssertEqualObjects(event.attributes[@"key2"], @"value1||value2||value3");
+        XCTAssertEqualObjects(event.attributes[@"key3"], @"1||2||3");
+        XCTAssertEqualObjects(event.attributes[@"key4"], @"(\n    1\n)||(\n    2\n)||(\n    3\n)");
+        XCTAssertEqualObjects(event.attributes[@"key5"], @"{\n    value = key;\n}"
+                                                         @"||{\n    value = key;\n}"
+                                                         @"||{\n    value = key;\n}");
+        XCTAssertNotNil(event.attributes[@"key6"]);
+    }
+    
+    {
+        [MockEventQueue.sharedQueue cleanQueue];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+#pragma clang diagnostic ignored "-Wobjc-literal-conversion"
+        {
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setConversionVariablesWithAttributesBuilder:nil]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setString:nil forKey:@"key"];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setConversionVariablesWithAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setString:@1 forKey:@"key"];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setConversionVariablesWithAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setString:@"value" forKey:nil];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setConversionVariablesWithAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setString:@"value" forKey:@""];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setConversionVariablesWithAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setString:@"value" forKey:@1];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setConversionVariablesWithAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setArray:nil forKey:@"key"];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setConversionVariablesWithAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setArray:@[] forKey:@"key"];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setConversionVariablesWithAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setArray:@"value" forKey:@"key"];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setConversionVariablesWithAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setArray:@[@"value1", @"value2", @"value3"] forKey:nil];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setConversionVariablesWithAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@""];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setConversionVariablesWithAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@1];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setConversionVariablesWithAttributesBuilder:builder]);
+        }
+#pragma clang diagnostic pop
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeConversionVariables];
+        XCTAssertEqual(events.count, 0);
+    }
+}
+
 - (void)testSetLoginUserAttributes {
     {
         [[GrowingAutotracker sharedInstance] setLoginUserAttributes:@{@"key" : @"value"}];
@@ -148,6 +241,99 @@
     }
 }
 
+- (void)testSetLoginUserAttributesWithAttributesBuilder {
+    {
+        GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+        [builder setString:@"value" forKey:@"key"];
+        [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@"key2"];
+        [builder setArray:@[@1, @2, @3] forKey:@"key3"];
+        [builder setArray:@[@[@"1"], @[@"2"], @[@"3"]] forKey:@"key4"];
+        [builder setArray:@[@{@"value":@"key"}, @{@"value":@"key"}, @{@"value":@"key"}] forKey:@"key5"];
+        [builder setArray:@[NSObject.new, NSObject.new, NSObject.new] forKey:@"key6"];
+        [[GrowingAutotracker sharedInstance] setLoginUserAttributesWithAttributesBuilder:builder];
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeLoginUserAttributes];
+        XCTAssertEqual(events.count, 1);
+        
+        GrowingLoginUserAttributesEvent *event = (GrowingLoginUserAttributesEvent *)events.firstObject;
+        XCTAssertEqualObjects(event.attributes[@"key"], @"value");
+        XCTAssertEqualObjects(event.attributes[@"key2"], @"value1||value2||value3");
+        XCTAssertEqualObjects(event.attributes[@"key3"], @"1||2||3");
+        XCTAssertEqualObjects(event.attributes[@"key4"], @"(\n    1\n)||(\n    2\n)||(\n    3\n)");
+        XCTAssertEqualObjects(event.attributes[@"key5"], @"{\n    value = key;\n}"
+                                                         @"||{\n    value = key;\n}"
+                                                         @"||{\n    value = key;\n}");
+        XCTAssertNotNil(event.attributes[@"key6"]);
+    }
+    
+    {
+        [MockEventQueue.sharedQueue cleanQueue];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+#pragma clang diagnostic ignored "-Wobjc-literal-conversion"
+        {
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setLoginUserAttributesWithAttributesBuilder:nil]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setString:nil forKey:@"key"];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setLoginUserAttributesWithAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setString:@1 forKey:@"key"];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setLoginUserAttributesWithAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setString:@"value" forKey:nil];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setLoginUserAttributesWithAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setString:@"value" forKey:@""];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setLoginUserAttributesWithAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setString:@"value" forKey:@1];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setLoginUserAttributesWithAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setArray:nil forKey:@"key"];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setLoginUserAttributesWithAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setArray:@[] forKey:@"key"];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setLoginUserAttributesWithAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setArray:@"value" forKey:@"key"];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setLoginUserAttributesWithAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setArray:@[@"value1", @"value2", @"value3"] forKey:nil];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setLoginUserAttributesWithAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@""];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setLoginUserAttributesWithAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@1];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setLoginUserAttributesWithAttributesBuilder:builder]);
+        }
+#pragma clang diagnostic pop
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeLoginUserAttributes];
+        XCTAssertEqual(events.count, 0);
+    }
+}
+
 - (void)testSetVisitorAttributes {
     {
         [[GrowingAutotracker sharedInstance] setVisitorAttributes:@{@"key" : @"value"}];
@@ -167,6 +353,99 @@
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setVisitorAttributes:@"value"]);
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setVisitorAttributes:@{@1 : @"value"}]);
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setVisitorAttributes:@{@"key" : @1}]);
+#pragma clang diagnostic pop
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeVisitorAttributes];
+        XCTAssertEqual(events.count, 0);
+    }
+}
+
+- (void)testSetVisitorAttributesWithAttributesBuilder {
+    {
+        GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+        [builder setString:@"value" forKey:@"key"];
+        [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@"key2"];
+        [builder setArray:@[@1, @2, @3] forKey:@"key3"];
+        [builder setArray:@[@[@"1"], @[@"2"], @[@"3"]] forKey:@"key4"];
+        [builder setArray:@[@{@"value":@"key"}, @{@"value":@"key"}, @{@"value":@"key"}] forKey:@"key5"];
+        [builder setArray:@[NSObject.new, NSObject.new, NSObject.new] forKey:@"key6"];
+        [[GrowingAutotracker sharedInstance] setVisitorAttributesWithAttributesBuilder:builder];
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeVisitorAttributes];
+        XCTAssertEqual(events.count, 1);
+        
+        GrowingVisitorAttributesEvent *event = (GrowingVisitorAttributesEvent *)events.firstObject;
+        XCTAssertEqualObjects(event.attributes[@"key"], @"value");
+        XCTAssertEqualObjects(event.attributes[@"key2"], @"value1||value2||value3");
+        XCTAssertEqualObjects(event.attributes[@"key3"], @"1||2||3");
+        XCTAssertEqualObjects(event.attributes[@"key4"], @"(\n    1\n)||(\n    2\n)||(\n    3\n)");
+        XCTAssertEqualObjects(event.attributes[@"key5"], @"{\n    value = key;\n}"
+                                                         @"||{\n    value = key;\n}"
+                                                         @"||{\n    value = key;\n}");
+        XCTAssertNotNil(event.attributes[@"key6"]);
+    }
+    
+    {
+        [MockEventQueue.sharedQueue cleanQueue];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+#pragma clang diagnostic ignored "-Wobjc-literal-conversion"
+        {
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setVisitorAttributesWithAttributesBuilder:nil]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setString:nil forKey:@"key"];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setVisitorAttributesWithAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setString:@1 forKey:@"key"];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setVisitorAttributesWithAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setString:@"value" forKey:nil];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setVisitorAttributesWithAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setString:@"value" forKey:@""];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setVisitorAttributesWithAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setString:@"value" forKey:@1];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setVisitorAttributesWithAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setArray:nil forKey:@"key"];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setVisitorAttributesWithAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setArray:@[] forKey:@"key"];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setVisitorAttributesWithAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setArray:@"value" forKey:@"key"];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setVisitorAttributesWithAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setArray:@[@"value1", @"value2", @"value3"] forKey:nil];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setVisitorAttributesWithAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@""];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setVisitorAttributesWithAttributesBuilder:builder]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@1];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setVisitorAttributesWithAttributesBuilder:builder]);
+        }
 #pragma clang diagnostic pop
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeVisitorAttributes];
         XCTAssertEqual(events.count, 0);
