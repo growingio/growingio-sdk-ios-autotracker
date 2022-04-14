@@ -17,6 +17,7 @@ target 'Example' do
 #  pod 'GrowingAnalytics/Advertising'
 #  pod 'GrowingAnalytics/DISABLE_IDFA', :path => './' #禁用idfa
   pod 'SDCycleScrollView', '~> 1.75'
+  pod 'GrowingToolsKit'
 end
 
 target 'GrowingAnalyticsTests' do
