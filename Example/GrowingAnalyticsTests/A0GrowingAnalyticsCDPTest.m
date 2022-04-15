@@ -147,6 +147,8 @@
         [builder setArray:@[@[@"1"], @[@"2"], @[@"3"]] forKey:@"key4"];
         [builder setArray:@[@{@"value":@"key"}, @{@"value":@"key"}, @{@"value":@"key"}] forKey:@"key5"];
         [builder setArray:@[NSObject.new, NSObject.new, NSObject.new] forKey:@"key6"];
+        [builder setArray:@[NSNull.new, NSNull.new, NSNull.new] forKey:@"key7"];
+        [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@""];
         [[GrowingAutotracker sharedInstance] setLoginUserAttributesWithAttributesBuilder:builder];
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeLoginUserAttributes];
         XCTAssertEqual(events.count, 1);
@@ -160,6 +162,8 @@
                                                          @"||{\n    value = key;\n}"
                                                          @"||{\n    value = key;\n}");
         XCTAssertNotNil(event.attributes[@"key6"]);
+        XCTAssertEqualObjects(event.attributes[@"key7"], @"||||");
+        XCTAssertEqualObjects(event.attributes[@""], @"value1||value2||value3");
     }
     
     {
@@ -187,11 +191,6 @@
         }
         {
             GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
-            [builder setString:@"value" forKey:@""];
-            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setLoginUserAttributesWithAttributesBuilder:builder]);
-        }
-        {
-            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
             [builder setString:@"value" forKey:@1];
             XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setLoginUserAttributesWithAttributesBuilder:builder]);
         }
@@ -213,11 +212,6 @@
         {
             GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
             [builder setArray:@[@"value1", @"value2", @"value3"] forKey:nil];
-            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setLoginUserAttributesWithAttributesBuilder:builder]);
-        }
-        {
-            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
-            [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@""];
             XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setLoginUserAttributesWithAttributesBuilder:builder]);
         }
         {
@@ -302,6 +296,8 @@
         [builder setArray:@[@[@"1"], @[@"2"], @[@"3"]] forKey:@"key4"];
         [builder setArray:@[@{@"value":@"key"}, @{@"value":@"key"}, @{@"value":@"key"}] forKey:@"key5"];
         [builder setArray:@[NSObject.new, NSObject.new, NSObject.new] forKey:@"key6"];
+        [builder setArray:@[NSNull.new, NSNull.new, NSNull.new] forKey:@"key7"];
+        [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@""];
         [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
                                         withAttributesBuilder:builder];
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
@@ -317,6 +313,8 @@
                                                          @"||{\n    value = key;\n}"
                                                          @"||{\n    value = key;\n}");
         XCTAssertNotNil(event.attributes[@"key6"]);
+        XCTAssertEqualObjects(event.attributes[@"key7"], @"||||");
+        XCTAssertEqualObjects(event.attributes[@""], @"value1||value2||value3");
     }
     
     {
@@ -357,12 +355,6 @@
         }
         {
             GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
-            [builder setString:@"value" forKey:@""];
-            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
-                                                             withAttributesBuilder:builder]);
-        }
-        {
-            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
             [builder setString:@"value" forKey:@1];
             XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
                                                              withAttributesBuilder:builder]);
@@ -388,12 +380,6 @@
         {
             GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
             [builder setArray:@[@"value1", @"value2", @"value3"] forKey:nil];
-            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
-                                                             withAttributesBuilder:builder]);
-        }
-        {
-            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
-            [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@""];
             XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
                                                              withAttributesBuilder:builder]);
         }
