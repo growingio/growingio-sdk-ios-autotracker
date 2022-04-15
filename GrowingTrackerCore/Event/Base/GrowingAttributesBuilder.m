@@ -30,7 +30,6 @@
 
 - (void)setString:(NSString *)value forKey:(NSString *)key {
     if (![key isKindOfClass:[NSString class]]
-        || key.length == 0
         || ![value isKindOfClass:[NSString class]]) {
         return;
     }
@@ -40,7 +39,6 @@
 
 - (void)setArray:(NSArray<NSObject *> *)values forKey:(NSString *)key {
     if (![key isKindOfClass:[NSString class]]
-        || key.length == 0
         || ![values isKindOfClass:[NSArray class]]
         || values.count == 0) {
         return;
@@ -52,6 +50,8 @@
             [array addObject:value];
         } else if ([value isKindOfClass:NSNumber.class]) {
             [array addObject:value];
+        } else if ([value isKindOfClass:NSNull.class]) {
+            [array addObject:@""];
         } else {
             [array addObject:value.description];
         }
