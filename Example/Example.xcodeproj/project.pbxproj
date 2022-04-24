@@ -83,7 +83,6 @@
 		346EABE5277EE1FD00A32B03 /* HybridTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 42ADE26B250B292900CA7268 /* HybridTest.m */; };
 		346EABE8277EE33F00A32B03 /* StatusBarEventManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 346EABE7277EE33F00A32B03 /* StatusBarEventManagerTest.m */; };
 		346EABEB277EE53200A32B03 /* DeviceInfoTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 346EABEA277EE53200A32B03 /* DeviceInfoTest.m */; };
-		346EABEE277EE5C300A32B03 /* RequestTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 346EABED277EE5C300A32B03 /* RequestTest.m */; };
 		346EABF2277EE63F00A32B03 /* NodeTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 346EABF1277EE63F00A32B03 /* NodeTest.m */; };
 		34821C6727B247DB006C8B8E /* UISegmentedControlAutotrackTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34821C6627B247DB006C8B8E /* UISegmentedControlAutotrackTest.m */; };
 		34821C6C27B25AE7006C8B8E /* HybridTest_HostApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 34821C6B27B25AE7006C8B8E /* HybridTest_HostApp.m */; };
@@ -259,7 +258,6 @@
 		346EABE0277EDF8A00A32B03 /* EventTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EventTest.m; sourceTree = "<group>"; };
 		346EABE7277EE33F00A32B03 /* StatusBarEventManagerTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StatusBarEventManagerTest.m; sourceTree = "<group>"; };
 		346EABEA277EE53200A32B03 /* DeviceInfoTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DeviceInfoTest.m; sourceTree = "<group>"; };
-		346EABED277EE5C300A32B03 /* RequestTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RequestTest.m; sourceTree = "<group>"; };
 		346EABF1277EE63F00A32B03 /* NodeTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NodeTest.m; sourceTree = "<group>"; };
 		34821C6627B247DB006C8B8E /* UISegmentedControlAutotrackTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UISegmentedControlAutotrackTest.m; sourceTree = "<group>"; };
 		34821C6B27B25AE7006C8B8E /* HybridTest_HostApp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HybridTest_HostApp.m; sourceTree = "<group>"; };
@@ -548,7 +546,6 @@
 				34B2148F2796B72B004E2CE3 /* HookTests */,
 				346EABE6277EE30700A32B03 /* ManagerTests */,
 				34B214882796A211004E2CE3 /* MenuTests */,
-				346EABEC277EE57D00A32B03 /* NetWorkTests */,
 				34AB4E5127901570002549FF /* ThreadTests */,
 				346EABE9277EE51900A32B03 /* UtilsTests */,
 			);
@@ -581,14 +578,6 @@
 				34B2148627969562004E2CE3 /* DynamicProxyTest.m */,
 			);
 			path = UtilsTests;
-			sourceTree = "<group>";
-		};
-		346EABEC277EE57D00A32B03 /* NetWorkTests */ = {
-			isa = PBXGroup;
-			children = (
-				346EABED277EE5C300A32B03 /* RequestTest.m */,
-			);
-			path = NetWorkTests;
 			sourceTree = "<group>";
 		};
 		346EABEF277EE5F700A32B03 /* AutotrackerCoreTests */ = {
@@ -1672,7 +1661,6 @@
 				34BA7B1F277C616B0030AC21 /* GrowingAnnotationTest.m in Sources */,
 				346EABEB277EE53200A32B03 /* DeviceInfoTest.m in Sources */,
 				34B7D648279F9C060003CE04 /* UICollectionViewAutotrackTest.m in Sources */,
-				346EABEE277EE5C300A32B03 /* RequestTest.m in Sources */,
 				34B2147E2796664E004E2CE3 /* JSONPersistenceTest.m in Sources */,
 				34BA7B23277C617F0030AC21 /* GrowingDispatchManagerTest.m in Sources */,
 				34B2148A2796A234004E2CE3 /* GrowingAlertTest.m in Sources */,
