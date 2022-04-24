@@ -24,23 +24,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingRequestHeaderAdapter : NSObject <GrowingRequestAdapter>
 
-+ (instancetype)headerAdapterWithHeader:(NSDictionary * _Nullable)header;
-
 @end
-
 
 @interface GrowingRequestMethodAdapter : NSObject <GrowingRequestAdapter>
 
-+ (instancetype)methodAdpterWithMethod:(GrowingHTTPMethod)method;
-
 @end
-
-
-@interface GrowingRequestJsonBodyAdapter : NSObject <GrowingRequestAdapter>
-
-+ (instancetype)jsonBodyWithParameter:(NSDictionary *)parameter;
-
-@end
-
 
 NS_ASSUME_NONNULL_END

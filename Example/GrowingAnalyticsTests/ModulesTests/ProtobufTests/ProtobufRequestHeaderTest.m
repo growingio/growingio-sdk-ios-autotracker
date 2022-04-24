@@ -39,7 +39,7 @@
 - (void)testRequestHeader {
     GrowingEventRequestHeaderAdapter *eventHeaderAdapter = [[GrowingEventRequestHeaderAdapter alloc] init];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.growingio.com"]];
-    request = [eventHeaderAdapter adaptedRequest:request];
+    request = [eventHeaderAdapter adaptedURLRequest:request];
     NSDictionary<NSString *, NSString *> *allHTTPHeaderFields = request.allHTTPHeaderFields;
     for (NSString *key in allHTTPHeaderFields.allKeys) {
         if ([key isEqualToString:@"Content-Type"]) {
@@ -57,7 +57,7 @@
 
     GrowingEventRequestHeaderAdapter *eventHeaderAdapter = [[GrowingEventRequestHeaderAdapter alloc] init];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.growingio.com"]];
-    request = [eventHeaderAdapter adaptedRequest:request];
+    request = [eventHeaderAdapter adaptedURLRequest:request];
     NSDictionary<NSString *, NSString *> *allHTTPHeaderFields = request.allHTTPHeaderFields;
     for (NSString *key in allHTTPHeaderFields.allKeys) {
         if ([key isEqualToString:@"X-Compress-Codec"]) {

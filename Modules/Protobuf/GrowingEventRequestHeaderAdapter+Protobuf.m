@@ -26,7 +26,7 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wobjc-protocol-method-implementation"
 
-- (NSMutableURLRequest *)adaptedRequest:(NSMutableURLRequest *)request {
+- (NSMutableURLRequest *)adaptedURLRequest:(NSMutableURLRequest *)request {
     NSMutableURLRequest *needAdaptReq = request;
 #ifdef GROWING_ANALYSIS_ENABLE_ENCRYPTION
     // deprecated

@@ -59,20 +59,14 @@
     return path;
 }
 
-
 - (NSArray<id<GrowingRequestAdapter>> *)adapters {
-    GrowingEventRequestHeaderAdapter *eventHeaderAdapter = [[GrowingEventRequestHeaderAdapter alloc] init];
-    GrowingRequestHeaderAdapter *basicHeaderAdapter = [GrowingRequestHeaderAdapter headerAdapterWithHeader:nil];
-    GrowingRequestMethodAdapter *methodAdapter = [GrowingRequestMethodAdapter methodAdpterWithMethod:self.method];
+    GrowingRequestHeaderAdapter *basicHeaderAdapter = [GrowingRequestHeaderAdapter adapterWithRequest:self];
+    GrowingRequestMethodAdapter *methodAdapter = [GrowingRequestMethodAdapter adapterWithRequest:self];
     
-    GrowingEventRequestJsonBodyAdpter *bodyAdapter = [GrowingEventRequestJsonBodyAdpter eventJsonBodyAdpter:self.events
-                                                                                                  timestamp:self.stm
-                                                                                               outsizeBlock:^(unsigned long long bodySize) {
-        self.outsize = bodySize;
-    }];
+    GrowingEventRequestHeaderAdapter *eventHeaderAdapter = [GrowingEventRequestHeaderAdapter adapterWithRequest:self];
+    GrowingEventRequestJsonBodyAdpter *eventBodyAdapter = [GrowingEventRequestJsonBodyAdpter adapterWithRequest:self];
     
-    NSMutableArray *adapters = [NSMutableArray arrayWithObjects:eventHeaderAdapter, basicHeaderAdapter, methodAdapter, bodyAdapter, nil];
-    return adapters;
+    return @[basicHeaderAdapter, methodAdapter, eventHeaderAdapter, eventBodyAdapter];
 }
 
 - (NSDictionary *)query {

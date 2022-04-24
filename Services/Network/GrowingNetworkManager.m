@@ -117,8 +117,10 @@ GrowingService(GrowingEventNetworkService, GrowingNetworkManager)
     }
     
     for (id <GrowingRequestAdapter> adapter in request.adapters) {
-       resultReq = [adapter adaptedRequest:resultReq];
+       resultReq = [adapter adaptedURLRequest:resultReq];
     }
+    
+    request.outsize = resultReq.HTTPBody.length;
 
     return resultReq;
 }

@@ -28,12 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingEventRequestJsonBodyAdpter : NSObject <GrowingRequestAdapter>
 
-+ (instancetype)eventJsonBodyAdpter:(NSData *)events
-                          timestamp:(unsigned long long) timestamp
-                       outsizeBlock:(void (^)(unsigned long long))outsizeBlock;
-
-
 @end
-
 
 NS_ASSUME_NONNULL_END

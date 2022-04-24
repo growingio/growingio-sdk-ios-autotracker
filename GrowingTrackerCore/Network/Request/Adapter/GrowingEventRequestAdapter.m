@@ -26,7 +26,12 @@
 
 @implementation GrowingEventRequestHeaderAdapter
 
-- (NSMutableURLRequest *)adaptedRequest:(NSMutableURLRequest *)request {
++ (instancetype)adapterWithRequest:(id <GrowingRequestProtocol>)request {
+    GrowingEventRequestHeaderAdapter *adapter = [[self alloc] init];
+    return adapter;
+}
+
+- (NSMutableURLRequest *)adaptedURLRequest:(NSMutableURLRequest *)request {
     NSMutableURLRequest *needAdaptReq = request;
 #ifdef GROWING_ANALYSIS_ENABLE_ENCRYPTION
     // deprecated
@@ -50,45 +55,36 @@
 
 @interface GrowingEventRequestJsonBodyAdpter ()
 
-@property (nonatomic, copy) NSData *events;
-@property (nonatomic, assign, readwrite) unsigned long long timestamp;
-@property (nonatomic, copy) void(^outsizeBlock)(unsigned long long);
+@property (nonatomic, weak) id <GrowingRequestProtocol> request;
 
 @end
 
 @implementation GrowingEventRequestJsonBodyAdpter
 
-+ (instancetype)eventJsonBodyAdpter:(NSData *)events
-                          timestamp:(unsigned long long)timestamp
-                       outsizeBlock:(nonnull void (^)(unsigned long long))outsizeBlock {
-    GrowingEventRequestJsonBodyAdpter *bodyAdapter = [[GrowingEventRequestJsonBodyAdpter alloc] init];
-    bodyAdapter.events = events;
-    bodyAdapter.timestamp = timestamp;
-    bodyAdapter.outsizeBlock = outsizeBlock;
-    return bodyAdapter;
++ (instancetype)adapterWithRequest:(id <GrowingRequestProtocol>)request {
+    GrowingEventRequestJsonBodyAdpter *adapter = [[self alloc] init];
+    adapter.request = request;
+    return adapter;
 }
 
-- (NSMutableURLRequest *)adaptedRequest:(NSMutableURLRequest *)request {
-    if (self.events.length == 0) {
+- (NSMutableURLRequest *)adaptedURLRequest:(NSMutableURLRequest *)request {
+    if (self.request.events.length == 0) {
         return nil;
     }
-    NSData *JSONData = self.events.copy;
+    NSData *JSONData = self.request.events.copy;
     @autoreleasepool {
         // jsonString malloc to much
 #ifdef GROWING_ANALYSIS_ENABLE_ENCRYPTION
         // deprecated
         JSONData = [JSONData growingHelper_LZ4String];
-        JSONData = [JSONData growingHelper_xorEncryptWithHint:(self.timestamp & 0xFF)];
+        JSONData = [JSONData growingHelper_xorEncryptWithHint:(self.request.stm & 0xFF)];
 #else
         BOOL encryptEnabled = GrowingConfigurationManager.sharedInstance.trackConfiguration.encryptEnabled;
         if (encryptEnabled) {
             JSONData = [JSONData growingHelper_LZ4String];
-            JSONData = [JSONData growingHelper_xorEncryptWithHint:(self.timestamp & 0xFF)];
+            JSONData = [JSONData growingHelper_xorEncryptWithHint:(self.request.stm & 0xFF)];
         }
 #endif
-    }
-    if (self.outsizeBlock) {
-        self.outsizeBlock(JSONData.length);
     }
     NSMutableURLRequest *needAdaptReq = request;
     needAdaptReq.HTTPBody = JSONData;
