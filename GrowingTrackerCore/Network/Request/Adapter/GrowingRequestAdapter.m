@@ -18,35 +18,19 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Network/Request/Adapter/GrowingRequestAdapter.h"
-#import "GrowingTrackerCore/Network/Request/GrowingEventRequest.h"
-#import "GrowingTrackerCore/Helpers/NSData+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/NSDictionary+GrowingHelper.h"
 
-@interface GrowingRequestHeaderAdapter ()
-
-@property (nonatomic, strong) NSDictionary *header;
-
-@end
+#pragma mark GrowingRequestHeaderAdapter
 
 @implementation GrowingRequestHeaderAdapter
 
-+ (instancetype)headerAdapterWithHeader:(NSDictionary *)header {
-    GrowingRequestHeaderAdapter *headerAdapter = [[GrowingRequestHeaderAdapter alloc] init];
-    headerAdapter.header = header;
-    return headerAdapter;
++ (instancetype)adapterWithRequest:(id <GrowingRequestProtocol>)request {
+    GrowingRequestHeaderAdapter *adapter = [[self alloc] init];
+    return adapter;
 }
 
-- (NSMutableURLRequest *)adaptedRequest:(NSMutableURLRequest *)request {
+- (NSMutableURLRequest *)adaptedURLRequest:(NSMutableURLRequest *)request {
     NSMutableURLRequest *needAdaptReq = request;
     [needAdaptReq setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    
-    if (!self.header.count) {
-        return needAdaptReq;
-    }
-    
-    for (NSString *key in self.header) {
-        [needAdaptReq setValue:self.header[key] forHTTPHeaderField:key];
-    }
     return needAdaptReq;
 }
 
@@ -56,24 +40,23 @@
 
 @interface GrowingRequestMethodAdapter ()
 
-@property (nonatomic, assign) GrowingHTTPMethod method;
+@property (nonatomic, weak) id <GrowingRequestProtocol> request;
 
 @end
 
 @implementation GrowingRequestMethodAdapter
 
-+ (instancetype)methodAdpterWithMethod:(GrowingHTTPMethod)method {
-    GrowingRequestMethodAdapter *methodAdapter = [[GrowingRequestMethodAdapter alloc] init];
-    methodAdapter.method = method;
-    return methodAdapter;
++ (instancetype)adapterWithRequest:(id <GrowingRequestProtocol>)request {
+    GrowingRequestMethodAdapter *adapter = [[self alloc] init];
+    adapter.request = request;
+    return adapter;
 }
 
-- (NSMutableURLRequest *)adaptedRequest:(NSMutableURLRequest *)request {
-        
+- (NSMutableURLRequest *)adaptedURLRequest:(NSMutableURLRequest *)request {
     NSMutableURLRequest *needAdaptReq = request;
     NSString *httpMethod = @"POST";
     
-    switch (self.method) {
+    switch (self.request.method) {
         case GrowingHTTPMethodPOST:
             httpMethod = @"POST";
             break;
@@ -94,42 +77,7 @@
     }
 
     needAdaptReq.HTTPMethod = httpMethod;
-    
     return needAdaptReq;
 }
 
 @end
-
-#pragma mark GrowingRequestJsonBodyAdapter
-
-@interface GrowingRequestJsonBodyAdapter ()
-
-@property (nonatomic, strong) NSDictionary *parameter;
-
-@end
-
-@implementation GrowingRequestJsonBodyAdapter
-
-+ (instancetype)jsonBodyWithParameter:(NSDictionary *)parameter {
-    GrowingRequestJsonBodyAdapter *jsonBodyAdapter = [[GrowingRequestJsonBodyAdapter alloc] init];
-    jsonBodyAdapter.parameter = parameter;
-    return jsonBodyAdapter;
-}
-
-- (NSMutableURLRequest *)adaptedRequest:(NSMutableURLRequest *)request {
-    
-    if (!self.parameter) {
-        return request;
-    }
-    
-    NSData *JSONData = [self.parameter growingHelper_jsonData];
-    NSMutableURLRequest *needAdaptReq = request;
-    needAdaptReq.HTTPBody = JSONData;
-    
-    return needAdaptReq;
-}
-
-@end
-
-
-

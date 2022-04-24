@@ -26,9 +26,12 @@ typedef NS_ENUM(NSUInteger, GrowingHTTPMethod) {
     GrowingHTTPMethodDELETE,
 };
 
+@protocol GrowingRequestProtocol;
 @protocol GrowingRequestAdapter <NSObject>
 
-- (NSMutableURLRequest *)adaptedRequest:(NSMutableURLRequest *)request;
++ (instancetype)adapterWithRequest:(id <GrowingRequestProtocol>)request;
+
+- (NSMutableURLRequest *)adaptedURLRequest:(NSMutableURLRequest *)request;
 
 @end
 
@@ -43,13 +46,12 @@ typedef NS_ENUM(NSUInteger, GrowingHTTPMethod) {
 @property (nonatomic, copy, readonly) NSString *path;
 @property (nonatomic, strong, readonly) NSArray <id <GrowingRequestAdapter>> *adapters;
 
-
-
 @optional
-///event property
+/// Growing Event Request Property
 @property (nonatomic, copy) NSData *events;
 @property (nonatomic, assign, readwrite) unsigned long long outsize;
 @property (nonatomic, assign) unsigned long long stm;
 @property (nonatomic, assign, readonly) NSTimeInterval timeoutInSeconds;
 @property (nonatomic, strong, readonly) NSDictionary *query;
+
 @end
