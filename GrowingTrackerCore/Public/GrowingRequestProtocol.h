@@ -33,6 +33,8 @@ typedef NS_ENUM(NSUInteger, GrowingHTTPMethod) {
 
 - (NSMutableURLRequest *)adaptedURLRequest:(NSMutableURLRequest *)request;
 
+- (NSUInteger)priority;
+
 @end
 
 #pragma mark GrowingRequestProtocol

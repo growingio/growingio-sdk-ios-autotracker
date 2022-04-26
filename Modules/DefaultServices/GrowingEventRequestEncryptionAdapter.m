@@ -1,9 +1,9 @@
 //
-//  GrowingEventRequestAdapter.m
+//  GrowingEventRequestEncryptionAdapter.m
 //  GrowingAnalytics
 //
-//  Created by GrowingIO on 2020/6/18.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2022/4/24.
+//  Copyright (C) 2022 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,79 +17,59 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Network/Request/Adapter/GrowingEventRequestAdapter.h"
-#import "GrowingTrackerCore/Network/Request/GrowingEventRequest.h"
+#import "Modules/DefaultServices/GrowingEventRequestEncryptionAdapter.h"
 #import "GrowingTrackerCore/Helpers/NSData+GrowingHelper.h"
-#import "GrowingTrackerCore/Utils/GrowingTimeUtil.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
-#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 
-@implementation GrowingEventRequestHeaderAdapter
-
-+ (instancetype)adapterWithRequest:(id <GrowingRequestProtocol>)request {
-    GrowingEventRequestHeaderAdapter *adapter = [[self alloc] init];
-    return adapter;
-}
-
-- (NSMutableURLRequest *)adaptedURLRequest:(NSMutableURLRequest *)request {
-    NSMutableURLRequest *needAdaptReq = request;
-#ifdef GROWING_ANALYSIS_ENABLE_ENCRYPTION
-    // deprecated
-    [needAdaptReq setValue:@"3" forHTTPHeaderField:@"X-Compress-Codec"];
-    [needAdaptReq setValue:@"1" forHTTPHeaderField:@"X-Crypt-Codec"];
-#else
-    BOOL encryptEnabled = GrowingConfigurationManager.sharedInstance.trackConfiguration.encryptEnabled;
-    if (encryptEnabled) {
-        [needAdaptReq setValue:@"3" forHTTPHeaderField:@"X-Compress-Codec"];
-        [needAdaptReq setValue:@"1" forHTTPHeaderField:@"X-Crypt-Codec"];
-    }
-#endif
-    [needAdaptReq setValue:[NSString stringWithFormat:@"%lld",[GrowingTimeUtil currentTimeMillis]] forHTTPHeaderField:@"X-Timestamp"];
-    [needAdaptReq setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    return needAdaptReq;
-}
-
-@end
-
-#pragma mark GrowingEventRequestJsonBodyAdpter
-
-@interface GrowingEventRequestJsonBodyAdpter ()
+@interface GrowingEventRequestEncryptionAdapter ()
 
 @property (nonatomic, weak) id <GrowingRequestProtocol> request;
 
 @end
 
-@implementation GrowingEventRequestJsonBodyAdpter
+@implementation GrowingEventRequestEncryptionAdapter
 
 + (instancetype)adapterWithRequest:(id <GrowingRequestProtocol>)request {
-    GrowingEventRequestJsonBodyAdpter *adapter = [[self alloc] init];
+    GrowingEventRequestEncryptionAdapter *adapter = [[self alloc] init];
     adapter.request = request;
     return adapter;
 }
 
 - (NSMutableURLRequest *)adaptedURLRequest:(NSMutableURLRequest *)request {
-    if (self.request.events.length == 0) {
-        return nil;
+    if (request.HTTPBody.length == 0) {
+        return request;
     }
-    NSData *JSONData = self.request.events.copy;
+    
+    NSMutableURLRequest *needAdaptReq = request;
+#ifdef GROWING_ANALYSIS_ENABLE_ENCRYPTION
+    // deprecated
+    [needAdaptReq setValue:@"1" forHTTPHeaderField:@"X-Crypt-Codec"];
+#else
+    BOOL encryptEnabled = GrowingConfigurationManager.sharedInstance.trackConfiguration.encryptEnabled;
+    if (encryptEnabled) {
+        [needAdaptReq setValue:@"1" forHTTPHeaderField:@"X-Crypt-Codec"];
+    }
+#endif
+    
+    NSData *JSONData = needAdaptReq.HTTPBody.copy;
     @autoreleasepool {
         // jsonString malloc to much
 #ifdef GROWING_ANALYSIS_ENABLE_ENCRYPTION
         // deprecated
-        JSONData = [JSONData growingHelper_LZ4String];
         JSONData = [JSONData growingHelper_xorEncryptWithHint:(self.request.stm & 0xFF)];
 #else
         BOOL encryptEnabled = GrowingConfigurationManager.sharedInstance.trackConfiguration.encryptEnabled;
         if (encryptEnabled) {
-            JSONData = [JSONData growingHelper_LZ4String];
             JSONData = [JSONData growingHelper_xorEncryptWithHint:(self.request.stm & 0xFF)];
         }
 #endif
     }
-    NSMutableURLRequest *needAdaptReq = request;
     needAdaptReq.HTTPBody = JSONData;
-    
     return needAdaptReq;
+}
+
+- (NSUInteger)priority {
+    return 20;
 }
 
 @end

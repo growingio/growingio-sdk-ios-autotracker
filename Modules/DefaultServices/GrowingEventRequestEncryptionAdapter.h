@@ -1,9 +1,9 @@
 //
-//  GrowingEventRequestAdapter.h
+//  GrowingEventRequestEncryptionAdapter.h
 //  GrowingAnalytics
 //
-//  Created by GrowingIO on 2020/6/18.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2022/4/24.
+//  Copyright (C) 2022 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -22,11 +22,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingEventRequestHeaderAdapter : NSObject <GrowingRequestAdapter>
-
-@end
-
-@interface GrowingEventRequestJsonBodyAdpter : NSObject <GrowingRequestAdapter>
+@interface GrowingEventRequestEncryptionAdapter : NSObject <GrowingRequestAdapter>
 
 @end
 

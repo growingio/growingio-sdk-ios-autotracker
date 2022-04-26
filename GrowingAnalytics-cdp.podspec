@@ -27,12 +27,7 @@ GrowingAnalytics-cdp基于GrowingAnalytics，同样具备自动采集基本的�
     autotracker.dependency 'GrowingAnalytics/Hybrid', s.version.to_s
     autotracker.dependency 'GrowingAnalytics/MobileDebugger', s.version.to_s
     autotracker.dependency 'GrowingAnalytics/WebCircle', s.version.to_s
-    
-    # Services
-    autotracker.dependency 'GrowingAnalytics/Database', s.version.to_s
-    autotracker.dependency 'GrowingAnalytics/Network', s.version.to_s
-    autotracker.dependency 'GrowingAnalytics/Encryption', s.version.to_s
-    autotracker.dependency 'GrowingAnalytics/Compression', s.version.to_s
+    autotracker.dependency 'GrowingAnalytics/DefaultServices', s.version.to_s
   end
 
   s.subspec 'Tracker' do |tracker|
@@ -42,12 +37,7 @@ GrowingAnalytics-cdp基于GrowingAnalytics，同样具备自动采集基本的�
 
     # Modules
     tracker.dependency 'GrowingAnalytics/MobileDebugger', s.version.to_s
-    
-    # Services
-    tracker.dependency 'GrowingAnalytics/Database', s.version.to_s
-    tracker.dependency 'GrowingAnalytics/Network', s.version.to_s
-    tracker.dependency 'GrowingAnalytics/Encryption', s.version.to_s
-    tracker.dependency 'GrowingAnalytics/Compression', s.version.to_s
+    tracker.dependency 'GrowingAnalytics/DefaultServices', s.version.to_s
   end
 
   s.subspec 'TrackerCore' do |trackerCore|

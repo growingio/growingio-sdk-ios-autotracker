@@ -1,9 +1,9 @@
 //
-//  GrowingEventRequestHeaderAdapter+Protobuf.h
+//  GrowingProtobufModule.h
 //  GrowingAnalytics
 //
-//  Created by YoloMao on 2021/12/3.
-//  Copyright (C) 2021 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2022/4/26.
+//  Copyright (C) 2022 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,11 +17,12 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Network/Request/Adapter/GrowingEventRequestAdapter.h"
+#import <Foundation/Foundation.h>
+#import "GrowingModuleProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingEventRequestHeaderAdapter (Protobuf)
+@interface GrowingProtobufModule : NSObject <GrowingModuleProtocol>
 
 @end
 

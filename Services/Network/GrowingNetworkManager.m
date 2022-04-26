@@ -116,7 +116,11 @@ GrowingService(GrowingEventNetworkService, GrowingNetworkManager)
         return resultReq;
     }
     
-    for (id <GrowingRequestAdapter> adapter in request.adapters) {
+    NSMutableArray *sortedAdapters = request.adapters.mutableCopy;
+    [sortedAdapters sortUsingComparator:^NSComparisonResult(id<GrowingRequestAdapter> adapter1, id<GrowingRequestAdapter> adapter2) {
+        return adapter1.priority > adapter2.priority;
+    }];
+    for (id <GrowingRequestAdapter> adapter in sortedAdapters) {
        resultReq = [adapter adaptedURLRequest:resultReq];
     }
     
