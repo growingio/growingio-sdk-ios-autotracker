@@ -24,12 +24,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     autotracker.dependency 'GrowingAnalytics/Hybrid'
     autotracker.dependency 'GrowingAnalytics/MobileDebugger'
     autotracker.dependency 'GrowingAnalytics/WebCircle'
-    
-    # Services
-    autotracker.dependency 'GrowingAnalytics/Database'
-    autotracker.dependency 'GrowingAnalytics/Network'
-    autotracker.dependency 'GrowingAnalytics/Encryption'
-    autotracker.dependency 'GrowingAnalytics/Compression'
+    autotracker.dependency 'GrowingAnalytics/DefaultServices'
   end
   
   s.subspec 'Tracker' do |tracker|
@@ -39,12 +34,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
 
     # Modules
     tracker.dependency 'GrowingAnalytics/MobileDebugger'
-    
-    # Services
-    tracker.dependency 'GrowingAnalytics/Database'
-    tracker.dependency 'GrowingAnalytics/Network'
-    tracker.dependency 'GrowingAnalytics/Encryption'
-    tracker.dependency 'GrowingAnalytics/Compression'
+    tracker.dependency 'GrowingAnalytics/DefaultServices'
   end
 
   s.subspec 'TrackerCore' do |trackerCore|
@@ -89,6 +79,18 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     service.source_files = 'Services/Encryption/**/*{.h,.m,.c,.cpp,.mm}'
     service.public_header_files = 'Services/Encryption/Public/*.h'
     service.dependency 'GrowingAnalytics/TrackerCore'
+  end
+
+  s.subspec 'DefaultServices' do |services|
+    services.source_files = 'Modules/DefaultServices/**/*{.h,.m,.c,.cpp,.mm}'
+    services.public_header_files = 'Modules/DefaultServices/Public/*.h'
+    services.dependency 'GrowingAnalytics/TrackerCore'
+
+    # Default Services
+    services.dependency 'GrowingAnalytics/Database'
+    services.dependency 'GrowingAnalytics/Network'
+    services.dependency 'GrowingAnalytics/Encryption'
+    services.dependency 'GrowingAnalytics/Compression'
   end
 
   s.subspec 'MobileDebugger' do |debugger|

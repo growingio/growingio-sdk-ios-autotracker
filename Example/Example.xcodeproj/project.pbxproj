@@ -1409,7 +1409,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ProtobufTests/Pods-ProtobufTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-06ecc7cf/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-3c3ffa9a/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -1429,7 +1429,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Example/Pods-Example-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-06ecc7cf/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-3c3ffa9a/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingToolsKit/GrowingToolsKit.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/SDCycleScrollView/SDCycleScrollView.framework",
@@ -1455,7 +1455,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-GrowingAnalyticsTests/Pods-GrowingAnalyticsTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-7e73e73a/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-c4dd48da/GrowingAnalytics.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -1539,7 +1539,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-GrowingAnalyticsStartTests/Pods-GrowingAnalyticsStartTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-5839346f/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-16cd3902/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-cdp/GrowingAnalytics_cdp.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -1581,7 +1581,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-GrowingAnalyticsCDPTests/Pods-GrowingAnalyticsCDPTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-5839346f/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-16cd3902/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-cdp/GrowingAnalytics_cdp.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -1601,7 +1601,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-HostApplicationTests/Pods-HostApplicationTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-e2e89842/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-c99a9474/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/KIF/KIF.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";

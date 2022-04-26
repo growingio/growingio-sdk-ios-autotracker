@@ -2,36 +2,33 @@ PODS:
   - GrowingAnalytics-cdp/Autotracker (3.3.6):
     - GrowingAnalytics-cdp/TrackerCore (= 3.3.6)
     - GrowingAnalytics/AutotrackerCore (= 3.3.6)
-    - GrowingAnalytics/Compression (= 3.3.6)
-    - GrowingAnalytics/Database (= 3.3.6)
-    - GrowingAnalytics/Encryption (= 3.3.6)
+    - GrowingAnalytics/DefaultServices (= 3.3.6)
     - GrowingAnalytics/Hybrid (= 3.3.6)
     - GrowingAnalytics/MobileDebugger (= 3.3.6)
-    - GrowingAnalytics/Network (= 3.3.6)
     - GrowingAnalytics/WebCircle (= 3.3.6)
   - GrowingAnalytics-cdp/Tracker (3.3.6):
     - GrowingAnalytics-cdp/TrackerCore (= 3.3.6)
-    - GrowingAnalytics/Compression (= 3.3.6)
-    - GrowingAnalytics/Database (= 3.3.6)
-    - GrowingAnalytics/Encryption (= 3.3.6)
+    - GrowingAnalytics/DefaultServices (= 3.3.6)
     - GrowingAnalytics/MobileDebugger (= 3.3.6)
-    - GrowingAnalytics/Network (= 3.3.6)
   - GrowingAnalytics-cdp/TrackerCore (3.3.6):
     - GrowingAnalytics/TrackerCore (= 3.3.6)
   - GrowingAnalytics/Autotracker (3.3.6):
     - GrowingAnalytics/AutotrackerCore
-    - GrowingAnalytics/Compression
-    - GrowingAnalytics/Database
-    - GrowingAnalytics/Encryption
+    - GrowingAnalytics/DefaultServices
     - GrowingAnalytics/Hybrid
     - GrowingAnalytics/MobileDebugger
-    - GrowingAnalytics/Network
     - GrowingAnalytics/WebCircle
   - GrowingAnalytics/AutotrackerCore (3.3.6):
     - GrowingAnalytics/TrackerCore
   - GrowingAnalytics/Compression (3.3.6):
     - GrowingAnalytics/TrackerCore
   - GrowingAnalytics/Database (3.3.6):
+    - GrowingAnalytics/TrackerCore
+  - GrowingAnalytics/DefaultServices (3.3.6):
+    - GrowingAnalytics/Compression
+    - GrowingAnalytics/Database
+    - GrowingAnalytics/Encryption
+    - GrowingAnalytics/Network
     - GrowingAnalytics/TrackerCore
   - GrowingAnalytics/Encryption (3.3.6):
     - GrowingAnalytics/TrackerCore
@@ -51,11 +48,8 @@ PODS:
     - GrowingAnalytics/TrackerCore
     - Protobuf
   - GrowingAnalytics/Tracker (3.3.6):
-    - GrowingAnalytics/Compression
-    - GrowingAnalytics/Database
-    - GrowingAnalytics/Encryption
+    - GrowingAnalytics/DefaultServices
     - GrowingAnalytics/MobileDebugger
-    - GrowingAnalytics/Network
     - GrowingAnalytics/TrackerCore
   - GrowingAnalytics/TrackerCore (3.3.6)
   - GrowingAnalytics/WebCircle (3.3.6):
@@ -118,8 +112,8 @@ EXTERNAL SOURCES:
     :path: "./"
 
 SPEC CHECKSUMS:
-  GrowingAnalytics: 565f164eba197639a392d8684fb844c5af5bfda9
-  GrowingAnalytics-cdp: 2abf5ed399be46ccc7be907ab4452aca5cc51ce7
+  GrowingAnalytics: 4f9960af686955c0d2db3b3393e6c9003fff5de3
+  GrowingAnalytics-cdp: 2e136b02d7f7ad000fb7465f2c7b05fb9097158f
   GrowingToolsKit: fd088ef90c60a7cb6166530dc0eb630e966b4eab
   KIF: e2e1bab222b6c9523a0a88caab31f8524fe82404
   Protobuf: 235750e4696ff59fb07d949a9dbbc92b3c0700fe

@@ -19,7 +19,7 @@
 
 #import "GrowingTrackerCore/Network/Request/GrowingEventRequest.h"
 #import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
-#import "GrowingTrackerCore/Network/Request/Adapter/GrowingEventRequestAdapter.h"
+#import "GrowingTrackerCore/Network/Request/Adapter/GrowingEventRequestAdapters.h"
 #import "GrowingTrackerCore/Network/Request/Adapter/GrowingRequestAdapter.h"
 #import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
@@ -63,10 +63,11 @@
     GrowingRequestHeaderAdapter *basicHeaderAdapter = [GrowingRequestHeaderAdapter adapterWithRequest:self];
     GrowingRequestMethodAdapter *methodAdapter = [GrowingRequestMethodAdapter adapterWithRequest:self];
     
-    GrowingEventRequestHeaderAdapter *eventHeaderAdapter = [GrowingEventRequestHeaderAdapter adapterWithRequest:self];
-    GrowingEventRequestJsonBodyAdpter *eventBodyAdapter = [GrowingEventRequestJsonBodyAdpter adapterWithRequest:self];
-    
-    return @[basicHeaderAdapter, methodAdapter, eventHeaderAdapter, eventBodyAdapter];
+    NSMutableArray *adapters = [NSMutableArray arrayWithObjects:basicHeaderAdapter, methodAdapter, nil];
+    for (Class cls in GrowingEventRequestAdapters.sharedInstance.adapters) {
+        [adapters addObject:[cls performSelector:@selector(adapterWithRequest:) withObject:self]];
+    }
+    return adapters;
 }
 
 - (NSDictionary *)query {

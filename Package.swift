@@ -76,10 +76,7 @@ let package = Package(
                 "GrowingModule_Hybrid",
                 "GrowingModule_MobileDebugger",
                 "GrowingModule_WebCircle",
-                "GrowingService_Database",
-                "GrowingService_Network",
-                "GrowingService_Encryption",
-                "GrowingService_Compression"
+                "GrowingModule_DefaultServices"
             ],
             path: "SwiftPM-Wrap/GrowingAutotracker-cdp-Wrapper"
         ),
@@ -89,10 +86,7 @@ let package = Package(
                 "GrowingTracker_cdp",
                 "GrowingUserIdentifier",
                 "GrowingModule_MobileDebugger",
-                "GrowingService_Database",
-                "GrowingService_Network",
-                "GrowingService_Encryption",
-                "GrowingService_Compression"
+                "GrowingModule_DefaultServices"
             ],
             path: "SwiftPM-Wrap/GrowingTracker-cdp-Wrapper"
         ),
@@ -104,10 +98,7 @@ let package = Package(
                 "GrowingModule_Hybrid",
                 "GrowingModule_MobileDebugger",
                 "GrowingModule_WebCircle",
-                "GrowingService_Database",
-                "GrowingService_Network",
-                "GrowingService_Encryption",
-                "GrowingService_Compression"
+                "GrowingModule_DefaultServices"
             ],
             path: "SwiftPM-Wrap/GrowingAutotracker-Wrapper"
         ),
@@ -117,10 +108,7 @@ let package = Package(
                 "GrowingTracker",
                 "GrowingUserIdentifier",
                 "GrowingModule_MobileDebugger",
-                "GrowingService_Database",
-                "GrowingService_Network",
-                "GrowingService_Encryption",
-                "GrowingService_Compression"
+                "GrowingModule_DefaultServices"
             ],
             path: "SwiftPM-Wrap/GrowingTracker-Wrapper"
         ),
@@ -266,6 +254,20 @@ let package = Package(
         // MARK: - GrowingAnalytics Modules
 
         .target(
+            name: "GrowingModule_DefaultServices",
+            dependencies: [
+                "GrowingTrackerCore",
+                "GrowingService_Database",
+                "GrowingService_Network",
+                "GrowingService_Encryption",
+                "GrowingService_Compression"
+            ],
+            path: "Modules/DefaultServices",
+            cSettings: [
+                .headerSearchPath("../.."),
+            ]
+        ),
+        .target(
             name: "GrowingModule_MobileDebugger",
             dependencies: [
                 "GrowingTrackerCore",
@@ -310,10 +312,7 @@ let package = Package(
                 "GrowingModule_Hybrid",
                 "GrowingModule_MobileDebugger",
                 "GrowingModule_WebCircle",
-                "GrowingService_Database",
-                "GrowingService_Network",
-                "GrowingService_Encryption",
-                "GrowingService_Compression"
+                "GrowingModule_DefaultServices"
             ],
             path: "SwiftPM-Wrap/GrowingAutotracker-cdp-NoIDFA-Wrapper"
         ),
@@ -323,10 +322,7 @@ let package = Package(
                 "GrowingTracker_cdp",
                 "GrowingUserIdentifier_NoIDFA",
                 "GrowingModule_MobileDebugger",
-                "GrowingService_Database",
-                "GrowingService_Network",
-                "GrowingService_Encryption",
-                "GrowingService_Compression"
+                "GrowingModule_DefaultServices"
             ],
             path: "SwiftPM-Wrap/GrowingTracker-cdp-NoIDFA-Wrapper"
         ),
@@ -338,10 +334,7 @@ let package = Package(
                 "GrowingModule_Hybrid",
                 "GrowingModule_MobileDebugger",
                 "GrowingModule_WebCircle",
-                "GrowingService_Database",
-                "GrowingService_Network",
-                "GrowingService_Encryption",
-                "GrowingService_Compression"
+                "GrowingModule_DefaultServices"
             ],
             path: "SwiftPM-Wrap/GrowingAutotracker-NoIDFA-Wrapper"
         ),
@@ -351,10 +344,7 @@ let package = Package(
                 "GrowingTracker",
                 "GrowingUserIdentifier_NoIDFA",
                 "GrowingModule_MobileDebugger",
-                "GrowingService_Database",
-                "GrowingService_Network",
-                "GrowingService_Encryption",
-                "GrowingService_Compression"
+                "GrowingModule_DefaultServices"
             ],
             path: "SwiftPM-Wrap/GrowingTracker-NoIDFA-Wrapper"
         )

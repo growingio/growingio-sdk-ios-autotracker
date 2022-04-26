@@ -19,8 +19,8 @@
 
 
 #import <XCTest/XCTest.h>
-#import "Modules/Protobuf/GrowingEventRequestHeaderAdapter+Protobuf.h"
-#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "Modules/Protobuf/GrowingEventRequestProtobufAdapter.h"
+#import "Modules/DefaultServices/GrowingEventRequestJSONAdapter.h"
 
 @interface ProtobufRequestHeaderTest : XCTestCase
 
@@ -37,36 +37,20 @@
 }
 
 - (void)testRequestHeader {
-    GrowingEventRequestHeaderAdapter *eventHeaderAdapter = [[GrowingEventRequestHeaderAdapter alloc] init];
+    GrowingEventRequestProtobufAdapter *adapter = [GrowingEventRequestProtobufAdapter adapterWithRequest:nil];
+    GrowingEventRequestJSONAdapter *adapter2 = [GrowingEventRequestJSONAdapter adapterWithRequest:nil];
+    XCTAssertLessThan(adapter2.priority, adapter.priority);
+    
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.growingio.com"]];
-    request = [eventHeaderAdapter adaptedURLRequest:request];
+    request = [adapter2 adaptedURLRequest:request];
+    request = [adapter adaptedURLRequest:request];
+    
     NSDictionary<NSString *, NSString *> *allHTTPHeaderFields = request.allHTTPHeaderFields;
     for (NSString *key in allHTTPHeaderFields.allKeys) {
         if ([key isEqualToString:@"Content-Type"]) {
             NSString *value = allHTTPHeaderFields[key];
             XCTAssertEqualObjects(value, @"application/protobuf");
             break;
-        }
-    }
-}
-
-- (void)testRequestHeaderWithEncryptEnabled {
-    GrowingTrackConfiguration *config = [GrowingTrackConfiguration configurationWithProjectId:@"test"];
-    config.encryptEnabled = YES;
-    GrowingConfigurationManager.sharedInstance.trackConfiguration = config;
-
-    GrowingEventRequestHeaderAdapter *eventHeaderAdapter = [[GrowingEventRequestHeaderAdapter alloc] init];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.growingio.com"]];
-    request = [eventHeaderAdapter adaptedURLRequest:request];
-    NSDictionary<NSString *, NSString *> *allHTTPHeaderFields = request.allHTTPHeaderFields;
-    for (NSString *key in allHTTPHeaderFields.allKeys) {
-        if ([key isEqualToString:@"X-Compress-Codec"]) {
-            NSString *value = allHTTPHeaderFields[key];
-            XCTAssertEqualObjects(value, @"3");
-        }
-        if ([key isEqualToString:@"X-Crypt-Codec"]) {
-            NSString *value = allHTTPHeaderFields[key];
-            XCTAssertEqualObjects(value, @"1");
         }
     }
 }
