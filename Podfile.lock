@@ -1,24 +1,24 @@
 PODS:
-  - GrowingAnalytics-cdp/Autotracker (3.3.5):
-    - GrowingAnalytics-cdp/TrackerCore (= 3.3.5)
-    - GrowingAnalytics/AutotrackerCore (= 3.3.5)
-    - GrowingAnalytics/Compression (= 3.3.5)
-    - GrowingAnalytics/Database (= 3.3.5)
-    - GrowingAnalytics/Encryption (= 3.3.5)
-    - GrowingAnalytics/Hybrid (= 3.3.5)
-    - GrowingAnalytics/MobileDebugger (= 3.3.5)
-    - GrowingAnalytics/Network (= 3.3.5)
-    - GrowingAnalytics/WebCircle (= 3.3.5)
-  - GrowingAnalytics-cdp/Tracker (3.3.5):
-    - GrowingAnalytics-cdp/TrackerCore (= 3.3.5)
-    - GrowingAnalytics/Compression (= 3.3.5)
-    - GrowingAnalytics/Database (= 3.3.5)
-    - GrowingAnalytics/Encryption (= 3.3.5)
-    - GrowingAnalytics/MobileDebugger (= 3.3.5)
-    - GrowingAnalytics/Network (= 3.3.5)
-  - GrowingAnalytics-cdp/TrackerCore (3.3.5):
-    - GrowingAnalytics/TrackerCore (= 3.3.5)
-  - GrowingAnalytics/Autotracker (3.3.5):
+  - GrowingAnalytics-cdp/Autotracker (3.3.6):
+    - GrowingAnalytics-cdp/TrackerCore (= 3.3.6)
+    - GrowingAnalytics/AutotrackerCore (= 3.3.6)
+    - GrowingAnalytics/Compression (= 3.3.6)
+    - GrowingAnalytics/Database (= 3.3.6)
+    - GrowingAnalytics/Encryption (= 3.3.6)
+    - GrowingAnalytics/Hybrid (= 3.3.6)
+    - GrowingAnalytics/MobileDebugger (= 3.3.6)
+    - GrowingAnalytics/Network (= 3.3.6)
+    - GrowingAnalytics/WebCircle (= 3.3.6)
+  - GrowingAnalytics-cdp/Tracker (3.3.6):
+    - GrowingAnalytics-cdp/TrackerCore (= 3.3.6)
+    - GrowingAnalytics/Compression (= 3.3.6)
+    - GrowingAnalytics/Database (= 3.3.6)
+    - GrowingAnalytics/Encryption (= 3.3.6)
+    - GrowingAnalytics/MobileDebugger (= 3.3.6)
+    - GrowingAnalytics/Network (= 3.3.6)
+  - GrowingAnalytics-cdp/TrackerCore (3.3.6):
+    - GrowingAnalytics/TrackerCore (= 3.3.6)
+  - GrowingAnalytics/Autotracker (3.3.6):
     - GrowingAnalytics/AutotrackerCore
     - GrowingAnalytics/Compression
     - GrowingAnalytics/Database
@@ -27,42 +27,42 @@ PODS:
     - GrowingAnalytics/MobileDebugger
     - GrowingAnalytics/Network
     - GrowingAnalytics/WebCircle
-  - GrowingAnalytics/AutotrackerCore (3.3.5):
+  - GrowingAnalytics/AutotrackerCore (3.3.6):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/Compression (3.3.5):
+  - GrowingAnalytics/Compression (3.3.6):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/Database (3.3.5):
+  - GrowingAnalytics/Database (3.3.6):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/Encryption (3.3.5):
+  - GrowingAnalytics/Encryption (3.3.6):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/Hybrid (3.3.5):
+  - GrowingAnalytics/Hybrid (3.3.6):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/MobileDebugger (3.3.5):
+  - GrowingAnalytics/MobileDebugger (3.3.6):
     - GrowingAnalytics/TrackerCore
     - GrowingAnalytics/WebSocket
-  - GrowingAnalytics/Network (3.3.5):
+  - GrowingAnalytics/Network (3.3.6):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/Protobuf (3.3.5):
+  - GrowingAnalytics/Protobuf (3.3.6):
     - GrowingAnalytics/Database
-    - GrowingAnalytics/Protobuf/Proto (= 3.3.5)
+    - GrowingAnalytics/Protobuf/Proto (= 3.3.6)
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/Protobuf/Proto (3.3.5):
+  - GrowingAnalytics/Protobuf/Proto (3.3.6):
     - GrowingAnalytics/Database
     - GrowingAnalytics/TrackerCore
     - Protobuf
-  - GrowingAnalytics/Tracker (3.3.5):
+  - GrowingAnalytics/Tracker (3.3.6):
     - GrowingAnalytics/Compression
     - GrowingAnalytics/Database
     - GrowingAnalytics/Encryption
     - GrowingAnalytics/MobileDebugger
     - GrowingAnalytics/Network
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/TrackerCore (3.3.5)
-  - GrowingAnalytics/WebCircle (3.3.5):
+  - GrowingAnalytics/TrackerCore (3.3.6)
+  - GrowingAnalytics/WebCircle (3.3.6):
     - GrowingAnalytics/AutotrackerCore
     - GrowingAnalytics/Hybrid
     - GrowingAnalytics/WebSocket
-  - GrowingAnalytics/WebSocket (3.3.5):
+  - GrowingAnalytics/WebSocket (3.3.6):
     - GrowingAnalytics/TrackerCore
   - GrowingToolsKit (1.0.5):
     - GrowingToolsKit/Default (= 1.0.5)
@@ -118,8 +118,8 @@ EXTERNAL SOURCES:
     :path: "./"
 
 SPEC CHECKSUMS:
-  GrowingAnalytics: 8963b86c8a54705bad946b1a479090802fe696db
-  GrowingAnalytics-cdp: d9cb1bdd747d3fba719d4b9864128d9eb173ca67
+  GrowingAnalytics: 565f164eba197639a392d8684fb844c5af5bfda9
+  GrowingAnalytics-cdp: 2abf5ed399be46ccc7be907ab4452aca5cc51ce7
   GrowingToolsKit: fd088ef90c60a7cb6166530dc0eb630e966b4eab
   KIF: e2e1bab222b6c9523a0a88caab31f8524fe82404
   Protobuf: 235750e4696ff59fb07d949a9dbbc92b3c0700fe
