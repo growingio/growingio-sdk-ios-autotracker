@@ -20,7 +20,7 @@
 
 #import <XCTest/XCTest.h>
 #import "Modules/Protobuf/GrowingEventProtobufPersistence.h"
-#import "Modules/Protobuf/GrowingEventFMDatabase+Protobuf.h"
+#import "Modules/Protobuf/GrowingEventProtobufDatabase.h"
 #import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
 #import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
 #import "Modules/Protobuf/Proto/GrowingEvent.pbobjc.h"
@@ -49,18 +49,18 @@
 }
 
 - (void)testDatabaseBuildRawEvents {
-    NSData *raw = [GrowingEventFMDatabase buildRawEventsFromEvents:@[self.customEventPersistence]];
+    NSData *raw = [GrowingEventProtobufDatabase buildRawEventsFromEvents:@[self.customEventPersistence]];
     XCTAssertNotNil(raw);
 }
 
 - (void)testDatabasePersistence {
     GrowingCustomEvent *event = (GrowingCustomEvent *)(GrowingCustomEvent.builder.build);
-    id persistence = [GrowingEventFMDatabase persistenceEventWithEvent:event uuid:[NSUUID UUID].UUIDString];
+    id persistence = [GrowingEventProtobufDatabase persistenceEventWithEvent:event uuid:[NSUUID UUID].UUIDString];
     XCTAssertNotNil(persistence);
 }
 
 - (void)testDatabaseInstanceMethods {
-    GrowingEventFMDatabase *database = [GrowingEventFMDatabase databaseWithPath:self.path error:nil];
+    GrowingEventProtobufDatabase *database = [GrowingEventProtobufDatabase databaseWithPath:self.path error:nil];
     XCTAssertNotNil(database.db);
 
     // clean expired event if need
@@ -108,7 +108,7 @@
     // last error
     NSString *errorPath = @"errorPath";
     NSError *error = nil;
-    GrowingEventFMDatabase *errorDatabase = [GrowingEventFMDatabase databaseWithPath:errorPath error:&error];
+    GrowingEventProtobufDatabase *errorDatabase = [GrowingEventProtobufDatabase databaseWithPath:errorPath error:&error];
     if (error) {
         // 这里使用一个错误/无权限路径来实现 Database 初始化异常
         // 使用模拟器运行，实测不会因错误/无权限路径导致初始化异常，error 为 nil，不会进到这一步
@@ -117,7 +117,7 @@
 }
 
 - (void)testDatabaseEventIO {
-    GrowingEventFMDatabase *database = [GrowingEventFMDatabase databaseWithPath:self.path error:nil];
+    GrowingEventProtobufDatabase *database = [GrowingEventProtobufDatabase databaseWithPath:self.path error:nil];
     XCTAssertNotNil(database.db);
 
     // clear all events

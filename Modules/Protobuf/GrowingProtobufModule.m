@@ -20,6 +20,7 @@
 #import "Modules/Protobuf/GrowingProtobufModule.h"
 #import "Modules/Protobuf/GrowingEventRequestProtobufAdapter.h"
 #import "GrowingTrackerCore/Network/Request/Adapter/GrowingEventRequestAdapters.h"
+#import "Modules/Protobuf/GrowingEventProtobufDatabase.h"
 
 GrowingMod(GrowingProtobufModule)
 
@@ -27,6 +28,8 @@ GrowingMod(GrowingProtobufModule)
 
 - (void)growingModInit:(GrowingContext *)context {
     [GrowingEventRequestAdapters.sharedInstance addAdapter:GrowingEventRequestProtobufAdapter.class];
+    [GrowingServiceManager.sharedInstance registerService:@protocol(GrowingEventDatabaseService)
+                                                implClass:GrowingEventProtobufDatabase.class];
 }
 
 @end

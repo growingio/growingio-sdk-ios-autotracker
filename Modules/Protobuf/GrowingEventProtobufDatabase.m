@@ -1,9 +1,9 @@
 //
-//  GrowingEventFMDatabase+Protobuf.m
+//  GrowingEventProtobufDatabase.m
 //  GrowingAnalytics
 //
-//  Created by YoloMao on 2021/12/3.
-//  Copyright (C) 2021 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2022/5/11.
+//  Copyright (C) 2022 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,17 +17,18 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "Modules/Protobuf/GrowingEventFMDatabase+Protobuf.h"
+#import "Modules/Protobuf/GrowingEventProtobufDatabase.h"
 #import "Services/Database/FMDB/GrowingFMDB.h"
 #import "Modules/Protobuf/GrowingEventProtobufPersistence.h"
 #import "GrowingTrackerCore/Utils/GrowingTimeUtil.h"
 
-@implementation GrowingEventFMDatabase (Protobuf)
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wobjc-protocol-method-implementation"
+@implementation GrowingEventProtobufDatabase
 
 #pragma mark - Init
+
++ (instancetype)databaseWithPath:(NSString *)path error:(NSError **)error {
+    return [[self alloc] initWithFilePath:path error:error];
+}
 
 - (instancetype)initWithFilePath:(NSString *)filePath error:(NSError **)error {
     if (self = [super init]) {
@@ -429,7 +430,5 @@ static BOOL isExecuteVacuum(void) {
                                code:GrowingEventDatabaseCreateDBError
                            userInfo:@{NSLocalizedDescriptionKey : ([db lastErrorMessage] ?: @"Could not create database")}];
 }
-
-#pragma clang diagnostic pop
 
 @end
