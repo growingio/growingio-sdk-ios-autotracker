@@ -1,9 +1,9 @@
 //
-//  GrowingPageCustomEvent+Protobuf.m
+//  GrowingEventProtobufDatabase.h
 //  GrowingAnalytics
 //
-//  Created by YoloMao on 2021/12/3.
-//  Copyright (C) 2021 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2022/5/11.
+//  Copyright (C) 2022 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,17 +17,18 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "Modules/Protobuf/Events/GrowingPageCustomEvent+Protobuf.h"
-#import "Modules/Protobuf/Events/GrowingBaseEvent+Protobuf.h"
-#import "Modules/Protobuf/Proto/GrowingEvent.pbobjc.h"
+#import <Foundation/Foundation.h>
+#import "GrowingEventDatabaseService.h"
 
-@implementation GrowingPageCustomEvent (Protobuf)
+NS_ASSUME_NONNULL_BEGIN
 
-- (GrowingPBEventV3Dto *)toProtobuf {
-    GrowingPBEventV3Dto *dto = [super toProtobuf];
-    dto.path = self.path;
-    dto.pageShowTimestamp = self.pageShowTimestamp;
-    return dto;
-}
+@class GrowingFMDatabaseQueue;
+
+@interface GrowingEventProtobufDatabase : NSObject <GrowingEventDatabaseService>
+
+@property (nonatomic, strong) GrowingFMDatabaseQueue *db;
+@property (nonatomic, strong) NSError *databaseError;
 
 @end
+
+NS_ASSUME_NONNULL_END
