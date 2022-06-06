@@ -1,0 +1,6 @@
+framework module FirebaseAnalytics {
+  umbrella header "FirebaseAnalytics.h"
+
+  export *
+  module * { export * }
+}

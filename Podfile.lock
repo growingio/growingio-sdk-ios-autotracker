@@ -1,62 +1,142 @@
 PODS:
-  - GrowingAnalytics-cdp/Autotracker (3.3.6):
-    - GrowingAnalytics-cdp/TrackerCore (= 3.3.6)
-    - GrowingAnalytics/AutotrackerCore (= 3.3.6)
-    - GrowingAnalytics/DefaultServices (= 3.3.6)
-    - GrowingAnalytics/Hybrid (= 3.3.6)
-    - GrowingAnalytics/MobileDebugger (= 3.3.6)
-    - GrowingAnalytics/WebCircle (= 3.3.6)
-  - GrowingAnalytics-cdp/Tracker (3.3.6):
-    - GrowingAnalytics-cdp/TrackerCore (= 3.3.6)
-    - GrowingAnalytics/DefaultServices (= 3.3.6)
-    - GrowingAnalytics/MobileDebugger (= 3.3.6)
-  - GrowingAnalytics-cdp/TrackerCore (3.3.6):
-    - GrowingAnalytics/TrackerCore (= 3.3.6)
-  - GrowingAnalytics/Autotracker (3.3.6):
+  - FirebaseAnalytics (9.1.0):
+    - FirebaseAnalytics/AdIdSupport (= 9.1.0)
+    - FirebaseCore (~> 9.0)
+    - FirebaseInstallations (~> 9.0)
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.7)
+    - GoogleUtilities/MethodSwizzler (~> 7.7)
+    - GoogleUtilities/Network (~> 7.7)
+    - "GoogleUtilities/NSData+zlib (~> 7.7)"
+    - nanopb (< 2.30910.0, >= 2.30908.0)
+  - FirebaseAnalytics/AdIdSupport (9.1.0):
+    - FirebaseCore (~> 9.0)
+    - FirebaseInstallations (~> 9.0)
+    - GoogleAppMeasurement (= 9.1.0)
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.7)
+    - GoogleUtilities/MethodSwizzler (~> 7.7)
+    - GoogleUtilities/Network (~> 7.7)
+    - "GoogleUtilities/NSData+zlib (~> 7.7)"
+    - nanopb (< 2.30910.0, >= 2.30908.0)
+  - FirebaseCore (9.1.0):
+    - FirebaseCoreDiagnostics (~> 9.0)
+    - FirebaseCoreInternal (~> 9.0)
+    - GoogleUtilities/Environment (~> 7.7)
+    - GoogleUtilities/Logger (~> 7.7)
+  - FirebaseCoreDiagnostics (9.1.0):
+    - GoogleDataTransport (< 10.0.0, >= 9.1.4)
+    - GoogleUtilities/Environment (~> 7.7)
+    - GoogleUtilities/Logger (~> 7.7)
+    - nanopb (< 2.30910.0, >= 2.30908.0)
+  - FirebaseCoreInternal (9.1.0):
+    - "GoogleUtilities/NSData+zlib (~> 7.7)"
+  - FirebaseInstallations (9.1.0):
+    - FirebaseCore (~> 9.0)
+    - GoogleUtilities/Environment (~> 7.7)
+    - GoogleUtilities/UserDefaults (~> 7.7)
+    - PromisesObjC (~> 2.1)
+  - GoogleAppMeasurement (9.1.0):
+    - GoogleAppMeasurement/AdIdSupport (= 9.1.0)
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.7)
+    - GoogleUtilities/MethodSwizzler (~> 7.7)
+    - GoogleUtilities/Network (~> 7.7)
+    - "GoogleUtilities/NSData+zlib (~> 7.7)"
+    - nanopb (< 2.30910.0, >= 2.30908.0)
+  - GoogleAppMeasurement/AdIdSupport (9.1.0):
+    - GoogleAppMeasurement/WithoutAdIdSupport (= 9.1.0)
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.7)
+    - GoogleUtilities/MethodSwizzler (~> 7.7)
+    - GoogleUtilities/Network (~> 7.7)
+    - "GoogleUtilities/NSData+zlib (~> 7.7)"
+    - nanopb (< 2.30910.0, >= 2.30908.0)
+  - GoogleAppMeasurement/WithoutAdIdSupport (9.1.0):
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.7)
+    - GoogleUtilities/MethodSwizzler (~> 7.7)
+    - GoogleUtilities/Network (~> 7.7)
+    - "GoogleUtilities/NSData+zlib (~> 7.7)"
+    - nanopb (< 2.30910.0, >= 2.30908.0)
+  - GoogleDataTransport (9.1.4):
+    - GoogleUtilities/Environment (~> 7.7)
+    - nanopb (< 2.30910.0, >= 2.30908.0)
+    - PromisesObjC (< 3.0, >= 1.2)
+  - GoogleUtilities/AppDelegateSwizzler (7.7.0):
+    - GoogleUtilities/Environment
+    - GoogleUtilities/Logger
+    - GoogleUtilities/Network
+  - GoogleUtilities/Environment (7.7.0):
+    - PromisesObjC (< 3.0, >= 1.2)
+  - GoogleUtilities/Logger (7.7.0):
+    - GoogleUtilities/Environment
+  - GoogleUtilities/MethodSwizzler (7.7.0):
+    - GoogleUtilities/Logger
+  - GoogleUtilities/Network (7.7.0):
+    - GoogleUtilities/Logger
+    - "GoogleUtilities/NSData+zlib"
+    - GoogleUtilities/Reachability
+  - "GoogleUtilities/NSData+zlib (7.7.0)"
+  - GoogleUtilities/Reachability (7.7.0):
+    - GoogleUtilities/Logger
+  - GoogleUtilities/UserDefaults (7.7.0):
+    - GoogleUtilities/Logger
+  - GrowingAnalytics-cdp/Autotracker (3.3.7-beta):
+    - GrowingAnalytics-cdp/TrackerCore (= 3.3.7-beta)
+    - GrowingAnalytics/AutotrackerCore (= 3.3.7-beta)
+    - GrowingAnalytics/DefaultServices (= 3.3.7-beta)
+    - GrowingAnalytics/Hybrid (= 3.3.7-beta)
+    - GrowingAnalytics/MobileDebugger (= 3.3.7-beta)
+    - GrowingAnalytics/WebCircle (= 3.3.7-beta)
+  - GrowingAnalytics-cdp/Tracker (3.3.7-beta):
+    - GrowingAnalytics-cdp/TrackerCore (= 3.3.7-beta)
+    - GrowingAnalytics/DefaultServices (= 3.3.7-beta)
+    - GrowingAnalytics/MobileDebugger (= 3.3.7-beta)
+  - GrowingAnalytics-cdp/TrackerCore (3.3.7-beta):
+    - GrowingAnalytics/TrackerCore (= 3.3.7-beta)
+  - GrowingAnalytics/Autotracker (3.3.7-beta):
     - GrowingAnalytics/AutotrackerCore
     - GrowingAnalytics/DefaultServices
     - GrowingAnalytics/Hybrid
     - GrowingAnalytics/MobileDebugger
     - GrowingAnalytics/WebCircle
-  - GrowingAnalytics/AutotrackerCore (3.3.6):
+  - GrowingAnalytics/AutotrackerCore (3.3.7-beta):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/Compression (3.3.6):
+  - GrowingAnalytics/Compression (3.3.7-beta):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/Database (3.3.6):
+  - GrowingAnalytics/Database (3.3.7-beta):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/DefaultServices (3.3.6):
+  - GrowingAnalytics/DefaultServices (3.3.7-beta):
     - GrowingAnalytics/Compression
     - GrowingAnalytics/Database
     - GrowingAnalytics/Encryption
     - GrowingAnalytics/Network
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/Encryption (3.3.6):
+  - GrowingAnalytics/Encryption (3.3.7-beta):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/Hybrid (3.3.6):
+  - GrowingAnalytics/GAAdapter (3.3.7-beta):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/MobileDebugger (3.3.6):
+  - GrowingAnalytics/Hybrid (3.3.7-beta):
+    - GrowingAnalytics/TrackerCore
+  - GrowingAnalytics/MobileDebugger (3.3.7-beta):
     - GrowingAnalytics/TrackerCore
     - GrowingAnalytics/WebSocket
-  - GrowingAnalytics/Network (3.3.6):
+  - GrowingAnalytics/Network (3.3.7-beta):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/Protobuf (3.3.6):
+  - GrowingAnalytics/Protobuf (3.3.7-beta):
     - GrowingAnalytics/Database
-    - GrowingAnalytics/Protobuf/Proto (= 3.3.6)
+    - GrowingAnalytics/Protobuf/Proto (= 3.3.7-beta)
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/Protobuf/Proto (3.3.6):
+  - GrowingAnalytics/Protobuf/Proto (3.3.7-beta):
     - GrowingAnalytics/Database
     - GrowingAnalytics/TrackerCore
     - Protobuf
-  - GrowingAnalytics/Tracker (3.3.6):
+  - GrowingAnalytics/Tracker (3.3.7-beta):
     - GrowingAnalytics/DefaultServices
     - GrowingAnalytics/MobileDebugger
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/TrackerCore (3.3.6)
-  - GrowingAnalytics/WebCircle (3.3.6):
+  - GrowingAnalytics/TrackerCore (3.3.7-beta)
+  - GrowingAnalytics/WebCircle (3.3.7-beta):
     - GrowingAnalytics/AutotrackerCore
     - GrowingAnalytics/Hybrid
     - GrowingAnalytics/WebSocket
-  - GrowingAnalytics/WebSocket (3.3.6):
+  - GrowingAnalytics/WebSocket (3.3.7-beta):
     - GrowingAnalytics/TrackerCore
   - GrowingToolsKit (1.0.5):
     - GrowingToolsKit/Default (= 1.0.5)
@@ -77,10 +157,16 @@ PODS:
     - GrowingToolsKit/Core
   - GrowingToolsKit/XPathTrack (1.0.5):
     - GrowingToolsKit/Core
-  - KIF (3.8.6):
-    - KIF/Core (= 3.8.6)
-  - KIF/Core (3.8.6)
-  - Protobuf (3.19.4)
+  - KIF (3.8.7):
+    - KIF/Core (= 3.8.7)
+  - KIF/Core (3.8.7)
+  - nanopb (2.30909.0):
+    - nanopb/decode (= 2.30909.0)
+    - nanopb/encode (= 2.30909.0)
+  - nanopb/decode (2.30909.0)
+  - nanopb/encode (2.30909.0)
+  - PromisesObjC (2.1.0)
+  - Protobuf (3.21.1)
   - SDCycleScrollView (1.82):
     - SDWebImage (>= 5.0.0)
   - SDWebImage (5.12.5):
@@ -88,9 +174,11 @@ PODS:
   - SDWebImage/Core (5.12.5)
 
 DEPENDENCIES:
+  - FirebaseAnalytics
   - GrowingAnalytics-cdp/Autotracker (from `./`)
   - GrowingAnalytics-cdp/Tracker (from `./`)
   - GrowingAnalytics/Autotracker (from `./`)
+  - GrowingAnalytics/GAAdapter (from `./`)
   - GrowingAnalytics/Protobuf (from `./`)
   - GrowingAnalytics/Tracker (from `./`)
   - GrowingToolsKit
@@ -99,8 +187,18 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - FirebaseAnalytics
+    - FirebaseCore
+    - FirebaseCoreDiagnostics
+    - FirebaseCoreInternal
+    - FirebaseInstallations
+    - GoogleAppMeasurement
+    - GoogleDataTransport
+    - GoogleUtilities
     - GrowingToolsKit
     - KIF
+    - nanopb
+    - PromisesObjC
     - Protobuf
     - SDCycleScrollView
     - SDWebImage
@@ -112,14 +210,24 @@ EXTERNAL SOURCES:
     :path: "./"
 
 SPEC CHECKSUMS:
-  GrowingAnalytics: 4f9960af686955c0d2db3b3393e6c9003fff5de3
-  GrowingAnalytics-cdp: 2e136b02d7f7ad000fb7465f2c7b05fb9097158f
+  FirebaseAnalytics: bf11064790ac96804df1df9ddc0ae45af950d9fc
+  FirebaseCore: b7bfc258e996eada23b3666bd6b9a22ca092acb8
+  FirebaseCoreDiagnostics: 2dabba3412b23b524823325739f45e520f67d1e7
+  FirebaseCoreInternal: f3c838ae0b41cd840bbf34f90debfede78d352e5
+  FirebaseInstallations: a91c74276b544524ce144c8315d8cdbce2dbe30b
+  GoogleAppMeasurement: 8ecc717f2abe3f9ee95a5d38db08827852894acc
+  GoogleDataTransport: 5fffe35792f8b96ec8d6775f5eccd83c998d5a3b
+  GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
+  GrowingAnalytics: 39ba297f6e13b81b862e032a1a2d0e55f5daf4c7
+  GrowingAnalytics-cdp: a950b859cadb2df28ba06b8618a8c5491d1c06f7
   GrowingToolsKit: fd088ef90c60a7cb6166530dc0eb630e966b4eab
-  KIF: e2e1bab222b6c9523a0a88caab31f8524fe82404
-  Protobuf: 235750e4696ff59fb07d949a9dbbc92b3c0700fe
+  KIF: 779cdbca106633b94ecee7b036537490ebdbd9de
+  nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
+  PromisesObjC: 99b6f43f9e1044bd87a95a60beff28c2c44ddb72
+  Protobuf: 9e88c1e667d75aa2491d211f26ccddde4e8ad4cf
   SDCycleScrollView: a0d74c3384caa72bdfc81470bdbc8c14b3e1fbcf
   SDWebImage: 0905f1b7760fc8ac4198cae0036600d67478751e
 
-PODFILE CHECKSUM: 94ebf3e527f5c5519b1781c6b64264ba3aef4aa0
+PODFILE CHECKSUM: b4fa0b6c17ed54525547065e4673bddd695404ab
 
 COCOAPODS: 1.11.3

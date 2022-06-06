@@ -46,6 +46,13 @@
         "identifier" : "34D932F627BF8A400038430E",
         "name" : "GrowingAnalyticsCDPTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Example.xcodeproj",
+        "identifier" : "3499F039283C71F400643F55",
+        "name" : "GAAdapterTests"
+      }
     }
   ],
   "version" : 1
