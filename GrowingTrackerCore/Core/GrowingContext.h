@@ -35,11 +35,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingContext : NSObject
 
-@property(nonatomic, strong) UIApplication *application;
+@property (nonatomic, strong) UIApplication *application;
 
-@property(nonatomic, strong) NSDictionary *launchOptions;
+@property (nonatomic, strong) NSDictionary *launchOptions;
 //customEvent>=1000
-@property(nonatomic, assign) NSInteger customEvent;
+@property (nonatomic, assign) NSInteger customEvent;
 //custom param
 @property (nonatomic, copy) NSDictionary *customParam;
 

@@ -21,8 +21,8 @@
 #import "GrowingTrackerCore/Hook/GrowingAppLifecycle.h"
 
 @interface GrowingAppLifecycle ()
-@property(strong, nonatomic, readonly) NSPointerArray *appLifecycleDelegates;
-@property(strong, nonatomic, readonly) NSLock *delegateLock;
+@property (strong, nonatomic, readonly) NSPointerArray *appLifecycleDelegates;
+@property (strong, nonatomic, readonly) NSLock *delegateLock;
 @end
 
 @implementation GrowingAppLifecycle

@@ -29,8 +29,8 @@
 
 @interface GrowingImpressionTrack () <GrowingAppLifecycleDelegate, GrowingViewControllerLifecycleDelegate>
 
-@property(nonatomic, strong) NSHashTable *sourceTable;
-@property(nonatomic, strong) NSHashTable *bgSourceTable;
+@property (nonatomic, strong) NSHashTable *sourceTable;
+@property (nonatomic, strong) NSHashTable *bgSourceTable;
 
 @end
 

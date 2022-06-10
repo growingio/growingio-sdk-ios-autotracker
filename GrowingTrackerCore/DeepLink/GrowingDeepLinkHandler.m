@@ -26,8 +26,8 @@
 
 @interface GrowingDeepLinkHandler ()
 
-@property(strong, nonatomic, readonly) NSPointerArray *handlers;
-@property(strong, nonatomic, readonly) NSLock *lock;
+@property (strong, nonatomic, readonly) NSPointerArray *handlers;
+@property (strong, nonatomic, readonly) NSLock *lock;
 @end
 
 @implementation GrowingDeepLinkHandler

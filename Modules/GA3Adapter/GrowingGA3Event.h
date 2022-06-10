@@ -26,8 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingGA3Event : GrowingBaseEvent
 
-@property(nonatomic, strong, readonly) GrowingBaseEvent *baseEvent;
-@property(nonatomic, weak, readonly) GrowingGA3TrackerInfo *info;
+@property (nonatomic, strong, readonly) GrowingBaseEvent *baseEvent;
+@property (nonatomic, weak, readonly) GrowingGA3TrackerInfo *info;
 
 + (GrowingGA3Builder *)builder;
 
@@ -35,8 +35,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingGA3Builder : GrowingBaseBuilder
 
-@property(nonatomic, strong, readonly) GrowingBaseEvent *baseEvent;
-@property(nonatomic, weak, readonly) GrowingGA3TrackerInfo *info;
+@property (nonatomic, strong, readonly) GrowingBaseEvent *baseEvent;
+@property (nonatomic, weak, readonly) GrowingGA3TrackerInfo *info;
 
 - (GrowingGA3Builder *(^)(GrowingBaseEvent *baseEvent))setBaseEvent;
 - (GrowingGA3Builder *(^)(GrowingGA3TrackerInfo *info))setTrackerInfo;

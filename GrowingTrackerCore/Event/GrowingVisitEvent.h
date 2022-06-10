@@ -25,9 +25,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingVisitEvent : GrowingBaseEvent
 
-@property(nonatomic, copy, readonly) NSString *idfa;
-@property(nonatomic, copy, readonly) NSString *idfv;
-@property(nonatomic, strong, readonly) NSDictionary<NSString *,NSString*> *extraSdk;
+@property (nonatomic, copy, readonly) NSString *idfa;
+@property (nonatomic, copy, readonly) NSString *idfv;
+@property (nonatomic, strong, readonly) NSDictionary<NSString *,NSString*> *extraSdk;
 
 - (instancetype _Nonnull)init NS_UNAVAILABLE;
 + (instancetype _Nonnull)new NS_UNAVAILABLE;
@@ -38,9 +38,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingVisitBuilder : GrowingBaseBuilder
 
-@property(nonatomic, copy, readonly) NSString *idfa;
-@property(nonatomic, copy, readonly) NSString *idfv;
-@property(nonatomic, strong, readonly) NSDictionary<NSString *,NSString*> *extraSdk;
+@property (nonatomic, copy, readonly) NSString *idfa;
+@property (nonatomic, copy, readonly) NSString *idfv;
+@property (nonatomic, strong, readonly) NSDictionary<NSString *,NSString*> *extraSdk;
 
 - (GrowingVisitBuilder *(^)(NSString *value))setIdfa;
 - (GrowingVisitBuilder *(^)(NSString *value))setIdfv;

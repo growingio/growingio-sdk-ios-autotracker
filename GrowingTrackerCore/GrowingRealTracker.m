@@ -44,8 +44,8 @@ const int GrowingTrackerVersionCode = 30307;
 
 @interface GrowingRealTracker ()
 
-@property(nonatomic, copy, readonly) NSDictionary *launchOptions;
-@property(nonatomic, strong, readonly) GrowingTrackConfiguration *configuration;
+@property (nonatomic, copy, readonly) NSDictionary *launchOptions;
+@property (nonatomic, strong, readonly) GrowingTrackConfiguration *configuration;
 
 @end
 
