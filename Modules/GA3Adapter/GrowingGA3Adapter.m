@@ -210,8 +210,7 @@ static NSString *const kGA3EventTypeKey = @"&t";
         if (!info) {
             return;
         }
-        NSString *eventName = parameters[kGA3EventTypeKey] ?: @"GAEvent";
-        GrowingBaseBuilder *builder = GrowingCustomEvent.builder.setEventName(eventName).setAttributes(parameters);
+        GrowingBaseBuilder *builder = GrowingCustomEvent.builder.setEventName(@"GAEvent").setAttributes(parameters);
         writeToDatabaseWithEvent(GA3Event(builder, info));
     }];
 }
