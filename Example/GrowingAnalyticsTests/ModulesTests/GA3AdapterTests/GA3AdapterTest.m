@@ -142,7 +142,7 @@
 
 - (void)test02ResendLastVisit {
     GrowingBaseBuilder *builder = GrowingVisitEvent.builder;
-    [GrowingEventManager.sharedInstance postEventBuidler:builder];
+    [GrowingEventManager.sharedInstance postEventBuilder:builder];
 
     GrowingVisitEvent *event = (GrowingVisitEvent *)[MockEventQueue.sharedQueue lastEventFor:GrowingEventTypeVisit];
         
@@ -191,7 +191,7 @@
         .setPath(@"path")
         .setTitle(@"title")
         .setReferralPage(@"referralPage");
-    [GrowingEventManager.sharedInstance postEventBuidler:builder];
+    [GrowingEventManager.sharedInstance postEventBuilder:builder];
 
     // !!! 注意：这里有个隐藏的死锁问题 !!!
     // 首次发送 GrowingPageEvent 时，-[GrowingDeviceInfo deviceOrientation] 中，有个子线程同步等待主线程的操作
@@ -580,7 +580,7 @@
         .setPath(@"path")
         .setPageShowTimestamp(1638857558209)
         .setAttributes(@{@"key" : @"value"});
-    [GrowingEventManager.sharedInstance postEventBuidler:builder];
+    [GrowingEventManager.sharedInstance postEventBuilder:builder];
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypePageAttributes];
     XCTAssertEqual(events.count, 2);

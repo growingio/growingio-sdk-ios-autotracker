@@ -33,7 +33,7 @@
 + (void)generateVisitEvent {
     [GrowingDispatchManager dispatchInGrowingThread:^{
         GrowingBaseBuilder *builder = GrowingVisitEvent.builder;
-        [[GrowingEventManager sharedInstance] postEventBuidler:builder];
+        [[GrowingEventManager sharedInstance] postEventBuilder:builder];
     }];
 }
 
@@ -41,35 +41,35 @@
                  attributes:(NSDictionary<NSString *, NSObject *> *_Nullable)attributes {
     [GrowingDispatchManager dispatchInGrowingThread:^{
         GrowingBaseBuilder *builder = GrowingCustomEvent.builder.setEventName(name).setAttributes(attributes);
-        [[GrowingEventManager sharedInstance] postEventBuidler:builder];
+        [[GrowingEventManager sharedInstance] postEventBuilder:builder];
     }];
 }
 
 + (void)generateConversionAttributesEvent:(NSDictionary<NSString *, NSObject *> *_Nonnull)variables {
     [GrowingDispatchManager dispatchInGrowingThread:^{
         GrowingBaseBuilder *builder = GrowingConversionVariableEvent.builder.setAttributes(variables);
-        [[GrowingEventManager sharedInstance] postEventBuidler:builder];
+        [[GrowingEventManager sharedInstance] postEventBuilder:builder];
     }];
 }
 
 + (void)generateLoginUserAttributesEvent:(NSDictionary<NSString *, NSObject *> *_Nonnull)attributes {
     [GrowingDispatchManager dispatchInGrowingThread:^{
         GrowingBaseBuilder *builder = GrowingLoginUserAttributesEvent.builder.setAttributes(attributes);
-        [[GrowingEventManager sharedInstance] postEventBuidler:builder];
+        [[GrowingEventManager sharedInstance] postEventBuilder:builder];
     }];
 }
 
 + (void)generateVisitorAttributesEvent:(NSDictionary<NSString *, NSObject *> *_Nonnull)attributes {
     [GrowingDispatchManager dispatchInGrowingThread:^{
         GrowingBaseBuilder *builder = GrowingVisitorAttributesEvent.builder.setAttributes(attributes);
-        [[GrowingEventManager sharedInstance] postEventBuidler:builder];
+        [[GrowingEventManager sharedInstance] postEventBuilder:builder];
     }];
 }
 
 + (void)generateAppCloseEvent {
     [GrowingDispatchManager dispatchInGrowingThread:^{
         GrowingBaseBuilder *builder = GrowingAppCloseEvent.builder;
-        [[GrowingEventManager sharedInstance] postEventBuidler:builder];
+        [[GrowingEventManager sharedInstance] postEventBuilder:builder];
     }];
 }
 

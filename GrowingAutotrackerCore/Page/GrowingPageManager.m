@@ -102,14 +102,14 @@
 - (void)sendPageEventWithPage:(GrowingPage *)page {
     GrowingBaseBuilder *builder =
         GrowingPageEvent.builder.setTitle(page.title).setPath(page.path).setTimestamp(page.showTimestamp);
-    [[GrowingEventManager sharedInstance] postEventBuidler:builder];
+    [[GrowingEventManager sharedInstance] postEventBuilder:builder];
 }
 
 - (void)sendPageAttributesEventWithPage:(GrowingPage *)page {
     GrowingBaseBuilder *builder = GrowingPageAttributesEvent.builder.setPath(page.path)
                                       .setTimestamp(page.showTimestamp)
                                       .setAttributes(page.variables);
-    [[GrowingEventManager sharedInstance] postEventBuidler:builder];
+    [[GrowingEventManager sharedInstance] postEventBuilder:builder];
 }
 
 - (void)addPageAlias:(GrowingPage *)page {

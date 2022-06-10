@@ -22,13 +22,13 @@
 
 @implementation GrowingAppCloseEvent
 
-+ (GrowingAppCloseBuidler *)builder {
-    return [[GrowingAppCloseBuidler alloc] init];
++ (GrowingAppCloseBuilder *)builder {
+    return [[GrowingAppCloseBuilder alloc] init];
 }
 
 @end
 
-@implementation GrowingAppCloseBuidler
+@implementation GrowingAppCloseBuilder
 
 - (GrowingBaseEvent *)build {
     return [[GrowingAppCloseEvent alloc] initWithBuilder:self];

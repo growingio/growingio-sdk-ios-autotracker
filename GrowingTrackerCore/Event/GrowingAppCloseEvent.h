@@ -21,15 +21,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class GrowingAppCloseBuidler;
+@class GrowingAppCloseBuilder;
 
 @interface GrowingAppCloseEvent : GrowingBaseEvent
 
-+ (GrowingAppCloseBuidler *)builder;
++ (GrowingAppCloseBuilder *)builder;
 
 @end
 
-@interface GrowingAppCloseBuidler : GrowingBaseBuilder
+@interface GrowingAppCloseBuilder : GrowingBaseBuilder
 
 @end
 
