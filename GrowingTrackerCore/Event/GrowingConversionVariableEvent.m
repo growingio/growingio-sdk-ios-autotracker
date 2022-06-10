@@ -34,10 +34,6 @@
     return [[GrowingConversionVariableBuidler alloc] init];
 }
 
-- (NSString *)eventType {
-    return GrowingEventTypeConversionVariables;
-}
-
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
     dataDictM[@"attributes"] = self.attributes;
@@ -53,6 +49,10 @@
         self->_attributes = value;
         return self;
     };
+}
+
+- (NSString *)eventType {
+    return GrowingEventTypeConversionVariables;
 }
 
 - (GrowingBaseEvent *)build {
