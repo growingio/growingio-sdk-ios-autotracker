@@ -22,7 +22,7 @@
 
 @implementation GrowingVisitorAttributesEvent
 
-+ (GrowingVisitorAttributesBuidler *_Nonnull)builder {
++ (GrowingVisitorAttributesBuidler *)builder {
     return [[GrowingVisitorAttributesBuidler alloc] init];
 }
 

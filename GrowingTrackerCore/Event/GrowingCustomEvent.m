@@ -22,10 +22,9 @@
 
 @implementation GrowingCustomEvent
 
-
 - (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
     if (self = [super initWithBuilder:builder]) {
-        GrowingCustomBuilder *subBuilder = (GrowingCustomBuilder*)builder;
+        GrowingCustomBuilder *subBuilder = (GrowingCustomBuilder *)builder;
         _eventName = subBuilder.eventName;
     }
     return self;
@@ -65,7 +64,6 @@
 - (GrowingBaseEvent *)build {
     return [[GrowingCustomEvent alloc] initWithBuilder:self];
 }
-
 
 @end
 #pragma clang diagnostic pop

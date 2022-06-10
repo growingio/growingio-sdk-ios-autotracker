@@ -18,39 +18,15 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Event/GrowingAppCloseEvent.h"
-#import "GrowingTrackerCore/Event/GrowingEventManager.h"
-#import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
 #import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
-
-@interface GrowingAppCloseEvent ()
-
-@property (nonatomic, copy, readwrite) NSString * _Nonnull pageName;
-
-@end
 
 @implementation GrowingAppCloseEvent
 
-- (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
-    if (self = [super initWithBuilder:builder]) {
-//        GrowingAppCloseBuidler *subBuilder = (GrowingAppCloseBuidler*)builder;
-    }
-    return self;
-}
-
-+ (GrowingAppCloseBuidler *_Nonnull)builder {
++ (GrowingAppCloseBuidler *)builder {
     return [[GrowingAppCloseBuidler alloc] init];
 }
 
-
-#pragma mark GrowingEventTransformable
-
-- (NSDictionary *)toDictionary {
-    NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
-    return dataDictM;
-}
-
 @end
-
 
 @implementation GrowingAppCloseBuidler
 
@@ -58,7 +34,6 @@
     return [[GrowingAppCloseEvent alloc] initWithBuilder:self];
 }
 
-//重写返回事件类型，设置默认返回值
 - (NSString *)eventType {
     return GrowingEventTypeAppClosed;
 }

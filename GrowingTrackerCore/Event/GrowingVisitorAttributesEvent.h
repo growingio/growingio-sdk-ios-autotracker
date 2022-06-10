@@ -20,10 +20,12 @@
 #import "GrowingTrackerCore/Event/GrowingBaseAttributesEvent.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
 @class GrowingVisitorAttributesBuidler;
+
 @interface GrowingVisitorAttributesEvent : GrowingBaseAttributesEvent
 
-+ (GrowingVisitorAttributesBuidler *_Nonnull)builder;
++ (GrowingVisitorAttributesBuidler *)builder;
 
 @end
 

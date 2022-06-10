@@ -26,10 +26,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingPageEvent : GrowingBaseEvent
 
-@property (nonatomic, copy, readonly) NSString * _Nonnull pageName;
-@property (nonatomic, copy, readonly) NSString * _Nonnull orientation;
-@property (nonatomic, copy, readonly) NSString * _Nonnull title;
-@property (nonatomic, copy, readonly) NSString * _Nonnull referralPage;
+@property (nonatomic, copy, readonly) NSString *pageName;
+@property (nonatomic, copy, readonly) NSString *orientation;
+@property (nonatomic, copy, readonly) NSString *title;
+@property (nonatomic, copy, readonly) NSString *referralPage;
 
 + (GrowingPageBuilder *)builder;
 
@@ -37,10 +37,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingPageBuilder : GrowingBaseBuilder
 
-@property (nonatomic, copy, readonly) NSString * _Nonnull pageName;
-@property (nonatomic, copy, readonly) NSString * _Nonnull orientation;
-@property (nonatomic, copy, readonly) NSString * _Nonnull title;
-@property (nonatomic, copy, readonly) NSString * _Nonnull referralPage;
+@property (nonatomic, copy, readonly) NSString *pageName;
+@property (nonatomic, copy, readonly) NSString *orientation;
+@property (nonatomic, copy, readonly) NSString *title;
+@property (nonatomic, copy, readonly) NSString *referralPage;
 
 - (GrowingPageBuilder *(^)(NSString *value))setPath;
 - (GrowingPageBuilder *(^)(NSString *value))setOrientation;

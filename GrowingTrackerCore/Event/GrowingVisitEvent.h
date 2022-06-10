@@ -19,35 +19,33 @@
 
 #import "GrowingBaseEvent.h"
 
-typedef NS_ENUM(NSUInteger, GrowingDeviceType) {
-    GrowingDeviceTypePhone, GrowingDeviceTypePad
-};
+NS_ASSUME_NONNULL_BEGIN
+
 @class GrowingVisitBuilder;
+
 @interface GrowingVisitEvent : GrowingBaseEvent
 
-@property(nonatomic, copy, readonly) NSString *_Nonnull idfa;
-@property(nonatomic, copy, readonly) NSString *_Nonnull idfv;
-@property(nonatomic, strong, readonly) NSDictionary<NSString *,NSString*> *_Nonnull extraSdk;
+@property(nonatomic, copy, readonly) NSString *idfa;
+@property(nonatomic, copy, readonly) NSString *idfv;
+@property(nonatomic, strong, readonly) NSDictionary<NSString *,NSString*> *extraSdk;
 
 - (instancetype _Nonnull)init NS_UNAVAILABLE;
 + (instancetype _Nonnull)new NS_UNAVAILABLE;
 
-+ (GrowingVisitBuilder *_Nonnull)builder;
++ (GrowingVisitBuilder *)builder;
 
 @end
 
 @interface GrowingVisitBuilder : GrowingBaseBuilder
 
-@property(nonatomic, copy, readonly) NSString *_Nonnull idfa;
-@property(nonatomic, copy, readonly) NSString *_Nonnull idfv;
-@property(nonatomic, strong, readonly) NSDictionary<NSString *,NSString*> *_Nonnull extraSdk;
+@property(nonatomic, copy, readonly) NSString *idfa;
+@property(nonatomic, copy, readonly) NSString *idfv;
+@property(nonatomic, strong, readonly) NSDictionary<NSString *,NSString*> *extraSdk;
 
-NS_ASSUME_NONNULL_BEGIN
-
-//new set methods
 - (GrowingVisitBuilder *(^)(NSString *value))setIdfa;
 - (GrowingVisitBuilder *(^)(NSString *value))setIdfv;
 - (GrowingVisitBuilder *(^)(NSDictionary<NSString *,NSString*> *value))setExtraSdk;
 
-NS_ASSUME_NONNULL_END
 @end
+
+NS_ASSUME_NONNULL_END

@@ -27,7 +27,7 @@
 
 - (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
     if (self = [super initWithBuilder:builder]) {
-        GrowingPageCustomBuilder *subBuilder = (GrowingPageCustomBuilder*)builder;
+        GrowingPageCustomBuilder *subBuilder = (GrowingPageCustomBuilder *)builder;
         _path = subBuilder.pageName;
         _pageShowTimestamp = subBuilder.pageShowTimestamp;
     }

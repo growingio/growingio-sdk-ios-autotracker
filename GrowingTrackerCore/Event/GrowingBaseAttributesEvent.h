@@ -28,15 +28,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-
-///builder
 @interface GrowingBaseAttributesBuilder : GrowingBaseBuilder
+
 @property (nonatomic, copy, readonly) NSDictionary <NSString *, NSObject *> *attributes;
-
-
 
 - (GrowingBaseAttributesBuilder *(^)(NSDictionary <NSString *, NSObject *>*value))setAttributes;
 
-NS_ASSUME_NONNULL_END
-
 @end
+
+NS_ASSUME_NONNULL_END

@@ -20,25 +20,26 @@
 #import <Foundation/Foundation.h>
 #import "GrowingTrackerCore/Event/GrowingBaseAttributesEvent.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class GrowingCustomBuilder;
+
 @interface GrowingCustomEvent : GrowingBaseAttributesEvent
 
-@property(nonatomic, copy) NSString *_Nonnull eventName;
+@property (nonatomic, copy) NSString *eventName;
 
-+ (GrowingCustomBuilder *_Nonnull)builder;
++ (GrowingCustomBuilder *)builder;
 
 @end
-
 
 @interface GrowingCustomBuilder : GrowingBaseAttributesBuilder
 
-@property(nonatomic, copy, readonly) NSString *_Nonnull eventName;
-
-NS_ASSUME_NONNULL_BEGIN
+@property (nonatomic, copy, readonly) NSString *eventName;
 
 - (GrowingCustomBuilder *(^)(NSString *value))setEventName;
 
-//override
 - (GrowingCustomBuilder *(^)(NSDictionary <NSString *, NSObject *>*value))setAttributes;
-NS_ASSUME_NONNULL_END
+
 @end
+
+NS_ASSUME_NONNULL_END
