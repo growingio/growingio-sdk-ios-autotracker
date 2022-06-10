@@ -14,6 +14,8 @@ target 'Example' do
 #  pod 'GrowingAnalytics/Tracker', :path => './'
 #  pod 'GrowingAnalytics/Hybrid', :path => './'
   pod 'GrowingAnalytics/Protobuf', :path => './'
+#  pod 'GrowingAnalytics/GA3Adapter', :path => './'
+#  pod 'GrowingAnalytics/Dummy-GoogleAnalytics', :path => './'
 #  pod 'GrowingAnalytics/GAAdapter', :path => './'
 #  pod 'GrowingAnalytics/Dummy-FirebaseAnalytics', :path => './'
 
@@ -22,6 +24,7 @@ target 'Example' do
   pod 'SDCycleScrollView', '~> 1.75'
   pod 'GrowingToolsKit'
 #  pod 'FirebaseAnalytics'
+#  pod 'GoogleAnalytics'
 end
 
 target 'GrowingAnalyticsTests' do
@@ -59,4 +62,11 @@ target 'GAAdapterTests' do
    pod 'GrowingAnalytics/Autotracker', :path => './'
    pod 'GrowingAnalytics/GAAdapter', :path => './'
    pod 'FirebaseAnalytics'
+end
+
+target 'GA3AdapterTests' do
+   project 'Example/Example'
+   pod 'GrowingAnalytics/Autotracker', :path => './'
+   pod 'GrowingAnalytics/GA3Adapter', :path => './'
+   pod 'GoogleAnalytics'
 end

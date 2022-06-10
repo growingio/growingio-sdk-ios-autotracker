@@ -134,8 +134,18 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     adapter.dependency 'GrowingAnalytics/TrackerCore'
   end
 
+  s.subspec 'GA3Adapter' do |adapter|
+    adapter.source_files = 'Modules/GA3Adapter/**/*{.h,.m,.c,.cpp,.mm}'
+    adapter.public_header_files = 'Modules/GA3Adapter/Public/*.h'
+    adapter.dependency 'GrowingAnalytics/TrackerCore'
+  end
+
   s.subspec 'Dummy-FirebaseAnalytics' do |dummy|
     dummy.vendored_frameworks = 'Modules/Dummy-FirebaseAnalytics/*.xcframework'
+  end
+
+  s.subspec 'Dummy-GoogleAnalytics' do |dummy|
+    dummy.vendored_frameworks = 'Modules/Dummy-GoogleAnalytics/*.xcframework'
   end
 
   s.subspec 'DISABLE_IDFA' do |config|

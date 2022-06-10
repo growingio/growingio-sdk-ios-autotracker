@@ -34,6 +34,7 @@ PODS:
     - GoogleUtilities/Environment (~> 7.7)
     - GoogleUtilities/UserDefaults (~> 7.7)
     - PromisesObjC (~> 2.1)
+  - GoogleAnalytics (3.20.0)
   - GoogleAppMeasurement (9.1.0):
     - GoogleAppMeasurement/AdIdSupport (= 9.1.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.7)
@@ -110,6 +111,8 @@ PODS:
     - GrowingAnalytics/TrackerCore
   - GrowingAnalytics/Encryption (3.3.7-beta):
     - GrowingAnalytics/TrackerCore
+  - GrowingAnalytics/GA3Adapter (3.3.7-beta):
+    - GrowingAnalytics/TrackerCore
   - GrowingAnalytics/GAAdapter (3.3.7-beta):
     - GrowingAnalytics/TrackerCore
   - GrowingAnalytics/Hybrid (3.3.7-beta):
@@ -175,9 +178,11 @@ PODS:
 
 DEPENDENCIES:
   - FirebaseAnalytics
+  - GoogleAnalytics
   - GrowingAnalytics-cdp/Autotracker (from `./`)
   - GrowingAnalytics-cdp/Tracker (from `./`)
   - GrowingAnalytics/Autotracker (from `./`)
+  - GrowingAnalytics/GA3Adapter (from `./`)
   - GrowingAnalytics/GAAdapter (from `./`)
   - GrowingAnalytics/Protobuf (from `./`)
   - GrowingAnalytics/Tracker (from `./`)
@@ -192,6 +197,7 @@ SPEC REPOS:
     - FirebaseCoreDiagnostics
     - FirebaseCoreInternal
     - FirebaseInstallations
+    - GoogleAnalytics
     - GoogleAppMeasurement
     - GoogleDataTransport
     - GoogleUtilities
@@ -215,10 +221,11 @@ SPEC CHECKSUMS:
   FirebaseCoreDiagnostics: 2dabba3412b23b524823325739f45e520f67d1e7
   FirebaseCoreInternal: f3c838ae0b41cd840bbf34f90debfede78d352e5
   FirebaseInstallations: a91c74276b544524ce144c8315d8cdbce2dbe30b
+  GoogleAnalytics: 01e4c5a04544a3608f93e970ce0817836897c5a5
   GoogleAppMeasurement: 8ecc717f2abe3f9ee95a5d38db08827852894acc
   GoogleDataTransport: 5fffe35792f8b96ec8d6775f5eccd83c998d5a3b
   GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
-  GrowingAnalytics: 39ba297f6e13b81b862e032a1a2d0e55f5daf4c7
+  GrowingAnalytics: 1de0aa600228d83af2925fc63ed7c62d7fed4f5c
   GrowingAnalytics-cdp: a950b859cadb2df28ba06b8618a8c5491d1c06f7
   GrowingToolsKit: fd088ef90c60a7cb6166530dc0eb630e966b4eab
   KIF: 779cdbca106633b94ecee7b036537490ebdbd9de
@@ -228,6 +235,6 @@ SPEC CHECKSUMS:
   SDCycleScrollView: a0d74c3384caa72bdfc81470bdbc8c14b3e1fbcf
   SDWebImage: 0905f1b7760fc8ac4198cae0036600d67478751e
 
-PODFILE CHECKSUM: b4fa0b6c17ed54525547065e4673bddd695404ab
+PODFILE CHECKSUM: a370d045804da56f0da0f9ab2b9ee76f97f33978
 
 COCOAPODS: 1.11.3
