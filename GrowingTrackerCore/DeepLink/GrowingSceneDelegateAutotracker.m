@@ -31,42 +31,99 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         if (@available(iOS 13.0, *)) {
-            //url scheme 跳转
+            // URL Scheme
             SEL sel = @selector(scene:openURLContexts:);
             class_getInstanceMethod(delegateClass, sel);
             Method method = class_getInstanceMethod(delegateClass,sel);
             if (method) {
                 IMP originImp = method_getImplementation(method);
-                method_setImplementation(method, imp_implementationWithBlock(^(id target,UIScene *scene,NSSet<UIOpenURLContext *> *URLContexts) {
+                method_setImplementation(method, imp_implementationWithBlock(^(id target,
+                                                                               UIScene *scene,
+                                                                               NSSet<UIOpenURLContext *> *URLContexts) {
                     NSURL *url = URLContexts.allObjects.firstObject.URL;
                     if (url) {
                         [GrowingDeepLinkHandler handlerUrl:url];
                     }
                     
-                    void (*tempImp)(id obj, SEL sel,UIScene *scene,NSSet<UIOpenURLContext *> *URLContexts) = (void*)originImp;
-                    tempImp(target,sel,scene,URLContexts);
+                    void (*tempImp)(id, SEL, UIScene *, NSSet<UIOpenURLContext *> *) = (void*)originImp;
+                    tempImp(target, sel, scene, URLContexts);
                 }));
             } else {
-                @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:[NSString stringWithFormat:@"在iOS13以上，请在%@实例中实现scene:openURLContexts:以适配UrlScheme",NSStringFromClass(delegateClass)] userInfo:nil];
+                @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                               reason:[NSString stringWithFormat:@"在iOS13以上，请在%@实例中实现scene:openURLContexts:以适配UrlScheme",
+                                                       NSStringFromClass(delegateClass)]
+                                             userInfo:nil];
             }
-            //hook deeplink method
+            // DeepLink
             sel = @selector(scene:continueUserActivity:);
             class_getInstanceMethod(delegateClass, sel);
             method = class_getInstanceMethod(delegateClass,sel);
             if (method) {
                 IMP originImp = method_getImplementation(method);
-                method_setImplementation(method, imp_implementationWithBlock(^(id target,UIScene *scene,NSUserActivity *userActivity) {
+                method_setImplementation(method, imp_implementationWithBlock(^(id target,
+                                                                               UIScene *scene,
+                                                                               NSUserActivity *userActivity) {
                     if ([userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb]) {
                         NSURL *url = userActivity.webpageURL;
                         if (url) {
                             [GrowingDeepLinkHandler handlerUrl:url];
                         }
                     }
-                    void (*tempImp)(id obj, SEL sel,UIScene *scene,NSUserActivity *userActivity) = (void*)originImp;
-                    tempImp(target,sel,scene,userActivity);
+                    void (*tempImp)(id, SEL, UIScene *, NSUserActivity *) = (void*)originImp;
+                    tempImp(target, sel, scene, userActivity);
                 }));
             } else {
-                @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:[NSString stringWithFormat:@"在iOS13以上，请在%@实例中实现scene:continueUserActivity:以适配DeepLink",NSStringFromClass(delegateClass)] userInfo:nil];
+                @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                               reason:[NSString stringWithFormat:@"在iOS13以上，请在%@实例中实现scene:continueUserActivity:以适配DeepLink",
+                                                       NSStringFromClass(delegateClass)]
+                                             userInfo:nil];
+            }
+            // 冷启动
+            sel = @selector(scene:willConnectToSession:options:);
+            class_getInstanceMethod(delegateClass, sel);
+            method = class_getInstanceMethod(delegateClass,sel);
+            if (method) {
+                IMP originImp = method_getImplementation(method);
+                method_setImplementation(method, imp_implementationWithBlock(^(id target,
+                                                                               UIScene *scene,
+                                                                               UISceneSession *session,
+                                                                               UISceneConnectionOptions *connectionOptions) {
+                    /*
+                     
+                     If your app has opted into Scenes, and your app is not running, the system delivers the
+                     URL to the scene(_:willConnectTo:options:) delegate method after launch, and to
+                     scene(_:openURLContexts:) when your app opens a URL while running or suspended in memory.
+                     link: https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app
+                     
+                     If your app has opted into Scenes, and your app is not running, the system delivers the
+                     universal link to the scene(_:willConnectTo:options:) delegate method after launch, and
+                     to scene(_:continue:) when the universal link is tapped while your app is running or
+                     suspended in memory.
+                     link: https://developer.apple.com/documentation/xcode/supporting-universal-links-in-your-app
+                     
+                     */
+                    NSURL *url = nil;
+                    NSUserActivity *userActivity = connectionOptions.userActivities.allObjects.firstObject;
+                    if (userActivity) {
+                        if ([userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb]) {
+                            url = userActivity.webpageURL;
+                        }
+                    } else {
+                        url = connectionOptions.URLContexts.allObjects.firstObject.URL;
+                    }
+                    
+                    if (url) {
+                        [GrowingDeepLinkHandler handlerUrl:url];
+                    }
+                    
+                    void (*tempImp)(id, SEL, UIScene *, UISceneSession *, UISceneConnectionOptions *) = (void*)originImp;
+                    tempImp(target, sel, scene, session, connectionOptions);
+                }));
+            } else {
+                @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                               reason:[NSString stringWithFormat:@"在iOS13以上，请在%@实例中实现scene:willConnectToSession:options:以适配冷启动圈选、冷启动DeepLink等场景",
+                                                       NSStringFromClass(delegateClass)]
+                                             userInfo:nil];
             }
         }
     });
