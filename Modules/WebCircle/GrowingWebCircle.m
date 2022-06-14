@@ -369,8 +369,7 @@ GrowingMod(GrowingWebCircle)
     [self sendScreenShot];
 }
 
-- (void)runWithCircle:(NSURL *)url readyBlock:(void (^)(void))readyBlock finishBlock:(void (^)(void))finishBlock;
-{
+- (void)runWithCircle:(NSURL *)url readyBlock:(void (^)(void))readyBlock finishBlock:(void (^)(void))finishBlock {
     
     if (self.webSocket) {
         [self.webSocket close];
@@ -379,6 +378,12 @@ GrowingMod(GrowingWebCircle)
     }
     
     if (!self.isReady) {
+        Class <GrowingWebSocketService> serviceClass = [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingWebSocketService)];
+        if (!serviceClass) {
+            GIOLogError(@"-runWithCircle:readyBlock:finishBlock: web circle error : no websocket service support");
+            return;
+        }
+        
         [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -389,11 +394,6 @@ GrowingMod(GrowingWebCircle)
         [UIApplication sharedApplication].idleTimerDisabled = YES;
         GIOLogDebug(@"开始起服务");
         
-        Class <GrowingWebSocketService> serviceClass = [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingWebSocketService)];
-        if (!serviceClass) {
-            GIOLogError(@"-runWithCircle:readyBlock:finishBlock: web circle error : no websocket service support");
-            return;
-        }
         if (url) {
             self.webSocket = [[(Class)serviceClass alloc] initWithURLRequest:[NSURLRequest requestWithURL:url]];
             self.webSocket.delegate = self;
