@@ -46,6 +46,20 @@
         "identifier" : "34D932F627BF8A400038430E",
         "name" : "GrowingAnalyticsCDPTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Example.xcodeproj",
+        "identifier" : "3494DCF728597E1A00A6CE46",
+        "name" : "GrowingAnalyticsUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Example.xcodeproj",
+        "identifier" : "3494DD2C2859E27B00A6CE46",
+        "name" : "GrowingAnalyticsiOS13UITests"
+      }
     }
   ],
   "version" : 1
