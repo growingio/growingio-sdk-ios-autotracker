@@ -49,3 +49,19 @@ target 'ProtobufTests' do
    pod 'GrowingAnalytics/Autotracker', :path => './'
    pod 'GrowingAnalytics/Protobuf', :path => './'
 end
+
+target 'GrowingAnalyticsUITests' do
+   project 'Example/Example'
+   pod 'GrowingAnalytics/Autotracker', :path => './'
+end
+
+target 'ExampleiOS13' do
+  project 'Example/Example'
+  pod 'GrowingAnalytics/Autotracker', :path => './'
+  pod 'GrowingToolsKit'
+end
+
+target 'GrowingAnalyticsiOS13UITests' do
+   project 'Example/Example'
+   pod 'GrowingAnalytics/Autotracker', :path => './'
+end
