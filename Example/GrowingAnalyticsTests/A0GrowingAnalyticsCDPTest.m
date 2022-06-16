@@ -74,7 +74,7 @@
     [[GrowingAutotracker sharedInstance] setLoginUserId:userId];
     
     [GrowingDispatchManager dispatchInGrowingThread:^{
-        XCTAssertEqual([GrowingSession currentSession].loginUserId, userId);
+        XCTAssertEqualObjects([GrowingSession currentSession].loginUserId, userId);
     } waitUntilDone:YES];
     
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeVisit];
@@ -85,7 +85,7 @@
     [[GrowingAutotracker sharedInstance] cleanLoginUserId];
     
     [GrowingDispatchManager dispatchInGrowingThread:^{
-        XCTAssertEqual([GrowingSession currentSession].loginUserId, nil);
+        XCTAssertEqualObjects([GrowingSession currentSession].loginUserId, nil);
     } waitUntilDone:YES];
 }
 
@@ -98,16 +98,16 @@
     NSString *userId = @"123456789";
     [[GrowingAutotracker sharedInstance] setLoginUserId:userId userKey:@"number"];
     [GrowingDispatchManager dispatchInGrowingThread:^{
-        XCTAssertEqual([GrowingSession currentSession].loginUserId, userId);
-        XCTAssertEqual([GrowingSession currentSession].loginUserKey, @"number");
+        XCTAssertEqualObjects([GrowingSession currentSession].loginUserId, userId);
+        XCTAssertEqualObjects([GrowingSession currentSession].loginUserKey, @"number");
         [expectation fulfill];
     }];
     
     userId = @"223344";
     [[GrowingAutotracker sharedInstance] setLoginUserId:userId];
     [GrowingDispatchManager dispatchInGrowingThread:^{
-        XCTAssertEqual([GrowingSession currentSession].loginUserId, userId);
-        XCTAssertEqual([GrowingSession currentSession].loginUserKey, nil);
+        XCTAssertEqualObjects([GrowingSession currentSession].loginUserId, userId);
+        XCTAssertEqualObjects([GrowingSession currentSession].loginUserKey, nil);
         [expectation fulfill];
     }];
     [self waitForExpectationsWithTimeout:10.0f handler:nil];

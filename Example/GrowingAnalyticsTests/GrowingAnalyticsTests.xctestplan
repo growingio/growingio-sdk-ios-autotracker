@@ -60,6 +60,13 @@
         "identifier" : "3494DD2C2859E27B00A6CE46",
         "name" : "GrowingAnalyticsiOS13UITests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Example.xcodeproj",
+        "identifier" : "34F24B8D285B048000F4B221",
+        "name" : "GAAdapterTests"
+      }
     }
   ],
   "version" : 1
