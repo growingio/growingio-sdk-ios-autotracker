@@ -26,13 +26,13 @@
     return [[GrowingLoginUserAttributesBuidler alloc] init];
 }
 
-- (NSString *)eventType {
-    return GrowingEventTypeLoginUserAttributes;
-}
-
 @end
 
 @implementation GrowingLoginUserAttributesBuidler
+
+- (NSString *)eventType {
+    return GrowingEventTypeLoginUserAttributes;
+}
 
 - (GrowingBaseEvent *)build {
     return [[GrowingLoginUserAttributesEvent alloc] initWithBuilder:self];
