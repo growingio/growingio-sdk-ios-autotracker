@@ -70,3 +70,19 @@ target 'GA3AdapterTests' do
    pod 'GrowingAnalytics/GA3Adapter', :path => './'
    pod 'GoogleAnalytics'
 end
+
+target 'GrowingAnalyticsUITests' do
+   project 'Example/Example'
+   pod 'GrowingAnalytics/Autotracker', :path => './'
+end
+
+target 'ExampleiOS13' do
+  project 'Example/Example'
+  pod 'GrowingAnalytics/Autotracker', :path => './'
+  pod 'GrowingToolsKit'
+end
+
+target 'GrowingAnalyticsiOS13UITests' do
+   project 'Example/Example'
+   pod 'GrowingAnalytics/Autotracker', :path => './'
+end
