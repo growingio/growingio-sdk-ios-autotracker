@@ -168,4 +168,28 @@
     return [GrowingGetClass((id)self) growing_swizzleMethod:origSel_ withMethod:altSel_ error:error_];
 }
 
++ (nullable NSInvocation *)growing_swizzleMethod:(SEL)origSel withBlock:(id)block error:(NSError **)error {
+    IMP blockIMP = imp_implementationWithBlock(block);
+    NSString *blockSelectorString = [NSString stringWithFormat:@"_growing_block_%@_%p", NSStringFromSelector(origSel), block];
+    SEL blockSel = sel_registerName([blockSelectorString cStringUsingEncoding:NSUTF8StringEncoding]);
+    Method origSelMethod = class_getInstanceMethod(self, origSel);
+    const char* origSelMethodArgs = method_getTypeEncoding(origSelMethod);
+    class_addMethod(self, blockSel, blockIMP, origSelMethodArgs);
+
+    NSMethodSignature *origSig = [NSMethodSignature signatureWithObjCTypes:origSelMethodArgs];
+    NSInvocation *origInvocation = [NSInvocation invocationWithMethodSignature:origSig];
+    origInvocation.selector = blockSel;
+
+    [self growing_swizzleMethod:origSel withMethod:blockSel error:nil];
+
+    return origInvocation;
+}
+
++ (nullable NSInvocation *)growing_swizzleClassMethod:(SEL)origSel withBlock:(id)block error:(NSError **)error {
+    NSInvocation *invocation = [GrowingGetClass((id)self) growing_swizzleMethod:origSel withBlock:block error:error];
+    invocation.target = self;
+
+    return invocation;
+}
+
 @end

@@ -9,6 +9,8 @@
 #import "AppDelegate.h"
 #import <AppTrackingTransparency/AppTrackingTransparency.h>
 #import <GrowingToolsKit/GrowingToolsKit.h>
+//@import FirebaseCore;
+//@import FirebaseAnalytics;
 
 static NSString *const kGrowingProjectId = @"bc675c65b3b0290e";
 
@@ -30,7 +32,12 @@ static NSString *const kGrowingProjectId = @"bc675c65b3b0290e";
     configuration.dataCollectionServerHost = @"https://run.mocky.io/v3/08999138-a180-431d-a136-051f3c6bd306";
 
     [GrowingSDK startWithConfiguration:configuration launchOptions:launchOptions];
-    [[GrowingSDK sharedInstance] setLocation:[@30.11 doubleValue] longitude:[@32.22 doubleValue]];
+
+    // 1. 前往 https://console.firebase.google.com/u/0/project/ga-adapter-e9417/settings/general 下载GoogleService-Info.plist
+    // 2. 将GoogleService-Info.plist添加到项目
+    // 3. 反注释下面这一行代码，启动FirebaseAnalytics
+//    [FIRApp configure];
+    
     return YES;
 }
 

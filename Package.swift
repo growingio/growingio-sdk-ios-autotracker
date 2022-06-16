@@ -62,6 +62,10 @@ let package = Package(
             name: "GrowingModule_Hybrid",
             targets: ["GrowingModule_Hybrid"]
         ),
+        .library(
+            name: "GrowingModule_GAAdapter",
+            targets: ["GrowingModule_GAAdapter"]
+        ),
     ],
     dependencies: [],
     targets: [
@@ -299,6 +303,14 @@ let package = Package(
             ],
             linkerSettings: [
                 .linkedFramework("WebKit", .when(platforms: [.iOS])),
+            ]
+        ),
+        .target(
+            name: "GrowingModule_GAAdapter",
+            dependencies: ["GrowingTrackerCore"],
+            path: "Modules/GAAdapter",
+            cSettings: [
+                .headerSearchPath("../.."),
             ]
         ),
 
