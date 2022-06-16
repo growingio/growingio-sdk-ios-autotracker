@@ -39,7 +39,7 @@
     GrowingTrackConfiguration *config = [GrowingTrackConfiguration configurationWithProjectId:@"test"];
     // 避免不执行readPropertyInTrackThread
     config.dataCollectionEnabled = YES;
-    config.sessionInterval = 10.0f;
+    config.sessionInterval = 5.0f;
     GrowingConfigurationManager.sharedInstance.trackConfiguration = config;
     
     // 避免insertEventToDatabase异常

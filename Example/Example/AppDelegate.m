@@ -12,6 +12,9 @@
 //@import FirebaseCore;
 //@import FirebaseAnalytics;
 
+//#import <GoogleAnalytics/GAI.h>
+//#import <GoogleAnalytics/GAIDictionaryBuilder.h>
+
 static NSString *const kGrowingProjectId = @"bc675c65b3b0290e";
 
 @interface AppDelegate ()
@@ -37,6 +40,11 @@ static NSString *const kGrowingProjectId = @"bc675c65b3b0290e";
     // 2. 将GoogleService-Info.plist添加到项目
     // 3. 反注释下面这一行代码，启动FirebaseAnalytics
 //    [FIRApp configure];
+    
+//    GAI *gai = [GAI sharedInstance];
+//    id<GAITracker> tracker = [gai trackerWithName:@"GA3Tracker" trackingId:@"UA-XXXX-Y"];
+//    gai.logger.logLevel = kGAILogLevelVerbose;
+//    [tracker send:@{@"key" : @"value"}];
     
     return YES;
 }

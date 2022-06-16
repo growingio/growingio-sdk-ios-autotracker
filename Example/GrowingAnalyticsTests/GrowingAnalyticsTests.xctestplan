@@ -67,6 +67,13 @@
         "identifier" : "34F24B8D285B048000F4B221",
         "name" : "GAAdapterTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Example.xcodeproj",
+        "identifier" : "34F24B9C285B080400F4B221",
+        "name" : "GA3AdapterTests"
+      }
     }
   ],
   "version" : 1
