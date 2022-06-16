@@ -97,7 +97,7 @@
         .setDeviceId(@"testdeviceID");
     
     GrowingBaseBuilder *builder = GrowingVisitEvent.builder;
-    [GrowingEventManager.sharedInstance postEventBuidler:builder];
+    [GrowingEventManager.sharedInstance postEventBuilder:builder];
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeVisit];
     XCTAssertEqual(events.count, 1);
@@ -113,7 +113,7 @@
 
 - (void)testGrowingCustomEvent {
     GrowingBaseBuilder *builder = GrowingCustomEvent.builder.setEventName(@"custom").setAttributes(@{@"key" : @"value"});
-    [GrowingEventManager.sharedInstance postEventBuidler:builder];
+    [GrowingEventManager.sharedInstance postEventBuilder:builder];
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
     XCTAssertEqual(events.count, 1);
@@ -133,7 +133,7 @@
 
 - (void)testGrowingLoginUserAttributesEvent {
     GrowingBaseBuilder *builder = GrowingLoginUserAttributesEvent.builder.setAttributes(@{@"key" : @"value"});
-    [GrowingEventManager.sharedInstance postEventBuidler:builder];
+    [GrowingEventManager.sharedInstance postEventBuilder:builder];
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeLoginUserAttributes];
     XCTAssertEqual(events.count, 1);
@@ -151,7 +151,7 @@
 
 - (void)testGrowingConversionVariableEvent {
     GrowingBaseBuilder *builder = GrowingConversionVariableEvent.builder.setAttributes(@{@"key" : @"value"});
-    [GrowingEventManager.sharedInstance postEventBuidler:builder];
+    [GrowingEventManager.sharedInstance postEventBuilder:builder];
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeConversionVariables];
     XCTAssertEqual(events.count, 1);
@@ -169,7 +169,7 @@
 
 - (void)testGrowingVisitorAttributesEvent {
     GrowingBaseBuilder *builder = GrowingVisitorAttributesEvent.builder.setAttributes(@{@"key" : @"value"});
-    [GrowingEventManager.sharedInstance postEventBuidler:builder];
+    [GrowingEventManager.sharedInstance postEventBuilder:builder];
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeVisitorAttributes];
     XCTAssertEqual(events.count, 1);
@@ -187,7 +187,7 @@
 
 - (void)testGrowingAppCloseEvent {
     GrowingBaseBuilder *builder = GrowingAppCloseEvent.builder;
-    [GrowingEventManager.sharedInstance postEventBuidler:builder];
+    [GrowingEventManager.sharedInstance postEventBuilder:builder];
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeAppClosed];
     XCTAssertEqual(events.count, 1);
@@ -208,7 +208,7 @@
         .setOrientation(orientation)
         .setTitle(@"title")
         .setReferralPage(@"referralPage");
-    [GrowingEventManager.sharedInstance postEventBuidler:builder];
+    [GrowingEventManager.sharedInstance postEventBuilder:builder];
 
     // !!! 注意：这里有个隐藏的死锁问题 !!!
     // 首次发送 GrowingPageEvent 时，-[GrowingDeviceInfo deviceOrientation] 中，有个子线程同步等待主线程的操作
@@ -253,7 +253,7 @@
         .setPath(@"path")
         .setPageShowTimestamp(1638857558209)
         .setAttributes(@{@"key" : @"value"});
-    [GrowingEventManager.sharedInstance postEventBuidler:builder];
+    [GrowingEventManager.sharedInstance postEventBuilder:builder];
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypePageAttributes];
     XCTAssertEqual(events.count, 1);

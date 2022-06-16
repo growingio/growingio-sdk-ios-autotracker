@@ -67,7 +67,7 @@
 
 /// 发送event，必须在主线程调用
 /// @param builder event构造器
-- (void)postEventBuidler:(GrowingBaseBuilder *_Nullable)builder;
+- (void)postEventBuilder:(GrowingBaseBuilder *_Nullable)builder;
 
 /// 添加拦截者 - 执行顺序不保证有序
 /// @param interceptor 拦截者

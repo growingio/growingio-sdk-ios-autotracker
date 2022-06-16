@@ -222,7 +222,7 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
         builder = GrowingConversionVariableEvent.builder.setAttributes(dict[@KEY_ATTRIBUTES]);
     }
     if (builder) {
-        [[GrowingEventManager sharedInstance] postEventBuidler:builder];
+        [[GrowingEventManager sharedInstance] postEventBuilder:builder];
     }
 }
 
