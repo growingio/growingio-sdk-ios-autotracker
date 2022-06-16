@@ -24,7 +24,7 @@
 
 @interface GrowingHybridBridgeProvider : NSObject
 
-@property(nullable, nonatomic, weak) id <GrowingWebViewDomChangedDelegate> domChangedDelegate;
+@property (nullable, nonatomic, weak) id <GrowingWebViewDomChangedDelegate> domChangedDelegate;
 
 + (instancetype _Nonnull)sharedInstance;
 

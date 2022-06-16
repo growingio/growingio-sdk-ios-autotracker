@@ -33,7 +33,7 @@ static GrowingAutotracker *sharedInstance = nil;
 
 @interface GrowingAutotracker ()
 
-@property(nonatomic, strong) GrowingCdpEventInterceptor *interceptor;
+@property (nonatomic, strong) GrowingCdpEventInterceptor *interceptor;
 
 @end
 

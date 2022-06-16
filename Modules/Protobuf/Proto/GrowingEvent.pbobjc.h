@@ -137,140 +137,140 @@ typedef GPB_ENUM(GrowingPBEventV3Dto_FieldNumber) {
 
 GPB_FINAL @interface GrowingPBEventV3Dto : GPBMessage
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *deviceId;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *deviceId;
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *userId;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *userId;
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *gioId;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *gioId;
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *sessionId;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *sessionId;
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *dataSourceId;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *dataSourceId;
 
-@property(nonatomic, readwrite) GrowingPBEventType eventType;
+@property (nonatomic, readwrite) GrowingPBEventType eventType;
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *platform;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *platform;
 
-@property(nonatomic, readwrite) int64_t timestamp;
+@property (nonatomic, readwrite) int64_t timestamp;
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *domain;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *domain;
 
 /** PageEvent */
-@property(nonatomic, readwrite, copy, null_resettable) NSString *path;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *path;
 
 /** HybridCustomEvent */
-@property(nonatomic, readwrite, copy, null_resettable) NSString *query;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *query;
 
 /** PageEvent */
-@property(nonatomic, readwrite, copy, null_resettable) NSString *title;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *title;
 
 /** PageEvent */
-@property(nonatomic, readwrite, copy, null_resettable) NSString *referralPage;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *referralPage;
 
-@property(nonatomic, readwrite) int64_t globalSequenceId;
+@property (nonatomic, readwrite) int64_t globalSequenceId;
 
-@property(nonatomic, readwrite) int32_t eventSequenceId;
+@property (nonatomic, readwrite) int32_t eventSequenceId;
 
-@property(nonatomic, readwrite) int32_t screenHeight;
+@property (nonatomic, readwrite) int32_t screenHeight;
 
-@property(nonatomic, readwrite) int32_t screenWidth;
+@property (nonatomic, readwrite) int32_t screenWidth;
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *language;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *language;
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *sdkVersion;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *sdkVersion;
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *appVersion;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *appVersion;
 
 /** VisitEvent */
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableDictionary<NSString*, NSString*> *extraSdk;
+@property (nonatomic, readwrite, strong, null_resettable) NSMutableDictionary<NSString*, NSString*> *extraSdk;
 /** The number of items in @c extraSdk without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger extraSdk_Count;
+@property (nonatomic, readonly) NSUInteger extraSdk_Count;
 
 /** customEvent */
-@property(nonatomic, readwrite, copy, null_resettable) NSString *eventName;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *eventName;
 
 /** PageAttributesEvent */
-@property(nonatomic, readwrite) int64_t pageShowTimestamp;
+@property (nonatomic, readwrite) int64_t pageShowTimestamp;
 
 /** BaseAttributesEvent */
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableDictionary<NSString*, NSString*> *attributes;
+@property (nonatomic, readwrite, strong, null_resettable) NSMutableDictionary<NSString*, NSString*> *attributes;
 /** The number of items in @c attributes without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger attributes_Count;
+@property (nonatomic, readonly) NSUInteger attributes_Count;
 
 /** ResourceItemCustomEvent */
-@property(nonatomic, readwrite, strong, null_resettable) GrowingPBResourceItem *resourceItem;
+@property (nonatomic, readwrite, strong, null_resettable) GrowingPBResourceItem *resourceItem;
 /** Test to see if @c resourceItem has been set. */
-@property(nonatomic, readwrite) BOOL hasResourceItem;
+@property (nonatomic, readwrite) BOOL hasResourceItem;
 
 /** HybridPageEvent */
-@property(nonatomic, readwrite, copy, null_resettable) NSString *protocolType;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *protocolType;
 
 /** ViewElementEvent */
-@property(nonatomic, readwrite, copy, null_resettable) NSString *textValue;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *textValue;
 
 /** ViewElementEvent */
-@property(nonatomic, readwrite, copy, null_resettable) NSString *xpath;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *xpath;
 
 /** ViewElementEvent */
-@property(nonatomic, readwrite) int32_t index;
+@property (nonatomic, readwrite) int32_t index;
 
 /** HybridViewElementEvent */
-@property(nonatomic, readwrite, copy, null_resettable) NSString *hyperlink;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *hyperlink;
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *URLScheme;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *URLScheme;
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *appState;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *appState;
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *networkState;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *networkState;
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *appChannel;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *appChannel;
 
 /** useless */
-@property(nonatomic, readwrite, copy, null_resettable) NSString *pageName;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *pageName;
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *platformVersion;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *platformVersion;
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *deviceBrand;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *deviceBrand;
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *deviceModel;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *deviceModel;
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *deviceType;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *deviceType;
 
 /** refer platformVersion */
-@property(nonatomic, readwrite, copy, null_resettable) NSString *operatingSystem;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *operatingSystem;
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *appName;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *appName;
 
-@property(nonatomic, readwrite) double latitude;
+@property (nonatomic, readwrite) double latitude;
 
-@property(nonatomic, readwrite) double longitude;
-
-/** VISITEVENT */
-@property(nonatomic, readwrite, copy, null_resettable) NSString *imei;
+@property (nonatomic, readwrite) double longitude;
 
 /** VISITEVENT */
-@property(nonatomic, readwrite, copy, null_resettable) NSString *androidId;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *imei;
 
 /** VISITEVENT */
-@property(nonatomic, readwrite, copy, null_resettable) NSString *oaid;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *androidId;
 
 /** VISITEVENT */
-@property(nonatomic, readwrite, copy, null_resettable) NSString *googleAdvertisingId;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *oaid;
+
+/** VISITEVENT */
+@property (nonatomic, readwrite, copy, null_resettable) NSString *googleAdvertisingId;
 
 /** for ios */
-@property(nonatomic, readwrite, copy, null_resettable) NSString *idfa;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *idfa;
 
 /** for ios */
-@property(nonatomic, readwrite, copy, null_resettable) NSString *idfv;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *idfv;
 
 /** PageEvent */
-@property(nonatomic, readwrite, copy, null_resettable) NSString *orientation;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *orientation;
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *projectKey;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *projectKey;
 
-@property(nonatomic, readwrite) int64_t sendTime;
+@property (nonatomic, readwrite) int64_t sendTime;
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *userKey;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *userKey;
 
 @end
 
@@ -296,13 +296,13 @@ typedef GPB_ENUM(GrowingPBResourceItem_FieldNumber) {
 
 GPB_FINAL @interface GrowingPBResourceItem : GPBMessage
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *id_p;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *id_p;
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *key;
+@property (nonatomic, readwrite, copy, null_resettable) NSString *key;
 
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableDictionary<NSString*, NSString*> *attributes;
+@property (nonatomic, readwrite, strong, null_resettable) NSMutableDictionary<NSString*, NSString*> *attributes;
 /** The number of items in @c attributes without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger attributes_Count;
+@property (nonatomic, readonly) NSUInteger attributes_Count;
 
 @end
 
@@ -314,9 +314,9 @@ typedef GPB_ENUM(GrowingPBEventV3List_FieldNumber) {
 
 GPB_FINAL @interface GrowingPBEventV3List : GPBMessage
 
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<GrowingPBEventV3Dto*> *valuesArray;
+@property (nonatomic, readwrite, strong, null_resettable) NSMutableArray<GrowingPBEventV3Dto*> *valuesArray;
 /** The number of items in @c valuesArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger valuesArray_Count;
+@property (nonatomic, readonly) NSUInteger valuesArray_Count;
 
 @end
 

@@ -22,7 +22,7 @@
 
 @interface GrowingPageGroup : GrowingPage
 
-@property(nonatomic, readonly, strong) NSPointerArray *childPages;
+@property (nonatomic, readonly, strong) NSPointerArray *childPages;
 
 - (void)addChildrenPage:(GrowingPage *)page;
 

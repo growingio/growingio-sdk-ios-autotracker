@@ -60,15 +60,15 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
 
 @interface GrowingModuleManager()
 /// 存module名，load之后清空
-@property(nonatomic, strong) NSMutableArray     *growingModuleNames;
+@property (nonatomic, strong) NSMutableArray     *growingModuleNames;
 /// 存module class
-@property(nonatomic, strong) NSMutableArray     *growingModuleDynamicClasses;
+@property (nonatomic, strong) NSMutableArray     *growingModuleDynamicClasses;
 /// 存封装有module class的info类
-@property(nonatomic, strong) NSMutableArray<NSDictionary *>     *growingModuleInfos;
-@property(nonatomic, strong) NSMutableArray     *growingModules;
+@property (nonatomic, strong) NSMutableArray<NSDictionary *>     *growingModuleInfos;
+@property (nonatomic, strong) NSMutableArray     *growingModules;
 
-@property(nonatomic, strong) NSMutableDictionary<NSNumber *, NSMutableArray<id<GrowingModuleProtocol>> *> *growingModulesByEvent;
-@property(nonatomic, strong) NSMutableDictionary<NSNumber *, NSString *> *growingSelectorByEvent;
+@property (nonatomic, strong) NSMutableDictionary<NSNumber *, NSMutableArray<id<GrowingModuleProtocol>> *> *growingModulesByEvent;
+@property (nonatomic, strong) NSMutableDictionary<NSNumber *, NSString *> *growingSelectorByEvent;
 
 @end
 
