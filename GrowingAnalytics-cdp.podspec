@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'GrowingAnalytics-cdp'
-  s.version          = '3.3.7-beta'
+  s.version          = '3.4.0'
   s.summary          = 'iOS SDK of GrowingIO.'
   s.description      = <<-DESC
 GrowingAnalytics-cdp基于GrowingAnalytics，同样具备自动采集基本的用户行为事件，比如访问和行为数据等。

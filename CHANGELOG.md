@@ -1,5 +1,21 @@
-# [3.3.6](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.3.5...3.3.6) (2022-04-28)
+# [3.4.0](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.3.6...3.4.0) (2022-06-16)
 
+### Bug Fixes
+
+* EventType 实现应统一到 Builder 类中 ([c10d9b1](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/c10d9b1d2cf04cf5a7feaa4b724c3a603b85988e))
+* RequestAdapter 初始化函数调整 ([2a026ee](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/2a026eefc3da7fcce5bd9350660be51b23a882af))
+* SDK 未初始化时多次扫码圈选导致多次注册 UIDeviceOrientationDidChangeNotification ([9c03a47](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/9c03a471ace9b01c783a390f120f54a59e150e1d))
+* 删除无用的 GrowingLoginRequest (.h, .m) ([5d2e2f0](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/5d2e2f0aa905bec927847284b696034663cce921))
+
+### Features
+
+* DefaultServices 单独作为 Module ([e89210e](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/e89210e522d38ee9835ce218778fbee5778d3e1f))
+* GA Adapter v3 ([e5433de](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/e5433de5cf853662ce8058309041d53101dc58c7))
+* GA Adapter v4 ([7250aa8](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/7250aa88ef2173de45606dd230884674869a1090))
+* Protobuf 模块优化，减少 Category 的使用，避免 ld warnings ([5394ca4](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/5394ca4b2fb1e178466cbd2e00869eb270ae1d2f))
+* 适配 iOS 13 UIScene 冷启动 DeepLink 唤起 ([1302b8b](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/1302b8bee188e087f2c6f49e16f365bda1b6becf))
+
+# [3.3.6](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.3.5...3.3.6) (2022-04-28)
 
 ### Features
 
@@ -7,12 +23,10 @@
 
 # [3.3.5](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.3.4...3.3.5) (2022-04-12)
 
-
 ### Bug Fixes
 
 * GrowingEventManager 在 loadLocalServices 之前初始化将导致数据库创建失败，事件无法入库 ([758a063](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/758a063966ad06a594c0a1e053b1ae322777e575))
 * 日志输出添加前缀 ([190e39a](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/190e39a6b470399fb64d219cb27adb57160fb5f9))
-
 
 ### Features
 
