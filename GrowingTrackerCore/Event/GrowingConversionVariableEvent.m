@@ -30,7 +30,7 @@
     return self;
 }
 
-+ (GrowingConversionVariableBuidler *_Nonnull)builder {
++ (GrowingConversionVariableBuidler *)builder {
     return [[GrowingConversionVariableBuidler alloc] init];
 }
 
@@ -58,4 +58,5 @@
 - (GrowingBaseEvent *)build {
     return [[GrowingConversionVariableEvent alloc] initWithBuilder:self];
 }
+
 @end

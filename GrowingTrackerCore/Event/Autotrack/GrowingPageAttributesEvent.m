@@ -23,7 +23,7 @@
 
 - (instancetype)initWithBuilder:(GrowingPageAttributesBuilder *)builder {
     if (self = [super initWithBuilder:builder]) {
-        GrowingPageAttributesBuilder *subBuilder = (GrowingPageAttributesBuilder*)builder;
+        GrowingPageAttributesBuilder *subBuilder = (GrowingPageAttributesBuilder *)builder;
         _path = subBuilder.path;
         _pageShowTimestamp = subBuilder.pageShowTimestamp;
     }
@@ -45,7 +45,6 @@
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wincomplete-implementation"
-
 @implementation GrowingPageAttributesBuilder
 
 - (GrowingPageAttributesBuilder *(^)(NSString *value))setPath {
@@ -55,13 +54,12 @@
     };
 }
 
-- (GrowingPageAttributesBuilder *(^)(long long value))setPageShowTimestamp{
+- (GrowingPageAttributesBuilder *(^)(long long value))setPageShowTimestamp {
     return ^(long long value) {
         self->_pageShowTimestamp = value;
         return self;
     };
 }
-
 
 - (NSString *)eventType {
     return GrowingEventTypePageAttributes;

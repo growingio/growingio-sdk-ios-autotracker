@@ -22,7 +22,7 @@
 
 @implementation GrowingLoginUserAttributesEvent
 
-+ (GrowingLoginUserAttributesBuidler *_Nonnull)builder {
++ (GrowingLoginUserAttributesBuidler *)builder {
     return [[GrowingLoginUserAttributesBuidler alloc] init];
 }
 
@@ -31,7 +31,6 @@
 }
 
 @end
-
 
 @implementation GrowingLoginUserAttributesBuidler
 

@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingPageAttributesEvent : GrowingBaseAttributesEvent
 
-@property (nonatomic, copy, readonly) NSString * _Nonnull path;
+@property (nonatomic, copy, readonly) NSString *path;
 @property (nonatomic, assign, readonly) long long pageShowTimestamp;
 
 + (GrowingPageAttributesBuilder *)builder;
@@ -35,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingPageAttributesBuilder : GrowingBaseAttributesBuilder
 
-@property (nonatomic, copy, readonly) NSString * _Nonnull path;
+@property (nonatomic, copy, readonly) NSString *path;
 @property (nonatomic, assign, readonly) long long pageShowTimestamp;
 
 - (GrowingPageAttributesBuilder *(^)(NSString *value))setPath;

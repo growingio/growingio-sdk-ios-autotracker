@@ -22,11 +22,12 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class GrowingConversionVariableBuidler;
+
 @interface GrowingConversionVariableEvent : GrowingBaseEvent
 
 @property (nonatomic, copy, readonly) NSDictionary<NSString *, NSObject *> *attributes;
 
-+ (GrowingConversionVariableBuidler *_Nonnull)builder;
++ (GrowingConversionVariableBuidler *)builder;
 
 @end
 

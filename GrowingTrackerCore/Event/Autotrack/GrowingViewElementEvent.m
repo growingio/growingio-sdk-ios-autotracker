@@ -27,7 +27,7 @@
 
 - (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
     if (self = [super initWithBuilder:builder]) {
-        GrowingViewElementBuilder *subBuilder = (GrowingViewElementBuilder*)builder;
+        GrowingViewElementBuilder *subBuilder = (GrowingViewElementBuilder *)builder;
         _path = subBuilder.pageName;
         _pageShowTimestamp = subBuilder.pageShowTimestamp;
         _textValue = subBuilder.textValue;
@@ -59,24 +59,28 @@
         return self;
     };
 }
+
 - (GrowingViewElementBuilder *(^)(long long value))setPageShowTimestamp {
     return ^(long long value) {
         self->_pageShowTimestamp = value;
         return self;
     };
 }
+
 - (GrowingViewElementBuilder *(^)(NSString *value))setTextValue {
     return ^(NSString *value) {
         self->_textValue = value;
         return self;
     };
 }
+
 - (GrowingViewElementBuilder *(^)(NSString *value))setXpath {
     return ^(NSString *value) {
         self->_xpath = value;
         return self;
     };
 }
+
 - (GrowingViewElementBuilder *(^)(int value))setIndex {
     return ^(int value) {
         self->_index = value;
@@ -87,7 +91,6 @@
 - (GrowingBaseEvent *)build {
     return [[GrowingViewElementEvent alloc] initWithBuilder:self];
 }
-
 
 @end
 #pragma clang diagnostic pop

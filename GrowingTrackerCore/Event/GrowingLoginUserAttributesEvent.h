@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingLoginUserAttributesEvent : GrowingBaseAttributesEvent
 
-+ (GrowingLoginUserAttributesBuidler *_Nonnull)builder;
++ (GrowingLoginUserAttributesBuidler *)builder;
 
 @end
 
