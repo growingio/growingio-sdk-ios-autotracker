@@ -24,15 +24,11 @@
 #import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
 #import "GrowingTrackerCore/GrowingRealTracker.h"
 
-@interface GrowingVisitEvent ()
-
-@end
-
 @implementation GrowingVisitEvent
 
 - (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
     if (self = [super initWithBuilder:builder]) {
-        GrowingVisitBuilder *subBuilder = (GrowingVisitBuilder*)builder;
+        GrowingVisitBuilder *subBuilder = (GrowingVisitBuilder *)builder;
         _idfa = subBuilder.idfa;
         _idfv = subBuilder.idfv;
         _extraSdk = subBuilder.extraSdk;
@@ -40,7 +36,7 @@
     return self;
 }
 
-+ (GrowingVisitBuilder *_Nonnull)builder {
++ (GrowingVisitBuilder *)builder {
     return [[GrowingVisitBuilder alloc] init];
 }
 
@@ -76,19 +72,21 @@
         return self;
     };
 }
+
 - (GrowingVisitBuilder *(^)(NSString *value))setIdfv {
     return ^(NSString *value) {
         self->_idfv = value;
         return self;
     };
 }
+
 - (GrowingVisitBuilder *(^)(NSDictionary<NSString *,NSString*> *value))setExtraSdk {
     return ^(NSDictionary<NSString *,NSString*> *value) {
         self->_extraSdk = value;
         return self;
     };
 }
-//_eventType成员变量并没有值
+
 - (NSString *)eventType {
     return GrowingEventTypeVisit;
 }
@@ -96,7 +94,6 @@
 - (GrowingBaseEvent *)build {
     return [[GrowingVisitEvent alloc] initWithBuilder:self];
 }
-
 
 @end
 #pragma clang diagnostic pop

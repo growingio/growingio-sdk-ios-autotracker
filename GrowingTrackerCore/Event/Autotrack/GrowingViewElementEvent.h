@@ -19,16 +19,19 @@
 
 #import "GrowingBaseEvent.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingAutotrackEventType.h"
-//泛型类型，可以生成多个类型event，故可以设置eventType
+
+// 泛型类型，可以生成多个类型event，故可以设置eventType
 
 NS_ASSUME_NONNULL_BEGIN
+
 @class GrowingViewElementBuilder;
+
 @interface GrowingViewElementEvent : GrowingBaseEvent
 
-@property (nonatomic, copy, readonly) NSString * _Nonnull path;
+@property (nonatomic, copy, readonly) NSString *path;
 @property (nonatomic, assign, readonly) long long pageShowTimestamp;
-@property (nonatomic, copy, readonly) NSString * _Nonnull textValue;
-@property (nonatomic, copy, readonly) NSString * _Nonnull xpath;
+@property (nonatomic, copy, readonly) NSString *textValue;
+@property (nonatomic, copy, readonly) NSString *xpath;
 @property (nonatomic, assign, readonly) int index;
 
 + (GrowingViewElementBuilder *)builder;
@@ -37,10 +40,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingViewElementBuilder : GrowingBaseBuilder
 
-@property (nonatomic, copy, readonly) NSString * _Nonnull pageName;
+@property (nonatomic, copy, readonly) NSString *pageName;
 @property (nonatomic, assign, readonly) long long pageShowTimestamp;
-@property (nonatomic, copy, readonly) NSString * _Nonnull textValue;
-@property (nonatomic, copy, readonly) NSString * _Nonnull xpath;
+@property (nonatomic, copy, readonly) NSString *textValue;
+@property (nonatomic, copy, readonly) NSString *xpath;
 @property (nonatomic, assign, readonly) int index;
 
 - (GrowingViewElementBuilder *(^)(NSString *value))setPath;
@@ -49,8 +52,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (GrowingViewElementBuilder *(^)(NSString *value))setXpath;
 - (GrowingViewElementBuilder *(^)(int value))setIndex;
 
-//extra add
-//覆盖返回值类型为GrowingViewElementBuilder
+// extra add
+// 覆盖返回值类型为GrowingViewElementBuilder
 - (GrowingViewElementBuilder *(^)(NSString *value))setEventType;
 
 @end

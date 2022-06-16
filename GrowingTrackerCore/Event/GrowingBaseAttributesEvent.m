@@ -21,10 +21,9 @@
 
 @implementation GrowingBaseAttributesEvent
 
-
 - (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
     if (self = [super initWithBuilder:builder]) {
-        GrowingBaseAttributesBuilder *subBuilder = (GrowingBaseAttributesBuilder*)builder;
+        GrowingBaseAttributesBuilder *subBuilder = (GrowingBaseAttributesBuilder *)builder;
         _attributes = subBuilder.attributes;
     }
     return self;
@@ -36,9 +35,7 @@
     return [dataDictM copy];
 }
 
-
 @end
-
 
 @implementation GrowingBaseAttributesBuilder
 
@@ -48,6 +45,5 @@
         return self;
     };
 }
-
 
 @end
