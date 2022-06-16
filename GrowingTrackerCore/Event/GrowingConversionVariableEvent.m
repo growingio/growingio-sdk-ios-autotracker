@@ -24,14 +24,14 @@
 
 - (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
     if (self = [super initWithBuilder:builder]) {
-        GrowingConversionVariableBuidler *subBuilder = (GrowingConversionVariableBuidler *)builder;
+        GrowingConversionVariableBuilder *subBuilder = (GrowingConversionVariableBuilder *)builder;
         _attributes = subBuilder.attributes;
     }
     return self;
 }
 
-+ (GrowingConversionVariableBuidler *)builder {
-    return [[GrowingConversionVariableBuidler alloc] init];
++ (GrowingConversionVariableBuilder *)builder {
+    return [[GrowingConversionVariableBuilder alloc] init];
 }
 
 - (NSDictionary *)toDictionary {
@@ -42,9 +42,9 @@
 
 @end
 
-@implementation GrowingConversionVariableBuidler
+@implementation GrowingConversionVariableBuilder
 
-- (GrowingConversionVariableBuidler * (^)(NSDictionary<NSString *, NSObject *> *value))setAttributes {
+- (GrowingConversionVariableBuilder * (^)(NSDictionary<NSString *, NSObject *> *value))setAttributes {
     return ^(NSDictionary<NSString *, NSObject *> *value) {
         self->_attributes = value;
         return self;

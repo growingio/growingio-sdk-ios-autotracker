@@ -21,15 +21,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class GrowingVisitorAttributesBuidler;
+@class GrowingVisitorAttributesBuilder;
 
 @interface GrowingVisitorAttributesEvent : GrowingBaseAttributesEvent
 
-+ (GrowingVisitorAttributesBuidler *)builder;
++ (GrowingVisitorAttributesBuilder *)builder;
 
 @end
 
-@interface GrowingVisitorAttributesBuidler : GrowingBaseAttributesBuilder
+@interface GrowingVisitorAttributesBuilder : GrowingBaseAttributesBuilder
 
 @end
 

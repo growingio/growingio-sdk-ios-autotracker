@@ -43,7 +43,7 @@
 }
 
 + (void)sendClickEvent:(GrowingPageGroup *)page viewNode:(GrowingViewNode *)node{
-    [[GrowingEventManager sharedInstance] postEventBuidler:GrowingViewElementEvent.builder.setEventType(GrowingEventTypeViewClick)
+    [[GrowingEventManager sharedInstance] postEventBuilder:GrowingViewElementEvent.builder.setEventType(GrowingEventTypeViewClick)
      .setPath(page.path)
      .setPageShowTimestamp(page.showTimestamp)
      .setXpath(node.xPath)

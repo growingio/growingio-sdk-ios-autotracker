@@ -22,13 +22,13 @@
 
 @implementation GrowingVisitorAttributesEvent
 
-+ (GrowingVisitorAttributesBuidler *)builder {
-    return [[GrowingVisitorAttributesBuidler alloc] init];
++ (GrowingVisitorAttributesBuilder *)builder {
+    return [[GrowingVisitorAttributesBuilder alloc] init];
 }
 
 @end
 
-@implementation GrowingVisitorAttributesBuidler
+@implementation GrowingVisitorAttributesBuilder
 
 - (NSString *)eventType {
     return GrowingEventTypeVisitorAttributes;

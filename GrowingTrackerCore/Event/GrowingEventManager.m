@@ -142,7 +142,7 @@ static GrowingEventManager *sharedInstance = nil;
 #pragma mark - Event
 #pragma mark Event Send
 
-- (void)postEventBuidler:(GrowingBaseBuilder *_Nullable)builder {
+- (void)postEventBuilder:(GrowingBaseBuilder *_Nullable)builder {
     dispatch_block_t block = ^{
         
         for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {

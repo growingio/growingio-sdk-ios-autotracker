@@ -97,7 +97,7 @@ static GrowingAutotracker *sharedInstance = nil;
         item.itemKey = itemKey;
         item.itemId = itemId;
         GrowingResourceCustomBuilder *builder = GrowingResourceCustomEvent.builder.setResourceItem(item).setAttributes(attributes).setEventName(eventName);
-        [[GrowingEventManager sharedInstance] postEventBuidler:builder];
+        [[GrowingEventManager sharedInstance] postEventBuilder:builder];
     }];
 }
 
