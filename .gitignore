@@ -23,7 +23,7 @@ DerivedData
 .swiftpm/
 
 Pods/
-Pods/
+Podfile.lock
 Example/Pods/
 Example/Example.xcodeproj/xcshareddata/
 Growing/release
