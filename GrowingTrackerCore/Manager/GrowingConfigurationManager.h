@@ -22,7 +22,7 @@
 
 @interface GrowingConfigurationManager : NSObject
 
-@property(nonatomic, strong) GrowingTrackConfiguration *trackConfiguration;
+@property (nonatomic, strong) GrowingTrackConfiguration *trackConfiguration;
 
 + (instancetype)sharedInstance;
 

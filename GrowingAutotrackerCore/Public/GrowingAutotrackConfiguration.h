@@ -30,7 +30,7 @@ typedef NS_ENUM(NSUInteger, GrowingIgnorePolicy) {
 
 @interface GrowingAutotrackConfiguration : GrowingTrackConfiguration
 
-@property(nonatomic, assign) float impressionScale;
+@property (nonatomic, assign) float impressionScale;
 
 @end
 

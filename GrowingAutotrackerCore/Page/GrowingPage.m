@@ -25,7 +25,7 @@
 #import "GrowingTrackerCore/Utils/GrowingTimeUtil.h"
 
 @interface GrowingPage ()
-@property(nonatomic, copy, readonly) NSString *pathCopy;
+@property (nonatomic, copy, readonly) NSString *pathCopy;
 @end
 
 @implementation GrowingPage

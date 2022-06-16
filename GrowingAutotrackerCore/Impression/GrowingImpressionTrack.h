@@ -22,9 +22,9 @@
 
 @interface GrowingImpressionTrack : NSObject
 
-@property(nonatomic, assign) NSTimeInterval IMPInterval;
+@property (nonatomic, assign) NSTimeInterval IMPInterval;
 
-@property(nonatomic, assign) BOOL impTrackActive;
+@property (nonatomic, assign) BOOL impTrackActive;
 
 + (instancetype)sharedInstance;
 
