@@ -20,6 +20,8 @@ target 'Example' do
 #  pod 'GrowingAnalytics/Dummy-GoogleAnalytics', :path => './'
 #  pod 'GrowingAnalytics/DISABLE_IDFA', :path => './' #禁用idfa
   pod 'SDCycleScrollView', '~> 1.75'
+  pod 'LBXScan/LBXNative', '2.3'
+  pod 'LBXScan/UI', '2.3'
   pod 'GrowingToolsKit'
 #  pod 'FirebaseAnalytics'
 #  pod 'GoogleAnalytics'
@@ -55,20 +57,10 @@ target 'ProtobufTests' do
    pod 'GrowingAnalytics/Protobuf', :path => './'
 end
 
-target 'GrowingAnalyticsUITests' do
-   project 'Example/Example'
-   pod 'GrowingAnalytics/Autotracker', :path => './'
-end
-
 target 'ExampleiOS13' do
   project 'Example/Example'
   pod 'GrowingAnalytics/Autotracker', :path => './'
   pod 'GrowingToolsKit'
-end
-
-target 'GrowingAnalyticsiOS13UITests' do
-   project 'Example/Example'
-   pod 'GrowingAnalytics/Autotracker', :path => './'
 end
 
 target 'GAAdapterTests' do

@@ -54,6 +54,8 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>GrowingIO测试demo 需要使用您的相机获取二维码信息</string>
 	<key>NSLocationUsageDescription</key>
 	<string>GrowingIO测试demo 需要访问您的位置信息以用于数据追踪分析</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
