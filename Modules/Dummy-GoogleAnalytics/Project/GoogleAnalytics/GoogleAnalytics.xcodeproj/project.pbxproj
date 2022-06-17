@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		34925226285C7A4E0063C8DF /* Dummy-GAILoggerImpl.h in Headers */ = {isa = PBXBuildFile; fileRef = 34925224285C7A4E0063C8DF /* Dummy-GAILoggerImpl.h */; };
+		34925227285C7A4E0063C8DF /* Dummy-GAILoggerImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = 34925225285C7A4E0063C8DF /* Dummy-GAILoggerImpl.m */; };
 		349AD02428475EE100FDDA78 /* GoogleAnalytics.h in Headers */ = {isa = PBXBuildFile; fileRef = 349AD02328475EE100FDDA78 /* GoogleAnalytics.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		349AD02F28475EF300FDDA78 /* GAI.m in Sources */ = {isa = PBXBuildFile; fileRef = 349AD02C28475EF300FDDA78 /* GAI.m */; };
 		349AD05528477FAA00FDDA78 /* GAILogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 349AD04B28477FA900FDDA78 /* GAILogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -25,6 +27,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		34925224285C7A4E0063C8DF /* Dummy-GAILoggerImpl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Dummy-GAILoggerImpl.h"; sourceTree = "<group>"; };
+		34925225285C7A4E0063C8DF /* Dummy-GAILoggerImpl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Dummy-GAILoggerImpl.m"; sourceTree = "<group>"; };
 		349AD02028475EE100FDDA78 /* GoogleAnalytics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GoogleAnalytics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		349AD02328475EE100FDDA78 /* GoogleAnalytics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GoogleAnalytics.h; sourceTree = "<group>"; };
 		349AD02C28475EF300FDDA78 /* GAI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GAI.m; sourceTree = "<group>"; };
@@ -87,6 +91,8 @@
 				349AD05428477FAA00FDDA78 /* GAITracker.h */,
 				349AD02328475EE100FDDA78 /* GoogleAnalytics.h */,
 				349AD02C28475EF300FDDA78 /* GAI.m */,
+				34925224285C7A4E0063C8DF /* Dummy-GAILoggerImpl.h */,
+				34925225285C7A4E0063C8DF /* Dummy-GAILoggerImpl.m */,
 				349AD0612847840700FDDA78 /* Dummy-GAITrackerImpl.h */,
 				349AD0622847840700FDDA78 /* Dummy-GAITrackerImpl.m */,
 			);
@@ -109,6 +115,7 @@
 				349AD05E28477FAA00FDDA78 /* GAITracker.h in Headers */,
 				349AD05728477FAA00FDDA78 /* GAIEcommerceFields.h in Headers */,
 				349AD05828477FAA00FDDA78 /* GAIDictionaryBuilder.h in Headers */,
+				34925226285C7A4E0063C8DF /* Dummy-GAILoggerImpl.h in Headers */,
 				349AD05B28477FAA00FDDA78 /* GAITrackedViewController.h in Headers */,
 				349AD05628477FAA00FDDA78 /* GAIEcommerceProductAction.h in Headers */,
 				349AD02428475EE100FDDA78 /* GoogleAnalytics.h in Headers */,
@@ -183,6 +190,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				34925227285C7A4E0063C8DF /* Dummy-GAILoggerImpl.m in Sources */,
 				349AD02F28475EF300FDDA78 /* GAI.m in Sources */,
 				349AD0642847840700FDDA78 /* Dummy-GAITrackerImpl.m in Sources */,
 			);
