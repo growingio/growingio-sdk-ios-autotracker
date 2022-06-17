@@ -99,6 +99,10 @@
 		3494DD422859E6B300A6CE46 /* DeepLinkTestHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3494DD3F2859E60700A6CE46 /* DeepLinkTestHelper.m */; };
 		3494DD482859F43600A6CE46 /* DeepLinkTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3494DD472859F43600A6CE46 /* DeepLinkTest.m */; };
 		349C1D3626D77D92005DB00C /* GIODataCollectionEnabledViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 349C1D3526D77D92005DB00C /* GIODataCollectionEnabledViewController.m */; };
+		349F1488285B503B00437F53 /* GIODefaultWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 349F1484285B503A00437F53 /* GIODefaultWebViewController.m */; };
+		349F1489285B503B00437F53 /* GIOH5BrowserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 349F1487285B503A00437F53 /* GIOH5BrowserViewController.m */; };
+		349F148C285B52B700437F53 /* GIOScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 349F148B285B52B700437F53 /* GIOScanViewController.m */; };
+		349F1492285B560200437F53 /* UIColor+Hex.m in Sources */ = {isa = PBXBuildFile; fileRef = 349F1490285B560100437F53 /* UIColor+Hex.m */; };
 		34AB4E4A279000F5002549FF /* GrowingAnalyticsStartTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AB4E49279000F5002549FF /* GrowingAnalyticsStartTests.m */; };
 		34AC208C279E80AF00F90E10 /* UIApplicationAutotrackTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AC208A279E7A2700F90E10 /* UIApplicationAutotrackTest.m */; };
 		34AC7AC92798270500C0DFA5 /* GrowingUIKitHelpersTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AC7AC82798270500C0DFA5 /* GrowingUIKitHelpersTest.m */; };
@@ -305,6 +309,14 @@
 		3494DD472859F43600A6CE46 /* DeepLinkTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeepLinkTest.m; sourceTree = "<group>"; };
 		349C1D3426D77D92005DB00C /* GIODataCollectionEnabledViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIODataCollectionEnabledViewController.h; sourceTree = "<group>"; };
 		349C1D3526D77D92005DB00C /* GIODataCollectionEnabledViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIODataCollectionEnabledViewController.m; sourceTree = "<group>"; };
+		349F1484285B503A00437F53 /* GIODefaultWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIODefaultWebViewController.m; sourceTree = "<group>"; };
+		349F1485285B503A00437F53 /* GIOH5BrowserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOH5BrowserViewController.h; sourceTree = "<group>"; };
+		349F1486285B503A00437F53 /* GIODefaultWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIODefaultWebViewController.h; sourceTree = "<group>"; };
+		349F1487285B503A00437F53 /* GIOH5BrowserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOH5BrowserViewController.m; sourceTree = "<group>"; };
+		349F148A285B52B700437F53 /* GIOScanViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOScanViewController.h; sourceTree = "<group>"; };
+		349F148B285B52B700437F53 /* GIOScanViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOScanViewController.m; sourceTree = "<group>"; };
+		349F1490285B560100437F53 /* UIColor+Hex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Hex.m"; sourceTree = "<group>"; };
+		349F1491285B560100437F53 /* UIColor+Hex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Hex.h"; sourceTree = "<group>"; };
 		34AB4E47279000F5002549FF /* GrowingAnalyticsStartTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrowingAnalyticsStartTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		34AB4E49279000F5002549FF /* GrowingAnalyticsStartTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GrowingAnalyticsStartTests.m; sourceTree = "<group>"; };
 		34AC208A279E7A2700F90E10 /* UIApplicationAutotrackTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UIApplicationAutotrackTest.m; sourceTree = "<group>"; };
@@ -470,6 +482,10 @@
 		046530D224DD4271002D254C /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				349F1491285B560100437F53 /* UIColor+Hex.h */,
+				349F1490285B560100437F53 /* UIColor+Hex.m */,
+				349F148A285B52B700437F53 /* GIOScanViewController.h */,
+				349F148B285B52B700437F53 /* GIOScanViewController.m */,
 				046530D424DD4271002D254C /* GIOConstants.h */,
 				046530D724DD4271002D254C /* GIOConstants.m */,
 				046530D624DD4271002D254C /* GIODataProcessOperation.h */,
@@ -525,6 +541,7 @@
 				0465310F24DD4271002D254C /* PageStructure */,
 				34BDC35527707BD00030B3CE /* ActionSheets */,
 				34BDC35627707C550030B3CE /* Hybrid */,
+				349F1483285B503A00437F53 /* H5Browser */,
 			);
 			path = UICategoryTests;
 			sourceTree = "<group>";
@@ -738,6 +755,17 @@
 				3494DD472859F43600A6CE46 /* DeepLinkTest.m */,
 			);
 			path = DeepLinkTests;
+			sourceTree = "<group>";
+		};
+		349F1483285B503A00437F53 /* H5Browser */ = {
+			isa = PBXGroup;
+			children = (
+				349F1485285B503A00437F53 /* GIOH5BrowserViewController.h */,
+				349F1487285B503A00437F53 /* GIOH5BrowserViewController.m */,
+				349F1486285B503A00437F53 /* GIODefaultWebViewController.h */,
+				349F1484285B503A00437F53 /* GIODefaultWebViewController.m */,
+			);
+			path = H5Browser;
 			sourceTree = "<group>";
 		};
 		34AB4E48279000F5002549FF /* GrowingAnalyticsStartTests */ = {
@@ -1757,6 +1785,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				04A6FAF224E662E9006C72F0 /* GIOChildsAddViewController.m in Sources */,
+				349F1492285B560200437F53 /* UIColor+Hex.m in Sources */,
+				349F1489285B503B00437F53 /* GIOH5BrowserViewController.m in Sources */,
 				0465314424DD4272002D254C /* GIOMeasurementProtocolTableViewController.m in Sources */,
 				0465314024DD4272002D254C /* GIOKeyValueCell.m in Sources */,
 				0465314D24DD4272002D254C /* AppDelegate.m in Sources */,
@@ -1785,12 +1815,14 @@
 				0465314524DD4272002D254C /* GIOCustomEventViewController.m in Sources */,
 				0465314724DD4272002D254C /* GIOContainerViewController.m in Sources */,
 				0465314E24DD4272002D254C /* GIOLabelAttributeViewController.m in Sources */,
+				349F1488285B503B00437F53 /* GIODefaultWebViewController.m in Sources */,
 				0465315324DD4272002D254C /* GIOActionSheetViewController.m in Sources */,
 				0465314C24DD4272002D254C /* main.m in Sources */,
 				0465314A24DD4272002D254C /* GIOSecondViewController.m in Sources */,
 				0465314224DD4272002D254C /* GIOPageAttributesEventViewController.m in Sources */,
 				0465315724DD4272002D254C /* GIOMultiViewController.m in Sources */,
 				0465314324DD4272002D254C /* GIOClickEventViewController.m in Sources */,
+				349F148C285B52B700437F53 /* GIOScanViewController.m in Sources */,
 				3494DD092859CCF300A6CE46 /* GrowingDeepLinkHandler+XCTest.m in Sources */,
 				4916270F24E157BB00444AF2 /* GIOPresentViewController.m in Sources */,
 			);
