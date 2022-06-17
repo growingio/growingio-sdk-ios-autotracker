@@ -19,6 +19,7 @@
 
 #import "GAI.h"
 #import "Dummy-GAITrackerImpl.h"
+#import "Dummy-GAILoggerImpl.h"
 
 NSString *const kGAIProduct = @"Dummy Google Analytics";
 
@@ -81,6 +82,13 @@ NSString *const kGAIErrorDomain = @"com.growingio.GoogleAnalytics";
 
 - (void)dispatchWithCompletionHandler:(void (^)(GAIDispatchResult result))completionHandler {
     
+}
+
+- (id<GAILogger>)logger {
+    if (!_logger) {
+        _logger = [[Dummy_GAILoggerImpl alloc] init];
+    }
+    return _logger;
 }
 
 @end
