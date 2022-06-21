@@ -272,7 +272,9 @@ static GrowingEventManager *sharedInstance = nil;
     if (!eventRequest) {
         eventRequest = [[GrowingEventRequest alloc] initWithEvents:rawEvents];
     } else {
-        eventRequest.events = rawEvents;
+        if ([eventRequest respondsToSelector:@selector(events)]) {
+            eventRequest.events = rawEvents;
+        }
     }
 
     id <GrowingEventNetworkService> service = [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingEventNetworkService)];
@@ -289,7 +291,9 @@ static GrowingEventManager *sharedInstance = nil;
         if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
             [GrowingDispatchManager dispatchInGrowingThread:^{
                 if (isViaCellular) {
-                    self.uploadEventSize += eventRequest.outsize;
+                    if ([eventRequest respondsToSelector:@selector(outsize)]) {
+                        self.uploadEventSize += eventRequest.outsize;
+                    }
                 }
                 [self removeEvents_unsafe:events forChannel:channel];
                 channel.isUploading = NO;

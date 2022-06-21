@@ -56,11 +56,15 @@
         // jsonString malloc to much
 #ifdef GROWING_ANALYSIS_ENABLE_ENCRYPTION
         // deprecated
-        JSONData = [JSONData growingHelper_xorEncryptWithHint:(self.request.stm & 0xFF)];
+        if ([self.request respondsToSelector:@selector(stm)]) {
+            JSONData = [JSONData growingHelper_xorEncryptWithHint:(self.request.stm & 0xFF)];
+        }
 #else
         BOOL encryptEnabled = GrowingConfigurationManager.sharedInstance.trackConfiguration.encryptEnabled;
         if (encryptEnabled) {
-            JSONData = [JSONData growingHelper_xorEncryptWithHint:(self.request.stm & 0xFF)];
+            if ([self.request respondsToSelector:@selector(stm)]) {
+                JSONData = [JSONData growingHelper_xorEncryptWithHint:(self.request.stm & 0xFF)];
+            }
         }
 #endif
     }
