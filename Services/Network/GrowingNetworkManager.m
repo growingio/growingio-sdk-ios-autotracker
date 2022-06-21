@@ -124,7 +124,9 @@ GrowingService(GrowingEventNetworkService, GrowingNetworkManager)
        resultReq = [adapter adaptedURLRequest:resultReq];
     }
     
-    request.outsize = resultReq.HTTPBody.length;
+    if ([request respondsToSelector:@selector(outsize)]) {
+        request.outsize = resultReq.HTTPBody.length;
+    }
 
     return resultReq;
 }

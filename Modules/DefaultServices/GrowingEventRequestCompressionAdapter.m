@@ -47,7 +47,7 @@
     }
 #endif
     
-    if (self.request.events.length == 0) {
+    if (![self.request respondsToSelector:@selector(events)] || self.request.events.length == 0) {
         return nil;
     }
     NSData *JSONData = self.request.events.copy;
