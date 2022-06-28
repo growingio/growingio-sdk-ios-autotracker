@@ -69,17 +69,13 @@
         {
             __block NSInvocation *invocation = nil;
             SEL selector = NSSelectorFromString(@"removeTrackerByName:");
-            id block = ^(id analytics, NSString *name) {
-                if (!invocation) {
-                    return;
-                }
-                [invocation retainArguments];
-                [invocation setArgument:&name atIndex:2];
-                [invocation invoke];
-                
+            void (^removeTrackerBlock)(id, SEL, NSString *) = ^(id gai, SEL selector, NSString *name) {
                 [GrowingGA3Adapter.sharedInstance removeTrackerByName:name];
             };
-            invocation = [class growing_swizzleMethod:selector withBlock:block error:nil];
+            [GrowingSwizzler growing_swizzleSelector:selector
+                                             onClass:class
+                                           withBlock:removeTrackerBlock
+                                               named:@"growing_ga3_adapter_removeTracker"];
         }
     });
 }
@@ -104,38 +100,27 @@ static void growingga3_adapter_trackerInit(id tracker, NSString *name, NSString 
         SEL selector = @selector(set:value:);
         Class class = [GrowingSwizzler realDelegateClassFromSelector:selector proxy:tracker];
         if ([GrowingSwizzler realDelegateClass:class respondsToSelector:selector]) {
-            __block NSInvocation *invocation = nil;
-            id block = ^(id tracker, NSString *parameterName, NSString *value) {
-                if (!invocation) {
-                    return;
-                }
-                [invocation retainArguments];
-                [invocation setArgument:&parameterName atIndex:2];
-                [invocation setArgument:&value atIndex:3];
-                [invocation invoke];
-                
+            void (^setValueBlock)(id, SEL, NSString *, NSString *) = ^(id tracker, SEL selector, NSString *parameterName, NSString *value) {
                 [GrowingGA3Adapter.sharedInstance tracker:tracker set:parameterName value:value];
             };
-            invocation = [class growing_swizzleMethod:selector withBlock:block error:nil];
+            [GrowingSwizzler growing_swizzleSelector:selector
+                                             onClass:class
+                                           withBlock:setValueBlock
+                                               named:@"growing_ga3_adapter_setValue"];
         }
     }
-    
+
     {
         SEL selector = @selector(send:);
         Class class = [GrowingSwizzler realDelegateClassFromSelector:selector proxy:tracker];
         if ([GrowingSwizzler realDelegateClass:class respondsToSelector:selector]) {
-            __block NSInvocation *invocation = nil;
-            id block = ^(id tracker, NSDictionary *parameters) {
-                if (!invocation) {
-                    return;
-                }
-                [invocation retainArguments];
-                [invocation setArgument:&parameters atIndex:2];
-                [invocation invoke];
-                
+            void (^sendBlock)(id, SEL, NSDictionary *) = ^(id tracker, SEL selector, NSDictionary *parameters) {
                 [GrowingGA3Adapter.sharedInstance tracker:tracker send:parameters];
             };
-            invocation = [class growing_swizzleMethod:selector withBlock:block error:nil];
+            [GrowingSwizzler growing_swizzleSelector:selector
+                                             onClass:class
+                                           withBlock:sendBlock
+                                               named:@"growing_ga3_adapter_send"];
         }
     }
 }
