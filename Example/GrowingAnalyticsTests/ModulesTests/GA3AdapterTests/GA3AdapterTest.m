@@ -313,14 +313,15 @@
     
     {
         // 删除属性
-        [tracker set:kGAISampleRate value:nil];
+        [tracker set:kGAITitle value:@"title"];
+        [tracker set:kGAITitle value:nil]; // 部分字段无法设置为nil，例如kGAISampleRate设为nil会崩溃: -[NSNull length]: unrecognized selector sent to instance
         [tracker send:params];
-        
+
         GrowingCustomEvent *gaEvent = (GrowingCustomEvent *)[MockEventQueue.sharedQueue lastEventFor:GrowingEventTypeCustom];
         NSDictionary *dic = gaEvent.toDictionary;
-        
+
         NSDictionary *attr = dic[@"attributes"];
-        XCTAssertNil(attr[@"&sf"]);
+        XCTAssertNil(attr[@"&dt"]);
         XCTAssertEqualObjects(attr[@"tracker"], @"1");
     }
     
