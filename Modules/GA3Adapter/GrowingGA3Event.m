@@ -42,7 +42,7 @@
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[self.baseEvent toDictionary]];
     dataDictM[@"userKey"] = nil; // 如果存在则移除userKey字段
-    dataDictM[@"gioId"] = nil; // 如果存在则移除gioId字段
+    dataDictM[@"gioId"] = self.info.lastUserId; // 替换gioId
     dataDictM[@"dataSourceId"] = self.info.dataSourceId; // 替换dataSourceId
     dataDictM[@"sessionId"] = self.info.sessionId; // 替换sessionId
     dataDictM[@"userId"] = self.info.userId; // 替换userId
