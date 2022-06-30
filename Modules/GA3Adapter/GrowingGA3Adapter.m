@@ -22,6 +22,7 @@
 #import "Modules/GA3Adapter/GrowingGA3Injector.h"
 #import "Modules/GA3Adapter/GrowingGA3TrackerInfo.h"
 #import "Modules/GA3Adapter/GrowingGA3Event.h"
+#import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Hook/GrowingAppLifecycle.h"
@@ -39,8 +40,6 @@ GrowingMod(GrowingGA3Adapter)
 
 static NSString *const kGA3UserIdKey = @"&uid";
 static NSString *const kGA3ClientIdKey = @"&cid";
-static NSString *const kGA3TrackingIdKey = @"&tid";
-static NSString *const kGA3EventTypeKey = @"&t";
 
 @interface GrowingEventManager ()
 
@@ -101,7 +100,8 @@ static NSString *const kGA3EventTypeKey = @"&t";
             for (NSString *key in self.trackerInfos.allKeys) {
                 GrowingGA3TrackerInfo *info = self.trackerInfos[key];
                 info.sessionId = NSUUID.UUID.UUIDString;
-                writeToDatabaseWithEvent(GA3Event(GrowingVisitEvent.builder, info));
+                info.sentVisitAfterRefreshSessionId = NO;
+                generateVisit(info);
             }
         }
     }];
@@ -133,6 +133,25 @@ static NSString *const kGA3EventTypeKey = @"&t";
     return _sharedInstance;
 }
 
+- (void)setDataCollectionEnabled:(BOOL)enabled {
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+        if (enabled == trackConfiguration.dataCollectionEnabled) {
+            return;
+        }
+        trackConfiguration.dataCollectionEnabled = enabled;
+        if (enabled) {
+            [[GrowingSession currentSession] generateVisit];
+            
+            // 所有GAITracker补发相应VISIT事件
+            for (NSString *key in self.trackerInfos.allKeys) {
+                GrowingGA3TrackerInfo *info = self.trackerInfos[key];
+                generateVisit(info);
+            }
+        }
+    }];
+}
+
 #pragma mark - Growing GA3 Injector
 
 - (void)trackerInit:(id)tracker name:(NSString *)name trackingId:(NSString *)trackingId {
@@ -148,10 +167,11 @@ static NSString *const kGA3EventTypeKey = @"&t";
             return;
         }
         
-        GrowingGA3TrackerInfo *info = [[GrowingGA3TrackerInfo alloc] initWithDataSourceId:dataSourceId
-                                                                                sessionId:NSUUID.UUID.UUIDString
-                                                                      transformEventBlock:^(GrowingBaseEvent * _Nonnull event,
-                                                                                            GrowingGA3TrackerInfo * _Nonnull info) {
+        GrowingGA3TrackerInfo *info = [[GrowingGA3TrackerInfo alloc] initWithTracker:tracker
+                                                                        dataSourceId:dataSourceId
+                                                                           sessionId:NSUUID.UUID.UUIDString
+                                                                 transformEventBlock:^(GrowingBaseEvent * _Nonnull event,
+                                                                                       GrowingGA3TrackerInfo * _Nonnull info) {
             if ([event.eventType isEqualToString:GrowingEventTypeVisit]
                 || [event.eventType isEqualToString:GrowingEventTypeCustom]
                 || [event.eventType isEqualToString:GrowingEventTypeLoginUserAttributes]
@@ -162,29 +182,15 @@ static NSString *const kGA3EventTypeKey = @"&t";
             
             // 转发所有无埋点事件(不含VISIT)
             [GrowingDispatchManager dispatchInGrowingThread:^{
-                writeToDatabaseWithEvent(transformGA3Event(event, info, 0LL));
+                transformToGA3Event(event, info, 0LL);
             }];
         }];
         
         // 增加对应GAITracker拦截器
         [[GrowingEventManager sharedInstance] addInterceptor:(id <GrowingEventInterceptor>)info];
         
-        // 补发VISIT、PAGE，更新时间为GAITracker创建时间
-        // 直接入库，不经过Interceptor
-        if (self.lastVisitEvent) {
-            writeToDatabaseWithEvent(transformGA3Event(self.lastVisitEvent, info, GrowingTimeUtil.currentTimeMillis));
-        }
-        if (self.lastPageEvent) {
-            writeToDatabaseWithEvent(transformGA3Event(self.lastPageEvent, info, GrowingTimeUtil.currentTimeMillis));
-        }
-        
-        // 发送LOGIN_USER_ATTRIBUTES事件，用于关联历史数据
-        NSString *clientId = getClientId(tracker);
-        if (clientId && clientId.length > 0) {
-            NSDictionary *attributes = @{kGA3ClientIdKey : clientId};
-            GrowingBaseBuilder *builder = GrowingLoginUserAttributesEvent.builder.setAttributes(attributes);
-            writeToDatabaseWithEvent(GA3Event(builder, info));
-        }
+        // 初始化补发VISIT、PAGE、LOGIN_USER_ATTRIBUTES
+        generateVisit(info);
         
         self.trackerInfos[name] = info;
     }];
@@ -211,7 +217,7 @@ static NSString *const kGA3EventTypeKey = @"&t";
             return;
         }
         GrowingBaseBuilder *builder = GrowingCustomEvent.builder.setEventName(@"GAEvent").setAttributes(parameters);
-        writeToDatabaseWithEvent(GA3Event(builder, info));
+        sendGA3Event(builder, info);
     }];
 }
 
@@ -240,6 +246,7 @@ static NSString *const kGA3EventTypeKey = @"&t";
     } else if (![userId isEqualToString:info.lastUserId]) {
         // A -> B
         info.sessionId = NSUUID.UUID.UUIDString;
+        info.sentVisitAfterRefreshSessionId = NO;
         sendVisit = YES;
     }
     
@@ -247,25 +254,90 @@ static NSString *const kGA3EventTypeKey = @"&t";
     info.lastUserId = userId;
     
     if (sendVisit) {
-        writeToDatabaseWithEvent(GA3Event(GrowingVisitEvent.builder, info));
+        generateVisit(info);
     }
 }
 
 #pragma mark - Growing GA3 Event
 
+static void generateVisit(GrowingGA3TrackerInfo *info) {
+    GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    if (!trackConfiguration.dataCollectionEnabled) {
+        return;
+    }
+    
+    if (info.isSentFirstVisit) {
+        info.sentVisitAfterRefreshSessionId = YES;
+        sendGA3Event(GrowingVisitEvent.builder, info);
+    } else {
+        // GAITracker初始化补发VISIT、PAGE，更新时间为GAITracker创建时间
+        if (GrowingGA3Adapter.sharedInstance.lastVisitEvent) {
+            info.sentFirstVisit = YES;
+            info.sentVisitAfterRefreshSessionId = YES;
+            transformToGA3Event(GrowingGA3Adapter.sharedInstance.lastVisitEvent, info, GrowingTimeUtil.currentTimeMillis);
+        }
+        if (GrowingGA3Adapter.sharedInstance.lastPageEvent) {
+            transformToGA3Event(GrowingGA3Adapter.sharedInstance.lastPageEvent, info, GrowingTimeUtil.currentTimeMillis);
+        }
+        
+        // 发送LOGIN_USER_ATTRIBUTES事件，用于关联历史数据
+        id tracker = info.tracker;
+        NSString *clientId = getClientId(tracker);
+        if (clientId && clientId.length > 0) {
+            NSDictionary *attributes = @{kGA3ClientIdKey : clientId};
+            GrowingBaseBuilder *builder = GrowingLoginUserAttributesEvent.builder.setAttributes(attributes);
+            sendGA3Event(builder, info);
+        }
+    }
+}
+
 static void writeToDatabaseWithEvent(GrowingBaseEvent *ga3Event) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    // 因为无依赖关系，动态调用增加到MobileDebugger队列中，方便MobileDebugger查看
+    Class class = NSClassFromString(@"GrowingDebuggerEventQueue");
+    SEL selector = NSSelectorFromString(@"currentQueue");
+    if (class && [class respondsToSelector:selector]) {
+        id sharedInstance = [class performSelector:selector];
+        selector = NSSelectorFromString(@"enqueue:");
+        if (sharedInstance && [sharedInstance respondsToSelector:selector]) {
+            [sharedInstance performSelector:selector withObject:ga3Event.toDictionary];
+        }
+    }
+#pragma clang diagnostic pop
+    
     [GrowingEventManager.sharedInstance writeToDatabaseWithEvent:ga3Event];
 }
 
 // 主动构造的事件需要执行readPropertyInTrackThread读取通用参数
-static GrowingBaseEvent *GA3Event(GrowingBaseBuilder *builder, GrowingGA3TrackerInfo *info) {
+static void sendGA3Event(GrowingBaseBuilder *builder, GrowingGA3TrackerInfo *info) {
+    GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    if (!trackConfiguration.dataCollectionEnabled) {
+        return;
+    }
+    
+    if (!info.isSentVisitAfterRefreshSessionId) {
+        generateVisit(info);
+    }
+    
     [builder readPropertyInTrackThread];
-    return GrowingGA3Event.builder.setBaseEvent(builder.build).setTrackerInfo(info).build;
+    GrowingBaseEvent *e = GrowingGA3Event.builder.setBaseEvent(builder.build).setTrackerInfo(info).build;
+    writeToDatabaseWithEvent(e);
 }
 
 // 转发事件已经执行过readPropertyInTrackThread
-static GrowingBaseEvent *transformGA3Event(GrowingBaseEvent *event, GrowingGA3TrackerInfo *info, long long timestamp) {
-    return GrowingGA3Event.builder.setBaseEvent(event).setTrackerInfo(info).setTimestamp(timestamp).build;
+static void transformToGA3Event(GrowingBaseEvent *event, GrowingGA3TrackerInfo *info, long long timestamp) {
+    GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    if (!trackConfiguration.dataCollectionEnabled) {
+        return;
+    }
+    
+    if (!info.isSentVisitAfterRefreshSessionId) {
+        generateVisit(info);
+    }
+
+    GrowingBaseEvent *e = GrowingGA3Event.builder.setBaseEvent(event).setTrackerInfo(info).setTimestamp(timestamp).build;
+    writeToDatabaseWithEvent(e);
 }
 
 #pragma mark - Growing GA3 GAITrackerImpl

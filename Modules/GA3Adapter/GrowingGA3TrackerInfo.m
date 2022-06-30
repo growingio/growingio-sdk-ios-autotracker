@@ -28,10 +28,14 @@
 
 @implementation GrowingGA3TrackerInfo
 
-- (instancetype)initWithDataSourceId:(NSString *)dataSourceId
-                           sessionId:(NSString *)sessionId
-                 transformEventBlock:(GrowingGA3TrackerTransformEventBlock)transformEventBlock {
+- (instancetype)initWithTracker:(id)tracker
+                   dataSourceId:(NSString *)dataSourceId
+                      sessionId:(NSString *)sessionId
+            transformEventBlock:(GrowingGA3TrackerTransformEventBlock)transformEventBlock {
     if (self = [super init]) {
+        _tracker = tracker;
+        _sentFirstVisit = NO;
+        _sentVisitAfterRefreshSessionId = NO;
         _dataSourceId = dataSourceId.copy;
         _sessionId = sessionId.copy;
         _block = transformEventBlock;
