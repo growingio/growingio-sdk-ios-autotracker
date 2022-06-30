@@ -232,17 +232,23 @@ static NSString *const kGA3EventTypeKey = @"&t";
         // A -> A
         return;
     }
+    
+    BOOL sendVisit = NO;
     if (!info.lastUserId || info.lastUserId.length == 0) {
-        // nil -> A
-        writeToDatabaseWithEvent(GA3Event(GrowingVisitEvent.builder, info));
+        // nil -> A(不包括 A -> nil -> A)
+        sendVisit = YES;
     } else if (![userId isEqualToString:info.lastUserId]) {
         // A -> B
         info.sessionId = NSUUID.UUID.UUIDString;
-        writeToDatabaseWithEvent(GA3Event(GrowingVisitEvent.builder, info));
+        sendVisit = YES;
     }
     
     info.userId = userId;
     info.lastUserId = userId;
+    
+    if (sendVisit) {
+        writeToDatabaseWithEvent(GA3Event(GrowingVisitEvent.builder, info));
+    }
 }
 
 #pragma mark - Growing GA3 Event
