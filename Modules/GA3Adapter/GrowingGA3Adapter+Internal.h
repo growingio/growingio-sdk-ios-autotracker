@@ -25,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedInstance;
 
+- (void)setDataCollectionEnabled:(BOOL)enabled;
+
 - (void)trackerInit:(id/* <GAITracker>*/)tracker name:(NSString *)name trackingId:(NSString *)trackingId;
 
 - (void)tracker:(id/* <GAITracker>*/)tracker set:(NSString *)parameterName value:(NSString *)value;

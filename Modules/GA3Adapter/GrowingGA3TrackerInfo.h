@@ -27,15 +27,19 @@ typedef void(^GrowingGA3TrackerTransformEventBlock)(GrowingBaseEvent *event, Gro
 
 @interface GrowingGA3TrackerInfo : NSObject 
 
+@property (nonatomic, assign, getter=isSentFirstVisit) BOOL sentFirstVisit;
+@property (nonatomic, assign, getter=isSentVisitAfterRefreshSessionId) BOOL sentVisitAfterRefreshSessionId;
+@property (nonatomic, weak) id tracker;
 @property (nonatomic, copy) NSString *sessionId;
 @property (nonatomic, copy) NSString *dataSourceId;
 @property (nonatomic, copy, nullable) NSString *userId;
 @property (nonatomic, copy) NSString *lastUserId;
 @property (nonatomic, strong) NSMutableDictionary *extraParams;
 
-- (instancetype)initWithDataSourceId:(NSString *)dataSourceId
-                           sessionId:(NSString *)sessionId
-                 transformEventBlock:(GrowingGA3TrackerTransformEventBlock)transformEventBlock;
+- (instancetype)initWithTracker:(id)tracker
+                   dataSourceId:(NSString *)dataSourceId
+                      sessionId:(NSString *)sessionId
+            transformEventBlock:(GrowingGA3TrackerTransformEventBlock)transformEventBlock;
 
 - (instancetype)init NS_UNAVAILABLE;
 
