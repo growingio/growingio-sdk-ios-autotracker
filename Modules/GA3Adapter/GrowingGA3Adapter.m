@@ -67,14 +67,13 @@ static NSString *const kGA3ClientIdKey = @"&cid";
 }
 
 - (void)growingModInit:(GrowingContext *)context {
-    [[GrowingEventManager sharedInstance] addInterceptor:self];
-    [GrowingAppLifecycle.sharedInstance addAppLifecycleDelegate:self];
-    
     GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
     NSTimeInterval sessionInterval = trackConfiguration.sessionInterval;
     self->_sessionInterval = (long long)(sessionInterval * 1000LL);
     
     [GrowingGA3Injector.sharedInstance addAdapterSwizzles];
+    [[GrowingEventManager sharedInstance] addInterceptor:self];
+    [GrowingAppLifecycle.sharedInstance addAppLifecycleDelegate:self];
 }
 
 #pragma mark - GrowingEventInterceptor
