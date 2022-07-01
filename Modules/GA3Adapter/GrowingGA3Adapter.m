@@ -278,15 +278,17 @@ static void generateVisit(GrowingGA3TrackerInfo *info) {
         if (GrowingGA3Adapter.sharedInstance.lastPageEvent) {
             transformToGA3Event(GrowingGA3Adapter.sharedInstance.lastPageEvent, info, GrowingTimeUtil.currentTimeMillis);
         }
-        
-        // 发送LOGIN_USER_ATTRIBUTES事件，用于关联历史数据
-        id tracker = info.tracker;
-        NSString *clientId = getClientId(tracker);
-        if (clientId && clientId.length > 0) {
-            NSDictionary *attributes = @{kGA3ClientIdKey : clientId};
-            GrowingBaseBuilder *builder = GrowingLoginUserAttributesEvent.builder.setAttributes(attributes);
-            sendGA3Event(builder, info);
-        }
+    }
+    
+    // 发送LOGIN_USER_ATTRIBUTES事件，用于关联历史数据
+    // 判断与上一个ClientId是否不同
+    id tracker = info.tracker;
+    NSString *clientId = getClientId(tracker);
+    if (clientId && clientId.length > 0 && ![clientId isEqualToString:info.clientId]) {
+        info.clientId = clientId;
+        NSDictionary *attributes = @{kGA3ClientIdKey : clientId};
+        GrowingBaseBuilder *builder = GrowingLoginUserAttributesEvent.builder.setAttributes(attributes);
+        sendGA3Event(builder, info);
     }
 }
 
