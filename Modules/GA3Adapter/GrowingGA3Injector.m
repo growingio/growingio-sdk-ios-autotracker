@@ -42,19 +42,23 @@
     dispatch_once(&onceToken, ^{
         Class class = NSClassFromString(@"GAI");
         if (!class) {
-            @throw [NSException exceptionWithName:@"Google Analytics v3未集成"
-                                           reason:@"请集成Google Analytics，再进行Growing GA3 Adapter适配"
+            @throw [NSException exceptionWithName:@"GoogleAnalytics未集成"
+                                           reason:@"请集成GoogleAnalytics，再进行Growing GA3 Adapter适配"
                                          userInfo:nil];
         }
         
         {
-            SEL selector = NSSelectorFromString(@"defaultTracker");
+            SEL selector = NSSelectorFromString(@"sharedInstance");
             if ([class respondsToSelector:selector]) {
-                id defaultTracker = ((id (*)(id, SEL))objc_msgSend)(class, selector);
-                if (defaultTracker) {
-                    @throw [NSException exceptionWithName:@"Google Analytics v3已初始化"
-                                                   reason:@"GrowingAnalytics初始化必须在GoogleAnalytics之前"
-                                                 userInfo:nil];
+                id sharedInstance = ((id (*)(id, SEL))objc_msgSend)(class, selector);
+                selector = NSSelectorFromString(@"defaultTracker");
+                if ([sharedInstance respondsToSelector:selector]) {
+                    id defaultTracker = ((id (*)(id, SEL))objc_msgSend)(sharedInstance, selector);
+                    if (defaultTracker) {
+                        @throw [NSException exceptionWithName:@"GoogleAnalytics已初始化"
+                                                       reason:@"GoogleAnalytics初始化必须在GrowingAnalytics之后"
+                                                     userInfo:nil];
+                    }
                 }
             }
         }
