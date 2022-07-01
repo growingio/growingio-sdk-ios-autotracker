@@ -20,6 +20,7 @@
 #import "Modules/GAAdapter/GrowingGAAdapter.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
+#import "GrowingTrackerCore/Event/GrowingLoginUserAttributesEvent.h"
 #import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Swizzle/GrowingSwizzle.h"
@@ -49,10 +50,12 @@ typedef NS_ENUM(int64_t, FIRAnalyticsEnabledState) {
 
 @property (nonatomic, assign, getter=isAnalyticsCollectionEnabled) BOOL analyticsCollectionEnabled;
 @property (nonatomic, strong) NSMutableDictionary *defaultParameters;
+@property (nonatomic, copy) NSString *appInstanceID;
 
 @property (nonatomic, assign) int64_t kFIRAnalyticsEnabledState;
 @property (nonatomic, assign) NSDictionary *kFIRAnalyticsDefaultEventParameters;
 @property (nonatomic, assign) BOOL isAdapterOnly;
+@property (nonatomic, assign, getter=isSentAppInstanceID) BOOL sentAppInstanceID;
 
 @end
 
@@ -65,15 +68,30 @@ typedef NS_ENUM(int64_t, FIRAnalyticsEnabledState) {
 }
 
 - (void)growingModInit:(GrowingContext *)context {    
-    [[GrowingEventManager sharedInstance] addInterceptor:self];
     [GrowingGAAdapter.sharedInstance addAdapterSwizzles];
+    [[GrowingEventManager sharedInstance] addInterceptor:self];
 }
 
 #pragma mark - GrowingEventInterceptor
 
 - (void)growingEventManagerEventDidBuild:(GrowingBaseEvent *)event {
-    // 初始化触发的首个VISIT事件
+    if ([event.eventType isEqualToString:GrowingEventTypeLoginUserAttributes]) {
+        GrowingLoginUserAttributesEvent *e = (GrowingLoginUserAttributesEvent *)event;
+        // 当前正在上报appInstanceID
+        if (e.attributes.count > 0 && e.attributes[@"appInstanceID"]) {
+            GrowingGAAdapter.sharedInstance.sentAppInstanceID = YES;
+            
+            // 清除事件拦截器
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[GrowingEventManager sharedInstance] removeInterceptor:self];
+            });
+            
+            return;
+        }
+    }
+    
     if ([event.eventType isEqualToString:GrowingEventTypeVisit]) {
+        // 初始化触发的首个VISIT事件
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
             BOOL enabled = self.kFIRAnalyticsEnabledState != kFIRAnalyticsEnabledStateSetNo;
@@ -82,10 +100,13 @@ typedef NS_ENUM(int64_t, FIRAnalyticsEnabledState) {
             
             self.kFIRAnalyticsEnabledState = 0;
             self.kFIRAnalyticsDefaultEventParameters = nil;
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [[GrowingEventManager sharedInstance] removeInterceptor:self];
-            });
+        });
+    }
+    
+    if (self.appInstanceID) {
+        // 异步调用，保证在首个VISIT事件之后
+        dispatch_async(dispatch_get_main_queue(), ^{
+            growingga_adapter_logAppInstanceID(self.appInstanceID);
         });
     }
 }
@@ -150,13 +171,8 @@ typedef NS_ENUM(int64_t, FIRAnalyticsEnabledState) {
             // nil if ConsentType.analyticsStorage has been set to ConsentStatus.denied.
             SEL selector = NSSelectorFromString(@"appInstanceID");
             if ([class respondsToSelector:selector]) {
-                NSString *appInstanceID = ((NSString *(*)(id, SEL))objc_msgSend)(class, selector);
-                if (appInstanceID) {
-                    // 异步调用，保证GrowingAnalytics已初始化完成，且在首个VISIT事件之后
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        growingga_adapter_logAppInstanceID(appInstanceID);
-                    });
-                }
+                self.appInstanceID = ((NSString *(*)(id, SEL))objc_msgSend)(class, selector);
+                self.sentAppInstanceID = NO;
             }
         }
         
@@ -258,6 +274,10 @@ static id growingga_tracker(void) {
 
 static void growingga_adapter_logAppInstanceID(NSString *appInstanceID) {
     [GrowingDispatchManager dispatchInGrowingThread:^{
+        if (GrowingGAAdapter.sharedInstance.isSentAppInstanceID) {
+            return;
+        }
+        
         if (!GrowingGAAdapter.sharedInstance.isAnalyticsCollectionEnabled) {
             return;
         }
