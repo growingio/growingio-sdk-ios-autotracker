@@ -29,7 +29,7 @@
 - (GrowingPBEventV3Dto *)toProtobuf {
     GrowingPBEventV3Dto *dto = self.baseEvent.toProtobuf;
     dto.userKey = nil; // 如果存在则移除userKey字段
-    dto.gioId = nil; // 如果存在则移除gioId字段
+    dto.gioId = self.info.lastUserId; // 替换gioId
     dto.dataSourceId = self.info.dataSourceId; // 替换dataSourceId
     dto.sessionId = self.info.sessionId; // 替换sessionId
     dto.userId = self.info.userId; // 替换userId

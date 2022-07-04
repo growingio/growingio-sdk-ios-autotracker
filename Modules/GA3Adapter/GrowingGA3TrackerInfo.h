@@ -27,8 +27,6 @@ typedef void(^GrowingGA3TrackerTransformEventBlock)(GrowingBaseEvent *event, Gro
 
 @interface GrowingGA3TrackerInfo : NSObject 
 
-@property (nonatomic, assign, getter=isSentFirstVisit) BOOL sentFirstVisit;
-@property (nonatomic, assign, getter=isSentVisitAfterRefreshSessionId) BOOL sentVisitAfterRefreshSessionId;
 @property (nonatomic, weak) id tracker;
 @property (nonatomic, copy) NSString *clientId;
 @property (nonatomic, copy) NSString *sessionId;
