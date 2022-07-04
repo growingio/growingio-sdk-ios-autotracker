@@ -34,8 +34,6 @@
             transformEventBlock:(GrowingGA3TrackerTransformEventBlock)transformEventBlock {
     if (self = [super init]) {
         _tracker = tracker;
-        _sentFirstVisit = NO;
-        _sentVisitAfterRefreshSessionId = NO;
         _dataSourceId = dataSourceId.copy;
         _sessionId = sessionId.copy;
         _block = transformEventBlock;
