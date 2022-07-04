@@ -165,7 +165,7 @@
     XCTAssertEqualObjects(gaDic[@"language"], dic[@"language"]);
     XCTAssertEqualObjects(gaDic[@"deviceBrand"], dic[@"deviceBrand"]);
     XCTAssertEqualObjects(gaDic[@"deviceId"], dic[@"deviceId"]);
-    XCTAssertEqualObjects(gaDic[@"globalSequenceId"], dic[@"globalSequenceId"]);
+    XCTAssertNotEqualObjects(gaDic[@"globalSequenceId"], dic[@"globalSequenceId"]);
     XCTAssertEqualObjects(gaDic[@"urlScheme"], dic[@"urlScheme"]);
     XCTAssertEqualObjects(gaDic[@"deviceType"], dic[@"deviceType"]);
     XCTAssertEqualObjects(gaDic[@"appVersion"], dic[@"appVersion"]);
@@ -181,71 +181,9 @@
     XCTAssertEqualObjects(gaDic[@"idfa"], dic[@"idfa"]);
     XCTAssertEqualObjects(gaDic[@"idfv"], dic[@"idfv"]);
     XCTAssertEqualObjects(gaDic[@"platformVersion"], dic[@"platformVersion"]);
-    XCTAssertEqualObjects(gaDic[@"eventSequenceId"], dic[@"eventSequenceId"]);
+    XCTAssertNotEqualObjects(gaDic[@"eventSequenceId"], dic[@"eventSequenceId"]);
 
     [gai removeTrackerByName:@"GA3Tracker1"];
-}
-
-- (void)test03ResendLastPage {
-    GrowingBaseBuilder *builder = GrowingPageEvent.builder
-        .setPath(@"path")
-        .setTitle(@"title")
-        .setReferralPage(@"referralPage");
-    [GrowingEventManager.sharedInstance postEventBuilder:builder];
-
-    // !!! 注意：这里有个隐藏的死锁问题 !!!
-    // 首次发送 GrowingPageEvent 时，-[GrowingDeviceInfo deviceOrientation] 中，有个子线程同步等待主线程的操作
-    // 如果此时主线程也在同步等待子线程，则会造成死锁，比如在主线程调用以下代码:
-    // [GrowingDispatchManager dispatchInGrowingThread:^{} waitUntilDone:YES];
-    // 因此，这里在子线程验证PageEvent
-    XCTestExpectation *expectation = [self expectationWithDescription:@"testLastPage failed : timeout"];
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        GrowingPageEvent *event = (GrowingPageEvent *)[MockEventQueue.sharedQueue lastEventFor:GrowingEventTypePage];
-        
-        // 新增一个Tracker将补发last PAGE，除了userKey/gioId/dataSourceId/sessionId等等字段，大部分字段值与原事件相同
-        GAI *gai = [GAI sharedInstance];
-        [gai trackerWithName:@"GA3Tracker1" trackingId:@"UA-1111-Y"];
-        
-        GrowingPageEvent *gaEvent = (GrowingPageEvent *)[MockEventQueue.sharedQueue lastEventFor:GrowingEventTypePage];
-        NSDictionary *dic = event.toDictionary;
-        NSDictionary *gaDic = gaEvent.toDictionary;
-
-        XCTAssertNil(gaDic[@"userKey"]);
-        XCTAssertNil(gaDic[@"gioId"]);
-        XCTAssertEqualObjects(gaDic[@"dataSourceId"], @"1111111111111111");
-        XCTAssertNotEqualObjects(gaDic[@"sessionId"], dic[@"sessionId"]);
-        XCTAssertNotEqualObjects(gaDic[@"userId"], dic[@"userId"]);
-        XCTAssertNotEqualObjects(gaDic[@"timestamp"], dic[@"timestamp"]);
-        
-        XCTAssertEqualObjects(gaDic[@"eventType"], dic[@"eventType"]);
-        XCTAssertEqualObjects(gaDic[@"language"], dic[@"language"]);
-        XCTAssertEqualObjects(gaDic[@"deviceBrand"], dic[@"deviceBrand"]);
-        XCTAssertEqualObjects(gaDic[@"deviceId"], dic[@"deviceId"]);
-        XCTAssertEqualObjects(gaDic[@"globalSequenceId"], dic[@"globalSequenceId"]);
-        XCTAssertEqualObjects(gaDic[@"title"], dic[@"title"]);
-        XCTAssertEqualObjects(gaDic[@"urlScheme"], dic[@"urlScheme"]);
-        XCTAssertEqualObjects(gaDic[@"deviceType"], dic[@"deviceType"]);
-        XCTAssertEqualObjects(gaDic[@"appVersion"], dic[@"appVersion"]);
-        XCTAssertEqualObjects(gaDic[@"screenHeight"], dic[@"screenHeight"]);
-        XCTAssertEqualObjects(gaDic[@"path"], dic[@"path"]);
-        XCTAssertEqualObjects(gaDic[@"networkState"], dic[@"networkState"]);
-        XCTAssertEqualObjects(gaDic[@"domain"], dic[@"domain"]);
-        XCTAssertEqualObjects(gaDic[@"referralPage"], dic[@"referralPage"]);
-        XCTAssertEqualObjects(gaDic[@"platform"], dic[@"platform"]);
-        XCTAssertEqualObjects(gaDic[@"appName"], dic[@"appName"]);
-        XCTAssertEqualObjects(gaDic[@"appState"], dic[@"appState"]);
-        XCTAssertEqualObjects(gaDic[@"sdkVersion"], dic[@"sdkVersion"]);
-        XCTAssertEqualObjects(gaDic[@"deviceModel"], dic[@"deviceModel"]);
-        XCTAssertEqualObjects(gaDic[@"screenWidth"], dic[@"screenWidth"]);
-        XCTAssertEqualObjects(gaDic[@"platformVersion"], dic[@"platformVersion"]);
-        XCTAssertEqualObjects(gaDic[@"eventSequenceId"], dic[@"eventSequenceId"]);
-
-        [gai removeTrackerByName:@"GA3Tracker1"];
-        
-        [expectation fulfill];
-    });
-    
-    [self waitForExpectationsWithTimeout:3.0f handler:nil];
 }
 
 - (void)test04UploadClientId {
@@ -548,6 +486,7 @@
         
         XCTAssertEqualObjects(dic[@"eventName"], @"GAEvent");
         XCTAssertEqualObjects(dic[@"userId"], @"userIdInGA");
+        XCTAssertEqualObjects(dic[@"gioId"], @"userIdInGA");
         NSDictionary *attr = dic[@"attributes"];
         XCTAssertEqual(attr.allKeys.count, 1);
         XCTAssertEqualObjects(attr[@"tracker"], @"1");
@@ -563,6 +502,7 @@
         
         XCTAssertEqualObjects(dic[@"eventName"], @"GAEvent");
         XCTAssertNil(dic[@"userId"]);
+        XCTAssertNotNil(dic[@"gioId"]);
         NSDictionary *attr = dic[@"attributes"];
         XCTAssertEqual(attr.allKeys.count, 1);
         XCTAssertEqualObjects(attr[@"tracker"], @"1");
