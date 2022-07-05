@@ -38,6 +38,8 @@ static NSString *const kFIRAPersistedConfigMeasurementEnabledStateKey =
 static NSString *const kFIRAPersistedConfigDefaultEventParametersKey =
     @"/google/measurement/default_event_parameters";
 
+static NSString *const kFIRAppInstanceID = @"app_instance_id";
+
 typedef NS_ENUM(int64_t, FIRAnalyticsEnabledState) {
   // 0 is the default value for keys not found stored in persisted config, so it cannot represent
   // kFIRAnalyticsEnabledStateSetNo. It must represent kFIRAnalyticsEnabledStateNotSet.
@@ -78,7 +80,7 @@ typedef NS_ENUM(int64_t, FIRAnalyticsEnabledState) {
     if ([event.eventType isEqualToString:GrowingEventTypeLoginUserAttributes]) {
         GrowingLoginUserAttributesEvent *e = (GrowingLoginUserAttributesEvent *)event;
         // 当前正在上报appInstanceID
-        if (e.attributes.count > 0 && e.attributes[@"appInstanceID"]) {
+        if (e.attributes.count > 0 && e.attributes[kFIRAppInstanceID]) {
             GrowingGAAdapter.sharedInstance.sentAppInstanceID = YES;
             
             // 清除事件拦截器
@@ -291,7 +293,7 @@ static void growingga_adapter_logAppInstanceID(NSString *appInstanceID) {
         if (![tracker respondsToSelector:selector]) {
             return;
         }
-        ((void (*)(id, SEL, NSDictionary *))objc_msgSend)(tracker, selector, @{@"appInstanceID" : appInstanceID});
+        ((void (*)(id, SEL, NSDictionary *))objc_msgSend)(tracker, selector, @{kFIRAppInstanceID : appInstanceID});
     }];
 }
 
