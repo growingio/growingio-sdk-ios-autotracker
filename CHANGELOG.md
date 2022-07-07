@@ -1,3 +1,20 @@
+## [3.4.1](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.4.0...3.4.1) (2022-07-07)
+
+### Bug Fixes
+
+* Dummy-GoogleAnalytics 在 Swift 下调用 gai?.logger.logLevel 报错 ([f9ccc22](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/f9ccc224dc5ee5ca4042127ecc74817d5f565dce))
+* GA 3 Adapter ClientId 更改时补发 ([ddaaccf](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/ddaaccf4c29a58971a31f786d1bcd5150f38976c))
+* GA 3 Adapter Event's userId/gioId 正确赋值 ([3ca2344](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/3ca2344ee0e6cc0e5bf339842872248aed62958d))
+* GA 3 Adapter Swizzle 改变了 _cmd 使 GoogleAnalytics 无法发数 ([9206a94](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/9206a94ab61f52436dd47f7be6337e3a39c84f34))
+* GA 3 Adapter 先 Swizzle 获取相关配置之后再添加拦截器 ([d434636](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/d4346367590fd7be41ad800798963f93c27459e4))
+* GA 3 Adapter 去掉 lastVisit、lastPage 相关逻辑 ([6f6fa7d](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/6f6fa7dadd3cf5a3c6fb0297b514e50247b6e66e))
+* GA 3 Adapter 在 GrowingAnalytics 之前初始化 GAITracker 应该报错 ([841418b](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/841418b73d827fbe3a6c409c706d29cd3c047d7f))
+* GA 4 Adapter app_instance_id 上报 ([6ec06da](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/6ec06dad3d3dc50a508f363726add8723451c7db))
+* GA 4 Adapter 保证 appInstanceID 上报 ([243bbb8](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/243bbb841364212127ef9393f03c9df748c6ffd7))
+* GA3 Adapter 适配 optOut ([7343164](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/7343164db00566d89968a7817c963ce00a254a0d))
+* GA3AdapterTest 错误测试用例导致失败 ([ed6e531](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/ed6e531f00581bdec27c26e8a988222deb4ca249))
+* id\<GrowingRequestProtocol\> 对象 optional 调用增加 respondsToSelector 判断 ([7d3d81a](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/7d3d81a633dfac994b4e27e34c18a7ec2445304e))
+
 # [3.4.0](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.3.6...3.4.0) (2022-06-16)
 
 ### Bug Fixes
@@ -15,13 +32,13 @@
 * Protobuf 模块优化，减少 Category 的使用，避免 ld warnings ([5394ca4](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/5394ca4b2fb1e178466cbd2e00869eb270ae1d2f))
 * 适配 iOS 13 UIScene 冷启动 DeepLink 唤起 ([1302b8b](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/1302b8bee188e087f2c6f49e16f365bda1b6becf))
 
-# [3.3.6](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.3.5...3.3.6) (2022-04-28)
+## [3.3.6](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.3.5...3.3.6) (2022-04-28)
 
 ### Features
 
 * LOGIN_USER_ATTRIBUTES 事件属性支持 `NSArray<ObjectType>` ([6d2e971](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/6d2e9712184874b8ed875ae270126393a646b5d7))
 
-# [3.3.5](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.3.4...3.3.5) (2022-04-12)
+## [3.3.5](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.3.4...3.3.5) (2022-04-12)
 
 ### Bug Fixes
 
@@ -120,7 +137,7 @@
 
 * 3.3.0 正式版发布
 
-# [3.3.0-beta](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.2.2...3.3.0-beta) (2021-10-08)
+## [3.3.0-beta](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.2.2...3.3.0-beta) (2021-10-08)
 
 ### Bug Fixes
 
@@ -151,7 +168,7 @@
 * release 3.2.2-beta ([6cb2cbe](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/6cb2cbe0c59174c50eb3c448c3c81cba2a37d7c4))
 * 增加 5G networkType 判断 ([d41ee08](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/d41ee0839476349f463f42ec82f3db25f87111ac))
 
-# [3.2.1](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.2.1-beta...3.2.1)(2021-09-01)
+## [3.2.1](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.2.1-beta...3.2.1)(2021-09-01)
 
 ### Bug Fixes
 
@@ -209,7 +226,7 @@
 
 * 3.2.0版本发布 ([fafc165](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/fafc165648834fc006d580aa932d4e8ea5f4a5af))
 
-# [3.2.0-beta](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.1.1-beta...3.2.0-beta) (2021-05-26)
+## [3.2.0-beta](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.1.1-beta...3.2.0-beta) (2021-05-26)
 
 ### Features
 
@@ -247,7 +264,7 @@
 
 * 3.1.0正式版本发布 ([69bf27e](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/69bf27ecf0f64b33dbdcd6a410146480aa4f2925))
 
-# [3.1.0-beta](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.0.2...3.1.0-beta) (2021-04-06)
+## [3.1.0-beta](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.0.2...3.1.0-beta) (2021-04-06)
 
 ### Bug Fixes
 
