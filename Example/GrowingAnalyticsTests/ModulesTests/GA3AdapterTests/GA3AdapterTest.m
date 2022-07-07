@@ -140,73 +140,127 @@
     [gai removeTrackerByName:@"GA3Tracker4"];
 }
 
-- (void)test02ResendLastVisit {
-    GrowingBaseBuilder *builder = GrowingVisitEvent.builder;
-    [GrowingEventManager.sharedInstance postEventBuilder:builder];
-
-    GrowingVisitEvent *event = (GrowingVisitEvent *)[MockEventQueue.sharedQueue lastEventFor:GrowingEventTypeVisit];
-        
-    // 新增一个Tracker将补发last VISIT，除了userKey/gioId/dataSourceId/sessionId等等字段，大部分字段值与原事件相同
+- (void)test02SendVisit {
+    // 新增一个Tracker将发送一个VISIT
     GAI *gai = [GAI sharedInstance];
     [gai trackerWithName:@"GA3Tracker1" trackingId:@"UA-1111-Y"];
     
     GrowingVisitEvent *gaEvent = (GrowingVisitEvent *)[MockEventQueue.sharedQueue lastEventFor:GrowingEventTypeVisit];
-    NSDictionary *dic = event.toDictionary;
     NSDictionary *gaDic = gaEvent.toDictionary;
 
-    XCTAssertNil(gaDic[@"userKey"]);
-    XCTAssertNil(gaDic[@"gioId"]);
-    XCTAssertEqualObjects(gaDic[@"dataSourceId"], @"1111111111111111");
-    XCTAssertNotEqualObjects(gaDic[@"sessionId"], dic[@"sessionId"]);
-    XCTAssertNotEqualObjects(gaDic[@"userId"], dic[@"userId"]);
-    XCTAssertNotEqualObjects(gaDic[@"timestamp"], dic[@"timestamp"]);
-    
-    XCTAssertEqualObjects(gaDic[@"eventType"], dic[@"eventType"]);
-    XCTAssertEqualObjects(gaDic[@"language"], dic[@"language"]);
-    XCTAssertEqualObjects(gaDic[@"deviceBrand"], dic[@"deviceBrand"]);
-    XCTAssertEqualObjects(gaDic[@"deviceId"], dic[@"deviceId"]);
-    XCTAssertNotEqualObjects(gaDic[@"globalSequenceId"], dic[@"globalSequenceId"]);
-    XCTAssertEqualObjects(gaDic[@"urlScheme"], dic[@"urlScheme"]);
-    XCTAssertEqualObjects(gaDic[@"deviceType"], dic[@"deviceType"]);
-    XCTAssertEqualObjects(gaDic[@"appVersion"], dic[@"appVersion"]);
-    XCTAssertEqualObjects(gaDic[@"screenHeight"], dic[@"screenHeight"]);
-    XCTAssertEqualObjects(gaDic[@"networkState"], dic[@"networkState"]);
-    XCTAssertEqualObjects(gaDic[@"domain"], dic[@"domain"]);
-    XCTAssertEqualObjects(gaDic[@"platform"], dic[@"platform"]);
-    XCTAssertEqualObjects(gaDic[@"appName"], dic[@"appName"]);
-    XCTAssertEqualObjects(gaDic[@"appState"], dic[@"appState"]);
-    XCTAssertEqualObjects(gaDic[@"sdkVersion"], dic[@"sdkVersion"]);
-    XCTAssertEqualObjects(gaDic[@"deviceModel"], dic[@"deviceModel"]);
-    XCTAssertEqualObjects(gaDic[@"screenWidth"], dic[@"screenWidth"]);
-    XCTAssertEqualObjects(gaDic[@"idfa"], dic[@"idfa"]);
-    XCTAssertEqualObjects(gaDic[@"idfv"], dic[@"idfv"]);
-    XCTAssertEqualObjects(gaDic[@"platformVersion"], dic[@"platformVersion"]);
-    XCTAssertNotEqualObjects(gaDic[@"eventSequenceId"], dic[@"eventSequenceId"]);
-
-    [gai removeTrackerByName:@"GA3Tracker1"];
-}
-
-- (void)test04UploadClientId {
-    // 新增一个Tracker将伴随着发送一个LOGIN_USER_ATTRIBUTES事件，上传clientId，用于关联历史数据
-    GAI *gai = [GAI sharedInstance];
-    [gai trackerWithName:@"GA3Tracker1" trackingId:@"UA-1111-Y"];
-    
-    GrowingLoginUserAttributesEvent *gaEvent = (GrowingLoginUserAttributesEvent *)[MockEventQueue.sharedQueue lastEventFor:GrowingEventTypeLoginUserAttributes];
-    NSDictionary *gaDic = gaEvent.toDictionary;
-    
     XCTAssertNil(gaDic[@"userKey"]);
     XCTAssertNil(gaDic[@"gioId"]);
     XCTAssertEqualObjects(gaDic[@"dataSourceId"], @"1111111111111111");
     XCTAssertNotNil(gaDic[@"sessionId"]);
-    XCTAssertNil(gaDic[@"userId"]);
     XCTAssertNotNil(gaDic[@"timestamp"]);
     
-    XCTAssertNotNil(gaDic[@"attributes"][@"&cid"]);
+    XCTAssertEqualObjects(gaDic[@"eventType"], @"VISIT");
+    XCTAssertNotNil(gaDic[@"language"],);
+    XCTAssertNotNil(gaDic[@"deviceBrand"]);
+    XCTAssertNotNil(gaDic[@"deviceId"]);
+    XCTAssertNotNil(gaDic[@"globalSequenceId"]);
+    XCTAssertNotNil(gaDic[@"urlScheme"]);
+    XCTAssertNotNil(gaDic[@"deviceType"]);
+    XCTAssertNotNil(gaDic[@"appVersion"]);
+    XCTAssertNotNil(gaDic[@"screenHeight"]);
+    XCTAssertNotNil(gaDic[@"networkState"]);
+    XCTAssertNotNil(gaDic[@"domain"]);
+    XCTAssertNotNil(gaDic[@"platform"]);
+    XCTAssertNotNil(gaDic[@"appName"]);
+    XCTAssertNotNil(gaDic[@"appState"]);
+    XCTAssertNotNil(gaDic[@"sdkVersion"]);
+    XCTAssertNotNil(gaDic[@"deviceModel"]);
+    XCTAssertNotNil(gaDic[@"screenWidth"]);
+    XCTAssertNotNil(gaDic[@"idfa"]);
+    XCTAssertNotNil(gaDic[@"idfv"]);
+    XCTAssertNotNil(gaDic[@"platformVersion"]);
+    XCTAssertNotNil(gaDic[@"eventSequenceId"]);
 
     [gai removeTrackerByName:@"GA3Tracker1"];
 }
 
-- (void)test05TrackerSetValue {
+- (void)test03UploadClientId {
+    GAI *gai = [GAI sharedInstance];
+    [gai trackerWithName:@"GA3Tracker1" trackingId:@"UA-1111-Y"];
+    
+    {// 1. 新增一个Tracker将伴随着发送一个LOGIN_USER_ATTRIBUTES事件，上传clientId，用于关联历史数据
+        GrowingLoginUserAttributesEvent *gaEvent = (GrowingLoginUserAttributesEvent *)[MockEventQueue.sharedQueue lastEventFor:GrowingEventTypeLoginUserAttributes];
+        NSDictionary *gaDic = gaEvent.toDictionary;
+        
+        XCTAssertNil(gaDic[@"userKey"]);
+        XCTAssertNil(gaDic[@"gioId"]);
+        XCTAssertEqualObjects(gaDic[@"dataSourceId"], @"1111111111111111");
+        XCTAssertNotNil(gaDic[@"sessionId"]);
+        XCTAssertNil(gaDic[@"userId"]);
+        XCTAssertNotNil(gaDic[@"timestamp"]);
+        XCTAssertNotNil(gaDic[@"attributes"][@"&cid"]);
+    }
+    
+    void(^setNewClientIDBlock)(void) = ^{
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+        // 设置新的客户端ID
+        // https://developers.google.com/analytics/devguides/collection/ios/v3/advanced#%E9%80%89%E9%A1%B9-2%EF%BC%9A%E8%AE%BE%E7%BD%AE%E6%96%B0%E7%9A%84%E5%AE%A2%E6%88%B7%E7%AB%AF-id
+        [GAI sharedInstance].optOut = YES;
+
+        // This Id should be a valid UUID (version 4) string as described in https://goo.gl/0dlrGx.
+        NSString *newClientID = [NSUUID UUID].UUIDString.lowercaseString;
+        id dispatcher = [[GAI sharedInstance] performSelector:@selector(dispatcher)];
+        id dataStore = [dispatcher performSelector:@selector(dataStore)];
+        if ([dataStore respondsToSelector:@selector(setClientId:)]) {
+          [dataStore performSelector:@selector(setClientId:) withObject:newClientID];
+        }
+
+        [GAI sharedInstance].optOut = NO;
+#pragma clang diagnostic pop
+    };
+        
+    {
+        // 清除事件队列
+        [MockEventQueue.sharedQueue cleanQueue];
+        
+        // 生成新的clientId
+        setNewClientIDBlock();
+        
+        // 2. 新生成clientId，将会再次上传
+        GrowingLoginUserAttributesEvent *gaEvent = (GrowingLoginUserAttributesEvent *)[MockEventQueue.sharedQueue lastEventFor:GrowingEventTypeLoginUserAttributes];
+        NSDictionary *gaDic = gaEvent.toDictionary;
+        
+        XCTAssertNil(gaDic[@"userKey"]);
+        XCTAssertNil(gaDic[@"gioId"]);
+        XCTAssertEqualObjects(gaDic[@"dataSourceId"], @"1111111111111111");
+        XCTAssertNotNil(gaDic[@"sessionId"]);
+        XCTAssertNil(gaDic[@"userId"]);
+        XCTAssertNotNil(gaDic[@"timestamp"]);
+        XCTAssertNotNil(gaDic[@"attributes"][@"&cid"]);
+    }
+    
+    {
+        // 清除事件队列
+        [MockEventQueue.sharedQueue cleanQueue];
+        
+        // 3. 多个Tracker分别发送clientId
+        [gai trackerWithName:@"GA3Tracker2" trackingId:@"UA-2222-Y"];
+        
+        // 新增一个Tracker将伴随着发送一个LOGIN_USER_ATTRIBUTES事件，上传clientId，用于关联历史数据
+        XCTAssertEqual([MockEventQueue.sharedQueue eventsFor:GrowingEventTypeLoginUserAttributes].count, 1);
+
+        // 清除事件队列
+        [MockEventQueue.sharedQueue cleanQueue];
+        
+        // 生成新的clientId
+        setNewClientIDBlock();
+        
+        // 当前共有2个Tracker，对应2个LOGIN_USER_ATTRIBUTES事件
+        XCTAssertEqual([MockEventQueue.sharedQueue eventsFor:GrowingEventTypeLoginUserAttributes].count, 2);
+
+        [gai removeTrackerByName:@"GA3Tracker2"];
+    }
+
+    [gai removeTrackerByName:@"GA3Tracker1"];
+}
+
+- (void)test04TrackerSetValue {
     GAI *gai = [GAI sharedInstance];
     id<GAITracker> tracker = [gai trackerWithName:@"GA3Tracker1" trackingId:@"UA-1111-Y"];
     NSDictionary *params = @{@"tracker" : @"1"};
@@ -266,7 +320,7 @@
     [gai removeTrackerByName:@"GA3Tracker1"];
 }
 
-- (void)test06TrackerSend {
+- (void)test05TrackerSend {
     GAI *gai = [GAI sharedInstance];
     id<GAITracker> tracker = [gai trackerWithName:@"GA3Tracker1" trackingId:@"UA-1111-Y"];
     
@@ -439,7 +493,7 @@
     [gai removeTrackerByName:@"GA3Tracker1"];
 }
 
-- (void)test07SetUserId {
+- (void)test06SetUserId {
     GAI *gai = [GAI sharedInstance];
     id<GAITracker> tracker = [gai trackerWithName:@"GA3Tracker1" trackingId:@"UA-1111-Y"];
     NSString *kGA3UserIdKey = @"&uid";
@@ -511,7 +565,7 @@
     [gai removeTrackerByName:@"GA3Tracker1"];
 }
 
-- (void)test08ForwardAutotrackEvent {
+- (void)test07ForwardAutotrackEvent {
     // 转发无埋点事件
     GAI *gai = [GAI sharedInstance];
     [gai trackerWithName:@"GA3Tracker1" trackingId:@"UA-1111-Y"];
@@ -572,7 +626,7 @@
     [gai removeTrackerByName:@"GA3Tracker1"];
 }
 
-- (void)test09ApplicationLifeCycle {
+- (void)test08ApplicationLifeCycle {
     GAI *gai = [GAI sharedInstance];
     [gai trackerWithName:@"GA3Tracker1" trackingId:@"UA-1111-Y"];
     [MockEventQueue.sharedQueue cleanQueue];
@@ -634,6 +688,33 @@
         XCTAssertEqualObjects(events[0].toDictionary[@"dataSourceId"], @"1111111111111111");
     }
 #pragma clang diagnostic pop
+    
+    [gai removeTrackerByName:@"GA3Tracker1"];
+}
+
+- (void)test09SetOptOut {
+    GAI *gai = [GAI sharedInstance];
+    id<GAITracker> tracker = [gai trackerWithName:@"GA3Tracker1" trackingId:@"UA-1111-Y"];
+    
+    {
+        // optOut == YES，不发数
+        gai.optOut = YES;
+        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    @"appview", kGAIHitType, @"Home Screen", kGAIScreenName, nil];
+        [tracker send:params];
+        
+        XCTAssertEqual([MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom].count, 0);
+    }
+    
+    {
+        // optOut == NO，发数
+        gai.optOut = NO;
+        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    @"appview", kGAIHitType, @"Home Screen", kGAIScreenName, nil];
+        [tracker send:params];
+        
+        XCTAssertEqual([MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom].count, 1);
+    }
     
     [gai removeTrackerByName:@"GA3Tracker1"];
 }
