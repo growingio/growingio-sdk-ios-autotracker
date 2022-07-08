@@ -14,17 +14,11 @@ target 'Example' do
 #  pod 'GrowingAnalytics/Tracker', :path => './'
 #  pod 'GrowingAnalytics/Hybrid', :path => './'
   pod 'GrowingAnalytics/Protobuf', :path => './'
-#  pod 'GrowingAnalytics/GAAdapter', :path => './'
-#  pod 'GrowingAnalytics/Dummy-FirebaseAnalytics', :path => './'
-#  pod 'GrowingAnalytics/GA3Adapter', :path => './'
-#  pod 'GrowingAnalytics/Dummy-GoogleAnalytics', :path => './'
 #  pod 'GrowingAnalytics/DISABLE_IDFA', :path => './' #禁用idfa
   pod 'SDCycleScrollView', '~> 1.75'
   pod 'LBXScan/LBXNative', '2.3'
   pod 'LBXScan/UI', '2.3'
   pod 'GrowingToolsKit'
-#  pod 'FirebaseAnalytics'
-#  pod 'GoogleAnalytics'
 end
 
 target 'GrowingAnalyticsTests' do
@@ -61,18 +55,4 @@ target 'ExampleiOS13' do
   project 'Example/Example'
   pod 'GrowingAnalytics/Autotracker', :path => './'
   pod 'GrowingToolsKit'
-end
-
-target 'GAAdapterTests' do
-   project 'Example/Example'
-   pod 'GrowingAnalytics/Autotracker', :path => './'
-   pod 'GrowingAnalytics/GAAdapter', :path => './'
-   pod 'FirebaseAnalytics'
-end
-
-target 'GA3AdapterTests' do
-   project 'Example/Example'
-   pod 'GrowingAnalytics/Autotracker', :path => './'
-   pod 'GrowingAnalytics/GA3Adapter', :path => './'
-   pod 'GoogleAnalytics'
 end

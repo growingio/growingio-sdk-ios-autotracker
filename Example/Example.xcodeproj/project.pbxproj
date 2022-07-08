@@ -151,10 +151,6 @@
 		34C0BF3D277EA9BA0047ADC4 /* MobileDebuggerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C0BF3C277EA9BA0047ADC4 /* MobileDebuggerTest.m */; };
 		34D932FE27BF8C640038430E /* MockEventQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962653324DA66B600032551 /* MockEventQueue.m */; };
 		34D9330027BF943F0038430E /* A0GrowingAnalyticsCDPTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D932F927BF8A400038430E /* A0GrowingAnalyticsCDPTest.m */; };
-		34F24B97285B04D000F4B221 /* GAAdapterTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F24B96285B04D000F4B221 /* GAAdapterTest.m */; };
-		34F24B98285B065900F4B221 /* MockEventQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962653324DA66B600032551 /* MockEventQueue.m */; };
-		34F24BA6285B084100F4B221 /* GA3AdapterTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F24BA5285B084100F4B221 /* GA3AdapterTest.m */; };
-		34F24BA7285B08D600F4B221 /* MockEventQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962653324DA66B600032551 /* MockEventQueue.m */; };
 		4916270F24E157BB00444AF2 /* GIOPresentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916270E24E157BB00444AF2 /* GIOPresentViewController.m */; };
 		4916271224E157CF00444AF2 /* GIOPagingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916271124E157CF00444AF2 /* GIOPagingViewController.m */; };
 		491D2D8D2500E2D9001CB289 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 491D2D8C2500E2D9001CB289 /* MapKit.framework */; };
@@ -352,10 +348,6 @@
 		34C0BF3C277EA9BA0047ADC4 /* MobileDebuggerTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MobileDebuggerTest.m; sourceTree = "<group>"; };
 		34D932F727BF8A400038430E /* GrowingAnalyticsCDPTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrowingAnalyticsCDPTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		34D932F927BF8A400038430E /* A0GrowingAnalyticsCDPTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = A0GrowingAnalyticsCDPTest.m; sourceTree = "<group>"; };
-		34F24B8E285B048000F4B221 /* GAAdapterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GAAdapterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		34F24B96285B04D000F4B221 /* GAAdapterTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GAAdapterTest.m; sourceTree = "<group>"; };
-		34F24B9D285B080400F4B221 /* GA3AdapterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GA3AdapterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		34F24BA5285B084100F4B221 /* GA3AdapterTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GA3AdapterTest.m; sourceTree = "<group>"; };
 		42ADE26B250B292900CA7268 /* HybridTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HybridTest.m; sourceTree = "<group>"; };
 		4916270D24E157BB00444AF2 /* GIOPresentViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIOPresentViewController.h; sourceTree = "<group>"; };
 		4916270E24E157BB00444AF2 /* GIOPresentViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOPresentViewController.m; sourceTree = "<group>"; };
@@ -424,20 +416,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		34D932F427BF8A400038430E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34F24B8B285B048000F4B221 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34F24B9A285B080400F4B221 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -789,8 +767,6 @@
 		34AB4E4F27901416002549FF /* ModulesTests */ = {
 			isa = PBXGroup;
 			children = (
-				34F24BA4285B084100F4B221 /* GA3AdapterTests */,
-				34F24B95285B04D000F4B221 /* GAAdapterTests */,
 				04A4C058276C4DF40056C8C4 /* HybridTests */,
 				34C0BF3B277EA95A0047ADC4 /* MobileDebuggerTests */,
 				34BA7B30277C63D00030AC21 /* ProtobufTests */,
@@ -1137,22 +1113,6 @@
 			path = MobileDebuggerTests;
 			sourceTree = "<group>";
 		};
-		34F24B95285B04D000F4B221 /* GAAdapterTests */ = {
-			isa = PBXGroup;
-			children = (
-				34F24B96285B04D000F4B221 /* GAAdapterTest.m */,
-			);
-			path = GAAdapterTests;
-			sourceTree = "<group>";
-		};
-		34F24BA4285B084100F4B221 /* GA3AdapterTests */ = {
-			isa = PBXGroup;
-			children = (
-				34F24BA5285B084100F4B221 /* GA3AdapterTest.m */,
-			);
-			path = GA3AdapterTests;
-			sourceTree = "<group>";
-		};
 		4962652C24DA66B600032551 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
@@ -1189,8 +1149,6 @@
 				3494DCF828597E1A00A6CE46 /* GrowingAnalyticsUITests.xctest */,
 				3494DD0E2859E07500A6CE46 /* ExampleiOS13.app */,
 				3494DD2D2859E27B00A6CE46 /* GrowingAnalyticsiOS13UITests.xctest */,
-				34F24B8E285B048000F4B221 /* GAAdapterTests.xctest */,
-				34F24B9D285B080400F4B221 /* GA3AdapterTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1350,40 +1308,6 @@
 			productReference = 34D932F727BF8A400038430E /* GrowingAnalyticsCDPTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		34F24B8D285B048000F4B221 /* GAAdapterTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 34F24B94285B048000F4B221 /* Build configuration list for PBXNativeTarget "GAAdapterTests" */;
-			buildPhases = (
-				34F24B8A285B048000F4B221 /* Sources */,
-				34F24B8B285B048000F4B221 /* Frameworks */,
-				34F24B8C285B048000F4B221 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = GAAdapterTests;
-			productName = GAAdapterTests;
-			productReference = 34F24B8E285B048000F4B221 /* GAAdapterTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		34F24B9C285B080400F4B221 /* GA3AdapterTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 34F24BA1285B080400F4B221 /* Build configuration list for PBXNativeTarget "GA3AdapterTests" */;
-			buildPhases = (
-				34F24B99285B080400F4B221 /* Sources */,
-				34F24B9A285B080400F4B221 /* Frameworks */,
-				34F24B9B285B080400F4B221 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = GA3AdapterTests;
-			productName = GA3AdapterTests;
-			productReference = 34F24B9D285B080400F4B221 /* GA3AdapterTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		6003F589195388D20070C39A /* Example */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6003F5BF195388D20070C39A /* Build configuration list for PBXNativeTarget "Example" */;
@@ -1462,16 +1386,6 @@
 						DevelopmentTeam = SXBU677CPT;
 						ProvisioningStyle = Automatic;
 					};
-					34F24B8D285B048000F4B221 = {
-						CreatedOnToolsVersion = 13.1;
-						DevelopmentTeam = SXBU677CPT;
-						ProvisioningStyle = Automatic;
-					};
-					34F24B9C285B080400F4B221 = {
-						CreatedOnToolsVersion = 13.1;
-						DevelopmentTeam = SXBU677CPT;
-						ProvisioningStyle = Automatic;
-					};
 					6003F589195388D20070C39A = {
 						DevelopmentTeam = SXBU677CPT;
 						ProvisioningStyle = Automatic;
@@ -1503,8 +1417,6 @@
 				3494DCF728597E1A00A6CE46 /* GrowingAnalyticsUITests */,
 				3494DD0D2859E07500A6CE46 /* ExampleiOS13 */,
 				3494DD2C2859E27B00A6CE46 /* GrowingAnalyticsiOS13UITests */,
-				34F24B8D285B048000F4B221 /* GAAdapterTests */,
-				34F24B9C285B080400F4B221 /* GA3AdapterTests */,
 			);
 		};
 /* End PBXProject section */
@@ -1563,20 +1475,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		34D932F527BF8A400038430E /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34F24B8C285B048000F4B221 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34F24B9B285B080400F4B221 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1759,24 +1657,6 @@
 			files = (
 				34D932FE27BF8C640038430E /* MockEventQueue.m in Sources */,
 				34D9330027BF943F0038430E /* A0GrowingAnalyticsCDPTest.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34F24B8A285B048000F4B221 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				34F24B98285B065900F4B221 /* MockEventQueue.m in Sources */,
-				34F24B97285B04D000F4B221 /* GAAdapterTest.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34F24B99285B080400F4B221 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				34F24BA7285B08D600F4B221 /* MockEventQueue.m in Sources */,
-				34F24BA6285B084100F4B221 /* GA3AdapterTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2674,188 +2554,6 @@
 			};
 			name = Release;
 		};
-		34F24B92285B048000F4B221 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = SXBU677CPT;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/..\"",
-				);
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MARKETING_VERSION = 1.0;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.growingio.GAAdapterTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		34F24B93285B048000F4B221 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CODE_SIGN_STYLE = Automatic;
-				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = SXBU677CPT;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/..\"",
-				);
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MARKETING_VERSION = 1.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.growingio.GAAdapterTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		34F24BA2285B080400F4B221 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = SXBU677CPT;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/..\"",
-				);
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MARKETING_VERSION = 1.0;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.growingio.GA3AdapterTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		34F24BA3285B080400F4B221 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CODE_SIGN_STYLE = Automatic;
-				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = SXBU677CPT;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/..\"",
-				);
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MARKETING_VERSION = 1.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.growingio.GA3AdapterTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 		6003F5BD195388D20070C39A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3070,24 +2768,6 @@
 			buildConfigurations = (
 				34D932FC27BF8A400038430E /* Debug */,
 				34D932FD27BF8A400038430E /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		34F24B94285B048000F4B221 /* Build configuration list for PBXNativeTarget "GAAdapterTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				34F24B92285B048000F4B221 /* Debug */,
-				34F24B93285B048000F4B221 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		34F24BA1285B080400F4B221 /* Build configuration list for PBXNativeTarget "GA3AdapterTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				34F24BA2285B080400F4B221 /* Debug */,
-				34F24BA3285B080400F4B221 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
