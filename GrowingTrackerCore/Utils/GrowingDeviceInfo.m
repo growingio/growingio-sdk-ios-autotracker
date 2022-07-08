@@ -281,7 +281,28 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 }
 
 - (void)updateAppState {
-    LOCK(_appState = [UIApplication sharedApplication].applicationState == UIApplicationStateActive ? 0 : 1;)
+    dispatch_block_t block = ^{
+        self->_appState = [UIApplication sharedApplication].applicationState == UIApplicationStateActive ? 0 : 1;
+    };
+    
+    if (@available(iOS 13.0, *)) {
+        // iOS 13当收到UISceneWillDeactivateNotification/UISceneDidActivateNotification时，applicationState并未转换
+        NSDictionary *sceneManifestDict = [[NSBundle mainBundle] infoDictionary][@"UIApplicationSceneManifest"];
+        if (sceneManifestDict) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                block();
+            });
+            return;
+        }
+    }
+    
+    if ([NSThread isMainThread]) {
+        block();
+    } else {
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            block();
+        });
+    }
 }
 
 @end
