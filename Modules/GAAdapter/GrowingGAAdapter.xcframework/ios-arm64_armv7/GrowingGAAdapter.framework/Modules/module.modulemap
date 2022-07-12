@@ -1,0 +1,6 @@
+framework module GrowingGAAdapter {
+  umbrella header "GrowingGAAdapter.h"
+
+  export *
+  module * { export * }
+}
