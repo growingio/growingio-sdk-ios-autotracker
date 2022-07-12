@@ -1,0 +1,134 @@
+PODS:
+  - GrowingAnalytics-cdp/Autotracker (3.4.1):
+    - GrowingAnalytics-cdp/TrackerCore (= 3.4.1)
+    - GrowingAnalytics/AutotrackerCore (= 3.4.1)
+    - GrowingAnalytics/DefaultServices (= 3.4.1)
+    - GrowingAnalytics/Hybrid (= 3.4.1)
+    - GrowingAnalytics/MobileDebugger (= 3.4.1)
+    - GrowingAnalytics/WebCircle (= 3.4.1)
+  - GrowingAnalytics-cdp/Tracker (3.4.1):
+    - GrowingAnalytics-cdp/TrackerCore (= 3.4.1)
+    - GrowingAnalytics/DefaultServices (= 3.4.1)
+    - GrowingAnalytics/MobileDebugger (= 3.4.1)
+  - GrowingAnalytics-cdp/TrackerCore (3.4.1):
+    - GrowingAnalytics/TrackerCore (= 3.4.1)
+  - GrowingAnalytics/Autotracker (3.4.1):
+    - GrowingAnalytics/AutotrackerCore
+    - GrowingAnalytics/DefaultServices
+    - GrowingAnalytics/Hybrid
+    - GrowingAnalytics/MobileDebugger
+    - GrowingAnalytics/WebCircle
+  - GrowingAnalytics/AutotrackerCore (3.4.1):
+    - GrowingAnalytics/TrackerCore
+  - GrowingAnalytics/Compression (3.4.1):
+    - GrowingAnalytics/TrackerCore
+  - GrowingAnalytics/Database (3.4.1):
+    - GrowingAnalytics/TrackerCore
+  - GrowingAnalytics/DefaultServices (3.4.1):
+    - GrowingAnalytics/Compression
+    - GrowingAnalytics/Database
+    - GrowingAnalytics/Encryption
+    - GrowingAnalytics/Network
+    - GrowingAnalytics/TrackerCore
+  - GrowingAnalytics/Encryption (3.4.1):
+    - GrowingAnalytics/TrackerCore
+  - GrowingAnalytics/Hybrid (3.4.1):
+    - GrowingAnalytics/TrackerCore
+  - GrowingAnalytics/MobileDebugger (3.4.1):
+    - GrowingAnalytics/TrackerCore
+    - GrowingAnalytics/WebSocket
+  - GrowingAnalytics/Network (3.4.1):
+    - GrowingAnalytics/TrackerCore
+  - GrowingAnalytics/Protobuf (3.4.1):
+    - GrowingAnalytics/Database
+    - GrowingAnalytics/Protobuf/Proto (= 3.4.1)
+    - GrowingAnalytics/TrackerCore
+  - GrowingAnalytics/Protobuf/Proto (3.4.1):
+    - GrowingAnalytics/Database
+    - GrowingAnalytics/TrackerCore
+    - Protobuf
+  - GrowingAnalytics/Tracker (3.4.1):
+    - GrowingAnalytics/DefaultServices
+    - GrowingAnalytics/MobileDebugger
+    - GrowingAnalytics/TrackerCore
+  - GrowingAnalytics/TrackerCore (3.4.1)
+  - GrowingAnalytics/WebCircle (3.4.1):
+    - GrowingAnalytics/AutotrackerCore
+    - GrowingAnalytics/Hybrid
+    - GrowingAnalytics/WebSocket
+  - GrowingAnalytics/WebSocket (3.4.1):
+    - GrowingAnalytics/TrackerCore
+  - GrowingToolsKit (1.0.6):
+    - GrowingToolsKit/Default (= 1.0.6)
+  - GrowingToolsKit/Core (1.0.6):
+    - GrowingToolsKit/Res
+  - GrowingToolsKit/Default (1.0.6):
+    - GrowingToolsKit/Core
+    - GrowingToolsKit/EventsList
+    - GrowingToolsKit/NetFlow
+    - GrowingToolsKit/SDKInfo
+    - GrowingToolsKit/XPathTrack
+  - GrowingToolsKit/EventsList (1.0.6):
+    - GrowingToolsKit/Core
+  - GrowingToolsKit/NetFlow (1.0.6):
+    - GrowingToolsKit/Core
+  - GrowingToolsKit/Res (1.0.6)
+  - GrowingToolsKit/SDKInfo (1.0.6):
+    - GrowingToolsKit/Core
+  - GrowingToolsKit/XPathTrack (1.0.6):
+    - GrowingToolsKit/Core
+  - KIF (3.8.7):
+    - KIF/Core (= 3.8.7)
+  - KIF/Core (3.8.7)
+  - LBXScan/LBXNative (2.3):
+    - LBXScan/Types (~> 2.2)
+  - LBXScan/Types (2.3)
+  - LBXScan/UI (2.3):
+    - LBXScan/Types (~> 2.2)
+  - Protobuf (3.21.2)
+  - SDCycleScrollView (1.82):
+    - SDWebImage (>= 5.0.0)
+  - SDWebImage (5.13.0):
+    - SDWebImage/Core (= 5.13.0)
+  - SDWebImage/Core (5.13.0)
+
+DEPENDENCIES:
+  - GrowingAnalytics-cdp/Autotracker (from `./`)
+  - GrowingAnalytics-cdp/Tracker (from `./`)
+  - GrowingAnalytics/Autotracker (from `./`)
+  - GrowingAnalytics/Protobuf (from `./`)
+  - GrowingAnalytics/Tracker (from `./`)
+  - GrowingToolsKit
+  - KIF
+  - LBXScan/LBXNative (= 2.3)
+  - LBXScan/UI (= 2.3)
+  - SDCycleScrollView (~> 1.75)
+
+SPEC REPOS:
+  trunk:
+    - GrowingToolsKit
+    - KIF
+    - LBXScan
+    - Protobuf
+    - SDCycleScrollView
+    - SDWebImage
+
+EXTERNAL SOURCES:
+  GrowingAnalytics:
+    :path: "./"
+  GrowingAnalytics-cdp:
+    :path: "./"
+
+SPEC CHECKSUMS:
+  GrowingAnalytics: 4eac2982cb2da0019e44f65eeaa0ea2143f53d12
+  GrowingAnalytics-cdp: 9cc14f2607040676eee4126fff104c27fd63088c
+  GrowingToolsKit: 52bb0083cb7feadf3486de8df5691b5761dff091
+  KIF: 779cdbca106633b94ecee7b036537490ebdbd9de
+  LBXScan: e51449f0832d1fe17da632af0d22adeb3cfa3543
+  Protobuf: 818c6a87e44193a77f56b87c6a1c106efda7e062
+  SDCycleScrollView: a0d74c3384caa72bdfc81470bdbc8c14b3e1fbcf
+  SDWebImage: 0327043dbb9533e75f2eff8445b3df0f2ceca6ac
+
+PODFILE CHECKSUM: 6671cc6cb6f993031ccfd78848758676d87995e1
+
+COCOAPODS: 1.11.3
