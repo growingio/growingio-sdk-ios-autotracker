@@ -128,6 +128,18 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     end
   end
 
+  s.subspec 'GAAdapter' do |adapter|
+    adapter.vendored_frameworks = 'Modules/GAAdapter/GrowingGAAdapter.xcframework'
+    adapter.dependency 'GrowingAnalytics/TrackerCore'
+    adapter.pod_target_xcconfig = { "OTHER_LDFLAGS" => '$(inherited) -ObjC' }
+  end
+
+  s.subspec 'GA3Adapter' do |adapter|
+    adapter.vendored_frameworks = 'Modules/GA3Adapter/GrowingGA3Adapter.xcframework'
+    adapter.dependency 'GrowingAnalytics/TrackerCore'
+    adapter.pod_target_xcconfig = { "OTHER_LDFLAGS" => '$(inherited) -ObjC' }
+  end
+
   s.subspec 'DISABLE_IDFA' do |config|
     config.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'GROWING_ANALYSIS_DISABLE_IDFA=1'}
     config.dependency 'GrowingAnalytics/TrackerCore'
