@@ -7,3 +7,4 @@ ignore:
   - "Services/Compression/LZ4"
   - "Services/Database/FMDB"
   - "Services/WebSocket"
+  - "Package.swift"
