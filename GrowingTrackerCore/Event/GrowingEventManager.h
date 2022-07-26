@@ -46,6 +46,10 @@
 /// @param event 当前事件
 - (void)growingEventManagerEventDidBuild:(GrowingBaseEvent *_Nullable)event;
 
+/// 事件入库完毕
+/// @param event 当前事件
+- (void)growingEventManagerEventDidWrite:(GrowingBaseEvent *_Nullable)event;
+
 /// 自定义event发送请求
 /// @param channel 事件发送通道
 - (id<GrowingRequestProtocol> _Nullable)growingEventManagerRequestWithChannel:(GrowingEventChannel *_Nullable)channel;

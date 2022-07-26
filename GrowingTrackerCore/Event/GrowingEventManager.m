@@ -180,7 +180,14 @@ static GrowingEventManager *sharedInstance = nil;
                 [obj growingEventManagerEventDidBuild:event];
             }
         }
+        
         [self writeToDatabaseWithEvent:event];
+        
+        for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
+            if ([obj respondsToSelector:@selector(growingEventManagerEventDidWrite:)]) {
+                [obj growingEventManagerEventDidWrite:event];
+            }
+        }
     };
     [GrowingDispatchManager dispatchInGrowingThread:block];
 }
