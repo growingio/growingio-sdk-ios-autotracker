@@ -73,7 +73,13 @@
 
 @end
 
+@interface AutotrackUITableView_Delegate_XCTest : NSObject <UITableViewDelegate>
+
+@end
+
 @interface UITableViewAutotrackTest : XCTestCase <UITableViewDelegate>
+
+@property (nonatomic, strong) AutotrackUITableView_Delegate_XCTest *delegate;
 
 @end
 
@@ -105,9 +111,20 @@
     // Put teardown code here. This method is called after the invocation of each test method in the class.
 }
 
-- (void)testUITableViewAutotrack {
+- (void)test01UITableViewAutotrack {
     AutotrackUITableView_XCTest *tableView = [[AutotrackUITableView_XCTest alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
     tableView.delegate = self;
+    
+    [tableView.delegate tableView:tableView didSelectRowAtIndexPath:[NSIndexPath indexPathWithIndex:0]];
+    
+    NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
+    XCTAssertEqual(events.count, 1);
+}
+
+- (void)test02UITableViewRealDelegate {
+    AutotrackUITableView_XCTest *tableView = [[AutotrackUITableView_XCTest alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+    self.delegate = [AutotrackUITableView_Delegate_XCTest new];
+    tableView.delegate = self.delegate;
     
     [tableView.delegate tableView:tableView didSelectRowAtIndexPath:[NSIndexPath indexPathWithIndex:0]];
     
@@ -124,3 +141,17 @@
 @end
 
 #pragma clang diagnostic pop
+
+@implementation AutotrackUITableView_Delegate_XCTest
+
+#pragma mark - UITableView Delegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
+    
+}
+
+- (Class)class {
+    return UITableViewController.class;
+}
+
+@end

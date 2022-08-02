@@ -73,7 +73,13 @@
 
 @end
 
+@interface AutotrackUICollectionView_Delegate_XCTest : NSObject <UICollectionViewDelegate>
+
+@end
+
 @interface UICollectionViewAutotrackTest : XCTestCase <UICollectionViewDelegate>
+
+@property (nonatomic, strong) AutotrackUICollectionView_Delegate_XCTest *delegate;
 
 @end
 
@@ -105,10 +111,23 @@
     // Put teardown code here. This method is called after the invocation of each test method in the class.
 }
 
-- (void)testUICollectionViewAutotrack {
+- (void)test01UICollectionViewAutotrack {
     AutotrackUICollectionView_XCTest *collectionView = [[AutotrackUICollectionView_XCTest alloc] initWithFrame:CGRectMake(0, 0, 100, 100)
                                                                                           collectionViewLayout:UICollectionViewLayout.new];
     collectionView.delegate = self;
+    
+    [collectionView.delegate collectionView:collectionView
+                   didSelectItemAtIndexPath:[NSIndexPath indexPathWithIndex:0]];
+    
+    NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
+    XCTAssertEqual(events.count, 1);
+}
+
+- (void)test02UICollectionViewRealDelegate {
+    AutotrackUICollectionView_XCTest *collectionView = [[AutotrackUICollectionView_XCTest alloc] initWithFrame:CGRectMake(0, 0, 100, 100)
+                                                                                          collectionViewLayout:UICollectionViewLayout.new];
+    self.delegate = [AutotrackUICollectionView_Delegate_XCTest new];
+    collectionView.delegate = self.delegate;
     
     [collectionView.delegate collectionView:collectionView
                    didSelectItemAtIndexPath:[NSIndexPath indexPathWithIndex:0]];
@@ -126,3 +145,17 @@
 @end
 
 #pragma clang diagnostic pop
+
+@implementation AutotrackUICollectionView_Delegate_XCTest
+
+#pragma mark - UICollectionView Delegate
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+}
+
+- (Class)class {
+    return UICollectionViewController.class;
+}
+
+@end
