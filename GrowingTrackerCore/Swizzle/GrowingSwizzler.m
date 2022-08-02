@@ -88,7 +88,7 @@
 static NSMapTable *growingSwizzles;
 
 static void growing_swizzledMethod_2(id self, SEL _cmd) {
-    Method aMethod = class_getInstanceMethod([self class], _cmd);
+    Method aMethod = class_getInstanceMethod(object_getClass(self), _cmd);
     GrowingSwizzleEntity *swizzle = (GrowingSwizzleEntity *)[growingSwizzles objectForKey:GROWING_MAPTABLE_ID(aMethod)];
     if (swizzle) {
         ((void(*)(id, SEL))swizzle.originalMethod)(self, _cmd);
@@ -102,7 +102,7 @@ static void growing_swizzledMethod_2(id self, SEL _cmd) {
 }
 
 static void growing_swizzledMethod_3(id self, SEL _cmd, id arg) {
-    Method aMethod = class_getInstanceMethod([self class], _cmd);
+    Method aMethod = class_getInstanceMethod(object_getClass(self), _cmd);
     GrowingSwizzleEntity *swizzle = (GrowingSwizzleEntity *)[growingSwizzles objectForKey:GROWING_MAPTABLE_ID(aMethod)];
     if (swizzle) {
         ((void(*)(id, SEL, id))swizzle.originalMethod)(self, _cmd, arg);
@@ -116,7 +116,7 @@ static void growing_swizzledMethod_3(id self, SEL _cmd, id arg) {
 }
 
 static void growing_swizzledMethod_4(id self, SEL _cmd, id arg, id arg2) {
-    Method aMethod = class_getInstanceMethod([self class], _cmd);
+    Method aMethod = class_getInstanceMethod(object_getClass(self), _cmd);
     GrowingSwizzleEntity *swizzle = (GrowingSwizzleEntity *)[growingSwizzles objectForKey:(__bridge id)((void *)aMethod)];
     if (swizzle) {
         ((void(*)(id, SEL, id, id))swizzle.originalMethod)(self, _cmd, arg, arg2);
@@ -130,7 +130,7 @@ static void growing_swizzledMethod_4(id self, SEL _cmd, id arg, id arg2) {
 }
 
 static void growing_swizzledMethod_5(id self, SEL _cmd, id arg, id arg2, id arg3) {
-    Method aMethod = class_getInstanceMethod([self class], _cmd);
+    Method aMethod = class_getInstanceMethod(object_getClass(self), _cmd);
     GrowingSwizzleEntity *swizzle = (GrowingSwizzleEntity *)[growingSwizzles objectForKey:(__bridge id)((void *)aMethod)];
     if (swizzle) {
         ((void(*)(id, SEL, id, id, id))swizzle.originalMethod)(self, _cmd, arg, arg2, arg3);
