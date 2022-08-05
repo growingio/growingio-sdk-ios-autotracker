@@ -27,8 +27,8 @@
 
 - (void)growing_setDelegate:(id<UITableViewDelegate>)delegate {
     SEL selector = @selector(tableView:didSelectRowAtIndexPath:);
-    Class class = [GrowingSwizzler realDelegateClassFromSelector:selector proxy:delegate];
-    
+    id<UITableViewDelegate> realDelegate = [GrowingSwizzler realDelegate:delegate toSelector:selector];
+    Class class = realDelegate.class;
     if ([GrowingSwizzler realDelegateClass:class respondsToSelector:selector]) {
 
         void (^didSelectBlock)(id, SEL, id, id) = ^(id view, SEL command, UITableView *tableView, NSIndexPath *indexPath) {
