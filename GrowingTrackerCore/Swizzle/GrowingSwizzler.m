@@ -193,7 +193,7 @@ static void (*growing_swizzledMethods[GROWING_MAX_ARGS - GROWING_MIN_ARGS + 1])(
     return isLocal;
 }
 
-+ (Class)realDelegateClassFromSelector:(SEL)selector proxy:(id)proxy {
++ (id)realDelegate:(id)proxy toSelector:(SEL)selector {
     if (!proxy) {
         return nil;
     }
@@ -212,7 +212,8 @@ static void (*growing_swizzledMethods[GROWING_MAX_ARGS - GROWING_MIN_ARGS + 1])(
         if (!obj) break;
         realDelegate = obj;
     } while (obj);
-    return object_getClass(realDelegate);
+    
+    return realDelegate;
 }
 
 + (BOOL)realDelegateClass:(Class)cls respondsToSelector:(SEL)sel {

@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingSwizzler : NSObject
 //setDelegate时，返回正确的delegate
-+ (Class)realDelegateClassFromSelector:(SEL)selector proxy:(id)proxy;
++ (id)realDelegate:(id)proxy toSelector:(SEL)selector;
 + (BOOL)realDelegateClass:(Class)cls respondsToSelector:(SEL)sel;
 + (void)growing_swizzleSelector:(SEL)aSelector
                         onClass:(Class)aClass
