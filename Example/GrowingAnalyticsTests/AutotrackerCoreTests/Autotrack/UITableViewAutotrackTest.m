@@ -32,7 +32,7 @@
 #import "GrowingAutotrackerCore/GrowingRealAutotracker.h"
 
 // 可配置growingNodeDonotTrack，从而配置可否生成VIEW_CLICK，以供测试
-
+// -------------------------------------------------------------------------------
 // UITableViewCell
 @interface AutotrackUITableViewCell_XCTest : UITableViewCell
 
@@ -72,14 +72,23 @@
 }
 
 @end
+// -------------------------------------------------------------------------------
 
 @interface AutotrackUITableView_Delegate_XCTest : NSObject <UITableViewDelegate>
 
 @end
 
+@interface AutotrackUITableView_Delegate_2_XCTest : NSObject <UITableViewDelegate>
+
+@property (nonatomic, weak) id <UITableViewDelegate> target;
+
+- (instancetype)initWithTarget:(id <UITableViewDelegate>)target;
+
+@end
+
 @interface UITableViewAutotrackTest : XCTestCase <UITableViewDelegate>
 
-@property (nonatomic, strong) AutotrackUITableView_Delegate_XCTest *delegate;
+@property (nonatomic, strong) id <UITableViewDelegate> delegate;
 
 @end
 
@@ -121,21 +130,54 @@
     XCTAssertEqual(events.count, 1);
 }
 
+static BOOL kDelegateDidCalled = NO;
+static BOOL kRealDelegateDidCalled = NO;
 - (void)test02UITableViewRealDelegate {
+    // 普通 delegate 对象，仅实现了 UITableViewDelegate 方法
     AutotrackUITableView_XCTest *tableView = [[AutotrackUITableView_XCTest alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
     self.delegate = [AutotrackUITableView_Delegate_XCTest new];
     tableView.delegate = self.delegate;
     
+    kDelegateDidCalled = NO;
+    kRealDelegateDidCalled = NO;
     [tableView.delegate tableView:tableView didSelectRowAtIndexPath:[NSIndexPath indexPathWithIndex:0]];
     
+    // 触发了无埋点点击事件
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
     XCTAssertEqual(events.count, 1);
+    
+    // 触发了 AutotrackUITableView_Delegate_XCTest didSelectRowAtIndexPath
+    XCTAssertTrue(kRealDelegateDidCalled);
+}
+
+- (void)test03UITableViewRealDelegate_2 {
+    // 特殊 delegate 对象，实现了 UITableViewDelegate 方法，并重写了 class 方法
+    // 模拟动态子类
+    AutotrackUITableView_XCTest *tableView = [[AutotrackUITableView_XCTest alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+    self.delegate = [[AutotrackUITableView_Delegate_2_XCTest alloc] initWithTarget:self];
+    tableView.delegate = self.delegate;
+    
+    kDelegateDidCalled = NO;
+    kRealDelegateDidCalled = NO;
+    [tableView.delegate tableView:tableView didSelectRowAtIndexPath:[NSIndexPath indexPathWithIndex:0]];
+    
+    // 触发了无埋点点击事件
+    NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
+    // 因为上面 test01UITableViewAutotrack 也对 self 进行了 hook，所以如果一起执行这里会等于 2
+    XCTAssertGreaterThanOrEqual(events.count, 1);
+    
+    // 触发了 UITableViewAutotrackTest didSelectRowAtIndexPath
+    XCTAssertTrue(kDelegateDidCalled);
+    
+    // 触发了 AutotrackUITableView_Delegate_2_XCTest didSelectRowAtIndexPath
+    XCTAssertTrue(kRealDelegateDidCalled);
 }
 
 #pragma mark - UITableView Delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
-    
+    kDelegateDidCalled = YES;
+    NSLog(@"UITableViewAutotrackTest didSelectRowAtIndexPath");
 }
 
 @end
@@ -147,11 +189,35 @@
 #pragma mark - UITableView Delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
-    
+    kRealDelegateDidCalled = YES;
+    NSLog(@"AutotrackUITableView_Delegate_XCTest didSelectRowAtIndexPath");
+}
+
+@end
+
+@implementation AutotrackUITableView_Delegate_2_XCTest
+
+- (instancetype)initWithTarget:(id <UITableViewDelegate>)target {
+    if (self = [super init]) {
+        _target = target;
+    }
+    return self;
+}
+
+#pragma mark - UITableView Delegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
+    if (self.target && [self.target respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)]) {
+        [self.target tableView:tableView didSelectRowAtIndexPath:indexPath];
+    }
+    kRealDelegateDidCalled = YES;
+    NSLog(@"AutotrackUITableView_Delegate_2_XCTest didSelectRowAtIndexPath");
 }
 
 - (Class)class {
-    return UITableViewController.class;
+    // 重写了 class，则必须在 @selector(tableView:didSelectRowAtIndexPath:) 中调用其对应方法
+    // 模拟动态子类的实现
+    return UITableViewAutotrackTest.class;
 }
 
 @end
