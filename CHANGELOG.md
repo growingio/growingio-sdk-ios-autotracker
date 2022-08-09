@@ -1,3 +1,16 @@
+## [3.4.2](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.4.1...3.4.2) (2022-08-09)
+
+
+### Bug Fixes
+
+* iOS 13 ApplicationState 在收到 UIScene 相关通知时并未转换 ([26e6297](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/26e6297f9c4a3d6c6167cac1874435423b3d4366))
+* 避免因 delegate 对象重写 class 方法导致 swizzle 失效 ([049db85](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/049db8541bba347a9e030944978b0e4c959bd941))
+
+
+### Features
+
+* GrowingEventInterceptor 增加 EventDidWrite 回调，以便新增事件排序 ([a7843f9](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/a7843f9e20f6669d32220fbdaa1231edd9298b7c))
+
 ## [3.4.1](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.4.0...3.4.1) (2022-07-07)
 
 ### Bug Fixes
