@@ -62,10 +62,6 @@ let package = Package(
             name: "GrowingModule_Hybrid",
             targets: ["GrowingModule_Hybrid"]
         ),
-        .library(
-            name: "GrowingModule_GAAdapter",
-            targets: ["GrowingGAAdapter"]
-        ),
     ],
     dependencies: [],
     targets: [
@@ -304,10 +300,6 @@ let package = Package(
             linkerSettings: [
                 .linkedFramework("WebKit", .when(platforms: [.iOS])),
             ]
-        ),
-        .binaryTarget(
-            name: "GrowingGAAdapter",
-            path: "Modules/GAAdapter/GrowingGAAdapter.xcframework"
         ),
 
         // MARK: - GrowingAnalytics Wrapper (No IDFA)
