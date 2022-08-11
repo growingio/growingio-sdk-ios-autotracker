@@ -38,7 +38,7 @@
 
 #import "Services/Database/FMDB/GrowingFMDatabase.h"
 #import "Services/Database/FMDB/GrowingFMDatabaseAdditions.h"
-#import "TargetConditionals.h"
+#import <TargetConditionals.h>
 
 @interface GrowingFMDatabase (PrivateStuff)
 - (GrowingFMResultSet *)executeQuery:(NSString *)sql withArgumentsInArray:(NSArray*)arrayArgs orDictionary:(NSDictionary *)dictionaryArgs orVAList:(va_list)args;
