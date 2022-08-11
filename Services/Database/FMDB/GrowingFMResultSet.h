@@ -37,7 +37,7 @@
 //  limitations under the License.
 
 #import <Foundation/Foundation.h>
-#import "sqlite3.h"
+#import <sqlite3.h>
 
 #ifndef __has_feature      // Optional.
 #define __has_feature(x) 0 // Compatibility with non-clang compilers.
