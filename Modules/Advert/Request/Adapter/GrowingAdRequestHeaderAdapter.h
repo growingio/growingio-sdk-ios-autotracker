@@ -1,8 +1,8 @@
 //
-//  DeepLinkTestHelper.h
+//  GrowingAdRequestHeaderAdapter.h
 //  GrowingAnalytics
 //
-//  Created by YoloMao on 2022/6/15.
+//  Created by YoloMao on 2022/8/29.
 //  Copyright (C) 2022 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,20 +17,15 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <Foundation/Foundation.h>
+#import "GrowingRequestProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DeepLinkTestHelper : NSObject
+@interface GrowingAdRequestHeaderAdapter : NSObject <GrowingRequestAdapter>
 
-+ (void)openSafariDeeplink:(NSString *)urlString terminateFirst:(BOOL)terminateFirst;
-
-+ (void)openFromSafari:(NSString *)urlString;
-
-+ (void)openMessagesUniversalLink:(NSString *)urlString terminateFirst:(BOOL)terminateFirst;
-
-+ (void)openFromMessages:(NSString *)urlString;
++ (instancetype)adapterWithRequest:(id <GrowingRequestProtocol>)request
+                            header:(nullable NSDictionary *)header;
 
 @end
 

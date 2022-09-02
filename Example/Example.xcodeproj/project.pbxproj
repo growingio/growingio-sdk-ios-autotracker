@@ -100,6 +100,11 @@
 		3494DD482859F43600A6CE46 /* DeepLinkTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3494DD472859F43600A6CE46 /* DeepLinkTest.m */; };
 		34986DF528C6EE2800401612 /* GIOTrackTimerEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34986DF428C6EE2800401612 /* GIOTrackTimerEventViewController.m */; };
 		34986DF928C6EFDA00401612 /* GIOTrackTimerTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34986DF828C6EFDA00401612 /* GIOTrackTimerTableViewCell.m */; };
+		349975F828BF301000466640 /* AdServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 349975F728BF300F00466640 /* AdServices.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		349975FA28BF301500466640 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 349975F928BF301500466640 /* iAd.framework */; };
+		349975FB28BF303100466640 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 349975F928BF301500466640 /* iAd.framework */; };
+		349975FC28BF303B00466640 /* AdServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 349975F728BF300F00466640 /* AdServices.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		349B529228C088F100EE88FE /* AdvertTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 349B528528C086C600EE88FE /* AdvertTest.m */; };
 		349F1488285B503B00437F53 /* GIODefaultWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 349F1484285B503A00437F53 /* GIODefaultWebViewController.m */; };
 		349F1489285B503B00437F53 /* GIOH5BrowserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 349F1487285B503A00437F53 /* GIOH5BrowserViewController.m */; };
 		349F148C285B52B700437F53 /* GIOScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 349F148B285B52B700437F53 /* GIOScanViewController.m */; };
@@ -120,6 +125,7 @@
 		34B2148C2796A5D5004E2CE3 /* GrowingStatusBarTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B2148B2796A5D5004E2CE3 /* GrowingStatusBarTest.m */; };
 		34B2148E2796B0D8004E2CE3 /* ApplicationEventManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B2148D2796B0D8004E2CE3 /* ApplicationEventManagerTest.m */; };
 		34B214912796B74B004E2CE3 /* GrowingAppLifeCycleTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B214902796B74B004E2CE3 /* GrowingAppLifeCycleTest.m */; };
+		34B21A7C28C17B3200137F3A /* MockEventQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962653324DA66B600032551 /* MockEventQueue.m */; };
 		34B25967278E76890096A10C /* ManualTrackHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962653224DA66B600032551 /* ManualTrackHelper.m */; };
 		34B7D648279F9C060003CE04 /* UICollectionViewAutotrackTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B7D647279F9C060003CE04 /* UICollectionViewAutotrackTest.m */; };
 		34B7D64A279FA5980003CE04 /* UITableViewAutotrackTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B7D649279FA5980003CE04 /* UITableViewAutotrackTest.m */; };
@@ -309,6 +315,10 @@
 		34986DF428C6EE2800401612 /* GIOTrackTimerEventViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOTrackTimerEventViewController.m; sourceTree = "<group>"; };
 		34986DF728C6EFDA00401612 /* GIOTrackTimerTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIOTrackTimerTableViewCell.h; sourceTree = "<group>"; };
 		34986DF828C6EFDA00401612 /* GIOTrackTimerTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOTrackTimerTableViewCell.m; sourceTree = "<group>"; };
+		349975F728BF300F00466640 /* AdServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdServices.framework; path = System/Library/Frameworks/AdServices.framework; sourceTree = SDKROOT; };
+		349975F928BF301500466640 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
+		349B528528C086C600EE88FE /* AdvertTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AdvertTest.m; sourceTree = "<group>"; };
+		349B528B28C0884400EE88FE /* AdvertTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AdvertTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		349F1484285B503A00437F53 /* GIODefaultWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIODefaultWebViewController.m; sourceTree = "<group>"; };
 		349F1485285B503A00437F53 /* GIOH5BrowserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOH5BrowserViewController.h; sourceTree = "<group>"; };
 		349F1486285B503A00437F53 /* GIODefaultWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIODefaultWebViewController.h; sourceTree = "<group>"; };
@@ -381,10 +391,19 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				349975FB28BF303100466640 /* iAd.framework in Frameworks */,
+				349975FC28BF303B00466640 /* AdServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3494DD2A2859E27B00A6CE46 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		349B528828C0884400EE88FE /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -433,8 +452,10 @@
 				6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */,
 				6003F592195388D20070C39A /* UIKit.framework in Frameworks */,
 				491D2D8D2500E2D9001CB289 /* MapKit.framework in Frameworks */,
+				349975FA28BF301500466640 /* iAd.framework in Frameworks */,
 				6003F58E195388D20070C39A /* Foundation.framework in Frameworks */,
 				04F675662628293800077374 /* AdSupport.framework in Frameworks */,
+				349975F828BF301000466640 /* AdServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -759,6 +780,14 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		349B528428C0869800EE88FE /* AdvertTests */ = {
+			isa = PBXGroup;
+			children = (
+				349B528528C086C600EE88FE /* AdvertTest.m */,
+			);
+			path = AdvertTests;
+			sourceTree = "<group>";
+		};
 		349F1483285B503A00437F53 /* H5Browser */ = {
 			isa = PBXGroup;
 			children = (
@@ -791,6 +820,7 @@
 		34AB4E4F27901416002549FF /* ModulesTests */ = {
 			isa = PBXGroup;
 			children = (
+				349B528428C0869800EE88FE /* AdvertTests */,
 				04A4C058276C4DF40056C8C4 /* HybridTests */,
 				34C0BF3B277EA95A0047ADC4 /* MobileDebuggerTests */,
 				34BA7B30277C63D00030AC21 /* ProtobufTests */,
@@ -1155,6 +1185,7 @@
 				3494DCF828597E1A00A6CE46 /* GrowingAnalyticsUITests.xctest */,
 				3494DD0E2859E07500A6CE46 /* ExampleiOS13.app */,
 				3494DD2D2859E27B00A6CE46 /* GrowingAnalyticsiOS13UITests.xctest */,
+				349B528B28C0884400EE88FE /* AdvertTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1162,6 +1193,8 @@
 		6003F58C195388D20070C39A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				349975F928BF301500466640 /* iAd.framework */,
+				349975F728BF300F00466640 /* AdServices.framework */,
 				04F675652628293800077374 /* AdSupport.framework */,
 				491D2D8C2500E2D9001CB289 /* MapKit.framework */,
 				6003F58D195388D20070C39A /* Foundation.framework */,
@@ -1227,6 +1260,23 @@
 			productName = GrowingAnalyticsiOS13UITests;
 			productReference = 3494DD2D2859E27B00A6CE46 /* GrowingAnalyticsiOS13UITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		349B528A28C0884400EE88FE /* AdvertTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 349B528F28C0884400EE88FE /* Build configuration list for PBXNativeTarget "AdvertTests" */;
+			buildPhases = (
+				349B528728C0884400EE88FE /* Sources */,
+				349B528828C0884400EE88FE /* Frameworks */,
+				349B528928C0884400EE88FE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AdvertTests;
+			productName = AdvertTests;
+			productReference = 349B528B28C0884400EE88FE /* AdvertTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		34AB4E46279000F5002549FF /* GrowingAnalyticsStartTests */ = {
 			isa = PBXNativeTarget;
@@ -1366,6 +1416,11 @@
 						ProvisioningStyle = Automatic;
 						TestTargetID = 3494DD0D2859E07500A6CE46;
 					};
+					349B528A28C0884400EE88FE = {
+						CreatedOnToolsVersion = 13.1;
+						DevelopmentTeam = SXBU677CPT;
+						ProvisioningStyle = Automatic;
+					};
 					34AB4E46279000F5002549FF = {
 						CreatedOnToolsVersion = 13.1;
 						DevelopmentTeam = SXBU677CPT;
@@ -1423,6 +1478,7 @@
 				3494DCF728597E1A00A6CE46 /* GrowingAnalyticsUITests */,
 				3494DD0D2859E07500A6CE46 /* ExampleiOS13 */,
 				3494DD2C2859E27B00A6CE46 /* GrowingAnalyticsiOS13UITests */,
+				349B528A28C0884400EE88FE /* AdvertTests */,
 			);
 		};
 /* End PBXProject section */
@@ -1446,6 +1502,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3494DD2B2859E27B00A6CE46 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		349B528928C0884400EE88FE /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1573,6 +1636,15 @@
 			files = (
 				3494DD3D2859E5DC00A6CE46 /* DeepLinkiOS13UISceneTest.m in Sources */,
 				3494DD412859E6B200A6CE46 /* DeepLinkTestHelper.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		349B528728C0884400EE88FE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				34B21A7C28C17B3200137F3A /* MockEventQueue.m in Sources */,
+				349B529228C088F100EE88FE /* AdvertTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2100,6 +2172,97 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = ExampleiOS13;
+			};
+			name = Release;
+		};
+		349B529028C0884400EE88FE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = SXBU677CPT;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/..\"",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.growingio.AdvertTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		349B529128C0884400EE88FE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = SXBU677CPT;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/..\"",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.growingio.AdvertTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -2731,6 +2894,15 @@
 			buildConfigurations = (
 				3494DD362859E27B00A6CE46 /* Debug */,
 				3494DD372859E27B00A6CE46 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		349B528F28C0884400EE88FE /* Build configuration list for PBXNativeTarget "AdvertTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				349B529028C0884400EE88FE /* Debug */,
+				349B529128C0884400EE88FE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -1,8 +1,8 @@
 //
-//  DeepLinkTestHelper.h
+//  GrowingAdUtils.h
 //  GrowingAnalytics
 //
-//  Created by YoloMao on 2022/6/15.
+//  Created by YoloMao on 2022/8/29.
 //  Copyright (C) 2022 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,20 +17,27 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DeepLinkTestHelper : NSObject
+@interface GrowingAdUtils : NSObject
 
-+ (void)openSafariDeeplink:(NSString *)urlString terminateFirst:(BOOL)terminateFirst;
++ (BOOL)isGrowingIOUrl:(NSURL *)url;
 
-+ (void)openFromSafari:(NSString *)urlString;
++ (BOOL)isShortChainUlink:(NSURL *)url;
 
-+ (void)openMessagesUniversalLink:(NSString *)urlString terminateFirst:(BOOL)terminateFirst;
++ (NSString *)URLDecodedString:(NSString *)urlString;
 
-+ (void)openFromMessages:(NSString *)urlString;
++ (nullable NSDictionary *)dictFromPasteboard:(NSString *_Nullable)clipboardString;
+
++ (void)setActivateWrote:(BOOL)activateWrote;
+
++ (BOOL)isActivateWrote;
+
++ (void)setActivateSent:(BOOL)activateSent;
+
++ (BOOL)isActivateSent;
 
 @end
 

@@ -1,8 +1,8 @@
 //
-//  DeepLinkTestHelper.h
+//  GrowingAdPreRequest.h
 //  GrowingAnalytics
 //
-//  Created by YoloMao on 2022/6/15.
+//  Created by YoloMao on 2022/8/29.
 //  Copyright (C) 2022 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,20 +17,18 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <Foundation/Foundation.h>
+#import "GrowingRequestProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DeepLinkTestHelper : NSObject
+/// 发送 reengage 之前需要发送一个前置请求请求数据
+@interface GrowingAdPreRequest : NSObject <GrowingRequestProtocol>
 
-+ (void)openSafariDeeplink:(NSString *)urlString terminateFirst:(BOOL)terminateFirst;
-
-+ (void)openFromSafari:(NSString *)urlString;
-
-+ (void)openMessagesUniversalLink:(NSString *)urlString terminateFirst:(BOOL)terminateFirst;
-
-+ (void)openFromMessages:(NSString *)urlString;
+@property (nonatomic, assign) BOOL isManual;
+@property (nonatomic, copy) NSString *hashId;
+@property (nonatomic, copy) NSString *userAgent;
+@property (nonatomic, strong) NSDictionary *query;
 
 @end
 

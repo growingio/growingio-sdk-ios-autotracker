@@ -113,6 +113,12 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     hybrid.public_header_files = 'Modules/Hybrid/Public/*.h'
     hybrid.dependency 'GrowingAnalytics/TrackerCore'
   end
+
+  s.subspec 'Advert' do |advert|
+    advert.source_files = 'Modules/Advert/**/*{.h,.m,.c,.cpp,.mm}'
+    advert.public_header_files = 'Modules/Advert/Public/*.h'
+    advert.dependency 'GrowingAnalytics/TrackerCore'
+  end
   
   s.subspec 'Protobuf' do |protobuf|
     protobuf.source_files = 'Modules/Protobuf/**/*{.h,.m,.c,.cpp,.mm}'

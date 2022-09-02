@@ -54,6 +54,16 @@
 /// @param channel 事件发送通道
 - (id<GrowingRequestProtocol> _Nullable)growingEventManagerRequestWithChannel:(GrowingEventChannel *_Nullable)channel;
 
+/// 即将发送事件
+/// @param events 发送的事件
+- (NSArray *_Nonnull)growingEventManagerEventsWillSend:(NSArray<id<GrowingEventPersistenceProtocol>> *_Nonnull)events
+                                               channel:(GrowingEventChannel *_Nonnull)channel;
+
+/// 事件发送完毕
+/// @param events 发送的事件
+- (void)growingEventManagerEventsDidSend:(NSArray<id<GrowingEventPersistenceProtocol>> *_Nonnull)events
+                                 channel:(GrowingEventChannel *_Nonnull)channel;
+
 @end
 
 @interface GrowingEventManager : NSObject

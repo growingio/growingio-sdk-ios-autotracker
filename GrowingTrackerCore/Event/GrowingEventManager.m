@@ -255,6 +255,11 @@ static GrowingEventManager *sharedInstance = nil;
     }
 
     NSArray<id <GrowingEventPersistenceProtocol>> *events = [self getEventsToBeUploadUnsafe:channel policy:policyMask];
+    for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
+        if ([obj respondsToSelector:@selector(growingEventManagerEventsWillSend:channel:)]) {
+            events = [obj growingEventManagerEventsWillSend:events channel:channel];
+        }
+    }
     if (events.count == 0) {
         return;
     }
@@ -302,6 +307,13 @@ static GrowingEventManager *sharedInstance = nil;
                         self.uploadEventSize += eventRequest.outsize;
                     }
                 }
+                
+                for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
+                    if ([obj respondsToSelector:@selector(growingEventManagerEventsDidSend:channel:)]) {
+                        [obj growingEventManagerEventsDidSend:events channel:channel];
+                    }
+                }
+                
                 [self removeEvents_unsafe:events forChannel:channel];
                 channel.isUploading = NO;
 

@@ -23,7 +23,7 @@
 // 参考自: https://swiftrocks.com/ui-testing-deeplinks-and-universal-links-in-ios
 @implementation DeepLinkTestHelper
 
-+ (void)openSafariDeeplink:(BOOL)terminateFirst {
++ (void)openSafariDeeplink:(NSString *)urlString terminateFirst:(BOOL)terminateFirst {
     XCUIApplication *app = [[XCUIApplication alloc] init];
     [app launch];
     
@@ -31,7 +31,7 @@
         [app terminate];
     }
     
-    [self openFromSafari:@"growing.deeplink://deeplink?xctest=DeepLinkTest"];
+    [self openFromSafari:[NSString stringWithFormat:@"%@&xctest=DeepLinkTest", urlString]];
     XCTAssertTrue([app waitForState:XCUIApplicationStateRunningForeground timeout:5]);
     
     XCUIElement *testButton = app.buttons[@"XCTest"];
@@ -44,14 +44,22 @@
     [safari launch];
     XCTAssertTrue([safari waitForState:XCUIApplicationStateRunningForeground timeout:5]);
     
-    XCUIElement *firstLaunchContinueButton = safari.buttons[@"Continue"];
-    if (firstLaunchContinueButton.exists) {
-        [firstLaunchContinueButton tap];
+    XCUIElementQuery *buttonsQuery = [safari.buttons matchingIdentifier:@"Continue"];
+    if (buttonsQuery.count> 0) {
+        XCUIElement *firstLaunchContinueButton = [buttonsQuery elementBoundByIndex:0];
+        if (firstLaunchContinueButton.exists) {
+            [firstLaunchContinueButton tap];
+        }
     }
+    
     [safari.textFields[@"TabBarItemTitle"] tap];
-    XCUIElement *keyboardTutorialButton = safari.buttons[@"Continue"];
-    if (keyboardTutorialButton.exists) {
-        [keyboardTutorialButton tap];
+    
+    XCUIElementQuery *buttonsQuery2 = [safari.buttons matchingIdentifier:@"Continue"];
+    if (buttonsQuery2.count > 0) {
+        XCUIElement *keyboardTutorialButton = [buttonsQuery2 elementBoundByIndex:0];
+        if (keyboardTutorialButton.exists) {
+            [keyboardTutorialButton tap];
+        }
     }
     
     [safari typeText:urlString];
@@ -60,11 +68,11 @@
     [goButton tap];
     
     XCUIElement *confirmationButton = safari.buttons[@"Open"];
-    XCTAssertTrue([confirmationButton waitForExistenceWithTimeout:5]);
+    XCTAssertTrue([confirmationButton waitForExistenceWithTimeout:10]);
     [confirmationButton tap];
 }
 
-+ (void)openMessagesUniversalLink:(BOOL)terminateFirst {
++ (void)openMessagesUniversalLink:(NSString *)urlString terminateFirst:(BOOL)terminateFirst {
     XCUIApplication *app = [[XCUIApplication alloc] init];
     [app launch];
     
@@ -72,7 +80,7 @@
         [app terminate];
     }
     
-    [self openFromMessages:@"https://datayi.cn/v8dsd/universallink?xctest=DeepLinkTest"];
+    [self openFromMessages:[NSString stringWithFormat:@"%@&xctest=DeepLinkTest", urlString]];
     XCTAssertTrue([app waitForState:XCUIApplicationStateRunningForeground timeout:5]);
     
     XCUIElement *testButton = app.buttons[@"XCTest"];

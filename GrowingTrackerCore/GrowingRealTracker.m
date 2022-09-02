@@ -277,6 +277,9 @@ const int GrowingTrackerVersionCode = 30403;
         } else {
             [GrowingEventTimer clearAllTimers];
         }
+        
+        [[GrowingModuleManager sharedInstance] triggerEvent:GrowingMSetDataCollectionEnabledEvent
+                                            withCustomParam:@{@"dataCollectionEnabled" : @(enabled)}];
     }];
 }
 

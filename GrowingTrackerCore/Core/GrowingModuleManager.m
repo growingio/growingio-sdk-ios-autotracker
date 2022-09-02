@@ -55,6 +55,7 @@ static  NSString *kContinueUserActivitySelector = @"growingModContinueUserActivi
 static  NSString *kDidUpdateContinueUserActivitySelector = @"growingModDidUpdateContinueUserActivity:";
 static  NSString *kFailToContinueUserActivitySelector = @"growingModDidFailToContinueUserActivity:";
 static  NSString *kHandleWatchKitExtensionRequestSelector = @"growingModHandleWatchKitExtensionRequest:";
+static  NSString *kSetDataCollectionEnabledSelector = @"growingModSetDataCollectionEnabled:";
 static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
 
 
@@ -406,6 +407,7 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
                                
                                @(GrowingMQuickActionEvent):kQuickActionSelector,
                                @(GrowingMHandleWatchKitExtensionRequestEvent):kHandleWatchKitExtensionRequestSelector,
+                               @(GrowingMSetDataCollectionEnabledEvent):kSetDataCollectionEnabledSelector,
                                @(GrowingMDidCustomEvent):kAppCustomSelector,
                                }.mutableCopy;
     }
@@ -420,7 +422,7 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
     switch (eventType) {
         case GrowingMInitEvent:
             //special
-            [self handleModulesInitEventForTarget:nil withCustomParam :customParam];
+            [self handleModulesInitEventForTarget:nil withCustomParam:customParam];
             break;
         case GrowingMTearDownEvent:
             //special
@@ -510,6 +512,12 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
            withSeletorStr:(NSString *)selectorStr
            andCustomParam:(NSDictionary *)customParam
 {
+    GrowingContext *context = [GrowingContext sharedInstance].copy;
+    if (customParam) {
+        context.customParam = customParam;
+    }
+    context.customEvent = eventType;
+    
     if (!selectorStr.length) {
         selectorStr = [self.growingSelectorByEvent objectForKey:@(eventType)];
     }
@@ -528,13 +536,10 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
         if ([moduleInstance respondsToSelector:seletor]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-            [moduleInstance performSelector:seletor withObject:nil];
+            [moduleInstance performSelector:seletor withObject:context];
 #pragma clang diagnostic pop
-        
-            
         }
     }];
 }
-
 
 @end
