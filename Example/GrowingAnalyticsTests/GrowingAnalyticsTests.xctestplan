@@ -60,6 +60,13 @@
         "identifier" : "3494DD2C2859E27B00A6CE46",
         "name" : "GrowingAnalyticsiOS13UITests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Example.xcodeproj",
+        "identifier" : "349B528A28C0884400EE88FE",
+        "name" : "AdvertTests"
+      }
     }
   ],
   "version" : 1

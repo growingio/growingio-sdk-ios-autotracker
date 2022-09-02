@@ -43,7 +43,7 @@
 }
 
 - (void)testGrowingWebWatcher {
-    NSURL *url = [NSURL URLWithString:@"growing.9683a369c615f77d://growing/oauth2/token?openConsoleLog=Yes"];
+    NSURL *url = [NSURL URLWithString:@"growing.deeplink://growing/oauth2/token?openConsoleLog=Yes"];
     [GrowingDeepLinkHandler handlerUrl:url];
 }
 

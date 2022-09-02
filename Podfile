@@ -13,7 +13,8 @@ target 'Example' do
   pod 'GrowingAnalytics/Autotracker', :path => './'
 #  pod 'GrowingAnalytics/Tracker', :path => './'
 #  pod 'GrowingAnalytics/Hybrid', :path => './'
-  pod 'GrowingAnalytics/Protobuf', :path => './'
+#  pod 'GrowingAnalytics/Protobuf', :path => './'
+  pod 'GrowingAnalytics/Advert', :path => './'
 #  pod 'GrowingAnalytics/DISABLE_IDFA', :path => './' #禁用idfa
   pod 'SDCycleScrollView', '~> 1.75'
   pod 'LBXScan/LBXNative', '2.3'
@@ -51,8 +52,15 @@ target 'ProtobufTests' do
    pod 'GrowingAnalytics/Protobuf', :path => './'
 end
 
+target 'AdvertTests' do
+   project 'Example/Example'
+   pod 'GrowingAnalytics/Autotracker', :path => './'
+   pod 'GrowingAnalytics/Advert', :path => './'
+end
+
 target 'ExampleiOS13' do
   project 'Example/Example'
   pod 'GrowingAnalytics/Autotracker', :path => './'
+  pod 'GrowingAnalytics/Advert', :path => './'
   pod 'GrowingToolsKit'
 end

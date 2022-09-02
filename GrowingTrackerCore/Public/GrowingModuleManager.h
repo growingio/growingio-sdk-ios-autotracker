@@ -51,6 +51,7 @@ typedef NS_ENUM(NSInteger, GrowingModuleEventType)
     GrowingMDidFailToContinueUserActivityEvent,
     GrowingMDidUpdateUserActivityEvent,
     GrowingMHandleWatchKitExtensionRequestEvent,
+    GrowingMSetDataCollectionEnabledEvent,
     GrowingMDidCustomEvent = 1000
     
 };

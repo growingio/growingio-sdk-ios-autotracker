@@ -61,4 +61,16 @@
     return self.rawJsonString.growingHelper_jsonObject;
 }
 
+- (void)appendExtraParams:(NSDictionary<NSString *, id> *)extraParams {
+    if (!extraParams || extraParams.count == 0) {
+        return;
+    }
+    NSMutableDictionary *dataDict = [NSMutableDictionary dictionary];
+    // 注意前后顺序，只能新增属性，不能修改原有属性
+    [dataDict addEntriesFromDictionary:extraParams];
+    [dataDict addEntriesFromDictionary:(NSDictionary *)[self toJSONObject]];
+    NSString *eventJsonString = [[NSString alloc] initWithJsonObject_growingHelper:dataDict];
+    _rawJsonString = eventJsonString;
+}
+
 @end

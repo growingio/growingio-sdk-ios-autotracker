@@ -71,4 +71,8 @@
     return self.dto.growingHelper_jsonObject;
 }
 
+- (void)appendExtraParams:(NSDictionary<NSString *, id> *)extraParams {
+    
+}
+
 @end

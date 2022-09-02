@@ -34,6 +34,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (id)toJSONObject;
 
+- (void)appendExtraParams:(NSDictionary<NSString *, id> *)extraParams;
+
 @end
 
 NS_ASSUME_NONNULL_END
