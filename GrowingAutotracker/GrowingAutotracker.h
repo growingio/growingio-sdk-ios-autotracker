@@ -22,6 +22,8 @@
 #import "GrowingAttributesBuilder.h"
 #import "GrowingAutotrackConfiguration.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface GrowingAutotracker : GrowingDynamicProxy
 
 /// 初始化方法
@@ -40,11 +42,6 @@
 /// @param eventName 自定义事件名称
 /// @param attributes 事件发生时所伴随的维度信息
 - (void)trackCustomEvent:(NSString *)eventName withAttributes:(NSDictionary <NSString *, NSString *> *)attributes;
-
-/// 发送一个自定义事件
-/// @param eventName 自定义事件名称
-/// @param attributesBuilder 事件发生时所伴随的维度信息构造器
-- (void)trackCustomEvent:(NSString *)eventName withAttributesBuilder:(GrowingAttributesBuilder *)attributesBuilder;
 
 /// 初始化事件计时器
 /// @param eventName 自定义事件名称
@@ -79,25 +76,13 @@
 /// @param attributes 用户属性信息
 - (void)setLoginUserAttributes:(NSDictionary<NSString *, NSString *> *)attributes;
 
-/// 以登录用户的身份定义用户属性变量，用于用户信息相关分析。
-/// @param attributesBuilder 用户属性信息构造器
-- (void)setLoginUserAttributesWithAttributesBuilder:(GrowingAttributesBuilder *)attributesBuilder;
-
 /// 以访客的身份定义用户属性变量，也可用于A/B测试上传标签。
 /// @param attributes 用户属性信息
 - (void)setVisitorAttributes:(NSDictionary<NSString *, NSString *> *)attributes;
 
-/// 以访客的身份定义用户属性变量，也可用于A/B测试上传标签。
-/// @param attributesBuilder 用户属性信息构造器
-- (void)setVisitorAttributesWithAttributesBuilder:(GrowingAttributesBuilder *)attributesBuilder;
-
 /// 发送一个转化信息用于高级归因分析，在添加代码之前必须在打点管理界面上声明转化变量。
 /// @param variables 转化变量信息
 - (void)setConversionVariables:(NSDictionary <NSString *, NSString *> *)variables;
-
-/// 发送一个转化信息用于高级归因分析，在添加代码之前必须在打点管理界面上声明转化变量。
-/// @param attributesBuilder 转化变量信息构造器
-- (void)setConversionVariablesWithAttributesBuilder:(GrowingAttributesBuilder *)attributesBuilder;
 
 /// 支持设置userId的类型, 存储方式与userId保持一致, userKey默认为null
 /// @param userId 用户ID
@@ -180,3 +165,30 @@
 @property (nonatomic, assign) GrowingIgnorePolicy growingPageIgnorePolicy;
 
 @end
+
+@interface GrowingAutotracker (Deprecated)
+
+/// 发送一个自定义事件
+/// @param eventName 自定义事件名称
+/// @param attributesBuilder 事件发生时所伴随的维度信息构造器
+/// @warning Deprecated: Please use `-[GrowingAutotracker trackCustomEvent:withAttributes:]` with attributesBuilder.build instead.
+- (void)trackCustomEvent:(NSString *)eventName withAttributesBuilder:(GrowingAttributesBuilder *)attributesBuilder DEPRECATED_MSG_ATTRIBUTE("Use trackCustomEvent:withAttributes: instead.");
+
+/// 以登录用户的身份定义用户属性变量，用于用户信息相关分析。
+/// @param attributesBuilder 用户属性信息构造器
+/// @warning Deprecated: Please use `-[GrowingAutotracker setLoginUserAttributes:]` with attributesBuilder.build instead.
+- (void)setLoginUserAttributesWithAttributesBuilder:(GrowingAttributesBuilder *)attributesBuilder DEPRECATED_MSG_ATTRIBUTE("Use setLoginUserAttributes: instead.");
+
+/// 以访客的身份定义用户属性变量，也可用于A/B测试上传标签。
+/// @param attributesBuilder 用户属性信息构造器
+/// @warning Deprecated: Please use `-[GrowingAutotracker setVisitorAttributes:]` with attributesBuilder.build instead.
+- (void)setVisitorAttributesWithAttributesBuilder:(GrowingAttributesBuilder *)attributesBuilder DEPRECATED_MSG_ATTRIBUTE("Use setVisitorAttributes: instead.");
+
+/// 发送一个转化信息用于高级归因分析，在添加代码之前必须在打点管理界面上声明转化变量。
+/// @param attributesBuilder 转化变量信息构造器
+/// @warning Deprecated: Please use `-[GrowingAutotracker setConversionVariables:]` with attributesBuilder.build instead.
+- (void)setConversionVariablesWithAttributesBuilder:(GrowingAttributesBuilder *)attributesBuilder DEPRECATED_MSG_ATTRIBUTE("Use setConversionVariables: instead.");
+
+@end
+
+NS_ASSUME_NONNULL_END
