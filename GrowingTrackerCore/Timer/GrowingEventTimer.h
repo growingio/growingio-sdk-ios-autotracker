@@ -1,9 +1,9 @@
 //
-// GIODataCollectionEnabledViewController.h
-// Example
+//  GrowingEventTimer.h
+//  GrowingAnalytics
 //
-//  Created by YoloMao on 2021/8/26.
-//  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2022/9/5.
+//  Copyright (C) 2022 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,11 +17,27 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GIODataCollectionEnabledViewController : UIViewController
+@interface GrowingEventTimer : NSObject
+
++ (nullable NSString *)trackTimerStart:(NSString *)eventName;
+
++ (void)trackTimerPause:(NSString *)timerId;
+
++ (void)trackTimerResume:(NSString *)timerId;
+
++ (void)trackTimerEnd:(NSString *)timerId withAttributes:(NSDictionary <NSString *, NSString *> *_Nullable)attributes;
+
++ (void)removeTimer:(NSString *)timerId;
+
++ (void)clearAllTimers;
+
++ (void)handleAllTimersPause;
+
++ (void)handleAllTimersResume;
 
 @end
 

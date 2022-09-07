@@ -15,6 +15,8 @@ typedef NS_ENUM(NSInteger, GIOMeasurementProtocolCount) { GIOAutoTrack = 0, GIOM
 
 @interface GIOMeasurementProtocolTableViewController ()
 
+@property (weak, nonatomic) IBOutlet UISwitch *dataCollectionEnabledSwitch;
+
 @end
 
 @implementation GIOMeasurementProtocolTableViewController
@@ -25,11 +27,19 @@ typedef NS_ENUM(NSInteger, GIOMeasurementProtocolCount) { GIOAutoTrack = 0, GIOM
     self.growingPageAttributes = @{@"xxx" : @"111mmm"};
 #endif
     self.tableView.accessibilityIdentifier = @"MeasurementProtocolTableView";
+    
+    self.dataCollectionEnabledSwitch.on = self.dataCollectionEnabled;
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (IBAction)setDataCollectionEnabled:(UISwitch *)sender {
+#if Autotracker
+    [[GrowingAutotracker sharedInstance] setDataCollectionEnabled:sender.isOn];
+#endif
 }
 
 #pragma mark - Table view data source
@@ -66,6 +76,27 @@ typedef NS_ENUM(NSInteger, GIOMeasurementProtocolCount) { GIOAutoTrack = 0, GIOM
 //表头高度
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return 44.0f;
+}
+
+#pragma mark - Getter & Setter
+
+- (BOOL)dataCollectionEnabled {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    Class class = NSClassFromString(@"GrowingConfigurationManager");
+    SEL selector = NSSelectorFromString(@"sharedInstance");
+    if (class && [class respondsToSelector:selector]) {
+        id manager = [class performSelector:selector];
+        SEL configurationSelector = NSSelectorFromString(@"trackConfiguration");
+        if (manager && [manager respondsToSelector:configurationSelector]) {
+            NSObject *configuration = [manager performSelector:configurationSelector];
+            if (configuration) {
+                return ((NSNumber *)[configuration valueForKey:@"dataCollectionEnabled"]).boolValue;
+            }
+        }
+    }
+#pragma clang diagnostic pop
+    return YES;
 }
 
 @end

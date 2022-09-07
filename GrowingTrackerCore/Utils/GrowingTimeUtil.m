@@ -23,7 +23,12 @@
 
 + (long long)currentTimeMillis {
     NSDate *dateNow = [NSDate date];
-    return (long long) ([dateNow timeIntervalSince1970] * 1000LL);
+    return (long long)([dateNow timeIntervalSince1970] * 1000LL);
+}
+
++ (double)currentSystemTimeMillis {
+    NSProcessInfo *processInfo = NSProcessInfo.processInfo;
+    return processInfo.systemUptime * 1000;
 }
 
 @end

@@ -38,6 +38,7 @@
 #import "GrowingTrackerCore/Public/GrowingModuleManager.h"
 #import "GrowingTrackerCore/Public/GrowingServiceManager.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
+#import "GrowingTrackerCore/Timer/GrowingEventTimer.h"
 
 NSString *const GrowingTrackerVersionName = @"3.4.2-hotfix.1";
 const int GrowingTrackerVersionCode = 30402;
@@ -163,6 +164,57 @@ const int GrowingTrackerVersionCode = 30402;
     [GrowingEventGenerator generateLoginUserAttributesEvent:attributes];
 }
 
+- (nullable NSString *)trackTimerStart:(NSString *)eventName {
+    if ([GrowingArgumentChecker isIllegalEventName:eventName]) {
+        return nil;
+    }
+    return [GrowingEventTimer trackTimerStart:eventName];
+}
+
+- (void)trackTimerPause:(NSString *)timerId {
+    if ([GrowingArgumentChecker isIllegalEventName:timerId]) {
+        return;
+    }
+    [GrowingEventTimer trackTimerPause:timerId];
+}
+
+- (void)trackTimerResume:(NSString *)timerId {
+    if ([GrowingArgumentChecker isIllegalEventName:timerId]) {
+        return;
+    }
+    [GrowingEventTimer trackTimerResume:timerId];
+}
+
+- (void)trackTimerEnd:(NSString *)timerId {
+    if ([GrowingArgumentChecker isIllegalEventName:timerId]) {
+        return;
+    }
+    [GrowingEventTimer trackTimerEnd:timerId withAttributes:nil];
+}
+
+- (void)trackTimerEnd:(NSString *)timerId withAttributes:(NSDictionary <NSString *, NSString *> *)attributes {
+    if ([GrowingArgumentChecker isIllegalEventName:timerId] || [GrowingArgumentChecker isIllegalAttributes:attributes]) {
+        return;
+    }
+    [GrowingEventTimer trackTimerEnd:timerId withAttributes:attributes];
+}
+
+- (void)trackTimerEnd:(NSString *)timerId withAttributesBuilder:(GrowingAttributesBuilder *)attributesBuilder {
+    NSDictionary *attributes = attributesBuilder.build;
+    [self trackTimerEnd:timerId withAttributes:attributes];
+}
+
+- (void)removeTimer:(NSString *)timerId {
+    if ([GrowingArgumentChecker isIllegalEventName:timerId]) {
+        return;
+    }
+    [GrowingEventTimer removeTimer:timerId];
+}
+
+- (void)clearTrackTimer {
+    [GrowingEventTimer clearAllTimers];
+}
+
 - (void)setLoginUserAttributesWithAttributesBuilder:(GrowingAttributesBuilder *)attributesBuilder {
     NSDictionary *attributes = attributesBuilder.build;
     [self setLoginUserAttributes:attributes];
@@ -222,6 +274,8 @@ const int GrowingTrackerVersionCode = 30402;
         trackConfiguration.dataCollectionEnabled = enabled;
         if (enabled) {
             [[GrowingSession currentSession] generateVisit];
+        } else {
+            [GrowingEventTimer clearAllTimers];
         }
     }];
 }
