@@ -29,6 +29,7 @@
 #import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
+#import "GrowingTrackerCore/Timer/GrowingEventTimer.h"
 
 @interface GrowingSession () <GrowingAppLifecycleDelegate>
 
@@ -104,6 +105,7 @@ static GrowingSession *currentSession = nil;
             [self refreshSessionId];
             [self generateVisit];
         }
+        [GrowingEventTimer handleAllTimersResume];
     }];
 }
 
@@ -119,6 +121,7 @@ static GrowingSession *currentSession = nil;
         self.latestDidEnterBackgroundTime = GrowingTimeUtil.currentTimeMillis;
         [GrowingEventGenerator generateAppCloseEvent];
         [[GrowingEventManager sharedInstance] flushDB];
+        [GrowingEventTimer handleAllTimersPause];
     }];
 }
 

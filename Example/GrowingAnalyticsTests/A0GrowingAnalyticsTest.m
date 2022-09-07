@@ -13,6 +13,7 @@
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Thread/GrowingThread.h"
 #import "MockEventQueue.h"
+#import "InvocationHelper.h"
 #import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
 #import "GrowingTrackerCore/Event/GrowingConversionVariableEvent.h"
 #import "GrowingTrackerCore/Event/GrowingLoginUserAttributesEvent.h"
@@ -597,6 +598,367 @@
             [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@1];
             XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
                                                              withAttributesBuilder:builder]);
+        }
+#pragma clang diagnostic pop
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+        XCTAssertEqual(events.count, 0);
+    }
+}
+
+- (void)testTrackTimer {
+    {
+        NSString *timerId = [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
+        usleep(1000);
+        [[GrowingAutotracker sharedInstance] trackTimerEnd:timerId];
+        
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+        XCTAssertEqual(events.count, 1);
+        
+        GrowingCustomEvent *event = (GrowingCustomEvent *)events.firstObject;
+        XCTAssertEqualObjects(event.eventName, @"eventName");
+        XCTAssertEqualObjects(event.attributes[@"key"], nil);
+        XCTAssertNotNil(event.attributes[@"eventDuration"]);
+    }
+    
+    {
+        // wrong eventName
+        [MockEventQueue.sharedQueue cleanQueue];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-literal-conversion"
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerStart:nil]);
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerStart:@""]);
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerStart:@1]);
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerPause:nil]);
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerPause:@""]);
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerPause:@1]);
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerResume:nil]);
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerResume:@""]);
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerResume:@1]);
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerEnd:nil]);
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerEnd:@""]);
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerEnd:@1]);
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] removeTimer:nil]);
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] removeTimer:@""]);
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] removeTimer:@1]);
+#pragma clang diagnostic pop
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+        XCTAssertEqual(events.count, 0);
+    }
+    
+    {
+        // wrong timerId
+        [MockEventQueue.sharedQueue cleanQueue];
+        [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
+        usleep(1000);
+        [[GrowingAutotracker sharedInstance] trackTimerEnd:@"eventName"];
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+        XCTAssertEqual(events.count, 0);
+        
+        [[GrowingAutotracker sharedInstance] clearTrackTimer];
+    }
+    
+    {
+        // remove timer
+        [MockEventQueue.sharedQueue cleanQueue];
+        NSString *timerId = [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
+        usleep(1000);
+        [[GrowingAutotracker sharedInstance] removeTimer:timerId];
+        [[GrowingAutotracker sharedInstance] trackTimerEnd:timerId];
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+        XCTAssertEqual(events.count, 0);
+    }
+    
+    {
+        // clear all timers
+        [MockEventQueue.sharedQueue cleanQueue];
+        NSString *timerId = [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
+        usleep(1000);
+        [[GrowingAutotracker sharedInstance] clearTrackTimer];
+        [[GrowingAutotracker sharedInstance] trackTimerEnd:timerId];
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+        XCTAssertEqual(events.count, 0);
+    }
+    
+    {
+        // pause
+        [MockEventQueue.sharedQueue cleanQueue];
+        NSString *timerId = [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
+        [[GrowingAutotracker sharedInstance] trackTimerPause:timerId];
+        sleep(1);
+        [[GrowingAutotracker sharedInstance] trackTimerEnd:timerId];
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+        XCTAssertEqual(events.count, 1);
+        
+        GrowingCustomEvent *event = (GrowingCustomEvent *)events.firstObject;
+        XCTAssertEqualObjects(event.eventName, @"eventName");
+        XCTAssertLessThan(((NSString *)event.attributes[@"eventDuration"]).floatValue, 1.0);
+    }
+    
+    {
+        // pause timer that not exist
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerPause:@"eventName"]);
+        
+        // pause twice
+        NSString *timerId = [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
+        [[GrowingAutotracker sharedInstance] trackTimerPause:timerId];
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerPause:timerId]);
+        
+        [[GrowingAutotracker sharedInstance] clearTrackTimer];
+    }
+    
+    {
+        // pause + resume
+        [MockEventQueue.sharedQueue cleanQueue];
+        NSString *timerId = [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
+        [[GrowingAutotracker sharedInstance] trackTimerPause:timerId];
+        [[GrowingAutotracker sharedInstance] trackTimerResume:timerId];
+        sleep(1);
+        [[GrowingAutotracker sharedInstance] trackTimerEnd:timerId];
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+        XCTAssertEqual(events.count, 1);
+        
+        GrowingCustomEvent *event = (GrowingCustomEvent *)events.firstObject;
+        XCTAssertEqualObjects(event.eventName, @"eventName");
+        XCTAssertGreaterThanOrEqual(((NSString *)event.attributes[@"eventDuration"]).floatValue, 0.9); // sleep 不准
+    }
+    
+    {
+        // resume timer that not exist
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerResume:@"eventName"]);
+        
+        // resume twice
+        NSString *timerId = [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
+        [[GrowingAutotracker sharedInstance] trackTimerPause:timerId];
+        [[GrowingAutotracker sharedInstance] trackTimerResume:timerId];
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerResume:timerId]);
+        
+        [[GrowingAutotracker sharedInstance] clearTrackTimer];
+    }
+    
+    {
+        // timer all pause & all resume
+        [MockEventQueue.sharedQueue cleanQueue];
+        
+        NSString *timerId = [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
+        
+        [GrowingSession.currentSession performSelector:@selector(applicationDidEnterBackground)];
+        NSNumber *sessionInterval = [GrowingSession.currentSession safePerformSelector:@selector(sessionInterval)];
+        sleep((int)(sessionInterval.longLongValue / 1000LL) + 1);
+        
+        NSString *oldSessionId = GrowingSession.currentSession.sessionId;
+        [GrowingSession.currentSession performSelector:@selector(applicationDidBecomeActive)];
+        
+        sleep(1); // 2 > duration > 1
+        [[GrowingAutotracker sharedInstance] trackTimerEnd:timerId];
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+        XCTAssertEqual(events.count, 1);
+        
+        GrowingCustomEvent *event = (GrowingCustomEvent *)events.firstObject;
+        XCTAssertEqualObjects(event.eventName, @"eventName");
+        XCTAssertGreaterThanOrEqual(((NSString *)event.attributes[@"eventDuration"]).floatValue, 0.9); // sleep 不准
+        // 不会算上前后台切换的时间
+        XCTAssertLessThan(((NSString *)event.attributes[@"eventDuration"]).floatValue, 2.0);
+    }
+}
+
+- (void)testTrackTimerWithAttributes {
+    {
+        NSString *timerId = [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
+        usleep(1000);
+        [[GrowingAutotracker sharedInstance] trackTimerEnd:timerId withAttributes:@{@"key" : @"value"}];
+        
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+        XCTAssertEqual(events.count, 1);
+        
+        GrowingCustomEvent *event = (GrowingCustomEvent *)events.firstObject;
+        XCTAssertEqualObjects(event.eventName, @"eventName");
+        XCTAssertEqualObjects(event.attributes[@"key"], @"value");
+        XCTAssertNotNil(event.attributes[@"eventDuration"]);
+    }
+    
+    {
+        // wrong timerId
+        [MockEventQueue.sharedQueue cleanQueue];
+        [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
+        usleep(1000);
+        [[GrowingAutotracker sharedInstance] trackTimerEnd:@"eventName" withAttributes:@{@"key" : @"value"}];
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+        XCTAssertEqual(events.count, 0);
+        
+        [[GrowingAutotracker sharedInstance] clearTrackTimer];
+    }
+    
+    {
+        // remove timer
+        [MockEventQueue.sharedQueue cleanQueue];
+        NSString *timerId = [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
+        usleep(1000);
+        [[GrowingAutotracker sharedInstance] removeTimer:timerId];
+        [[GrowingAutotracker sharedInstance] trackTimerEnd:timerId withAttributes:@{@"key" : @"value"}];
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+        XCTAssertEqual(events.count, 0);
+    }
+    
+    {
+        // clear all timers
+        [MockEventQueue.sharedQueue cleanQueue];
+        NSString *timerId = [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
+        usleep(1000);
+        [[GrowingAutotracker sharedInstance] clearTrackTimer];
+        [[GrowingAutotracker sharedInstance] trackTimerEnd:timerId withAttributes:@{@"key" : @"value"}];
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+        XCTAssertEqual(events.count, 0);
+    }
+    
+    {
+        // pause
+        [MockEventQueue.sharedQueue cleanQueue];
+        NSString *timerId = [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
+        [[GrowingAutotracker sharedInstance] trackTimerPause:timerId];
+        sleep(1);
+        [[GrowingAutotracker sharedInstance] trackTimerEnd:timerId withAttributes:@{@"key" : @"value"}];
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+        XCTAssertEqual(events.count, 1);
+        
+        GrowingCustomEvent *event = (GrowingCustomEvent *)events.firstObject;
+        XCTAssertEqualObjects(event.eventName, @"eventName");
+        XCTAssertEqualObjects(event.attributes[@"key"], @"value");
+        XCTAssertLessThan(((NSString *)event.attributes[@"eventDuration"]).floatValue, 1.0);
+    }
+    
+    {
+        // pause + resume
+        [MockEventQueue.sharedQueue cleanQueue];
+        NSString *timerId = [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
+        [[GrowingAutotracker sharedInstance] trackTimerPause:timerId];
+        [[GrowingAutotracker sharedInstance] trackTimerResume:timerId];
+        sleep(1);
+        [[GrowingAutotracker sharedInstance] trackTimerEnd:timerId withAttributes:@{@"key" : @"value"}];
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+        XCTAssertEqual(events.count, 1);
+        
+        GrowingCustomEvent *event = (GrowingCustomEvent *)events.firstObject;
+        XCTAssertEqualObjects(event.eventName, @"eventName");
+        XCTAssertEqualObjects(event.attributes[@"key"], @"value");
+        XCTAssertGreaterThanOrEqual(((NSString *)event.attributes[@"eventDuration"]).floatValue, 0.9); // sleep 不准
+    }
+    
+    {
+        [MockEventQueue.sharedQueue cleanQueue];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+#pragma clang diagnostic ignored "-Wobjc-literal-conversion"
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerEnd:nil
+                                                             withAttributes:@{@"key" : @"value"}]);
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerEnd:@""
+                                                             withAttributes:@{@"key" : @"value"}]);
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerEnd:@1
+                                                             withAttributes:@{@"key" : @"value"}]);
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerEnd:@"eventName"
+                                                             withAttributes:nil]);
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerEnd:@"eventName"
+                                                             withAttributes:@"value"]);
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerEnd:@"eventName"
+                                                             withAttributes:@{@1 : @"value"}]);
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerEnd:@"eventName"
+                                                             withAttributes:@{@"key" : @1}]);
+#pragma clang diagnostic pop
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+        XCTAssertEqual(events.count, 0);
+    }
+}
+
+- (void)testTrackTimerWithAttributesBuilder {
+    {
+        NSString *timerId = [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
+        GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+        [builder setString:@"value" forKey:@"key"];
+        [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@"key2"];
+        [builder setArray:@[@1, @2, @3] forKey:@"key3"];
+        [builder setArray:@[@[@"1"], @[@"2"], @[@"3"]] forKey:@"key4"];
+        [builder setArray:@[@{@"value":@"key"}, @{@"value":@"key"}, @{@"value":@"key"}] forKey:@"key5"];
+        [builder setArray:@[NSObject.new, NSObject.new, NSObject.new] forKey:@"key6"];
+        [builder setArray:@[NSNull.new, NSNull.new, NSNull.new] forKey:@"key7"];
+        [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@""];
+        [[GrowingAutotracker sharedInstance] trackTimerEnd:timerId withAttributes:builder.build];
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+        XCTAssertEqual(events.count, 1);
+        
+        GrowingCustomEvent *event = (GrowingCustomEvent *)events.firstObject;
+        XCTAssertEqualObjects(event.eventName, @"eventName");
+        XCTAssertEqualObjects(event.attributes[@"key"], @"value");
+        XCTAssertEqualObjects(event.attributes[@"key2"], @"value1||value2||value3");
+        XCTAssertEqualObjects(event.attributes[@"key3"], @"1||2||3");
+        XCTAssertEqualObjects(event.attributes[@"key4"], @"(\n    1\n)||(\n    2\n)||(\n    3\n)");
+        XCTAssertEqualObjects(event.attributes[@"key5"], @"{\n    value = key;\n}"
+                                                         @"||{\n    value = key;\n}"
+                                                         @"||{\n    value = key;\n}");
+        XCTAssertNotNil(event.attributes[@"key6"]);
+        XCTAssertEqualObjects(event.attributes[@"key7"], @"||||");
+        XCTAssertEqualObjects(event.attributes[@""], @"value1||value2||value3");
+        XCTAssertNotNil(event.attributes[@"eventDuration"]);
+    }
+    
+    {
+        [MockEventQueue.sharedQueue cleanQueue];
+        NSString *timerId = [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+#pragma clang diagnostic ignored "-Wobjc-literal-conversion"
+        GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+        [builder setString:@"value" forKey:@"key"];
+        [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@"key2"];
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerEnd:nil withAttributes:builder.build]);
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerEnd:@"" withAttributes:builder.build]);
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerEnd:@1 withAttributes:builder.build]);
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerEnd:timerId withAttributes:nil]);
+        
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setString:nil forKey:@"key"];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerEnd:timerId withAttributes:builder.build]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setString:@1 forKey:@"key"];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerEnd:timerId withAttributes:builder.build]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setString:@"value" forKey:nil];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerEnd:timerId withAttributes:builder.build]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setString:@"value" forKey:@1];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerEnd:timerId withAttributes:builder.build]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setArray:nil forKey:@"key"];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerEnd:timerId withAttributes:builder.build]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setArray:@[] forKey:@"key"];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerEnd:timerId withAttributes:builder.build]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setArray:@"value" forKey:@"key"];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerEnd:timerId withAttributes:builder.build]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setArray:@[@"value1", @"value2", @"value3"] forKey:nil];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerEnd:timerId withAttributes:builder.build]);
+        }
+        {
+            GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
+            [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@1];
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerEnd:timerId withAttributes:builder.build]);
         }
 #pragma clang diagnostic pop
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];

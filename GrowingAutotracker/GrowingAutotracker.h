@@ -46,6 +46,35 @@
 /// @param attributesBuilder 事件发生时所伴随的维度信息构造器
 - (void)trackCustomEvent:(NSString *)eventName withAttributesBuilder:(GrowingAttributesBuilder *)attributesBuilder;
 
+/// 初始化事件计时器
+/// @param eventName 自定义事件名称
+/// @return 计时器唯一标识
+- (nullable NSString *)trackTimerStart:(NSString *)eventName;
+
+/// 暂停事件计时器
+/// @param timerId 计时器唯一标识
+- (void)trackTimerPause:(NSString *)timerId;
+
+/// 恢复事件计时器
+/// @param timerId 计时器唯一标识
+- (void)trackTimerResume:(NSString *)timerId;
+
+/// 停止事件计时器，并发送一个自定义事件
+/// @param timerId 计时器唯一标识
+- (void)trackTimerEnd:(NSString *)timerId;
+
+/// 停止事件计时器，并发送一个自定义事件
+/// @param timerId 计时器唯一标识
+/// @param attributes 事件发生时所伴随的维度信息
+- (void)trackTimerEnd:(NSString *)timerId withAttributes:(NSDictionary <NSString *, NSString *> *)attributes;
+
+/// 删除事件计时器
+/// @param timerId 计时器唯一标识
+- (void)removeTimer:(NSString *)timerId;
+
+/// 清除所有事件计时器
+- (void)clearTrackTimer;
+
 /// 以登录用户的身份定义用户属性变量，用于用户信息相关分析。
 /// @param attributes 用户属性信息
 - (void)setLoginUserAttributes:(NSDictionary<NSString *, NSString *> *)attributes;

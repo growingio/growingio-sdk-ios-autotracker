@@ -1,9 +1,9 @@
 //
-//  GrowingTimeUtil.h
+//  GIOTrackTimerTableViewCell.h
 //  GrowingAnalytics
 //
-// Created by xiangyang on 2020/11/11.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2022/9/6.
+//  Copyright (C) 2022 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,12 +17,19 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-@interface GrowingTimeUtil : NSObject
+NS_ASSUME_NONNULL_BEGIN
 
-+ (long long)currentTimeMillis;
+typedef void(^GIOTrackTimerTableViewCellBlock)(NSString *timerId);
 
-+ (double)currentSystemTimeMillis;
+@interface GIOTrackTimerTableViewCell : UITableViewCell
+
+@property (weak, nonatomic) IBOutlet UILabel *label;
+@property (nonatomic, copy) GIOTrackTimerTableViewCellBlock pauseBlock;
+@property (nonatomic, copy) GIOTrackTimerTableViewCellBlock resumeBlock;
+@property (nonatomic, copy) GIOTrackTimerTableViewCellBlock endBlock;
 
 @end
+
+NS_ASSUME_NONNULL_END

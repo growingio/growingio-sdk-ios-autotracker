@@ -98,7 +98,8 @@
 		3494DD412859E6B200A6CE46 /* DeepLinkTestHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3494DD3F2859E60700A6CE46 /* DeepLinkTestHelper.m */; };
 		3494DD422859E6B300A6CE46 /* DeepLinkTestHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3494DD3F2859E60700A6CE46 /* DeepLinkTestHelper.m */; };
 		3494DD482859F43600A6CE46 /* DeepLinkTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3494DD472859F43600A6CE46 /* DeepLinkTest.m */; };
-		349C1D3626D77D92005DB00C /* GIODataCollectionEnabledViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 349C1D3526D77D92005DB00C /* GIODataCollectionEnabledViewController.m */; };
+		34986DF528C6EE2800401612 /* GIOTrackTimerEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34986DF428C6EE2800401612 /* GIOTrackTimerEventViewController.m */; };
+		34986DF928C6EFDA00401612 /* GIOTrackTimerTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34986DF828C6EFDA00401612 /* GIOTrackTimerTableViewCell.m */; };
 		349F1488285B503B00437F53 /* GIODefaultWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 349F1484285B503A00437F53 /* GIODefaultWebViewController.m */; };
 		349F1489285B503B00437F53 /* GIOH5BrowserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 349F1487285B503A00437F53 /* GIOH5BrowserViewController.m */; };
 		349F148C285B52B700437F53 /* GIOScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 349F148B285B52B700437F53 /* GIOScanViewController.m */; };
@@ -111,6 +112,7 @@
 		34AC7ACE279829FC00C0DFA5 /* GrowingUIKitHelpersTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AC7AC82798270500C0DFA5 /* GrowingUIKitHelpersTest.m */; };
 		34AC7AD127982BEE00C0DFA5 /* GrowingSwizzleTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AC7AD027982BEE00C0DFA5 /* GrowingSwizzleTest.m */; };
 		34AE0FE8279AADA7009C8166 /* NSNotificationCenterAutotrackTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AE0FE7279AADA7009C8166 /* NSNotificationCenterAutotrackTest.m */; };
+		34B014BB28C861AD00903B99 /* InvocationHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BF77B027951D5D00CA18BA /* InvocationHelper.m */; };
 		34B2147C27966142004E2CE3 /* DatabaseTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B2147B27966142004E2CE3 /* DatabaseTest.m */; };
 		34B2147E2796664E004E2CE3 /* JSONPersistenceTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B2147D2796664E004E2CE3 /* JSONPersistenceTest.m */; };
 		34B2148727969562004E2CE3 /* DynamicProxyTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B2148627969562004E2CE3 /* DynamicProxyTest.m */; };
@@ -303,8 +305,10 @@
 		3494DD3E2859E60700A6CE46 /* DeepLinkTestHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DeepLinkTestHelper.h; sourceTree = "<group>"; };
 		3494DD3F2859E60700A6CE46 /* DeepLinkTestHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DeepLinkTestHelper.m; sourceTree = "<group>"; };
 		3494DD472859F43600A6CE46 /* DeepLinkTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeepLinkTest.m; sourceTree = "<group>"; };
-		349C1D3426D77D92005DB00C /* GIODataCollectionEnabledViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIODataCollectionEnabledViewController.h; sourceTree = "<group>"; };
-		349C1D3526D77D92005DB00C /* GIODataCollectionEnabledViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIODataCollectionEnabledViewController.m; sourceTree = "<group>"; };
+		34986DF328C6EE2800401612 /* GIOTrackTimerEventViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIOTrackTimerEventViewController.h; sourceTree = "<group>"; };
+		34986DF428C6EE2800401612 /* GIOTrackTimerEventViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOTrackTimerEventViewController.m; sourceTree = "<group>"; };
+		34986DF728C6EFDA00401612 /* GIOTrackTimerTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIOTrackTimerTableViewCell.h; sourceTree = "<group>"; };
+		34986DF828C6EFDA00401612 /* GIOTrackTimerTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOTrackTimerTableViewCell.m; sourceTree = "<group>"; };
 		349F1484285B503A00437F53 /* GIODefaultWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIODefaultWebViewController.m; sourceTree = "<group>"; };
 		349F1485285B503A00437F53 /* GIOH5BrowserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOH5BrowserViewController.h; sourceTree = "<group>"; };
 		349F1486285B503A00437F53 /* GIODefaultWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIODefaultWebViewController.h; sourceTree = "<group>"; };
@@ -484,7 +488,8 @@
 				34BDC342277071200030B3CE /* AttributesEvent */,
 				34BDC343277071360030B3CE /* PageAttributesEvent */,
 				34BDC34B2770719C0030B3CE /* CustomEvent */,
-				34BDC34C277071BE0030B3CE /* Interface */,
+				34BDC34D277071FE0030B3CE /* UserId */,
+				34986DF228C6EE0E00401612 /* TrackTimer */,
 				34BDC35727707EAE0030B3CE /* View */,
 			);
 			path = MeasurementProtocol;
@@ -735,6 +740,25 @@
 			path = DeepLinkTests;
 			sourceTree = "<group>";
 		};
+		34986DF228C6EE0E00401612 /* TrackTimer */ = {
+			isa = PBXGroup;
+			children = (
+				34986DF628C6EFA700401612 /* View */,
+				34986DF328C6EE2800401612 /* GIOTrackTimerEventViewController.h */,
+				34986DF428C6EE2800401612 /* GIOTrackTimerEventViewController.m */,
+			);
+			path = TrackTimer;
+			sourceTree = "<group>";
+		};
+		34986DF628C6EFA700401612 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				34986DF728C6EFDA00401612 /* GIOTrackTimerTableViewCell.h */,
+				34986DF828C6EFDA00401612 /* GIOTrackTimerTableViewCell.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		349F1483285B503A00437F53 /* H5Browser */ = {
 			isa = PBXGroup;
 			children = (
@@ -944,15 +968,6 @@
 			path = CustomEvent;
 			sourceTree = "<group>";
 		};
-		34BDC34C277071BE0030B3CE /* Interface */ = {
-			isa = PBXGroup;
-			children = (
-				34BDC34D277071FE0030B3CE /* UserId */,
-				34BDC34E277072040030B3CE /* DataCollectionEnabled */,
-			);
-			path = Interface;
-			sourceTree = "<group>";
-		};
 		34BDC34D277071FE0030B3CE /* UserId */ = {
 			isa = PBXGroup;
 			children = (
@@ -960,15 +975,6 @@
 				046530E124DD4271002D254C /* GIOUserIdViewController.m */,
 			);
 			path = UserId;
-			sourceTree = "<group>";
-		};
-		34BDC34E277072040030B3CE /* DataCollectionEnabled */ = {
-			isa = PBXGroup;
-			children = (
-				349C1D3426D77D92005DB00C /* GIODataCollectionEnabledViewController.h */,
-				349C1D3526D77D92005DB00C /* GIODataCollectionEnabledViewController.m */,
-			);
-			path = DataCollectionEnabled;
 			sourceTree = "<group>";
 		};
 		34BDC34F27707B700030B3CE /* Button&AlertView */ = {
@@ -1656,6 +1662,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				34D932FE27BF8C640038430E /* MockEventQueue.m in Sources */,
+				34B014BB28C861AD00903B99 /* InvocationHelper.m in Sources */,
 				34D9330027BF943F0038430E /* A0GrowingAnalyticsCDPTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1670,9 +1677,9 @@
 				0465314424DD4272002D254C /* GIOMeasurementProtocolTableViewController.m in Sources */,
 				0465314024DD4272002D254C /* GIOKeyValueCell.m in Sources */,
 				0465314D24DD4272002D254C /* AppDelegate.m in Sources */,
-				349C1D3626D77D92005DB00C /* GIODataCollectionEnabledViewController.m in Sources */,
 				0465315024DD4272002D254C /* GIOCollectionViewController.m in Sources */,
 				0465315424DD4272002D254C /* GIOSimpleUIElemtsViewController.m in Sources */,
+				34986DF528C6EE2800401612 /* GIOTrackTimerEventViewController.m in Sources */,
 				0465315624DD4272002D254C /* GIOBannerAndTableViewController.m in Sources */,
 				0465315524DD4272002D254C /* GIOHybridViewController.m in Sources */,
 				0465315124DD4272002D254C /* GIOUICategoryViewController.m in Sources */,
@@ -1683,6 +1690,7 @@
 				0465313724DD4272002D254C /* GIODataProcessOperation.m in Sources */,
 				0465314924DD4272002D254C /* GIOFirstViewController.m in Sources */,
 				0465316024DD4272002D254C /* GIOButtonViewController.m in Sources */,
+				34986DF928C6EFDA00401612 /* GIOTrackTimerTableViewCell.m in Sources */,
 				0465315E24DD4272002D254C /* GIOListTableViewCell.m in Sources */,
 				0465315824DD4272002D254C /* GIOPageStructureViewController.m in Sources */,
 				0465313D24DD4272002D254C /* GIOUserIdViewController.m in Sources */,
