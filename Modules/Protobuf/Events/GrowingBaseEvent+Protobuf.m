@@ -176,14 +176,13 @@
                 }
 #endif
             }
-        }
 #ifdef GROWING_ANALYSIS_ADVERT
-    } else if ([self isKindOfClass:GrowingActivateEvent.class]) {
-        GrowingActivateEvent *event = (GrowingActivateEvent *)self;
-        if (event.userAgent.length > 0) {
-            dto.attributes = @{@"userAgent" : event.userAgent.copy}.mutableCopy;
-        }
+        } else if ([self isKindOfClass:GrowingActivateEvent.class]) {
+            GrowingActivateEvent *event = (GrowingActivateEvent *)self;
+            dto.idfa = event.idfa;
+            dto.idfv = event.idfv;
 #endif
+        }
     }
     return dto;
 }
@@ -225,11 +224,11 @@
             return GrowingPBEventType_LoginUserAttributes;
         } else if ([self isKindOfClass:GrowingCustomEvent.class]) {
             return GrowingPBEventType_Custom;
-        }
 #ifdef GROWING_ANALYSIS_ADVERT
-    } else if ([self isKindOfClass:GrowingActivateEvent.class]) {
-        return GrowingPBEventType_Activate;
+        } else if ([self isKindOfClass:GrowingActivateEvent.class]) {
+            return GrowingPBEventType_Activate;
 #endif
+        }
     }
     
     return GrowingPBEventType_GPBUnrecognizedEnumeratorValue;

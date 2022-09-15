@@ -159,8 +159,11 @@ GrowingMod(GrowingAdvertising)
             // activate 在同一安装周期内仅需发送一次
             return;
         }
-        
-        GrowingActivateBuilder *builder = GrowingActivateEvent.builder.setUserAgent(userAgent);
+
+        GrowingActivateBuilder *builder = GrowingActivateEvent.builder;
+        if (userAgent.length > 0) {
+            builder.setAttributes(@{@"userAgent" : userAgent.copy});
+        }
         [[GrowingEventManager sharedInstance] postEventBuilder:builder];
         [GrowingAdUtils setActivateWrote:YES];
     }];
