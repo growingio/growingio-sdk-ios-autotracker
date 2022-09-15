@@ -52,6 +52,7 @@ typedef GPB_ENUM(GrowingPBEventType) {
   GrowingPBEventType_ViewClick = 8,
   GrowingPBEventType_ViewChange = 9,
   GrowingPBEventType_FormSubmit = 10,
+  GrowingPBEventType_Activate = 11,
 };
 
 GPBEnumDescriptor *GrowingPBEventType_EnumDescriptor(void);

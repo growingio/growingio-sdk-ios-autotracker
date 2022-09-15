@@ -25,6 +25,10 @@
 #import "Modules/Hybrid/Events/GrowingHybridEventType.h"
 #define GROWING_ANALYSIS_HYBRID
 #endif
+#if __has_include("Modules/Advert/Public/GrowingAdvertising.h")
+#import "Modules/Advert/Event/GrowingAdvertEventType.h"
+#define GROWING_ANALYSIS_ADVERT
+#endif
 
 @implementation GrowingPBEventV3Dto (GrowingHelper)
 
@@ -92,6 +96,12 @@
 #ifdef GROWING_ANALYSIS_HYBRID
         case GrowingPBEventType_FormSubmit: {
             [dic setObject:GrowingEventTypeFormSubmit forKey:@"eventType"];
+        }
+            break;
+#endif
+#ifdef GROWING_ANALYSIS_ADVERT
+        case GrowingPBEventType_Activate: {
+            [dic setObject:GrowingEventTypeActivate forKey:@"eventType"];
         }
             break;
 #endif

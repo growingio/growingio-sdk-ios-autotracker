@@ -24,6 +24,7 @@
 
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 
 #import <objc/runtime.h>
@@ -103,7 +104,8 @@ static pthread_rwlock_t _lock = PTHREAD_RWLOCK_INITIALIZER;
         return array;
     } else {
         if (GrowingAsaFetcher.asaData.allKeys.count > 0) {
-            [activate appendExtraParams:@{@"asa" : GrowingAsaFetcher.asaData}];
+            NSString *jsonString = [[NSString alloc] initWithJsonObject_growingHelper:GrowingAsaFetcher.asaData];
+            [activate appendExtraParams:@{@"appleSearchAds" : jsonString}];
         }
         
         if (GrowingAsaFetcher.status == GrowingAsaFetcherStatusFailure) {

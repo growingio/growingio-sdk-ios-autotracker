@@ -62,7 +62,7 @@ GPBEnumDescriptor *GrowingPBEventType_EnumDescriptor(void) {
         "Visit\000Custom\000VisitorAttributes\000LoginUser"
         "Attributes\000ConversionVariables\000AppClosed"
         "\000Page\000PageAttributes\000ViewClick\000ViewChang"
-        "e\000FormSubmit\000";
+        "e\000FormSubmit\000Activate\000";
     static const int32_t values[] = {
         GrowingPBEventType_Visit,
         GrowingPBEventType_Custom,
@@ -75,6 +75,7 @@ GPBEnumDescriptor *GrowingPBEventType_EnumDescriptor(void) {
         GrowingPBEventType_ViewClick,
         GrowingPBEventType_ViewChange,
         GrowingPBEventType_FormSubmit,
+        GrowingPBEventType_Activate,
     };
     GPBEnumDescriptor *worker =
         [GPBEnumDescriptor allocDescriptorForName:GPBNSStringifySymbol(GrowingPBEventType)
@@ -103,6 +104,7 @@ BOOL GrowingPBEventType_IsValidValue(int32_t value__) {
     case GrowingPBEventType_ViewClick:
     case GrowingPBEventType_ViewChange:
     case GrowingPBEventType_FormSubmit:
+    case GrowingPBEventType_Activate:
       return YES;
     default:
       return NO;
