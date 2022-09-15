@@ -29,7 +29,6 @@ NSString * const GrowingEventTypeActivate = @"ACTIVATE";
         GrowingActivateBuilder *subBuilder = (GrowingActivateBuilder *)builder;
         _idfa = subBuilder.idfa;
         _idfv = subBuilder.idfv;
-        _userAgent = subBuilder.userAgent;
     }
     return self;
 }
@@ -44,9 +43,8 @@ NSString * const GrowingEventTypeActivate = @"ACTIVATE";
 
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
-    if (self.userAgent.length > 0) {
-        dataDictM[@"attributes"] = @{@"userAgent" : self.userAgent.copy};
-    }
+    dataDictM[@"idfa"] = self.idfa;
+    dataDictM[@"idfv"] = self.idfv;
     return [dataDictM copy];
 }
 
@@ -61,13 +59,6 @@ NSString * const GrowingEventTypeActivate = @"ACTIVATE";
     GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
     _idfa = deviceInfo.idfa;
     _idfv = deviceInfo.idfv;
-}
-
-- (GrowingActivateBuilder * (^)(NSString *value))setUserAgent {
-    return ^(NSString *value) {
-        self->_userAgent = value;
-        return self;
-    };
 }
 
 - (GrowingBaseEvent *)build {

@@ -17,17 +17,16 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingBaseEvent.h"
+#import "GrowingTrackerCore/Event/GrowingBaseAttributesEvent.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class GrowingActivateBuilder;
 
-@interface GrowingActivateEvent : GrowingBaseEvent
+@interface GrowingActivateEvent : GrowingBaseAttributesEvent
 
 @property (nonatomic, copy, readonly) NSString *idfa;
 @property (nonatomic, copy, readonly) NSString *idfv;
-@property (nonatomic, copy, readonly) NSString *userAgent;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
@@ -36,13 +35,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface GrowingActivateBuilder : GrowingBaseBuilder
+@interface GrowingActivateBuilder : GrowingBaseAttributesBuilder
 
 @property (nonatomic, copy, readonly) NSString *idfa;
 @property (nonatomic, copy, readonly) NSString *idfv;
-@property (nonatomic, copy, readonly) NSString *userAgent;
 
-- (GrowingActivateBuilder * (^)(NSString *value))setUserAgent;
+- (GrowingActivateBuilder *(^)(NSDictionary<NSString *, NSObject *> *value))setAttributes;
 
 @end
 
