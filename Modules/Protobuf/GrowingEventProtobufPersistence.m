@@ -72,7 +72,11 @@
 }
 
 - (void)appendExtraParams:(NSDictionary<NSString *, id> *)extraParams {
+    if (!extraParams || extraParams.count == 0) {
+        return;
+    }
     
+    [self.dto.attributes addEntriesFromDictionary:extraParams];
 }
 
 @end

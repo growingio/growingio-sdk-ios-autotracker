@@ -23,14 +23,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingAdUtils : NSObject
 
-+ (BOOL)isGrowingIOUrl:(NSURL *)url;
-
-+ (BOOL)isShortChainUlink:(NSURL *)url;
-
-+ (NSString *)URLDecodedString:(NSString *)urlString;
-
-+ (nullable NSDictionary *)dictFromPasteboard:(NSString *_Nullable)clipboardString;
-
 + (void)setActivateWrote:(BOOL)activateWrote;
 
 + (BOOL)isActivateWrote;

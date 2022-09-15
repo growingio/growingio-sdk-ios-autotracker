@@ -20,4 +20,3 @@
 #import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
 
 FOUNDATION_EXPORT GrowingEventType const GrowingEventTypeActivate;
-FOUNDATION_EXPORT GrowingEventType const GrowingEventTypeReengage;

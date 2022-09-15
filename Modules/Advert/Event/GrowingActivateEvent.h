@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy, readonly) NSString *idfa;
 @property (nonatomic, copy, readonly) NSString *idfv;
+@property (nonatomic, copy, readonly) NSString *userAgent;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
@@ -39,13 +40,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy, readonly) NSString *idfa;
 @property (nonatomic, copy, readonly) NSString *idfv;
+@property (nonatomic, copy, readonly) NSString *userAgent;
 
-// new set methods
-- (GrowingActivateBuilder * (^)(NSString *value))setIdfa;
-- (GrowingActivateBuilder * (^)(NSString *value))setIdfv;
-
-// override
-- (GrowingActivateBuilder * (^)(NSDictionary *))setExtraParams;
+- (GrowingActivateBuilder * (^)(NSString *value))setUserAgent;
 
 @end
 

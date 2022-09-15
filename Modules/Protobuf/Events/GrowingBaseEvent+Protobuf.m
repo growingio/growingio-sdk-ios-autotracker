@@ -41,6 +41,11 @@
 #define GROWING_ANALYSIS_HYBRID
 #endif
 
+#if __has_include("Modules/Advert/Public/GrowingAdvertising.h")
+#import "Modules/Advert/Event/GrowingActivateEvent.h"
+#define GROWING_ANALYSIS_ADVERT
+#endif
+
 @implementation GrowingBaseEvent (Protobuf)
 
 - (GrowingPBEventV3Dto *)toProtobuf {
@@ -172,6 +177,13 @@
 #endif
             }
         }
+#ifdef GROWING_ANALYSIS_ADVERT
+    } else if ([self isKindOfClass:GrowingActivateEvent.class]) {
+        GrowingActivateEvent *event = (GrowingActivateEvent *)self;
+        if (event.userAgent.length > 0) {
+            dto.attributes = @{@"userAgent" : event.userAgent.copy}.mutableCopy;
+        }
+#endif
     }
     return dto;
 }
@@ -214,6 +226,10 @@
         } else if ([self isKindOfClass:GrowingCustomEvent.class]) {
             return GrowingPBEventType_Custom;
         }
+#ifdef GROWING_ANALYSIS_ADVERT
+    } else if ([self isKindOfClass:GrowingActivateEvent.class]) {
+        return GrowingPBEventType_Activate;
+#endif
     }
     
     return GrowingPBEventType_GPBUnrecognizedEnumeratorValue;

@@ -25,10 +25,7 @@ NSString * const kGrowingDefaultDataCollectionServerHost = @"https://api.growing
 @interface GrowingTrackConfiguration ()
 
 // Advert
-@property (nonatomic, copy) id deepLinkCallback;
-@property (nonatomic, assign) BOOL readClipBoardEnabled;
 @property (nonatomic, assign) BOOL ASAEnabled;
-@property (nonatomic, assign) BOOL autoInstall;
 
 @end
 
@@ -53,10 +50,7 @@ NSString * const kGrowingDefaultDataCollectionServerHost = @"https://api.growing
         _encryptEnabled = NO;
         
         // Advert
-        _deepLinkCallback = nil;
-        _readClipBoardEnabled = YES;
         _ASAEnabled = NO;
-        _autoInstall = YES;
     }
 
     return self;
@@ -83,10 +77,7 @@ NSString * const kGrowingDefaultDataCollectionServerHost = @"https://api.growing
     configuration->_encryptEnabled = _encryptEnabled;
     
     // Advert
-    configuration->_deepLinkCallback = [_deepLinkCallback copy];
-    configuration->_readClipBoardEnabled = _readClipBoardEnabled;
     configuration->_ASAEnabled = _ASAEnabled;
-    configuration->_autoInstall = _autoInstall;
     return configuration;
 }
 

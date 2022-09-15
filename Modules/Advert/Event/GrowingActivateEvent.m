@@ -29,6 +29,7 @@ NSString * const GrowingEventTypeActivate = @"ACTIVATE";
         GrowingActivateBuilder *subBuilder = (GrowingActivateBuilder *)builder;
         _idfa = subBuilder.idfa;
         _idfv = subBuilder.idfv;
+        _userAgent = subBuilder.userAgent;
     }
     return self;
 }
@@ -42,24 +43,11 @@ NSString * const GrowingEventTypeActivate = @"ACTIVATE";
 }
 
 - (NSDictionary *)toDictionary {
-    NSMutableDictionary *dataDict = [NSMutableDictionary dictionary];
-    //如果有额外参数添加
-    if (self.extraParams.count > 0) {
-        [dataDict addEntriesFromDictionary:self.extraParams];
+    NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
+    if (self.userAgent.length > 0) {
+        dataDictM[@"attributes"] = @{@"userAgent" : self.userAgent.copy};
     }
-    
-    dataDict[@"s"] = self.sessionId;
-    dataDict[@"u"] = self.deviceId;
-    dataDict[@"t"] = self.eventType;
-    dataDict[@"tm"] = @(self.timestamp);
-    dataDict[@"d"] = self.domain;
-    dataDict[@"dm"] = self.deviceModel;
-    dataDict[@"osv"] = self.platformVersion;
-    dataDict[@"iv"] = self.idfv;
-    dataDict[@"ui"] = self.idfa;
-    dataDict[@"gesid"] = @(self.globalSequenceId);
-    dataDict[@"esid"] = @(self.eventSequenceId);
-    return [dataDict copy];
+    return [dataDictM copy];
 }
 
 @end
@@ -73,6 +61,13 @@ NSString * const GrowingEventTypeActivate = @"ACTIVATE";
     GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
     _idfa = deviceInfo.idfa;
     _idfv = deviceInfo.idfv;
+}
+
+- (GrowingActivateBuilder * (^)(NSString *value))setUserAgent {
+    return ^(NSString *value) {
+        self->_userAgent = value;
+        return self;
+    };
 }
 
 - (GrowingBaseEvent *)build {
