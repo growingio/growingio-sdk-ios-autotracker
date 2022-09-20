@@ -1,3 +1,18 @@
+## [3.4.3](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.4.2-hotfix.1...3.4.3) (2022-09-20)
+
+
+### Features
+
+* track timer ([be62b64](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/be62b64c8117374abb8129963cfc9a246a72d34c))
+* 废弃 WithAttributesBuilder 相关接口 ([17c1caa](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/17c1caa3f6a4f574c45ed77a46efcee59614ba52))
+
+## [3.4.2-hotfix.1](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.4.2...3.4.2-hotfix.1) (2022-08-12)
+
+
+### Bug Fixes
+
+* 系统库文件如 sqlite3.h 应使用尖括号导入，而不是引号 ([a66aea8](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/a66aea875111ac90d8fa3d3367b2292f45b2fe91))
+
 ## [3.4.2](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.4.1...3.4.2) (2022-08-09)
 
 
