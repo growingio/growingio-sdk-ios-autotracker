@@ -13,7 +13,7 @@ target 'Example' do
   pod 'GrowingAnalytics/Autotracker', :path => './'
 #  pod 'GrowingAnalytics/Tracker', :path => './'
 #  pod 'GrowingAnalytics/Hybrid', :path => './'
- pod 'GrowingAnalytics/Protobuf', :path => './'
+  pod 'GrowingAnalytics/Protobuf', :path => './'
   pod 'GrowingAnalytics/Advert', :path => './'
 #  pod 'GrowingAnalytics/DISABLE_IDFA', :path => './' #禁用idfa
   pod 'SDCycleScrollView', '~> 1.75'

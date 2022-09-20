@@ -266,7 +266,13 @@ static pthread_rwlock_t _lock = PTHREAD_RWLOCK_INITIALIZER;
             case GrowingAsaFetcherErrorRequestClientError:
             case GrowingAsaFetcherErrorRequestServerError:
             case GrowingAsaFetcherErrorRequestNetworkError: {
+                if (self.retriesLeft <= 0) {
+                    GrowingAsaFetcher.asaData = [GrowingAsaFetcher mapDictionaryForUpload:attributionDetails isIAd:isIAd];
+                    GrowingAsaFetcher.status = GrowingAsaFetcherStatusFailure;
+                    return;
+                }
                 int64_t retryDelay = 0;
+                self.retriesLeft--;
                 switch (self.retriesLeft) {
                     case 2:
                         retryDelay = _retryDelay * NSEC_PER_SEC;
@@ -274,12 +280,6 @@ static pthread_rwlock_t _lock = PTHREAD_RWLOCK_INITIALIZER;
                     default:
                         retryDelay = 2 * NSEC_PER_SEC;
                         break;
-                }
-                self.retriesLeft--;
-                if (self.retriesLeft <= 0) {
-                    GrowingAsaFetcher.asaData = [GrowingAsaFetcher mapDictionaryForUpload:attributionDetails isIAd:isIAd];
-                    GrowingAsaFetcher.status = GrowingAsaFetcherStatusFailure;
-                    return;
                 }
                 dispatch_time_t retryTime = dispatch_time(DISPATCH_TIME_NOW, retryDelay);
                 dispatch_after(retryTime, dispatch_get_main_queue(), ^{
@@ -289,12 +289,12 @@ static pthread_rwlock_t _lock = PTHREAD_RWLOCK_INITIALIZER;
             }
             case GrowingAsaFetcherErrorTimedOut:
             case GrowingAsaFetcherErrorTokenInvalid: {
-                self.retriesLeft--;
                 if (self.retriesLeft <= 0) {
                     GrowingAsaFetcher.asaData = [GrowingAsaFetcher mapDictionaryForUpload:attributionDetails isIAd:isIAd];
                     GrowingAsaFetcher.status = GrowingAsaFetcherStatusFailure;
                     return;
                 }
+                self.retriesLeft--;
                 [self fetchAttribution];
             }
                 return;
