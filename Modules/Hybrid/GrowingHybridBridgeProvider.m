@@ -32,7 +32,7 @@
 #import "GrowingTrackerCore/Event/Autotrack/GrowingPageAttributesEvent.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
-#import "GrowingTrackerCore/Utils/GrowingTimeUtil.h"
+#import "GrowingTimeUtil.h"
 #import "GrowingTrackerCore/Event/GrowingVisitorAttributesEvent.h"
 #import "Modules/Hybrid/GrowingWebViewDomChangedDelegate.h"
 #import "GrowingTrackerCore/Helpers/NSDictionary+GrowingHelper.h"

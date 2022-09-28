@@ -18,7 +18,7 @@
 //  limitations under the License.
 
 #import "Modules/Hybrid/GrowingHybridModule.h"
-#import "GrowingTrackerCore/Swizzle/GrowingSwizzle.h"
+#import "GrowingSwizzle.h"
 #import "Modules/Hybrid/WKWebView+GrowingAutotracker.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 

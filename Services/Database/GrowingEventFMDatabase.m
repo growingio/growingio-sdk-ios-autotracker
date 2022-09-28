@@ -21,7 +21,7 @@
 #import "Services/Database/FMDB/GrowingFMDB.h"
 #import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
 #import "Services/Database/GrowingEventJSONPersistence.h"
-#import "GrowingTrackerCore/Utils/GrowingTimeUtil.h"
+#import "GrowingTimeUtil.h"
 
 GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
 

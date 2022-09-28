@@ -28,9 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString *)growingPageName;
 - (nullable NSString *)growingPageTitle;
 
-- (void)growing_viewDidAppear:(BOOL)animated;
-- (void)growing_viewDidDisappear:(BOOL)animated;
-
 @end
 
 NS_ASSUME_NONNULL_END

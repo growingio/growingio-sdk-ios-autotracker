@@ -39,7 +39,7 @@
 #import "GrowingTrackerCore/Helpers/UIApplication+GrowingHelper.h"
 #import "GrowingTrackerCore/Helpers/UIImage+GrowingHelper.h"
 #import "GrowingTrackerCore/Helpers/UIWindow+GrowingHelper.h"
-#import "GrowingTrackerCore/Utils/GrowingTimeUtil.h"
+#import "GrowingTimeUtil.h"
 #import "Modules/MobileDebugger/GrowingDebuggerEventQueue.h"
 #import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
 #import "GrowingTrackerCore/GrowingRealTracker.h"

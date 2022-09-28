@@ -17,19 +17,22 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <UIKit/UIKit.h>
-#import "GrowingTrackerCore/Hook/GrowingAppLifecycle.h"
+#import "GrowingAppLifecycle.h"
+#import "GrowingTimeUtil.h"
 
 @interface GrowingAppLifecycle ()
-@property (strong, nonatomic, readonly) NSPointerArray *appLifecycleDelegates;
+
+@property (strong, nonatomic, readonly) NSPointerArray *lifecycleDelegates;
 @property (strong, nonatomic, readonly) NSLock *delegateLock;
+
 @end
 
 @implementation GrowingAppLifecycle
+
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _appLifecycleDelegates = [NSPointerArray pointerArrayWithOptions:NSPointerFunctionsWeakMemory];
+        _lifecycleDelegates = [NSPointerArray pointerArrayWithOptions:NSPointerFunctionsWeakMemory];
         _delegateLock = [[NSLock alloc] init];
     }
 
@@ -46,8 +49,14 @@
     return _sharedInstance;
 }
 
-- (void)setupAppStateNotification {
++ (void)setup {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [[self sharedInstance] setupAppStateNotification];
+    });
+}
 
+- (void)setupAppStateNotification {
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 
     // UIApplication: Process Lifecycle
@@ -103,7 +112,6 @@
 }
 
 - (void)handleProcessLifecycleNotification:(NSNotification *)notification {
-
     NSString *name = notification.name;
 
     if ([name isEqualToString:UIApplicationDidFinishLaunchingNotification]) {
@@ -114,7 +122,6 @@
 }
 
 - (void)handleUILifecycleNotification:(NSNotification *)notification {
-
     NSString *name = notification.name;
 
     if ([name isEqualToString:UIApplicationDidBecomeActiveNotification]) {
@@ -130,28 +137,28 @@
 
 - (void)addAppLifecycleDelegate:(id)delegate {
     [self.delegateLock lock];
-    if (![self.appLifecycleDelegates.allObjects containsObject:delegate]) {
-        [self.appLifecycleDelegates addPointer:(__bridge void *)delegate];
+    if (![self.lifecycleDelegates.allObjects containsObject:delegate]) {
+        [self.lifecycleDelegates addPointer:(__bridge void *)delegate];
     }
     [self.delegateLock unlock];
 }
 
 - (void)removeAppLifecycleDelegate:(id)delegate {
     [self.delegateLock lock];
-    [self.appLifecycleDelegates.allObjects
-            enumerateObjectsWithOptions:NSEnumerationReverse
-                             usingBlock:^(NSObject *obj, NSUInteger idx, BOOL *_Nonnull stop) {
-                                 if (delegate == obj) {
-                                     [self.appLifecycleDelegates removePointerAtIndex:idx];
-                                     *stop = YES;
-                                 }
-                             }];
+    [self.lifecycleDelegates.allObjects enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(NSObject *obj, NSUInteger idx, BOOL *_Nonnull stop) {
+        if (delegate == obj) {
+            [self.lifecycleDelegates removePointerAtIndex:idx];
+            *stop = YES;
+        }
+    }];
     [self.delegateLock unlock];
 }
 
 - (void)dispatchApplicationDidFinishLaunching:(NSDictionary *)userInfo {
+    self.appDidFinishLaunchingTime = [GrowingTimeUtil currentSystemTimeMillis];
+
     [self.delegateLock lock];
-    for (id delegate in self.appLifecycleDelegates) {
+    for (id delegate in self.lifecycleDelegates) {
         if ([delegate respondsToSelector:@selector(applicationDidFinishLaunching:)]) {
             [delegate applicationDidFinishLaunching:userInfo];
         }
@@ -161,7 +168,7 @@
 
 - (void)dispatchApplicationWillTerminate {
     [self.delegateLock lock];
-    for (id delegate in self.appLifecycleDelegates) {
+    for (id delegate in self.lifecycleDelegates) {
         if ([delegate respondsToSelector:@selector(applicationWillTerminate)]) {
             [delegate applicationWillTerminate];
         }
@@ -170,8 +177,10 @@
 }
 
 - (void)dispatchApplicationDidEnterBackground {
+    self.appDidEnterBackgroundTime = [GrowingTimeUtil currentSystemTimeMillis];
+
     [self.delegateLock lock];
-    for (id delegate in self.appLifecycleDelegates) {
+    for (id delegate in self.lifecycleDelegates) {
         if ([delegate respondsToSelector:@selector(applicationDidEnterBackground)]) {
             [delegate applicationDidEnterBackground];
         }
@@ -180,8 +189,10 @@
 }
 
 - (void)dispatchApplicationDidBecomeActive {
+    self.appDidBecomeActiveTime = [GrowingTimeUtil currentSystemTimeMillis];
+
     [self.delegateLock lock];
-    for (id delegate in self.appLifecycleDelegates) {
+    for (id delegate in self.lifecycleDelegates) {
         if ([delegate respondsToSelector:@selector(applicationDidBecomeActive)]) {
             [delegate applicationDidBecomeActive];
         }
@@ -190,8 +201,10 @@
 }
 
 - (void)dispatchApplicationWillResignActive {
+    self.appWillResignActiveTime = [GrowingTimeUtil currentSystemTimeMillis];
+
     [self.delegateLock lock];
-    for (id delegate in self.appLifecycleDelegates) {
+    for (id delegate in self.lifecycleDelegates) {
         if ([delegate respondsToSelector:@selector(applicationWillResignActive)]) {
             [delegate applicationWillResignActive];
         }
@@ -200,8 +213,10 @@
 }
 
 - (void)dispatchApplicationWillEnterForeground {
+    self.appWillEnterForegroundTime = [GrowingTimeUtil currentSystemTimeMillis];
+
     [self.delegateLock lock];
-    for (id delegate in self.appLifecycleDelegates) {
+    for (id delegate in self.lifecycleDelegates) {
         if ([delegate respondsToSelector:@selector(applicationWillEnterForeground)]) {
             [delegate applicationWillEnterForeground];
         }

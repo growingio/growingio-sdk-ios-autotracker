@@ -20,7 +20,7 @@
 #import "GrowingTrackerCore/GrowingRealTracker.h"
 #import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
 #import "GrowingTrackerCore/Public/GrowingAttributesBuilder.h"
-#import "GrowingTrackerCore/Hook/GrowingAppLifecycle.h"
+#import "GrowingAppLifecycle.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/LogFormat/GrowingWSLoggerFormat.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
@@ -63,7 +63,7 @@ const int GrowingTrackerVersionCode = 30403;
         }
         
         [self loggerSetting];
-        [GrowingAppLifecycle.sharedInstance setupAppStateNotification];
+        [GrowingAppLifecycle setup];
         [GrowingSession startSession];
         [GrowingAppDelegateAutotracker track];
         [[GrowingModuleManager sharedInstance] registedAllModules];

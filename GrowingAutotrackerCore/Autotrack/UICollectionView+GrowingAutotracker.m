@@ -18,8 +18,8 @@
 //  limitations under the License.
 
 #import "GrowingAutotrackerCore/Autotrack/UICollectionView+GrowingAutotracker.h"
-#import "GrowingTrackerCore/Swizzle/GrowingSwizzle.h"
-#import "GrowingTrackerCore/Swizzle/GrowingSwizzler.h"
+#import "GrowingSwizzle.h"
+#import "GrowingSwizzler.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/GrowingViewClickProvider.h"
 
