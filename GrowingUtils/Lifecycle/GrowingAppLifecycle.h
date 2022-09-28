@@ -18,8 +18,10 @@
 //  limitations under the License.
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @protocol GrowingAppLifecycleDelegate <NSObject>
+
 @optional
 - (void)applicationDidFinishLaunching:(NSDictionary *)userInfo;
 
@@ -32,14 +34,23 @@
 - (void)applicationDidEnterBackground;
 
 - (void)applicationWillEnterForeground;
+
 @end
 
 @interface GrowingAppLifecycle : NSObject
+
+@property (nonatomic, assign) double appDidFinishLaunchingTime;
+@property (nonatomic, assign) double appWillEnterForegroundTime;
+@property (nonatomic, assign) double appDidBecomeActiveTime;
+@property (nonatomic, assign) double appDidEnterBackgroundTime;
+@property (nonatomic, assign) double appWillResignActiveTime;
+
 + (instancetype)sharedInstance;
 
-- (void)setupAppStateNotification;
++ (void)setup;
 
 - (void)addAppLifecycleDelegate:(id <GrowingAppLifecycleDelegate>)delegate;
 
 - (void)removeAppLifecycleDelegate:(id <GrowingAppLifecycleDelegate>)delegate;
+
 @end
