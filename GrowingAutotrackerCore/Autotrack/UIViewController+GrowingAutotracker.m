@@ -22,28 +22,11 @@
 #import "GrowingAutotrackerCore/Page/GrowingPage.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
 #import "GrowingAutotrackerCore/Private/GrowingPrivateCategory.h"
-#import "GrowingAutotrackerCore/Manager/GrowingViewControllerLifecycle.h"
-#import "GrowingAutotrackerCore/Autotrack/GrowingPropertyDefine.h"
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIViewController+GrowingNode.h"
-
-GrowingPropertyDefine(UIViewController, NSNumber *, growingHook_hasDidAppear, setGrowingHook_hasDidAppear)
+#import "GrowingViewControllerLifecycle.h"
 
 @implementation UIViewController (GrowingAutotracker)
-
-- (void)growing_viewDidAppear:(BOOL)animated {
-    [self setGrowingHook_hasDidAppear:@YES];
-    [GrowingViewControllerLifecycle.sharedInstance dispatchViewControllerDidAppear:self];
-
-    [self growing_viewDidAppear:animated];
-}
-
-- (void)growing_viewDidDisappear:(BOOL)animated {
-    [GrowingViewControllerLifecycle.sharedInstance dispatchViewControllerDidDisappear:self];
-    [self growing_viewDidDisappear:animated];
-}
-
-#pragma mark pageName
 
 - (NSString *)growingPageName {
     NSString *pageName = nil;
@@ -72,7 +55,7 @@ GrowingPropertyDefine(UIViewController, NSNumber *, growingHook_hasDidAppear, se
 //}
 
 - (BOOL)growingHookIsCustomAddVC {
-    return !self.growingHook_hasDidAppear.boolValue && self.parentViewController == nil &&
+    return !self.growing_DidAppear && self.parentViewController == nil &&
            [UIApplication sharedApplication].keyWindow.rootViewController != self;
 }
 

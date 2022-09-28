@@ -22,7 +22,7 @@
 #import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/Page/UIViewController+GrowingPageHelper.h"
-#import "GrowingTrackerCore/Utils/GrowingTimeUtil.h"
+#import "GrowingTimeUtil.h"
 
 @interface GrowingPage ()
 @property (nonatomic, copy, readonly) NSString *pathCopy;

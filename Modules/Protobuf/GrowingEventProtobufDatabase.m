@@ -20,7 +20,7 @@
 #import "Modules/Protobuf/GrowingEventProtobufDatabase.h"
 #import "Services/Database/FMDB/GrowingFMDB.h"
 #import "Modules/Protobuf/GrowingEventProtobufPersistence.h"
-#import "GrowingTrackerCore/Utils/GrowingTimeUtil.h"
+#import "GrowingTimeUtil.h"
 
 @implementation GrowingEventProtobufDatabase
 

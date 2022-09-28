@@ -38,6 +38,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   end
 
   s.subspec 'TrackerCore' do |trackerCore|
+    trackerCore.dependency 'GrowingUtils/TrackerCore'
     trackerCore.source_files = 'GrowingTrackerCore/**/*{.h,.m,.c,.cpp,.mm}'
     trackerCore.exclude_files = 'GrowingTrackerCore/Utils/UserIdentifier/GrowingUserIdentifier_NoIDFA.m'
     trackerCore.public_header_files = 'GrowingTrackerCore/Public/*.h'
@@ -45,6 +46,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   end
   
   s.subspec 'AutotrackerCore' do |autotrackerCore|
+    autotrackerCore.dependency 'GrowingUtils/AutotrackerCore'
     autotrackerCore.source_files = 'GrowingAutotrackerCore/**/*{.h,.m,.c,.cpp,.mm}'
     autotrackerCore.private_header_files = 'GrowingAutotrackerCore/Private/*{.h,.m,.c,.cpp,.mm}'
     autotrackerCore.public_header_files = 'GrowingAutotrackerCore/Public/*.h'

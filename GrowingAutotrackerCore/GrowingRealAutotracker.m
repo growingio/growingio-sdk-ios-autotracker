@@ -18,7 +18,8 @@
 //  limitations under the License.
 
 #import "GrowingAutotrackerCore/GrowingRealAutotracker.h"
-#import "GrowingTrackerCore/Swizzle/GrowingSwizzle.h"
+#import "GrowingSwizzle.h"
+#import "GrowingViewControllerLifecycle.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogMacros.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
@@ -43,6 +44,7 @@
     self = [super initWithConfiguration:configuration launchOptions:launchOptions];
     if (self) {
         [self addAutoTrackSwizzles];
+        [GrowingViewControllerLifecycle setup];
         [GrowingPageManager.sharedInstance start];
         [GrowingImpressionTrack.sharedInstance start];
     }
@@ -53,20 +55,6 @@
 - (void)addAutoTrackSwizzles {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSError *error = NULL;
-        // UIViewController
-        [UIViewController growing_swizzleMethod:@selector(viewDidAppear:)
-                                     withMethod:@selector(growing_viewDidAppear:)
-                                          error:&error];
-
-        [UIViewController growing_swizzleMethod:@selector(viewDidDisappear:)
-                                     withMethod:@selector(growing_viewDidDisappear:)
-                                          error:&error];
-        if (error) {
-            GIOLogError(@"Failed to swizzle UIViewController. Details: %@", error);
-            error = NULL;
-        }
-
         // UIApplication
         NSError *applicatonError = NULL;
         [UIApplication growing_swizzleMethod:@selector(sendAction:to:from:forEvent:)
@@ -113,8 +101,6 @@
         if (notiError) {
             GIOLogError(@"Failed to swizzle NSNotificationCenter. Details: %@", notiError);
         }
-
-        
 
         // ListView
         NSError *listViewError = NULL;

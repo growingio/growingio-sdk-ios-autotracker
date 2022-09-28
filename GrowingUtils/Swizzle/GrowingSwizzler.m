@@ -21,10 +21,9 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Swizzle/GrowingSwizzler.h"
+#import "GrowingSwizzler.h"
 #import <objc/runtime.h>
 #import <objc/message.h>
-#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 
 #define GROWING_MIN_ARGS 2
 #define GROWING_MAX_ARGS 5
@@ -161,7 +160,7 @@ static void (*growing_swizzledMethods[GROWING_MAX_ARGS - GROWING_MIN_ARGS + 1])(
     NSEnumerator *en = [growingSwizzles objectEnumerator];
     GrowingSwizzleEntity *swizzle;
     while ((swizzle = (GrowingSwizzleEntity *)[en nextObject])) {
-        GIOLogInfo(@"%@", swizzle);
+        NSLog(@"%@", swizzle.description);
     }
 }
 

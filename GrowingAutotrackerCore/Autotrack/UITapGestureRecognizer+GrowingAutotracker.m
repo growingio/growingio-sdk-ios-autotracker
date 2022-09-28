@@ -18,7 +18,7 @@
 //  limitations under the License.
 
 #import "GrowingAutotrackerCore/Autotrack/UITapGestureRecognizer+GrowingAutotracker.h"
-#import "GrowingTrackerCore/Swizzle/GrowingSwizzle.h"
+#import "GrowingSwizzle.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/GrowingViewClickProvider.h"
 

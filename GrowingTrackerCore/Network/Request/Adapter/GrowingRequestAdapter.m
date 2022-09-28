@@ -18,7 +18,7 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Network/Request/Adapter/GrowingRequestAdapter.h"
-#import "GrowingTrackerCore/Utils/GrowingTimeUtil.h"
+#import "GrowingTimeUtil.h"
 
 #pragma mark GrowingRequestHeaderAdapter
 

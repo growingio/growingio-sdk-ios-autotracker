@@ -21,20 +21,42 @@
 #import <UIKit/UIKit.h>
 
 @protocol GrowingViewControllerLifecycleDelegate <NSObject>
+
 @optional
+- (void)viewControllerLoadView:(UIViewController *)controller;
+
+- (void)viewControllerDidLoad:(UIViewController *)controller;
+
+- (void)viewControllerWillAppear:(UIViewController *)controller;
+
 - (void)viewControllerDidAppear:(UIViewController *)controller;
 
+- (void)viewControllerWillDisappear:(UIViewController *)controller;
+
 - (void)viewControllerDidDisappear:(UIViewController *)controller;
+
+- (void)pageLoadCompletedWithViewController:(UIViewController *)viewController
+                               loadViewTime:(double)loadViewTime
+                            viewDidLoadTime:(double)viewDidLoadTime
+                         viewWillAppearTime:(double)viewWillAppearTime
+                          viewDidAppearTime:(double)viewDidAppearTime;
+
+@end
+
+@interface UIViewController (GrowingUtils)
+
+@property (nonatomic, assign) BOOL growing_DidAppear;
+
 @end
 
 @interface GrowingViewControllerLifecycle : NSObject
+
 + (instancetype)sharedInstance;
+
++ (void)setup;
 
 - (void)addViewControllerLifecycleDelegate:(id <GrowingViewControllerLifecycleDelegate>)delegate;
 
 - (void)removeViewControllerLifecycleDelegate:(id <GrowingViewControllerLifecycleDelegate>)delegate;
 
-- (void)dispatchViewControllerDidAppear:(UIViewController *)controller;
-
-- (void)dispatchViewControllerDidDisappear:(UIViewController *)controller;
 @end

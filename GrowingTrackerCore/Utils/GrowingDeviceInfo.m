@@ -24,7 +24,7 @@
 #import <pthread.h>
 #import <sys/utsname.h>
 
-#import "GrowingTrackerCore/Hook/GrowingAppLifecycle.h"
+#import "GrowingAppLifecycle.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingKeyChainWrapper.h"

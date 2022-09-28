@@ -40,7 +40,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Swizzle/GrowingSwizzle.h"
+#import "GrowingSwizzle.h"
 
 #if TARGET_OS_IPHONE
     #import <objc/runtime.h>
