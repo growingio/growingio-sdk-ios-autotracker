@@ -230,15 +230,19 @@ GrowingMod(GrowingWebCircle)
         return;
     }
     UIView *node = viewNode.view;
-    if ([node growingNodeUserInteraction] || [node isKindOfClass:NSClassFromString(@"WKWebView")]) {
-        if ([node growingNodeDonotTrack] || [node growingNodeDonotCircle]) {
-            GIOLogDebug(@"圈选过滤节点:%@,DontTrack:%d,DontCircle:%d", [node class], [node growingNodeDonotTrack],
-                        [node growingNodeDonotCircle]);
-        } else {
+    if ([node growingNodeDonotCircle]) {
+        GIOLogDebug(@"过滤节点：%@ 因不可见，无法圈选", [node class]);
+        return;
+    }
+    
+    if ([node growingNodeDonotTrack]) {
+        GIOLogDebug(@"过滤节点：%@ 已忽略，无需圈选", [node class]);
+    } else {
+        if ([node growingNodeUserInteraction] || [node isKindOfClass:NSClassFromString(@"WKWebView")]) {
             NSMutableDictionary *dict = [self dictFromNode:viewNode];
-            if ([viewNode.view isKindOfClass:NSClassFromString(@"WKWebView")]) {
+            if ([node isKindOfClass:NSClassFromString(@"WKWebView")]) {
                 [[GrowingHybridBridgeProvider sharedInstance]
-                    getDomTreeForWebView:(WKWebView *)viewNode.view
+                    getDomTreeForWebView:(WKWebView *)node
                        completionHandler:^(NSDictionary *_Nullable domTee, NSError *_Nullable error) {
                            if (domTee.count > 0) {
                                [dict setValue:domTee forKey:@"webView"];
