@@ -62,8 +62,18 @@ let package = Package(
             name: "GrowingModule_Hybrid",
             targets: ["GrowingModule_Hybrid"]
         ),
+        .library(
+            name: "GrowingModule_Advert",
+            targets: ["GrowingModule_Advert"]
+        ),
     ],
-    dependencies: [],
+    dependencies: [
+        .package(
+            name: "GrowingUtils",
+            url: "https://github.com/growingio/growingio-sdk-ios-utilities.git",
+            .revision("af1ec1304d71a5a7467616cafa5fad79ca8e01bc")
+        ),
+    ],
     targets: [
         
         // MARK: - GrowingAnalytics Wrapper
@@ -177,7 +187,9 @@ let package = Package(
         ),
         .target(
             name: "GrowingTrackerCore",
-            dependencies: [],
+            dependencies: [
+                .product(name: "GrowingUtilsTrackerCore", package: "GrowingUtils"),
+            ],
             path: "GrowingTrackerCore",
             exclude: ["Utils/UserIdentifier"],
             publicHeadersPath: "Public",
@@ -191,7 +203,10 @@ let package = Package(
         ),
         .target(
             name: "GrowingAutotrackerCore",
-            dependencies: ["GrowingTrackerCore"],
+            dependencies: [
+                "GrowingTrackerCore",
+                .product(name: "GrowingUtilsAutotrackerCore", package: "GrowingUtils"),
+            ],
             path: "GrowingAutotrackerCore",
             publicHeadersPath: "Public",
             cSettings: [
@@ -281,7 +296,7 @@ let package = Package(
         .target(
             name: "GrowingModule_WebCircle",
             dependencies: [
-                "GrowingTrackerCore",
+                "GrowingAutotrackerCore",
                 "GrowingService_WebSocket",
                 "GrowingModule_Hybrid"
             ],
@@ -299,6 +314,14 @@ let package = Package(
             ],
             linkerSettings: [
                 .linkedFramework("WebKit", .when(platforms: [.iOS])),
+            ]
+        ),
+        .target(
+            name: "GrowingModule_Advert",
+            dependencies: ["GrowingTrackerCore"],
+            path: "Modules/Advert",
+            cSettings: [
+                .headerSearchPath("../.."),
             ]
         ),
 
