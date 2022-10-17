@@ -4,7 +4,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -31,50 +30,12 @@
                     <connections>
                         <segue destination="Keq-hv-nRZ" kind="relationship" relationship="viewControllers" id="JuE-To-uZi"/>
                         <segue destination="mqh-ab-Zua" kind="relationship" relationship="viewControllers" id="chK-Nm-b49"/>
-                        <segue destination="FWZ-Jn-FDc" kind="relationship" relationship="viewControllers" id="A1W-mN-dmS"/>
+                        <segue destination="0DM-Mf-6UK" kind="relationship" relationship="viewControllers" id="A1W-mN-dmS"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fU9-Ik-F8H" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1713" y="-488"/>
-        </scene>
-        <!--占位-->
-        <scene sceneID="o3i-zP-C9i">
-            <objects>
-                <navigationController id="FWZ-Jn-FDc" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="占位" image="merge" id="AS5-1n-NRw">
-                        <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="0.0"/>
-                    </tabBarItem>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="5Di-PA-FjW">
-                        <rect key="frame" x="0.0" y="44" width="390" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <connections>
-                        <segue destination="Lfx-1N-MSw" kind="relationship" relationship="rootViewController" id="WPf-7w-9vu"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Ljy-Zw-k5S" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2263" y="296"/>
-        </scene>
-        <!--PlaceholderVC-->
-        <scene sceneID="0I9-Tc-eHF">
-            <objects>
-                <viewController id="Lfx-1N-MSw" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="ZX7-62-vCw"/>
-                        <viewControllerLayoutGuide type="bottom" id="aum-rM-p2c"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="4Kn-Ca-r80">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </view>
-                    <navigationItem key="navigationItem" title="PlaceholderVC" id="wh0-wJ-OJE"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="YFp-5d-fBv" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3080" y="296"/>
         </scene>
         <!--UICatalogTests-->
         <scene sceneID="Fwf-7V-CUS">
@@ -86,11 +47,15 @@
             </objects>
             <point key="canvasLocation" x="1713" y="-26"/>
         </scene>
+        <!--Others-->
+        <scene sceneID="pP3-0H-qGB">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Others" id="0DM-Mf-6UK" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="4Z8-r3-Xaa"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="TD9-KF-pxe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2237" y="-26"/>
+        </scene>
     </scenes>
-    <resources>
-        <image name="merge" width="32" height="32"/>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-    </resources>
 </document>
