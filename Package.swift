@@ -66,12 +66,21 @@ let package = Package(
             name: "GrowingModule_Advert",
             targets: ["GrowingModule_Advert"]
         ),
+        .library(
+            name: "GrowingModule_APM",
+            targets: ["GrowingModule_APM"]
+        ),
     ],
     dependencies: [
         .package(
             name: "GrowingUtils",
             url: "https://github.com/growingio/growingio-sdk-ios-utilities.git",
-            .revision("af1ec1304d71a5a7467616cafa5fad79ca8e01bc")
+            .exact("0.0.1")
+        ),
+        .package(
+            name: "GrowingAPM",
+            url: "https://github.com/growingio/growingio-sdk-ios-performance-ext.git",
+            .branch("master")
         ),
     ],
     targets: [
@@ -320,6 +329,17 @@ let package = Package(
             name: "GrowingModule_Advert",
             dependencies: ["GrowingTrackerCore"],
             path: "Modules/Advert",
+            cSettings: [
+                .headerSearchPath("../.."),
+            ]
+        ),
+        .target(
+            name: "GrowingModule_APM",
+            dependencies: [
+                "GrowingTrackerCore",
+                .product(name: "GrowingAPM", package: "GrowingAPM"),
+            ],
+            path: "Modules/APM",
             cSettings: [
                 .headerSearchPath("../.."),
             ]
