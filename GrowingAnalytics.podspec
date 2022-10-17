@@ -38,7 +38,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   end
 
   s.subspec 'TrackerCore' do |trackerCore|
-    trackerCore.dependency 'GrowingUtils/TrackerCore', '0.0.2'
+    trackerCore.dependency 'GrowingUtils/TrackerCore', '0.0.1'
     trackerCore.source_files = 'GrowingTrackerCore/**/*{.h,.m,.c,.cpp,.mm}'
     trackerCore.exclude_files = 'GrowingTrackerCore/Utils/UserIdentifier/GrowingUserIdentifier_NoIDFA.m'
     trackerCore.public_header_files = 'GrowingTrackerCore/Public/*.h'
@@ -46,7 +46,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   end
   
   s.subspec 'AutotrackerCore' do |autotrackerCore|
-    autotrackerCore.dependency 'GrowingUtils/AutotrackerCore', '0.0.2'
+    autotrackerCore.dependency 'GrowingUtils/AutotrackerCore', '0.0.1'
     autotrackerCore.source_files = 'GrowingAutotrackerCore/**/*{.h,.m,.c,.cpp,.mm}'
     autotrackerCore.private_header_files = 'GrowingAutotrackerCore/Private/*{.h,.m,.c,.cpp,.mm}'
     autotrackerCore.public_header_files = 'GrowingAutotrackerCore/Public/*.h'
@@ -134,6 +134,13 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
       proto.requires_arc = false
       proto.dependency 'Protobuf'
     end
+  end
+
+  s.subspec 'APM' do |apm|
+    apm.source_files = 'Modules/APM/**/*{.h,.m,.c,.cpp,.mm}'
+    apm.public_header_files = 'Modules/APM/Public/*.h'
+    apm.dependency 'GrowingAnalytics/TrackerCore'
+    apm.dependency 'GrowingAPM/Core'
   end
 
   s.subspec 'DISABLE_IDFA' do |config|

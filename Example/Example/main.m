@@ -8,9 +8,11 @@
 
 @import UIKit;
 #import "AppDelegate.h"
+#import "GrowingAPMModule.h"
 
 int main(int argc, char * argv[])
 {
+    [GrowingAPM swizzle:GrowingAPMMonitorsCrash | GrowingAPMMonitorsLaunch | GrowingAPMMonitorsUserInterface];
     @autoreleasepool {
         return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
     }

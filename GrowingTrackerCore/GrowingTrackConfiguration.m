@@ -27,6 +27,9 @@ NSString * const kGrowingDefaultDataCollectionServerHost = @"https://api.growing
 // Advert
 @property (nonatomic, assign) BOOL ASAEnabled;
 
+// APM
+@property (nonatomic, copy) NSObject *APMConfig;
+
 @end
 
 @implementation GrowingTrackConfiguration
@@ -51,6 +54,9 @@ NSString * const kGrowingDefaultDataCollectionServerHost = @"https://api.growing
         
         // Advert
         _ASAEnabled = NO;
+        
+        // APM
+        _APMConfig = nil;
     }
 
     return self;
@@ -78,6 +84,9 @@ NSString * const kGrowingDefaultDataCollectionServerHost = @"https://api.growing
     
     // Advert
     configuration->_ASAEnabled = _ASAEnabled;
+    
+    // APM
+    configuration->_APMConfig = [_APMConfig copy];
     return configuration;
 }
 

@@ -10,6 +10,8 @@
 #import <AppTrackingTransparency/AppTrackingTransparency.h>
 #import <GrowingToolsKit/GrowingToolsKit.h>
 #import "GrowingAdvertising.h"
+#import "GrowingAPMModule.h"
+#import <Bugly/Bugly.h>
 
 static NSString *const kGrowingProjectId = @"bc675c65b3b0290e";
 
@@ -29,7 +31,15 @@ static NSString *const kGrowingProjectId = @"bc675c65b3b0290e";
     // 暂时设置host为mocky链接，防止请求404，实际是没有上传到服务器的，正式使用请去掉，或设置正确的host
     configuration.dataCollectionServerHost = @"https://run.mocky.io/v3/08999138-a180-431d-a136-051f3c6bd306";
     configuration.ASAEnabled = YES;
+    
+    GrowingAPMConfig *config = GrowingAPMConfig.config;
+    config.monitors = GrowingAPMMonitorsCrash | GrowingAPMMonitorsLaunch | GrowingAPMMonitorsUserInterface;
+    configuration.APMConfig = config;
+    
+    
     [GrowingSDK startWithConfiguration:configuration launchOptions:launchOptions];
+    
+    [Bugly startWithAppId:@"93004a21ca"];
     return YES;
 }
 

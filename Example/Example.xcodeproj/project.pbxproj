@@ -105,6 +105,8 @@
 		349975FB28BF303100466640 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 349975F928BF301500466640 /* iAd.framework */; };
 		349975FC28BF303B00466640 /* AdServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 349975F728BF300F00466640 /* AdServices.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		349B529228C088F100EE88FE /* AdvertTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 349B528528C086C600EE88FE /* AdvertTest.m */; };
+		349DA46828F2BD5400C4281F /* Others.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 349DA46728F2BC5400C4281F /* Others.storyboard */; };
+		349DA46C28F2BF9400C4281F /* GIOCrashMonitorTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 349DA46B28F2BF9400C4281F /* GIOCrashMonitorTableViewController.mm */; };
 		349F1488285B503B00437F53 /* GIODefaultWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 349F1484285B503A00437F53 /* GIODefaultWebViewController.m */; };
 		349F1489285B503B00437F53 /* GIOH5BrowserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 349F1487285B503A00437F53 /* GIOH5BrowserViewController.m */; };
 		349F148C285B52B700437F53 /* GIOScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 349F148B285B52B700437F53 /* GIOScanViewController.m */; };
@@ -319,6 +321,9 @@
 		349975F928BF301500466640 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
 		349B528528C086C600EE88FE /* AdvertTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AdvertTest.m; sourceTree = "<group>"; };
 		349B528B28C0884400EE88FE /* AdvertTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AdvertTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		349DA46728F2BC5400C4281F /* Others.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Others.storyboard; sourceTree = "<group>"; };
+		349DA46A28F2BF9400C4281F /* GIOCrashMonitorTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIOCrashMonitorTableViewController.h; sourceTree = "<group>"; };
+		349DA46B28F2BF9400C4281F /* GIOCrashMonitorTableViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GIOCrashMonitorTableViewController.mm; sourceTree = "<group>"; };
 		349F1484285B503A00437F53 /* GIODefaultWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIODefaultWebViewController.m; sourceTree = "<group>"; };
 		349F1485285B503A00437F53 /* GIOH5BrowserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIOH5BrowserViewController.h; sourceTree = "<group>"; };
 		349F1486285B503A00437F53 /* GIODefaultWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIODefaultWebViewController.h; sourceTree = "<group>"; };
@@ -469,6 +474,7 @@
 				34B93233276765CD00025C94 /* Storyboard */,
 				046530DE24DD4271002D254C /* MeasurementProtocol */,
 				0465310024DD4271002D254C /* UICategoryTests */,
+				349DA46928F2BF5A00C4281F /* Others */,
 				046530BE24DD4271002D254C /* AppDelegate.h */,
 				046530FF24DD4271002D254C /* AppDelegate.m */,
 				046530D124DD4271002D254C /* Assets.xcassets */,
@@ -788,6 +794,15 @@
 			path = AdvertTests;
 			sourceTree = "<group>";
 		};
+		349DA46928F2BF5A00C4281F /* Others */ = {
+			isa = PBXGroup;
+			children = (
+				349DA46A28F2BF9400C4281F /* GIOCrashMonitorTableViewController.h */,
+				349DA46B28F2BF9400C4281F /* GIOCrashMonitorTableViewController.mm */,
+			);
+			path = Others;
+			sourceTree = "<group>";
+		};
 		349F1483285B503A00437F53 /* H5Browser */ = {
 			isa = PBXGroup;
 			children = (
@@ -896,6 +911,7 @@
 			children = (
 				34B932342767661600025C94 /* MeasurementProtocol.storyboard */,
 				34BDC359277088D40030B3CE /* UICatalogTests.storyboard */,
+				349DA46728F2BC5400C4281F /* Others.storyboard */,
 			);
 			path = Storyboard;
 			sourceTree = "<group>";
@@ -1554,6 +1570,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				349DA46828F2BD5400C4281F /* Others.storyboard in Resources */,
 				0465313624DD4272002D254C /* Assets.xcassets in Resources */,
 				0465313C24DD4272002D254C /* Main.storyboard in Resources */,
 				0465315C24DD4272002D254C /* GIOCollectionViewCell.xib in Resources */,
@@ -1773,6 +1790,7 @@
 				04A6FAF524E67215006C72F0 /* GIOBaseViewController.m in Sources */,
 				0465315A24DD4272002D254C /* GIOFoodTableViewCell.m in Sources */,
 				0465314524DD4272002D254C /* GIOCustomEventViewController.m in Sources */,
+				349DA46C28F2BF9400C4281F /* GIOCrashMonitorTableViewController.mm in Sources */,
 				0465314724DD4272002D254C /* GIOContainerViewController.m in Sources */,
 				0465314E24DD4272002D254C /* GIOLabelAttributeViewController.m in Sources */,
 				349F1488285B503B00437F53 /* GIODefaultWebViewController.m in Sources */,
