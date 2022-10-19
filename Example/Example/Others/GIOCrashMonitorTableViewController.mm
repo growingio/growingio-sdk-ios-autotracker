@@ -18,8 +18,11 @@
 //  limitations under the License.
 
 #import "GIOCrashMonitorTableViewController.h"
+#import "Crasher.h"
 
 @interface GIOCrashMonitorTableViewController ()
+
+@property (nonatomic, strong) Crasher *crasher;
 
 @end
 
@@ -29,6 +32,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.crasher = [[Crasher alloc] init];
 }
 
 #pragma mark - UITableView DataSource & Delegate
@@ -37,33 +41,83 @@
     switch (indexPath.row) {
         case 0: {
             // NSException
-            __unused id a = @[][1];
+            [self.crasher throwUncaughtNSException];
         }
             break;
         case 1: {
-            // C++ Exception
-            throw 0;
+            // dereferenceBadPointer
+            [self.crasher dereferenceBadPointer];
         }
             break;
         case 2: {
-            // Mach Exception
-            char* ptr = (char*)-1;
-            *ptr = 10;
+            // dereferenceNullPointer
+            [self.crasher dereferenceNullPointer];
         }
             break;
         case 3: {
-            // Signal
-            raise(SIGABRT);
+            // useCorruptObject
+            [self.crasher useCorruptObject];
         }
             break;
         case 4: {
-            // WatchDog
+            // spinRunloop
+            [self.crasher spinRunloop];
             
         }
             break;
         case 5: {
-            // Out Of Memory
-            
+            // StackOverflow
+            [self.crasher causeStackOverflow];
+        }
+            break;
+        case 6: {
+            // abort()
+            [self.crasher doAbort];
+        }
+            break;
+        case 7: {
+            // doDiv0
+            [self.crasher doDiv0];
+        }
+            break;
+        case 8: {
+            // Illegal Instruction
+            [self.crasher doIllegalInstruction];
+        }
+            break;
+        case 9: {
+            // accessDeallocatedObject
+            [self.crasher accessDeallocatedObject];
+        }
+            break;
+        case 10: {
+            // accessDeallocatedPtrProxy
+            [self.crasher accessDeallocatedPtrProxy];
+        }
+            break;
+        case 11: {
+            // zombieNSException
+            [self.crasher zombieNSException];
+        }
+            break;
+        case 12: {
+            // corruptMemory
+            [self.crasher corruptMemory];
+        }
+            break;
+        case 13: {
+            // deadlock
+            [self.crasher deadlock];
+        }
+            break;
+        case 14: {
+            // pthreadAPICrash
+            [self.crasher pthreadAPICrash];
+        }
+            break;
+        case 15: {
+            // throwUncaughtCPPException
+            [self.crasher throwUncaughtCPPException];
         }
             break;
         default:
