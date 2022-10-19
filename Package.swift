@@ -329,6 +329,7 @@ let package = Package(
             name: "GrowingModule_Advert",
             dependencies: ["GrowingTrackerCore"],
             path: "Modules/Advert",
+            publicHeadersPath: "Public",
             cSettings: [
                 .headerSearchPath("../.."),
             ]
@@ -340,6 +341,7 @@ let package = Package(
                 .product(name: "GrowingAPM", package: "GrowingAPM"),
             ],
             path: "Modules/APM",
+            publicHeadersPath: "Public",
             cSettings: [
                 .headerSearchPath("../.."),
             ]
