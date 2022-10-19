@@ -20,8 +20,8 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GrowingTrackerCore/Swizzle/GrowingSwizzle.h"
-#import "GrowingTrackerCore/Swizzle/GrowingSwizzler.h"
+#import "GrowingSwizzle.h"
+#import "GrowingSwizzler.h"
 #import <objc/runtime.h>
 #import <objc/message.h>
 
