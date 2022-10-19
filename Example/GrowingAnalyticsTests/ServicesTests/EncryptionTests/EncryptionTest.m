@@ -20,7 +20,7 @@
 #import <XCTest/XCTest.h>
 
 #import "Services/Encryption/GrowingDataEncoder.h"
-#import "GrowingTrackerCore/Utils/GrowingTimeUtil.h"
+#import "GrowingTimeUtil.h"
 #import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
 #import "GrowingTrackerCore/Helpers/NSDictionary+GrowingHelper.h"
 
