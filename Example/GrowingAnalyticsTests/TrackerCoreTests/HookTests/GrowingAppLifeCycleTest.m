@@ -20,7 +20,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GrowingTrackerCore/Hook/GrowingAppLifecycle.h"
+#import "GrowingAppLifecycle.h"
 #import "InvocationHelper.h"
 
 @interface GrowingAppLifeCycleTest : XCTestCase <GrowingAppLifecycleDelegate>
