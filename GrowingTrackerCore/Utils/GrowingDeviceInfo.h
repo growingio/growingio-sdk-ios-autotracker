@@ -19,7 +19,6 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
 
 @interface GrowingDeviceInfo : NSObject
 
@@ -28,8 +27,6 @@
 @property (nonatomic, copy) NSString * (^deviceIDBlock)(void);
 @property (nonatomic, copy) NSString * (^encryptStringBlock)(NSString *string);
 
-@property (nonatomic, readonly) BOOL isNewInstall;
-@property (nonatomic, readonly) BOOL isPastedDeeplinkCallback;
 @property (nonatomic, readonly) NSString *idfv;
 @property (nonatomic, readonly) NSString *idfa;
 @property (nonatomic, readonly) NSString *deviceIDString;
@@ -50,11 +47,6 @@
 @property (nonatomic, readonly) int appState;
 
 + (void)configUrlScheme:(NSString *)urlScheme;
-
-@property (nonatomic, strong) GrowingFileStorage *deviceStorage;
-
-- (void)deviceInfoReported;
-- (void)pasteboardDeeplinkReported;
 + (CGSize)deviceScreenSize;
 
 @end

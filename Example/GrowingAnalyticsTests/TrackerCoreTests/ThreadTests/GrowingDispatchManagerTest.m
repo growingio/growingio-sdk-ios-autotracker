@@ -73,11 +73,6 @@
             XCTAssertTrue([NSThread isMainThread]);
         }];
     } waitUntilDone:YES];
-
-    [GrowingDispatchManager dispatchInLowThread:^{
-        int i = strcmp(dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL), "io.growing.low");
-        XCTAssertTrue(i == 0);
-    }];
 }
 
 - (void)testGrowingThread {

@@ -52,10 +52,6 @@
     }
 }
 
-+ (void)dispatchInLowThread:(void (^_Nullable)(void))block {
-    dispatch_async(self.lowDispatch, block);
-}
-
 + (void)trackApiSel:(SEL)selector dispatchInMainThread:(void (^_Nullable)(void))block {
     if (strcmp(dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL),
                dispatch_queue_get_label(dispatch_get_main_queue())) == 0) {
@@ -64,17 +60,6 @@
         GIOLogWarn(@"!!!: 埋点相关API-\"%@\"，请在主线程里调用.", NSStringFromSelector(selector));
         dispatch_async(dispatch_get_main_queue(), block);
     }
-}
-
-+ (dispatch_queue_t)lowDispatch {
-    static dispatch_queue_t lowDispatch = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        lowDispatch = dispatch_queue_create("io.growing.low", NULL);
-        dispatch_set_target_queue(lowDispatch, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0));
-    });
-
-    return lowDispatch;
 }
 
 @end
