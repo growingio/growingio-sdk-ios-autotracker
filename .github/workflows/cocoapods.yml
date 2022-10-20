@@ -8,7 +8,7 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       # https://github.com/CocoaPods/CocoaPods/issues/9497
       # https://github.com/CocoaPods/cocoapods-trunk/pull/147
