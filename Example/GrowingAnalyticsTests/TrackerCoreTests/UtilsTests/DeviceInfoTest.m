@@ -38,8 +38,6 @@
 }
 
 - (void)testGrowingDeviceInfo {
-    [[GrowingDeviceInfo currentDeviceInfo] deviceInfoReported];
-    [[GrowingDeviceInfo currentDeviceInfo] pasteboardDeeplinkReported];
     [GrowingDeviceInfo deviceScreenSize];
 }
 
@@ -47,8 +45,6 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
     GrowingDeviceInfo *deviceInfo = GrowingDeviceInfo.currentDeviceInfo;
-    XCTAssertNoThrow([deviceInfo safePerformSelector:@selector(isNewInstall)]);
-    XCTAssertNoThrow([deviceInfo safePerformSelector:@selector(isPastedDeeplinkCallback)]);
     XCTAssertNotNil([deviceInfo safePerformSelector:@selector(carrier)]);
     XCTAssertNoThrow([deviceInfo safePerformSelector:@selector(handleStatusBarOrientationChange)]);
     XCTAssertNoThrow([deviceInfo safePerformSelector:@selector(applicationDidBecomeActive)]);

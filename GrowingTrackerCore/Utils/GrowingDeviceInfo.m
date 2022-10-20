@@ -71,19 +71,10 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
     return _deviceIDString;
 }
 
-- (BOOL)isNewInstall {
-    return ![self isSentDeviceInfoBefore];
-}
-
-- (BOOL)isPastedDeeplinkCallback {
-    return [self isPasteboardDeeplinkCallBack];
-}
-
 - (instancetype)init {
     if (self = [super init]) {
         NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
 
-        _deviceStorage = [[GrowingFileStorage alloc] initWithName:@"config"];
         _lock = dispatch_semaphore_create(1);
         _bundleID = infoDictionary[@"CFBundleIdentifier"];
 
@@ -173,28 +164,6 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
     [GrowingKeyChainWrapper setKeychainObject:uuid forKey:kGrowingKeychainUserIdKey];
 
     return uuid;
-}
-
-- (BOOL)isSentDeviceInfoBefore {
-    NSString *isSentDeviceInfoStateString = [self.deviceStorage stringForKey:@"isSentDeviceInfoBefore"];
-    return isSentDeviceInfoStateString != nil;
-}
-
-- (BOOL)isPasteboardDeeplinkCallBack {
-    NSString *isPasteboardDeeplinkCallBack = [self.deviceStorage stringForKey:@"isPasteboardDeeplinkCallBack"];
-    return isPasteboardDeeplinkCallBack.length > 0;
-}
-
-- (void)deviceInfoReported {
-    [GrowingDispatchManager dispatchInLowThread:^{
-        [self.deviceStorage setString:@"hasSent" forKey:@"isSentDeviceInfoBefore"];
-    }];
-}
-
-- (void)pasteboardDeeplinkReported {
-    [GrowingDispatchManager dispatchInLowThread:^{
-        [self.deviceStorage setString:@"yes" forKey:@"isPasteboardDeeplinkCallBack"];
-    }];
 }
 
 + (instancetype)currentDeviceInfo {

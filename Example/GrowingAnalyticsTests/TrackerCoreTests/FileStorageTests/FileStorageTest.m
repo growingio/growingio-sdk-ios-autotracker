@@ -21,7 +21,6 @@
 #import <XCTest/XCTest.h>
 
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
-#import "GrowingTrackerCore/FileStorage/GrowingUserDefaults.h"
 #import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
 
 @interface FileStorageTest : XCTestCase
@@ -36,20 +35,6 @@
 
 - (void)tearDown {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
-}
-
-- (void)testGrowingUserDefaults {
-    [[GrowingUserDefaults sharedInstance] setValue:@"testToken" forKey:@"_refreshToken"];
-    
-    XCTestExpectation *expectation = [self expectationWithDescription:@"testGrowingUserDefaults Test failed"];
-    [GrowingDispatchManager dispatchInLowThread:^{
-        NSString *token = [[GrowingUserDefaults sharedInstance] valueForKey:@"_refreshToken"];
-        XCTAssertEqualObjects(token, @"testToken");
-        
-        [expectation fulfill];
-    }];
-    
-    [self waitForExpectationsWithTimeout:30.0f handler:nil];
 }
 
 - (void)testGrowingFileStorage {
