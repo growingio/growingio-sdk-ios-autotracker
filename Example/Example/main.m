@@ -12,7 +12,7 @@
 
 int main(int argc, char * argv[])
 {
-    [GrowingAPM swizzle:GrowingAPMMonitorsCrash | GrowingAPMMonitorsLaunch | GrowingAPMMonitorsUserInterface];
+    [GrowingAPM swizzle:GrowingAPMMonitorsCrash | GrowingAPMMonitorsUserInterface];
     @autoreleasepool {
         return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
     }

@@ -40,18 +40,20 @@ GrowingMod(GrowingAPMModule)
     // 初始化 GrowingAPM
     [GrowingAPM startWithConfig:config];
     
-    GrowingAPM.sharedInstance.launchMonitor.monitorBlock = ^(double rebootTime, BOOL isWarm) {
-        [GrowingEventGenerator generateCustomEvent:@"AppLaunchTime"
-                                        attributes:isWarm ? @{@"warm_reboot_time" : [NSString stringWithFormat:@"%.0f", rebootTime],
-                                                              @"warm_reboot" : @"true"}
-                                                          : @{@"cold_reboot_time" : [NSString stringWithFormat:@"%.0f", rebootTime],
-                                                              @"cold_reboot" : @"true"}];
-    };
-    
-    GrowingAPM.sharedInstance.pageLoadMonitor.monitorBlock = ^(NSString *pageName, double loadDuration) {
-        [GrowingEventGenerator generateCustomEvent:@"AppLaunchTime"
-                                        attributes:@{@"page_name" : pageName,
-                                                     @"page_load_duration" : [NSString stringWithFormat:@"%.0f", loadDuration]}];
+    GrowingAPM.sharedInstance.pageLoadMonitor.monitorBlock = ^(NSString *pageName,
+                                                               double loadDuration,
+                                                               double rebootTime,
+                                                               BOOL isWarm) {
+        NSDictionary *pageLoadDic = @{@"page_name" : pageName,
+                                      @"page_load_duration" : [NSString stringWithFormat:@"%.0f", loadDuration]};
+        NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:pageLoadDic];
+        if (rebootTime > 0) {
+            [params addEntriesFromDictionary:isWarm ? @{@"warm_reboot_time" : [NSString stringWithFormat:@"%.0f", rebootTime],
+                                                        @"warm_reboot" : @"true"}
+                                                    : @{@"cold_reboot_time" : [NSString stringWithFormat:@"%.0f", rebootTime],
+                                                        @"cold_reboot" : @"true"}];
+        }
+        [GrowingEventGenerator generateCustomEvent:@"AppLaunchTime" attributes:params];
     };
     
     GrowingAPM.sharedInstance.crashMonitor.monitorBlock = ^(NSArray *filteredReports, BOOL completed, NSError *error) {
