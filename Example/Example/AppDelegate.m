@@ -33,7 +33,7 @@ static NSString *const kGrowingProjectId = @"bc675c65b3b0290e";
     configuration.ASAEnabled = YES;
     
     GrowingAPMConfig *config = GrowingAPMConfig.config;
-    config.monitors = GrowingAPMMonitorsCrash | GrowingAPMMonitorsLaunch | GrowingAPMMonitorsUserInterface;
+    config.monitors = GrowingAPMMonitorsCrash | GrowingAPMMonitorsUserInterface;
     configuration.APMConfig = config;
     
     

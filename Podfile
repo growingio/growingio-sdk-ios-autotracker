@@ -19,7 +19,6 @@ target 'Example' do
 
   pod 'GrowingAPM'
 #  pod 'GrowingAPM/UIMonitor'
-#  pod 'GrowingAPM/LaunchMonitor'
 #  pod 'GrowingAPM/CrashMonitor'
   pod 'GrowingAnalytics/APM', :path => './'
 
