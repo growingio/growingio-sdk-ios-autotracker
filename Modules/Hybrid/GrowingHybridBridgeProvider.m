@@ -135,6 +135,13 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
     __block NSDictionary *resultDic = nil;
     __block NSError *resultError = nil;
     CGRect rect = webView.growingNodeFrame;
+    if (@available(iOS 11.0, *)) {
+        UIEdgeInsets adjust = webView.scrollView.adjustedContentInset;
+        rect.origin.x += adjust.left;
+        rect.origin.y += adjust.top;
+        rect.size.width -= (adjust.left + adjust.right);
+        rect.size.height -= (adjust.top + adjust.bottom);
+    }
     CGFloat scale = [UIScreen mainScreen].scale;
     scale = MIN(scale, 2);
     int left = (int)(rect.origin.x * scale);
