@@ -78,13 +78,7 @@
 - (void)createdViewControllerPage:(UIViewController *)viewController {
     GrowingPageGroup *page = [viewController growingPageHelper_getPageObject];
     if (page == nil) {
-        page = [GrowingPageGroup pageWithCarrier:viewController];
-        page.parent = [self findParentPage:viewController];
-        if (page.parent != nil) {
-            [page.parent addChildrenPage:page];
-        }
-        [self addPageAlias:page];
-        [viewController growingPageHelper_setPageObject:page];
+        page = [self createdPage:viewController];
     } else {
         [page refreshShowTimestamp];
     }
@@ -140,6 +134,17 @@
     }
 }
 
+- (GrowingPageGroup *)createdPage:(UIViewController *)viewController {
+    GrowingPageGroup *page = [GrowingPageGroup pageWithCarrier:viewController];
+    page.parent = [self findParentPage:viewController];
+    if (page.parent != nil) {
+        [page.parent addChildrenPage:page];
+    }
+    [self addPageAlias:page];
+    [viewController growingPageHelper_setPageObject:page];
+    return page;
+}
+
 - (GrowingPageGroup *)findParentPage:(UIViewController *)carrier {
     UIViewController *parentVC = nil;
 
@@ -155,8 +160,7 @@
     } else {
         GrowingPageGroup *page = [parentVC growingPageHelper_getPageObject];
         if (page == nil) {
-            [self.ignoredPrivateControllers addObject:NSStringFromClass(carrier.class)];
-            GIOLogError(@"UIViewController: %@ associated page object is nil", carrier);
+            page = [self createdPage:parentVC];
         }
         return page;
     }
