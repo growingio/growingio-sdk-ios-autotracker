@@ -261,6 +261,9 @@
             current = (UIViewController*)current.growingNodeParent;
         } else {
             page = [current growingPageHelper_getPageObject];
+            if (page == nil) {
+                page = [self createdPage:current];
+            }
             if (page.isIgnored) {
                 current = (UIViewController*)current.growingNodeParent;
             } else {
