@@ -1,3 +1,18 @@
+## [3.4.4](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.4.3...3.4.4) (2022-11-03)
+
+
+### Bug Fixes
+
+* activate event add idfv & idfa ([5fed774](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/5fed7748e26edd9fc092bd3c1e5597fb6c26e644))
+* GrowingAsaFetcher AsaData 改为重试 3 次，间隔 5 / 2 / 2 秒 ([3d59eaa](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/3d59eaa4c45a8bcdd74c69c01130d9e2b7a9fe97))
+* parentView 不可见时，圈选遍历不应该包含 subViews ([69953ff](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/69953ff10b70192950d4d0be77a7d4e4125bdf32))
+
+
+### Features
+
+* advert module ([b7b974d](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/b7b974df786c87b3da40157b4731e68cb71c6f3b))
+* advert module (only activate) ([188fd2a](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/188fd2ac9ac91ff8c55799ff4c266533d91551d6))
+
 ## [3.4.3](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.4.2-hotfix.1...3.4.3) (2022-09-20)
 
 
