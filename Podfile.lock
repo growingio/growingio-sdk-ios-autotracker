@@ -66,15 +66,15 @@ PODS:
     - GrowingAnalytics/WebSocket
   - GrowingAnalytics/WebSocket (3.4.3):
     - GrowingAnalytics/TrackerCore
-  - GrowingAPM (0.0.4):
-    - GrowingAPM/Core (= 0.0.4)
-    - GrowingAPM/CrashMonitor (= 0.0.4)
-    - GrowingAPM/UIMonitor (= 0.0.4)
-  - GrowingAPM/Core (0.0.4):
+  - GrowingAPM (0.0.6):
+    - GrowingAPM/Core (= 0.0.6)
+    - GrowingAPM/CrashMonitor (= 0.0.6)
+    - GrowingAPM/UIMonitor (= 0.0.6)
+  - GrowingAPM/Core (0.0.6):
     - GrowingUtils/TrackerCore
-  - GrowingAPM/CrashMonitor (0.0.4):
+  - GrowingAPM/CrashMonitor (0.0.6):
     - GrowingAPM/Core
-  - GrowingAPM/UIMonitor (0.0.4):
+  - GrowingAPM/UIMonitor (0.0.6):
     - GrowingAPM/Core
   - GrowingToolsKit (1.0.8):
     - GrowingToolsKit/Default (= 1.0.8)
@@ -115,9 +115,9 @@ PODS:
   - Protobuf (3.21.9)
   - SDCycleScrollView (1.82):
     - SDWebImage (>= 5.0.0)
-  - SDWebImage (5.13.4):
-    - SDWebImage/Core (= 5.13.4)
-  - SDWebImage/Core (5.13.4)
+  - SDWebImage (5.13.5):
+    - SDWebImage/Core (= 5.13.5)
+  - SDWebImage/Core (5.13.5)
 
 DEPENDENCIES:
   - Bugly
@@ -128,7 +128,7 @@ DEPENDENCIES:
   - GrowingAnalytics/Autotracker (from `./`)
   - GrowingAnalytics/Protobuf (from `./`)
   - GrowingAnalytics/Tracker (from `./`)
-  - GrowingAPM (= 0.0.4)
+  - GrowingAPM
   - GrowingToolsKit
   - KIF
   - LBXScan/LBXNative (= 2.3)
@@ -157,15 +157,15 @@ SPEC CHECKSUMS:
   Bugly: b8715e6ec4004b7f7fbffab0643ba80545aee3da
   GrowingAnalytics: babdc43d8fda5809999f9111fc84cf98e1bacca6
   GrowingAnalytics-cdp: 4b9cfd488ec0d8ebb0f3f02315c4e40f1df24000
-  GrowingAPM: 544822c44f6b1074e35b21bfa0bc770865160f5d
+  GrowingAPM: 98cb05264115cc6fd3457d483c2d3c84c4781b65
   GrowingToolsKit: 98ea25ce94ba858ebe87376b76b0ef3ac7b31ae7
   GrowingUtils: d5f3fb94859cd7b11c491f5f081c45971ae3948b
   KIF: 779cdbca106633b94ecee7b036537490ebdbd9de
   LBXScan: e51449f0832d1fe17da632af0d22adeb3cfa3543
   Protobuf: 02524ec14183fe08fb259741659e79683788158b
   SDCycleScrollView: a0d74c3384caa72bdfc81470bdbc8c14b3e1fbcf
-  SDWebImage: e5cc87bf736e60f49592f307bdf9e157189298a3
+  SDWebImage: 23d714cd599354ee7906dbae26dff89b421c4370
 
-PODFILE CHECKSUM: b2cc6c934aed15f7df7a87d7013b29af54684010
+PODFILE CHECKSUM: c3cd328a78c253a0d27e1846b55bc624397930fa
 
 COCOAPODS: 1.11.3

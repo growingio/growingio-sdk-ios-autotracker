@@ -40,30 +40,46 @@ GrowingMod(GrowingAPMModule)
     // 初始化 GrowingAPM
     [GrowingAPM startWithConfig:config];
     
-    GrowingAPM.sharedInstance.pageLoadMonitor.monitorBlock = ^(NSString *pageName,
-                                                               double loadDuration,
-                                                               double rebootTime,
-                                                               BOOL isWarm) {
-        NSDictionary *pageLoadDic = @{@"page_name" : pageName,
-                                      @"page_load_duration" : [NSString stringWithFormat:@"%.0f", loadDuration]};
-        NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:pageLoadDic];
-        if (rebootTime > 0) {
-            [params addEntriesFromDictionary:isWarm ? @{@"warm_reboot_time" : [NSString stringWithFormat:@"%.0f", rebootTime],
-                                                        @"warm_reboot" : @"true"}
-                                                    : @{@"cold_reboot_time" : [NSString stringWithFormat:@"%.0f", rebootTime],
-                                                        @"cold_reboot" : @"true"}];
-        }
-        [GrowingEventGenerator generateCustomEvent:@"AppLaunchTime" attributes:params];
-    };
+    GrowingAPM *apm = GrowingAPM.sharedInstance;
+    if (config.monitors & GrowingAPMMonitorsUserInterface) {
+        [apm.loadMonitor addMonitorDelegate:self];
+    }
+    if (config.monitors & GrowingAPMMonitorsCrash) {
+        [apm.crashMonitor addMonitorDelegate:self];
+    }
+}
+
+#pragma mark - GrowingAPM Delegate
+
+- (void)growingapm_UIMonitorHandleWithPageName:(NSString *)pageName
+                                  loadDuration:(double)loadDuration
+                                    rebootTime:(double)rebootTime
+                                        isWarm:(double)isWarm {
+    NSDictionary *pageLoadDic = @{@"page_name" : pageName,
+                                  @"page_load_duration" : [NSString stringWithFormat:@"%.0f", loadDuration]};
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:pageLoadDic];
+    if (rebootTime > 0) {
+        [params addEntriesFromDictionary:isWarm ? @{@"warm_reboot_time" : [NSString stringWithFormat:@"%.0f", rebootTime],
+                                                    @"warm_reboot" : @"true"}
+                                                : @{@"cold_reboot_time" : [NSString stringWithFormat:@"%.0f", rebootTime],
+                                                    @"cold_reboot" : @"true"}];
+    }
+    [GrowingEventGenerator generateCustomEvent:@"AppLaunchTime" attributes:params];
+}
+
+- (void)growingapm_crashMonitorHandleWithReports:(NSArray *)reports
+                                       completed:(BOOL)completed
+                                           error:(NSError *)error {
+    if (!completed || error) {
+        return;
+    }
     
-    GrowingAPM.sharedInstance.crashMonitor.monitorBlock = ^(NSArray *filteredReports, BOOL completed, NSError *error) {
-        if (!completed || error) {
-            return;
-        }
-        for(id report in filteredReports) {
-            if ([report isKindOfClass:[NSDictionary class]]) {
+    for(id report in reports) {
+        if ([report isKindOfClass:[NSDictionary class]]) {
+            id reportForEvent = report[@"errorReport"];
+            if ([reportForEvent isKindOfClass:[NSDictionary class]]) {
                 NSMutableString *exception_name = [NSMutableString string];
-                NSDictionary *mach = report[@"mach"];
+                NSDictionary *mach = reportForEvent[@"mach"];
                 if ([mach isKindOfClass:[NSDictionary class]] && mach.allKeys.count > 0) {
                     NSString *mach_exception_name = mach[@"exception_name"];
                     if (mach_exception_name.length > 0) {
@@ -71,7 +87,7 @@ GrowingMod(GrowingAPMModule)
                     }
                 }
 
-                NSDictionary *signal = report[@"signal"];
+                NSDictionary *signal = reportForEvent[@"signal"];
                 if ([signal isKindOfClass:[NSDictionary class]] && signal.allKeys.count > 0) {
                     NSString *signal_name = signal[@"name"];
                     if (signal_name.length > 0) {
@@ -80,21 +96,24 @@ GrowingMod(GrowingAPMModule)
                 }
                 
                 NSString *reason = @"";
-                NSDictionary *nsexception = report[@"nsexception"];
-                NSDictionary *cppexception = report[@"cpp_exception"];
+                NSDictionary *nsexception = reportForEvent[@"nsexception"];
+                NSDictionary *cppexception = reportForEvent[@"cpp_exception"];
                 if ([nsexception isKindOfClass:[NSDictionary class]] && nsexception.allKeys.count > 0) {
-                    reason = [self stringWithUncaughtExceptionName:nsexception[@"name"] reason:report[@"reason"]];
+                    reason = [self stringWithUncaughtExceptionName:nsexception[@"name"] reason:reportForEvent[@"reason"]];
                 } else if ([cppexception isKindOfClass:[NSDictionary class]] && cppexception.allKeys.count > 0) {
-                    reason = [self stringWithUncaughtExceptionName:cppexception[@"name"] reason:report[@"reason"]];
+                    reason = [self stringWithUncaughtExceptionName:cppexception[@"name"] reason:reportForEvent[@"reason"]];
                 }
                 
                 [GrowingEventGenerator generateCustomEvent:@"Error" attributes:@{@"error_title" : exception_name,
                                                                                  @"error_content" : reason}];
-            } else if ([report isKindOfClass:[NSString class]]) {
-                GIOLogDebug(@"\n%s\n", ((NSString *)report).UTF8String);
+            }
+            
+            id appleFmt = report[@"AppleFmt"];
+            if ([appleFmt isKindOfClass:[NSString class]]) {
+                GIOLogDebug(@"\n%s\n", ((NSString *)appleFmt).UTF8String);
             }
         }
-    };
+    }
 }
 
 #pragma mark - Private Method
