@@ -8,12 +8,12 @@
 
 @import UIKit;
 #import "AppDelegate.h"
-#import "GrowingAPMModule.h"
 
 int main(int argc, char * argv[])
 {
-    [GrowingAPM setupMonitors:GrowingAPMMonitorsCrash | GrowingAPMMonitorsUserInterface
-             appDelegateClass:[AppDelegate class]];
+#if defined(SDKAPM)
+    [GrowingAPM setupMonitors];
+#endif
     @autoreleasepool {
         return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
     }

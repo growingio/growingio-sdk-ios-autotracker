@@ -23,8 +23,6 @@
 #import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 
-#import "GrowingAPM+Private.h"
-
 GrowingMod(GrowingAPMModule)
 
 @implementation GrowingAPMModule

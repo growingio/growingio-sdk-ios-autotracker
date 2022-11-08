@@ -10,16 +10,43 @@
 #warning "This project uses features only available in iOS SDK 5.0 and later."
 #endif
 
-#define Autotracker 1
+#define DELAY_INITIALIZED 0
 
-#if Autotracker
+#if __has_include("GrowingAutotracker.h")
+// SDK 3.x 无埋点
 #import "GrowingAutotracker.h"
+#define SDK3rd
+#define AUTOTRACKER
 #define GrowingSDK GrowingAutotracker
 #define GrowingSDKConfiguration GrowingAutotrackConfiguration
-#else
+#elif __has_include("GrowingTracker.h")
+// SDK 3.x 埋点
 #import "GrowingTracker.h"
+#define SDK3rd
 #define GrowingSDK GrowingTracker
 #define GrowingSDKConfiguration GrowingTrackConfiguration
+#endif
+
+#if __has_include("GrowingTrackConfiguration+CdpTracker.h")
+// CDP SDK
+#define SDKCDP
+#endif
+
+#if __has_include("GrowingAdvertising.h")
+// Advert Module
+#import "GrowingAdvertising.h"
+#define SDKADVERTMODULE
+#endif
+
+#if __has_include("GrowingAPM+Private.h")
+// APM SDK
+#import "GrowingAPM+Private.h"
+#define SDKAPM
+#if __has_include("GrowingAPMModule.h")
+// APM Module
+#import "GrowingAPMModule.h"
+#define SDKAPMMODULE
+#endif
 #endif
 
 #ifdef __OBJC__
