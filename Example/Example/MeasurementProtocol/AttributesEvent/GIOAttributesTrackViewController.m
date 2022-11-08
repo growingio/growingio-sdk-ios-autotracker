@@ -98,31 +98,36 @@
 
 - (void)trackEventWithAttributes:(NSDictionary *)atts {
     if ([self.eventType isEqualToString:@"LOGIN_USER_ATTRIBUTES"]) {
+#if defined(SDK3rd)
         [[GrowingSDK sharedInstance] setLoginUserAttributes:atts];
         
         GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
         [builder setString:@"value" forKey:@"key"];
         [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@"key2"];
         [builder setString:@"LOGIN_USER_ATTRIBUTES" forKey:@"type"];
-        [GrowingSDK.sharedInstance setLoginUserAttributesWithAttributesBuilder:builder];
-
+        [GrowingSDK.sharedInstance setLoginUserAttributes:builder.build];
+#endif
+        
     } else if ([self.eventType isEqualToString:@"CONVERSION_VARIABLES"]) {
+#if defined(SDK3rd) && !defined(SDKCDP)
         [[GrowingSDK sharedInstance] setConversionVariables:atts];
         
         GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
         [builder setString:@"value" forKey:@"key"];
         [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@"key2"];
         [builder setString:@"CONVERSION_VARIABLES" forKey:@"type"];
-        [GrowingSDK.sharedInstance setConversionVariablesWithAttributesBuilder:builder];
-
+        [GrowingSDK.sharedInstance setConversionVariables:builder.build];
+#endif
     } else if ([self.eventType isEqualToString:@"VISITOR_ATTRIBUTES"]) {
+#if defined(SDK3rd) && !defined(SDKCDP)
         [[GrowingSDK sharedInstance] setVisitorAttributes:atts];
         
         GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
         [builder setString:@"value" forKey:@"key"];
         [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@"key2"];
         [builder setString:@"VISITOR_ATTRIBUTES" forKey:@"type"];
-        [GrowingSDK.sharedInstance setVisitorAttributesWithAttributesBuilder:builder];
+        [GrowingSDK.sharedInstance setVisitorAttributes:builder.build];
+#endif
     }
 
     NSLog(@"track %@ 事件，attributes:%@", self.eventType, atts);

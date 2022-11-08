@@ -22,21 +22,20 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-#if Autotracker
-     self.segmentControl.growingUniqueTag = @"language-selector";
-
-     self.growingPageAttributes = @{@"greet": @"hello"};
-    self.growingPageIgnorePolicy = GrowingIgnoreChildren;
+#if defined(AUTOTRACKER)
+#if !defined(SDKCDP) && defined(SDK3rd)
+    self.growingPageAttributes = @{@"greet": @"hello"};
+#endif
+#endif
     
-   self.parentViewController.growingPageIgnorePolicy = GrowingIgnoreAll;
+#if defined(AUTOTRACKER)
+#if defined(SDK3rd)
+    self.growingPageIgnorePolicy = GrowingIgnoreSelf;
+    self.segmentControl.growingUniqueTag = @"language-selector";
     [self.sendEventButton growingTrackImpression:@"hello_track_impression"];
     [self.view growingTrackImpression:@"self_view_imp_track" attributes:@{@"self_view_key": @"self_view_value"}];
 #endif
-    if ([UIApplication.sharedApplication.delegate isKindOfClass:AppDelegate.class]) {
-        AppDelegate *appDelegate = (AppDelegate *)UIApplication.sharedApplication.delegate;
-//        [self.trackEnabledSwitch setOn:appDelegate.configuation.dataTrackEnabled animated:YES];
-//        [self.uploadEnabledSwitch setOn:appDelegate.configuation.dataUploadEnabled animated:YES];
-    }
+#endif
 }
 
 - (IBAction)buttonClick:(UIButton *)sender {
