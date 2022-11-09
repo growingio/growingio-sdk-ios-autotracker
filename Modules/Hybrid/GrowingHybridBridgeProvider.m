@@ -102,6 +102,7 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
     if ([kGrowingJavascriptMessageType_dispatchEvent isEqualToString:messageType]) {
         [self parseEventJsonString:messageData];
     } else if ([kGrowingJavascriptMessageType_setNativeUserId isEqualToString:messageType]) {
+        messageData = [self safeConvertToString:messageData];
         [[GrowingSession currentSession] setLoginUserId:messageData];
     } else if ([kGrowingJavascriptMessageType_clearNativeUserId isEqualToString:messageType]) {
         [[GrowingSession currentSession] setLoginUserId:nil];
@@ -111,8 +112,8 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
         }
         id dict = [messageData growingHelper_jsonObject];
         NSDictionary *evetDataDict = (NSDictionary *)dict;
-        NSString *userId = evetDataDict[@"userId"];
-        NSString *userKey = evetDataDict[@"userKey"];
+        NSString *userId = [self safeConvertToString:evetDataDict[@"userId"]];
+        NSString *userKey = [self safeConvertToString:evetDataDict[@"userKey"]];
         [[GrowingSession currentSession] setLoginUserId:userId userKey:userKey];
     } else if ([kGrowingJavascriptMessageType_clearNativeUserIdAndUserKey isEqualToString:messageType]) {
         [[GrowingSession currentSession] setLoginUserId:nil];
@@ -129,8 +130,8 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
 }
 
 - (void)getDomTreeForWebView:(WKWebView *)webView
-           completionHandler:
-               (void (^_Nonnull)(NSDictionary *_Nullable domTee, NSError *_Nullable error))completionHandler {
+           completionHandler:(void (^_Nonnull)(NSDictionary *_Nullable domTee,
+                                               NSError *_Nullable error))completionHandler {
     __block BOOL finished = NO;
     __block NSDictionary *resultDic = nil;
     __block NSError *resultError = nil;
@@ -148,9 +149,11 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
     int top = (int)(rect.origin.y * scale);
     int width = (int)(rect.size.width * scale);
     int height = (int)(rect.size.height * scale);
-    NSString *javaScript =
-        [NSString stringWithFormat:@"window.GrowingWebViewJavascriptBridge.getDomTree(%i, %i, %i, %i, 100)", left, top,
-                                   width, height];
+    NSString *javaScript = [NSString stringWithFormat:@"window.GrowingWebViewJavascriptBridge.getDomTree(%i, %i, %i, %i, 100)",
+                                                      left,
+                                                      top,
+                                                      width,
+                                                      height];
     //方法不会阻塞线程，而且它的回调代码块总是在主线程中运行。
     [webView evaluateJavaScript:javaScript
               completionHandler:^(id _Nullable result, NSError *error) {
@@ -174,6 +177,31 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
         domain = [GrowingDeviceInfo currentDeviceInfo].bundleID;
     }
     return domain;
+}
+
+- (NSDictionary *)safeAttributesFromDict:(NSDictionary *)dict {
+    NSDictionary *attributes = dict[@KEY_ATTRIBUTES];
+    if (!attributes || attributes.count == 0) {
+        return attributes;
+    }
+    NSMutableDictionary *safeAttributes = [NSMutableDictionary dictionary];
+    for (NSString *key in attributes.allKeys) {
+        id value = [self safeConvertToString:attributes[key]];
+        if (value) {
+            [safeAttributes setObject:value forKey:key];
+        }
+    }
+    return safeAttributes;
+}
+
+- (NSString *)safeConvertToString:(id)value {
+    if ([value isKindOfClass:[NSString class]]) {
+        return (NSString *)value;
+    }
+    if ([value isKindOfClass:[NSNumber class]]) {
+        return [(NSNumber *)value stringValue];
+    }
+    return nil;
 }
 
 - (void)parseEventJsonString:(NSString *)jsonString {
@@ -200,12 +228,11 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
                       .setTimestamp([dict growingHelper_longlongForKey:@KEY_TIMESTAMP fallback:[GrowingTimeUtil currentTimeMillis]])
                       .setDomain([self getDomain:dict]);
     } else if ([type isEqualToString:GrowingEventTypePageAttributes]) {
-        // TODO:检查@KEY_ATTRIBUTES字段是否符合字典类型
         builder = GrowingHybridPageAttributesEvent.builder.setQuery(dict[@KEY_QUERY])
                       .setPath(dict[@KEY_PATH])
                       .setPageShowTimestamp([dict growingHelper_longlongForKey:@KEY_PAGE_SHOW_TIMESTAMP
                                                                       fallback:[GrowingTimeUtil currentTimeMillis]])
-                      .setAttributes(dict[@KEY_ATTRIBUTES])
+                      .setAttributes([self safeAttributesFromDict:dict])
                       .setDomain([self getDomain:dict]);
     } else if ([type isEqualToString:GrowingEventTypeVisit]) {
         builder = [self transformViewElementBuilder:dict].setEventType(type);
@@ -220,13 +247,13 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
                       .setPath(dict[@KEY_PATH])
                       .setPageShowTimestamp([dict growingHelper_longlongForKey:@KEY_PAGE_SHOW_TIMESTAMP
                                                                       fallback:[GrowingTimeUtil currentTimeMillis]])
-                      .setAttributes(dict[@KEY_ATTRIBUTES])
+                      .setAttributes([self safeAttributesFromDict:dict])
                       .setEventName(dict[@KEY_EVENT_NAME])
                       .setDomain([self getDomain:dict]);
     } else if ([type isEqualToString:GrowingEventTypeLoginUserAttributes]) {
-        builder = GrowingLoginUserAttributesEvent.builder.setAttributes(dict[@KEY_ATTRIBUTES]);
+        builder = GrowingLoginUserAttributesEvent.builder.setAttributes([self safeAttributesFromDict:dict]);
     } else if ([type isEqualToString:GrowingEventTypeConversionVariables]) {
-        builder = GrowingConversionVariableEvent.builder.setAttributes(dict[@KEY_ATTRIBUTES]);
+        builder = GrowingConversionVariableEvent.builder.setAttributes([self safeAttributesFromDict:dict]);
     }
     if (builder) {
         [[GrowingEventManager sharedInstance] postEventBuilder:builder];
