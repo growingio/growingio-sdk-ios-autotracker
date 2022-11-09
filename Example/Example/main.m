@@ -11,7 +11,7 @@
 
 int main(int argc, char * argv[])
 {
-#if defined(SDKAPM)
+#if defined(SDKAPMMODULE)
     [GrowingAPM setupMonitors];
 #endif
     @autoreleasepool {
