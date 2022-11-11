@@ -70,6 +70,13 @@ target 'ExampleiOS13' do
   project 'Example/Example'
   pod 'GrowingAnalytics/Autotracker', :path => './'
   pod 'GrowingAnalytics/Advert', :path => './'
+  
+  # 这一行勿删，避免 Multiple commands produce 报错
+  # 背景：GrowingToolsKit(version 1.0.9+) 依赖 GrowingAPM
+  # 其目的在于告诉 Cocoapods 在执行 pod install 时，使用 target 'Example' 中所集成的 GrowingAPM，
+  # 而不是再去集成一个新的 GrowingAPM，其将导致生成 2 个 GrowingAPM Pod Target，编译会出现 Multiple commands produce 报错
+  pod 'GrowingAPM'
+  
   pod 'GrowingToolsKit'
 end
 
