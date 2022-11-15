@@ -20,7 +20,6 @@
 #import "GrowingTrackerCore/GrowingRealTracker.h"
 #import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
 #import "GrowingTrackerCore/Public/GrowingAttributesBuilder.h"
-#import "GrowingAppLifecycle.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/LogFormat/GrowingWSLoggerFormat.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
@@ -39,6 +38,7 @@
 #import "GrowingTrackerCore/Public/GrowingServiceManager.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Timer/GrowingEventTimer.h"
+#import "GrowingULAppLifecycle.h"
 
 NSString *const GrowingTrackerVersionName = @"3.4.5-beta";
 const int GrowingTrackerVersionCode = 30405;
@@ -63,7 +63,7 @@ const int GrowingTrackerVersionCode = 30405;
         }
         
         [self loggerSetting];
-        [GrowingAppLifecycle setup];
+        [GrowingULAppLifecycle setup];
         [GrowingSession startSession];
         [GrowingAppDelegateAutotracker track];
         [[GrowingModuleManager sharedInstance] registedAllModules];

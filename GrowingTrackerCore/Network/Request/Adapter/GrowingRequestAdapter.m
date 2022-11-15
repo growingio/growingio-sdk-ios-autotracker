@@ -18,7 +18,7 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Network/Request/Adapter/GrowingRequestAdapter.h"
-#import "GrowingTimeUtil.h"
+#import "GrowingULTimeUtil.h"
 
 #pragma mark GrowingRequestHeaderAdapter
 
@@ -31,7 +31,7 @@
 
 - (NSMutableURLRequest *)adaptedURLRequest:(NSMutableURLRequest *)request {
     NSMutableURLRequest *needAdaptReq = request;
-    [needAdaptReq setValue:[NSString stringWithFormat:@"%lld",[GrowingTimeUtil currentTimeMillis]]
+    [needAdaptReq setValue:[NSString stringWithFormat:@"%lld",[GrowingULTimeUtil currentTimeMillis]]
         forHTTPHeaderField:@"X-Timestamp"];
     [needAdaptReq setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     return needAdaptReq;

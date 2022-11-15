@@ -20,7 +20,7 @@
 #import "Modules/Protobuf/GrowingEventProtobufDatabase.h"
 #import "Services/Database/FMDB/GrowingFMDB.h"
 #import "Modules/Protobuf/GrowingEventProtobufPersistence.h"
-#import "GrowingTimeUtil.h"
+#import "GrowingULTimeUtil.h"
 
 @implementation GrowingEventProtobufDatabase
 
@@ -145,7 +145,7 @@
         result = [db executeUpdate:@"INSERT INTO namedcachetable(key,value,createAt,type,policy) VALUES(?,?,?,?,?)",
                   event.eventUUID,
                   ((GrowingEventProtobufPersistence *)event).data,
-                  @([GrowingTimeUtil currentTimeMillis]),
+                  @([GrowingULTimeUtil currentTimeMillis]),
                   event.eventType,
                   @(event.policy)];
         
@@ -173,7 +173,7 @@
             result = [db executeUpdate:@"INSERT INTO namedcachetable(key,value,createAt,type,policy) VALUES(?,?,?,?,?)",
                       event.eventUUID,
                       event.data,
-                      @([GrowingTimeUtil currentTimeMillis]),
+                      @([GrowingULTimeUtil currentTimeMillis]),
                       event.eventType,
                       @(event.policy)];
             

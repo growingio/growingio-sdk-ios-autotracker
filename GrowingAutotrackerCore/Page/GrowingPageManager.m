@@ -18,7 +18,6 @@
 //  limitations under the License.
 
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
-#import "GrowingAppLifecycle.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingAutotrackerCore/Page/GrowingPage.h"
@@ -26,15 +25,16 @@
 #import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
 #import "GrowingAutotrackerCore/Private/GrowingPrivateCategory.h"
-#import "GrowingViewControllerLifecycle.h"
 #import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
 #import "GrowingTrackerCore/Helpers/UIView+GrowingHelper.h"
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIViewController+GrowingNode.h"
 #import "GrowingAutotrackerCore/Page/UIViewController+GrowingPageHelper.h"
+#import "GrowingULViewControllerLifecycle.h"
+#import "GrowingULAppLifecycle.h"
 #import <UIKit/UIKit.h>
 
-@interface GrowingPageManager () <GrowingViewControllerLifecycleDelegate>
+@interface GrowingPageManager () <GrowingULViewControllerLifecycleDelegate>
 
 @property (nonatomic, strong) NSHashTable *visiableControllersTable;
 @property (nonatomic, strong) NSPointerArray *visiableControllersArray;
@@ -58,7 +58,7 @@
 - (void)start {
     static dispatch_once_t startOnceToken;
     dispatch_once(&startOnceToken, ^{
-        [GrowingViewControllerLifecycle.sharedInstance addViewControllerLifecycleDelegate:self];
+        [GrowingULViewControllerLifecycle.sharedInstance addViewControllerLifecycleDelegate:self];
     });
 }
 

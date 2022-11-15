@@ -18,21 +18,19 @@
 //  limitations under the License.
 
 #import "GrowingAutotrackerCore/Autotrack/UITableView+GrowingAutotracker.h"
-#import "GrowingSwizzle.h"
-#import "GrowingSwizzler.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/GrowingViewClickProvider.h"
+#import "GrowingULSwizzle.h"
+#import "GrowingULSwizzler.h"
 
 @implementation UITableView (GrowingAutotracker)
 
 - (void)growing_setDelegate:(id<UITableViewDelegate>)delegate {
     SEL selector = @selector(tableView:didSelectRowAtIndexPath:);
-    id<UITableViewDelegate> realDelegate = [GrowingSwizzler realDelegate:delegate toSelector:selector];
+    id<UITableViewDelegate> realDelegate = [GrowingULSwizzler realDelegate:delegate toSelector:selector];
     Class class = realDelegate.class;
-    if ([GrowingSwizzler realDelegateClass:class respondsToSelector:selector]) {
-
+    if ([GrowingULSwizzler realDelegateClass:class respondsToSelector:selector]) {
         void (^didSelectBlock)(id, SEL, id, id) = ^(id view, SEL command, UITableView *tableView, NSIndexPath *indexPath) {
-                                                 
             if (tableView && indexPath) {
                 UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
                 if (cell) {
@@ -40,10 +38,10 @@
                 }
             }
         };
-        [GrowingSwizzler growing_swizzleSelector:selector
-                                         onClass:class
-                                       withBlock:didSelectBlock
-                                           named:@"growing_tableView_didSelect"];
+        [GrowingULSwizzler growingul_swizzleSelector:selector
+                                             onClass:class
+                                           withBlock:didSelectBlock
+                                               named:@"growing_tableView_didSelect"];
     }
     
     [self growing_setDelegate:delegate];

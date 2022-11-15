@@ -21,7 +21,7 @@
 #import "Services/Database/FMDB/GrowingFMDB.h"
 #import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
 #import "Services/Database/GrowingEventJSONPersistence.h"
-#import "GrowingTimeUtil.h"
+#import "GrowingULTimeUtil.h"
 
 GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
 
@@ -153,7 +153,7 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
                   self.name,
                   event.eventUUID,
                   ((GrowingEventJSONPersistence *)event).rawJsonString,
-                  @([GrowingTimeUtil currentTimeMillis]),
+                  @([GrowingULTimeUtil currentTimeMillis]),
                   event.eventType,
                   @(event.policy)];
         
@@ -182,7 +182,7 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
                       self.name,
                       event.eventUUID,
                       event.rawJsonString,
-                      @([GrowingTimeUtil currentTimeMillis]),
+                      @([GrowingULTimeUtil currentTimeMillis]),
                       event.eventType,
                       @(event.policy)];
             

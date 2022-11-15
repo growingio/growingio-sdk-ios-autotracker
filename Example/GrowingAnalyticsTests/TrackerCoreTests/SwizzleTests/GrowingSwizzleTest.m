@@ -1,5 +1,5 @@
 //
-//  GrowingSwizzleTest.m
+//  GrowingULSwizzleTest.m
 //  GrowingAnalytics
 //
 //  Created by YoloMao on 2022/1/19.
@@ -17,11 +17,10 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <XCTest/XCTest.h>
 
-#import "GrowingSwizzle.h"
-#import "GrowingSwizzler.h"
+#import "GrowingULSwizzle.h"
+#import "GrowingULSwizzler.h"
 #import <objc/runtime.h>
 #import <objc/message.h>
 
@@ -112,12 +111,9 @@ static NSInteger b = 0;
 }
 
 - (void)delegateSelector {
-    
 }
 
-static void fooMethod(id obj, SEL _cmd) {
-    
-}
+static void fooMethod(id obj, SEL _cmd) {}
 
 + (BOOL)resolveInstanceMethod:(SEL)sel {
     if (sel == @selector(delegateSelector2)) {
@@ -158,11 +154,11 @@ static void fooMethod(id obj, SEL _cmd) {
 
 #pragma clang diagnostic pop
 
-@interface GrowingSwizzleTest : XCTestCase
+@interface GrowingULSwizzleTest : XCTestCase
 
 @end
 
-@implementation GrowingSwizzleTest
+@implementation GrowingULSwizzleTest
 
 - (void)setUp {
     // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -172,184 +168,196 @@ static void fooMethod(id obj, SEL _cmd) {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
 }
 
-- (void)test0GrowingSwizzler {
+- (void)test0GrowingULSwizzler {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
     {
-        [GrowingSwizzler growing_swizzleSelector:@selector(instanceMethod)
-                                         onClass:Growing_Swizzle_XCTest.class
-                                       withBlock:^{
-            b = 8;
-        } named:@"xctest"];
-        
+        [GrowingULSwizzler growingul_swizzleSelector:@selector(instanceMethod)
+                                             onClass:Growing_Swizzle_XCTest.class
+                                           withBlock:^{
+                                               b = 8;
+                                           }
+                                               named:@"xctest"];
+
         Growing_Swizzle_XCTest *test = Growing_Swizzle_XCTest.new;
         [test instanceMethod];
         XCTAssertEqual(b, 8);
 
-        [GrowingSwizzler growing_unswizzleSelector:@selector(instanceMethod)
-                                           onClass:Growing_Swizzle_XCTest.class
-                                             named:@"xctest"];
+        [GrowingULSwizzler growing_unswizzleSelector:@selector(instanceMethod)
+                                             onClass:Growing_Swizzle_XCTest.class
+                                               named:@"xctest"];
         [test instanceMethod];
         XCTAssertEqual(b, 1);
     }
-    
+
     {
-        [GrowingSwizzler growing_swizzleSelector:@selector(instanceMethod:)
-                                         onClass:Growing_Swizzle_XCTest.class
-                                       withBlock:^{
-            b = 9;
-        } named:@"xctest"];
-        
+        [GrowingULSwizzler growingul_swizzleSelector:@selector(instanceMethod:)
+                                             onClass:Growing_Swizzle_XCTest.class
+                                           withBlock:^{
+                                               b = 9;
+                                           }
+                                               named:@"xctest"];
+
         Growing_Swizzle_XCTest *test = Growing_Swizzle_XCTest.new;
         [test instanceMethod:@""];
         XCTAssertEqual(b, 9);
 
-        [GrowingSwizzler growing_unswizzleSelector:@selector(instanceMethod:)
-                                           onClass:Growing_Swizzle_XCTest.class
-                                             named:@"xctest"];
+        [GrowingULSwizzler growing_unswizzleSelector:@selector(instanceMethod:)
+                                             onClass:Growing_Swizzle_XCTest.class
+                                               named:@"xctest"];
         [test instanceMethod:@""];
         XCTAssertEqual(b, 3);
     }
-    
+
     {
-        [GrowingSwizzler growing_swizzleSelector:@selector(instanceMethod:arg2:)
-                                         onClass:Growing_Swizzle_XCTest.class
-                                       withBlock:^{
-            b = 10;
-        } named:@"xctest"];
-        
+        [GrowingULSwizzler growingul_swizzleSelector:@selector(instanceMethod:arg2:)
+                                             onClass:Growing_Swizzle_XCTest.class
+                                           withBlock:^{
+                                               b = 10;
+                                           }
+                                               named:@"xctest"];
+
         Growing_Swizzle_XCTest *test = Growing_Swizzle_XCTest.new;
         [test instanceMethod:@"" arg2:@""];
         XCTAssertEqual(b, 10);
 
-        [GrowingSwizzler growing_unswizzleSelector:@selector(instanceMethod:arg2:)
-                                           onClass:Growing_Swizzle_XCTest.class
-                                             named:@"xctest"];
+        [GrowingULSwizzler growing_unswizzleSelector:@selector(instanceMethod:arg2:)
+                                             onClass:Growing_Swizzle_XCTest.class
+                                               named:@"xctest"];
         [test instanceMethod:@"" arg2:@""];
         XCTAssertEqual(b, 4);
     }
-    
+
     {
-        [GrowingSwizzler growing_swizzleSelector:@selector(instanceMethod:arg2:arg3:)
-                                         onClass:Growing_Swizzle_XCTest.class
-                                       withBlock:^{
-            b = 11;
-        } named:@"xctest"];
-        
+        [GrowingULSwizzler growingul_swizzleSelector:@selector(instanceMethod:arg2:arg3:)
+                                             onClass:Growing_Swizzle_XCTest.class
+                                           withBlock:^{
+                                               b = 11;
+                                           }
+                                               named:@"xctest"];
+
         Growing_Swizzle_XCTest *test = Growing_Swizzle_XCTest.new;
         [test instanceMethod:@"" arg2:@"" arg3:@""];
         XCTAssertEqual(b, 11);
 
-        [GrowingSwizzler growing_unswizzleSelector:@selector(instanceMethod:arg2:arg3:)
-                                           onClass:Growing_Swizzle_XCTest.class
-                                             named:@"xctest"];
+        [GrowingULSwizzler growing_unswizzleSelector:@selector(instanceMethod:arg2:arg3:)
+                                             onClass:Growing_Swizzle_XCTest.class
+                                               named:@"xctest"];
         [test instanceMethod:@"" arg2:@"" arg3:@""];
         XCTAssertEqual(b, 5);
     }
-    
+
     {
-        [GrowingSwizzler growing_swizzleSelector:@selector(instanceMethod)
-                                         onClass:Growing_Swizzle_XCTest.class
-                                       withBlock:^{
-            b *= 2;
-        } named:@"xctest"];
-        [GrowingSwizzler growing_swizzleSelector:@selector(instanceMethod)
-                                         onClass:Growing_Swizzle_XCTest.class
-                                       withBlock:^{
-            b *= 3;
-        } named:@"xctest2"];
-        
+        [GrowingULSwizzler growingul_swizzleSelector:@selector(instanceMethod)
+                                             onClass:Growing_Swizzle_XCTest.class
+                                           withBlock:^{
+                                               b *= 2;
+                                           }
+                                               named:@"xctest"];
+        [GrowingULSwizzler growingul_swizzleSelector:@selector(instanceMethod)
+                                             onClass:Growing_Swizzle_XCTest.class
+                                           withBlock:^{
+                                               b *= 3;
+                                           }
+                                               named:@"xctest2"];
+
         Growing_Swizzle_XCTest *test = Growing_Swizzle_XCTest.new;
         [test instanceMethod];
         XCTAssertEqual(b, 6);
 
-        ((void(*)(id, SEL, SEL, Class))objc_msgSend)(GrowingSwizzler.class,
-                                                     @selector(growing_unswizzleSelector:onClass:),
-                                                     @selector(instanceMethod),
-                                                     Growing_Swizzle_XCTest.class);
+        ((void (*)(id, SEL, SEL, Class))objc_msgSend)(GrowingULSwizzler.class,
+                                                      @selector(growing_unswizzleSelector:onClass:),
+                                                      @selector(instanceMethod),
+                                                      Growing_Swizzle_XCTest.class);
         [test instanceMethod];
         XCTAssertEqual(b, 1);
     }
-    
+
     {
-        [GrowingSwizzler growing_swizzleSelector:@selector(respondsToSelector:)
-                                         onClass:Growing_Swizzle_XCTest.class
-                                       withBlock:^{
-            b = 12;
-        } named:@"xctest"];
+        [GrowingULSwizzler growingul_swizzleSelector:@selector(respondsToSelector:)
+                                             onClass:Growing_Swizzle_XCTest.class
+                                           withBlock:^{
+                                               b = 12;
+                                           }
+                                               named:@"xctest"];
     }
-    
+
     {
-        XCTAssertThrows([GrowingSwizzler growing_swizzleSelector:@selector(cannotFindMethod)
-                                                         onClass:Growing_Swizzle_XCTest.class
-                                                       withBlock:^{
-        } named:@"xctest"]);
-        
-        XCTAssertThrows([GrowingSwizzler growing_swizzleSelector:@selector(instanceMethod:arg2:arg3:arg4:)
-                                                         onClass:Growing_Swizzle_XCTest.class
-                                                       withBlock:^{
-        } named:@"xctest"]);
+        XCTAssertThrows([GrowingULSwizzler growingul_swizzleSelector:@selector(cannotFindMethod)
+                                                             onClass:Growing_Swizzle_XCTest.class
+                                                           withBlock:^{
+                                                           }
+                                                               named:@"xctest"]);
+
+        XCTAssertThrows([GrowingULSwizzler growingul_swizzleSelector:@selector(instanceMethod:arg2:arg3:arg4:)
+                                                             onClass:Growing_Swizzle_XCTest.class
+                                                           withBlock:^{
+                                                           }
+                                                               named:@"xctest"]);
     }
-        
-    XCTAssertNoThrow([GrowingSwizzler growing_printSwizzles]);
+
+    XCTAssertNoThrow([GrowingULSwizzler growing_printSwizzles]);
 #pragma clang diagnostic pop
 }
 
-- (void)test0GrowingSwizzlerRealDelegate {
+- (void)test0GrowingULSwizzlerRealDelegate {
     // NSProxy
     id proxy = nil;
     id proxy1 = [[Growing_Swizzle_Proxy_XCTest alloc] initWithTarget:nil];
     id proxy2 = [[Growing_Swizzle_Proxy_XCTest2 alloc] initWithTarget:proxy1];
     {
-        XCTAssertNoThrow([GrowingSwizzler realDelegate:proxy toSelector:@selector(delegateSelector)]);
-        
+        XCTAssertNoThrow([GrowingULSwizzler realDelegate:proxy toSelector:@selector(delegateSelector)]);
+
         // proxy 本身实现了
-        id result = [GrowingSwizzler realDelegate:proxy1 toSelector:@selector(delegateSelector)];
+        id result = [GrowingULSwizzler realDelegate:proxy1 toSelector:@selector(delegateSelector)];
         XCTAssertEqualObjects(proxy1, result);
-        XCTAssertTrue([GrowingSwizzler realDelegateClass:((NSObject *)result).class respondsToSelector:@selector(delegateSelector)]);
+        XCTAssertTrue([GrowingULSwizzler realDelegateClass:((NSObject *)result).class
+                                        respondsToSelector:@selector(delegateSelector)]);
 
         // proxy 在 resolveInstanceMethod 增加了实现
-        id result2 = [GrowingSwizzler realDelegate:proxy1 toSelector:@selector(delegateSelector2)];
+        id result2 = [GrowingULSwizzler realDelegate:proxy1 toSelector:@selector(delegateSelector2)];
         XCTAssertEqualObjects(proxy1, result2);
-        XCTAssertTrue([GrowingSwizzler realDelegateClass:((NSObject *)result2).class respondsToSelector:@selector(delegateSelector2)]);
+        XCTAssertTrue([GrowingULSwizzler realDelegateClass:((NSObject *)result2).class
+                                        respondsToSelector:@selector(delegateSelector2)]);
     }
-    
+
     {
         // proxy 在 forwardingTargetForSelector 转发给了另一个对象
-        id result = [GrowingSwizzler realDelegate:proxy2 toSelector:@selector(delegateSelector)];
+        id result = [GrowingULSwizzler realDelegate:proxy2 toSelector:@selector(delegateSelector)];
         XCTAssertEqualObjects(proxy1, result);
-        XCTAssertTrue([GrowingSwizzler realDelegateClass:((NSObject *)result).class respondsToSelector:@selector(delegateSelector)]);
+        XCTAssertTrue([GrowingULSwizzler realDelegateClass:((NSObject *)result).class
+                                        respondsToSelector:@selector(delegateSelector)]);
     }
 }
 
-- (void)test1GrowingSwizzle {
+- (void)test1GrowingULSwizzle {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
     NSError *error = nil;
-    [Growing_Swizzle_XCTest growing_swizzleMethod:@selector(undefinedSelector)
-                                       withMethod:@selector(swizzle_instanceMethod)
-                                            error:&error];
+    [Growing_Swizzle_XCTest growingul_swizzleMethod:@selector(undefinedSelector)
+                                         withMethod:@selector(swizzle_instanceMethod)
+                                              error:&error];
     XCTAssertNotNil(error);
-    
+
     error = nil;
-    [Growing_Swizzle_XCTest growing_swizzleMethod:@selector(instanceMethod)
-                                       withMethod:@selector(undefinedSelector)
-                                            error:&error];
+    [Growing_Swizzle_XCTest growingul_swizzleMethod:@selector(instanceMethod)
+                                         withMethod:@selector(undefinedSelector)
+                                              error:&error];
     XCTAssertNotNil(error);
-    
+
     error = nil;
-    [Growing_Swizzle_XCTest growing_swizzleMethod:@selector(instanceMethod)
-                                       withMethod:@selector(swizzle_instanceMethod)
-                                            error:&error];
+    [Growing_Swizzle_XCTest growingul_swizzleMethod:@selector(instanceMethod)
+                                         withMethod:@selector(swizzle_instanceMethod)
+                                              error:&error];
     XCTAssertNil(error);
     Growing_Swizzle_XCTest *test = Growing_Swizzle_XCTest.new;
     [test instanceMethod];
     XCTAssertEqual(b, 6);
 
     error = nil;
-    [Growing_Swizzle_XCTest growing_swizzleClassMethod:@selector(classMethod)
-                                       withClassMethod:@selector(swizzle_classMethod)
-                                                 error:&error];
+    [Growing_Swizzle_XCTest growingul_swizzleClassMethod:@selector(classMethod)
+                                         withClassMethod:@selector(swizzle_classMethod)
+                                                   error:&error];
     XCTAssertNil(error);
     [Growing_Swizzle_XCTest classMethod];
     XCTAssertEqual(b, 7);

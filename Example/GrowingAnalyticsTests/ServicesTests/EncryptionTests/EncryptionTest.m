@@ -20,9 +20,9 @@
 #import <XCTest/XCTest.h>
 
 #import "Services/Encryption/GrowingDataEncoder.h"
-#import "GrowingTimeUtil.h"
 #import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
 #import "GrowingTrackerCore/Helpers/NSDictionary+GrowingHelper.h"
+#import "GrowingULTimeUtil.h"
 
 @interface EncryptionTest : XCTestCase
 
@@ -63,7 +63,7 @@
 }
 
 - (void)testGrowingDataEncoderLogic {
-    long long stm = [GrowingTimeUtil currentTimeMillis];
+    long long stm = [GrowingULTimeUtil currentTimeMillis];
     GrowingDataEncoder *encoder = [GrowingDataEncoder new];
     NSData *origin = self.dict.growingHelper_jsonData;
     NSData *result = [encoder encryptEventData:origin factor:(stm & 0xFF)];

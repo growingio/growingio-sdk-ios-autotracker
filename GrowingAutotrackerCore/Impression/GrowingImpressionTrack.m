@@ -21,13 +21,13 @@
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Hook/UIApplication+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
-#import "GrowingAppLifecycle.h"
-#import "GrowingViewControllerLifecycle.h"
 #import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogMacros.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
+#import "GrowingULAppLifecycle.h"
+#import "GrowingULViewControllerLifecycle.h"
 
-@interface GrowingImpressionTrack () <GrowingAppLifecycleDelegate, GrowingViewControllerLifecycleDelegate>
+@interface GrowingImpressionTrack () <GrowingULAppLifecycleDelegate, GrowingULViewControllerLifecycleDelegate>
 
 @property (nonatomic, strong) NSHashTable *sourceTable;
 @property (nonatomic, strong) NSHashTable *bgSourceTable;
@@ -133,8 +133,8 @@ static GrowingImpressionTrack *impTrack = nil;
 }
 
 - (void)start {
-    [GrowingAppLifecycle.sharedInstance addAppLifecycleDelegate:self];
-    [GrowingViewControllerLifecycle.sharedInstance addViewControllerLifecycleDelegate:self];
+    [GrowingULAppLifecycle.sharedInstance addAppLifecycleDelegate:self];
+    [GrowingULViewControllerLifecycle.sharedInstance addViewControllerLifecycleDelegate:self];
 }
 
 

@@ -20,9 +20,8 @@
 #import "GrowingTrackerCore/Timer/GrowingEventTimer.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
-#import "GrowingTimeUtil.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
-
+#import "GrowingULTimeUtil.h"
 #import <objc/runtime.h>
 
 static NSString * const kGrowingEventDuration = @"eventDuration";
@@ -47,7 +46,7 @@ static NSString * const kGrowingEventDuration = @"eventDuration";
         return nil;
     }
     
-    double currentTime = [GrowingTimeUtil currentSystemTimeMillis];
+    double currentTime = [GrowingULTimeUtil currentSystemTimeMillis];
     
     GrowingEventTimer *timer = [[GrowingEventTimer alloc] init];
     timer.eventName = eventName;
@@ -67,7 +66,7 @@ static NSString * const kGrowingEventDuration = @"eventDuration";
 }
 
 + (void)trackTimerPause:(NSString *)timerId {
-    double currentTime = [GrowingTimeUtil currentSystemTimeMillis];
+    double currentTime = [GrowingULTimeUtil currentSystemTimeMillis];
     [GrowingDispatchManager dispatchInGrowingThread:^{
         GrowingEventTimer *timer = [GrowingEventTimer.timers objectForKey:timerId];
         if (!timer) {
@@ -82,7 +81,7 @@ static NSString * const kGrowingEventDuration = @"eventDuration";
 }
 
 + (void)trackTimerResume:(NSString *)timerId {
-    double currentTime = [GrowingTimeUtil currentSystemTimeMillis];
+    double currentTime = [GrowingULTimeUtil currentSystemTimeMillis];
     [GrowingDispatchManager dispatchInGrowingThread:^{
         GrowingEventTimer *timer = [GrowingEventTimer.timers objectForKey:timerId];
         if (!timer) {
@@ -96,7 +95,7 @@ static NSString * const kGrowingEventDuration = @"eventDuration";
 }
 
 + (void)trackTimerEnd:(NSString *)timerId withAttributes:(NSDictionary <NSString *, NSString *> *_Nullable)attributes {
-    double currentTime = [GrowingTimeUtil currentSystemTimeMillis];
+    double currentTime = [GrowingULTimeUtil currentSystemTimeMillis];
 
     [GrowingDispatchManager dispatchInGrowingThread:^{
         GrowingEventTimer *timer = [GrowingEventTimer.timers objectForKey:timerId];
@@ -131,7 +130,7 @@ static NSString * const kGrowingEventDuration = @"eventDuration";
 }
 
 + (void)handleAllTimersPause {
-    double currentTime = [GrowingTimeUtil currentSystemTimeMillis];
+    double currentTime = [GrowingULTimeUtil currentSystemTimeMillis];
     [GrowingDispatchManager dispatchInGrowingThread:^{
         for (GrowingEventTimer *timer in GrowingEventTimer.timers.allValues) {
             if (timer.isPaused) {
@@ -144,7 +143,7 @@ static NSString * const kGrowingEventDuration = @"eventDuration";
 }
 
 + (void)handleAllTimersResume {
-    double currentTime = [GrowingTimeUtil currentSystemTimeMillis];
+    double currentTime = [GrowingULTimeUtil currentSystemTimeMillis];
     [GrowingDispatchManager dispatchInGrowingThread:^{
         for (GrowingEventTimer *timer in GrowingEventTimer.timers.allValues) {
             if (timer.isPaused) {

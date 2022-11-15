@@ -1,5 +1,5 @@
 //
-//  GrowingAppLifeCycleTest.m
+//  GrowingULAppLifeCycleTest.m
 //  GrowingAnalytics
 //
 //  Created by YoloMao on 2022/1/18.
@@ -17,17 +17,16 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <XCTest/XCTest.h>
 
-#import "GrowingAppLifecycle.h"
+#import "GrowingULAppLifecycle.h"
 #import "InvocationHelper.h"
 
-@interface GrowingAppLifeCycleTest : XCTestCase <GrowingAppLifecycleDelegate>
+@interface GrowingULAppLifeCycleTest : XCTestCase <GrowingULAppLifecycleDelegate>
 
 @end
 
-@implementation GrowingAppLifeCycleTest
+@implementation GrowingULAppLifeCycleTest
 
 - (void)setUp {
     // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -37,10 +36,10 @@
     // Put teardown code here. This method is called after the invocation of each test method in the class.
 }
 
-- (void)testGrowingAppLifeCycle {
+- (void)testGrowingULAppLifeCycle {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
-    GrowingAppLifecycle *sharedInstance = GrowingAppLifecycle.sharedInstance;
+    GrowingULAppLifecycle *sharedInstance = GrowingULAppLifecycle.sharedInstance;
     XCTAssertNotNil(sharedInstance);
     XCTAssertNoThrow([sharedInstance safePerformSelector:@selector(setupAppStateNotification)]);
     XCTAssertNoThrow([sharedInstance safePerformSelector:@selector(addSceneNotification)]);
@@ -59,7 +58,7 @@
 #pragma clang diagnostic pop
 }
 
-#pragma mark - GrowingAppLifecycleDelegate
+#pragma mark - GrowingULAppLifecycleDelegate
 
 - (void)applicationDidFinishLaunching:(NSDictionary *)userInfo {
     
