@@ -22,7 +22,7 @@
 #import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/Page/UIViewController+GrowingPageHelper.h"
-#import "GrowingTimeUtil.h"
+#import "GrowingULTimeUtil.h"
 
 @interface GrowingPage ()
 @property (nonatomic, copy, readonly) NSString *pathCopy;
@@ -34,7 +34,7 @@
     self = [super init];
     if (self) {
         _carrier = carrier;
-        _showTimestamp = GrowingTimeUtil.currentTimeMillis;
+        _showTimestamp = GrowingULTimeUtil.currentTimeMillis;
         _isIgnored = [carrier growingPageHelper_pageDidIgnore];
         _title = [carrier growingPageTitle];
     }
@@ -47,7 +47,7 @@
 }
 
 - (void)refreshShowTimestamp {
-    _showTimestamp = GrowingTimeUtil.currentTimeMillis;
+    _showTimestamp = GrowingULTimeUtil.currentTimeMillis;
 }
 
 - (NSString *)name {

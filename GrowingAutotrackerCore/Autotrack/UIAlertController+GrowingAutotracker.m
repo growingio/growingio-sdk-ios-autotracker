@@ -19,10 +19,10 @@
 
 #import "GrowingAutotrackerCore/Autotrack/UIAlertController+GrowingAutotracker.h"
 #import "GrowingTrackerCore/Helpers/NSObject+GrowingIvarHelper.h"
-#import "GrowingSwizzle.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/GrowingViewClickProvider.h"
+#import "GrowingULSwizzle.h"
 
 @implementation UIAlertController (GrowingAutotracker)
 

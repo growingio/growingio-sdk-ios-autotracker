@@ -23,7 +23,7 @@
 #import "GrowingTrackerCore/Network/Request/Adapter/GrowingRequestAdapter.h"
 #import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
-#import "GrowingTimeUtil.h"
+#import "GrowingULTimeUtil.h"
 
 @implementation GrowingEventRequest
 
@@ -34,7 +34,7 @@
 - (instancetype)initWithEvents:(NSData *)events {
     if (self = [super init]) {
         self.events = events;
-        self.stm = [GrowingTimeUtil currentTimeMillis];
+        self.stm = [GrowingULTimeUtil currentTimeMillis];
     }
     return self;
 }

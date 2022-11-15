@@ -24,7 +24,7 @@
 #import "GrowingAutotrackerCore/Private/GrowingPrivateCategory.h"
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIViewController+GrowingNode.h"
-#import "GrowingViewControllerLifecycle.h"
+#import "GrowingULViewControllerLifecycle.h"
 
 @implementation UIViewController (GrowingAutotracker)
 
@@ -55,7 +55,7 @@
 //}
 
 - (BOOL)growingHookIsCustomAddVC {
-    return !self.growing_DidAppear && self.parentViewController == nil &&
+    return !self.growingul_didAppear && self.parentViewController == nil &&
            [UIApplication sharedApplication].keyWindow.rootViewController != self;
 }
 

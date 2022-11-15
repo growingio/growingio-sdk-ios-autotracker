@@ -39,7 +39,6 @@
 #import "GrowingTrackerCore/Helpers/UIApplication+GrowingHelper.h"
 #import "GrowingTrackerCore/Helpers/UIImage+GrowingHelper.h"
 #import "GrowingTrackerCore/Helpers/UIWindow+GrowingHelper.h"
-#import "GrowingTimeUtil.h"
 #import "Modules/MobileDebugger/GrowingDebuggerEventQueue.h"
 #import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
 #import "GrowingTrackerCore/GrowingRealTracker.h"
@@ -47,6 +46,7 @@
 #import "Modules/MobileDebugger/GrowingDebuggerEventQueue.h"
 #import "GrowingTrackerCore/Public/GrowingServiceManager.h"
 #import "GrowingTrackerCore/Public/GrowingWebSocketService.h"
+#import "GrowingULTimeUtil.h"
 
 #define LOCK(...) dispatch_semaphore_wait(self->_lock, DISPATCH_TIME_FOREVER); \
 __VA_ARGS__; \
@@ -384,7 +384,7 @@ GrowingMod(GrowingMobileDebugger)
     NSDictionary *dict = @{
         @"projectId" : projectId,
         @"msgType" : @"ready",
-        @"timestamp" : @([GrowingTimeUtil currentTimeMillis]),
+        @"timestamp" : @([GrowingULTimeUtil currentTimeMillis]),
         @"domain" : [GrowingDeviceInfo currentDeviceInfo].bundleID,
         @"sdkVersion" : GrowingTrackerVersionName,
         @"sdkVersionCode" : [GrowingDeviceInfo currentDeviceInfo].appFullVersion,

@@ -18,20 +18,20 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
-#import "GrowingAppLifecycle.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogMacros.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
-#import "GrowingTimeUtil.h"
 #import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
 #import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
 #import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Timer/GrowingEventTimer.h"
+#import "GrowingULAppLifecycle.h"
+#import "GrowingULTimeUtil.h"
 
-@interface GrowingSession () <GrowingAppLifecycleDelegate>
+@interface GrowingSession () <GrowingULAppLifecycleDelegate>
 
 @property (nonatomic, copy) NSString *latestNonNullUserId;
 @property (nonatomic, assign, readonly) long long sessionInterval;
@@ -71,7 +71,7 @@ static GrowingSession *currentSession = nil;
         currentSession = [[self alloc] initWithSessionInterval:sessionInterval];
     });
     
-    [GrowingAppLifecycle.sharedInstance addAppLifecycleDelegate:currentSession];
+    [GrowingULAppLifecycle.sharedInstance addAppLifecycleDelegate:currentSession];
     [currentSession refreshSessionId];
 }
 
@@ -100,7 +100,7 @@ static GrowingSession *currentSession = nil;
             //首次启动，在SDK初始化时，即发送visit事件
             return;
         }
-        long long now = GrowingTimeUtil.currentTimeMillis;
+        long long now = GrowingULTimeUtil.currentTimeMillis;
         if (now - self.latestDidEnterBackgroundTime >= self.sessionInterval) {
             [self refreshSessionId];
             [self generateVisit];
@@ -112,13 +112,13 @@ static GrowingSession *currentSession = nil;
 // 下拉显示通知中心/系统权限授权弹窗显示
 - (void)applicationWillResignActive {
     [GrowingDispatchManager dispatchInGrowingThread:^{
-        self.latestDidEnterBackgroundTime = GrowingTimeUtil.currentTimeMillis;
+        self.latestDidEnterBackgroundTime = GrowingULTimeUtil.currentTimeMillis;
     }];
 }
 
 - (void)applicationDidEnterBackground {
     [GrowingDispatchManager dispatchInGrowingThread:^{
-        self.latestDidEnterBackgroundTime = GrowingTimeUtil.currentTimeMillis;
+        self.latestDidEnterBackgroundTime = GrowingULTimeUtil.currentTimeMillis;
         [GrowingEventGenerator generateAppCloseEvent];
         [[GrowingEventManager sharedInstance] flushDB];
         [GrowingEventTimer handleAllTimersPause];

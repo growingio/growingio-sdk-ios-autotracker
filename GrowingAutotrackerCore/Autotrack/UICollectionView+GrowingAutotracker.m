@@ -18,21 +18,19 @@
 //  limitations under the License.
 
 #import "GrowingAutotrackerCore/Autotrack/UICollectionView+GrowingAutotracker.h"
-#import "GrowingSwizzle.h"
-#import "GrowingSwizzler.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/GrowingViewClickProvider.h"
+#import "GrowingULSwizzle.h"
+#import "GrowingULSwizzler.h"
 
 @implementation UICollectionView (GrowingAutotracker)
 
 - (void)growing_setDelegate:(id<UICollectionViewDelegate>)delegate {
     SEL selector = @selector(collectionView:didSelectItemAtIndexPath:);
-    id<UICollectionViewDelegate> realDelegate = [GrowingSwizzler realDelegate:delegate toSelector:selector];
+    id<UICollectionViewDelegate> realDelegate = [GrowingULSwizzler realDelegate:delegate toSelector:selector];
     Class class = realDelegate.class;
-    if ([GrowingSwizzler realDelegateClass:class respondsToSelector:selector]) {
-        
+    if ([GrowingULSwizzler realDelegateClass:class respondsToSelector:selector]) {
         void (^didSelectItemBlock)(id, SEL, id, id) = ^(id view, SEL command, UICollectionView *collectionView, NSIndexPath *indexPath) {
-                                                 
             if (collectionView && indexPath) {
                 UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
                 if (cell) {
@@ -40,13 +38,13 @@
                 }
             }
         };
-        
-        [GrowingSwizzler growing_swizzleSelector:selector
-                                         onClass:class
-                                       withBlock:didSelectItemBlock
-                                           named:@"growing_collectionView_didSelect"];
+
+        [GrowingULSwizzler growingul_swizzleSelector:selector
+                                             onClass:class
+                                           withBlock:didSelectItemBlock
+                                               named:@"growing_collectionView_didSelect"];
     }
-    
+
     [self growing_setDelegate:delegate];
 }
 

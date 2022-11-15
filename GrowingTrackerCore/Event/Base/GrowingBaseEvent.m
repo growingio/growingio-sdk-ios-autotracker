@@ -22,9 +22,9 @@
 #import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
 #import "GrowingTrackerCore/GrowingRealTracker.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
-#import "GrowingTimeUtil.h"
 #import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
 #import "GrowingTrackerCore/Public/GrowingFieldsIgnore.h"
+#import "GrowingULTimeUtil.h"
 
 @implementation GrowingBaseEvent
 
@@ -112,7 +112,7 @@
 
 //赋值属性，eg:deviceId,userId,sessionId,globalSequenceId,eventSequenceId
 - (void)readPropertyInTrackThread {
-    _timestamp = _timestamp > 0 ? _timestamp : [GrowingTimeUtil currentTimeMillis];
+    _timestamp = _timestamp > 0 ? _timestamp : [GrowingULTimeUtil currentTimeMillis];
 
     GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
     _domain = _domain.length > 0 ? _domain : deviceInfo.bundleID;

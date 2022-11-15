@@ -19,7 +19,7 @@
 
 #import <UIKit/UIKit.h>
 #import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
-#import "GrowingViewControllerLifecycle.h"
+#import "GrowingULViewControllerLifecycle.h"
 
 @interface GrowingPageManager : NSObject
 

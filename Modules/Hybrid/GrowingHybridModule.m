@@ -18,9 +18,9 @@
 //  limitations under the License.
 
 #import "Modules/Hybrid/GrowingHybridModule.h"
-#import "GrowingSwizzle.h"
 #import "Modules/Hybrid/WKWebView+GrowingAutotracker.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
+#import "GrowingULSwizzle.h"
 
 GrowingMod(GrowingHybridModule)
 
@@ -35,33 +35,33 @@ GrowingMod(GrowingHybridModule)
     dispatch_once(&onceToken, ^{
         // WKWebView
         NSError *webViewError = NULL;
-        [WKWebView growing_swizzleMethod:@selector(loadRequest:)
-                              withMethod:@selector(growing_loadRequest:)
-                                   error:&webViewError];
+        [WKWebView growingul_swizzleMethod:@selector(loadRequest:)
+                                withMethod:@selector(growing_loadRequest:)
+                                     error:&webViewError];
         if (webViewError) {
             GIOLogError(@"Failed to swizzle WKWebView loadRequest:. Details: %@", webViewError);
             webViewError = NULL;
         }
         
-        [WKWebView growing_swizzleMethod:@selector(loadHTMLString:baseURL:)
-                              withMethod:@selector(growing_loadHTMLString:baseURL:)
-                                   error:&webViewError];
+        [WKWebView growingul_swizzleMethod:@selector(loadHTMLString:baseURL:)
+                                withMethod:@selector(growing_loadHTMLString:baseURL:)
+                                     error:&webViewError];
         if (webViewError) {
             GIOLogError(@"Failed to swizzle WKWebView loadHTMLString:baseURL:. Details: %@", webViewError);
             webViewError = NULL;
         }
         
-        [WKWebView growing_swizzleMethod:@selector(loadFileURL:allowingReadAccessToURL:)
-                              withMethod:@selector(growing_loadFileURL:allowingReadAccessToURL:)
-                                   error:&webViewError];
+        [WKWebView growingul_swizzleMethod:@selector(loadFileURL:allowingReadAccessToURL:)
+                                withMethod:@selector(growing_loadFileURL:allowingReadAccessToURL:)
+                                     error:&webViewError];
         if (webViewError) {
             GIOLogError(@"Failed to swizzle WKWebView loadFileURL:allowingReadAccessToURL:. Details: %@", webViewError);
             webViewError = NULL;
         }
         
-        [WKWebView growing_swizzleMethod:@selector(loadData:MIMEType:characterEncodingName:baseURL:)
-                              withMethod:@selector(growing_loadData:MIMEType:characterEncodingName:baseURL:)
-                                   error:&webViewError];
+        [WKWebView growingul_swizzleMethod:@selector(loadData:MIMEType:characterEncodingName:baseURL:)
+                                withMethod:@selector(growing_loadData:MIMEType:characterEncodingName:baseURL:)
+                                     error:&webViewError];
         if (webViewError) {
             GIOLogError(@"Failed to swizzle WKWebView loadData:MIMEType:characterEncodingName:baseURL:. Details: %@", webViewError);
             webViewError = NULL;

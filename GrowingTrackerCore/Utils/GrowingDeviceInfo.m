@@ -24,12 +24,12 @@
 #import <pthread.h>
 #import <sys/utsname.h>
 
-#import "GrowingAppLifecycle.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingKeyChainWrapper.h"
 #import "GrowingTrackerCore/Utils/UserIdentifier/GrowingUserIdentifier.h"
 #import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
+#import "GrowingULAppLifecycle.h"
 
 #define LOCK(...)                                                \
     dispatch_semaphore_wait(self->_lock, DISPATCH_TIME_FOREVER); \
@@ -39,7 +39,7 @@
 static NSString *kGrowingUrlScheme = nil;
 NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 
-@interface GrowingDeviceInfo () <GrowingAppLifecycleDelegate>
+@interface GrowingDeviceInfo () <GrowingULAppLifecycleDelegate>
 @property (nonatomic, copy) NSString *deviceOrientation;
 @end
 
@@ -127,7 +127,7 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
             }
         }];
 
-        [[GrowingAppLifecycle sharedInstance] addAppLifecycleDelegate:self];
+        [[GrowingULAppLifecycle sharedInstance] addAppLifecycleDelegate:self];
 
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(handleStatusBarOrientationChange:)

@@ -127,7 +127,7 @@
 		34B2148A2796A234004E2CE3 /* GrowingAlertTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B214892796A234004E2CE3 /* GrowingAlertTest.m */; };
 		34B2148C2796A5D5004E2CE3 /* GrowingStatusBarTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B2148B2796A5D5004E2CE3 /* GrowingStatusBarTest.m */; };
 		34B2148E2796B0D8004E2CE3 /* ApplicationEventManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B2148D2796B0D8004E2CE3 /* ApplicationEventManagerTest.m */; };
-		34B214912796B74B004E2CE3 /* GrowingAppLifeCycleTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B214902796B74B004E2CE3 /* GrowingAppLifeCycleTest.m */; };
+		34B214912796B74B004E2CE3 /* GrowingULAppLifeCycleTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B214902796B74B004E2CE3 /* GrowingULAppLifeCycleTest.m */; };
 		34B21A7C28C17B3200137F3A /* MockEventQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962653324DA66B600032551 /* MockEventQueue.m */; };
 		34B25967278E76890096A10C /* ManualTrackHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962653224DA66B600032551 /* ManualTrackHelper.m */; };
 		34B7D648279F9C060003CE04 /* UICollectionViewAutotrackTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B7D647279F9C060003CE04 /* UICollectionViewAutotrackTest.m */; };
@@ -348,7 +348,7 @@
 		34B214892796A234004E2CE3 /* GrowingAlertTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GrowingAlertTest.m; sourceTree = "<group>"; };
 		34B2148B2796A5D5004E2CE3 /* GrowingStatusBarTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GrowingStatusBarTest.m; sourceTree = "<group>"; };
 		34B2148D2796B0D8004E2CE3 /* ApplicationEventManagerTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ApplicationEventManagerTest.m; sourceTree = "<group>"; };
-		34B214902796B74B004E2CE3 /* GrowingAppLifeCycleTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GrowingAppLifeCycleTest.m; sourceTree = "<group>"; };
+		34B214902796B74B004E2CE3 /* GrowingULAppLifeCycleTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GrowingULAppLifeCycleTest.m; sourceTree = "<group>"; };
 		34B7D647279F9C060003CE04 /* UICollectionViewAutotrackTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UICollectionViewAutotrackTest.m; sourceTree = "<group>"; };
 		34B7D649279FA5980003CE04 /* UITableViewAutotrackTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UITableViewAutotrackTest.m; sourceTree = "<group>"; };
 		34B7EB7C27B366B10026B2AF /* gio_hybrideventtest.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = gio_hybrideventtest.html; sourceTree = "<group>"; };
@@ -906,7 +906,7 @@
 		34B2148F2796B72B004E2CE3 /* HookTests */ = {
 			isa = PBXGroup;
 			children = (
-				34B214902796B74B004E2CE3 /* GrowingAppLifeCycleTest.m */,
+				34B214902796B74B004E2CE3 /* GrowingULAppLifeCycleTest.m */,
 			);
 			path = HookTests;
 			sourceTree = "<group>";
@@ -1694,7 +1694,7 @@
 				34B2148727969562004E2CE3 /* DynamicProxyTest.m in Sources */,
 				34821C6727B247DB006C8B8E /* UISegmentedControlAutotrackTest.m in Sources */,
 				34B7D64A279FA5980003CE04 /* UITableViewAutotrackTest.m in Sources */,
-				34B214912796B74B004E2CE3 /* GrowingAppLifeCycleTest.m in Sources */,
+				34B214912796B74B004E2CE3 /* GrowingULAppLifeCycleTest.m in Sources */,
 				34B2148E2796B0D8004E2CE3 /* ApplicationEventManagerTest.m in Sources */,
 				34BA7B48277D92840030AC21 /* FileStorageTest.m in Sources */,
 				34B25967278E76890096A10C /* ManualTrackHelper.m in Sources */,
