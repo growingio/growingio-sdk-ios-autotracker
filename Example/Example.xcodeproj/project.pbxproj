@@ -80,7 +80,6 @@
 		34664587278EEEA6009C351C /* A0GrowingAnalyticsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3A224F638BB0028FE94 /* A0GrowingAnalyticsTest.m */; };
 		346EABE1277EDF8A00A32B03 /* EventTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 346EABE0277EDF8A00A32B03 /* EventTest.m */; };
 		346EABE5277EE1FD00A32B03 /* HybridTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 42ADE26B250B292900CA7268 /* HybridTest.m */; };
-		346EABE8277EE33F00A32B03 /* StatusBarEventManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 346EABE7277EE33F00A32B03 /* StatusBarEventManagerTest.m */; };
 		346EABEB277EE53200A32B03 /* DeviceInfoTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 346EABEA277EE53200A32B03 /* DeviceInfoTest.m */; };
 		346EABF2277EE63F00A32B03 /* NodeTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 346EABF1277EE63F00A32B03 /* NodeTest.m */; };
 		34821C6727B247DB006C8B8E /* UISegmentedControlAutotrackTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34821C6627B247DB006C8B8E /* UISegmentedControlAutotrackTest.m */; };
@@ -1718,7 +1717,6 @@
 				34BA7B23277C617F0030AC21 /* GrowingDispatchManagerTest.m in Sources */,
 				34B2148A2796A234004E2CE3 /* GrowingAlertTest.m in Sources */,
 				34BA7B27277C63070030AC21 /* EncryptionTest.m in Sources */,
-				346EABE8277EE33F00A32B03 /* StatusBarEventManagerTest.m in Sources */,
 				34BA7B26277C62FF0030AC21 /* JSONDatabaseTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -54,7 +54,6 @@
 #import "GrowingAutotrackerCore/Page/UIViewController+GrowingPageHelper.h"
 #import "GrowingTrackerCore/Helpers/UIWindow+GrowingHelper.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIWindow+GrowingNode.h"
-#import "Modules/WebCircle/GrowingStatusBarAutotracker.h"
 #import "GrowingTrackerCore/Public/GrowingServiceManager.h"
 #import "Modules/Hybrid/GrowingHybridBridgeProvider.h"
 #import "GrowingTrackerCore/Public/GrowingWebSocketService.h"
@@ -91,12 +90,13 @@ GrowingMod(GrowingWebCircle)
 //当页面vc的page未生成，即viewDidAppear未执行，此时忽略数据，并不发送
 @property (nonatomic, assign) BOOL isPageDontShow;
 @property (nonatomic, strong) NSMutableArray *elements;
+@property (nonatomic, weak) UIWindow *lastKeyWindow;
+
 @end
 
 @implementation GrowingWebCircle
 
 - (void)growingModInit:(GrowingContext *)context {
-    [GrowingStatusBarAutotracker track];
     [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:self];
 }
 
@@ -266,19 +266,36 @@ GrowingMod(GrowingWebCircle)
     NSMutableDictionary *finalDataDict = [NSMutableDictionary dictionaryWithDictionary:dataDict];
     //初始化数组
     self.elements = [NSMutableArray array];
-    CGFloat windowLevel = UIWindowLevelNormal;
     UIWindow *topwindow = nil;
+    UIWindow *highestWindow = nil;
     for (UIWindow *window in [UIApplication sharedApplication].growingHelper_allWindowsWithoutGrowingWindow) {
         //如果找到了keywindow跳出循环
         if (window.isKeyWindow) {
             topwindow = window;
             break;
         }
-        if (window.windowLevel >= windowLevel) {
-            windowLevel = window.windowLevel;
-            topwindow = window;
+        
+        // 找到当前windowLevel最高的window
+        if (highestWindow) {
+            if (window.windowLevel >= highestWindow.windowLevel) {
+                highestWindow = window;
+            }
+        } else {
+            highestWindow = window;
         }
     }
+    
+    if (!topwindow) {
+        // keyWindow是GrowingWindow或其他内部window
+        if (self.lastKeyWindow && self.lastKeyWindow.isHidden == NO) {
+            // 用上一个KeyWindow
+            topwindow = self.lastKeyWindow;
+        } else {
+            // 用当前windowLevel最高的window
+            topwindow = highestWindow;
+        }
+    }
+
     if (topwindow) {
         self.zLevel = 0;
         self.isPageDontShow = NO;
@@ -394,6 +411,11 @@ GrowingMod(GrowingWebCircle)
                                                  selector:@selector(handleDeviceOrientationDidChange:)
                                                      name:UIDeviceOrientationDidChangeNotification
                                                    object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(handleWindowDidResignKey:)
+                                                     name:UIWindowDidResignKeyNotification
+                                                   object:nil];
 
         [UIApplication sharedApplication].idleTimerDisabled = YES;
         GIOLogDebug(@"开始起服务");
@@ -454,6 +476,10 @@ GrowingMod(GrowingWebCircle)
     lastRect = rect;
 }
 
+- (void)handleWindowDidResignKey:(NSNotification *)notification {
+    self.lastKeyWindow = (UIWindow *)notification.object;
+}
+
 - (void)start {
     self.statusWindow.statusLable.text = @"正在进行GrowingIO移动端圈选";
     self.statusWindow.statusLable.textAlignment = NSTextAlignmentCenter;
@@ -484,6 +510,10 @@ GrowingMod(GrowingWebCircle)
 - (void)_stopWithError:(NSString *)error {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
     [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIWindowDidResignKeyNotification object:nil];
+    if (self.lastKeyWindow) {
+        self.lastKeyWindow = nil;
+    }
 
     [GrowingHybridBridgeProvider sharedInstance].domChangedDelegate = nil;
     [[GrowingEventManager sharedInstance] removeInterceptor:self];
