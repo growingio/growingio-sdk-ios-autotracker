@@ -1,3 +1,23 @@
+## [3.4.5](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.4.4...3.4.5) (2022-11-16)
+
+
+### Bug Fixes
+
+* delete unused files ([36571d2](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/36571d2066a0d5529d5b576d593af00149729778))
+* SwiftPM module Advert / APM public headers path configuration ([5ba2f54](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/5ba2f54f300aaae9ab87b4ac8874d15abeb392d8))
+* 修复 hybrid 圈选时 H5 元素位置不准确 ([e84da8d](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/e84da8d9af0851f1c6cae1c94aa60e8d2151bf36))
+* 修复延迟初始化下 PAGE 漏发、page.path 不准确 ([f21d432](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/f21d432be757617adec2ffcabbe98a285857af50))
+* 修复延迟初始化下 VIEW_CLICK、VIEW_CHANGE 事件参数异常，圈选显示截图异常 ([f82c7fb](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/f82c7fb0901c1339c6ff46f0498dbf34053cd3e3))
+* 兼容 Hybrid 打通时，非字符串类型参数 ([97b388d](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/97b388dfa50452e8aff0e2289f0ec6309cfce45c))
+
+
+### Features
+
+* APM ([fd10b30](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/fd10b30a1d8c013c1ba01eec01e6ecec1d911622))
+* APM modules SwiftPM support ([cf65835](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/cf65835f5354e0dfbfa921465a2743ff1fd6f790))
+* podspec ios_deployment_target 改为 9.0 ([5eb504b](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/5eb504b887c44b9437316d045e91aa5fc5bbee18))
+* 圈选提示 ([a90c42d](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/a90c42ddb7696fa4a1078773f2e865cd97e60156))
+
 ## [3.4.4](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.4.3...3.4.4) (2022-11-03)
 
 
