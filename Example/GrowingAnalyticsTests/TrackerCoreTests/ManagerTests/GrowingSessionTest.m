@@ -80,14 +80,6 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
     {
-        NSString *oldSessionId = GrowingSession.currentSession.sessionId;
-        [GrowingSession.currentSession performSelector:@selector(applicationDidBecomeActive)];
-        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeVisit];
-        XCTAssertEqual(events.count, 0);
-        XCTAssertEqualObjects(oldSessionId, GrowingSession.currentSession.sessionId);
-    }
-    
-    {
         [GrowingSession.currentSession performSelector:@selector(applicationDidEnterBackground)];
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeAppClosed];
         XCTAssertEqual(events.count, 1);
