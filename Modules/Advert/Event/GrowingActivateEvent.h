@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingActivateEvent : GrowingBaseAttributesEvent
 
+@property (nonatomic, copy, readonly) NSString *eventName;
 @property (nonatomic, copy, readonly) NSString *idfa;
 @property (nonatomic, copy, readonly) NSString *idfv;
 
@@ -37,9 +38,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingActivateBuilder : GrowingBaseAttributesBuilder
 
+@property (nonatomic, copy, readonly) NSString *eventName;
 @property (nonatomic, copy, readonly) NSString *idfa;
 @property (nonatomic, copy, readonly) NSString *idfv;
 
+- (GrowingActivateBuilder *(^)(NSString *value))setEventName;
 - (GrowingActivateBuilder *(^)(NSDictionary<NSString *, NSObject *> *value))setAttributes;
 
 @end

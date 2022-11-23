@@ -23,13 +23,40 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSInteger , GrowingAdvertisingError) {
+    GrowingAdvertisingNoQueryError = 500, /// 无自定义参数
+    GrowingAdvertisingIllegalURLError,    /// 非法 URL
+    GrowingAdvertisingRequestFailedError, /// 短链请求失败
+};
+
+extern NSString *const GrowingAdvertisingErrorDomain;
+
+typedef void(^_Nullable GrowingAdDeepLinkCallback)(NSDictionary * _Nullable params,
+                                                   NSTimeInterval processTime,
+                                                   NSError * _Nullable error);
+
 @interface GrowingAdvertising : NSObject <GrowingModuleProtocol>
+
+/// 单例获取
++ (instancetype)sharedInstance;
+
+/// 打开或关闭剪贴板读取
+/// @param enabled 打开或者关闭
+- (void)setReadClipBoardEnabled:(BOOL)enabled;
+
+/// 根据传入的 url，手动触发 GrowingIO 的 deeplink 处理逻辑
+/// @param url 对应需要处理的 GrowingIO deeplink 或 applink url
+/// @param callback 处理结果的回调, 如果 callback 为 null, 回调会使用初始化时传入的默认 deepLinkCallback
+/// @return url 是否是 GrowingIO 的 deeplink 链接格式
+- (BOOL)doDeeplinkByUrl:(NSURL *)url callback:(GrowingAdDeepLinkCallback)callback;
 
 @end
 
 @interface GrowingTrackConfiguration (Advert)
 
 @property (nonatomic, assign) BOOL ASAEnabled;
+@property (nonatomic, copy) GrowingAdDeepLinkCallback deepLinkCallback;
+@property (nonatomic, assign) BOOL readClipboardEnabled;
 
 @end
 

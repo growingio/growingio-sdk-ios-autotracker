@@ -22,6 +22,93 @@
 
 @implementation GrowingAdUtils
 
++ (BOOL)isGrowingIOUrl:(NSURL *)url {
+    return ([self isUniversalLink:url] || [self isURLScheme:url]);
+}
+
++ (BOOL)isUniversalLink:(NSURL *)url {
+    if (!url) {
+        return NO;
+    }
+    
+    return ([url.host isEqualToString:@"datayi.cn"] || [url.host hasSuffix:@".datayi.cn"]);
+}
+
++ (BOOL)isURLScheme:(NSURL *)url {
+    if (!url) {
+        return NO;
+    }
+    
+    return [url.scheme hasPrefix:@"growing."];
+}
+
++ (NSString *)URLDecodedString:(NSString *)urlString {
+    urlString = [urlString stringByReplacingOccurrencesOfString:@"+" withString:@" "];
+    return [urlString stringByRemovingPercentEncoding];
+}
+
++ (nullable NSDictionary *)dictFromPasteboard:(NSString *_Nullable)clipboardString {
+    if (!clipboardString) {
+        return nil;
+    }
+    if (clipboardString.length > 2000 * 16) {
+        return nil;
+    }
+    NSString *binaryList = @"";
+    for (int i = 0; i < clipboardString.length; i++) {
+        char a = [clipboardString characterAtIndex:i];
+        NSString *charString = @"";
+        if (a == (char)020014) {
+            charString = @"0";
+        } else {
+            charString = @"1";
+        }
+        binaryList = [binaryList stringByAppendingString:charString];
+    }
+    NSInteger binaryListLength = binaryList.length;
+    NSInteger SINGLE_CHAR_LENGTH = 16;
+    if (binaryListLength % SINGLE_CHAR_LENGTH != 0) {
+        return nil;
+    }
+    NSMutableArray *bs = [NSMutableArray array];
+    int i = 0;
+    while (i < binaryListLength) {
+        [bs addObject:[binaryList substringWithRange:NSMakeRange(i, SINGLE_CHAR_LENGTH)]];
+        i += SINGLE_CHAR_LENGTH;
+    }
+    NSString *listString = @"";
+    for (int i = 0; i < bs.count; i++) {
+        NSString *partString = bs[i];
+        long long part = [partString longLongValue];
+        int partInt = [self convertBinaryToDecimal:part];
+        listString = [listString stringByAppendingString:[NSString stringWithFormat:@"%C", (unichar)partInt]];
+    }
+    NSDictionary *dict = listString.growingHelper_jsonObject;
+    return [dict isKindOfClass:[NSDictionary class]] ? dict : nil;
+}
+
++ (int)convertBinaryToDecimal:(long long)n {
+    int decimalNumber = 0, i = 0, remainder;
+    while (n != 0) {
+        remainder = n % 10;
+        n /= 10;
+        decimalNumber += remainder * pow(2, i);
+        ++i;
+    }
+    return decimalNumber;
+}
+
++ (void)setActivateDefer:(BOOL)activateDefer {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setObject:@(activateDefer) forKey:@"GrowingAdvertisingActivateDefer"];
+    [userDefaults synchronize];
+}
+
++ (BOOL)isActivateDefer {
+    NSNumber *number = [[NSUserDefaults standardUserDefaults] objectForKey:@"GrowingAdvertisingActivateDefer"];
+    return number && number.boolValue;
+}
+
 + (void)setActivateWrote:(BOOL)activateWrote {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     [userDefaults setObject:@(activateWrote) forKey:@"GrowingAdvertisingActivateWrote"];

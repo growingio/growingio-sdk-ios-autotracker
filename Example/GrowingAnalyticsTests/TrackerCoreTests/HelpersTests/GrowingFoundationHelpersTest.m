@@ -101,7 +101,6 @@
     XCTAssertFalse([NSString growingHelper_isBlankString:@"t"]);
     a = [@"https://www.baidu.com" growingHelper_absoluteURLStringWithPath:@"path" andQuery:@{@"key" : @"value"}];
     XCTAssertEqualObjects(a, @"https://www.baidu.com/path?key=value");
-    [a growingHelper_convertToDictFromPasteboard];
     XCTAssertFalse([NSString growingHelper_isEqualStringA:@"A" andStringB:@"B"]);
 }
 

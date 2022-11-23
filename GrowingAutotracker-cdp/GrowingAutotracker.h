@@ -21,7 +21,6 @@
 #import "GrowingAttributesBuilder.h"
 #import "GrowingAutotrackConfiguration.h"
 #import "GrowingDynamicProxy.h"
-#import "GrowingTrackConfiguration+CdpTracker.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

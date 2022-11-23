@@ -20,6 +20,7 @@
 #import "Modules/Advert/AppleSearchAds/GrowingAsaFetcher.h"
 #import "Modules/Advert/Public/GrowingAdvertising.h"
 #import "Modules/Advert/Event/GrowingAdvertEventType.h"
+#import "Modules/Advert/Event/GrowingActivateEvent.h"
 #import "Modules/Advert/Utils/GrowingAdUtils.h"
 
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
@@ -81,6 +82,13 @@ static pthread_rwlock_t _lock = PTHREAD_RWLOCK_INITIALIZER;
     id <GrowingEventPersistenceProtocol> activate = nil;
     for (id <GrowingEventPersistenceProtocol> event in events) {
         if ([event.eventType isEqualToString:GrowingEventTypeActivate]) {
+            id jsonObject = event.toJSONObject;
+            if ([jsonObject isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *dic = (NSDictionary *)jsonObject;
+                if ([dic[@"eventName"] isEqualToString:GrowingAdvertEventNameReengage]) {
+                    continue;
+                }
+            }
             activate = event;
             break;
         }
@@ -121,6 +129,13 @@ static pthread_rwlock_t _lock = PTHREAD_RWLOCK_INITIALIZER;
                                  channel:(GrowingEventChannel *)channel {
     for (id <GrowingEventPersistenceProtocol> event in events) {
         if ([event.eventType isEqualToString:GrowingEventTypeActivate]) {
+            id jsonObject = event.toJSONObject;
+            if ([jsonObject isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *dic = (NSDictionary *)jsonObject;
+                if ([dic[@"eventName"] isEqualToString:GrowingAdvertEventNameReengage]) {
+                    continue;
+                }
+            }
             GrowingAsaFetcher.status = GrowingAsaFetcherStatusCompleted;
             [GrowingAdUtils setActivateSent:YES];
             

@@ -26,6 +26,8 @@ NSString * const kGrowingDefaultDataCollectionServerHost = @"https://api.growing
 
 // Advert
 @property (nonatomic, assign) BOOL ASAEnabled;
+@property (nonatomic, copy) id deepLinkCallback;
+@property (nonatomic, assign) BOOL readClipboardEnabled;
 
 // APM
 @property (nonatomic, copy) NSObject *APMConfig;
@@ -38,6 +40,7 @@ NSString * const kGrowingDefaultDataCollectionServerHost = @"https://api.growing
     self = [super init];
     if (self) {
         _projectId = [projectId copy];
+        _dataSourceId = nil;
         
         _debugEnabled = NO;
         _cellularDataLimit = 10;
@@ -54,6 +57,8 @@ NSString * const kGrowingDefaultDataCollectionServerHost = @"https://api.growing
         
         // Advert
         _ASAEnabled = NO;
+        _deepLinkCallback = nil;
+        _readClipboardEnabled = YES;
         
         // APM
         _APMConfig = nil;
@@ -69,6 +74,7 @@ NSString * const kGrowingDefaultDataCollectionServerHost = @"https://api.growing
 - (id)copyWithZone:(NSZone *)zone {
     GrowingTrackConfiguration *configuration = [[[self class] allocWithZone:zone] init];
     configuration->_projectId = [_projectId copy];
+    configuration->_dataSourceId = [_dataSourceId copy];
     configuration->_debugEnabled = _debugEnabled;
     configuration->_cellularDataLimit = _cellularDataLimit;
     configuration->_dataUploadInterval = _dataUploadInterval;
@@ -84,6 +90,8 @@ NSString * const kGrowingDefaultDataCollectionServerHost = @"https://api.growing
     
     // Advert
     configuration->_ASAEnabled = _ASAEnabled;
+    configuration->_deepLinkCallback = [_deepLinkCallback copy];
+    configuration->_readClipboardEnabled = _readClipboardEnabled;
     
     // APM
     configuration->_APMConfig = [_APMConfig copy];
