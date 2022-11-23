@@ -1,8 +1,8 @@
 //
-//  GrowingAdvertEventType.h
+//  dummy.h
 //  GrowingAnalytics
 //
-//  Created by YoloMao on 2022/8/29.
+//  Created by YoloMao on 2022/11/23.
 //  Copyright (C) 2022 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,10 +17,5 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
-
-FOUNDATION_EXPORT GrowingEventType const GrowingEventTypeActivate;
-FOUNDATION_EXPORT NSString *const GrowingAdvertEventNameActivate;
-FOUNDATION_EXPORT NSString *const GrowingAdvertEventNameDefer;
-FOUNDATION_EXPORT NSString *const GrowingAdvertEventNameReengage;
-
+// There are no actual public headers in the lib. This is a dummy public header to prevent Cocoapods
+// from adding all internal headers as public.

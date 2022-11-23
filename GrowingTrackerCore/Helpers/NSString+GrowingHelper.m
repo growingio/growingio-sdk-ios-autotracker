@@ -182,63 +182,6 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\\[]{}
     return absoluteURLString;
 }
 
-- (NSDictionary *)growingHelper_convertToDictFromPasteboard {
-    if (self.length > 2000 * 16) {
-        return nil;
-    }
-
-    NSString *binaryList = @"";
-
-    for (int i = 0; i < self.length; i++) {
-        char a = [self characterAtIndex:i];
-        NSString *charString = @"";
-        if (a == (char) 020014) {
-            charString = @"0";
-        } else {
-            charString = @"1";
-        }
-        binaryList = [binaryList stringByAppendingString:charString];
-    }
-
-    NSInteger binaryListLength = binaryList.length;
-
-    NSInteger SINGLE_CHAR_LENGTH = 16;
-
-    if (binaryListLength % SINGLE_CHAR_LENGTH != 0) {
-        return nil;
-    }
-
-    NSMutableArray *bs = [NSMutableArray array];
-
-    int i = 0;
-    while (i < binaryListLength) {
-        [bs addObject:[binaryList substringWithRange:NSMakeRange(i, SINGLE_CHAR_LENGTH)]];
-        i += SINGLE_CHAR_LENGTH;
-    }
-
-    NSString *listString = @"";
-
-    for (int i = 0; i < bs.count; i++) {
-        NSString *partString = bs[i];
-        long long part = [partString longLongValue];
-        int partInt = [self growingHelper_convertBinaryToDecimal:part];
-        listString = [listString stringByAppendingString:[NSString stringWithFormat:@"%C", (unichar) partInt]];
-    }
-    NSDictionary *dict = listString.growingHelper_jsonObject;
-    return [dict isKindOfClass:[NSDictionary class]] ? dict : nil;
-}
-
-- (int)growingHelper_convertBinaryToDecimal:(long long)n {
-    int decimalNumber = 0, i = 0, remainder;
-    while (n != 0) {
-        remainder = n % 10;
-        n /= 10;
-        decimalNumber += remainder * pow(2, i);
-        ++i;
-    }
-    return decimalNumber;
-}
-
 + (BOOL)growingHelper_isEqualStringA:(NSString *)strA andStringB:(NSString *)strB {
     if ([self growingHelper_isBlankString:strA]) {
         return [self growingHelper_isBlankString:strB];

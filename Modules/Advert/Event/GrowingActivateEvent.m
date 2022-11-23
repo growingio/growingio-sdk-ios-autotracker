@@ -21,12 +21,16 @@
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 
 NSString * const GrowingEventTypeActivate = @"ACTIVATE";
+NSString *const GrowingAdvertEventNameActivate = @"$app_activation";
+NSString *const GrowingAdvertEventNameDefer = @"$app_defer";
+NSString *const GrowingAdvertEventNameReengage = @"$app_reengage";
 
 @implementation GrowingActivateEvent
 
 - (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
     if (self = [super initWithBuilder:builder]) {
         GrowingActivateBuilder *subBuilder = (GrowingActivateBuilder *)builder;
+        _eventName = subBuilder.eventName;
         _idfa = subBuilder.idfa;
         _idfv = subBuilder.idfv;
     }
@@ -43,6 +47,7 @@ NSString * const GrowingEventTypeActivate = @"ACTIVATE";
 
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
+    dataDictM[@"eventName"] = self.eventName;
     dataDictM[@"idfa"] = self.idfa;
     dataDictM[@"idfv"] = self.idfv;
     return [dataDictM copy];
@@ -60,6 +65,17 @@ NSString * const GrowingEventTypeActivate = @"ACTIVATE";
     _idfa = deviceInfo.idfa;
     _idfv = deviceInfo.idfv;
 }
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmethod-signatures"
+#pragma clang diagnostic ignored "-Wmismatched-return-types"
+- (GrowingBaseBuilder *(^)(NSString *value))setEventName {
+    return ^(NSString *value) {
+        self->_eventName = value;
+        return self;
+    };
+}
+#pragma clang diagnostic pop
 
 - (GrowingBaseEvent *)build {
     return [[GrowingActivateEvent alloc] initWithBuilder:self];

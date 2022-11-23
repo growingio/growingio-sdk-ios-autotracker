@@ -1,8 +1,8 @@
 //
-//  GrowingAdvertEventType.h
+//  GrowingAdRequestHeaderAdapter.h
 //  GrowingAnalytics
 //
-//  Created by YoloMao on 2022/8/29.
+//  Created by YoloMao on 2022/11/22.
 //  Copyright (C) 2022 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,10 +17,16 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
+#import <Foundation/Foundation.h>
+#import "GrowingRequestProtocol.h"
 
-FOUNDATION_EXPORT GrowingEventType const GrowingEventTypeActivate;
-FOUNDATION_EXPORT NSString *const GrowingAdvertEventNameActivate;
-FOUNDATION_EXPORT NSString *const GrowingAdvertEventNameDefer;
-FOUNDATION_EXPORT NSString *const GrowingAdvertEventNameReengage;
+NS_ASSUME_NONNULL_BEGIN
 
+@interface GrowingAdRequestHeaderAdapter : NSObject <GrowingRequestAdapter>
+
++ (instancetype)adapterWithRequest:(id <GrowingRequestProtocol>)request
+                            header:(nullable NSDictionary *)header;
+
+@end
+
+NS_ASSUME_NONNULL_END
