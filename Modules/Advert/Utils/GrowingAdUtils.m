@@ -18,6 +18,8 @@
 //  limitations under the License.
 
 #import "Modules/Advert/Utils/GrowingAdUtils.h"
+#import "Modules/Advert/Public/GrowingAdvertising.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
 #import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
 
@@ -73,7 +75,8 @@ static pthread_mutex_t _mutex;
         return NO;
     }
     
-    return ([url.host isEqualToString:@"datayi.cn"] || [url.host hasSuffix:@".datayi.cn"]);
+    GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    return ([url.host isEqualToString:trackConfiguration.deepLinkHost] || [url.host hasSuffix:trackConfiguration.deepLinkHost]);
 }
 
 + (BOOL)isURLScheme:(NSURL *)url {
