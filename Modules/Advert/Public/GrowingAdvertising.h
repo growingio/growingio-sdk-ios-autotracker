@@ -42,7 +42,7 @@ typedef void(^_Nullable GrowingAdDeepLinkCallback)(NSDictionary * _Nullable para
 
 /// 打开或关闭剪贴板读取
 /// @param enabled 打开或者关闭
-- (void)setReadClipBoardEnabled:(BOOL)enabled;
+- (void)setReadClipboardEnabled:(BOOL)enabled;
 
 /// 根据传入的 url，手动触发 GrowingIO 的 deeplink 处理逻辑
 /// @param url 对应需要处理的 GrowingIO deeplink 或 applink url

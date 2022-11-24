@@ -99,7 +99,7 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
     return _sharedInstance;
 }
 
-- (void)setReadClipBoardEnabled:(BOOL)enabled {
+- (void)setReadClipboardEnabled:(BOOL)enabled {
     [GrowingDispatchManager dispatchInGrowingThread:^{
         GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
         if (enabled == trackConfiguration.readClipboardEnabled) {
@@ -246,7 +246,7 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
         }
         
         if (!trackConfiguration.readClipboardEnabled) {
-            GIOLogDebug(@"[GrowingAdvertising] readClipBoardEnabled is false");
+            GIOLogDebug(@"[GrowingAdvertising] readClipboardEnabled is false");
             [self generateAppActivation];
             return;
         }
