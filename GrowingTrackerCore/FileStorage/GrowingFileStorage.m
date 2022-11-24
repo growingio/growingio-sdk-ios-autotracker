@@ -173,7 +173,6 @@ NSString *const kGrowingDirCommonPrefix = @"com.growingio.";
     NSURL *url = [self urlForKey:key];
     NSData *data = [NSData dataWithContentsOfURL:url];
     if (!data) {
-        GIOLogDebug(@"WARNING: No data file for key %@", key);
         return nil;
     }
     if (self.crypto && [self.crypto respondsToSelector:@selector(decryptLocalData:)]) {
