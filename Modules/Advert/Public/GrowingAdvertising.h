@@ -55,6 +55,7 @@ typedef void(^_Nullable GrowingAdDeepLinkCallback)(NSDictionary * _Nullable para
 @interface GrowingTrackConfiguration (Advert)
 
 @property (nonatomic, assign) BOOL ASAEnabled;
+@property (nonatomic, copy) NSString *deepLinkHost;
 @property (nonatomic, copy) GrowingAdDeepLinkCallback deepLinkCallback;
 @property (nonatomic, assign) BOOL readClipboardEnabled;
 

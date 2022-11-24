@@ -26,6 +26,7 @@ NSString * const kGrowingDefaultDataCollectionServerHost = @"https://api.growing
 
 // Advert
 @property (nonatomic, assign) BOOL ASAEnabled;
+@property (nonatomic, copy) NSString *deepLinkHost;
 @property (nonatomic, copy) id deepLinkCallback;
 @property (nonatomic, assign) BOOL readClipboardEnabled;
 
@@ -57,6 +58,7 @@ NSString * const kGrowingDefaultDataCollectionServerHost = @"https://api.growing
         
         // Advert
         _ASAEnabled = NO;
+        _deepLinkHost = nil;
         _deepLinkCallback = nil;
         _readClipboardEnabled = YES;
         
@@ -90,6 +92,7 @@ NSString * const kGrowingDefaultDataCollectionServerHost = @"https://api.growing
     
     // Advert
     configuration->_ASAEnabled = _ASAEnabled;
+    configuration->_deepLinkHost = [_deepLinkHost copy];
     configuration->_deepLinkCallback = [_deepLinkCallback copy];
     configuration->_readClipboardEnabled = _readClipboardEnabled;
     
