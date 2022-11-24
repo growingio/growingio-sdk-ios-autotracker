@@ -19,8 +19,50 @@
 
 #import "Modules/Advert/Utils/GrowingAdUtils.h"
 #import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
+#import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
+
+#import <pthread.h>
+
+static NSString *const kGrowingAdertisingFileKey = @"GrowingAdertisingFileKey";
+static NSString *const kGrowingAdIsActivateDeferKey = @"GrowingAdvertisingActivateDefer";
+static NSString *const kGrowingAdIsActivateWroteKey = @"GrowingAdvertisingActivateWrote";
+static NSString *const kGrowingAdIsActivateSentKey = @"GrowingAdvertisingActivateSent";
+
+@interface GrowingAdUtils ()
+
+@property (nonatomic, strong) GrowingFileStorage *storage;
+@property (nonatomic, strong) NSMutableDictionary *storeDic;
+
+@end
 
 @implementation GrowingAdUtils
+
+#pragma mark - Init
+
+- (instancetype)init {
+    if (self = [super init]) {
+        _storage = [[GrowingFileStorage alloc] initWithName:@"config"];
+        _storeDic = [NSMutableDictionary dictionary];
+        NSDictionary *dic = [_storage dictionaryForKey:kGrowingAdertisingFileKey];
+        if ([dic isKindOfClass:[NSDictionary class]]) {
+            [_storeDic addEntriesFromDictionary:dic];
+        }
+    }
+    return self;
+}
+
+static pthread_mutex_t _mutex;
++ (instancetype)sharedInstance {
+    static id instance;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [[GrowingAdUtils alloc] init];
+        pthread_mutex_init(&_mutex, NULL);
+    });
+    return instance;
+}
+
+#pragma mark - Public Method
 
 + (BOOL)isGrowingIOUrl:(NSURL *)url {
     return ([self isUniversalLink:url] || [self isURLScheme:url]);
@@ -99,36 +141,55 @@
 }
 
 + (void)setActivateDefer:(BOOL)activateDefer {
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setObject:@(activateDefer) forKey:@"GrowingAdvertisingActivateDefer"];
-    [userDefaults synchronize];
+    pthread_mutex_lock(&_mutex);
+    [GrowingAdUtils.sharedInstance.storeDic setObject:@(activateDefer) forKey:kGrowingAdIsActivateDeferKey];
+    [GrowingAdUtils.sharedInstance.storage setDictionary:GrowingAdUtils.sharedInstance.storeDic forKey:kGrowingAdertisingFileKey];
+    pthread_mutex_unlock(&_mutex);
 }
 
 + (BOOL)isActivateDefer {
-    NSNumber *number = [[NSUserDefaults standardUserDefaults] objectForKey:@"GrowingAdvertisingActivateDefer"];
+    NSNumber *number = [GrowingAdUtils.sharedInstance.storeDic objectForKey:kGrowingAdIsActivateDeferKey];
     return number && number.boolValue;
 }
 
 + (void)setActivateWrote:(BOOL)activateWrote {
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setObject:@(activateWrote) forKey:@"GrowingAdvertisingActivateWrote"];
-    [userDefaults synchronize];
+    pthread_mutex_lock(&_mutex);
+    [GrowingAdUtils.sharedInstance.storeDic setObject:@(activateWrote) forKey:kGrowingAdIsActivateWroteKey];
+    [GrowingAdUtils.sharedInstance.storage setDictionary:GrowingAdUtils.sharedInstance.storeDic forKey:kGrowingAdertisingFileKey];
+    pthread_mutex_unlock(&_mutex);
 }
 
 + (BOOL)isActivateWrote {
-    NSNumber *number = [[NSUserDefaults standardUserDefaults] objectForKey:@"GrowingAdvertisingActivateWrote"];
-    return number && number.boolValue;
+    NSNumber *number = [GrowingAdUtils.sharedInstance.storeDic objectForKey:kGrowingAdIsActivateWroteKey];
+    if (number) {
+        return number.boolValue;
+    }
+
+    // 兼容 3.4.5 及以下旧版本存储
+    number = [[NSUserDefaults standardUserDefaults] objectForKey:kGrowingAdIsActivateWroteKey];
+    BOOL isActivateWrote = number && number.boolValue;
+    [self setActivateWrote:isActivateWrote];
+    return isActivateWrote;
 }
 
 + (void)setActivateSent:(BOOL)activateSent {
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setObject:@(activateSent) forKey:@"GrowingAdvertisingActivateSent"];
-    [userDefaults synchronize];
+    pthread_mutex_lock(&_mutex);
+    [GrowingAdUtils.sharedInstance.storeDic setObject:@(activateSent) forKey:kGrowingAdIsActivateSentKey];
+    [GrowingAdUtils.sharedInstance.storage setDictionary:GrowingAdUtils.sharedInstance.storeDic forKey:kGrowingAdertisingFileKey];
+    pthread_mutex_unlock(&_mutex);
 }
 
 + (BOOL)isActivateSent {
-    NSNumber *number = [[NSUserDefaults standardUserDefaults] objectForKey:@"GrowingAdvertisingActivateSent"];
-    return number && number.boolValue;
+    NSNumber *number = [GrowingAdUtils.sharedInstance.storeDic objectForKey:kGrowingAdIsActivateSentKey];
+    if (number) {
+        return number.boolValue;
+    }
+
+    // 兼容 3.4.5 及以下旧版本存储
+    number = [[NSUserDefaults standardUserDefaults] objectForKey:kGrowingAdIsActivateSentKey];
+    BOOL isActivateSent = number && number.boolValue;
+    [self setActivateSent:isActivateSent];
+    return isActivateSent;
 }
 
 @end
