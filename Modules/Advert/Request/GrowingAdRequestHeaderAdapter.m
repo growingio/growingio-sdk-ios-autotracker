@@ -43,9 +43,6 @@
 
 - (NSMutableURLRequest *)adaptedURLRequest:(NSMutableURLRequest *)request {
     NSMutableURLRequest *needAdaptReq = request;
-    
-    [needAdaptReq setValue:[NSString stringWithFormat:@"%lld", [GrowingULTimeUtil currentTimeMillis]]
-        forHTTPHeaderField:@"X-Timestamp"];
     [needAdaptReq setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     
     if (!self.header.count) {

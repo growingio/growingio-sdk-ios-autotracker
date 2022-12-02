@@ -27,7 +27,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) NSString *trackId;
 @property (nonatomic, copy) NSString *userAgent;
-@property (nonatomic, strong) NSDictionary *query;
 @property (nonatomic, assign) BOOL isManual;
 
 @end

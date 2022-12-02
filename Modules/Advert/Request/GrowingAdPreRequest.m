@@ -23,7 +23,6 @@
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Network/Request/Adapter/GrowingRequestAdapter.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
-#import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
 
 @implementation GrowingAdPreRequest
 
@@ -36,7 +35,7 @@
     if (!baseUrl.length) {
         return nil;
     }
-    NSString *absoluteURLString = [baseUrl growingHelper_absoluteURLStringWithPath:self.path andQuery:self.query];
+    NSString *absoluteURLString = [baseUrl stringByAppendingString:self.path];
     return [NSURL URLWithString:absoluteURLString];
 }
 

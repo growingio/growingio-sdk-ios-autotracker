@@ -80,6 +80,9 @@ static pthread_mutex_t _mutex;
     }
     
     GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    if (!trackConfiguration.deepLinkHost) {
+        return NO;
+    }
     return ([url.host isEqualToString:trackConfiguration.deepLinkHost] || [url.host hasSuffix:trackConfiguration.deepLinkHost]);
 }
 
