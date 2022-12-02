@@ -132,8 +132,8 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
         return NO;
     }
     
-    // Universal Link
-    if ([GrowingAdUtils isUniversalLink:url]) {
+    // Universal Link 短链
+    if ([GrowingAdUtils isShortChainUlink:url]) {
         NSDate *startDate = [NSDate date];
         [GrowingDispatchManager dispatchInGrowingThread:^{
             if ([self SDKDoNotTrack]) {
@@ -172,18 +172,16 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
         return YES;
     }
     
-    // URL Scheme
-    if ([GrowingAdUtils isURLScheme:url]) {
-        NSDictionary *dic = url.growingHelper_queryDict;
-        if (dic[@"deep_link_id"]) {
-            [self getDeeplinkParams:dic isManual:isManual block:^(BOOL completed, NSDictionary *params, NSDictionary * _Nullable customParams) {
-                if (completed) {
-                    [self generateAppReengage:params];
-                    [self handleDeepLinkCallback:callback customParams:customParams startDate:nil error:nil];
-                }
-            }];
-            return YES;
-        }
+    // Universal Link 长链 / URL Scheme
+    NSDictionary *dic = url.growingHelper_queryDict;
+    if (dic[@"deep_link_id"]) {
+        [self getDeeplinkParams:dic isManual:isManual block:^(BOOL completed, NSDictionary *params, NSDictionary * _Nullable customParams) {
+            if (completed) {
+                [self generateAppReengage:params];
+                [self handleDeepLinkCallback:callback customParams:customParams startDate:nil error:nil];
+            }
+        }];
+        return YES;
     }
     
     return NO;
