@@ -148,7 +148,6 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
                 eventRequest.trackId = [url.path componentsSeparatedByString:@"/"].lastObject;
                 eventRequest.isManual = isManual;
                 eventRequest.userAgent = userAgent;
-                eventRequest.query = [url.query growingHelper_dictionaryObject];
                 id <GrowingEventNetworkService> service = [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingEventNetworkService)];
                 if (!service) {
                     GIOLogError(@"[GrowingAdvertising] -growingHandlerUrl:isManual:callback: error : no network service support");
