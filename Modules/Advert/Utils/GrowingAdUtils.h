@@ -25,9 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (BOOL)isGrowingIOUrl:(NSURL *)url;
 
-+ (BOOL)isUniversalLink:(NSURL *)url;
-
-+ (BOOL)isURLScheme:(NSURL *)url;
++ (BOOL)isShortChainUlink:(NSURL *)url;
 
 + (NSString *)URLDecodedString:(NSString *)urlString;
 

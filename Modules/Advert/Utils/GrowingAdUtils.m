@@ -70,6 +70,10 @@ static pthread_mutex_t _mutex;
     return ([self isUniversalLink:url] || [self isURLScheme:url]);
 }
 
++ (BOOL)isShortChainUlink:(NSURL *)url {
+    return [self isUniversalLink:url] && [url.path componentsSeparatedByString:@"/"].count == 2;
+}
+
 + (BOOL)isUniversalLink:(NSURL *)url {
     if (!url) {
         return NO;
