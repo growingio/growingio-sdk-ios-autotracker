@@ -24,7 +24,7 @@
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "Modules/Hybrid/GrowingHybridBridgeProvider.h"
 #import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
-#import "Modules/Hybrid/Events/GrowingHybridPageAttributesEvent.h"
+#import "Modules/Hybrid/Events/GrowingHybridPageEvent.h"
 #import "GrowingTrackerCore/Helpers/NSDictionary+GrowingHelper.h"
 #import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
@@ -66,9 +66,8 @@
 - (void)testGrowingHybridBridgeProvider {
     [self.provider handleJavascriptBridgeMessage:@"testHibrid"];
 
-    GrowingBaseBuilder *builder = GrowingHybridPageAttributesEvent.builder.setQuery(@"QUERY")
+    GrowingBaseBuilder *builder = GrowingHybridPageEvent.builder.setQuery(@"QUERY")
                                       .setPath(@"KEY_PATH")
-                                      .setPageShowTimestamp(123456)
                                       .setAttributes(@{@"test" : @"value"})
                                       .setDomain(@"domain")
                                       .setUserId(@"testUserId")

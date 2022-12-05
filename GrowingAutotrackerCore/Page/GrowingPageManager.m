@@ -21,7 +21,6 @@
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingAutotrackerCore/Page/GrowingPage.h"
-#import "GrowingTrackerCore/Event/Autotrack/GrowingPageAttributesEvent.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
 #import "GrowingAutotrackerCore/Private/GrowingPrivateCategory.h"
@@ -89,20 +88,15 @@
     } else {
         GIOLogDebug(@"createdViewControllerPage: path = %@ is ignored", page.path);
     }
-    [self reissuePageVariable:page];
 }
 
 
 - (void)sendPageEventWithPage:(GrowingPage *)page {
-    GrowingBaseBuilder *builder =
-        GrowingPageEvent.builder.setTitle(page.title).setPath(page.path).setTimestamp(page.showTimestamp);
-    [[GrowingEventManager sharedInstance] postEventBuilder:builder];
-}
-
-- (void)sendPageAttributesEventWithPage:(GrowingPage *)page {
-    GrowingBaseBuilder *builder = GrowingPageAttributesEvent.builder.setPath(page.path)
-                                      .setTimestamp(page.showTimestamp)
-                                      .setAttributes(page.variables);
+    GrowingBaseBuilder *builder = GrowingPageEvent.builder
+                                                  .setTitle(page.title)
+                                                  .setPath(page.path)
+                                                  .setTimestamp(page.showTimestamp)
+                                                  .setAttributes([page.carrier growingPageAttributes]);
     [[GrowingEventManager sharedInstance] postEventBuilder:builder];
 }
 
@@ -110,27 +104,6 @@
     NSString *alias = [page.carrier growingPageAlias];
     if (![NSString growingHelper_isBlankString:alias]) {
         page.alias = alias;
-    }
-}
-
-- (void)reissuePageVariable:(GrowingPageGroup *)pageGroup {
-    NSDictionary<NSString *, NSString *> *var = [pageGroup.carrier growingPageAttributes];
-    if (var.count > 0) {
-        [self setPage:pageGroup variable:var];
-        return;
-    }
-
-    var = pageGroup.variables;
-    if (var.count > 0) {
-        [self setPage:pageGroup variable:var];
-        return;
-    }
-
-    if (pageGroup.parent != nil) {
-        var = pageGroup.parent.variables;
-        if (var.count > 0) {
-            [self setPage:pageGroup variable:var];
-        }
     }
 }
 
@@ -163,27 +136,6 @@
             page = [self createdPage:parentVC];
         }
         return page;
-    }
-}
-
-- (void)setPage:(GrowingPage *)page variable:(NSDictionary<NSString *, NSString *> *)variable {
-    page.variables = variable;
-
-    if (!page.isIgnored) {
-        // 发送pvar事件
-        [self sendPageAttributesEventWithPage:page];
-    }
-    if ([page isKindOfClass:GrowingPageGroup.class]) {
-        GrowingPageGroup *pageGroup = (GrowingPageGroup *)page;
-        if (!pageGroup.childPages.allObjects) {
-            return;
-        }
-
-        for (GrowingPage *child in pageGroup.childPages.allObjects) {
-            if (child.showTimestamp >= pageGroup.showTimestamp) {
-                [self setPage:child variable:variable];
-            }
-        }
     }
 }
 

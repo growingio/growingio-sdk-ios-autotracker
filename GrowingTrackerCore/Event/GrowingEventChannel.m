@@ -50,10 +50,15 @@ static NSMutableArray *eventChannels = nil;
 + (NSMutableArray<GrowingEventChannel *> *)eventChannels {
     if (!eventChannels) {
         eventChannels = [NSMutableArray array];
-        [eventChannels addObject:[GrowingEventChannel eventChannelWithEventTypes:@[GrowingEventTypeVisit, GrowingEventTypeAppClosed,GrowingEventTypePage]
+        [eventChannels addObject:[GrowingEventChannel eventChannelWithEventTypes:@[GrowingEventTypeVisit,
+                                                                                   GrowingEventTypeAppClosed,
+                                                                                   GrowingEventTypePage]
                                                                      urlTemplate:kGrowingEventApiTemplate
                                                                    isCustomEvent:NO]];
-        [eventChannels addObject:[GrowingEventChannel eventChannelWithEventTypes:@[GrowingEventTypeCustom, GrowingEventTypeConversionVariables, GrowingEventTypeLoginUserAttributes, GrowingEventTypeVisitorAttributes,GrowingEventTypePageAttributes]
+        [eventChannels addObject:[GrowingEventChannel eventChannelWithEventTypes:@[GrowingEventTypeCustom,
+                                                                                   GrowingEventTypeConversionVariables,
+                                                                                   GrowingEventTypeLoginUserAttributes,
+                                                                                   GrowingEventTypeVisitorAttributes]
                                                                      urlTemplate:kGrowingEventApiTemplate
                                                                    isCustomEvent:YES]];
     }

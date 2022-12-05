@@ -81,10 +81,6 @@
             [dic setObject:GrowingEventTypePage forKey:@"eventType"];
         }
             break;
-        case GrowingPBEventType_PageAttributes: {
-            [dic setObject:GrowingEventTypePageAttributes forKey:@"eventType"];
-        }
-            break;
         case GrowingPBEventType_ViewClick: {
             [dic setObject:GrowingEventTypeViewClick forKey:@"eventType"];
         }

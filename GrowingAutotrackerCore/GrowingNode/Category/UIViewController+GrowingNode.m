@@ -271,49 +271,22 @@ static char kGrowingPageAttributesKey;
 
 GrowingSafeStringPropertyImplementation(growingPageAlias, setGrowingPageAlias)
 
-- (void)mergeGrowingAttributesPvar:(NSDictionary<NSString *, NSObject *> *)growingAttributesPvar {
-    //为GrowingMobileDebugger缓存用户设置 - pvar
-    if (growingAttributesPvar.count != 0) {
-        NSMutableDictionary<NSString *, NSObject *> *pvar = [self growingAttributesMutablePvar];
-        [pvar addEntriesFromDictionary:growingAttributesPvar];
-    }
-}
-
-- (void)removeGrowingAttributesPvar:(NSString *)key {
-    if (key == nil) {
-        [self.growingAttributesMutablePvar removeAllObjects];
-    } else if (key.length > 0) {
-        [self.growingAttributesMutablePvar removeObjectForKey:key];
-    }
-}
-
-- (NSMutableDictionary<NSString *, NSObject *> *)growingAttributesMutablePvar {
-    NSMutableDictionary<NSString *, NSObject *> *pvar = objc_getAssociatedObject(self, &kGrowingPageAttributesKey);
-    if (pvar == nil) {
-        pvar = [[NSMutableDictionary alloc] init];
-        objc_setAssociatedObject(self, &kGrowingPageAttributesKey, pvar, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return pvar;
-}
-
-- (void)setGrowingPageAttributes:(NSDictionary<NSString *, NSString *> *)growingPageAttributes {
-    [GrowingDispatchManager trackApiSel:_cmd
-                   dispatchInMainThread:^{
-                       if (!growingPageAttributes || ([growingPageAttributes isKindOfClass:NSDictionary.class] &&
-                                                      growingPageAttributes.count == 0)) {
-                           [self removeGrowingAttributesPvar:nil];  // remove all
-
-                       } else {
-                           if ([GrowingArgumentChecker isIllegalAttributes:growingPageAttributes]) {
-                               return;
-                           }
-                           [self mergeGrowingAttributesPvar:growingPageAttributes];
-                       }
-                   }];
+- (void)setGrowingPageAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
+    [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
+        if (!attributes
+        || ([attributes isKindOfClass:NSDictionary.class] && attributes.count == 0)) {
+            objc_setAssociatedObject(self, &kGrowingPageAttributesKey, nil, OBJC_ASSOCIATION_COPY_NONATOMIC);
+        } else {
+            if ([GrowingArgumentChecker isIllegalAttributes:attributes]) {
+                return;
+            }
+            objc_setAssociatedObject(self, &kGrowingPageAttributesKey, attributes, OBJC_ASSOCIATION_COPY_NONATOMIC);
+        }
+    }];
 }
 
 - (NSDictionary<NSString *, NSString *> *)growingPageAttributes {
-    return [[self growingAttributesMutablePvar] copy];
+    return [objc_getAssociatedObject(self, &kGrowingPageAttributesKey) copy];
 }
 
 - (void)setGrowingPageIgnorePolicy:(GrowingIgnorePolicy)growingPageIgnorePolicy {

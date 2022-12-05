@@ -45,6 +45,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (GrowingHybridPageBuilder *(^)(NSString *value))setOrientation;
 - (GrowingHybridPageBuilder *(^)(NSString *value))setTitle;
 - (GrowingHybridPageBuilder *(^)(NSString *value))setReferralPage;
+- (GrowingHybridPageBuilder *(^)(NSDictionary <NSString *, NSObject *>*value))setAttributes;
+- (GrowingHybridPageBuilder *(^)(long long value))setTimestamp;
+- (GrowingHybridPageBuilder *(^)(NSString *value))setDomain;
 
 @end
 

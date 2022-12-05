@@ -28,7 +28,6 @@
 #import "Modules/Hybrid/Events/GrowingHybridViewElementEvent.h"
 #import "Modules/Hybrid/Events/GrowingHybridPageEvent.h"
 #import "Modules/Hybrid/Events/GrowingHybridCustomEvent.h"
-#import "Modules/Hybrid/Events/GrowingHybridPageAttributesEvent.h"
 #import "ManualTrackHelper.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
@@ -197,23 +196,26 @@
     XCTAssertEqualObjects(dic[@"query"], @"a=1&b=2");
 }
 
-- (void)test08SendMockPageAttributesEvent {
+- (void)test08SendMockPageEventWithAttributes {
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"HybridWebView"];
-    [self webView:actor.view evaluateJavaScript:@"sendMockPageAttributesEvent()"];
+    [self webView:actor.view evaluateJavaScript:@"sendMockPageEventWithAttributes()"];
     [viewTester waitForTimeInterval:1];
 
-    NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypePageAttributes];
+    NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
     XCTAssertEqual(events.count, 1);
     
-    GrowingHybridPageAttributesEvent *event = (GrowingHybridPageAttributesEvent *)events.firstObject;
+    GrowingHybridPageEvent *event = (GrowingHybridPageEvent *)events.firstObject;
     NSDictionary *dic = event.toDictionary;
-    XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypePageAttributes);
-    XCTAssertTrue([ManualTrackHelper pageAttributesEventCheck:dic]);
+    XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypePage);
+    XCTAssertTrue([ManualTrackHelper pageEventCheck:dic]);
     XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
     
     XCTAssertEqualObjects(dic[@"domain"], @"test-browser.growingio.com");
     XCTAssertEqualObjects(dic[@"path"], @"/push/web.html");
-    XCTAssertEqualObjects(dic[@"query"], @"a=1&b=2");
+    XCTAssertEqualObjects(dic[@"title"], @"Hybrid测试页面");
+    XCTAssertNotNil(dic[@"attributes"]);
+    XCTAssertEqualObjects(dic[@"attributes"][@"key1"], @"value1");
+    XCTAssertEqualObjects(dic[@"attributes"][@"key2"], @"value2");
 }
 
 - (void)test09SendMockViewClickEvent {

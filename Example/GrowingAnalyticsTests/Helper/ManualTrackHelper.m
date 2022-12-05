@@ -67,16 +67,7 @@
         return NO;
     }
     NSArray *protocol = [self.context arrayByAddingObjectsFromArray:@[@"path", @"orientation"]];
-    NSArray *optional = @[@"title", @"referralPage", @"query", @"protocolType"];
-    return [self protocolCheck:event protocol:protocol] && [self emptyPropertyCheck:event optional:optional];
-}
-
-+ (BOOL)pageAttributesEventCheck:(NSDictionary *)event {
-    if (event.count == 0) {
-        return NO;
-    }
-    NSArray *protocol = [self.context arrayByAddingObjectsFromArray:@[@"path", @"pageShowTimestamp", @"attributes"]];
-    NSArray *optional = @[@"query"];
+    NSArray *optional = @[@"title", @"referralPage", @"query", @"protocolType", @"attributes"];
     return [self protocolCheck:event protocol:protocol] && [self emptyPropertyCheck:event optional:optional];
 }
 
