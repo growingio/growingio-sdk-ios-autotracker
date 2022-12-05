@@ -20,6 +20,5 @@
 #import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
 
 FOUNDATION_EXPORT GrowingEventType const GrowingEventTypePage;
-FOUNDATION_EXPORT GrowingEventType const GrowingEventTypePageAttributes;
 FOUNDATION_EXPORT GrowingEventType const GrowingEventTypeViewClick;
 FOUNDATION_EXPORT GrowingEventType const GrowingEventTypeViewChange;

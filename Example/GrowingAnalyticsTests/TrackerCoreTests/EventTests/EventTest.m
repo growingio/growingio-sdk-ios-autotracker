@@ -37,7 +37,6 @@
 #import "GrowingTrackerCore/Event/GrowingVisitorAttributesEvent.h"
 #import "GrowingTrackerCore/Event/GrowingConversionVariableEvent.h"
 #import "GrowingTrackerCore/Event/GrowingLoginUserAttributesEvent.h"
-#import "GrowingTrackerCore/Event/Autotrack/GrowingPageAttributesEvent.h"
 
 @interface EventTest : XCTestCase
 
@@ -207,7 +206,8 @@
         .setPath(@"path")
         .setOrientation(orientation)
         .setTitle(@"title")
-        .setReferralPage(@"referralPage");
+        .setReferralPage(@"referralPage")
+        .setAttributes(@{@"key" : @"value"});
     [GrowingEventManager.sharedInstance postEventBuilder:builder];
 
     // !!! 注意：这里有个隐藏的死锁问题 !!!
@@ -226,6 +226,7 @@
         XCTAssertEqualObjects(event.orientation, orientation);
         XCTAssertEqualObjects(event.title, @"title");
         XCTAssertEqualObjects(event.referralPage, @"referralPage");
+        XCTAssertEqualObjects(event.attributes[@"key"], @"value");
 
         NSDictionary *dic = event.toDictionary;
         XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypePage);
@@ -233,6 +234,7 @@
         XCTAssertEqualObjects(dic[@"orientation"], orientation);
         XCTAssertEqualObjects(dic[@"title"], @"title");
         XCTAssertEqualObjects(dic[@"referralPage"], @"referralPage");
+        XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
         
         NSMutableDictionary *mDic = dic.mutableCopy;
         if (dic[@"orientation"] == nil && orientation == nil) {
@@ -246,31 +248,6 @@
     });
     
     [self waitForExpectationsWithTimeout:3.0f handler:nil];
-}
-
-- (void)testGrowingPageAttributesEvent {
-    GrowingBaseBuilder *builder = GrowingPageAttributesEvent.builder
-        .setPath(@"path")
-        .setPageShowTimestamp(1638857558209)
-        .setAttributes(@{@"key" : @"value"});
-    [GrowingEventManager.sharedInstance postEventBuilder:builder];
-
-    NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypePageAttributes];
-    XCTAssertEqual(events.count, 1);
-    
-    GrowingPageAttributesEvent *event = (GrowingPageAttributesEvent *)events.firstObject;
-    XCTAssertEqualObjects(event.eventType, GrowingEventTypePageAttributes);
-    XCTAssertEqualObjects(event.path, @"path");
-    XCTAssertEqual(event.pageShowTimestamp, 1638857558209);
-    XCTAssertEqualObjects(event.attributes[@"key"], @"value");
-    
-    NSDictionary *dic = event.toDictionary;
-    XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypePageAttributes);
-    XCTAssertEqualObjects(dic[@"path"], @"path");
-    XCTAssertEqualObjects(dic[@"pageShowTimestamp"], @(1638857558209));
-    XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
-    XCTAssertTrue([ManualTrackHelper pageAttributesEventCheck:dic]);
-    XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
 }
 
 #pragma mark - Private Methods

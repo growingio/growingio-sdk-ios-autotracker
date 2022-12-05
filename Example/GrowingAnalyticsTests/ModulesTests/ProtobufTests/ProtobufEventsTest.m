@@ -31,8 +31,6 @@
 #import "GrowingTrackerCore/Event/GrowingAppCloseEvent.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
 #import "Modules/Hybrid/Events/GrowingHybridPageEvent.h"
-#import "GrowingTrackerCore/Event/Autotrack/GrowingPageAttributesEvent.h"
-#import "Modules/Hybrid/Events/GrowingHybridPageAttributesEvent.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
 #import "Modules/Hybrid/Events/GrowingHybridViewElementEvent.h"
 #import "Modules/Hybrid/Events/GrowingHybridEventType.h"
@@ -271,6 +269,7 @@
                                                        .setOrientation(@"PORTRAIT")
                                                        .setTitle(@"title")
                                                        .setReferralPage(@"referralPage")
+                                                       .setAttributes(@{@"key" : @"value"})
                                                        .build);
         GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
         [self contrastOfDefaultParamter:event protobuf:protobuf];
@@ -280,6 +279,7 @@
         XCTAssertEqualObjects(event.orientation ?: @"", protobuf.orientation);
         XCTAssertEqualObjects(event.title ?: @"", protobuf.title);
         XCTAssertEqualObjects(event.referralPage ?: @"", protobuf.referralPage);
+        XCTAssertEqualObjects(event.attributes ?: @{}, protobuf.attributes);
     }
     {
         GrowingPageEvent *event = (GrowingPageEvent *)(GrowingPageEvent.builder.build);
@@ -291,6 +291,7 @@
         XCTAssertEqualObjects(event.orientation ?: @"", protobuf.orientation);
         XCTAssertEqualObjects(event.title ?: @"", protobuf.title);
         XCTAssertEqualObjects(event.referralPage ?: @"", protobuf.referralPage);
+        XCTAssertEqualObjects(event.attributes ?: @{}, protobuf.attributes);
     }
 
     // GrowingHybridPageEvent
@@ -302,6 +303,7 @@
                                                                    .setReferralPage(@"referralPage")
                                                                    .setQuery(@"query")
                                                                    .setProtocolType(@"https")
+                                                                   .setAttributes(@{@"key" : @"value"})
                                                                    .build);
         GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
         [self contrastOfDefaultParamter:event protobuf:protobuf];
@@ -313,6 +315,7 @@
         XCTAssertEqualObjects(event.referralPage ?: @"", protobuf.referralPage);
         XCTAssertEqualObjects(event.query ?: @"", protobuf.query);
         XCTAssertEqualObjects(event.protocolType ?: @"", protobuf.protocolType);
+        XCTAssertEqualObjects(event.attributes ?: @{}, protobuf.attributes);
     }
     {
         GrowingHybridPageEvent *event = (GrowingHybridPageEvent *)(GrowingHybridPageEvent.builder.build);
@@ -326,64 +329,7 @@
         XCTAssertEqualObjects(event.referralPage ?: @"", protobuf.referralPage);
         XCTAssertEqualObjects(event.query ?: @"", protobuf.query);
         XCTAssertEqualObjects(event.protocolType ?: @"", protobuf.protocolType);
-    }
-}
-
-- (void)testEventConvertToPB_PageAttributes {
-    // GrowingPageAttributesEvent
-    {
-        GrowingPageAttributesEvent *event = (GrowingPageAttributesEvent *)(GrowingPageAttributesEvent.builder
-                                                                           .setPath(@"path")
-                                                                           .setPageShowTimestamp(1638857558209)
-                                                                           .setAttributes(@{@"key": @"value"})
-                                                                           .build);
-        GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
-        [self contrastOfDefaultParamter:event protobuf:protobuf];
-        XCTAssertEqualObjects(GrowingEventTypePageAttributes, event.eventType);
-        XCTAssertEqual(GrowingPBEventType_PageAttributes, protobuf.eventType);
-        XCTAssertEqualObjects(event.path ?: @"", protobuf.path);
-        XCTAssertEqual(event.pageShowTimestamp, protobuf.pageShowTimestamp);
         XCTAssertEqualObjects(event.attributes ?: @{}, protobuf.attributes);
-    }
-    {
-        GrowingPageAttributesEvent *event = (GrowingPageAttributesEvent *)(GrowingPageAttributesEvent.builder.build);
-        GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
-        [self contrastOfDefaultParamter:event protobuf:protobuf];
-        XCTAssertEqualObjects(GrowingEventTypePageAttributes, event.eventType);
-        XCTAssertEqual(GrowingPBEventType_PageAttributes, protobuf.eventType);
-        XCTAssertEqualObjects(event.path ?: @"", protobuf.path);
-        XCTAssertEqual(event.pageShowTimestamp, protobuf.pageShowTimestamp);
-        XCTAssertEqualObjects(event.attributes ?: @{}, protobuf.attributes);
-    }
-
-    // GrowingHybridPageAttributesEvent
-    {
-        GrowingHybridPageAttributesEvent *event = (GrowingHybridPageAttributesEvent *)(GrowingHybridPageAttributesEvent.builder
-                                                                                       .setQuery(@"query")
-                                                                                       .setPath(@"path")
-                                                                                       .setPageShowTimestamp(1638857558209)
-                                                                                       .setAttributes(@{@"key": @"value"})
-                                                                                       .build);
-        GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
-        [self contrastOfDefaultParamter:event protobuf:protobuf];
-        XCTAssertEqualObjects(GrowingEventTypePageAttributes, event.eventType);
-        XCTAssertEqual(GrowingPBEventType_PageAttributes, protobuf.eventType);
-        XCTAssertEqualObjects(event.path ?: @"", protobuf.path);
-        XCTAssertEqual(event.pageShowTimestamp, protobuf.pageShowTimestamp);
-        XCTAssertEqualObjects(event.attributes ?: @{}, protobuf.attributes);
-        XCTAssertEqualObjects(event.query ?: @"", protobuf.query);
-    }
-    {
-        GrowingHybridPageAttributesEvent *event = (GrowingHybridPageAttributesEvent *)(GrowingHybridPageAttributesEvent.builder
-                                                                                       .build);
-        GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
-        [self contrastOfDefaultParamter:event protobuf:protobuf];
-        XCTAssertEqualObjects(GrowingEventTypePageAttributes, event.eventType);
-        XCTAssertEqual(GrowingPBEventType_PageAttributes, protobuf.eventType);
-        XCTAssertEqualObjects(event.path ?: @"", protobuf.path);
-        XCTAssertEqual(event.pageShowTimestamp, protobuf.pageShowTimestamp);
-        XCTAssertEqualObjects(event.attributes ?: @{}, protobuf.attributes);
-        XCTAssertEqualObjects(event.query ?: @"", protobuf.query);
     }
 }
 

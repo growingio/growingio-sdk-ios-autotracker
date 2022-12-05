@@ -17,13 +17,8 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Event/GrowingEventManager.h"
-#import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
-#import "GrowingAutotrackerCore/Page/GrowingPage.h"
-#import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
-#import "GrowingAutotrackerCore/Private/GrowingPrivateCategory.h"
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
-#import "GrowingAutotrackerCore/GrowingNode/Category/UIViewController+GrowingNode.h"
+#import "GrowingAutotrackerCore/Private/GrowingPrivateCategory.h"
 #import "GrowingULViewControllerLifecycle.h"
 
 @implementation UIViewController (GrowingAutotracker)

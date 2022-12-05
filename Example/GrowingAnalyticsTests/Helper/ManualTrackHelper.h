@@ -27,8 +27,6 @@
 
 + (BOOL)pageEventCheck:(NSDictionary *)event;
 
-+ (BOOL)pageAttributesEventCheck:(NSDictionary *)event;
-
 + (BOOL)viewClickEventCheck:(NSDictionary *)event;
 
 + (BOOL)viewChangeEventCheck:(NSDictionary *)event;

@@ -23,7 +23,6 @@
 #import "GrowingTrackerCore/Event/GrowingConversionVariableEvent.h"
 #import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
 #import "GrowingTrackerCore/Event/GrowingLoginUserAttributesEvent.h"
-#import "GrowingTrackerCore/Event/Autotrack/GrowingPageAttributesEvent.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingPageCustomEvent.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
@@ -34,7 +33,6 @@
 
 #if __has_include("Modules/Hybrid/GrowingHybridModule.h")
 #import "Modules/Hybrid/Events/GrowingHybridCustomEvent.h"
-#import "Modules/Hybrid/Events/GrowingHybridPageAttributesEvent.h"
 #import "Modules/Hybrid/Events/GrowingHybridPageEvent.h"
 #import "Modules/Hybrid/Events/GrowingHybridViewElementEvent.h"
 #import "Modules/Hybrid/Events/GrowingHybridEventType.h"
@@ -108,21 +106,7 @@
     dto.sdkVersion = self.sdkVersion;
     dto.userKey = self.userKey;
     
-    if ([self isKindOfClass:GrowingPageEvent.class]) {
-       GrowingPageEvent *event = (GrowingPageEvent *)self;
-       dto.path = event.pageName;
-       dto.orientation = event.orientation;
-       dto.title = event.title;
-       dto.referralPage = event.referralPage;
-       
-#ifdef GROWING_ANALYSIS_HYBRID
-       if ([self isKindOfClass:GrowingHybridPageEvent.class]) {
-           GrowingHybridPageEvent *event = (GrowingHybridPageEvent *)self;
-           dto.query = event.query;
-           dto.protocolType = event.protocolType;
-       }
-#endif
-    } else if ([self isKindOfClass:GrowingVisitEvent.class]) {
+    if ([self isKindOfClass:GrowingVisitEvent.class]) {
         GrowingVisitEvent *event = (GrowingVisitEvent *)self;
         dto.idfa = event.idfa;
         dto.idfv = event.idfv;
@@ -149,16 +133,19 @@
         GrowingBaseAttributesEvent *event = (GrowingBaseAttributesEvent *)self;
         dto.attributes = [dto growingHelper_safeMap:event.attributes];
         
-        if ([self isKindOfClass:GrowingPageAttributesEvent.class]) {
-            GrowingPageAttributesEvent *event = (GrowingPageAttributesEvent *)self;
-            dto.path = event.path;
-            dto.pageShowTimestamp = event.pageShowTimestamp;
-            
+        if ([self isKindOfClass:GrowingPageEvent.class]) {
+            GrowingPageEvent *event = (GrowingPageEvent *)self;
+            dto.path = event.pageName;
+            dto.orientation = event.orientation;
+            dto.title = event.title;
+            dto.referralPage = event.referralPage;
+           
 #ifdef GROWING_ANALYSIS_HYBRID
-            if ([self isKindOfClass:GrowingHybridPageAttributesEvent.class]) {
-                GrowingHybridPageAttributesEvent *event = (GrowingHybridPageAttributesEvent *)self;
-                dto.query = event.query;
-            }
+           if ([self isKindOfClass:GrowingHybridPageEvent.class]) {
+               GrowingHybridPageEvent *event = (GrowingHybridPageEvent *)self;
+               dto.query = event.query;
+               dto.protocolType = event.protocolType;
+           }
 #endif
         } else if ([self isKindOfClass:GrowingCustomEvent.class]) {
             GrowingCustomEvent *event = (GrowingCustomEvent *)self;
@@ -188,9 +175,7 @@
 }
 
 - (GrowingPBEventType)pbEventType {
-    if ([self isKindOfClass:GrowingPageEvent.class]) {
-        return GrowingPBEventType_Page;
-    } else if ([self isKindOfClass:GrowingVisitEvent.class]) {
+    if ([self isKindOfClass:GrowingVisitEvent.class]) {
         return GrowingPBEventType_Visit;
     } else if ([self isKindOfClass:GrowingViewElementEvent.class]) {
 #ifdef GROWING_ANALYSIS_HYBRID
@@ -216,8 +201,8 @@
     } else if ([self isKindOfClass:GrowingConversionVariableEvent.class]) {
         return GrowingPBEventType_ConversionVariables;
     } else if ([self isKindOfClass:GrowingBaseAttributesEvent.class]) {
-        if ([self isKindOfClass:GrowingPageAttributesEvent.class]) {
-            return GrowingPBEventType_PageAttributes;
+        if ([self isKindOfClass:GrowingPageEvent.class]) {
+            return GrowingPBEventType_Page;
         } else if ([self isKindOfClass:GrowingVisitorAttributesEvent.class]) {
             return GrowingPBEventType_VisitorAttributes;
         } else if ([self isKindOfClass:GrowingLoginUserAttributesEvent.class]) {

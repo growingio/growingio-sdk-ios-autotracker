@@ -24,12 +24,10 @@
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "Modules/Hybrid/Events/GrowingHybridEventType.h"
-#import "Modules/Hybrid/Events/GrowingHybridPageAttributesEvent.h"
 #import "Modules/Hybrid/Events/GrowingHybridPageEvent.h"
 #import "Modules/Hybrid/Events/GrowingHybridViewElementEvent.h"
 #import "Modules/Hybrid/Events/GrowingHybridCustomEvent.h"
 #import "GrowingTrackerCore/Event/GrowingLoginUserAttributesEvent.h"
-#import "GrowingTrackerCore/Event/Autotrack/GrowingPageAttributesEvent.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Event/GrowingVisitorAttributesEvent.h"
@@ -182,7 +180,7 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
 - (NSDictionary *)safeAttributesFromDict:(NSDictionary *)dict {
     NSDictionary *attributes = dict[@KEY_ATTRIBUTES];
     if (!attributes || attributes.count == 0) {
-        return attributes;
+        return nil;
     }
     NSMutableDictionary *safeAttributes = [NSMutableDictionary dictionary];
     for (NSString *key in attributes.allKeys) {
@@ -226,12 +224,6 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
                       .setReferralPage(dict[@KEY_REFERRAL_PAGE])
                       .setPath(dict[@KEY_PATH])
                       .setTimestamp([dict growingHelper_longlongForKey:@KEY_TIMESTAMP fallback:[GrowingULTimeUtil currentTimeMillis]])
-                      .setDomain([self getDomain:dict]);
-    } else if ([type isEqualToString:GrowingEventTypePageAttributes]) {
-        builder = GrowingHybridPageAttributesEvent.builder.setQuery(dict[@KEY_QUERY])
-                      .setPath(dict[@KEY_PATH])
-                      .setPageShowTimestamp([dict growingHelper_longlongForKey:@KEY_PAGE_SHOW_TIMESTAMP
-                                                                      fallback:[GrowingULTimeUtil currentTimeMillis]])
                       .setAttributes([self safeAttributesFromDict:dict])
                       .setDomain([self getDomain:dict]);
     } else if ([type isEqualToString:GrowingEventTypeVisit]) {

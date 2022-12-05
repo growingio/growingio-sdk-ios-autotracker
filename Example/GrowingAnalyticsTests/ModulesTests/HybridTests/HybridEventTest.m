@@ -21,7 +21,6 @@
 #import <XCTest/XCTest.h>
 
 #import "Modules/Hybrid/Events/GrowingHybridCustomEvent.h"
-#import "Modules/Hybrid/Events/GrowingHybridPageAttributesEvent.h"
 #import "Modules/Hybrid/Events/GrowingHybridPageEvent.h"
 #import "Modules/Hybrid/Events/GrowingHybridViewElementEvent.h"
 
@@ -54,25 +53,15 @@
     XCTAssertTrue([value isEqualToString:@"value"]);
 }
 
-- (void)testGrowingHybridPageAttributesEvent {
-    GrowingHybridPageAttributesEvent *event = (GrowingHybridPageAttributesEvent *)GrowingHybridPageAttributesEvent.builder.setPath(@"/hybrid/test")
-    .setQuery(@"testquery")
-    .setPageShowTimestamp(123456677)
-    .setAttributes(@{@"test":@"value"}).build;
-    
-    XCTAssertEqual(event.path, @"/hybrid/test");
-    XCTAssertEqual(event.query, @"testquery");
-    NSString *value = (NSString *)event.attributes[@"test"];
-    XCTAssertTrue([value isEqualToString:@"value"]);
-}
-
 - (void)testGrowingHybridPageEvent {
     GrowingHybridPageEvent *event = (GrowingHybridPageEvent *)GrowingHybridPageEvent.builder
     .setQuery(@"testquery")
-    .setProtocolType(@"testProtocol").build;
+    .setProtocolType(@"testProtocol")
+    .setAttributes(@{@"test":@"value"}).build;
     
     XCTAssertEqual(event.query, @"testquery");
     XCTAssertEqual(event.protocolType, @"testProtocol");
+    XCTAssertEqualObjects(event.attributes[@"test"], @"value");
 }
 
 - (void)testGrowingPageCustomEvent {
