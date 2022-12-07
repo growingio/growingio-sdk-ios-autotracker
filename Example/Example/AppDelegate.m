@@ -10,6 +10,7 @@
 #import <AppTrackingTransparency/AppTrackingTransparency.h>
 #import <GrowingToolsKit/GrowingToolsKit.h>
 #import <Bugly/Bugly.h>
+#import "Services/Encryption_v2/GrowingEncrypt.h"
 
 @interface AppDelegate ()
 
@@ -18,6 +19,11 @@
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    GrowingEncrypt *encrypt = [[GrowingEncrypt alloc] init];
+    NSData *data = [encrypt encryptData:[@"sjldfjklsjfms.fm.s,fm.sanfklsjkflsjlfkj" dataUsingEncoding:NSUTF8StringEncoding]];
+    NSData *base64EncodedData = [data base64EncodedDataWithOptions:NSDataBase64EncodingEndLineWithCarriageReturn];
+    NSString *result = [[NSString alloc] initWithData:base64EncodedData encoding:NSUTF8StringEncoding];
+    NSLog(@"加密结果为：%@", result);
 #if DELAY_INITIALIZED
 #if defined(SDKAPM)
     [GrowingAPM didFinishLaunching];
