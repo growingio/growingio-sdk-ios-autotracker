@@ -22,7 +22,7 @@
 
 @implementation GrowingWKWebViewJavascriptBridge_JS
 
-NSString *WKWebViewJavascriptBridge_js(void) {
+static NSString *kWKWebViewJavascriptBridge_js(void) {
 #define __WKWebViewJavascriptBridge_js_func__(x) #x
 
     // BEGIN preprocessorJSCode
@@ -32,14 +32,19 @@ NSString *WKWebViewJavascriptBridge_js(void) {
         }
 
         window.GrowingWebViewJavascriptBridge = {
-                configuration: %@,
+                configuration: $configuration_replacement,
                 dispatchEvent: dispatchEvent,
                 setNativeUserId: setNativeUserId,
                 clearNativeUserId: clearNativeUserId,
                 setNativeUserIdAndUserKey: setNativeUserIdAndUserKey,
                 clearNativeUserIdAndUserKey: clearNativeUserIdAndUserKey,
-                onDomChanged: onDomChanged
+                onDomChanged: onDomChanged,
+                getDomTree: getDomTreeTemp
         };
+        
+        function getDomTreeTemp() {
+            console.log("%c [GrowingIO]：圈选获取节点信息失败！请集成 gioHybridCircle 插件后重试！", "color: #F59E0B;");
+        }
 
         function dispatchEvent(event) {
             _doSend("dispatchEvent", event);
@@ -83,7 +88,8 @@ NSString *WKWebViewJavascriptBridge_js(void) {
 };
 
 + (NSString *)createJavascriptBridgeJsWithNativeConfiguration:(GrowingWebViewJavascriptBridgeConfiguration *)configuration {
-    return [NSString stringWithFormat:WKWebViewJavascriptBridge_js(), [configuration toJsonString]];
+    NSString *bridge = kWKWebViewJavascriptBridge_js();
+    return [bridge stringByReplacingOccurrencesOfString:@"$configuration_replacement" withString:[configuration toJsonString]];
 }
 
 @end
