@@ -1,3 +1,14 @@
+## [3.4.6](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.4.5...3.4.6) (2022-12-15)
+
+### Bug Fixes
+
+* Web 端未集成圈选插件时，显示对应提示 ([944919a](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/944919a5e9b3b0c6464a3ebe402b6e08cffc5e3e))
+
+
+### Features
+
+* page attributes ([acece74](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/acece749cbffe6358ac337655c95eccfee20f192))
+
 ## [3.4.5](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.4.4...3.4.5) (2022-11-16)
 
 
