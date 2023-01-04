@@ -24,7 +24,7 @@
 #import "GrowingULTimeUtil.h"
 #import <objc/runtime.h>
 
-static NSString * const kGrowingEventDuration = @"eventDuration";
+static NSString * const kGrowingEventDuration = @"event_duration";
 
 @interface GrowingEventTimer ()
 
