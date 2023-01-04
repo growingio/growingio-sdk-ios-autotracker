@@ -34,6 +34,8 @@
 #import "GrowingTrackerCore/Event/GrowingVisitorAttributesEvent.h"
 #import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
 
+static NSString * const kGrowingEventDuration = @"event_duration";
+
 @interface A0GrowingAnalyticsCDPTest : XCTestCase <GrowingEventInterceptor>
 
 @end
@@ -667,7 +669,7 @@
         GrowingCustomEvent *event = (GrowingCustomEvent *)events.firstObject;
         XCTAssertEqualObjects(event.eventName, @"eventName");
         XCTAssertEqualObjects(event.attributes[@"key"], nil);
-        XCTAssertNotNil(event.attributes[@"eventDuration"]);
+        XCTAssertNotNil(event.attributes[kGrowingEventDuration]);
     }
     
     {
@@ -742,7 +744,7 @@
         
         GrowingCustomEvent *event = (GrowingCustomEvent *)events.firstObject;
         XCTAssertEqualObjects(event.eventName, @"eventName");
-        XCTAssertLessThan(((NSString *)event.attributes[@"eventDuration"]).floatValue, 1.0);
+        XCTAssertLessThan(((NSString *)event.attributes[kGrowingEventDuration]).floatValue, 1.0);
     }
     
     {
@@ -770,7 +772,7 @@
         
         GrowingCustomEvent *event = (GrowingCustomEvent *)events.firstObject;
         XCTAssertEqualObjects(event.eventName, @"eventName");
-        XCTAssertGreaterThanOrEqual(((NSString *)event.attributes[@"eventDuration"]).floatValue, 0.9); // sleep 不准
+        XCTAssertGreaterThanOrEqual(((NSString *)event.attributes[kGrowingEventDuration]).floatValue, 0.9); // sleep 不准
     }
     
     {
@@ -806,9 +808,9 @@
         
         GrowingCustomEvent *event = (GrowingCustomEvent *)events.firstObject;
         XCTAssertEqualObjects(event.eventName, @"eventName");
-        XCTAssertGreaterThanOrEqual(((NSString *)event.attributes[@"eventDuration"]).floatValue, 0.9); // sleep 不准
+        XCTAssertGreaterThanOrEqual(((NSString *)event.attributes[kGrowingEventDuration]).floatValue, 0.9); // sleep 不准
         // 不会算上前后台切换的时间
-        XCTAssertLessThan(((NSString *)event.attributes[@"eventDuration"]).floatValue, 2.0);
+        XCTAssertLessThan(((NSString *)event.attributes[kGrowingEventDuration]).floatValue, 2.0);
     }
 }
 
@@ -824,7 +826,7 @@
         GrowingCustomEvent *event = (GrowingCustomEvent *)events.firstObject;
         XCTAssertEqualObjects(event.eventName, @"eventName");
         XCTAssertEqualObjects(event.attributes[@"key"], @"value");
-        XCTAssertNotNil(event.attributes[@"eventDuration"]);
+        XCTAssertNotNil(event.attributes[kGrowingEventDuration]);
     }
     
     {
@@ -874,7 +876,7 @@
         GrowingCustomEvent *event = (GrowingCustomEvent *)events.firstObject;
         XCTAssertEqualObjects(event.eventName, @"eventName");
         XCTAssertEqualObjects(event.attributes[@"key"], @"value");
-        XCTAssertLessThan(((NSString *)event.attributes[@"eventDuration"]).floatValue, 1.0);
+        XCTAssertLessThan(((NSString *)event.attributes[kGrowingEventDuration]).floatValue, 1.0);
     }
     
     {
@@ -891,7 +893,7 @@
         GrowingCustomEvent *event = (GrowingCustomEvent *)events.firstObject;
         XCTAssertEqualObjects(event.eventName, @"eventName");
         XCTAssertEqualObjects(event.attributes[@"key"], @"value");
-        XCTAssertGreaterThanOrEqual(((NSString *)event.attributes[@"eventDuration"]).floatValue, 0.9); // sleep 不准
+        XCTAssertGreaterThanOrEqual(((NSString *)event.attributes[kGrowingEventDuration]).floatValue, 0.9); // sleep 不准
     }
     
     {
@@ -947,7 +949,7 @@
         XCTAssertNotNil(event.attributes[@"key6"]);
         XCTAssertEqualObjects(event.attributes[@"key7"], @"||||");
         XCTAssertEqualObjects(event.attributes[@""], @"value1||value2||value3");
-        XCTAssertNotNil(event.attributes[@"eventDuration"]);
+        XCTAssertNotNil(event.attributes[kGrowingEventDuration]);
     }
     
     {

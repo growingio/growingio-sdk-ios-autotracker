@@ -25,6 +25,18 @@
 
 GrowingMod(GrowingAPMModule)
 
+static NSString * const kAPMEventError = @"apm_system_error";
+static NSString * const kAPMErrorTitle = @"error_type";
+static NSString * const kAPMErrorContent = @"error_content";
+
+static NSString * const kAPMEventLaunchTime = @"apm_app_launch";
+static NSString * const kAPMRebootMode = @"reboot_mode";
+static NSString * const kAPMRebootModeWarm = @"warm";
+static NSString * const kAPMRebootModeCold = @"cold";
+static NSString * const kAPMRebootTime = @"reboot_duration";
+static NSString * const kAPMPageName = @"title";
+static NSString * const kAPMPageDuration = @"page_launch_duration";
+
 @implementation GrowingAPMModule
 
 #pragma mark - GrowingModuleProtocol
@@ -53,16 +65,14 @@ GrowingMod(GrowingAPMModule)
                                   loadDuration:(double)loadDuration
                                     rebootTime:(double)rebootTime
                                         isWarm:(double)isWarm {
-    NSDictionary *pageLoadDic = @{@"page_name" : pageName,
-                                  @"page_load_duration" : [NSString stringWithFormat:@"%.0f", loadDuration]};
+    NSDictionary *pageLoadDic = @{kAPMPageName : pageName,
+                                  kAPMPageDuration : [NSString stringWithFormat:@"%.0f", loadDuration]};
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:pageLoadDic];
     if (rebootTime > 0) {
-        [params addEntriesFromDictionary:isWarm ? @{@"warm_reboot_time" : [NSString stringWithFormat:@"%.0f", rebootTime],
-                                                    @"warm_reboot" : @"true"}
-                                                : @{@"cold_reboot_time" : [NSString stringWithFormat:@"%.0f", rebootTime],
-                                                    @"cold_reboot" : @"true"}];
+        [params addEntriesFromDictionary:@{kAPMRebootTime : [NSString stringWithFormat:@"%.0f", rebootTime],
+                                           kAPMRebootMode : isWarm ? kAPMRebootModeWarm : kAPMRebootModeCold}];
     }
-    [GrowingEventGenerator generateCustomEvent:@"AppLaunchTime" attributes:params];
+    [GrowingEventGenerator generateCustomEvent:kAPMEventLaunchTime attributes:params];
 }
 
 - (void)growingapm_crashMonitorHandleWithReports:(NSArray *)reports
@@ -102,8 +112,8 @@ GrowingMod(GrowingAPMModule)
                     reason = [self stringWithUncaughtExceptionName:cppexception[@"name"] reason:reportForEvent[@"reason"]];
                 }
                 
-                [GrowingEventGenerator generateCustomEvent:@"Error" attributes:@{@"error_title" : exception_name,
-                                                                                 @"error_content" : reason}];
+                [GrowingEventGenerator generateCustomEvent:kAPMEventError attributes:@{kAPMErrorTitle : exception_name,
+                                                                                       kAPMErrorContent : reason}];
             }
             
             id appleFmt = report[@"AppleFmt"];
