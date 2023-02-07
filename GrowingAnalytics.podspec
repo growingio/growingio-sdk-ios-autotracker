@@ -143,6 +143,12 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     apm.dependency 'GrowingAPM/Core'
   end
 
+  s.subspec 'HubFrameworkAdapter' do |adapter|
+    adapter.source_files = 'Modules/HubFrameworkAdapter/**/*{.h,.m,.c,.cpp,.mm}'
+    adapter.public_header_files = 'Modules/HubFrameworkAdapter/Public/*.h'
+    adapter.dependency 'GrowingAnalytics/AutotrackerCore'
+  end
+
   s.subspec 'DISABLE_IDFA' do |config|
     config.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'GROWING_ANALYSIS_DISABLE_IDFA=1'}
     config.dependency 'GrowingAnalytics/TrackerCore'
