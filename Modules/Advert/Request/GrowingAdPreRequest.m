@@ -18,6 +18,7 @@
 //  limitations under the License.
 
 #import "Modules/Advert/Request/GrowingAdPreRequest.h"
+#import "Modules/Advert/Public/GrowingAdvertising.h"
 #import "Modules/Advert/Request/GrowingAdRequestHeaderAdapter.h"
 
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
@@ -27,21 +28,24 @@
 @implementation GrowingAdPreRequest
 
 - (GrowingHTTPMethod)method {
-    return GrowingHTTPMethodPOST;
+    return GrowingHTTPMethodGET;
 }
 
 - (NSURL *)absoluteURL {
-    NSString *baseUrl = @"https://t.growingio.com";
-    if (!baseUrl.length) {
-        return nil;
+    NSURL *baseURL;
+    GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    if (config.deepLinkHost) {
+        baseURL = config.deepLinkHost;
+    } else {
+        baseURL = [NSURL URLWithString:@"https://t.growingio.com"];
     }
-    NSString *absoluteURLString = [baseUrl stringByAppendingString:self.path];
-    return [NSURL URLWithString:absoluteURLString];
+    return [NSURL URLWithString:self.path relativeToURL:baseURL];
 }
 
 - (NSString *)path {
-    NSString *projectKey = GrowingConfigurationManager.sharedInstance.trackConfiguration.projectId ?: @"";
-    NSString *datasourceId = GrowingConfigurationManager.sharedInstance.trackConfiguration.dataSourceId ?: @"";
+    GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    NSString *projectKey = config.projectId ?: @"";
+    NSString *datasourceId = config.dataSourceId ?: @"";
     NSString *path = [NSString stringWithFormat:@"deep/v1/%@/ios/%@/%@/%@", self.isManual ? @"inapp" : @"defer",
                                                                             projectKey,
                                                                             datasourceId,
@@ -50,8 +54,7 @@
 }
 
 - (NSArray<id<GrowingRequestAdapter>> *)adapters {
-    NSDictionary *headers = @{@"Content-Type" : @"application/json",
-                              @"User-Agent" : self.userAgent};
+    NSDictionary *headers = @{@"User-Agent" : self.userAgent};
     GrowingAdRequestHeaderAdapter *basicHeaderAdapter = [GrowingAdRequestHeaderAdapter adapterWithRequest:self
                                                                                                    header:headers];
     GrowingRequestMethodAdapter *methodAdapter = [GrowingRequestMethodAdapter adapterWithRequest:self];

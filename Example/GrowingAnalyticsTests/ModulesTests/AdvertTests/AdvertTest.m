@@ -26,6 +26,7 @@
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 
 #import "Modules/Advert/Event/GrowingAdvertEventType.h"
+#import "Modules/Advert/Utils/GrowingAdUtils.h"
 
 #import "MockEventQueue.h"
 
@@ -61,9 +62,8 @@
 
 - (void)test01SetDataCollectionEnabled {
     // 恢复为未发送激活事件
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setObject:@(0) forKey:@"GrowingAdvertisingActivateWrote"];
-    [userDefaults synchronize];
+    [GrowingAdUtils setActivateWrote:NO];
+    [GrowingAdUtils setActivateSent:NO];
     
     [[GrowingAutotracker sharedInstance] setDataCollectionEnabled:NO];
     [[GrowingAutotracker sharedInstance] setDataCollectionEnabled:YES];
