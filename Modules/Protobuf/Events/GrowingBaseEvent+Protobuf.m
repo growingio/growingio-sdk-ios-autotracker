@@ -166,6 +166,7 @@
 #ifdef GROWING_ANALYSIS_ADVERT
         } else if ([self isKindOfClass:GrowingActivateEvent.class]) {
             GrowingActivateEvent *event = (GrowingActivateEvent *)self;
+            dto.eventName = event.eventName;
             dto.idfa = event.idfa;
             dto.idfv = event.idfv;
 #endif

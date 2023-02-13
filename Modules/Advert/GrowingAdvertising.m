@@ -35,6 +35,7 @@
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/NSDictionary+GrowingHelper.h"
 #import "GrowingTrackerCore/Helpers/NSData+GrowingHelper.h"
 #import "GrowingTrackerCore/Helpers/NSURL+GrowingHelper.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
@@ -49,6 +50,7 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
 
 @property (nonatomic, strong) WKWebView *wkWebView;
 @property (nonatomic, copy) NSString *userAgent;
+@property (nonatomic, copy) NSURL *deeplinkUrl;
 
 @end
 
@@ -71,6 +73,10 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
     BOOL dataCollectionEnabled = ((NSNumber *)customParam[@"dataCollectionEnabled"]).boolValue;
     if (dataCollectionEnabled) {
         [self loadClipboard];
+        if (self.deeplinkUrl) {
+            [self growingHandlerUrl:self.deeplinkUrl.copy isManual:NO callback:nil];
+            self.deeplinkUrl = nil; // 避免多线程环境下有可能多发 AppReengage
+        }
     }
 }
 
@@ -132,6 +138,15 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
         return NO;
     }
     
+    if (!isManual) {
+        // 适配初始化时， dataCollectionEnabled == NO 的场景
+        self.deeplinkUrl = url.copy;
+    }
+    
+    if ([self SDKDoNotTrack]) {
+        return NO;
+    }
+    
     // Universal Link 短链
     if ([GrowingAdUtils isShortChainUlink:url]) {
         NSDate *startDate = [NSDate date];
@@ -141,6 +156,10 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
             }
             [self accessUserAgent:^(NSString * _Nullable userAgent) {
                 if ([self SDKDoNotTrack]) {
+                    return;
+                }
+                self.deeplinkUrl = nil;
+                if (!userAgent) {
                     return;
                 }
                 GrowingAdPreRequest *eventRequest = nil;
@@ -174,6 +193,7 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
     // Universal Link 长链 / URL Scheme
     NSDictionary *dic = url.growingHelper_queryDict;
     if (dic[@"deep_link_id"]) {
+        self.deeplinkUrl = nil;
         [self getDeeplinkParams:dic isManual:isManual block:^(BOOL completed, NSDictionary *params, NSDictionary * _Nullable customParams) {
             if (completed) {
                 [self generateAppReengage:params];
@@ -200,7 +220,9 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
     dispatch_async(dispatch_get_main_queue(), ^{
         // WKWebView 的 initWithFrame 方法偶发崩溃，这里 @try @catch 保护
         @try {
-            self.wkWebView = [[WKWebView alloc] initWithFrame:CGRectZero];
+            if (!self.wkWebView) {
+                self.wkWebView = [[WKWebView alloc] initWithFrame:CGRectZero];
+            }
             __weak typeof(self) weakSelf = self;
             [self.wkWebView evaluateJavaScript:@"navigator.userAgent"
                              completionHandler:^(_Nullable id response, NSError *_Nullable error) {
@@ -283,20 +305,30 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
     dictM[@"deep_link_id"] = originDic[@"deep_link_id"];
     dictM[@"deep_click_id"] = originDic[@"deep_click_id"];
     dictM[@"deep_click_time"] = originDic[@"deep_click_time"];
+    if ([dictM[@"deep_click_time"] isKindOfClass:[NSNumber class]]) {
+        dictM[@"deep_click_time"] = [NSString stringWithFormat:@"%@", dictM[@"deep_click_time"]];
+    }
+    
     BOOL completed = dictM.count == 3;
     
     NSString *encode = originDic[@"deep_params"];
     NSDictionary *customParams = nil;
-    if (encode.length > 0) {
-        NSString *decode = [GrowingAdUtils URLDecodedString:encode];
-        if (decode.length > 0) {
-            dictM[@"deep_params"] = decode;
-            customParams = decode.growingHelper_dictionaryObject;
+    if ([encode isKindOfClass:[NSString class]]) {
+        if (encode.length > 0) {
+            NSString *decode = [GrowingAdUtils URLDecodedString:encode];
+            if (decode.length > 0) {
+                dictM[@"deep_params"] = decode;
+                customParams = decode.growingHelper_dictionaryObject;
+            }
         }
+    } else if ([encode isKindOfClass:[NSDictionary class]]) {
+        NSDictionary *dic = (NSDictionary *)encode;
+        dictM[@"deep_params"] = dic.growingHelper_jsonString;
+        customParams = dic.copy;
     }
     
     if (isManual) {
-        dictM[@"deep_type"] = @"in_app";
+        dictM[@"deep_type"] = @"inapp";
     }
     
     if (paramsBlock) {

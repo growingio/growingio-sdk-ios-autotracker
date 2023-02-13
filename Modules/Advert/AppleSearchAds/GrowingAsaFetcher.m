@@ -85,23 +85,15 @@ static pthread_rwlock_t _lock = PTHREAD_RWLOCK_INITIALIZER;
             id jsonObject = event.toJSONObject;
             if ([jsonObject isKindOfClass:[NSDictionary class]]) {
                 NSDictionary *dic = (NSDictionary *)jsonObject;
-                if ([dic[@"eventName"] isEqualToString:GrowingAdvertEventNameReengage]) {
-                    continue;
+                if (!dic[@"eventName"] // 兼容旧版无 eventName
+                    || [dic[@"eventName"] isEqualToString:GrowingAdvertEventNameActivate]) {
+                    activate = event;
+                    break;
                 }
             }
-            activate = event;
-            break;
         }
     }
     if (activate == nil) {
-        if ([GrowingAdUtils isActivateWrote]) {
-            GrowingAsaFetcher.status = GrowingAsaFetcherStatusCompleted;
-            [GrowingAdUtils setActivateSent:YES];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [[GrowingEventManager sharedInstance] removeInterceptor:self];
-            });
-        }
         return events;
     }
     
@@ -117,7 +109,7 @@ static pthread_rwlock_t _lock = PTHREAD_RWLOCK_INITIALIZER;
         }
         
         if (GrowingAsaFetcher.status == GrowingAsaFetcherStatusFailure) {
-            // AsaData获取失败，上传activate的同时，再次尝试获取AsaData
+            // AsaData 获取失败，上传 activate 的同时，再次尝试获取 AsaData
             [GrowingAsaFetcher retry];
         }
     }
@@ -132,17 +124,18 @@ static pthread_rwlock_t _lock = PTHREAD_RWLOCK_INITIALIZER;
             id jsonObject = event.toJSONObject;
             if ([jsonObject isKindOfClass:[NSDictionary class]]) {
                 NSDictionary *dic = (NSDictionary *)jsonObject;
-                if ([dic[@"eventName"] isEqualToString:GrowingAdvertEventNameReengage]) {
-                    continue;
+                if ([dic[@"eventName"] isEqualToString:GrowingAdvertEventNameActivate]
+                    || [dic[@"eventName"] isEqualToString:GrowingAdvertEventNameDefer]) {
+                    // 普通激活和 defer 都可视为激活已发送
+                    GrowingAsaFetcher.status = GrowingAsaFetcherStatusCompleted;
+                    [GrowingAdUtils setActivateSent:YES];
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [[GrowingEventManager sharedInstance] removeInterceptor:self];
+                    });
+                    break;
                 }
             }
-            GrowingAsaFetcher.status = GrowingAsaFetcherStatusCompleted;
-            [GrowingAdUtils setActivateSent:YES];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [[GrowingEventManager sharedInstance] removeInterceptor:self];
-            });
-            break;
         }
     }
 }
