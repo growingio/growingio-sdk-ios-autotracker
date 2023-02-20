@@ -252,7 +252,6 @@
             @"UICompatibilityInputViewController", @"UISystemInputAssistantViewController",
             @"UIPredictionViewController", @"GrowingWindowViewController", @"UIApplicationRotationFollowingController",
             @"UIAlertController",
-            @"FlutterViewController",
         ]];
     }
     return _ignoredPrivateControllers;

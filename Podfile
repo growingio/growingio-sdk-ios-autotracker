@@ -15,6 +15,7 @@ target 'Example' do
 #  pod 'GrowingAnalytics/Hybrid', :path => './'
   pod 'GrowingAnalytics/Protobuf', :path => './'
   pod 'GrowingAnalytics/Advert', :path => './'
+#  pod 'GrowingAnalytics/Flutter', :path => './'
 #  pod 'GrowingAnalytics/DISABLE_IDFA', :path => './' #禁用idfa
 
   pod 'GrowingAPM'
@@ -25,7 +26,7 @@ target 'Example' do
   pod 'SDCycleScrollView', '~> 1.75'
   pod 'LBXScan/LBXNative', '2.3'
   pod 'LBXScan/UI', '2.3'
-  pod 'Bugly'
+#  pod 'Bugly'
   pod 'GrowingToolsKit'
 end
 

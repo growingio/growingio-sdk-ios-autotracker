@@ -242,7 +242,7 @@ static BOOL impTrackIsRegistered = NO;
 - (void)addNode:(UIView *)node inSubView:(BOOL)flag; {
     //如果不可见或者忽略，则不可track
     if ([node growingNodeDonotTrack]) {
-        GIOLogDebug(@"imp track view %@ is donotTrack",node);
+        GIOLogVerbose(@"imp track view %@ is donotTrack", node);
         return;
     }
     if (node.growingIMPTrackEventName.length > 0) {
@@ -264,7 +264,7 @@ static BOOL impTrackIsRegistered = NO;
 - (void)addNode:(UIView *)node {
     //如果不可见或者忽略，则不可track
     if ([node growingNodeDonotTrack]) {
-        GIOLogDebug(@"imp track view %@ is donotTrack",node);
+        GIOLogVerbose(@"imp track view %@ is donotTrack", node);
         return;
     }
     if (node.growingIMPTrackEventName.length > 0) {
