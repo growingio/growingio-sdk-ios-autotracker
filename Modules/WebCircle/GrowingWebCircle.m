@@ -59,6 +59,11 @@
 #import "GrowingTrackerCore/Public/GrowingWebSocketService.h"
 #import "GrowingTrackerCore/GrowingRealTracker.h"
 
+#if __has_include("Modules/Flutter/Public/GrowingFlutterPlugin.h")
+#import "Modules/Flutter/Public/GrowingFlutterPlugin.h"
+#define GROWING_ANALYSIS_FLUTTER
+#endif
+
 GrowingMod(GrowingWebCircle)
 
 @interface GrowingWeakObject : NSObject
@@ -91,6 +96,10 @@ GrowingMod(GrowingWebCircle)
 @property (nonatomic, assign) BOOL isPageDontShow;
 @property (nonatomic, strong) NSMutableArray *elements;
 @property (nonatomic, weak) UIWindow *lastKeyWindow;
+
+#ifdef GROWING_ANALYSIS_FLUTTER
+@property (nonatomic, copy) NSDictionary *flutterCircleData;
+#endif
 
 @end
 
@@ -190,7 +199,7 @@ GrowingMod(GrowingWebCircle)
     GrowingPage *page = [[GrowingPageManager sharedInstance] findPageByView:node.view];
     if (!page) {
         self.isPageDontShow = YES;
-        GIOLogDebug(@"page of view %@ not found", node.view);
+        GIOLogDebug(@"[GrowingWebCircle] page of view %@ not found", node.view);
     }
     GrowingWebCircleElement *element = GrowingWebCircleElement.builder.setRect(node.view.growingNodeFrame)
                                            .setContent(node.viewContent)
@@ -231,12 +240,12 @@ GrowingMod(GrowingWebCircle)
     }
     UIView *node = viewNode.view;
     if ([node growingNodeDonotCircle]) {
-        GIOLogDebug(@"过滤节点：%@ 因不可见，无法圈选", [node class]);
+        GIOLogDebug(@"[GrowingWebCircle] 过滤节点：%@ 因不可见，无法圈选", [node class]);
         return;
     }
     
     if ([node growingNodeDonotTrack]) {
-        GIOLogDebug(@"过滤节点：%@ 已忽略，无需圈选", [node class]);
+        GIOLogDebug(@"[GrowingWebCircle] 过滤节点：%@ 已忽略，无需圈选", [node class]);
     } else {
         if ([node growingNodeUserInteraction] || [node isKindOfClass:NSClassFromString(@"WKWebView")]) {
             NSMutableDictionary *dict = [self dictFromNode:viewNode];
@@ -264,7 +273,6 @@ GrowingMod(GrowingWebCircle)
 
 - (void)fillAllViewsForWebCircle:(NSDictionary *)dataDict completion:(void (^)(NSMutableDictionary *dict))completion {
     NSMutableDictionary *finalDataDict = [NSMutableDictionary dictionaryWithDictionary:dataDict];
-    //初始化数组
     self.elements = [NSMutableArray array];
     UIWindow *topwindow = nil;
     UIWindow *highestWindow = nil;
@@ -320,8 +328,22 @@ GrowingMod(GrowingWebCircle)
         NSMutableDictionary *dict = [self dictFromPage:tmp xPath:page.path];
         [pages addObject:dict];
     }
+    
+#ifdef GROWING_ANALYSIS_FLUTTER
+    NSArray *flutterElements = self.flutterCircleData[@"elements"];
+    if ([flutterElements isKindOfClass:[NSArray class]]) {
+        [self.elements addObjectsFromArray:flutterElements];
+    }
+    
+    NSArray *flutterPages = self.flutterCircleData[@"pages"];
+    if ([flutterPages isKindOfClass:[NSArray class]]) {
+        [pages addObjectsFromArray:flutterPages];
+    }
+#endif
+        
     finalDataDict[@"elements"] = self.elements;
     finalDataDict[@"pages"] = pages;
+    
     if (completion != nil) {
         completion(finalDataDict);
     }
@@ -340,15 +362,25 @@ GrowingMod(GrowingWebCircle)
     if (!data.length || !imgBase64Str.length) {
         return nil;
     }
-    NSDictionary *dict = @{
-        @"screenWidth" : @(image.size.width * image.scale),
-        @"screenHeight" : @(image.size.height * image.scale),
-        @"scale" : @(1),  //暂时没有计算
-        @"screenshot" : [@"data:image/jpeg;base64," stringByAppendingString:imgBase64Str],
-        @"msgType" : action,
-        @"snapshotKey" : @([self getSnapshotKey]),
-    };
-
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"screenshot"] = [@"data:image/jpeg;base64," stringByAppendingString:imgBase64Str];
+    dict[@"msgType"] = action;
+    dict[@"snapshotKey"] = @([self getSnapshotKey]);
+    dict[@"screenWidth"] = @(image.size.width * image.scale);
+    dict[@"screenHeight"] = @(image.size.height * image.scale);
+    dict[@"scale"] = @(1);
+    
+#ifdef GROWING_ANALYSIS_FLUTTER
+    if ([self.flutterCircleData[@"width"] isKindOfClass:[NSNumber class]]) {
+        dict[@"screenWidth"] = self.flutterCircleData[@"width"];
+    }
+    if ([self.flutterCircleData[@"height"] isKindOfClass:[NSNumber class]]) {
+        dict[@"screenHeight"] = self.flutterCircleData[@"height"];
+    }
+    if ([self.flutterCircleData[@"scale"] isKindOfClass:[NSNumber class]]) {
+        dict[@"scale"] = self.flutterCircleData[@"scale"];
+    }
+#endif
     return dict;
 }
 
@@ -401,7 +433,7 @@ GrowingMod(GrowingWebCircle)
     if (!self.isReady) {
         Class <GrowingWebSocketService> serviceClass = [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingWebSocketService)];
         if (!serviceClass) {
-            GIOLogError(@"-runWithCircle:readyBlock:finishBlock: web circle error : no websocket service support");
+            GIOLogError(@"[GrowingWebCircle] -runWithCircle:readyBlock:finishBlock: web circle error : no websocket service support");
             return;
         }
         
@@ -418,7 +450,7 @@ GrowingMod(GrowingWebCircle)
                                                    object:nil];
 
         [UIApplication sharedApplication].idleTimerDisabled = YES;
-        GIOLogDebug(@"开始起服务");
+        GIOLogDebug(@"[GrowingWebCircle] 开始起服务");
         
         if (url) {
             self.webSocket = [[(Class)serviceClass alloc] initWithURLRequest:[NSURLRequest requestWithURL:url]];
@@ -498,7 +530,7 @@ GrowingMod(GrowingWebCircle)
 }
 
 - (void)stop {
-    GIOLogDebug(@"开始断开连接");
+    GIOLogDebug(@"[GrowingWebCircle] 开始断开连接");
     NSDictionary *dict = @{@"msgType" : @"quit"};
     [self sendJson:dict];
     self.statusWindow.statusLable.text = @"正在关闭web圈选...";
@@ -559,7 +591,7 @@ GrowingMod(GrowingWebCircle)
 
 - (void)webSocket:(id <GrowingWebSocketService>)webSocket didReceiveMessage:(id)message {
     if ([message isKindOfClass:[NSString class]] || ((NSString *)message).length > 0) {
-        GIOLogDebug(@"didReceiveMessage: %@", message);
+        GIOLogDebug(@"[GrowingWebCircle] didReceiveMessage: %@", message);
         NSMutableDictionary *dict = [[message growingHelper_jsonObject] mutableCopy];
 
         //如果收到了ready消息，说明可以发送圈选数据了
@@ -585,7 +617,7 @@ GrowingMod(GrowingWebCircle)
 }
 
 - (void)webSocketDidOpen:(id <GrowingWebSocketService>)webSocket {
-    GIOLogDebug(@"websocket已连接");
+    GIOLogDebug(@"[GrowingWebCircle] websocket已连接");
     CGSize screenSize = [GrowingDeviceInfo deviceScreenSize];
     NSString *projectId = GrowingConfigurationManager.sharedInstance.trackConfiguration.projectId;
     NSDictionary *dict = @{
@@ -607,16 +639,16 @@ GrowingMod(GrowingWebCircle)
     didCloseWithCode:(NSInteger)code
               reason:(NSString *)reason
             wasClean:(BOOL)wasClean {
-    GIOLogDebug(@"已断开链接");
-    _isReady = NO;
+    GIOLogDebug(@"[GrowingWebCircle] 已断开链接");
+    self.isReady = NO;
     if (code != GrowingWebSocketStatusCodeNormal) {
         [self _stopWithError:@"当前设备已与Web端断开连接,如需继续圈选请扫码重新连接。"];
     }
 }
 
 - (void)webSocket:(id <GrowingWebSocketService>)webSocket didFailWithError:(NSError *)error {
-    GIOLogDebug(@"error : %@", error);
-    _isReady = NO;
+    GIOLogDebug(@"[GrowingWebCircle] webSocketDidFailWithError: %@", error);
+    self.isReady = NO;
     [self _stopWithError:@"服务器链接失败"];
 }
 
@@ -637,13 +669,13 @@ GrowingMod(GrowingWebCircle)
 }
 
 #pragma mark - GrowingEventManagerObserver
-//事件被触发
+
 - (void)growingEventManagerEventTriggered:(NSString *_Nullable)eventType {
     [self sendWebcircleWithType:eventType];
 }
 
 - (void)sendWebcircleWithType:(NSString *)eventType {
-    if (!_isReady) {
+    if (!self.isReady) {
         return;
     }
     if ([eventType isEqualToString:GrowingEventTypeViewClick] || [eventType isEqualToString:GrowingEventTypePage]) {
@@ -657,18 +689,45 @@ GrowingMod(GrowingWebCircle)
             if (self.cachedEvents.count == 0 || !self.isReady) return;
             NSMutableArray *eventArray = self.cachedEvents;
             self.cachedEvents = [NSMutableArray array];
-            [eventArray
-                enumerateObjectsWithOptions:NSEnumerationReverse
-                                 usingBlock:^(__kindof NSString *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-                                     if ([obj isEqualToString:GrowingEventTypeViewClick] ||
-                                         [obj isEqualToString:GrowingEventTypePage]) {
-                                         [self sendScreenShotWithCallback:nil];
-                                         *stop = YES;
-                                     }
-                                 }];
+            [eventArray enumerateObjectsWithOptions:NSEnumerationReverse
+                                         usingBlock:^(__kindof NSString *_Nonnull obj,
+                                                      NSUInteger idx,
+                                                      BOOL *_Nonnull stop) {
+                if ([obj isEqualToString:GrowingEventTypeViewClick] || [obj isEqualToString:GrowingEventTypePage]) {
+                    [self sendScreenShotWithCallback:nil];
+                    *stop = YES;
+                }
+            }];
             self.onProcessing = NO;
         });
     }
+}
+
+#pragma mark - Setter & Getter
+
+- (void)setIsReady:(BOOL)isReady {
+    _isReady = isReady;
+    
+#ifdef GROWING_ANALYSIS_FLUTTER
+    if (isReady) {
+        __weak typeof(self) weakSelf = self;
+        [GrowingFlutterPlugin sharedInstance].onFlutterCircleDataChange = ^(NSDictionary * _Nonnull data) {
+            weakSelf.flutterCircleData = data;
+            // 由于没有传递eventType，这里假设为ViewClick
+            [weakSelf sendWebcircleWithType:GrowingEventTypeViewClick];
+        };
+        
+        if ([GrowingFlutterPlugin sharedInstance].onWebCircleStart) {
+            [GrowingFlutterPlugin sharedInstance].onWebCircleStart();
+        }
+    } else {
+        [GrowingFlutterPlugin sharedInstance].onFlutterCircleDataChange = nil;
+        
+        if ([GrowingFlutterPlugin sharedInstance].onWebCircleStop) {
+            [GrowingFlutterPlugin sharedInstance].onWebCircleStop();
+        }
+    }
+#endif
 }
 
 @end

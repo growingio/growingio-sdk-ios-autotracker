@@ -9,7 +9,7 @@
 #import "AppDelegate.h"
 #import <AppTrackingTransparency/AppTrackingTransparency.h>
 #import <GrowingToolsKit/GrowingToolsKit.h>
-#import <Bugly/Bugly.h>
+//#import <Bugly/Bugly.h>
 
 @interface AppDelegate ()
 
@@ -30,7 +30,7 @@
     [self SDK3rdStart];
 #endif
     
-    [Bugly startWithAppId:@"93004a21ca"];
+//    [Bugly startWithAppId:@"93004a21ca"];
     
     return YES;
 }
