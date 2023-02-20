@@ -83,7 +83,7 @@ static pthread_mutex_t _mutex;
     if (!trackConfiguration.deepLinkHost) {
         return NO;
     }
-    NSString *deepLinkHost = trackConfiguration.deepLinkHost.host;
+    NSString *deepLinkHost = [NSURL URLWithString:trackConfiguration.deepLinkHost].host;
     return ([url.host isEqualToString:deepLinkHost] || [url.host hasSuffix:deepLinkHost]);
 }
 

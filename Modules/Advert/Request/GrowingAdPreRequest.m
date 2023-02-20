@@ -35,7 +35,7 @@
     NSURL *baseURL;
     GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
     if (config.deepLinkHost) {
-        baseURL = config.deepLinkHost;
+        baseURL = [NSURL URLWithString:config.deepLinkHost];
     } else {
         baseURL = [NSURL URLWithString:@"https://t.growingio.com"];
     }
