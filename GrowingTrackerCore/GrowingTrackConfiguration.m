@@ -26,7 +26,7 @@ NSString * const kGrowingDefaultDataCollectionServerHost = @"https://api.growing
 
 // Advert
 @property (nonatomic, assign) BOOL ASAEnabled;
-@property (nonatomic, copy) NSURL *deepLinkHost;
+@property (nonatomic, copy) NSString *deepLinkHost;
 @property (nonatomic, copy) id deepLinkCallback;
 @property (nonatomic, assign) BOOL readClipboardEnabled;
 
