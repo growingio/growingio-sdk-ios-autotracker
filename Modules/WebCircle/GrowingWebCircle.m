@@ -59,8 +59,8 @@
 #import "GrowingTrackerCore/Public/GrowingWebSocketService.h"
 #import "GrowingTrackerCore/GrowingRealTracker.h"
 
-#if __has_include("Modules/Flutter/Public/GrowingFlutterPlugin.h")
-#import "Modules/Flutter/Public/GrowingFlutterPlugin.h"
+#if __has_include("Modules/Flutter/GrowingFlutterPlugin.h")
+#import "Modules/Flutter/GrowingFlutterPlugin.h"
 #define GROWING_ANALYSIS_FLUTTER
 #endif
 
