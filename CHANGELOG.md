@@ -1,3 +1,14 @@
+## [3.4.7](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.4.6...3.4.7) (2023-02-23)
+
+### Bug Fixes
+
+* 修改 advert 模块本地存储方式 ([fa4dc64](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/fa4dc64e99a205d39ba6a8deec23c0d5977014d4))
+
+### Features
+
+* deeplink ([71a010f](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/71a010f15fdc5fcd75a90a118fc27cd4bbd19bd7))
+* rename apm/track_timer attributes keys ([2898716](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/2898716e43187d11047c4f90f55e12d6038196af))
+
 ## [3.4.6](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.4.5...3.4.6) (2022-12-15)
 
 ### Bug Fixes
