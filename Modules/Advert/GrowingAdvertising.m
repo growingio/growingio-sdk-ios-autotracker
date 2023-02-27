@@ -30,6 +30,7 @@
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Event/GrowingEventChannel.h"
 #import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
+#import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
@@ -39,6 +40,7 @@
 #import "GrowingTrackerCore/Helpers/NSData+GrowingHelper.h"
 #import "GrowingTrackerCore/Helpers/NSURL+GrowingHelper.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
+#import "GrowingULAppLifecycle.h"
 
 #import <WebKit/WebKit.h>
 
@@ -46,11 +48,12 @@ GrowingMod(GrowingAdvertising)
 
 NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
 
-@interface GrowingAdvertising () <GrowingDeepLinkHandlerProtocol, GrowingEventInterceptor>
+@interface GrowingAdvertising () <GrowingDeepLinkHandlerProtocol, GrowingEventInterceptor, GrowingULAppLifecycleDelegate>
 
 @property (nonatomic, strong) WKWebView *wkWebView;
 @property (nonatomic, copy) NSString *userAgent;
 @property (nonatomic, copy) NSURL *deeplinkUrl;
+@property (nonatomic, strong) NSMutableArray <GrowingBaseBuilder *>*builders;
 
 @end
 
@@ -63,8 +66,10 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
 }
 
 - (void)growingModInit:(GrowingContext *)context {
+    self.builders = [NSMutableArray array];
     [[GrowingEventManager sharedInstance] addInterceptor:self];
     [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:self];
+    [GrowingULAppLifecycle.sharedInstance addAppLifecycleDelegate:self];
     [self loadClipboard];
 }
 
@@ -92,6 +97,18 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
     [channels addObject:[GrowingEventChannel eventChannelWithEventTypes:@[GrowingEventTypeActivate]
                                                             urlTemplate:kGrowingEventApiTemplate
                                                           isCustomEvent:NO]];
+}
+
+#pragma mark - GrowingULAppLifecycleDelegate
+
+- (void)applicationDidBecomeActive {
+    // 避免在SessionId刷新的情况下，app_reengage事件先于VISIT事件发送，导致其SessionId与VISIT事件不一致
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        for (GrowingBaseBuilder *builder in self.builders) {
+            [[GrowingEventManager sharedInstance] postEventBuilder:builder];
+        }
+        self.builders = [NSMutableArray array];
+    }];
 }
 
 #pragma mark - Public Method
@@ -383,7 +400,11 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
         GrowingActivateBuilder *builder = GrowingActivateEvent.builder
                                                               .setEventName(GrowingAdvertEventNameReengage)
                                                               .setAttributes(dic);
-        [[GrowingEventManager sharedInstance] postEventBuilder:builder];
+        if ([GrowingSession currentSession].state == GrowingSessionStateActive) {
+            [[GrowingEventManager sharedInstance] postEventBuilder:builder];
+        } else {
+            [self.builders addObject:builder];
+        }
     }];
 }
 

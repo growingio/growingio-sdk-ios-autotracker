@@ -38,6 +38,7 @@
 @property (nonatomic, assign) long long latestDidEnterBackgroundTime;
 @property (nonatomic, strong, readonly) NSHashTable *userIdChangedDelegates;
 @property (nonatomic, strong, readonly) NSLock *delegateLock;
+@property (nonatomic, assign, readwrite) GrowingSessionState state;
 
 @end
 
@@ -59,6 +60,7 @@ static GrowingSession *currentSession = nil;
         _latestNonNullUserId = [GrowingPersistenceDataProvider sharedInstance].loginUserId;
         _userIdChangedDelegates = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
         _delegateLock = [[NSLock alloc] init];
+        _state = GrowingSessionStateActive;
     }
 
     return self;
@@ -96,6 +98,7 @@ static GrowingSession *currentSession = nil;
 // iOS 11系统上面VC的viewDidAppear生命周期会早于AppDelegate的applicationDidBecomeActive，这样会造成Page事件早于Visit事件
 - (void)applicationDidBecomeActive {
     [GrowingDispatchManager dispatchInGrowingThread:^{
+        self.state = GrowingSessionStateActive;
         if (self.latestDidEnterBackgroundTime == 0) {
             //首次启动，在SDK初始化时，即发送visit事件
             return;
@@ -112,12 +115,14 @@ static GrowingSession *currentSession = nil;
 // 下拉显示通知中心/系统权限授权弹窗显示
 - (void)applicationWillResignActive {
     [GrowingDispatchManager dispatchInGrowingThread:^{
+        self.state = GrowingSessionStateInactive;
         self.latestDidEnterBackgroundTime = GrowingULTimeUtil.currentTimeMillis;
     }];
 }
 
 - (void)applicationDidEnterBackground {
     [GrowingDispatchManager dispatchInGrowingThread:^{
+        self.state = GrowingSessionStateBackground;
         self.latestDidEnterBackgroundTime = GrowingULTimeUtil.currentTimeMillis;
         [GrowingEventGenerator generateAppCloseEvent];
         [[GrowingEventManager sharedInstance] flushDB];
