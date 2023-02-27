@@ -26,6 +26,12 @@
 
 @end
 
+typedef NS_ENUM(NSInteger, GrowingSessionState) {
+    GrowingSessionStateActive,
+    GrowingSessionStateInactive,
+    GrowingSessionStateBackground
+};
+
 @interface GrowingSession : NSObject
 
 @property (nonatomic, assign, readonly, getter=isSentVisitAfterRefreshSessionId) BOOL sentVisitAfterRefreshSessionId;
@@ -34,6 +40,7 @@
 @property (nonatomic, copy, readonly) NSString *loginUserKey;
 @property (nonatomic, assign, readonly) double latitude;
 @property (nonatomic, assign, readonly) double longitude;
+@property (nonatomic, assign, readonly) GrowingSessionState state;
 
 + (void)startSession;
 
