@@ -120,7 +120,7 @@ PODS:
   - LBXScan/Types (2.3)
   - LBXScan/UI (2.3):
     - LBXScan/Types (~> 2.2)
-  - Protobuf (3.21.12)
+  - Protobuf (3.22.0)
   - SDCycleScrollView (1.82):
     - SDWebImage (>= 5.0.0)
   - SDWebImage (5.15.1):
@@ -167,10 +167,10 @@ SPEC CHECKSUMS:
   GrowingUtils: fd6e7d1a87c57dbda30967bbdcbc14546c68cd22
   KIF: 779cdbca106633b94ecee7b036537490ebdbd9de
   LBXScan: e51449f0832d1fe17da632af0d22adeb3cfa3543
-  Protobuf: 120350fc38646e2dedc26f49ecba778184ea1de2
+  Protobuf: 5e6cbc143d02fe08585d86b0098f8b755d2caaab
   SDCycleScrollView: a0d74c3384caa72bdfc81470bdbc8c14b3e1fbcf
   SDWebImage: a254f2c53b46e3fba7946b1f8b8b3eaf00413b92
 
-PODFILE CHECKSUM: e2976c8db8fd164f9cdd14c07e1072ff086b0bc9
+PODFILE CHECKSUM: 64594c82d4ec64f37133d304431a7602ce7f793b
 
 COCOAPODS: 1.11.3

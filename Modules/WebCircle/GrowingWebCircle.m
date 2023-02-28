@@ -57,21 +57,10 @@
 #import "GrowingTrackerCore/Public/GrowingServiceManager.h"
 #import "Modules/Hybrid/GrowingHybridBridgeProvider.h"
 #import "GrowingTrackerCore/Public/GrowingWebSocketService.h"
+#import "GrowingTrackerCore/Public/GrowingFlutterService.h"
 #import "GrowingTrackerCore/GrowingRealTracker.h"
 
-#if __has_include("Modules/Flutter/GrowingFlutterPlugin.h")
-#import "Modules/Flutter/GrowingFlutterPlugin.h"
-#define GROWING_ANALYSIS_FLUTTER
-#endif
-
 GrowingMod(GrowingWebCircle)
-
-@interface GrowingWeakObject : NSObject
-@property (nonatomic, weak) JSContext *context;
-@property (nonatomic, weak) id webView;
-@end
-@implementation GrowingWeakObject
-@end
 
 @interface GrowingWebCircle () <GrowingWebSocketDelegate,
                                 GrowingEventInterceptor,
@@ -97,9 +86,7 @@ GrowingMod(GrowingWebCircle)
 @property (nonatomic, strong) NSMutableArray *elements;
 @property (nonatomic, weak) UIWindow *lastKeyWindow;
 
-#ifdef GROWING_ANALYSIS_FLUTTER
 @property (nonatomic, copy) NSDictionary *flutterCircleData;
-#endif
 
 @end
 
@@ -328,18 +315,17 @@ GrowingMod(GrowingWebCircle)
         NSMutableDictionary *dict = [self dictFromPage:tmp xPath:page.path];
         [pages addObject:dict];
     }
-    
-#ifdef GROWING_ANALYSIS_FLUTTER
-    NSArray *flutterElements = self.flutterCircleData[@"elements"];
+        
+    NSDictionary *flutterData = self.flutterCircleData;
+    NSArray *flutterElements = flutterData[@"elements"];
     if ([flutterElements isKindOfClass:[NSArray class]]) {
         [self.elements addObjectsFromArray:flutterElements];
     }
     
-    NSArray *flutterPages = self.flutterCircleData[@"pages"];
+    NSArray *flutterPages = flutterData[@"pages"];
     if ([flutterPages isKindOfClass:[NSArray class]]) {
         [pages addObjectsFromArray:flutterPages];
     }
-#endif
         
     finalDataDict[@"elements"] = self.elements;
     finalDataDict[@"pages"] = pages;
@@ -370,17 +356,17 @@ GrowingMod(GrowingWebCircle)
     dict[@"screenHeight"] = @(image.size.height * image.scale);
     dict[@"scale"] = @(1);
     
-#ifdef GROWING_ANALYSIS_FLUTTER
-    if ([self.flutterCircleData[@"width"] isKindOfClass:[NSNumber class]]) {
-        dict[@"screenWidth"] = self.flutterCircleData[@"width"];
+    NSDictionary *flutterData = self.flutterCircleData;
+    if ([flutterData[@"width"] isKindOfClass:[NSNumber class]]) {
+        dict[@"screenWidth"] = flutterData[@"width"];
     }
-    if ([self.flutterCircleData[@"height"] isKindOfClass:[NSNumber class]]) {
-        dict[@"screenHeight"] = self.flutterCircleData[@"height"];
+    if ([flutterData[@"height"] isKindOfClass:[NSNumber class]]) {
+        dict[@"screenHeight"] = flutterData[@"height"];
     }
-    if ([self.flutterCircleData[@"scale"] isKindOfClass:[NSNumber class]]) {
-        dict[@"scale"] = self.flutterCircleData[@"scale"];
+    if ([flutterData[@"scale"] isKindOfClass:[NSNumber class]]) {
+        dict[@"scale"] = flutterData[@"scale"];
     }
-#endif
+    
     return dict;
 }
 
@@ -708,26 +694,23 @@ GrowingMod(GrowingWebCircle)
 - (void)setIsReady:(BOOL)isReady {
     _isReady = isReady;
     
-#ifdef GROWING_ANALYSIS_FLUTTER
+    Class <GrowingFlutterService> serviceClass = [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingFlutterService)];
+    if (!serviceClass) {
+        return;
+    }
     if (isReady) {
         __weak typeof(self) weakSelf = self;
-        [GrowingFlutterPlugin sharedInstance].onFlutterCircleDataChange = ^(NSDictionary * _Nonnull data) {
+        [serviceClass onFlutterCircleDataChange:^(NSDictionary *_Nonnull data) {
             weakSelf.flutterCircleData = data;
             // 由于没有传递eventType，这里假设为ViewClick
             [weakSelf sendWebcircleWithType:GrowingEventTypeViewClick];
-        };
-        
-        if ([GrowingFlutterPlugin sharedInstance].onWebCircleStart) {
-            [GrowingFlutterPlugin sharedInstance].onWebCircleStart();
-        }
+        }];
+        [serviceClass onWebCircleStart];
     } else {
-        [GrowingFlutterPlugin sharedInstance].onFlutterCircleDataChange = nil;
-        
-        if ([GrowingFlutterPlugin sharedInstance].onWebCircleStop) {
-            [GrowingFlutterPlugin sharedInstance].onWebCircleStop();
-        }
+        self.flutterCircleData = nil;
+        [serviceClass onFlutterCircleDataChange:nil];
+        [serviceClass onWebCircleStop];
     }
-#endif
 }
 
 @end
