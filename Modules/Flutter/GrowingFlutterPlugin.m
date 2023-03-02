@@ -18,6 +18,7 @@
 //  limitations under the License.
 
 #import "Modules/Flutter/GrowingFlutterPlugin.h"
+#import "GrowingTrackerCore/Public/GrowingAttributesBuilder.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
@@ -70,7 +71,28 @@ GrowingMod(GrowingFlutterPlugin)
     }
     NSDictionary *attributes = arguments[@"attributes"];
     if (attributes && [attributes isKindOfClass:[NSDictionary class]] && attributes.count > 0) {
-        builder = builder.setAttributes(attributes);
+        GrowingAttributesBuilder *attrBuilder = GrowingAttributesBuilder.new;
+        for (NSString *key in attributes.allKeys) {
+            id value = attributes[key];
+            if ([value isKindOfClass:[NSString class]]) {
+                [attrBuilder setString:value forKey:key];
+            } else if ([value isKindOfClass:[NSNumber class]]) {
+                [attrBuilder setString:[NSString stringWithFormat:@"%@", value] forKey:key];
+            } else if ([value isKindOfClass:[NSArray class]]) {
+                NSArray *array = (NSArray *)value;
+                NSMutableArray *stringArray = [NSMutableArray array];
+                for (int i = 0; i < array.count; i++) {
+                    id indexValue = array[i];
+                    if ([indexValue isKindOfClass:[NSString class]]) {
+                        [stringArray addObject:indexValue];
+                    } else if ([indexValue isKindOfClass:[NSNumber class]]) {
+                        [stringArray addObject:[NSString stringWithFormat:@"%@", indexValue]];
+                    }
+                }
+                [attrBuilder setArray:stringArray forKey:key];
+            }
+        }
+        builder = builder.setAttributes(attrBuilder.build);
     }
     [[GrowingEventManager sharedInstance] postEventBuilder:builder];
 }
