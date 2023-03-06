@@ -170,6 +170,8 @@ NS_ASSUME_NONNULL_BEGIN
 // 手动标识该页面的标题，必须在该UIViewController显示之前设置
 @property (nonatomic, copy) NSString *growingPageAlias;
 
+@property (nonatomic, strong) NSDictionary <NSString *, NSString *> *growingPageAttributes;
+
 @property (nonatomic, assign) GrowingIgnorePolicy growingPageIgnorePolicy;
 
 @end
