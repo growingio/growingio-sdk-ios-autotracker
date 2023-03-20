@@ -251,7 +251,9 @@
             @"UIInputWindowController", @"UIActivityGroupViewController", @"UIKeyboardHiddenViewController",
             @"UICompatibilityInputViewController", @"UISystemInputAssistantViewController",
             @"UIPredictionViewController", @"GrowingWindowViewController", @"UIApplicationRotationFollowingController",
-            @"UIAlertController",
+            @"UIAlertController", @"_UIAlertControllerTextFieldViewController",
+            @"UICandidateViewController", @"UISystemKeyboardDockController",
+            @"UIKeyboardCameraViewController", @"UIKeyboardCameraRemoteViewController",
         ]];
     }
     return _ignoredPrivateControllers;
