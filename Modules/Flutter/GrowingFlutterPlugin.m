@@ -54,7 +54,7 @@ GrowingMod(GrowingFlutterPlugin)
 
 #pragma mark - Autotrack Event
 
-- (void)trackPageEvent:(NSDictionary *)arguments {
+- (void)trackPageEvent:(NSDictionary *)arguments attributes:(NSDictionary <NSString *, NSString *>* _Nullable)attributes {
     NSString *path = arguments[@"path"];
     if (!path || ![path isKindOfClass:[NSString class]] || path.length == 0) {
         return;
@@ -69,30 +69,8 @@ GrowingMod(GrowingFlutterPlugin)
     if (title && [title isKindOfClass:[NSString class]] && title.length > 0) {
         builder = builder.setTitle(title);
     }
-    NSDictionary *attributes = arguments[@"attributes"];
-    if (attributes && [attributes isKindOfClass:[NSDictionary class]] && attributes.count > 0) {
-        GrowingAttributesBuilder *attrBuilder = GrowingAttributesBuilder.new;
-        for (NSString *key in attributes.allKeys) {
-            id value = attributes[key];
-            if ([value isKindOfClass:[NSString class]]) {
-                [attrBuilder setString:value forKey:key];
-            } else if ([value isKindOfClass:[NSNumber class]]) {
-                [attrBuilder setString:[NSString stringWithFormat:@"%@", value] forKey:key];
-            } else if ([value isKindOfClass:[NSArray class]]) {
-                NSArray *array = (NSArray *)value;
-                NSMutableArray *stringArray = [NSMutableArray array];
-                for (int i = 0; i < array.count; i++) {
-                    id indexValue = array[i];
-                    if ([indexValue isKindOfClass:[NSString class]]) {
-                        [stringArray addObject:indexValue];
-                    } else if ([indexValue isKindOfClass:[NSNumber class]]) {
-                        [stringArray addObject:[NSString stringWithFormat:@"%@", indexValue]];
-                    }
-                }
-                [attrBuilder setArray:stringArray forKey:key];
-            }
-        }
-        builder = builder.setAttributes(attrBuilder.build);
+    if (attributes) {
+        builder = builder.setAttributes(attributes);
     }
     [[GrowingEventManager sharedInstance] postEventBuilder:builder];
 }

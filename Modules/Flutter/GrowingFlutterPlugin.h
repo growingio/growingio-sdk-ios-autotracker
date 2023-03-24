@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) void (^onAppDidBecomeActive)(void);
 @property (nonatomic, copy) void (^onAppDidEnterBackground)(void);
 
-- (void)trackPageEvent:(NSDictionary *)arguments;
+- (void)trackPageEvent:(NSDictionary *)arguments attributes:(NSDictionary <NSString *, NSString *>* _Nullable)attributes;
 - (void)trackViewElementEvent:(NSDictionary *)arguments;
 
 @end
