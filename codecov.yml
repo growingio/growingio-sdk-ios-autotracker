@@ -4,6 +4,7 @@ ignore:
   - "Example"
   - "GrowingTrackerCore/Thirdparty"
   - "Modules/Protobuf/Proto/*.pbobjc.m"
+  - "Modules/Flutter"
   - "Services/Compression/LZ4"
   - "Services/Database/FMDB"
   - "Services/WebSocket"
