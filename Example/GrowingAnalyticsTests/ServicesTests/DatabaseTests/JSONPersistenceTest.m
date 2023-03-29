@@ -21,8 +21,7 @@
 
 #import "Services/Database/GrowingEventJSONPersistence.h"
 #import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
-#import "GrowingTrackerCore/Helpers/NSDictionary+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 
 @interface JSONPersistenceTest : XCTestCase
 

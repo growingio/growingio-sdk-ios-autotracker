@@ -27,7 +27,7 @@
 #import "GrowingTrackerCore/Database/GrowingEventDatabase.h"
 #import "Services/Database/GrowingEventJSONPersistence.h"
 #import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
-#import "GrowingTrackerCore/Helpers/NSDictionary+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
 #import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
 
