@@ -92,10 +92,10 @@ let package = Package(
             dependencies: [
                 "GrowingAutotracker_cdp",
                 "GrowingUserIdentifier",
-                "GrowingModule_Hybrid",
-                "GrowingModule_MobileDebugger",
-                "GrowingModule_WebCircle",
-                "GrowingModule_DefaultServices"
+                "GrowingModule_DefaultServices",
+                .target(name: "GrowingModule_Hybrid", condition: .when(platforms: [.iOS])),
+                .target(name: "GrowingModule_MobileDebugger", condition: .when(platforms: [.iOS])),
+                .target(name: "GrowingModule_WebCircle", condition: .when(platforms: [.iOS])),
             ],
             path: "SwiftPM-Wrap/GrowingAutotracker-cdp-Wrapper"
         ),
@@ -104,8 +104,8 @@ let package = Package(
             dependencies: [
                 "GrowingTracker_cdp",
                 "GrowingUserIdentifier",
-                "GrowingModule_MobileDebugger",
-                "GrowingModule_DefaultServices"
+                "GrowingModule_DefaultServices",
+                .target(name: "GrowingModule_MobileDebugger", condition: .when(platforms: [.iOS])),
             ],
             path: "SwiftPM-Wrap/GrowingTracker-cdp-Wrapper"
         ),
@@ -114,10 +114,10 @@ let package = Package(
             dependencies: [
                 "GrowingAutotracker",
                 "GrowingUserIdentifier",
-                "GrowingModule_Hybrid",
-                "GrowingModule_MobileDebugger",
-                "GrowingModule_WebCircle",
-                "GrowingModule_DefaultServices"
+                "GrowingModule_DefaultServices",
+                .target(name: "GrowingModule_Hybrid", condition: .when(platforms: [.iOS])),
+                .target(name: "GrowingModule_MobileDebugger", condition: .when(platforms: [.iOS])),
+                .target(name: "GrowingModule_WebCircle", condition: .when(platforms: [.iOS])),
             ],
             path: "SwiftPM-Wrap/GrowingAutotracker-Wrapper"
         ),
@@ -126,8 +126,8 @@ let package = Package(
             dependencies: [
                 "GrowingTracker",
                 "GrowingUserIdentifier",
-                "GrowingModule_MobileDebugger",
-                "GrowingModule_DefaultServices"
+                "GrowingModule_DefaultServices",
+                .target(name: "GrowingModule_MobileDebugger", condition: .when(platforms: [.iOS])),
             ],
             path: "SwiftPM-Wrap/GrowingTracker-Wrapper"
         ),
@@ -354,10 +354,10 @@ let package = Package(
             dependencies: [
                 "GrowingAutotracker_cdp",
                 "GrowingUserIdentifier_NoIDFA",
-                "GrowingModule_Hybrid",
-                "GrowingModule_MobileDebugger",
-                "GrowingModule_WebCircle",
-                "GrowingModule_DefaultServices"
+                "GrowingModule_DefaultServices",
+                .target(name: "GrowingModule_Hybrid", condition: .when(platforms: [.iOS])),
+                .target(name: "GrowingModule_MobileDebugger", condition: .when(platforms: [.iOS])),
+                .target(name: "GrowingModule_WebCircle", condition: .when(platforms: [.iOS])),
             ],
             path: "SwiftPM-Wrap/GrowingAutotracker-cdp-NoIDFA-Wrapper"
         ),
@@ -366,8 +366,8 @@ let package = Package(
             dependencies: [
                 "GrowingTracker_cdp",
                 "GrowingUserIdentifier_NoIDFA",
-                "GrowingModule_MobileDebugger",
-                "GrowingModule_DefaultServices"
+                "GrowingModule_DefaultServices",
+                .target(name: "GrowingModule_MobileDebugger", condition: .when(platforms: [.iOS])),
             ],
             path: "SwiftPM-Wrap/GrowingTracker-cdp-NoIDFA-Wrapper"
         ),
@@ -376,10 +376,10 @@ let package = Package(
             dependencies: [
                 "GrowingAutotracker",
                 "GrowingUserIdentifier_NoIDFA",
-                "GrowingModule_Hybrid",
-                "GrowingModule_MobileDebugger",
-                "GrowingModule_WebCircle",
-                "GrowingModule_DefaultServices"
+                "GrowingModule_DefaultServices",
+                .target(name: "GrowingModule_Hybrid", condition: .when(platforms: [.iOS])),
+                .target(name: "GrowingModule_MobileDebugger", condition: .when(platforms: [.iOS])),
+                .target(name: "GrowingModule_WebCircle", condition: .when(platforms: [.iOS])),
             ],
             path: "SwiftPM-Wrap/GrowingAutotracker-NoIDFA-Wrapper"
         ),
@@ -388,8 +388,8 @@ let package = Package(
             dependencies: [
                 "GrowingTracker",
                 "GrowingUserIdentifier_NoIDFA",
-                "GrowingModule_MobileDebugger",
-                "GrowingModule_DefaultServices"
+                "GrowingModule_DefaultServices",
+                .target(name: "GrowingModule_MobileDebugger", condition: .when(platforms: [.iOS])),
             ],
             path: "SwiftPM-Wrap/GrowingTracker-NoIDFA-Wrapper"
         )
