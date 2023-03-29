@@ -17,8 +17,11 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <Foundation/Foundation.h>
+#if __has_include(<UIKit/UIKit.h>)
 #import <UIKit/UIKit.h>
+#elif __has_include(<AppKit/AppKit.h>)
+#import <AppKit/AppKit.h>
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -31,11 +34,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-
-
 @interface GrowingContext : NSObject
 
+#if __has_include(<UIKit/UIKit.h>)
 @property (nonatomic, strong) UIApplication *application;
+#elif __has_include(<AppKit/AppKit.h>)
+@property (nonatomic, strong) NSApplication *application;
+#endif
 
 @property (nonatomic, strong) NSDictionary *launchOptions;
 //customEvent>=1000

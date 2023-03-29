@@ -22,7 +22,7 @@
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Event/GrowingNodeProtocol.h"
-#import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingULTimeUtil.h"
 
 @implementation GrowingViewNode

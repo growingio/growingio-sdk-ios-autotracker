@@ -1,8 +1,8 @@
 //
-//  UIApplication+GrowingHelper.h
+//  UIImage+GrowingHelper.h
 //  GrowingAnalytics
 //
-//  Created by GrowingIO on 12/3/15.
+//  Created by GrowingIO on 15/9/4.
 //  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,12 +17,15 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#if __has_include(<UIKit/UIKit.h>)
 #import <UIKit/UIKit.h>
 
-@interface UIApplication (GrowingHelper)
+@interface UIImage (GrowingHelper)
 
-- (NSArray <UIWindow *> *)growingHelper_allWindows;
-- (NSArray <UIWindow *> *)growingHelper_allWindowsSortedByWindowLevel;
-- (NSArray <UIWindow *> *)growingHelper_allWindowsWithoutGrowingWindow;
+- (NSData*)growingHelper_JPEG:(CGFloat)compress;
+- (NSData*)growingHelper_PNG;
+- (NSString*)growingHelper_Base64JPEG:(CGFloat)compress;
+- (NSString*)growingHelper_Base64PNG;
 
 @end
+#endif

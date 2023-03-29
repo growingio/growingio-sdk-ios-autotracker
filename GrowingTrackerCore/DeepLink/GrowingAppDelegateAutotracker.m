@@ -1,5 +1,5 @@
 //
-// GrowingDeepLinkTrack.m
+// GrowingAppDelegateAutotracker.m
 // GrowingAnalytics
 //
 //  Created by sheng on 2020/11/27.
@@ -17,6 +17,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#if __has_include(<UIKit/UIKit.h>)
 #import "GrowingTrackerCore/DeepLink/GrowingAppDelegateAutotracker.h"
 #import "GrowingTrackerCore/DeepLink/GrowingSceneDelegateAutotracker.h"
 #import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
@@ -128,3 +129,4 @@
 }
 
 @end
+#endif

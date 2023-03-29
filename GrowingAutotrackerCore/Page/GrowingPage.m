@@ -19,7 +19,7 @@
 
 #import "GrowingAutotrackerCore/Page/GrowingPage.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
-#import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/Page/UIViewController+GrowingPageHelper.h"
 #import "GrowingULTimeUtil.h"

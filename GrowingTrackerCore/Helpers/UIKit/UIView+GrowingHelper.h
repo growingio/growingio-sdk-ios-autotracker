@@ -17,11 +17,12 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#if __has_include(<UIKit/UIKit.h>)
 #import <UIKit/UIKit.h>
 
 @interface UIView (GrowingHelper)
 
-- (UIImage *)growingHelper_screenshot:(CGFloat)maxScale;
 - (UIViewController *)growingHelper_viewController;
 
 @end
+#endif

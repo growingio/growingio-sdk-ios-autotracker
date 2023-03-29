@@ -17,9 +17,9 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/NSData+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/NSDictionary+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/Foundation/NSString+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/Foundation/NSData+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/Foundation/NSDictionary+GrowingHelper.h"
 #import <CommonCrypto/CommonDigest.h>
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"

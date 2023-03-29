@@ -12,6 +12,7 @@ GrowingAnalytics-cdp基于GrowingAnalytics，同样具备自动采集基本的�
   s.author           = { 'GrowingIO' => 'support@growingio.com' }
   s.source           = { :git => 'https://github.com/growingio/growingio-sdk-ios-autotracker.git', :tag => s.version.to_s }
   s.ios.deployment_target = '9.0'
+  s.osx.deployment_target = '10.13'
   s.ios.framework = 'WebKit'
   s.requires_arc = true
   s.default_subspec = "Autotracker"
@@ -24,9 +25,9 @@ GrowingAnalytics-cdp基于GrowingAnalytics，同样具备自动采集基本的�
     autotracker.dependency 'GrowingAnalytics/AutotrackerCore', s.version.to_s
 
     # Modules
-    autotracker.dependency 'GrowingAnalytics/Hybrid', s.version.to_s
-    autotracker.dependency 'GrowingAnalytics/MobileDebugger', s.version.to_s
-    autotracker.dependency 'GrowingAnalytics/WebCircle', s.version.to_s
+    autotracker.ios.dependency 'GrowingAnalytics/Hybrid', s.version.to_s
+    autotracker.ios.dependency 'GrowingAnalytics/MobileDebugger', s.version.to_s
+    autotracker.ios.dependency 'GrowingAnalytics/WebCircle', s.version.to_s
     autotracker.dependency 'GrowingAnalytics/DefaultServices', s.version.to_s
   end
 
@@ -36,7 +37,7 @@ GrowingAnalytics-cdp基于GrowingAnalytics，同样具备自动采集基本的�
     tracker.dependency 'GrowingAnalytics-cdp/TrackerCore', s.version.to_s
 
     # Modules
-    tracker.dependency 'GrowingAnalytics/MobileDebugger', s.version.to_s
+    tracker.ios.dependency 'GrowingAnalytics/MobileDebugger', s.version.to_s
     tracker.dependency 'GrowingAnalytics/DefaultServices', s.version.to_s
   end
 

@@ -17,22 +17,26 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <UIKit/UIKit.h>
 #import "GrowingTrackerCore/Utils/UserIdentifier/GrowingUserIdentifier.h"
-#import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
+
+#if __has_include(<UIKit/UIKit.h>)
+#import <UIKit/UIKit.h>
+#endif
 
 @implementation GrowingUserIdentifier
 
 + (NSString *)getUserIdentifier {
     NSString *uuid = nil;
-    // 尝试取block
+#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
     NSString *idfaString = [self idfa];
     if (!idfaString.growingHelper_isValidU) {
-        idfaString = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+        idfaString = [self idfv];
     }
-    if ([idfaString isKindOfClass:[NSString class]] && idfaString.length > 0 && idfaString.length <= 64) {
-        uuid = idfaString;
-    }
+    uuid = idfaString;
+#else
+    uuid = [self platformUUID];
+#endif
     // 失败了随机生成 UUID
     if (!uuid.length || !uuid.growingHelper_isValidU) {
         uuid = [[NSUUID UUID] UUIDString];
@@ -41,15 +45,34 @@
 }
 
 + (nullable NSString *)idfv {
-    NSString *vendorId = nil;
-    if (NSClassFromString(@"UIDevice")) {
-        vendorId = [[UIDevice currentDevice].identifierForVendor UUIDString];
-    }
-    return vendorId;
+#if TARGET_OS_IOS
+    return [[UIDevice currentDevice].identifierForVendor UUIDString];
+#endif
+    return @"";
 }
 
 + (NSString *)idfa {
     return @"";
 }
+
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
++ (nullable NSString *)platformUUID {
+    io_service_t service = IOServiceGetMatchingService(kIOMasterPortDefault,
+                                                       IOServiceMatching("IOPlatformExpertDevice"));
+    if (service) {
+        CFStringRef ref = IORegistryEntryCreateCFProperty(service,
+                                                          CFSTR(kIOPlatformUUIDKey),
+                                                          kCFAllocatorDefault,
+                                                          0);
+        IOObjectRelease(service);
+        if (ref) {
+            NSString *string = [NSString stringWithString:(__bridge NSString *)ref];
+            CFRelease(ref);
+            return string;
+        }
+    }
+    return nil;
+}
+#endif
 
 @end

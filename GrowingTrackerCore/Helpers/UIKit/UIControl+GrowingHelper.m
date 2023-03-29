@@ -17,7 +17,8 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Helpers/UIControl+GrowingHelper.h"
+#if __has_include(<UIKit/UIKit.h>)
+#import "GrowingTrackerCore/Helpers/UIKit/UIControl+GrowingHelper.h"
 #import <objc/runtime.h>
 
 #define UICONTROL_BLOCK(EVENT,GETTER,SETTER)                                    \
@@ -75,3 +76,4 @@ UICONTROL_BLOCK(UIControlEventTouchUpInside, growingHelper_onClick, setGrowingHe
 @implementation UITextField(GrowingHelper)
 UICONTROL_BLOCK(UIControlEventEditingChanged, growingHelper_onTextChange, setGrowingHelper_onTextChange)
 @end
+#endif

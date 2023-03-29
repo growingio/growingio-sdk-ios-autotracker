@@ -18,47 +18,38 @@
 //  limitations under the License.
 
 #import "Modules/WebCircle/GrowingWebCircle.h"
-
-#import <JavaScriptCore/JavaScriptCore.h>
-#import <UIKit/UIKit.h>
-#import <arpa/inet.h>
-#import <ifaddrs.h>
-
-#import "GrowingTrackerCore/Menu/GrowingAlert.h"
-#import "GrowingTrackerCore/Manager/GrowingApplicationEventManager.h"
+#import "Modules/WebCircle/GrowingWebCircleElement.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
+#import "GrowingTrackerCore/GrowingRealTracker.h"
 #import "GrowingTrackerCore/GrowingAttributesConst.h"
-#import "GrowingTrackerCore/Event/Autotrack/GrowingAutotrackEventType.h"
-#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
+#import "GrowingTrackerCore/Menu/GrowingAlert.h"
+#import "GrowingTrackerCore/Menu/GrowingStatusBar.h"
+#import "GrowingTrackerCore/Manager/GrowingApplicationEventManager.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Event/Autotrack/GrowingAutotrackEventType.h"
+#import "GrowingTrackerCore/Event/GrowingEventManager.h"
+#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
-#import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
-#import "GrowingAutotrackerCore/GrowingNode/GrowingNodeHelper.h"
-#import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
-#import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
-#import "GrowingTrackerCore/Menu/GrowingStatusBar.h"
-#import "Modules/WebCircle/GrowingWebCircleElement.h"
-#import "Modules/Hybrid/GrowingWebViewDomChangedDelegate.h"
-#import "GrowingTrackerCore/Helpers/NSArray+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/NSData+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/NSDictionary+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/NSURL+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/UIApplication+GrowingHelper.h"
-#import "GrowingTrackerCore/Hook/UIApplication+GrowingNode.h"
-#import "GrowingTrackerCore/Helpers/UIImage+GrowingHelper.h"
-#import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
-#import "GrowingAutotrackerCore/GrowingNode/Category/UIViewController+GrowingNode.h"
-#import "GrowingAutotrackerCore/Page/UIViewController+GrowingPageHelper.h"
-#import "GrowingTrackerCore/Helpers/UIWindow+GrowingHelper.h"
-#import "GrowingAutotrackerCore/GrowingNode/Category/UIWindow+GrowingNode.h"
 #import "GrowingTrackerCore/Public/GrowingServiceManager.h"
-#import "Modules/Hybrid/GrowingHybridBridgeProvider.h"
 #import "GrowingTrackerCore/Public/GrowingWebSocketService.h"
 #import "GrowingTrackerCore/Public/GrowingFlutterService.h"
-#import "GrowingTrackerCore/GrowingRealTracker.h"
+#import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
+#import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
+#import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
+#import "GrowingAutotrackerCore/Page/UIViewController+GrowingPageHelper.h"
+#import "GrowingAutotrackerCore/GrowingNode/GrowingNodeHelper.h"
+#import "GrowingAutotrackerCore/GrowingNode/Category/UIApplication+GrowingNode.h"
+#import "GrowingAutotrackerCore/GrowingNode/Category/UIViewController+GrowingNode.h"
+#import "GrowingAutotrackerCore/GrowingNode/Category/UIWindow+GrowingNode.h"
+#import <arpa/inet.h>
+#import <ifaddrs.h>
+
+#import "Modules/Hybrid/GrowingWebViewDomChangedDelegate.h"
+#import "Modules/Hybrid/GrowingHybridBridgeProvider.h"
+#import <JavaScriptCore/JavaScriptCore.h>
 
 GrowingMod(GrowingWebCircle)
 
@@ -604,7 +595,6 @@ GrowingMod(GrowingWebCircle)
 
 - (void)webSocketDidOpen:(id <GrowingWebSocketService>)webSocket {
     GIOLogDebug(@"[GrowingWebCircle] websocket已连接");
-    CGSize screenSize = [GrowingDeviceInfo deviceScreenSize];
     NSString *projectId = GrowingConfigurationManager.sharedInstance.trackConfiguration.projectId;
     NSDictionary *dict = @{
         @"projectId" : projectId,
@@ -614,8 +604,8 @@ GrowingMod(GrowingWebCircle)
         @"sdkVersion" : GrowingTrackerVersionName,
         @"appVersion" : [GrowingDeviceInfo currentDeviceInfo].appFullVersion,
         @"os" : @"iOS",
-        @"screenWidth" : [NSNumber numberWithInteger:screenSize.width],
-        @"screenHeight" : [NSNumber numberWithInteger:screenSize.height],
+        @"screenWidth" : [NSNumber numberWithInteger:[GrowingDeviceInfo currentDeviceInfo].screenWidth],
+        @"screenHeight" : [NSNumber numberWithInteger:[GrowingDeviceInfo currentDeviceInfo].screenHeight],
         @"urlScheme" : [GrowingDeviceInfo currentDeviceInfo].urlScheme
     };
     [self sendJson:dict];

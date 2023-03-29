@@ -19,7 +19,7 @@
 
 #import "GrowingTrackerCore/DeepLink/GrowingWebWatcher.h"
 #import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
-#import "GrowingTrackerCore/Helpers/NSURL+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/LogFormat/GrowingASLLoggerFormat.h"
 

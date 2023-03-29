@@ -18,8 +18,7 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
-#import "GrowingTrackerCore/Helpers/NSArray+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/NSDictionary+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Public/GrowingServiceManager.h"
 

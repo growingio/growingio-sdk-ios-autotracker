@@ -72,7 +72,9 @@
         netType = @"UNKNOWN";
     } else if (self.WiFiValid) {
         netType = @"WIFI";
-    } else if (self.WWANValid) {
+    }
+#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
+    else if (self.WWANValid) {
         NSArray *typeStrings2G = @[
             CTRadioAccessTechnologyEdge,
             CTRadioAccessTechnologyGPRS,
@@ -127,9 +129,8 @@
         } else {
             netType = @"UNKNOWN";
         }
-    } else {
-        netType = @"UNKNOWN";
     }
+#endif
     return netType;
 }
 

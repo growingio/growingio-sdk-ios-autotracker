@@ -18,7 +18,7 @@
 //  limitations under the License.
 
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIControl+GrowingNode.h"
-#import "GrowingTrackerCore/Helpers/UIView+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Public/GrowingBaseEvent.h"
 
 @implementation UIControl(Growing)

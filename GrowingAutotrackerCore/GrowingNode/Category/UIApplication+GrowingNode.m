@@ -1,8 +1,8 @@
 //
-//  UIButton+Block.h
-//  TravelGuideMdd
+//  UIApplication+GrowingNode.m
+//  GrowingAnalytics
 //
-//  Created by GrowingIO on 14/10/30.
+//  Created by GrowingIO on 15/11/15.
 //  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,16 +17,18 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <UIKit/UIKit.h>
+#import "GrowingAutotrackerCore/GrowingNode/Category/UIApplication+GrowingNode.h"
 
-@interface UIControl(GrowingHelper)
+@implementation UIApplication (GrowingNode)
 
-@property (nonatomic, copy) void(^growingHelper_onClick)(void);
-
-@end
-
-@interface UITextField(GrowingHelper)
-
-@property (nonatomic, copy) void(^growingHelper_onTextChange)(void);
+- (UIWindow*)growingMainWindow {
+    for (NSUInteger i = 0; i < self.windows.count; i++) {
+        UIWindow *window = self.windows[i];
+        if (window.windowLevel == UIWindowLevelNormal && window.hidden == NO) {
+            return window;
+        }
+    }
+    return nil;
+}
 
 @end

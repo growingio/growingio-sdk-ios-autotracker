@@ -214,6 +214,7 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
         }
     }
 
+#if TARGET_OS_IPHONE
 	if ((flags & kSCNetworkReachabilityFlagsIsWWAN) == kSCNetworkReachabilityFlagsIsWWAN)
 	{
 		/*
@@ -221,6 +222,7 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
          */
 		returnValue = GrowingReachableViaWWAN;
 	}
+#endif
     
 	return returnValue;
 }

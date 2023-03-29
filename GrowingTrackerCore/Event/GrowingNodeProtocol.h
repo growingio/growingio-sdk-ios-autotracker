@@ -18,7 +18,6 @@
 //  limitations under the License.
 
 #import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
 
 typedef NS_OPTIONS(NSUInteger, GrowingElementEventCategory) {
     GrowingElementEventCategoryClick = 2,
@@ -62,13 +61,7 @@ typedef NS_OPTIONS(NSUInteger, GrowingElementEventCategory) {
 
 - (NSDictionary * _Nullable)growingNodeDataDict;
 
-- (UIWindow * _Nullable)growingNodeWindow;
-
 - (CGRect)growingNodeFrame;
-
-// 截图
-- (UIImage * _Nullable)growingNodeScreenShot:(UIImage * _Nullable)fullScreenImage;
-- (UIImage * _Nullable)growingNodeScreenShotWithScale:(CGFloat)maxScale;
 
 // 唯一标识某个view，客户可通过 growingAttributesUniqueTag 设置
 - (NSString * _Nullable)growingNodeUniqueTag;

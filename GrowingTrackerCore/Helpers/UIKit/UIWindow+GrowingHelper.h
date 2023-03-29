@@ -1,8 +1,8 @@
 //
-//  GrowingStatusBar.h
+//  UIWindow+GrowingHelper.h
 //  GrowingAnalytics
 //
-//  Created by GrowingIO on 3/15/16.
+//  Created by GrowingIO on 2/17/16.
 //  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,12 +19,15 @@
 
 #if __has_include(<UIKit/UIKit.h>)
 #import <UIKit/UIKit.h>
-#import "GrowingTrackerCore/GrowingWindow.h"
 
-@interface GrowingStatusBar : GrowingWindowView
+@interface UIWindow (GrowingHelper)
 
-@property (nonatomic, retain) UILabel *statusLable;
-@property (nonatomic, copy) void (^onButtonClick)(void);
++ (UIImage *)growingHelper_screenshotWithWindows:(NSArray<UIWindow*>*)windows
+                                    andMaxScale:(CGFloat)maxScale
+                                          block:(void(^)(CGContextRef context))block;
+
++ (UIImage *)growingHelper_screenshotWithWindows:(NSArray<UIWindow*>*)windows
+                                    andMaxScale:(CGFloat)maxScale;
 
 @end
 #endif

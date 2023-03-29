@@ -17,21 +17,22 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Helpers/NSData+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
-#import <CommonCrypto/CommonCrypto.h>
+#import "GrowingTrackerCore/Helpers/Foundation/NSData+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/Foundation/NSString+GrowingHelper.h"
 #import "GrowingTrackerCore/Public/GrowingServiceManager.h"
 #import "GrowingTrackerCore/Public/GrowingEncryptionService.h"
 #import "GrowingTrackerCore/Public/GrowingCompressService.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 
+#import <CommonCrypto/CommonCrypto.h>
+
 @implementation NSData (GrowingHelper)
 
-- (NSString*)growingHelper_utf8String {
+- (NSString *)growingHelper_utf8String {
     return [[NSString alloc] initWithData:self encoding:NSUTF8StringEncoding];
 }
 
-- (NSData*)growingHelper_LZ4String {
+- (NSData *)growingHelper_LZ4String {
     id <GrowingCompressService> compressImpl = [[GrowingServiceManager sharedInstance] createService:NSProtocolFromString(@"GrowingCompressService")];
     if (compressImpl) {
         return [compressImpl compressedEventData:self];
@@ -40,7 +41,7 @@
     return self;
 }
 
-- (NSString*)growingHelper_base64String {
+- (NSString *)growingHelper_base64String {
     //ensure wrapWidth is a multiple of 4
     
     NSUInteger wrapWidth = 0;
@@ -101,7 +102,7 @@
     return jsonObj;
 }
 
-- (NSDictionary*)growingHelper_dictionaryObject {
+- (NSDictionary *)growingHelper_dictionaryObject {
     
     NSDictionary *dict = [self growingHelper_jsonObject];
     if (dict && [dict isKindOfClass:[NSDictionary class]]) {
@@ -111,7 +112,7 @@
     }
 }
 
-- (NSArray*)growingHelper_arrayObject {
+- (NSArray *)growingHelper_arrayObject {
     
     NSArray *arr = [self growingHelper_jsonObject];
     if (arr && [arr isKindOfClass:[NSArray class]]) {
@@ -125,7 +126,7 @@
     CC_MD5(self.bytes, (CC_LONG)[self length], valueArray);
 }
 
-- (NSString*)growingHelper_md5String {
+- (NSString *)growingHelper_md5String {
     unsigned char result[16];
     [self growingHelper_md5value:result];
     NSString *retVal =

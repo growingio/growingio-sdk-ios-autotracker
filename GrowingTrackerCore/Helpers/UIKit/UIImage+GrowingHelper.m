@@ -1,5 +1,5 @@
 //
-//  NSData+GrowingHelper.h
+//  UIImage+GrowingHelper.m
 //  GrowingAnalytics
 //
 //  Created by GrowingIO on 15/9/4.
@@ -17,18 +17,27 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <Foundation/Foundation.h>
+#if __has_include(<UIKit/UIKit.h>)
+#import "GrowingTrackerCore/Helpers/UIKit/UIImage+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/Foundation/NSData+GrowingHelper.h"
 
-@interface NSData (GrowingHelper)
+@implementation UIImage (GrowingHelper)
 
-- (NSString *)growingHelper_base64String;
-- (NSString *)growingHelper_utf8String;
-- (NSString *)growingHelper_md5String;
-- (void)growingHelper_md5value:(unsigned char*)valueArray;
-- (NSData *)growingHelper_LZ4String;
-- (id)growingHelper_jsonObject;
-- (NSArray *)growingHelper_arrayObject;
-- (NSDictionary *)growingHelper_dictionaryObject;
-- (NSData *)growingHelper_xorEncryptWithHint:(unsigned char)hint;
+- (NSData*)growingHelper_JPEG:(CGFloat)compress {
+    return UIImageJPEGRepresentation(self, compress);
+}
+
+- (NSData*)growingHelper_PNG {
+    return UIImagePNGRepresentation(self);
+}
+
+- (NSString*)growingHelper_Base64JPEG:(CGFloat)compress {
+    return [[self growingHelper_JPEG:compress] growingHelper_base64String];
+}
+
+- (NSString*)growingHelper_Base64PNG {
+    return [[self growingHelper_PNG] growingHelper_base64String];
+}
 
 @end
+#endif

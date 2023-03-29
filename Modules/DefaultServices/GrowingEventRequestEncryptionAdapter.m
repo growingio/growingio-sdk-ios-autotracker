@@ -18,7 +18,7 @@
 //  limitations under the License.
 
 #import "Modules/DefaultServices/GrowingEventRequestEncryptionAdapter.h"
-#import "GrowingTrackerCore/Helpers/NSData+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 
 @interface GrowingEventRequestEncryptionAdapter ()

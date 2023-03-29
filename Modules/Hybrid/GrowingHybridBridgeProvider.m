@@ -32,8 +32,7 @@
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Event/GrowingVisitorAttributesEvent.h"
 #import "Modules/Hybrid/GrowingWebViewDomChangedDelegate.h"
-#import "GrowingTrackerCore/Helpers/NSDictionary+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Public/GrowingAnnotationCore.h"
 #import "GrowingULTimeUtil.h"
 #import <WebKit/WebKit.h>
