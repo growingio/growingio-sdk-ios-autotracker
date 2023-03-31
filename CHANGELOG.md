@@ -1,3 +1,9 @@
+## [3.4.8](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.4.7...3.4.8) (2023-03-31)
+
+### Features
+
+* 支持 Flutter 无埋点 SDK ([ceb94e5](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/ceb94e5c8684d68c1e196341f0755766993b6e73))
+
 ## [3.4.7](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.4.6...3.4.7) (2023-02-23)
 
 ### Bug Fixes
