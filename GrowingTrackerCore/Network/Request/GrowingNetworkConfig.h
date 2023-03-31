@@ -30,19 +30,13 @@
 
 + (instancetype)sharedInstance;
 
-/// 返回 growingApiHostEnd 拼接的事件上传地址 eg:https://api.growingio.com/v3/projects/91eaf9b283361032/collect
+/// 返回 growingApiHostEnd 拼接的事件上传地址 eg:https://napi.growingio.com/v3/projects/91eaf9b283361032/collect
 + (NSString *)absoluteURL;
+
 /// 返回url path eg:v3/projects/91eaf9b283361032/collect
 + (NSString *)path;
 
-/// 返回GrowingTrackConfiguration配置的dataCollectionServerHost，如果没有额外配置该参数的话，默认返回 https://api.growingio.com
+/// 返回GrowingTrackConfiguration配置的dataCollectionServerHost，如果没有额外配置该参数的话，默认返回 https://napi.growingio.com
 - (NSString *)growingApiHostEnd;
-
-/// 1. 如果设置了 customDataHost，则使用customDataHost，否则使用 https://www.growingio.com
-- (NSString *)growingDataHostEnd;
-
-/// 固定值，为 https://tags.growingio.com
-- (NSString *)tagsHost;
-
 
 @end

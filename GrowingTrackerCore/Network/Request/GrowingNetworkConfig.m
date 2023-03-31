@@ -28,11 +28,6 @@
 
 static GrowingNetworkConfig *sharedInstance;
 
-static NSString * const kGrowingDataHost = @"https://www.growingio.com";
-static NSString * const kGrowingTrackerHost = @"https://api.growingio.com";
-static NSString * const kGrowingTagsHostFormat = @"https://tags.growingio.com";
-static NSString * const kGrowingWsHostFormat =  @"wss://ws.growingio.com";
-
 + (instancetype)sharedInstance {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -84,14 +79,6 @@ static NSString * const kGrowingWsHostFormat =  @"wss://ws.growingio.com";
 
 - (NSString *)growingApiHostEnd {
     return GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionServerHost;
-}
-
-- (NSString *)growingDataHostEnd {
-    return _customDataHost.length > 0 ? _customDataHost : kGrowingDataHost;
-}
-
-- (NSString *)tagsHost {
-    return [NSString stringWithFormat:kGrowingTagsHostFormat];
 }
 
 @end

@@ -99,7 +99,7 @@
     XCTAssertEqual(configuration.sessionInterval, 30);
     XCTAssertEqual(configuration.dataCollectionEnabled, YES);
     XCTAssertEqual(configuration.uploadExceptionEnable, YES);
-    XCTAssertEqualObjects(configuration.dataCollectionServerHost, @"https://api.growingio.com");
+    XCTAssertEqualObjects(configuration.dataCollectionServerHost, @"https://napi.growingio.com");
     XCTAssertEqual(configuration.excludeEvent, 0);
     XCTAssertEqual(configuration.ignoreField, 0);
     XCTAssertEqual(configuration.idMappingEnabled, NO);
@@ -155,7 +155,7 @@
     XCTAssertEqual(configuration.sessionInterval, 30);
     XCTAssertEqual(configuration.dataCollectionEnabled, YES);
     XCTAssertEqual(configuration.uploadExceptionEnable, YES);
-    XCTAssertEqualObjects(configuration.dataCollectionServerHost, @"https://api.growingio.com");
+    XCTAssertEqualObjects(configuration.dataCollectionServerHost, @"https://napi.growingio.com");
     XCTAssertEqual(configuration.excludeEvent, 0);
     XCTAssertEqual(configuration.ignoreField, 0);
     XCTAssertEqual(configuration.idMappingEnabled, NO);
