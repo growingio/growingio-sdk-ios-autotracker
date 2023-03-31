@@ -20,7 +20,7 @@
 #import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 
-NSString * const kGrowingDefaultDataCollectionServerHost = @"https://api.growingio.com";
+NSString * const kGrowingDefaultDataCollectionServerHost = @"https://napi.growingio.com";
 
 @interface GrowingTrackConfiguration ()
 
