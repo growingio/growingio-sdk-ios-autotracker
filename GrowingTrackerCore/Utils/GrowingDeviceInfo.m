@@ -236,12 +236,12 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 
 - (NSString *)deviceModel {
     if (!_deviceModel) {
-#if !TARGET_OS_OSX
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+        _deviceModel = [GrowingDeviceInfo getSysInfoByName:(char *)"hw.model"];
+#else
         struct utsname systemInfo;
         uname(&systemInfo);
         _deviceModel = @(systemInfo.machine);
-#else
-        _deviceModel = [GrowingDeviceInfo getSysInfoByName:(char *)"hw.model"];
 #endif
     }
     return _deviceModel;
@@ -260,8 +260,10 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 
 - (NSString *)platform {
     if (!_platform) {
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+#if TARGET_OS_OSX
         _platform = @"macOS";
+#elif TARGET_OS_MACCATALYST
+        _platform = @"MacCatalyst";
 #elif TARGET_OS_IOS
         _platform = @"iOS";
 #endif
