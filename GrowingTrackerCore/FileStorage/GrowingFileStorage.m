@@ -40,21 +40,13 @@ NSString *const kGrowingDirCommonPrefix = @"com.growingio.";
 }
 
 - (instancetype)initWithName:(NSString *)name {
-    Protocol *proto = NSProtocolFromString(@"GrowingEncryptionService");
-    id <GrowingEncryptionService> impl;
-    if (proto) {
-        impl = [[GrowingServiceManager sharedInstance] createService:proto];
-    }
-    return [self initWithName:name directory:GrowingUserDirectoryLibrary crypto:impl];
+    id <GrowingEncryptionService> service = [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingEncryptionService)];
+    return [self initWithName:name directory:GrowingUserDirectoryLibrary crypto:service];
 }
 
 - (instancetype)initWithName:(NSString *)name directory:(GrowingUserDirectory)directory {
-    Protocol *proto = NSProtocolFromString(@"GrowingEncryptionService");
-    id <GrowingEncryptionService> impl;
-    if (proto) {
-        impl = [[GrowingServiceManager sharedInstance] createService:proto];
-    }
-    return [self initWithName:name directory:directory crypto:impl];
+    id <GrowingEncryptionService> service = [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingEncryptionService)];
+    return [self initWithName:name directory:directory crypto:service];
 }
 
 - (instancetype)initWithName:(NSString *)name directory:(GrowingUserDirectory)directory crypto:(id<GrowingEncryptionService> _Nullable)crypto {

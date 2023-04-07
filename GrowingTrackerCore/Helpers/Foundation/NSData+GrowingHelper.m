@@ -33,9 +33,9 @@
 }
 
 - (NSData *)growingHelper_LZ4String {
-    id <GrowingCompressService> compressImpl = [[GrowingServiceManager sharedInstance] createService:NSProtocolFromString(@"GrowingCompressService")];
-    if (compressImpl) {
-        return [compressImpl compressedEventData:self];
+    id <GrowingCompressService> service = [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingCompressService)];
+    if (service) {
+        return [service compressedEventData:self];
     }
     GIOLogDebug(@"NSData -growingHelper_LZ4String compressed error : no compress service support");
     return self;
@@ -141,9 +141,9 @@
 }
 
 - (NSData *)growingHelper_xorEncryptWithHint:(unsigned char)hint {
-    id <GrowingEncryptionService> impl = [[GrowingServiceManager sharedInstance] createService:NSProtocolFromString(@"GrowingEncryptionService")];
-    if (impl) {
-        return [impl encryptEventData:self factor:hint];
+    id <GrowingEncryptionService> service = [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingEncryptionService)];
+    if (service) {
+        return [service encryptEventData:self factor:hint];
     }
     GIOLogDebug(@"NSData -growingHelper_xorEncryptWithHint Encrypt error : no encrypt service support");
     return self;
