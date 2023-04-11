@@ -29,7 +29,6 @@
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
-#import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
 #import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
 #import "GrowingTrackerCore/DeepLink/GrowingAppDelegateAutotracker.h"
 #import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"

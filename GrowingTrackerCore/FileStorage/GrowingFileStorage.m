@@ -21,6 +21,7 @@
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Public/GrowingServiceManager.h"
+#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 
 NSString *const kGrowingResidentDirName = @"com.growingio.core";
 NSString *const kGrowingDirCommonPrefix = @"com.growingio.";
@@ -58,7 +59,7 @@ NSString *const kGrowingDirCommonPrefix = @"com.growingio.";
 
 - (instancetype)initWithName:(NSString *)name directory:(GrowingUserDirectory)directory crypto:(id<GrowingEncryptionService> _Nullable)crypto {
     if (self = [super init]) {
-        NSString *fullPath = [NSString stringWithFormat:@"%@/%@%@", kGrowingResidentDirName, kGrowingDirCommonPrefix, name];
+        NSString *fullPath = [GrowingFileStorage fullPathWithName:name append:nil];
         NSURL *userDir = [GrowingFileStorage userDirectoryURL:directory];
         _folderURL = [userDir URLByAppendingPathComponent:fullPath];
         _crypto = crypto;
@@ -109,6 +110,19 @@ NSString *const kGrowingDirCommonPrefix = @"com.growingio.";
     return [NSURL fileURLWithPath:storagePath];
 }
 
++ (NSString *)fullPathWithName:(NSString *)dirName append:(NSString * _Nullable)lastPathComponent {
+    NSString *fullPath = [NSString stringWithFormat:@"%@/%@%@", kGrowingResidentDirName, kGrowingDirCommonPrefix, dirName];
+#if TARGET_OS_OSX
+    // 兼容非沙盒MacApp
+    NSString *bundleId = [GrowingDeviceInfo currentDeviceInfo].bundleID;
+    fullPath = [fullPath stringByAppendingFormat:@"/%@", bundleId];
+#endif
+    if (lastPathComponent && lastPathComponent.length > 0) {
+        return [fullPath stringByAppendingFormat:@"/%@", lastPathComponent];
+    }
+    return fullPath;
+}
+
 #pragma mark Public
 
 + (NSString *)getTimingDatabasePath {
@@ -116,7 +130,7 @@ NSString *const kGrowingDirCommonPrefix = @"com.growingio.";
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         NSURL *userDir = [GrowingFileStorage userDirectoryURL:GrowingUserDirectoryLibrary];
-        NSString *dirName = [NSString stringWithFormat:@"%@/%@%@", kGrowingResidentDirName, kGrowingDirCommonPrefix, @"event/timing.sqlite"];
+        NSString *dirName = [GrowingFileStorage fullPathWithName:@"event" append:@"timing.sqlite"];
         kGrowingPathTiming = [userDir URLByAppendingPathComponent:dirName].path;
     });
     return kGrowingPathTiming;
@@ -127,7 +141,7 @@ NSString *const kGrowingDirCommonPrefix = @"com.growingio.";
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         NSURL *userDir = [GrowingFileStorage userDirectoryURL:GrowingUserDirectoryLibrary];
-        NSString *dirName = [NSString stringWithFormat:@"%@/%@%@", kGrowingResidentDirName, kGrowingDirCommonPrefix, @"event/realtime.sqlite"];
+        NSString *dirName = [GrowingFileStorage fullPathWithName:@"event" append:@"realtime.sqlite"];
         kGrowingPathReal = [userDir URLByAppendingPathComponent:dirName].path;
     });
     return kGrowingPathReal;

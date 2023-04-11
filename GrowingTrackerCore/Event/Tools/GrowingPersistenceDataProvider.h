@@ -25,13 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingPersistenceDataProvider : NSObject
 
-
-@property (nonatomic, strong) NSString *loginUserId;
-
 + (instancetype)sharedInstance;
-
-- (void)setDeviceId:(NSString * _Nullable)deviceId;
-- (NSString *)deviceId;
 
 - (void)setLoginUserId:(NSString * _Nullable)loginUserId;
 - (nullable NSString *)loginUserId;
@@ -39,12 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setLoginUserKey:(NSString * _Nullable)loginUserKey;
 - (nullable NSString *)loginUserKey;
 
-///设置NSString,NSNumber(cdp、upgrade)
-- (void)setString:(NSString *)value forKey:(NSString *)key;
-
-- (NSString *)getStringforKey:(NSString *)key;
-
-- (GrowingEventSequenceObject*)getAndIncrement:(NSString *)eventType;
+- (GrowingEventSequenceObject *)getAndIncrement:(NSString *)eventType;
 
 //防止xcode编码提示使用KVC来获取值
 - (void)setValue:(id _Nullable)value forKey:(NSString * _Nonnull)key UNAVAILABLE_ATTRIBUTE;

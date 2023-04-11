@@ -21,7 +21,6 @@
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Event/GrowingDataTraffic.h"
 #import "GrowingTrackerCore/Event/GrowingEventChannel.h"
-#import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
