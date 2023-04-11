@@ -22,6 +22,12 @@
 #import "Modules/Protobuf/GrowingEventProtobufPersistence.h"
 #import "GrowingULTimeUtil.h"
 
+@interface GrowingEventProtobufDatabase ()
+
+@property (nonatomic, copy, readonly) NSString *lastPathComponent;
+
+@end
+
 @implementation GrowingEventProtobufDatabase
 
 #pragma mark - Init
@@ -38,9 +44,9 @@
         });
         
         NSString *lastPathComponent = [NSURL fileURLWithPath:filePath].lastPathComponent;
-        lastPathComponent = [NSString stringWithFormat:@"enc_%@", lastPathComponent];
+        _lastPathComponent = [NSString stringWithFormat:@"enc_%@", lastPathComponent];
         NSURL *url = [NSURL fileURLWithPath:filePath].URLByDeletingLastPathComponent;
-        NSString *path = [url URLByAppendingPathComponent:lastPathComponent].path;
+        NSString *path = [url URLByAppendingPathComponent:_lastPathComponent].path;
         
         self.db = [GrowingFMDatabaseQueue databaseQueueWithPath:path];
         if (!self.db) {
@@ -304,7 +310,7 @@
 }
 
 - (BOOL)vacuum {
-    if (!isExecuteVacuum()) {
+    if (!isExecuteVacuum(self.lastPathComponent)) {
         return YES;
     }
 
@@ -323,8 +329,11 @@
     return result;
 }
 
-static BOOL isExecuteVacuum(void) {
-    NSString *vacuumDate = @"GIO_VACUUM_DATE_E7B96C4E-6EE2-49CD-87F0-B2E62D4EE96A-ENCODE-EVENT";
+static BOOL isExecuteVacuum(NSString *name) {
+    if (name.length == 0) {
+        return NO;
+    }
+    NSString *vacuumDate = [NSString stringWithFormat:@"GIO_VACUUM_DATE_E7B96C4E-6EE2-49CD-87F0-B2E62D4EE96A-ENCODE-%@", name];
     NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
     NSDate *beforeDate = [userDefault objectForKey:vacuumDate];
     NSDate *nowDate = [NSDate date];
