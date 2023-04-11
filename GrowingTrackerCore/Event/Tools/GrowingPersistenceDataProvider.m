@@ -85,6 +85,15 @@ static GrowingPersistenceDataProvider *persistence = nil;
     return  [_growingUserdefault valueForKey:kGrowingUserdefault_loginUserKey];
 }
 
+///设置NSString,NSNumber
+- (void)setString:(NSString *)value forKey:(NSString *)key {
+    [_growingUserdefault setValue:value forKey:key];
+}
+
+- (NSString *)getStringforKey:(NSString *)key; {
+    return [_growingUserdefault valueForKey:key];
+}
+
 - (GrowingEventSequenceObject*)getAndIncrement:(NSString *)eventType {
     long long globalId = [self increaseFor:kGrowingUserdefault_globalId spanValue:1];
     long long eventTypeId = [self increaseFor:[NSString stringWithFormat:@"%@.%@",kGrowingUserdefault_prefix, eventType] spanValue:1];
