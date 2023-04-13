@@ -21,7 +21,6 @@
 #import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingAutotrackEventType.h"
 
-#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
 #if __has_include("Modules/Hybrid/GrowingHybridModule.h")
 #import "Modules/Hybrid/Events/GrowingHybridEventType.h"
 #define GROWING_ANALYSIS_HYBRID
@@ -30,7 +29,6 @@
 #if __has_include("Modules/Advert/Public/GrowingAdvertising.h")
 #import "Modules/Advert/Event/GrowingAdvertEventType.h"
 #define GROWING_ANALYSIS_ADVERT
-#endif
 #endif
 
 @implementation GrowingPBEventV3Dto (GrowingHelper)

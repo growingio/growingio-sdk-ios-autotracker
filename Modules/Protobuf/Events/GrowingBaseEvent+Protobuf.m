@@ -31,7 +31,6 @@
 #import "Modules/Protobuf/Proto/GrowingEvent.pbobjc.h"
 #import "Modules/Protobuf/GrowingPBEventV3Dto+GrowingHelper.h"
 
-#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
 #if __has_include("Modules/Hybrid/GrowingHybridModule.h")
 #import "Modules/Hybrid/Events/GrowingHybridCustomEvent.h"
 #import "Modules/Hybrid/Events/GrowingHybridPageEvent.h"
@@ -43,7 +42,6 @@
 #if __has_include("Modules/Advert/Public/GrowingAdvertising.h")
 #import "Modules/Advert/Event/GrowingActivateEvent.h"
 #define GROWING_ANALYSIS_ADVERT
-#endif
 #endif
 
 @implementation GrowingBaseEvent (Protobuf)

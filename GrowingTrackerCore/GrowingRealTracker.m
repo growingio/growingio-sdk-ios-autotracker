@@ -63,7 +63,7 @@ const int GrowingTrackerVersionCode = 30408;
         [self loggerSetting];
         [GrowingULAppLifecycle setup];
         [GrowingSession startSession];
-#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
+#if TARGET_OS_IOS
         [GrowingAppDelegateAutotracker track];
 #endif
         [[GrowingModuleManager sharedInstance] registedAllModules];

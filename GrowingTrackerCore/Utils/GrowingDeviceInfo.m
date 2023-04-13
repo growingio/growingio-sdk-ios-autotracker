@@ -238,7 +238,7 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
     if (!_deviceModel) {
 #if TARGET_OS_OSX || TARGET_OS_MACCATALYST
         _deviceModel = [GrowingDeviceInfo getSysInfoByName:(char *)"hw.model"];
-#else
+#elif TARGET_OS_IOS
         struct utsname systemInfo;
         uname(&systemInfo);
         _deviceModel = @(systemInfo.machine);
@@ -273,11 +273,11 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 
 - (NSString *)platformVersion {
     if (!_platformVersion) {
-#if !TARGET_OS_OSX
-        _platformVersion = [UIDevice currentDevice].systemVersion;
-#else
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
         NSDictionary *dic = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
         _platformVersion = dic[@"ProductVersion"];
+#elif TARGET_OS_IOS
+        _platformVersion = [UIDevice currentDevice].systemVersion;
 #endif
     }
     return _platformVersion;
