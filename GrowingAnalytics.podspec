@@ -58,37 +58,37 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
 
   s.subspec 'Database' do |service|
     service.source_files = 'Services/Database/**/*{.h,.m,.c,.cpp,.mm}'
-    service.public_header_files = 'Services/Database/Public/*.h'
+    service.public_header_files = 'Services/Database/include/*.h'
     service.dependency 'GrowingAnalytics/TrackerCore'
   end
   
   s.subspec 'Network' do |service|
     service.source_files = 'Services/Network/**/*{.h,.m,.c,.cpp,.mm}'
-    service.public_header_files = 'Services/Network/Public/*.h'
+    service.public_header_files = 'Services/Network/include/*.h'
     service.dependency 'GrowingAnalytics/TrackerCore'
   end
   
   s.subspec 'WebSocket' do |service|
     service.source_files = 'Services/WebSocket/**/*{.h,.m,.c,.cpp,.mm}'
-    service.public_header_files = 'Services/WebSocket/Public/*.h'
+    service.public_header_files = 'Services/WebSocket/include/*.h'
     service.dependency 'GrowingAnalytics/TrackerCore'
   end
   
   s.subspec 'Compression' do |service|
     service.source_files = 'Services/Compression/**/*{.h,.m,.c,.cpp,.mm}'
-    service.public_header_files = 'Services/Compression/Public/*.h'
+    service.public_header_files = 'Services/Compression/include/*.h'
     service.dependency 'GrowingAnalytics/TrackerCore'
   end
 
   s.subspec 'Encryption' do |service|
     service.source_files = 'Services/Encryption/**/*{.h,.m,.c,.cpp,.mm}'
-    service.public_header_files = 'Services/Encryption/Public/*.h'
+    service.public_header_files = 'Services/Encryption/include/*.h'
     service.dependency 'GrowingAnalytics/TrackerCore'
   end
 
   s.subspec 'DefaultServices' do |services|
     services.source_files = 'Modules/DefaultServices/**/*{.h,.m,.c,.cpp,.mm}'
-    services.public_header_files = 'Modules/DefaultServices/Public/*.h'
+    services.public_header_files = 'Modules/DefaultServices/include/*.h'
     services.dependency 'GrowingAnalytics/TrackerCore'
 
     # Default Services
@@ -101,7 +101,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   s.subspec 'MobileDebugger' do |debugger|
     debugger.ios.deployment_target = '9.0'
     debugger.source_files = 'Modules/MobileDebugger/**/*{.h,.m,.c,.cpp,.mm}'
-    debugger.public_header_files = 'Modules/MobileDebugger/Public/*.h'
+    debugger.public_header_files = 'Modules/MobileDebugger/include/*.h'
     debugger.dependency 'GrowingAnalytics/TrackerCore'
     debugger.dependency 'GrowingAnalytics/WebSocket'
   end
@@ -109,7 +109,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   s.subspec 'WebCircle' do |webcircle|
     webcircle.ios.deployment_target = '9.0'
     webcircle.source_files = 'Modules/WebCircle/**/*{.h,.m,.c,.cpp,.mm}'
-    webcircle.public_header_files = 'Modules/WebCircle/Public/*.h'
+    webcircle.public_header_files = 'Modules/WebCircle/include/*.h'
     webcircle.dependency 'GrowingAnalytics/AutotrackerCore'
     webcircle.dependency 'GrowingAnalytics/Hybrid'
     webcircle.dependency 'GrowingAnalytics/WebSocket'
@@ -118,7 +118,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   s.subspec 'Hybrid' do |hybrid|
     hybrid.ios.deployment_target = '9.0'
     hybrid.source_files = 'Modules/Hybrid/**/*{.h,.m,.c,.cpp,.mm}'
-    hybrid.public_header_files = 'Modules/Hybrid/Public/*.h'
+    hybrid.public_header_files = 'Modules/Hybrid/include/*.h'
     hybrid.dependency 'GrowingAnalytics/TrackerCore'
   end
 
@@ -132,7 +132,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   s.subspec 'Protobuf' do |protobuf|
     protobuf.source_files = 'Modules/Protobuf/**/*{.h,.m,.c,.cpp,.mm}'
     protobuf.exclude_files = 'Modules/Protobuf/Proto/**/*{.h,.m,.c,.cpp,.mm}'
-    protobuf.public_header_files = 'Modules/Protobuf/Public/*.h'
+    protobuf.public_header_files = 'Modules/Protobuf/include/*.h'
     protobuf.dependency 'GrowingAnalytics/TrackerCore'
     protobuf.dependency 'GrowingAnalytics/Database'
     
@@ -154,7 +154,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   # 使用flutter无埋点插件时，将自动导入该库，正常情况下请勿手动导入
   s.subspec 'Flutter' do |flutter|
     flutter.source_files = 'Modules/Flutter/**/*{.h,.m,.c,.cpp,.mm}'
-    flutter.public_header_files = 'Modules/Flutter/Public/*.h'
+    flutter.public_header_files = 'Modules/Flutter/include/*.h'
     flutter.dependency 'GrowingAnalytics/TrackerCore'
   end
 

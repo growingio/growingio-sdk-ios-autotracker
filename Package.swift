@@ -238,7 +238,6 @@ let package = Package(
             name: "GrowingService_Database",
             dependencies: ["GrowingTrackerCore"],
             path: "Services/Database",
-            publicHeadersPath: "Public",
             cSettings: [
                 .headerSearchPath("../.."),
             ]
@@ -247,7 +246,6 @@ let package = Package(
             name: "GrowingService_Network",
             dependencies: ["GrowingTrackerCore"],
             path: "Services/Network",
-            publicHeadersPath: "Public",
             cSettings: [
                 .headerSearchPath("../.."),
             ]
@@ -256,7 +254,6 @@ let package = Package(
             name: "GrowingService_WebSocket",
             dependencies: ["GrowingTrackerCore"],
             path: "Services/WebSocket",
-            publicHeadersPath: "Public",
             cSettings: [
                 .headerSearchPath("../.."),
             ]
@@ -265,7 +262,6 @@ let package = Package(
             name: "GrowingService_Compression",
             dependencies: ["GrowingTrackerCore"],
             path: "Services/Compression",
-            publicHeadersPath: "Public",
             cSettings: [
                 .headerSearchPath("../.."),
             ]
@@ -274,7 +270,6 @@ let package = Package(
             name: "GrowingService_Encryption",
             dependencies: ["GrowingTrackerCore"],
             path: "Services/Encryption",
-            publicHeadersPath: "Public",
             cSettings: [
                 .headerSearchPath("../.."),
             ]
@@ -292,7 +287,6 @@ let package = Package(
                 "GrowingService_Compression"
             ],
             path: "Modules/DefaultServices",
-            publicHeadersPath: "Public",
             cSettings: [
                 .headerSearchPath("../.."),
             ]
@@ -304,7 +298,6 @@ let package = Package(
                 "GrowingService_WebSocket"
             ],
             path: "Modules/MobileDebugger",
-            publicHeadersPath: "Public",
             cSettings: [
                 .headerSearchPath("../.."),
             ]
@@ -317,7 +310,6 @@ let package = Package(
                 "GrowingModule_Hybrid"
             ],
             path: "Modules/WebCircle",
-            publicHeadersPath: "Public",
             cSettings: [
                 .headerSearchPath("../.."),
             ]
@@ -326,7 +318,6 @@ let package = Package(
             name: "GrowingModule_Hybrid",
             dependencies: ["GrowingTrackerCore"],
             path: "Modules/Hybrid",
-            publicHeadersPath: "Public",
             cSettings: [
                 .headerSearchPath("../.."),
             ],
