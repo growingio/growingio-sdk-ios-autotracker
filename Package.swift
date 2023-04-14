@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.6
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 //
@@ -6,7 +6,7 @@
 //  GrowingAnalytics
 //
 //  Created by YoloMao on 2022/03/17.
-//  Copyright (C) 2022 Beijing Yishu Technology Co., Ltd.
+//  Copyright (C) 2023 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import PackageDescription
 
 let package = Package(
     name: "GrowingAnalytics",
-    platforms: [.iOS(.v9)],
+    platforms: [.iOS(.v10), .macCatalyst(.v13), .macOS(.v10_12)],
     products: [
         .library(
             name: "GrowingAutotracker_cdp",
@@ -73,14 +73,12 @@ let package = Package(
     ],
     dependencies: [
         .package(
-            name: "GrowingUtils",
             url: "https://github.com/growingio/growingio-sdk-ios-utilities.git",
-            .branch("master")
+            branch: "master"
         ),
         .package(
-            name: "GrowingAPM",
             url: "https://github.com/growingio/growingio-sdk-ios-performance-ext.git",
-            .branch("master")
+            branch: "master"
         ),
     ],
     targets: [
@@ -93,7 +91,7 @@ let package = Package(
                 "GrowingAutotracker_cdp",
                 "GrowingUserIdentifier",
                 "GrowingModule_DefaultServices",
-                .target(name: "GrowingModule_Hybrid", condition: .when(platforms: [.iOS])),
+                .target(name: "GrowingModule_Hybrid", condition: .when(platforms: [.iOS, .macCatalyst])),
                 .target(name: "GrowingModule_MobileDebugger", condition: .when(platforms: [.iOS])),
                 .target(name: "GrowingModule_WebCircle", condition: .when(platforms: [.iOS])),
             ],
@@ -115,7 +113,7 @@ let package = Package(
                 "GrowingAutotracker",
                 "GrowingUserIdentifier",
                 "GrowingModule_DefaultServices",
-                .target(name: "GrowingModule_Hybrid", condition: .when(platforms: [.iOS])),
+                .target(name: "GrowingModule_Hybrid", condition: .when(platforms: [.iOS, .macCatalyst])),
                 .target(name: "GrowingModule_MobileDebugger", condition: .when(platforms: [.iOS])),
                 .target(name: "GrowingModule_WebCircle", condition: .when(platforms: [.iOS])),
             ],
@@ -181,6 +179,7 @@ let package = Package(
             dependencies: [],
             path: "GrowingTrackerCore/Utils/UserIdentifier",
             exclude: ["GrowingUserIdentifier_NoIDFA.m"],
+            publicHeadersPath: ".",
             cSettings: [
                 .headerSearchPath("../../.."),
             ]
@@ -190,6 +189,7 @@ let package = Package(
             dependencies: [],
             path: "GrowingTrackerCore/Utils/UserIdentifier",
             exclude: ["GrowingUserIdentifier.m"],
+            publicHeadersPath: ".",
             cSettings: [
                 .headerSearchPath("../../.."),
             ]
@@ -197,7 +197,7 @@ let package = Package(
         .target(
             name: "GrowingTrackerCore",
             dependencies: [
-                .product(name: "GrowingUtilsTrackerCore", package: "GrowingUtils"),
+                .product(name: "GrowingUtilsTrackerCore", package: "growingio-sdk-ios-utilities"),
             ],
             path: "GrowingTrackerCore",
             exclude: ["Utils/UserIdentifier"],
@@ -207,14 +207,14 @@ let package = Package(
             ],
             linkerSettings: [
                 .linkedLibrary("c++"),
-                .linkedFramework("UIKit", .when(platforms: [.iOS])),
+                .linkedFramework("UIKit", .when(platforms: [.iOS, .macCatalyst])),
             ]
         ),
         .target(
             name: "GrowingAutotrackerCore",
             dependencies: [
                 "GrowingTrackerCore",
-                .product(name: "GrowingUtilsAutotrackerCore", package: "GrowingUtils"),
+                .product(name: "GrowingUtilsAutotrackerCore", package: "growingio-sdk-ios-utilities"),
             ],
             path: "GrowingAutotrackerCore",
             publicHeadersPath: "Public",
@@ -238,6 +238,7 @@ let package = Package(
             name: "GrowingService_Database",
             dependencies: ["GrowingTrackerCore"],
             path: "Services/Database",
+            publicHeadersPath: "Public",
             cSettings: [
                 .headerSearchPath("../.."),
             ]
@@ -246,6 +247,7 @@ let package = Package(
             name: "GrowingService_Network",
             dependencies: ["GrowingTrackerCore"],
             path: "Services/Network",
+            publicHeadersPath: "Public",
             cSettings: [
                 .headerSearchPath("../.."),
             ]
@@ -254,6 +256,7 @@ let package = Package(
             name: "GrowingService_WebSocket",
             dependencies: ["GrowingTrackerCore"],
             path: "Services/WebSocket",
+            publicHeadersPath: "Public",
             cSettings: [
                 .headerSearchPath("../.."),
             ]
@@ -262,6 +265,7 @@ let package = Package(
             name: "GrowingService_Compression",
             dependencies: ["GrowingTrackerCore"],
             path: "Services/Compression",
+            publicHeadersPath: "Public",
             cSettings: [
                 .headerSearchPath("../.."),
             ]
@@ -270,6 +274,7 @@ let package = Package(
             name: "GrowingService_Encryption",
             dependencies: ["GrowingTrackerCore"],
             path: "Services/Encryption",
+            publicHeadersPath: "Public",
             cSettings: [
                 .headerSearchPath("../.."),
             ]
@@ -287,6 +292,7 @@ let package = Package(
                 "GrowingService_Compression"
             ],
             path: "Modules/DefaultServices",
+            publicHeadersPath: "Public",
             cSettings: [
                 .headerSearchPath("../.."),
             ]
@@ -298,6 +304,7 @@ let package = Package(
                 "GrowingService_WebSocket"
             ],
             path: "Modules/MobileDebugger",
+            publicHeadersPath: "Public",
             cSettings: [
                 .headerSearchPath("../.."),
             ]
@@ -310,6 +317,7 @@ let package = Package(
                 "GrowingModule_Hybrid"
             ],
             path: "Modules/WebCircle",
+            publicHeadersPath: "Public",
             cSettings: [
                 .headerSearchPath("../.."),
             ]
@@ -318,11 +326,12 @@ let package = Package(
             name: "GrowingModule_Hybrid",
             dependencies: ["GrowingTrackerCore"],
             path: "Modules/Hybrid",
+            publicHeadersPath: "Public",
             cSettings: [
                 .headerSearchPath("../.."),
             ],
             linkerSettings: [
-                .linkedFramework("WebKit", .when(platforms: [.iOS])),
+                .linkedFramework("WebKit", .when(platforms: [.iOS, .macCatalyst])),
             ]
         ),
         .target(
@@ -338,7 +347,7 @@ let package = Package(
             name: "GrowingModule_APM",
             dependencies: [
                 "GrowingTrackerCore",
-                .product(name: "GrowingAPM", package: "GrowingAPM"),
+                .product(name: "GrowingAPM", package: "growingio-sdk-ios-performance-ext"),
             ],
             path: "Modules/APM",
             publicHeadersPath: "Public",
@@ -355,7 +364,7 @@ let package = Package(
                 "GrowingAutotracker_cdp",
                 "GrowingUserIdentifier_NoIDFA",
                 "GrowingModule_DefaultServices",
-                .target(name: "GrowingModule_Hybrid", condition: .when(platforms: [.iOS])),
+                .target(name: "GrowingModule_Hybrid", condition: .when(platforms: [.iOS, .macCatalyst])),
                 .target(name: "GrowingModule_MobileDebugger", condition: .when(platforms: [.iOS])),
                 .target(name: "GrowingModule_WebCircle", condition: .when(platforms: [.iOS])),
             ],
@@ -377,7 +386,7 @@ let package = Package(
                 "GrowingAutotracker",
                 "GrowingUserIdentifier_NoIDFA",
                 "GrowingModule_DefaultServices",
-                .target(name: "GrowingModule_Hybrid", condition: .when(platforms: [.iOS])),
+                .target(name: "GrowingModule_Hybrid", condition: .when(platforms: [.iOS, .macCatalyst])),
                 .target(name: "GrowingModule_MobileDebugger", condition: .when(platforms: [.iOS])),
                 .target(name: "GrowingModule_WebCircle", condition: .when(platforms: [.iOS])),
             ],
