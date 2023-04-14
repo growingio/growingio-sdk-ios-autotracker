@@ -74,7 +74,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/growingio/growingio-sdk-ios-utilities.git",
-            branch: "master"
+            exact: "0.0.5"
         ),
         .package(
             url: "https://github.com/growingio/growingio-sdk-ios-performance-ext.git",
