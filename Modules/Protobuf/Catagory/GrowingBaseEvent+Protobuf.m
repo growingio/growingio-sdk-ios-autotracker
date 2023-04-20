@@ -17,7 +17,9 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "Modules/Protobuf/Events/GrowingBaseEvent+Protobuf.h"
+#import "Modules/Protobuf/Catagory/GrowingBaseEvent+Protobuf.h"
+#import "Modules/Protobuf/Catagory/GrowingPBEventV3Dto+GrowingHelper.h"
+#import "Modules/Protobuf/Proto/GrowingEvent.pbobjc.h"
 #import "GrowingTrackerCore/Event/GrowingAppCloseEvent.h"
 #import "GrowingTrackerCore/Event/GrowingBaseAttributesEvent.h"
 #import "GrowingTrackerCore/Event/GrowingConversionVariableEvent.h"
@@ -28,8 +30,6 @@
 #import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
 #import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
 #import "GrowingTrackerCore/Event/GrowingVisitorAttributesEvent.h"
-#import "Modules/Protobuf/Proto/GrowingEvent.pbobjc.h"
-#import "Modules/Protobuf/GrowingPBEventV3Dto+GrowingHelper.h"
 
 #if __has_include("Modules/Hybrid/GrowingHybridModule.h")
 #import "Modules/Hybrid/Events/GrowingHybridCustomEvent.h"

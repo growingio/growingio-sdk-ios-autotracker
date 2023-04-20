@@ -17,7 +17,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "Modules/Protobuf/GrowingPBEventV3Dto+GrowingHelper.h"
+#import "Modules/Protobuf/Catagory/GrowingPBEventV3Dto+GrowingHelper.h"
 #import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingAutotrackEventType.h"
 

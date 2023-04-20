@@ -18,13 +18,22 @@
 //  limitations under the License.
 
 #import "Modules/Protobuf/GrowingEventProtobufPersistence.h"
+
+#if SWIFT_PACKAGE
+@import GrowingModule_SwiftProtobuf;
+#else
 #import "Modules/Protobuf/Proto/GrowingEvent.pbobjc.h"
-#import "Modules/Protobuf/Events/GrowingBaseEvent+Protobuf.h"
-#import "Modules/Protobuf/GrowingPBEventV3Dto+GrowingHelper.h"
+#import "Modules/Protobuf/Catagory/GrowingBaseEvent+Protobuf.h"
+#import "Modules/Protobuf/Catagory/GrowingPBEventV3Dto+GrowingHelper.h"
+#endif
 
 @interface GrowingEventProtobufPersistence ()
 
+#if SWIFT_PACKAGE
+@property (nonatomic, strong, readonly, nullable) GrowingSwiftProtobuf *dtoBox;
+#else
 @property (nonatomic, strong, readonly, nullable) GrowingPBEventV3Dto *dto;
+#endif
 
 @end
 
@@ -38,7 +47,11 @@
         _eventUUID = uuid;
         _eventType = eventType;
         _data = data;
+#if SWIFT_PACKAGE
+        _dtoBox = [GrowingSwiftProtobuf parseFromData:data];
+#else
         _dto = [GrowingPBEventV3Dto parseFromData:data error:nil];
+#endif
         _policy = policy;
     }
     return self;
@@ -49,12 +62,27 @@
     persistence->_eventUUID = uuid;
     persistence->_eventType = event.eventType;
     persistence->_policy = event.sendPolicy;
+    
+#if SWIFT_PACKAGE
+    persistence->_dtoBox = event.toProtobuf;
+    persistence->_data = (persistence->_dtoBox).data;
+#else
     persistence->_dto = event.toProtobuf;
     persistence->_data = (persistence->_dto).data;
+#endif
     return persistence;
 }
 
 + (NSData *)buildRawEventsFromEvents:(NSArray<GrowingEventProtobufPersistence *> *)events {
+#if SWIFT_PACKAGE
+    NSMutableArray *list = [NSMutableArray array];
+    for (GrowingEventProtobufPersistence *e in events) {
+        if (e.dtoBox) {
+            [list addObject:e.dtoBox];
+        }
+    }
+    return [GrowingSwiftProtobuf serializedDatasFromList:list];
+#else
     GrowingPBEventV3List *list = [[GrowingPBEventV3List alloc] init];
     for (GrowingEventProtobufPersistence *e in events) {
         if (e.dto) {
@@ -62,13 +90,18 @@
         }
     }
     return list.data;
+#endif
 }
 
 - (id)toJSONObject {
+#if SWIFT_PACKAGE
+    return self.dtoBox.toJsonObject;
+#else
     if (!self.dto) {
         return [NSDictionary dictionary];
     }
     return self.dto.growingHelper_jsonObject;
+#endif
 }
 
 - (void)appendExtraParams:(NSDictionary<NSString *, id> *)extraParams {
@@ -76,7 +109,11 @@
         return;
     }
     
+#if SWIFT_PACKAGE
+    [self.dtoBox appendWithExtraParams:extraParams];
+#else
     [self.dto.attributes addEntriesFromDictionary:extraParams];
+#endif
 }
 
 @end
