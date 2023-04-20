@@ -43,7 +43,7 @@ public class SwiftProtobufWrapper: NSObject {
     public func toJsonObject() -> [String: AnyObject]? {
         do {
             let data = try unbox.jsonUTF8Data()
-            let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String:AnyObject]
+            let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String: AnyObject]
             return json
         } catch {
             return nil
@@ -64,6 +64,25 @@ public class SwiftProtobufWrapper: NSObject {
                 list.values.append(box.unbox)
             }
             return try list.serializedData()
+        } catch {
+            return nil
+        }
+    }
+}
+
+extension SwiftProtobufWrapper {
+    // For GrowingToolsKit NetFlow
+    @objc(convertProtobufDataToJsonArray:)
+    public static func convertProtobufDataToJsonArray(from data: Data) -> [[String: AnyObject]]? {
+        do {
+            let list = try EventV3List(serializedData: data)
+            var array = [[String: AnyObject]]()
+            for dto in list.values {
+                let jsonData = try dto.jsonUTF8Data()
+                let dic = try JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers) as! [String: AnyObject]
+                array.append(dic)
+            }
+            return array
         } catch {
             return nil
         }
@@ -131,7 +150,7 @@ extension GrowingBaseEvent {
         dto.referralPage = referralPage()
         dto.protocolType = protocolType()
         dto.eventName = eventName()
-
+        
         return SwiftProtobufWrapper(dto)
     }
 }
@@ -161,10 +180,10 @@ extension GrowingBaseEvent {
         } else if self.eventType == "ACTIVATE" {
             return .activate
         }
-    
+        
         return .UNRECOGNIZED(100)
     }
-
+    
     fileprivate func idfa() -> String {
         let selector = Selector(("idfa"))
         if self.responds(to: selector) {
