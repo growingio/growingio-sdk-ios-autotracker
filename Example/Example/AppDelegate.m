@@ -8,7 +8,13 @@
 
 #import "AppDelegate.h"
 #import <AppTrackingTransparency/AppTrackingTransparency.h>
+
+#if __has_include(<GrowingToolsKit/GrowingToolsKit.h>)
 #import <GrowingToolsKit/GrowingToolsKit.h>
+#else
+#import "GrowingToolsKit.h"
+#endif
+
 //#import <Bugly/Bugly.h>
 
 @interface AppDelegate ()
