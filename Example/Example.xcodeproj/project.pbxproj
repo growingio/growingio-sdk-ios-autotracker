@@ -76,7 +76,6 @@
 		04A6FAF524E67215006C72F0 /* GIOBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A6FAF424E67215006C72F0 /* GIOBaseViewController.m */; };
 		04F675662628293800077374 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04F675652628293800077374 /* AdSupport.framework */; };
 		33A0F692F1D1738D6854E19A /* Pods_HostApplicationTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42F5EA0EFE2552358C35A0F5 /* Pods_HostApplicationTests.framework */; };
-		34106BB428FECB0E00E7DB01 /* Crasher.mm in Sources */ = {isa = PBXBuildFile; fileRef = 34106BB328FECB0E00E7DB01 /* Crasher.mm */; };
 		34486D3D27B1049000FA8223 /* UITapGestureRecognizerAutotrackTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34486D3B27B102B000FA8223 /* UITapGestureRecognizerAutotrackTest.m */; };
 		34664587278EEEA6009C351C /* A0GrowingAnalyticsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3A224F638BB0028FE94 /* A0GrowingAnalyticsTest.m */; };
 		346E0B3B29F2724400A12E4E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346E0B3A29F2724400A12E4E /* AppDelegate.swift */; };
@@ -112,7 +111,6 @@
 		349975FC28BF303B00466640 /* AdServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 349975F728BF300F00466640 /* AdServices.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		349B529228C088F100EE88FE /* AdvertTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 349B528528C086C600EE88FE /* AdvertTest.m */; };
 		349DA46828F2BD5400C4281F /* Others.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 349DA46728F2BC5400C4281F /* Others.storyboard */; };
-		349DA46C28F2BF9400C4281F /* GIOCrashMonitorTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 349DA46B28F2BF9400C4281F /* GIOCrashMonitorTableViewController.mm */; };
 		349F1488285B503B00437F53 /* GIODefaultWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 349F1484285B503A00437F53 /* GIODefaultWebViewController.m */; };
 		349F1489285B503B00437F53 /* GIOH5BrowserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 349F1487285B503A00437F53 /* GIOH5BrowserViewController.m */; };
 		349F148C285B52B700437F53 /* GIOScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 349F148B285B52B700437F53 /* GIOScanViewController.m */; };
@@ -2373,7 +2371,6 @@
 				04A6FAF524E67215006C72F0 /* GIOBaseViewController.m in Sources */,
 				0465315A24DD4272002D254C /* GIOFoodTableViewCell.m in Sources */,
 				0465314524DD4272002D254C /* GIOCustomEventViewController.m in Sources */,
-				349DA46C28F2BF9400C4281F /* GIOCrashMonitorTableViewController.mm in Sources */,
 				0465314724DD4272002D254C /* GIOContainerViewController.m in Sources */,
 				0465314E24DD4272002D254C /* GIOLabelAttributeViewController.m in Sources */,
 				349F1488285B503B00437F53 /* GIODefaultWebViewController.m in Sources */,
@@ -2385,7 +2382,6 @@
 				0465314324DD4272002D254C /* GIOClickEventViewController.m in Sources */,
 				349F148C285B52B700437F53 /* GIOScanViewController.m in Sources */,
 				3494DD092859CCF300A6CE46 /* GrowingDeepLinkHandler+XCTest.m in Sources */,
-				34106BB428FECB0E00E7DB01 /* Crasher.mm in Sources */,
 				4916270F24E157BB00444AF2 /* GIOPresentViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
