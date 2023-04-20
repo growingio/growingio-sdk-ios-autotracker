@@ -188,7 +188,6 @@ GrowingMod(GrowingMobileDebugger)
     [self sendScreenShot];
 }
 
-
 - (void)start {
     self.isReady = YES;
     [self remoteReady];
@@ -197,10 +196,26 @@ GrowingMod(GrowingMobileDebugger)
         self.statusWindow.hidden = NO;
         self.statusWindow.statusLable.text = @"正在进行Debugger";
         self.statusWindow.statusLable.textAlignment = NSTextAlignmentCenter;
+        
+        __weak typeof(self) wself = self;
+        self.statusWindow.onButtonClick = ^{
+            NSString *content = [NSString stringWithFormat:@"APP版本: %@\nSDK版本: %@",
+                                                           [GrowingDeviceInfo currentDeviceInfo].appFullVersion,
+                                                           GrowingTrackerVersionName];
+            GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert
+                                                               title:@"正在进行Debugger"
+                                                             message:content];
+            [alert addOkWithTitle:@"继续Debugger" handler:nil];
+            [alert
+                addCancelWithTitle:@"退出Debugger"
+                           handler:^(UIAlertAction *_Nonnull action, NSArray<UITextField *> *_Nonnull textFields) {
+                               [wself stop];
+                           }];
+            [alert showAlertAnimated:NO];
+        };
     }
     [[GrowingApplicationEventManager sharedInstance] addApplicationEventObserver:self];
 }
-
 
 - (void)stop {
     GIOLogDebug(@"开始断开连接");
@@ -214,7 +229,6 @@ GrowingMod(GrowingMobileDebugger)
 - (void)dealloc {
     [self stop];
 }
-
 
 - (void)_stopWithError:(NSString *)error {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
