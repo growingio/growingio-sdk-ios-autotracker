@@ -4,7 +4,6 @@
 use_frameworks!
 
 install!'cocoapods',:deterministic_uuids=>false
-platform :ios, '10.0'
 
 workspace 'GrowingAnalytics.xcworkspace'
 
@@ -79,6 +78,11 @@ target 'ExampleiOS13' do
   pod 'GrowingAPM'
   
   pod 'GrowingToolsKit'
+end
+
+target 'Example-macOS' do
+  project 'Example/Example'
+  pod 'GrowingAnalytics/Tracker', :path => './'
 end
 
 post_install do |installer|
