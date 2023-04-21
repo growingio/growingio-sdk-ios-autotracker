@@ -79,8 +79,10 @@ extension SwiftProtobufWrapper {
             var array = [[String: AnyObject]]()
             for dto in list.values {
                 let jsonData = try dto.jsonUTF8Data()
-                let dic = try JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers) as! [String: AnyObject]
-                array.append(dic)
+                let dic = try JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers) as? [String: AnyObject]
+                if let dic = dic {
+                    array.append(dic)
+                }
             }
             return array
         } catch {
@@ -95,8 +97,8 @@ extension GrowingBaseEvent {
         
         // ************************* CDP *************************
         if self.extraParams.count > 0 {
-            dto.dataSourceID = self.extraParams["dataSourceId"] as! String
-            dto.gioID = self.extraParams["gioId"] as! String
+            dto.dataSourceID = self.extraParams["dataSourceId"] as? String ?? ""
+            dto.gioID = self.extraParams["gioId"] as? String ?? ""
         }
         
         if let resourceItem = resourceItem() {
@@ -253,7 +255,7 @@ extension GrowingBaseEvent {
     }
     
     fileprivate func index() -> Int32 {
-        let selector = Selector(("pageShowTimestamp"))
+        let selector = Selector(("index"))
         if self.responds(to: selector) {
             let imp: IMP = method_getImplementation(class_getInstanceMethod(type(of: self), selector)!)
             let result = unsafeBitCast(imp, to: (@convention(c)(GrowingBaseEvent, Selector) -> Int32).self)(self, selector)
