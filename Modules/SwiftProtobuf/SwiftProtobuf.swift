@@ -286,7 +286,10 @@ extension GrowingBaseEvent {
         let selector = Selector(("attributes"))
         if self.responds(to: selector) {
             let imp: IMP = method_getImplementation(class_getInstanceMethod(type(of: self), selector)!)
-            return unsafeBitCast(imp, to: (@convention(c)(GrowingBaseEvent, Selector) -> [String: String]?).self)(self, selector) ?? [:]
+            let result = unsafeBitCast(imp, to: (@convention(c)(GrowingBaseEvent, Selector) -> [String: AnyObject]?).self)(self, selector)
+            if let result = result {
+                return result.filter({ $0.value is String }) as? [String: String] ?? [:]
+            }
         }
         return [:]
     }
