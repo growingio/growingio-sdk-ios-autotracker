@@ -174,7 +174,7 @@ FOLDER_NAME='generate'
 PREFIX_PATH="./${FOLDER_NAME}/${MAIN_FRAMEWORK_NAME}"
 generateProject() {
 	logger -v "step: gem bundle install"
-	sudo bundle install || exit 1
+	sudo -E bundle install || exit 1
 	rm -rf $FOLDER_NAME
 	mkdir $FOLDER_NAME
 	logger -v "step: generate xcodeproj from podspec using square/cocoapods-generate"
