@@ -2,7 +2,7 @@
 
 LOGGER_MODE=1 # 0=silent/1=info/2=verbose
 if [[ $1 == '-s' || $1 == '--silent' ]]; then
-		LOGGER_MODE=0
+	LOGGER_MODE=0
 elif [[ $1 == '-v' || $1 == '--verbose' ]]; then
 	LOGGER_MODE=2
 fi
@@ -22,22 +22,22 @@ IS_SAAS=false
 chooseSaasOrCdp() {
 	PS3='Please choose SaaS or CDP:'
 	options=("SaaS" "CDP" "Quit")
-	select opt in "${options[@]}"
-	do 
+	select opt in "${options[@]}"; do
 		case $opt in
-			"SaaS")
-				IS_SAAS=true
-				break
+		"SaaS")
+			IS_SAAS=true
+			break
 			;;
-			"CDP")
-				break
+		"CDP")
+			break
 			;;
-			"Quit")
-				exit 0
-				break
+		"Quit")
+			exit 0
+			break
 			;;
-			*)
-				logger -e invalid option;;
+		*)
+			logger -e invalid option
+			;;
 		esac
 	done
 }
@@ -46,23 +46,23 @@ MAIN_BUNDLE=""
 chooseMainBundle() {
 	PS3='Please choose which bundle you wanna build:'
 	options=("GrowingAutotracker" "GrowingTracker" "Quit")
-	select opt in "${options[@]}"
-	do 
+	select opt in "${options[@]}"; do
 		case $opt in
-			"GrowingAutotracker")
-				MAIN_BUNDLE="GrowingAutotracker"
-				break
+		"GrowingAutotracker")
+			MAIN_BUNDLE="GrowingAutotracker"
+			break
 			;;
-			"GrowingTracker")
-				MAIN_BUNDLE="GrowingTracker"
-				break
+		"GrowingTracker")
+			MAIN_BUNDLE="GrowingTracker"
+			break
 			;;
-			"Quit")
-				exit 0
-				break
+		"Quit")
+			exit 0
+			break
 			;;
-			*)
-				logger -e invalid option;;
+		*)
+			logger -e invalid option
+			;;
 		esac
 	done
 }
@@ -70,61 +70,59 @@ chooseMainBundle() {
 MODULES=()
 APMMODULES=()
 chooseModules() {
-	if [ $MAIN_BUNDLE == 'GrowingAutotracker' ]
-	then
+	if [ $MAIN_BUNDLE == 'GrowingAutotracker' ]; then
 		modules=("Advert" "Protobuf" "APMUIMonitor" "APMCrashMonitor" "Done" "Quit")
 		chooseModulesWith ${modules[*]}
-	elif [ $MAIN_BUNDLE == 'GrowingTracker' ]
-	then
+	elif [ $MAIN_BUNDLE == 'GrowingTracker' ]; then
 		modules=("Hybrid" "Advert" "Protobuf" "APMUIMonitor" "APMCrashMonitor" "Done" "Quit")
 		chooseModulesWith ${modules[*]}
 	fi
 }
 chooseModulesWith() {
 	PS3='Please choose modules you wanna build:'
-	select opt in $@
-	do 
+	select opt in $@; do
 		case $opt in
-			"Hybrid")
-				if [[ ! ${MODULES[*]} =~ "Hybrid" ]]; then
-				   MODULES+=("Hybrid")
-				fi
+		"Hybrid")
+			if [[ ! ${MODULES[*]} =~ "Hybrid" ]]; then
+				MODULES+=("Hybrid")
+			fi
 			;;
-			"Advert")
-				if [[ ! ${MODULES[*]} =~ "Advert" ]]; then
-				   MODULES+=("Advert")
-				fi
+		"Advert")
+			if [[ ! ${MODULES[*]} =~ "Advert" ]]; then
+				MODULES+=("Advert")
+			fi
 			;;
-			"Protobuf")
-				if [[ ! ${MODULES[*]} =~ "Protobuf" ]]; then
-				   MODULES+=("Protobuf")
-				fi
+		"Protobuf")
+			if [[ ! ${MODULES[*]} =~ "Protobuf" ]]; then
+				MODULES+=("Protobuf")
+			fi
 			;;
-			"APMUIMonitor")
-				if [[ ! ${MODULES[*]} =~ "APM" ]]; then
-				   MODULES+=("APM")
-				fi
-				if [[ ! ${APMMODULES[*]} =~ "UIMonitor" ]]; then
-				   APMMODULES+=("UIMonitor")
-				fi
+		"APMUIMonitor")
+			if [[ ! ${MODULES[*]} =~ "APM" ]]; then
+				MODULES+=("APM")
+			fi
+			if [[ ! ${APMMODULES[*]} =~ "UIMonitor" ]]; then
+				APMMODULES+=("UIMonitor")
+			fi
 			;;
-			"APMCrashMonitor")
-				if [[ ! ${MODULES[*]} =~ "APM" ]]; then
-				   MODULES+=("APM")
-				fi
-				if [[ ! ${APMMODULES[*]} =~ "CrashMonitor" ]]; then
-				   APMMODULES+=("CrashMonitor")
-				fi
+		"APMCrashMonitor")
+			if [[ ! ${MODULES[*]} =~ "APM" ]]; then
+				MODULES+=("APM")
+			fi
+			if [[ ! ${APMMODULES[*]} =~ "CrashMonitor" ]]; then
+				APMMODULES+=("CrashMonitor")
+			fi
 			;;
-			"Done")
-				break
+		"Done")
+			break
 			;;
-			"Quit")
-				exit 0
-				break
+		"Quit")
+			exit 0
+			break
 			;;
-			*)
-				logger -e invalid option;;
+		*)
+			logger -e invalid option
+			;;
 		esac
 	done
 }
@@ -132,8 +130,7 @@ chooseModulesWith() {
 MAIN_FRAMEWORK_NAME='GrowingAnalytics'
 copyAndModifyPodspec() {
 	logger -v "step: backup podspec"
-	if [ $IS_SAAS == false ]
-	then
+	if [ $IS_SAAS == false ]; then
 		MAIN_FRAMEWORK_NAME='GrowingAnalytics-cdp'
 	fi
 	cp "${MAIN_FRAMEWORK_NAME}.podspec" "${MAIN_FRAMEWORK_NAME}-backup.podspec"
@@ -144,26 +141,23 @@ modifyPodspec() {
 	podspec=$1
 	default_subspec='Autotracker'
 	default_subspec_alias='autotracker'
-	if [ $MAIN_BUNDLE == 'GrowingTracker' ]
-	then
+	if [ $MAIN_BUNDLE == 'GrowingTracker' ]; then
 		default_subspec='Tracker'
 		default_subspec_alias='tracker'
 		logger -v "step: change default subspec"
 		sed -i '' 's/s.default_subspec = "Autotracker"/s.default_subspec = "Tracker"/g' $podspec
 	fi
-	
+
 	numberOfLine=$(sed -n "/s.subspec '${default_subspec}' do |${default_subspec_alias}|/=" $podspec)
 	logger -v "step: add additional modules"
-	for module in ${MODULES[@]}
-	do 
+	for module in ${MODULES[@]}; do
 		sed -i '' "${numberOfLine}a\\ 
 		${default_subspec_alias}.ios.dependency 'GrowingAnalytics\/${module}', s.version.to_s\\
 		" $podspec
 	done
 
 	logger -v "step: add apm modules"
-	for module in ${APMMODULES[@]}
-	do 
+	for module in ${APMMODULES[@]}; do
 		sed -i '' "${numberOfLine}a\\ 
 		${default_subspec_alias}.ios.dependency 'GrowingAPM\/${module}'\\
 		" $podspec
@@ -187,28 +181,22 @@ generateProject() {
 	bundle exec pod gen ${MAIN_FRAMEWORK_NAME}.podspec $args || exit 1
 
 	logger -v "step: modify build settings using CocoaPods/Xcodeproj"
-	targets=`ruby ./scripts/modifyPodsXcodeproj.ruby "${PREFIX_PATH}/Pods/Pods.xcodeproj"`
+	targets=$(ruby ./scripts/modifyPodsXcodeproj.ruby "${PREFIX_PATH}/Pods/Pods.xcodeproj")
 	schemes=$1
-	for target in ${targets[@]}
-	do 
-		if [ $target == "GrowingAnalytics" ]
-		then
+	for target in ${targets[@]}; do
+		if [ $target == "GrowingAnalytics" ]; then
 			schemes+=("GrowingAnalytics")
 		fi
-		if [ $target == "GrowingAnalytics-cdp" ]
-		then
+		if [ $target == "GrowingAnalytics-cdp" ]; then
 			schemes+=("GrowingAnalytics-cdp")
 		fi
-		if [ $target == "GrowingUtils" ]
-		then
+		if [ $target == "GrowingUtils" ]; then
 			schemes+=("GrowingUtils")
 		fi
-		if [ $target == "GrowingAPM" ]
-		then
+		if [ $target == "GrowingAPM" ]; then
 			schemes+=("GrowingAPM")
 		fi
-		if [ $target == "Protobuf" ]
-		then
+		if [ $target == "Protobuf" ]; then
 			schemes+=("Protobuf")
 		fi
 	done
@@ -222,7 +210,7 @@ generateProject() {
 generate_xcframework() {
 	archive_path="./${FOLDER_NAME}/archive"
 
-	for i in $@; do 
+	for i in $@; do
 		framework_name=$i
 		iphone_os_archive_path="${archive_path}/iphoneos"
 		iphone_os_framework_path=${iphone_os_archive_path}.xcarchive/Products/Library/Frameworks/${framework_name}.framework
@@ -243,28 +231,28 @@ generate_xcframework() {
 
 		logger -v "step: generate ${framework_name} ios-arm64 framework"
 		xcodebuild ${common_args} \
-		-destination "generic/platform=iOS" \
-		-archivePath ${iphone_os_archive_path} || exit 1
+			-destination "generic/platform=iOS" \
+			-archivePath ${iphone_os_archive_path} || exit 1
 
 		logger -v "step: generate ${framework_name} ios-arm64_x86_64-simulator framework"
 		xcodebuild ${common_args} \
-		-destination "generic/platform=iOS Simulator" \
-		-archivePath ${iphone_simulator_archive_path} || exit 1
+			-destination "generic/platform=iOS Simulator" \
+			-archivePath ${iphone_simulator_archive_path} || exit 1
 
 		logger -v "step: generate ${framework_name} ios-arm64_x86_64-maccatalyst framework"
 		xcodebuild ${common_args} \
-		-destination "generic/platform=macOS,variant=Mac Catalyst" \
-		-archivePath ${mac_catalyst_archive_path} || exit 1
+			-destination "generic/platform=macOS,variant=Mac Catalyst" \
+			-archivePath ${mac_catalyst_archive_path} || exit 1
 
 		logger -v "step: delete _CodeSignature folder in iphonesimulator framework which is unnecessary"
 		rm -rf ${iphone_simulator_framework_path}/_CodeSignature
 
 		logger -v "step: generate ${framework_name} xcframework"
 		xcodebuild -create-xcframework \
-		-framework ${iphone_os_framework_path} \
-		-framework ${iphone_simulator_framework_path} \
-		-framework ${mac_catalyst_framework_path} \
-		-output ${output_path} || exit 1
+			-framework ${iphone_os_framework_path} \
+			-framework ${iphone_simulator_framework_path} \
+			-framework ${mac_catalyst_framework_path} \
+			-output ${output_path} || exit 1
 	done
 }
 
