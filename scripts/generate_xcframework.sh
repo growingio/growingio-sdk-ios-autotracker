@@ -1,8 +1,19 @@
 #!/bin/bash
 
-# usage: 
-# in growingio-sdk-ios-autotracker folder
-# sh ./scripts/generate_xcframework.sh -v | grep '\[GrowingAnalytics\]'
+if [[ $1 == '-h' || $1 == '--help' ]]; then
+	echo "\033[32m
+usage: 
+1. cd growingio-sdk-ios-autotracker folder
+2. run script: sh ./scripts/generate_xcframework.sh -v | grep '\[GrowingAnalytics\]'
+3. drag all xcframeworks in ./generate/Release/ into your project, select [Copy items if needed]
+4. add -ObjC to [Other Linker Flags] in order to load OC Catagory
+5. add libc++.tbd to your project if chose CrashMonitor apm modules
+
+> because using of __has_include, if select Protobuf and not select Advert/Hybrid in the same time,
+> delete Advert/Hybrid folder before building that avoid link error when using the xcframework
+	\033[0m"
+	exit 0
+fi
 
 LOGGER_MODE=1 # 0=silent/1=info/2=verbose
 if [[ $1 == '-s' || $1 == '--silent' ]]; then
@@ -137,6 +148,7 @@ copyAndModifyPodspec() {
 	if [ $IS_SAAS == false ]; then
 		MAIN_FRAMEWORK_NAME='GrowingAnalytics-cdp'
 	fi
+	PREFIX_PATH="./${FOLDER_NAME}/${MAIN_FRAMEWORK_NAME}"
 	cp "${MAIN_FRAMEWORK_NAME}.podspec" "${MAIN_FRAMEWORK_NAME}-backup.podspec"
 	modifyPodspec "${MAIN_FRAMEWORK_NAME}.podspec"
 }
@@ -169,7 +181,7 @@ modifyPodspec() {
 }
 
 FOLDER_NAME='generate'
-PREFIX_PATH="./${FOLDER_NAME}/${MAIN_FRAMEWORK_NAME}"
+PREFIX_PATH=''
 generateProject() {
 	logger -v "step: gem bundle install"
 	sudo -E bundle install || exit 1
@@ -260,6 +272,15 @@ generate_xcframework() {
 	done
 }
 
+copy_apm_modules_xcframework() {
+	for module in ${APMMODULES[@]}; do
+		logger -v "step: copy ${module} xcframework"
+		path="${PREFIX_PATH}/Pods/GrowingAPM/${module}/GrowingAPM${module}.xcframework"
+		output_path="./${FOLDER_NAME}/Release/GrowingAPM${module}.xcframework"
+		cp -r $path $output_path
+	done
+}
+
 main() {
 	chooseSaasOrCdp
 	chooseMainBundle
@@ -272,6 +293,8 @@ main() {
 	generateProject $schemes
 	logger -i "job: generate xcframework"
 	generate_xcframework ${schemes[*]}
+	logger -i "job: copy apm xcframework if necessary"
+	copy_apm_modules_xcframework
 
 	echo "\033[36m[GrowingAnalytics] WINNER WINNER, CHICKEN DINNER!\033[0m"
 }
