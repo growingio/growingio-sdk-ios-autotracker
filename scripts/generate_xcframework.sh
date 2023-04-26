@@ -10,11 +10,11 @@ logger() {
 	mode=$1
 	message=$2
 	if [[ $mode == '-e' ]]; then
-		echo "\033[31m[GrowingAnlaytics] [ERROR] ${message}\033[0m"
+		echo "\033[31m[GrowingAnalytics] [ERROR] ${message}\033[0m"
 	elif [[ $mode == '-i' && LOGGER_MODE -gt 0 ]]; then
-		echo "\033[36m[GrowingAnlaytics] [INFO] ${message}\033[0m"
+		echo "\033[36m[GrowingAnalytics] [INFO] ${message}\033[0m"
 	elif [[ $mode == '-v' && LOGGER_MODE -gt 1 ]]; then
-		echo "\033[32m[GrowingAnlaytics] [VERBOSE] ${message}\033[0m"
+		echo "\033[32m[GrowingAnalytics] [VERBOSE] ${message}\033[0m"
 	fi
 }
 
@@ -241,25 +241,25 @@ generate_xcframework() {
 
 		rm -rf ${output_path}
 
-		logger -v "step: generate ios-arm64 framework"
+		logger -v "step: generate ${framework_name} ios-arm64 framework"
 		xcodebuild ${common_args} \
 		-destination "generic/platform=iOS" \
 		-archivePath ${iphone_os_archive_path} || exit 1
 
-		logger -v "step: generate ios-arm64_x86_64-simulator framework"
+		logger -v "step: generate ${framework_name} ios-arm64_x86_64-simulator framework"
 		xcodebuild ${common_args} \
 		-destination "generic/platform=iOS Simulator" \
 		-archivePath ${iphone_simulator_archive_path} || exit 1
 
-		logger -v "step: generate ios-arm64_x86_64-maccatalyst framework"
+		logger -v "step: generate ${framework_name} ios-arm64_x86_64-maccatalyst framework"
 		xcodebuild ${common_args} \
 		-destination "generic/platform=macOS,variant=Mac Catalyst" \
 		-archivePath ${mac_catalyst_archive_path} || exit 1
 
-		logger -v "step: delete _CodeSignature folder in framework which is unnecessary"
+		logger -v "step: delete _CodeSignature folder in iphonesimulator framework which is unnecessary"
 		rm -rf ${iphone_simulator_framework_path}/_CodeSignature
 
-		logger -v "step: generate xcframework"
+		logger -v "step: generate ${framework_name} xcframework"
 		xcodebuild -create-xcframework \
 		-framework ${iphone_os_framework_path} \
 		-framework ${iphone_simulator_framework_path} \
@@ -281,9 +281,7 @@ main() {
 	logger -i "job: generate xcframework"
 	generate_xcframework ${schemes[*]}
 
-	echo "\033[36m[GrowingAnlaytics] WINNER WINNER, CHICKEN DINNER!\033[0m"
-	echo "\033[36m[GrowingAnlaytics] WINNER WINNER, CHICKEN DINNER!\033[0m"
-	echo "\033[36m[GrowingAnlaytics] WINNER WINNER, CHICKEN DINNER!\033[0m"
+	echo "\033[36m[GrowingAnalytics] WINNER WINNER, CHICKEN DINNER!\033[0m"
 }
 
 main
