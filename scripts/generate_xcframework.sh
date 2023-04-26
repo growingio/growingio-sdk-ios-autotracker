@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# usage: 
+# in growingio-sdk-ios-autotracker folder
+# sh ./scripts/generate_xcframework.sh -v | grep '\[GrowingAnalytics\]'
+
 LOGGER_MODE=1 # 0=silent/1=info/2=verbose
 if [[ $1 == '-s' || $1 == '--silent' ]]; then
 	LOGGER_MODE=0
