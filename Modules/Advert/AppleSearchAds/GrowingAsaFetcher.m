@@ -94,6 +94,16 @@ static pthread_rwlock_t _lock = PTHREAD_RWLOCK_INITIALIZER;
         }
     }
     if (activate == nil) {
+        if ([GrowingAdUtils isActivateWrote]) {
+            // 已产生activate事件且已发送(数据库内无activate事件且isActivateWrote)
+            // 一般发生于：activate事件发送之后，[GrowingAdUtils setActivateSent:YES]执行过程中，文件写入失败
+            GrowingAsaFetcher.status = GrowingAsaFetcherStatusCompleted;
+            [GrowingAdUtils setActivateSent:YES];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[GrowingEventManager sharedInstance] removeInterceptor:self];
+            });
+        }
         return events;
     }
     
