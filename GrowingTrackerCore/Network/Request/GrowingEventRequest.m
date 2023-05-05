@@ -21,7 +21,7 @@
 #import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
 #import "GrowingTrackerCore/Network/Request/Adapter/GrowingEventRequestAdapters.h"
 #import "GrowingTrackerCore/Network/Request/Adapter/GrowingRequestAdapter.h"
-#import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingULTimeUtil.h"
 

@@ -18,20 +18,18 @@
 //  limitations under the License.
 
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
-#import "GrowingAutotrackerCore/Page/GrowingPage.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
+#import "GrowingAutotrackerCore/Page/GrowingPage.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
 #import "GrowingAutotrackerCore/Private/GrowingPrivateCategory.h"
-#import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/UIView+GrowingHelper.h"
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIViewController+GrowingNode.h"
 #import "GrowingAutotrackerCore/Page/UIViewController+GrowingPageHelper.h"
 #import "GrowingULViewControllerLifecycle.h"
 #import "GrowingULAppLifecycle.h"
-#import <UIKit/UIKit.h>
 
 @interface GrowingPageManager () <GrowingULViewControllerLifecycleDelegate>
 

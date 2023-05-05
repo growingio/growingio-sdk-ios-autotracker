@@ -53,7 +53,6 @@
     [vc1 performSelector:@selector(growingNodeName)];
     [vc1 performSelector:@selector(growingNodeContent)];
     [vc1 performSelector:@selector(growingNodeDataDict)];
-    [vc1 performSelector:@selector(growingNodeWindow)];
     [vc1 performSelector:@selector(growingNodeUniqueTag)];
     [vc1 performSelector:@selector(growingNodeKeyIndex)];
     [vc1 performSelector:@selector(growingNodeSubPath)];
@@ -110,7 +109,6 @@
     [view2 performSelector:@selector(growingNodeUserInteraction)];
     [view2 performSelector:@selector(growingViewUserInteraction)];
     [view2 performSelector:@selector(growingNodeDataDict)];
-    [view2 performSelector:@selector(growingNodeWindow)];
     [view2 performSelector:@selector(growingNodeUniqueTag)];
     [view2 performSelector:@selector(growingViewCustomContent)];
     [view2 performSelector:@selector(growingIMPTracked)];

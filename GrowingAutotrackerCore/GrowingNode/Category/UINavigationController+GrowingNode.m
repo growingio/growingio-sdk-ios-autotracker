@@ -19,8 +19,8 @@
 
 #import "GrowingAutotrackerCore/GrowingNode/Category/UINavigationController+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
-#import "GrowingTrackerCore/Helpers/NSObject+GrowingIvarHelper.h"
-#import "GrowingTrackerCore/Hook/UIApplication+GrowingNode.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
+#import "GrowingAutotrackerCore/GrowingNode/Category/UIApplication+GrowingNode.h"
 #import <objc/runtime.h>
 
 @implementation UINavigationController (GrowingNode)

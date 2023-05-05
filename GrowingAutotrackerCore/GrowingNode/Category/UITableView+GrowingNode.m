@@ -20,7 +20,7 @@
 #import "GrowingTrackerCore/GrowingAttributesConst.h"
 #import "GrowingAutotrackerCore/Autotrack/UITableView+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UITableView+GrowingNode.h"
-#import "GrowingTrackerCore/Helpers/UIView+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 
 @implementation UITableView (GrowingNode)
 

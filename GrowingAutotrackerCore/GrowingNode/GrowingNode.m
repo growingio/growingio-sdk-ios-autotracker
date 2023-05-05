@@ -19,11 +19,10 @@
 
 #import "GrowingAutotrackerCore/GrowingNode/GrowingNode.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingAutotrackerCore/Autotrack/GrowingPropertyDefine.h"
-#import "GrowingTrackerCore/Helpers/UIApplication+GrowingHelper.h"
-#import "GrowingTrackerCore/Hook/UIApplication+GrowingNode.h"
-#import "GrowingTrackerCore/Helpers/UIImage+GrowingHelper.h"
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
+#import "GrowingAutotrackerCore/GrowingNode/Category/UIApplication+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIViewController+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIWindow+GrowingNode.h"
 

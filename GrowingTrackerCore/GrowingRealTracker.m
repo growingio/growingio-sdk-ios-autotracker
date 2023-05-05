@@ -23,14 +23,12 @@
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/LogFormat/GrowingWSLoggerFormat.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
-#import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/NSDictionary+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
-#import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
 #import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
 #import "GrowingTrackerCore/DeepLink/GrowingAppDelegateAutotracker.h"
 #import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
@@ -65,7 +63,9 @@ const int GrowingTrackerVersionCode = 30408;
         [self loggerSetting];
         [GrowingULAppLifecycle setup];
         [GrowingSession startSession];
+#if TARGET_OS_IOS
         [GrowingAppDelegateAutotracker track];
+#endif
         [[GrowingModuleManager sharedInstance] registedAllModules];
         [[GrowingServiceManager sharedInstance] loadLocalServices];
         [[GrowingModuleManager sharedInstance] triggerEvent:GrowingMInitEvent];

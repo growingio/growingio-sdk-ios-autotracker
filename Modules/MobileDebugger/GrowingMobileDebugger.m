@@ -18,35 +18,26 @@
 //  limitations under the License.
 
 #import "Modules/MobileDebugger/GrowingMobileDebugger.h"
-#import <UIKit/UIKit.h>
-#import <arpa/inet.h>
-#import <ifaddrs.h>
-#import "GrowingTrackerCore/Menu/GrowingAlert.h"
-#import "GrowingTrackerCore/Manager/GrowingApplicationEventManager.h"
+#import "Modules/MobileDebugger/GrowingDebuggerEventQueue.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
+#import "GrowingTrackerCore/GrowingRealTracker.h"
 #import "GrowingTrackerCore/GrowingAttributesConst.h"
-#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
+#import "GrowingTrackerCore/Menu/GrowingAlert.h"
+#import "GrowingTrackerCore/Menu/GrowingStatusBar.h"
+#import "GrowingTrackerCore/Manager/GrowingApplicationEventManager.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
-#import "GrowingTrackerCore/Menu/GrowingStatusBar.h"
-#import "GrowingTrackerCore/Helpers/NSArray+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/NSData+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/NSDictionary+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/NSURL+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/UIApplication+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/UIImage+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/UIWindow+GrowingHelper.h"
-#import "Modules/MobileDebugger/GrowingDebuggerEventQueue.h"
 #import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
-#import "GrowingTrackerCore/GrowingRealTracker.h"
 #import "GrowingTrackerCore/Public/GrowingAnnotationCore.h"
-#import "Modules/MobileDebugger/GrowingDebuggerEventQueue.h"
 #import "GrowingTrackerCore/Public/GrowingServiceManager.h"
 #import "GrowingTrackerCore/Public/GrowingWebSocketService.h"
 #import "GrowingULTimeUtil.h"
+#import <arpa/inet.h>
+#import <ifaddrs.h>
 
 #define LOCK(...) dispatch_semaphore_wait(self->_lock, DISPATCH_TIME_FOREVER); \
 __VA_ARGS__; \
@@ -197,7 +188,6 @@ GrowingMod(GrowingMobileDebugger)
     [self sendScreenShot];
 }
 
-
 - (void)start {
     self.isReady = YES;
     [self remoteReady];
@@ -206,10 +196,26 @@ GrowingMod(GrowingMobileDebugger)
         self.statusWindow.hidden = NO;
         self.statusWindow.statusLable.text = @"正在进行Debugger";
         self.statusWindow.statusLable.textAlignment = NSTextAlignmentCenter;
+        
+        __weak typeof(self) wself = self;
+        self.statusWindow.onButtonClick = ^{
+            NSString *content = [NSString stringWithFormat:@"APP版本: %@\nSDK版本: %@",
+                                                           [GrowingDeviceInfo currentDeviceInfo].appFullVersion,
+                                                           GrowingTrackerVersionName];
+            GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert
+                                                               title:@"正在进行Debugger"
+                                                             message:content];
+            [alert addOkWithTitle:@"继续Debugger" handler:nil];
+            [alert
+                addCancelWithTitle:@"退出Debugger"
+                           handler:^(UIAlertAction *_Nonnull action, NSArray<UITextField *> *_Nonnull textFields) {
+                               [wself stop];
+                           }];
+            [alert showAlertAnimated:NO];
+        };
     }
     [[GrowingApplicationEventManager sharedInstance] addApplicationEventObserver:self];
 }
-
 
 - (void)stop {
     GIOLogDebug(@"开始断开连接");
@@ -223,7 +229,6 @@ GrowingMod(GrowingMobileDebugger)
 - (void)dealloc {
     [self stop];
 }
-
 
 - (void)_stopWithError:(NSString *)error {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
@@ -379,7 +384,6 @@ GrowingMod(GrowingMobileDebugger)
 
 - (void)webSocketDidOpen:(id <GrowingWebSocketService>)webSocket {
     GIOLogDebug(@"websocket已连接");
-    CGSize screenSize = [GrowingDeviceInfo deviceScreenSize];
     NSString *projectId = GrowingConfigurationManager.sharedInstance.trackConfiguration.projectId;
     NSDictionary *dict = @{
         @"projectId" : projectId,
@@ -389,8 +393,8 @@ GrowingMod(GrowingMobileDebugger)
         @"sdkVersion" : GrowingTrackerVersionName,
         @"sdkVersionCode" : [GrowingDeviceInfo currentDeviceInfo].appFullVersion,
         @"os" : @"iOS",
-        @"screenWidth" : [NSNumber numberWithInteger:screenSize.width],
-        @"screenHeight" : [NSNumber numberWithInteger:screenSize.height],
+        @"screenWidth" : [NSNumber numberWithInteger:[GrowingDeviceInfo currentDeviceInfo].screenWidth],
+        @"screenHeight" : [NSNumber numberWithInteger:[GrowingDeviceInfo currentDeviceInfo].screenHeight],
         @"urlScheme" : [GrowingDeviceInfo currentDeviceInfo].urlScheme
     };
     [self sendJson:dict];

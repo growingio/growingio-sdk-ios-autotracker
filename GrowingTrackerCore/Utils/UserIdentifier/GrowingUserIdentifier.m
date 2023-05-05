@@ -17,22 +17,26 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <UIKit/UIKit.h>
 #import "GrowingTrackerCore/Utils/UserIdentifier/GrowingUserIdentifier.h"
-#import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
+
+#if __has_include(<UIKit/UIKit.h>)
+#import <UIKit/UIKit.h>
+#endif
 
 @implementation GrowingUserIdentifier
 
 + (NSString *)getUserIdentifier {
     NSString *uuid = nil;
-    // 尝试取block
+#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
     NSString *idfaString = [self idfa];
     if (!idfaString.growingHelper_isValidU) {
-        idfaString = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+        idfaString = [self idfv];
     }
-    if ([idfaString isKindOfClass:[NSString class]] && idfaString.length > 0 && idfaString.length <= 64) {
-        uuid = idfaString;
-    }
+    uuid = idfaString;
+#else
+    uuid = [self platformUUID];
+#endif
     // 失败了随机生成 UUID
     if (!uuid.length || !uuid.growingHelper_isValidU) {
         uuid = [[NSUUID UUID] UUIDString];
@@ -41,30 +45,24 @@
 }
 
 + (nullable NSString *)idfv {
-    NSString *vendorId = nil;
-    if (NSClassFromString(@"UIDevice")) {
-        vendorId = [[UIDevice currentDevice].identifierForVendor UUIDString];
-    }
-    return vendorId;
+#if TARGET_OS_IOS
+    return [[UIDevice currentDevice].identifierForVendor UUIDString];
+#endif
+    return @"";
 }
 
 + (NSString *)idfa {
     NSString *idfa = @"";
+#if TARGET_OS_IOS
 #ifndef GROWING_ANALYSIS_DISABLE_IDFA
-    Class ASIdentifierManagerClass = NSClassFromString(@"ASIdentifierManager");
-    if (!ASIdentifierManagerClass) {
+    Class class = NSClassFromString(@"ASIdentifierManager");
+    if (!class) {
         return idfa;
     }
-
-    SEL sharedManagerSelector = NSSelectorFromString(@"sharedManager");
-    id sharedManager = ((id(*)(id, SEL))[ASIdentifierManagerClass methodForSelector:sharedManagerSelector])(
-        ASIdentifierManagerClass, sharedManagerSelector);
-    //    SEL trackingEnabledSelector = NSSelectorFromString(@"isAdvertisingTrackingEnabled");
-    //    BOOL trackingEnabled = ((BOOL(*)(id, SEL))[sharedManager methodForSelector:trackingEnabledSelector])(
-    //        sharedManager, trackingEnabledSelector);
+    SEL selector = NSSelectorFromString(@"sharedManager");
+    id sharedManager = ((id(*)(id, SEL))[class methodForSelector:selector])(class, selector);
     SEL advertisingIdentifierSelector = NSSelectorFromString(@"advertisingIdentifier");
-
-    NSUUID *uuid = ((NSUUID * (*)(id, SEL))[sharedManager methodForSelector:advertisingIdentifierSelector])(
+    NSUUID *uuid = ((NSUUID *(*)(id, SEL))[sharedManager methodForSelector:advertisingIdentifierSelector])(
         sharedManager, advertisingIdentifierSelector);
     idfa = [uuid UUIDString];
     // In iOS 10.0 and later, the value of advertisingIdentifier is all zeroes
@@ -73,7 +71,28 @@
         idfa = @"";
     }
 #endif
+#endif
     return idfa;
 }
+
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
++ (nullable NSString *)platformUUID {
+    io_service_t service = IOServiceGetMatchingService(kIOMasterPortDefault,
+                                                       IOServiceMatching("IOPlatformExpertDevice"));
+    if (service) {
+        CFStringRef ref = IORegistryEntryCreateCFProperty(service,
+                                                          CFSTR(kIOPlatformUUIDKey),
+                                                          kCFAllocatorDefault,
+                                                          0);
+        IOObjectRelease(service);
+        if (ref) {
+            NSString *string = [NSString stringWithString:(__bridge NSString *)ref];
+            CFRelease(ref);
+            return string;
+        }
+    }
+    return nil;
+}
+#endif
 
 @end

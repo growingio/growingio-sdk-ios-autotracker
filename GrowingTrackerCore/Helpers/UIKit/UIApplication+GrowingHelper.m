@@ -17,8 +17,9 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <UIKit/UIKit.h>
-#import "GrowingTrackerCore/Helpers/UIWindow+GrowingHelper.h"
+#if __has_include(<UIKit/UIKit.h>)
+#import "GrowingTrackerCore/Helpers/UIKit/UIApplication+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/UIKit/UIWindow+GrowingHelper.h"
 #import "GrowingTrackerCore/GrowingWindow.h"
 
 @implementation UIApplication (GrowingHelper)
@@ -80,3 +81,4 @@
 }
 
 @end
+#endif

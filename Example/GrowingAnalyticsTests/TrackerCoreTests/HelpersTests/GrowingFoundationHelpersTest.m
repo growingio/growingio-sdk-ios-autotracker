@@ -20,12 +20,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GrowingTrackerCore/Helpers/NSData+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/NSArray+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/NSDictionary+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/NSObject+GrowingIvarHelper.h"
-#import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/NSURL+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 
 @interface GrowingFoundationHelpersTest : XCTestCase
 

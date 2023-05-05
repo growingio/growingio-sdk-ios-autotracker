@@ -18,33 +18,22 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingAutotrackerCore/GrowingNode/GrowingNode.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
-#import "GrowingAutotrackerCore/Private/GrowingPrivateCategory.h"
-#import "GrowingAutotrackerCore/Autotrack/GrowingPropertyDefine.h"
-#import "GrowingAutotrackerCore/Public/GrowingAutotrackConfiguration.h"
-#import "GrowingTrackerCore/Helpers/NSDictionary+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/NSObject+GrowingIvarHelper.h"
-#import "GrowingTrackerCore/Hook/UIApplication+GrowingNode.h"
-#import "GrowingTrackerCore/Helpers/UIImage+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/UIView+GrowingHelper.h"
-#import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
-#import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
-#import "GrowingAutotrackerCore/GrowingNode/Category/UIViewController+GrowingNode.h"
 #import "GrowingAutotrackerCore/Page/UIViewController+GrowingPageHelper.h"
+#import "GrowingAutotrackerCore/Private/GrowingPrivateCategory.h"
+#import "GrowingAutotrackerCore/Public/GrowingAutotrackConfiguration.h"
+#import "GrowingAutotrackerCore/GrowingNode/Category/UIApplication+GrowingNode.h"
+#import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
+#import "GrowingAutotrackerCore/GrowingNode/Category/UIViewController+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIWindow+GrowingNode.h"
+#import "GrowingAutotrackerCore/Autotrack/GrowingPropertyDefine.h"
+#import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
 
 @implementation UIViewController (GrowingNode)
-
-- (UIImage *)growingNodeScreenShot:(UIImage *)fullScreenImage {
-    return [fullScreenImage growingHelper_getSubImage:[self.view growingNodeFrame]];
-}
-
-- (UIImage *)growingNodeScreenShotWithScale:(CGFloat)maxScale {
-    return [self.view growingHelper_screenshot:maxScale];
-}
 
 - (CGRect)growingNodeFrame {
     CGRect rect = self.view.growingNodeFrame;
@@ -142,10 +131,6 @@
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     dict[@"pageName"] = ([self growingPageHelper_getPageObject].name ?: self.growingPageName);
     return dict;
-}
-
-- (UIWindow *)growingNodeWindow {
-    return self.view.window;
 }
 
 - (NSString *)growingNodeUniqueTag {

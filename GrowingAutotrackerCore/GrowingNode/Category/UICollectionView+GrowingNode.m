@@ -19,7 +19,7 @@
 
 #import "GrowingAutotrackerCore/GrowingNode/Category/UICollectionView+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
-#import "GrowingTrackerCore/Helpers/UIView+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/GrowingAttributesConst.h"
 #import <pthread.h>
 

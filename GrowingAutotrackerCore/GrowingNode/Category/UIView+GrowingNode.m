@@ -19,18 +19,15 @@
 
 #import "GrowingAutotrackerCore/Autotrack/GrowingPropertyDefine.h"
 #import "GrowingAutotrackerCore/Autotrack/UITapGestureRecognizer+GrowingAutotracker.h"
-#import "GrowingTrackerCore/Helpers/UIImage+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Public/GrowingBaseEvent.h"
-#import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
-#import "GrowingTrackerCore/Helpers/NSObject+GrowingIvarHelper.h"
-#import "GrowingTrackerCore/Hook/UIApplication+GrowingNode.h"
-#import "GrowingTrackerCore/Helpers/UIImage+GrowingHelper.h"
-#import "GrowingAutotrackerCore/Autotrack/UITableView+GrowingAutotracker.h"
-#import "GrowingTrackerCore/Helpers/UIView+GrowingHelper.h"
-#import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
-#import "GrowingAutotrackerCore/Impression/GrowingImpressionTrack.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
+#import "GrowingAutotrackerCore/Autotrack/UITableView+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingNode/GrowingNode.h"
+#import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
+#import "GrowingAutotrackerCore/GrowingNode/Category/UIApplication+GrowingNode.h"
+#import "GrowingAutotrackerCore/Impression/GrowingImpressionTrack.h"
 #import "GrowingAutotrackerCore/Public/GrowingAutotrackConfiguration.h"
 
 @interface GrowingMaskView : UIImageView
@@ -49,17 +46,7 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
 
 @implementation UIView (GrowingNode)
 
-- (UIImage *)growingNodeScreenShot:(UIImage *)fullScreenImage {
-    return [fullScreenImage growingHelper_getSubImage:[self growingNodeFrame]];
-}
-
-- (UIImage *)growingNodeScreenShotWithScale:(CGFloat)maxScale {
-    return [self growingHelper_screenshot:maxScale];
-}
-
 #pragma mark - xpath
-
-
 
 - (NSIndexPath *)growingNodeIndexPath {
     return nil;
@@ -303,10 +290,6 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
 
 - (NSDictionary *)growingNodeDataDict {
     return nil;
-}
-
-- (UIWindow *)growingNodeWindow {
-    return self.window;
 }
 
 - (NSString *)growingNodeUniqueTag {

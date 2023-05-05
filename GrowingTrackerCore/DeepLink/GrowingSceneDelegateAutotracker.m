@@ -17,11 +17,12 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <UIKit/UIKit.h>
+#if __has_include(<UIKit/UIKit.h>)
 #import "GrowingTrackerCore/DeepLink/GrowingSceneDelegateAutotracker.h"
 #import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/LogFormat/GrowingASLLoggerFormat.h"
+#import <UIKit/UIKit.h>
 #import <objc/runtime.h>
 #import <objc/message.h>
 
@@ -130,3 +131,4 @@
 }
 
 @end
+#endif

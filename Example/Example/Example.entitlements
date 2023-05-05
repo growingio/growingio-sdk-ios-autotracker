@@ -7,5 +7,13 @@
 		<string>applinks:testlink.growingio.com</string>
 		<string>applinks:datayi.cn</string>
 	</array>
+	<key>com.apple.security.app-sandbox</key>
+	<true/>
+	<key>com.apple.security.device.camera</key>
+	<true/>
+	<key>com.apple.security.network.client</key>
+	<true/>
+	<key>com.apple.security.personal-information.location</key>
+	<true/>
 </dict>
 </plist>

@@ -133,9 +133,8 @@
     _longitude = session.longitude;
     _userKey = session.loginUserKey;
 
-    CGSize screenSize = [GrowingDeviceInfo deviceScreenSize];
-    _screenWidth = [GrowingFieldsIgnore isIgnoreFields:@"screenWidth"] ? 0 : screenSize.width;
-    _screenHeight = [GrowingFieldsIgnore isIgnoreFields:@"screenHeight"] ? 0 : screenSize.height;
+    _screenWidth = [GrowingFieldsIgnore isIgnoreFields:@"screenWidth"] ? 0 : deviceInfo.screenWidth;
+    _screenHeight = [GrowingFieldsIgnore isIgnoreFields:@"screenHeight"] ? 0 : deviceInfo.screenHeight;
     _networkState = [GrowingFieldsIgnore isIgnoreFields:@"networkState"] ? nil : [[GrowingNetworkInterfaceManager sharedInstance] networkType];
     _sdkVersion = GrowingTrackerVersionName;
     _deviceBrand = [GrowingFieldsIgnore isIgnoreFields:@"deviceBrand"] ? nil : deviceInfo.deviceBrand;

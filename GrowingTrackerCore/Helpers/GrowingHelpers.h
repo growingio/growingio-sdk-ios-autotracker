@@ -17,15 +17,18 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Helpers/NSData+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/NSObject+GrowingIvarHelper.h"
-#import "GrowingTrackerCore/Helpers/NSDictionary+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/UIControl+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/UIImage+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/UIView+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/NSArray+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/UIWindow+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/UIApplication+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/NSURL+GrowingHelper.h"
-#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
+#import "GrowingTrackerCore/Helpers/Foundation/NSArray+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/Foundation/NSData+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/Foundation/NSDictionary+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/Foundation/NSObject+GrowingIvarHelper.h"
+#import "GrowingTrackerCore/Helpers/Foundation/NSString+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/Foundation/NSURL+GrowingHelper.h"
+
+#if __has_include(<UIKit/UIKit.h>)
+#import <UIKit/UIKit.h>
+#import "GrowingTrackerCore/Helpers/UIKit/UIApplication+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/UIKit/UIControl+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/UIKit/UIImage+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/UIKit/UIView+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/UIKit/UIWindow+GrowingHelper.h"
+#endif

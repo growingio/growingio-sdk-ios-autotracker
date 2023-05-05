@@ -22,7 +22,7 @@
 #import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogMacros.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
-#import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
 #import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"

@@ -21,8 +21,7 @@
 
 #import "Services/Compression/GrowingDataCompression.h"
 #import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
-#import "GrowingTrackerCore/Helpers/NSData+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/NSDictionary+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 
 @interface CompressionTest : XCTestCase
 

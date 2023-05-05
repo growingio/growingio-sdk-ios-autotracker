@@ -18,8 +18,7 @@
 //  limitations under the License.
 
 #import <Foundation/Foundation.h>
-#import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/NSURL+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"

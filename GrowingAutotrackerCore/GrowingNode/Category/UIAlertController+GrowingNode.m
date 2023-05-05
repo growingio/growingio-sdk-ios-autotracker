@@ -18,10 +18,9 @@
 //  limitations under the License.
 
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIAlertController+GrowingNode.h"
-#import "GrowingTrackerCore/Helpers/NSObject+GrowingIvarHelper.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingAutotrackerCore/Autotrack/UIAlertController+GrowingAutotracker.h"
-#import "GrowingTrackerCore/Helpers/UIView+GrowingHelper.h"
 #import <objc/runtime.h>
 
 @implementation UIAlertController (GrowingNode)

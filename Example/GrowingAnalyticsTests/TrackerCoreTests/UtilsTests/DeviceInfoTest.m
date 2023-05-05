@@ -37,15 +37,10 @@
     // Put teardown code here. This method is called after the invocation of each test method in the class.
 }
 
-- (void)testGrowingDeviceInfo {
-    [GrowingDeviceInfo deviceScreenSize];
-}
-
 - (void)testGrowingDeviceInfoPrivateMethods {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
     GrowingDeviceInfo *deviceInfo = GrowingDeviceInfo.currentDeviceInfo;
-    XCTAssertNotNil([deviceInfo safePerformSelector:@selector(carrier)]);
     XCTAssertNoThrow([deviceInfo safePerformSelector:@selector(handleStatusBarOrientationChange)]);
     XCTAssertNoThrow([deviceInfo safePerformSelector:@selector(applicationDidBecomeActive)]);
     XCTAssertNoThrow([deviceInfo safePerformSelector:@selector(applicationWillResignActive)]);

@@ -18,20 +18,18 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
+#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 
 static NSString *kGrowingUserdefault_file = @"growingio.userdefault";
-static NSString *kGrowingUserdefault_deviceId = @"growingio.userdefault.deviceid";
-//static NSString *GrowingUserdefault_sessionId = @"growingio.userdefault.sessionId";
 static NSString *kGrowingUserdefault_loginUserId = @"growingio.userdefault.loginUserId";
 static NSString *kGrowingUserdefault_loginUserKey = @"growingio.userdefault.loginUserKey";
-
 static NSString *kGrowingUserdefault_globalId = @"growingio.userdefault.globalId";
 static NSString *kGrowingUserdefault_prefix = @"growingio.userdefault";
 
-
-@class GrowingEventSequenceObject;
 @interface GrowingPersistenceDataProvider()
+
 @property (nonatomic, strong) NSUserDefaults *growingUserdefault;
+
 @end
 
 @implementation GrowingPersistenceDataProvider
@@ -48,24 +46,15 @@ static GrowingPersistenceDataProvider *persistence = nil;
 
 - (instancetype)init {
     if (self = [super init]) {
-        _growingUserdefault = [[NSUserDefaults alloc] initWithSuiteName:kGrowingUserdefault_file];
+        NSString *suiteName = kGrowingUserdefault_file;
+#if TARGET_OS_OSX
+        // 兼容非沙盒MacApp
+        NSString *bundleId = [GrowingDeviceInfo currentDeviceInfo].bundleID;
+        suiteName = [suiteName stringByAppendingFormat:@".%@", bundleId];
+#endif
+        _growingUserdefault = [[NSUserDefaults alloc] initWithSuiteName:suiteName];
     }
     return self;
-}
-
-- (void)setDeviceId:(NSString *)deviceId {
-    //空值
-    if (!deviceId || deviceId.length == 0) {
-        return;
-    }
-    [_growingUserdefault setValue:deviceId forKey:kGrowingUserdefault_deviceId];
-    //write now!
-    [_growingUserdefault synchronize];
-}
-
-
-- (NSString *)deviceId {
-    return [_growingUserdefault valueForKey:kGrowingUserdefault_deviceId];
 }
 
 - (void)setLoginUserId:(NSString * _Nullable)loginUserId {
@@ -91,6 +80,7 @@ static GrowingPersistenceDataProvider *persistence = nil;
     //write now!
     [_growingUserdefault synchronize];
 }
+
 - (nullable NSString *)loginUserKey {
     return  [_growingUserdefault valueForKey:kGrowingUserdefault_loginUserKey];
 }
@@ -106,7 +96,7 @@ static GrowingPersistenceDataProvider *persistence = nil;
 
 - (GrowingEventSequenceObject*)getAndIncrement:(NSString *)eventType {
     long long globalId = [self increaseFor:kGrowingUserdefault_globalId spanValue:1];
-    long long eventTypeId = [self increaseFor:[NSString stringWithFormat:@"%@.%@",kGrowingUserdefault_prefix,eventType] spanValue:1];
+    long long eventTypeId = [self increaseFor:[NSString stringWithFormat:@"%@.%@",kGrowingUserdefault_prefix, eventType] spanValue:1];
     GrowingEventSequenceObject* obj = [[GrowingEventSequenceObject alloc] init];
     obj.globalId = globalId;
     obj.eventTypeId = eventTypeId;

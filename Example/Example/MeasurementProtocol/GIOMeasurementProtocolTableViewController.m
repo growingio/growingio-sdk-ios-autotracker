@@ -40,7 +40,7 @@ typedef NS_ENUM(NSInteger, GIOMeasurementProtocolCount) { GIOAutoTrack = 0, GIOM
 
 - (IBAction)setDataCollectionEnabled:(UISwitch *)sender {
 #if defined(SDK3rd)
-    [[GrowingAutotracker sharedInstance] setDataCollectionEnabled:sender.isOn];
+    [[GrowingSDK sharedInstance] setDataCollectionEnabled:sender.isOn];
 #endif
 }
 

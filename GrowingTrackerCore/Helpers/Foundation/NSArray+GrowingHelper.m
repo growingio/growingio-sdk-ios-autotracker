@@ -17,19 +17,19 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Helpers/NSArray+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/NSData+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/Foundation/NSArray+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/Foundation/NSData+GrowingHelper.h"
 
 @implementation NSArray (GrowingHelper)
 
-- (NSData*)growingHelper_jsonData {
+- (NSData *)growingHelper_jsonData {
     return [self growingHelper_jsonDataWithOptions:0];
 }
 
-- (NSData*)growingHelper_jsonDataWithOptions:(NSJSONWritingOptions)options {
-    NSData * jsonData = nil;
+- (NSData *)growingHelper_jsonDataWithOptions:(NSJSONWritingOptions)options {
+    NSData *jsonData = nil;
     @try {
-        NSError * error = nil;
+        NSError *error = nil;
         jsonData = [NSJSONSerialization dataWithJSONObject:self
                                                    options:options
                                                      error:&error];
@@ -43,7 +43,7 @@
     return jsonData;
 }
 
-- (NSString*)growingHelper_jsonString {
+- (NSString *)growingHelper_jsonString {
     return [[self growingHelper_jsonData] growingHelper_utf8String];
 }
 

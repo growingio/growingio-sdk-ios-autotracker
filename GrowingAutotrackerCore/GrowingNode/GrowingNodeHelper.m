@@ -18,14 +18,13 @@
 //  limitations under the License.
 
 #import "GrowingAutotrackerCore/GrowingNode/GrowingNodeHelper.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
-#import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/UIView+GrowingHelper.h"
+#import "GrowingAutotrackerCore/Page/UIViewController+GrowingPageHelper.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIViewController+GrowingNode.h"
-#import "GrowingAutotrackerCore/Page/UIViewController+GrowingPageHelper.h"
 
 static NSString *const kGrowingNodeRootPage = @"Page";
 static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";

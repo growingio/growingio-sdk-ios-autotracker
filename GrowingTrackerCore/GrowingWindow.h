@@ -17,6 +17,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#if __has_include(<UIKit/UIKit.h>)
 #import <UIKit/UIKit.h>
 
 @interface GrowingWindowView : UIView
@@ -27,5 +28,6 @@
 
 @interface GrowingWindow : UIWindow
 @end
+#endif
 
 

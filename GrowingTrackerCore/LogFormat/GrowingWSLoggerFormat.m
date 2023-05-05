@@ -18,7 +18,7 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/LogFormat/GrowingWSLoggerFormat.h"
-#import "GrowingTrackerCore/Helpers/NSDictionary+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 
 NS_INLINE NSString* logLevel(GrowingLogFlag level) {
     switch (level) {

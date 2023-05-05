@@ -20,11 +20,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GrowingTrackerCore/Helpers/UIApplication+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/UIControl+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/UIImage+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/UIWindow+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/UIView+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "InvocationHelper.h"
 
 @interface GrowingUIKitHelpersTest : XCTestCase
@@ -105,18 +101,15 @@
     [image growingHelper_PNG];
     [image growingHelper_Base64JPEG:0.9];
     [image growingHelper_Base64PNG];
-    [image growingHelper_getSubImage:CGRectMake(0, 0, 1, 1)];
 }
 
 - (void)testUIWindowHelper {
-    [[UIWindow new] growingHelper_screenshot:0.8];
     [UIWindow growingHelper_screenshotWithWindows:nil andMaxScale:0.8];
     [UIWindow growingHelper_screenshotWithWindows:nil andMaxScale:0.8 block:nil];
 }
 
 - (void)testUIViewHelper {
     UIView *view = [[UIView alloc] init];
-    [view growingHelper_screenshot:2.0f];
     [view growingHelper_viewController];
 }
 

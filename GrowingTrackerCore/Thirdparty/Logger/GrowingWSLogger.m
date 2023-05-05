@@ -18,7 +18,7 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingWSLogger.h"
-#import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 
 static const NSInteger kGIOMaxCachesLogNumber = 100;
 

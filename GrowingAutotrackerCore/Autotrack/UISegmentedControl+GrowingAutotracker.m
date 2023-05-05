@@ -18,7 +18,7 @@
 //  limitations under the License.
 
 #import "GrowingAutotrackerCore/Autotrack/UISegmentedControl+GrowingAutotracker.h"
-#import "GrowingTrackerCore/Helpers/NSObject+GrowingIvarHelper.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/GrowingViewClickProvider.h"
 

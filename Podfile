@@ -1,10 +1,10 @@
 #source 'https://github.com/growingio/giospec.git'
 #source 'https://github.com/CocoaPods/Specs.git'
 
+platform :ios, '11.0'
 use_frameworks!
 
-install!'cocoapods',:deterministic_uuids=>false
-platform :ios, '10.0'
+install!'cocoapods',:deterministic_uuids=>false, :warn_for_unused_master_specs_repo=>false
 
 workspace 'GrowingAnalytics.xcworkspace'
 
@@ -27,7 +27,7 @@ target 'Example' do
   pod 'LBXScan/LBXNative', '2.3'
   pod 'LBXScan/UI', '2.3'
 #  pod 'Bugly'
-  pod 'GrowingToolsKit'
+  pod 'GrowingToolsKit', '>= 1.1.3'
 end
 
 target 'GrowingAnalyticsTests' do
@@ -78,7 +78,13 @@ target 'ExampleiOS13' do
   # 而不是再去集成一个新的 GrowingAPM，其将导致生成 2 个 GrowingAPM Pod Target，编译会出现 Multiple commands produce 报错
   pod 'GrowingAPM'
   
-  pod 'GrowingToolsKit'
+  pod 'GrowingToolsKit', '>= 1.1.3'
+end
+
+target 'Example-macOS' do
+  platform :osx, '11.0'
+  project 'Example/Example'
+  pod 'GrowingAnalytics/Tracker', :path => './'
 end
 
 post_install do |installer|

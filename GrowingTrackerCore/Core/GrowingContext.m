@@ -21,14 +21,11 @@
 
 @implementation GrowingOpenURLItem
 
-
 @end
 
 @implementation GrowingContext
 
-
-+ (instancetype)sharedInstance
-{
++ (instancetype)sharedInstance {
     static dispatch_once_t p;
     static id contextInstance = nil;
     
@@ -39,8 +36,7 @@
     return contextInstance;
 }
 
-- (instancetype)init
-{
+- (instancetype)init {
     self = [super init];
     if (self) {
         self.openURLItem = [GrowingOpenURLItem new];

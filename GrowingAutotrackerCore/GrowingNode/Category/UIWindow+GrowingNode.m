@@ -59,8 +59,4 @@
     return nil;
 }
 
-- (UIWindow *)growingNodeWindow {
-    return self;
-}
-
 @end

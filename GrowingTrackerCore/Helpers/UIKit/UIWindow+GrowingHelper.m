@@ -17,14 +17,11 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Helpers/UIWindow+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/UIView+GrowingHelper.h"
+#if __has_include(<UIKit/UIKit.h>)
+#import "GrowingTrackerCore/Helpers/UIKit/UIWindow+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/UIKit/UIView+GrowingHelper.h"
 
 @implementation UIWindow (GrowingHelper)
-
-- (UIImage *)growingHelper_screenshot:(CGFloat)maxScale {
-    return [[self class] growingHelper_screenshotWithWindows:@[self] andMaxScale:maxScale];
-}
 
 + (UIImage *)growingHelper_screenshotWithWindows:(NSArray<UIWindow *> *)windows andMaxScale:(CGFloat)maxScale {
     return [self growingHelper_screenshotWithWindows:windows andMaxScale:maxScale block:nil];
@@ -69,3 +66,4 @@
 }
 
 @end
+#endif

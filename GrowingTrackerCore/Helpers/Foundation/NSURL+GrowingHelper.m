@@ -17,7 +17,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Helpers/NSURL+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/Foundation/NSURL+GrowingHelper.h"
 
 @implementation NSURL (GrowingHelper)
 

@@ -1,8 +1,8 @@
 //
-//  UIWindow+GrowingHelper.h
+//  UIView+GrowingHelper.m
 //  GrowingAnalytics
 //
-//  Created by GrowingIO on 2/17/16.
+//  Created by GrowingIO on 15/9/4.
 //  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,15 +17,21 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <UIKit/UIKit.h>
+#if __has_include(<UIKit/UIKit.h>)
+#import "GrowingTrackerCore/Helpers/UIKit/UIView+GrowingHelper.h"
 
-@interface UIWindow (GrowingHelper)
+@implementation UIView (GrowingHelper)
 
-+ (UIImage *)growingHelper_screenshotWithWindows:(NSArray<UIWindow*>*)windows
-                                    andMaxScale:(CGFloat)maxScale
-                                          block:(void(^)(CGContextRef context))block;
-
-+ (UIImage *)growingHelper_screenshotWithWindows:(NSArray<UIWindow*>*)windows
-                                    andMaxScale:(CGFloat)maxScale;
+- (UIViewController*)growingHelper_viewController {
+    UIResponder *curNode = self.nextResponder;
+    while (curNode) {
+        if ([curNode isKindOfClass:[UIViewController class]]) {
+            return (id)curNode;
+        }
+        curNode = [curNode nextResponder];
+    }
+    return nil;
+}
 
 @end
+#endif

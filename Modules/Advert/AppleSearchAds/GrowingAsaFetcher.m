@@ -25,7 +25,7 @@
 
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
-#import "GrowingTrackerCore/Helpers/NSString+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 
 #import <objc/runtime.h>
