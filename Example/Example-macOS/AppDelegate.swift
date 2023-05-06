@@ -20,9 +20,7 @@
 
 import Cocoa
 
-#if canImport(GrowingAnalytics_cdp)
-import GrowingAnalytics_cdp
-#elseif canImport(GrowingAnalytics)
+#if canImport(GrowingAnalytics)
 import GrowingAnalytics
 #endif
 

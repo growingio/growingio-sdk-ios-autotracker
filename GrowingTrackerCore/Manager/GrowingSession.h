@@ -38,6 +38,7 @@ typedef NS_ENUM(NSInteger, GrowingSessionState) {
 @property (nonatomic, copy, readonly) NSString *sessionId;
 @property (nonatomic, copy, readonly) NSString *loginUserId;
 @property (nonatomic, copy, readonly) NSString *loginUserKey;
+@property (nonatomic, copy, readonly) NSString *latestNonNullUserId;
 @property (nonatomic, assign, readonly) double latitude;
 @property (nonatomic, assign, readonly) double longitude;
 @property (nonatomic, assign, readonly) GrowingSessionState state;

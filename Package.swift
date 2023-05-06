@@ -27,28 +27,12 @@ let package = Package(
     platforms: [.iOS(.v10), .macCatalyst(.v13), .macOS(.v10_12)],
     products: [
         .library(
-            name: "GrowingAutotracker_cdp",
-            targets: ["GrowingAutotracker_cdp_Wrapper"]
-        ),
-        .library(
-            name: "GrowingTracker_cdp",
-            targets: ["GrowingTracker_cdp_Wrapper"]
-        ),
-        .library(
             name: "GrowingAutotracker",
             targets: ["GrowingAutotracker_Wrapper"]
         ),
         .library(
             name: "GrowingTracker",
             targets: ["GrowingTracker_Wrapper"]
-        ),
-        .library(
-            name: "GrowingAutotracker_cdp_NoIDFA",
-            targets: ["GrowingAutotracker_cdp_NoIDFA_Wrapper"]
-        ),
-        .library(
-            name: "GrowingTracker_cdp_NoIDFA",
-            targets: ["GrowingTracker_cdp_NoIDFA_Wrapper"]
         ),
         .library(
             name: "GrowingAutotracker_NoIDFA",
@@ -86,28 +70,6 @@ let package = Package(
         // MARK: - GrowingAnalytics Wrapper
         
         .target(
-            name: "GrowingAutotracker_cdp_Wrapper",
-            dependencies: [
-                "GrowingAutotracker_cdp",
-                "GrowingUserIdentifier",
-                "GrowingModule_DefaultServices",
-                .target(name: "GrowingModule_Hybrid", condition: .when(platforms: [.iOS, .macCatalyst])),
-                .target(name: "GrowingModule_MobileDebugger", condition: .when(platforms: [.iOS])),
-                .target(name: "GrowingModule_WebCircle", condition: .when(platforms: [.iOS])),
-            ],
-            path: "SwiftPM-Wrap/GrowingAutotracker-cdp-Wrapper"
-        ),
-        .target(
-            name: "GrowingTracker_cdp_Wrapper",
-            dependencies: [
-                "GrowingTracker_cdp",
-                "GrowingUserIdentifier",
-                "GrowingModule_DefaultServices",
-                .target(name: "GrowingModule_MobileDebugger", condition: .when(platforms: [.iOS])),
-            ],
-            path: "SwiftPM-Wrap/GrowingTracker-cdp-Wrapper"
-        ),
-        .target(
             name: "GrowingAutotracker_Wrapper",
             dependencies: [
                 "GrowingAutotracker",
@@ -132,27 +94,6 @@ let package = Package(
         
         // MARK: - GrowingAnalytics Public API
         
-        .target(
-            name: "GrowingAutotracker_cdp",
-            dependencies: [
-                "GrowingTrackerCore_cdp",
-                "GrowingAutotrackerCore"
-            ],
-            path: "GrowingAutotracker-cdp",
-            publicHeadersPath: ".",
-            cSettings: [
-                .headerSearchPath(".."),
-            ]
-        ),
-        .target(
-            name: "GrowingTracker_cdp",
-            dependencies: ["GrowingTrackerCore_cdp"],
-            path: "GrowingTracker-cdp",
-            publicHeadersPath: ".",
-            cSettings: [
-                .headerSearchPath(".."),
-            ]
-        ),
         .target(
             name: "GrowingAutotracker",
             dependencies: ["GrowingAutotrackerCore"],
@@ -217,15 +158,6 @@ let package = Package(
                 .product(name: "GrowingUtilsAutotrackerCore", package: "growingio-sdk-ios-utilities"),
             ],
             path: "GrowingAutotrackerCore",
-            publicHeadersPath: "Public",
-            cSettings: [
-                .headerSearchPath(".."),
-            ]
-        ),
-        .target(
-            name: "GrowingTrackerCore_cdp",
-            dependencies: ["GrowingTrackerCore"],
-            path: "GrowingTrackerCore-cdp",
             publicHeadersPath: "Public",
             cSettings: [
                 .headerSearchPath(".."),
@@ -349,28 +281,6 @@ let package = Package(
 
         // MARK: - GrowingAnalytics Wrapper (No IDFA)
     
-        .target(
-            name: "GrowingAutotracker_cdp_NoIDFA_Wrapper",
-            dependencies: [
-                "GrowingAutotracker_cdp",
-                "GrowingUserIdentifier_NoIDFA",
-                "GrowingModule_DefaultServices",
-                .target(name: "GrowingModule_Hybrid", condition: .when(platforms: [.iOS, .macCatalyst])),
-                .target(name: "GrowingModule_MobileDebugger", condition: .when(platforms: [.iOS])),
-                .target(name: "GrowingModule_WebCircle", condition: .when(platforms: [.iOS])),
-            ],
-            path: "SwiftPM-Wrap/GrowingAutotracker-cdp-NoIDFA-Wrapper"
-        ),
-        .target(
-            name: "GrowingTracker_cdp_NoIDFA_Wrapper",
-            dependencies: [
-                "GrowingTracker_cdp",
-                "GrowingUserIdentifier_NoIDFA",
-                "GrowingModule_DefaultServices",
-                .target(name: "GrowingModule_MobileDebugger", condition: .when(platforms: [.iOS])),
-            ],
-            path: "SwiftPM-Wrap/GrowingTracker-cdp-NoIDFA-Wrapper"
-        ),
         .target(
             name: "GrowingAutotracker_NoIDFA_Wrapper",
             dependencies: [

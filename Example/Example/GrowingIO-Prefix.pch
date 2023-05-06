@@ -27,11 +27,6 @@
 #define GrowingSDKConfiguration GrowingTrackConfiguration
 #endif
 
-#if (__has_include("GrowingTrackConfiguration+CdpTracker.h") || __has_include("Dummy-GrowingTrackerCore-cdp.h"))
-// CDP SDK
-#define SDKCDP
-#endif
-
 #if __has_include("GrowingAdvertising.h")
 // Advert Module
 #import "GrowingAdvertising.h"

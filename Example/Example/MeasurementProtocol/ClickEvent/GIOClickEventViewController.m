@@ -22,10 +22,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-#if defined(AUTOTRACKER)
-#if !defined(SDKCDP) && defined(SDK3rd)
+#if defined(AUTOTRACKER) && defined(SDK3rd)
     self.growingPageAttributes = @{@"greet": @"hello"};
-#endif
 #endif
     
 #if defined(AUTOTRACKER)

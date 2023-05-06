@@ -20,23 +20,23 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     autotracker.ios.deployment_target = '9.0'
     autotracker.source_files = 'GrowingAutotracker/**/*{.h,.m,.c,.cpp,.mm}'
     autotracker.public_header_files = 'GrowingAutotracker/*.h'
-    autotracker.dependency 'GrowingAnalytics/AutotrackerCore'
+    autotracker.dependency 'GrowingAnalytics/AutotrackerCore', s.version.to_s
 
     # Modules
-    autotracker.ios.dependency 'GrowingAnalytics/Hybrid'
-    autotracker.ios.dependency 'GrowingAnalytics/MobileDebugger'
-    autotracker.ios.dependency 'GrowingAnalytics/WebCircle'
-    autotracker.dependency 'GrowingAnalytics/DefaultServices'
+    autotracker.ios.dependency 'GrowingAnalytics/Hybrid', s.version.to_s
+    autotracker.ios.dependency 'GrowingAnalytics/MobileDebugger', s.version.to_s
+    autotracker.ios.dependency 'GrowingAnalytics/WebCircle', s.version.to_s
+    autotracker.dependency 'GrowingAnalytics/DefaultServices', s.version.to_s
   end
   
   s.subspec 'Tracker' do |tracker|
     tracker.source_files = 'GrowingTracker/**/*{.h,.m,.c,.cpp,.mm}'
     tracker.public_header_files = 'GrowingTracker/*.h'
-    tracker.dependency 'GrowingAnalytics/TrackerCore'
+    tracker.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
 
     # Modules
-    tracker.ios.dependency 'GrowingAnalytics/MobileDebugger'
-    tracker.dependency 'GrowingAnalytics/DefaultServices'
+    tracker.ios.dependency 'GrowingAnalytics/MobileDebugger', s.version.to_s
+    tracker.dependency 'GrowingAnalytics/DefaultServices', s.version.to_s
   end
 
   s.subspec 'TrackerCore' do |trackerCore|
@@ -53,88 +53,88 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     autotrackerCore.source_files = 'GrowingAutotrackerCore/**/*{.h,.m,.c,.cpp,.mm}'
     autotrackerCore.private_header_files = 'GrowingAutotrackerCore/Private/*{.h,.m,.c,.cpp,.mm}'
     autotrackerCore.public_header_files = 'GrowingAutotrackerCore/Public/*.h'
-    autotrackerCore.dependency 'GrowingAnalytics/TrackerCore'
+    autotrackerCore.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
   end
 
   s.subspec 'Database' do |service|
     service.source_files = 'Services/Database/**/*{.h,.m,.c,.cpp,.mm}'
     service.public_header_files = 'Services/Database/include/*.h'
-    service.dependency 'GrowingAnalytics/TrackerCore'
+    service.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
   end
   
   s.subspec 'Network' do |service|
     service.source_files = 'Services/Network/**/*{.h,.m,.c,.cpp,.mm}'
     service.public_header_files = 'Services/Network/include/*.h'
-    service.dependency 'GrowingAnalytics/TrackerCore'
+    service.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
   end
   
   s.subspec 'WebSocket' do |service|
     service.source_files = 'Services/WebSocket/**/*{.h,.m,.c,.cpp,.mm}'
     service.public_header_files = 'Services/WebSocket/include/*.h'
-    service.dependency 'GrowingAnalytics/TrackerCore'
+    service.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
   end
   
   s.subspec 'Compression' do |service|
     service.source_files = 'Services/Compression/**/*{.h,.m,.c,.cpp,.mm}'
     service.public_header_files = 'Services/Compression/include/*.h'
-    service.dependency 'GrowingAnalytics/TrackerCore'
+    service.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
   end
 
   s.subspec 'Encryption' do |service|
     service.source_files = 'Services/Encryption/**/*{.h,.m,.c,.cpp,.mm}'
     service.public_header_files = 'Services/Encryption/include/*.h'
-    service.dependency 'GrowingAnalytics/TrackerCore'
+    service.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
   end
 
   s.subspec 'DefaultServices' do |services|
     services.source_files = 'Modules/DefaultServices/**/*{.h,.m,.c,.cpp,.mm}'
     services.public_header_files = 'Modules/DefaultServices/include/*.h'
-    services.dependency 'GrowingAnalytics/TrackerCore'
+    services.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
 
     # Default Services
-    services.dependency 'GrowingAnalytics/Database'
-    services.dependency 'GrowingAnalytics/Network'
-    services.dependency 'GrowingAnalytics/Encryption'
-    services.dependency 'GrowingAnalytics/Compression'
+    services.dependency 'GrowingAnalytics/Database', s.version.to_s
+    services.dependency 'GrowingAnalytics/Network', s.version.to_s
+    services.dependency 'GrowingAnalytics/Encryption', s.version.to_s
+    services.dependency 'GrowingAnalytics/Compression', s.version.to_s
   end
 
   s.subspec 'MobileDebugger' do |debugger|
     debugger.ios.deployment_target = '9.0'
     debugger.source_files = 'Modules/MobileDebugger/**/*{.h,.m,.c,.cpp,.mm}'
     debugger.public_header_files = 'Modules/MobileDebugger/include/*.h'
-    debugger.dependency 'GrowingAnalytics/TrackerCore'
-    debugger.dependency 'GrowingAnalytics/WebSocket'
+    debugger.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
+    debugger.dependency 'GrowingAnalytics/WebSocket', s.version.to_s
   end
 
   s.subspec 'WebCircle' do |webcircle|
     webcircle.ios.deployment_target = '9.0'
     webcircle.source_files = 'Modules/WebCircle/**/*{.h,.m,.c,.cpp,.mm}'
     webcircle.public_header_files = 'Modules/WebCircle/include/*.h'
-    webcircle.dependency 'GrowingAnalytics/AutotrackerCore'
-    webcircle.dependency 'GrowingAnalytics/Hybrid'
-    webcircle.dependency 'GrowingAnalytics/WebSocket'
+    webcircle.dependency 'GrowingAnalytics/AutotrackerCore', s.version.to_s
+    webcircle.dependency 'GrowingAnalytics/Hybrid', s.version.to_s
+    webcircle.dependency 'GrowingAnalytics/WebSocket', s.version.to_s
   end
 
   s.subspec 'Hybrid' do |hybrid|
     hybrid.ios.deployment_target = '9.0'
     hybrid.source_files = 'Modules/Hybrid/**/*{.h,.m,.c,.cpp,.mm}'
     hybrid.public_header_files = 'Modules/Hybrid/include/*.h'
-    hybrid.dependency 'GrowingAnalytics/TrackerCore'
+    hybrid.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
   end
 
   s.subspec 'Advert' do |advert|
     advert.ios.deployment_target = '9.0'
     advert.source_files = 'Modules/Advert/**/*{.h,.m,.c,.cpp,.mm}'
     advert.public_header_files = 'Modules/Advert/Public/*.h'
-    advert.dependency 'GrowingAnalytics/TrackerCore'
+    advert.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
   end
   
   s.subspec 'Protobuf' do |protobuf|
     protobuf.source_files = 'Modules/Protobuf/**/*{.h,.m,.c,.cpp,.mm}'
     protobuf.exclude_files = 'Modules/Protobuf/Proto/**/*{.h,.m,.c,.cpp,.mm}'
     protobuf.public_header_files = 'Modules/Protobuf/include/*.h'
-    protobuf.dependency 'GrowingAnalytics/TrackerCore'
-    protobuf.dependency 'GrowingAnalytics/Database'
+    protobuf.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
+    protobuf.dependency 'GrowingAnalytics/Database', s.version.to_s
     
     protobuf.subspec 'Proto' do |proto|
       proto.source_files = 'Modules/Protobuf/Proto/*{.h,.m,.c,.cpp,.mm}'
@@ -147,7 +147,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     apm.ios.deployment_target = '9.0'
     apm.source_files = 'Modules/APM/**/*{.h,.m,.c,.cpp,.mm}'
     apm.public_header_files = 'Modules/APM/Public/*.h'
-    apm.dependency 'GrowingAnalytics/TrackerCore'
+    apm.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
     apm.dependency 'GrowingAPM/Core'
   end
 
@@ -155,17 +155,11 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   s.subspec 'Flutter' do |flutter|
     flutter.source_files = 'Modules/Flutter/**/*{.h,.m,.c,.cpp,.mm}'
     flutter.public_header_files = 'Modules/Flutter/include/*.h'
-    flutter.dependency 'GrowingAnalytics/TrackerCore'
+    flutter.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
   end
 
   s.subspec 'DISABLE_IDFA' do |config|
     config.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'GROWING_ANALYSIS_DISABLE_IDFA=1'}
-    config.dependency 'GrowingAnalytics/TrackerCore'
-  end
-
-  # deprecated
-  s.subspec 'ENABLE_ENCRYPTION' do |config|
-    config.pod_target_xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => 'GROWING_ANALYSIS_ENABLE_ENCRYPTION=1'}
-    config.dependency 'GrowingAnalytics/TrackerCore'
+    config.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
   end
 end

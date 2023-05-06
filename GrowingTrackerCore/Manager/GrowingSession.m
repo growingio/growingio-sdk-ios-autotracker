@@ -33,7 +33,10 @@
 
 @interface GrowingSession () <GrowingULAppLifecycleDelegate>
 
-@property (nonatomic, copy) NSString *latestNonNullUserId;
+@property (nonatomic, copy, readwrite) NSString *sessionId;
+@property (nonatomic, copy, readwrite) NSString *loginUserId;
+@property (nonatomic, copy, readwrite) NSString *loginUserKey;
+@property (nonatomic, copy, readwrite) NSString *latestNonNullUserId;
 @property (nonatomic, assign, readonly) long long sessionInterval;
 @property (nonatomic, assign) long long latestDidEnterBackgroundTime;
 @property (nonatomic, strong, readonly) NSHashTable *userIdChangedDelegates;
@@ -45,9 +48,6 @@
 static GrowingSession *currentSession = nil;
 
 @implementation GrowingSession
-@synthesize sessionId = _sessionId;
-@synthesize loginUserId = _loginUserId;
-@synthesize loginUserKey = _loginUserKey;
 
 - (instancetype)initWithSessionInterval:(NSTimeInterval)sessionInterval {
     self = [super init];
@@ -212,15 +212,14 @@ static GrowingSession *currentSession = nil;
 - (void)resendVisitByUserIdDidChangedFrom:(NSString *)oldUserId to:(NSString *)newUserId {
     GIOLogDebug(@"resendVisitByUserIdDidChangedFrom %@ to %@", oldUserId, newUserId);
     if (![NSString growingHelper_isBlankString:newUserId]) {
-        if ([NSString growingHelper_isBlankString:self.latestNonNullUserId]) {
-            [self generateVisit];
-        } else {
-            if (![newUserId isEqualToString:self.latestNonNullUserId]) {
-                [self refreshSessionId];
-                [self generateVisit];
-            }
-        }
+        NSString *latestNonNullUserId = self.latestNonNullUserId.copy;
         self.latestNonNullUserId = newUserId;
+        if ([NSString growingHelper_isBlankString:latestNonNullUserId]) {
+            [self generateVisit];
+        } else if (![newUserId isEqualToString:latestNonNullUserId]) {
+            [self refreshSessionId];
+            [self generateVisit];
+        }
     }
 }
 

@@ -36,16 +36,10 @@ target 'GrowingAnalyticsTests' do
    pod 'GrowingAnalytics/Tracker', :path => './'
 end
 
-target 'GrowingAnalyticsCDPTests' do
-   project 'Example/Example'
-   pod 'GrowingAnalytics-cdp/Autotracker', :path => './'
-   pod 'GrowingAnalytics-cdp/Tracker', :path => './'
-end
-
 target 'GrowingAnalyticsStartTests' do
    project 'Example/Example'
-   pod 'GrowingAnalytics-cdp/Autotracker', :path => './'
-   pod 'GrowingAnalytics-cdp/Tracker', :path => './'
+   pod 'GrowingAnalytics/Autotracker', :path => './'
+   pod 'GrowingAnalytics/Tracker', :path => './'
 end
 
 target 'HostApplicationTests' do

@@ -40,10 +40,7 @@
     configuration.debugEnabled = YES;
     configuration.idMappingEnabled = YES;
     configuration.dataCollectionServerHost = @"https://run.mocky.io/v3/08999138-a180-431d-a136-051f3c6bd306";
-    
-#if defined(SDKCDP)
     configuration.dataSourceId = @"1234567890";
-#endif
     
 #if defined(SDKADVERTMODULE)
     configuration.ASAEnabled = YES;

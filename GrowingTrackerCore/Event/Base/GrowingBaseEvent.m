@@ -22,6 +22,7 @@
 #import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
 #import "GrowingTrackerCore/GrowingRealTracker.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
 #import "GrowingTrackerCore/Public/GrowingFieldsIgnore.h"
 #import "GrowingULTimeUtil.h"
@@ -31,6 +32,7 @@
 - (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
     self = [super init];
     if (self) {
+        _dataSourceId = builder.dataSourceId;
         _deviceId = builder.deviceId;
         _userId = builder.userId;
         _sessionId = builder.sessionId;
@@ -57,6 +59,7 @@
         _longitude = builder.longitude;
         _sdkVersion = builder.sdkVersion;
         _userKey = builder.userKey;
+        _gioId = builder.gioId;
     }
     return self;
 }
@@ -74,6 +77,7 @@
     // NSMutableDictionary class dataDict[key] = nil
     // Passing nil will cause any object corresponding to aKey to be removed from the dictionary.
     // actually use method (setObject:forKeyedSubscript:)
+    dataDict[@"dataSourceId"] = self.dataSourceId;
     dataDict[@"sessionId"] = self.sessionId;
     dataDict[@"timestamp"] = @(self.timestamp);
     dataDict[@"eventType"] = self.eventType;
@@ -99,6 +103,7 @@
     dataDict[@"longitude"] = ABS(self.longitude) > 0 ? @(self.longitude) : nil;
     dataDict[@"sdkVersion"] = self.sdkVersion;
     dataDict[@"userKey"] = self.userKey.length > 0 ? self.userKey : nil;
+    dataDict[@"gioId"] = self.gioId.length > 0 ? self.gioId : nil;
     return [dataDict copy];
 }
 
@@ -112,6 +117,9 @@
 
 //赋值属性，eg:deviceId,userId,sessionId,globalSequenceId,eventSequenceId
 - (void)readPropertyInTrackThread {
+    GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    _dataSourceId = config.dataSourceId;
+    
     _timestamp = _timestamp > 0 ? _timestamp : [GrowingULTimeUtil currentTimeMillis];
 
     GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
@@ -132,6 +140,7 @@
     _latitude = session.latitude;
     _longitude = session.longitude;
     _userKey = session.loginUserKey;
+    _gioId = session.latestNonNullUserId;
 
     _screenWidth = [GrowingFieldsIgnore isIgnoreFields:@"screenWidth"] ? 0 : deviceInfo.screenWidth;
     _screenHeight = [GrowingFieldsIgnore isIgnoreFields:@"screenHeight"] ? 0 : deviceInfo.screenHeight;
@@ -143,6 +152,13 @@
     _appName = deviceInfo.displayName;
     _appVersion = deviceInfo.appVersion;
     _language = deviceInfo.language;
+}
+
+- (GrowingBaseBuilder *(^)(NSString *value))setDataSourceId {
+    return ^(NSString *value) {
+        self->_dataSourceId = value;
+        return self;
+    };
 }
 
 - (GrowingBaseBuilder * (^)(NSString *value))setDeviceId {
@@ -323,6 +339,13 @@
 - (GrowingBaseBuilder * (^)(NSString *value))setUserKey {
     return ^(NSString *value) {
         self->_userKey = value;
+        return self;
+    };
+}
+
+- (GrowingBaseBuilder *(^)(NSString *value))setGioId {
+    return ^(NSString *value) {
+        self->_gioId = value;
         return self;
     };
 }
