@@ -17,9 +17,13 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#if __has_feature(modules)
+@import GrowingAnalytics;
+#else
 #import "GrowingAttributesBuilder.h"
 #import "GrowingDynamicProxy.h"
 #import "GrowingTrackConfiguration.h"
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
