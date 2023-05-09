@@ -18,25 +18,19 @@
 //  limitations under the License.
 
 #import "GrowingAutotrackerCore/GrowingRealAutotracker.h"
-#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogMacros.h"
-#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
-#import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/Autotrack/UIApplication+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/Autotrack/UISegmentedControl+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/Autotrack/UIView+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/Autotrack/NSNotificationCenter+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/Autotrack/UITableView+GrowingAutotracker.h"
+#import "GrowingAutotrackerCore/Autotrack/UICollectionView+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/Autotrack/UITapGestureRecognizer+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/Autotrack/UIAlertController+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
 #import "GrowingAutotrackerCore/Impression/GrowingImpressionTrack.h"
-#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
-#import "GrowingAutotrackerCore/Public/GrowingAutotrackConfiguration.h"
-#import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
-#import "GrowingTrackerCore/Event/Autotrack/GrowingAutotrackEventType.h"
-#import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
-#import "GrowingULSwizzle.h"
+#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingULViewControllerLifecycle.h"
+#import "GrowingULSwizzle.h"
 
 @implementation GrowingRealAutotracker
 
@@ -64,12 +58,7 @@
         if (applicatonError) {
             GIOLogError(@"Failed to swizzle UIApplication. Details: %@", applicatonError);
         }
-        [UIApplication growingul_swizzleMethod:@selector(sendEvent:)
-                                    withMethod:@selector(growing_sendEvent:)
-                                         error:&applicatonError];
-        if (applicatonError) {
-            GIOLogError(@"Failed to swizzle UIApplication sendEvent. Details: %@", applicatonError);
-        }
+        
         // UISegmentControl
         NSError *segmentControlError = NULL;
         [UISegmentedControl growingul_swizzleMethod:@selector(initWithCoder:)

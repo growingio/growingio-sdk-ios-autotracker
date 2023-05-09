@@ -24,7 +24,6 @@
 #import "GrowingTrackerCore/GrowingAttributesConst.h"
 #import "GrowingTrackerCore/Menu/GrowingAlert.h"
 #import "GrowingTrackerCore/Menu/GrowingStatusBar.h"
-#import "GrowingTrackerCore/Manager/GrowingApplicationEventManager.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
@@ -36,6 +35,7 @@
 #import "GrowingTrackerCore/Public/GrowingAnnotationCore.h"
 #import "GrowingTrackerCore/Public/GrowingServiceManager.h"
 #import "GrowingTrackerCore/Public/GrowingWebSocketService.h"
+#import "GrowingTrackerCore/Public/GrowingScreenshotService.h"
 #import "GrowingULTimeUtil.h"
 #import <arpa/inet.h>
 #import <ifaddrs.h>
@@ -55,6 +55,8 @@ GrowingMod(GrowingMobileDebugger)
 @property (nonatomic, assign) unsigned long snapNumber;  //数据发出序列号
 @property (nonatomic, copy) NSString *absoluteURL;
 
+@property (nonatomic, weak) id<GrowingScreenshotService> screenshotProvider;
+
 @end
 
 @implementation GrowingMobileDebugger {
@@ -64,6 +66,7 @@ GrowingMod(GrowingMobileDebugger)
 //static GrowingMobileDebugger *sharedInstance = nil;
 
 - (void)growingModInit:(GrowingContext *)context {
+    self.screenshotProvider = [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingScreenshotService)];
     [GrowingDebuggerEventQueue startQueue];
     [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:self];
 }
@@ -138,7 +141,7 @@ GrowingMod(GrowingMobileDebugger)
 
 - (void)sendScreenShot {
     if (self.isReady) {
-        UIImage *image = [self screenShot];
+        UIImage *image = [self.screenshotProvider screenShot];
         NSData *data = [image growingHelper_JPEG:0.8];
         NSString *imgBase64Str = [data growingHelper_base64String];
         
@@ -157,26 +160,6 @@ GrowingMod(GrowingMobileDebugger)
         };
         [self sendJson:dict];
     }
-}
-
-- (UIImage *)screenShot {
-    CGFloat scale = MIN([UIScreen mainScreen].scale, 2);
-    NSArray *windows = [[UIApplication sharedApplication].growingHelper_allWindowsWithoutGrowingWindow sortedArrayUsingComparator:^NSComparisonResult(UIWindow *obj1, UIWindow *obj2) {
-        if (obj1.windowLevel == obj2.windowLevel) {
-            return NSOrderedSame;
-        }else if (obj1.windowLevel > obj2.windowLevel) {
-            return NSOrderedDescending;
-        }else {
-            return NSOrderedAscending;
-        }
-    }];
-    
-    UIImage *image = [UIWindow growingHelper_screenshotWithWindows:windows
-                                                       andMaxScale:scale
-                                                             block:^(CGContextRef context) {
-                                                                 
-                                                             }];
-    return image;
 }
 
 - (void)remoteReady {
@@ -210,7 +193,7 @@ GrowingMod(GrowingMobileDebugger)
             [alert showAlertAnimated:NO];
         };
     }
-    [[GrowingApplicationEventManager sharedInstance] addApplicationEventObserver:self];
+    [self.screenshotProvider addApplicationEventObserver:self];
 }
 
 - (void)stop {
@@ -230,7 +213,7 @@ GrowingMod(GrowingMobileDebugger)
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
     [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
 
-    [[GrowingApplicationEventManager sharedInstance] removeApplicationEventObserver:self];
+    [self.screenshotProvider removeApplicationEventObserver:self];
     if (self.statusWindow) {
         self.statusWindow.hidden = YES;
         self.statusWindow = nil;
@@ -406,6 +389,8 @@ GrowingMod(GrowingMobileDebugger)
         @"urlScheme" : [GrowingDeviceInfo currentDeviceInfo].urlScheme
     };
     [self sendJson:dict];
+    
+    [self.screenshotProvider addSendEventSwizzle];
 }
 
 - (void)webSocket:(id <GrowingWebSocketService>)webSocket
