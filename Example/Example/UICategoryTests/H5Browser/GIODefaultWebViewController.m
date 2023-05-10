@@ -58,6 +58,11 @@
 - (WKWebView *)webView {
     if (!_webView) {
         _webView = [[WKWebView alloc] initWithFrame:self.view.bounds];
+#if defined(__IPHONE_16_4) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_16_4)
+        if (@available(macOS 13.3, iOS 16.4, tvOS 16.4, *)) {
+            _webView.inspectable = YES;
+        }
+#endif
     }
     return _webView;
 }
