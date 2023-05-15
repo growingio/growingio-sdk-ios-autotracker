@@ -43,6 +43,8 @@
 
 GrowingMod(GrowingAdvertising)
 
+NSString * const GrowingAdDefaultDeepLinkHost = @"https://n.datayi.cn";
+
 NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
 
 @interface GrowingAdvertising () <GrowingDeepLinkHandlerProtocol, GrowingEventInterceptor, GrowingULAppLifecycleDelegate>
