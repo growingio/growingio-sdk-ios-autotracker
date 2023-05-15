@@ -65,6 +65,14 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
 }
 
 - (void)growingModInit:(GrowingContext *)context {
+    GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    if (config.deepLinkHost && config.deepLinkHost.length > 0) {
+        NSString *host = [NSURL URLWithString:config.deepLinkHost].host;
+        if (!host) {
+            @throw [NSException exceptionWithName:@"初始化异常" reason:@"您所配置的DeepLinkHost不符合规范" userInfo:nil];
+        }
+    }
+    
     self.builders = [NSMutableArray array];
     [[GrowingEventManager sharedInstance] addInterceptor:self];
     [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:self];
