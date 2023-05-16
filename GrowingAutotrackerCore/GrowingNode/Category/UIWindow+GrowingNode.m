@@ -50,8 +50,4 @@
     return self.accessibilityLabel;
 }
 
-- (NSDictionary *)growingNodeDataDict {
-    return nil;
-}
-
 @end

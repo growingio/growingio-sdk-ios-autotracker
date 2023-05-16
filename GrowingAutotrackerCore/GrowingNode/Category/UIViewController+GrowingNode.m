@@ -115,16 +115,6 @@
     return self.accessibilityLabel;
 }
 
-- (NSDictionary *)growingNodeDataDict {
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-    dict[@"pageName"] = ([self growingPageHelper_getPageObject].name ?: self.growingPageName);
-    return dict;
-}
-
-- (NSString *)growingNodeUniqueTag {
-    return self.growingPageAlias;
-}
-
 #pragma mark - xpath
 - (NSInteger)growingNodeKeyIndex {
     NSString *classString = NSStringFromClass(self.class);
@@ -159,10 +149,6 @@
 
 - (NSString *)growingNodeSubSimilarPath {
     return [self growingNodeSubPath];
-}
-
-- (NSIndexPath *)growingNodeIndexPath {
-    return nil;
 }
 
 - (NSArray<id<GrowingNode>> *)growingNodeChilds {

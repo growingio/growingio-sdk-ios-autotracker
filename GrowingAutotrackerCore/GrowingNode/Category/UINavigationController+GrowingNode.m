@@ -24,6 +24,7 @@
 #import <objc/runtime.h>
 
 @implementation UINavigationController (GrowingNode)
+
 - (CGRect)growingNodeFrame {
     CGRect rect = self.view.growingNodeFrame;
     BOOL isFullScreenShow = CGPointEqualToPoint(rect.origin, CGPointMake(0, 0)) && CGSizeEqualToSize(rect.size, [UIApplication sharedApplication].growingMainWindow.bounds.size);
@@ -48,6 +49,5 @@
     }
     return childs;
 }
-
 
 @end

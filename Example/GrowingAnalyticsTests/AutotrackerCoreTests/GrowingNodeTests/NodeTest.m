@@ -43,12 +43,9 @@
     [vc1 performSelector:@selector(growingNodeDonotCircle)];
     [vc1 performSelector:@selector(growingNodeUserInteraction)];
     [vc1 performSelector:@selector(growingNodeContent)];
-    [vc1 performSelector:@selector(growingNodeDataDict)];
-    [vc1 performSelector:@selector(growingNodeUniqueTag)];
     [vc1 performSelector:@selector(growingNodeKeyIndex)];
     [vc1 performSelector:@selector(growingNodeSubPath)];
     [vc1 performSelector:@selector(growingNodeSubSimilarPath)];
-    [vc1 performSelector:@selector(growingNodeIndexPath)];
     [vc1 performSelector:@selector(growingNodeChilds)];
     [vc1 performSelector:@selector(growingPageIgnorePolicy)];
 #pragma clang diagnostic pop
@@ -66,7 +63,6 @@
     UICollectionViewCell *cell = [[UICollectionViewCell alloc] init];
     [view1 performSelector:@selector(growingNodeChilds)];
     [cell performSelector:@selector(growingNodeKeyIndex)];
-    [cell performSelector:@selector(growingNodeIndexPath)];
     [cell performSelector:@selector(growingNodeSubPath)];
     [cell performSelector:@selector(growingNodeSubSimilarPath)];
     [cell performSelector:@selector(growingNodeDonotCircle)];
@@ -82,7 +78,6 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
     UIView *view2 = [[UIView alloc] init];
-    [view2 performSelector:@selector(growingNodeIndexPath)];
     [view2 performSelector:@selector(growingNodeKeyIndex)];
     [view2 performSelector:@selector(growingNodeSubPath)];
     [view2 performSelector:@selector(growingNodeSubSimilarPath)];
@@ -92,14 +87,10 @@
     [view2 performSelector:@selector(growingImpNodeIsVisible)];
     [view2 performSelector:@selector(growingNodeDonotTrack)];
     [view2 performSelector:@selector(growingViewDontTrack)];
-    [view2 performSelector:@selector(growingNodeSubPath)];
     [view2 performSelector:@selector(growingNodeDonotCircle)];
     [view2 performSelector:@selector(growingViewContent)];
     [view2 performSelector:@selector(growingNodeUserInteraction)];
     [view2 performSelector:@selector(growingViewUserInteraction)];
-    [view2 performSelector:@selector(growingNodeDataDict)];
-    [view2 performSelector:@selector(growingNodeUniqueTag)];
-    [view2 performSelector:@selector(growingViewCustomContent)];
     [view2 performSelector:@selector(growingIMPTracked)];
     [view2 performSelector:@selector(growingIMPTrackEventName)];
     [view2 performSelector:@selector(growingIMPTrackVariable)];
