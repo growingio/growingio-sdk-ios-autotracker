@@ -29,20 +29,6 @@
 #import "GrowingAutotrackerCore/Impression/GrowingImpressionTrack.h"
 #import "GrowingAutotrackerCore/Public/GrowingAutotrackConfiguration.h"
 
-@interface GrowingMaskView : UIImageView
-@end
-
-@implementation GrowingMaskView
-
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
-    UIView *hit = [super hitTest:point withEvent:event];
-    return (hit == self) ? nil : hit;
-}
-
-@end
-
-GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowingHighlightView)
-
 @implementation UIView (GrowingNode)
 
 #pragma mark - xpath
