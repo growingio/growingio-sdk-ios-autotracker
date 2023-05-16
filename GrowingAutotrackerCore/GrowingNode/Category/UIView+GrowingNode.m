@@ -220,14 +220,6 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
     return [self growingViewNodeIsInvisiable];
 }
 
-// 值
-- (NSString *)growingNodeName {
-    if ([self isKindOfClass:NSClassFromString(@"_UINavigationItemButtonView")]) {
-        return @"返回按钮";
-    }
-    return NSStringFromClass(self.class);
-}
-
 - (NSString *)growingViewContent {
     // apple在11.1.2的部分机型上很小概率对于class为UIPickerTableView的对象调用accessibilityLabel可能会崩溃
     // 此为apple bug

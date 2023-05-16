@@ -56,7 +56,6 @@ typedef NS_OPTIONS(NSUInteger, GrowingElementEventCategory) {
 // 值
 - (BOOL)growingNodeUserInteraction;
 
-- (NSString * _Nullable)growingNodeName;
 - (NSString * _Nullable)growingNodeContent;
 
 - (NSDictionary * _Nullable)growingNodeDataDict;

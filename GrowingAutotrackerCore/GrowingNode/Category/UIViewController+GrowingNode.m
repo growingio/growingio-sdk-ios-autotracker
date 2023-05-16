@@ -111,10 +111,6 @@
     return NO;
 }
 
-- (NSString *)growingNodeName {
-    return @"页面";
-}
-
 - (NSString *)growingNodeContent {
     return self.accessibilityLabel;
 }

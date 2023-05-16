@@ -91,33 +91,6 @@
     return YES;
 }
 
-- (NSString *)growingNodeName {
-    __kindof UIView *curView = self;
-    UICollectionView *collecitonView = nil;
-    while (curView) {
-        if ([curView isKindOfClass:[UICollectionView class]]) {
-            collecitonView = curView;
-        }
-        curView = curView.superview;
-    }
-    if (!collecitonView) {
-        return @"列表";
-    } else {
-        CGSize contentsize = collecitonView.contentSize;
-        CGSize frameSize = collecitonView.frame.size;
-        BOOL w = ABS(contentsize.width - frameSize.width) > 1;
-        BOOL h = ABS(contentsize.height - frameSize.height) > 1;
-        if (w && !h) {
-            return @"横滑列表项";
-        } else if (h && !w) {
-            return @"竖滑列表项";
-        } else {
-            return @"列表项";
-        }
-    }
-}
-
-
 @end
 
 @interface UICollectionReusableView (GrowingNode) <GrowingNode>

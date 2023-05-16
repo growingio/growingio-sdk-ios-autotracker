@@ -97,23 +97,6 @@
     return YES;
 }
 
-- (NSString *)growingNodeName {
-    __kindof UIView *curView = self;
-    UITableView *tableView = nil;
-    while (curView != nil) {
-        if ([curView isKindOfClass:[UITableView class]]) {
-            tableView = curView;
-            break;
-        }
-        curView = curView.superview;
-    }
-    if (tableView == nil) {
-        return @"列表项";
-    }
-    
-    return @"列表";
-}
-
 - (BOOL)growingNodeDonotCircle {
     return [super growingNodeDonotCircle];
 }

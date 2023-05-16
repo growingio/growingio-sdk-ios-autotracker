@@ -68,11 +68,6 @@
     return YES;
 }
 
-- (NSString*)growingNodeName
-{
-    return @"按钮";
-}
-
 - (NSArray<id<GrowingNode>>*)growingNodeChilds {
     return nil;
 }

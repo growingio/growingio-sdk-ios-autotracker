@@ -42,7 +42,6 @@
     [vc1 performSelector:@selector(growingNodeDonotTrack)];
     [vc1 performSelector:@selector(growingNodeDonotCircle)];
     [vc1 performSelector:@selector(growingNodeUserInteraction)];
-    [vc1 performSelector:@selector(growingNodeName)];
     [vc1 performSelector:@selector(growingNodeContent)];
     [vc1 performSelector:@selector(growingNodeDataDict)];
     [vc1 performSelector:@selector(growingNodeUniqueTag)];
@@ -73,7 +72,6 @@
     [cell performSelector:@selector(growingNodeDonotCircle)];
     [cell performSelector:@selector(growingNodeUserInteraction)];
     [cell performSelector:@selector(growingViewUserInteraction)];
-    [cell performSelector:@selector(growingNodeName)];
     [cell performSelector:@selector(growingNodeDonotCircle)];
     [cell performSelector:@selector(growingNodeUserInteraction)];
     [cell performSelector:@selector(growingViewUserInteraction)];
@@ -96,7 +94,6 @@
     [view2 performSelector:@selector(growingViewDontTrack)];
     [view2 performSelector:@selector(growingNodeSubPath)];
     [view2 performSelector:@selector(growingNodeDonotCircle)];
-    [view2 performSelector:@selector(growingNodeName)];
     [view2 performSelector:@selector(growingViewContent)];
     [view2 performSelector:@selector(growingNodeUserInteraction)];
     [view2 performSelector:@selector(growingViewUserInteraction)];

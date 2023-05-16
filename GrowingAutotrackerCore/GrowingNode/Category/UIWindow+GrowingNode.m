@@ -46,10 +46,6 @@
     return NO;
 }
 
-- (NSString *)growingNodeName {
-    return @"页面";
-}
-
 - (NSString *)growingViewContent {
     return self.accessibilityLabel;
 }
