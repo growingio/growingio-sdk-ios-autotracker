@@ -73,10 +73,6 @@
     }
 }
 
-- (BOOL)growingNodeIsBadNode {
-    return NO;
-}
-
 @end
 
 @implementation GrowingWindowContentView

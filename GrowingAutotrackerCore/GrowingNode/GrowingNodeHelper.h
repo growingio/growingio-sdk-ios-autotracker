@@ -18,7 +18,6 @@
 //  limitations under the License.
 
 #import <Foundation/Foundation.h>
-#import "GrowingAutotrackerCore/GrowingNode/GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/GrowingViewNode.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -35,7 +34,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (GrowingViewNode *)getViewNode:(UIView *)view;
 + (NSString *)getViewNodeType:(UIView *)view;
-
 
 @end
 

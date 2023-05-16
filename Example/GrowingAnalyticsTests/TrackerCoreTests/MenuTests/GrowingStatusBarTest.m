@@ -48,7 +48,6 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
     [statusBar safePerformSelector:@selector(didTapStatusBar:)];
-    XCTAssertEqual([statusBar safePerformSelector:@selector(growingNodeIsBadNode)], @(NO));
 #pragma clang diagnostic pop
     statusBar = nil;
 }

@@ -24,7 +24,6 @@
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
 #import "GrowingAutotrackerCore/Autotrack/UITableView+GrowingAutotracker.h"
-#import "GrowingAutotrackerCore/GrowingNode/GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIApplication+GrowingNode.h"
 #import "GrowingAutotrackerCore/Impression/GrowingImpressionTrack.h"
@@ -131,8 +130,7 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
 - (BOOL)growingViewNodeIsInvisiable {
     // 这个应该放在controller代码里 放这里可以提升效率
     // 逻辑冗余
-    return (self.hidden || self.alpha < 0.001 ||
-            !self.superview || self.growingNodeIsBadNode || !self.window);
+    return (self.hidden || self.alpha < 0.001 || !self.superview || !self.window);
 }
 
 - (BOOL)growingImpNodeIsVisible {

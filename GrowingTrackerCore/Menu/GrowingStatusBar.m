@@ -130,9 +130,5 @@
     self.btn.growingHelper_onClick = self.onButtonClick;
 }
 
-- (BOOL)growingNodeIsBadNode {
-    return NO;
-}
-
 @end
 #endif
