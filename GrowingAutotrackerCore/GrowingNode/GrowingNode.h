@@ -19,7 +19,6 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "GrowingAutotrackerCore/GrowingNode/GrowingNodeItem.h"
 #import "GrowingTrackerCore/Event/GrowingNodeProtocol.h"
 
 @interface NSObject (GrowingNode)

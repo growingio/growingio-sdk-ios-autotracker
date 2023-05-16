@@ -17,10 +17,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <XCTest/XCTest.h>
-
-#import "GrowingAutotrackerCore/GrowingNode/GrowingNodeItem.h"
 
 @interface NodeTest : XCTestCase
 
@@ -34,11 +31,6 @@
 
 - (void)tearDown {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
-}
-
-- (void)testGrowingNodeItem {
-    [GrowingNodeItemComponent indexNotFound];
-    [GrowingNodeItemComponent indexNotDefine];
 }
 
 -(void)testGrowingUIViewController {
