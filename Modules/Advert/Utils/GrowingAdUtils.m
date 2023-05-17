@@ -80,11 +80,12 @@ static pthread_mutex_t _mutex;
     }
     
     GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
-    if (!trackConfiguration.deepLinkHost) {
-        return NO;
+    NSString *deepLinkHost = trackConfiguration.deepLinkHost;
+    if (!deepLinkHost || deepLinkHost.length == 0) {
+        deepLinkHost = GrowingAdDefaultDeepLinkHost;
     }
-    NSString *deepLinkHost = [NSURL URLWithString:trackConfiguration.deepLinkHost].host;
-    return ([url.host isEqualToString:deepLinkHost] || [url.host hasSuffix:deepLinkHost]);
+    NSString *host = [NSURL URLWithString:deepLinkHost].host;
+    return ([url.host isEqualToString:host] || [url.host hasSuffix:host]);
 }
 
 + (BOOL)isURLScheme:(NSURL *)url {

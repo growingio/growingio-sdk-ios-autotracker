@@ -5,7 +5,7 @@
 	<key>com.apple.developer.associated-domains</key>
 	<array>
 		<string>applinks:testlink.growingio.com</string>
-		<string>applinks:datayi.cn</string>
+		<string>applinks:n.datayi.cn</string>
 	</array>
 	<key>com.apple.security.app-sandbox</key>
 	<true/>

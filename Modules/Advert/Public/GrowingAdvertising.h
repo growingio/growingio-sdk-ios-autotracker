@@ -29,6 +29,8 @@ typedef NS_ENUM(NSInteger , GrowingAdvertisingError) {
     GrowingAdvertisingRequestFailedError, /// 短链请求失败
 };
 
+FOUNDATION_EXPORT NSString *const GrowingAdDefaultDeepLinkHost;
+
 extern NSString *const GrowingAdvertisingErrorDomain;
 
 typedef void(^_Nullable GrowingAdDeepLinkCallback)(NSDictionary * _Nullable params,
