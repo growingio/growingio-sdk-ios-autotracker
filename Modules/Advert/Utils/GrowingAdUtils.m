@@ -23,8 +23,6 @@
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
 
-#import <pthread.h>
-
 static NSString *const kGrowingAdertisingFileKey = @"GrowingAdertisingFileKey";
 static NSString *const kGrowingAdIsActivateDeferKey = @"GrowingAdvertisingActivateDefer";
 static NSString *const kGrowingAdIsActivateWroteKey = @"GrowingAdvertisingActivateWrote";
@@ -53,13 +51,11 @@ static NSString *const kGrowingAdIsActivateSentKey = @"GrowingAdvertisingActivat
     return self;
 }
 
-static pthread_mutex_t _mutex;
 + (instancetype)sharedInstance {
     static id instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         instance = [[GrowingAdUtils alloc] init];
-        pthread_mutex_init(&_mutex, NULL);
     });
     return instance;
 }
@@ -152,10 +148,8 @@ static pthread_mutex_t _mutex;
 }
 
 + (void)setActivateDefer:(BOOL)activateDefer {
-    pthread_mutex_lock(&_mutex);
     [GrowingAdUtils.sharedInstance.storeDic setObject:@(activateDefer) forKey:kGrowingAdIsActivateDeferKey];
     [GrowingAdUtils.sharedInstance.storage setDictionary:GrowingAdUtils.sharedInstance.storeDic forKey:kGrowingAdertisingFileKey];
-    pthread_mutex_unlock(&_mutex);
 }
 
 + (BOOL)isActivateDefer {
@@ -164,10 +158,8 @@ static pthread_mutex_t _mutex;
 }
 
 + (void)setActivateWrote:(BOOL)activateWrote {
-    pthread_mutex_lock(&_mutex);
     [GrowingAdUtils.sharedInstance.storeDic setObject:@(activateWrote) forKey:kGrowingAdIsActivateWroteKey];
     [GrowingAdUtils.sharedInstance.storage setDictionary:GrowingAdUtils.sharedInstance.storeDic forKey:kGrowingAdertisingFileKey];
-    pthread_mutex_unlock(&_mutex);
 }
 
 + (BOOL)isActivateWrote {
@@ -184,10 +176,8 @@ static pthread_mutex_t _mutex;
 }
 
 + (void)setActivateSent:(BOOL)activateSent {
-    pthread_mutex_lock(&_mutex);
     [GrowingAdUtils.sharedInstance.storeDic setObject:@(activateSent) forKey:kGrowingAdIsActivateSentKey];
     [GrowingAdUtils.sharedInstance.storage setDictionary:GrowingAdUtils.sharedInstance.storeDic forKey:kGrowingAdertisingFileKey];
-    pthread_mutex_unlock(&_mutex);
 }
 
 + (BOOL)isActivateSent {

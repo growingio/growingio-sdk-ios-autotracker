@@ -193,16 +193,14 @@ GrowingMod(GrowingWebCircle)
 }
 
 - (unsigned long)getSnapshotKey {
-    @synchronized(self) {
-        _snapNumber++;
-    }
+    // running in main thread
+    _snapNumber++;
     return _snapNumber;
 }
 
 - (void)resetSnapshotKey {
-    @synchronized(self) {
-        _snapNumber = 0;
-    }
+    // running in main thread
+    _snapNumber = 0;
 }
 
 - (NSMutableArray *)elements {
