@@ -190,6 +190,8 @@
     [[viewTester usingLabel:@"Simple UI Elements"] tap];
     [viewTester waitForAnimationsToFinish];
     
+    [MockEventQueue.sharedQueue cleanQueue];
+
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"ThirdSegment"];
     {
         actor.view.growingViewCustomContent = @"Four";
