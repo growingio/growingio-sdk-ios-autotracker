@@ -17,20 +17,12 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Manager/GrowingApplicationEventManager.h"
+#import "GrowingAutotrackerCore/Autotrack/UIApplication+GrowingAutotracker.h"
+#import "GrowingAutotrackerCore/GrowingNode/GrowingViewClickProvider.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Event/GrowingNodeProtocol.h"
-#import "GrowingAutotrackerCore/GrowingNode/GrowingNodeHelper.h"
-#import "GrowingAutotrackerCore/GrowingNode/GrowingViewClickProvider.h"
-#import "GrowingAutotrackerCore/Autotrack/UIApplication+GrowingAutotracker.h"
 
 @implementation UIApplication (GrowingAutotracker)
-
-- (void)growing_sendEvent:(UIEvent *)event {
-    [self growing_sendEvent:event];
-    //触摸 滑动都会在这里触发
-    [[GrowingApplicationEventManager sharedInstance] dispatchApplicationEventSendEvent:event];
-}
 
 - (BOOL)growing_sendAction:(SEL)action to:(id)target from:(id)sender forEvent:(UIEvent *)event {
     BOOL result = YES;
@@ -66,16 +58,11 @@
 
     if ([sender isKindOfClass:UISwitch.class] || [sender isKindOfClass:UIStepper.class] ||
         [sender isKindOfClass:UIPageControl.class]) {
-        [GrowingViewClickProvider viewOnClick:(UIView*)node];
+        [GrowingViewClickProvider viewOnClick:(UIView *)node];
     } else if ([event isKindOfClass:[UIEvent class]] && event.type == UIEventTypeTouches &&
                [[[event allTouches] anyObject] phase] == UITouchPhaseEnded) {
-        [GrowingViewClickProvider viewOnClick:(UIView*)node];
+        [GrowingViewClickProvider viewOnClick:(UIView *)node];
     }
-
-    [[GrowingApplicationEventManager sharedInstance] dispatchApplicationEventSendAction:action
-                                                                                     to:target
-                                                                                   from:sender
-                                                                               forEvent:event];
 }
 
 @end

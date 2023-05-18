@@ -30,7 +30,6 @@
 #import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
 #import "InvocationHelper.h"
 #import "GrowingAutotrackerCore/GrowingRealAutotracker.h"
-#import "GrowingTrackerCore/Manager/GrowingApplicationEventManager.h"
 
 // 需要有HostApplication，不然UIApplication.sharedApplication为nil
 
@@ -52,7 +51,7 @@ AutotrackXCTestClassDefine(UISwitch)
 AutotrackXCTestClassDefine(UIStepper)
 AutotrackXCTestClassDefine(UIPageControl)
 
-@interface UIApplicationAutotrackTest : XCTestCase <GrowingApplicationEventProtocol>
+@interface UIApplicationAutotrackTest : XCTestCase
 
 @property (nonatomic, strong) UIEvent *event;
 @property (nonatomic, strong) AutotrackUITabBarItem_XCTest *tabBarItem;
@@ -71,13 +70,10 @@ AutotrackXCTestClassDefine(UIPageControl)
 
 - (void)setUp {
     [MockEventQueue.sharedQueue cleanQueue];
-    
     self.event = UIEvent.new;
-    [[GrowingApplicationEventManager sharedInstance] addApplicationEventObserver:self];
 }
 
 - (void)tearDown {
-    [[GrowingApplicationEventManager sharedInstance] removeApplicationEventObserver:self];
 }
 
 - (void)testSendEvent {
@@ -242,16 +238,6 @@ AutotrackXCTestClassDefine(UIPageControl)
         [expectation fulfill];
     });
     [self waitForExpectationsWithTimeout:100.0f handler:nil];
-}
-
-#pragma mark - GrowingApplicationEventProtocol
-
-- (void)growingApplicationEventSendEvent:(UIEvent *)event {
-    XCTAssertEqualObjects(event, self.event);
-}
-
-- (void)growingApplicationEventSendAction:(SEL)action to:(id)target from:(id)sender forEvent:(UIEvent *)event {
-    XCTAssertEqualObjects(event, self.event);
 }
 
 @end

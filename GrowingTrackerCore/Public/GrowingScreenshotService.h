@@ -1,9 +1,9 @@
 //
-// GrowingApplicationEventManager.h
-// GrowingAnalytics
+//  GrowingScreenshotService.h
+//  GrowingAnalytics
 //
-//  Created by sheng on 2020/12/22.
-//  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2023/5/9.
+//  Copyright (C) 2023 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,39 +17,24 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#if __has_include(<UIKit/UIKit.h>)
-#import <UIKit/UIKit.h>
+#import "GrowingBaseService.h"
 
-NS_ASSUME_NONNULL_BEGIN
+@class UIEvent, UIImage;
 
 @protocol GrowingApplicationEventProtocol <NSObject>
 
 @optional
-- (void)growingApplicationEventSendAction:(SEL)action
-                                       to:(nullable id)target
-                                     from:(nullable id)sender
-                                 forEvent:(nullable UIEvent *)event;
-
 - (void)growingApplicationEventSendEvent:(UIEvent *)event;
 
 @end
 
-@interface GrowingApplicationEventManager : NSObject
+@protocol GrowingScreenshotService <GrowingBaseService>
 
-+ (instancetype)sharedInstance;
-
+@required
+- (UIImage *)screenShot;
+- (void)addSendEventSwizzle;
 - (void)addApplicationEventObserver:(id<GrowingApplicationEventProtocol>)delegate;
-
 - (void)removeApplicationEventObserver:(id<GrowingApplicationEventProtocol>)delegate;
-
-- (void)dispatchApplicationEventSendAction:(SEL)action
-                                        to:(nullable id)target
-                                      from:(nullable id)sender
-                                  forEvent:(nullable UIEvent *)event;
-
 - (void)dispatchApplicationEventSendEvent:(UIEvent *)event;
 
 @end
-
-NS_ASSUME_NONNULL_END
-#endif

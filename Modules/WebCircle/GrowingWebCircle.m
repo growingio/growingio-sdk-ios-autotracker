@@ -24,7 +24,6 @@
 #import "GrowingTrackerCore/GrowingAttributesConst.h"
 #import "GrowingTrackerCore/Menu/GrowingAlert.h"
 #import "GrowingTrackerCore/Menu/GrowingStatusBar.h"
-#import "GrowingTrackerCore/Manager/GrowingApplicationEventManager.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingAutotrackEventType.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
@@ -35,6 +34,7 @@
 #import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
 #import "GrowingTrackerCore/Public/GrowingServiceManager.h"
 #import "GrowingTrackerCore/Public/GrowingWebSocketService.h"
+#import "GrowingTrackerCore/Public/GrowingScreenshotService.h"
 #import "GrowingTrackerCore/Public/GrowingFlutterService.h"
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
@@ -79,11 +79,14 @@ GrowingMod(GrowingWebCircle)
 
 @property (nonatomic, copy) NSDictionary *flutterCircleData;
 
+@property (nonatomic, weak) id<GrowingScreenshotService> screenshotProvider;
+
 @end
 
 @implementation GrowingWebCircle
 
 - (void)growingModInit:(GrowingContext *)context {
+    self.screenshotProvider = [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingScreenshotService)];
     [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:self];
 }
 
@@ -116,30 +119,6 @@ GrowingMod(GrowingWebCircle)
 
 #pragma mark - screenShot
 
-- (UIImage *)screenShot {
-    CGFloat scale = [[self class] impressScale];
-
-    NSArray *windows = [[UIApplication sharedApplication].growingHelper_allWindowsWithoutGrowingWindow
-        sortedArrayUsingComparator:^NSComparisonResult(UIWindow *obj1, UIWindow *obj2) {
-            if (obj1.windowLevel == obj2.windowLevel) {
-                return NSOrderedSame;
-            } else if (obj1.windowLevel > obj2.windowLevel) {
-                return NSOrderedDescending;
-            } else {
-                return NSOrderedAscending;
-            }
-        }];
-
-    UIImage *image = [UIWindow growingHelper_screenshotWithWindows:windows andMaxScale:scale block:nil];
-
-    return image;
-}
-
-+ (CGFloat)impressScale {
-    CGFloat scale = [UIScreen mainScreen].scale;
-    return MIN(scale, 2);
-}
-
 /*
  Page Json Data is like this:
  {
@@ -156,7 +135,7 @@ GrowingMod(GrowingWebCircle)
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     CGRect frame = [aNode growingNodeFrame];
     if (!CGRectEqualToRect(frame, CGRectZero)) {
-        CGFloat scale = [[self class] impressScale];
+        CGFloat scale = MIN([UIScreen mainScreen].scale, 2);
         dict[@"left"] = [NSNumber numberWithInt:(int)(frame.origin.x * scale)];
         dict[@"top"] = [NSNumber numberWithInt:(int)(frame.origin.y * scale)];
         dict[@"width"] = [NSNumber numberWithInt:(int)(frame.size.width * scale)];
@@ -329,7 +308,7 @@ GrowingMod(GrowingWebCircle)
         return nil;
     }
 
-    UIImage *image = [self screenShot];
+    UIImage *image = [self.screenshotProvider screenShot];
     NSData *data = [image growingHelper_JPEG:0.8];
 
     NSString *imgBase64Str = [data growingHelper_base64String];
@@ -501,7 +480,7 @@ GrowingMod(GrowingWebCircle)
     [GrowingHybridBridgeProvider sharedInstance].domChangedDelegate = self;
     //监听原生事件，变动时发送
     [[GrowingEventManager sharedInstance] addInterceptor:self];
-    [[GrowingApplicationEventManager sharedInstance] addApplicationEventObserver:self];
+    [self.screenshotProvider addApplicationEventObserver:self];
 }
 
 - (void)stop {
@@ -524,7 +503,7 @@ GrowingMod(GrowingWebCircle)
 
     [GrowingHybridBridgeProvider sharedInstance].domChangedDelegate = nil;
     [[GrowingEventManager sharedInstance] removeInterceptor:self];
-    [[GrowingApplicationEventManager sharedInstance] removeApplicationEventObserver:self];
+    [self.screenshotProvider removeApplicationEventObserver:self];
     if (self.webSocket) {
         self.webSocket.delegate = nil;
         [self.webSocket close];
@@ -607,6 +586,8 @@ GrowingMod(GrowingWebCircle)
         @"urlScheme" : [GrowingDeviceInfo currentDeviceInfo].urlScheme
     };
     [self sendJson:dict];
+    
+    [self.screenshotProvider addSendEventSwizzle];
 }
 
 - (void)webSocket:(id <GrowingWebSocketService>)webSocket

@@ -274,6 +274,14 @@ let package = Package(
                 .headerSearchPath("../.."),
             ]
         ),
+        .target(
+            name: "GrowingService_Screenshot",
+            dependencies: ["GrowingTrackerCore"],
+            path: "Services/Screenshot",
+            cSettings: [
+                .headerSearchPath("../.."),
+            ]
+        ),
 
         // MARK: - GrowingAnalytics Modules
 
@@ -295,7 +303,8 @@ let package = Package(
             name: "GrowingModule_MobileDebugger",
             dependencies: [
                 "GrowingTrackerCore",
-                "GrowingService_WebSocket"
+                "GrowingService_WebSocket",
+                "GrowingService_Screenshot"
             ],
             path: "Modules/MobileDebugger",
             cSettings: [
@@ -307,6 +316,7 @@ let package = Package(
             dependencies: [
                 "GrowingAutotrackerCore",
                 "GrowingService_WebSocket",
+                "GrowingService_Screenshot",
                 "GrowingModule_Hybrid"
             ],
             path: "Modules/WebCircle",
