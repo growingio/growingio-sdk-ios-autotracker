@@ -1,9 +1,9 @@
 //
-//  UIApplication+GrowingAutoTrack.h
+//  UIApplication+Screenshot.m
 //  GrowingAnalytics
 //
-//  Created by GrowingIO on 2020/7/23.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2023/5/9.
+//  Copyright (C) 2023 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,17 +17,18 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <UIKit/UIKit.h>
+#import "Services/Screenshot/UIApplication+Screenshot.h"
+#import "Services/Screenshot/GrowingScreenshotProvider.h"
 
-NS_ASSUME_NONNULL_BEGIN
+@implementation UIApplication (Screenshot)
 
-@interface UIApplication (GrowingAutotracker)
-
-- (BOOL)growing_sendAction:(SEL)action
-                        to:(nullable id)target
-                      from:(nullable id)sender
-                  forEvent:(nullable UIEvent *)event;
+- (void)growing_sendEvent:(UIEvent *)event {
+    [self growing_sendEvent:event];
+    
+    if (event.type == UIEventTypeTouches) {
+        //触摸 滑动都会在这里触发
+        [[GrowingScreenshotProvider sharedInstance] dispatchApplicationEventSendEvent:event];
+    }
+}
 
 @end
-
-NS_ASSUME_NONNULL_END

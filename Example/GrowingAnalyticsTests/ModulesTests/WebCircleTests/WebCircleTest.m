@@ -34,10 +34,6 @@
 
 @interface GrowingWebCircle (XCTest)
 
-- (UIImage *)screenShot;
-
-+ (CGFloat)impressScale;
-
 - (NSMutableDictionary *)dictFromPage:(id<GrowingNode>)aNode xPath:(NSString *)xPath;
 
 - (unsigned long)getSnapshotKey;
@@ -100,8 +96,6 @@
 
 - (void)testWebCircle {
     GrowingWebCircle *circle = [[GrowingWebCircle alloc] init];
-    CGFloat impressScale = [GrowingWebCircle impressScale];
-    XCTAssertGreaterThanOrEqual(impressScale, 0);
         
     XCTAssertGreaterThan([circle getSnapshotKey], 0);
     [circle resetSnapshotKey];
@@ -118,7 +112,6 @@
     XCTAssertNotNil([circle dictFromPage:(id<GrowingNode>)current xPath:page.path]);
     XCTAssertNotNil([circle elements]);
     
-    [circle screenShot];
     [circle sendScreenShot];
     [circle remoteReady];
     [circle runWithCircle:[NSURL URLWithString:@"ws://testws"] readyBlock:nil finishBlock:nil];

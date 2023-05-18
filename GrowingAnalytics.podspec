@@ -86,6 +86,13 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     service.dependency 'GrowingAnalytics/TrackerCore'
   end
 
+  s.subspec 'Screenshot' do |service|
+    service.ios.deployment_target = '9.0'
+    service.source_files = 'Services/Screenshot/**/*{.h,.m,.c,.cpp,.mm}'
+    service.public_header_files = 'Services/Screenshot/include/*.h'
+    service.dependency 'GrowingAnalytics/TrackerCore'
+  end
+
   s.subspec 'DefaultServices' do |services|
     services.source_files = 'Modules/DefaultServices/**/*{.h,.m,.c,.cpp,.mm}'
     services.public_header_files = 'Modules/DefaultServices/include/*.h'
@@ -104,6 +111,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     debugger.public_header_files = 'Modules/MobileDebugger/include/*.h'
     debugger.dependency 'GrowingAnalytics/TrackerCore'
     debugger.dependency 'GrowingAnalytics/WebSocket'
+    debugger.dependency 'GrowingAnalytics/Screenshot'
   end
 
   s.subspec 'WebCircle' do |webcircle|
@@ -113,6 +121,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     webcircle.dependency 'GrowingAnalytics/AutotrackerCore'
     webcircle.dependency 'GrowingAnalytics/Hybrid'
     webcircle.dependency 'GrowingAnalytics/WebSocket'
+    webcircle.dependency 'GrowingAnalytics/Screenshot'
   end
 
   s.subspec 'Hybrid' do |hybrid|

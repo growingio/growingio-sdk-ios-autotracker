@@ -87,6 +87,7 @@
 		346EABE5277EE1FD00A32B03 /* HybridTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 42ADE26B250B292900CA7268 /* HybridTest.m */; };
 		346EABEB277EE53200A32B03 /* DeviceInfoTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 346EABEA277EE53200A32B03 /* DeviceInfoTest.m */; };
 		346EABF2277EE63F00A32B03 /* NodeTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 346EABF1277EE63F00A32B03 /* NodeTest.m */; };
+		347B8F432A0A46DD00B8A114 /* ScreenshotTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 347B8F422A0A46DD00B8A114 /* ScreenshotTest.m */; };
 		34821C6727B247DB006C8B8E /* UISegmentedControlAutotrackTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34821C6627B247DB006C8B8E /* UISegmentedControlAutotrackTest.m */; };
 		34821C6C27B25AE7006C8B8E /* HybridTest_HostApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 34821C6B27B25AE7006C8B8E /* HybridTest_HostApp.m */; };
 		3494DD0328597E2E00A6CE46 /* DeepLinkTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BA7B41277D8EC30030AC21 /* DeepLinkTest.m */; };
@@ -130,7 +131,6 @@
 		34B2148727969562004E2CE3 /* DynamicProxyTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B2148627969562004E2CE3 /* DynamicProxyTest.m */; };
 		34B2148A2796A234004E2CE3 /* GrowingAlertTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B214892796A234004E2CE3 /* GrowingAlertTest.m */; };
 		34B2148C2796A5D5004E2CE3 /* GrowingStatusBarTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B2148B2796A5D5004E2CE3 /* GrowingStatusBarTest.m */; };
-		34B2148E2796B0D8004E2CE3 /* ApplicationEventManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B2148D2796B0D8004E2CE3 /* ApplicationEventManagerTest.m */; };
 		34B214912796B74B004E2CE3 /* GrowingULAppLifeCycleTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B214902796B74B004E2CE3 /* GrowingULAppLifeCycleTest.m */; };
 		34B21A7C28C17B3200137F3A /* MockEventQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962653324DA66B600032551 /* MockEventQueue.m */; };
 		34B25967278E76890096A10C /* ManualTrackHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962653224DA66B600032551 /* ManualTrackHelper.m */; };
@@ -312,9 +312,9 @@
 		346E0B4129F2724400A12E4E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		346E0B4329F2724400A12E4E /* Example_macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Example_macOS.entitlements; sourceTree = "<group>"; };
 		346EABE0277EDF8A00A32B03 /* EventTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EventTest.m; sourceTree = "<group>"; };
-		346EABE7277EE33F00A32B03 /* StatusBarEventManagerTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StatusBarEventManagerTest.m; sourceTree = "<group>"; };
 		346EABEA277EE53200A32B03 /* DeviceInfoTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DeviceInfoTest.m; sourceTree = "<group>"; };
 		346EABF1277EE63F00A32B03 /* NodeTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NodeTest.m; sourceTree = "<group>"; };
+		347B8F422A0A46DD00B8A114 /* ScreenshotTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ScreenshotTest.m; sourceTree = "<group>"; };
 		34821C6627B247DB006C8B8E /* UISegmentedControlAutotrackTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UISegmentedControlAutotrackTest.m; sourceTree = "<group>"; };
 		34821C6B27B25AE7006C8B8E /* HybridTest_HostApp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HybridTest_HostApp.m; sourceTree = "<group>"; };
 		3494DCF828597E1A00A6CE46 /* GrowingAnalyticsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrowingAnalyticsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -369,7 +369,6 @@
 		34B2148627969562004E2CE3 /* DynamicProxyTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DynamicProxyTest.m; sourceTree = "<group>"; };
 		34B214892796A234004E2CE3 /* GrowingAlertTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GrowingAlertTest.m; sourceTree = "<group>"; };
 		34B2148B2796A5D5004E2CE3 /* GrowingStatusBarTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GrowingStatusBarTest.m; sourceTree = "<group>"; };
-		34B2148D2796B0D8004E2CE3 /* ApplicationEventManagerTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ApplicationEventManagerTest.m; sourceTree = "<group>"; };
 		34B214902796B74B004E2CE3 /* GrowingULAppLifeCycleTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GrowingULAppLifeCycleTest.m; sourceTree = "<group>"; };
 		34B7D647279F9C060003CE04 /* UICollectionViewAutotrackTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UICollectionViewAutotrackTest.m; sourceTree = "<group>"; };
 		34B7D649279FA5980003CE04 /* UITableViewAutotrackTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UITableViewAutotrackTest.m; sourceTree = "<group>"; };
@@ -754,9 +753,7 @@
 		346EABE6277EE30700A32B03 /* ManagerTests */ = {
 			isa = PBXGroup;
 			children = (
-				346EABE7277EE33F00A32B03 /* StatusBarEventManagerTest.m */,
 				34BF77AD2795095100CA18BA /* GrowingSessionTest.m */,
-				34B2148D2796B0D8004E2CE3 /* ApplicationEventManagerTest.m */,
 			);
 			path = ManagerTests;
 			sourceTree = "<group>";
@@ -785,6 +782,14 @@
 				346EABF1277EE63F00A32B03 /* NodeTest.m */,
 			);
 			path = GrowingNodeTests;
+			sourceTree = "<group>";
+		};
+		347B8F412A0A46AC00B8A114 /* ScreenshotTests */ = {
+			isa = PBXGroup;
+			children = (
+				347B8F422A0A46DD00B8A114 /* ScreenshotTest.m */,
+			);
+			path = ScreenshotTests;
 			sourceTree = "<group>";
 		};
 		34821C6527B21642006C8B8E /* Autotrack */ = {
@@ -929,6 +934,7 @@
 		34AB4E4E279013CB002549FF /* ServicesTests */ = {
 			isa = PBXGroup;
 			children = (
+				347B8F412A0A46AC00B8A114 /* ScreenshotTests */,
 				04909E13276ADF1A002BAC25 /* CompressionTests */,
 				04909E31276AE754002BAC25 /* DatabaseTests */,
 				04909E3E276AE982002BAC25 /* EncryptionTests */,
@@ -1798,7 +1804,7 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Example/Pods-Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/GrowingAPM/GrowingAPM.framework",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-dfdad360/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-4a08faf1/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingToolsKit/GrowingToolsKit.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/LBXScan/LBXScan.framework",
@@ -1829,7 +1835,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-GrowingAnalyticsStartTests/Pods-GrowingAnalyticsStartTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-16cd3902/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-fbb9594a/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-cdp/GrowingAnalytics_cdp.framework",
 			);
@@ -2006,7 +2012,7 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ExampleiOS13/Pods-ExampleiOS13-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/GrowingAPM/GrowingAPM.framework",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-b0c2cd62/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-4e785b40/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingToolsKit/GrowingToolsKit.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore/GrowingUtils.framework",
 			);
@@ -2029,7 +2035,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-GrowingAnalyticsTests/Pods-GrowingAnalyticsTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-c4dd48da/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-0637fae5/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore/GrowingUtils.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -2049,7 +2055,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-GrowingAnalyticsCDPTests/Pods-GrowingAnalyticsCDPTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-16cd3902/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-fbb9594a/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-cdp/GrowingAnalytics_cdp.framework",
 			);
@@ -2071,7 +2077,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-HostApplicationTests/Pods-HostApplicationTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-c99a9474/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-ef2c314b/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/KIF/KIF.framework",
 			);
@@ -2137,7 +2143,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ProtobufTests/Pods-ProtobufTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-b10f5797/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-c1567d15/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 			);
@@ -2179,7 +2185,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-AdvertTests/Pods-AdvertTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-b0c2cd62/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-4e785b40/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore/GrowingUtils.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -2268,7 +2274,6 @@
 				34821C6727B247DB006C8B8E /* UISegmentedControlAutotrackTest.m in Sources */,
 				34B7D64A279FA5980003CE04 /* UITableViewAutotrackTest.m in Sources */,
 				34B214912796B74B004E2CE3 /* GrowingULAppLifeCycleTest.m in Sources */,
-				34B2148E2796B0D8004E2CE3 /* ApplicationEventManagerTest.m in Sources */,
 				34BA7B48277D92840030AC21 /* FileStorageTest.m in Sources */,
 				34B25967278E76890096A10C /* ManualTrackHelper.m in Sources */,
 				34AE0FE8279AADA7009C8166 /* NSNotificationCenterAutotrackTest.m in Sources */,
@@ -2276,6 +2281,7 @@
 				34C0BF3D277EA9BA0047ADC4 /* MobileDebuggerTest.m in Sources */,
 				34AC7AD127982BEE00C0DFA5 /* GrowingSwizzleTest.m in Sources */,
 				34BF77AE2795095100CA18BA /* GrowingSessionTest.m in Sources */,
+				347B8F432A0A46DD00B8A114 /* ScreenshotTest.m in Sources */,
 				34BA7B21277C61770030AC21 /* GrowingModuleTest.m in Sources */,
 				346EABE1277EDF8A00A32B03 /* EventTest.m in Sources */,
 				34BA7B20277C61740030AC21 /* GrowingServiceTest.m in Sources */,

@@ -1,9 +1,9 @@
 //
-//  UIApplication+GrowingAutoTrack.h
+//  dummy.h
 //  GrowingAnalytics
 //
-//  Created by GrowingIO on 2020/7/23.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2023/5/9.
+//  Copyright (C) 2023 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,17 +17,5 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <UIKit/UIKit.h>
-
-NS_ASSUME_NONNULL_BEGIN
-
-@interface UIApplication (GrowingAutotracker)
-
-- (BOOL)growing_sendAction:(SEL)action
-                        to:(nullable id)target
-                      from:(nullable id)sender
-                  forEvent:(nullable UIEvent *)event;
-
-@end
-
-NS_ASSUME_NONNULL_END
+// There are no actual public headers in the lib. This is a dummy public header to prevent Cocoapods
+// from adding all internal headers as public.

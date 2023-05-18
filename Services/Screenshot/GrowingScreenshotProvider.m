@@ -1,9 +1,9 @@
 //
-// GrowingApplicationEventManager.m
+// GrowingScreenshotProvider.h
 // GrowingAnalytics
 //
-//  Created by sheng on 2020/12/22.
-//  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
+//  Created by sheng on 2023/5/9.
+//  Copyright (C) 2023 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,19 +17,26 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#if __has_include(<UIKit/UIKit.h>)
-#import "GrowingTrackerCore/Manager/GrowingApplicationEventManager.h"
+#import "Services/Screenshot/GrowingScreenshotProvider.h"
+#import "Services/Screenshot/UIApplication+Screenshot.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
+#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
+#import "GrowingULSwizzle.h"
 
-@interface GrowingApplicationEventManager ()
+GrowingService(GrowingScreenshotService, GrowingScreenshotProvider)
+
+@interface GrowingScreenshotProvider ()
 
 @property (strong, nonatomic, readonly) NSPointerArray *observers;
 
 @end
 
-@implementation GrowingApplicationEventManager {
+@implementation GrowingScreenshotProvider {
     GROWING_LOCK_DECLARE(lock);
 }
+
+#pragma mark - Init
 
 - (instancetype)init {
     self = [super init];
@@ -44,23 +51,13 @@
     static id _sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _sharedInstance = [[super allocWithZone:NULL] init];
+        _sharedInstance = [[self alloc] init];
     });
 
     return _sharedInstance;
 }
-// for safe sharedInstance
-+ (instancetype)allocWithZone:(struct _NSZone *)zone {
-    return [self sharedInstance];
-}
 
-- (id)copyWithZone:(NSZone *)zone {
-    return self;
-}
-
-- (id)mutableCopyWithZone:(NSZone *)zone {
-    return self;
-}
+#pragma mark - GrowingApplicationEventProtocol
 
 - (void)addApplicationEventObserver:(id<GrowingApplicationEventProtocol>)delegate {
     GROWING_LOCK(lock);
@@ -82,19 +79,6 @@
     GROWING_UNLOCK(lock);
 }
 
-- (void)dispatchApplicationEventSendAction:(SEL)action
-                                        to:(nullable id)target
-                                      from:(nullable id)sender
-                                  forEvent:(nullable UIEvent *)event {
-    GROWING_LOCK(lock);
-    for (id observer in self.observers) {
-        if ([observer respondsToSelector:@selector(growingApplicationEventSendAction:to:from:forEvent:)]) {
-            [observer growingApplicationEventSendAction:action to:target from:sender forEvent:event];
-        }
-    }
-    GROWING_UNLOCK(lock);
-}
-
 - (void)dispatchApplicationEventSendEvent:(UIEvent *)event {
     GROWING_LOCK(lock);
     for (id observer in self.observers) {
@@ -105,5 +89,43 @@
     GROWING_UNLOCK(lock);
 }
 
+#pragma mark - GrowingBaseService
+
++ (BOOL)singleton {
+    return YES;
+}
+
+#pragma mark - GrowingScreenshotService
+
+- (UIImage *)screenShot {
+    CGFloat scale = MIN([UIScreen mainScreen].scale, 2);
+    NSArray *windows = [UIApplication sharedApplication].growingHelper_allWindowsWithoutGrowingWindow;
+    windows = [windows sortedArrayUsingComparator:^NSComparisonResult(UIWindow *obj1, UIWindow *obj2) {
+        if (obj1.windowLevel == obj2.windowLevel) {
+            return NSOrderedSame;
+        }else if (obj1.windowLevel > obj2.windowLevel) {
+            return NSOrderedDescending;
+        }else {
+            return NSOrderedAscending;
+        }
+    }];
+    
+    UIImage *image = [UIWindow growingHelper_screenshotWithWindows:windows andMaxScale:scale block:nil];
+    return image;
+}
+
+- (void)addSendEventSwizzle {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        // UIApplication
+        NSError *error = NULL;
+        [UIApplication growingul_swizzleMethod:@selector(sendEvent:)
+                                    withMethod:@selector(growing_sendEvent:)
+                                         error:&error];
+        if (error) {
+            GIOLogError(@"Failed to swizzle UIApplication sendEvent. Details: %@", error);
+        }
+    });
+}
+
 @end
-#endif
