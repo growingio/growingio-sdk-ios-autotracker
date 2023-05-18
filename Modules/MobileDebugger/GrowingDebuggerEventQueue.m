@@ -19,10 +19,7 @@
 
 #import "Modules/MobileDebugger/GrowingDebuggerEventQueue.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
-
-#define LOCK(...) dispatch_semaphore_wait(_lock, DISPATCH_TIME_FOREVER); \
-__VA_ARGS__; \
-dispatch_semaphore_signal(_lock);
+#import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 
 static const NSInteger kGIOMaxCachesLogNumber = 50;
 
@@ -34,7 +31,7 @@ static const NSInteger kGIOMaxCachesLogNumber = 50;
 @end
 
 @implementation GrowingDebuggerEventQueue {
-    dispatch_semaphore_t _lock;
+    GROWING_LOCK_DECLARE(lock);
 }
 
 static GrowingDebuggerEventQueue *sharedInstance = nil;
@@ -53,7 +50,7 @@ static GrowingDebuggerEventQueue *sharedInstance = nil;
 
 - (instancetype)init {
     if (self = [super init]) {
-        _lock = dispatch_semaphore_create(1);
+        GROWING_LOCK_INIT(lock);
         _cacheArray = [[NSMutableArray alloc] init];
         _maxCachesNumber = kGIOMaxCachesLogNumber;
     }
@@ -61,25 +58,29 @@ static GrowingDebuggerEventQueue *sharedInstance = nil;
 }
 
 - (void)dequeue {
+    GROWING_LOCK(lock);
     if (self.debuggerBlock) {
-        LOCK(NSArray *arr = self.cacheArray.copy);
+        NSArray *arr = self.cacheArray.copy;
         self.debuggerBlock(arr);
-        LOCK([self.cacheArray removeAllObjects]);
+        [self.cacheArray removeAllObjects];
     }
+    GROWING_UNLOCK(lock);
 }
 
 - (void)enqueue:(id)anObject {
+    GROWING_LOCK(lock);
     if (self.debuggerBlock) {
-        LOCK([self.cacheArray addObject:anObject];
-             NSArray *arr = self.cacheArray.copy;);
+        [self.cacheArray addObject:anObject];
+        NSArray *arr = self.cacheArray.copy;
         self.debuggerBlock(arr);
-        LOCK([self.cacheArray removeAllObjects]);
+        [self.cacheArray removeAllObjects];
     } else {
         while ((NSInteger)self.cacheArray.count >= self.maxCachesNumber) {
-            LOCK([self.cacheArray removeObjectAtIndex:0]);
+            [self.cacheArray removeObjectAtIndex:0];
         }
-        LOCK([self.cacheArray addObject:anObject]);
+        [self.cacheArray addObject:anObject];
     }
+    GROWING_UNLOCK(lock);
 }
 
 - (void)growingEventManagerEventDidBuild:(GrowingBaseEvent *)event {

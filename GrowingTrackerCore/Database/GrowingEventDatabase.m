@@ -18,16 +18,14 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Database/GrowingEventDatabase.h"
-#import <pthread.h>
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
+#import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 #import "GrowingTrackerCore/Public/GrowingServiceManager.h"
 
 long long const GrowingEventDatabaseExpirationTime = 86400000 * 7;
 NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.error";
 
-@interface GrowingEventDatabase () {
-    pthread_mutex_t _updateArrayMutex;
-}
+@interface GrowingEventDatabase ()
 
 @property (nonatomic, strong) id <GrowingEventDatabaseService> db;
 @property (nonatomic, strong) NSMutableArray *updateKeys;
@@ -35,7 +33,9 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
 
 @end
 
-@implementation GrowingEventDatabase
+@implementation GrowingEventDatabase {
+    GROWING_LOCK_DECLARE(lock);
+}
 
 #pragma mark - Init
 
@@ -47,7 +47,7 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
     if (self = [super init]) {
         _updateValues = [[NSMutableArray alloc] init];
         _updateKeys = [[NSMutableArray alloc] init];
-        pthread_mutex_init(&_updateArrayMutex, NULL);
+        GROWING_LOCK_INIT(lock);
         
         Class <GrowingEventDatabaseService> serviceClass = [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingEventDatabaseService)];
         if (!serviceClass) {
@@ -214,9 +214,9 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
 #pragma mark - Perform Block
 
 - (void)performModifyArrayBlock:(void (^)(void))block {
-    pthread_mutex_lock(&_updateArrayMutex);
+    GROWING_LOCK(lock);
     block();
-    pthread_mutex_unlock(&_updateArrayMutex);
+    GROWING_UNLOCK(lock);
 }
 
 #pragma mark - Error

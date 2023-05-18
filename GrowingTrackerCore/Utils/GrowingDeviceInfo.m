@@ -35,22 +35,16 @@
 
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
+#import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 #import "GrowingTrackerCore/Utils/GrowingKeyChainWrapper.h"
 #import "GrowingTrackerCore/Utils/UserIdentifier/GrowingUserIdentifier.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingULAppLifecycle.h"
 
-#define LOCK(...)                                                \
-    dispatch_semaphore_wait(self->_lock, DISPATCH_TIME_FOREVER); \
-    __VA_ARGS__;                                                 \
-    dispatch_semaphore_signal(self->_lock);
-
 static NSString *kGrowingUrlScheme = nil;
 NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 
-@interface GrowingDeviceInfo () <GrowingULAppLifecycleDelegate> {
-    dispatch_semaphore_t _lock;
-}
+@interface GrowingDeviceInfo () <GrowingULAppLifecycleDelegate>
 
 @property (nonatomic, readwrite, copy) NSDictionary *infoDictionary;
 @property (nonatomic, readwrite, copy) NSString *deviceIDString;
@@ -74,13 +68,15 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 
 @end
 
-@implementation GrowingDeviceInfo
+@implementation GrowingDeviceInfo {
+    GROWING_LOCK_DECLARE(lock);
+}
 
 #pragma mark - Initialize
 
 - (instancetype)init {
     if (self = [super init]) {
-        _lock = dispatch_semaphore_create(1);
+        GROWING_LOCK_INIT(lock);
         _infoDictionary = [[NSBundle mainBundle] infoDictionary];
         _deviceBrand = @"Apple";
         _appState = 0;
@@ -158,7 +154,7 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 - (void)handleStatusBarOrientationChange:(NSNotification *)notification {
     UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
     if (orientation != UIInterfaceOrientationUnknown) {
-        LOCK(_deviceOrientation = UIInterfaceOrientationIsPortrait(orientation) ? @"PORTRAIT" : @"LANDSCAPE";)
+        _deviceOrientation = UIInterfaceOrientationIsPortrait(orientation) ? @"PORTRAIT" : @"LANDSCAPE";
     }
 }
 #endif
@@ -207,9 +203,11 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 #pragma mark - Getter & Setter
 
 - (NSString *)deviceIDString {
-    LOCK(
-         if (!_deviceIDString) _deviceIDString = [self getDeviceIdString];
-    )
+    if (!_deviceIDString) {
+        GROWING_LOCK(lock);
+        _deviceIDString = [self getDeviceIdString];
+        GROWING_UNLOCK(lock);
+    }
     return _deviceIDString;
 }
 
@@ -312,8 +310,7 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
         dispatch_block_t block = ^{
             UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
             if (orientation != UIInterfaceOrientationUnknown) {
-                LOCK(self->_deviceOrientation =
-                         UIInterfaceOrientationIsPortrait(orientation) ? @"PORTRAIT" : @"LANDSCAPE";)
+                self->_deviceOrientation = UIInterfaceOrientationIsPortrait(orientation) ? @"PORTRAIT" : @"LANDSCAPE";
             }
         };
         if ([NSThread isMainThread]) {

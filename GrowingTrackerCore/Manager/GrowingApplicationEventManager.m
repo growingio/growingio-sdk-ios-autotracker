@@ -19,19 +19,23 @@
 
 #if __has_include(<UIKit/UIKit.h>)
 #import "GrowingTrackerCore/Manager/GrowingApplicationEventManager.h"
+#import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 
 @interface GrowingApplicationEventManager ()
+
 @property (strong, nonatomic, readonly) NSPointerArray *observers;
-@property (strong, nonatomic, readonly) NSLock *observerLock;
+
 @end
 
-@implementation GrowingApplicationEventManager
+@implementation GrowingApplicationEventManager {
+    GROWING_LOCK_DECLARE(lock);
+}
 
 - (instancetype)init {
     self = [super init];
     if (self) {
         _observers = [NSPointerArray pointerArrayWithOptions:NSPointerFunctionsWeakMemory];
-        _observerLock = [[NSLock alloc] init];
+        GROWING_LOCK_INIT(lock);
     }
     return self;
 }
@@ -59,15 +63,15 @@
 }
 
 - (void)addApplicationEventObserver:(id<GrowingApplicationEventProtocol>)delegate {
-    [self.observerLock lock];
+    GROWING_LOCK(lock);
     if (![self.observers.allObjects containsObject:delegate]) {
         [self.observers addPointer:(__bridge void *)delegate];
     }
-    [self.observerLock unlock];
+    GROWING_UNLOCK(lock);
 }
 
 - (void)removeApplicationEventObserver:(id<GrowingApplicationEventProtocol>)delegate {
-    [self.observerLock lock];
+    GROWING_LOCK(lock);
     [self.observers.allObjects enumerateObjectsWithOptions:NSEnumerationReverse
                                                 usingBlock:^(NSObject *obj, NSUInteger idx, BOOL *_Nonnull stop) {
                                                     if (delegate == obj) {
@@ -75,30 +79,30 @@
                                                         *stop = YES;
                                                     }
                                                 }];
-    [self.observerLock unlock];
+    GROWING_UNLOCK(lock);
 }
 
 - (void)dispatchApplicationEventSendAction:(SEL)action
                                         to:(nullable id)target
                                       from:(nullable id)sender
                                   forEvent:(nullable UIEvent *)event {
-    [self.observerLock lock];
+    GROWING_LOCK(lock);
     for (id observer in self.observers) {
         if ([observer respondsToSelector:@selector(growingApplicationEventSendAction:to:from:forEvent:)]) {
             [observer growingApplicationEventSendAction:action to:target from:sender forEvent:event];
         }
     }
-    [self.observerLock unlock];
+    GROWING_UNLOCK(lock);
 }
 
 - (void)dispatchApplicationEventSendEvent:(UIEvent *)event {
-    [self.observerLock lock];
+    GROWING_LOCK(lock);
     for (id observer in self.observers) {
         if ([observer respondsToSelector:@selector(growingApplicationEventSendEvent:)]) {
             [observer growingApplicationEventSendEvent:event];
         }
     }
-    [self.observerLock unlock];
+    GROWING_UNLOCK(lock);
 }
 
 @end
