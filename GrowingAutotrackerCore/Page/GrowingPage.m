@@ -21,7 +21,6 @@
 #import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
-#import "GrowingAutotrackerCore/Page/UIViewController+GrowingPageHelper.h"
 #import "GrowingULTimeUtil.h"
 
 @interface GrowingPage ()
@@ -35,7 +34,7 @@
     if (self) {
         _carrier = carrier;
         _showTimestamp = GrowingULTimeUtil.currentTimeMillis;
-        _isIgnored = [carrier growingPageHelper_pageDidIgnore];
+        _isIgnored = [carrier growingPageDidIgnore];
         _title = [carrier growingPageTitle];
     }
 

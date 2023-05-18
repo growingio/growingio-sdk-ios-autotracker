@@ -51,7 +51,6 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     autotrackerCore.ios.deployment_target = '9.0'
     autotrackerCore.dependency 'GrowingUtils/AutotrackerCore', '0.0.5'
     autotrackerCore.source_files = 'GrowingAutotrackerCore/**/*{.h,.m,.c,.cpp,.mm}'
-    autotrackerCore.private_header_files = 'GrowingAutotrackerCore/Private/*{.h,.m,.c,.cpp,.mm}'
     autotrackerCore.public_header_files = 'GrowingAutotrackerCore/Public/*.h'
     autotrackerCore.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
   end
