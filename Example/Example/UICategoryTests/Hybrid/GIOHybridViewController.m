@@ -119,6 +119,11 @@
         _webView.navigationDelegate = self;
         _webView.backgroundColor = [UIColor whiteColor];
         _webView.accessibilityLabel = @"HybridWebView";
+#if defined(__IPHONE_16_4) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_16_4)
+        if (@available(macOS 13.3, iOS 16.4, tvOS 16.4, *)) {
+            _webView.inspectable = YES;
+        }
+#endif
     }
     return _webView;
 }
