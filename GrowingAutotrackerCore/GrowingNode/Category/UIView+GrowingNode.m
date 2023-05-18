@@ -231,6 +231,11 @@
 #pragma mark - GrowingNodeProtocol
 
 - (NSString *)growingNodeContent {
+    NSString *attrContent = self.growingViewCustomContent;
+    if ([attrContent isKindOfClass:[NSString class]] && attrContent.length) {
+        return attrContent;
+    }
+
     NSString *viewContent = self.growingViewContent;
     if ([viewContent isKindOfClass:[NSString class]] && viewContent.length) {
         return viewContent;
@@ -256,6 +261,24 @@
 }
 
 #pragma mark GrowingAttributes
+
+- (NSString *)growingViewCustomContent {
+    return objc_getAssociatedObject(self, @selector(growingViewCustomContent));
+}
+
+- (void)setGrowingViewCustomContent:(NSString *)content {
+    if ([content isKindOfClass:[NSNumber class]]) {
+        content = [(NSNumber *)content stringValue];
+    }
+    if (![content isKindOfClass:[NSString class]]) {
+        content = nil;
+    }
+    if (content.length > 50) {
+        content = [content substringToIndex:50];
+    }
+    objc_setAssociatedObject(self, @selector(growingViewCustomContent), content,
+                             OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
 
 - (BOOL)growingIMPTracked {
     return [objc_getAssociatedObject(self, @selector(growingIMPTracked)) boolValue];

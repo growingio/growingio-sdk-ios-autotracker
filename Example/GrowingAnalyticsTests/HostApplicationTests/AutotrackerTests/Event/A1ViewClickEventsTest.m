@@ -185,4 +185,29 @@
     }
 }
 
+- (void)test06ClickCustomContent {
+    // 单击自定义content的UISegmentedControl，检测textValue
+    [[viewTester usingLabel:@"Simple UI Elements"] tap];
+    [viewTester waitForAnimationsToFinish];
+    
+    KIFUIViewTestActor *actor = [viewTester usingLabel:@"ThirdSegment"];
+    {
+        actor.view.growingViewCustomContent = @"Four";
+        [actor tap];
+
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
+        XCTAssertEqual(events.count, 1);
+        
+        GrowingViewElementEvent *event = (GrowingViewElementEvent *)events.firstObject;
+        NSDictionary *dic = event.toDictionary;
+        XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeViewClick);
+        XCTAssertTrue([ManualTrackHelper viewClickEventCheck:dic]);
+        XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
+        
+        XCTAssertEqualObjects(dic[@"textValue"], @"Four");
+        XCTAssertEqualObjects(dic[@"xpath"], @"/Page/UISegmentedControl[0]/UISegment[-]");
+        XCTAssertEqualObjects(dic[@"index"], @(2));
+    }
+}
+
 @end
