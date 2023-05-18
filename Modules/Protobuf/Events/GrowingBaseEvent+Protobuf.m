@@ -48,38 +48,7 @@
 
 - (GrowingPBEventV3Dto *)toProtobuf {
     GrowingPBEventV3Dto *dto = [[GrowingPBEventV3Dto alloc] init];
-    
-    // ************************* CDP *************************
-    if (self.extraParams.count > 0) {
-        dto.dataSourceId = self.extraParams[@"dataSourceId"];
-        dto.gioId = self.extraParams[@"gioId"];
-    }
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-    if ([self isKindOfClass:NSClassFromString(@"GrowingResourceCustomEvent")]
-        && [self respondsToSelector:@selector(resourceItem)]) {
-        id resourceItem = [self performSelector:@selector(resourceItem)];
-        if (resourceItem) {
-            NSString *itemId;
-            NSString *itemKey;
-            SEL itemIdSel = NSSelectorFromString(@"itemId");
-            SEL itemKeySel = NSSelectorFromString(@"itemKey");
-            if ([resourceItem respondsToSelector:itemIdSel]) {
-                itemId = [resourceItem performSelector:itemIdSel];
-            }
-            if ([resourceItem respondsToSelector:itemKeySel]) {
-                itemKey = [resourceItem performSelector:itemKeySel];
-            }
-            
-            GrowingPBResourceItem *pbResourceItem = [[GrowingPBResourceItem alloc] init];
-            pbResourceItem.id_p = itemId;
-            pbResourceItem.key = itemKey;
-            dto.resourceItem = pbResourceItem;
-        }
-    }
-#pragma clang diagnostic pop
-    // ************************* CDP *************************
-    
+    dto.dataSourceId = self.dataSourceId;
     dto.sessionId = self.sessionId;
     dto.timestamp = self.timestamp;
     dto.eventType = self.pbEventType;
@@ -105,6 +74,7 @@
     dto.longitude = self.longitude;
     dto.sdkVersion = self.sdkVersion;
     dto.userKey = self.userKey;
+    dto.gioId = self.gioId;
     
     if ([self isKindOfClass:GrowingVisitEvent.class]) {
         GrowingVisitEvent *event = (GrowingVisitEvent *)self;

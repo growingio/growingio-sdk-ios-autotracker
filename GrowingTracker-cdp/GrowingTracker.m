@@ -19,28 +19,16 @@
 
 #import "GrowingTracker-cdp/GrowingTracker.h"
 #import "GrowingTrackerCore/GrowingRealTracker.h"
-#import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
-#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
-#import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
-#import "GrowingTrackerCore-cdp/GrowingResourceCustomEvent.h"
-#import "GrowingTrackerCore-cdp/GrowingCdpEventInterceptor.h"
+#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogMacros.h"
+#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
+
+static GrowingTracker *sharedInstance = nil;
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wincomplete-implementation"
 
-static GrowingTracker *sharedInstance = nil;
-
-@interface GrowingTracker ()
-
-@property (nonatomic, strong) GrowingCdpEventInterceptor *interceptor;
-
-@end
-
 @implementation GrowingTracker
-
-#pragma mark - Initialization
-
 - (instancetype)initWithRealTracker:(GrowingRealTracker *)realTracker {
     self = [super initWithTarget:realTracker];
     return self;
@@ -59,9 +47,6 @@ static GrowingTracker *sharedInstance = nil;
     dispatch_once(&onceToken, ^{
         GrowingRealTracker *realTracker = [GrowingRealTracker trackerWithConfiguration:configuration launchOptions:launchOptions];
         sharedInstance = [[self alloc] initWithRealTracker:realTracker];
-        sharedInstance.interceptor = [[GrowingCdpEventInterceptor alloc] initWithSourceId:configuration.dataSourceId];
-        [[GrowingSession currentSession] addUserIdChangedDelegate:sharedInstance.interceptor];
-        [[GrowingEventManager sharedInstance] addInterceptor:sharedInstance.interceptor];
         [[GrowingSession currentSession] generateVisit];
     });
 }
@@ -71,34 +56,6 @@ static GrowingTracker *sharedInstance = nil;
         @throw [NSException exceptionWithName:@"GrowingTracker未初始化" reason:@"请在applicationDidFinishLaunching中调用startWithConfiguration函数,并且确保在主线程中" userInfo:nil];
     }
     return sharedInstance;
-}
-
-#pragma mark - Track Event
-
-- (void)trackCustomEvent:(NSString *)eventName itemKey:(NSString *)itemKey itemId:(NSString *)itemId {
-    
-    [self trackCustomEvent:eventName itemKey:itemKey itemId:itemId withAttributes:nil];
-}
-
-- (void)trackCustomEvent:(NSString *)eventName itemKey:(NSString *)itemKey itemId:(NSString *)itemId withAttributes:(NSDictionary <NSString *, NSString *> * _Nullable)attributes {
-    if ([GrowingArgumentChecker isIllegalEventName:eventName]
-        || [GrowingArgumentChecker isIllegalEventName:itemKey]
-        || [GrowingArgumentChecker isIllegalEventName:itemId]) {
-        return;
-    }
-    if (attributes/* nullable */) {
-        if ([GrowingArgumentChecker isIllegalAttributes:attributes]) {
-            return;
-        }
-    }
-    
-    [GrowingDispatchManager dispatchInGrowingThread:^{
-        GrowingCdpResourceItem *item = [GrowingCdpResourceItem new];
-        item.itemKey = itemKey;
-        item.itemId = itemId;
-        GrowingResourceCustomBuilder *builder = GrowingResourceCustomEvent.builder.setResourceItem(item).setAttributes(attributes).setEventName(eventName);
-        [[GrowingEventManager sharedInstance] postEventBuilder:builder];
-    }];
 }
 
 @end

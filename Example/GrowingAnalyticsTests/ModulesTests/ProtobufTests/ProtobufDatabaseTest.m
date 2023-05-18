@@ -152,6 +152,8 @@
                                                        .setLongitude(32.22)
                                                        .setSdkVersion(@"3.3.3")
                                                        .setUserKey(@"iPhone")
+                                                       .setDataSourceId(@"1234567890")
+                                                       .setGioId(@"1111")
                                                        .build);
     NSString *uuid = [NSUUID UUID].UUIDString;
     GrowingEventProtobufPersistence *persistenceIn = [GrowingEventProtobufPersistence persistenceEventWithEvent:event
@@ -184,8 +186,8 @@
     XCTAssertEqualObjects((event.appState == GrowingAppStateForeground ? @"FOREGROUND" : @"BACKGROUND"), protobuf.appState);
     XCTAssertEqual(event.globalSequenceId, protobuf.globalSequenceId);
     XCTAssertEqual(event.eventSequenceId, protobuf.eventSequenceId);
-    XCTAssertEqualObjects(event.extraParams[@"dataSourceId"] ?: @"", protobuf.dataSourceId);
-    XCTAssertEqualObjects(event.extraParams[@"gioId"] ?: @"", protobuf.gioId);
+    XCTAssertEqualObjects(event.dataSourceId, protobuf.dataSourceId);
+    XCTAssertEqualObjects(event.gioId, protobuf.gioId);
     // 3.2.0
     XCTAssertEqualObjects(event.networkState ?: @"", protobuf.networkState);
     XCTAssertEqualObjects(event.appChannel ?: @"", protobuf.appChannel);
