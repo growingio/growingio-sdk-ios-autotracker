@@ -19,6 +19,7 @@
 
 #import "GrowingAutotrackerCore/Autotrack/UIApplication+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingNode/GrowingViewClickProvider.h"
+#import "GrowingAutotrackerCore/GrowingNode/GrowingViewChangeProvider.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Event/GrowingNodeProtocol.h"
 
@@ -55,13 +56,18 @@
     }
 
     NSObject<GrowingNode> *node = (NSObject<GrowingNode> *)sender;
-
-    if ([sender isKindOfClass:UISwitch.class] || [sender isKindOfClass:UIStepper.class] ||
-        [sender isKindOfClass:UIPageControl.class]) {
+    if ([sender isKindOfClass:UIStepper.class] || [sender isKindOfClass:UIPageControl.class]) {
         [GrowingViewClickProvider viewOnClick:(UIView *)node];
-    } else if ([event isKindOfClass:[UIEvent class]] && event.type == UIEventTypeTouches &&
+    } else if ([sender isKindOfClass:UISwitch.class]) {
+        [GrowingViewChangeProvider viewOnChange:(UIView *)node];
+    } else if ([event isKindOfClass:[UIEvent class]] &&
+               event.type == UIEventTypeTouches &&
                [[[event allTouches] anyObject] phase] == UITouchPhaseEnded) {
-        [GrowingViewClickProvider viewOnClick:(UIView *)node];
+        if ([sender isKindOfClass:UISlider.class]) {
+            [GrowingViewChangeProvider viewOnChange:(UIView *)node];
+        } else {
+            [GrowingViewClickProvider viewOnClick:(UIView *)node];
+        }
     }
 }
 
