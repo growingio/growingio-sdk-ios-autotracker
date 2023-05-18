@@ -17,10 +17,15 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#if __has_feature(modules)
+@import UIKit;
+@import GrowingAnalytics;
+#else
 #import <UIKit/UIKit.h>
 #import "GrowingAttributesBuilder.h"
 #import "GrowingAutotrackConfiguration.h"
 #import "GrowingDynamicProxy.h"
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
