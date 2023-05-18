@@ -28,6 +28,7 @@
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Timer/GrowingEventTimer.h"
+#import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 #import "GrowingULAppLifecycle.h"
 #import "GrowingULTimeUtil.h"
 
@@ -37,14 +38,16 @@
 @property (nonatomic, assign, readonly) long long sessionInterval;
 @property (nonatomic, assign) long long latestDidEnterBackgroundTime;
 @property (nonatomic, strong, readonly) NSHashTable *userIdChangedDelegates;
-@property (nonatomic, strong, readonly) NSLock *delegateLock;
 @property (nonatomic, assign, readwrite) GrowingSessionState state;
 
 @end
 
 static GrowingSession *currentSession = nil;
 
-@implementation GrowingSession
+@implementation GrowingSession {
+    GROWING_LOCK_DECLARE(lock);
+}
+
 @synthesize sessionId = _sessionId;
 @synthesize loginUserId = _loginUserId;
 @synthesize loginUserKey = _loginUserKey;
@@ -59,8 +62,8 @@ static GrowingSession *currentSession = nil;
         _loginUserKey = [GrowingPersistenceDataProvider sharedInstance].loginUserKey;
         _latestNonNullUserId = [GrowingPersistenceDataProvider sharedInstance].loginUserId;
         _userIdChangedDelegates = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
-        _delegateLock = [[NSLock alloc] init];
         _state = GrowingSessionStateActive;
+        GROWING_LOCK_INIT(lock);
     }
 
     return self;
@@ -137,25 +140,25 @@ static GrowingSession *currentSession = nil;
 }
 
 - (void)addUserIdChangedDelegate:(id<GrowingUserIdChangedDelegate>)delegate {
-    [self.delegateLock lock];
+    GROWING_LOCK(lock);
     [self.userIdChangedDelegates addObject:delegate];
-    [self.delegateLock unlock];
+    GROWING_UNLOCK(lock);
 }
 
 - (void)removeUserIdChangedDelegate:(id<GrowingUserIdChangedDelegate>)delegate {
-    [self.delegateLock lock];
+    GROWING_LOCK(lock);
     [self.userIdChangedDelegates removeObject:delegate];
-    [self.delegateLock unlock];
+    GROWING_UNLOCK(lock);
 }
 
 - (void)dispatchUserIdDidChangedFrom:(NSString *)oldUserId to:(NSString *)newUserId {
-    [self.delegateLock lock];
+    GROWING_LOCK(lock);
     for (id<GrowingUserIdChangedDelegate> delegate in self.userIdChangedDelegates) {
         if ([delegate respondsToSelector:@selector(userIdDidChangedFrom:to:)]) {
             [delegate userIdDidChangedFrom:oldUserId.copy to:newUserId.copy];
         }
     }
-    [self.delegateLock unlock];
+    GROWING_UNLOCK(lock);
 }
 
 - (void)setLoginUserId:(NSString *)loginUserId userKey:(NSString *)userKey {

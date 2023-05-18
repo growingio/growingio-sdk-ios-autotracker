@@ -23,14 +23,17 @@
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/LogFormat/GrowingASLLoggerFormat.h"
 #import "GrowingTrackerCore/DeepLink/GrowingWebWatcher.h"
+#import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 
 @interface GrowingDeepLinkHandler ()
 
 @property (strong, nonatomic, readonly) NSPointerArray *handlers;
-@property (strong, nonatomic, readonly) NSLock *lock;
+
 @end
 
-@implementation GrowingDeepLinkHandler
+@implementation GrowingDeepLinkHandler {
+    GROWING_LOCK_DECLARE(lock);
+}
 
 + (instancetype)sharedInstance {
     static GrowingDeepLinkHandler *handler = nil;
@@ -44,21 +47,21 @@
 - (instancetype)init {
     if (self = [super init]) {
         _handlers = [NSPointerArray pointerArrayWithOptions:NSPointerFunctionsWeakMemory];
-        _lock = [[NSLock alloc] init];
+        GROWING_LOCK_INIT(lock);
     }
     return self;
 }
 
 - (void)addHandlersObject:(id)object {
-    [self.lock lock];
+    GROWING_LOCK(lock);
     if (![self.handlers.allObjects containsObject:object]) {
         [self.handlers addPointer:(__bridge void *)object];
     }
-    [self.lock unlock];
+    GROWING_UNLOCK(lock);
 }
 
 - (void)removeHandlersObject:(id)object {
-    [self.lock lock];
+    GROWING_LOCK(lock);
     [self.handlers.allObjects
             enumerateObjectsWithOptions:NSEnumerationReverse
                              usingBlock:^(NSObject *obj, NSUInteger idx, BOOL *_Nonnull stop) {
@@ -67,11 +70,11 @@
                                      *stop = YES;
                                  }
                              }];
-    [self.lock unlock];
+    GROWING_UNLOCK(lock);
 }
 
 - (BOOL)dispatchHandlerUrl:(NSURL *)url {
-    [self.lock lock];
+    GROWING_LOCK(lock);
     for (id object in self.handlers) {
         if ([object respondsToSelector:@selector(growingHandlerUrl:)]) {
             if ([object growingHandlerUrl:url]) {
@@ -80,7 +83,7 @@
             }
         }
     }
-    [self.lock unlock];
+    GROWING_UNLOCK(lock);
     return YES;
 }
 
