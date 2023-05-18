@@ -104,18 +104,16 @@ static GrowingPersistenceDataProvider *persistence = nil;
 }
 
 - (long long)increaseFor:(NSString *)key spanValue:(int)span {
-    @synchronized (self) {
-        NSNumber *value = [_growingUserdefault valueForKey:key];
-        if (!value) {
-            value = [NSNumber numberWithLongLong:0];
-        }
-        
-        long long result = value.longLongValue + span;
-        value = @(result);
-        [_growingUserdefault setValue:value forKey:key];
-        [_growingUserdefault synchronize];
-        return result;
+    NSNumber *value = [_growingUserdefault valueForKey:key];
+    if (!value) {
+        value = [NSNumber numberWithLongLong:0];
     }
+    
+    long long result = value.longLongValue + span;
+    value = @(result);
+    [_growingUserdefault setValue:value forKey:key];
+    [_growingUserdefault synchronize];
+    return result;
 }
 
 @end

@@ -29,6 +29,7 @@
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
+#import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
 #import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
@@ -38,10 +39,6 @@
 #import "GrowingULTimeUtil.h"
 #import <arpa/inet.h>
 #import <ifaddrs.h>
-
-#define LOCK(...) dispatch_semaphore_wait(self->_lock, DISPATCH_TIME_FOREVER); \
-__VA_ARGS__; \
-dispatch_semaphore_signal(self->_lock);
 
 GrowingMod(GrowingMobileDebugger)
 
@@ -61,7 +58,7 @@ GrowingMod(GrowingMobileDebugger)
 @end
 
 @implementation GrowingMobileDebugger {
-    dispatch_semaphore_t _lock;
+    GROWING_LOCK_DECLARE(lock);
 }
 
 //static GrowingMobileDebugger *sharedInstance = nil;
@@ -73,7 +70,7 @@ GrowingMod(GrowingMobileDebugger)
 
 - (instancetype)init {
     if (self = [super init]) {
-        _lock = dispatch_semaphore_create(1);
+        GROWING_LOCK_INIT(lock);
         _cacheEvent =  [NSMutableArray arrayWithCapacity:0];
     }
     return self;
@@ -131,9 +128,8 @@ GrowingMod(GrowingMobileDebugger)
 }
 
 - (unsigned long)getSnapshotKey {
-    @synchronized(self) {
-        _snapNumber++;
-    }
+    // running in main thread
+    _snapNumber++;
     return _snapNumber;
 }
 
@@ -267,15 +263,19 @@ GrowingMod(GrowingMobileDebugger)
         NSMutableDictionary *cacheDic = [NSMutableDictionary dictionary];
         cacheDic[@"msgType"] = @"logger_data";
         cacheDic[@"sdkVersion"] = GrowingTrackerVersionName;
-        LOCK(cacheDic[@"data"] = self.cacheArray.copy;
-        [self.cacheArray removeAllObjects]);
+        GROWING_LOCK(lock);
+        cacheDic[@"data"] = self.cacheArray.copy;
+        [self.cacheArray removeAllObjects];
+        GROWING_UNLOCK(lock);
         [self sendJson:cacheDic];
     }
     
     if (self.cacheEvent.count > 0) {
         //防止遍历的时候进行增删改查
-        LOCK(NSArray *events = self.cacheEvent.copy;
-             [self.cacheEvent removeAllObjects];);
+        GROWING_LOCK(lock);
+        NSArray *events = self.cacheEvent.copy;
+        [self.cacheEvent removeAllObjects];
+        GROWING_UNLOCK(lock);
         for (int i = 0; i < events.count; i++) {
             NSMutableDictionary *attrs = [[NSMutableDictionary alloc] initWithDictionary:events[i]];
             NSMutableDictionary *cacheDic = [NSMutableDictionary dictionary];
@@ -313,9 +313,13 @@ GrowingMod(GrowingMobileDebugger)
         if ([[dict objectForKey:@"msgType"] isEqualToString:@"ready"]) {
             [self start];
             [self startTimer];
+            __weak typeof(self) weakSelf = self;
             [GrowingDebuggerEventQueue currentQueue].debuggerBlock = ^(NSArray * _Nonnull events) {
+                __strong typeof(weakSelf) self = weakSelf;
                 if (events.count > 0) {
-                    LOCK([self.cacheEvent addObjectsFromArray:events]);
+                    GROWING_LOCK(self->lock);
+                    [self.cacheEvent addObjectsFromArray:events];
+                    GROWING_UNLOCK(self->lock);
                 }
             };
             //队列出队
@@ -327,10 +331,14 @@ GrowingMod(GrowingMobileDebugger)
         if ([msg isKindOfClass:NSString.class]) {
              if ([msg isEqualToString:@"logger_open"]) {
                 [self startTimer];
+                 __weak typeof(self) weakSelf = self;
                 [GrowingWSLogger sharedInstance].loggerBlock = ^(NSArray * logMessageArray) {
-                       if (logMessageArray.count > 0) {
-                           LOCK([self.cacheArray addObjectsFromArray:logMessageArray]);
-                       }
+                    __strong typeof(weakSelf) self = weakSelf;
+                    if (logMessageArray.count > 0) {
+                        GROWING_LOCK(self->lock);
+                        [self.cacheArray addObjectsFromArray:logMessageArray];
+                        GROWING_UNLOCK(self->lock);
+                    }
                 };
              }
              else if ([msg isEqualToString:@"logger_close"]) {

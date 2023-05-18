@@ -18,21 +18,22 @@
 // limitations under the License.
 
 #import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
+#import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 
 @implementation GrowingPageGroup {
-    dispatch_semaphore_t _lock;
+    GROWING_LOCK_DECLARE(lock);
 }
 
 - (void)addChildrenPage:(GrowingPage *)page {
-    dispatch_semaphore_wait(_lock, DISPATCH_TIME_FOREVER);
+    GROWING_LOCK(lock);
     if (![self.childPages.allObjects containsObject:page]) {
         [self.childPages addPointer:(__bridge void *)page];
     }
-    dispatch_semaphore_signal(_lock);
+    GROWING_UNLOCK(lock);
 }
 
 - (void)removeChildrenPage:(GrowingPage *)page {
-    dispatch_semaphore_wait(_lock, DISPATCH_TIME_FOREVER);
+    GROWING_LOCK(lock);
     [self.childPages.allObjects enumerateObjectsWithOptions:NSEnumerationReverse
                                                  usingBlock:^(NSObject *obj, NSUInteger idx, BOOL *_Nonnull stop) {
         if (page == obj) {
@@ -40,24 +41,14 @@
             *stop = YES;
         }
     }];
-    dispatch_semaphore_signal(_lock);
+    GROWING_UNLOCK(lock);
 }
 
 - (instancetype)initWithCarrier:(UIViewController *)carrier {
     if (self = [super initWithCarrier:carrier]) {
         _childPages = [NSPointerArray pointerArrayWithOptions:NSPointerFunctionsWeakMemory];
-        _lock = dispatch_semaphore_create(1);
+        GROWING_LOCK_INIT(lock);
     }
-    return self;
-}
-
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        _childPages = [NSPointerArray pointerArrayWithOptions:NSPointerFunctionsWeakMemory];
-        _lock = dispatch_semaphore_create(1);
-    }
-
     return self;
 }
 

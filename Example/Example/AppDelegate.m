@@ -47,7 +47,7 @@
     
 #if defined(SDKADVERTMODULE)
     configuration.ASAEnabled = YES;
-    configuration.deepLinkHost = @"https://datayi.cn";
+    configuration.deepLinkHost = @"https://n.datayi.cn";
     configuration.deepLinkCallback = ^(NSDictionary * _Nullable params, NSTimeInterval processTime, NSError * _Nullable error) {
         if (error) {
             NSLog(@"error = %@", error);
