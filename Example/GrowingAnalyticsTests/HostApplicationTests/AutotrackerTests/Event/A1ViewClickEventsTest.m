@@ -192,9 +192,10 @@
     
     [MockEventQueue.sharedQueue cleanQueue];
 
-    KIFUIViewTestActor *actor = [viewTester usingLabel:@"ThirdSegment"];
+    KIFUIViewTestActor *actor = [viewTester usingLabel:@"Fire"];
     {
-        actor.view.growingViewCustomContent = @"Four";
+        // Fire -> Water
+        actor.view.growingViewCustomContent = @"Water";
         [actor tap];
 
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
@@ -206,10 +207,11 @@
         XCTAssertTrue([ManualTrackHelper viewClickEventCheck:dic]);
         XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
         
-        XCTAssertEqualObjects(dic[@"textValue"], @"Four");
-        XCTAssertEqualObjects(dic[@"xpath"], @"/Page/UISegmentedControl[0]/UISegment[-]");
-        XCTAssertEqualObjects(dic[@"index"], @(2));
+        XCTAssertEqualObjects(dic[@"textValue"], @"Water");
+        XCTAssertEqualObjects(dic[@"xpath"], @"/Page/UIView[0]/UIButton[1]");
     }
+    
+    [[viewTester usingLabel:@"好的"] tap];
 }
 
 @end
