@@ -126,7 +126,6 @@
     }
 
     if (parentVC == nil) {
-        GIOLogError(@"%@ you want find parentVC is nil", carrier);
         return nil;
     } else {
         GrowingPageGroup *page = [parentVC growingPageHelper_getPageObject];
