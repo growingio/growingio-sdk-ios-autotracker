@@ -114,4 +114,4 @@ DEPENDENCIES
   xcodeproj (= 1.22.0)!
 
 BUNDLED WITH
-   1.17.2
+   2.4.13

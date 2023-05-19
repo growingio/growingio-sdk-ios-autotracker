@@ -1,26 +1,6 @@
 #!/bin/bash
 
-if [[ $1 == '-h' || $1 == '--help' ]]; then
-	echo "\033[32m
-usage: 
-1. cd growingio-sdk-ios-autotracker folder
-2. run script: sh ./scripts/generate_xcframework.sh -v | grep '\[GrowingAnalytics\]'
-3. drag all xcframeworks in ./generate/Release/ into your project, select [Copy items if needed]
-4. add -ObjC to [Other Linker Flags] in order to load OC Catagory
-5. add libc++.tbd to your project if chose CrashMonitor apm modules
-
-> because using of __has_include, if select Protobuf and not select Advert/Hybrid in the same time,
-> delete Advert/Hybrid folder before building that avoid link error when using the xcframework
-	\033[0m"
-	exit 0
-fi
-
 LOGGER_MODE=1 # 0=silent/1=info/2=verbose
-if [[ $1 == '-s' || $1 == '--silent' ]]; then
-	LOGGER_MODE=0
-elif [[ $1 == '-v' || $1 == '--verbose' ]]; then
-	LOGGER_MODE=2
-fi
 logger() {
 	mode=$1
 	message=$2
@@ -229,12 +209,12 @@ generate_xcframework() {
 	for i in $@; do
 		framework_name=$i
 		iphone_os_archive_path="${archive_path}/iphoneos"
-		iphone_os_framework_path=${iphone_os_archive_path}.xcarchive/Products/Library/Frameworks/${framework_name}.framework
+		iphone_os_framework_path=${iphone_os_archive_path}.xcarchive/Products/Library/Frameworks/${framework_name//-/_}.framework
 		iphone_simulator_archive_path="${archive_path}/iphonesimulator"
-		iphone_simulator_framework_path=${iphone_simulator_archive_path}.xcarchive/Products/Library/Frameworks/${framework_name}.framework
+		iphone_simulator_framework_path=${iphone_simulator_archive_path}.xcarchive/Products/Library/Frameworks/${framework_name//-/_}.framework
 		mac_catalyst_archive_path="${archive_path}/maccatalyst"
-		mac_catalyst_framework_path=${mac_catalyst_archive_path}.xcarchive/Products/Library/Frameworks/${framework_name}.framework
-		output_path="./${FOLDER_NAME}/Release/${framework_name}.xcframework"
+		mac_catalyst_framework_path=${mac_catalyst_archive_path}.xcarchive/Products/Library/Frameworks/${framework_name//-/_}.framework
+		output_path="./${FOLDER_NAME}/Release/${framework_name//-/_}.xcframework"
 		common_args="archive -workspace ./${PREFIX_PATH}/${MAIN_FRAMEWORK_NAME}.xcworkspace \
 		-scheme ${framework_name} -configuration 'Release' -derivedDataPath ./${FOLDER_NAME}/derivedData"
 		if [[ $LOGGER_MODE -eq 0 ]]; then
@@ -281,10 +261,7 @@ copy_apm_modules_xcframework() {
 	done
 }
 
-main() {
-	chooseSaasOrCdp
-	chooseMainBundle
-	chooseModules
+beginGenerate() {
 	logger -i "you chose bundle is $MAIN_BUNDLE, additional modules is ${MODULES[@]}, and apm modules is ${APMMODULES[@]}"
 	logger -i "job: backup and modify podspec"
 	copyAndModifyPodspec
@@ -299,4 +276,58 @@ main() {
 	echo "\033[36m[GrowingAnalytics] WINNER WINNER, CHICKEN DINNER!\033[0m"
 }
 
-main
+main() {
+	chooseSaasOrCdp
+	chooseMainBundle
+	chooseModules
+	beginGenerate
+}
+
+releaseDefaultAutotracker() {
+	MAIN_BUNDLE="GrowingAutotracker"
+	beginGenerate
+}
+
+releaseDefaultTracker() {
+	MAIN_BUNDLE="GrowingTracker"
+	beginGenerate
+}
+
+if [ $# -eq 0 ]; then
+	main
+else
+	execFunc="main"
+	for arg in "$@"; do
+		if [[ $arg == '-h' || $arg == '--help' ]]; then
+			echo "\033[32m
+		usage: 
+		1. cd growingio-sdk-ios-autotracker folder
+		2. run script: sh ./scripts/generate_xcframework.sh -v | grep '\[GrowingAnalytics\]'
+		3. drag all xcframeworks in ./generate/Release/ into your project, select [Copy items if needed]
+		4. add -ObjC to [Other Linker Flags] in order to load OC Catagory
+		5. add libc++.tbd to your project if chose CrashMonitor apm modules
+
+		example:
+		sh ./scripts/generate_xcframework.sh -v
+		sh ./scripts/generate_xcframework.sh --verbose
+		sh ./scripts/generate_xcframework.sh --silent
+		sh ./scripts/generate_xcframework.sh releaseDefaultAutotracker --verbose
+		sh ./scripts/generate_xcframework.sh releaseDefaultTracker --verbose
+		sh ./scripts/generate_xcframework.sh --help
+
+		> because using of __has_include, if select Protobuf and not select Advert/Hybrid in the same time,
+		> delete Advert/Hybrid folder before building that avoid link error when using the xcframework
+			\033[0m"
+			exit 0
+		elif [[ $arg == '-s' || $arg == '--silent' ]]; then
+	        LOGGER_MODE=0
+	    elif [[ $arg == '-v' || $arg == '--verbose' ]]; then
+			LOGGER_MODE=2
+		else
+			execFunc="$arg"
+		fi
+	done
+	"$execFunc"
+fi
+
+
