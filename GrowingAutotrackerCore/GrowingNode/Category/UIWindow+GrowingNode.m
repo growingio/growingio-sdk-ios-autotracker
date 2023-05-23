@@ -19,7 +19,6 @@
 
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIWindow+GrowingNode.h"
-#import "GrowingAutotrackerCore/GrowingNode/GrowingNode.h"
 
 @implementation UIWindow (GrowingNode)
 
@@ -36,7 +35,7 @@
 }
 
 - (BOOL)growingWindowNodeIsInvisiable {
-    return self.alpha <= 0.001 || self.hidden || [self growingNodeIsBadNode];
+    return self.alpha <= 0.001 || self.hidden;
 }
 
 - (BOOL)growingNodeDonotCircle {
@@ -47,16 +46,8 @@
     return NO;
 }
 
-- (NSString *)growingNodeName {
-    return @"页面";
-}
-
 - (NSString *)growingViewContent {
     return self.accessibilityLabel;
-}
-
-- (NSDictionary *)growingNodeDataDict {
-    return nil;
 }
 
 @end

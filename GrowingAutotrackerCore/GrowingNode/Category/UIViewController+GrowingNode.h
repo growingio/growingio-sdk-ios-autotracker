@@ -24,8 +24,4 @@
 
 @end
 
-@interface UIViewController (GrowingPrivateAttributes)
-
-@end
-
 
