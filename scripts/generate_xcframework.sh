@@ -174,7 +174,29 @@ generateProject() {
 	elif [[ $LOGGER_MODE -eq 2 ]]; then
 		args+=" --verbose"
 	fi
-	bundle exec pod gen ${MAIN_FRAMEWORK_NAME}.podspec $args || exit 1
+
+	if [ $IS_SAAS == false ]; then
+		# 会出现找不到GrowingAnalytics对应版本的报错，处理方法在下面
+		logger -i "tip: please ignore error message under, this script handled it perfectly"
+		bundle exec pod gen ${MAIN_FRAMEWORK_NAME}.podspec $args
+		logger -i "tip: please ignore error message above, this script handled it perfectly"
+	else
+		bundle exec pod gen ${MAIN_FRAMEWORK_NAME}.podspec $args || exit 1
+	fi
+
+	if [ $IS_SAAS == false ]; then
+		logger -v "step: modify CocoaPods.podfile.yaml"
+		# 这里用了比较绕的办法，让生成的GrowingAnalytics-cdp xcodeproj使用本地环境的GrowingAnalytics代码而不是Cocoapods Spec Repo上的对应的
+		# 另外一种办法是使用[.gen_config.yml](https://github.com/square/cocoapods-generate#gen_configyml)，添加external_source_pods:
+		# external_source_pods:
+		#	- "GrowingAnalytics":
+     	#	 - git: "https://github.com/growingio/growingio-sdk-ios-autotracker.git"
+     	# 这样在生成xcodeproj时将使用git url对应最新的GrowingAnalytics.podspec，无需先执行pod repo push REPO_NAME PODSPEC_NAME更新podspec
+		ruby ./scripts/modifyPodfileYAML.ruby "${PREFIX_PATH}/CocoaPods.podfile.yaml"
+		pushd ${PREFIX_PATH}
+		bundle exec pod update --no-repo-update
+		popd
+	fi
 
 	logger -v "step: modify build settings using CocoaPods/Xcodeproj"
 	targets=$(ruby ./scripts/modifyPodsXcodeproj.ruby "${PREFIX_PATH}/Pods/Pods.xcodeproj")

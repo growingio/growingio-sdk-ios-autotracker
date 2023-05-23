@@ -1,0 +1,46 @@
+name: Draft Release Without Tag
+
+on: workflow_dispatch
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Conventional Changelog
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v3
+        with:
+          github-token: ${{ secrets.github_token}}
+          preset: 'angular'
+          skip-version-file: 'true'
+          skip-commit: 'true'
+          skip-tag: 'true'
+          tag-prefix: ''
+
+      - name: Generate xcframework
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        run: 
+          sh ./scripts/generate_xcframework.sh releaseDefaultAutotracker --verbose
+
+      - name: Archive
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        run: |
+          cd ./generate
+          tar -czvf GrowingAnalytics.xcframework.tar.gz ./Release
+          zip -r GrowingAnalytics.xcframework.zip ./Release
+      
+      - name: Release
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        uses: softprops/action-gh-release@v1
+        with: 
+          files: |
+            ${{ github.workspace }}/generate/GrowingAnalytics.xcframework.tar.gz
+            ${{ github.workspace }}/generate/GrowingAnalytics.xcframework.zip
+          body: ${{ steps.changelog.outputs.changelog }}
+          draft: true
