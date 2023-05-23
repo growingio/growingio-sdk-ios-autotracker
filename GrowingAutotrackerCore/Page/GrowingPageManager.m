@@ -24,10 +24,8 @@
 #import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
 #import "GrowingAutotrackerCore/Page/GrowingPage.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
-#import "GrowingAutotrackerCore/Private/GrowingPrivateCategory.h"
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIViewController+GrowingNode.h"
-#import "GrowingAutotrackerCore/Page/UIViewController+GrowingPageHelper.h"
 #import "GrowingULViewControllerLifecycle.h"
 #import "GrowingULAppLifecycle.h"
 
@@ -73,7 +71,7 @@
 }
 
 - (void)createdViewControllerPage:(UIViewController *)viewController {
-    GrowingPageGroup *page = [viewController growingPageHelper_getPageObject];
+    GrowingPageGroup *page = [viewController growingPageObject];
     if (page == nil) {
         page = [self createdPage:viewController];
     } else {
@@ -112,7 +110,7 @@
         [page.parent addChildrenPage:page];
     }
     [self addPageAlias:page];
-    [viewController growingPageHelper_setPageObject:page];
+    [viewController setGrowingPageObject:page];
     return page;
 }
 
@@ -126,10 +124,9 @@
     }
 
     if (parentVC == nil) {
-        GIOLogError(@"%@ you want find parentVC is nil", carrier);
         return nil;
     } else {
-        GrowingPageGroup *page = [parentVC growingPageHelper_getPageObject];
+        GrowingPageGroup *page = [parentVC growingPageObject];
         if (page == nil) {
             page = [self createdPage:parentVC];
         }
@@ -210,7 +207,7 @@
         if ([[GrowingPageManager sharedInstance] isPrivateViewControllerIgnored:current]) {
             current = (UIViewController*)current.growingNodeParent;
         } else {
-            page = [current growingPageHelper_getPageObject];
+            page = [current growingPageObject];
             if (page == nil) {
                 page = [self createdPage:current];
             }
@@ -222,7 +219,7 @@
         }
     }
     if (!page && last) {
-        page = [last growingPageHelper_getPageObject];
+        page = [last growingPageObject];
     }
     return page;
 }
@@ -237,7 +234,7 @@
 
 - (GrowingPageGroup *)currentPage {
     UIViewController *parent = [self currentViewController];
-    GrowingPageGroup *page = [parent growingPageHelper_getPageObject];
+    GrowingPageGroup *page = [parent growingPageObject];
     return page;
 }
 

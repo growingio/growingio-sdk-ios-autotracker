@@ -22,7 +22,6 @@ GrowingAnalytics-cdp基于GrowingAnalytics，同样具备自动采集基本的�
     autotracker.ios.deployment_target = '9.0'
     autotracker.source_files = 'GrowingAutotracker-cdp/**/*{.h,.m,.c,.cpp,.mm}'
     autotracker.public_header_files = 'GrowingAutotracker-cdp/*.h'
-    autotracker.dependency 'GrowingAnalytics-cdp/TrackerCore', s.version.to_s
     autotracker.dependency 'GrowingAnalytics/AutotrackerCore', s.version.to_s
 
     # Modules
@@ -35,16 +34,10 @@ GrowingAnalytics-cdp基于GrowingAnalytics，同样具备自动采集基本的�
   s.subspec 'Tracker' do |tracker|
     tracker.source_files = 'GrowingTracker-cdp/**/*{.h,.m,.c,.cpp,.mm}'
     tracker.public_header_files = 'GrowingTracker-cdp/*.h'
-    tracker.dependency 'GrowingAnalytics-cdp/TrackerCore', s.version.to_s
+    tracker.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
 
     # Modules
     tracker.ios.dependency 'GrowingAnalytics/MobileDebugger', s.version.to_s
     tracker.dependency 'GrowingAnalytics/DefaultServices', s.version.to_s
-  end
-
-  s.subspec 'TrackerCore' do |trackerCore|
-      trackerCore.source_files = 'GrowingTrackerCore-cdp/**/*{.h,.m,.c,.cpp,.mm}'
-      trackerCore.public_header_files = 'GrowingTrackerCore-cdp/Public/*.h'
-      trackerCore.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
   end
 end

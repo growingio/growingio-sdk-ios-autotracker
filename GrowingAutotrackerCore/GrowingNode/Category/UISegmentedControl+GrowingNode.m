@@ -68,11 +68,6 @@
     return YES;
 }
 
-- (NSString*)growingNodeName
-{
-    return @"按钮";
-}
-
 - (NSArray<id<GrowingNode>>*)growingNodeChilds {
     return nil;
 }
@@ -92,8 +87,7 @@
 }
 
 
-- (NSString*)growingNodeContent
-{
+- (NSString *)growingNodeContent {
     NSString *nodeContent = [UISegmentedControl growing_titleForSegment:(id)self];
     if (nodeContent.length) {
         return nodeContent;
@@ -101,6 +95,5 @@
         return self.accessibilityLabel;
     }
 }
-
 
 @end

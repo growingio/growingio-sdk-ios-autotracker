@@ -185,4 +185,33 @@
     }
 }
 
+- (void)test06ClickCustomContent {
+    // 单击自定义content的UISegmentedControl，检测textValue
+    [[viewTester usingLabel:@"Simple UI Elements"] tap];
+    [viewTester waitForAnimationsToFinish];
+    
+    [MockEventQueue.sharedQueue cleanQueue];
+
+    KIFUIViewTestActor *actor = [viewTester usingLabel:@"Fire"];
+    {
+        // Fire -> Water
+        actor.view.growingViewCustomContent = @"Water";
+        [actor tap];
+
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
+        XCTAssertEqual(events.count, 1);
+        
+        GrowingViewElementEvent *event = (GrowingViewElementEvent *)events.firstObject;
+        NSDictionary *dic = event.toDictionary;
+        XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeViewClick);
+        XCTAssertTrue([ManualTrackHelper viewClickEventCheck:dic]);
+        XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
+        
+        XCTAssertEqualObjects(dic[@"textValue"], @"Water");
+        XCTAssertEqualObjects(dic[@"xpath"], @"/Page/UIView[0]/UIButton[1]");
+    }
+    
+    [[viewTester usingLabel:@"好的"] tap];
+}
+
 @end

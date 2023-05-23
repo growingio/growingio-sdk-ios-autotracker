@@ -162,6 +162,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 手动标识该view的忽略策略，请在该view被初始化后立刻赋值
 @property (nonatomic, assign) GrowingIgnorePolicy growingViewIgnorePolicy;
 
+// 手动标识该view的取值，请在该view被初始化后立刻赋值
+@property (nonatomic, copy) NSString *growingViewCustomContent;
+
 // 手动标识该view的tag
 // 这个tag必须是全局唯一的，在代码结构改变时也请保持不变
 @property (nonatomic, copy) NSString *growingUniqueTag;
@@ -175,37 +178,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 手动标识该页面的标题，必须在该UIViewController显示之前设置
 @property (nonatomic, copy) NSString *growingPageAlias;
 
-@property (nonatomic, strong) NSDictionary <NSString *, NSString *> *growingPageAttributes;
+@property (nonatomic, copy) NSDictionary <NSString *, NSString *> *growingPageAttributes;
 
 @property (nonatomic, assign) GrowingIgnorePolicy growingPageIgnorePolicy;
-
-@end
-
-@interface GrowingAutotracker (Deprecated)
-
-/// 发送一个自定义事件
-/// @param eventName 自定义事件名称
-/// @param itemKey 事件发生关联的物品模型Key
-/// @param itemId 事件发生关联的物品模型ID
-- (void)trackCustomEvent:(NSString *)eventName itemKey:(NSString *)itemKey itemId:(NSString *)itemId DEPRECATED_MSG_ATTRIBUTE("新版本仅需在属性中关联itemId, 参见维度表数据上报");
-
-/// 发送一个自定义事件
-/// @param eventName 自定义事件名称
-/// @param itemKey 事件发生关联的物品模型Key
-/// @param itemId 事件发生关联的物品模型ID
-/// @param attributes 事件发生时所伴随的维度信息
-- (void)trackCustomEvent:(NSString *)eventName itemKey:(NSString *)itemKey itemId:(NSString *)itemId withAttributes:(NSDictionary <NSString *, NSString *> * _Nullable)attributes DEPRECATED_MSG_ATTRIBUTE("新版本仅需在属性中关联itemId, 参见维度表数据上报");
-
-/// 发送一个自定义事件
-/// @param eventName 自定义事件名称
-/// @param attributesBuilder 事件发生时所伴随的维度信息构造器
-/// @warning Deprecated: Please use `-[GrowingAutotracker trackCustomEvent:withAttributes:]` with attributesBuilder.build instead.
-- (void)trackCustomEvent:(NSString *)eventName withAttributesBuilder:(GrowingAttributesBuilder *)attributesBuilder DEPRECATED_MSG_ATTRIBUTE("Use trackCustomEvent:withAttributes: instead.");
-
-/// 以登录用户的身份定义用户属性变量，用于用户信息相关分析。
-/// @param attributesBuilder 用户属性信息构造器
-/// @warning Deprecated: Please use `-[GrowingAutotracker setLoginUserAttributes:]` with attributesBuilder.build instead.
-- (void)setLoginUserAttributesWithAttributesBuilder:(GrowingAttributesBuilder *)attributesBuilder DEPRECATED_MSG_ATTRIBUTE("Use setLoginUserAttributes: instead.");
 
 @end
 

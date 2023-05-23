@@ -1,9 +1,9 @@
 //
-//  GrowingNode.m
+//  UISwitch+GrowingNode.m
 //  GrowingAnalytics
 //
-//  Created by GrowingIO on 15/12/12.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2023/5/18.
+//  Copyright (C) 2023 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,14 +17,12 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
-#import "GrowingAutotrackerCore/GrowingNode/GrowingNodeItem.h"
-#import "GrowingTrackerCore/Event/GrowingNodeProtocol.h"
+#import "GrowingAutotrackerCore/GrowingNode/Category/UISwitch+GrowingNode.h"
 
-@interface NSObject (GrowingNode)
+@implementation UISwitch (GrowingNode)
 
-@property (nonatomic, assign) BOOL growingNodeIsBadNode;
+- (NSString *)growingViewContent {
+    return self.isOn ? @"true" : @"false";
+}
 
 @end
-

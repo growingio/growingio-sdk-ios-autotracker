@@ -69,7 +69,6 @@
     XCTAssertEqual(windowView.growingViewLevel, 2);
     
     XCTAssertNoThrow([window hitTest:CGPointMake(0, 0) withEvent:nil]);
-    XCTAssertFalse([window performSelector:NSSelectorFromString(@"growingNodeIsBadNode")]);
 #pragma clang diagnostic pop
 }
 

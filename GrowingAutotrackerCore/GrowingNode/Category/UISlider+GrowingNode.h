@@ -1,9 +1,9 @@
 //
-//  UIViewController+GrowingNode.m
+//  UISlider+GrowingNode.h
 //  GrowingAnalytics
 //
-//  Created by GrowingIO on 15/8/31.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2023/5/18.
+//  Copyright (C) 2023 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -18,10 +18,11 @@
 //  limitations under the License.
 
 #import <UIKit/UIKit.h>
-#import "GrowingTrackerCore/Event/GrowingNodeProtocol.h"
 
-@interface UIViewController (GrowingNode) <GrowingNode>
+NS_ASSUME_NONNULL_BEGIN
+
+@interface UISlider (GrowingNode)
 
 @end
 
-
+NS_ASSUME_NONNULL_END

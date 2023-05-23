@@ -102,10 +102,6 @@
     return YES;
 }
 
-- (NSString *)growingNodeName {
-    return @"弹出框选项";
-}
-
 - (NSString *)growingNodeContent {
     NSString *nodeContent = [[UIAlertController growing_actionForActionView:(id)self] title];
     

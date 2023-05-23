@@ -25,10 +25,11 @@
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
+#import "GrowingTrackerCore/Event/GrowingNodeProtocol.h"
 #import "Modules/WebCircle/GrowingWebCircle.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
-#import "GrowingAutotrackerCore/Page/UIViewController+GrowingPageHelper.h"
+#import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "Modules/WebCircle/GrowingWebCircleElement.h"
 
 @interface GrowingWebCircle (XCTest)
@@ -103,10 +104,10 @@
     UIViewController *current = [[UIViewController alloc] init];
     // 避免自动发 PAGE 报错
     current.growingPageIgnorePolicy = GrowingIgnoreSelf;
-    GrowingPageGroup *page = [current growingPageHelper_getPageObject];
+    GrowingPageGroup *page = [current growingPageObject];
     if (!page) {
         [[GrowingPageManager sharedInstance] createdViewControllerPage:current];
-        page = [current growingPageHelper_getPageObject];
+        page = [current growingPageObject];
     }
     XCTAssertNotNil([circle dictFromPage:(id<GrowingNode>)current xPath:page.path]);
     XCTAssertNotNil([circle elements]);

@@ -39,7 +39,6 @@
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
-#import "GrowingAutotrackerCore/Page/UIViewController+GrowingPageHelper.h"
 #import "GrowingAutotrackerCore/GrowingNode/GrowingNodeHelper.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIApplication+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIViewController+GrowingNode.h"
@@ -148,7 +147,7 @@ GrowingMod(GrowingWebCircle)
         dict[@"title"] = vc.title;
     }
 
-    dict[@"isIgnored"] = @([vc growingPageHelper_pageDidIgnore]);
+    dict[@"isIgnored"] = @([vc growingPageDidIgnore]);
     return dict;
 }
 

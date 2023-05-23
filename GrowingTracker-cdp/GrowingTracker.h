@@ -126,32 +126,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface GrowingTracker (Deprecated)
-
-/// 发送一个自定义事件
-/// @param eventName 自定义事件名称
-/// @param itemKey 事件发生关联的物品模型Key
-/// @param itemId 事件发生关联的物品模型ID
-- (void)trackCustomEvent:(NSString *)eventName itemKey:(NSString *)itemKey itemId:(NSString *)itemId DEPRECATED_MSG_ATTRIBUTE("新版本仅需在属性中关联itemId, 参见维度表数据上报");
-
-/// 发送一个自定义事件
-/// @param eventName 自定义事件名称
-/// @param itemKey 事件发生关联的物品模型Key
-/// @param itemId 事件发生关联的物品模型ID
-/// @param attributes 事件发生时所伴随的维度信息
-- (void)trackCustomEvent:(NSString *)eventName itemKey:(NSString *)itemKey itemId:(NSString *)itemId withAttributes:(NSDictionary <NSString *, NSString *> * _Nullable)attributes DEPRECATED_MSG_ATTRIBUTE("新版本仅需在属性中关联itemId, 参见维度表数据上报");
-
-/// 发送一个自定义事件
-/// @param eventName 自定义事件名称
-/// @param attributesBuilder 事件发生时所伴随的维度信息构造器
-/// @warning Deprecated: Please use `-[GrowingTracker trackCustomEvent:withAttributes:]` with attributesBuilder.build instead.
-- (void)trackCustomEvent:(NSString *)eventName withAttributesBuilder:(GrowingAttributesBuilder *)attributesBuilder DEPRECATED_MSG_ATTRIBUTE("Use trackCustomEvent:withAttributes: instead.");
-
-/// 以登录用户的身份定义用户属性变量，用于用户信息相关分析。
-/// @param attributesBuilder 用户属性信息构造器
-/// @warning Deprecated: Please use `-[GrowingTracker setLoginUserAttributes:]` with attributesBuilder.build instead.
-- (void)setLoginUserAttributesWithAttributesBuilder:(GrowingAttributesBuilder *)attributesBuilder DEPRECATED_MSG_ATTRIBUTE("Use setLoginUserAttributes: instead.");
-
-@end
-
 NS_ASSUME_NONNULL_END
