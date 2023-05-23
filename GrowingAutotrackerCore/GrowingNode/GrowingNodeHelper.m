@@ -190,8 +190,11 @@ static NSString *const kGrowingViewNodeWebView = @"WEB_VIEW";
     if ([view isKindOfClass:NSClassFromString(@"_UIButtonBarButton")] ||
         [view isKindOfClass:NSClassFromString(@"_UIModernBarButton")]) {
         nodetype = kGrowingViewNodeButton;
-    } else if ([view isKindOfClass:[UITextField class]] || [view isKindOfClass:[UISearchBar class]] ||
-               [view isKindOfClass:[UITextView class]]) {
+    } else if ([view isKindOfClass:[UITextField class]] ||
+               [view isKindOfClass:[UISearchBar class]] ||
+               [view isKindOfClass:[UITextView class]] ||
+               [view isKindOfClass:[UISlider class]] ||
+               [view isKindOfClass:[UISwitch class]]) {
         nodetype = kGrowingViewNodeInput;
     } else if ([view isKindOfClass:[UICollectionViewCell class]] || [view isKindOfClass:[UITableViewCell class]]) {
         nodetype = kGrowingViewNodeList;
