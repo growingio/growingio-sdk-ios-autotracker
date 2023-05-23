@@ -17,20 +17,13 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
-#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
-#import "GrowingAutotrackerCore/Page/UIViewController+GrowingPageHelper.h"
-#import "GrowingAutotrackerCore/Private/GrowingPrivateCategory.h"
-#import "GrowingAutotrackerCore/Public/GrowingAutotrackConfiguration.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIApplication+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIViewController+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIWindow+GrowingNode.h"
-#import "GrowingAutotrackerCore/Autotrack/GrowingPropertyDefine.h"
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
-#import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
 
 @implementation UIViewController (GrowingNode)
 
@@ -219,53 +212,6 @@
     }
 
     return childs;
-}
-
-@end
-
-@implementation UIViewController (GrowingAttributes)
-
-static char kGrowingPageIgnorePolicyKey;
-static char kGrowingPageAttributesKey;
-
-GrowingSafeStringPropertyImplementation(growingPageAlias, setGrowingPageAlias)
-
-- (void)setGrowingPageAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
-    [GrowingDispatchManager trackApiSel:_cmd dispatchInMainThread:^{
-        if (!attributes
-        || ([attributes isKindOfClass:NSDictionary.class] && attributes.count == 0)) {
-            objc_setAssociatedObject(self, &kGrowingPageAttributesKey, nil, OBJC_ASSOCIATION_COPY_NONATOMIC);
-        } else {
-            if ([GrowingArgumentChecker isIllegalAttributes:attributes]) {
-                return;
-            }
-            objc_setAssociatedObject(self, &kGrowingPageAttributesKey, attributes, OBJC_ASSOCIATION_COPY_NONATOMIC);
-        }
-    }];
-}
-
-- (NSDictionary<NSString *, NSString *> *)growingPageAttributes {
-    return [objc_getAssociatedObject(self, &kGrowingPageAttributesKey) copy];
-}
-
-- (void)setGrowingPageIgnorePolicy:(GrowingIgnorePolicy)growingPageIgnorePolicy {
-    objc_setAssociatedObject(self, &kGrowingPageIgnorePolicyKey,
-                             [NSNumber numberWithUnsignedInteger:growingPageIgnorePolicy],
-                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (GrowingIgnorePolicy)growingPageIgnorePolicy {
-    id policyObjc = objc_getAssociatedObject(self, &kGrowingPageIgnorePolicyKey);
-    if (!policyObjc) {
-        return GrowingIgnoreNone;
-    }
-
-    if ([policyObjc isKindOfClass:NSNumber.class]) {
-        NSNumber *policyNum = (NSNumber *)policyObjc;
-        return policyNum.unsignedIntegerValue;
-    }
-
-    return GrowingIgnoreNone;
 }
 
 @end

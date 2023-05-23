@@ -19,12 +19,10 @@
 
 #import "GrowingAutotrackerCore/GrowingNode/GrowingNodeHelper.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
-#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
-#import "GrowingAutotrackerCore/Page/UIViewController+GrowingPageHelper.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
-#import "GrowingAutotrackerCore/GrowingNode/Category/UIViewController+GrowingNode.h"
+#import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 
 static NSString *const kGrowingNodeRootPage = @"Page";
 static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
@@ -81,7 +79,7 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
             if ([[GrowingPageManager sharedInstance] isPrivateViewControllerIgnored:(UIViewController *)node]) {
                 if (node.growingNodeSubPath.length > 0) [viewPathArray addObject:node.growingNodeSubPath];
             } else {
-                GrowingPageGroup *page = [(UIViewController *)node growingPageHelper_getPageObject];
+                GrowingPageGroup *page = [(UIViewController *)node growingPageObject];
                 if (page.isIgnored) {
                     if (node.growingNodeSubPath.length > 0) [viewPathArray addObject:node.growingNodeSubPath];
                 } else {

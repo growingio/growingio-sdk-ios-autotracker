@@ -54,12 +54,6 @@
     if (atts.count > 0) {
 
         [[GrowingSDK sharedInstance] trackCustomEvent:eventName withAttributes:atts];
-        
-        GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
-        [builder setString:@"value" forKey:@"key"];
-        [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@"key2"];
-        [builder setString:@"CUSTOM" forKey:@"type"];
-        [[GrowingSDK sharedInstance] trackCustomEvent:eventName withAttributesBuilder:builder];
         NSLog(@"Track事件，eventName:%@, attributes:%@", eventName, atts);
 
     } else {
