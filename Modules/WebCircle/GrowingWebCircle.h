@@ -19,7 +19,6 @@
 
 #import <Foundation/Foundation.h>
 #import "GrowingModuleProtocol.h"
-#import "GrowingAutotrackerCore/GrowingNode/GrowingNode.h"
 
 @protocol GrowingWebSocketService;
 

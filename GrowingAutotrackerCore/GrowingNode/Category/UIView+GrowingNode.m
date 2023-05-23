@@ -24,33 +24,14 @@
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
 #import "GrowingAutotrackerCore/Autotrack/UITableView+GrowingAutotracker.h"
-#import "GrowingAutotrackerCore/GrowingNode/GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIApplication+GrowingNode.h"
 #import "GrowingAutotrackerCore/Impression/GrowingImpressionTrack.h"
 #import "GrowingAutotrackerCore/Public/GrowingAutotrackConfiguration.h"
 
-@interface GrowingMaskView : UIImageView
-@end
-
-@implementation GrowingMaskView
-
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
-    UIView *hit = [super hitTest:point withEvent:event];
-    return (hit == self) ? nil : hit;
-}
-
-@end
-
-GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowingHighlightView)
-
 @implementation UIView (GrowingNode)
 
 #pragma mark - xpath
-
-- (NSIndexPath *)growingNodeIndexPath {
-    return nil;
-}
 
 - (NSInteger)growingNodeKeyIndex {
     NSString *classString = NSStringFromClass(self.class);
@@ -131,8 +112,7 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
 - (BOOL)growingViewNodeIsInvisiable {
     // 这个应该放在controller代码里 放这里可以提升效率
     // 逻辑冗余
-    return (self.hidden || self.alpha < 0.001 ||
-            !self.superview || self.growingNodeIsBadNode || !self.window);
+    return (self.hidden || self.alpha < 0.001 || !self.superview || !self.window);
 }
 
 - (BOOL)growingImpNodeIsVisible {
@@ -222,14 +202,6 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
     return [self growingViewNodeIsInvisiable];
 }
 
-// 值
-- (NSString *)growingNodeName {
-    if ([self isKindOfClass:NSClassFromString(@"_UINavigationItemButtonView")]) {
-        return @"返回按钮";
-    }
-    return NSStringFromClass(self.class);
-}
-
 - (NSString *)growingViewContent {
     // apple在11.1.2的部分机型上很小概率对于class为UIPickerTableView的对象调用accessibilityLabel可能会崩溃
     // 此为apple bug
@@ -286,14 +258,6 @@ GrowingPropertyDefine(UIView, GrowingMaskView*, growingHighlightView, setGrowing
 
 - (BOOL)growingViewUserInteraction {
     return NO;
-}
-
-- (NSDictionary *)growingNodeDataDict {
-    return nil;
-}
-
-- (NSString *)growingNodeUniqueTag {
-    return self.growingUniqueTag;
 }
 
 #pragma mark GrowingAttributes

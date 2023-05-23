@@ -22,11 +22,6 @@
 
 @implementation UIImageView (GrowingNode)
 
-- (NSString*)growingNodeName
-{
-    return @"图片";
-}
-
 - (NSString*)growingViewContent
 {
     if (self.accessibilityLabel.length) {

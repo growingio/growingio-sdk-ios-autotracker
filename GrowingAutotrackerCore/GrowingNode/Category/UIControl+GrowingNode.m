@@ -28,11 +28,6 @@
     return self.enabled && self.allTargets.count > 0;
 }
 
-- (NSString*)growingNodeName
-{
-    return @"按钮";
-}
-
 - (NSString *)growingViewContent
 {
     NSMutableArray<UIView*> *unvisted = [[NSMutableArray alloc] init];

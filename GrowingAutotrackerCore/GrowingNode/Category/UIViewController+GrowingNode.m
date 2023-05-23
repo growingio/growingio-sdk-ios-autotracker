@@ -19,7 +19,6 @@
 
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
-#import "GrowingAutotrackerCore/GrowingNode/GrowingNode.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
 #import "GrowingAutotrackerCore/Page/UIViewController+GrowingPageHelper.h"
@@ -100,15 +99,8 @@
     return NO;
 }
 
-#define DonotrackCheck(theCode) \
-    if (theCode) {              \
-        return YES;             \
-    }
-
 - (BOOL)growingNodeDonotTrack {
-    DonotrackCheck(![self isViewLoaded]) DonotrackCheck(!self.view.window)
-        DonotrackCheck(self.view.window.growingNodeIsBadNode) DonotrackCheck(self.growingNodeIsBadNode)
-            DonotrackCheck(![self growingAppearStateCanTrack]) return NO;
+    return (![self isViewLoaded] || !self.view.window || ![self growingAppearStateCanTrack]);
 }
 
 - (BOOL)growingNodeDonotCircle {
@@ -119,22 +111,8 @@
     return NO;
 }
 
-- (NSString *)growingNodeName {
-    return @"页面";
-}
-
 - (NSString *)growingNodeContent {
     return self.accessibilityLabel;
-}
-
-- (NSDictionary *)growingNodeDataDict {
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-    dict[@"pageName"] = ([self growingPageHelper_getPageObject].name ?: self.growingPageName);
-    return dict;
-}
-
-- (NSString *)growingNodeUniqueTag {
-    return self.growingPageAlias;
 }
 
 #pragma mark - xpath
@@ -171,10 +149,6 @@
 
 - (NSString *)growingNodeSubSimilarPath {
     return [self growingNodeSubPath];
-}
-
-- (NSIndexPath *)growingNodeIndexPath {
-    return nil;
 }
 
 - (NSArray<id<GrowingNode>> *)growingNodeChilds {

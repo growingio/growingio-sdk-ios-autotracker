@@ -31,9 +31,4 @@
     }
 }
 
-- (NSString *)growingNodeName
-{
-    return @"文本";
-}
-
 @end

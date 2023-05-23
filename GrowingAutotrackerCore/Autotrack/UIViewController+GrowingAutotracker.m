@@ -45,10 +45,6 @@
     return currentPageName;
 }
 
-//- (NSString *)growingNodeName {
-//    return @"页面";
-//}
-
 - (BOOL)growingHookIsCustomAddVC {
     return !self.growingul_didAppear && self.parentViewController == nil &&
            [UIApplication sharedApplication].keyWindow.rootViewController != self;
