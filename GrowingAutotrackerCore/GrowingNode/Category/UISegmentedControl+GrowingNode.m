@@ -87,8 +87,7 @@
 }
 
 
-- (NSString*)growingNodeContent
-{
+- (NSString *)growingNodeContent {
     NSString *nodeContent = [UISegmentedControl growing_titleForSegment:(id)self];
     if (nodeContent.length) {
         return nodeContent;

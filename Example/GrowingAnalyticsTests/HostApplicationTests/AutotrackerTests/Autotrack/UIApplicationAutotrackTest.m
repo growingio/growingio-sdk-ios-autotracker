@@ -89,7 +89,7 @@ AutotrackXCTestClassDefine(UIPageControl)
                                            from:self.switchT
                                        forEvent:self.event];
     dispatch_block_t block = ^{
-        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewChange];
         XCTAssertEqual(events.count, 1);
     };
     [self dispatchInNotMainThread:block];
@@ -104,7 +104,7 @@ AutotrackXCTestClassDefine(UIPageControl)
                                            from:self.switchT
                                        forEvent:self.event];
     dispatch_block_t block = ^{
-        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewChange];
         XCTAssertEqual(events.count, 1);
     };
     [self dispatchInNotMainThread:block];
@@ -164,7 +164,7 @@ AutotrackXCTestClassDefine(UIPageControl)
                                            from:self.switchT
                                        forEvent:self.event];
     dispatch_block_t block = ^{
-        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewChange];
         XCTAssertEqual(events.count, 1);
     };
     [self dispatchInNotMainThread:block];
