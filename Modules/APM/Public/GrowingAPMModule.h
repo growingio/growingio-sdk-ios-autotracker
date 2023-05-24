@@ -20,7 +20,12 @@
 #import <Foundation/Foundation.h>
 #import "GrowingModuleProtocol.h"
 #import "GrowingTrackConfiguration.h"
+
+#if __has_include(<GrowingAPM/GrowingAPM+Private.h>)
+#import <GrowingAPM/GrowingAPM+Private.h>
+#else
 #import "GrowingAPM+Private.h"
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
