@@ -8,7 +8,17 @@ permissions:
 jobs:
   publish:
     runs-on: macos-latest
+
     steps:
+      - name: Check if on master branch
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/master" ]; then
+            echo "Running on master branch"
+          else
+            echo "Not running on master branch"
+            exit 1
+          fi
+
       - name: Checkout
         uses: actions/checkout@v3
 
