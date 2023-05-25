@@ -143,7 +143,6 @@ let package = Package(
         .target(
             name: "GrowingAutotracker_cdp",
             dependencies: [
-                "GrowingTrackerCore_cdp",
                 "GrowingAutotrackerCore"
             ],
             path: "GrowingAutotracker-cdp",
@@ -154,7 +153,7 @@ let package = Package(
         ),
         .target(
             name: "GrowingTracker_cdp",
-            dependencies: ["GrowingTrackerCore_cdp"],
+            dependencies: ["GrowingTrackerCore"],
             path: "GrowingTracker-cdp",
             publicHeadersPath: ".",
             cSettings: [
@@ -225,15 +224,6 @@ let package = Package(
                 .product(name: "GrowingUtilsAutotrackerCore", package: "growingio-sdk-ios-utilities"),
             ],
             path: "GrowingAutotrackerCore",
-            publicHeadersPath: "Public",
-            cSettings: [
-                .headerSearchPath(".."),
-            ]
-        ),
-        .target(
-            name: "GrowingTrackerCore_cdp",
-            dependencies: ["GrowingTrackerCore"],
-            path: "GrowingTrackerCore-cdp",
             publicHeadersPath: "Public",
             cSettings: [
                 .headerSearchPath(".."),
