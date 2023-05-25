@@ -42,6 +42,10 @@ static GrowingTracker *sharedInstance = nil;
     if (!configuration.projectId.length) {
         @throw [NSException exceptionWithName:@"初始化异常" reason:@"ProjectId不能为空" userInfo:nil];
     }
+    
+    if (!configuration.dataSourceId.length) {
+        @throw [NSException exceptionWithName:@"初始化异常" reason:@"dataSourceId不能为空" userInfo:nil];
+    }
 
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
