@@ -30,7 +30,7 @@
 
 - (void)configRandomPageAttributes {
 #if defined(AUTOTRACKER)
-#if !defined(SDKCDP) && defined(SDK3rd)
+#if defined(SDK3rd)
     self.growingPageAttributes = [self getRandomAttributes];
 #endif
 #endif
@@ -44,7 +44,7 @@
     
     NSDictionary *pval = [GIOConstants getLargeDictionary];
 #if defined(AUTOTRACKER)
-#if !defined(SDKCDP) && defined(SDK3rd)
+#if defined(SDK3rd)
     self.growingPageAttributes = pval;
 #endif
 #endif

@@ -45,10 +45,7 @@
     GrowingSDKConfiguration *configuration = [GrowingSDKConfiguration configurationWithProjectId:@"0a1b4118dd954ec3bcc69da5138bdb96"];
     configuration.debugEnabled = YES;
     configuration.idMappingEnabled = YES;
-    
-#if defined(SDKCDP)
     configuration.dataSourceId = @"ab555003531e0fd1";
-#endif
     
 #if defined(SDKADVERTMODULE)
     configuration.ASAEnabled = YES;
