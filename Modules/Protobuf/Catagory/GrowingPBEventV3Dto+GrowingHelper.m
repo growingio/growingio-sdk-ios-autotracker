@@ -180,9 +180,6 @@
     if (self.networkState.length > 0) {
         [dic setObject:self.networkState forKey:@"networkState"];
     }
-    if (self.pageName.length > 0) {
-        [dic setObject:self.pageName forKey:@"pageName"];
-    }
     if (self.platformVersion.length > 0) {
         [dic setObject:self.platformVersion forKey:@"platformVersion"];
     }
@@ -194,9 +191,6 @@
     }
     if (self.deviceType.length > 0) {
         [dic setObject:self.deviceType forKey:@"deviceType"];
-    }
-    if (self.operatingSystem.length > 0) {
-        [dic setObject:self.operatingSystem forKey:@"operatingSystem"];
     }
     if (self.appName.length > 0) {
         [dic setObject:self.appName forKey:@"appName"];
