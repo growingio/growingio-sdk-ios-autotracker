@@ -52,6 +52,11 @@
                                  @"GrowingTracker未初始化");
     
     GrowingTrackConfiguration *config = [GrowingTrackConfiguration configurationWithProjectId:@"xctest"];
+    XCTAssertThrowsSpecificNamed([GrowingTracker startWithConfiguration:config launchOptions:nil],
+                                 NSException,
+                                 @"初始化异常");
+    
+    config.dataSourceId = @"xctest";
     [GrowingTracker startWithConfiguration:config launchOptions:nil];
     
     [GrowingDispatchManager dispatchInGrowingThread:^{
@@ -72,6 +77,11 @@
                                  @"GrowingAutotracker未初始化");
     
     GrowingAutotrackConfiguration *config = [GrowingAutotrackConfiguration configurationWithProjectId:@"xctest"];
+    XCTAssertThrowsSpecificNamed([GrowingAutotracker startWithConfiguration:config launchOptions:nil],
+                                 NSException,
+                                 @"初始化异常");
+    
+    config.dataSourceId = @"xctest";
     [GrowingAutotracker startWithConfiguration:config launchOptions:nil];
     
     [GrowingDispatchManager dispatchInGrowingThread:^{
