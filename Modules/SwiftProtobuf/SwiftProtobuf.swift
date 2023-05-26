@@ -95,21 +95,8 @@ extension GrowingBaseEvent {
     @objc public func toProtobuf() -> SwiftProtobufWrapper {
         var dto = EventV3Dto()
         
-        // ************************* CDP *************************
-        if self.extraParams.count > 0 {
-            dto.dataSourceID = self.extraParams["dataSourceId"] as? String ?? ""
-            dto.gioID = self.extraParams["gioId"] as? String ?? ""
-        }
-        
-        if let resourceItem = resourceItem() {
-            let item = item(resourceItem)
-            var pbResourceItem = ResourceItem()
-            pbResourceItem.id = item.itemId
-            pbResourceItem.key = item.itemKey
-            dto.resourceItem = pbResourceItem
-        }
-        // ************************* CDP *************************
-        
+        dto.dataSourceID = self.dataSourceId ?? ""
+        dto.gioID = self.gioId ?? ""
         dto.sessionID = self.sessionId ?? ""
         dto.timestamp = self.timestamp
         dto.domain = self.domain
@@ -338,39 +325,4 @@ extension GrowingBaseEvent {
         }
         return ""
     }
-    
-    // ************************* CDP *************************
-    fileprivate func resourceItem() -> AnyObject? {
-        let selector = Selector(("resourceItem"))
-        if self.responds(to: selector) {
-            let imp: IMP = method_getImplementation(class_getInstanceMethod(type(of: self), selector)!)
-            return unsafeBitCast(imp, to: (@convention(c)(GrowingBaseEvent, Selector) -> AnyObject?).self)(self, selector)
-        }
-        return nil
-    }
-    
-    fileprivate func item(_ resourceItem: AnyObject) -> (itemId: String, itemKey: String) {
-        func getItemId() -> String {
-            let selector = Selector(("itemId"))
-            if resourceItem.responds(to: selector) {
-                let imp: IMP = method_getImplementation(class_getInstanceMethod(type(of: resourceItem), selector)!)
-                return unsafeBitCast(imp, to: (@convention(c)(NSObject, Selector) -> String?).self)(self, selector) ?? ""
-            }
-            return ""
-        }
-        
-        func getItemKey() -> String {
-            let selector = Selector(("itemKey"))
-            if resourceItem.responds(to: selector) {
-                let imp: IMP = method_getImplementation(class_getInstanceMethod(type(of: resourceItem), selector)!)
-                return unsafeBitCast(imp, to: (@convention(c)(NSObject, Selector) -> String?).self)(self, selector) ?? ""
-            }
-            return ""
-        }
-        
-        let itemId = getItemId()
-        let itemKey = getItemKey()
-        return (itemId, itemKey)
-    }
-    // ************************* CDP *************************
 }
