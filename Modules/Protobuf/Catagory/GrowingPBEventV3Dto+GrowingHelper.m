@@ -18,18 +18,6 @@
 //  limitations under the License.
 
 #import "Modules/Protobuf/Catagory/GrowingPBEventV3Dto+GrowingHelper.h"
-#import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
-#import "GrowingTrackerCore/Event/Autotrack/GrowingAutotrackEventType.h"
-
-#if __has_include("Modules/Hybrid/GrowingHybridModule.h")
-#import "Modules/Hybrid/Events/GrowingHybridEventType.h"
-#define GROWING_ANALYSIS_HYBRID
-#endif
-
-#if __has_include("Modules/Advert/Public/GrowingAdvertising.h")
-#import "Modules/Advert/Event/GrowingAdvertEventType.h"
-#define GROWING_ANALYSIS_ADVERT
-#endif
 
 @implementation GrowingPBEventV3Dto (GrowingHelper)
 
@@ -55,53 +43,49 @@
     }
     switch (self.eventType) {
         case GrowingPBEventType_Visit: {
-            [dic setObject:GrowingEventTypeVisit forKey:@"eventType"];
+            [dic setObject:@"VISIT" forKey:@"eventType"];
         }
             break;
         case GrowingPBEventType_Custom: {
-            [dic setObject:GrowingEventTypeCustom forKey:@"eventType"];
+            [dic setObject:@"CUSTOM" forKey:@"eventType"];
         }
             break;
         case GrowingPBEventType_VisitorAttributes: {
-            [dic setObject:GrowingEventTypeVisitorAttributes forKey:@"eventType"];
+            [dic setObject:@"VISITOR_ATTRIBUTES" forKey:@"eventType"];
         }
             break;
         case GrowingPBEventType_LoginUserAttributes: {
-            [dic setObject:GrowingEventTypeLoginUserAttributes forKey:@"eventType"];
+            [dic setObject:@"LOGIN_USER_ATTRIBUTES" forKey:@"eventType"];
         }
             break;
         case GrowingPBEventType_ConversionVariables: {
-            [dic setObject:GrowingEventTypeConversionVariables forKey:@"eventType"];
+            [dic setObject:@"CONVERSION_VARIABLES" forKey:@"eventType"];
         }
             break;
         case GrowingPBEventType_AppClosed: {
-            [dic setObject:GrowingEventTypeAppClosed forKey:@"eventType"];
+            [dic setObject:@"APP_CLOSED" forKey:@"eventType"];
         }
             break;
         case GrowingPBEventType_Page: {
-            [dic setObject:GrowingEventTypePage forKey:@"eventType"];
+            [dic setObject:@"PAGE" forKey:@"eventType"];
         }
             break;
         case GrowingPBEventType_ViewClick: {
-            [dic setObject:GrowingEventTypeViewClick forKey:@"eventType"];
+            [dic setObject:@"VIEW_CLICK" forKey:@"eventType"];
         }
             break;
         case GrowingPBEventType_ViewChange: {
-            [dic setObject:GrowingEventTypeViewChange forKey:@"eventType"];
+            [dic setObject:@"VIEW_CHANGE" forKey:@"eventType"];
         }
             break;
-#ifdef GROWING_ANALYSIS_HYBRID
         case GrowingPBEventType_FormSubmit: {
-            [dic setObject:GrowingEventTypeFormSubmit forKey:@"eventType"];
+            [dic setObject:@"FORM_SUBMIT" forKey:@"eventType"];
         }
             break;
-#endif
-#ifdef GROWING_ANALYSIS_ADVERT
         case GrowingPBEventType_Activate: {
-            [dic setObject:GrowingEventTypeActivate forKey:@"eventType"];
+            [dic setObject:@"ACTIVATE" forKey:@"eventType"];
         }
             break;
-#endif
         default:
             break;
     }

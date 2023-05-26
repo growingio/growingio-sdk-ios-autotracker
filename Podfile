@@ -58,7 +58,6 @@ target 'ProtobufTests' do
    project 'Example/Example'
    pod 'GrowingAnalytics/Autotracker', :path => './'
    pod 'GrowingAnalytics/Protobuf', :path => './'
-   pod 'GrowingAnalytics/Advert', :path => './'
 end
 
 target 'AdvertTests' do
