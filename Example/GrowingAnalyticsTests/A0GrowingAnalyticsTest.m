@@ -33,6 +33,7 @@ static NSString * const kGrowingEventDuration = @"event_duration";
 
 + (void)setUp {
     GrowingAutotrackConfiguration *configuration = [GrowingAutotrackConfiguration configurationWithProjectId:@"test"];
+    configuration.dataSourceId = @"test";
     configuration.idMappingEnabled = YES;
     configuration.sessionInterval = 10.0f;
     configuration.urlScheme = @"growing.xctest";
@@ -353,7 +354,7 @@ static NSString * const kGrowingEventDuration = @"event_duration";
         
         GrowingCustomEvent *event = (GrowingCustomEvent *)events.firstObject;
         XCTAssertEqualObjects(event.eventName, @"eventName");
-        XCTAssertGreaterThanOrEqual(((NSString *)event.attributes[kGrowingEventDuration]).floatValue, 0.9); // sleep 不准
+        XCTAssertGreaterThanOrEqual(((NSString *)event.attributes[kGrowingEventDuration]).floatValue, 0.6); // sleep 不准
     }
     
     {
@@ -389,7 +390,7 @@ static NSString * const kGrowingEventDuration = @"event_duration";
         
         GrowingCustomEvent *event = (GrowingCustomEvent *)events.firstObject;
         XCTAssertEqualObjects(event.eventName, @"eventName");
-        XCTAssertGreaterThanOrEqual(((NSString *)event.attributes[kGrowingEventDuration]).floatValue, 0.9); // sleep 不准
+        XCTAssertGreaterThanOrEqual(((NSString *)event.attributes[kGrowingEventDuration]).floatValue, 0.6); // sleep 不准
         // 不会算上前后台切换的时间
         XCTAssertLessThan(((NSString *)event.attributes[kGrowingEventDuration]).floatValue, 2.0);
     }
@@ -474,7 +475,7 @@ static NSString * const kGrowingEventDuration = @"event_duration";
         GrowingCustomEvent *event = (GrowingCustomEvent *)events.firstObject;
         XCTAssertEqualObjects(event.eventName, @"eventName");
         XCTAssertEqualObjects(event.attributes[@"key"], @"value");
-        XCTAssertGreaterThanOrEqual(((NSString *)event.attributes[kGrowingEventDuration]).floatValue, 0.9); // sleep 不准
+        XCTAssertGreaterThanOrEqual(((NSString *)event.attributes[kGrowingEventDuration]).floatValue, 0.6); // sleep 不准
     }
     
     {

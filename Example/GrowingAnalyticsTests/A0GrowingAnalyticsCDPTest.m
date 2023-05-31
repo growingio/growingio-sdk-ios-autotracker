@@ -46,6 +46,7 @@ static NSString * const kGrowingEventDuration = @"event_duration";
 
 + (void)setUp {
     GrowingAutotrackConfiguration *configuration = [GrowingAutotrackConfiguration configurationWithProjectId:@"test"];
+    configuration.dataSourceId = @"test";
     configuration.idMappingEnabled = YES;
     configuration.sessionInterval = 10.0f;
     configuration.urlScheme = @"growing.xctest";

@@ -336,9 +336,7 @@ else
 		sh ./scripts/generate_xcframework.sh releaseDefaultAutotracker --verbose
 		sh ./scripts/generate_xcframework.sh releaseDefaultTracker --verbose
 		sh ./scripts/generate_xcframework.sh --help
-
-		> because using of __has_include, if select Protobuf and not select Advert/Hybrid in the same time,
-		> delete Advert/Hybrid folder before building that avoid link error when using the xcframework
+		
 			\033[0m"
 			exit 0
 		elif [[ $arg == '-s' || $arg == '--silent' ]]; then

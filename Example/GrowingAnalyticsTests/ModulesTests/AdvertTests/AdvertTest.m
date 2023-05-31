@@ -46,6 +46,7 @@
 
 - (void)test00SendActivateEvent {
     GrowingAutotrackConfiguration *configuration = [GrowingAutotrackConfiguration configurationWithProjectId:@"test"];
+    configuration.dataSourceId = @"test";
     configuration.urlScheme = @"growing.530c8231345c492d";
     [GrowingAutotracker startWithConfiguration:configuration launchOptions:nil];
     

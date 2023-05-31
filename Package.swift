@@ -63,6 +63,10 @@ let package = Package(
             targets: ["GrowingModule_Hybrid"]
         ),
         .library(
+            name: "GrowingModule_Protobuf",
+            targets: ["GrowingModule_Protobuf"]
+        ),
+        .library(
             name: "GrowingModule_Advert",
             targets: ["GrowingModule_Advert"]
         ),
@@ -79,6 +83,10 @@ let package = Package(
         .package(
             url: "https://github.com/growingio/growingio-sdk-ios-performance-ext.git",
             branch: "master"
+        ),
+        .package(
+            url: "https://github.com/apple/swift-protobuf.git",
+            from: "1.21.0"
         ),
     ],
     targets: [
@@ -135,7 +143,6 @@ let package = Package(
         .target(
             name: "GrowingAutotracker_cdp",
             dependencies: [
-                "GrowingTrackerCore_cdp",
                 "GrowingAutotrackerCore"
             ],
             path: "GrowingAutotracker-cdp",
@@ -146,7 +153,7 @@ let package = Package(
         ),
         .target(
             name: "GrowingTracker_cdp",
-            dependencies: ["GrowingTrackerCore_cdp"],
+            dependencies: ["GrowingTrackerCore"],
             path: "GrowingTracker-cdp",
             publicHeadersPath: ".",
             cSettings: [
@@ -217,15 +224,6 @@ let package = Package(
                 .product(name: "GrowingUtilsAutotrackerCore", package: "growingio-sdk-ios-utilities"),
             ],
             path: "GrowingAutotrackerCore",
-            publicHeadersPath: "Public",
-            cSettings: [
-                .headerSearchPath(".."),
-            ]
-        ),
-        .target(
-            name: "GrowingTrackerCore_cdp",
-            dependencies: ["GrowingTrackerCore"],
-            path: "GrowingTrackerCore-cdp",
             publicHeadersPath: "Public",
             cSettings: [
                 .headerSearchPath(".."),
@@ -334,6 +332,27 @@ let package = Package(
             linkerSettings: [
                 .linkedFramework("WebKit", .when(platforms: [.iOS, .macCatalyst])),
             ]
+        ),
+        .target(
+            name: "GrowingModule_Protobuf",
+            dependencies: [
+                "GrowingTrackerCore",
+                "GrowingService_Database",
+                "GrowingModule_SwiftProtobuf",
+            ],
+            path: "Modules/Protobuf",
+            exclude: ["Proto", "Catagory"],
+            cSettings: [
+                .headerSearchPath("../.."),
+            ]
+        ),
+        .target(
+            name: "GrowingModule_SwiftProtobuf",
+            dependencies: [
+                "GrowingTrackerCore",
+                .product(name: "SwiftProtobuf", package: "swift-protobuf"),
+            ],
+            path: "Modules/SwiftProtobuf"
         ),
         .target(
             name: "GrowingModule_Advert",

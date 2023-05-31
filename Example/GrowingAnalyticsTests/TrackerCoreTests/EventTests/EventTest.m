@@ -46,6 +46,8 @@
 
 + (void)setUp {
     GrowingTrackConfiguration *config = [GrowingTrackConfiguration configurationWithProjectId:@"test"];
+    config.dataSourceId = @"test";
+    
     // 避免不执行readPropertyInTrackThread
     config.dataCollectionEnabled = YES;
     // 开启idMapping
