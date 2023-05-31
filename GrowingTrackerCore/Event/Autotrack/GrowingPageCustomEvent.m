@@ -47,14 +47,14 @@
 #pragma clang diagnostic ignored "-Wincomplete-implementation"
 @implementation GrowingPageCustomBuilder
 
-- (GrowingPageCustomBuilder *(^)(NSString *value))setPath {
+- (GrowingPageCustomBuilder * (^)(NSString *value))setPath {
     return ^(NSString *value) {
         self->_pageName = value;
         return self;
     };
 }
 
-- (GrowingPageCustomBuilder *(^)(long long value))setPageShowTimestamp {
+- (GrowingPageCustomBuilder * (^)(long long value))setPageShowTimestamp {
     return ^(long long value) {
         self->_pageShowTimestamp = value;
         return self;

@@ -36,9 +36,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy, readonly) NSString *eventName;
 
-- (GrowingCustomBuilder *(^)(NSString *value))setEventName;
+- (GrowingCustomBuilder * (^)(NSString *value))setEventName;
 
-- (GrowingCustomBuilder *(^)(NSDictionary <NSString *, NSObject *>*value))setAttributes;
+- (GrowingCustomBuilder * (^)(NSDictionary<NSString *, NSObject *> *value))setAttributes;
 
 @end
 

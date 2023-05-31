@@ -20,7 +20,7 @@
 #import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 
-NSString * const kGrowingDefaultDataCollectionServerHost = @"https://napi.growingio.com";
+NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growingio.com";
 
 @interface GrowingTrackConfiguration ()
 
@@ -42,7 +42,7 @@ NSString * const kGrowingDefaultDataCollectionServerHost = @"https://napi.growin
     if (self) {
         _projectId = [projectId copy];
         _dataSourceId = nil;
-        
+
         _debugEnabled = NO;
         _cellularDataLimit = 10;
         _dataUploadInterval = 15;
@@ -55,13 +55,13 @@ NSString * const kGrowingDefaultDataCollectionServerHost = @"https://napi.growin
         _idMappingEnabled = NO;
         _urlScheme = nil;
         _encryptEnabled = NO;
-        
+
         // Advert
         _ASAEnabled = NO;
         _deepLinkHost = nil;
         _deepLinkCallback = nil;
         _readClipboardEnabled = YES;
-        
+
         // APM
         _APMConfig = nil;
     }
@@ -89,13 +89,13 @@ NSString * const kGrowingDefaultDataCollectionServerHost = @"https://napi.growin
     configuration->_idMappingEnabled = _idMappingEnabled;
     configuration->_urlScheme = _urlScheme;
     configuration->_encryptEnabled = _encryptEnabled;
-    
+
     // Advert
     configuration->_ASAEnabled = _ASAEnabled;
     configuration->_deepLinkHost = [_deepLinkHost copy];
     configuration->_deepLinkCallback = [_deepLinkCallback copy];
     configuration->_readClipboardEnabled = _readClipboardEnabled;
-    
+
     // APM
     configuration->_APMConfig = [_APMConfig copy];
     return configuration;

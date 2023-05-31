@@ -42,8 +42,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *idfa;
 @property (nonatomic, copy, readonly) NSString *idfv;
 
-- (GrowingActivateBuilder *(^)(NSString *value))setEventName;
-- (GrowingActivateBuilder *(^)(NSDictionary<NSString *, NSObject *> *value))setAttributes;
+- (GrowingActivateBuilder * (^)(NSString *value))setEventName;
+- (GrowingActivateBuilder * (^)(NSDictionary<NSString *, NSObject *> *value))setAttributes;
 
 @end
 

@@ -30,22 +30,22 @@
     id<UITableViewDelegate> realDelegate = [GrowingULSwizzler realDelegate:delegate toSelector:selector];
     Class class = realDelegate.class;
     if ([GrowingULSwizzler realDelegateClass:class respondsToSelector:selector]) {
-        void (^didSelectBlock)(id, SEL, id, id) = ^(id view, SEL command, UITableView *tableView, NSIndexPath *indexPath) {
-            if (tableView && indexPath) {
-                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                if (cell) {
-                    [GrowingViewClickProvider viewOnClick:cell];
+        void (^didSelectBlock)(id, SEL, id, id) =
+            ^(id view, SEL command, UITableView *tableView, NSIndexPath *indexPath) {
+                if (tableView && indexPath) {
+                    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                    if (cell) {
+                        [GrowingViewClickProvider viewOnClick:cell];
+                    }
                 }
-            }
-        };
+            };
         [GrowingULSwizzler growingul_swizzleSelector:selector
                                              onClass:class
                                            withBlock:didSelectBlock
                                                named:@"growing_tableView_didSelect"];
     }
-    
+
     [self growing_setDelegate:delegate];
 }
 
 @end
-

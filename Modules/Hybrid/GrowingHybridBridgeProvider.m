@@ -18,24 +18,24 @@
 //  limitations under the License.
 
 #import "Modules/Hybrid/GrowingHybridBridgeProvider.h"
+#import <WebKit/WebKit.h>
+#import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
+#import "GrowingTrackerCore/Event/GrowingConversionVariableEvent.h"
+#import "GrowingTrackerCore/Event/GrowingEventManager.h"
+#import "GrowingTrackerCore/Event/GrowingLoginUserAttributesEvent.h"
+#import "GrowingTrackerCore/Event/GrowingVisitorAttributesEvent.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
+#import "GrowingTrackerCore/Manager/GrowingSession.h"
+#import "GrowingTrackerCore/Public/GrowingAnnotationCore.h"
 #import "GrowingTrackerCore/Public/GrowingBaseEvent.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
-#import "GrowingTrackerCore/Event/GrowingConversionVariableEvent.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
-#import "GrowingTrackerCore/Event/GrowingEventManager.h"
+#import "GrowingULTimeUtil.h"
+#import "Modules/Hybrid/Events/GrowingHybridCustomEvent.h"
 #import "Modules/Hybrid/Events/GrowingHybridEventType.h"
 #import "Modules/Hybrid/Events/GrowingHybridPageEvent.h"
 #import "Modules/Hybrid/Events/GrowingHybridViewElementEvent.h"
-#import "Modules/Hybrid/Events/GrowingHybridCustomEvent.h"
-#import "GrowingTrackerCore/Event/GrowingLoginUserAttributesEvent.h"
-#import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
-#import "GrowingTrackerCore/Manager/GrowingSession.h"
-#import "GrowingTrackerCore/Event/GrowingVisitorAttributesEvent.h"
 #import "Modules/Hybrid/GrowingWebViewDomChangedDelegate.h"
-#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
-#import "GrowingTrackerCore/Public/GrowingAnnotationCore.h"
-#import "GrowingULTimeUtil.h"
-#import <WebKit/WebKit.h>
 
 NSString *const kGrowingJavascriptMessageTypeKey = @"messageType";
 NSString *const kGrowingJavascriptMessageDataKey = @"data";
@@ -76,8 +76,6 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
 
     return _sharedInstance;
 }
-
-
 
 - (void)handleJavascriptBridgeMessage:(NSString *)message {
     GIOLogDebug(@"handleJavascriptBridgeMessage: %@", message);
@@ -127,8 +125,8 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
 }
 
 - (void)getDomTreeForWebView:(WKWebView *)webView
-           completionHandler:(void (^_Nonnull)(NSDictionary *_Nullable domTee,
-                                               NSError *_Nullable error))completionHandler {
+           completionHandler:
+               (void (^_Nonnull)(NSDictionary *_Nullable domTee, NSError *_Nullable error))completionHandler {
     __block BOOL finished = NO;
     __block NSDictionary *resultDic = nil;
     __block NSError *resultError = nil;
@@ -146,12 +144,13 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
     int top = (int)(rect.origin.y * scale);
     int width = (int)(rect.size.width * scale);
     int height = (int)(rect.size.height * scale);
-    NSString *javaScript = [NSString stringWithFormat:@"window.GrowingWebViewJavascriptBridge.getDomTree(%i, %i, %i, %i, 100)",
-                                                      left,
-                                                      top,
-                                                      width,
-                                                      height];
-    //方法不会阻塞线程，而且它的回调代码块总是在主线程中运行。
+    NSString *javaScript =
+        [NSString stringWithFormat:@"window.GrowingWebViewJavascriptBridge.getDomTree(%i, %i, %i, %i, 100)",
+                                   left,
+                                   top,
+                                   width,
+                                   height];
+    // 方法不会阻塞线程，而且它的回调代码块总是在主线程中运行。
     [webView evaluateJavaScript:javaScript
               completionHandler:^(id _Nullable result, NSError *error) {
                   if ([result isKindOfClass:[NSDictionary class]]) {
@@ -222,7 +221,8 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
                       .setTitle(dict[@KEY_TITLE])
                       .setReferralPage(dict[@KEY_REFERRAL_PAGE])
                       .setPath(dict[@KEY_PATH])
-                      .setTimestamp([dict growingHelper_longlongForKey:@KEY_TIMESTAMP fallback:[GrowingULTimeUtil currentTimeMillis]])
+                      .setTimestamp([dict growingHelper_longlongForKey:@KEY_TIMESTAMP
+                                                              fallback:[GrowingULTimeUtil currentTimeMillis]])
                       .setAttributes([self safeAttributesFromDict:dict])
                       .setDomain([self getDomain:dict]);
     } else if ([type isEqualToString:GrowingEventTypeVisit]) {

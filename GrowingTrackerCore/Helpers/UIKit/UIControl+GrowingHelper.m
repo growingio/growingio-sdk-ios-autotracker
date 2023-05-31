@@ -18,62 +18,47 @@
 //  limitations under the License.
 
 #if __has_include(<UIKit/UIKit.h>)
-#import "GrowingTrackerCore/Helpers/UIKit/UIControl+GrowingHelper.h"
 #import <objc/runtime.h>
+#import "GrowingTrackerCore/Helpers/UIKit/UIControl+GrowingHelper.h"
 
-#define UICONTROL_BLOCK(EVENT,GETTER,SETTER)                                    \
-static const char  GETTER ## _key;                                              \
-- (void)SETTER:(void (^)(void))block                                            \
-{                                                                               \
-    NSInteger flag = 0;                                                         \
-    if(self.GETTER)                                                             \
-    {                                                                           \
-        flag -= 1;                                                              \
-    }                                                                           \
-    if (block)                                                                  \
-    {                                                                           \
-        flag += 1;                                                              \
-    }                                                                           \
-    objc_setAssociatedObject(self,                                              \
-                             & GETTER ## _key,                                  \
-                             block,                                             \
-                             OBJC_ASSOCIATION_COPY_NONATOMIC);                  \
-                                                                                \
-    switch (flag) {                                                             \
-        case -1:                                                                \
-            [self removeTarget:self                                             \
-                        action:@selector( __ ## GETTER ## _handle)              \
-              forControlEvents:EVENT];                                          \
-            break;                                                              \
-        case 0:                                                                 \
-            break;                                                              \
-        case 1:                                                                 \
-        default:                                                                \
-            [self addTarget:self                                                \
-                     action:@selector( __ ## GETTER ## _handle)                 \
-           forControlEvents:EVENT];                                             \
-            break;                                                              \
-    }                                                                           \
-}                                                                               \
-- (void(^)(void))GETTER                                                         \
-{                                                                               \
-    return objc_getAssociatedObject(self, & GETTER ## _key);                    \
-}                                                                               \
-- (void)__ ## GETTER ## _handle                                                 \
-{                                                                               \
-    if (self.GETTER)                                                            \
-    {                                                                           \
-        self.GETTER();                                                          \
-    }                                                                           \
-}                                                                               \
+#define UICONTROL_BLOCK(EVENT, GETTER, SETTER)                                                         \
+    static const char GETTER##_key;                                                                    \
+    -(void)SETTER : (void (^)(void))block {                                                            \
+        NSInteger flag = 0;                                                                            \
+        if (self.GETTER) {                                                                             \
+            flag -= 1;                                                                                 \
+        }                                                                                              \
+        if (block) {                                                                                   \
+            flag += 1;                                                                                 \
+        }                                                                                              \
+        objc_setAssociatedObject(self, &GETTER##_key, block, OBJC_ASSOCIATION_COPY_NONATOMIC);         \
+                                                                                                       \
+        switch (flag) {                                                                                \
+            case -1:                                                                                   \
+                [self removeTarget:self action:@selector(__##GETTER##_handle) forControlEvents:EVENT]; \
+                break;                                                                                 \
+            case 0:                                                                                    \
+                break;                                                                                 \
+            case 1:                                                                                    \
+            default:                                                                                   \
+                [self addTarget:self action:@selector(__##GETTER##_handle) forControlEvents:EVENT];    \
+                break;                                                                                 \
+        }                                                                                              \
+    }                                                                                                  \
+    -(void (^)(void))GETTER {                                                                          \
+        return objc_getAssociatedObject(self, &GETTER##_key);                                          \
+    }                                                                                                  \
+    -(void)__##GETTER##_handle {                                                                       \
+        if (self.GETTER) {                                                                             \
+            self.GETTER();                                                                             \
+        }                                                                                              \
+    }
 
-
-@implementation UIControl(GrowingHelper)
+@implementation UIControl (GrowingHelper)
 UICONTROL_BLOCK(UIControlEventTouchUpInside, growingHelper_onClick, setGrowingHelper_onClick)
 @end
 
-
-@implementation UITextField(GrowingHelper)
+@implementation UITextField (GrowingHelper)
 UICONTROL_BLOCK(UIControlEventEditingChanged, growingHelper_onTextChange, setGrowingHelper_onTextChange)
 @end
 #endif

@@ -23,4 +23,3 @@ FOUNDATION_EXPORT GrowingEventType const GrowingEventTypeActivate;
 FOUNDATION_EXPORT NSString *const GrowingAdvertEventNameActivate;
 FOUNDATION_EXPORT NSString *const GrowingAdvertEventNameDefer;
 FOUNDATION_EXPORT NSString *const GrowingAdvertEventNameReengage;
-

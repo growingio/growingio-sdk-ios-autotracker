@@ -17,11 +17,11 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
 #import <Foundation/Foundation.h>
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
-#import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
-#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 
 @implementation GrowingNetworkConfig
 
@@ -36,7 +36,8 @@ static GrowingNetworkConfig *sharedInstance;
 }
 
 + (NSString *)generateValidEndPoint:(NSString *)customHost {
-    NSString *validEndPoint = [[customHost stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] copy];
+    NSString *validEndPoint =
+        [[customHost stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] copy];
     if (!validEndPoint.length) {
         GIOLogError(@"An empty string is set as tracker host.");
         return @"";
@@ -53,7 +54,7 @@ static GrowingNetworkConfig *sharedInstance;
     return validEndPoint;
 }
 
-//获取url字段
+// 获取url字段
 + (NSString *)absoluteURL {
     NSString *baseUrl = [GrowingNetworkConfig sharedInstance].growingApiHostEnd;
     if (!baseUrl.length) {
@@ -64,7 +65,7 @@ static GrowingNetworkConfig *sharedInstance;
 }
 
 + (NSString *)path {
-    NSString *accountId = [GrowingConfigurationManager sharedInstance].trackConfiguration.projectId ? : @"";
+    NSString *accountId = [GrowingConfigurationManager sharedInstance].trackConfiguration.projectId ?: @"";
     NSString *path = [NSString stringWithFormat:@"v3/projects/%@/collect", accountId];
     return path;
 }

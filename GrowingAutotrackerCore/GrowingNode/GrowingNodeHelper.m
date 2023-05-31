@@ -18,18 +18,18 @@
 //  limitations under the License.
 
 #import "GrowingAutotrackerCore/GrowingNode/GrowingNodeHelper.h"
-#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
+#import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
+#import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
-#import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
-#import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 
 static NSString *const kGrowingNodeRootPage = @"Page";
 static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
 
 @implementation GrowingNodeHelper
 
-//当node为列表视图时，返回路径为 TableView/cell[-]，序号在index字段中返回
+// 当node为列表视图时，返回路径为 TableView/cell[-]，序号在index字段中返回
 + (nullable NSString *)xPathSimilarForNode:(id<GrowingNode>)node {
     if ([node isKindOfClass:[UIView class]]) {
         return [self xPathForView:(UIView *)node similar:YES];
@@ -89,7 +89,7 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
             }
             node = node.growingNodeParent;
         }
-        //如果遍历到了根节点(即没有parent)，说明所有层级vc都被过滤，则添加IgnorePage
+        // 如果遍历到了根节点(即没有parent)，说明所有层级vc都被过滤，则添加IgnorePage
         if (!node) {
             [viewPathArray addObject:kGrowingNodeRootIgnore];
         }
@@ -168,13 +168,13 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
         .build;
 }
 
-//文本
+// 文本
 static NSString *const kGrowingViewNodeText = @"TEXT";
-//按钮
+// 按钮
 static NSString *const kGrowingViewNodeButton = @"BUTTON";
-//输入框
+// 输入框
 static NSString *const kGrowingViewNodeInput = @"INPUT";
-//列表元素 - 这里指TableView中的cell元素
+// 列表元素 - 这里指TableView中的cell元素
 static NSString *const kGrowingViewNodeList = @"LIST";
 // WKWebView - webview只做标记用，不参与元素定义。
 static NSString *const kGrowingViewNodeWebView = @"WEB_VIEW";
@@ -188,10 +188,8 @@ static NSString *const kGrowingViewNodeWebView = @"WEB_VIEW";
     if ([view isKindOfClass:NSClassFromString(@"_UIButtonBarButton")] ||
         [view isKindOfClass:NSClassFromString(@"_UIModernBarButton")]) {
         nodetype = kGrowingViewNodeButton;
-    } else if ([view isKindOfClass:[UITextField class]] ||
-               [view isKindOfClass:[UISearchBar class]] ||
-               [view isKindOfClass:[UITextView class]] ||
-               [view isKindOfClass:[UISlider class]] ||
+    } else if ([view isKindOfClass:[UITextField class]] || [view isKindOfClass:[UISearchBar class]] ||
+               [view isKindOfClass:[UITextView class]] || [view isKindOfClass:[UISlider class]] ||
                [view isKindOfClass:[UISwitch class]]) {
         nodetype = kGrowingViewNodeInput;
     } else if ([view isKindOfClass:[UICollectionViewCell class]] || [view isKindOfClass:[UITableViewCell class]]) {

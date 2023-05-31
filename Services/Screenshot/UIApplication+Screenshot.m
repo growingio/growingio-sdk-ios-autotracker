@@ -17,16 +17,16 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "Services/Screenshot/UIApplication+Screenshot.h"
 #import "Services/Screenshot/GrowingScreenshotProvider.h"
+#import "Services/Screenshot/UIApplication+Screenshot.h"
 
 @implementation UIApplication (Screenshot)
 
 - (void)growing_sendEvent:(UIEvent *)event {
     [self growing_sendEvent:event];
-    
+
     if (event.type == UIEventTypeTouches) {
-        //触摸 滑动都会在这里触发
+        // 触摸 滑动都会在这里触发
         [[GrowingScreenshotProvider sharedInstance] dispatchApplicationEventSendEvent:event];
     }
 }

@@ -18,19 +18,19 @@
 //  limitations under the License.
 
 #import "GrowingAutotrackerCore/GrowingRealAutotracker.h"
-#import "GrowingAutotrackerCore/Autotrack/UIApplication+GrowingAutotracker.h"
-#import "GrowingAutotrackerCore/Autotrack/UISegmentedControl+GrowingAutotracker.h"
-#import "GrowingAutotrackerCore/Autotrack/UIView+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/Autotrack/NSNotificationCenter+GrowingAutotracker.h"
-#import "GrowingAutotrackerCore/Autotrack/UITableView+GrowingAutotracker.h"
-#import "GrowingAutotrackerCore/Autotrack/UICollectionView+GrowingAutotracker.h"
-#import "GrowingAutotrackerCore/Autotrack/UITapGestureRecognizer+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/Autotrack/UIAlertController+GrowingAutotracker.h"
-#import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
+#import "GrowingAutotrackerCore/Autotrack/UIApplication+GrowingAutotracker.h"
+#import "GrowingAutotrackerCore/Autotrack/UICollectionView+GrowingAutotracker.h"
+#import "GrowingAutotrackerCore/Autotrack/UISegmentedControl+GrowingAutotracker.h"
+#import "GrowingAutotrackerCore/Autotrack/UITableView+GrowingAutotracker.h"
+#import "GrowingAutotrackerCore/Autotrack/UITapGestureRecognizer+GrowingAutotracker.h"
+#import "GrowingAutotrackerCore/Autotrack/UIView+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/Impression/GrowingImpressionTrack.h"
+#import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
-#import "GrowingULViewControllerLifecycle.h"
 #import "GrowingULSwizzle.h"
+#import "GrowingULViewControllerLifecycle.h"
 
 @implementation GrowingRealAutotracker
 
@@ -58,7 +58,7 @@
         if (applicatonError) {
             GIOLogError(@"Failed to swizzle UIApplication. Details: %@", applicatonError);
         }
-        
+
         // UISegmentControl
         NSError *segmentControlError = NULL;
         [UISegmentedControl growingul_swizzleMethod:@selector(initWithCoder:)
@@ -118,9 +118,8 @@
         }
 
         // UIAlertController
-        SEL oldDismissActionSEL = NSSelectorFromString([NSString stringWithFormat:@"_%@:%@:",
-                                                                                  @"dismissAnimated",
-                                                                                  @"triggeringAction"]);
+        SEL oldDismissActionSEL =
+            NSSelectorFromString([NSString stringWithFormat:@"_%@:%@:", @"dismissAnimated", @"triggeringAction"]);
 
         NSString *dismissActionStr = [NSString stringWithFormat:@"_%@:%@:%@:%@:",
                                                                 @"dismissAnimated",
@@ -134,9 +133,11 @@
                                         withMethod:@selector(growing_dismissAnimated:triggeringAction:)
                                              error:&alertError];
 
-        [UIAlertController growingul_swizzleMethod:dismissActionSELFromIOS11
-                                        withMethod:@selector(growing_dismissAnimated:triggeringAction:triggeredByPopoverDimmingView:dismissCompletion:)
-                                             error:&alertError];
+        [UIAlertController
+            growingul_swizzleMethod:dismissActionSELFromIOS11
+                         withMethod:@selector(growing_dismissAnimated:
+                                                     triggeringAction:triggeredByPopoverDimmingView:dismissCompletion:)
+                              error:&alertError];
 
         if (alertError) {
             GIOLogError(@"Failed to swizzle UIAlertController. Details: %@", alertError);

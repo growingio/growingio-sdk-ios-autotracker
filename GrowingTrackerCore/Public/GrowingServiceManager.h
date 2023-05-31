@@ -32,9 +32,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)registerServiceName:(NSString *)serviceName implClassName:(NSString *)serviceClassName;
 
-- (void)registerService:(Protocol*)service implClass:(Class)serviceClass;
+- (void)registerService:(Protocol *)service implClass:(Class)serviceClass;
 
-- (id)createService:(Protocol*)service;
+- (id)createService:(Protocol *)service;
 
 - (id)serviceImplClass:(Protocol *)service;
 

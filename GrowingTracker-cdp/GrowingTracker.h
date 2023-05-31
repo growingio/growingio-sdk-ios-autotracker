@@ -83,7 +83,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 发送一个自定义事件
 /// @param eventName 自定义事件名称
 /// @param attributes 事件发生时所伴随的维度信息
-- (void)trackCustomEvent:(NSString *)eventName withAttributes:(NSDictionary <NSString *, NSString *> *)attributes;
+- (void)trackCustomEvent:(NSString *)eventName withAttributes:(NSDictionary<NSString *, NSString *> *)attributes;
 
 /// 初始化事件计时器
 /// @param eventName 自定义事件名称
@@ -105,7 +105,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 停止事件计时器，并发送一个自定义事件
 /// @param timerId 计时器唯一标识
 /// @param attributes 事件发生时所伴随的维度信息
-- (void)trackTimerEnd:(NSString *)timerId withAttributes:(NSDictionary <NSString *, NSString *> *)attributes;
+- (void)trackTimerEnd:(NSString *)timerId withAttributes:(NSDictionary<NSString *, NSString *> *)attributes;
 
 /// 删除事件计时器
 /// @param timerId 计时器唯一标识

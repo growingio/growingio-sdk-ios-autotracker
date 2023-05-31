@@ -23,7 +23,7 @@
 
 @required
 
-+ (void)onFlutterCircleDataChange:(void(^_Nullable)(NSDictionary *_Nonnull data))handler;
++ (void)onFlutterCircleDataChange:(void (^_Nullable)(NSDictionary *_Nonnull data))handler;
 + (void)onWebCircleStart;
 + (void)onWebCircleStop;
 

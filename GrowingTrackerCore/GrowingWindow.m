@@ -35,11 +35,10 @@
 }
 
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
-    return [[UIApplication sharedApplication]statusBarOrientation];
+    return [[UIApplication sharedApplication] statusBarOrientation];
 }
 
 @end
-
 
 @interface GrowingWindowContentView : UIView
 
@@ -62,7 +61,7 @@
     return self;
 }
 
-- (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
     UIView *view = [super hitTest:point withEvent:event];
     if (view == self) {
         return nil;
@@ -96,9 +95,7 @@
 
 - (void)_growingWindowTrySetShow {
     if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
-        [self performSelector:@selector(_growingWindowSetShow)
-                   withObject:nil
-                   afterDelay:0.1];
+        [self performSelector:@selector(_growingWindowSetShow) withObject:nil afterDelay:0.1];
     } else {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self _growingWindowTrySetShow];
@@ -107,53 +104,53 @@
 }
 
 - (void)_growingWindowSetShow {
-    if (self.showWindow) { return; }
-    
+    if (self.showWindow) {
+        return;
+    }
+
     UIWindow *window = [[GrowingWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.showWindow = window;
-    window.windowLevel = UIWindowLevelAlert+100;
+    window.windowLevel = UIWindowLevelAlert + 100;
     self.frame = window.bounds;
     [window.rootViewController.view addSubview:self];
     window.hidden = NO;
 }
 
-- (void)addWindowView:(GrowingWindowView*)view {
+- (void)addWindowView:(GrowingWindowView *)view {
     if (!view) {
         return;
     }
-    
+
     if (!self.childWindowView) {
         self.childWindowView = [[NSMutableArray alloc] init];
     }
-    
+
     [self.childWindowView addObject:view];
 
     __block BOOL added = NO;
-    [self.childWindowView enumerateObjectsUsingBlock:^(__kindof GrowingWindowView * _Nonnull obj,
-                                                                  NSUInteger idx,
-                                                                  BOOL * _Nonnull stop) {
-        
-        if (obj.growingViewLevel > view.growingViewLevel) {
-            NSInteger index = [self.subviews indexOfObject:obj];
-            if (index != NSNotFound) {
-                [self insertSubview:view atIndex:index];
-                added = YES;
-                *stop = YES;
+    [self.childWindowView
+        enumerateObjectsUsingBlock:^(__kindof GrowingWindowView *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+            if (obj.growingViewLevel > view.growingViewLevel) {
+                NSInteger index = [self.subviews indexOfObject:obj];
+                if (index != NSNotFound) {
+                    [self insertSubview:view atIndex:index];
+                    added = YES;
+                    *stop = YES;
+                }
             }
-        }
-    }];
-    
+        }];
+
     if (!added) {
         [[GrowingWindowContentView sharedInstance] addSubview:view];
     }
 }
 
-- (void)removeWindowView:(GrowingWindowView*)view {
+- (void)removeWindowView:(GrowingWindowView *)view {
     [view removeFromSuperview];
     [self.childWindowView removeObject:view];
 }
 
-- (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
     UIView *view = [super hitTest:point withEvent:event];
     if (view == self) {
         return nil;

@@ -54,71 +54,69 @@
     dataDict[@"xpath"] = self.xpath;
     dataDict[@"nodeType"] = self.nodeType;
     dataDict[@"isContainer"] = @(self.isContainer);
-    dataDict[@"index"] = self.index >= 0 ? @(self.index):nil;
+    dataDict[@"index"] = self.index >= 0 ? @(self.index) : nil;
     dataDict[@"parentXPath"] = self.parentXPath;
     dataDict[@"page"] = self.page;
     dataDict[@"domain"] = self.domain;
     return [dataDict copy];
 }
 
-
 @end
-
 
 @implementation GrowingWebCircleElementBuilder
 
-- (GrowingWebCircleElementBuilder *(^)(CGRect value))setRect {
+- (GrowingWebCircleElementBuilder * (^)(CGRect value))setRect {
     return ^(CGRect value) {
         self->_rect = value;
         return self;
     };
 }
-- (GrowingWebCircleElementBuilder *(^)(int value))setZLevel {
+- (GrowingWebCircleElementBuilder * (^)(int value))setZLevel {
     return ^(int value) {
         self->_zLevel = value;
         return self;
     };
 }
-- (GrowingWebCircleElementBuilder *(^)(NSString *value))setContent {
+- (GrowingWebCircleElementBuilder * (^)(NSString *value))setContent {
     return ^(NSString *value) {
         self->_content = value;
         return self;
     };
 }
-- (GrowingWebCircleElementBuilder *(^)(NSString *value))setXpath {
+- (GrowingWebCircleElementBuilder * (^)(NSString *value))setXpath {
     return ^(NSString *value) {
         self->_xpath = value;
         return self;
     };
 }
-- (GrowingWebCircleElementBuilder *(^)(NSString *value))setNodeType {
+- (GrowingWebCircleElementBuilder * (^)(NSString *value))setNodeType {
     return ^(NSString *value) {
         self->_nodeType = value;
         return self;
     };
 }
 
-- (GrowingWebCircleElementBuilder *(^)(NSString *value))setParentXPath {
+- (GrowingWebCircleElementBuilder * (^)(NSString *value))setParentXPath {
     return ^(NSString *value) {
         self->_parentXPath = value;
         return self;
     };
 }
 
-- (GrowingWebCircleElementBuilder *(^)(BOOL value))setIsContainer {
+- (GrowingWebCircleElementBuilder * (^)(BOOL value))setIsContainer {
     return ^(BOOL value) {
         self->_isContainer = value;
         return self;
     };
 }
-- (GrowingWebCircleElementBuilder *(^)(int value))setIndex {
+- (GrowingWebCircleElementBuilder * (^)(int value))setIndex {
     return ^(int value) {
         self->_index = value;
         return self;
     };
 }
 
-- (GrowingWebCircleElementBuilder *(^)(NSString *value))setPage {
+- (GrowingWebCircleElementBuilder * (^)(NSString *value))setPage {
     return ^(NSString *value) {
         self->_page = value;
         return self;

@@ -20,15 +20,15 @@
 #if __has_include(<UIKit/UIKit.h>)
 #import <UIKit/UIKit.h>
 
-@interface UIControl(GrowingHelper)
+@interface UIControl (GrowingHelper)
 
-@property (nonatomic, copy) void(^growingHelper_onClick)(void);
+@property (nonatomic, copy) void (^growingHelper_onClick)(void);
 
 @end
 
-@interface UITextField(GrowingHelper)
+@interface UITextField (GrowingHelper)
 
-@property (nonatomic, copy) void(^growingHelper_onTextChange)(void);
+@property (nonatomic, copy) void (^growingHelper_onTextChange)(void);
 
 @end
 #endif

@@ -19,4 +19,4 @@
 
 #import "Modules/Hybrid/Events/GrowingHybridEventType.h"
 
-NSString * const GrowingEventTypeFormSubmit = @"FORM_SUBMIT";
+NSString *const GrowingEventTypeFormSubmit = @"FORM_SUBMIT";

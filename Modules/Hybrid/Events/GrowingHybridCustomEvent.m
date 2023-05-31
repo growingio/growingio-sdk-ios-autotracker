@@ -23,14 +23,13 @@
 
 - (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
     if (self = [super initWithBuilder:builder]) {
-        GrowingHybridCustomBuilder *subBuilder = (GrowingHybridCustomBuilder*)builder;
+        GrowingHybridCustomBuilder *subBuilder = (GrowingHybridCustomBuilder *)builder;
         _query = subBuilder.query;
     }
     return self;
 }
 
-
-+ (GrowingHybridCustomBuilder*)builder {
++ (GrowingHybridCustomBuilder *)builder {
     return [[GrowingHybridCustomBuilder alloc] init];
 }
 
@@ -46,8 +45,8 @@
 #pragma clang diagnostic ignored "-Wincomplete-implementation"
 @implementation GrowingHybridCustomBuilder
 
-- (GrowingHybridCustomBuilder *(^)(NSString *value))setQuery {
-    return  ^(NSString *value){
+- (GrowingHybridCustomBuilder * (^)(NSString *value))setQuery {
+    return ^(NSString *value) {
         self->_query = value;
         return self;
     };

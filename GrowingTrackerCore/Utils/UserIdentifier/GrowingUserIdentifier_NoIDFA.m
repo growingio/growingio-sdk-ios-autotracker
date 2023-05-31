@@ -17,8 +17,8 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Utils/UserIdentifier/GrowingUserIdentifier.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
+#import "GrowingTrackerCore/Utils/UserIdentifier/GrowingUserIdentifier.h"
 
 #if __has_include(<UIKit/UIKit.h>)
 #import <UIKit/UIKit.h>
@@ -57,13 +57,10 @@
 
 #if TARGET_OS_OSX || TARGET_OS_MACCATALYST
 + (nullable NSString *)platformUUID {
-    io_service_t service = IOServiceGetMatchingService(kIOMasterPortDefault,
-                                                       IOServiceMatching("IOPlatformExpertDevice"));
+    io_service_t service =
+        IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("IOPlatformExpertDevice"));
     if (service) {
-        CFStringRef ref = IORegistryEntryCreateCFProperty(service,
-                                                          CFSTR(kIOPlatformUUIDKey),
-                                                          kCFAllocatorDefault,
-                                                          0);
+        CFStringRef ref = IORegistryEntryCreateCFProperty(service, CFSTR(kIOPlatformUUIDKey), kCFAllocatorDefault, 0);
         IOObjectRelease(service);
         if (ref) {
             NSString *string = [NSString stringWithString:(__bridge NSString *)ref];

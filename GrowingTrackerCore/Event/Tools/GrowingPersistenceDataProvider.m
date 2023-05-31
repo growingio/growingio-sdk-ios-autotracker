@@ -26,7 +26,7 @@ static NSString *kGrowingUserdefault_loginUserKey = @"growingio.userdefault.logi
 static NSString *kGrowingUserdefault_globalId = @"growingio.userdefault.globalId";
 static NSString *kGrowingUserdefault_prefix = @"growingio.userdefault";
 
-@interface GrowingPersistenceDataProvider()
+@interface GrowingPersistenceDataProvider ()
 
 @property (nonatomic, strong) NSUserDefaults *growingUserdefault;
 
@@ -57,50 +57,50 @@ static GrowingPersistenceDataProvider *persistence = nil;
     return self;
 }
 
-- (void)setLoginUserId:(NSString * _Nullable)loginUserId {
-    //空值
+- (void)setLoginUserId:(NSString *_Nullable)loginUserId {
+    // 空值
     if (!loginUserId || loginUserId.length == 0) {
         loginUserId = @"";
     }
     [_growingUserdefault setValue:loginUserId forKey:kGrowingUserdefault_loginUserId];
-    //write now!
+    // write now!
     [_growingUserdefault synchronize];
 }
 
 - (nullable NSString *)loginUserId {
-    return  [_growingUserdefault valueForKey:kGrowingUserdefault_loginUserId];
+    return [_growingUserdefault valueForKey:kGrowingUserdefault_loginUserId];
 }
 
-- (void)setLoginUserKey:(NSString * _Nullable)loginUserKey {
-    //空值
+- (void)setLoginUserKey:(NSString *_Nullable)loginUserKey {
+    // 空值
     if (!loginUserKey || loginUserKey.length == 0) {
         loginUserKey = @"";
     }
     [_growingUserdefault setValue:loginUserKey forKey:kGrowingUserdefault_loginUserKey];
-    //write now!
+    // write now!
     [_growingUserdefault synchronize];
 }
 
 - (nullable NSString *)loginUserKey {
-    return  [_growingUserdefault valueForKey:kGrowingUserdefault_loginUserKey];
+    return [_growingUserdefault valueForKey:kGrowingUserdefault_loginUserKey];
 }
 
-///设置NSString,NSNumber
+/// 设置NSString,NSNumber
 - (void)setString:(NSString *)value forKey:(NSString *)key {
     [_growingUserdefault setValue:value forKey:key];
 }
 
-- (NSString *)getStringforKey:(NSString *)key; {
-    return [_growingUserdefault valueForKey:key];
-}
+- (NSString *)getStringforKey:(NSString *)key;
+{ return [_growingUserdefault valueForKey:key]; }
 
-- (GrowingEventSequenceObject*)getAndIncrement:(NSString *)eventType {
+- (GrowingEventSequenceObject *)getAndIncrement:(NSString *)eventType {
     long long globalId = [self increaseFor:kGrowingUserdefault_globalId spanValue:1];
-    long long eventTypeId = [self increaseFor:[NSString stringWithFormat:@"%@.%@",kGrowingUserdefault_prefix, eventType] spanValue:1];
-    GrowingEventSequenceObject* obj = [[GrowingEventSequenceObject alloc] init];
+    long long eventTypeId =
+        [self increaseFor:[NSString stringWithFormat:@"%@.%@", kGrowingUserdefault_prefix, eventType] spanValue:1];
+    GrowingEventSequenceObject *obj = [[GrowingEventSequenceObject alloc] init];
     obj.globalId = globalId;
     obj.eventTypeId = eventTypeId;
-    return  obj;
+    return obj;
 }
 
 - (long long)increaseFor:(NSString *)key spanValue:(int)span {
@@ -108,7 +108,7 @@ static GrowingPersistenceDataProvider *persistence = nil;
     if (!value) {
         value = [NSNumber numberWithLongLong:0];
     }
-    
+
     long long result = value.longLongValue + span;
     value = @(result);
     [_growingUserdefault setValue:value forKey:key];

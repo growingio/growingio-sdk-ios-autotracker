@@ -18,11 +18,11 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Network/Request/GrowingEventRequest.h"
-#import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
-#import "GrowingTrackerCore/Network/Request/Adapter/GrowingEventRequestAdapters.h"
-#import "GrowingTrackerCore/Network/Request/Adapter/GrowingRequestAdapter.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Network/Request/Adapter/GrowingEventRequestAdapters.h"
+#import "GrowingTrackerCore/Network/Request/Adapter/GrowingRequestAdapter.h"
+#import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
 #import "GrowingULTimeUtil.h"
 
 @implementation GrowingEventRequest
@@ -48,13 +48,13 @@
     if (!baseUrl.length) {
         return nil;
     }
-    
+
     NSString *absoluteURLString = [baseUrl growingHelper_absoluteURLStringWithPath:self.path andQuery:self.query];
     return [NSURL URLWithString:absoluteURLString];
 }
 
 - (NSString *)path {
-    NSString *accountId = [GrowingConfigurationManager sharedInstance].trackConfiguration.projectId ? : @"";
+    NSString *accountId = [GrowingConfigurationManager sharedInstance].trackConfiguration.projectId ?: @"";
     NSString *path = [NSString stringWithFormat:@"v3/projects/%@/collect", accountId];
     return path;
 }
@@ -62,7 +62,7 @@
 - (NSArray<id<GrowingRequestAdapter>> *)adapters {
     GrowingRequestHeaderAdapter *basicHeaderAdapter = [GrowingRequestHeaderAdapter adapterWithRequest:self];
     GrowingRequestMethodAdapter *methodAdapter = [GrowingRequestMethodAdapter adapterWithRequest:self];
-    
+
     NSMutableArray *adapters = [NSMutableArray arrayWithObjects:basicHeaderAdapter, methodAdapter, nil];
     for (Class cls in GrowingEventRequestAdapters.sharedInstance.adapters) {
         [adapters addObject:[cls performSelector:@selector(adapterWithRequest:) withObject:self]];
@@ -72,7 +72,7 @@
 
 - (NSDictionary *)query {
     NSString *stm = [NSString stringWithFormat:@"%llu", self.stm];
-    return @{@"stm" : stm};
+    return @{@"stm": stm};
 }
 
 @end

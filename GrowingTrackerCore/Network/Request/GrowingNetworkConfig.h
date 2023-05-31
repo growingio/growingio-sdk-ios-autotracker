@@ -36,7 +36,8 @@
 /// 返回url path eg:v3/projects/91eaf9b283361032/collect
 + (NSString *)path;
 
-/// 返回GrowingTrackConfiguration配置的dataCollectionServerHost，如果没有额外配置该参数的话，默认返回 https://napi.growingio.com
+/// 返回GrowingTrackConfiguration配置的dataCollectionServerHost，如果没有额外配置该参数的话，默认返回
+/// https://napi.growingio.com
 - (NSString *)growingApiHostEnd;
 
 @end

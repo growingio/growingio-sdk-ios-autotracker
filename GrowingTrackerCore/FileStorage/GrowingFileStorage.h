@@ -44,8 +44,7 @@
 
 @end
 
-typedef NS_ENUM(NSUInteger, GrowingUserDirectory)
-{
+typedef NS_ENUM(NSUInteger, GrowingUserDirectory) {
     GrowingUserDirectoryCaches,
     GrowingUserDirectoryDocuments,
     GrowingUserDirectoryLibrary,
@@ -64,7 +63,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype _Nonnull)initWithName:(NSString *_Nonnull)name directory:(GrowingUserDirectory)directory;
 
-- (instancetype _Nonnull)initWithName:(NSString *_Nonnull)name directory:(GrowingUserDirectory)directory crypto:(id<GrowingEncryptionService> _Nullable)crypto;
+- (instancetype _Nonnull)initWithName:(NSString *_Nonnull)name
+                            directory:(GrowingUserDirectory)directory
+                               crypto:(id<GrowingEncryptionService> _Nullable)crypto;
 
 - (NSURL *_Nonnull)urlForKey:(NSString *_Nonnull)key;
 

@@ -54,11 +54,12 @@ static GrowingDataTraffic *_instance;
     }
 }
 
-
 + (unsigned long long)cellularNetworkUploadEventSize {
-    NSString *todayUploadEvent = [[GrowingDataTraffic sharedInstance].storeDict valueForKey:kGrowingCellularUploadEventSize];
+    NSString *todayUploadEvent =
+        [[GrowingDataTraffic sharedInstance].storeDict valueForKey:kGrowingCellularUploadEventSize];
     NSArray *todayUploadEventArray = [todayUploadEvent componentsSeparatedByString:@"/"];
-    if (todayUploadEventArray.count >= 2 && [[todayUploadEventArray objectAtIndex:1] isEqualToString:[self getTodayKey]]) {
+    if (todayUploadEventArray.count >= 2 &&
+        [[todayUploadEventArray objectAtIndex:1] isEqualToString:[self getTodayKey]]) {
         return [todayUploadEventArray.firstObject longLongValue];
     } else {
         return 0;
@@ -66,17 +67,19 @@ static GrowingDataTraffic *_instance;
 }
 
 + (void)cellularNetworkStorgeEventSize:(unsigned long long)uploadEventSize {
-    NSString *todayUploadEvent = [NSString stringWithFormat:@"%@/%@", [NSString stringWithFormat:@"%llu",uploadEventSize], [self getTodayKey]];
+    NSString *todayUploadEvent =
+        [NSString stringWithFormat:@"%@/%@", [NSString stringWithFormat:@"%llu", uploadEventSize], [self getTodayKey]];
     [[GrowingDataTraffic sharedInstance].storeDict setObject:todayUploadEvent forKey:kGrowingCellularUploadEventSize];
-    [[GrowingDataTraffic sharedInstance].cellularTrafficStorage setDictionary:[GrowingDataTraffic sharedInstance].storeDict forKey:kGrowingUploadEventFileKey];
+    [[GrowingDataTraffic sharedInstance].cellularTrafficStorage
+        setDictionary:[GrowingDataTraffic sharedInstance].storeDict
+               forKey:kGrowingUploadEventFileKey];
 }
 
-+ (NSString*)getTodayKey {
++ (NSString *)getTodayKey {
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyy-MM-dd"];
     NSString *date = [dateFormatter stringFromDate:[NSDate date]];
     return date;
 }
-
 
 @end

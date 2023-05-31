@@ -18,66 +18,64 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Public/GrowingModuleManager.h"
-#import "GrowingTrackerCore/Public/GrowingModuleProtocol.h"
+#import <objc/message.h>
+#import <objc/runtime.h>
 #import "GrowingTrackerCore/Core/GrowingContext.h"
 #import "GrowingTrackerCore/Public/GrowingAnnotationCore.h"
+#import "GrowingTrackerCore/Public/GrowingModuleProtocol.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
-#import <objc/runtime.h>
-#import <objc/message.h>
 
-#define kModuleArrayKey     @"moduleClasses"
-#define kModuleInfoNameKey  @"moduleClass"
+#define kModuleArrayKey @"moduleClasses"
+#define kModuleInfoNameKey @"moduleClass"
 #define kModuleInfoLevelKey @"moduleLevel"
 #define kModuleInfoPriorityKey @"modulePriority"
 #define kModuleInfoHasInstantiatedKey @"moduleHasInstantiated"
 
-static  NSString *kSetupSelector = @"growingModSetUp:";
-static  NSString *kInitSelector = @"growingModInit:";
-static  NSString *kSplashSeletor = @"growingModSplash:";
-static  NSString *kTearDownSelector = @"growingModTearDown:";
-static  NSString *kWillResignActiveSelector = @"growingModWillResignActive:";
-static  NSString *kDidEnterBackgroundSelector = @"growingModDidEnterBackground:";
-static  NSString *kWillEnterForegroundSelector = @"growingModWillEnterForeground:";
-static  NSString *kDidBecomeActiveSelector = @"growingModDidBecomeActive:";
-static  NSString *kWillTerminateSelector = @"growingModWillTerminate:";
-static  NSString *kUnmountEventSelector = @"growingModUnmount:";
-static  NSString *kQuickActionSelector = @"growingModQuickAction:";
-static  NSString *kOpenURLSelector = @"growingModOpenURL:";
-static  NSString *kDidReceiveMemoryWarningSelector = @"growingModDidReceiveMemoryWaring:";
-static  NSString *kFailToRegisterForRemoteNotificationsSelector = @"growingModDidFailToRegisterForRemoteNotifications:";
-static  NSString *kDidRegisterForRemoteNotificationsSelector = @"growingModDidRegisterForRemoteNotifications:";
-static  NSString *kDidReceiveRemoteNotificationsSelector = @"growingModDidReceiveRemoteNotification:";
-static  NSString *kDidReceiveLocalNotificationsSelector = @"growingModDidReceiveLocalNotification:";
-static  NSString *kWillPresentNotificationSelector = @"growingModWillPresentNotification:";
-static  NSString *kDidReceiveNotificationResponseSelector = @"growingModDidReceiveNotificationResponse:";
-static  NSString *kWillContinueUserActivitySelector = @"growingModWillContinueUserActivity:";
-static  NSString *kContinueUserActivitySelector = @"growingModContinueUserActivity:";
-static  NSString *kDidUpdateContinueUserActivitySelector = @"growingModDidUpdateContinueUserActivity:";
-static  NSString *kFailToContinueUserActivitySelector = @"growingModDidFailToContinueUserActivity:";
-static  NSString *kHandleWatchKitExtensionRequestSelector = @"growingModHandleWatchKitExtensionRequest:";
-static  NSString *kSetDataCollectionEnabledSelector = @"growingModSetDataCollectionEnabled:";
-static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
+static NSString *kSetupSelector = @"growingModSetUp:";
+static NSString *kInitSelector = @"growingModInit:";
+static NSString *kSplashSeletor = @"growingModSplash:";
+static NSString *kTearDownSelector = @"growingModTearDown:";
+static NSString *kWillResignActiveSelector = @"growingModWillResignActive:";
+static NSString *kDidEnterBackgroundSelector = @"growingModDidEnterBackground:";
+static NSString *kWillEnterForegroundSelector = @"growingModWillEnterForeground:";
+static NSString *kDidBecomeActiveSelector = @"growingModDidBecomeActive:";
+static NSString *kWillTerminateSelector = @"growingModWillTerminate:";
+static NSString *kUnmountEventSelector = @"growingModUnmount:";
+static NSString *kQuickActionSelector = @"growingModQuickAction:";
+static NSString *kOpenURLSelector = @"growingModOpenURL:";
+static NSString *kDidReceiveMemoryWarningSelector = @"growingModDidReceiveMemoryWaring:";
+static NSString *kFailToRegisterForRemoteNotificationsSelector = @"growingModDidFailToRegisterForRemoteNotifications:";
+static NSString *kDidRegisterForRemoteNotificationsSelector = @"growingModDidRegisterForRemoteNotifications:";
+static NSString *kDidReceiveRemoteNotificationsSelector = @"growingModDidReceiveRemoteNotification:";
+static NSString *kDidReceiveLocalNotificationsSelector = @"growingModDidReceiveLocalNotification:";
+static NSString *kWillPresentNotificationSelector = @"growingModWillPresentNotification:";
+static NSString *kDidReceiveNotificationResponseSelector = @"growingModDidReceiveNotificationResponse:";
+static NSString *kWillContinueUserActivitySelector = @"growingModWillContinueUserActivity:";
+static NSString *kContinueUserActivitySelector = @"growingModContinueUserActivity:";
+static NSString *kDidUpdateContinueUserActivitySelector = @"growingModDidUpdateContinueUserActivity:";
+static NSString *kFailToContinueUserActivitySelector = @"growingModDidFailToContinueUserActivity:";
+static NSString *kHandleWatchKitExtensionRequestSelector = @"growingModHandleWatchKitExtensionRequest:";
+static NSString *kSetDataCollectionEnabledSelector = @"growingModSetDataCollectionEnabled:";
+static NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
 
-
-@interface GrowingModuleManager()
+@interface GrowingModuleManager ()
 /// 存module名，load之后清空
-@property (nonatomic, strong) NSMutableArray     *growingModuleNames;
+@property (nonatomic, strong) NSMutableArray *growingModuleNames;
 /// 存module class
-@property (nonatomic, strong) NSMutableArray     *growingModuleDynamicClasses;
+@property (nonatomic, strong) NSMutableArray *growingModuleDynamicClasses;
 /// 存封装有module class的info类
-@property (nonatomic, strong) NSMutableArray<NSDictionary *>     *growingModuleInfos;
-@property (nonatomic, strong) NSMutableArray     *growingModules;
+@property (nonatomic, strong) NSMutableArray<NSDictionary *> *growingModuleInfos;
+@property (nonatomic, strong) NSMutableArray *growingModules;
 
-@property (nonatomic, strong) NSMutableDictionary<NSNumber *, NSMutableArray<id<GrowingModuleProtocol>> *> *growingModulesByEvent;
+@property (nonatomic, strong)
+    NSMutableDictionary<NSNumber *, NSMutableArray<id<GrowingModuleProtocol>> *> *growingModulesByEvent;
 @property (nonatomic, strong) NSMutableDictionary<NSNumber *, NSString *> *growingSelectorByEvent;
 
 @end
 
-
 @implementation GrowingModuleManager
 
-+ (instancetype)sharedInstance
-{
++ (instancetype)sharedInstance {
     static id sharedManager = nil;
     static dispatch_once_t onceToken = 0;
     dispatch_once(&onceToken, ^{
@@ -94,10 +92,10 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
         char *string = (char *)section.charAddress[i];
         NSString *str = [NSString stringWithUTF8String:string];
         if (!str) continue;
-        GIOLogDebug(@"[GrowingModuleManager] load %@",str);
+        GIOLogDebug(@"[GrowingModuleManager] load %@", str);
         if (str) [self.growingModuleNames addObject:str];
     }
-    
+
     for (NSString *name in self.growingModuleNames) {
         Class classname = NSClassFromString(name);
         if (classname) {
@@ -107,19 +105,19 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
     [self.growingModuleNames removeAllObjects];
 }
 
-- (void)registerDynamicModule:(Class)moduleClass
-{
+- (void)registerDynamicModule:(Class)moduleClass {
     [self addModuleFromObject:moduleClass];
 }
-
 
 - (void)unRegisterDynamicModule:(Class)moduleClass {
     if (!moduleClass) {
         return;
     }
-    [self.growingModuleInfos filterUsingPredicate:[NSPredicate predicateWithFormat:@"self.%@!=%@", kModuleInfoNameKey, NSStringFromClass(moduleClass)]];
+    [self.growingModuleInfos filterUsingPredicate:[NSPredicate predicateWithFormat:@"self.%@!=%@",
+                                                                                   kModuleInfoNameKey,
+                                                                                   NSStringFromClass(moduleClass)]];
     __block NSInteger index = -1;
-    [self.growingModules enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [self.growingModules enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
         if ([obj isKindOfClass:moduleClass]) {
             index = idx;
             *stop = YES;
@@ -128,9 +126,12 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
     if (index >= 0) {
         [self.growingModules removeObjectAtIndex:index];
     }
-    [self.growingModulesByEvent enumerateKeysAndObjectsUsingBlock:^(NSNumber * _Nonnull key, NSMutableArray<id<GrowingModuleProtocol>> * _Nonnull obj, BOOL * _Nonnull stop) {
+    [self.growingModulesByEvent enumerateKeysAndObjectsUsingBlock:^(
+                                    NSNumber *_Nonnull key,
+                                    NSMutableArray<id<GrowingModuleProtocol>> *_Nonnull obj,
+                                    BOOL *_Nonnull stop) {
         __block NSInteger index = -1;
-        [obj enumerateObjectsUsingBlock:^(id<GrowingModuleProtocol>  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [obj enumerateObjectsUsingBlock:^(id<GrowingModuleProtocol> _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
             if ([obj isKindOfClass:moduleClass]) {
                 index = idx;
                 *stop = YES;
@@ -142,12 +143,11 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
     }];
 }
 
-- (void)registedAllModules
-{
+- (void)registedAllModules {
     [self loadLocalModules];
     [self.growingModuleInfos sortUsingComparator:^NSComparisonResult(NSDictionary *module1, NSDictionary *module2) {
         NSNumber *module1Level = (NSNumber *)[module1 objectForKey:kModuleInfoLevelKey];
-        NSNumber *module2Level =  (NSNumber *)[module2 objectForKey:kModuleInfoLevelKey];
+        NSNumber *module2Level = (NSNumber *)[module2 objectForKey:kModuleInfoLevelKey];
         if (module1Level.integerValue != module2Level.integerValue) {
             return module1Level.integerValue > module2Level.integerValue;
         } else {
@@ -156,14 +156,13 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
             return module1Priority.integerValue < module2Priority.integerValue;
         }
     }];
-    
+
     NSMutableArray *tmpArray = [NSMutableArray array];
-    
-    //module init
-    [self.growingModuleInfos enumerateObjectsUsingBlock:^(NSDictionary *module, NSUInteger idx, BOOL * _Nonnull stop) {
-        
+
+    // module init
+    [self.growingModuleInfos enumerateObjectsUsingBlock:^(NSDictionary *module, NSUInteger idx, BOOL *_Nonnull stop) {
         NSString *classStr = [module objectForKey:kModuleInfoNameKey];
-        
+
         Class moduleClass = NSClassFromString(classStr);
         BOOL hasInstantiated = ((NSNumber *)[module objectForKey:kModuleInfoHasInstantiatedKey]).boolValue;
         if (moduleClass && NSStringFromClass(moduleClass) && !hasInstantiated) {
@@ -171,20 +170,19 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
             [self registerEventsByModuleInstance:moduleInstance];
             [tmpArray addObject:moduleInstance];
         }
-        
     }];
-    
+
     [self.growingModules removeAllObjects];
 
     [self.growingModules addObjectsFromArray:tmpArray];
-    
+
     [self registerAllSystemEvents];
 }
 
-- (id <GrowingModuleProtocol>)getModuleInstanceByClass:(Class) moduleClass{
+- (id<GrowingModuleProtocol>)getModuleInstanceByClass:(Class)moduleClass {
     id<GrowingModuleProtocol> moduleInstance = nil;
     if ([[moduleClass class] respondsToSelector:@selector(singleton)]) {
-        BOOL (*sigletonImp)(id,SEL) = (BOOL(*)(id, SEL))objc_msgSend;
+        BOOL (*sigletonImp)(id, SEL) = (BOOL(*)(id, SEL))objc_msgSend;
         BOOL isSingleton = sigletonImp([moduleClass class], @selector(singleton));
         if (isSingleton) {
             if ([[moduleClass class] respondsToSelector:@selector(sharedInstance)])
@@ -192,36 +190,32 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
             else
                 moduleInstance = [[moduleClass alloc] init];
         }
-    }else {
+    } else {
         moduleInstance = [[moduleClass alloc] init];
     }
     return moduleInstance;
 }
 
 - (void)registerCustomEvent:(NSInteger)eventType
-   withModuleInstance:(id)moduleInstance
-       andSelectorStr:(NSString *)selectorStr {
+         withModuleInstance:(id)moduleInstance
+             andSelectorStr:(NSString *)selectorStr {
     if (eventType < 1000) {
         return;
     }
     [self registerEvent:eventType withModuleInstance:moduleInstance andSelectorStr:selectorStr];
 }
 
-- (void)triggerEvent:(NSInteger)eventType
-{
+- (void)triggerEvent:(NSInteger)eventType {
     [self triggerEvent:eventType withCustomParam:nil];
-    
 }
 
-- (void)triggerEvent:(NSInteger)eventType
-     withCustomParam:(NSDictionary *)customParam {
+- (void)triggerEvent:(NSInteger)eventType withCustomParam:(NSDictionary *)customParam {
     [self handleModuleEvent:eventType forTarget:nil withCustomParam:customParam];
 }
 
 #pragma mark - life loop
 
-- (instancetype)init
-{
+- (instancetype)init {
     self = [super init];
     if (self) {
         self.growingModuleDynamicClasses = [NSMutableArray array];
@@ -229,11 +223,9 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
     return self;
 }
 
-
 #pragma mark - private
 
-- (GrowingModuleLevel)checkModuleLevel:(NSUInteger)level
-{
+- (GrowingModuleLevel)checkModuleLevel:(NSUInteger)level {
     switch (level) {
         case 0:
             return GrowingModuleBasic;
@@ -242,63 +234,62 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
         default:
             break;
     }
-    //default normal
+    // default normal
     return GrowingModuleNormal;
 }
 
-
-- (void)addModuleFromObject:(id)object
-{
+- (void)addModuleFromObject:(id)object {
     Class class;
     NSString *moduleName = nil;
-    
+
     if (object) {
         class = object;
         moduleName = NSStringFromClass(class);
     } else {
         return;
     }
-    
+
     if ([class conformsToProtocol:@protocol(GrowingModuleProtocol)]) {
         NSMutableDictionary *moduleInfo = [NSMutableDictionary dictionary];
-        
+
         BOOL responseBasicLevel = [class instancesRespondToSelector:@selector(basicModuleLevel)];
 
         int levelInt = 1;
-        
+
         if (responseBasicLevel) {
             levelInt = 0;
         }
-        
+
         [moduleInfo setObject:@(levelInt) forKey:kModuleInfoLevelKey];
         if (moduleName) {
             [moduleInfo setObject:moduleName forKey:kModuleInfoNameKey];
         }
 
         [self.growingModuleInfos addObject:moduleInfo];
-    
+
         [moduleInfo setObject:@(NO) forKey:kModuleInfoHasInstantiatedKey];
     }
 }
 
-- (void)registerAllSystemEvents
-{
-    [self.growingModules enumerateObjectsUsingBlock:^(id<GrowingModuleProtocol> moduleInstance, NSUInteger idx, BOOL * _Nonnull stop) {
-        [self registerEventsByModuleInstance:moduleInstance];
-    }];
+- (void)registerAllSystemEvents {
+    [self.growingModules
+        enumerateObjectsUsingBlock:^(id<GrowingModuleProtocol> moduleInstance, NSUInteger idx, BOOL *_Nonnull stop) {
+            [self registerEventsByModuleInstance:moduleInstance];
+        }];
 }
 
-- (void)registerEventsByModuleInstance:(id<GrowingModuleProtocol>)moduleInstance
-{
+- (void)registerEventsByModuleInstance:(id<GrowingModuleProtocol>)moduleInstance {
     NSArray<NSNumber *> *events = self.growingSelectorByEvent.allKeys;
-    [events enumerateObjectsUsingBlock:^(NSNumber * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [self registerEvent:obj.integerValue withModuleInstance:moduleInstance andSelectorStr:self.growingSelectorByEvent[obj]];
+    [events enumerateObjectsUsingBlock:^(NSNumber *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+        [self registerEvent:obj.integerValue
+            withModuleInstance:moduleInstance
+                andSelectorStr:self.growingSelectorByEvent[obj]];
     }];
 }
 
 - (void)registerEvent:(NSInteger)eventType
-         withModuleInstance:(id)moduleInstance
-             andSelectorStr:(NSString *)selectorStr {
+    withModuleInstance:(id)moduleInstance
+        andSelectorStr:(NSString *)selectorStr {
     SEL selector = NSSelectorFromString(selectorStr);
     if (!selector || ![moduleInstance respondsToSelector:selector]) {
         return;
@@ -313,7 +304,8 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
     NSMutableArray *eventModules = [self.growingModulesByEvent objectForKey:eventTypeNumber];
     if (![eventModules containsObject:moduleInstance]) {
         [eventModules addObject:moduleInstance];
-        [eventModules sortUsingComparator:^NSComparisonResult(id<GrowingModuleProtocol> moduleInstance1, id<GrowingModuleProtocol> moduleInstance2) {
+        [eventModules sortUsingComparator:^NSComparisonResult(id<GrowingModuleProtocol> moduleInstance1,
+                                                              id<GrowingModuleProtocol> moduleInstance2) {
             NSNumber *module1Level = @(GrowingModuleNormal);
             NSNumber *module2Level = @(GrowingModuleNormal);
             if ([moduleInstance1 respondsToSelector:@selector(basicModuleLevel)]) {
@@ -355,61 +347,59 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
     return _growingModuleInfos;
 }
 
-- (NSMutableArray *)growingModules
-{
+- (NSMutableArray *)growingModules {
     if (!_growingModules) {
         _growingModules = [NSMutableArray array];
     }
     return _growingModules;
 }
 
-- (NSMutableDictionary<NSNumber *, NSMutableArray<id<GrowingModuleProtocol>> *> *)growingModulesByEvent
-{
+- (NSMutableDictionary<NSNumber *, NSMutableArray<id<GrowingModuleProtocol>> *> *)growingModulesByEvent {
     if (!_growingModulesByEvent) {
         _growingModulesByEvent = @{}.mutableCopy;
     }
     return _growingModulesByEvent;
 }
 
-- (NSMutableDictionary<NSNumber *, NSString *> *)growingSelectorByEvent
-{
+- (NSMutableDictionary<NSNumber *, NSString *> *)growingSelectorByEvent {
     if (!_growingSelectorByEvent) {
         _growingSelectorByEvent = @{
-                               @(GrowingMSetupEvent):kSetupSelector,
-                               @(GrowingMInitEvent):kInitSelector,
-                               @(GrowingMTearDownEvent):kTearDownSelector,
-                               @(GrowingMSplashEvent):kSplashSeletor,
-                               @(GrowingMWillResignActiveEvent):kWillResignActiveSelector,
-                               @(GrowingMDidEnterBackgroundEvent):kDidEnterBackgroundSelector,
-                               @(GrowingMWillEnterForegroundEvent):kWillEnterForegroundSelector,
-                               @(GrowingMDidBecomeActiveEvent):kDidBecomeActiveSelector,
-                               @(GrowingMWillTerminateEvent):kWillTerminateSelector,
-                               @(GrowingMUnmountEvent):kUnmountEventSelector,
-                               @(GrowingMOpenURLEvent):kOpenURLSelector,
-                               @(GrowingMDidReceiveMemoryWarningEvent):kDidReceiveMemoryWarningSelector,
-                               
-                               @(GrowingMDidReceiveRemoteNotificationEvent):kDidReceiveRemoteNotificationsSelector,
-                               @(GrowingMWillPresentNotificationEvent):kWillPresentNotificationSelector,
-                               @(GrowingMDidReceiveNotificationResponseEvent):kDidReceiveNotificationResponseSelector,
-                               
-                               @(GrowingMDidFailToRegisterForRemoteNotificationsEvent):kFailToRegisterForRemoteNotificationsSelector,
-                               @(GrowingMDidRegisterForRemoteNotificationsEvent):kDidRegisterForRemoteNotificationsSelector,
-                               
-                               @(GrowingMDidReceiveLocalNotificationEvent):kDidReceiveLocalNotificationsSelector,
-                               
-                               @(GrowingMWillContinueUserActivityEvent):kWillContinueUserActivitySelector,
-                               
-                               @(GrowingMContinueUserActivityEvent):kContinueUserActivitySelector,
-                               
-                               @(GrowingMDidFailToContinueUserActivityEvent):kFailToContinueUserActivitySelector,
-                               
-                               @(GrowingMDidUpdateUserActivityEvent):kDidUpdateContinueUserActivitySelector,
-                               
-                               @(GrowingMQuickActionEvent):kQuickActionSelector,
-                               @(GrowingMHandleWatchKitExtensionRequestEvent):kHandleWatchKitExtensionRequestSelector,
-                               @(GrowingMSetDataCollectionEnabledEvent):kSetDataCollectionEnabledSelector,
-                               @(GrowingMDidCustomEvent):kAppCustomSelector,
-                               }.mutableCopy;
+            @(GrowingMSetupEvent): kSetupSelector,
+            @(GrowingMInitEvent): kInitSelector,
+            @(GrowingMTearDownEvent): kTearDownSelector,
+            @(GrowingMSplashEvent): kSplashSeletor,
+            @(GrowingMWillResignActiveEvent): kWillResignActiveSelector,
+            @(GrowingMDidEnterBackgroundEvent): kDidEnterBackgroundSelector,
+            @(GrowingMWillEnterForegroundEvent): kWillEnterForegroundSelector,
+            @(GrowingMDidBecomeActiveEvent): kDidBecomeActiveSelector,
+            @(GrowingMWillTerminateEvent): kWillTerminateSelector,
+            @(GrowingMUnmountEvent): kUnmountEventSelector,
+            @(GrowingMOpenURLEvent): kOpenURLSelector,
+            @(GrowingMDidReceiveMemoryWarningEvent): kDidReceiveMemoryWarningSelector,
+
+            @(GrowingMDidReceiveRemoteNotificationEvent): kDidReceiveRemoteNotificationsSelector,
+            @(GrowingMWillPresentNotificationEvent): kWillPresentNotificationSelector,
+            @(GrowingMDidReceiveNotificationResponseEvent): kDidReceiveNotificationResponseSelector,
+
+            @(GrowingMDidFailToRegisterForRemoteNotificationsEvent): kFailToRegisterForRemoteNotificationsSelector,
+            @(GrowingMDidRegisterForRemoteNotificationsEvent): kDidRegisterForRemoteNotificationsSelector,
+
+            @(GrowingMDidReceiveLocalNotificationEvent): kDidReceiveLocalNotificationsSelector,
+
+            @(GrowingMWillContinueUserActivityEvent): kWillContinueUserActivitySelector,
+
+            @(GrowingMContinueUserActivityEvent): kContinueUserActivitySelector,
+
+            @(GrowingMDidFailToContinueUserActivityEvent): kFailToContinueUserActivitySelector,
+
+            @(GrowingMDidUpdateUserActivityEvent): kDidUpdateContinueUserActivitySelector,
+
+            @(GrowingMQuickActionEvent): kQuickActionSelector,
+            @(GrowingMHandleWatchKitExtensionRequestEvent): kHandleWatchKitExtensionRequestSelector,
+            @(GrowingMSetDataCollectionEnabledEvent): kSetDataCollectionEnabledSelector,
+            @(GrowingMDidCustomEvent): kAppCustomSelector,
+        }
+                                      .mutableCopy;
     }
     return _growingSelectorByEvent;
 }
@@ -417,80 +407,75 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
 #pragma mark - module protocol
 - (void)handleModuleEvent:(NSInteger)eventType
                 forTarget:(id<GrowingModuleProtocol>)target
-          withCustomParam:(NSDictionary *)customParam
-{
+          withCustomParam:(NSDictionary *)customParam {
     switch (eventType) {
         case GrowingMInitEvent:
-            //special
+            // special
             [self handleModulesInitEventForTarget:nil withCustomParam:customParam];
             break;
         case GrowingMTearDownEvent:
-            //special
+            // special
             [self handleModulesTearDownEventForTarget:nil withCustomParam:customParam];
             break;
         default: {
             NSString *selectorStr = [self.growingSelectorByEvent objectForKey:@(eventType)];
             [self handleModuleEvent:eventType forTarget:nil withSeletorStr:selectorStr andCustomParam:customParam];
-        }
-            break;
+        } break;
     }
-    
 }
 
-- (void)handleModulesInitEventForTarget:(id<GrowingModuleProtocol>)target
-                        withCustomParam:(NSDictionary *)customParam
-{
+- (void)handleModulesInitEventForTarget:(id<GrowingModuleProtocol>)target withCustomParam:(NSDictionary *)customParam {
     GrowingContext *context = [GrowingContext sharedInstance].copy;
     if (customParam) {
         context.customParam = customParam;
     }
     context.customEvent = GrowingMInitEvent;
-    
+
     NSArray<id<GrowingModuleProtocol>> *moduleInstances;
     if (target) {
         moduleInstances = @[target];
     } else {
         moduleInstances = [self.growingModulesByEvent objectForKey:@(GrowingMInitEvent)];
     }
-    
-    [moduleInstances enumerateObjectsUsingBlock:^(id<GrowingModuleProtocol> moduleInstance, NSUInteger idx, BOOL * _Nonnull stop) {
-        __weak typeof(&*self) wself = self;
-        void ( ^ bk )(void);
-        bk = ^(){
-            __strong typeof(&*self) sself = wself;
-            if (sself) {
-                if ([moduleInstance respondsToSelector:@selector(growingModInit:)]) {
-                    [moduleInstance growingModInit:context];
-                }
-            }
-        };
 
-        if ([moduleInstance respondsToSelector:@selector(async)]) {
-            BOOL async = [moduleInstance async];
-            
-            if (async) {
-                dispatch_async(dispatch_get_main_queue(), ^{
+    [moduleInstances
+        enumerateObjectsUsingBlock:^(id<GrowingModuleProtocol> moduleInstance, NSUInteger idx, BOOL *_Nonnull stop) {
+            __weak typeof(&*self) wself = self;
+            void (^bk)(void);
+            bk = ^() {
+                __strong typeof(&*self) sself = wself;
+                if (sself) {
+                    if ([moduleInstance respondsToSelector:@selector(growingModInit:)]) {
+                        [moduleInstance growingModInit:context];
+                    }
+                }
+            };
+
+            if ([moduleInstance respondsToSelector:@selector(async)]) {
+                BOOL async = [moduleInstance async];
+
+                if (async) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        bk();
+                    });
+
+                } else {
                     bk();
-                });
-                
+                }
             } else {
                 bk();
             }
-        } else {
-            bk();
-        }
-    }];
+        }];
 }
 
 - (void)handleModulesTearDownEventForTarget:(id<GrowingModuleProtocol>)target
-                            withCustomParam:(NSDictionary *)customParam
-{
+                            withCustomParam:(NSDictionary *)customParam {
     GrowingContext *context = [GrowingContext sharedInstance].copy;
     if (customParam) {
         context.customParam = customParam;
     }
     context.customEvent = GrowingMTearDownEvent;
-    
+
     NSArray<id<GrowingModuleProtocol>> *moduleInstances;
     if (target) {
         moduleInstances = @[target];
@@ -498,7 +483,7 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
         moduleInstances = [self.growingModulesByEvent objectForKey:@(GrowingMTearDownEvent)];
     }
 
-    //Reverse Order to unload
+    // Reverse Order to unload
     for (int i = (int)moduleInstances.count - 1; i >= 0; i--) {
         id<GrowingModuleProtocol> moduleInstance = [moduleInstances objectAtIndex:i];
         if (moduleInstance && [moduleInstance respondsToSelector:@selector(growingModTearDown:)]) {
@@ -510,14 +495,13 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
 - (void)handleModuleEvent:(NSInteger)eventType
                 forTarget:(id<GrowingModuleProtocol>)target
            withSeletorStr:(NSString *)selectorStr
-           andCustomParam:(NSDictionary *)customParam
-{
+           andCustomParam:(NSDictionary *)customParam {
     GrowingContext *context = [GrowingContext sharedInstance].copy;
     if (customParam) {
         context.customParam = customParam;
     }
     context.customEvent = eventType;
-    
+
     if (!selectorStr.length) {
         selectorStr = [self.growingSelectorByEvent objectForKey:@(eventType)];
     }
@@ -532,14 +516,15 @@ static  NSString *kAppCustomSelector = @"growingModDidCustomEvent:";
     } else {
         moduleInstances = [self.growingModulesByEvent objectForKey:@(eventType)];
     }
-    [moduleInstances enumerateObjectsUsingBlock:^(id<GrowingModuleProtocol> moduleInstance, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([moduleInstance respondsToSelector:seletor]) {
+    [moduleInstances
+        enumerateObjectsUsingBlock:^(id<GrowingModuleProtocol> moduleInstance, NSUInteger idx, BOOL *_Nonnull stop) {
+            if ([moduleInstance respondsToSelector:seletor]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-            [moduleInstance performSelector:seletor withObject:context];
+                [moduleInstance performSelector:seletor withObject:context];
 #pragma clang diagnostic pop
-        }
-    }];
+            }
+        }];
 }
 
 @end

@@ -18,13 +18,13 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Timer/GrowingEventTimer.h"
-#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
+#import <objc/runtime.h>
 #import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingULTimeUtil.h"
-#import <objc/runtime.h>
 
-static NSString * const kGrowingEventDuration = @"event_duration";
+static NSString *const kGrowingEventDuration = @"event_duration";
 
 @interface GrowingEventTimer ()
 
@@ -45,21 +45,22 @@ static NSString * const kGrowingEventDuration = @"event_duration";
     if (!dataCollectionEnabled) {
         return nil;
     }
-    
+
     double currentTime = [GrowingULTimeUtil currentSystemTimeMillis];
-    
+
     GrowingEventTimer *timer = [[GrowingEventTimer alloc] init];
     timer.eventName = eventName;
     timer.startTime = currentTime;
     timer.duration = 0;
-    
+
     NSString *timerId = [NSString stringWithFormat:@"%@_%@", eventName, NSUUID.UUID.UUIDString];
     [GrowingDispatchManager dispatchInGrowingThread:^{
-        BOOL dataCollectionEnabled = GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionEnabled;
+        BOOL dataCollectionEnabled =
+            GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionEnabled;
         if (!dataCollectionEnabled) {
             return;
         }
-        
+
         [GrowingEventTimer.timers setObject:timer forKey:timerId];
     }];
     return timerId;
@@ -94,7 +95,7 @@ static NSString * const kGrowingEventDuration = @"event_duration";
     }];
 }
 
-+ (void)trackTimerEnd:(NSString *)timerId withAttributes:(NSDictionary <NSString *, NSString *> *_Nullable)attributes {
++ (void)trackTimerEnd:(NSString *)timerId withAttributes:(NSDictionary<NSString *, NSString *> *_Nullable)attributes {
     double currentTime = [GrowingULTimeUtil currentSystemTimeMillis];
 
     [GrowingDispatchManager dispatchInGrowingThread:^{
@@ -102,7 +103,7 @@ static NSString * const kGrowingEventDuration = @"event_duration";
         if (!timer) {
             return;
         }
-        
+
         double duration = [self durationFrom:timer.startTime to:currentTime];
         duration += timer.duration;
         NSString *eventName = timer.eventName.copy;
@@ -112,7 +113,7 @@ static NSString * const kGrowingEventDuration = @"event_duration";
         }
         [attr setObject:[NSString stringWithFormat:@"%.3f", duration / 1000.0] forKey:kGrowingEventDuration];
         [GrowingEventGenerator generateCustomEvent:eventName attributes:attr];
-        
+
         [GrowingEventTimer.timers removeObjectForKey:timerId];
     }];
 }

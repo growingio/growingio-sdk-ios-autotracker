@@ -17,14 +17,14 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/GrowingAttributesConst.h"
 #import "GrowingAutotrackerCore/Autotrack/UITableView+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UITableView+GrowingNode.h"
+#import "GrowingTrackerCore/GrowingAttributesConst.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 
 @implementation UITableView (GrowingNode)
 
-- (NSArray<id<GrowingNode>>*)growingNodeChilds {
+- (NSArray<id<GrowingNode>> *)growingNodeChilds {
     // 对于collectionView我们仅需要返回可见cell
     NSMutableArray *childs = [NSMutableArray array];
     [childs addObjectsFromArray:self.visibleCells];
@@ -59,11 +59,10 @@
 - (NSString *)growingNodeSubPath {
     NSIndexPath *indexpath = [self growingNodeIndexPath];
     if (indexpath) {
-        return
-            [NSString stringWithFormat:@"Section[%ld]/%@[%ld]",
-                                       (long)indexpath.section,
-                                       NSStringFromClass(self.class),
-                                       (long)indexpath.row];
+        return [NSString stringWithFormat:@"Section[%ld]/%@[%ld]",
+                                          (long)indexpath.section,
+                                          NSStringFromClass(self.class),
+                                          (long)indexpath.row];
         ;
     }
     return [super growingNodeSubPath];
@@ -73,17 +72,15 @@
     NSIndexPath *indexpath = [self growingNodeIndexPath];
     if (indexpath) {
         return
-            [NSString stringWithFormat:@"Section[%ld]/%@[-]",
-                                       (long)indexpath.section,
-                                       NSStringFromClass(self.class)];
+            [NSString stringWithFormat:@"Section[%ld]/%@[-]", (long)indexpath.section, NSStringFromClass(self.class)];
     }
     return [super growingNodeSubPath];
 }
 
-- (NSArray<id<GrowingNode>>*)growingNodeChilds {
-    UIView * cell = self;
+- (NSArray<id<GrowingNode>> *)growingNodeChilds {
+    UIView *cell = self;
     NSMutableArray *childs = [NSMutableArray array];
-    for (UIView * v in cell.subviews) {
+    for (UIView *v in cell.subviews) {
         if (v == self.selectedBackgroundView) {
             continue;
         } else {
@@ -100,6 +97,5 @@
 - (BOOL)growingNodeDonotCircle {
     return [super growingNodeDonotCircle];
 }
-
 
 @end

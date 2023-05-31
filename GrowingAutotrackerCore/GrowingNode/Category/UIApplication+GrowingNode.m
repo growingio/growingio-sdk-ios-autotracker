@@ -21,7 +21,7 @@
 
 @implementation UIApplication (GrowingNode)
 
-- (UIWindow*)growingMainWindow {
+- (UIWindow *)growingMainWindow {
     for (NSUInteger i = 0; i < self.windows.count; i++) {
         UIWindow *window = self.windows[i];
         if (window.windowLevel == UIWindowLevelNormal && window.hidden == NO) {

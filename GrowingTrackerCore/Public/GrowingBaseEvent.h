@@ -21,16 +21,13 @@
 
 @class GrowingBaseBuilder;
 
-typedef NS_ENUM(NSUInteger, GrowingAppState) {
-    GrowingAppStateForeground, GrowingAppStateBackground
-};
+typedef NS_ENUM(NSUInteger, GrowingAppState) { GrowingAppStateForeground, GrowingAppStateBackground };
 
 typedef NS_OPTIONS(NSUInteger, GrowingEventSendPolicy) {
-    GrowingEventSendPolicyInstant = 1 << 0,    /// 实时发送（目前仅VISIT事件为实时发送策略）
-    GrowingEventSendPolicyMobileData = 1 << 1, /// 移动网络流量发送
-    GrowingEventSendPolicyWiFi = 1 << 2,       /// 仅WiFi可发送（特殊事件数据，如大文件等）
+    GrowingEventSendPolicyInstant = 1 << 0,     /// 实时发送（目前仅VISIT事件为实时发送策略）
+    GrowingEventSendPolicyMobileData = 1 << 1,  /// 移动网络流量发送
+    GrowingEventSendPolicyWiFi = 1 << 2,        /// 仅WiFi可发送（特殊事件数据，如大文件等）
 };
-
 
 @interface GrowingBaseEvent : NSObject
 
@@ -69,13 +66,13 @@ typedef NS_OPTIONS(NSUInteger, GrowingEventSendPolicy) {
 
 - (instancetype _Nonnull)init NS_UNAVAILABLE;
 + (instancetype _Nonnull)new NS_UNAVAILABLE;
-- (instancetype _Nonnull)initWithBuilder:(GrowingBaseBuilder*_Nonnull)builder;
-//subclass overload this method,change return type
+- (instancetype _Nonnull)initWithBuilder:(GrowingBaseBuilder *_Nonnull)builder;
+// subclass overload this method,change return type
 + (GrowingBaseBuilder *_Nonnull)builder;
 
 @end
 
-///builder
+/// builder
 @interface GrowingBaseBuilder : NSObject
 
 @property (nonatomic, copy, readonly) NSString *_Nullable dataSourceId;
@@ -110,37 +107,37 @@ typedef NS_OPTIONS(NSUInteger, GrowingEventSendPolicy) {
 
 NS_ASSUME_NONNULL_BEGIN
 
-//赋值属性，eg:deviceId,userId,sessionId,globalSequenceId,eventSequenceId
+// 赋值属性，eg:deviceId,userId,sessionId,globalSequenceId,eventSequenceId
 - (void)readPropertyInTrackThread;
 
-- (GrowingBaseBuilder *(^)(NSString *value))setDataSourceId;
-- (GrowingBaseBuilder *(^)(NSString *value))setDeviceId;
-- (GrowingBaseBuilder *(^)(NSString *value))setUserId;
-- (GrowingBaseBuilder *(^)(NSString *value))setSessionId;
-- (GrowingBaseBuilder *(^)(long long value))setTimestamp;
-- (GrowingBaseBuilder *(^)(NSString *value))setDomain;
-- (GrowingBaseBuilder *(^)(NSString *value))setUrlScheme;
-- (GrowingBaseBuilder *(^)(int value))setAppState;
-- (GrowingBaseBuilder *(^)(long long value))setGlobalSequenceId;
-- (GrowingBaseBuilder *(^)(long long value))setEventSequenceId;
-- (GrowingBaseBuilder *(^)(NSString *value))setPlatform;
-- (GrowingBaseBuilder *(^)(NSString *value))setPlatformVersion;
-- (GrowingBaseBuilder *(^)(NSDictionary *value))setExtraParams;
-- (GrowingBaseBuilder *(^)(NSString *value))setNetworkState;
-- (GrowingBaseBuilder *(^)(NSInteger value))setScreenHeight;
-- (GrowingBaseBuilder *(^)(NSInteger value))setScreenWidth;
-- (GrowingBaseBuilder *(^)(NSString *value))setDeviceBrand;
-- (GrowingBaseBuilder *(^)(NSString *value))setDeviceModel;
-- (GrowingBaseBuilder *(^)(NSString *value))setDeviceType;
-- (GrowingBaseBuilder *(^)(NSString *value))setAppName;
-- (GrowingBaseBuilder *(^)(NSString *value))setAppVersion;
-- (GrowingBaseBuilder *(^)(NSString *value))setLanguage;
-- (GrowingBaseBuilder *(^)(double value))setLatitude;
-- (GrowingBaseBuilder *(^)(double value))setLongitude;
-- (GrowingBaseBuilder *(^)(NSString *value))setSdkVersion;
-- (GrowingBaseBuilder *(^)(NSString *value))setUserKey;
-- (GrowingBaseBuilder *(^)(NSString *value))setGioId;
-- (GrowingBaseBuilder *(^)(NSString *value))setEventType;
+- (GrowingBaseBuilder * (^)(NSString *value))setDataSourceId;
+- (GrowingBaseBuilder * (^)(NSString *value))setDeviceId;
+- (GrowingBaseBuilder * (^)(NSString *value))setUserId;
+- (GrowingBaseBuilder * (^)(NSString *value))setSessionId;
+- (GrowingBaseBuilder * (^)(long long value))setTimestamp;
+- (GrowingBaseBuilder * (^)(NSString *value))setDomain;
+- (GrowingBaseBuilder * (^)(NSString *value))setUrlScheme;
+- (GrowingBaseBuilder * (^)(int value))setAppState;
+- (GrowingBaseBuilder * (^)(long long value))setGlobalSequenceId;
+- (GrowingBaseBuilder * (^)(long long value))setEventSequenceId;
+- (GrowingBaseBuilder * (^)(NSString *value))setPlatform;
+- (GrowingBaseBuilder * (^)(NSString *value))setPlatformVersion;
+- (GrowingBaseBuilder * (^)(NSDictionary *value))setExtraParams;
+- (GrowingBaseBuilder * (^)(NSString *value))setNetworkState;
+- (GrowingBaseBuilder * (^)(NSInteger value))setScreenHeight;
+- (GrowingBaseBuilder * (^)(NSInteger value))setScreenWidth;
+- (GrowingBaseBuilder * (^)(NSString *value))setDeviceBrand;
+- (GrowingBaseBuilder * (^)(NSString *value))setDeviceModel;
+- (GrowingBaseBuilder * (^)(NSString *value))setDeviceType;
+- (GrowingBaseBuilder * (^)(NSString *value))setAppName;
+- (GrowingBaseBuilder * (^)(NSString *value))setAppVersion;
+- (GrowingBaseBuilder * (^)(NSString *value))setLanguage;
+- (GrowingBaseBuilder * (^)(double value))setLatitude;
+- (GrowingBaseBuilder * (^)(double value))setLongitude;
+- (GrowingBaseBuilder * (^)(NSString *value))setSdkVersion;
+- (GrowingBaseBuilder * (^)(NSString *value))setUserKey;
+- (GrowingBaseBuilder * (^)(NSString *value))setGioId;
+- (GrowingBaseBuilder * (^)(NSString *value))setEventType;
 - (GrowingBaseEvent *)build;
 
 NS_ASSUME_NONNULL_END

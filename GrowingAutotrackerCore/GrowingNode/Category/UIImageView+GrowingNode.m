@@ -22,8 +22,7 @@
 
 @implementation UIImageView (GrowingNode)
 
-- (NSString*)growingViewContent
-{
+- (NSString *)growingViewContent {
     if (self.accessibilityLabel.length) {
         return self.accessibilityLabel;
     } else {
@@ -33,7 +32,7 @@
             }
         }
     }
-    
+
     return nil;
 }
 

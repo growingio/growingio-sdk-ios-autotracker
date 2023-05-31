@@ -20,8 +20,8 @@
 #import "GrowingTrackerCore/DeepLink/GrowingWebWatcher.h"
 #import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
-#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/LogFormat/GrowingASLLoggerFormat.h"
+#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 
 @interface GrowingWebWatcher () <GrowingDeepLinkHandlerProtocol>
 @end
@@ -44,12 +44,13 @@ static GrowingWebWatcher *sharedInstance = nil;
     NSDictionary *params = url.growingHelper_queryDict;
     //  open console.app 中的log
     NSString *openConsoleLog = params[@"openConsoleLog"];
-    if (openConsoleLog && [openConsoleLog caseInsensitiveCompare:@"Yes"] == NSOrderedSame && ![GrowingLog.allLoggers containsObject:[GrowingASLLogger sharedInstance]]) {
+    if (openConsoleLog && [openConsoleLog caseInsensitiveCompare:@"Yes"] == NSOrderedSame &&
+        ![GrowingLog.allLoggers containsObject:[GrowingASLLogger sharedInstance]]) {
         [GrowingLog addLogger:[GrowingASLLogger sharedInstance] withLevel:GrowingLogLevelAll];
         [GrowingASLLogger sharedInstance].logFormatter = [GrowingASLLoggerFormat new];
         return YES;
     }
-    
+
     return NO;
 }
 

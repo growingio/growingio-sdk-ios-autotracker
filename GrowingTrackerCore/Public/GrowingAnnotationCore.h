@@ -33,16 +33,14 @@
 
 #endif
 
-#define GrowingService(servicename,impl) \
-char * k##servicename##_service GrowingDATA(GrowingServices) = "{ \""#servicename"\" : \""#impl"\"}";
+#define GrowingService(servicename, impl) \
+    char *k##servicename##_service GrowingDATA(GrowingServices) = "{ \"" #servicename "\" : \"" #impl "\"}";
 
+#define GrowingMod(name) char *k##name##_mod GrowingDATA(GrowingMods) = "" #name "";
 
-#define GrowingMod(name) \
-char * k##name##_mod GrowingDATA(GrowingMods) = ""#name"";
+#define GrowingDATA(sectname) __attribute((used, section("__DATA," #sectname "")))
 
-#define GrowingDATA(sectname) __attribute((used, section("__DATA,"#sectname"")))
-
-//最大支持 module/service 数量限制
+// 最大支持 module/service 数量限制
 #define growing_section_size 64
 
 struct _growing_section {

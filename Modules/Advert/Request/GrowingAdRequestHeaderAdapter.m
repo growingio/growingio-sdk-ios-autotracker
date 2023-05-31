@@ -22,19 +22,18 @@
 
 @interface GrowingAdRequestHeaderAdapter ()
 
-@property (nonatomic, weak) id <GrowingRequestProtocol> request;
+@property (nonatomic, weak) id<GrowingRequestProtocol> request;
 @property (nonatomic, copy) NSDictionary *header;
 
 @end
 
 @implementation GrowingAdRequestHeaderAdapter
 
-+ (instancetype)adapterWithRequest:(id <GrowingRequestProtocol>)request {
++ (instancetype)adapterWithRequest:(id<GrowingRequestProtocol>)request {
     return [self adapterWithRequest:request header:nil];
 }
 
-+ (instancetype)adapterWithRequest:(id <GrowingRequestProtocol>)request
-                            header:(nullable NSDictionary *)header {
++ (instancetype)adapterWithRequest:(id<GrowingRequestProtocol>)request header:(nullable NSDictionary *)header {
     GrowingAdRequestHeaderAdapter *adapter = [[self alloc] init];
     adapter.request = request;
     adapter.header = header;
@@ -44,11 +43,11 @@
 - (NSMutableURLRequest *)adaptedURLRequest:(NSMutableURLRequest *)request {
     NSMutableURLRequest *needAdaptReq = request;
     [needAdaptReq setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    
+
     if (!self.header.count) {
         return needAdaptReq;
     }
-    
+
     for (NSString *key in self.header) {
         [needAdaptReq setValue:self.header[key] forHTTPHeaderField:key];
     }

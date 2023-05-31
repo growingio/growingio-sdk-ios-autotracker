@@ -31,7 +31,7 @@
 }
 
 + (GrowingCustomBuilder *)builder {
-    return [[GrowingCustomBuilder alloc]init];
+    return [[GrowingCustomBuilder alloc] init];
 }
 
 - (NSDictionary *)toDictionary {
@@ -49,7 +49,7 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wmethod-signatures"
 #pragma clang diagnostic ignored "-Wmismatched-return-types"
-- (GrowingBaseBuilder *(^)(NSString *value))setEventName {
+- (GrowingBaseBuilder * (^)(NSString *value))setEventName {
     return ^(NSString *value) {
         self->_eventName = value;
         return self;

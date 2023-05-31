@@ -34,14 +34,15 @@
 
 - (BOOL)cleanExpiredDataIfNeeded;
 
-- (void)setEvent:(id <GrowingEventPersistenceProtocol>)event forKey:(NSString *)key;
+- (void)setEvent:(id<GrowingEventPersistenceProtocol>)event forKey:(NSString *)key;
 
-- (NSArray <id <GrowingEventPersistenceProtocol>> *)getEventsWithPackageNum:(NSUInteger)packageNum policy:(NSUInteger)mask;
+- (NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsWithPackageNum:(NSUInteger)packageNum
+                                                                   policy:(NSUInteger)mask;
 
-- (NSArray <id <GrowingEventPersistenceProtocol>> *)getEventsWithPackageNum:(NSUInteger)packageNum;
+- (NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsWithPackageNum:(NSUInteger)packageNum;
 
-+ (NSData *)buildRawEventsFromEvents:(NSArray<id <GrowingEventPersistenceProtocol>> *)events;
++ (NSData *)buildRawEventsFromEvents:(NSArray<id<GrowingEventPersistenceProtocol>> *)events;
 
-+ (id <GrowingEventPersistenceProtocol>)persistenceEventWithEvent:(GrowingBaseEvent *)event uuid:(NSString *)uuid;
++ (id<GrowingEventPersistenceProtocol>)persistenceEventWithEvent:(GrowingBaseEvent *)event uuid:(NSString *)uuid;
 
 @end

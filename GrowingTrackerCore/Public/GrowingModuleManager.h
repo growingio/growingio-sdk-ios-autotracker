@@ -19,14 +19,9 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NS_ENUM(NSUInteger, GrowingModuleLevel)
-{
-    GrowingModuleBasic  = 0,
-    GrowingModuleNormal = 1
-};
+typedef NS_ENUM(NSUInteger, GrowingModuleLevel) { GrowingModuleBasic = 0, GrowingModuleNormal = 1 };
 
-typedef NS_ENUM(NSInteger, GrowingModuleEventType)
-{
+typedef NS_ENUM(NSInteger, GrowingModuleEventType) {
     GrowingMSetupEvent = 0,
     GrowingMInitEvent,
     GrowingMTearDownEvent,
@@ -53,7 +48,7 @@ typedef NS_ENUM(NSInteger, GrowingModuleEventType)
     GrowingMHandleWatchKitExtensionRequestEvent,
     GrowingMSetDataCollectionEnabledEvent,
     GrowingMDidCustomEvent = 1000
-    
+
 };
 
 NS_ASSUME_NONNULL_BEGIN
@@ -80,8 +75,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)triggerEvent:(NSInteger)eventType;
 
-- (void)triggerEvent:(NSInteger)eventType
-     withCustomParam:(NSDictionary * _Nullable)customParam;
+- (void)triggerEvent:(NSInteger)eventType withCustomParam:(NSDictionary *_Nullable)customParam;
 
 @end
 

@@ -20,7 +20,7 @@
 #import <UIKit/UIKit.h>
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIViewController+GrowingNode.h"
 
-@interface UIAlertController (GrowingNode)<GrowingNode>
+@interface UIAlertController (GrowingNode) <GrowingNode>
 
 @end
 

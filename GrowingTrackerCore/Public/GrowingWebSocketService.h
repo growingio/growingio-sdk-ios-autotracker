@@ -24,10 +24,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// websocket当前运行状态
 typedef NS_ENUM(NSInteger, GrowingWebSocketReadyState) {
-    Growing_WS_CONNECTING   = 0, /// 正在连接
-    Growing_WS_OPEN         = 1, /// 已打开
-    Growing_WS_CLOSING      = 2, /// 正在关闭
-    Growing_WS_CLOSED       = 3, /// 已关闭
+    Growing_WS_CONNECTING = 0,  /// 正在连接
+    Growing_WS_OPEN = 1,        /// 已打开
+    Growing_WS_CLOSING = 2,     /// 正在关闭
+    Growing_WS_CLOSED = 3,      /// 已关闭
 };
 
 /// websocket当前状态码
@@ -53,7 +53,8 @@ typedef NS_ENUM(NSInteger, GrowingWebSocketStatusCode) {
     GrowingWebSocketStatusCodeTLSHandshake = 1015,
     // 1016-1999: Reserved for future use by the WebSocket standard.
     // 2000-2999: Reserved for use by WebSocket extensions.
-    // 3000-3999: Available for use by libraries and frameworks. May not be used by applications. Available for registration at the IANA via first-come, first-serve.
+    // 3000-3999: Available for use by libraries and frameworks. May not be used by applications. Available for
+    // registration at the IANA via first-come, first-serve.
     // 4000-4999: Available for use by applications.
 };
 
@@ -68,7 +69,7 @@ typedef NS_ENUM(NSInteger, GrowingWebSocketStatusCode) {
 @required
 
 /// 回调delegate，需遵循GrowingWebSocketDelegate协议
-@property (nonatomic, weak) id <GrowingWebSocketDelegate> delegate;
+@property (nonatomic, weak) id<GrowingWebSocketDelegate> delegate;
 
 /// websocket当前运行状态
 @property (nonatomic, assign, readonly) GrowingWebSocketReadyState readyState;
@@ -96,31 +97,34 @@ typedef NS_ENUM(NSInteger, GrowingWebSocketStatusCode) {
 
 @protocol GrowingWebSocketDelegate <NSObject>
 
-//need to call these delegate methods in the correct websocket state
-//自定义GrowingWebSocketService需在正确的时机调用delegate methods，SDK内部处理
+// need to call these delegate methods in the correct websocket state
+// 自定义GrowingWebSocketService需在正确的时机调用delegate methods，SDK内部处理
 
 @required
 
 /// websocket收到消息
 /// @param webSocket webSocket对象
 /// @param message 消息内容
-- (void)webSocket:(id <GrowingWebSocketService>)webSocket didReceiveMessage:(id)message;
+- (void)webSocket:(id<GrowingWebSocketService>)webSocket didReceiveMessage:(id)message;
 
 /// websoket已打开
 /// @param webSocket webSocket对象
-- (void)webSocketDidOpen:(id <GrowingWebSocketService>)webSocket;
+- (void)webSocketDidOpen:(id<GrowingWebSocketService>)webSocket;
 
 /// websocket发生错误
 /// @param webSocket webSocket对象
 /// @param error 错误信息
-- (void)webSocket:(id <GrowingWebSocketService>)webSocket didFailWithError:(NSError *)error;
+- (void)webSocket:(id<GrowingWebSocketService>)webSocket didFailWithError:(NSError *)error;
 
 /// websocket已关闭
 /// @param webSocket webSocket对象
 /// @param code 服务端返回的code
 /// @param reason 服务端返回的原因（可以为nil）
 /// @param wasClean websocket是否在clean状态下关闭
-- (void)webSocket:(id <GrowingWebSocketService>)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean;
+- (void)webSocket:(id<GrowingWebSocketService>)webSocket
+    didCloseWithCode:(NSInteger)code
+              reason:(NSString *)reason
+            wasClean:(BOOL)wasClean;
 
 @end
 

@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *hyperlink;
 @property (nonatomic, copy, readonly) NSString *query;
 
-+ (GrowingHybridViewElementBuilder*)builder;
++ (GrowingHybridViewElementBuilder *)builder;
 
 @end
 
@@ -37,18 +37,18 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *hyperlink;
 @property (nonatomic, copy, readonly) NSString *query;
 
-- (GrowingHybridViewElementBuilder *(^)(NSString *value))setQuery;
-- (GrowingHybridViewElementBuilder *(^)(NSString *value))setHyperlink;
+- (GrowingHybridViewElementBuilder * (^)(NSString *value))setQuery;
+- (GrowingHybridViewElementBuilder * (^)(NSString *value))setHyperlink;
 
-//重写
-- (GrowingHybridViewElementBuilder *(^)(NSString *value))setPath;
-- (GrowingHybridViewElementBuilder *(^)(long long value))setPageShowTimestamp;
-- (GrowingHybridViewElementBuilder *(^)(NSString *value))setTextValue;
-- (GrowingHybridViewElementBuilder *(^)(NSString *value))setXpath;
-- (GrowingHybridViewElementBuilder *(^)(int value))setIndex;
+// 重写
+- (GrowingHybridViewElementBuilder * (^)(NSString *value))setPath;
+- (GrowingHybridViewElementBuilder * (^)(long long value))setPageShowTimestamp;
+- (GrowingHybridViewElementBuilder * (^)(NSString *value))setTextValue;
+- (GrowingHybridViewElementBuilder * (^)(NSString *value))setXpath;
+- (GrowingHybridViewElementBuilder * (^)(int value))setIndex;
 
-//extra add
-- (GrowingHybridViewElementBuilder *(^)(NSString *value))setEventType;
+// extra add
+- (GrowingHybridViewElementBuilder * (^)(NSString *value))setEventType;
 
 @end
 

@@ -25,14 +25,14 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GrowingWebCircleElement : NSObject
 @property (nonatomic, assign, readonly) CGRect rect;
 @property (nonatomic, assign, readonly) int zLevel;
-@property (nonatomic, copy, readonly) NSString* _Nullable content;
-@property (nonatomic, copy, readonly) NSString* _Nonnull xpath;
-@property (nonatomic, copy, readonly) NSString* _Nonnull nodeType;
-@property (nonatomic, copy, readonly) NSString* _Nullable parentXPath;
+@property (nonatomic, copy, readonly) NSString *_Nullable content;
+@property (nonatomic, copy, readonly) NSString *_Nonnull xpath;
+@property (nonatomic, copy, readonly) NSString *_Nonnull nodeType;
+@property (nonatomic, copy, readonly) NSString *_Nullable parentXPath;
 @property (nonatomic, assign, readonly) BOOL isContainer;
 @property (nonatomic, assign, readonly) int index;
-@property (nonatomic, copy, readonly) NSString* _Nonnull page;
-@property (nonatomic, copy, readonly) NSString* _Nonnull domain;
+@property (nonatomic, copy, readonly) NSString *_Nonnull page;
+@property (nonatomic, copy, readonly) NSString *_Nonnull domain;
 
 - (instancetype _Nonnull)init NS_UNAVAILABLE;
 + (instancetype _Nonnull)new NS_UNAVAILABLE;
@@ -47,23 +47,23 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GrowingWebCircleElementBuilder : NSObject
 @property (nonatomic, assign, readonly) CGRect rect;
 @property (nonatomic, assign, readonly) int zLevel;
-@property (nonatomic, copy, readonly) NSString* _Nullable content;
-@property (nonatomic, copy, readonly) NSString* _Nonnull xpath;
-@property (nonatomic, copy, readonly) NSString* _Nonnull nodeType;
-@property (nonatomic, copy, readonly) NSString* _Nullable parentXPath;
+@property (nonatomic, copy, readonly) NSString *_Nullable content;
+@property (nonatomic, copy, readonly) NSString *_Nonnull xpath;
+@property (nonatomic, copy, readonly) NSString *_Nonnull nodeType;
+@property (nonatomic, copy, readonly) NSString *_Nullable parentXPath;
 @property (nonatomic, assign, readonly) BOOL isContainer;
 @property (nonatomic, assign, readonly) int index;
-@property (nonatomic, copy, readonly) NSString* _Nonnull page;
+@property (nonatomic, copy, readonly) NSString *_Nonnull page;
 
-- (GrowingWebCircleElementBuilder *(^)(CGRect value))setRect;
-- (GrowingWebCircleElementBuilder *(^)(int value))setZLevel;
-- (GrowingWebCircleElementBuilder *(^)(NSString *value))setContent;
-- (GrowingWebCircleElementBuilder *(^)(NSString *value))setXpath;
-- (GrowingWebCircleElementBuilder *(^)(NSString *value))setNodeType;
-- (GrowingWebCircleElementBuilder *(^)(NSString *value))setParentXPath;
-- (GrowingWebCircleElementBuilder *(^)(BOOL value))setIsContainer;
-- (GrowingWebCircleElementBuilder *(^)(int value))setIndex;
-- (GrowingWebCircleElementBuilder *(^)(NSString *value))setPage;
+- (GrowingWebCircleElementBuilder * (^)(CGRect value))setRect;
+- (GrowingWebCircleElementBuilder * (^)(int value))setZLevel;
+- (GrowingWebCircleElementBuilder * (^)(NSString *value))setContent;
+- (GrowingWebCircleElementBuilder * (^)(NSString *value))setXpath;
+- (GrowingWebCircleElementBuilder * (^)(NSString *value))setNodeType;
+- (GrowingWebCircleElementBuilder * (^)(NSString *value))setParentXPath;
+- (GrowingWebCircleElementBuilder * (^)(BOOL value))setIsContainer;
+- (GrowingWebCircleElementBuilder * (^)(int value))setIndex;
+- (GrowingWebCircleElementBuilder * (^)(NSString *value))setPage;
 
 - (GrowingWebCircleElement *)build;
 

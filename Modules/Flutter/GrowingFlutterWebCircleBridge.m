@@ -24,7 +24,7 @@ GrowingService(GrowingFlutterService, GrowingFlutterWebCircleBridge)
 
 @implementation GrowingFlutterWebCircleBridge
 
-+ (void)onFlutterCircleDataChange:(void(^_Nullable)(NSDictionary *_Nonnull data))handler {
++ (void)onFlutterCircleDataChange:(void (^_Nullable)(NSDictionary *_Nonnull data))handler {
     GrowingFlutterPlugin *plugin = [GrowingFlutterPlugin sharedInstance];
     plugin.onFlutterCircleDataChange = handler;
 }

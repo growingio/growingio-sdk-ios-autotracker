@@ -29,21 +29,18 @@
 @implementation GrowingAttributesBuilder
 
 - (void)setString:(NSString *)value forKey:(NSString *)key {
-    if (![key isKindOfClass:[NSString class]]
-        || ![value isKindOfClass:[NSString class]]) {
+    if (![key isKindOfClass:[NSString class]] || ![value isKindOfClass:[NSString class]]) {
         return;
     }
-    
+
     [self.dictionary setObject:value forKey:key];
 }
 
 - (void)setArray:(NSArray<NSObject *> *)values forKey:(NSString *)key {
-    if (![key isKindOfClass:[NSString class]]
-        || ![values isKindOfClass:[NSArray class]]
-        || values.count == 0) {
+    if (![key isKindOfClass:[NSString class]] || ![values isKindOfClass:[NSArray class]] || values.count == 0) {
         return;
     }
-    
+
     NSMutableArray *array = NSMutableArray.array;
     for (NSObject *value in values) {
         if ([value isKindOfClass:NSString.class]) {
@@ -56,7 +53,7 @@
             [array addObject:value.description];
         }
     }
-    
+
     NSString *valueString = [array componentsJoinedByString:self.separate];
     [self.dictionary setObject:valueString forKey:key];
 }

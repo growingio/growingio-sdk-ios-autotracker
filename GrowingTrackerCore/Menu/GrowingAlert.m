@@ -40,22 +40,21 @@ typedef NS_ENUM(NSUInteger, GrowingAlertResult) {
 @implementation UIViewController (GrowingAlertHelper)
 
 - (UIViewController *)growing_topMostViewController {
-    
     UIViewController *presented = self.presentedViewController;
     if (presented) {
         return [presented growing_topMostViewController];
     }
-    
+
     if ([self isKindOfClass:UINavigationController.class]) {
         UINavigationController *navigation = (UINavigationController *)self;
         return [navigation.visibleViewController growing_topMostViewController];
     }
-    
+
     if ([self isKindOfClass:UITabBarController.class]) {
         UITabBarController *tab = (UITabBarController *)self;
         return [tab.selectedViewController growing_topMostViewController];
     }
-    
+
     return self;
 }
 
@@ -70,7 +69,6 @@ typedef NS_ENUM(NSUInteger, GrowingAlertResult) {
 @implementation UIApplication (GrowingAlertHelper)
 
 - (UIViewController *)growing_topMostViewController {
-    
     UIWindow *keyWindow = nil;
     for (UIWindow *w in self.windows) {
         if (w.isKeyWindow) {
@@ -78,14 +76,15 @@ typedef NS_ENUM(NSUInteger, GrowingAlertResult) {
             break;
         }
     }
-    
-    if (!keyWindow) { return nil; }
-    
+
+    if (!keyWindow) {
+        return nil;
+    }
+
     return [keyWindow.rootViewController growing_topMostViewController];
 }
 
 @end
-
 
 @interface GrowingAlert ()
 
@@ -98,12 +97,11 @@ typedef NS_ENUM(NSUInteger, GrowingAlertResult) {
 - (instancetype)initWithTitle:(NSString *)title
                       message:(NSString *)message
                preferredStyle:(UIAlertControllerStyle)preferredStyle {
-    
     if (self = [super init]) {
         UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:title
                                                                          message:message
                                                                   preferredStyle:preferredStyle];
-        
+
         self.alertController = alertVC;
     }
     return self;
@@ -111,18 +109,16 @@ typedef NS_ENUM(NSUInteger, GrowingAlertResult) {
 
 #pragma mark - Public
 
-+ (instancetype)createAlertWithStyle:(UIAlertControllerStyle)style
-                               title:(NSString *)title
-                             message:(NSString *)message {
++ (instancetype)createAlertWithStyle:(UIAlertControllerStyle)style title:(NSString *)title message:(NSString *)message {
     return [[GrowingAlert alloc] initWithTitle:title message:message preferredStyle:style];
 }
 
-- (void)addTextFieldWithConfigurationHandler:(void (^ __nullable)(UITextField *textField))configurationHandler {
+- (void)addTextFieldWithConfigurationHandler:(void (^__nullable)(UITextField *textField))configurationHandler {
     if (self.alertController.preferredStyle != UIAlertControllerStyleAlert) {
         return;
     }
-    
-    [self.alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+
+    [self.alertController addTextFieldWithConfigurationHandler:^(UITextField *_Nonnull textField) {
         if (configurationHandler) {
             configurationHandler(textField);
         }
@@ -131,58 +127,46 @@ typedef NS_ENUM(NSUInteger, GrowingAlertResult) {
 
 - (void)addActionWithTitle:(NSString *)title
                      style:(UIAlertActionStyle)style
-                   handler:(void (^ __nullable)(UIAlertAction *action, NSArray <UITextField *> *textFields))handler {
-    
-    UIAlertAction *action = [UIAlertAction actionWithTitle:title
-                                                     style:style
-                                                   handler:^(UIAlertAction * _Nonnull action) {
-        
-        if (handler) {
-            handler(action, self.alertController.preferredStyle == UIAlertControllerStyleAlert ? self.alertController.textFields : nil);
-            self.alertController = nil;
-        }
-    }];
-    
+                   handler:(void (^__nullable)(UIAlertAction *action, NSArray<UITextField *> *textFields))handler {
+    UIAlertAction *action =
+        [UIAlertAction actionWithTitle:title
+                                 style:style
+                               handler:^(UIAlertAction *_Nonnull action) {
+                                   if (handler) {
+                                       handler(action,
+                                               self.alertController.preferredStyle == UIAlertControllerStyleAlert
+                                                   ? self.alertController.textFields
+                                                   : nil);
+                                       self.alertController = nil;
+                                   }
+                               }];
+
     [self.alertController addAction:action];
 }
 
 - (void)addOkWithTitle:(NSString *)title
-               handler:(void (^ __nullable)(UIAlertAction *action, NSArray <UITextField *> *textFields))handler {
-    [self addActionWithTitle:title
-                       style:UIAlertActionStyleDefault
-                     handler:handler];
+               handler:(void (^__nullable)(UIAlertAction *action, NSArray<UITextField *> *textFields))handler {
+    [self addActionWithTitle:title style:UIAlertActionStyleDefault handler:handler];
 }
-
 
 - (void)addCancelWithTitle:(NSString *)title
-                   handler:(void (^ __nullable)(UIAlertAction *action, NSArray <UITextField *> *textFields))handler {
-    [self addActionWithTitle:title
-                       style:UIAlertActionStyleCancel
-                     handler:handler];
+                   handler:(void (^__nullable)(UIAlertAction *action, NSArray<UITextField *> *textFields))handler {
+    [self addActionWithTitle:title style:UIAlertActionStyleCancel handler:handler];
 }
-
 
 - (void)addDestructiveWithTitle:(NSString *)title
-                        handler:(void (^ __nullable)(UIAlertAction *action, NSArray <UITextField *> *textFields))handler {
-    [self addActionWithTitle:title
-                       style:UIAlertActionStyleDestructive
-                     handler:handler];
+                        handler:(void (^__nullable)(UIAlertAction *action, NSArray<UITextField *> *textFields))handler {
+    [self addActionWithTitle:title style:UIAlertActionStyleDestructive handler:handler];
 }
-
 
 - (void)showAlertAnimated:(BOOL)animated {
     UIViewController *sourceViewController = [[UIApplication sharedApplication] growing_topMostViewController];
     if (sourceViewController) {
-        [sourceViewController presentViewController:self.alertController
-          animated:YES
-        completion:nil];
-    }else {
+        [sourceViewController presentViewController:self.alertController animated:YES completion:nil];
+    } else {
         GIOLogError(@"Alert show Error : Window Top ViewController is not find");
     }
-    
 }
 
 @end
 #endif
-
-

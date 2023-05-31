@@ -36,7 +36,7 @@
     return _target;
 }
 
-//慢速转发
+// 慢速转发
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector {
     NSMethodSignature *ms = [_target methodSignatureForSelector:aSelector];
     if (ms) {
@@ -47,7 +47,9 @@
 
 - (void)forwardInvocation:(NSInvocation *)invocation {
     if (!_target || ![_target respondsToSelector:[invocation selector]]) {
-        GIOLogError(@"%@ doesNotRecognizeSelector named : %@",NSStringFromClass([self class]),NSStringFromSelector([invocation selector]));
+        GIOLogError(@"%@ doesNotRecognizeSelector named : %@",
+                    NSStringFromClass([self class]),
+                    NSStringFromSelector([invocation selector]));
     }
 }
 
@@ -103,6 +105,5 @@
 //- (NSMethodSignature *)methodSignatureForSelector:(SEL)selector {
 //    return [NSObject instanceMethodSignatureForSelector:@selector(init)];
 //}
-
 
 @end

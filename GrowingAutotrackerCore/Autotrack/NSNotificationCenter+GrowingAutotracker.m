@@ -18,43 +18,45 @@
 //  limitations under the License.
 
 #import <UIKit/UIKit.h>
-#import "GrowingAutotrackerCore/Autotrack/NSNotificationCenter+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/Autotrack/GrowingPropertyDefine.h"
+#import "GrowingAutotrackerCore/Autotrack/NSNotificationCenter+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/GrowingViewChangeProvider.h"
 
 GrowingPropertyDefine(UITextField, NSString *, growingHookOldText, setGrowingHookOldText)
-GrowingPropertyDefine(UITextView, NSString *, growingHookOldText, setGrowingHookOldText)
+    GrowingPropertyDefine(UITextView, NSString *, growingHookOldText, setGrowingHookOldText)
 
-@implementation NSNotificationCenter (GrowingAutotracker)
+        @implementation NSNotificationCenter(GrowingAutotracker)
 
 - (void)growing_postNotificationName:(NSNotificationName)aName object:(id)anObject userInfo:(NSDictionary *)aUserInfo {
-    
     if ([aName isEqualToString:UITextFieldTextDidEndEditingNotification]) {
         [self growing_handleInputViewDidEndingEditing:anObject];
     }
-    
+
     [self growing_postNotificationName:aName object:anObject userInfo:aUserInfo];
 }
 
 - (void)growing_handleInputViewDidEndingEditing:(id)anObject {
     if ([anObject isKindOfClass:UITextField.class]) {
         UITextField *inputView = (UITextField *)anObject;
-        
-        if (inputView.isSecureTextEntry) { return; }
-        
+
+        if (inputView.isSecureTextEntry) {
+            return;
+        }
+
         NSString *text = inputView.text;
         if (text && ![inputView.growingHookOldText isEqualToString:text]) {
             inputView.growingHookOldText = text;
             [GrowingViewChangeProvider viewOnChange:inputView];
         }
-        
+
     } else if ([anObject isKindOfClass:UITextView.class]) {
-        
         UITextView *inputView = (UITextView *)anObject;
-        
-        if (inputView.isSecureTextEntry) { return; }
-        
+
+        if (inputView.isSecureTextEntry) {
+            return;
+        }
+
         NSString *text = inputView.text;
         if (![inputView.growingHookOldText isEqualToString:text]) {
             inputView.growingHookOldText = text;

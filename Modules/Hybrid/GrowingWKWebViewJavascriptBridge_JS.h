@@ -23,6 +23,7 @@
 
 @interface GrowingWKWebViewJavascriptBridge_JS : NSObject
 
-+ (NSString *)createJavascriptBridgeJsWithNativeConfiguration:(GrowingWebViewJavascriptBridgeConfiguration *)configuration;
++ (NSString *)createJavascriptBridgeJsWithNativeConfiguration:
+    (GrowingWebViewJavascriptBridgeConfiguration *)configuration;
 
 @end

@@ -26,12 +26,13 @@ static NSString *kWKWebViewJavascriptBridge_js(void) {
 #define __WKWebViewJavascriptBridge_js_func__(x) #x
 
     // BEGIN preprocessorJSCode
-    static NSString *kGrowingPreprocessorJSCode = @__WKWebViewJavascriptBridge_js_func__((function() {
-        if (window.GrowingWebViewJavascriptBridge) {
-            return;
-        }
+    static NSString *kGrowingPreprocessorJSCode = @__WKWebViewJavascriptBridge_js_func__(
+        (function() {
+            if (window.GrowingWebViewJavascriptBridge) {
+                return;
+            }
 
-        window.GrowingWebViewJavascriptBridge = {
+            window.GrowingWebViewJavascriptBridge = {
                 configuration: $configuration_replacement,
                 dispatchEvent: dispatchEvent,
                 setNativeUserId: setNativeUserId,
@@ -40,56 +41,54 @@ static NSString *kWKWebViewJavascriptBridge_js(void) {
                 clearNativeUserIdAndUserKey: clearNativeUserIdAndUserKey,
                 onDomChanged: onDomChanged,
                 getDomTree: getDomTreeTemp
-        };
-        
-        function getDomTreeTemp() {
-            console.log("%c [GrowingIO]：圈选获取节点信息失败！请集成 gioHybridCircle 插件后重试！", "color: #F59E0B;");
-        }
-
-        function dispatchEvent(event) {
-            _doSend("dispatchEvent", event);
-        }
-
-        function setNativeUserId(userId) {
-            _doSend("setNativeUserId", userId);
-        }
-
-        function clearNativeUserId() {
-            _doSend("clearNativeUserId", null);
-        }
-        
-        function setNativeUserIdAndUserKey(userId,userKey) {
-            let data = {
-                "userId": userId,
-                "userKey": userKey
             };
-            _doSend("setNativeUserIdAndUserKey", JSON.stringify(data));
-        }
 
-        function clearNativeUserIdAndUserKey() {
-            _doSend("clearNativeUserIdAndUserKey", null);
-        }
+            function getDomTreeTemp() {
+                console.log("%c [GrowingIO]：圈选获取节点信息失败！请集成 gioHybridCircle 插件后重试！",
+                            "color: #F59E0B;");
+            }
 
-        function onDomChanged() {
-            _doSend("onDomChanged", null);
-        }
+            function dispatchEvent(event) {
+                _doSend("dispatchEvent", event);
+            }
 
-        function _doSend(messageType, data) {
-            console.log("Growing hybrid send message: messageType = " + messageType + ", data = " + data);
-            var messageString = JSON.stringify({messageType:messageType, data:data});
-            window.webkit.messageHandlers.GrowingWKWebViewJavascriptBridge.postMessage(messageString);
-        }
+            function setNativeUserId(userId) {
+                _doSend("setNativeUserId", userId);
+            }
 
-    })();
-    ); // END preprocessorJSCode
+            function clearNativeUserId() {
+                _doSend("clearNativeUserId", null);
+            }
+
+            function setNativeUserIdAndUserKey(userId, userKey) {
+                let data = {"userId": userId, "userKey": userKey};
+                _doSend("setNativeUserIdAndUserKey", JSON.stringify(data));
+            }
+
+            function clearNativeUserIdAndUserKey() {
+                _doSend("clearNativeUserIdAndUserKey", null);
+            }
+
+            function onDomChanged() {
+                _doSend("onDomChanged", null);
+            }
+
+            function _doSend(messageType, data) {
+                console.log("Growing hybrid send message: messageType = " + messageType + ", data = " + data);
+                var messageString = JSON.stringify({messageType: messageType, data: data});
+                window.webkit.messageHandlers.GrowingWKWebViewJavascriptBridge.postMessage(messageString);
+            }
+        })(););  // END preprocessorJSCode
 
 #undef __WKWebViewJavascriptBridge_js_func__
     return kGrowingPreprocessorJSCode;
 };
 
-+ (NSString *)createJavascriptBridgeJsWithNativeConfiguration:(GrowingWebViewJavascriptBridgeConfiguration *)configuration {
++ (NSString *)createJavascriptBridgeJsWithNativeConfiguration:
+    (GrowingWebViewJavascriptBridgeConfiguration *)configuration {
     NSString *bridge = kWKWebViewJavascriptBridge_js();
-    return [bridge stringByReplacingOccurrencesOfString:@"$configuration_replacement" withString:[configuration toJsonString]];
+    return [bridge stringByReplacingOccurrencesOfString:@"$configuration_replacement"
+                                             withString:[configuration toJsonString]];
 }
 
 @end

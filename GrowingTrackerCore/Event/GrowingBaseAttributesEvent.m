@@ -39,8 +39,8 @@
 
 @implementation GrowingBaseAttributesBuilder
 
-- (GrowingBaseAttributesBuilder *(^)(NSDictionary <NSString *, NSObject *>*value))setAttributes {
-    return ^(NSDictionary <NSString *, NSObject *>*value) {
+- (GrowingBaseAttributesBuilder * (^)(NSDictionary<NSString *, NSObject *> *value))setAttributes {
+    return ^(NSDictionary<NSString *, NSObject *> *value) {
         self->_attributes = value;
         return self;
     };

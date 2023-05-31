@@ -18,8 +18,8 @@
 //  limitations under the License.
 
 #if __has_include(<UIKit/UIKit.h>)
-#import "GrowingTrackerCore/Helpers/UIKit/UIWindow+GrowingHelper.h"
 #import "GrowingTrackerCore/Helpers/UIKit/UIView+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/UIKit/UIWindow+GrowingHelper.h"
 
 @implementation UIWindow (GrowingHelper)
 
@@ -28,8 +28,8 @@
 }
 
 + (UIImage *)growingHelper_screenshotWithWindows:(NSArray<UIWindow *> *)windows
-                                    andMaxScale:(CGFloat)maxScale
-                                          block:(void (^)(CGContextRef))block {
+                                     andMaxScale:(CGFloat)maxScale
+                                           block:(void (^)(CGContextRef))block {
     CGFloat scale = [UIScreen mainScreen].scale;
     if (maxScale != 0 && maxScale < scale) {
         scale = maxScale;
@@ -40,12 +40,14 @@
     CGSize imageSize = [UIScreen mainScreen].bounds.size;
     UIGraphicsBeginImageContextWithOptions(imageSize, NO, scale);
     CGContextRef context = UIGraphicsGetCurrentContext();
-    
+
     for (UIWindow *window in windows) {
         CGContextSaveGState(context);
         CGContextTranslateCTM(context, window.center.x, window.center.y);
         CGContextConcatCTM(context, window.transform);
-        CGContextTranslateCTM(context, -window.bounds.size.width * window.layer.anchorPoint.x, -window.bounds.size.height * window.layer.anchorPoint.y);
+        CGContextTranslateCTM(context,
+                              -window.bounds.size.width * window.layer.anchorPoint.x,
+                              -window.bounds.size.height * window.layer.anchorPoint.y);
         if ([window respondsToSelector:@selector(drawViewHierarchyInRect:afterScreenUpdates:)]) {
             [window drawViewHierarchyInRect:window.bounds afterScreenUpdates:NO];
         } else {
@@ -55,7 +57,7 @@
         }
         CGContextRestoreGState(context);
     }
-    
+
     if (block) {
         block(context);
     }

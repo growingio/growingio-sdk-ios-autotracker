@@ -46,15 +46,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *xpath;
 @property (nonatomic, assign, readonly) int index;
 
-- (GrowingViewElementBuilder *(^)(NSString *value))setPath;
-- (GrowingViewElementBuilder *(^)(long long value))setPageShowTimestamp;
-- (GrowingViewElementBuilder *(^)(NSString *value))setTextValue;
-- (GrowingViewElementBuilder *(^)(NSString *value))setXpath;
-- (GrowingViewElementBuilder *(^)(int value))setIndex;
+- (GrowingViewElementBuilder * (^)(NSString *value))setPath;
+- (GrowingViewElementBuilder * (^)(long long value))setPageShowTimestamp;
+- (GrowingViewElementBuilder * (^)(NSString *value))setTextValue;
+- (GrowingViewElementBuilder * (^)(NSString *value))setXpath;
+- (GrowingViewElementBuilder * (^)(int value))setIndex;
 
 // extra add
 // 覆盖返回值类型为GrowingViewElementBuilder
-- (GrowingViewElementBuilder *(^)(NSString *value))setEventType;
+- (GrowingViewElementBuilder * (^)(NSString *value))setEventType;
 
 @end
 

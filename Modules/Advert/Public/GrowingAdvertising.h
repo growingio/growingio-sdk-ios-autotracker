@@ -18,24 +18,24 @@
 //  limitations under the License.
 
 #import <Foundation/Foundation.h>
-#import "GrowingTrackConfiguration.h"
 #import "GrowingModuleProtocol.h"
+#import "GrowingTrackConfiguration.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSInteger , GrowingAdvertisingError) {
-    GrowingAdvertisingNoQueryError = 500, /// 无自定义参数
-    GrowingAdvertisingIllegalURLError,    /// 非法 URL
-    GrowingAdvertisingRequestFailedError, /// 短链请求失败
+typedef NS_ENUM(NSInteger, GrowingAdvertisingError) {
+    GrowingAdvertisingNoQueryError = 500,  /// 无自定义参数
+    GrowingAdvertisingIllegalURLError,     /// 非法 URL
+    GrowingAdvertisingRequestFailedError,  /// 短链请求失败
 };
 
 FOUNDATION_EXPORT NSString *const GrowingAdDefaultDeepLinkHost;
 
 extern NSString *const GrowingAdvertisingErrorDomain;
 
-typedef void(^_Nullable GrowingAdDeepLinkCallback)(NSDictionary * _Nullable params,
-                                                   NSTimeInterval processTime,
-                                                   NSError * _Nullable error);
+typedef void (^_Nullable GrowingAdDeepLinkCallback)(NSDictionary *_Nullable params,
+                                                    NSTimeInterval processTime,
+                                                    NSError *_Nullable error);
 
 @interface GrowingAdvertising : NSObject <GrowingModuleProtocol>
 

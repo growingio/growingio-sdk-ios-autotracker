@@ -17,35 +17,32 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/GrowingAttributesConst.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UITabBarController+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIViewController+GrowingNode.h"
+#import "GrowingTrackerCore/GrowingAttributesConst.h"
 
 @implementation UITabBarController (GrowingNode)
 
-- (NSArray<id<GrowingNode>>*)growingNodeChilds {
+- (NSArray<id<GrowingNode>> *)growingNodeChilds {
     NSMutableArray *childs = [NSMutableArray array];
     if (self.presentedViewController) {
         [childs addObject:self.presentedViewController];
         return childs;
     }
-    
+
     if (self.selectedViewController) {
         [childs addObject:self.selectedViewController];
     }
-    
+
     if (self.isViewLoaded && [self.tabBar growingImpNodeIsVisible]) {
         [childs addObject:self.tabBar];
     }
-    
+
     return childs;
 }
-
 
 - (CGRect)growingNodeFrame {
     return self.view.growingNodeFrame;
 }
 
 @end
-
-

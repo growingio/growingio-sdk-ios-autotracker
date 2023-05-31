@@ -1,0 +1,59 @@
+name: Code Format
+
+on:
+  pull_request:
+    paths:
+      - 'Growing*/**'
+      - 'Modules/**'
+      - 'Services/**'
+      - 'Package.swift'
+
+permissions:
+  contents: write
+
+jobs:
+  code-format:
+    name: Code Format
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install clang-format
+        run: brew install clang-format
+
+      - name: Install swiftlint
+        run: swiftlint --version
+
+      - name: Code Format
+        run: |
+          git fetch
+
+          git diff --name-only --relative --diff-filter=ACMR origin/master HEAD \
+          | sed -E -n '
+          \%\.pbobjc\.% d
+          \%^GrowingTrackerCore/Thirdparty/% d
+          \%^Services/Compression/LZ4/% d
+          \%^Services/Database/FMDB/% d
+          \%^Services/WebSocket/% d
+          \%(Growing|Modules/|Services/).*\.(h|hpp|c|cpp|m|mm)% p
+          ' \
+          | xargs clang-format -i -style=file
+
+          git diff --name-only --relative --diff-filter=ACMR origin/master HEAD \
+          | sed -E -n '
+          \%\.pb\.% d
+          \%(Growing|Modules/|Services/).*\.swift% p
+          \%Package.swift% p
+          ' \
+          | xargs swiftlint --fix
+
+      - name: Commit
+        run: |
+          if [[ $(git status) == *"nothing to commit"* ]]; then
+              echo "All Code formatted correctly."
+          else
+              git checkout ${{ github.head_ref }}
+              git commit -am "style: code format"
+              git push --set-upstream origin ${{ github.head_ref }}
+          fi

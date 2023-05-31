@@ -17,8 +17,8 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Helpers/Foundation/NSDictionary+GrowingHelper.h"
 #import "GrowingTrackerCore/Helpers/Foundation/NSData+GrowingHelper.h"
+#import "GrowingTrackerCore/Helpers/Foundation/NSDictionary+GrowingHelper.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 
 @implementation NSDictionary (GrowingHelper)
@@ -37,12 +37,15 @@
         jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     }
     jsonString = [jsonString stringByReplacingOccurrencesOfString:@"\\/" withString:@"/"];
-    NSString *beautifulJsonString = @"╔═══════════════════════════════════════════════════════════════════════════════════════\n";
+    NSString *beautifulJsonString =
+        @"╔═══════════════════════════════════════════════════════════════════════════════════════\n";
     NSArray *lines = [jsonString componentsSeparatedByString:@"\n"];
     for (NSString *line in lines) {
         beautifulJsonString = [NSString stringWithFormat:@"%@║ %@\n", beautifulJsonString, line];
     }
-    beautifulJsonString = [beautifulJsonString stringByAppendingString:@"╚═══════════════════════════════════════════════════════════════════════════════════════"];
+    beautifulJsonString = [beautifulJsonString
+        stringByAppendingString:
+            @"╚═══════════════════════════════════════════════════════════════════════════════════════"];
     return beautifulJsonString;
 }
 
@@ -57,7 +60,7 @@
     } @catch (NSException *exception) {
         jsonData = nil;
     }
-    
+
     return jsonData;
 }
 

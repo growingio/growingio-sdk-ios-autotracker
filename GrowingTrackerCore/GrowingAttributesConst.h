@@ -19,42 +19,18 @@
 
 #import <Foundation/Foundation.h>
 
-#define GrowingAttrMacro(M)   \
-    M(ReturnYES)                            /*默认的返回值      YES*/            \
-    M(IgnorePage)                           /*圈选默认忽略page  BOOL*/           \
-    M(IsOneRow)                             /*列表中一行        BOOL*/              \
-    M(IsButton)                             /*是个按钮          BOOL*/                     \
-    M(IsLabel)                              /*是个文本     */                      \
-    M(IsImageView)                          /*是个图片*/                           \
-    M(IsTabbarInTabbarController)           /*是个tabbar*/                       \
-    M(FontSize)                             /*字体大小          NSNumber(float)*/          \
-    M(IsHorizontalTable)                    /*横向表格          BOOL*/                     \
-    M(IsWithinRowOfTable)                   /*横向表格          BOOL*/                     \
+#define GrowingAttrMacro(M)                                                 \
+    M(ReturnYES)                  /*默认的返回值      YES*/           \
+    M(IgnorePage)                 /*圈选默认忽略page  BOOL*/          \
+    M(IsOneRow)                   /*列表中一行        BOOL*/           \
+    M(IsButton)                   /*是个按钮          BOOL*/            \
+    M(IsLabel)                    /*是个文本     */                     \
+    M(IsImageView)                /*是个图片*/                          \
+    M(IsTabbarInTabbarController) /*是个tabbar*/                          \
+    M(FontSize)                   /*字体大小          NSNumber(float)*/ \
+    M(IsHorizontalTable)          /*横向表格          BOOL*/            \
+    M(IsWithinRowOfTable)         /*横向表格          BOOL*/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#define GrowingAttrDefine(NAME) \
-    extern NSString *GrowingAttribute ## NAME ## Key;
+#define GrowingAttrDefine(NAME) extern NSString *GrowingAttribute##NAME##Key;
 
 GrowingAttrMacro(GrowingAttrDefine)

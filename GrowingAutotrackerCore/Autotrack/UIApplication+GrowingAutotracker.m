@@ -18,10 +18,10 @@
 //  limitations under the License.
 
 #import "GrowingAutotrackerCore/Autotrack/UIApplication+GrowingAutotracker.h"
-#import "GrowingAutotrackerCore/GrowingNode/GrowingViewClickProvider.h"
 #import "GrowingAutotrackerCore/GrowingNode/GrowingViewChangeProvider.h"
-#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
+#import "GrowingAutotrackerCore/GrowingNode/GrowingViewClickProvider.h"
 #import "GrowingTrackerCore/Event/GrowingNodeProtocol.h"
+#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 
 @implementation UIApplication (GrowingAutotracker)
 
@@ -60,8 +60,7 @@
         [GrowingViewClickProvider viewOnClick:(UIView *)node];
     } else if ([sender isKindOfClass:UISwitch.class]) {
         [GrowingViewChangeProvider viewOnChange:(UIView *)node];
-    } else if ([event isKindOfClass:[UIEvent class]] &&
-               event.type == UIEventTypeTouches &&
+    } else if ([event isKindOfClass:[UIEvent class]] && event.type == UIEventTypeTouches &&
                [[[event allTouches] anyObject] phase] == UITouchPhaseEnded) {
         if ([sender isKindOfClass:UISlider.class]) {
             [GrowingViewChangeProvider viewOnChange:(UIView *)node];

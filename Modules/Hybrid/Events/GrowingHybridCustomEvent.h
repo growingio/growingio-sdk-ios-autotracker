@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) NSString *query;
 
-+ (GrowingHybridCustomBuilder*)builder;
++ (GrowingHybridCustomBuilder *)builder;
 
 @end
 
@@ -33,13 +33,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) NSString *query;
 
-- (GrowingHybridCustomBuilder *(^)(NSString *value))setQuery;
+- (GrowingHybridCustomBuilder * (^)(NSString *value))setQuery;
 
-//override
-- (GrowingHybridCustomBuilder *(^)(NSString *value))setPath;
-- (GrowingHybridCustomBuilder *(^)(long long value))setPageShowTimestamp;
-- (GrowingHybridCustomBuilder *(^)(NSString *value))setEventName;
-- (GrowingHybridCustomBuilder *(^)(NSDictionary <NSString *, NSObject *>*value))setAttributes;
+// override
+- (GrowingHybridCustomBuilder * (^)(NSString *value))setPath;
+- (GrowingHybridCustomBuilder * (^)(long long value))setPageShowTimestamp;
+- (GrowingHybridCustomBuilder * (^)(NSString *value))setEventName;
+- (GrowingHybridCustomBuilder * (^)(NSDictionary<NSString *, NSObject *> *value))setAttributes;
 
 @end
 

@@ -18,11 +18,11 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
-#import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
-#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
-#import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
+#import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
 #import "GrowingTrackerCore/GrowingRealTracker.h"
+#import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
+#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 
 @implementation GrowingVisitEvent
 
@@ -66,22 +66,22 @@
     _idfv = deviceInfo.idfv;
 }
 
-- (GrowingVisitBuilder *(^)(NSString *value))setIdfa {
+- (GrowingVisitBuilder * (^)(NSString *value))setIdfa {
     return ^(NSString *value) {
         self->_idfa = value;
         return self;
     };
 }
 
-- (GrowingVisitBuilder *(^)(NSString *value))setIdfv {
+- (GrowingVisitBuilder * (^)(NSString *value))setIdfv {
     return ^(NSString *value) {
         self->_idfv = value;
         return self;
     };
 }
 
-- (GrowingVisitBuilder *(^)(NSDictionary<NSString *,NSString*> *value))setExtraSdk {
-    return ^(NSDictionary<NSString *,NSString*> *value) {
+- (GrowingVisitBuilder * (^)(NSDictionary<NSString *, NSString *> *value))setExtraSdk {
+    return ^(NSDictionary<NSString *, NSString *> *value) {
         self->_extraSdk = value;
         return self;
     };

@@ -17,10 +17,10 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import <objc/runtime.h>
 #import "GrowingAutotrackerCore/Autotrack/UISegmentedControl+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UISegmentedControl+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
-#import <objc/runtime.h>
 
 @interface UISegmentedControl () <GrowingNode>
 
@@ -32,7 +32,7 @@
     return NO;  // the UISegmentControl itself is not interactive
 }
 
-- (NSArray <id<GrowingNode>> * _Nullable)growingNodeChilds {
+- (NSArray<id<GrowingNode>> *_Nullable)growingNodeChilds {
     return self.growing_segmentViews;
 }
 
@@ -41,7 +41,7 @@
 @implementation GrowingSegmentButton
 
 + (void)load {
-//    metamacro_foreach(GrowingCategoryBindCheckName, ,__VA_ARGS__ )
+    //    metamacro_foreach(GrowingCategoryBindCheckName, ,__VA_ARGS__ )
     unsigned int count = 0;
     Method *methods = class_copyMethodList(self, &count);
     NSMutableArray *classes = [[NSMutableArray alloc] init];
@@ -63,29 +63,25 @@
     free(methods);
 }
 
-- (BOOL)growingViewUserInteraction
-{
+- (BOOL)growingViewUserInteraction {
     return YES;
 }
 
-- (NSArray<id<GrowingNode>>*)growingNodeChilds {
+- (NSArray<id<GrowingNode>> *)growingNodeChilds {
     return nil;
 }
 
 - (NSString *)growingNodeSubSimilarPath {
-    //如果手动标识了该view,返回标识
+    // 如果手动标识了该view,返回标识
     if ([self respondsToSelector:@selector(growingUniqueTag)]) {
         if (self.growingUniqueTag.length > 0) {
             return self.growingUniqueTag;
         }
     }
-    
-    NSString *className = NSStringFromClass(self.class);
-    return index < 0
-               ? className
-               : [NSString stringWithFormat:@"%@[-]", className];
-}
 
+    NSString *className = NSStringFromClass(self.class);
+    return index < 0 ? className : [NSString stringWithFormat:@"%@[-]", className];
+}
 
 - (NSString *)growingNodeContent {
     NSString *nodeContent = [UISegmentedControl growing_titleForSegment:(id)self];

@@ -20,7 +20,8 @@
 #import "GrowingTrackerCore/Public/GrowingEventFilter.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 
-NSUInteger const GrowingFilterClickChangeSubmit = (GrowingFilterEventViewClick | GrowingFilterEventViewChange | GrowingFilterEventFormSubmit);
+NSUInteger const GrowingFilterClickChangeSubmit =
+    (GrowingFilterEventViewClick | GrowingFilterEventViewChange | GrowingFilterEventFormSubmit);
 
 @implementation GrowingEventFilter
 
@@ -28,28 +29,39 @@ NSUInteger const GrowingFilterClickChangeSubmit = (GrowingFilterEventViewClick |
     static NSArray *_filterEventItems;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _filterEventItems = @[@"VISIT", @"CUSTOM", @"VISITOR_ATTRIBUTES", @"LOGIN_USER_ATTRIBUTES",
-                              @"CONVERSION_VARIABLES", @"APP_CLOSED", @"PAGE", @"PAGE_ATTRIBUTES",
-                              @"VIEW_CLICK", @"VIEW_CHANGE", @"FORM_SUBMIT", @"REENGAGE"];
+        _filterEventItems = @[
+            @"VISIT",
+            @"CUSTOM",
+            @"VISITOR_ATTRIBUTES",
+            @"LOGIN_USER_ATTRIBUTES",
+            @"CONVERSION_VARIABLES",
+            @"APP_CLOSED",
+            @"PAGE",
+            @"PAGE_ATTRIBUTES",
+            @"VIEW_CLICK",
+            @"VIEW_CHANGE",
+            @"FORM_SUBMIT",
+            @"REENGAGE"
+        ];
     });
     return _filterEventItems;
 }
 
 + (NSUInteger)getFilterMask:(NSString *)typeName {
-    NSUInteger index = [[[self class] filterEventItems] indexOfObject : typeName];
+    NSUInteger index = [[[self class] filterEventItems] indexOfObject:typeName];
     return index == NSNotFound ? 0 : 1 << index;
 }
 
 + (BOOL)isFilterEvent:(NSString *)eventType {
     NSUInteger excludeEventMask = GrowingConfigurationManager.sharedInstance.trackConfiguration.excludeEvent;
     NSUInteger typeMask = [GrowingEventFilter getFilterMask:eventType];
-    if(excludeEventMask && (excludeEventMask & typeMask) > 0 ) {
+    if (excludeEventMask && (excludeEventMask & typeMask) > 0) {
         return true;
     }
     return false;
 }
 
-+ (NSString*) getFilterEventLog {
++ (NSString *)getFilterEventLog {
     NSUInteger excludeEventMask = [GrowingConfigurationManager sharedInstance].trackConfiguration.excludeEvent;
     if (excludeEventMask <= 0) {
         return nil;
@@ -60,8 +72,9 @@ NSUInteger const GrowingFilterClickChangeSubmit = (GrowingFilterEventViewClick |
             [events addObject:[[[self class] filterEventItems] objectAtIndex:i]];
         }
     }
-    
-    NSString *logStr = [NSString stringWithFormat:@"[Debug] Filter Events : %@",[events componentsJoinedByString:@","]];
+
+    NSString *logStr =
+        [NSString stringWithFormat:@"[Debug] Filter Events : %@", [events componentsJoinedByString:@","]];
     return logStr;
 }
 

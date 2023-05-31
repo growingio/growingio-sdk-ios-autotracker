@@ -30,14 +30,15 @@
     id<UICollectionViewDelegate> realDelegate = [GrowingULSwizzler realDelegate:delegate toSelector:selector];
     Class class = realDelegate.class;
     if ([GrowingULSwizzler realDelegateClass:class respondsToSelector:selector]) {
-        void (^didSelectItemBlock)(id, SEL, id, id) = ^(id view, SEL command, UICollectionView *collectionView, NSIndexPath *indexPath) {
-            if (collectionView && indexPath) {
-                UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-                if (cell) {
-                    [GrowingViewClickProvider viewOnClick:cell];
+        void (^didSelectItemBlock)(id, SEL, id, id) =
+            ^(id view, SEL command, UICollectionView *collectionView, NSIndexPath *indexPath) {
+                if (collectionView && indexPath) {
+                    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+                    if (cell) {
+                        [GrowingViewClickProvider viewOnClick:cell];
+                    }
                 }
-            }
-        };
+            };
 
         [GrowingULSwizzler growingul_swizzleSelector:selector
                                              onClass:class

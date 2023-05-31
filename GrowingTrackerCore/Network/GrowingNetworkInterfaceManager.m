@@ -18,12 +18,12 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
-#import "GrowingTrackerCore/Thirdparty/Reachability/GrowingReachability.h"
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
+#import "GrowingTrackerCore/Thirdparty/Reachability/GrowingReachability.h"
 
-@interface GrowingNetworkInterfaceManager()
+@interface GrowingNetworkInterfaceManager ()
 
-@property (nonatomic, retain) GrowingReachability * internetReachability;
+@property (nonatomic, retain) GrowingReachability *internetReachability;
 @property (nonatomic, assign) BOOL isUnknown;
 
 @end
@@ -54,14 +54,14 @@
     _WiFiValid = NO;
     _WWANValid = YES;
     _isUnknown = NO;
-#else // #ifdef GROWINGIO_SIMULATING_3G
+#else   // #ifdef GROWINGIO_SIMULATING_3G
     GrowingNetworkStatus netStatus = [self.internetReachability currentReachabilityStatus];
     BOOL connectionRequired = [self.internetReachability connectionRequired];
     _isUnknown = (netStatus == GrowingUnknown);
     _WiFiValid = (netStatus == GrowingReachableViaWiFi && !connectionRequired);
     _WWANValid = (netStatus == GrowingReachableViaWWAN && !connectionRequired);
     _isReachable = (_WiFiValid || _WWANValid);
-#endif // #ifdef GROWINGIO_SIMULATING_3G
+#endif  // #ifdef GROWINGIO_SIMULATING_3G
 }
 
 - (NSString *)networkType {
@@ -75,11 +75,8 @@
     }
 #if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
     else if (self.WWANValid) {
-        NSArray *typeStrings2G = @[
-            CTRadioAccessTechnologyEdge,
-            CTRadioAccessTechnologyGPRS,
-            CTRadioAccessTechnologyCDMA1x
-        ];
+        NSArray *typeStrings2G =
+            @[CTRadioAccessTechnologyEdge, CTRadioAccessTechnologyGPRS, CTRadioAccessTechnologyCDMA1x];
 
         NSArray *typeStrings3G = @[
             CTRadioAccessTechnologyHSDPA,
@@ -116,10 +113,7 @@
             netType = @"2G";
 #if defined(__IPHONE_14_1) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_14_1)
         } else if (@available(iOS 14.1, *)) {
-            NSArray *typeStrings5G = @[
-                CTRadioAccessTechnologyNR,
-                CTRadioAccessTechnologyNRNSA
-            ];
+            NSArray *typeStrings5G = @[CTRadioAccessTechnologyNR, CTRadioAccessTechnologyNRNSA];
             if ([typeStrings5G containsObject:accessString]) {
                 netType = @"5G";
             } else {

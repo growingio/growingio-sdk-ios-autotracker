@@ -58,13 +58,17 @@
     return ret;
 }
 
-
 // keychain
 + (NSMutableDictionary *)getKeychainQuery:(NSString *)key {
-    return [NSMutableDictionary dictionaryWithObjectsAndKeys:(id)kSecClassGenericPassword, (id)kSecClass, key,
-                                                             (id)kSecAttrService, key, (id)kSecAttrAccount,
+    return [NSMutableDictionary dictionaryWithObjectsAndKeys:(id)kSecClassGenericPassword,
+                                                             (id)kSecClass,
+                                                             key,
+                                                             (id)kSecAttrService,
+                                                             key,
+                                                             (id)kSecAttrAccount,
                                                              (id)kSecAttrAccessibleAlwaysThisDeviceOnly,
-                                                             (id)kSecAttrAccessible, nil];
+                                                             (id)kSecAttrAccessible,
+                                                             nil];
 }
 
 + (void)removeKeyChainObjectForKey:(NSString *)service {

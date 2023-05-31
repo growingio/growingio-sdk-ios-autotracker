@@ -28,7 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (nonnull instancetype)initWithTarget:(nonnull id)target;
 + (nonnull instancetype)proxyWithTarget:(nonnull id)target;
 
-
 @end
 
 NS_ASSUME_NONNULL_END

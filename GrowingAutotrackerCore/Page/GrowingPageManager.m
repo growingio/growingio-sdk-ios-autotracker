@@ -18,16 +18,16 @@
 //  limitations under the License.
 
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
-#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
-#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
-#import "GrowingTrackerCore/Event/GrowingEventManager.h"
-#import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
-#import "GrowingAutotrackerCore/Page/GrowingPage.h"
-#import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIViewController+GrowingNode.h"
-#import "GrowingULViewControllerLifecycle.h"
+#import "GrowingAutotrackerCore/Page/GrowingPage.h"
+#import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
+#import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
+#import "GrowingTrackerCore/Event/GrowingEventManager.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
+#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingULAppLifecycle.h"
+#import "GrowingULViewControllerLifecycle.h"
 
 @interface GrowingPageManager () <GrowingULViewControllerLifecycleDelegate>
 
@@ -79,20 +79,18 @@
     }
 
     if (!page.isIgnored) {
-        //发送page事件
+        // 发送page事件
         [self sendPageEventWithPage:page];
     } else {
         GIOLogDebug(@"createdViewControllerPage: path = %@ is ignored", page.path);
     }
 }
 
-
 - (void)sendPageEventWithPage:(GrowingPage *)page {
-    GrowingBaseBuilder *builder = GrowingPageEvent.builder
-                                                  .setTitle(page.title)
-                                                  .setPath(page.path)
-                                                  .setTimestamp(page.showTimestamp)
-                                                  .setAttributes([page.carrier growingPageAttributes]);
+    GrowingBaseBuilder *builder = GrowingPageEvent.builder.setTitle(page.title)
+                                      .setPath(page.path)
+                                      .setTimestamp(page.showTimestamp)
+                                      .setAttributes([page.carrier growingPageAttributes]);
     [[GrowingEventManager sharedInstance] postEventBuilder:builder];
 }
 
@@ -205,14 +203,14 @@
     while (current) {
         last = current;
         if ([[GrowingPageManager sharedInstance] isPrivateViewControllerIgnored:current]) {
-            current = (UIViewController*)current.growingNodeParent;
+            current = (UIViewController *)current.growingNodeParent;
         } else {
             page = [current growingPageObject];
             if (page == nil) {
                 page = [self createdPage:current];
             }
             if (page.isIgnored) {
-                current = (UIViewController*)current.growingNodeParent;
+                current = (UIViewController *)current.growingNodeParent;
             } else {
                 break;
             }
@@ -243,12 +241,20 @@
 - (NSMutableArray *)ignoredPrivateControllers {
     if (!_ignoredPrivateControllers) {
         _ignoredPrivateControllers = [NSMutableArray arrayWithArray:@[
-            @"UIInputWindowController", @"UIActivityGroupViewController", @"UIKeyboardHiddenViewController",
-            @"UICompatibilityInputViewController", @"UISystemInputAssistantViewController",
-            @"UIPredictionViewController", @"GrowingWindowViewController", @"UIApplicationRotationFollowingController",
-            @"UIAlertController", @"_UIAlertControllerTextFieldViewController",
-            @"UICandidateViewController", @"UISystemKeyboardDockController",
-            @"UIKeyboardCameraViewController", @"UIKeyboardCameraRemoteViewController",
+            @"UIInputWindowController",
+            @"UIActivityGroupViewController",
+            @"UIKeyboardHiddenViewController",
+            @"UICompatibilityInputViewController",
+            @"UISystemInputAssistantViewController",
+            @"UIPredictionViewController",
+            @"GrowingWindowViewController",
+            @"UIApplicationRotationFollowingController",
+            @"UIAlertController",
+            @"_UIAlertControllerTextFieldViewController",
+            @"UICandidateViewController",
+            @"UISystemKeyboardDockController",
+            @"UIKeyboardCameraViewController",
+            @"UIKeyboardCameraRemoteViewController",
         ]];
     }
     return _ignoredPrivateControllers;

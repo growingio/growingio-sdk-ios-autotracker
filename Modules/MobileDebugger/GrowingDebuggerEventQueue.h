@@ -21,7 +21,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^GrowingDebuggerEventQueueBlock)(NSArray *events);
+typedef void (^GrowingDebuggerEventQueueBlock)(NSArray *events);
 
 @interface GrowingDebuggerEventQueue : NSObject
 

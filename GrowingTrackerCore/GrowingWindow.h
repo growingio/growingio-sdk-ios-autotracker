@@ -29,5 +29,3 @@
 @interface GrowingWindow : UIWindow
 @end
 #endif
-
-

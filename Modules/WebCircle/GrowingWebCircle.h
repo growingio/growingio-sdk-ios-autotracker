@@ -24,6 +24,6 @@
 
 @interface GrowingWebCircle : NSObject <GrowingModuleProtocol>
 
-@property (nonatomic, strong) id <GrowingWebSocketService> webSocket;
+@property (nonatomic, strong) id<GrowingWebSocketService> webSocket;
 
 @end

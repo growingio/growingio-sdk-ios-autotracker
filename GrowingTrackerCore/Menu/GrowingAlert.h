@@ -23,24 +23,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingAlert : NSObject
 
-+ (instancetype)createAlertWithStyle:(UIAlertControllerStyle)style
-                               title:(NSString *)title
-                             message:(NSString *)message;
++ (instancetype)createAlertWithStyle:(UIAlertControllerStyle)style title:(NSString *)title message:(NSString *)message;
 
 - (void)addActionWithTitle:(NSString *)title
                      style:(UIAlertActionStyle)style
-                   handler:(void (^ __nullable)(UIAlertAction *action, NSArray <UITextField *> *textFields))handler;
+                   handler:(void (^__nullable)(UIAlertAction *action, NSArray<UITextField *> *textFields))handler;
 
 - (void)addOkWithTitle:(NSString *)title
-               handler:(void (^ __nullable)(UIAlertAction *action, NSArray <UITextField *> *textFields))handler;
+               handler:(void (^__nullable)(UIAlertAction *action, NSArray<UITextField *> *textFields))handler;
 
 - (void)addCancelWithTitle:(NSString *)title
-                   handler:(void (^ __nullable)(UIAlertAction *action, NSArray <UITextField *> *textFields))handler;
+                   handler:(void (^__nullable)(UIAlertAction *action, NSArray<UITextField *> *textFields))handler;
 
 - (void)addDestructiveWithTitle:(NSString *)title
-                        handler:(void (^ __nullable)(UIAlertAction *action, NSArray <UITextField *> *textFields))handler;
+                        handler:(void (^__nullable)(UIAlertAction *action, NSArray<UITextField *> *textFields))handler;
 
-- (void)addTextFieldWithConfigurationHandler:(void (^ __nullable)(UITextField *textField))configurationHandler;
+- (void)addTextFieldWithConfigurationHandler:(void (^__nullable)(UITextField *textField))configurationHandler;
 
 - (void)showAlertAnimated:(BOOL)animated;
 

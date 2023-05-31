@@ -20,14 +20,15 @@
 #import <Foundation/Foundation.h>
 #import "Services/Network/GrowingURLSessionDataTaskProtocol.h"
 
-typedef void(^GrowingNetworkDataTaskBlock)(NSData * _Nullable data,
-                                           NSURLResponse * _Nullable response,
-                                           NSError * _Nullable error);
+typedef void (^GrowingNetworkDataTaskBlock)(NSData *_Nullable data,
+                                            NSURLResponse *_Nullable response,
+                                            NSError *_Nullable error);
 
 @protocol GrowingURLSessionProtocol <NSObject>
 
 @required
-- (id <GrowingURLSessionDataTaskProtocol>_Nullable)growing_dataTaskWithRequest:(NSURLRequest *_Nonnull)request
-                                                                    completion:(GrowingNetworkDataTaskBlock _Nonnull)completion;
+- (id<GrowingURLSessionDataTaskProtocol> _Nullable)growing_dataTaskWithRequest:(NSURLRequest *_Nonnull)request
+                                                                    completion:(GrowingNetworkDataTaskBlock _Nonnull)
+                                                                                   completion;
 
 @end

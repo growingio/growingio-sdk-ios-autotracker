@@ -24,12 +24,13 @@
 
 @interface GrowingHybridBridgeProvider : NSObject
 
-@property (nullable, nonatomic, weak) id <GrowingWebViewDomChangedDelegate> domChangedDelegate;
+@property (nullable, nonatomic, weak) id<GrowingWebViewDomChangedDelegate> domChangedDelegate;
 
 + (instancetype _Nonnull)sharedInstance;
 
 - (void)handleJavascriptBridgeMessage:(NSString *_Nullable)message;
 
 - (void)getDomTreeForWebView:(WKWebView *_Nonnull)webView
-           completionHandler:(void (^ _Nonnull)(NSDictionary *_Nullable domTee, NSError *_Nullable error))completionHandler;
+           completionHandler:
+               (void (^_Nonnull)(NSDictionary *_Nullable domTee, NSError *_Nullable error))completionHandler;
 @end

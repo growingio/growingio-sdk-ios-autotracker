@@ -22,9 +22,9 @@
 
 @interface UIApplication (GrowingHelper)
 
-- (NSArray <UIWindow *> *)growingHelper_allWindows;
-- (NSArray <UIWindow *> *)growingHelper_allWindowsSortedByWindowLevel;
-- (NSArray <UIWindow *> *)growingHelper_allWindowsWithoutGrowingWindow;
+- (NSArray<UIWindow *> *)growingHelper_allWindows;
+- (NSArray<UIWindow *> *)growingHelper_allWindowsSortedByWindowLevel;
+- (NSArray<UIWindow *> *)growingHelper_allWindowsWithoutGrowingWindow;
 
 @end
 #endif

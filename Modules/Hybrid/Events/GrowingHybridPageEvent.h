@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *protocolType;
 @property (nonatomic, copy, readonly) NSString *query;
 
-+ (GrowingHybridPageBuilder*)builder;
++ (GrowingHybridPageBuilder *)builder;
 
 @end
 
@@ -37,17 +37,17 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *protocolType;
 @property (nonatomic, strong, readonly) NSString *query;
 
-- (GrowingHybridPageBuilder *(^)(NSString *value))setQuery;
-- (GrowingHybridPageBuilder *(^)(NSString *value))setProtocolType;
+- (GrowingHybridPageBuilder * (^)(NSString *value))setQuery;
+- (GrowingHybridPageBuilder * (^)(NSString *value))setProtocolType;
 
-//重写
-- (GrowingHybridPageBuilder *(^)(NSString *value))setPath;
-- (GrowingHybridPageBuilder *(^)(NSString *value))setOrientation;
-- (GrowingHybridPageBuilder *(^)(NSString *value))setTitle;
-- (GrowingHybridPageBuilder *(^)(NSString *value))setReferralPage;
-- (GrowingHybridPageBuilder *(^)(NSDictionary <NSString *, NSObject *>*value))setAttributes;
-- (GrowingHybridPageBuilder *(^)(long long value))setTimestamp;
-- (GrowingHybridPageBuilder *(^)(NSString *value))setDomain;
+// 重写
+- (GrowingHybridPageBuilder * (^)(NSString *value))setPath;
+- (GrowingHybridPageBuilder * (^)(NSString *value))setOrientation;
+- (GrowingHybridPageBuilder * (^)(NSString *value))setTitle;
+- (GrowingHybridPageBuilder * (^)(NSString *value))setReferralPage;
+- (GrowingHybridPageBuilder * (^)(NSDictionary<NSString *, NSObject *> *value))setAttributes;
+- (GrowingHybridPageBuilder * (^)(long long value))setTimestamp;
+- (GrowingHybridPageBuilder * (^)(NSString *value))setDomain;
 
 @end
 

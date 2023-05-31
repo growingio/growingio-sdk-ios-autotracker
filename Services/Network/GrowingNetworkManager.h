@@ -18,14 +18,16 @@
 //  limitations under the License.
 
 #import <Foundation/Foundation.h>
-#import "GrowingRequestProtocol.h"
 #import "GrowingEventNetworkService.h"
+#import "GrowingRequestProtocol.h"
 
 @protocol GrowingURLSessionProtocol;
 @protocol GrowingURLSessionDataTaskProtocol;
 
-typedef void ( ^GrowingNetworkSuccessBlock ) ( NSHTTPURLResponse * _Nonnull httpResponse , NSData * _Nullable data);
-typedef void ( ^GrowingNetworkFailureBlock ) ( NSHTTPURLResponse * _Nonnull httpResponse , NSData * _Nullable data, NSError * _Nullable error );
+typedef void (^GrowingNetworkSuccessBlock)(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nullable data);
+typedef void (^GrowingNetworkFailureBlock)(NSHTTPURLResponse *_Nonnull httpResponse,
+                                           NSData *_Nullable data,
+                                           NSError *_Nullable error);
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -33,12 +35,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedInstance;
 
-+ (instancetype)shareManagerURLSession:(id <GrowingURLSessionProtocol>)session;
++ (instancetype)shareManagerURLSession:(id<GrowingURLSessionProtocol>)session;
 
-- (id <GrowingURLSessionDataTaskProtocol>_Nullable)sendRequest:(id <GrowingRequestProtocol>)request
+- (id<GrowingURLSessionDataTaskProtocol> _Nullable)sendRequest:(id<GrowingRequestProtocol>)request
                                                        success:(GrowingNetworkSuccessBlock)success
                                                        failure:(GrowingNetworkFailureBlock)failure;
-
 
 @end
 

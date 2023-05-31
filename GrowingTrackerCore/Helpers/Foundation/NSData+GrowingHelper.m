@@ -19,9 +19,9 @@
 
 #import "GrowingTrackerCore/Helpers/Foundation/NSData+GrowingHelper.h"
 #import "GrowingTrackerCore/Helpers/Foundation/NSString+GrowingHelper.h"
-#import "GrowingTrackerCore/Public/GrowingServiceManager.h"
-#import "GrowingTrackerCore/Public/GrowingEncryptionService.h"
 #import "GrowingTrackerCore/Public/GrowingCompressService.h"
+#import "GrowingTrackerCore/Public/GrowingEncryptionService.h"
+#import "GrowingTrackerCore/Public/GrowingServiceManager.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 
 #import <CommonCrypto/CommonCrypto.h>
@@ -33,7 +33,8 @@
 }
 
 - (NSData *)growingHelper_LZ4String {
-    id <GrowingCompressService> service = [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingCompressService)];
+    id<GrowingCompressService> service =
+        [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingCompressService)];
     if (service) {
         return [service compressedEventData:self];
     }
@@ -42,59 +43,58 @@
 }
 
 - (NSString *)growingHelper_base64String {
-    //ensure wrapWidth is a multiple of 4
-    
+    // ensure wrapWidth is a multiple of 4
+
     NSUInteger wrapWidth = 0;
-    
-    const char lookup[] ="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-    
+
+    const char lookup[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
     long long inputLength = (long long)[self length];
     const unsigned char *inputBytes = [self bytes];
-    
-    long long maxOutputLength = (inputLength /3 + 1) * 4;
-    maxOutputLength += wrapWidth? (maxOutputLength / wrapWidth) *2: 0;
+
+    long long maxOutputLength = (inputLength / 3 + 1) * 4;
+    maxOutputLength += wrapWidth ? (maxOutputLength / wrapWidth) * 2 : 0;
     unsigned char *outputBytes = (unsigned char *)malloc((unsigned long)maxOutputLength);
-    
+
     long long i;
-    long long outputLength =0;
-    for (i = 0; i < inputLength -2; i += 3) {
-        outputBytes[outputLength++] = lookup[(inputBytes[i] &0xFC) >> 2];
-        outputBytes[outputLength++] = lookup[((inputBytes[i] &0x03) << 4) | ((inputBytes[i +1] & 0xF0) >>4)];
-        outputBytes[outputLength++] = lookup[((inputBytes[i +1] & 0x0F) <<2) | ((inputBytes[i + 2] & 0xC0) >> 6)];
-        outputBytes[outputLength++] = lookup[inputBytes[i +2] & 0x3F];
-        
-        //add line break
+    long long outputLength = 0;
+    for (i = 0; i < inputLength - 2; i += 3) {
+        outputBytes[outputLength++] = lookup[(inputBytes[i] & 0xFC) >> 2];
+        outputBytes[outputLength++] = lookup[((inputBytes[i] & 0x03) << 4) | ((inputBytes[i + 1] & 0xF0) >> 4)];
+        outputBytes[outputLength++] = lookup[((inputBytes[i + 1] & 0x0F) << 2) | ((inputBytes[i + 2] & 0xC0) >> 6)];
+        outputBytes[outputLength++] = lookup[inputBytes[i + 2] & 0x3F];
+
+        // add line break
         if (wrapWidth && (outputLength + 2) % (wrapWidth + 2) == 0) {
-            outputBytes[outputLength++] ='\r';
-            outputBytes[outputLength++] ='\n';
+            outputBytes[outputLength++] = '\r';
+            outputBytes[outputLength++] = '\n';
         }
     }
-    
-    //handle left-over data
+
+    // handle left-over data
     if (i == inputLength - 2) {
         // = terminator
-        outputBytes[outputLength++] = lookup[(inputBytes[i] &0xFC) >> 2];
-        outputBytes[outputLength++] = lookup[((inputBytes[i] &0x03) << 4) | ((inputBytes[i +1] & 0xF0) >>4)];
-        outputBytes[outputLength++] = lookup[(inputBytes[i +1] & 0x0F) <<2];
-        outputBytes[outputLength++] =  '=';
-    
-    } else if (i == inputLength -1) {
+        outputBytes[outputLength++] = lookup[(inputBytes[i] & 0xFC) >> 2];
+        outputBytes[outputLength++] = lookup[((inputBytes[i] & 0x03) << 4) | ((inputBytes[i + 1] & 0xF0) >> 4)];
+        outputBytes[outputLength++] = lookup[(inputBytes[i + 1] & 0x0F) << 2];
+        outputBytes[outputLength++] = '=';
+
+    } else if (i == inputLength - 1) {
         // == terminator
-        outputBytes[outputLength++] = lookup[(inputBytes[i] &0xFC) >> 2];
-        outputBytes[outputLength++] = lookup[(inputBytes[i] &0x03) << 4];
-        outputBytes[outputLength++] ='=';
-        outputBytes[outputLength++] ='=';
+        outputBytes[outputLength++] = lookup[(inputBytes[i] & 0xFC) >> 2];
+        outputBytes[outputLength++] = lookup[(inputBytes[i] & 0x03) << 4];
+        outputBytes[outputLength++] = '=';
+        outputBytes[outputLength++] = '=';
     }
-    
-    //truncate data to match actual output length
+
+    // truncate data to match actual output length
     outputBytes = realloc(outputBytes, (unsigned long)outputLength);
     NSString *result = [[NSString alloc] initWithBytesNoCopy:outputBytes
                                                       length:(NSUInteger)outputLength
                                                     encoding:NSASCIIStringEncoding
                                                 freeWhenDone:YES];
-    
-    
-    return (outputLength >= 4)? result: nil;
+
+    return (outputLength >= 4) ? result : nil;
 }
 
 - (id)growingHelper_jsonObject {
@@ -103,7 +103,6 @@
 }
 
 - (NSDictionary *)growingHelper_dictionaryObject {
-    
     NSDictionary *dict = [self growingHelper_jsonObject];
     if (dict && [dict isKindOfClass:[NSDictionary class]]) {
         return dict;
@@ -113,7 +112,6 @@
 }
 
 - (NSArray *)growingHelper_arrayObject {
-    
     NSArray *arr = [self growingHelper_jsonObject];
     if (arr && [arr isKindOfClass:[NSArray class]]) {
         return arr;
@@ -129,19 +127,29 @@
 - (NSString *)growingHelper_md5String {
     unsigned char result[16];
     [self growingHelper_md5value:result];
-    NSString *retVal =
-    [NSString stringWithFormat:
-                           @"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
-                           result[0], result[1], result[2], result[3],
-                           result[4], result[5], result[6], result[7],
-                           result[8], result[9], result[10], result[11],
-                           result[12], result[13], result[14], result[15]
-                           ];
+    NSString *retVal = [NSString stringWithFormat:@"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+                                                  result[0],
+                                                  result[1],
+                                                  result[2],
+                                                  result[3],
+                                                  result[4],
+                                                  result[5],
+                                                  result[6],
+                                                  result[7],
+                                                  result[8],
+                                                  result[9],
+                                                  result[10],
+                                                  result[11],
+                                                  result[12],
+                                                  result[13],
+                                                  result[14],
+                                                  result[15]];
     return retVal;
 }
 
 - (NSData *)growingHelper_xorEncryptWithHint:(unsigned char)hint {
-    id <GrowingEncryptionService> service = [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingEncryptionService)];
+    id<GrowingEncryptionService> service =
+        [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingEncryptionService)];
     if (service) {
         return [service encryptEventData:self factor:hint];
     }

@@ -19,8 +19,8 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSObject(GrowingIvarHelper)
+@interface NSObject (GrowingIvarHelper)
 
-- (BOOL)growingHelper_getIvar:(const char *)iVarName outObj:(id*)outObj;
+- (BOOL)growingHelper_getIvar:(const char *)iVarName outObj:(id *)outObj;
 
 @end

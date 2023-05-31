@@ -29,7 +29,7 @@ typedef NS_ENUM(NSUInteger, GrowingHTTPMethod) {
 @protocol GrowingRequestProtocol;
 @protocol GrowingRequestAdapter <NSObject>
 
-+ (instancetype)adapterWithRequest:(id <GrowingRequestProtocol>)request;
++ (instancetype)adapterWithRequest:(id<GrowingRequestProtocol>)request;
 
 - (NSMutableURLRequest *)adaptedURLRequest:(NSMutableURLRequest *)request;
 
@@ -46,7 +46,7 @@ typedef NS_ENUM(NSUInteger, GrowingHTTPMethod) {
 @property (nonatomic, assign, readonly) GrowingHTTPMethod method;
 @property (nonatomic, strong, readonly) NSURL *absoluteURL;
 @property (nonatomic, copy, readonly) NSString *path;
-@property (nonatomic, strong, readonly) NSArray <id <GrowingRequestAdapter>> *adapters;
+@property (nonatomic, strong, readonly) NSArray<id<GrowingRequestAdapter>> *adapters;
 
 @optional
 /// Growing Event Request Property

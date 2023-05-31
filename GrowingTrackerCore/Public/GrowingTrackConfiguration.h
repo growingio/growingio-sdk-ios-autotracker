@@ -21,7 +21,7 @@
 #import "GrowingEventFilter.h"
 #import "GrowingFieldsIgnore.h"
 
-FOUNDATION_EXPORT NSString * const kGrowingDefaultDataCollectionServerHost;
+FOUNDATION_EXPORT NSString *const kGrowingDefaultDataCollectionServerHost;
 
 @interface GrowingTrackConfiguration : NSObject <NSCopying>
 

@@ -21,17 +21,15 @@
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Public/GrowingBaseEvent.h"
 
-@implementation UIControl(Growing)
+@implementation UIControl (Growing)
 
-- (BOOL)growingViewUserInteraction
-{
+- (BOOL)growingViewUserInteraction {
     return self.enabled && self.allTargets.count > 0;
 }
 
-- (NSString *)growingViewContent
-{
-    NSMutableArray<UIView*> *unvisted = [[NSMutableArray alloc] init];
-    
+- (NSString *)growingViewContent {
+    NSMutableArray<UIView *> *unvisted = [[NSMutableArray alloc] init];
+
     if (self.subviews.count) {
         [unvisted addObjectsFromArray:self.subviews];
     } else {

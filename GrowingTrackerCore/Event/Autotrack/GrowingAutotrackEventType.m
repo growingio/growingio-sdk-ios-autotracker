@@ -19,6 +19,6 @@
 
 #import "GrowingTrackerCore/Event/Autotrack/GrowingAutotrackEventType.h"
 
-NSString * const GrowingEventTypePage = @"PAGE";
-NSString * const GrowingEventTypeViewClick = @"VIEW_CLICK";
-NSString * const GrowingEventTypeViewChange = @"VIEW_CHANGE";
+NSString *const GrowingEventTypePage = @"PAGE";
+NSString *const GrowingEventTypeViewClick = @"VIEW_CLICK";
+NSString *const GrowingEventTypeViewChange = @"VIEW_CHANGE";

@@ -19,8 +19,8 @@
 
 #import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
-#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Public/GrowingServiceManager.h"
+#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 
 NSString *const kGrowingResidentDirName = @"com.growingio.core";
@@ -40,16 +40,20 @@ NSString *const kGrowingDirCommonPrefix = @"com.growingio.";
 }
 
 - (instancetype)initWithName:(NSString *)name {
-    id <GrowingEncryptionService> service = [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingEncryptionService)];
+    id<GrowingEncryptionService> service =
+        [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingEncryptionService)];
     return [self initWithName:name directory:GrowingUserDirectoryLibrary crypto:service];
 }
 
 - (instancetype)initWithName:(NSString *)name directory:(GrowingUserDirectory)directory {
-    id <GrowingEncryptionService> service = [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingEncryptionService)];
+    id<GrowingEncryptionService> service =
+        [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingEncryptionService)];
     return [self initWithName:name directory:directory crypto:service];
 }
 
-- (instancetype)initWithName:(NSString *)name directory:(GrowingUserDirectory)directory crypto:(id<GrowingEncryptionService> _Nullable)crypto {
+- (instancetype)initWithName:(NSString *)name
+                   directory:(GrowingUserDirectory)directory
+                      crypto:(id<GrowingEncryptionService> _Nullable)crypto {
     if (self = [super init]) {
         NSString *fullPath = [GrowingFileStorage fullPathWithName:name append:nil];
         NSURL *userDir = [GrowingFileStorage userDirectoryURL:directory];
@@ -61,9 +65,7 @@ NSString *const kGrowingDirCommonPrefix = @"com.growingio.";
 }
 
 - (void)createDirectoryAtURLIfNeeded:(NSURL *)url {
-    
-    if (![[NSFileManager defaultManager] fileExistsAtPath:url.path
-                                              isDirectory:NULL]) {
+    if (![[NSFileManager defaultManager] fileExistsAtPath:url.path isDirectory:NULL]) {
         NSError *error = nil;
         if (![[NSFileManager defaultManager] createDirectoryAtPath:url.path
                                        withIntermediateDirectories:YES
@@ -71,12 +73,10 @@ NSString *const kGrowingDirCommonPrefix = @"com.growingio.";
                                                              error:&error]) {
             GIOLogError(@"error: %@", error.localizedDescription);
         }
-        
+
         // excluded backup to iCloud
         NSError *excludedBackupErr = nil;
-        if (![url setResourceValue:@YES
-                            forKey:NSURLIsExcludedFromBackupKey
-                             error:&error]) {
+        if (![url setResourceValue:@YES forKey:NSURLIsExcludedFromBackupKey error:&error]) {
             GIOLogError(@"Error excluding %@ from backup %@", [url lastPathComponent], excludedBackupErr);
         }
     }
@@ -102,8 +102,9 @@ NSString *const kGrowingDirCommonPrefix = @"com.growingio.";
     return [NSURL fileURLWithPath:storagePath];
 }
 
-+ (NSString *)fullPathWithName:(NSString *)dirName append:(NSString * _Nullable)lastPathComponent {
-    NSString *fullPath = [NSString stringWithFormat:@"%@/%@%@", kGrowingResidentDirName, kGrowingDirCommonPrefix, dirName];
++ (NSString *)fullPathWithName:(NSString *)dirName append:(NSString *_Nullable)lastPathComponent {
+    NSString *fullPath =
+        [NSString stringWithFormat:@"%@/%@%@", kGrowingResidentDirName, kGrowingDirCommonPrefix, dirName];
 #if TARGET_OS_OSX
     // 兼容非沙盒MacApp
     NSString *bundleId = [GrowingDeviceInfo currentDeviceInfo].bundleID;
@@ -159,13 +160,13 @@ NSString *const kGrowingDirCommonPrefix = @"com.growingio.";
 
 - (void)setData:(NSData *)data forKey:(NSString *)key {
     NSURL *url = [self urlForKey:key];
-    
+
     // a nil value was supplied, remove the storage for that key.
     if (data == nil) {
         [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
         return;
     }
-    
+
     if (self.crypto && [self.crypto respondsToSelector:@selector(encryptLocalData:)]) {
         NSData *encryptedData = [self.crypto encryptLocalData:data];
         [encryptedData writeToURL:url atomically:YES];
@@ -230,7 +231,7 @@ NSString *const kGrowingDirCommonPrefix = @"com.growingio.";
 
 - (id _Nullable)jsonForKey:(NSString *)key {
     id result = nil;
-    
+
     NSData *data = [self dataForKey:key];
     if (data) {
         result = [self jsonFromData:data];
@@ -249,7 +250,7 @@ NSString *const kGrowingDirCommonPrefix = @"com.growingio.";
 
 - (void)setJSON:(id _Nonnull)json forKey:(NSString *)key {
     NSDictionary *dict = nil;
-    
+
     if (json) {
         if ([json isKindOfClass:[NSDictionary class]] || [json isKindOfClass:[NSArray class]]) {
             dict = json;
@@ -257,15 +258,17 @@ NSString *const kGrowingDirCommonPrefix = @"com.growingio.";
             dict = @{key: json};
         }
     }
-    
+
     // NSDictionary or NSArray
     NSData *data = [dict growingHelper_jsonData];
     [self setData:data forKey:key];
 }
 
 - (NSData *_Nullable)dataFromJSON:(id)json {
-    if (json == nil) { return nil; }
-    
+    if (json == nil) {
+        return nil;
+    }
+
     NSError *error = nil;
     NSData *data = [NSJSONSerialization dataWithJSONObject:json options:0 error:&error];
     if (error) {

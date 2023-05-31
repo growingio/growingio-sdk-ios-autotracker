@@ -24,14 +24,14 @@
 
 @implementation GrowingRequestHeaderAdapter
 
-+ (instancetype)adapterWithRequest:(id <GrowingRequestProtocol>)request {
++ (instancetype)adapterWithRequest:(id<GrowingRequestProtocol>)request {
     GrowingRequestHeaderAdapter *adapter = [[self alloc] init];
     return adapter;
 }
 
 - (NSMutableURLRequest *)adaptedURLRequest:(NSMutableURLRequest *)request {
     NSMutableURLRequest *needAdaptReq = request;
-    [needAdaptReq setValue:[NSString stringWithFormat:@"%lld",[GrowingULTimeUtil currentTimeMillis]]
+    [needAdaptReq setValue:[NSString stringWithFormat:@"%lld", [GrowingULTimeUtil currentTimeMillis]]
         forHTTPHeaderField:@"X-Timestamp"];
     [needAdaptReq setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     return needAdaptReq;
@@ -47,13 +47,13 @@
 
 @interface GrowingRequestMethodAdapter ()
 
-@property (nonatomic, weak) id <GrowingRequestProtocol> request;
+@property (nonatomic, weak) id<GrowingRequestProtocol> request;
 
 @end
 
 @implementation GrowingRequestMethodAdapter
 
-+ (instancetype)adapterWithRequest:(id <GrowingRequestProtocol>)request {
++ (instancetype)adapterWithRequest:(id<GrowingRequestProtocol>)request {
     GrowingRequestMethodAdapter *adapter = [[self alloc] init];
     adapter.request = request;
     return adapter;
@@ -62,7 +62,7 @@
 - (NSMutableURLRequest *)adaptedURLRequest:(NSMutableURLRequest *)request {
     NSMutableURLRequest *needAdaptReq = request;
     NSString *httpMethod = @"POST";
-    
+
     switch (self.request.method) {
         case GrowingHTTPMethodPOST:
             httpMethod = @"POST";
@@ -70,15 +70,15 @@
         case GrowingHTTPMethodGET:
             httpMethod = @"GET";
             break;
-            
+
         case GrowingHTTPMethodPUT:
             httpMethod = @"PUT";
             break;
-            
+
         case GrowingHTTPMethodDELETE:
             httpMethod = @"DELETE";
             break;
-            
+
         default:
             break;
     }

@@ -22,7 +22,7 @@
 
 @implementation UIView (GrowingHelper)
 
-- (UIViewController*)growingHelper_viewController {
+- (UIViewController *)growingHelper_viewController {
     UIResponder *curNode = self.nextResponder;
     while (curNode) {
         if ([curNode isKindOfClass:[UIViewController class]]) {

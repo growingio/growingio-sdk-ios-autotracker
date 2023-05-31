@@ -38,21 +38,21 @@
 
 //  from https://github.com/SDWebImage/SDWebImage/blob/master/SDWebImage/Private/SDInternalMacros.h
 
-#import <os/lock.h>
 #import <libkern/OSAtomic.h>
+#import <os/lock.h>
 
-#define GROWING_USE_OS_UNFAIR_LOCK TARGET_OS_MACCATALYST ||\
-    (__IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_10_0) ||\
-    (__MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_12) ||\
-    (__TV_OS_VERSION_MIN_REQUIRED >= __TVOS_10_0) ||\
-    (__WATCH_OS_VERSION_MIN_REQUIRED >= __WATCHOS_3_0)
+#define GROWING_USE_OS_UNFAIR_LOCK                                                                           \
+    TARGET_OS_MACCATALYST || (__IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_10_0) ||                          \
+        (__MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_12) || (__TV_OS_VERSION_MIN_REQUIRED >= __TVOS_10_0) || \
+        (__WATCH_OS_VERSION_MIN_REQUIRED >= __WATCHOS_3_0)
 
 #ifndef GROWING_LOCK_DECLARE
 #if GROWING_USE_OS_UNFAIR_LOCK
 #define GROWING_LOCK_DECLARE(lock) os_unfair_lock lock
 #else
-#define GROWING_LOCK_DECLARE(lock) os_unfair_lock lock API_AVAILABLE(ios(10.0), tvos(10), watchos(3), macos(10.12)); \
-OSSpinLock lock##_deprecated;
+#define GROWING_LOCK_DECLARE(lock)                                                    \
+    os_unfair_lock lock API_AVAILABLE(ios(10.0), tvos(10), watchos(3), macos(10.12)); \
+    OSSpinLock lock##_deprecated;
 #endif
 #endif
 
@@ -60,8 +60,9 @@ OSSpinLock lock##_deprecated;
 #if GROWING_USE_OS_UNFAIR_LOCK
 #define GROWING_LOCK_DECLARE_STATIC(lock) static os_unfair_lock lock
 #else
-#define GROWING_LOCK_DECLARE_STATIC(lock) static os_unfair_lock lock API_AVAILABLE(ios(10.0), tvos(10), watchos(3), macos(10.12)); \
-static OSSpinLock lock##_deprecated;
+#define GROWING_LOCK_DECLARE_STATIC(lock)                                                    \
+    static os_unfair_lock lock API_AVAILABLE(ios(10.0), tvos(10), watchos(3), macos(10.12)); \
+    static OSSpinLock lock##_deprecated;
 #endif
 #endif
 
@@ -69,8 +70,11 @@ static OSSpinLock lock##_deprecated;
 #if GROWING_USE_OS_UNFAIR_LOCK
 #define GROWING_LOCK_INIT(lock) lock = OS_UNFAIR_LOCK_INIT
 #else
-#define GROWING_LOCK_INIT(lock) if (@available(iOS 10, tvOS 10, watchOS 3, macOS 10.12, *)) lock = OS_UNFAIR_LOCK_INIT; \
-else lock##_deprecated = OS_SPINLOCK_INIT;
+#define GROWING_LOCK_INIT(lock)                                 \
+    if (@available(iOS 10, tvOS 10, watchOS 3, macOS 10.12, *)) \
+        lock = OS_UNFAIR_LOCK_INIT;                             \
+    else                                                        \
+        lock##_deprecated = OS_SPINLOCK_INIT;
 #endif
 #endif
 
@@ -78,8 +82,11 @@ else lock##_deprecated = OS_SPINLOCK_INIT;
 #if GROWING_USE_OS_UNFAIR_LOCK
 #define GROWING_LOCK(lock) os_unfair_lock_lock(&lock)
 #else
-#define GROWING_LOCK(lock) if (@available(iOS 10, tvOS 10, watchOS 3, macOS 10.12, *)) os_unfair_lock_lock(&lock); \
-else OSSpinLockLock(&lock##_deprecated);
+#define GROWING_LOCK(lock)                                      \
+    if (@available(iOS 10, tvOS 10, watchOS 3, macOS 10.12, *)) \
+        os_unfair_lock_lock(&lock);                             \
+    else                                                        \
+        OSSpinLockLock(&lock##_deprecated);
 #endif
 #endif
 
@@ -87,7 +94,10 @@ else OSSpinLockLock(&lock##_deprecated);
 #if GROWING_USE_OS_UNFAIR_LOCK
 #define GROWING_UNLOCK(lock) os_unfair_lock_unlock(&lock)
 #else
-#define GROWING_UNLOCK(lock) if (@available(iOS 10, tvOS 10, watchOS 3, macOS 10.12, *)) os_unfair_lock_unlock(&lock); \
-else OSSpinLockUnlock(&lock##_deprecated);
+#define GROWING_UNLOCK(lock)                                    \
+    if (@available(iOS 10, tvOS 10, watchOS 3, macOS 10.12, *)) \
+        os_unfair_lock_unlock(&lock);                           \
+    else                                                        \
+        OSSpinLockUnlock(&lock##_deprecated);
 #endif
 #endif
