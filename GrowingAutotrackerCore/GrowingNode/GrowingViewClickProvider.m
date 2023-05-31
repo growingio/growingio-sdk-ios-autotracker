@@ -18,12 +18,12 @@
 //  limitations under the License.
 
 #import "GrowingAutotrackerCore/GrowingNode/GrowingViewClickProvider.h"
-#import "GrowingTrackerCore/Event/GrowingEventManager.h"
-#import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
+#import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
+#import "GrowingAutotrackerCore/GrowingNode/GrowingNodeHelper.h"
 #import "GrowingAutotrackerCore/GrowingNode/GrowingViewNode.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
-#import "GrowingAutotrackerCore/GrowingNode/GrowingNodeHelper.h"
-#import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
+#import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
+#import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogMacros.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 
@@ -31,7 +31,7 @@
 
 + (void)viewOnClick:(UIView *)view {
     if ([view growingNodeDonotTrack]) {
-        GIOLogDebug(@"viewOnClick %@ is donotTrack",view);
+        GIOLogDebug(@"viewOnClick %@ is donotTrack", view);
         return;
     }
     GrowingPageGroup *page = [[GrowingPageManager sharedInstance] findPageByView:view];
@@ -42,13 +42,14 @@
     [self sendClickEvent:page viewNode:node];
 }
 
-+ (void)sendClickEvent:(GrowingPageGroup *)page viewNode:(GrowingViewNode *)node{
-    [[GrowingEventManager sharedInstance] postEventBuilder:GrowingViewElementEvent.builder.setEventType(GrowingEventTypeViewClick)
-     .setPath(page.path)
-     .setPageShowTimestamp(page.showTimestamp)
-     .setXpath(node.xPath)
-     .setIndex(node.index)
-     .setTextValue(node.viewContent)];
++ (void)sendClickEvent:(GrowingPageGroup *)page viewNode:(GrowingViewNode *)node {
+    [[GrowingEventManager sharedInstance]
+        postEventBuilder:GrowingViewElementEvent.builder.setEventType(GrowingEventTypeViewClick)
+                             .setPath(page.path)
+                             .setPageShowTimestamp(page.showTimestamp)
+                             .setXpath(node.xPath)
+                             .setIndex(node.index)
+                             .setTextValue(node.viewContent)];
 }
 
 @end

@@ -24,12 +24,10 @@
 
 @interface GrowingMobileDebugger : NSObject <GrowingModuleProtocol>
 
-@property (nonatomic, strong) id <GrowingWebSocketService> webSocket;
+@property (nonatomic, strong) id<GrowingWebSocketService> webSocket;
 
 - (void)start;
 
 - (NSString *)absoluteURL;
 
 @end
-
-

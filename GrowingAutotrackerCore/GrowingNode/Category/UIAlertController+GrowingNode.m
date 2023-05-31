@@ -17,11 +17,11 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingAutotrackerCore/GrowingNode/Category/UIAlertController+GrowingNode.h"
-#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
-#import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
-#import "GrowingAutotrackerCore/Autotrack/UIAlertController+GrowingAutotracker.h"
 #import <objc/runtime.h>
+#import "GrowingAutotrackerCore/Autotrack/UIAlertController+GrowingAutotracker.h"
+#import "GrowingAutotrackerCore/GrowingNode/Category/UIAlertController+GrowingNode.h"
+#import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 
 @implementation UIAlertController (GrowingNode)
 
@@ -29,13 +29,13 @@
     return [self.view growingNodeFrame];
 }
 
-- (NSArray <id <GrowingNode> > *)growingNodeChilds {
+- (NSArray<id<GrowingNode> > *)growingNodeChilds {
     NSMutableArray *childs = [NSMutableArray array];
     NSMapTable *allButton = [self growing_allActionViews];
-    for (UIView *view in  [allButton keyEnumerator]) {
+    for (UIView *view in [allButton keyEnumerator]) {
         [childs addObject:view];
     }
-    
+
     UIView *view = nil;
     if ([self.view growingHelper_getIvar:"_titleLabel" outObj:&view]) {
         [childs addObject:view];
@@ -43,12 +43,11 @@
     if ([self.view growingHelper_getIvar:"_messageLabel" outObj:&view]) {
         [childs addObject:view];
     }
-    
+
     return childs;
 }
 
 @end
-
 
 @implementation GrowingAlertVCActionView
 
@@ -56,8 +55,11 @@
     unsigned int count = 0;
     Method *methods = class_copyMethodList(self, &count);
     NSMutableArray *classes = [[NSMutableArray alloc] init];
-    NSArray *classNames= @[[NSString stringWithFormat:@"_UI%@Controller%@",@"Alert",@"CollectionViewCell"],[NSString stringWithFormat:@"_UI%@Controller%@View",@"Alert",@"Action"]];
-    for (NSString *clsname  in classNames) {
+    NSArray *classNames = @[
+        [NSString stringWithFormat:@"_UI%@Controller%@", @"Alert", @"CollectionViewCell"],
+        [NSString stringWithFormat:@"_UI%@Controller%@View", @"Alert", @"Action"]
+    ];
+    for (NSString *clsname in classNames) {
         Class clazz = NSClassFromString(clsname);
         if (clazz) {
             [classes addObject:clazz];
@@ -77,15 +79,13 @@
     free(methods);
 }
 
-
 - (NSString *)growingNodeSubPath {
-    
     NSString *subpath = @"Button";
-    
+
     UIViewController *responderVC = [self growingHelper_viewController];
     if ([responderVC isKindOfClass:UIAlertController.class]) {
         UIAlertController *alertVC = (UIAlertController *)responderVC;
-        
+
         UIAlertAction *action = [UIAlertController growing_actionForActionView:(id)self];
         NSInteger index = -1;
         if (alertVC.actions && action) {
@@ -93,10 +93,9 @@
         }
         subpath = (index < 0) ? subpath : [NSString stringWithFormat:@"Button[%ld]", (long)index];
     }
-    
+
     return subpath;
 }
-
 
 - (BOOL)growingNodeUserInteraction {
     return YES;
@@ -104,13 +103,12 @@
 
 - (NSString *)growingNodeContent {
     NSString *nodeContent = [[UIAlertController growing_actionForActionView:(id)self] title];
-    
+
     if (nodeContent.length) {
         return nodeContent;
     } else {
         return self.accessibilityLabel;
     }
 }
-
 
 @end

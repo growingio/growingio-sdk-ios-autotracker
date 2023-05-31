@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)trackTimerResume:(NSString *)timerId;
 
-+ (void)trackTimerEnd:(NSString *)timerId withAttributes:(NSDictionary <NSString *, NSString *> *_Nullable)attributes;
++ (void)trackTimerEnd:(NSString *)timerId withAttributes:(NSDictionary<NSString *, NSString *> *_Nullable)attributes;
 
 + (void)removeTimer:(NSString *)timerId;
 

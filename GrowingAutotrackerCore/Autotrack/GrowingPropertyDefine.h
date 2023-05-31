@@ -22,49 +22,35 @@
 #ifndef Growing_GrowingPropertyDefine_h
 #define Growing_GrowingPropertyDefine_h
 
-#define GrowingPropertyDefine(theClass,theType,theGetter,theSetter)                         \
-        @interface theClass(GrowingDefineProperty_##theGetter)                              \
-        @property (nonatomic, retain) theType theGetter;                                    \
-        @end                                                                                \
-        @implementation theClass(GrowingDefineProperty_##theGetter)                         \
-             GrowingPropertyImplementation(theType,theGetter,theSetter)                     \
-        @end                                                                                \
+#define GrowingPropertyDefine(theClass, theType, theGetter, theSetter) \
+    @interface theClass (GrowingDefineProperty_##theGetter)            \
+    @property (nonatomic, retain) theType theGetter;                   \
+    @end                                                               \
+    @implementation theClass (GrowingDefineProperty_##theGetter)       \
+    GrowingPropertyImplementation(theType, theGetter, theSetter) @end
 
-#define GrowingPropertyImplementation(theType,theGetter,theSetter)                          \
-        static char __##theClass##__##theGetter##_key;                                      \
-        - (void)theSetter:(theType)value                                                    \
-        {                                                                                   \
-            objc_setAssociatedObject(self,                                                  \
-                                     &__##theClass##__##theGetter##_key,                    \
-                                     value,                                                 \
-                                     OBJC_ASSOCIATION_RETAIN_NONATOMIC);                    \
-        }                                                                                   \
-        - (theType)theGetter                                                                \
-        {                                                                                   \
-            return objc_getAssociatedObject(self,&__##theClass##__##theGetter##_key);       \
-        }                                                                                   \
+#define GrowingPropertyImplementation(theType, theGetter, theSetter)                                                  \
+    static char __##theClass##__##theGetter##_key;                                                                    \
+    -(void)theSetter : (theType)value {                                                                               \
+        objc_setAssociatedObject(self, &__##theClass##__##theGetter##_key, value, OBJC_ASSOCIATION_RETAIN_NONATOMIC); \
+    }                                                                                                                 \
+    -(theType)theGetter {                                                                                             \
+        return objc_getAssociatedObject(self, &__##theClass##__##theGetter##_key);                                    \
+    }
 
-
-#define GrowingSafeStringPropertyImplementation(theGetter,theSetter)                        \
-        static char __##theClass##__##theGetter##_key;                                      \
-        - (void)theSetter:(NSString *)value                                                 \
-        {                                                                                   \
-            if ([value isKindOfClass:[NSNumber class]])                                     \
-            {                                                                               \
-                value = [(NSNumber *)value stringValue];                                    \
-            }                                                                               \
-            if (![value isKindOfClass:[NSString class]])                                    \
-            {                                                                               \
-                value = nil;                                                                \
-            }                                                                               \
-            objc_setAssociatedObject(self,                                                  \
-                                     &__##theClass##__##theGetter##_key,                    \
-                                     value,                                                 \
-                                     OBJC_ASSOCIATION_COPY_NONATOMIC);                      \
-        }                                                                                   \
-        - (NSString *)theGetter                                                             \
-        {                                                                                   \
-            return objc_getAssociatedObject(self,&__##theClass##__##theGetter##_key);       \
-        }                                                                                   \
+#define GrowingSafeStringPropertyImplementation(theGetter, theSetter)                                               \
+    static char __##theClass##__##theGetter##_key;                                                                  \
+    -(void)theSetter : (NSString *)value {                                                                          \
+        if ([value isKindOfClass:[NSNumber class]]) {                                                               \
+            value = [(NSNumber *)value stringValue];                                                                \
+        }                                                                                                           \
+        if (![value isKindOfClass:[NSString class]]) {                                                              \
+            value = nil;                                                                                            \
+        }                                                                                                           \
+        objc_setAssociatedObject(self, &__##theClass##__##theGetter##_key, value, OBJC_ASSOCIATION_COPY_NONATOMIC); \
+    }                                                                                                               \
+    -(NSString *)theGetter {                                                                                        \
+        return objc_getAssociatedObject(self, &__##theClass##__##theGetter##_key);                                  \
+    }
 
 #endif

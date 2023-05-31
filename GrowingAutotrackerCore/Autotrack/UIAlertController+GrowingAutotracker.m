@@ -18,32 +18,30 @@
 //  limitations under the License.
 
 #import "GrowingAutotrackerCore/Autotrack/UIAlertController+GrowingAutotracker.h"
-#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
-#import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/GrowingViewClickProvider.h"
+#import "GrowingTrackerCore/Event/GrowingEventManager.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingULSwizzle.h"
 
 @implementation UIAlertController (GrowingAutotracker)
 
 - (void)growing_dismissAnimated:(BOOL)animated triggeringAction:(UIAlertAction *)action {
-    
     [self growing_sendClickEventForAction:action];
 
     [self growing_dismissAnimated:animated triggeringAction:action];
 }
 
 - (void)growing_dismissAnimated:(BOOL)animated
-               triggeringAction:(UIAlertAction *)action
-  triggeredByPopoverDimmingView:(UIView *)view
-              dismissCompletion:(id)completion {
-    
+                 triggeringAction:(UIAlertAction *)action
+    triggeredByPopoverDimmingView:(UIView *)view
+                dismissCompletion:(id)completion {
     [self growing_sendClickEventForAction:action];
-    
+
     [self growing_dismissAnimated:animated
-                 triggeringAction:action
-    triggeredByPopoverDimmingView:view
-                dismissCompletion:completion];
+                     triggeringAction:action
+        triggeredByPopoverDimmingView:view
+                    dismissCompletion:completion];
 }
 
 - (void)growing_sendClickEventForAction:(UIAlertAction *)action {
@@ -56,7 +54,7 @@
     }
 }
 
-+ (nullable UIAlertAction *)growing_actionForActionView:(UIView*)actionView {
++ (nullable UIAlertAction *)growing_actionForActionView:(UIView *)actionView {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     NSString *viewSelectorString = [NSString stringWithFormat:@"a%@ion%@w", @"ct", @"Vie"];
@@ -66,9 +64,8 @@
     }
 #pragma clang diagnostic pop
     UIAlertAction *action = nil;
-    if ([actionView respondsToSelector:@selector(action)])
-    {
-        action =[actionView performSelector:@selector(action)];
+    if ([actionView respondsToSelector:@selector(action)]) {
+        action = [actionView performSelector:@selector(action)];
     }
     return action;
 }
@@ -76,22 +73,21 @@
 - (NSMapTable *)growing_allActionViews {
     UICollectionView *collectionView = [self growing_collectionView];
     NSMapTable *retMap = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsStrongMemory
-                                                valueOptions:NSPointerFunctionsStrongMemory
-                                                    capacity:4];
+                                                   valueOptions:NSPointerFunctionsStrongMemory
+                                                       capacity:4];
     // ios9以及以下
     if (collectionView) {
-        [[collectionView indexPathsForVisibleItems] enumerateObjectsUsingBlock:^(NSIndexPath * _Nonnull obj,
-                                                                                 NSUInteger idx,
-                                                                                 BOOL * _Nonnull stop) {
-            UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:obj];
-            if (cell) {
-                [retMap setObject:[NSNumber numberWithInteger:obj.row] forKey:cell];
-            }
-        }];
-    } else { //  ios10以及以上
+        [[collectionView indexPathsForVisibleItems]
+            enumerateObjectsUsingBlock:^(NSIndexPath *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+                UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:obj];
+                if (cell) {
+                    [retMap setObject:[NSNumber numberWithInteger:obj.row] forKey:cell];
+                }
+            }];
+    } else {  //  ios10以及以上
         NSArray *views = nil;
         if ([self.view growingHelper_getIvar:"_actionViews" outObj:&views]) {
-            [views enumerateObjectsUsingBlock:^(UIView *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [views enumerateObjectsUsingBlock:^(UIView *obj, NSUInteger idx, BOOL *_Nonnull stop) {
                 [retMap setObject:[NSNumber numberWithInteger:idx] forKey:obj];
             }];
         }
@@ -99,14 +95,14 @@
     return retMap;
 }
 
-- (UICollectionView*)growing_collectionView {
+- (UICollectionView *)growing_collectionView {
     return [self growing_alertViewCollectionView:self.view];
 }
 
-- (UICollectionView*)growing_alertViewCollectionView:(UIView*)view {
+- (UICollectionView *)growing_alertViewCollectionView:(UIView *)view {
     for (UIView *subview in view.subviews) {
         if ([subview isKindOfClass:[UICollectionView class]]) {
-            return (UICollectionView*)subview;
+            return (UICollectionView *)subview;
         } else {
             UICollectionView *ret = [self growing_alertViewCollectionView:subview];
             if (ret) {

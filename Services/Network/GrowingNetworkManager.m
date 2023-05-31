@@ -18,15 +18,15 @@
 //  limitations under the License.
 
 #import "Services/Network/GrowingNetworkManager.h"
-#import "Services/Network/NSURLSession+GrowingURLSessionHelper.h"
 #import "GrowingTrackerCore/Public/GrowingAnnotationCore.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
+#import "Services/Network/NSURLSession+GrowingURLSessionHelper.h"
 
 GrowingService(GrowingEventNetworkService, GrowingNetworkManager)
 
 @interface GrowingNetworkManager ()
 
-@property (nonatomic, strong) id <GrowingURLSessionProtocol> session;
+@property (nonatomic, strong) id<GrowingURLSessionProtocol> session;
 
 @end
 
@@ -46,84 +46,87 @@ GrowingService(GrowingEventNetworkService, GrowingNetworkManager)
     return manager;
 }
 
-- (id <GrowingURLSessionDataTaskProtocol>)sendRequest:(id<GrowingRequestProtocol>)request
-                                              success:(GrowingNetworkSuccessBlock)success
-                                              failure:(GrowingNetworkFailureBlock)failure {
-    
+- (id<GrowingURLSessionDataTaskProtocol>)sendRequest:(id<GrowingRequestProtocol>)request
+                                             success:(GrowingNetworkSuccessBlock)success
+                                             failure:(GrowingNetworkFailureBlock)failure {
     NSURLRequest *urlRequest = [self createRequest:request];
-    
+
     SEL selector = @selector(growing_dataTaskWithRequest:completion:);
     if (![self.session respondsToSelector:selector]) {
         GIOLogError(@"Session(%@) cannot respond to %@ method.", self.session, NSStringFromSelector(selector));
         return nil;
     }
-    
-    id <GrowingURLSessionDataTaskProtocol> task =
-    [self.session growing_dataTaskWithRequest:urlRequest
-                                   completion:^(NSData * _Nullable data,
-                                                NSURLResponse * _Nullable response,
-                                                NSError * _Nullable error) {
-        
-        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (error) {
-                GIOLogError(@"Request(%@) failed with connection error: %@", request.absoluteURL.absoluteString, error);
-                if (failure) {
-                    failure(httpResponse, data, error);
-                }
-                return;
-            }
-            
-            if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
-                
-                GIOLogDebug(@"Request(%@) succeeded: %zd.", request.absoluteURL.absoluteString, httpResponse.statusCode);
-                if (success) {
-                    success(httpResponse, data);
-                }
-            } else {
-                GIOLogError(@"Request(%@) failed with unexpected status code: %zd.", request.absoluteURL.absoluteString, httpResponse.statusCode);
-                if (failure) {
-                    failure(httpResponse, data, error);
-                }
-            }
-        });
-    }];
-    
+
+    id<GrowingURLSessionDataTaskProtocol> task =
+        [self.session growing_dataTaskWithRequest:urlRequest
+                                       completion:^(NSData *_Nullable data,
+                                                    NSURLResponse *_Nullable response,
+                                                    NSError *_Nullable error) {
+                                           NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+
+                                           dispatch_async(dispatch_get_main_queue(), ^{
+                                               if (error) {
+                                                   GIOLogError(@"Request(%@) failed with connection error: %@",
+                                                               request.absoluteURL.absoluteString,
+                                                               error);
+                                                   if (failure) {
+                                                       failure(httpResponse, data, error);
+                                                   }
+                                                   return;
+                                               }
+
+                                               if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
+                                                   GIOLogDebug(@"Request(%@) succeeded: %zd.",
+                                                               request.absoluteURL.absoluteString,
+                                                               httpResponse.statusCode);
+                                                   if (success) {
+                                                       success(httpResponse, data);
+                                                   }
+                                               } else {
+                                                   GIOLogError(@"Request(%@) failed with unexpected status code: %zd.",
+                                                               request.absoluteURL.absoluteString,
+                                                               httpResponse.statusCode);
+                                                   if (failure) {
+                                                       failure(httpResponse, data, error);
+                                                   }
+                                               }
+                                           });
+                                       }];
+
     if ([task respondsToSelector:@selector(resume)]) {
         [task resume];
     }
-    
+
     return task;
 }
 
-- (NSURLRequest *)createRequest:(id <GrowingRequestProtocol>)request {
-    
+- (NSURLRequest *)createRequest:(id<GrowingRequestProtocol>)request {
     if (![request respondsToSelector:@selector(absoluteURL)]) {
         return nil;
     }
-    
+
     NSTimeInterval timeout = 60;
     if ([request respondsToSelector:@selector(timeoutInSeconds)] && request.timeoutInSeconds > 0) {
         timeout = request.timeoutInSeconds;
     }
-    
+
     NSMutableURLRequest *resultReq = [NSMutableURLRequest requestWithURL:request.absoluteURL
                                                              cachePolicy:NSURLRequestUseProtocolCachePolicy
                                                          timeoutInterval:timeout];
-    
+
     if (![request respondsToSelector:@selector(adapters)]) {
         return resultReq;
     }
-    
+
     NSMutableArray *sortedAdapters = request.adapters.mutableCopy;
-    [sortedAdapters sortUsingComparator:^NSComparisonResult(id<GrowingRequestAdapter> adapter1, id<GrowingRequestAdapter> adapter2) {
+    [sortedAdapters sortUsingComparator:^NSComparisonResult(id<GrowingRequestAdapter> adapter1,
+                                                            id<GrowingRequestAdapter> adapter2) {
         return adapter1.priority > adapter2.priority;
     }];
-    for (id <GrowingRequestAdapter> adapter in sortedAdapters) {
-       resultReq = [adapter adaptedURLRequest:resultReq];
+    for (id<GrowingRequestAdapter> adapter in sortedAdapters) {
+        resultReq = [adapter adaptedURLRequest:resultReq];
     }
-    
+
     if ([request respondsToSelector:@selector(outsize)]) {
         request.outsize = resultReq.HTTPBody.length;
     }
@@ -137,15 +140,17 @@ GrowingService(GrowingEventNetworkService, GrowingNetworkManager)
     return YES;
 }
 
-- (void)sendRequest:(id <GrowingRequestProtocol> _Nonnull)request
-         completion:(void(^_Nullable)(NSHTTPURLResponse * _Nonnull httpResponse,
-                                      NSData * _Nullable data,
-                                      NSError * _Nullable error))callback {
-    [self sendRequest:request success:^(NSHTTPURLResponse * _Nonnull httpResponse, NSData * _Nonnull data) {
-        if (callback) callback(httpResponse,data,nil);
-    } failure:^(NSHTTPURLResponse * _Nonnull httpResponse, NSData * _Nonnull data, NSError * _Nonnull error) {
-        if (callback) callback(httpResponse,data,error);
-    }];
+- (void)sendRequest:(id<GrowingRequestProtocol> _Nonnull)request
+         completion:(void (^_Nullable)(NSHTTPURLResponse *_Nonnull httpResponse,
+                                       NSData *_Nullable data,
+                                       NSError *_Nullable error))callback {
+    [self sendRequest:request
+        success:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data) {
+            if (callback) callback(httpResponse, data, nil);
+        }
+        failure:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data, NSError *_Nonnull error) {
+            if (callback) callback(httpResponse, data, error);
+        }];
 }
 
 @end

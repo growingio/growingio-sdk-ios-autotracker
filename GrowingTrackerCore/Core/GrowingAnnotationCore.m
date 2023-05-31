@@ -18,11 +18,11 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Public/GrowingAnnotationCore.h"
-#include <mach-o/getsect.h>
-#include <mach-o/loader.h>
-#include <mach-o/dyld.h>
 #include <dlfcn.h>
+#include <mach-o/dyld.h>
+#include <mach-o/getsect.h>
 #include <mach-o/ldsyms.h>
+#include <mach-o/loader.h>
 
 static growing_section growing_modules;
 static growing_section growing_services;
@@ -35,7 +35,7 @@ growing_section growingSectionDataService(void) {
     return growing_services;
 }
 
-void GrowingReadConfiguration(growing_section* msection, char *sectionName, const struct mach_header *mhp) {
+void GrowingReadConfiguration(growing_section *msection, char *sectionName, const struct mach_header *mhp) {
     unsigned long size = 0;
 #ifndef __LP64__
     uintptr_t *memory = (uintptr_t *)getsectiondata(mhp, SEG_DATA, sectionName, &size);
@@ -48,23 +48,22 @@ void GrowingReadConfiguration(growing_section* msection, char *sectionName, cons
     if (counter == 0) {
         return;
     }
-    
+
     for (int idx = 0; idx < counter; ++idx) {
         if (msection->count < growing_section_size) {
             msection->charAddress[msection->count] = (uintptr_t)(memory[idx]);
-            msection->count ++;
+            msection->count++;
         }
     }
     return;
 }
 
-
 static void dyld_callback(const struct mach_header *mhp, intptr_t vmaddr_slide) {
     switch (mhp->filetype) {
         case MH_EXECUTE:
         case MH_DYLIB:
-            GrowingReadConfiguration(&growing_modules,GrowingModSectName,mhp);
-            GrowingReadConfiguration(&growing_services,GrowingServiceSectName,mhp);
+            GrowingReadConfiguration(&growing_modules, GrowingModSectName, mhp);
+            GrowingReadConfiguration(&growing_services, GrowingServiceSectName, mhp);
         default:
             // do nothing
             break;

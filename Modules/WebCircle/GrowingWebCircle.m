@@ -18,37 +18,37 @@
 //  limitations under the License.
 
 #import "Modules/WebCircle/GrowingWebCircle.h"
-#import "Modules/WebCircle/GrowingWebCircleElement.h"
-#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
-#import "GrowingTrackerCore/GrowingRealTracker.h"
-#import "GrowingTrackerCore/GrowingAttributesConst.h"
-#import "GrowingTrackerCore/Menu/GrowingAlert.h"
-#import "GrowingTrackerCore/Menu/GrowingStatusBar.h"
-#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
-#import "GrowingTrackerCore/Event/Autotrack/GrowingAutotrackEventType.h"
-#import "GrowingTrackerCore/Event/GrowingEventManager.h"
-#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
-#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
-#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
-#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
-#import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
-#import "GrowingTrackerCore/Public/GrowingServiceManager.h"
-#import "GrowingTrackerCore/Public/GrowingWebSocketService.h"
-#import "GrowingTrackerCore/Public/GrowingScreenshotService.h"
-#import "GrowingTrackerCore/Public/GrowingFlutterService.h"
+#import <arpa/inet.h>
+#import <ifaddrs.h>
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
-#import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
-#import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
-#import "GrowingAutotrackerCore/GrowingNode/GrowingNodeHelper.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIApplication+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIViewController+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIWindow+GrowingNode.h"
-#import <arpa/inet.h>
-#import <ifaddrs.h>
+#import "GrowingAutotrackerCore/GrowingNode/GrowingNodeHelper.h"
+#import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
+#import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
+#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
+#import "GrowingTrackerCore/Event/Autotrack/GrowingAutotrackEventType.h"
+#import "GrowingTrackerCore/Event/GrowingEventManager.h"
+#import "GrowingTrackerCore/GrowingAttributesConst.h"
+#import "GrowingTrackerCore/GrowingRealTracker.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Menu/GrowingAlert.h"
+#import "GrowingTrackerCore/Menu/GrowingStatusBar.h"
+#import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
+#import "GrowingTrackerCore/Public/GrowingFlutterService.h"
+#import "GrowingTrackerCore/Public/GrowingScreenshotService.h"
+#import "GrowingTrackerCore/Public/GrowingServiceManager.h"
+#import "GrowingTrackerCore/Public/GrowingWebSocketService.h"
+#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
+#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
+#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
+#import "Modules/WebCircle/GrowingWebCircleElement.h"
 
-#import "Modules/Hybrid/GrowingWebViewDomChangedDelegate.h"
-#import "Modules/Hybrid/GrowingHybridBridgeProvider.h"
 #import <JavaScriptCore/JavaScriptCore.h>
+#import "Modules/Hybrid/GrowingHybridBridgeProvider.h"
+#import "Modules/Hybrid/GrowingWebViewDomChangedDelegate.h"
 
 GrowingMod(GrowingWebCircle)
 
@@ -58,7 +58,7 @@ GrowingMod(GrowingWebCircle)
                                 GrowingApplicationEventProtocol,
                                 GrowingDeepLinkHandlerProtocol>
 
-//表示web和app是否同时准备好数据发送，此时表示可以发送数据
+// 表示web和app是否同时准备好数据发送，此时表示可以发送数据
 @property (nonatomic, assign) BOOL isReady;
 
 @property (nonatomic, copy) void (^onReadyBlock)(void);
@@ -69,9 +69,9 @@ GrowingMod(GrowingWebCircle)
 @property (nonatomic, retain) NSMutableArray<NSString *> *cachedEvents;
 
 @property (nonatomic, assign) int zLevel;
-@property (nonatomic, assign) unsigned long snapNumber;  //数据发出序列号
+@property (nonatomic, assign) unsigned long snapNumber;  // 数据发出序列号
 @property (nonatomic, assign) BOOL onProcessing;
-//当页面vc的page未生成，即viewDidAppear未执行，此时忽略数据，并不发送
+// 当页面vc的page未生成，即viewDidAppear未执行，此时忽略数据，并不发送
 @property (nonatomic, assign) BOOL isPageDontShow;
 @property (nonatomic, strong) NSMutableArray *elements;
 @property (nonatomic, weak) UIWindow *lastKeyWindow;
@@ -85,7 +85,8 @@ GrowingMod(GrowingWebCircle)
 @implementation GrowingWebCircle
 
 - (void)growingModInit:(GrowingContext *)context {
-    self.screenshotProvider = [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingScreenshotService)];
+    self.screenshotProvider =
+        [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingScreenshotService)];
     [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:self];
 }
 
@@ -197,7 +198,7 @@ GrowingMod(GrowingWebCircle)
         GIOLogDebug(@"[GrowingWebCircle] 过滤节点：%@ 因不可见，无法圈选", [node class]);
         return;
     }
-    
+
     if ([node growingNodeDonotTrack]) {
         GIOLogDebug(@"[GrowingWebCircle] 过滤节点：%@ 已忽略，无需圈选", [node class]);
     } else {
@@ -231,12 +232,12 @@ GrowingMod(GrowingWebCircle)
     UIWindow *topwindow = nil;
     UIWindow *highestWindow = nil;
     for (UIWindow *window in [UIApplication sharedApplication].growingHelper_allWindowsWithoutGrowingWindow) {
-        //如果找到了keywindow跳出循环
+        // 如果找到了keywindow跳出循环
         if (window.isKeyWindow) {
             topwindow = window;
             break;
         }
-        
+
         // 找到当前windowLevel最高的window
         if (highestWindow) {
             if (window.windowLevel >= highestWindow.windowLevel) {
@@ -246,7 +247,7 @@ GrowingMod(GrowingWebCircle)
             highestWindow = window;
         }
     }
-    
+
     if (!topwindow) {
         // keyWindow是GrowingWindow或其他内部window
         if (self.lastKeyWindow && self.lastKeyWindow.isHidden == NO) {
@@ -282,21 +283,21 @@ GrowingMod(GrowingWebCircle)
         NSMutableDictionary *dict = [self dictFromPage:tmp xPath:page.path];
         [pages addObject:dict];
     }
-        
+
     NSDictionary *flutterData = self.flutterCircleData;
     NSArray *flutterElements = flutterData[@"elements"];
     if ([flutterElements isKindOfClass:[NSArray class]]) {
         [self.elements addObjectsFromArray:flutterElements];
     }
-    
+
     NSArray *flutterPages = flutterData[@"pages"];
     if ([flutterPages isKindOfClass:[NSArray class]]) {
         [pages addObjectsFromArray:flutterPages];
     }
-        
+
     finalDataDict[@"elements"] = self.elements;
     finalDataDict[@"pages"] = pages;
-    
+
     if (completion != nil) {
         completion(finalDataDict);
     }
@@ -322,7 +323,7 @@ GrowingMod(GrowingWebCircle)
     dict[@"screenWidth"] = @(image.size.width * image.scale);
     dict[@"screenHeight"] = @(image.size.height * image.scale);
     dict[@"scale"] = @(1);
-    
+
     NSDictionary *flutterData = self.flutterCircleData;
     if ([flutterData[@"width"] isKindOfClass:[NSNumber class]]) {
         dict[@"screenWidth"] = flutterData[@"width"];
@@ -333,7 +334,7 @@ GrowingMod(GrowingWebCircle)
     if ([flutterData[@"scale"] isKindOfClass:[NSNumber class]]) {
         dict[@"scale"] = flutterData[@"scale"];
     }
-    
+
     return dict;
 }
 
@@ -376,27 +377,29 @@ GrowingMod(GrowingWebCircle)
 }
 
 - (void)runWithCircle:(NSURL *)url readyBlock:(void (^)(void))readyBlock finishBlock:(void (^)(void))finishBlock {
-    
     if (self.webSocket) {
         [self.webSocket close];
         self.webSocket.delegate = nil;
         self.webSocket = nil;
     }
-    
+
     if (!self.isReady) {
-        Class <GrowingWebSocketService> serviceClass = [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingWebSocketService)];
+        Class<GrowingWebSocketService> serviceClass =
+            [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingWebSocketService)];
         if (!serviceClass) {
-            GIOLogError(@"[GrowingWebCircle] -runWithCircle:readyBlock:finishBlock: web circle error : no websocket service support");
+            GIOLogError(
+                @"[GrowingWebCircle] -runWithCircle:readyBlock:finishBlock: web circle error : no websocket service "
+                @"support");
             return;
         }
-        
+
         [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(handleDeviceOrientationDidChange:)
                                                      name:UIDeviceOrientationDidChangeNotification
                                                    object:nil];
-        
+
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(handleWindowDidResignKey:)
                                                      name:UIWindowDidResignKeyNotification
@@ -404,13 +407,13 @@ GrowingMod(GrowingWebCircle)
 
         [UIApplication sharedApplication].idleTimerDisabled = YES;
         GIOLogDebug(@"[GrowingWebCircle] 开始起服务");
-        
+
         if (url) {
             self.webSocket = [[(Class)serviceClass alloc] initWithURLRequest:[NSURLRequest requestWithURL:url]];
             self.webSocket.delegate = self;
             [self.webSocket open];
         }
-        
+
         if (!self.statusWindow) {
             self.statusWindow = [[GrowingStatusBar alloc] initWithFrame:[UIScreen mainScreen].bounds];
             self.statusWindow.hidden = NO;
@@ -477,14 +480,14 @@ GrowingMod(GrowingWebCircle)
     [self remoteReady];
     // Hybrid的布局改变回调代理设置
     [GrowingHybridBridgeProvider sharedInstance].domChangedDelegate = self;
-    //监听原生事件，变动时发送
+    // 监听原生事件，变动时发送
     [[GrowingEventManager sharedInstance] addInterceptor:self];
     [self.screenshotProvider addApplicationEventObserver:self];
 }
 
 - (void)stop {
     GIOLogDebug(@"[GrowingWebCircle] 开始断开连接");
-    NSDictionary *dict = @{@"msgType" : @"quit"};
+    NSDictionary *dict = @{@"msgType": @"quit"};
     [self sendJson:dict];
     self.statusWindow.statusLable.text = @"正在关闭web圈选...";
     self.statusWindow.statusLable.textAlignment = NSTextAlignmentCenter;
@@ -542,12 +545,12 @@ GrowingMod(GrowingWebCircle)
 
 #pragma mark - Websocket Delegate
 
-- (void)webSocket:(id <GrowingWebSocketService>)webSocket didReceiveMessage:(id)message {
+- (void)webSocket:(id<GrowingWebSocketService>)webSocket didReceiveMessage:(id)message {
     if ([message isKindOfClass:[NSString class]] || ((NSString *)message).length > 0) {
         GIOLogDebug(@"[GrowingWebCircle] didReceiveMessage: %@", message);
         NSMutableDictionary *dict = [[message growingHelper_jsonObject] mutableCopy];
 
-        //如果收到了ready消息，说明可以发送圈选数据了
+        // 如果收到了ready消息，说明可以发送圈选数据了
         if ([[dict objectForKey:@"msgType"] isEqualToString:@"ready"]) {
             [self start];
         }
@@ -569,27 +572,27 @@ GrowingMod(GrowingWebCircle)
     }
 }
 
-- (void)webSocketDidOpen:(id <GrowingWebSocketService>)webSocket {
+- (void)webSocketDidOpen:(id<GrowingWebSocketService>)webSocket {
     GIOLogDebug(@"[GrowingWebCircle] websocket已连接");
     NSString *projectId = GrowingConfigurationManager.sharedInstance.trackConfiguration.projectId;
     NSDictionary *dict = @{
-        @"projectId" : projectId,
-        @"msgType" : @"ready",
-        @"timestamp" : @([[NSDate date] timeIntervalSince1970]),
-        @"domain" : [GrowingDeviceInfo currentDeviceInfo].bundleID,
-        @"sdkVersion" : GrowingTrackerVersionName,
-        @"appVersion" : [GrowingDeviceInfo currentDeviceInfo].appFullVersion,
-        @"os" : @"iOS",
-        @"screenWidth" : [NSNumber numberWithInteger:[GrowingDeviceInfo currentDeviceInfo].screenWidth],
-        @"screenHeight" : [NSNumber numberWithInteger:[GrowingDeviceInfo currentDeviceInfo].screenHeight],
-        @"urlScheme" : [GrowingDeviceInfo currentDeviceInfo].urlScheme
+        @"projectId": projectId,
+        @"msgType": @"ready",
+        @"timestamp": @([[NSDate date] timeIntervalSince1970]),
+        @"domain": [GrowingDeviceInfo currentDeviceInfo].bundleID,
+        @"sdkVersion": GrowingTrackerVersionName,
+        @"appVersion": [GrowingDeviceInfo currentDeviceInfo].appFullVersion,
+        @"os": @"iOS",
+        @"screenWidth": [NSNumber numberWithInteger:[GrowingDeviceInfo currentDeviceInfo].screenWidth],
+        @"screenHeight": [NSNumber numberWithInteger:[GrowingDeviceInfo currentDeviceInfo].screenHeight],
+        @"urlScheme": [GrowingDeviceInfo currentDeviceInfo].urlScheme
     };
     [self sendJson:dict];
-    
+
     [self.screenshotProvider addSendEventSwizzle];
 }
 
-- (void)webSocket:(id <GrowingWebSocketService>)webSocket
+- (void)webSocket:(id<GrowingWebSocketService>)webSocket
     didCloseWithCode:(NSInteger)code
               reason:(NSString *)reason
             wasClean:(BOOL)wasClean {
@@ -600,13 +603,13 @@ GrowingMod(GrowingWebCircle)
     }
 }
 
-- (void)webSocket:(id <GrowingWebSocketService>)webSocket didFailWithError:(NSError *)error {
+- (void)webSocket:(id<GrowingWebSocketService>)webSocket didFailWithError:(NSError *)error {
     GIOLogDebug(@"[GrowingWebCircle] webSocketDidFailWithError: %@", error);
     self.isReady = NO;
     [self _stopWithError:@"服务器链接失败"];
 }
 
-- (void)webSocket:(id <GrowingWebSocketService>)webSocket didReceivePong:(NSData *)pongPayload {
+- (void)webSocket:(id<GrowingWebSocketService>)webSocket didReceivePong:(NSData *)pongPayload {
 }
 
 #pragma mark - GrowingWebViewDomChangedDelegate
@@ -643,15 +646,15 @@ GrowingMod(GrowingWebCircle)
             if (self.cachedEvents.count == 0 || !self.isReady) return;
             NSMutableArray *eventArray = self.cachedEvents;
             self.cachedEvents = [NSMutableArray array];
-            [eventArray enumerateObjectsWithOptions:NSEnumerationReverse
-                                         usingBlock:^(__kindof NSString *_Nonnull obj,
-                                                      NSUInteger idx,
-                                                      BOOL *_Nonnull stop) {
-                if ([obj isEqualToString:GrowingEventTypeViewClick] || [obj isEqualToString:GrowingEventTypePage]) {
-                    [self sendScreenShotWithCallback:nil];
-                    *stop = YES;
-                }
-            }];
+            [eventArray
+                enumerateObjectsWithOptions:NSEnumerationReverse
+                                 usingBlock:^(__kindof NSString *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+                                     if ([obj isEqualToString:GrowingEventTypeViewClick] ||
+                                         [obj isEqualToString:GrowingEventTypePage]) {
+                                         [self sendScreenShotWithCallback:nil];
+                                         *stop = YES;
+                                     }
+                                 }];
             self.onProcessing = NO;
         });
     }
@@ -661,8 +664,9 @@ GrowingMod(GrowingWebCircle)
 
 - (void)setIsReady:(BOOL)isReady {
     _isReady = isReady;
-    
-    Class <GrowingFlutterService> serviceClass = [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingFlutterService)];
+
+    Class<GrowingFlutterService> serviceClass =
+        [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingFlutterService)];
     if (!serviceClass) {
         return;
     }

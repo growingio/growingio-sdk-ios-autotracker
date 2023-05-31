@@ -18,10 +18,10 @@
 //  limitations under the License.
 
 #import "Modules/Advert/Utils/GrowingAdUtils.h"
-#import "Modules/Advert/Public/GrowingAdvertising.h"
-#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
-#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "Modules/Advert/Public/GrowingAdvertising.h"
 
 static NSString *const kGrowingAdertisingFileKey = @"GrowingAdertisingFileKey";
 static NSString *const kGrowingAdIsActivateDeferKey = @"GrowingAdvertisingActivateDefer";
@@ -74,7 +74,7 @@ static NSString *const kGrowingAdIsActivateSentKey = @"GrowingAdvertisingActivat
     if (!url) {
         return NO;
     }
-    
+
     GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
     NSString *deepLinkHost = trackConfiguration.deepLinkHost;
     if (!deepLinkHost || deepLinkHost.length == 0) {
@@ -88,7 +88,7 @@ static NSString *const kGrowingAdIsActivateSentKey = @"GrowingAdvertisingActivat
     if (!url) {
         return NO;
     }
-    
+
     return [url.scheme hasPrefix:@"growing."];
 }
 
@@ -150,7 +150,8 @@ static NSString *const kGrowingAdIsActivateSentKey = @"GrowingAdvertisingActivat
 
 + (void)setActivateDefer:(BOOL)activateDefer {
     [GrowingAdUtils.sharedInstance.storeDic setObject:@(activateDefer) forKey:kGrowingAdIsActivateDeferKey];
-    [GrowingAdUtils.sharedInstance.storage setDictionary:GrowingAdUtils.sharedInstance.storeDic forKey:kGrowingAdertisingFileKey];
+    [GrowingAdUtils.sharedInstance.storage setDictionary:GrowingAdUtils.sharedInstance.storeDic
+                                                  forKey:kGrowingAdertisingFileKey];
 }
 
 + (BOOL)isActivateDefer {
@@ -160,7 +161,8 @@ static NSString *const kGrowingAdIsActivateSentKey = @"GrowingAdvertisingActivat
 
 + (void)setActivateWrote:(BOOL)activateWrote {
     [GrowingAdUtils.sharedInstance.storeDic setObject:@(activateWrote) forKey:kGrowingAdIsActivateWroteKey];
-    [GrowingAdUtils.sharedInstance.storage setDictionary:GrowingAdUtils.sharedInstance.storeDic forKey:kGrowingAdertisingFileKey];
+    [GrowingAdUtils.sharedInstance.storage setDictionary:GrowingAdUtils.sharedInstance.storeDic
+                                                  forKey:kGrowingAdertisingFileKey];
 }
 
 + (BOOL)isActivateWrote {
@@ -178,7 +180,8 @@ static NSString *const kGrowingAdIsActivateSentKey = @"GrowingAdvertisingActivat
 
 + (void)setActivateSent:(BOOL)activateSent {
     [GrowingAdUtils.sharedInstance.storeDic setObject:@(activateSent) forKey:kGrowingAdIsActivateSentKey];
-    [GrowingAdUtils.sharedInstance.storage setDictionary:GrowingAdUtils.sharedInstance.storeDic forKey:kGrowingAdertisingFileKey];
+    [GrowingAdUtils.sharedInstance.storage setDictionary:GrowingAdUtils.sharedInstance.storeDic
+                                                  forKey:kGrowingAdertisingFileKey];
 }
 
 + (BOOL)isActivateSent {

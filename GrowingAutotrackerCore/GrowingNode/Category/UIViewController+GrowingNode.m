@@ -17,20 +17,20 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
-#import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
+#import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIApplication+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIViewController+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIWindow+GrowingNode.h"
-#import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
+#import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
+#import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
 
 @implementation UIViewController (GrowingNode)
 
 - (CGRect)growingNodeFrame {
     CGRect rect = self.view.growingNodeFrame;
-    //是否全屏显示
-    //当ViewController全屏显示时，如果被NavigationController包裹,其frame大小高度应减去导航栏的高度
+    // 是否全屏显示
+    // 当ViewController全屏显示时，如果被NavigationController包裹,其frame大小高度应减去导航栏的高度
     BOOL isFullScreenShow =
         CGPointEqualToPoint(rect.origin, CGPointMake(0, 0)) &&
         CGSizeEqualToSize(rect.size, [UIApplication sharedApplication].growingMainWindow.bounds.size);
@@ -72,7 +72,7 @@
     // UIResponder关系为
     // UIApplication/UIWindowScene/_UIAlertControllerShimPresenterWindow/UITransitionView/UIAlertController/AlertView
     // UIAlertController的presentingViewController 为 UIApplicationRotationFollowingController
-    //取最上层的视图控制器，则无法使用上面两种方式。
+    // 取最上层的视图控制器，则无法使用上面两种方式。
     if ([self isKindOfClass:UIAlertController.class]) {
         return [[GrowingPageManager sharedInstance] currentViewController];
     } else {
@@ -84,8 +84,8 @@
     if ([[GrowingPageManager sharedInstance] isDidAppearController:self]) {
         return YES;
     }
-    //此处判断意义在于避免没有使用addChildViewController方法的childVC没有调用didappear
-    //造成checknode失败 页面元素无法收集
+    // 此处判断意义在于避免没有使用addChildViewController方法的childVC没有调用didappear
+    // 造成checknode失败 页面元素无法收集
     if ([self growingHookIsCustomAddVC]) {
         return YES;
     }
@@ -131,7 +131,7 @@
 }
 
 - (NSString *)growingNodeSubPath {
-    //如果别名存在，则直接返回别名
+    // 如果别名存在，则直接返回别名
     if (self.growingPageAlias) {
         return self.growingPageAlias;
     }
@@ -163,13 +163,14 @@
             NSArray<UIViewController *> *childViewControllers = self.childViewControllers;
             [childViewControllers
                 enumerateObjectsWithOptions:NSEnumerationReverse
-                                 usingBlock:^(__kindof UIViewController *_Nonnull obj, NSUInteger idx,
+                                 usingBlock:^(__kindof UIViewController *_Nonnull obj,
+                                              NSUInteger idx,
                                               BOOL *_Nonnull stop) {
                                      if (obj.isViewLoaded) {
                                          UIView *objSuperview = obj.view;
                                          for (long i = (long)(childs.count - 1); i >= 0; i--) {
                                              UIView *childview = childs[i];
-                                             //如果childview包含或者等于objsuperview
+                                             // 如果childview包含或者等于objsuperview
                                              if ([objSuperview isDescendantOfView:childview]) {
                                                  // xib拖拽的viewController会被一个自定义的view包裹，判断其subviews数量是否为1
                                                  if ([childview isEqual:objSuperview] ||

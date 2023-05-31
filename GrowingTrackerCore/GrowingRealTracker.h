@@ -30,12 +30,14 @@ FOUNDATION_EXPORT const int GrowingTrackerVersionCode;
 /// 初始化方法
 /// @param configuration 配置信息
 /// @param launchOptions 启动参数
-- (instancetype)initWithConfiguration:(GrowingTrackConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions;
+- (instancetype)initWithConfiguration:(GrowingTrackConfiguration *)configuration
+                        launchOptions:(NSDictionary *)launchOptions;
 
 /// 初始化方法
 /// @param configuration 配置信息
 /// @param launchOptions 启动参数
-+ (instancetype)trackerWithConfiguration:(GrowingTrackConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions;
++ (instancetype)trackerWithConfiguration:(GrowingTrackConfiguration *)configuration
+                           launchOptions:(NSDictionary *)launchOptions;
 
 /// 发送一个自定义事件
 /// @param eventName 自定义事件名称
@@ -44,7 +46,7 @@ FOUNDATION_EXPORT const int GrowingTrackerVersionCode;
 /// 发送一个自定义事件
 /// @param eventName 自定义事件名称
 /// @param attributes 事件发生时所伴随的维度信息
-- (void)trackCustomEvent:(NSString *)eventName withAttributes:(NSDictionary <NSString *, NSString *> *)attributes;
+- (void)trackCustomEvent:(NSString *)eventName withAttributes:(NSDictionary<NSString *, NSString *> *)attributes;
 
 /// 发送一个自定义事件
 /// @param eventName 自定义事件名称
@@ -69,7 +71,7 @@ FOUNDATION_EXPORT const int GrowingTrackerVersionCode;
 
 /// 发送一个转化信息用于高级归因分析，在添加代码之前必须在打点管理界面上声明转化变量。
 /// @param variables 转化变量信息
-- (void)setConversionVariables:(NSDictionary <NSString *, NSString *> *)variables;
+- (void)setConversionVariables:(NSDictionary<NSString *, NSString *> *)variables;
 
 /// 发送一个转化信息用于高级归因分析，在添加代码之前必须在打点管理界面上声明转化变量。
 /// @param attributesBuilder 转化变量信息构造器

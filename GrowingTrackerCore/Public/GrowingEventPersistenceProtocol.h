@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)persistenceEventWithEvent:(GrowingBaseEvent *)event uuid:(NSString *)uuid;
 
-+ (NSData *)buildRawEventsFromEvents:(NSArray<id <GrowingEventPersistenceProtocol>> *)events;
++ (NSData *)buildRawEventsFromEvents:(NSArray<id<GrowingEventPersistenceProtocol>> *)events;
 
 - (id)toJSONObject;
 

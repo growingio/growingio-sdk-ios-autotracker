@@ -19,10 +19,9 @@
 
 #import "GrowingTrackerCore/GrowingAttributesConst.h"
 
-#define growing_metamacro_stringify_(VALUE) # VALUE
+#define growing_metamacro_stringify_(VALUE) #VALUE
 
-#define GROWINGATTTR(NAME)      \
-    NSString *GrowingAttribute ## NAME ## Key = @ growing_metamacro_stringify_( GrowingAttribute ## NAME ## Key );
-
+#define GROWINGATTTR(NAME) \
+    NSString *GrowingAttribute##NAME##Key = @growing_metamacro_stringify_(GrowingAttribute##NAME##Key);
 
 GrowingAttrMacro(GROWINGATTTR)

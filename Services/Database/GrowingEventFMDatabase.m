@@ -18,10 +18,10 @@
 //  limitations under the License.
 
 #import "Services/Database/GrowingEventFMDatabase.h"
-#import "Services/Database/FMDB/GrowingFMDB.h"
 #import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
-#import "Services/Database/GrowingEventJSONPersistence.h"
 #import "GrowingULTimeUtil.h"
+#import "Services/Database/FMDB/GrowingFMDB.h"
+#import "Services/Database/GrowingEventJSONPersistence.h"
 
 GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
 
@@ -47,10 +47,10 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
         dispatch_once(&onceToken, ^{
             [self makeDirByFileName:filePath];
         });
-        
+
         if ([filePath isEqualToString:[GrowingFileStorage getTimingDatabasePath]]) {
             _name = @"growingtimingevent";
-        }else if ([filePath isEqualToString:[GrowingFileStorage getRealtimeDatabasePath]]) {
+        } else if ([filePath isEqualToString:[GrowingFileStorage getRealtimeDatabasePath]]) {
             _name = @"growingrealtimevent";
         }
 
@@ -60,12 +60,12 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
         } else {
             [self initDB];
         }
-        
+
         if (error) {
             *error = _databaseError;
         }
     }
-    
+
     return self;
 }
 
@@ -110,10 +110,17 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
     if (self.countOfEvents == 0) {
         return [[NSArray alloc] init];
     }
-    
+
     NSMutableArray<GrowingEventJSONPersistence *> *events = [[NSMutableArray alloc] init];
-    [self enumerateKeysAndValuesUsingBlock:^(NSString *key, NSString *value, NSString *type, NSUInteger policy, BOOL *stop) {
-        GrowingEventJSONPersistence *event = [[GrowingEventJSONPersistence alloc] initWithUUID:key eventType:type jsonString:value policy:policy];
+    [self enumerateKeysAndValuesUsingBlock:^(NSString *key,
+                                             NSString *value,
+                                             NSString *type,
+                                             NSUInteger policy,
+                                             BOOL *stop) {
+        GrowingEventJSONPersistence *event = [[GrowingEventJSONPersistence alloc] initWithUUID:key
+                                                                                     eventType:type
+                                                                                    jsonString:value
+                                                                                        policy:policy];
         [events addObject:event];
         if (events.count >= count) {
             *stop = YES;
@@ -127,11 +134,18 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
     if (self.countOfEvents == 0) {
         return [[NSArray alloc] init];
     }
-    
+
     NSMutableArray<GrowingEventJSONPersistence *> *events = [[NSMutableArray alloc] init];
-    [self enumerateKeysAndValuesUsingBlock:^(NSString *key, NSString *value, NSString *type, NSUInteger policy, BOOL *stop) {
+    [self enumerateKeysAndValuesUsingBlock:^(NSString *key,
+                                             NSString *value,
+                                             NSString *type,
+                                             NSUInteger policy,
+                                             BOOL *stop) {
         if (mask & policy) {
-            GrowingEventJSONPersistence *event = [[GrowingEventJSONPersistence alloc] initWithUUID:key eventType:type jsonString:value policy:policy];
+            GrowingEventJSONPersistence *event = [[GrowingEventJSONPersistence alloc] initWithUUID:key
+                                                                                         eventType:type
+                                                                                        jsonString:value
+                                                                                            policy:policy];
             [events addObject:event];
             if (events.count >= count) {
                 *stop = YES;
@@ -149,19 +163,20 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
             self.databaseError = error;
             return;
         }
-        result = [db executeUpdate:@"insert into namedcachetable(name,key,value,createAt,type,policy) values(?,?,?,?,?,?)",
-                  self.name,
-                  event.eventUUID,
-                  ((GrowingEventJSONPersistence *)event).rawJsonString,
-                  @([GrowingULTimeUtil currentTimeMillis]),
-                  event.eventType,
-                  @(event.policy)];
-        
+        result =
+            [db executeUpdate:@"insert into namedcachetable(name,key,value,createAt,type,policy) values(?,?,?,?,?,?)",
+                              self.name,
+                              event.eventUUID,
+                              ((GrowingEventJSONPersistence *)event).rawJsonString,
+                              @([GrowingULTimeUtil currentTimeMillis]),
+                              event.eventType,
+                              @(event.policy)];
+
         if (!result) {
             self.databaseError = [self writeErrorInDatabase:db];
         }
     }];
-    
+
     return result;
 }
 
@@ -169,7 +184,7 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
     if (!events || events.count == 0) {
         return YES;
     }
-    
+
     __block BOOL result = NO;
     [self performTransactionBlock:^(GrowingFMDatabase *db, BOOL *rollback, NSError *error) {
         if (error) {
@@ -178,21 +193,22 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
         }
         for (int i = 0; i < events.count; i++) {
             GrowingEventJSONPersistence *event = (GrowingEventJSONPersistence *)events[i];
-            result = [db executeUpdate:@"insert into namedcachetable(name,key,value,createAt,type,policy) values(?,?,?,?,?,?)",
-                      self.name,
-                      event.eventUUID,
-                      event.rawJsonString,
-                      @([GrowingULTimeUtil currentTimeMillis]),
-                      event.eventType,
-                      @(event.policy)];
-            
+            result = [db
+                executeUpdate:@"insert into namedcachetable(name,key,value,createAt,type,policy) values(?,?,?,?,?,?)",
+                              self.name,
+                              event.eventUUID,
+                              event.rawJsonString,
+                              @([GrowingULTimeUtil currentTimeMillis]),
+                              event.eventType,
+                              @(event.policy)];
+
             if (!result) {
                 self.databaseError = [self writeErrorInDatabase:db];
                 break;
             }
         }
     }];
-    
+
     return result;
 }
 
@@ -204,12 +220,12 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
             return;
         }
         result = [db executeUpdate:@"delete from namedcachetable where name=? and key=?;", self.name, key];
-        
+
         if (!result) {
             self.databaseError = [self writeErrorInDatabase:db];
         }
     }];
-    
+
     return result;
 }
 
@@ -217,14 +233,14 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
     if (!keys || keys.count == 0) {
         return YES;
     }
-    
+
     __block BOOL result = NO;
     [self performTransactionBlock:^(GrowingFMDatabase *db, BOOL *rollback, NSError *error) {
         if (error) {
             self.databaseError = error;
             return;
         }
-        
+
         for (NSString *key in keys) {
             result = [db executeUpdate:@"delete from namedcachetable where name=? and key=?;", self.name, key];
             if (!result) {
@@ -233,7 +249,7 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
             }
         }
     }];
-    
+
     return result;
 }
 
@@ -249,26 +265,27 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
             self.databaseError = [self writeErrorInDatabase:db];
         }
     }];
-    
+
     return result;
 }
 
 - (BOOL)cleanExpiredEventIfNeeded {
     NSNumber *now = [NSNumber numberWithLongLong:([[NSDate date] timeIntervalSince1970] * 1000LL)];
     NSNumber *sevenDayBefore = [NSNumber numberWithLongLong:(now.longLongValue - GrowingEventDatabaseExpirationTime)];
-    
+
     __block BOOL result = NO;
     [self performDatabaseBlock:^(GrowingFMDatabase *db, NSError *error) {
         if (error) {
             self.databaseError = error;
             return;
         }
-        result = [db executeUpdate:@"delete from namedcachetable where name=? and createAt<=?;", self.name, sevenDayBefore];
+        result =
+            [db executeUpdate:@"delete from namedcachetable where name=? and createAt<=?;", self.name, sevenDayBefore];
         if (!result) {
             self.databaseError = [self writeErrorInDatabase:db];
         }
     }];
-    
+
     return result;
 }
 
@@ -285,17 +302,20 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
             self.databaseError = error;
             return;
         }
-        
-        NSString *sql = @"create table if not exists namedcachetable("
-        @"id INTEGER PRIMARY KEY,"
-        @"name text,"
-        @"key text,"
-        @"value text,"
-        @"createAt INTEGER NOT NULL,"
-        @"type text,"
-        @"policy INTEGER);";
-        NSString *sqlCreateIndexNameKey = @"create index if not exists namedcachetable_name_key on namedcachetable (name, key);";
-        NSString *sqlCreateIndexNameId = @"create index if not exists namedcachetable_name_id on namedcachetable (name, id);";
+
+        NSString *sql =
+            @"create table if not exists namedcachetable("
+            @"id INTEGER PRIMARY KEY,"
+            @"name text,"
+            @"key text,"
+            @"value text,"
+            @"createAt INTEGER NOT NULL,"
+            @"type text,"
+            @"policy INTEGER);";
+        NSString *sqlCreateIndexNameKey =
+            @"create index if not exists namedcachetable_name_key on namedcachetable (name, key);";
+        NSString *sqlCreateIndexNameId =
+            @"create index if not exists namedcachetable_name_id on namedcachetable (name, id);";
         NSString *sqlCreateColumnIfNotExist = @"ALTER TABLE namedcachetable ADD policy INTEGER default 6";
         if (![db executeUpdate:sql]) {
             self.databaseError = [self createDBErrorInDatabase:db];
@@ -317,10 +337,10 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
         }
         result = YES;
     }];
-    
+
     if (result) {
         return [self vacuum];
-    }else {
+    } else {
         return result;
     }
 }
@@ -371,14 +391,15 @@ static BOOL isExecuteVacuum(NSString *name) {
     }
 }
 
-- (void)makeDirByFileName:(NSString*)filePath {
+- (void)makeDirByFileName:(NSString *)filePath {
     [[NSFileManager defaultManager] createDirectoryAtPath:[filePath stringByDeletingLastPathComponent]
                               withIntermediateDirectories:YES
                                                attributes:nil
                                                     error:nil];
 }
 
-- (void)enumerateKeysAndValuesUsingBlock:(void (^)(NSString *key, NSString *value, NSString *type, NSUInteger policy, BOOL *stop))block {
+- (void)enumerateKeysAndValuesUsingBlock:
+    (void (^)(NSString *key, NSString *value, NSString *type, NSUInteger policy, BOOL *stop))block {
     if (!block) {
         return;
     }
@@ -411,7 +432,7 @@ static BOOL isExecuteVacuum(NSString *name) {
 
 #pragma mark - Perform Block
 
-- (void)performDatabaseBlock:(void(^)(GrowingFMDatabase *db, NSError *error))block {
+- (void)performDatabaseBlock:(void (^)(GrowingFMDatabase *db, NSError *error))block {
     [self.db inDatabase:^(GrowingFMDatabase *db) {
         if (!db) {
             block(db, [self openErrorInDatabase:db]);
@@ -421,7 +442,7 @@ static BOOL isExecuteVacuum(NSString *name) {
     }];
 }
 
-- (void)performTransactionBlock:(void(^)(GrowingFMDatabase *db, BOOL *rollback, NSError *error))block {
+- (void)performTransactionBlock:(void (^)(GrowingFMDatabase *db, BOOL *rollback, NSError *error))block {
     [self.db inTransaction:^(GrowingFMDatabase *db, BOOL *rollback) {
         if (!db) {
             block(db, rollback, [self openErrorInDatabase:db]);
@@ -436,25 +457,26 @@ static BOOL isExecuteVacuum(NSString *name) {
 - (NSError *)openErrorInDatabase:(GrowingFMDatabase *)db {
     return [NSError errorWithDomain:GrowingEventDatabaseErrorDomain
                                code:GrowingEventDatabaseOpenError
-                           userInfo:@{NSLocalizedDescriptionKey : @"open database error"}];
+                           userInfo:@{NSLocalizedDescriptionKey: @"open database error"}];
 }
 
 - (NSError *)readErrorInDatabase:(GrowingFMDatabase *)db {
     return [NSError errorWithDomain:GrowingEventDatabaseErrorDomain
                                code:GrowingEventDatabaseReadError
-                           userInfo:@{NSLocalizedDescriptionKey : ([db lastErrorMessage] ?: @"")}];
+                           userInfo:@{NSLocalizedDescriptionKey: ([db lastErrorMessage] ?: @"")}];
 }
 
 - (NSError *)writeErrorInDatabase:(GrowingFMDatabase *)db {
     return [NSError errorWithDomain:GrowingEventDatabaseErrorDomain
                                code:GrowingEventDatabaseWriteError
-                           userInfo:@{NSLocalizedDescriptionKey : ([db lastErrorMessage] ?: @"")}];
+                           userInfo:@{NSLocalizedDescriptionKey: ([db lastErrorMessage] ?: @"")}];
 }
 
 - (NSError *)createDBErrorInDatabase:(GrowingFMDatabase *)db {
-    return [NSError errorWithDomain:GrowingEventDatabaseErrorDomain
-                               code:GrowingEventDatabaseCreateDBError
-                           userInfo:@{NSLocalizedDescriptionKey : ([db lastErrorMessage] ?: @"Could not create database")}];
+    return
+        [NSError errorWithDomain:GrowingEventDatabaseErrorDomain
+                            code:GrowingEventDatabaseCreateDBError
+                        userInfo:@{NSLocalizedDescriptionKey: ([db lastErrorMessage] ?: @"Could not create database")}];
 }
 
 @end

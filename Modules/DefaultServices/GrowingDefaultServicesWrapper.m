@@ -18,10 +18,10 @@
 //  limitations under the License.
 
 #import "Modules/DefaultServices/GrowingDefaultServicesWrapper.h"
+#import "GrowingTrackerCore/Network/Request/Adapter/GrowingEventRequestAdapters.h"
 #import "Modules/DefaultServices/GrowingEventRequestCompressionAdapter.h"
 #import "Modules/DefaultServices/GrowingEventRequestEncryptionAdapter.h"
 #import "Modules/DefaultServices/GrowingEventRequestJSONAdapter.h"
-#import "GrowingTrackerCore/Network/Request/Adapter/GrowingEventRequestAdapters.h"
 
 GrowingMod(GrowingDefaultServicesWrapper)
 

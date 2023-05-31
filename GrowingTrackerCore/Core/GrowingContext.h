@@ -43,12 +43,12 @@ NS_ASSUME_NONNULL_BEGIN
 #endif
 
 @property (nonatomic, strong) NSDictionary *launchOptions;
-//customEvent>=1000
+// customEvent>=1000
 @property (nonatomic, assign) NSInteger customEvent;
-//custom param
+// custom param
 @property (nonatomic, copy) NSDictionary *customParam;
 
-//OpenURL model
+// OpenURL model
 @property (nonatomic, strong) GrowingOpenURLItem *openURLItem;
 
 + (instancetype)sharedInstance;

@@ -18,12 +18,12 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Public/GrowingServiceManager.h"
+#import <objc/message.h>
+#import <objc/runtime.h>
 #import "GrowingTrackerCore/Public/GrowingAnnotationCore.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
-#import <objc/runtime.h>
-#import <objc/message.h>
 
-@implementation GrowingServiceManager 
+@implementation GrowingServiceManager
 
 static GrowingServiceManager *manager = nil;
 
@@ -40,22 +40,22 @@ static GrowingServiceManager *manager = nil;
     if (!self) return nil;
     _allServiceDict = [[NSMutableDictionary alloc] init];
     _allServiceInstanceDict = [[NSMutableDictionary alloc] init];
-//    _signallock = dispatch_semaphore_create(1);
+    //    _signallock = dispatch_semaphore_create(1);
     return self;
 }
 
 #pragma mark - private
 
 - (void)registerServiceName:(NSString *)serviceName implClassName:(NSString *)serviceClassName {
-//    dispatch_semaphore_wait(_signallock, DISPATCH_TIME_FOREVER);
+    //    dispatch_semaphore_wait(_signallock, DISPATCH_TIME_FOREVER);
     [_allServiceDict setValue:serviceClassName forKey:serviceName];
-//    dispatch_semaphore_signal(_signallock);
+    //    dispatch_semaphore_signal(_signallock);
 }
 
-- (void)registerService:(Protocol*)service implClass:(Class)serviceClass {
-//    dispatch_semaphore_wait(_signallock, DISPATCH_TIME_FOREVER);
+- (void)registerService:(Protocol *)service implClass:(Class)serviceClass {
+    //    dispatch_semaphore_wait(_signallock, DISPATCH_TIME_FOREVER);
     [_allServiceDict setValue:NSStringFromClass(serviceClass) forKey:NSStringFromProtocol(service)];
-//    dispatch_semaphore_signal(_signallock);
+    //    dispatch_semaphore_signal(_signallock);
 }
 
 - (id)createService:(Protocol *)service {
@@ -65,7 +65,6 @@ static GrowingServiceManager *manager = nil;
 - (id)createService:(Protocol *)service withServiceName:(NSString *)serviceName {
     return [self createService:service withServiceName:serviceName shouldCache:YES];
 }
-
 
 - (void)loadLocalServices {
     // register services
@@ -81,7 +80,7 @@ static GrowingServiceManager *manager = nil;
                 NSString *protocol = [json allKeys][0];
                 NSString *clsName = [json allValues][0];
                 if (protocol && clsName) {
-                    GIOLogDebug(@"[GrowingServiceManager] load protocol %@ clsname %@",protocol,clsName);
+                    GIOLogDebug(@"[GrowingServiceManager] load protocol %@ clsname %@", protocol, clsName);
                     [[GrowingServiceManager sharedInstance] registerServiceName:protocol implClassName:clsName];
                 }
             }
@@ -91,9 +90,9 @@ static GrowingServiceManager *manager = nil;
 
 - (BOOL)checkValidService:(Protocol *)service {
     id class = nil;
-//    dispatch_semaphore_wait(_signallock, DISPATCH_TIME_FOREVER);
+    //    dispatch_semaphore_wait(_signallock, DISPATCH_TIME_FOREVER);
     class = [_allServiceDict valueForKey:NSStringFromProtocol(service)];
-//    dispatch_semaphore_signal(_signallock);
+    //    dispatch_semaphore_signal(_signallock);
     if (class) {
         return YES;
     }
@@ -105,13 +104,16 @@ static GrowingServiceManager *manager = nil;
         serviceName = NSStringFromProtocol(service);
     }
     id implInstance = nil;
-    
+
     if (![self checkValidService:service]) {
         if (self.enableException) {
-            @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:[NSString stringWithFormat:@"%@ protocol does not been registed", NSStringFromProtocol(service)] userInfo:nil];
+            @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                           reason:[NSString stringWithFormat:@"%@ protocol does not been registed",
+                                                                             NSStringFromProtocol(service)]
+                                         userInfo:nil];
         }
     }
-    
+
     NSString *serviceStr = serviceName;
     if (shouldCache) {
         id protocolImpl = [_allServiceInstanceDict objectForKey:serviceStr];
@@ -119,12 +121,12 @@ static GrowingServiceManager *manager = nil;
             return protocolImpl;
         }
     }
-    
+
     Class implClass = [self serviceImplClass:service];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
     if ([[implClass class] respondsToSelector:@selector(singleton)]) {
-        BOOL (*sigletonImp)(id,SEL) = (BOOL(*)(id, SEL))objc_msgSend;
+        BOOL (*sigletonImp)(id, SEL) = (BOOL(*)(id, SEL))objc_msgSend;
         BOOL isSingleton = sigletonImp([implClass class], @selector(singleton));
         if (isSingleton) {
             if ([[implClass class] respondsToSelector:@selector(sharedInstance)])

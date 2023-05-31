@@ -30,15 +30,15 @@
 #import <CoreTelephony/CTCarrier.h>
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <pthread.h>
-#import <sys/utsname.h>
 #include <sys/sysctl.h>
+#import <sys/utsname.h>
 
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 #import "GrowingTrackerCore/Utils/GrowingKeyChainWrapper.h"
 #import "GrowingTrackerCore/Utils/UserIdentifier/GrowingUserIdentifier.h"
-#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingULAppLifecycle.h"
 
 static NSString *kGrowingUrlScheme = nil;
@@ -80,9 +80,9 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
         _infoDictionary = [[NSBundle mainBundle] infoDictionary];
         _deviceBrand = @"Apple";
         _appState = 0;
-        
+
         [[GrowingULAppLifecycle sharedInstance] addAppLifecycleDelegate:self];
-        
+
 #if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(handleStatusBarOrientationChange:)
@@ -167,7 +167,7 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
         self->_appState = [UIApplication sharedApplication].applicationState == UIApplicationStateActive ? 0 : 1;
 #endif
     };
-    
+
 #if !TARGET_OS_OSX
     if (@available(iOS 13.0, *)) {
         // iOS 13当收到UISceneWillDeactivateNotification/UISceneDidActivateNotification时，applicationState并未转换
@@ -180,7 +180,7 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
         }
     }
 #endif
-    
+
     if ([NSThread isMainThread]) {
         block();
     } else {
@@ -272,7 +272,8 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 - (NSString *)platformVersion {
     if (!_platformVersion) {
 #if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-        NSDictionary *dic = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
+        NSDictionary *dic =
+            [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
         _platformVersion = dic[@"ProductVersion"];
 #elif TARGET_OS_IOS
         _platformVersion = [UIDevice currentDevice].systemVersion;

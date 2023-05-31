@@ -22,23 +22,26 @@
 
 @class GrowingContext;
 
-#define GROW_EXPORT_MODULE(isAsync) \
-+ (void)load { [[GrowingModuleManager sharedInstance] registerDynamicModule:[self class]]; } \
--(BOOL)async { return [[NSString stringWithUTF8String:#isAsync] boolValue];}
+#define GROW_EXPORT_MODULE(isAsync)                                                 \
+    +(void)load {                                                                   \
+        [[GrowingModuleManager sharedInstance] registerDynamicModule:[self class]]; \
+    }                                                                               \
+    -(BOOL)async {                                                                  \
+        return [[NSString stringWithUTF8String:#isAsync] boolValue];                \
+    }
 
 @protocol GrowingModuleProtocol <NSObject>
-
 
 @optional
 
 + (BOOL)singleton;
-//越大越优先
+// 越大越优先
 - (NSInteger)modulePriority;
 
 - (BOOL)async;
 
-//如果不去设置Level默认是Normal
-//basicModuleLevel不去实现默认Normal
+// 如果不去设置Level默认是Normal
+// basicModuleLevel不去实现默认Normal
 - (void)basicModuleLevel;
 
 - (void)growingModSetUp:(GrowingContext *)context;

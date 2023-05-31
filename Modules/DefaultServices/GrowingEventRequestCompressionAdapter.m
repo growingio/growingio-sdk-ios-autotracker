@@ -23,13 +23,13 @@
 
 @interface GrowingEventRequestCompressionAdapter ()
 
-@property (nonatomic, weak) id <GrowingRequestProtocol> request;
+@property (nonatomic, weak) id<GrowingRequestProtocol> request;
 
 @end
 
 @implementation GrowingEventRequestCompressionAdapter
 
-+ (instancetype)adapterWithRequest:(id <GrowingRequestProtocol>)request {
++ (instancetype)adapterWithRequest:(id<GrowingRequestProtocol>)request {
     GrowingEventRequestCompressionAdapter *adapter = [[self alloc] init];
     adapter.request = request;
     return adapter;
@@ -46,7 +46,7 @@
         [needAdaptReq setValue:@"3" forHTTPHeaderField:@"X-Compress-Codec"];
     }
 #endif
-    
+
     if (![self.request respondsToSelector:@selector(events)] || self.request.events.length == 0) {
         return nil;
     }

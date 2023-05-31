@@ -18,24 +18,24 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/GrowingRealTracker.h"
-#import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
-#import "GrowingTrackerCore/Public/GrowingAttributesBuilder.h"
-#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
-#import "GrowingTrackerCore/LogFormat/GrowingWSLoggerFormat.h"
-#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
-#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
-#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
-#import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
-#import "GrowingTrackerCore/Manager/GrowingSession.h"
-#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
-#import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
-#import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
 #import "GrowingTrackerCore/DeepLink/GrowingAppDelegateAutotracker.h"
 #import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
+#import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
+#import "GrowingTrackerCore/Event/GrowingEventManager.h"
+#import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
+#import "GrowingTrackerCore/LogFormat/GrowingWSLoggerFormat.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Manager/GrowingSession.h"
+#import "GrowingTrackerCore/Public/GrowingAttributesBuilder.h"
 #import "GrowingTrackerCore/Public/GrowingModuleManager.h"
 #import "GrowingTrackerCore/Public/GrowingServiceManager.h"
-#import "GrowingTrackerCore/Event/GrowingEventManager.h"
+#import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
+#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
+#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Timer/GrowingEventTimer.h"
+#import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
+#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "GrowingULAppLifecycle.h"
 
 NSString *const GrowingTrackerVersionName = @"3.4.8";
@@ -50,7 +50,8 @@ const int GrowingTrackerVersionCode = 30408;
 
 @implementation GrowingRealTracker
 
-- (instancetype)initWithConfiguration:(GrowingTrackConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions {
+- (instancetype)initWithConfiguration:(GrowingTrackConfiguration *)configuration
+                        launchOptions:(NSDictionary *)launchOptions {
     self = [super init];
     if (self) {
         _configuration = [configuration copyWithZone:nil];
@@ -59,7 +60,7 @@ const int GrowingTrackerVersionCode = 30408;
         if (configuration.urlScheme.length > 0) {
             [GrowingDeviceInfo configUrlScheme:configuration.urlScheme.copy];
         }
-        
+
         [self loggerSetting];
         [GrowingULAppLifecycle setup];
         [GrowingSession startSession];
@@ -79,7 +80,8 @@ const int GrowingTrackerVersionCode = 30408;
     return self;
 }
 
-+ (instancetype)trackerWithConfiguration:(GrowingTrackConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions {
++ (instancetype)trackerWithConfiguration:(GrowingTrackConfiguration *)configuration
+                           launchOptions:(NSDictionary *)launchOptions {
     return [[self alloc] initWithConfiguration:configuration launchOptions:launchOptions];
 }
 
@@ -87,7 +89,7 @@ const int GrowingTrackerVersionCode = 30408;
     GrowingLogLevel level = self.logLevel;
     if (@available(iOS 10.0, *)) {
         [GrowingLog addLogger:[GrowingOSLogger sharedInstance] withLevel:level];
-    }else {
+    } else {
         [GrowingLog addLogger:[GrowingTTYLogger sharedInstance] withLevel:level];
         [GrowingLog addLogger:[GrowingASLLogger sharedInstance] withLevel:level];
     }
@@ -105,17 +107,21 @@ const int GrowingTrackerVersionCode = 30408;
 }
 
 - (void)versionPrint {
-    NSString *versionStr = [NSString stringWithFormat:@"Thank you very much for using GrowingIO. We will do our best to provide you with the best service. GrowingIO version: %@",GrowingTrackerVersionName];
+    NSString *versionStr = [NSString stringWithFormat:
+                                         @"Thank you very much for using GrowingIO. We will do our best to provide you "
+                                         @"with the best service. GrowingIO version: %@",
+                                         GrowingTrackerVersionName];
     GIOLogInfo(@"%@", versionStr);
-    
+
 #ifdef GROWING_ANALYSIS_ENABLE_ENCRYPTION
-    GIOLogWarn(@"\n"
-               @"╔═══════════════════════════════════════════════════════════════════════════════════════\n"
-               @"║ \n"
-               @"║ WARNING: pod ENABLE_ENCRYPTION is deprecated, please use -[GrowingTrackConfiguration setEncryptEnabled]\n"
-               @"║ 警告: pod ENABLE_ENCRYPTION 已被废弃, 请使用 -[GrowingTrackConfiguration setEncryptEnabled] 进行配置\n"
-               @"║ \n"
-               @"╚═══════════════════════════════════════════════════════════════════════════════════════");
+    GIOLogWarn(
+        @"\n"
+        @"╔═══════════════════════════════════════════════════════════════════════════════════════\n"
+        @"║ \n"
+        @"║ WARNING: pod ENABLE_ENCRYPTION is deprecated, please use -[GrowingTrackConfiguration setEncryptEnabled]\n"
+        @"║ 警告: pod ENABLE_ENCRYPTION 已被废弃, 请使用 -[GrowingTrackConfiguration setEncryptEnabled] 进行配置\n"
+        @"║ \n"
+        @"╚═══════════════════════════════════════════════════════════════════════════════════════");
 #endif
 }
 
@@ -130,10 +136,10 @@ const int GrowingTrackerVersionCode = 30408;
 }
 
 - (void)filterLogPrint {
-    if(GrowingConfigurationManager.sharedInstance.trackConfiguration.excludeEvent > 0) {
+    if (GrowingConfigurationManager.sharedInstance.trackConfiguration.excludeEvent > 0) {
         GIOLogInfo(@"%@", [GrowingEventFilter getFilterEventLog]);
     }
-    if(GrowingConfigurationManager.sharedInstance.trackConfiguration.ignoreField > 0) {
+    if (GrowingConfigurationManager.sharedInstance.trackConfiguration.ignoreField > 0) {
         GIOLogInfo(@"%@", [GrowingFieldsIgnore getIgnoreFieldsLog]);
     }
 }
@@ -146,7 +152,8 @@ const int GrowingTrackerVersionCode = 30408;
 }
 
 - (void)trackCustomEvent:(NSString *)eventName withAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
-    if ([GrowingArgumentChecker isIllegalEventName:eventName] || [GrowingArgumentChecker isIllegalAttributes:attributes]) {
+    if ([GrowingArgumentChecker isIllegalEventName:eventName] ||
+        [GrowingArgumentChecker isIllegalAttributes:attributes]) {
         return;
     }
     [GrowingEventGenerator generateCustomEvent:eventName attributes:attributes];
@@ -192,8 +199,9 @@ const int GrowingTrackerVersionCode = 30408;
     [GrowingEventTimer trackTimerEnd:timerId withAttributes:nil];
 }
 
-- (void)trackTimerEnd:(NSString *)timerId withAttributes:(NSDictionary <NSString *, NSString *> *)attributes {
-    if ([GrowingArgumentChecker isIllegalEventName:timerId] || [GrowingArgumentChecker isIllegalAttributes:attributes]) {
+- (void)trackTimerEnd:(NSString *)timerId withAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
+    if ([GrowingArgumentChecker isIllegalEventName:timerId] ||
+        [GrowingArgumentChecker isIllegalAttributes:attributes]) {
         return;
     }
     [GrowingEventTimer trackTimerEnd:timerId withAttributes:attributes];
@@ -277,9 +285,11 @@ const int GrowingTrackerVersionCode = 30408;
         } else {
             [GrowingEventTimer clearAllTimers];
         }
-        
+
         [[GrowingModuleManager sharedInstance] triggerEvent:GrowingMSetDataCollectionEnabledEvent
-                                            withCustomParam:@{@"dataCollectionEnabled" : @(enabled)}];
+                                            withCustomParam:@{
+                                                @"dataCollectionEnabled": @(enabled)
+                                            }];
     }];
 }
 
@@ -298,6 +308,5 @@ const int GrowingTrackerVersionCode = 30408;
         [[GrowingSession currentSession] cleanLocation];
     }];
 }
-
 
 @end

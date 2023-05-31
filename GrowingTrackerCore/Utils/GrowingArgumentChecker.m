@@ -28,7 +28,7 @@
         GIOLogError(@"event name is not kind of NSString class");
         return YES;
     }
-    
+
     if ([NSString growingHelper_isBlankString:eventName]) {
         GIOLogError(@"event name is NULL");
         return YES;

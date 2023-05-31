@@ -18,61 +18,61 @@
 //  limitations under the License.
 
 #if __has_include(<UIKit/UIKit.h>)
+#import "GrowingTrackerCore/GrowingWindow.h"
 #import "GrowingTrackerCore/Helpers/UIKit/UIApplication+GrowingHelper.h"
 #import "GrowingTrackerCore/Helpers/UIKit/UIWindow+GrowingHelper.h"
-#import "GrowingTrackerCore/GrowingWindow.h"
 
 @implementation UIApplication (GrowingHelper)
 
 /// 当使用UIAlertView时，系统会创建一个_UIAlertControllerShimPresenterWindow
 /// 并且调用[self winows]时，该数组中没有这个_UIAlertControllerShimPresenterWindow
 /// 我们需要将其加入数组中
-- (NSArray<UIWindow*>*)growingHelper_allWindows {
-    NSArray * array = [self windows];
-    UIWindow * keyWindow = [self keyWindow];
-    
+- (NSArray<UIWindow *> *)growingHelper_allWindows {
+    NSArray *array = [self windows];
+    UIWindow *keyWindow = [self keyWindow];
+
     if (!keyWindow) {
         return array;
     }
-    
+
     if (!array.count) {
         return @[keyWindow];
     }
-    
+
     if ([array containsObject:keyWindow]) {
         return array;
     }
-    
+
     return [array arrayByAddingObject:keyWindow];
 }
 
-- (NSArray<UIWindow*>*)growingHelper_allWindowsSortedByWindowLevel {
+- (NSArray<UIWindow *> *)growingHelper_allWindowsSortedByWindowLevel {
     NSArray *windows = [[UIApplication sharedApplication] growingHelper_allWindows];
-    
+
     NSMutableArray *sortedWindows = [NSMutableArray arrayWithArray:windows];
     [sortedWindows sortWithOptions:NSSortStable
-                   usingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
-        UIWindow * win1 = obj1;
-        UIWindow * win2 = obj2;
-        if (win1.windowLevel < win2.windowLevel) {
-            return NSOrderedAscending;
-        }
-        
-        if (win1.windowLevel > win2.windowLevel) {
-            return NSOrderedDescending;
-        }
-        
-        return NSOrderedSame;
-    }];
-    
+                   usingComparator:^NSComparisonResult(id _Nonnull obj1, id _Nonnull obj2) {
+                       UIWindow *win1 = obj1;
+                       UIWindow *win2 = obj2;
+                       if (win1.windowLevel < win2.windowLevel) {
+                           return NSOrderedAscending;
+                       }
+
+                       if (win1.windowLevel > win2.windowLevel) {
+                           return NSOrderedDescending;
+                       }
+
+                       return NSOrderedSame;
+                   }];
+
     return sortedWindows;
 }
 
-- (NSArray<UIWindow*>*)growingHelper_allWindowsWithoutGrowingWindow {
+- (NSArray<UIWindow *> *)growingHelper_allWindowsWithoutGrowingWindow {
     NSMutableArray *windows = [[NSMutableArray alloc] initWithArray:self.growingHelper_allWindows];
-    for (NSInteger i = windows.count - 1; i >= 0 ; i --) {
+    for (NSInteger i = windows.count - 1; i >= 0; i--) {
         UIWindow *win = windows[i];
-        
+
         if ([win isKindOfClass:[GrowingWindow class]]) {
             [windows removeObjectAtIndex:i];
         }

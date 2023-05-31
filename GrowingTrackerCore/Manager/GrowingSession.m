@@ -18,15 +18,15 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
+#import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
+#import "GrowingTrackerCore/Event/GrowingEventManager.h"
+#import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogMacros.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
-#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
-#import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
-#import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
-#import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Timer/GrowingEventTimer.h"
 #import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 #import "GrowingULAppLifecycle.h"
@@ -74,7 +74,7 @@ static GrowingSession *currentSession = nil;
         NSTimeInterval sessionInterval = GrowingConfigurationManager.sharedInstance.trackConfiguration.sessionInterval;
         currentSession = [[self alloc] initWithSessionInterval:sessionInterval];
     });
-    
+
     [GrowingULAppLifecycle.sharedInstance addAppLifecycleDelegate:currentSession];
     [currentSession refreshSessionId];
 }
@@ -102,7 +102,7 @@ static GrowingSession *currentSession = nil;
     [GrowingDispatchManager dispatchInGrowingThread:^{
         self.state = GrowingSessionStateActive;
         if (self.latestDidEnterBackgroundTime == 0) {
-            //首次启动，在SDK初始化时，即发送visit事件
+            // 首次启动，在SDK初始化时，即发送visit事件
             return;
         }
         long long now = GrowingULTimeUtil.currentTimeMillis;
@@ -133,9 +133,11 @@ static GrowingSession *currentSession = nil;
 }
 
 - (void)applicationWillTerminate {
-    [GrowingDispatchManager dispatchInGrowingThread:^{
-        // make sure APP_CLOSED event did saved, and all events did flush to database
-    } waitUntilDone:YES];
+    [GrowingDispatchManager
+        dispatchInGrowingThread:^{
+            // make sure APP_CLOSED event did saved, and all events did flush to database
+        }
+                  waitUntilDone:YES];
 }
 
 - (void)addUserIdChangedDelegate:(id<GrowingUserIdChangedDelegate>)delegate {
@@ -179,7 +181,7 @@ static GrowingSession *currentSession = nil;
         _loginUserKey = nil;
         [[GrowingPersistenceDataProvider sharedInstance] setLoginUserId:nil];
         [[GrowingPersistenceDataProvider sharedInstance] setLoginUserKey:nil];
-        //额外的处理者
+        // 额外的处理者
         if (oldUserId && oldUserId.length > 0) {
             [self dispatchUserIdDidChangedFrom:oldUserId to:nil];
         }
@@ -187,8 +189,8 @@ static GrowingSession *currentSession = nil;
         return;
     }
 
-    if ([NSString growingHelper_isEqualStringA:loginUserId andStringB:self.loginUserId]
-        && [NSString growingHelper_isEqualStringA:userKey andStringB:self.loginUserKey]) {
+    if ([NSString growingHelper_isEqualStringA:loginUserId andStringB:self.loginUserId] &&
+        [NSString growingHelper_isEqualStringA:userKey andStringB:self.loginUserKey]) {
         GIOLogWarn(@"setLoginUserId:userKey:, but loginUserId and loginUserKey is equal");
         return;
     }
@@ -201,9 +203,9 @@ static GrowingSession *currentSession = nil;
     [[GrowingPersistenceDataProvider sharedInstance] setLoginUserId:_loginUserId];
     [[GrowingPersistenceDataProvider sharedInstance] setLoginUserKey:_loginUserKey];
 
-    //额外的处理者
+    // 额外的处理者
     [self dispatchUserIdDidChangedFrom:oldUserId to:_loginUserId.copy];
-    //重发visit事件，必须在分发UserIdDidChangedFrom:to:方法之后，处理者可能修改visit中的数据内容
+    // 重发visit事件，必须在分发UserIdDidChangedFrom:to:方法之后，处理者可能修改visit中的数据内容
     [self resendVisitByUserIdDidChangedFrom:oldUserId to:_loginUserId.copy];
 }
 
@@ -226,7 +228,7 @@ static GrowingSession *currentSession = nil;
 }
 
 - (void)setLocation:(double)latitude longitude:(double)longitude {
-    //经纬度从无到有会发visit
+    // 经纬度从无到有会发visit
     if ((_latitude == 0 && (ABS(latitude) > 0)) || (_longitude == 0 && ABS(longitude) > 0)) {
         _latitude = latitude;
         _longitude = longitude;

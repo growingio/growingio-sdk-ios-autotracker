@@ -17,15 +17,15 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import <pthread.h>
 #import "GrowingAutotrackerCore/GrowingNode/Category/UICollectionView+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
-#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/GrowingAttributesConst.h"
-#import <pthread.h>
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 
 @implementation UICollectionView (GrowingNode)
 
-- (NSArray<id<GrowingNode>>*)growingNodeChilds {
+- (NSArray<id<GrowingNode>> *)growingNodeChilds {
     // 对于collectionView我们仅需要返回可见cell
     NSMutableArray *childs = [NSMutableArray array];
     if (@available(iOS 9.0, *)) {
@@ -59,11 +59,10 @@
 - (NSString *)growingNodeSubPath {
     NSIndexPath *indexpath = [self growingNodeIndexPath];
     if (indexpath) {
-        return
-            [NSString stringWithFormat:@"Section[%ld]/%@[%ld]",
-                                       (long)indexpath.section,
-                                       NSStringFromClass(self.class),
-                                       (long)indexpath.row];
+        return [NSString stringWithFormat:@"Section[%ld]/%@[%ld]",
+                                          (long)indexpath.section,
+                                          NSStringFromClass(self.class),
+                                          (long)indexpath.row];
     }
     return [super growingNodeSubPath];
 }
@@ -72,9 +71,7 @@
     NSIndexPath *indexpath = [self growingNodeIndexPath];
     if (indexpath) {
         return
-            [NSString stringWithFormat:@"Section[%ld]/%@[-]",
-                                       (long)indexpath.section,
-                                       NSStringFromClass(self.class)];
+            [NSString stringWithFormat:@"Section[%ld]/%@[-]", (long)indexpath.section, NSStringFromClass(self.class)];
     }
     return [super growingNodeSubPath];
 }

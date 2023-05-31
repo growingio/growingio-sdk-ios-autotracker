@@ -20,7 +20,7 @@
 #import "GrowingTrackerCore/LogFormat/GrowingWSLoggerFormat.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 
-NS_INLINE NSString* logLevel(GrowingLogFlag level) {
+NS_INLINE NSString *logLevel(GrowingLogFlag level) {
     switch (level) {
         case GrowingLogFlagError:
             return @"Error";
@@ -38,9 +38,7 @@ NS_INLINE NSString* logLevel(GrowingLogFlag level) {
 
 @implementation GrowingWSLoggerFormat
 
-
 - (nullable NSString *)formatLogMessage:(GrowingLogMessage *)logMessage {
-    
     long long epoch = [logMessage->_timestamp timeIntervalSince1970] * 1000;
     NSMutableDictionary *logDic = [NSMutableDictionary dictionary];
     [logDic setValue:[logLevel(logMessage->_flag) uppercaseString] forKey:@"type"];

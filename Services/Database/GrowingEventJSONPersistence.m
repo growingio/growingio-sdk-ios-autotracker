@@ -39,9 +39,9 @@
     NSString *eventJsonString = [[NSString alloc] initWithJsonObject_growingHelper:event.toDictionary];
 
     return [[GrowingEventJSONPersistence alloc] initWithUUID:uuid
-                                               eventType:event.eventType
-                                              jsonString:eventJsonString
-                                                  policy:event.sendPolicy];
+                                                   eventType:event.eventType
+                                                  jsonString:eventJsonString
+                                                      policy:event.sendPolicy];
 }
 
 + (NSData *)buildRawEventsFromEvents:(NSArray<GrowingEventJSONPersistence *> *)events {
@@ -66,8 +66,8 @@
         return;
     }
     NSMutableDictionary *dictM = [(NSDictionary *)[self toJSONObject] mutableCopy];
-    NSMutableDictionary *attributes = dictM[@"attributes"] ? [(NSDictionary *)dictM[@"attributes"] mutableCopy]
-                                                           : [NSMutableDictionary dictionary];
+    NSMutableDictionary *attributes =
+        dictM[@"attributes"] ? [(NSDictionary *)dictM[@"attributes"] mutableCopy] : [NSMutableDictionary dictionary];
     [attributes addEntriesFromDictionary:extraParams];
     dictM[@"attributes"] = attributes.copy;
     NSString *eventJsonString = [[NSString alloc] initWithJsonObject_growingHelper:dictM];

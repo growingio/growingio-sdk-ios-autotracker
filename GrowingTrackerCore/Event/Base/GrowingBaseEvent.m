@@ -18,13 +18,13 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Public/GrowingBaseEvent.h"
-#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
 #import "GrowingTrackerCore/GrowingRealTracker.h"
-#import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
 #import "GrowingTrackerCore/Public/GrowingFieldsIgnore.h"
+#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "GrowingULTimeUtil.h"
 
 @implementation GrowingBaseEvent
@@ -70,7 +70,7 @@
 
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDict = [NSMutableDictionary dictionary];
-    //如果有额外参数添加
+    // 如果有额外参数添加
     if (self.extraParams.count > 0) {
         [dataDict addEntriesFromDictionary:self.extraParams];
     }
@@ -115,11 +115,11 @@
 
 @implementation GrowingBaseBuilder
 
-//赋值属性，eg:deviceId,userId,sessionId,globalSequenceId,eventSequenceId
+// 赋值属性，eg:deviceId,userId,sessionId,globalSequenceId,eventSequenceId
 - (void)readPropertyInTrackThread {
     GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
     _dataSourceId = config.dataSourceId;
-    
+
     GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
     _domain = _domain.length > 0 ? _domain : deviceInfo.bundleID;
     _appState = deviceInfo.appState;
@@ -139,11 +139,13 @@
     _longitude = session.longitude;
     _userKey = session.loginUserKey;
     _gioId = session.latestNonNullUserId;
-    
+
     _timestamp = _timestamp > 0 ? _timestamp : [GrowingULTimeUtil currentTimeMillis];
     _screenWidth = [GrowingFieldsIgnore isIgnoreFields:@"screenWidth"] ? 0 : deviceInfo.screenWidth;
     _screenHeight = [GrowingFieldsIgnore isIgnoreFields:@"screenHeight"] ? 0 : deviceInfo.screenHeight;
-    _networkState = [GrowingFieldsIgnore isIgnoreFields:@"networkState"] ? nil : [[GrowingNetworkInterfaceManager sharedInstance] networkType];
+    _networkState = [GrowingFieldsIgnore isIgnoreFields:@"networkState"]
+                        ? nil
+                        : [[GrowingNetworkInterfaceManager sharedInstance] networkType];
     _sdkVersion = GrowingTrackerVersionName;
     _deviceBrand = [GrowingFieldsIgnore isIgnoreFields:@"deviceBrand"] ? nil : deviceInfo.deviceBrand;
     _deviceModel = [GrowingFieldsIgnore isIgnoreFields:@"deviceModel"] ? nil : deviceInfo.deviceModel;
@@ -153,7 +155,7 @@
     _language = deviceInfo.language;
 }
 
-- (GrowingBaseBuilder *(^)(NSString *value))setDataSourceId {
+- (GrowingBaseBuilder * (^)(NSString *value))setDataSourceId {
     return ^(NSString *value) {
         self->_dataSourceId = value;
         return self;
@@ -342,7 +344,7 @@
     };
 }
 
-- (GrowingBaseBuilder *(^)(NSString *value))setGioId {
+- (GrowingBaseBuilder * (^)(NSString *value))setGioId {
     return ^(NSString *value) {
         self->_gioId = value;
         return self;

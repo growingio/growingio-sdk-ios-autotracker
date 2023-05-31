@@ -46,15 +46,16 @@
     GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
     NSString *projectKey = config.projectId ?: @"";
     NSString *datasourceId = config.dataSourceId ?: @"";
-    NSString *path = [NSString stringWithFormat:@"deep/v1/%@/ios/%@/%@/%@", self.isManual ? @"inapp" : @"defer",
-                                                                            projectKey,
-                                                                            datasourceId,
-                                                                            self.trackId];
+    NSString *path = [NSString stringWithFormat:@"deep/v1/%@/ios/%@/%@/%@",
+                                                self.isManual ? @"inapp" : @"defer",
+                                                projectKey,
+                                                datasourceId,
+                                                self.trackId];
     return path;
 }
 
 - (NSArray<id<GrowingRequestAdapter>> *)adapters {
-    NSDictionary *headers = @{@"User-Agent" : self.userAgent};
+    NSDictionary *headers = @{@"User-Agent": self.userAgent};
     GrowingAdRequestHeaderAdapter *basicHeaderAdapter = [GrowingAdRequestHeaderAdapter adapterWithRequest:self
                                                                                                    header:headers];
     GrowingRequestMethodAdapter *methodAdapter = [GrowingRequestMethodAdapter adapterWithRequest:self];

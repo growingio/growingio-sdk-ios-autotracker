@@ -24,15 +24,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingBaseAttributesEvent : GrowingBaseEvent
 
-@property (nonatomic, copy, readonly) NSDictionary <NSString *, NSObject *> *attributes;
+@property (nonatomic, copy, readonly) NSDictionary<NSString *, NSObject *> *attributes;
 
 @end
 
 @interface GrowingBaseAttributesBuilder : GrowingBaseBuilder
 
-@property (nonatomic, copy, readonly) NSDictionary <NSString *, NSObject *> *attributes;
+@property (nonatomic, copy, readonly) NSDictionary<NSString *, NSObject *> *attributes;
 
-- (GrowingBaseAttributesBuilder *(^)(NSDictionary <NSString *, NSObject *>*value))setAttributes;
+- (GrowingBaseAttributesBuilder * (^)(NSDictionary<NSString *, NSObject *> *value))setAttributes;
 
 @end
 

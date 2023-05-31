@@ -22,9 +22,9 @@
 #if SWIFT_PACKAGE
 @import GrowingModule_SwiftProtobuf;
 #else
-#import "Modules/Protobuf/Proto/GrowingEvent.pbobjc.h"
 #import "Modules/Protobuf/Catagory/GrowingBaseEvent+Protobuf.h"
 #import "Modules/Protobuf/Catagory/GrowingPBEventV3Dto+GrowingHelper.h"
+#import "Modules/Protobuf/Proto/GrowingEvent.pbobjc.h"
 #endif
 
 @interface GrowingEventProtobufPersistence ()
@@ -62,7 +62,7 @@
     persistence->_eventUUID = uuid;
     persistence->_eventType = event.eventType;
     persistence->_policy = event.sendPolicy;
-    
+
 #if SWIFT_PACKAGE
     persistence->_dtoBox = event.toProtobuf;
     persistence->_data = (persistence->_dtoBox).data;
@@ -108,7 +108,7 @@
     if (!extraParams || extraParams.count == 0) {
         return;
     }
-    
+
 #if SWIFT_PACKAGE
     [self.dtoBox appendWithExtraParams:extraParams];
 #else

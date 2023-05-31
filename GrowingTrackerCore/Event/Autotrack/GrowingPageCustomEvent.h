@@ -37,12 +37,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *pageName;
 @property (nonatomic, assign, readonly) long long pageShowTimestamp;
 
-- (GrowingPageCustomBuilder *(^)(NSString *value))setPath;
-- (GrowingPageCustomBuilder *(^)(long long value))setPageShowTimestamp;
+- (GrowingPageCustomBuilder * (^)(NSString *value))setPath;
+- (GrowingPageCustomBuilder * (^)(long long value))setPageShowTimestamp;
 
 // override
-- (GrowingPageCustomBuilder *(^)(NSString *value))setEventName;
-- (GrowingPageCustomBuilder *(^)(NSDictionary <NSString *, NSObject *>*value))setAttributes;
+- (GrowingPageCustomBuilder * (^)(NSString *value))setEventName;
+- (GrowingPageCustomBuilder * (^)(NSDictionary<NSString *, NSObject *> *value))setAttributes;
 
 @end
 

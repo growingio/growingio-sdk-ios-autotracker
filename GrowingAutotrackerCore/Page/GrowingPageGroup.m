@@ -36,11 +36,11 @@
     GROWING_LOCK(lock);
     [self.childPages.allObjects enumerateObjectsWithOptions:NSEnumerationReverse
                                                  usingBlock:^(NSObject *obj, NSUInteger idx, BOOL *_Nonnull stop) {
-        if (page == obj) {
-            [self.childPages removePointerAtIndex:idx];
-            *stop = YES;
-        }
-    }];
+                                                     if (page == obj) {
+                                                         [self.childPages removePointerAtIndex:idx];
+                                                         *stop = YES;
+                                                     }
+                                                 }];
     GROWING_UNLOCK(lock);
 }
 

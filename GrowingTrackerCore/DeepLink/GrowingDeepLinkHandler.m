@@ -18,11 +18,11 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
+#import "GrowingTrackerCore/DeepLink/GrowingWebWatcher.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
+#import "GrowingTrackerCore/LogFormat/GrowingASLLoggerFormat.h"
 #import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
-#import "GrowingTrackerCore/LogFormat/GrowingASLLoggerFormat.h"
-#import "GrowingTrackerCore/DeepLink/GrowingWebWatcher.h"
 #import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 
 @interface GrowingDeepLinkHandler ()
@@ -62,14 +62,13 @@
 
 - (void)removeHandlersObject:(id)object {
     GROWING_LOCK(lock);
-    [self.handlers.allObjects
-            enumerateObjectsWithOptions:NSEnumerationReverse
-                             usingBlock:^(NSObject *obj, NSUInteger idx, BOOL *_Nonnull stop) {
-                                 if (object == obj) {
-                                     [self.handlers removePointerAtIndex:idx];
-                                     *stop = YES;
-                                 }
-                             }];
+    [self.handlers.allObjects enumerateObjectsWithOptions:NSEnumerationReverse
+                                               usingBlock:^(NSObject *obj, NSUInteger idx, BOOL *_Nonnull stop) {
+                                                   if (object == obj) {
+                                                       [self.handlers removePointerAtIndex:idx];
+                                                       *stop = YES;
+                                                   }
+                                               }];
     GROWING_UNLOCK(lock);
 }
 
@@ -78,7 +77,7 @@
     for (id object in self.handlers) {
         if ([object respondsToSelector:@selector(growingHandlerUrl:)]) {
             if ([object growingHandlerUrl:url]) {
-                //如果有一个handler处理，则break，不再继续执行后续handler
+                // 如果有一个handler处理，则break，不再继续执行后续handler
                 break;
             }
         }

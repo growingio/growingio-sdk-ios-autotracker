@@ -17,8 +17,8 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "Modules/Hybrid/WKWebView+GrowingAutotracker.h"
 #import "Modules/Hybrid/GrowingWKWebViewJavascriptBridge.h"
+#import "Modules/Hybrid/WKWebView+GrowingAutotracker.h"
 
 @implementation WKWebView (GrowingAutotracker)
 
@@ -37,7 +37,10 @@
     return [self growing_loadFileURL:URL allowingReadAccessToURL:readAccessURL];
 }
 
-- (WKNavigation *)growing_loadData:(NSData *)data MIMEType:(NSString *)MIMEType characterEncodingName:(NSString *)characterEncodingName baseURL:(NSURL *)baseURL {
+- (WKNavigation *)growing_loadData:(NSData *)data
+                          MIMEType:(NSString *)MIMEType
+             characterEncodingName:(NSString *)characterEncodingName
+                           baseURL:(NSURL *)baseURL {
     [GrowingWKWebViewJavascriptBridge bridgeForWebView:self];
     return [self growing_loadData:data MIMEType:MIMEType characterEncodingName:characterEncodingName baseURL:baseURL];
 }

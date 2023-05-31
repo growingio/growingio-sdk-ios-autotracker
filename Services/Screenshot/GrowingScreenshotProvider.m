@@ -18,11 +18,11 @@
 //  limitations under the License.
 
 #import "Services/Screenshot/GrowingScreenshotProvider.h"
-#import "Services/Screenshot/UIApplication+Screenshot.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
-#import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
+#import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 #import "GrowingULSwizzle.h"
+#import "Services/Screenshot/UIApplication+Screenshot.h"
 
 GrowingService(GrowingScreenshotService, GrowingScreenshotProvider)
 
@@ -103,13 +103,13 @@ GrowingService(GrowingScreenshotService, GrowingScreenshotProvider)
     windows = [windows sortedArrayUsingComparator:^NSComparisonResult(UIWindow *obj1, UIWindow *obj2) {
         if (obj1.windowLevel == obj2.windowLevel) {
             return NSOrderedSame;
-        }else if (obj1.windowLevel > obj2.windowLevel) {
+        } else if (obj1.windowLevel > obj2.windowLevel) {
             return NSOrderedDescending;
-        }else {
+        } else {
             return NSOrderedAscending;
         }
     }];
-    
+
     UIImage *image = [UIWindow growingHelper_screenshotWithWindows:windows andMaxScale:scale block:nil];
     return image;
 }

@@ -18,16 +18,16 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Database/GrowingEventDatabase.h"
+#import "GrowingTrackerCore/Public/GrowingServiceManager.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
-#import "GrowingTrackerCore/Public/GrowingServiceManager.h"
 
 long long const GrowingEventDatabaseExpirationTime = 86400000 * 7;
 NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.error";
 
 @interface GrowingEventDatabase ()
 
-@property (nonatomic, strong) id <GrowingEventDatabaseService> db;
+@property (nonatomic, strong) id<GrowingEventDatabaseService> db;
 @property (nonatomic, strong) NSMutableArray *updateKeys;
 @property (nonatomic, strong) NSMutableArray *updateValues;
 
@@ -48,13 +48,14 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
         _updateValues = [[NSMutableArray alloc] init];
         _updateKeys = [[NSMutableArray alloc] init];
         GROWING_LOCK_INIT(lock);
-        
-        Class <GrowingEventDatabaseService> serviceClass = [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingEventDatabaseService)];
+
+        Class<GrowingEventDatabaseService> serviceClass =
+            [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingEventDatabaseService)];
         if (!serviceClass) {
             GIOLogError(@"-databaseWithPath: event database error : no event database service support");
             return nil;
         }
-        
+
         NSError *error;
         _db = [(Class)serviceClass databaseWithPath:filePath error:&error];
         if (error) {
@@ -69,7 +70,7 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
 
 - (NSUInteger)countOfEvents {
     [self flush];
-    
+
     NSInteger count = [self.db countOfEvents];
     if (count < 0) {
         [self handleDatabaseError:[self.db lastError]];
@@ -86,11 +87,11 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
         if (!self.updateKeys.count) {
             return;
         }
-        
+
         // 如果一个key被更改多次 则以最后一次为准 从后向前遍历一个key只用一次 该table用来记录使用过的key
-        NSHashTable *checkTable = [[NSHashTable alloc] initWithOptions:NSPointerFunctionsObjectPersonality
-                                   | NSPointerFunctionsStrongMemory
-                                                              capacity:self.updateKeys.count];
+        NSHashTable *checkTable =
+            [[NSHashTable alloc] initWithOptions:NSPointerFunctionsObjectPersonality | NSPointerFunctionsStrongMemory
+                                        capacity:self.updateKeys.count];
         NSString *key = nil;
         id value = nil;
 
@@ -108,7 +109,7 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
             if (value != nil && ![value isKindOfClass:[NSNull class]]) {
                 // 保持顺序
                 [insertArray insertObject:value atIndex:0];
-            }else {
+            } else {
                 [removeArray addObject:key];
             }
         }
@@ -121,7 +122,7 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
     if (removeArray.count == 0 && insertArray.count == 0) {
         return YES;
     }
-    
+
     // 数据库操作
     BOOL result = [self.db deleteEvents:removeArray];
     if (!result) {
@@ -133,7 +134,7 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
         [self handleDatabaseError:[self.db lastError]];
         return NO;
     }
-    
+
     return YES;
 }
 
@@ -141,7 +142,7 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
     if (![self flush]) {
         return NO;
     }
-    
+
     BOOL result = [self.db clearAllEvents];
     if (!result) {
         [self handleDatabaseError:[self.db lastError]];
@@ -151,14 +152,14 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
 
 - (BOOL)cleanExpiredDataIfNeeded {
     BOOL result = [self.db cleanExpiredEventIfNeeded];
-    
+
     if (!result) {
         [self handleDatabaseError:[self.db lastError]];
     }
     return result;
 }
 
-- (void)setEvent:(id <GrowingEventPersistenceProtocol>)event forKey:(NSString *)key {
+- (void)setEvent:(id<GrowingEventPersistenceProtocol>)event forKey:(NSString *)key {
     if (!key.length) {
         return;
     }
@@ -175,39 +176,42 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
     }
 }
 
-- (NSArray<id <GrowingEventPersistenceProtocol>> *)getEventsWithPackageNum:(NSUInteger)packageNum policy:(NSUInteger)mask {
+- (NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsWithPackageNum:(NSUInteger)packageNum
+                                                                   policy:(NSUInteger)mask {
     NSArray *events = [self.db getEventsByCount:packageNum policy:mask];
-    
+
     if (!events) {
         [self handleDatabaseError:[self.db lastError]];
     }
     return events ?: [[NSArray alloc] init];
 }
 
-- (NSArray<id <GrowingEventPersistenceProtocol>> *)getEventsWithPackageNum:(NSUInteger)packageNum {
+- (NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsWithPackageNum:(NSUInteger)packageNum {
     NSArray *events = [self.db getEventsByCount:packageNum];
-    
+
     if (!events) {
         [self handleDatabaseError:[self.db lastError]];
     }
     return events ?: [[NSArray alloc] init];
 }
 
-+ (NSData *)buildRawEventsFromEvents:(NSArray<id <GrowingEventPersistenceProtocol>> *)events {
-    Class <GrowingEventDatabaseService> serviceClass = [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingEventDatabaseService)];
++ (NSData *)buildRawEventsFromEvents:(NSArray<id<GrowingEventPersistenceProtocol>> *)events {
+    Class<GrowingEventDatabaseService> serviceClass =
+        [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingEventDatabaseService)];
     if (!serviceClass) {
         return nil;
     }
-    
+
     return [serviceClass buildRawEventsFromEvents:events];
 }
 
-+ (id <GrowingEventPersistenceProtocol>)persistenceEventWithEvent:(GrowingBaseEvent *)event uuid:(NSString *)uuid {
-    Class <GrowingEventDatabaseService> serviceClass = [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingEventDatabaseService)];
++ (id<GrowingEventPersistenceProtocol>)persistenceEventWithEvent:(GrowingBaseEvent *)event uuid:(NSString *)uuid {
+    Class<GrowingEventDatabaseService> serviceClass =
+        [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingEventDatabaseService)];
     if (!serviceClass) {
         return nil;
     }
-    
+
     return [serviceClass persistenceEventWithEvent:event uuid:uuid];
 }
 

@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy, readonly) NSString *idfa;
 @property (nonatomic, copy, readonly) NSString *idfv;
-@property (nonatomic, strong, readonly) NSDictionary<NSString *,NSString*> *extraSdk;
+@property (nonatomic, strong, readonly) NSDictionary<NSString *, NSString *> *extraSdk;
 
 - (instancetype _Nonnull)init NS_UNAVAILABLE;
 + (instancetype _Nonnull)new NS_UNAVAILABLE;
@@ -40,11 +40,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy, readonly) NSString *idfa;
 @property (nonatomic, copy, readonly) NSString *idfv;
-@property (nonatomic, strong, readonly) NSDictionary<NSString *,NSString*> *extraSdk;
+@property (nonatomic, strong, readonly) NSDictionary<NSString *, NSString *> *extraSdk;
 
-- (GrowingVisitBuilder *(^)(NSString *value))setIdfa;
-- (GrowingVisitBuilder *(^)(NSString *value))setIdfv;
-- (GrowingVisitBuilder *(^)(NSDictionary<NSString *,NSString*> *value))setExtraSdk;
+- (GrowingVisitBuilder * (^)(NSString *value))setIdfa;
+- (GrowingVisitBuilder * (^)(NSString *value))setIdfv;
+- (GrowingVisitBuilder * (^)(NSDictionary<NSString *, NSString *> *value))setExtraSdk;
 
 @end
 

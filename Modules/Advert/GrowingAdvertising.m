@@ -18,24 +18,24 @@
 //  limitations under the License.
 
 #import "Modules/Advert/Public/GrowingAdvertising.h"
-#import "Modules/Advert/Utils/GrowingAdUtils.h"
+#import "Modules/Advert/AppleSearchAds/GrowingAsaFetcher.h"
 #import "Modules/Advert/Event/GrowingActivateEvent.h"
 #import "Modules/Advert/Event/GrowingAdvertEventType.h"
 #import "Modules/Advert/Request/GrowingAdPreRequest.h"
-#import "Modules/Advert/AppleSearchAds/GrowingAsaFetcher.h"
+#import "Modules/Advert/Utils/GrowingAdUtils.h"
 
+#import "GrowingTrackerCore/Core/GrowingContext.h"
+#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
+#import "GrowingTrackerCore/Event/GrowingEventChannel.h"
+#import "GrowingTrackerCore/Event/GrowingEventManager.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Manager/GrowingSession.h"
+#import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
 #import "GrowingTrackerCore/Public/GrowingEventNetworkService.h"
 #import "GrowingTrackerCore/Public/GrowingServiceManager.h"
-#import "GrowingTrackerCore/Core/GrowingContext.h"
-#import "GrowingTrackerCore/Event/GrowingEventManager.h"
-#import "GrowingTrackerCore/Event/GrowingEventChannel.h"
-#import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
-#import "GrowingTrackerCore/Manager/GrowingSession.h"
-#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
-#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
-#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
-#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
+#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "GrowingULAppLifecycle.h"
 
@@ -43,16 +43,18 @@
 
 GrowingMod(GrowingAdvertising)
 
-NSString * const GrowingAdDefaultDeepLinkHost = @"https://n.datayi.cn";
+NSString *const GrowingAdDefaultDeepLinkHost = @"https://n.datayi.cn";
 
 NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
 
-@interface GrowingAdvertising () <GrowingDeepLinkHandlerProtocol, GrowingEventInterceptor, GrowingULAppLifecycleDelegate>
+@interface GrowingAdvertising () <GrowingDeepLinkHandlerProtocol,
+                                  GrowingEventInterceptor,
+                                  GrowingULAppLifecycleDelegate>
 
 @property (nonatomic, strong) WKWebView *wkWebView;
 @property (nonatomic, copy) NSString *userAgent;
 @property (nonatomic, copy) NSURL *deeplinkUrl;
-@property (nonatomic, strong) NSMutableArray <GrowingBaseBuilder *>*builders;
+@property (nonatomic, strong) NSMutableArray<GrowingBaseBuilder *> *builders;
 
 @end
 
@@ -69,10 +71,12 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
     if (config.deepLinkHost && config.deepLinkHost.length > 0) {
         NSString *host = [NSURL URLWithString:config.deepLinkHost].host;
         if (!host) {
-            @throw [NSException exceptionWithName:@"初始化异常" reason:@"您所配置的DeepLinkHost不符合规范" userInfo:nil];
+            @throw [NSException exceptionWithName:@"初始化异常"
+                                           reason:@"您所配置的DeepLinkHost不符合规范"
+                                         userInfo:nil];
         }
     }
-    
+
     self.builders = [NSMutableArray array];
     [[GrowingEventManager sharedInstance] addInterceptor:self];
     [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:self];
@@ -87,7 +91,7 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
         [self loadClipboard];
         if (self.deeplinkUrl) {
             [self growingHandlerUrl:self.deeplinkUrl.copy isManual:NO callback:nil];
-            self.deeplinkUrl = nil; // 避免多线程环境下有可能多发 AppReengage
+            self.deeplinkUrl = nil;  // 避免多线程环境下有可能多发 AppReengage
         }
     }
 }
@@ -161,16 +165,16 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
         }
         return NO;
     }
-    
+
     if (!isManual) {
         // 适配初始化时， dataCollectionEnabled == NO 的场景
         self.deeplinkUrl = url.copy;
     }
-    
+
     if ([self SDKDoNotTrack]) {
         return NO;
     }
-    
+
     // Universal Link 短链
     if ([GrowingAdUtils isShortChainUlink:url]) {
         NSDate *startDate = [NSDate date];
@@ -178,7 +182,7 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
             if ([self SDKDoNotTrack]) {
                 return;
             }
-            [self accessUserAgent:^(NSString * _Nullable userAgent) {
+            [self accessUserAgent:^(NSString *_Nullable userAgent) {
                 if ([self SDKDoNotTrack]) {
                     return;
                 }
@@ -191,42 +195,63 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
                 eventRequest.trackId = [url.path componentsSeparatedByString:@"/"].lastObject;
                 eventRequest.isManual = isManual;
                 eventRequest.userAgent = userAgent;
-                id <GrowingEventNetworkService> service = [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingEventNetworkService)];
+                id<GrowingEventNetworkService> service =
+                    [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingEventNetworkService)];
                 if (!service) {
-                    GIOLogError(@"[GrowingAdvertising] -growingHandlerUrl:isManual:callback: error : no network service support");
+                    GIOLogError(
+                        @"[GrowingAdvertising] -growingHandlerUrl:isManual:callback: error : no network service "
+                        @"support");
                     return;
                 }
-                [service sendRequest:eventRequest completion:^(NSHTTPURLResponse * _Nonnull httpResponse, NSData * _Nonnull data, NSError * _Nonnull error) {
-                    if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
-                        NSDictionary *dic = [[data growingHelper_dictionaryObject] objectForKey:@"data"];
-                        [self getDeeplinkParams:dic isManual:isManual block:^(BOOL completed, NSDictionary *params, NSDictionary * _Nullable customParams) {
-                            if (completed) {
-                                [self generateAppReengage:params];
-                                [self handleDeepLinkCallback:callback customParams:customParams startDate:startDate error:nil];
-                            }
-                        }];
-                    } else {
-                        [self handleDeepLinkCallback:callback customParams:nil startDate:startDate error:self.requestFailedError];
-                    }
-                }];
+                [service sendRequest:eventRequest
+                          completion:^(NSHTTPURLResponse *_Nonnull httpResponse,
+                                       NSData *_Nonnull data,
+                                       NSError *_Nonnull error) {
+                              if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
+                                  NSDictionary *dic = [[data growingHelper_dictionaryObject] objectForKey:@"data"];
+                                  [self getDeeplinkParams:dic
+                                                 isManual:isManual
+                                                    block:^(BOOL completed,
+                                                            NSDictionary *params,
+                                                            NSDictionary *_Nullable customParams) {
+                                                        if (completed) {
+                                                            [self generateAppReengage:params];
+                                                            [self handleDeepLinkCallback:callback
+                                                                            customParams:customParams
+                                                                               startDate:startDate
+                                                                                   error:nil];
+                                                        }
+                                                    }];
+                              } else {
+                                  [self handleDeepLinkCallback:callback
+                                                  customParams:nil
+                                                     startDate:startDate
+                                                         error:self.requestFailedError];
+                              }
+                          }];
             }];
         }];
         return YES;
     }
-    
+
     // Universal Link 长链 / URL Scheme
     NSDictionary *dic = url.growingHelper_queryDict;
     if (dic[@"deep_link_id"]) {
         self.deeplinkUrl = nil;
-        [self getDeeplinkParams:dic isManual:isManual block:^(BOOL completed, NSDictionary *params, NSDictionary * _Nullable customParams) {
-            if (completed) {
-                [self generateAppReengage:params];
-                [self handleDeepLinkCallback:callback customParams:customParams startDate:nil error:nil];
-            }
-        }];
+        [self getDeeplinkParams:dic
+                       isManual:isManual
+                          block:^(BOOL completed, NSDictionary *params, NSDictionary *_Nullable customParams) {
+                              if (completed) {
+                                  [self generateAppReengage:params];
+                                  [self handleDeepLinkCallback:callback
+                                                  customParams:customParams
+                                                     startDate:nil
+                                                         error:nil];
+                              }
+                          }];
         return YES;
     }
-    
+
     return NO;
 }
 
@@ -240,7 +265,7 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
         }];
         return;
     }
-    
+
     dispatch_async(dispatch_get_main_queue(), ^{
         // WKWebView 的 initWithFrame 方法偶发崩溃，这里 @try @catch 保护
         @try {
@@ -248,19 +273,20 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
                 self.wkWebView = [[WKWebView alloc] initWithFrame:CGRectZero];
             }
             __weak typeof(self) weakSelf = self;
-            [self.wkWebView evaluateJavaScript:@"navigator.userAgent"
-                             completionHandler:^(_Nullable id response, NSError *_Nullable error) {
-                [GrowingDispatchManager dispatchInGrowingThread:^{
-                    if (error || !response) {
-                        GIOLogError(@"[GrowingAdvertising] WKWebView evaluateJavaScript load UA error:%@", error);
-                        block(nil);
-                    } else {
-                        weakSelf.userAgent = response;
-                        block(response);
-                    }
-                }];
-                weakSelf.wkWebView = nil;
-            }];
+            [self.wkWebView
+                evaluateJavaScript:@"navigator.userAgent"
+                 completionHandler:^(_Nullable id response, NSError *_Nullable error) {
+                     [GrowingDispatchManager dispatchInGrowingThread:^{
+                         if (error || !response) {
+                             GIOLogError(@"[GrowingAdvertising] WKWebView evaluateJavaScript load UA error:%@", error);
+                             block(nil);
+                         } else {
+                             weakSelf.userAgent = response;
+                             block(response);
+                         }
+                     }];
+                     weakSelf.wkWebView = nil;
+                 }];
         } @catch (NSException *exception) {
             GIOLogDebug(@"[GrowingAdvertising] loadUserAgentWithCompletion crash :%@", exception);
             [GrowingDispatchManager dispatchInGrowingThread:^{
@@ -275,7 +301,7 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
         if ([self SDKDoNotTrack]) {
             return;
         }
-        
+
         GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
         if ([GrowingAdUtils isActivateWrote]) {
             // activate 在同一安装周期内仅需发送一次
@@ -287,34 +313,38 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
             }
             return;
         }
-        
+
         if (!trackConfiguration.readClipboardEnabled) {
             GIOLogDebug(@"[GrowingAdvertising] readClipboardEnabled is false");
             [self generateAppActivation];
             return;
         }
-        
+
         // 不直接在 GrowingThread 执行是因为 UIPasteboard 调用**可能**会卡死线程，实测在主线程调用有卡死案例
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             NSString *content = [UIPasteboard generalPasteboard].string;
             NSDictionary *dic = [GrowingAdUtils dictFromPasteboard:content];
 
             [GrowingDispatchManager dispatchInGrowingThread:^{
-                if (dic.count == 0
-                    || ![dic[@"type"] isEqualToString:@"gads"]
-                    || ![dic[@"scheme"] isEqualToString:[GrowingDeviceInfo currentDeviceInfo].urlScheme]) {
+                if (dic.count == 0 || ![dic[@"type"] isEqualToString:@"gads"] ||
+                    ![dic[@"scheme"] isEqualToString:[GrowingDeviceInfo currentDeviceInfo].urlScheme]) {
                     [self generateAppActivation];
                     return;
                 }
-                
-                [self getDeeplinkParams:dic isManual:NO block:^(BOOL completed, NSDictionary *params, NSDictionary * _Nullable customParams) {
-                    if (completed) {
-                        [self generateAppDefer:params];
-                        [self handleDeepLinkCallback:nil customParams:customParams startDate:nil error:nil];
-                    }
-                }];
+
+                [self getDeeplinkParams:dic
+                               isManual:NO
+                                  block:^(BOOL completed, NSDictionary *params, NSDictionary *_Nullable customParams) {
+                                      if (completed) {
+                                          [self generateAppDefer:params];
+                                          [self handleDeepLinkCallback:nil
+                                                          customParams:customParams
+                                                             startDate:nil
+                                                                 error:nil];
+                                      }
+                                  }];
             }];
-            
+
             if ([[UIPasteboard generalPasteboard].string isEqualToString:content]) {
                 [UIPasteboard generalPasteboard].string = @"";
             }
@@ -324,7 +354,7 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
 
 - (void)getDeeplinkParams:(NSDictionary *)originDic
                  isManual:(BOOL)isManual
-                    block:(void(^)(BOOL, NSDictionary *, NSDictionary * _Nullable))paramsBlock {
+                    block:(void (^)(BOOL, NSDictionary *, NSDictionary *_Nullable))paramsBlock {
     NSMutableDictionary *dictM = [NSMutableDictionary dictionary];
     dictM[@"deep_link_id"] = originDic[@"deep_link_id"];
     dictM[@"deep_click_id"] = originDic[@"deep_click_id"];
@@ -332,9 +362,9 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
     if ([dictM[@"deep_click_time"] isKindOfClass:[NSNumber class]]) {
         dictM[@"deep_click_time"] = [NSString stringWithFormat:@"%@", dictM[@"deep_click_time"]];
     }
-    
+
     BOOL completed = dictM.count == 3;
-    
+
     NSString *encode = originDic[@"deep_params"];
     NSDictionary *customParams = nil;
     if ([encode isKindOfClass:[NSString class]]) {
@@ -350,11 +380,11 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
         dictM[@"deep_params"] = dic.growingHelper_jsonString;
         customParams = dic.copy;
     }
-    
+
     if (isManual) {
         dictM[@"deep_type"] = @"inapp";
     }
-    
+
     if (paramsBlock) {
         paramsBlock(completed, dictM.copy, customParams);
     }
@@ -367,16 +397,15 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
     if (trackConfiguration.ASAEnabled) {
         [GrowingAsaFetcher startFetchWithTimeOut:GrowingAsaFetcherDefaultTimeOut];
     }
-    
+
     [self accessUserAgent:^(NSString *userAgent) {
         if ([self SDKDoNotTrack]) {
             return;
         }
 
-        GrowingActivateBuilder *builder = GrowingActivateEvent.builder
-                                                              .setEventName(GrowingAdvertEventNameActivate);
+        GrowingActivateBuilder *builder = GrowingActivateEvent.builder.setEventName(GrowingAdvertEventNameActivate);
         if (userAgent.length > 0) {
-            builder.setAttributes(@{@"userAgent" : userAgent.copy});
+            builder.setAttributes(@{@"userAgent": userAgent.copy});
         }
         [[GrowingEventManager sharedInstance] postEventBuilder:builder];
         [GrowingAdUtils setActivateWrote:YES];
@@ -389,9 +418,8 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
             return;
         }
 
-        GrowingActivateBuilder *builder = GrowingActivateEvent.builder
-                                                              .setEventName(GrowingAdvertEventNameDefer)
-                                                              .setAttributes(dic);
+        GrowingActivateBuilder *builder =
+            GrowingActivateEvent.builder.setEventName(GrowingAdvertEventNameDefer).setAttributes(dic);
         [[GrowingEventManager sharedInstance] postEventBuilder:builder];
         [GrowingAdUtils setActivateWrote:YES];
         [GrowingAdUtils setActivateDefer:YES];
@@ -403,10 +431,9 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
         if ([self SDKDoNotTrack]) {
             return;
         }
-        
-        GrowingActivateBuilder *builder = GrowingActivateEvent.builder
-                                                              .setEventName(GrowingAdvertEventNameReengage)
-                                                              .setAttributes(dic);
+
+        GrowingActivateBuilder *builder =
+            GrowingActivateEvent.builder.setEventName(GrowingAdvertEventNameReengage).setAttributes(dic);
         if ([GrowingSession currentSession].state == GrowingSessionStateActive) {
             [[GrowingEventManager sharedInstance] postEventBuilder:builder];
         } else {
@@ -426,7 +453,7 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
     if (!callback) {
         callback = trackConfiguration.deepLinkCallback;
     }
-    
+
     if (callback) {
         NSTimeInterval processTime = startDate ? [[NSDate date] timeIntervalSinceDate:startDate] : 0.0;
 
@@ -447,19 +474,19 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
 - (NSError *)noQueryError {
     return [NSError errorWithDomain:GrowingAdvertisingErrorDomain
                                code:GrowingAdvertisingNoQueryError
-                           userInfo:@{NSLocalizedDescriptionKey : @"no custom parameters"}];
+                           userInfo:@{NSLocalizedDescriptionKey: @"no custom parameters"}];
 }
 
 - (NSError *)illegalURLError {
     return [NSError errorWithDomain:GrowingAdvertisingErrorDomain
                                code:GrowingAdvertisingIllegalURLError
-                           userInfo:@{NSLocalizedDescriptionKey : @"this is not GrowingIO DeepLink URL"}];
+                           userInfo:@{NSLocalizedDescriptionKey: @"this is not GrowingIO DeepLink URL"}];
 }
 
 - (NSError *)requestFailedError {
     return [NSError errorWithDomain:GrowingAdvertisingErrorDomain
                                code:GrowingAdvertisingRequestFailedError
-                           userInfo:@{NSLocalizedDescriptionKey : @"pre-request failed"}];
+                           userInfo:@{NSLocalizedDescriptionKey: @"pre-request failed"}];
 }
 
 @end

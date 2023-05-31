@@ -23,14 +23,14 @@
 
 - (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
     if (self = [super initWithBuilder:builder]) {
-        GrowingHybridViewElementBuilder *subBuilder = (GrowingHybridViewElementBuilder*)builder;
+        GrowingHybridViewElementBuilder *subBuilder = (GrowingHybridViewElementBuilder *)builder;
         _query = subBuilder.query;
         _hyperlink = subBuilder.hyperlink;
     }
     return self;
 }
 
-+ (GrowingHybridViewElementBuilder*)builder {
++ (GrowingHybridViewElementBuilder *)builder {
     return [[GrowingHybridViewElementBuilder alloc] init];
 }
 
@@ -48,15 +48,15 @@
 
 @implementation GrowingHybridViewElementBuilder
 
-- (GrowingHybridViewElementBuilder *(^)(NSString *value))setQuery {
-    return  ^(NSString *value){
+- (GrowingHybridViewElementBuilder * (^)(NSString *value))setQuery {
+    return ^(NSString *value) {
         self->_query = value;
         return self;
     };
 }
 
-- (GrowingHybridViewElementBuilder *(^)(NSString *value))setHyperlink {
-    return  ^(NSString *value){
+- (GrowingHybridViewElementBuilder * (^)(NSString *value))setHyperlink {
+    return ^(NSString *value) {
         self->_hyperlink = value;
         return self;
     };

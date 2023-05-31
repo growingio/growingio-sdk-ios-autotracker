@@ -18,9 +18,9 @@
 //  limitations under the License.
 
 #import <UIKit/UIKit.h>
-#import "GrowingDynamicProxy.h"
 #import "GrowingAttributesBuilder.h"
 #import "GrowingAutotrackConfiguration.h"
+#import "GrowingDynamicProxy.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -84,7 +84,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 发送一个自定义事件
 /// @param eventName 自定义事件名称
 /// @param attributes 事件发生时所伴随的维度信息
-- (void)trackCustomEvent:(NSString *)eventName withAttributes:(NSDictionary <NSString *, NSString *> *)attributes;
+- (void)trackCustomEvent:(NSString *)eventName withAttributes:(NSDictionary<NSString *, NSString *> *)attributes;
 
 /// 初始化事件计时器
 /// @param eventName 自定义事件名称
@@ -106,7 +106,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 停止事件计时器，并发送一个自定义事件
 /// @param timerId 计时器唯一标识
 /// @param attributes 事件发生时所伴随的维度信息
-- (void)trackTimerEnd:(NSString *)timerId withAttributes:(NSDictionary <NSString *, NSString *> *)attributes;
+- (void)trackTimerEnd:(NSString *)timerId withAttributes:(NSDictionary<NSString *, NSString *> *)attributes;
 
 /// 删除事件计时器
 /// @param timerId 计时器唯一标识
@@ -152,7 +152,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 该属性setter方法均使用 objc_setAssociatedObject实现
 // 如果是自定义的View建议优先使用重写getter方法来实现 以提高性能
-@interface UIView(GrowingAttributes)
+@interface UIView (GrowingAttributes)
 
 // 手动标识该view的忽略策略，请在该view被初始化后立刻赋值
 @property (nonatomic, assign) GrowingIgnorePolicy growingViewIgnorePolicy;
@@ -173,7 +173,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 手动标识该页面的标题，必须在该UIViewController显示之前设置
 @property (nonatomic, copy) NSString *growingPageAlias;
 
-@property (nonatomic, copy) NSDictionary <NSString *, NSString *> *growingPageAttributes;
+@property (nonatomic, copy) NSDictionary<NSString *, NSString *> *growingPageAttributes;
 
 @property (nonatomic, assign) GrowingIgnorePolicy growingPageIgnorePolicy;
 

@@ -17,10 +17,10 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import <objc/message.h>
 #import "Modules/Protobuf/Catagory/GrowingBaseEvent+Protobuf.h"
 #import "Modules/Protobuf/Catagory/GrowingPBEventV3Dto+GrowingHelper.h"
 #import "Modules/Protobuf/Proto/GrowingEvent.pbobjc.h"
-#import <objc/message.h>
 
 @implementation GrowingBaseEvent (Protobuf)
 
@@ -53,17 +53,17 @@
     dto.sdkVersion = self.sdkVersion;
     dto.userKey = self.userKey;
     dto.gioId = self.gioId;
-    
+
     __weak typeof(self) weakSelf = self;
-    NSString *(^stringBlock)(NSString *) = ^(NSString *selectorString) {
+    NSString * (^stringBlock)(NSString *) = ^(NSString *selectorString) {
         __strong typeof(weakSelf) self = weakSelf;
         SEL selector = NSSelectorFromString(selectorString);
         if ([self respondsToSelector:selector]) {
-            return ((NSString *(*)(id, SEL))objc_msgSend)(self, selector);
+            return ((NSString * (*)(id, SEL)) objc_msgSend)(self, selector);
         }
         return @"";
     };
-    
+
     int32_t (^int32Block)(NSString *) = ^(NSString *selectorString) {
         __strong typeof(weakSelf) self = weakSelf;
         SEL selector = NSSelectorFromString(selectorString);
@@ -73,7 +73,7 @@
         }
         return 0;
     };
-    
+
     int64_t (^int64Block)(NSString *) = ^(NSString *selectorString) {
         __strong typeof(weakSelf) self = weakSelf;
         SEL selector = NSSelectorFromString(selectorString);
@@ -83,16 +83,16 @@
         }
         return (int64_t)0;
     };
-    
-    NSDictionary<NSString *, NSString *> *(^dicBlock)(NSString *) = ^(NSString *selectorString) {
+
+    NSDictionary<NSString *, NSString *> * (^dicBlock)(NSString *) = ^(NSString *selectorString) {
         __strong typeof(weakSelf) self = weakSelf;
         SEL selector = NSSelectorFromString(selectorString);
         if ([self respondsToSelector:selector]) {
-            return ((NSDictionary *(*)(id, SEL))objc_msgSend)(self, selector);
+            return ((NSDictionary * (*)(id, SEL)) objc_msgSend)(self, selector);
         }
         return @{};
     };
-    
+
     dto.idfa = stringBlock(@"idfa");
     dto.idfv = stringBlock(@"idfv");
     dto.extraSdk = dicBlock(@"extraSdk").mutableCopy;
@@ -103,7 +103,7 @@
     dto.index = int32Block(@"index");
     dto.query = stringBlock(@"query");
     dto.hyperlink = stringBlock(@"hyperlink");
-    dto.attributes = [dto growingHelper_safeMap:dicBlock(@"attributes")]; // hybrid 可能会返回 NSNull value
+    dto.attributes = [dto growingHelper_safeMap:dicBlock(@"attributes")];  // hybrid 可能会返回 NSNull value
     dto.orientation = stringBlock(@"orientation");
     dto.title = stringBlock(@"title");
     dto.referralPage = stringBlock(@"referralPage");
@@ -137,7 +137,7 @@
     } else if ([self.eventType isEqualToString:@"ACTIVATE"]) {
         return GrowingPBEventType_Activate;
     }
-    
+
     return GrowingPBEventType_GPBUnrecognizedEnumeratorValue;
 }
 

@@ -17,33 +17,36 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import <objc/runtime.h>
+#import "GrowingAutotrackerCore/GrowingNode/Category/UIApplication+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UINavigationController+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
-#import "GrowingAutotrackerCore/GrowingNode/Category/UIApplication+GrowingNode.h"
-#import <objc/runtime.h>
 
 @implementation UINavigationController (GrowingNode)
 
 - (CGRect)growingNodeFrame {
     CGRect rect = self.view.growingNodeFrame;
-    BOOL isFullScreenShow = CGPointEqualToPoint(rect.origin, CGPointMake(0, 0)) && CGSizeEqualToSize(rect.size, [UIApplication sharedApplication].growingMainWindow.bounds.size);
-    if (isFullScreenShow && self.parentViewController && [self.parentViewController isKindOfClass:[UITabBarController class]]) {
-        UITabBarController *tabbarvc = (UITabBarController*)self.parentViewController;
+    BOOL isFullScreenShow =
+        CGPointEqualToPoint(rect.origin, CGPointMake(0, 0)) &&
+        CGSizeEqualToSize(rect.size, [UIApplication sharedApplication].growingMainWindow.bounds.size);
+    if (isFullScreenShow && self.parentViewController &&
+        [self.parentViewController isKindOfClass:[UITabBarController class]]) {
+        UITabBarController *tabbarvc = (UITabBarController *)self.parentViewController;
         rect.size.height -= tabbarvc.tabBar.frame.size.height;
     }
-    
+
     return rect;
 }
-- (NSArray<id<GrowingNode>>*)growingNodeChilds {
+- (NSArray<id<GrowingNode>> *)growingNodeChilds {
     NSMutableArray *childs = [NSMutableArray array];
     if (self.presentedViewController) {
         [childs addObject:self.presentedViewController];
         return childs;
     }
-    
+
     [childs addObject:self.topViewController];
-    
+
     if (self.isViewLoaded && [self.navigationBar growingImpNodeIsVisible]) {
         [childs addObject:self.navigationBar];
     }

@@ -21,7 +21,7 @@
 
 @implementation GrowingEventRequestProtobufAdapter
 
-+ (instancetype)adapterWithRequest:(id <GrowingRequestProtocol>)request {
++ (instancetype)adapterWithRequest:(id<GrowingRequestProtocol>)request {
     GrowingEventRequestProtobufAdapter *adapter = [[self alloc] init];
     return adapter;
 }

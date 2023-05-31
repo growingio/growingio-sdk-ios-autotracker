@@ -18,41 +18,40 @@
 //  limitations under the License.
 
 #import "Modules/MobileDebugger/GrowingMobileDebugger.h"
-#import "Modules/MobileDebugger/GrowingDebuggerEventQueue.h"
-#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
-#import "GrowingTrackerCore/GrowingRealTracker.h"
-#import "GrowingTrackerCore/GrowingAttributesConst.h"
-#import "GrowingTrackerCore/Menu/GrowingAlert.h"
-#import "GrowingTrackerCore/Menu/GrowingStatusBar.h"
-#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
-#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
-#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
-#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
-#import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
-#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
-#import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
-#import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
-#import "GrowingTrackerCore/Public/GrowingAnnotationCore.h"
-#import "GrowingTrackerCore/Public/GrowingServiceManager.h"
-#import "GrowingTrackerCore/Public/GrowingWebSocketService.h"
-#import "GrowingTrackerCore/Public/GrowingScreenshotService.h"
-#import "GrowingULTimeUtil.h"
 #import <arpa/inet.h>
 #import <ifaddrs.h>
+#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
+#import "GrowingTrackerCore/GrowingAttributesConst.h"
+#import "GrowingTrackerCore/GrowingRealTracker.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Menu/GrowingAlert.h"
+#import "GrowingTrackerCore/Menu/GrowingStatusBar.h"
+#import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
+#import "GrowingTrackerCore/Public/GrowingAnnotationCore.h"
+#import "GrowingTrackerCore/Public/GrowingScreenshotService.h"
+#import "GrowingTrackerCore/Public/GrowingServiceManager.h"
+#import "GrowingTrackerCore/Public/GrowingWebSocketService.h"
+#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
+#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
+#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
+#import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
+#import "GrowingULTimeUtil.h"
+#import "Modules/MobileDebugger/GrowingDebuggerEventQueue.h"
 
 GrowingMod(GrowingMobileDebugger)
 
 @interface GrowingMobileDebugger () <GrowingWebSocketDelegate,
-                                GrowingApplicationEventProtocol,
-                                GrowingDeepLinkHandlerProtocol>
+                                     GrowingApplicationEventProtocol,
+                                     GrowingDeepLinkHandlerProtocol>
 
-//表示web和app是否同时准备好数据发送，此时表示可以发送数据
+// 表示web和app是否同时准备好数据发送，此时表示可以发送数据
 @property (nonatomic, assign) BOOL isReady;
-@property (nonatomic, strong) NSMutableArray * cacheArray;
-@property (nonatomic, strong) NSMutableArray * cacheEvent;
+@property (nonatomic, strong) NSMutableArray *cacheArray;
+@property (nonatomic, strong) NSMutableArray *cacheEvent;
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, retain) GrowingStatusBar *statusWindow;
-@property (nonatomic, assign) unsigned long snapNumber;  //数据发出序列号
+@property (nonatomic, assign) unsigned long snapNumber;  // 数据发出序列号
 @property (nonatomic, copy) NSString *absoluteURL;
 
 @property (nonatomic, weak) id<GrowingScreenshotService> screenshotProvider;
@@ -63,10 +62,11 @@ GrowingMod(GrowingMobileDebugger)
     GROWING_LOCK_DECLARE(lock);
 }
 
-//static GrowingMobileDebugger *sharedInstance = nil;
+// static GrowingMobileDebugger *sharedInstance = nil;
 
 - (void)growingModInit:(GrowingContext *)context {
-    self.screenshotProvider = [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingScreenshotService)];
+    self.screenshotProvider =
+        [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingScreenshotService)];
     [GrowingDebuggerEventQueue startQueue];
     [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:self];
 }
@@ -74,12 +74,12 @@ GrowingMod(GrowingMobileDebugger)
 - (instancetype)init {
     if (self = [super init]) {
         GROWING_LOCK_INIT(lock);
-        _cacheEvent =  [NSMutableArray arrayWithCapacity:0];
+        _cacheEvent = [NSMutableArray arrayWithCapacity:0];
     }
     return self;
 }
 
-//获取url字段
+// 获取url字段
 - (NSString *)absoluteURL {
     if (!_absoluteURL) {
         _absoluteURL = [GrowingNetworkConfig absoluteURL];
@@ -88,12 +88,13 @@ GrowingMod(GrowingMobileDebugger)
 }
 
 - (void)runWithMobileDebugger:(NSURL *)url {
-    Class <GrowingWebSocketService> serviceClass = [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingWebSocketService)];
+    Class<GrowingWebSocketService> serviceClass =
+        [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingWebSocketService)];
     if (!serviceClass) {
         GIOLogError(@"-runWithMobileDebugger: mobile debugger error : no websocket service support");
         return;
     }
-    
+
     if (self.webSocket) {
         self.webSocket.delegate = nil;
         [self.webSocket close];
@@ -113,7 +114,7 @@ GrowingMod(GrowingMobileDebugger)
     NSString *serviceType = params[@"serviceType"];
     NSString *wsurl = params[@"wsUrl"];
     if (serviceType.length > 0 && [serviceType isEqualToString:@"debugger"] && wsurl.length > 0) {
-        [self runWithMobileDebugger:[NSURL URLWithString:wsurl] ];
+        [self runWithMobileDebugger:[NSURL URLWithString:wsurl]];
         return YES;
     }
     return NO;
@@ -136,7 +137,6 @@ GrowingMod(GrowingMobileDebugger)
     return _snapNumber;
 }
 
-
 #pragma mark - screenShot
 
 - (void)sendScreenShot {
@@ -144,19 +144,18 @@ GrowingMod(GrowingMobileDebugger)
         UIImage *image = [self.screenshotProvider screenShot];
         NSData *data = [image growingHelper_JPEG:0.8];
         NSString *imgBase64Str = [data growingHelper_base64String];
-        
-        if(!data.length || !imgBase64Str.length) {
-            return ;
+
+        if (!data.length || !imgBase64Str.length) {
+            return;
         }
-        
-        
+
         NSDictionary *dict = @{
-            @"screenWidth" : @(image.size.width * image.scale),
-            @"screenHeight" : @(image.size.height * image.scale),
-            @"scale" : @(1),  //暂时没有计算
-            @"screenshot" : [@"data:image/jpeg;base64," stringByAppendingString:imgBase64Str],
-            @"msgType" : @"refreshScreenshot",
-            @"snapshotKey" : @([self getSnapshotKey]),
+            @"screenWidth": @(image.size.width * image.scale),
+            @"screenHeight": @(image.size.height * image.scale),
+            @"scale": @(1),  // 暂时没有计算
+            @"screenshot": [@"data:image/jpeg;base64," stringByAppendingString:imgBase64Str],
+            @"msgType": @"refreshScreenshot",
+            @"snapshotKey": @([self getSnapshotKey]),
         };
         [self sendJson:dict];
     }
@@ -175,7 +174,7 @@ GrowingMod(GrowingMobileDebugger)
         self.statusWindow.hidden = NO;
         self.statusWindow.statusLable.text = @"正在进行Debugger";
         self.statusWindow.statusLable.textAlignment = NSTextAlignmentCenter;
-        
+
         __weak typeof(self) wself = self;
         self.statusWindow.onButtonClick = ^{
             NSString *content = [NSString stringWithFormat:@"APP版本: %@\nSDK版本: %@",
@@ -185,11 +184,10 @@ GrowingMod(GrowingMobileDebugger)
                                                                title:@"正在进行Debugger"
                                                              message:content];
             [alert addOkWithTitle:@"继续Debugger" handler:nil];
-            [alert
-                addCancelWithTitle:@"退出Debugger"
-                           handler:^(UIAlertAction *_Nonnull action, NSArray<UITextField *> *_Nonnull textFields) {
-                               [wself stop];
-                           }];
+            [alert addCancelWithTitle:@"退出Debugger"
+                              handler:^(UIAlertAction *_Nonnull action, NSArray<UITextField *> *_Nonnull textFields) {
+                                  [wself stop];
+                              }];
             [alert showAlertAnimated:NO];
         };
     }
@@ -198,7 +196,7 @@ GrowingMod(GrowingMobileDebugger)
 
 - (void)stop {
     GIOLogDebug(@"开始断开连接");
-    NSDictionary *dict = @{@"msgType" : @"quit"};
+    NSDictionary *dict = @{@"msgType": @"quit"};
     [self sendJson:dict];
     self.statusWindow.statusLable.text = @"正在关闭Debugger";
     self.statusWindow.statusLable.textAlignment = NSTextAlignmentCenter;
@@ -252,9 +250,9 @@ GrowingMod(GrowingMobileDebugger)
         GROWING_UNLOCK(lock);
         [self sendJson:cacheDic];
     }
-    
+
     if (self.cacheEvent.count > 0) {
-        //防止遍历的时候进行增删改查
+        // 防止遍历的时候进行增删改查
         GROWING_LOCK(lock);
         NSArray *events = self.cacheEvent.copy;
         [self.cacheEvent removeAllObjects];
@@ -271,11 +269,14 @@ GrowingMod(GrowingMobileDebugger)
     }
 }
 
-
 - (void)startTimer {
     if (!self.timer) {
         self.cacheArray = [NSMutableArray arrayWithCapacity:0];
-        self.timer =  [NSTimer timerWithTimeInterval:1.0 target:self selector:@selector(nextOne) userInfo:nil repeats:YES];
+        self.timer = [NSTimer timerWithTimeInterval:1.0
+                                             target:self
+                                           selector:@selector(nextOne)
+                                           userInfo:nil
+                                            repeats:YES];
         [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
     }
 }
@@ -287,17 +288,17 @@ GrowingMod(GrowingMobileDebugger)
     }
 }
 
-- (void)webSocket:(id <GrowingWebSocketService>)webSocket didReceiveMessage:(id)message {
+- (void)webSocket:(id<GrowingWebSocketService>)webSocket didReceiveMessage:(id)message {
     if ([message isKindOfClass:[NSString class]] || ((NSString *)message).length > 0) {
         GIOLogDebug(@"didReceiveMessage: %@", message);
         NSMutableDictionary *dict = [message growingHelper_jsonObject];
 
-        //如果收到了ready消息，说明可以发送数据了
+        // 如果收到了ready消息，说明可以发送数据了
         if ([[dict objectForKey:@"msgType"] isEqualToString:@"ready"]) {
             [self start];
             [self startTimer];
             __weak typeof(self) weakSelf = self;
-            [GrowingDebuggerEventQueue currentQueue].debuggerBlock = ^(NSArray * _Nonnull events) {
+            [GrowingDebuggerEventQueue currentQueue].debuggerBlock = ^(NSArray *_Nonnull events) {
                 __strong typeof(weakSelf) self = weakSelf;
                 if (events.count > 0) {
                     GROWING_LOCK(self->lock);
@@ -305,17 +306,17 @@ GrowingMod(GrowingMobileDebugger)
                     GROWING_UNLOCK(self->lock);
                 }
             };
-            //队列出队
+            // 队列出队
             [[GrowingDebuggerEventQueue currentQueue] dequeue];
             return;
         }
-        //发送log信息
+        // 发送log信息
         NSString *msg = dict[@"msgType"];
         if ([msg isKindOfClass:NSString.class]) {
-             if ([msg isEqualToString:@"logger_open"]) {
+            if ([msg isEqualToString:@"logger_open"]) {
                 [self startTimer];
-                 __weak typeof(self) weakSelf = self;
-                [GrowingWSLogger sharedInstance].loggerBlock = ^(NSArray * logMessageArray) {
+                __weak typeof(self) weakSelf = self;
+                [GrowingWSLogger sharedInstance].loggerBlock = ^(NSArray *logMessageArray) {
                     __strong typeof(weakSelf) self = weakSelf;
                     if (logMessageArray.count > 0) {
                         GROWING_LOCK(self->lock);
@@ -323,10 +324,9 @@ GrowingMod(GrowingMobileDebugger)
                         GROWING_UNLOCK(self->lock);
                     }
                 };
-             }
-             else if ([msg isEqualToString:@"logger_close"]) {
+            } else if ([msg isEqualToString:@"logger_close"]) {
                 [self stopTimer];
-                [GrowingWSLogger sharedInstance].loggerBlock =nil;
+                [GrowingWSLogger sharedInstance].loggerBlock = nil;
             }
             return;
         }
@@ -354,46 +354,46 @@ GrowingMod(GrowingMobileDebugger)
 - (NSDictionary *)userInfo {
     GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
     NSDictionary *dict = @{
-        @"msgType" : @"client_info",
-        @"sdkVersion" : GrowingTrackerVersionName,
-        @"data" :@{
-                @"os" : @"iOS",
-                @"appVersion" : deviceInfo.appFullVersion,
-                @"appChannel" : @"App Store",
-                @"osVersion" : deviceInfo.platformVersion,
-                @"deviceType" : deviceInfo.deviceType,
-                @"deviceBrand" : deviceInfo.deviceBrand,
-                @"deviceModel" : deviceInfo.deviceModel
+        @"msgType": @"client_info",
+        @"sdkVersion": GrowingTrackerVersionName,
+        @"data": @{
+            @"os": @"iOS",
+            @"appVersion": deviceInfo.appFullVersion,
+            @"appChannel": @"App Store",
+            @"osVersion": deviceInfo.platformVersion,
+            @"deviceType": deviceInfo.deviceType,
+            @"deviceBrand": deviceInfo.deviceBrand,
+            @"deviceModel": deviceInfo.deviceModel
         }
-        
+
     };
-    
+
     return dict;
 }
 
 #pragma mark - websocket delegate
 
-- (void)webSocketDidOpen:(id <GrowingWebSocketService>)webSocket {
+- (void)webSocketDidOpen:(id<GrowingWebSocketService>)webSocket {
     GIOLogDebug(@"websocket已连接");
     NSString *projectId = GrowingConfigurationManager.sharedInstance.trackConfiguration.projectId;
     NSDictionary *dict = @{
-        @"projectId" : projectId,
-        @"msgType" : @"ready",
-        @"timestamp" : @([GrowingULTimeUtil currentTimeMillis]),
-        @"domain" : [GrowingDeviceInfo currentDeviceInfo].bundleID,
-        @"sdkVersion" : GrowingTrackerVersionName,
-        @"sdkVersionCode" : [GrowingDeviceInfo currentDeviceInfo].appFullVersion,
-        @"os" : @"iOS",
-        @"screenWidth" : [NSNumber numberWithInteger:[GrowingDeviceInfo currentDeviceInfo].screenWidth],
-        @"screenHeight" : [NSNumber numberWithInteger:[GrowingDeviceInfo currentDeviceInfo].screenHeight],
-        @"urlScheme" : [GrowingDeviceInfo currentDeviceInfo].urlScheme
+        @"projectId": projectId,
+        @"msgType": @"ready",
+        @"timestamp": @([GrowingULTimeUtil currentTimeMillis]),
+        @"domain": [GrowingDeviceInfo currentDeviceInfo].bundleID,
+        @"sdkVersion": GrowingTrackerVersionName,
+        @"sdkVersionCode": [GrowingDeviceInfo currentDeviceInfo].appFullVersion,
+        @"os": @"iOS",
+        @"screenWidth": [NSNumber numberWithInteger:[GrowingDeviceInfo currentDeviceInfo].screenWidth],
+        @"screenHeight": [NSNumber numberWithInteger:[GrowingDeviceInfo currentDeviceInfo].screenHeight],
+        @"urlScheme": [GrowingDeviceInfo currentDeviceInfo].urlScheme
     };
     [self sendJson:dict];
-    
+
     [self.screenshotProvider addSendEventSwizzle];
 }
 
-- (void)webSocket:(id <GrowingWebSocketService>)webSocket
+- (void)webSocket:(id<GrowingWebSocketService>)webSocket
     didCloseWithCode:(NSInteger)code
               reason:(NSString *)reason
             wasClean:(BOOL)wasClean {
@@ -404,7 +404,7 @@ GrowingMod(GrowingMobileDebugger)
     }
 }
 
-- (void)webSocket:(id <GrowingWebSocketService>)webSocket didFailWithError:(NSError *)error {
+- (void)webSocket:(id<GrowingWebSocketService>)webSocket didFailWithError:(NSError *)error {
     GIOLogDebug(@"error : %@", error);
     _isReady = NO;
     [self _stopWithError:@"服务器链接失败"];
@@ -418,4 +418,3 @@ GrowingMod(GrowingMobileDebugger)
 }
 
 @end
-

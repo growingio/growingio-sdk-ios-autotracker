@@ -23,5 +23,3 @@
 @interface UIViewController (GrowingNode) <GrowingNode>
 
 @end
-
-

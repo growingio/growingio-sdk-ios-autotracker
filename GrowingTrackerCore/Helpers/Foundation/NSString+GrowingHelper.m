@@ -17,12 +17,12 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Helpers/Foundation/NSString+GrowingHelper.h"
+#import <CommonCrypto/CommonDigest.h>
 #import "GrowingTrackerCore/Helpers/Foundation/NSData+GrowingHelper.h"
 #import "GrowingTrackerCore/Helpers/Foundation/NSDictionary+GrowingHelper.h"
-#import <CommonCrypto/CommonDigest.h>
-#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
+#import "GrowingTrackerCore/Helpers/Foundation/NSString+GrowingHelper.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
+#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 
 static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\\[]{},.<>/?";
 
@@ -64,7 +64,7 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\\[]{}
     NSData *data = [self dataUsingEncoding:NSUTF8StringEncoding];
     uint8_t digest[CC_SHA1_DIGEST_LENGTH];
 
-    CC_SHA1(data.bytes, (CC_LONG) data.length, digest);
+    CC_SHA1(data.bytes, (CC_LONG)data.length, digest);
 
     NSMutableString *output = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 2];
 
@@ -76,7 +76,9 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\\[]{}
 }
 
 - (BOOL)growingHelper_isLegal {
-    if (self.length != 1) {return NO;}
+    if (self.length != 1) {
+        return NO;
+    }
 
     unichar character = [self characterAtIndex:0];
 
@@ -91,12 +93,14 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\\[]{}
 }
 
 - (BOOL)growingHelper_isValidU {
-    if (!self.length) {return NO;}
+    if (!self.length) {
+        return NO;
+    }
 
     NSArray *stringArray = [self componentsSeparatedByString:@"-"];
 
     for (NSString *string in stringArray) {
-        NSString *zero = [NSString stringWithFormat:@"0{%lu}", (unsigned long) string.length];
+        NSString *zero = [NSString stringWithFormat:@"0{%lu}", (unsigned long)string.length];
         NSPredicate *zeroPre = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", zero];
         if (![zeroPre evaluateWithObject:string]) {
             return YES;
@@ -113,7 +117,6 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\\[]{}
         return self;
     }
 }
-
 
 - (instancetype)initWithJsonObject_growingHelper:(id)obj {
     if (!obj || ![NSJSONSerialization isValidJSONObject:obj]) {
@@ -139,14 +142,17 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\\[]{}
     }
 
     return [[string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length] == 0;
-
 }
 
 - (NSDictionary *)growingHelper_queryObject {
-    if (self.length == 0) {return nil;}
+    if (self.length == 0) {
+        return nil;
+    }
 
     NSArray *stringArray = [self componentsSeparatedByString:@"&"];
-    if (stringArray.count == 0) {return nil;}
+    if (stringArray.count == 0) {
+        return nil;
+    }
 
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     for (NSString *string in stringArray) {
@@ -160,7 +166,6 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\\[]{}
 }
 
 - (NSString *)growingHelper_absoluteURLStringWithPath:(NSString *)path andQuery:(NSDictionary *)query {
-
     NSString *baseUrl = self;
 
     BOOL baseHasSuffix = [baseUrl hasSuffix:@"/"];

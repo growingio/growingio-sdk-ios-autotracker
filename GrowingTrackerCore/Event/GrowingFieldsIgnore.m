@@ -20,8 +20,10 @@
 #import "GrowingTrackerCore/Public/GrowingFieldsIgnore.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 
-//忽略当前所有可设置的属性掩码值
-NSUInteger const GrowingIgnoreFieldsAll = (GrowingIgnoreFieldsNetworkState | GrowingIgnoreFieldsScreenWidth |  GrowingIgnoreFieldsScreenHeight | GrowingIgnoreFieldsDeviceBrand | GrowingIgnoreFieldsDeviceModel | GrowingIgnoreFieldsDeviceType);
+// 忽略当前所有可设置的属性掩码值
+NSUInteger const GrowingIgnoreFieldsAll =
+    (GrowingIgnoreFieldsNetworkState | GrowingIgnoreFieldsScreenWidth | GrowingIgnoreFieldsScreenHeight |
+     GrowingIgnoreFieldsDeviceBrand | GrowingIgnoreFieldsDeviceModel | GrowingIgnoreFieldsDeviceType);
 
 @implementation GrowingFieldsIgnore
 
@@ -29,21 +31,21 @@ NSUInteger const GrowingIgnoreFieldsAll = (GrowingIgnoreFieldsNetworkState | Gro
     static NSArray *_ignoreFieldsItems;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _ignoreFieldsItems = @[@"networkState", @"screenHeight", @"screenWidth",
-                               @"deviceBrand", @"deviceModel", @"deviceType"];
+        _ignoreFieldsItems =
+            @[@"networkState", @"screenHeight", @"screenWidth", @"deviceBrand", @"deviceModel", @"deviceType"];
     });
     return _ignoreFieldsItems;
 }
 
 + (NSUInteger)getIgnoreFieldsMask:(NSString *)typeName {
-    NSUInteger index = [[[self class] ignoreFieldsItems] indexOfObject : typeName];
+    NSUInteger index = [[[self class] ignoreFieldsItems] indexOfObject:typeName];
     return index == NSNotFound ? 0 : 1 << index;
 }
 
 + (BOOL)isIgnoreFields:(NSString *)fieldsType {
     NSUInteger ignoreFieldsMask = [GrowingConfigurationManager sharedInstance].trackConfiguration.ignoreField;
     NSUInteger typeMask = [GrowingFieldsIgnore getIgnoreFieldsMask:fieldsType];
-    if(ignoreFieldsMask && (ignoreFieldsMask & typeMask) > 0 ) {
+    if (ignoreFieldsMask && (ignoreFieldsMask & typeMask) > 0) {
         return true;
     }
     return false;
@@ -60,7 +62,8 @@ NSUInteger const GrowingIgnoreFieldsAll = (GrowingIgnoreFieldsNetworkState | Gro
             [fields addObject:[[[self class] ignoreFieldsItems] objectAtIndex:i]];
         }
     }
-    NSString *logStr = [NSString stringWithFormat:@"[Debug] Ignored Fields : %@",[fields componentsJoinedByString:@","]];
+    NSString *logStr =
+        [NSString stringWithFormat:@"[Debug] Ignored Fields : %@", [fields componentsJoinedByString:@","]];
     return logStr;
 }
 

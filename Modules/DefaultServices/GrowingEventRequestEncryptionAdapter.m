@@ -23,13 +23,13 @@
 
 @interface GrowingEventRequestEncryptionAdapter ()
 
-@property (nonatomic, weak) id <GrowingRequestProtocol> request;
+@property (nonatomic, weak) id<GrowingRequestProtocol> request;
 
 @end
 
 @implementation GrowingEventRequestEncryptionAdapter
 
-+ (instancetype)adapterWithRequest:(id <GrowingRequestProtocol>)request {
++ (instancetype)adapterWithRequest:(id<GrowingRequestProtocol>)request {
     GrowingEventRequestEncryptionAdapter *adapter = [[self alloc] init];
     adapter.request = request;
     return adapter;
@@ -39,7 +39,7 @@
     if (request.HTTPBody.length == 0) {
         return request;
     }
-    
+
     NSMutableURLRequest *needAdaptReq = request;
 #ifdef GROWING_ANALYSIS_ENABLE_ENCRYPTION
     // deprecated
@@ -50,7 +50,7 @@
         [needAdaptReq setValue:@"1" forHTTPHeaderField:@"X-Crypt-Codec"];
     }
 #endif
-    
+
     NSData *JSONData = needAdaptReq.HTTPBody.copy;
     @autoreleasepool {
         // jsonString malloc to much

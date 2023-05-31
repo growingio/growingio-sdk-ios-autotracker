@@ -18,8 +18,8 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Event/GrowingEventChannel.h"
-#import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingAutotrackEventType.h"
+#import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
 
 @implementation GrowingEventChannel
 
@@ -50,15 +50,19 @@ static NSMutableArray *eventChannels = nil;
 + (NSMutableArray<GrowingEventChannel *> *)eventChannels {
     if (!eventChannels) {
         eventChannels = [NSMutableArray array];
-        [eventChannels addObject:[GrowingEventChannel eventChannelWithEventTypes:@[GrowingEventTypeVisit,
-                                                                                   GrowingEventTypeAppClosed,
-                                                                                   GrowingEventTypePage]
+        [eventChannels addObject:[GrowingEventChannel eventChannelWithEventTypes:@[
+                           GrowingEventTypeVisit,
+                           GrowingEventTypeAppClosed,
+                           GrowingEventTypePage
+                       ]
                                                                      urlTemplate:kGrowingEventApiTemplate
                                                                    isCustomEvent:NO]];
-        [eventChannels addObject:[GrowingEventChannel eventChannelWithEventTypes:@[GrowingEventTypeCustom,
-                                                                                   GrowingEventTypeConversionVariables,
-                                                                                   GrowingEventTypeLoginUserAttributes,
-                                                                                   GrowingEventTypeVisitorAttributes]
+        [eventChannels addObject:[GrowingEventChannel eventChannelWithEventTypes:@[
+                           GrowingEventTypeCustom,
+                           GrowingEventTypeConversionVariables,
+                           GrowingEventTypeLoginUserAttributes,
+                           GrowingEventTypeVisitorAttributes
+                       ]
                                                                      urlTemplate:kGrowingEventApiTemplate
                                                                    isCustomEvent:YES]];
     }
@@ -74,8 +78,7 @@ static NSMutableArray *eventChannels = nil;
     return channels;
 }
 
-+ (NSDictionary *)eventChannelMapFromAllChannels:(NSArray <GrowingEventChannel *> *)channels {
-    
++ (NSDictionary *)eventChannelMapFromAllChannels:(NSArray<GrowingEventChannel *> *)channels {
     NSArray *allEventChannels = channels;
     if (!allEventChannels.count) {
         allEventChannels = [self buildAllEventChannels];
@@ -90,11 +93,11 @@ static NSMutableArray *eventChannels = nil;
     return dictM;
 }
 
-+ (GrowingEventChannel *)otherEventChannelFromAllChannels:(NSArray <GrowingEventChannel *> *)allEventChannels {
++ (GrowingEventChannel *)otherEventChannelFromAllChannels:(NSArray<GrowingEventChannel *> *)allEventChannels {
     if (!allEventChannels.count) {
         return [self buildAllEventChannels].lastObject;
     }
-    
+
     return allEventChannels.lastObject;
 }
 

@@ -18,9 +18,9 @@
 //  limitations under the License.
 
 #import "Modules/Protobuf/GrowingProtobufModule.h"
-#import "Modules/Protobuf/GrowingEventRequestProtobufAdapter.h"
 #import "GrowingTrackerCore/Network/Request/Adapter/GrowingEventRequestAdapters.h"
 #import "Modules/Protobuf/GrowingEventProtobufDatabase.h"
+#import "Modules/Protobuf/GrowingEventRequestProtobufAdapter.h"
 
 GrowingMod(GrowingProtobufModule)
 

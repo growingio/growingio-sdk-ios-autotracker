@@ -17,10 +17,10 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Helpers/Foundation/NSObject+GrowingIvarHelper.h"
 #import <objc/runtime.h>
+#import "GrowingTrackerCore/Helpers/Foundation/NSObject+GrowingIvarHelper.h"
 
-@implementation NSObject(GrowingIvarHelper)
+@implementation NSObject (GrowingIvarHelper)
 
 - (BOOL)growingHelper_getIvar:(const char *)ivarName outObj:(id *)outObj {
     unsigned count = 0;
@@ -36,7 +36,7 @@
         }
     }
     free(ivars);
-    
+
     if (outObj && var) {
         *outObj = object_getIvar(self, var);
     }

@@ -20,7 +20,7 @@
 #import "Modules/Advert/Event/GrowingActivateEvent.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 
-NSString * const GrowingEventTypeActivate = @"ACTIVATE";
+NSString *const GrowingEventTypeActivate = @"ACTIVATE";
 NSString *const GrowingAdvertEventNameActivate = @"$app_activation";
 NSString *const GrowingAdvertEventNameDefer = @"$app_defer";
 NSString *const GrowingAdvertEventNameReengage = @"$app_reengage";
@@ -69,7 +69,7 @@ NSString *const GrowingAdvertEventNameReengage = @"$app_reengage";
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wmethod-signatures"
 #pragma clang diagnostic ignored "-Wmismatched-return-types"
-- (GrowingBaseBuilder *(^)(NSString *value))setEventName {
+- (GrowingBaseBuilder * (^)(NSString *value))setEventName {
     return ^(NSString *value) {
         self->_eventName = value;
         return self;

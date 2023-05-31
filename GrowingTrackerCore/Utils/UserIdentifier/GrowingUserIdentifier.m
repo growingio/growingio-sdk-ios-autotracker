@@ -62,8 +62,9 @@
     SEL selector = NSSelectorFromString(@"sharedManager");
     id sharedManager = ((id(*)(id, SEL))[class methodForSelector:selector])(class, selector);
     SEL advertisingIdentifierSelector = NSSelectorFromString(@"advertisingIdentifier");
-    NSUUID *uuid = ((NSUUID *(*)(id, SEL))[sharedManager methodForSelector:advertisingIdentifierSelector])(
-        sharedManager, advertisingIdentifierSelector);
+    NSUUID *uuid = ((NSUUID * (*)(id, SEL))[sharedManager methodForSelector:advertisingIdentifierSelector])(
+        sharedManager,
+        advertisingIdentifierSelector);
     idfa = [uuid UUIDString];
     // In iOS 10.0 and later, the value of advertisingIdentifier is all zeroes
     // when the user has limited ad tracking; So return @"";
@@ -77,13 +78,10 @@
 
 #if TARGET_OS_OSX || TARGET_OS_MACCATALYST
 + (nullable NSString *)platformUUID {
-    io_service_t service = IOServiceGetMatchingService(kIOMasterPortDefault,
-                                                       IOServiceMatching("IOPlatformExpertDevice"));
+    io_service_t service =
+        IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("IOPlatformExpertDevice"));
     if (service) {
-        CFStringRef ref = IORegistryEntryCreateCFProperty(service,
-                                                          CFSTR(kIOPlatformUUIDKey),
-                                                          kCFAllocatorDefault,
-                                                          0);
+        CFStringRef ref = IORegistryEntryCreateCFProperty(service, CFSTR(kIOPlatformUUIDKey), kCFAllocatorDefault, 0);
         IOObjectRelease(service);
         if (ref) {
             NSString *string = [NSString stringWithString:(__bridge NSString *)ref];

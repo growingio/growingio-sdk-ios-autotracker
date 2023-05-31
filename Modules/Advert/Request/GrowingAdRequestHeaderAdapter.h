@@ -24,8 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingAdRequestHeaderAdapter : NSObject <GrowingRequestAdapter>
 
-+ (instancetype)adapterWithRequest:(id <GrowingRequestProtocol>)request
-                            header:(nullable NSDictionary *)header;
++ (instancetype)adapterWithRequest:(id<GrowingRequestProtocol>)request header:(nullable NSDictionary *)header;
 
 @end
 

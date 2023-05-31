@@ -44,48 +44,37 @@
     switch (self.eventType) {
         case GrowingPBEventType_Visit: {
             [dic setObject:@"VISIT" forKey:@"eventType"];
-        }
-            break;
+        } break;
         case GrowingPBEventType_Custom: {
             [dic setObject:@"CUSTOM" forKey:@"eventType"];
-        }
-            break;
+        } break;
         case GrowingPBEventType_VisitorAttributes: {
             [dic setObject:@"VISITOR_ATTRIBUTES" forKey:@"eventType"];
-        }
-            break;
+        } break;
         case GrowingPBEventType_LoginUserAttributes: {
             [dic setObject:@"LOGIN_USER_ATTRIBUTES" forKey:@"eventType"];
-        }
-            break;
+        } break;
         case GrowingPBEventType_ConversionVariables: {
             [dic setObject:@"CONVERSION_VARIABLES" forKey:@"eventType"];
-        }
-            break;
+        } break;
         case GrowingPBEventType_AppClosed: {
             [dic setObject:@"APP_CLOSED" forKey:@"eventType"];
-        }
-            break;
+        } break;
         case GrowingPBEventType_Page: {
             [dic setObject:@"PAGE" forKey:@"eventType"];
-        }
-            break;
+        } break;
         case GrowingPBEventType_ViewClick: {
             [dic setObject:@"VIEW_CLICK" forKey:@"eventType"];
-        }
-            break;
+        } break;
         case GrowingPBEventType_ViewChange: {
             [dic setObject:@"VIEW_CHANGE" forKey:@"eventType"];
-        }
-            break;
+        } break;
         case GrowingPBEventType_FormSubmit: {
             [dic setObject:@"FORM_SUBMIT" forKey:@"eventType"];
-        }
-            break;
+        } break;
         case GrowingPBEventType_Activate: {
             [dic setObject:@"ACTIVATE" forKey:@"eventType"];
-        }
-            break;
+        } break;
         default:
             break;
     }
@@ -197,19 +186,19 @@
     if (self.userKey.length > 0) {
         [dic setObject:self.userKey forKey:@"userKey"];
     }
-    
+
     return dic;
 }
 
-- (NSMutableDictionary<NSString*, NSString*> *)growingHelper_safeMap:(NSDictionary *)originMap {
-    NSMutableDictionary<NSString*, NSString*> *map = originMap.mutableCopy;
+- (NSMutableDictionary<NSString *, NSString *> *)growingHelper_safeMap:(NSDictionary *)originMap {
+    NSMutableDictionary<NSString *, NSString *> *map = originMap.mutableCopy;
     for (NSString *key in map.allKeys) {
         if ([map[key] isKindOfClass:[NSNull class]]) {
             // NSNull will crash
             map[key] = nil;
         }
     }
-    
+
     return map;
 }
 

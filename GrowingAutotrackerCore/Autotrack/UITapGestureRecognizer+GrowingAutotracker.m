@@ -42,14 +42,14 @@
     if (sel) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        [((NSObject*)self) performSelector:sel withObject:gesture];
+        [((NSObject *)self) performSelector:sel withObject:gesture];
 #pragma clang diagnostic pop
     }
 }
 
 - (SEL)getSelectorByGesture:(UIGestureRecognizer *)gesture {
     if (gesture.class == [UITapGestureRecognizer class]) {
-        NSInteger tapCount = ((UITapGestureRecognizer*)gesture).numberOfTapsRequired;
+        NSInteger tapCount = ((UITapGestureRecognizer *)gesture).numberOfTapsRequired;
         if (tapCount == 1) {
             return @selector(growingClickEvent:);
         }
@@ -66,7 +66,6 @@
 @implementation UITapGestureRecognizer (GrowingAutotracker)
 
 - (instancetype)growing_initWithTarget:(id)target action:(SEL)action {
-    
     UITapGestureRecognizer *gesture = [self growing_initWithTarget:[GrowingUIGestureRecognizerObserver sharedInstance]
                                                             action:@selector(growingHandleGesture:)];
     [gesture addTarget:target action:action];
@@ -75,8 +74,7 @@
 
 - (instancetype)growing_initWithCoder:(NSCoder *)coder {
     UITapGestureRecognizer *gesture = [self growing_initWithCoder:coder];
-    [gesture addTarget:[GrowingUIGestureRecognizerObserver sharedInstance]
-                action:@selector(growingHandleGesture:)];
+    [gesture addTarget:[GrowingUIGestureRecognizerObserver sharedInstance] action:@selector(growingHandleGesture:)];
     return gesture;
 }
 

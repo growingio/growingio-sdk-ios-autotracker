@@ -23,14 +23,14 @@
 
 - (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
     if (self = [super initWithBuilder:builder]) {
-        GrowingHybridPageBuilder *subBuilder = (GrowingHybridPageBuilder*)builder;
+        GrowingHybridPageBuilder *subBuilder = (GrowingHybridPageBuilder *)builder;
         _query = subBuilder.query;
         _protocolType = subBuilder.protocolType;
     }
     return self;
 }
 
-+ (GrowingHybridPageBuilder*)builder {
++ (GrowingHybridPageBuilder *)builder {
     return [[GrowingHybridPageBuilder alloc] init];
 }
 
@@ -48,14 +48,14 @@
 
 @implementation GrowingHybridPageBuilder
 
-- (GrowingHybridPageBuilder *(^)(NSString *value))setQuery {
-    return  ^(NSString *value){
+- (GrowingHybridPageBuilder * (^)(NSString *value))setQuery {
+    return ^(NSString *value) {
         self->_query = value;
         return self;
     };
 }
-- (GrowingHybridPageBuilder *(^)(NSString *value))setProtocolType {
-    return  ^(NSString *value){
+- (GrowingHybridPageBuilder * (^)(NSString *value))setProtocolType {
+    return ^(NSString *value) {
         self->_protocolType = value;
         return self;
     };

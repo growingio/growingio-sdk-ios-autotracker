@@ -18,19 +18,19 @@
 //  limitations under the License.
 
 #import "Modules/Hybrid/GrowingWKWebViewJavascriptBridge.h"
-#import "Modules/Hybrid/GrowingWKWebViewJavascriptBridge_JS.h"
-#import "Modules/Hybrid/GrowingWebViewJavascriptBridgeConfiguration.h"
-#import "Modules/Hybrid/GrowingHybridBridgeProvider.h"
-#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
+#import <WebKit/WebKit.h>
+#import <objc/message.h>
+#import <objc/runtime.h>
+#import "GrowingTrackerCore/Event/GrowingNodeProtocol.h"
+#import "GrowingTrackerCore/GrowingRealTracker.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
-#import "GrowingTrackerCore/GrowingRealTracker.h"
-#import "GrowingTrackerCore/Event/GrowingNodeProtocol.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogMacros.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
-#import <WebKit/WebKit.h>
-#import <objc/runtime.h>
-#import <objc/message.h>
+#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
+#import "Modules/Hybrid/GrowingHybridBridgeProvider.h"
+#import "Modules/Hybrid/GrowingWKWebViewJavascriptBridge_JS.h"
+#import "Modules/Hybrid/GrowingWebViewJavascriptBridgeConfiguration.h"
 
 static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJavascriptBridge";
 
@@ -62,7 +62,7 @@ static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJav
         GIOLogDebug(@"WKWebview Bridge %@ is donotTrack", webView);
         return;
     }
-    
+
     WKUserContentController *contentController = webView.configuration.userContentController;
     [self addScriptMessageHandler:contentController];
     [self addUserScripts:contentController];
@@ -89,25 +89,28 @@ static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJav
             NSString *projectId = GrowingConfigurationManager.sharedInstance.trackConfiguration.projectId;
             NSString *bundleId = [GrowingDeviceInfo currentDeviceInfo].bundleID;
             NSString *urlScheme = [GrowingDeviceInfo currentDeviceInfo].urlScheme;
-            GrowingWebViewJavascriptBridgeConfiguration *config = [GrowingWebViewJavascriptBridgeConfiguration configurationWithProjectId:projectId
-                                                                                                                                    appId:urlScheme
-                                                                                                                               appPackage:bundleId
-                                                                                                                         nativeSdkVersion:GrowingTrackerVersionName
-                                                                                                                     nativeSdkVersionCode:GrowingTrackerVersionCode];
+            GrowingWebViewJavascriptBridgeConfiguration *config =
+                [GrowingWebViewJavascriptBridgeConfiguration configurationWithProjectId:projectId
+                                                                                  appId:urlScheme
+                                                                             appPackage:bundleId
+                                                                       nativeSdkVersion:GrowingTrackerVersionName
+                                                                   nativeSdkVersionCode:GrowingTrackerVersionCode];
 
-            WKUserScript *userScript = [[WKUserScript alloc] initWithSource:[GrowingWKWebViewJavascriptBridge_JS createJavascriptBridgeJsWithNativeConfiguration:config]
-                                                              injectionTime:WKUserScriptInjectionTimeAtDocumentStart
-                                                           forMainFrameOnly:NO];
+            WKUserScript *userScript =
+                [[WKUserScript alloc] initWithSource:[GrowingWKWebViewJavascriptBridge_JS
+                                                         createJavascriptBridgeJsWithNativeConfiguration:config]
+                                       injectionTime:WKUserScriptInjectionTimeAtDocumentStart
+                                    forMainFrameOnly:NO];
             [contentController addUserScript:userScript];
         }
     } @catch (NSException *exception) {
-
     }
 }
 
-- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
+- (void)userContentController:(WKUserContentController *)userContentController
+      didReceiveScriptMessage:(WKScriptMessage *)message {
     if ([GrowingWKWebViewJavascriptBridge webViewDontTrackCheck:message.webView]) {
-        GIOLogDebug(@"WKWebview Bridge %@ is donotTrack",message.webView);
+        GIOLogDebug(@"WKWebview Bridge %@ is donotTrack", message.webView);
         return;
     }
 

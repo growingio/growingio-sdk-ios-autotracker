@@ -32,7 +32,7 @@
 - (BOOL)isPrivateViewControllerIgnored:(UIViewController *)viewController;
 
 // All ViewControllers that did appeared
-- (NSArray <UIViewController *> *)allDidAppearViewControllers;
+- (NSArray<UIViewController *> *)allDidAppearViewControllers;
 
 // Current ViewController show in window
 - (UIViewController *)currentViewController;

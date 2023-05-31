@@ -27,29 +27,29 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedInstance;
 
-- (void)setLoginUserId:(NSString * _Nullable)loginUserId;
+- (void)setLoginUserId:(NSString *_Nullable)loginUserId;
 - (nullable NSString *)loginUserId;
 
-- (void)setLoginUserKey:(NSString * _Nullable)loginUserKey;
+- (void)setLoginUserKey:(NSString *_Nullable)loginUserKey;
 - (nullable NSString *)loginUserKey;
 
-///设置NSString,NSNumber(cdp、upgrade)
+/// 设置NSString,NSNumber(cdp、upgrade)
 - (void)setString:(NSString *)value forKey:(NSString *)key;
 
 - (NSString *)getStringforKey:(NSString *)key;
 
 - (GrowingEventSequenceObject *)getAndIncrement:(NSString *)eventType;
 
-//防止xcode编码提示使用KVC来获取值
-- (void)setValue:(id _Nullable)value forKey:(NSString * _Nonnull)key UNAVAILABLE_ATTRIBUTE;
-- (id)valueForKey:(NSString * _Nonnull)key UNAVAILABLE_ATTRIBUTE;
+// 防止xcode编码提示使用KVC来获取值
+- (void)setValue:(id _Nullable)value forKey:(NSString *_Nonnull)key UNAVAILABLE_ATTRIBUTE;
+- (id)valueForKey:(NSString *_Nonnull)key UNAVAILABLE_ATTRIBUTE;
 
 @end
 
 @interface GrowingEventSequenceObject : NSObject
-//全局 序列id
+// 全局 序列id
 @property (nonatomic, assign) long long globalId;
-//事件类型 序列id
+// 事件类型 序列id
 @property (nonatomic, assign) long long eventTypeId;
 
 @end

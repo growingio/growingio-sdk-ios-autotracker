@@ -22,11 +22,11 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSUInteger, GrowingAsaFetcherStatus) {
-    GrowingAsaFetcherStatusDenied = 1,   // ASAEnabled == NO或未集成framework
-    GrowingAsaFetcherStatusFailure,      // 获取归因数据失败
-    GrowingAsaFetcherStatusFetching,     // 正在获取归因数据
-    GrowingAsaFetcherStatusSuccess,      // 获取归因数据成功
-    GrowingAsaFetcherStatusCompleted     // activate 事件发送完毕
+    GrowingAsaFetcherStatusDenied = 1,  // ASAEnabled == NO或未集成framework
+    GrowingAsaFetcherStatusFailure,     // 获取归因数据失败
+    GrowingAsaFetcherStatusFetching,    // 正在获取归因数据
+    GrowingAsaFetcherStatusSuccess,     // 获取归因数据成功
+    GrowingAsaFetcherStatusCompleted    // activate 事件发送完毕
 };
 
 extern CGFloat const GrowingAsaFetcherDefaultTimeOut;

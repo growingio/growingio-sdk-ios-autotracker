@@ -18,9 +18,9 @@
 // limitations under the License.
 
 #import "GrowingAutotrackerCore/Page/GrowingPage.h"
+#import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
-#import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingULTimeUtil.h"
 
 @interface GrowingPage ()
@@ -112,12 +112,12 @@
     NSString *path = [NSString string];
     for (NSInteger i = 0; i < pageTree.count; ++i) {
         if (i >= 3) {
-            //SDK3.0 xpath逻辑调整,仅遍历UIViewController的三层视图
+            // SDK3.0 xpath逻辑调整,仅遍历UIViewController的三层视图
             path = [NSString stringWithFormat:@"*%@", path];
             break;
         }
-        NSString *subpath = [NSString stringWithFormat:@"/%@",pageTree[i].name];
-        path = [NSString stringWithFormat:@"%@%@",subpath,path];
+        NSString *subpath = [NSString stringWithFormat:@"/%@", pageTree[i].name];
+        path = [NSString stringWithFormat:@"%@%@", subpath, path];
     }
     _pathCopy = path;
     return self.pathCopy;

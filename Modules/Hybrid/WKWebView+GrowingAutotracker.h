@@ -26,7 +26,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (WKNavigation *)growing_loadRequest:(NSURLRequest *)request;
 - (WKNavigation *)growing_loadHTMLString:(NSString *)string baseURL:(NSURL *)baseURL;
 - (WKNavigation *)growing_loadFileURL:(NSURL *)URL allowingReadAccessToURL:(NSURL *)readAccessURL;
-- (WKNavigation *)growing_loadData:(NSData *)data MIMEType:(NSString *)MIMEType characterEncodingName:(NSString *)characterEncodingName baseURL:(NSURL *)baseURL;
+- (WKNavigation *)growing_loadData:(NSData *)data
+                          MIMEType:(NSString *)MIMEType
+             characterEncodingName:(NSString *)characterEncodingName
+                           baseURL:(NSURL *)baseURL;
 
 @end
 

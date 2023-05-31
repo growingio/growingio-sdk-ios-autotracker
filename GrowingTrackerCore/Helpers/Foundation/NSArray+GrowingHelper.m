@@ -30,16 +30,14 @@
     NSData *jsonData = nil;
     @try {
         NSError *error = nil;
-        jsonData = [NSJSONSerialization dataWithJSONObject:self
-                                                   options:options
-                                                     error:&error];
+        jsonData = [NSJSONSerialization dataWithJSONObject:self options:options error:&error];
         if (error != nil) {
             jsonData = nil;
         }
     } @catch (NSException *exception) {
         jsonData = nil;
     }
-    
+
     return jsonData;
 }
 

@@ -18,10 +18,10 @@
 //  limitations under the License.
 
 #import "Modules/Flutter/GrowingFlutterPlugin.h"
-#import "GrowingTrackerCore/Public/GrowingAttributesBuilder.h"
-#import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
+#import "GrowingTrackerCore/Event/GrowingEventManager.h"
+#import "GrowingTrackerCore/Public/GrowingAttributesBuilder.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingULAppLifecycle.h"
 
@@ -54,7 +54,8 @@ GrowingMod(GrowingFlutterPlugin)
 
 #pragma mark - Autotrack Event
 
-- (void)trackPageEvent:(NSDictionary *)arguments attributes:(NSDictionary <NSString *, NSString *>* _Nullable)attributes {
+- (void)trackPageEvent:(NSDictionary *)arguments
+            attributes:(NSDictionary<NSString *, NSString *> *_Nullable)attributes {
     NSString *path = arguments[@"path"];
     if (!path || ![path isKindOfClass:[NSString class]] || path.length == 0) {
         return;
@@ -63,7 +64,7 @@ GrowingMod(GrowingFlutterPlugin)
     if (!ptm || ![ptm isKindOfClass:[NSNumber class]]) {
         return;
     }
-    
+
     GrowingPageBuilder *builder = GrowingPageEvent.builder.setPath(path).setTimestamp(ptm.longLongValue);
     NSString *title = arguments[@"title"];
     if (title && [title isKindOfClass:[NSString class]] && title.length > 0) {
@@ -93,10 +94,9 @@ GrowingMod(GrowingFlutterPlugin)
         return;
     }
 
-    GrowingViewElementBuilder *builder = GrowingViewElementEvent.builder.setEventType(eventType)
-                                                                        .setXpath(xpath)
-                                                                        .setPath(path)
-                                                                        .setPageShowTimestamp(ptm.longLongValue);
+    GrowingViewElementBuilder *builder =
+        GrowingViewElementEvent.builder.setEventType(eventType).setXpath(xpath).setPath(path).setPageShowTimestamp(
+            ptm.longLongValue);
     NSString *viewContent = arguments[@"textValue"];
     if (viewContent && [viewContent isKindOfClass:[NSString class]] && viewContent.length > 0) {
         builder = builder.setTextValue(viewContent);

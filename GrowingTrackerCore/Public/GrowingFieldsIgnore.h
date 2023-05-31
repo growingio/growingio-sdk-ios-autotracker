@@ -20,27 +20,27 @@
 #import <Foundation/Foundation.h>
 
 typedef NS_OPTIONS(NSUInteger, GrowingIgnoreFields) {
-    
-    GrowingIgnoreFieldsNetworkState     = (1 << 0),
-    GrowingIgnoreFieldsScreenWidth      = (1 << 1),
-    GrowingIgnoreFieldsScreenHeight     = (1 << 2),
-    GrowingIgnoreFieldsDeviceBrand      = (1 << 3),
-    GrowingIgnoreFieldsDeviceModel      = (1 << 4),
-    GrowingIgnoreFieldsDeviceType       = (1 << 5),
+
+    GrowingIgnoreFieldsNetworkState = (1 << 0),
+    GrowingIgnoreFieldsScreenWidth = (1 << 1),
+    GrowingIgnoreFieldsScreenHeight = (1 << 2),
+    GrowingIgnoreFieldsDeviceBrand = (1 << 3),
+    GrowingIgnoreFieldsDeviceModel = (1 << 4),
+    GrowingIgnoreFieldsDeviceType = (1 << 5),
 };
 
-//忽略当前所有可设置的属性掩码值
+// 忽略当前所有可设置的属性掩码值
 extern NSUInteger const GrowingIgnoreFieldsAll;
 
 @interface GrowingFieldsIgnore : NSObject
 
-+ (NSArray*)ignoreFieldsItems;
++ (NSArray *)ignoreFieldsItems;
 
 // 通过字段名称获取其对应的掩码值
 + (NSUInteger)getIgnoreFieldsMask:(NSString *)typeName;
 
 + (BOOL)isIgnoreFields:(NSString *)fieldsType;
 
-+ (NSString*)getIgnoreFieldsLog;
++ (NSString *)getIgnoreFieldsLog;
 
 @end

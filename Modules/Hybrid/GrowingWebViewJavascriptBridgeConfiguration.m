@@ -21,7 +21,11 @@
 
 @implementation GrowingWebViewJavascriptBridgeConfiguration
 
-- (instancetype)initWithProjectId:(NSString *)projectId appId:(NSString *)appId appPackage:(NSString *)appPackage nativeSdkVersion:(NSString *)nativeSdkVersion nativeSdkVersionCode:(int)nativeSdkVersionCode {
+- (instancetype)initWithProjectId:(NSString *)projectId
+                            appId:(NSString *)appId
+                       appPackage:(NSString *)appPackage
+                 nativeSdkVersion:(NSString *)nativeSdkVersion
+             nativeSdkVersionCode:(int)nativeSdkVersionCode {
     self = [super init];
     if (self) {
         _projectId = [projectId copy];
@@ -34,7 +38,11 @@
     return self;
 }
 
-+ (instancetype)configurationWithProjectId:(NSString *)projectId appId:(NSString *)appId appPackage:(NSString *)appPackage nativeSdkVersion:(NSString *)nativeSdkVersion nativeSdkVersionCode:(int)nativeSdkVersionCode {
++ (instancetype)configurationWithProjectId:(NSString *)projectId
+                                     appId:(NSString *)appId
+                                appPackage:(NSString *)appPackage
+                          nativeSdkVersion:(NSString *)nativeSdkVersion
+                      nativeSdkVersionCode:(int)nativeSdkVersionCode {
     return [[self alloc] initWithProjectId:projectId
                                      appId:appId
                                 appPackage:appPackage
@@ -43,9 +51,17 @@
 }
 
 - (NSString *)toJsonString {
-    NSDictionary *configuration = [self dictionaryWithValuesForKeys:@[@"projectId", @"appId", @"appPackage", @"nativeSdkVersion", @"nativeSdkVersionCode"]];
+    NSDictionary *configuration = [self dictionaryWithValuesForKeys:@[
+        @"projectId",
+        @"appId",
+        @"appPackage",
+        @"nativeSdkVersion",
+        @"nativeSdkVersionCode"
+    ]];
     NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:configuration options:NSJSONWritingPrettyPrinted error:&error];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:configuration
+                                                       options:NSJSONWritingPrettyPrinted
+                                                         error:&error];
     if (error) {
         return nil;
     }

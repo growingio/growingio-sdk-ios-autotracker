@@ -18,9 +18,9 @@
 //  limitations under the License.
 
 #import "Modules/Hybrid/GrowingHybridModule.h"
-#import "Modules/Hybrid/WKWebView+GrowingAutotracker.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingULSwizzle.h"
+#import "Modules/Hybrid/WKWebView+GrowingAutotracker.h"
 
 GrowingMod(GrowingHybridModule)
 
@@ -42,7 +42,7 @@ GrowingMod(GrowingHybridModule)
             GIOLogError(@"Failed to swizzle WKWebView loadRequest:. Details: %@", webViewError);
             webViewError = NULL;
         }
-        
+
         [WKWebView growingul_swizzleMethod:@selector(loadHTMLString:baseURL:)
                                 withMethod:@selector(growing_loadHTMLString:baseURL:)
                                      error:&webViewError];
@@ -50,7 +50,7 @@ GrowingMod(GrowingHybridModule)
             GIOLogError(@"Failed to swizzle WKWebView loadHTMLString:baseURL:. Details: %@", webViewError);
             webViewError = NULL;
         }
-        
+
         [WKWebView growingul_swizzleMethod:@selector(loadFileURL:allowingReadAccessToURL:)
                                 withMethod:@selector(growing_loadFileURL:allowingReadAccessToURL:)
                                      error:&webViewError];
@@ -58,12 +58,13 @@ GrowingMod(GrowingHybridModule)
             GIOLogError(@"Failed to swizzle WKWebView loadFileURL:allowingReadAccessToURL:. Details: %@", webViewError);
             webViewError = NULL;
         }
-        
+
         [WKWebView growingul_swizzleMethod:@selector(loadData:MIMEType:characterEncodingName:baseURL:)
                                 withMethod:@selector(growing_loadData:MIMEType:characterEncodingName:baseURL:)
                                      error:&webViewError];
         if (webViewError) {
-            GIOLogError(@"Failed to swizzle WKWebView loadData:MIMEType:characterEncodingName:baseURL:. Details: %@", webViewError);
+            GIOLogError(@"Failed to swizzle WKWebView loadData:MIMEType:characterEncodingName:baseURL:. Details: %@",
+                        webViewError);
             webViewError = NULL;
         }
     });

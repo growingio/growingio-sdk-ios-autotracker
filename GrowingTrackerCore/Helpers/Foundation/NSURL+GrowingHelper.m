@@ -22,14 +22,14 @@
 @implementation NSURL (GrowingHelper)
 
 - (NSDictionary *)growingHelper_queryDict {
-    NSString * query = [self query];
-    NSArray * pairs = [query componentsSeparatedByString:@"&"];
-    NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
-    for (NSString * pair in pairs) {
-        NSArray * kv = [pair componentsSeparatedByString:@"="];
+    NSString *query = [self query];
+    NSArray *pairs = [query componentsSeparatedByString:@"&"];
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+    for (NSString *pair in pairs) {
+        NSArray *kv = [pair componentsSeparatedByString:@"="];
         if (kv.count == 2) {
-            NSString * key = [kv objectAtIndex:0];
-            NSString * val = [[kv objectAtIndex:1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            NSString *key = [kv objectAtIndex:0];
+            NSString *val = [[kv objectAtIndex:1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             if (val) {
                 [params setObject:val forKey:key];
             }

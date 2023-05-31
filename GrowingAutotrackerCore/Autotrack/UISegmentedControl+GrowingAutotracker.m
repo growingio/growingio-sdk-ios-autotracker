@@ -18,9 +18,9 @@
 //  limitations under the License.
 
 #import "GrowingAutotrackerCore/Autotrack/UISegmentedControl+GrowingAutotracker.h"
-#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/GrowingViewClickProvider.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 
 @interface GrowingUISegmentedControlObserver : NSObject
 
@@ -31,7 +31,7 @@
 
 @implementation UISegmentedControl (GrowingAutotracker)
 
-+ (UILabel*)growing_labelForSegment:(UIView*)segment {
++ (UILabel *)growing_labelForSegment:(UIView *)segment {
     UILabel *lable = nil;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
@@ -48,7 +48,7 @@
     return lable;
 }
 
-+ (NSString*)growing_titleForSegment:(UIView *)segment {
++ (NSString *)growing_titleForSegment:(UIView *)segment {
     return [self growing_labelForSegment:segment].text;
 }
 
@@ -65,13 +65,13 @@ static void growingUISegmentedControlSetUp(UISegmentedControl *self) {
     @autoreleasepool {
         allTargets = self.allTargets;
     }
-    
+
     if ([allTargets containsObject:[GrowingUISegmentedControlObserver sharedInstance]]) {
         return;
     }
     [self addTarget:[GrowingUISegmentedControlObserver sharedInstance]
-             action:@selector(growingSegmentAction:)
-   forControlEvents:UIControlEventValueChanged];
+                  action:@selector(growingSegmentAction:)
+        forControlEvents:UIControlEventValueChanged];
 }
 
 - (instancetype)growing_initWithCoder:(NSCoder *)coder {
@@ -110,8 +110,8 @@ static void growingUISegmentedControlSetUp(UISegmentedControl *self) {
 
 - (void)growingSegmentAction:(UISegmentedControl *)segmentControl {
     NSInteger index = segmentControl.selectedSegmentIndex;
-    NSArray *arr    = segmentControl.growing_segmentViews;
-    
+    NSArray *arr = segmentControl.growing_segmentViews;
+
     if (index >= 0 && index < arr.count) {
         UIView *segment = arr[index];
         [GrowingViewClickProvider viewOnClick:segment];

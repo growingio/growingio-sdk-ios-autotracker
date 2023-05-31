@@ -21,7 +21,7 @@
 
 @implementation GrowingEventRequestJSONAdapter
 
-+ (instancetype)adapterWithRequest:(id <GrowingRequestProtocol>)request {
++ (instancetype)adapterWithRequest:(id<GrowingRequestProtocol>)request {
     GrowingEventRequestJSONAdapter *adapter = [[self alloc] init];
     return adapter;
 }

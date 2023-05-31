@@ -36,20 +36,24 @@ static GrowingTracker *sharedInstance = nil;
 
 + (void)startWithConfiguration:(GrowingTrackConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions {
     if (![NSThread isMainThread]) {
-        @throw [NSException exceptionWithName:@"初始化异常" reason:@"请在applicationDidFinishLaunching中调用startWithConfiguration函数,并且确保在主线程中" userInfo:nil];
+        @throw [NSException
+            exceptionWithName:@"初始化异常"
+                       reason:@"请在applicationDidFinishLaunching中调用startWithConfiguration函数,并且确保在主线程中"
+                     userInfo:nil];
     }
 
     if (!configuration.projectId.length) {
         @throw [NSException exceptionWithName:@"初始化异常" reason:@"ProjectId不能为空" userInfo:nil];
     }
-    
+
     if (!configuration.dataSourceId.length) {
         @throw [NSException exceptionWithName:@"初始化异常" reason:@"dataSourceId不能为空" userInfo:nil];
     }
 
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        GrowingRealTracker *realTracker = [GrowingRealTracker trackerWithConfiguration:configuration launchOptions:launchOptions];
+        GrowingRealTracker *realTracker = [GrowingRealTracker trackerWithConfiguration:configuration
+                                                                         launchOptions:launchOptions];
         sharedInstance = [[self alloc] initWithRealTracker:realTracker];
         [[GrowingSession currentSession] generateVisit];
     });
@@ -57,7 +61,10 @@ static GrowingTracker *sharedInstance = nil;
 
 + (instancetype)sharedInstance {
     if (!sharedInstance) {
-        @throw [NSException exceptionWithName:@"GrowingTracker未初始化" reason:@"请在applicationDidFinishLaunching中调用startWithConfiguration函数,并且确保在主线程中" userInfo:nil];
+        @throw [NSException
+            exceptionWithName:@"GrowingTracker未初始化"
+                       reason:@"请在applicationDidFinishLaunching中调用startWithConfiguration函数,并且确保在主线程中"
+                     userInfo:nil];
     }
     return sharedInstance;
 }

@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (id)growingHelper_jsonObject;
 
-- (NSMutableDictionary<NSString*, NSString*> *)growingHelper_safeMap:(NSDictionary *)originMap;
+- (NSMutableDictionary<NSString *, NSString *> *)growingHelper_safeMap:(NSDictionary *)originMap;
 
 @end
 

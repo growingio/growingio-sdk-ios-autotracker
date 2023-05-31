@@ -22,15 +22,15 @@
 
 @implementation NSURLSession (GrowingURLSessionHelper)
 
-- (id <GrowingURLSessionDataTaskProtocol>_Nullable)growing_dataTaskWithRequest:(NSURLRequest *_Nonnull)request
-                                                                    completion:(GrowingNetworkDataTaskBlock _Nonnull)completion {
-    NSURLSessionTask *task = [self dataTaskWithRequest:request
-                                     completionHandler:completion];
-    
+- (id<GrowingURLSessionDataTaskProtocol> _Nullable)growing_dataTaskWithRequest:(NSURLRequest *_Nonnull)request
+                                                                    completion:(GrowingNetworkDataTaskBlock _Nonnull)
+                                                                                   completion {
+    NSURLSessionTask *task = [self dataTaskWithRequest:request completionHandler:completion];
+
     if ([task isKindOfClass:NSURLSessionDataTask.class]) {
         return (NSURLSessionDataTask *)task;
     }
-    
+
     return nil;
 }
 
