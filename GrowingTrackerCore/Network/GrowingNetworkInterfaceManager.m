@@ -23,8 +23,12 @@
 
 @interface GrowingNetworkInterfaceManager()
 
-@property (nonatomic, retain) GrowingReachability * internetReachability;
+@property (nonatomic, strong) GrowingReachability *internetReachability;
 @property (nonatomic, assign) BOOL isUnknown;
+@property (nonatomic, assign, readwrite) BOOL WWANValid;
+@property (nonatomic, assign, readwrite) BOOL WiFiValid;
+@property (nonatomic, assign, readwrite) BOOL isReachable;
+@property (nonatomic, strong) CTTelephonyNetworkInfo *teleInfo;
 
 @end
 
@@ -42,36 +46,30 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        self.internetReachability = [GrowingReachability reachabilityForInternetConnection];
-        [self.internetReachability startNotifier];
-        self.isUnknown = YES;
+        _internetReachability = [GrowingReachability reachabilityForInternetConnection];
+        [_internetReachability startNotifier];
+        _teleInfo = [[CTTelephonyNetworkInfo alloc] init];
+        _isUnknown = YES;
     }
     return self;
 }
 
 - (void)updateInterfaceInfo {
-#ifdef GROWINGIO_SIMULATING_3G
-    _WiFiValid = NO;
-    _WWANValid = YES;
-    _isUnknown = NO;
-#else // #ifdef GROWINGIO_SIMULATING_3G
     GrowingNetworkStatus netStatus = [self.internetReachability currentReachabilityStatus];
     BOOL connectionRequired = [self.internetReachability connectionRequired];
-    _isUnknown = (netStatus == GrowingUnknown);
-    _WiFiValid = (netStatus == GrowingReachableViaWiFi && !connectionRequired);
-    _WWANValid = (netStatus == GrowingReachableViaWWAN && !connectionRequired);
-    _isReachable = (_WiFiValid || _WWANValid);
-#endif // #ifdef GROWINGIO_SIMULATING_3G
+    self.isUnknown = (netStatus == GrowingUnknown);
+    self.WiFiValid = (netStatus == GrowingReachableViaWiFi && !connectionRequired);
+    self.WWANValid = (netStatus == GrowingReachableViaWWAN && !connectionRequired);
+    self.isReachable = (self.WiFiValid || self.WWANValid);
 }
 
 - (NSString *)networkType {
     [self updateInterfaceInfo];
 
-    NSString *netType = @"UNKNOWN";
     if (self.isUnknown) {
-        netType = @"UNKNOWN";
+        return @"UNKNOWN";
     } else if (self.WiFiValid) {
-        netType = @"WIFI";
+        return @"WIFI";
     } else if (self.WWANValid) {
         NSArray *typeStrings2G = @[
             CTRadioAccessTechnologyEdge,
@@ -92,26 +90,23 @@
         NSArray *typeStrings4G = @[CTRadioAccessTechnologyLTE];
 
         NSString *accessString = CTRadioAccessTechnologyLTE;  // default 4G
-        CTTelephonyNetworkInfo *teleInfo = [[CTTelephonyNetworkInfo alloc] init];
         if (@available(iOS 12.0, *)) {
-            if ([teleInfo respondsToSelector:@selector(serviceCurrentRadioAccessTechnology)]) {
-                NSDictionary *radioDic = teleInfo.serviceCurrentRadioAccessTechnology;
+            if ([self.teleInfo respondsToSelector:@selector(serviceCurrentRadioAccessTechnology)]) {
+                NSDictionary *radioDic = self.teleInfo.serviceCurrentRadioAccessTechnology;
                 if (radioDic.count) {
                     accessString = radioDic[radioDic.allKeys.firstObject];
                 }
             }
         } else {
-            accessString = teleInfo.currentRadioAccessTechnology;
+            accessString = self.teleInfo.currentRadioAccessTechnology;
         }
-        if (!accessString) {
-            return @"UNKNOWN";
-        }
+
         if ([typeStrings4G containsObject:accessString]) {
-            netType = @"4G";
+            return @"4G";
         } else if ([typeStrings3G containsObject:accessString]) {
-            netType = @"3G";
+            return @"3G";
         } else if ([typeStrings2G containsObject:accessString]) {
-            netType = @"2G";
+            return @"2G";
 #if defined(__IPHONE_14_1) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_14_1)
         } else if (@available(iOS 14.1, *)) {
             NSArray *typeStrings5G = @[
@@ -119,18 +114,13 @@
                 CTRadioAccessTechnologyNRNSA
             ];
             if ([typeStrings5G containsObject:accessString]) {
-                netType = @"5G";
-            } else {
-                netType = @"UNKNOWN";
+                return @"5G";
             }
 #endif
-        } else {
-            netType = @"UNKNOWN";
         }
-    } else {
-        netType = @"UNKNOWN";
     }
-    return netType;
+    
+    return @"UNKNOWN";
 }
 
 @end

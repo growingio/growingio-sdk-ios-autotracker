@@ -21,9 +21,8 @@
 
 @interface GrowingNetworkInterfaceManager : NSObject
 
-@property (readonly) BOOL WWANValid;
-@property (readonly) BOOL WiFiValid;
-@property (readonly) BOOL isUnknown;
+@property (nonatomic, assign, readonly) BOOL WWANValid;
+@property (nonatomic, assign, readonly) BOOL WiFiValid;
 @property (nonatomic, assign, readonly) BOOL isReachable;
 
 + (instancetype)sharedInstance;
