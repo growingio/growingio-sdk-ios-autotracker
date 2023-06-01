@@ -24,7 +24,7 @@
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #endif
 
-@interface GrowingNetworkInterfaceManager()
+@interface GrowingNetworkInterfaceManager ()
 
 @property (nonatomic, strong) GrowingReachability *internetReachability;
 @property (nonatomic, assign) BOOL isUnknown;
@@ -74,18 +74,15 @@
 
 - (NSString *)networkType {
     [self updateInterfaceInfo];
-    
+
     if (self.isUnknown) {
         return @"UNKNOWN";
     } else if (self.WiFiValid) {
         return @"WIFI";
 #if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
     } else if (self.WWANValid) {
-        NSArray *typeStrings2G = @[
-            CTRadioAccessTechnologyEdge,
-            CTRadioAccessTechnologyGPRS,
-            CTRadioAccessTechnologyCDMA1x
-        ];
+        NSArray *typeStrings2G =
+            @[CTRadioAccessTechnologyEdge, CTRadioAccessTechnologyGPRS, CTRadioAccessTechnologyCDMA1x];
 
         NSArray *typeStrings3G = @[
             CTRadioAccessTechnologyHSDPA,
@@ -119,10 +116,7 @@
             return @"2G";
 #if defined(__IPHONE_14_1) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_14_1)
         } else if (@available(iOS 14.1, *)) {
-            NSArray *typeStrings5G = @[
-                CTRadioAccessTechnologyNR,
-                CTRadioAccessTechnologyNRNSA
-            ];
+            NSArray *typeStrings5G = @[CTRadioAccessTechnologyNR, CTRadioAccessTechnologyNRNSA];
             if ([typeStrings5G containsObject:accessString]) {
                 return @"5G";
             }
@@ -130,7 +124,7 @@
         }
 #endif
     }
-    
+
     return @"UNKNOWN";
 }
 
