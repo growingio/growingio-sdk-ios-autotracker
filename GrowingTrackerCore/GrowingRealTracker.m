@@ -112,17 +112,6 @@ const int GrowingTrackerVersionCode = 30408;
                                          @"with the best service. GrowingIO version: %@",
                                          GrowingTrackerVersionName];
     GIOLogInfo(@"%@", versionStr);
-
-#ifdef GROWING_ANALYSIS_ENABLE_ENCRYPTION
-    GIOLogWarn(
-        @"\n"
-        @"╔═══════════════════════════════════════════════════════════════════════════════════════\n"
-        @"║ \n"
-        @"║ WARNING: pod ENABLE_ENCRYPTION is deprecated, please use -[GrowingTrackConfiguration setEncryptEnabled]\n"
-        @"║ 警告: pod ENABLE_ENCRYPTION 已被废弃, 请使用 -[GrowingTrackConfiguration setEncryptEnabled] 进行配置\n"
-        @"║ \n"
-        @"╚═══════════════════════════════════════════════════════════════════════════════════════");
-#endif
 }
 
 + (NSString *)versionName {

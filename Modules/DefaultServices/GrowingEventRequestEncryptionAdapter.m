@@ -41,32 +41,20 @@
     }
 
     NSMutableURLRequest *needAdaptReq = request;
-#ifdef GROWING_ANALYSIS_ENABLE_ENCRYPTION
-    // deprecated
-    [needAdaptReq setValue:@"1" forHTTPHeaderField:@"X-Crypt-Codec"];
-#else
     BOOL encryptEnabled = GrowingConfigurationManager.sharedInstance.trackConfiguration.encryptEnabled;
     if (encryptEnabled) {
         [needAdaptReq setValue:@"1" forHTTPHeaderField:@"X-Crypt-Codec"];
     }
-#endif
 
     NSData *JSONData = needAdaptReq.HTTPBody.copy;
     @autoreleasepool {
         // jsonString malloc to much
-#ifdef GROWING_ANALYSIS_ENABLE_ENCRYPTION
-        // deprecated
-        if ([self.request respondsToSelector:@selector(stm)]) {
-            JSONData = [JSONData growingHelper_xorEncryptWithHint:(self.request.stm & 0xFF)];
-        }
-#else
         BOOL encryptEnabled = GrowingConfigurationManager.sharedInstance.trackConfiguration.encryptEnabled;
         if (encryptEnabled) {
             if ([self.request respondsToSelector:@selector(stm)]) {
                 JSONData = [JSONData growingHelper_xorEncryptWithHint:(self.request.stm & 0xFF)];
             }
         }
-#endif
     }
     needAdaptReq.HTTPBody = JSONData;
     return needAdaptReq;
