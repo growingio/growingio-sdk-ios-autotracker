@@ -19,36 +19,9 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NS_ENUM(NSUInteger, GrowingModuleLevel) { GrowingModuleBasic = 0, GrowingModuleNormal = 1 };
-
 typedef NS_ENUM(NSInteger, GrowingModuleEventType) {
-    GrowingMSetupEvent = 0,
     GrowingMInitEvent,
-    GrowingMTearDownEvent,
-    GrowingMSplashEvent,
-    GrowingMQuickActionEvent,
-    GrowingMWillResignActiveEvent,
-    GrowingMDidEnterBackgroundEvent,
-    GrowingMWillEnterForegroundEvent,
-    GrowingMDidBecomeActiveEvent,
-    GrowingMWillTerminateEvent,
-    GrowingMUnmountEvent,
-    GrowingMOpenURLEvent,
-    GrowingMDidReceiveMemoryWarningEvent,
-    GrowingMDidFailToRegisterForRemoteNotificationsEvent,
-    GrowingMDidRegisterForRemoteNotificationsEvent,
-    GrowingMDidReceiveRemoteNotificationEvent,
-    GrowingMDidReceiveLocalNotificationEvent,
-    GrowingMWillPresentNotificationEvent,
-    GrowingMDidReceiveNotificationResponseEvent,
-    GrowingMWillContinueUserActivityEvent,
-    GrowingMContinueUserActivityEvent,
-    GrowingMDidFailToContinueUserActivityEvent,
-    GrowingMDidUpdateUserActivityEvent,
-    GrowingMHandleWatchKitExtensionRequestEvent,
-    GrowingMSetDataCollectionEnabledEvent,
-    GrowingMDidCustomEvent = 1000
-
+    GrowingMSetDataCollectionEnabledEvent
 };
 
 NS_ASSUME_NONNULL_BEGIN
@@ -57,21 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedInstance;
 
-#pragma mark - 调用方法
-// If you do not comply with set Level protocol, the default Normal
-// 将 class 存入Module Info，并不会初始化
-- (void)registerDynamicModule:(Class)moduleClass;
-
-- (void)unRegisterDynamicModule:(Class)moduleClass;
-
-// 初始化各个Module Info
 - (void)registedAllModules;
-
-#pragma mark - 事件和module关联
-
-- (void)registerCustomEvent:(NSInteger)eventType
-         withModuleInstance:(id)moduleInstance
-             andSelectorStr:(NSString *)selectorStr;
 
 - (void)triggerEvent:(NSInteger)eventType;
 

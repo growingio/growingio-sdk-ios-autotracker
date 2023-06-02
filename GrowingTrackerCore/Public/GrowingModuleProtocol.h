@@ -22,76 +22,11 @@
 
 @class GrowingContext;
 
-#define GROW_EXPORT_MODULE(isAsync)                                                 \
-    +(void)load {                                                                   \
-        [[GrowingModuleManager sharedInstance] registerDynamicModule:[self class]]; \
-    }                                                                               \
-    -(BOOL)async {                                                                  \
-        return [[NSString stringWithUTF8String:#isAsync] boolValue];                \
-    }
-
 @protocol GrowingModuleProtocol <NSObject>
 
 @optional
-
 + (BOOL)singleton;
-// 越大越优先
-- (NSInteger)modulePriority;
-
-- (BOOL)async;
-
-// 如果不去设置Level默认是Normal
-// basicModuleLevel不去实现默认Normal
-- (void)basicModuleLevel;
-
-- (void)growingModSetUp:(GrowingContext *)context;
-
++ (instancetype)sharedInstance;
 - (void)growingModInit:(GrowingContext *)context;
-
-- (void)growingModSplash:(GrowingContext *)context;
-
-- (void)growingModQuickAction:(GrowingContext *)context;
-
-- (void)growingModTearDown:(GrowingContext *)context;
-
-- (void)growingModWillResignActive:(GrowingContext *)context;
-
-- (void)growingModDidEnterBackground:(GrowingContext *)context;
-
-- (void)growingModWillEnterForeground:(GrowingContext *)context;
-
-- (void)growingModDidBecomeActive:(GrowingContext *)context;
-
-- (void)growingModWillTerminate:(GrowingContext *)context;
-
-- (void)growingModUnmount:(GrowingContext *)context;
-
-- (void)growingModOpenURL:(GrowingContext *)context;
-
-- (void)growingModDidReceiveMemoryWaring:(GrowingContext *)context;
-
-- (void)growingModDidFailToRegisterForRemoteNotifications:(GrowingContext *)context;
-
-- (void)growingModDidRegisterForRemoteNotifications:(GrowingContext *)context;
-
-- (void)growingModDidReceiveRemoteNotification:(GrowingContext *)context;
-
-- (void)growingModDidReceiveLocalNotification:(GrowingContext *)context;
-
-- (void)growingModWillPresentNotification:(GrowingContext *)context;
-
-- (void)growingModDidReceiveNotificationResponse:(GrowingContext *)context;
-
-- (void)growingModWillContinueUserActivity:(GrowingContext *)context;
-
-- (void)growingModContinueUserActivity:(GrowingContext *)context;
-
-- (void)growingModDidFailToContinueUserActivity:(GrowingContext *)context;
-
-- (void)growingModDidUpdateContinueUserActivity:(GrowingContext *)context;
-
-- (void)growingModHandleWatchKitExtensionRequest:(GrowingContext *)context;
-
-- (void)growingModDidCustomEvent:(GrowingContext *)context;
 
 @end

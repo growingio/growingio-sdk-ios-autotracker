@@ -19,20 +19,26 @@
 
 #import "GrowingTrackerCore/Public/GrowingServiceManager.h"
 #import <objc/message.h>
-#import <objc/runtime.h>
 #import "GrowingTrackerCore/Public/GrowingAnnotationCore.h"
+#import "GrowingTrackerCore/Public/GrowingBaseService.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
+
+@interface GrowingServiceManager ()
+
+@property (nonatomic, copy) NSMutableDictionary *allServiceDict;
+@property (nonatomic, copy) NSMutableDictionary *allServiceInstanceDict;
+
+@end
 
 @implementation GrowingServiceManager
 
-static GrowingServiceManager *manager = nil;
-
 + (instancetype)sharedInstance {
+    static id _sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        manager = [[GrowingServiceManager alloc] init];
+        _sharedInstance = [[self alloc] init];
     });
-    return manager;
+    return _sharedInstance;
 }
 
 - (instancetype)init {
@@ -40,33 +46,12 @@ static GrowingServiceManager *manager = nil;
     if (!self) return nil;
     _allServiceDict = [[NSMutableDictionary alloc] init];
     _allServiceInstanceDict = [[NSMutableDictionary alloc] init];
-    //    _signallock = dispatch_semaphore_create(1);
     return self;
 }
 
-#pragma mark - private
+#pragma mark - Public
 
-- (void)registerServiceName:(NSString *)serviceName implClassName:(NSString *)serviceClassName {
-    //    dispatch_semaphore_wait(_signallock, DISPATCH_TIME_FOREVER);
-    [_allServiceDict setValue:serviceClassName forKey:serviceName];
-    //    dispatch_semaphore_signal(_signallock);
-}
-
-- (void)registerService:(Protocol *)service implClass:(Class)serviceClass {
-    //    dispatch_semaphore_wait(_signallock, DISPATCH_TIME_FOREVER);
-    [_allServiceDict setValue:NSStringFromClass(serviceClass) forKey:NSStringFromProtocol(service)];
-    //    dispatch_semaphore_signal(_signallock);
-}
-
-- (id)createService:(Protocol *)service {
-    return [self createService:service withServiceName:nil];
-}
-
-- (id)createService:(Protocol *)service withServiceName:(NSString *)serviceName {
-    return [self createService:service withServiceName:serviceName shouldCache:YES];
-}
-
-- (void)loadLocalServices {
+- (void)registerAllServices {
     // register services
     growing_section section = growingSectionDataService();
     for (int i = 0; i < section.count; i++) {
@@ -80,82 +65,51 @@ static GrowingServiceManager *manager = nil;
                 NSString *protocol = [json allKeys][0];
                 NSString *clsName = [json allValues][0];
                 if (protocol && clsName) {
-                    GIOLogDebug(@"[GrowingServiceManager] load protocol %@ clsname %@", protocol, clsName);
-                    [[GrowingServiceManager sharedInstance] registerServiceName:protocol implClassName:clsName];
+                    GIOLogDebug(@"[GrowingServiceManager] load %@(%@)", clsName, protocol);
+                    [self.allServiceDict setValue:clsName forKey:protocol];
                 }
             }
         }
     }
 }
 
-- (BOOL)checkValidService:(Protocol *)service {
-    id class = nil;
-    //    dispatch_semaphore_wait(_signallock, DISPATCH_TIME_FOREVER);
-    class = [_allServiceDict valueForKey:NSStringFromProtocol(service)];
-    //    dispatch_semaphore_signal(_signallock);
-    if (class) {
-        return YES;
-    }
-    return NO;
+- (void)registerService:(Protocol *)service implClass:(Class)serviceClass {
+    [self.allServiceDict setValue:NSStringFromClass(serviceClass) forKey:NSStringFromProtocol(service)];
 }
 
-- (id)createService:(Protocol *)service withServiceName:(NSString *)serviceName shouldCache:(BOOL)shouldCache {
-    if (!serviceName.length) {
-        serviceName = NSStringFromProtocol(service);
-    }
-    id implInstance = nil;
-
-    if (![self checkValidService:service]) {
-        if (self.enableException) {
-            @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                           reason:[NSString stringWithFormat:@"%@ protocol does not been registed",
-                                                                             NSStringFromProtocol(service)]
-                                         userInfo:nil];
-        }
-    }
-
-    NSString *serviceStr = serviceName;
-    if (shouldCache) {
-        id protocolImpl = [_allServiceInstanceDict objectForKey:serviceStr];
-        if (protocolImpl) {
-            return protocolImpl;
-        }
+- (id)createService:(Protocol *)service {
+    NSString *serviceString = NSStringFromProtocol(service);
+    id instance = [self.allServiceInstanceDict objectForKey:serviceString];
+    if (instance) {
+        return instance;
     }
 
     Class implClass = [self serviceImplClass:service];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wundeclared-selector"
+    if (!implClass) {
+        return nil;
+    }
+    
     if ([[implClass class] respondsToSelector:@selector(singleton)]) {
         BOOL (*sigletonImp)(id, SEL) = (BOOL(*)(id, SEL))objc_msgSend;
         BOOL isSingleton = sigletonImp([implClass class], @selector(singleton));
         if (isSingleton) {
-            if ([[implClass class] respondsToSelector:@selector(sharedInstance)])
-                implInstance = [[implClass class] performSelector:@selector(sharedInstance)];
-            else
-                implInstance = [[implClass alloc] init];
-            if (shouldCache) {
-                [_allServiceInstanceDict setObject:implInstance forKey:serviceStr];
-                return implInstance;
-            } else {
-                return implInstance;
+            if ([[implClass class] respondsToSelector:@selector(sharedInstance)]) {
+                instance = [[implClass class] performSelector:@selector(sharedInstance)];
             }
         }
     }
-#pragma clang diagnostic pop
-    return [[implClass alloc] init];
+    
+    if (!instance) {
+        instance = [[implClass alloc] init];
+    }
+    
+    [self.allServiceInstanceDict setObject:instance forKey:serviceString]; // cache
+    return instance;
 }
 
 - (id)serviceImplClass:(Protocol *)service {
-    NSString *classname = [_allServiceDict valueForKey:NSStringFromProtocol(service)];
-    return NSClassFromString(classname);
-}
-
-- (id)getServiceInstanceForServiceName:(NSString *)serviceName {
-    return [_allServiceInstanceDict objectForKey:serviceName];
-}
-
-- (void)removeServiceInstanceForServiceName:(NSString *)serviceName {
-    [_allServiceInstanceDict removeObjectForKey:serviceName];
+    NSString *className = [self.allServiceDict valueForKey:NSStringFromProtocol(service)];
+    return NSClassFromString(className);
 }
 
 @end
