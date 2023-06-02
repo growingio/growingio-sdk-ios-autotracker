@@ -56,9 +56,9 @@
     [obj unitTest];
     XCTAssertTrue([obj isKindOfClass:[GrowingServiceTest class]]);
     
-    //单例对象 应该是不存在的 GrowingServiceTest 不是单例对象
-    GrowingServiceTest *obj2 = [[GrowingServiceManager sharedInstance] getServiceInstanceForServiceName:@"GrowingServiceTestProtocol"];
-    XCTAssertTrue(![obj2 isKindOfClass:[GrowingServiceTest class]]);
+    GrowingServiceTest *obj2 = [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingServiceTestProtocol)];
+    XCTAssertTrue([obj2 isKindOfClass:[GrowingServiceTest class]]);
+    XCTAssertEqualObjects(obj, obj2);
 }
 
 @end
