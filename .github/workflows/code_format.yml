@@ -39,14 +39,14 @@ jobs:
           \%^Services/Compression/LZ4/% d
           \%^Services/Database/FMDB/% d
           \%^Services/WebSocket/% d
-          \%(Growing|Modules/|Services/).*\.(h|hpp|c|cpp|m|mm)% p
+          \%^(Growing|Modules/|Services/).*\.(h|hpp|c|cpp|m|mm)% p
           ' \
           | xargs clang-format -i -style=file
 
           git diff --name-only --relative --diff-filter=ACMR origin/master HEAD \
           | sed -E -n '
           \%\.pb\.% d
-          \%(Growing|Modules/|Services/).*\.swift% p
+          \%^(Growing|Modules/|Services/).*\.swift% p
           \%Package.swift% p
           ' \
           | xargs swiftlint --fix
