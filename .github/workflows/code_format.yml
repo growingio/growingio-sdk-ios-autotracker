@@ -19,6 +19,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Brew Update
+        run: brew update
+
       - name: Install clang-format
         run: brew install clang-format
 
