@@ -88,7 +88,7 @@
     if (!implClass) {
         return nil;
     }
-    
+
     if ([[implClass class] respondsToSelector:@selector(singleton)]) {
         BOOL (*sigletonImp)(id, SEL) = (BOOL(*)(id, SEL))objc_msgSend;
         BOOL isSingleton = sigletonImp([implClass class], @selector(singleton));
@@ -98,12 +98,12 @@
             }
         }
     }
-    
+
     if (!instance) {
         instance = [[implClass alloc] init];
     }
-    
-    [self.allServiceInstanceDict setObject:instance forKey:serviceString]; // cache
+
+    [self.allServiceInstanceDict setObject:instance forKey:serviceString];  // cache
     return instance;
 }
 

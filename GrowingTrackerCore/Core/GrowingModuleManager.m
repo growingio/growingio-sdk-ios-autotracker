@@ -151,20 +151,20 @@ static NSString *kSetDataCollectionEnabledSelector = @"growingModSetDataCollecti
     if (!selString.length) {
         return;
     }
-    
+
     SEL seletor = NSSelectorFromString(selString);
     if (!seletor) {
         return;
     }
-    
+
     GrowingContext *context = [GrowingContext sharedInstance].copy;
     context.customEvent = eventType;
     context.customParam = customParam;
-    
+
     NSArray *moduleInstances = [self.modulesByEvent objectForKey:@(eventType)];
     for (id<GrowingModuleProtocol> module in moduleInstances) {
         if ([module respondsToSelector:seletor]) {
-            void (*imp)(id, SEL, id) = (void(*)(id, SEL, id))objc_msgSend;
+            void (*imp)(id, SEL, id) = (void (*)(id, SEL, id))objc_msgSend;
             imp(module, seletor, context);
         }
     }
