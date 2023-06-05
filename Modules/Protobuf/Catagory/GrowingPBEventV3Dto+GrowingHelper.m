@@ -120,9 +120,6 @@
     if (self.eventName.length > 0) {
         [dic setObject:self.eventName forKey:@"eventName"];
     }
-    if (self.pageShowTimestamp > 0) {
-        [dic setObject:@(self.pageShowTimestamp) forKey:@"pageShowTimestamp"];
-    }
     if (self.attributes_Count > 0) {
         [dic setObject:self.attributes forKey:@"attributes"];
     }

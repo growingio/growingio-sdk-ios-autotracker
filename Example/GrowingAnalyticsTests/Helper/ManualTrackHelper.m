@@ -26,7 +26,7 @@
         return NO;
     }
     NSArray *protocol = [self.context arrayByAddingObjectsFromArray:@[@"eventName"]];
-    NSArray *optional = @[@"path", @"pageShowTimestamp", @"attributes", @"query"];
+    NSArray *optional = @[@"path", @"attributes", @"query"];
     return [self protocolCheck:event protocol:protocol] && [self emptyPropertyCheck:event optional:optional];
 }
 
@@ -75,7 +75,7 @@
     if (event.count == 0) {
         return NO;
     }
-    NSArray *protocol = [self.context arrayByAddingObjectsFromArray:@[@"path", @"pageShowTimestamp", @"xpath"]];
+    NSArray *protocol = [self.context arrayByAddingObjectsFromArray:@[@"path", @"xpath"]];
     NSArray *optional = @[@"textValue", @"index", @"hyperlink", @"query"];
     return [self protocolCheck:event protocol:protocol] && [self emptyPropertyCheck:event optional:optional];
 }
@@ -84,7 +84,7 @@
     if (event.count == 0) {
         return NO;
     }
-    NSArray *protocol = [self.context arrayByAddingObjectsFromArray:@[@"path", @"pageShowTimestamp", @"xpath"]];
+    NSArray *protocol = [self.context arrayByAddingObjectsFromArray:@[@"path", @"xpath"]];
     NSArray *optional = @[@"textValue", @"index", @"hyperlink", @"query"];
     return [self protocolCheck:event protocol:protocol] && [self emptyPropertyCheck:event optional:optional];
 }

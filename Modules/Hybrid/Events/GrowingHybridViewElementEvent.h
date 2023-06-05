@@ -42,7 +42,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 重写
 - (GrowingHybridViewElementBuilder * (^)(NSString *value))setPath;
-- (GrowingHybridViewElementBuilder * (^)(long long value))setPageShowTimestamp;
 - (GrowingHybridViewElementBuilder * (^)(NSString *value))setTextValue;
 - (GrowingHybridViewElementBuilder * (^)(NSString *value))setXpath;
 - (GrowingHybridViewElementBuilder * (^)(int value))setIndex;

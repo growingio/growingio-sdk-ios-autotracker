@@ -26,7 +26,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GrowingPageCustomEvent : GrowingCustomEvent
 
 @property (nonatomic, copy, readonly) NSString *path;
-@property (nonatomic, assign, readonly) long long pageShowTimestamp;
 
 + (GrowingPageCustomBuilder *)builder;
 
@@ -35,10 +34,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GrowingPageCustomBuilder : GrowingCustomBuilder
 
 @property (nonatomic, copy, readonly) NSString *pageName;
-@property (nonatomic, assign, readonly) long long pageShowTimestamp;
 
 - (GrowingPageCustomBuilder * (^)(NSString *value))setPath;
-- (GrowingPageCustomBuilder * (^)(long long value))setPageShowTimestamp;
 
 // override
 - (GrowingPageCustomBuilder * (^)(NSString *value))setEventName;

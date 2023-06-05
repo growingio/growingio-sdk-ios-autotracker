@@ -46,7 +46,6 @@
     [[GrowingEventManager sharedInstance]
         postEventBuilder:GrowingViewElementEvent.builder.setEventType(GrowingEventTypeViewClick)
                              .setPath(page.path)
-                             .setPageShowTimestamp(page.showTimestamp)
                              .setXpath(node.xPath)
                              .setIndex(node.index)
                              .setTextValue(node.viewContent)];
