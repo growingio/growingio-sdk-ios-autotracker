@@ -53,7 +53,6 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
 #define KEY_REFERRAL_PAGE "referralPage"
 #define KEY_TITLE "title"
 #define KEY_TIMESTAMP "timestamp"
-#define KEY_PAGE_SHOW_TIMESTAMP "pageShowTimestamp"
 #define KEY_ATTRIBUTES "attributes"
 #define KEY_VARIABLES "variables"
 #define KEY_EVENT_NAME "eventName"
@@ -233,8 +232,6 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
     } else if ([type isEqualToString:GrowingEventTypeCustom]) {
         builder = GrowingHybridCustomEvent.builder.setQuery(dict[@KEY_QUERY])
                       .setPath(dict[@KEY_PATH])
-                      .setPageShowTimestamp([dict growingHelper_longlongForKey:@KEY_PAGE_SHOW_TIMESTAMP
-                                                                      fallback:[GrowingULTimeUtil currentTimeMillis]])
                       .setAttributes([self safeAttributesFromDict:dict])
                       .setEventName(dict[@KEY_EVENT_NAME])
                       .setDomain([self getDomain:dict]);
@@ -255,8 +252,6 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
         .setTextValue(dict[@KEY_TEXT_VALUE])
         .setXpath(dict[@KEY_XPATH])
         .setPath(dict[@KEY_PATH])
-        .setPageShowTimestamp([dict growingHelper_longlongForKey:@KEY_PAGE_SHOW_TIMESTAMP
-                                                        fallback:[GrowingULTimeUtil currentTimeMillis]])
         .setDomain([self getDomain:dict]);
 }
 

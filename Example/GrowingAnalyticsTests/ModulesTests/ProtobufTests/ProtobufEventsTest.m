@@ -80,7 +80,6 @@
         GrowingHybridViewElementEvent *event = (GrowingHybridViewElementEvent *)(GrowingHybridViewElementEvent.builder
                                                                                  .setEventType(GrowingEventTypeVisit)
                                                                                  .setPath(@"path")
-                                                                                 .setPageShowTimestamp(1638857558209)
                                                                                  .setXpath(@"xpath")
                                                                                  .setIndex(1)
                                                                                  .setQuery(@"query")
@@ -90,7 +89,6 @@
         XCTAssertEqualObjects(GrowingEventTypeVisit, event.eventType);
         XCTAssertEqual(GrowingPBEventType_Visit, protobuf.eventType);
         XCTAssertEqualObjects(event.path ?: @"", protobuf.path);
-        XCTAssertEqual(event.pageShowTimestamp, protobuf.pageShowTimestamp);
         XCTAssertEqualObjects(event.xpath ?: @"", protobuf.xpath);
         XCTAssertEqual(event.index, protobuf.index);
         XCTAssertEqualObjects(event.query ?: @"", protobuf.query);
@@ -126,7 +124,6 @@
         GrowingPageCustomEvent *event = (GrowingPageCustomEvent *)(GrowingPageCustomEvent.builder
                                                                    .setEventName(@"custom")
                                                                    .setPath(@"path")
-                                                                   .setPageShowTimestamp(1638857558209)
                                                                    .setAttributes(@{@"key": @"value"})
                                                                    .build);
         GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
@@ -135,7 +132,6 @@
         XCTAssertEqual(GrowingPBEventType_Custom, protobuf.eventType);
         XCTAssertEqualObjects(event.eventName ?: @"", protobuf.eventName);
         XCTAssertEqualObjects(event.path ?: @"", protobuf.path);
-        XCTAssertEqual(event.pageShowTimestamp, protobuf.pageShowTimestamp);
         XCTAssertEqualObjects(event.attributes ?: @{}, protobuf.attributes);
     }
     {
@@ -146,7 +142,6 @@
         XCTAssertEqual(GrowingPBEventType_Custom, protobuf.eventType);
         XCTAssertEqualObjects(event.eventName ?: @"", protobuf.eventName);
         XCTAssertEqualObjects(event.path ?: @"", protobuf.path);
-        XCTAssertEqual(event.pageShowTimestamp, protobuf.pageShowTimestamp);
         XCTAssertEqualObjects(event.attributes ?: @{}, protobuf.attributes);
     }
 
@@ -155,7 +150,6 @@
         GrowingHybridCustomEvent *event = (GrowingHybridCustomEvent *)(GrowingHybridCustomEvent.builder
                                                                        .setEventName(@"custom")
                                                                        .setPath(@"path")
-                                                                       .setPageShowTimestamp(1638857558209)
                                                                        .setAttributes(@{@"key": @"value"})
                                                                        .setQuery(@"query")
                                                                        .build);
@@ -165,7 +159,6 @@
         XCTAssertEqual(GrowingPBEventType_Custom, protobuf.eventType);
         XCTAssertEqualObjects(event.eventName ?: @"", protobuf.eventName);
         XCTAssertEqualObjects(event.path ?: @"", protobuf.path);
-        XCTAssertEqual(event.pageShowTimestamp, protobuf.pageShowTimestamp);
         XCTAssertEqualObjects(event.attributes ?: @{}, protobuf.attributes);
         XCTAssertEqualObjects(event.query ?: @"", protobuf.query);
     }
@@ -177,7 +170,6 @@
         XCTAssertEqual(GrowingPBEventType_Custom, protobuf.eventType);
         XCTAssertEqualObjects(event.eventName ?: @"", protobuf.eventName);
         XCTAssertEqualObjects(event.path ?: @"", protobuf.path);
-        XCTAssertEqual(event.pageShowTimestamp, protobuf.pageShowTimestamp);
         XCTAssertEqualObjects(event.attributes ?: @{}, protobuf.attributes);
         XCTAssertEqualObjects(event.query ?: @"", protobuf.query);
     }
@@ -338,7 +330,6 @@
         GrowingViewElementEvent *event = (GrowingViewElementEvent *)(GrowingViewElementEvent.builder
                                                                      .setEventType(GrowingEventTypeViewClick)
                                                                      .setPath(@"path")
-                                                                     .setPageShowTimestamp(1638857558209)
                                                                      .setTextValue(@"textvalue")
                                                                      .setXpath(@"xpath")
                                                                      .setIndex(1)
@@ -348,7 +339,6 @@
         XCTAssertEqualObjects(GrowingEventTypeViewClick, event.eventType);
         XCTAssertEqual(GrowingPBEventType_ViewClick, protobuf.eventType);
         XCTAssertEqualObjects(event.path ?: @"", protobuf.path);
-        XCTAssertEqual(event.pageShowTimestamp, protobuf.pageShowTimestamp);
         XCTAssertEqualObjects(event.textValue ?: @"", protobuf.textValue);
         XCTAssertEqualObjects(event.xpath ?: @"", protobuf.xpath);
         XCTAssertEqual(event.index, protobuf.index);
@@ -362,7 +352,6 @@
         XCTAssertEqualObjects(GrowingEventTypeViewClick, event.eventType);
         XCTAssertEqual(GrowingPBEventType_ViewClick, protobuf.eventType);
         XCTAssertEqualObjects(event.path ?: @"", protobuf.path);
-        XCTAssertEqual(event.pageShowTimestamp, protobuf.pageShowTimestamp);
         XCTAssertEqualObjects(event.textValue ?: @"", protobuf.textValue);
         XCTAssertEqualObjects(event.xpath ?: @"", protobuf.xpath);
         XCTAssertEqual(event.index, protobuf.index);
@@ -373,7 +362,6 @@
         GrowingHybridViewElementEvent *event = (GrowingHybridViewElementEvent *)(GrowingHybridViewElementEvent.builder
                                                                                  .setEventType(GrowingEventTypeViewClick)
                                                                                  .setPath(@"path")
-                                                                                 .setPageShowTimestamp(1638857558209)
                                                                                  .setTextValue(@"textvalue")
                                                                                  .setXpath(@"xpath")
                                                                                  .setIndex(1)
@@ -385,7 +373,6 @@
         XCTAssertEqualObjects(GrowingEventTypeViewClick, event.eventType);
         XCTAssertEqual(GrowingPBEventType_ViewClick, protobuf.eventType);
         XCTAssertEqualObjects(event.path ?: @"", protobuf.path);
-        XCTAssertEqual(event.pageShowTimestamp, protobuf.pageShowTimestamp);
         XCTAssertEqualObjects(event.textValue ?: @"", protobuf.textValue);
         XCTAssertEqualObjects(event.xpath ?: @"", protobuf.xpath);
         XCTAssertEqual(event.index, protobuf.index);
@@ -401,7 +388,6 @@
         XCTAssertEqualObjects(GrowingEventTypeViewClick, event.eventType);
         XCTAssertEqual(GrowingPBEventType_ViewClick, protobuf.eventType);
         XCTAssertEqualObjects(event.path ?: @"", protobuf.path);
-        XCTAssertEqual(event.pageShowTimestamp, protobuf.pageShowTimestamp);
         XCTAssertEqualObjects(event.textValue ?: @"", protobuf.textValue);
         XCTAssertEqualObjects(event.xpath ?: @"", protobuf.xpath);
         XCTAssertEqual(event.index, protobuf.index);
@@ -416,7 +402,6 @@
         GrowingViewElementEvent *event = (GrowingViewElementEvent *)(GrowingViewElementEvent.builder
                                                                      .setEventType(GrowingEventTypeViewChange)
                                                                      .setPath(@"path")
-                                                                     .setPageShowTimestamp(1638857558209)
                                                                      .setTextValue(@"textvalue")
                                                                      .setXpath(@"xpath")
                                                                      .setIndex(1)
@@ -426,7 +411,6 @@
         XCTAssertEqualObjects(GrowingEventTypeViewChange, event.eventType);
         XCTAssertEqual(GrowingPBEventType_ViewChange, protobuf.eventType);
         XCTAssertEqualObjects(event.path ?: @"", protobuf.path);
-        XCTAssertEqual(event.pageShowTimestamp, protobuf.pageShowTimestamp);
         XCTAssertEqualObjects(event.textValue ?: @"", protobuf.textValue);
         XCTAssertEqualObjects(event.xpath ?: @"", protobuf.xpath);
         XCTAssertEqual(event.index, protobuf.index);
@@ -440,7 +424,6 @@
         XCTAssertEqualObjects(GrowingEventTypeViewChange, event.eventType);
         XCTAssertEqual(GrowingPBEventType_ViewChange, protobuf.eventType);
         XCTAssertEqualObjects(event.path ?: @"", protobuf.path);
-        XCTAssertEqual(event.pageShowTimestamp, protobuf.pageShowTimestamp);
         XCTAssertEqualObjects(event.textValue ?: @"", protobuf.textValue);
         XCTAssertEqualObjects(event.xpath ?: @"", protobuf.xpath);
         XCTAssertEqual(event.index, protobuf.index);
@@ -451,7 +434,6 @@
         GrowingHybridViewElementEvent *event = (GrowingHybridViewElementEvent *)(GrowingHybridViewElementEvent.builder
                                                                                  .setEventType(GrowingEventTypeViewChange)
                                                                                  .setPath(@"path")
-                                                                                 .setPageShowTimestamp(1638857558209)
                                                                                  .setTextValue(@"textvalue")
                                                                                  .setXpath(@"xpath")
                                                                                  .setIndex(1)
@@ -463,7 +445,6 @@
         XCTAssertEqualObjects(GrowingEventTypeViewChange, event.eventType);
         XCTAssertEqual(GrowingPBEventType_ViewChange, protobuf.eventType);
         XCTAssertEqualObjects(event.path ?: @"", protobuf.path);
-        XCTAssertEqual(event.pageShowTimestamp, protobuf.pageShowTimestamp);
         XCTAssertEqualObjects(event.textValue ?: @"", protobuf.textValue);
         XCTAssertEqualObjects(event.xpath ?: @"", protobuf.xpath);
         XCTAssertEqual(event.index, protobuf.index);
@@ -479,7 +460,6 @@
         XCTAssertEqualObjects(GrowingEventTypeViewChange, event.eventType);
         XCTAssertEqual(GrowingPBEventType_ViewChange, protobuf.eventType);
         XCTAssertEqualObjects(event.path ?: @"", protobuf.path);
-        XCTAssertEqual(event.pageShowTimestamp, protobuf.pageShowTimestamp);
         XCTAssertEqualObjects(event.textValue ?: @"", protobuf.textValue);
         XCTAssertEqualObjects(event.xpath ?: @"", protobuf.xpath);
         XCTAssertEqual(event.index, protobuf.index);
