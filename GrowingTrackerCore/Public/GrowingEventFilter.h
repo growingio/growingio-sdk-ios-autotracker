@@ -19,22 +19,18 @@
 
 #import <Foundation/Foundation.h>
 
-// 过滤 VIEW_CLICK、VIEW_CHANGE、FORM_SUBMIT 事件的掩码值
-extern NSUInteger const GrowingFilterClickChangeSubmit;
+// 过滤 VIEW_CLICK、VIEW_CHANGE 事件的掩码值
+extern NSUInteger const GrowingFilterClickChange;
 
 typedef NS_OPTIONS(NSUInteger, GrowingFilterEvent) {
     GrowingFilterEventVisit = (1 << 0),
     GrowingFilterEventCustom = (1 << 1),
-    GrowingFilterEventVisitorAttributes = (1 << 2),
-    GrowingFilterEventLoginUserAttributes = (1 << 3),
-    GrowingFilterEventConversionVariables = (1 << 4),
-    GrowingFilterEventAppClosed = (1 << 5),
-    GrowingFilterEventPage = (1 << 6),
-    GrowingFilterEventPageAttributes = (1 << 7),
-    GrowingFilterEventViewClick = (1 << 8),
-    GrowingFilterEventViewChange = (1 << 9),
-    GrowingFilterEventFormSubmit = (1 << 10),
-    GrowingFilterEventReengage = (1 << 11),
+    GrowingFilterEventLoginUserAttributes = (1 << 2),
+    GrowingFilterEventAppClosed = (1 << 3),
+    GrowingFilterEventPage = (1 << 4),
+    GrowingFilterEventViewClick = (1 << 5),
+    GrowingFilterEventViewChange = (1 << 6),
+    GrowingFilterEventActivate = (1 << 7),
 };
 
 @interface GrowingEventFilter : NSObject

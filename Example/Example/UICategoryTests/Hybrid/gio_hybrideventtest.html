@@ -299,27 +299,6 @@
             sendMockEvent(event);
         }
 
-        function sendMockFormSubmitEvent() {
-            let event = {
-                "deviceId": "7196f014-d7bc-4bd8-b920-757cb2375ff6",
-                "sessionId": "d5cbcf77-b38b-4223-954f-c6a2fdc0c098",
-                "eventType": "FORM_SUBMIT",
-                "platform": "Web",
-                "timestamp": 1602485628504,
-                "domain": "test-browser.growingio.com",
-                "path": "/push/web.html",
-                "query": "a=1&b=2",
-                "title": "Hybrid测试页面",
-                "referralPage": "http://test-browser.growingio.com/push",
-                "globalSequenceId": 99,
-                "eventSequenceId": 3,
-                "pageShowTimestamp": 1602485626878,
-                "xpath": "/div/form/input",
-                "index": 1
-            };
-            sendMockEvent(event);
-        }
-
         function sendMockEvent(event) {
             GrowingWebViewJavascriptBridge.dispatchEvent(JSON.stringify(event));
         }
@@ -388,9 +367,6 @@
                     </button>
                     <button class="button" onclick="javascript:sendMockViewChangeEvent()" type="button">
                         sendMockViewChangeEvent
-                    </button>
-                    <button class="button" onclick="javascript:sendMockFormSubmitEvent()" type="button">
-                        sendMockFormSubmitEvent
                     </button>
                     <button class="button" onclick="javascript:mockSetUserId('name')" type="button">
                         mockSetUserId('name')
