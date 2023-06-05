@@ -22,6 +22,7 @@
 #import "GrowingAutotrackerCore/GrowingNode/GrowingNodeHelper.h"
 #import "GrowingAutotrackerCore/GrowingNode/GrowingViewNode.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
+#import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogMacros.h"
@@ -43,12 +44,18 @@
 }
 
 + (void)sendChangeEvent:(GrowingPageGroup *)page viewNode:(GrowingViewNode *)node {
-    [[GrowingEventManager sharedInstance]
-        postEventBuilder:GrowingViewElementEvent.builder.setEventType(GrowingEventTypeViewChange)
-                             .setPath(page.path)
-                             .setXpath(node.xPath)
-                             .setIndex(node.index)
-                             .setTextValue(node.viewContent)];
+    GrowingViewElementBuilder *builder = GrowingViewElementEvent.builder
+        .setEventType(GrowingEventTypeViewChange)
+        .setPath(page.path)
+        .setXpath(node.xPath)
+        .setIndex(node.index)
+        .setTextValue(node.viewContent);
+    
+    if (!page.isIgnored) {
+        builder.setAttributes([page.carrier growingPageAttributes]);
+    }
+    
+    [[GrowingEventManager sharedInstance] postEventBuilder:builder];
 }
 
 @end
