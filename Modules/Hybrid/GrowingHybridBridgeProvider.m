@@ -252,7 +252,8 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
         .setTextValue(dict[@KEY_TEXT_VALUE])
         .setXpath(dict[@KEY_XPATH])
         .setPath(dict[@KEY_PATH])
-        .setDomain([self getDomain:dict]);
+        .setDomain([self getDomain:dict])
+        .setAttributes([self safeAttributesFromDict:dict]);;
 }
 
 @end
