@@ -127,7 +127,6 @@ extension GrowingBaseEvent {
         dto.idfv = idfv()
         dto.extraSdk = extraSdk()
         dto.path = path()
-        dto.pageShowTimestamp = pageShowTimestamp()
         dto.textValue = textValue()
         dto.xpath = xpath()
         dto.index = index()
@@ -209,16 +208,6 @@ extension GrowingBaseEvent {
             return unsafeBitCast(imp, to: (@convention(c)(GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
         }
         return ""
-    }
-
-    fileprivate func pageShowTimestamp() -> Int64 {
-        let selector = Selector(("pageShowTimestamp"))
-        if self.responds(to: selector) {
-            let imp: IMP = method_getImplementation(class_getInstanceMethod(type(of: self), selector)!)
-            let result = unsafeBitCast(imp, to: (@convention(c)(GrowingBaseEvent, Selector) -> Int64).self)(self, selector)
-            return result > 0 ? result : 0
-        }
-        return 0
     }
 
     fileprivate func textValue() -> String {

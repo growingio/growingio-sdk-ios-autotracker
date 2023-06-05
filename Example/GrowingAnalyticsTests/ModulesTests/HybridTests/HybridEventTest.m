@@ -42,13 +42,11 @@
     GrowingHybridCustomEvent *event = (GrowingHybridCustomEvent *)GrowingHybridCustomEvent.builder.setPath(@"/hybrid/test")
     .setQuery(@"testquery")
     .setEventName(@"testEventName")
-    .setPageShowTimestamp(123456677)
     .setAttributes(@{@"test":@"value"}).build;
     
     XCTAssertEqual(event.path, @"/hybrid/test");
     XCTAssertEqual(event.query, @"testquery");
     XCTAssertEqual(event.eventName, @"testEventName");
-    XCTAssertTrue(event.pageShowTimestamp == 123456677);
     NSString *value = (NSString *)event.attributes[@"test"];
     XCTAssertTrue([value isEqualToString:@"value"]);
 }
@@ -68,14 +66,12 @@
     GrowingPageCustomEvent *event = (GrowingPageCustomEvent *)GrowingPageCustomEvent.builder
     .setPath(@"path")
     .setEventName(@"testEventName")
-    .setAttributes(@{@"test":@"value"})
-    .setPageShowTimestamp(123456677).build;
+    .setAttributes(@{@"test":@"value"}).build;
     
     XCTAssertEqualObjects(event.path, @"path");
     XCTAssertEqualObjects(event.eventName, @"testEventName");
     NSString *value = (NSString *)event.attributes[@"test"];
     XCTAssertTrue([value isEqualToString:@"value"]);
-    XCTAssertTrue(event.pageShowTimestamp == 123456677);
 }
 
 - (void)testGrowingHybridViewElementEvent {

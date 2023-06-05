@@ -29,7 +29,6 @@
     if (self = [super initWithBuilder:builder]) {
         GrowingPageCustomBuilder *subBuilder = (GrowingPageCustomBuilder *)builder;
         _path = subBuilder.pageName;
-        _pageShowTimestamp = subBuilder.pageShowTimestamp;
     }
     return self;
 }
@@ -37,7 +36,6 @@
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
     dataDictM[@"path"] = self.path;
-    dataDictM[@"pageShowTimestamp"] = @(self.pageShowTimestamp);
     return dataDictM;
 }
 
@@ -50,13 +48,6 @@
 - (GrowingPageCustomBuilder * (^)(NSString *value))setPath {
     return ^(NSString *value) {
         self->_pageName = value;
-        return self;
-    };
-}
-
-- (GrowingPageCustomBuilder * (^)(long long value))setPageShowTimestamp {
-    return ^(long long value) {
-        self->_pageShowTimestamp = value;
         return self;
     };
 }
