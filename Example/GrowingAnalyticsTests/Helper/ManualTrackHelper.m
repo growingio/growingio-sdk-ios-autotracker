@@ -89,15 +89,6 @@
     return [self protocolCheck:event protocol:protocol] && [self emptyPropertyCheck:event optional:optional];
 }
 
-+ (BOOL)hybridFormSubmitEventCheck:(NSDictionary *)event {
-    if (event.count == 0) {
-        return NO;
-    }
-    NSArray *protocol = [self.context arrayByAddingObjectsFromArray:@[@"path", @"pageShowTimestamp", @"xpath"]];
-    NSArray *optional = @[@"index", @"query"];
-    return [self protocolCheck:event protocol:protocol] && [self emptyPropertyCheck:event optional:optional];
-}
-
 /// 验证测量协议中通用非必需字段不为空（需在生成事件前赋值对应字段，如userId、userKey等）
 /// @param event 事件
 + (BOOL)contextOptionalPropertyCheck:(NSDictionary *)event {

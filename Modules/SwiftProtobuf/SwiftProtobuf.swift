@@ -164,8 +164,6 @@ extension GrowingBaseEvent {
             return .viewClick
         } else if self.eventType == "VIEW_CHANGE" {
             return .viewChange
-        } else if self.eventType == "FORM_SUBMIT" {
-            return .formSubmit
         } else if self.eventType == "ACTIVATE" {
             return .activate
         }

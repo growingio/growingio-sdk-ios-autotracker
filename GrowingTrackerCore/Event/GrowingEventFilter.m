@@ -20,8 +20,8 @@
 #import "GrowingTrackerCore/Public/GrowingEventFilter.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 
-NSUInteger const GrowingFilterClickChangeSubmit =
-    (GrowingFilterEventViewClick | GrowingFilterEventViewChange | GrowingFilterEventFormSubmit);
+NSUInteger const GrowingFilterClickChange =
+    (GrowingFilterEventViewClick | GrowingFilterEventViewChange);
 
 @implementation GrowingEventFilter
 
@@ -32,16 +32,12 @@ NSUInteger const GrowingFilterClickChangeSubmit =
         _filterEventItems = @[
             @"VISIT",
             @"CUSTOM",
-            @"VISITOR_ATTRIBUTES",
             @"LOGIN_USER_ATTRIBUTES",
-            @"CONVERSION_VARIABLES",
             @"APP_CLOSED",
             @"PAGE",
-            @"PAGE_ATTRIBUTES",
             @"VIEW_CLICK",
             @"VIEW_CHANGE",
-            @"FORM_SUBMIT",
-            @"REENGAGE"
+            @"ACTIVATE"
         ];
     });
     return _filterEventItems;
