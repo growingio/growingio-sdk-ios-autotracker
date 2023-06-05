@@ -132,8 +132,6 @@
         return GrowingPBEventType_ViewClick;
     } else if ([self.eventType isEqualToString:@"VIEW_CHANGE"]) {
         return GrowingPBEventType_ViewChange;
-    } else if ([self.eventType isEqualToString:@"FORM_SUBMIT"]) {
-        return GrowingPBEventType_FormSubmit;
     } else if ([self.eventType isEqualToString:@"ACTIVATE"]) {
         return GrowingPBEventType_Activate;
     }

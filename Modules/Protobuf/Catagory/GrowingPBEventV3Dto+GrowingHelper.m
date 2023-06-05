@@ -69,9 +69,6 @@
         case GrowingPBEventType_ViewChange: {
             [dic setObject:@"VIEW_CHANGE" forKey:@"eventType"];
         } break;
-        case GrowingPBEventType_FormSubmit: {
-            [dic setObject:@"FORM_SUBMIT" forKey:@"eventType"];
-        } break;
         case GrowingPBEventType_Activate: {
             [dic setObject:@"ACTIVATE" forKey:@"eventType"];
         } break;

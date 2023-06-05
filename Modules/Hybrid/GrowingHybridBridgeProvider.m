@@ -32,7 +32,6 @@
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "GrowingULTimeUtil.h"
 #import "Modules/Hybrid/Events/GrowingHybridCustomEvent.h"
-#import "Modules/Hybrid/Events/GrowingHybridEventType.h"
 #import "Modules/Hybrid/Events/GrowingHybridPageEvent.h"
 #import "Modules/Hybrid/Events/GrowingHybridViewElementEvent.h"
 #import "Modules/Hybrid/GrowingWebViewDomChangedDelegate.h"
@@ -230,8 +229,6 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
     } else if ([type isEqualToString:GrowingEventTypeViewClick]) {
         builder = [self transformViewElementBuilder:dict].setEventType(type);
     } else if ([type isEqualToString:GrowingEventTypeViewChange]) {
-        builder = [self transformViewElementBuilder:dict].setEventType(type);
-    } else if ([type isEqualToString:GrowingEventTypeFormSubmit]) {
         builder = [self transformViewElementBuilder:dict].setEventType(type);
     } else if ([type isEqualToString:GrowingEventTypeCustom]) {
         builder = GrowingHybridCustomEvent.builder.setQuery(dict[@KEY_QUERY])

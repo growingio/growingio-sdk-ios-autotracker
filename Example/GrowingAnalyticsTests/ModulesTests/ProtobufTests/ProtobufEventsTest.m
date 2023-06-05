@@ -33,7 +33,6 @@
 #import "Modules/Hybrid/Events/GrowingHybridPageEvent.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
 #import "Modules/Hybrid/Events/GrowingHybridViewElementEvent.h"
-#import "Modules/Hybrid/Events/GrowingHybridEventType.h"
 
 @interface ProtobufEventsTest : XCTestCase
 
@@ -485,43 +484,6 @@
         XCTAssertEqualObjects(event.xpath ?: @"", protobuf.xpath);
         XCTAssertEqual(event.index, protobuf.index);
         XCTAssertEqualObjects(event.hyperlink ?: @"", protobuf.hyperlink);
-        XCTAssertEqualObjects(event.query ?: @"", protobuf.query);
-    }
-}
-
-- (void)testEventConvertToPB_FormSubmit {
-    // GrowingHybridViewElementEvent
-    {
-        GrowingHybridViewElementEvent *event = (GrowingHybridViewElementEvent *)(GrowingHybridViewElementEvent.builder
-                                                                                 .setEventType(GrowingEventTypeFormSubmit)
-                                                                                 .setPath(@"path")
-                                                                                 .setPageShowTimestamp(1638857558209)
-                                                                                 .setXpath(@"xpath")
-                                                                                 .setIndex(1)
-                                                                                 .setQuery(@"query")
-                                                                                 .build);
-        GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
-        [self contrastOfDefaultParamter:event protobuf:protobuf];
-        XCTAssertEqualObjects(GrowingEventTypeFormSubmit, event.eventType);
-        XCTAssertEqual(GrowingPBEventType_FormSubmit, protobuf.eventType);
-        XCTAssertEqualObjects(event.path ?: @"", protobuf.path);
-        XCTAssertEqual(event.pageShowTimestamp, protobuf.pageShowTimestamp);
-        XCTAssertEqualObjects(event.xpath ?: @"", protobuf.xpath);
-        XCTAssertEqual(event.index, protobuf.index);
-        XCTAssertEqualObjects(event.query ?: @"", protobuf.query);
-    }
-    {
-        GrowingHybridViewElementEvent *event = (GrowingHybridViewElementEvent *)(GrowingHybridViewElementEvent.builder
-                                                                                 .setEventType(GrowingEventTypeFormSubmit)
-                                                                                 .build);
-        GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
-        [self contrastOfDefaultParamter:event protobuf:protobuf];
-        XCTAssertEqualObjects(GrowingEventTypeFormSubmit, event.eventType);
-        XCTAssertEqual(GrowingPBEventType_FormSubmit, protobuf.eventType);
-        XCTAssertEqualObjects(event.path ?: @"", protobuf.path);
-        XCTAssertEqual(event.pageShowTimestamp, protobuf.pageShowTimestamp);
-        XCTAssertEqualObjects(event.xpath ?: @"", protobuf.xpath);
-        XCTAssertEqual(event.index, protobuf.index);
         XCTAssertEqualObjects(event.query ?: @"", protobuf.query);
     }
 }
