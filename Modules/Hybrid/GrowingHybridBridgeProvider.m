@@ -223,8 +223,6 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
                                                               fallback:[GrowingULTimeUtil currentTimeMillis]])
                       .setAttributes([self safeAttributesFromDict:dict])
                       .setDomain([self getDomain:dict]);
-    } else if ([type isEqualToString:GrowingEventTypeVisit]) {
-        builder = [self transformViewElementBuilder:dict].setEventType(type);
     } else if ([type isEqualToString:GrowingEventTypeViewClick]) {
         builder = [self transformViewElementBuilder:dict].setEventType(type);
     } else if ([type isEqualToString:GrowingEventTypeViewChange]) {
@@ -237,8 +235,6 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
                       .setDomain([self getDomain:dict]);
     } else if ([type isEqualToString:GrowingEventTypeLoginUserAttributes]) {
         builder = GrowingLoginUserAttributesEvent.builder.setAttributes([self safeAttributesFromDict:dict]);
-    } else if ([type isEqualToString:GrowingEventTypeConversionVariables]) {
-        builder = GrowingConversionVariableEvent.builder.setAttributes([self safeAttributesFromDict:dict]);
     }
     if (builder) {
         [[GrowingEventManager sharedInstance] postEventBuilder:builder];
