@@ -20,8 +20,7 @@
 #import "GrowingTrackerCore/Public/GrowingEventFilter.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 
-NSUInteger const GrowingFilterClickChange =
-    (GrowingFilterEventViewClick | GrowingFilterEventViewChange);
+NSUInteger const GrowingFilterClickChange = (GrowingFilterEventViewClick | GrowingFilterEventViewChange);
 
 @implementation GrowingEventFilter
 

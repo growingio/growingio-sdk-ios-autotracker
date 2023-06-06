@@ -18,11 +18,11 @@
 //  limitations under the License.
 
 #import "GrowingAutotrackerCore/GrowingNode/GrowingViewChangeProvider.h"
+#import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/GrowingNodeHelper.h"
 #import "GrowingAutotrackerCore/GrowingNode/GrowingViewNode.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
-#import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogMacros.h"
@@ -44,17 +44,16 @@
 }
 
 + (void)sendChangeEvent:(GrowingPageGroup *)page viewNode:(GrowingViewNode *)node {
-    GrowingViewElementBuilder *builder = GrowingViewElementEvent.builder
-        .setEventType(GrowingEventTypeViewChange)
-        .setPath(page.path)
-        .setXpath(node.xPath)
-        .setIndex(node.index)
-        .setTextValue(node.viewContent);
-    
+    GrowingViewElementBuilder *builder = GrowingViewElementEvent.builder.setEventType(GrowingEventTypeViewChange)
+                                             .setPath(page.path)
+                                             .setXpath(node.xPath)
+                                             .setIndex(node.index)
+                                             .setTextValue(node.viewContent);
+
     if (!page.isIgnored) {
         builder.setAttributes([page.carrier growingPageAttributes]);
     }
-    
+
     [[GrowingEventManager sharedInstance] postEventBuilder:builder];
 }
 

@@ -17,8 +17,8 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Event/GrowingBaseAttributesEvent.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingAutotrackEventType.h"
+#import "GrowingTrackerCore/Event/GrowingBaseAttributesEvent.h"
 
 // 泛型类型，可以生成多个类型event，故可以设置eventType
 
@@ -48,7 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (GrowingViewElementBuilder * (^)(NSString *value))setTextValue;
 - (GrowingViewElementBuilder * (^)(NSString *value))setXpath;
 - (GrowingViewElementBuilder * (^)(int value))setIndex;
-- (GrowingViewElementBuilder *(^)(NSDictionary <NSString *, NSObject *>*value))setAttributes;
+- (GrowingViewElementBuilder * (^)(NSDictionary<NSString *, NSObject *> *value))setAttributes;
 
 // extra add
 // 覆盖返回值类型为GrowingViewElementBuilder
