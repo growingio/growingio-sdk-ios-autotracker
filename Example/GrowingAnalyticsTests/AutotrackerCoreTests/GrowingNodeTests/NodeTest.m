@@ -47,7 +47,6 @@
     [vc1 performSelector:@selector(growingNodeSubPath)];
     [vc1 performSelector:@selector(growingNodeSubSimilarPath)];
     [vc1 performSelector:@selector(growingNodeChilds)];
-    [vc1 performSelector:@selector(growingPageIgnorePolicy)];
 #pragma clang diagnostic pop
 }
 

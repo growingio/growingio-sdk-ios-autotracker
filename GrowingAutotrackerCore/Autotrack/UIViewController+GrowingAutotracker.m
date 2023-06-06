@@ -18,6 +18,7 @@
 //  limitations under the License.
 
 #import <objc/runtime.h>
+#import "GrowingAutotrackerCore/GrowingRealAutotracker.h"
 #import "GrowingAutotrackerCore/Autotrack/GrowingPropertyDefine.h"
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
@@ -26,8 +27,8 @@
 #import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
 #import "GrowingULViewControllerLifecycle.h"
 
+static char kGrowingPageAutotrackEnabledKey;
 static char kGrowingPageObjectKey;
-static char kGrowingPageIgnorePolicyKey;
 static char kGrowingPageAttributesKey;
 
 @implementation UIViewController (GrowingAutotracker)
@@ -88,48 +89,45 @@ GrowingSafeStringPropertyImplementation(growingPageAlias, setGrowingPageAlias)
     return [objc_getAssociatedObject(self, &kGrowingPageAttributesKey) copy];
 }
 
-- (void)setGrowingPageIgnorePolicy:(GrowingIgnorePolicy)growingPageIgnorePolicy {
+- (void)setGrowingAutotrackEnabled:(BOOL)enabled {
     objc_setAssociatedObject(self,
-                             &kGrowingPageIgnorePolicyKey,
-                             [NSNumber numberWithUnsignedInteger:growingPageIgnorePolicy],
+                             &kGrowingPageAutotrackEnabledKey,
+                             @(enabled),
                              OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (GrowingIgnorePolicy)growingPageIgnorePolicy {
-    id policyObjc = objc_getAssociatedObject(self, &kGrowingPageIgnorePolicyKey);
-    if (!policyObjc) {
-        return GrowingIgnoreNone;
+- (BOOL)growingAutotrackEnabled {
+    id enabled = objc_getAssociatedObject(self, &kGrowingPageAutotrackEnabledKey);
+    if ([enabled isKindOfClass:NSNumber.class]) {
+        return ((NSNumber *)enabled).boolValue;
     }
-
-    if ([policyObjc isKindOfClass:NSNumber.class]) {
-        NSNumber *policyNum = (NSNumber *)policyObjc;
-        return policyNum.unsignedIntegerValue;
-    }
-
-    return GrowingIgnoreNone;
-}
-
-- (BOOL)growingPageDidIgnore {
-    // judge self firstly
-    GrowingIgnorePolicy selfPolicy = self.growingPageIgnorePolicy;
-    if (GrowingIgnoreAll == selfPolicy || GrowingIgnoreSelf == selfPolicy) {
-        return YES;
-    }
-
-    // judge parent
-    UIViewController *current = self;
-    while (current.parentViewController) {
-        UIViewController *parent = current.parentViewController;
-        GrowingIgnorePolicy parentPolicy = parent.growingPageIgnorePolicy;
-
-        if (GrowingIgnoreChildren == parentPolicy || GrowingIgnoreAll == parentPolicy) {
-            return YES;
-        }
-
-        current = parent;
-    }
-
+    
     return NO;
 }
+
+//- (BOOL)growingPageDidIgnore {
+//    return NO;
+//}
+//    // judge self firstly
+//    GrowingIgnorePolicy selfPolicy = self.growingPageIgnorePolicy;
+//    if (GrowingIgnoreAll == selfPolicy || GrowingIgnoreSelf == selfPolicy) {
+//        return YES;
+//    }
+//
+//    // judge parent
+//    UIViewController *current = self;
+//    while (current.parentViewController) {
+//        UIViewController *parent = current.parentViewController;
+//        GrowingIgnorePolicy parentPolicy = parent.growingPageIgnorePolicy;
+//
+//        if (GrowingIgnoreChildren == parentPolicy || GrowingIgnoreAll == parentPolicy) {
+//            return YES;
+//        }
+//
+//        current = parent;
+//    }
+//
+//    return NO;
+//}
 
 @end

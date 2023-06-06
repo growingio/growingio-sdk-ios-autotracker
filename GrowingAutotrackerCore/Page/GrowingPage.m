@@ -34,7 +34,6 @@
     if (self) {
         _carrier = carrier;
         _showTimestamp = GrowingULTimeUtil.currentTimeMillis;
-        _isIgnored = [carrier growingPageDidIgnore];
         _title = [carrier growingPageTitle];
     }
 

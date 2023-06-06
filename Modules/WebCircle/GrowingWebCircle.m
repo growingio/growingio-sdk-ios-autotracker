@@ -148,7 +148,7 @@ GrowingMod(GrowingWebCircle)
         dict[@"title"] = vc.title;
     }
 
-    dict[@"isIgnored"] = @([vc growingPageDidIgnore]);
+    dict[@"isIgnored"] = @(![GrowingPageManager.sharedInstance pageNeedAutotrack:vc]);
     return dict;
 }
 

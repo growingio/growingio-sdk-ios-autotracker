@@ -115,6 +115,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// 清除所有事件计时器
 - (void)clearTrackTimer;
 
+/// 配置需要追踪页面浏览事件的页面Class，多次调用累加
+/// @param pages 页面Class数组
+- (void)appendAuotrackPages:(NSArray<Class> *)pages;
+
 ///-------------------------------
 #pragma mark Unavailable
 ///-------------------------------
@@ -170,12 +174,13 @@ NS_ASSUME_NONNULL_BEGIN
 // 如果是自定义的UIViewController不要使用重写getter方法来实现,因为SDK在set方法内部有逻辑处理
 @interface UIViewController (GrowingAttributes)
 
+// 是否追踪该页面的浏览事件
+@property (nonatomic, assign) BOOL growingAutotrackEnabled;
+
 // 手动标识该页面的标题，必须在该UIViewController显示之前设置
 @property (nonatomic, copy) NSString *growingPageAlias;
 
 @property (nonatomic, copy) NSDictionary<NSString *, NSString *> *growingPageAttributes;
-
-@property (nonatomic, assign) GrowingIgnorePolicy growingPageIgnorePolicy;
 
 @end
 

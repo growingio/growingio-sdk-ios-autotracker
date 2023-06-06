@@ -47,6 +47,10 @@
     return self;
 }
 
+- (void)appendAuotrackPages:(NSArray<Class> *)pages {
+    [GrowingPageManager.sharedInstance appendAuotrackPages:pages];
+}
+
 - (void)addAutoTrackSwizzles {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{

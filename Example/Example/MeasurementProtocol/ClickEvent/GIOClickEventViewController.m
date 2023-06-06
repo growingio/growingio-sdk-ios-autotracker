@@ -30,7 +30,6 @@
     
 #if defined(AUTOTRACKER)
 #if defined(SDK3rd)
-    self.growingPageIgnorePolicy = GrowingIgnoreSelf;
     self.segmentControl.growingUniqueTag = @"language-selector";
     [self.sendEventButton growingTrackImpression:@"hello_track_impression"];
     [self.view growingTrackImpression:@"self_view_imp_track" attributes:@{@"self_view_key": @"self_view_value"}];

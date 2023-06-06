@@ -103,7 +103,6 @@
 
     UIViewController *current = [[UIViewController alloc] init];
     // 避免自动发 PAGE 报错
-    current.growingPageIgnorePolicy = GrowingIgnoreSelf;
     GrowingPageGroup *page = [current growingPageObject];
     if (!page) {
         [[GrowingPageManager sharedInstance] createdViewControllerPage:current];

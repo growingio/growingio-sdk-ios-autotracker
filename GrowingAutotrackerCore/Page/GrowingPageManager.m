@@ -36,6 +36,8 @@
 
 @property (nonatomic, strong) NSMutableArray<NSString *> *ignoredPrivateControllers;
 
+@property (nonatomic, strong) NSMutableArray *autotrackPages;
+
 @end
 
 @implementation GrowingPageManager
@@ -78,7 +80,7 @@
         [page refreshShowTimestamp];
     }
 
-    if (!page.isIgnored) {
+    if ([self pageNeedAutotrack:viewController]) {
         // 发送page事件
         [self sendPageEventWithPage:page];
     } else {
@@ -198,26 +200,12 @@
     return NO;
 }
 - (GrowingPageGroup *)findPageByViewController:(UIViewController *)current {
-    GrowingPageGroup *page = nil;
-    UIViewController *last = nil;
-    while (current) {
-        last = current;
-        if ([[GrowingPageManager sharedInstance] isPrivateViewControllerIgnored:current]) {
-            current = (UIViewController *)current.growingNodeParent;
-        } else {
-            page = [current growingPageObject];
-            if (page == nil) {
-                page = [self createdPage:current];
-            }
-            if (page.isIgnored) {
-                current = (UIViewController *)current.growingNodeParent;
-            } else {
-                break;
-            }
-        }
+    while ([[GrowingPageManager sharedInstance] isPrivateViewControllerIgnored:current]) {
+        current = (UIViewController *)current.growingNodeParent;
     }
-    if (!page && last) {
-        page = [last growingPageObject];
+    GrowingPageGroup *page = current.growingPageObject;
+    if (page == nil) {
+        page = [self createdPage:current];
     }
     return page;
 }
@@ -234,6 +222,22 @@
     UIViewController *parent = [self currentViewController];
     GrowingPageGroup *page = [parent growingPageObject];
     return page;
+}
+
+- (BOOL)pageNeedAutotrack:(UIViewController *)controller {
+    if (controller.growingAutotrackEnabled) {
+        return YES;
+    }
+    
+    return [self.autotrackPages containsObject:[controller class]];
+}
+
+
+- (void)appendAuotrackPages:(NSArray<Class> *)pages {
+    if (![pages isKindOfClass:NSArray.class]) {
+        return;
+    }
+    [self.autotrackPages addObjectsFromArray:pages];
 }
 
 #pragma mark Lazy Load

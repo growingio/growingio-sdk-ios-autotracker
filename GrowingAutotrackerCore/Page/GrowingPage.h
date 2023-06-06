@@ -27,7 +27,6 @@
 @property (readonly, weak, nonatomic) UIViewController *carrier;
 @property (readwrite, strong, nonatomic) GrowingPageGroup *parent;
 @property (readonly, assign, nonatomic) long long showTimestamp;
-@property (readwrite, assign, nonatomic) BOOL isIgnored;
 @property (readonly, copy, nonatomic) NSString *name;
 @property (readonly, copy, nonatomic) NSString *title;
 @property (readwrite, copy, nonatomic) NSString *alias;

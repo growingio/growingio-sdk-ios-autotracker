@@ -50,7 +50,7 @@
                                              .setIndex(node.index)
                                              .setTextValue(node.viewContent);
 
-    if (!page.isIgnored) {
+    if ([GrowingPageManager.sharedInstance pageNeedAutotrack:page.carrier]) {
         builder.setAttributes([page.carrier growingPageAttributes]);
     }
 

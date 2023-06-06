@@ -75,24 +75,13 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
         if (viewPathArray.count > 0) {
             [viewPathArray removeLastObject];
         }
-        while (node) {
-            if ([[GrowingPageManager sharedInstance] isPrivateViewControllerIgnored:(UIViewController *)node]) {
-                if (node.growingNodeSubPath.length > 0) [viewPathArray addObject:node.growingNodeSubPath];
-            } else {
-                GrowingPageGroup *page = [(UIViewController *)node growingPageObject];
-                if (page.isIgnored) {
-                    if (node.growingNodeSubPath.length > 0) [viewPathArray addObject:node.growingNodeSubPath];
-                } else {
-                    [viewPathArray addObject:kGrowingNodeRootPage];
-                    break;
-                }
+        while ([[GrowingPageManager sharedInstance] isPrivateViewControllerIgnored:(UIViewController *)node]) {
+            if (node.growingNodeSubPath.length > 0) {
+                [viewPathArray addObject:node.growingNodeSubPath];
             }
             node = node.growingNodeParent;
         }
-        // 如果遍历到了根节点(即没有parent)，说明所有层级vc都被过滤，则添加IgnorePage
-        if (!node) {
-            [viewPathArray addObject:kGrowingNodeRootIgnore];
-        }
+        [viewPathArray addObject:kGrowingNodeRootPage];
     }
 
     NSString *viewPath = [[[viewPathArray reverseObjectEnumerator] allObjects] componentsJoinedByString:@"/"];
