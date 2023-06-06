@@ -22,25 +22,16 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingServiceManager : NSObject
-@property (nonatomic, assign) BOOL enableException;
-@property (nonatomic, copy, readonly) NSMutableDictionary *allServiceDict;
-@property (nonatomic, copy, readonly) NSMutableDictionary *allServiceInstanceDict;
 
 + (instancetype)sharedInstance;
 
-- (void)loadLocalServices;
-
-- (void)registerServiceName:(NSString *)serviceName implClassName:(NSString *)serviceClassName;
+- (void)registerAllServices;
 
 - (void)registerService:(Protocol *)service implClass:(Class)serviceClass;
 
 - (id)createService:(Protocol *)service;
 
 - (id)serviceImplClass:(Protocol *)service;
-
-- (id)getServiceInstanceForServiceName:(NSString *)serviceName;
-
-- (void)removeServiceInstanceForServiceName:(NSString *)serviceName;
 
 @end
 

@@ -17,39 +17,16 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#if __has_include(<UIKit/UIKit.h>)
-#import <UIKit/UIKit.h>
-#elif __has_include(<AppKit/AppKit.h>)
-#import <AppKit/AppKit.h>
-#endif
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingOpenURLItem : NSObject
-
-@property (nonatomic, strong) NSURL *openURL;
-@property (nonatomic, copy) NSString *sourceApplication;
-@property (nonatomic, strong) id annotation;
-@property (nonatomic, strong) NSDictionary *options;
-
-@end
-
 @interface GrowingContext : NSObject
 
-#if __has_include(<UIKit/UIKit.h>)
-@property (nonatomic, strong) UIApplication *application;
-#elif __has_include(<AppKit/AppKit.h>)
-@property (nonatomic, strong) NSApplication *application;
-#endif
-
-@property (nonatomic, strong) NSDictionary *launchOptions;
 // customEvent>=1000
 @property (nonatomic, assign) NSInteger customEvent;
 // custom param
 @property (nonatomic, copy) NSDictionary *customParam;
-
-// OpenURL model
-@property (nonatomic, strong) GrowingOpenURLItem *openURLItem;
 
 + (instancetype)sharedInstance;
 
