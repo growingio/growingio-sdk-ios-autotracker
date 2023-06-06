@@ -23,11 +23,7 @@
 @protocol GrowingBaseService <NSObject>
 
 @optional
-
-/// 是否是单例对象
 + (BOOL)singleton;
-
-/// 如果是单例对象，需实现sharedInstance函数，未实现将默认alloc init创建
 + (id)sharedInstance;
 
 @end

@@ -19,16 +19,11 @@
 
 #import "GrowingTrackerCore/Core/GrowingContext.h"
 
-@implementation GrowingOpenURLItem
-
-@end
-
 @implementation GrowingContext
 
 + (instancetype)sharedInstance {
     static dispatch_once_t p;
     static id contextInstance = nil;
-
     dispatch_once(&p, ^{
         contextInstance = [[[self class] alloc] init];
     });
@@ -36,24 +31,10 @@
     return contextInstance;
 }
 
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        self.openURLItem = [GrowingOpenURLItem new];
-    }
-
-    return self;
-}
-
 - (instancetype)copyWithZone:(NSZone *)zone {
     GrowingContext *context = [[self.class allocWithZone:zone] init];
-
-    context.application = self.application;
-    context.launchOptions = self.launchOptions;
     context.customEvent = self.customEvent;
     context.customParam = self.customParam;
-    context.openURLItem = self.openURLItem;
-
     return context;
 }
 

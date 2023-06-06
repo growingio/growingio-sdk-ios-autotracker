@@ -22,15 +22,11 @@
 #import "GrowingServiceManager.h"
 
 #ifndef GrowingModSectName
-
 #define GrowingModSectName "GrowingMods"
-
 #endif
 
 #ifndef GrowingServiceSectName
-
 #define GrowingServiceSectName "GrowingServices"
-
 #endif
 
 #define GrowingService(servicename, impl) \
