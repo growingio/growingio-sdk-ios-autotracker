@@ -48,9 +48,6 @@
 
 - (GrowingPageGroup *)currentPage;
 
-
-
-
 - (BOOL)pageNeedAutotrack:(UIViewController *)controller;
 - (void)appendAuotrackPages:(NSArray<Class> *)pages;
 

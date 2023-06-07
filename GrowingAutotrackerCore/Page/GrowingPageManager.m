@@ -228,10 +228,9 @@
     if (controller.growingAutotrackEnabled) {
         return YES;
     }
-    
+
     return [self.autotrackPages containsObject:[controller class]];
 }
-
 
 - (void)appendAuotrackPages:(NSArray<Class> *)pages {
     if (![pages isKindOfClass:NSArray.class]) {

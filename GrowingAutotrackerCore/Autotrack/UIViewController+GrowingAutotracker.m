@@ -18,9 +18,9 @@
 //  limitations under the License.
 
 #import <objc/runtime.h>
-#import "GrowingAutotrackerCore/GrowingRealAutotracker.h"
 #import "GrowingAutotrackerCore/Autotrack/GrowingPropertyDefine.h"
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
+#import "GrowingAutotrackerCore/GrowingRealAutotracker.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
 #import "GrowingAutotrackerCore/Public/GrowingAutotrackConfiguration.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
@@ -90,10 +90,7 @@ GrowingSafeStringPropertyImplementation(growingPageAlias, setGrowingPageAlias)
 }
 
 - (void)setGrowingAutotrackEnabled:(BOOL)enabled {
-    objc_setAssociatedObject(self,
-                             &kGrowingPageAutotrackEnabledKey,
-                             @(enabled),
-                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, &kGrowingPageAutotrackEnabledKey, @(enabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (BOOL)growingAutotrackEnabled {
@@ -101,7 +98,7 @@ GrowingSafeStringPropertyImplementation(growingPageAlias, setGrowingPageAlias)
     if ([enabled isKindOfClass:NSNumber.class]) {
         return ((NSNumber *)enabled).boolValue;
     }
-    
+
     return NO;
 }
 
