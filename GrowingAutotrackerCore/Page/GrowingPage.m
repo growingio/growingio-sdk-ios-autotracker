@@ -20,14 +20,12 @@
 #import "GrowingAutotrackerCore/Page/GrowingPage.h"
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
-#import "GrowingULTimeUtil.h"
 #import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
+#import "GrowingULTimeUtil.h"
 
 @interface GrowingPage ()
 
-
 @property (nonatomic, copy) NSString *pathName;
-
 
 @property (nonatomic, copy, readonly) NSString *pathCopy;
 
@@ -55,7 +53,6 @@
 + (instancetype)pageWithCarrier:(UIViewController *)carrier {
     return [[self alloc] initWithCarrier:carrier];
 }
-
 
 #pragma mark - Public
 
