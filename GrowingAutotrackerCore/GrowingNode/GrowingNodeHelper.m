@@ -20,7 +20,6 @@
 #import "GrowingAutotrackerCore/GrowingNode/GrowingNodeHelper.h"
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
-#import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 
@@ -91,7 +90,7 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
 
 + (NSString *)xPathForViewController:(UIViewController *)vc {
     NSAssert(vc, @"+xPathForViewController: vc is nil");
-    GrowingPageGroup *page = [[GrowingPageManager sharedInstance] findPageByViewController:vc];
+    GrowingPage *page = [[GrowingPageManager sharedInstance] findPageByViewController:vc];
     return page.path;
 }
 

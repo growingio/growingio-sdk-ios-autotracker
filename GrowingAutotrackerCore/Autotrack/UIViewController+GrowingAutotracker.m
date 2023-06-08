@@ -21,7 +21,7 @@
 #import "GrowingAutotrackerCore/Autotrack/GrowingPropertyDefine.h"
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingRealAutotracker.h"
-#import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
+#import "GrowingAutotrackerCore/Page/GrowingPage.h"
 #import "GrowingAutotrackerCore/Public/GrowingAutotrackConfiguration.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
@@ -60,11 +60,11 @@ static char kGrowingPageAttributesKey;
            [UIApplication sharedApplication].keyWindow.rootViewController != self;
 }
 
-- (void)setGrowingPageObject:(GrowingPageGroup *)page {
+- (void)setGrowingPageObject:(GrowingPage *)page {
     objc_setAssociatedObject(self, &kGrowingPageObjectKey, page, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (GrowingPageGroup *)growingPageObject {
+- (GrowingPage *)growingPageObject {
     return objc_getAssociatedObject(self, &kGrowingPageObjectKey);
 }
 

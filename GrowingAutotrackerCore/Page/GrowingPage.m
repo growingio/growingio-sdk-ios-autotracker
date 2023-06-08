@@ -19,15 +19,25 @@
 
 #import "GrowingAutotrackerCore/Page/GrowingPage.h"
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
-#import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingULTimeUtil.h"
+#import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 
 @interface GrowingPage ()
+
+
+@property (nonatomic, copy) NSString *pathName;
+
+
 @property (nonatomic, copy, readonly) NSString *pathCopy;
+
 @end
 
-@implementation GrowingPage
+@implementation GrowingPage {
+    GROWING_LOCK_DECLARE(lock);
+}
+
+#pragma mark - Init
 
 - (instancetype)initWithCarrier:(UIViewController *)carrier {
     self = [super init];
@@ -35,6 +45,8 @@
         _carrier = carrier;
         _showTimestamp = GrowingULTimeUtil.currentTimeMillis;
         _title = [carrier growingPageTitle];
+        _childPages = [NSPointerArray pointerArrayWithOptions:NSPointerFunctionsWeakMemory];
+        GROWING_LOCK_INIT(lock);
     }
 
     return self;
@@ -44,11 +56,36 @@
     return [[self alloc] initWithCarrier:carrier];
 }
 
+
+#pragma mark - Public
+
 - (void)refreshShowTimestamp {
     _showTimestamp = GrowingULTimeUtil.currentTimeMillis;
 }
 
-- (NSString *)name {
+- (void)addChildrenPage:(GrowingPage *)page {
+    GROWING_LOCK(lock);
+    if (![self.childPages.allObjects containsObject:page]) {
+        [self.childPages addPointer:(__bridge void *)page];
+    }
+    GROWING_UNLOCK(lock);
+}
+
+- (void)removeChildrenPage:(GrowingPage *)page {
+    GROWING_LOCK(lock);
+    [self.childPages.allObjects enumerateObjectsWithOptions:NSEnumerationReverse
+                                                 usingBlock:^(NSObject *obj, NSUInteger idx, BOOL *_Nonnull stop) {
+                                                     if (page == obj) {
+                                                         [self.childPages removePointerAtIndex:idx];
+                                                         *stop = YES;
+                                                     }
+                                                 }];
+    GROWING_UNLOCK(lock);
+}
+
+#pragma mark - Setter & Getter
+
+- (NSString *)pathName {
     if (self.carrier == nil) {
         return nil;
     }
@@ -100,7 +137,7 @@
 
     NSMutableArray<GrowingPage *> *pageTree = [NSMutableArray array];
     [pageTree addObject:self];
-    GrowingPageGroup *pageParent = self.parent;
+    GrowingPage *pageParent = self.parent;
     while (pageParent != nil) {
         [pageTree addObject:pageParent];
         if (![NSString growingHelper_isBlankString:pageParent.alias]) {
@@ -115,7 +152,7 @@
             path = [NSString stringWithFormat:@"*%@", path];
             break;
         }
-        NSString *subpath = [NSString stringWithFormat:@"/%@", pageTree[i].name];
+        NSString *subpath = [NSString stringWithFormat:@"/%@", pageTree[i].pathName];
         path = [NSString stringWithFormat:@"%@%@", subpath, path];
     }
     _pathCopy = path;

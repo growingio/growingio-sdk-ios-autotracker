@@ -20,8 +20,6 @@
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIViewController+GrowingNode.h"
-#import "GrowingAutotrackerCore/Page/GrowingPage.h"
-#import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
@@ -73,7 +71,7 @@
 }
 
 - (void)createdViewControllerPage:(UIViewController *)viewController {
-    GrowingPageGroup *page = [viewController growingPageObject];
+    GrowingPage *page = [viewController growingPageObject];
     if (page == nil) {
         page = [self createdPage:viewController];
     } else {
@@ -103,8 +101,8 @@
     }
 }
 
-- (GrowingPageGroup *)createdPage:(UIViewController *)viewController {
-    GrowingPageGroup *page = [GrowingPageGroup pageWithCarrier:viewController];
+- (GrowingPage *)createdPage:(UIViewController *)viewController {
+    GrowingPage *page = [GrowingPage pageWithCarrier:viewController];
     page.parent = [self findParentPage:viewController];
     if (page.parent != nil) {
         [page.parent addChildrenPage:page];
@@ -114,7 +112,7 @@
     return page;
 }
 
-- (GrowingPageGroup *)findParentPage:(UIViewController *)carrier {
+- (GrowingPage *)findParentPage:(UIViewController *)carrier {
     UIViewController *parentVC = nil;
 
     if ([carrier isKindOfClass:UIAlertController.class]) {
@@ -126,7 +124,7 @@
     if (parentVC == nil) {
         return nil;
     } else {
-        GrowingPageGroup *page = [parentVC growingPageObject];
+        GrowingPage *page = [parentVC growingPageObject];
         if (page == nil) {
             page = [self createdPage:parentVC];
         }
@@ -199,18 +197,18 @@
 
     return NO;
 }
-- (GrowingPageGroup *)findPageByViewController:(UIViewController *)current {
+- (GrowingPage *)findPageByViewController:(UIViewController *)current {
     while ([[GrowingPageManager sharedInstance] isPrivateViewControllerIgnored:current]) {
         current = (UIViewController *)current.growingNodeParent;
     }
-    GrowingPageGroup *page = current.growingPageObject;
+    GrowingPage *page = current.growingPageObject;
     if (page == nil) {
         page = [self createdPage:current];
     }
     return page;
 }
 
-- (GrowingPageGroup *)findPageByView:(UIView *)view {
+- (GrowingPage *)findPageByView:(UIView *)view {
     UIViewController *current = [view growingHelper_viewController];
     if (!current) {
         current = self.currentViewController;
@@ -218,9 +216,9 @@
     return [self findPageByViewController:current];
 }
 
-- (GrowingPageGroup *)currentPage {
+- (GrowingPage *)currentPage {
     UIViewController *parent = [self currentViewController];
-    GrowingPageGroup *page = [parent growingPageObject];
+    GrowingPage *page = [parent growingPageObject];
     return page;
 }
 

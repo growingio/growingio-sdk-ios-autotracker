@@ -35,7 +35,7 @@
         GIOLogDebug(@"viewOnChange %@ is donotTrack", view);
         return;
     }
-    GrowingPageGroup *page = [[GrowingPageManager sharedInstance] findPageByView:view];
+    GrowingPage *page = [[GrowingPageManager sharedInstance] findPageByView:view];
     if (!page) {
         page = [[GrowingPageManager sharedInstance] currentPage];
     }
@@ -43,7 +43,7 @@
     [self sendChangeEvent:page viewNode:node];
 }
 
-+ (void)sendChangeEvent:(GrowingPageGroup *)page viewNode:(GrowingViewNode *)node {
++ (void)sendChangeEvent:(GrowingPage *)page viewNode:(GrowingViewNode *)node {
     GrowingViewElementBuilder *builder = GrowingViewElementEvent.builder.setEventType(GrowingEventTypeViewChange)
                                              .setPath(page.path)
                                              .setXpath(node.xPath)

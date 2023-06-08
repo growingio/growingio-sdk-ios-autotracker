@@ -20,23 +20,23 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@class GrowingPageGroup;
-
 @interface GrowingPage : NSObject
 
-@property (readonly, weak, nonatomic) UIViewController *carrier;
-@property (readwrite, strong, nonatomic) GrowingPageGroup *parent;
-@property (readonly, assign, nonatomic) long long showTimestamp;
-@property (readonly, copy, nonatomic) NSString *name;
-@property (readonly, copy, nonatomic) NSString *title;
-@property (readwrite, copy, nonatomic) NSString *alias;
-@property (readonly, copy, nonatomic) NSString *path;
-@property (readwrite, strong, nonatomic) NSDictionary<NSString *, NSString *> *variables;
+@property (nonatomic, weak, readonly) UIViewController *carrier;
 
-- (instancetype)initWithCarrier:(UIViewController *)carrier;
+@property (nonatomic, copy, readonly) NSString *title;
+@property (nonatomic, copy, readonly) NSString *path;
+@property (nonatomic, assign, readonly) long long showTimestamp;
+@property (nonatomic, copy) NSString *alias;
+
+@property (nonatomic, strong) GrowingPage *parent;
+@property (nonatomic, strong, readonly) NSPointerArray *childPages;
 
 + (instancetype)pageWithCarrier:(UIViewController *)carrier;
 
 - (void)refreshShowTimestamp;
+
+- (void)addChildrenPage:(GrowingPage *)page;
+- (void)removeChildrenPage:(GrowingPage *)page;
 
 @end

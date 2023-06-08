@@ -18,7 +18,7 @@
 // limitations under the License.
 
 #import <UIKit/UIKit.h>
-#import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
+#import "GrowingAutotrackerCore/Page/GrowingPage.h"
 #import "GrowingULViewControllerLifecycle.h"
 
 @interface GrowingPageManager : NSObject
@@ -43,10 +43,10 @@
 // Whether a vc is did appeared
 - (BOOL)isDidAppearController:(UIViewController *)vc;
 
-- (GrowingPageGroup *)findPageByView:(UIView *)view;
-- (GrowingPageGroup *)findPageByViewController:(UIViewController *)current;
+- (GrowingPage *)findPageByView:(UIView *)view;
+- (GrowingPage *)findPageByViewController:(UIViewController *)current;
 
-- (GrowingPageGroup *)currentPage;
+- (GrowingPage *)currentPage;
 
 - (BOOL)pageNeedAutotrack:(UIViewController *)controller;
 - (void)appendAuotrackPages:(NSArray<Class> *)pages;

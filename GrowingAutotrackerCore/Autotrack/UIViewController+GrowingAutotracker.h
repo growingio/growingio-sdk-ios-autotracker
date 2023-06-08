@@ -21,7 +21,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class GrowingPageGroup;
+@class GrowingPage;
 
 @interface UIViewController (GrowingAutotracker)
 
@@ -32,8 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)growingHookIsCustomAddVC;  // 用来判断是否是没有使用addChildViewController方法的childVC
 - (NSString *)growingPageName;
 - (nullable NSString *)growingPageTitle;
-- (void)setGrowingPageObject:(GrowingPageGroup *)page;
-- (GrowingPageGroup *)growingPageObject;
+- (void)setGrowingPageObject:(GrowingPage *)page;
+- (GrowingPage *)growingPageObject;
 
 @end
 
