@@ -27,7 +27,6 @@
 #import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
 #import "GrowingTrackerCore/Event/GrowingNodeProtocol.h"
 #import "Modules/WebCircle/GrowingWebCircle.h"
-#import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "Modules/WebCircle/GrowingWebCircleElement.h"
@@ -103,7 +102,7 @@
 
     UIViewController *current = [[UIViewController alloc] init];
     // 避免自动发 PAGE 报错
-    GrowingPageGroup *page = [current growingPageObject];
+    GrowingPage *page = [current growingPageObject];
     if (!page) {
         [[GrowingPageManager sharedInstance] createdViewControllerPage:current];
         page = [current growingPageObject];
