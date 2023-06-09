@@ -37,6 +37,7 @@ NSUInteger const GrowingFilterClickChange =
             @"PAGE",
             @"VIEW_CLICK",
             @"VIEW_CHANGE",
+            @"FORM_SUBMIT",
             @"ACTIVATE"
         ];
     });

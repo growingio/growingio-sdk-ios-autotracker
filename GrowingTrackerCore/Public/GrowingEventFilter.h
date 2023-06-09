@@ -30,7 +30,8 @@ typedef NS_OPTIONS(NSUInteger, GrowingFilterEvent) {
     GrowingFilterEventPage = (1 << 4),
     GrowingFilterEventViewClick = (1 << 5),
     GrowingFilterEventViewChange = (1 << 6),
-    GrowingFilterEventActivate = (1 << 7),
+    GrowingFilterEventFormSubmit = (1 << 7),
+    GrowingFilterEventActivate = (1 << 8)
 };
 
 @interface GrowingEventFilter : NSObject
