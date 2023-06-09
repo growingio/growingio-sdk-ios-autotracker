@@ -36,6 +36,7 @@ NSUInteger const GrowingFilterClickChange = (GrowingFilterEventViewClick | Growi
             @"PAGE",
             @"VIEW_CLICK",
             @"VIEW_CHANGE",
+            @"FORM_SUBMIT",
             @"ACTIVATE"
         ];
     });
