@@ -29,12 +29,9 @@
 
 @interface GrowingPageManager () <GrowingULViewControllerLifecycleDelegate>
 
-@property (nonatomic, strong) NSHashTable *visiableControllersTable;
-@property (nonatomic, strong) NSPointerArray *visiableControllersArray;
-
-@property (nonatomic, strong) NSMutableArray<NSString *> *ignoredPrivateControllers;
-
 @property (nonatomic, strong) NSMutableArray *autotrackPages;
+@property (nonatomic, strong) NSPointerArray *visiablePages;
+@property (nonatomic, strong) NSMutableArray<NSString *> *ignoredPrivateControllers;
 
 @end
 
@@ -58,47 +55,54 @@
 }
 
 - (void)viewControllerDidAppear:(UIViewController *)controller {
-    if (![self isPrivateViewControllerIgnored:controller]) {
-        [self createdViewControllerPage:controller];
-        [self addDidAppearController:controller];
+    if (![self isPrivateViewController:controller]) {
+        GrowingPage *page = [self createdViewControllerPage:controller];
+        
+        if (!self.visiablePages) {
+            self.visiablePages = [NSPointerArray weakObjectsPointerArray];
+        }
+
+        if (![self.visiablePages.allObjects containsObject:page]) {
+            [self.visiablePages addPointer:(__bridge void *)page];
+        }
     }
 }
 
 - (void)viewControllerDidDisappear:(UIViewController *)controller {
-    if (![self isPrivateViewControllerIgnored:controller]) {
-        [self removeDidDisappearController:controller];
+    if (![self isPrivateViewController:controller]) {
+        [self.visiablePages.allObjects
+            enumerateObjectsWithOptions:NSEnumerationReverse
+                             usingBlock:^(GrowingPage *page, NSUInteger idx, BOOL *_Nonnull stop) {
+                                 if (page.carrier == controller) {
+                                     [self.visiablePages removePointerAtIndex:idx];
+                                 }
+                             }];
     }
 }
 
-- (void)createdViewControllerPage:(UIViewController *)viewController {
-    GrowingPage *page = [viewController growingPageObject];
-    if (page == nil) {
-        page = [self createdPage:viewController];
+- (GrowingPage *)createdViewControllerPage:(UIViewController *)controller {
+    GrowingPage *page = [controller growingPageObject];
+    if (!page) {
+        page = [self createdPage:controller];
     } else {
         [page refreshShowTimestamp];
     }
 
-    if ([self pageNeedAutotrack:viewController]) {
-        // 发送page事件
+    if ([self isAutotrackPage:controller]) {
+        // 发送PAGE事件
         [self sendPageEventWithPage:page];
     } else {
-        GIOLogDebug(@"createdViewControllerPage: path = %@ is ignored", page.path);
+        GIOLogVerbose(@"GrowingPageManager: path = %@ is not track", page.path);
     }
+    return page;
 }
 
 - (void)sendPageEventWithPage:(GrowingPage *)page {
     GrowingBaseBuilder *builder = GrowingPageEvent.builder.setTitle(page.title)
                                       .setPath(page.path)
                                       .setTimestamp(page.showTimestamp)
-                                      .setAttributes([page.carrier growingPageAttributes]);
+                                      .setAttributes(page.attributes);
     [[GrowingEventManager sharedInstance] postEventBuilder:builder];
-}
-
-- (void)addPageAlias:(GrowingPage *)page {
-    NSString *alias = [page.carrier growingPageAlias];
-    if (![NSString growingHelper_isBlankString:alias]) {
-        page.alias = alias;
-    }
 }
 
 - (GrowingPage *)createdPage:(UIViewController *)viewController {
@@ -107,103 +111,64 @@
     if (page.parent != nil) {
         [page.parent addChildrenPage:page];
     }
-    [self addPageAlias:page];
     [viewController setGrowingPageObject:page];
     return page;
 }
 
 - (GrowingPage *)findParentPage:(UIViewController *)carrier {
-    UIViewController *parentVC = nil;
-
-    if ([carrier isKindOfClass:UIAlertController.class]) {
-        parentVC = [self currentViewController];
-    } else {
-        parentVC = carrier.parentViewController;
-    }
-
-    if (parentVC == nil) {
+    UIViewController *controller = (UIViewController *)carrier.growingNodeParent;
+    if (!controller) {
         return nil;
-    } else {
-        GrowingPage *page = [parentVC growingPageObject];
-        if (page == nil) {
-            page = [self createdPage:parentVC];
-        }
-        return page;
     }
+    
+    GrowingPage *page = [controller growingPageObject];
+    if (!page) {
+        // 一般来说，page对象在viewDidAppear时就已创建
+        // 此处兼容viewDidAppear未执行的特殊情况，比如：
+        // 用户未在自定义的ViewController viewDidAppear中调用super viewDidAppear
+        page = [self createdPage:controller];
+    }
+    return page;
 }
 
 #pragma mark Visiable ViewController
 
-- (void)addDidAppearController:(UIViewController *)appearVc {
-    if ([self isPrivateViewControllerIgnored:appearVc]) {
-        return;
-    }
-    if (!self.visiableControllersTable) {
-        self.visiableControllersTable = [NSHashTable weakObjectsHashTable];
-    }
-
-    if (!self.visiableControllersArray) {
-        self.visiableControllersArray = [NSPointerArray weakObjectsPointerArray];
-    }
-
-    [self.visiableControllersTable addObject:appearVc];
-    if (![self.visiableControllersArray.allObjects containsObject:appearVc]) {
-        [self.visiableControllersArray addPointer:(__bridge void *)appearVc];
-    }
-}
-
-- (void)removeDidDisappearController:(UIViewController *)disappearVc {
-    if ([self isPrivateViewControllerIgnored:disappearVc]) {
-        return;
-    }
-    [self.visiableControllersTable removeObject:disappearVc];
-    [self.visiableControllersArray.allObjects
-        enumerateObjectsWithOptions:NSEnumerationReverse
-                         usingBlock:^(UIViewController *vc, NSUInteger idx, BOOL *_Nonnull stop) {
-                             if (disappearVc == vc) {
-                                 [self.visiableControllersArray removePointerAtIndex:idx];
-                             }
-                         }];
-}
-
-- (UIViewController *)currentViewController {
-    return self.allDidAppearViewControllers.lastObject;
-}
-
-- (UIViewController *)rootViewController {
-    UIViewController *vc = self.allDidAppearViewControllers.lastObject;
-    while (vc.parentViewController) {
-        vc = vc.parentViewController;
-    }
-    return vc;
-}
-
-- (NSArray<UIViewController *> *)allDidAppearViewControllers {
-    return self.visiableControllersArray.allObjects;
+- (NSArray<GrowingPage *> *)allDidAppearPages {
+    return self.visiablePages.allObjects;
 }
 
 - (BOOL)isDidAppearController:(UIViewController *)vc {
-    return [self.visiableControllersTable containsObject:vc];
+    for (GrowingPage *page in self.visiablePages) {
+        if (page.carrier == vc) {
+            return YES;
+        }
+    }
+    return NO;
 }
 
-- (BOOL)isPrivateViewControllerIgnored:(UIViewController *)viewController {
-    if (viewController == nil) {
+- (BOOL)isPrivateViewController:(UIViewController *)viewController {
+    if (!viewController) {
         return NO;
     }
     NSString *vcName = NSStringFromClass([viewController class]);
-    if (self.ignoredPrivateControllers.count > 0 && [self.ignoredPrivateControllers containsObject:vcName]) {
-        return YES;
-    }
-
-    return NO;
+    return [self.ignoredPrivateControllers containsObject:vcName];
 }
-- (GrowingPage *)findPageByViewController:(UIViewController *)current {
-    while ([[GrowingPageManager sharedInstance] isPrivateViewControllerIgnored:current]) {
-        current = (UIViewController *)current.growingNodeParent;
+
+- (GrowingPage *)findPageByViewController:(UIViewController *)controller {
+    while ([self isPrivateViewController:controller]) {
+        controller = (UIViewController *)controller.growingNodeParent;
     }
-    GrowingPage *page = current.growingPageObject;
-    if (page == nil) {
-        page = [self createdPage:current];
+    
+    if (!controller) {
+        return self.currentPage;
+    }
+    
+    GrowingPage *page = controller.growingPageObject;
+    if (!page) {
+        // 一般来说，page对象在viewDidAppear时就已创建
+        // 此处兼容viewDidAppear未执行的特殊情况，比如：
+        // 用户未在自定义的ViewController viewDidAppear中调用super viewDidAppear
+        page = [self createdPage:controller];
     }
     return page;
 }
@@ -211,18 +176,16 @@
 - (GrowingPage *)findPageByView:(UIView *)view {
     UIViewController *current = [view growingHelper_viewController];
     if (!current) {
-        current = self.currentViewController;
+        return self.currentPage;
     }
     return [self findPageByViewController:current];
 }
 
 - (GrowingPage *)currentPage {
-    UIViewController *parent = [self currentViewController];
-    GrowingPage *page = [parent growingPageObject];
-    return page;
+    return self.visiablePages.allObjects.lastObject;
 }
 
-- (BOOL)pageNeedAutotrack:(UIViewController *)controller {
+- (BOOL)isAutotrackPage:(UIViewController *)controller {
     if (controller.growingAutotrackEnabled) {
         return YES;
     }

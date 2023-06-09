@@ -28,25 +28,6 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
 
 @implementation GrowingNodeHelper
 
-// 当node为列表视图时，返回路径为 TableView/cell[-]，序号在index字段中返回
-+ (nullable NSString *)xPathSimilarForNode:(id<GrowingNode>)node {
-    if ([node isKindOfClass:[UIView class]]) {
-        return [self xPathForView:(UIView *)node similar:YES];
-    } else if ([node isKindOfClass:[UIViewController class]]) {
-        return [self xPathForViewController:(UIViewController *)node];
-    }
-    return nil;
-}
-
-+ (nullable NSString *)xPathForNode:(id<GrowingNode>)node {
-    if ([node isKindOfClass:[UIView class]]) {
-        return [self xPathForView:(UIView *)node similar:NO];
-    } else if ([node isKindOfClass:[UIViewController class]]) {
-        return [self xPathForViewController:(UIViewController *)node];
-    }
-    return nil;
-}
-
 /// 获取某个view的xpath
 /// @param view 节点
 /// @param isSimilar 是否返回相似路径
@@ -68,30 +49,15 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
     // 当检测到viewController时，会替换成page字段
     // 此时则需要判断是否ignored以及过滤
     if ([node isKindOfClass:[UIViewController class]]) {
-        // vc.view不计入xpath
-        // eg:UIViewController/view => /Page/
-        // eg:UIViewController/TableView => /Page/
+        // vc.viewcontroller、viewcontroller.view不计入xpath
         if (viewPathArray.count > 0) {
             [viewPathArray removeLastObject];
         }
-        while ([[GrowingPageManager sharedInstance] isPrivateViewControllerIgnored:(UIViewController *)node]) {
-            if (node.growingNodeSubPath.length > 0) {
-                [viewPathArray addObject:node.growingNodeSubPath];
-            }
-            node = node.growingNodeParent;
-        }
-        [viewPathArray addObject:kGrowingNodeRootPage];
     }
 
     NSString *viewPath = [[[viewPathArray reverseObjectEnumerator] allObjects] componentsJoinedByString:@"/"];
     viewPath = [@"/" stringByAppendingString:viewPath];
     return viewPath;
-}
-
-+ (NSString *)xPathForViewController:(UIViewController *)vc {
-    NSAssert(vc, @"+xPathForViewController: vc is nil");
-    GrowingPage *page = [[GrowingPageManager sharedInstance] findPageByViewController:vc];
-    return page.path;
 }
 
 + (NSString *)buildElementContentForNode:(id<GrowingNode> _Nullable)view {

@@ -26,8 +26,8 @@
 
 @property (nonatomic, copy, readonly) NSString *title;
 @property (nonatomic, copy, readonly) NSString *path;
+@property (nonatomic, copy, readonly) NSDictionary<NSString *, NSString *> *attributes;
 @property (nonatomic, assign, readonly) long long showTimestamp;
-@property (nonatomic, copy) NSString *alias;
 
 @property (nonatomic, strong) GrowingPage *parent;
 @property (nonatomic, strong, readonly) NSPointerArray *childPages;

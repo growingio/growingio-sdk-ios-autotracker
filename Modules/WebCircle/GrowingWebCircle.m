@@ -130,9 +130,9 @@ GrowingMod(GrowingWebCircle)
    "isIgnored": true
  }
  */
-- (NSMutableDictionary *)dictFromPage:(id<GrowingNode>)aNode xPath:(NSString *)xPath {
+- (NSMutableDictionary *)dictFromPage:(GrowingPage *)page {
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-    CGRect frame = [aNode growingNodeFrame];
+    CGRect frame = [page.carrier growingNodeFrame];
     if (!CGRectEqualToRect(frame, CGRectZero)) {
         CGFloat scale = MIN([UIScreen mainScreen].scale, 2);
         dict[@"left"] = [NSNumber numberWithInt:(int)(frame.origin.x * scale)];
@@ -140,14 +140,9 @@ GrowingMod(GrowingWebCircle)
         dict[@"width"] = [NSNumber numberWithInt:(int)(frame.size.width * scale)];
         dict[@"height"] = [NSNumber numberWithInt:(int)(frame.size.height * scale)];
     }
-    dict[@"path"] = xPath;
-
-    UIViewController *vc = (UIViewController *)aNode;
-    if (vc.title) {
-        dict[@"title"] = vc.title;
-    }
-
-    dict[@"isIgnored"] = @(![GrowingPageManager.sharedInstance pageNeedAutotrack:vc]);
+    dict[@"path"] = page.path;
+    dict[@"title"] = page.title;
+    dict[@"isIgnored"] = @(![GrowingPageManager.sharedInstance isAutotrackPage:page.carrier]);
     return dict;
 }
 
@@ -275,11 +270,10 @@ GrowingMod(GrowingWebCircle)
     }
 
     NSMutableArray *pages = [NSMutableArray array];
-    NSArray *vcs = [[GrowingPageManager sharedInstance] allDidAppearViewControllers];
-    for (int i = 0; i < vcs.count; i++) {
-        UIViewController *tmp = vcs[i];
-        GrowingPage *page = [[GrowingPageManager sharedInstance] findPageByViewController:tmp];
-        NSMutableDictionary *dict = [self dictFromPage:tmp xPath:page.path];
+    NSArray *allDidAppearPages = [[GrowingPageManager sharedInstance] allDidAppearPages];
+    for (int i = 0; i < allDidAppearPages.count; i++) {
+        GrowingPage *page = allDidAppearPages[i];
+        NSMutableDictionary *dict = [self dictFromPage:page];
         [pages addObject:dict];
     }
 

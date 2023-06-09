@@ -19,7 +19,6 @@
 
 #import <UIKit/UIKit.h>
 #import "GrowingAutotrackerCore/Page/GrowingPage.h"
-#import "GrowingULViewControllerLifecycle.h"
 
 @interface GrowingPageManager : NSObject
 
@@ -27,28 +26,17 @@
 
 - (void)start;
 
-- (void)createdViewControllerPage:(UIViewController *)viewController;
-
-- (BOOL)isPrivateViewControllerIgnored:(UIViewController *)viewController;
-
 // All ViewControllers that did appeared
-- (NSArray<UIViewController *> *)allDidAppearViewControllers;
-
-// Current ViewController show in window
-- (UIViewController *)currentViewController;
-
-// Root ViewController in DidAppearControllers eg:UIWindow/Root/xxx/xxx/Current
-- (UIViewController *)rootViewController;
+- (NSArray<GrowingPage *> *)allDidAppearPages;
 
 // Whether a vc is did appeared
 - (BOOL)isDidAppearController:(UIViewController *)vc;
 
 - (GrowingPage *)findPageByView:(UIView *)view;
-- (GrowingPage *)findPageByViewController:(UIViewController *)current;
 
 - (GrowingPage *)currentPage;
 
-- (BOOL)pageNeedAutotrack:(UIViewController *)controller;
+- (BOOL)isAutotrackPage:(UIViewController *)controller;
 - (void)appendAuotrackPages:(NSArray<Class> *)pages;
 
 @end

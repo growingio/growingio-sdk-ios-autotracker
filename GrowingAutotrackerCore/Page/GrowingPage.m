@@ -25,9 +25,7 @@
 
 @interface GrowingPage ()
 
-@property (nonatomic, copy) NSString *pathName;
-
-@property (nonatomic, copy, readonly) NSString *pathCopy;
+//@property (nonatomic, copy) NSString *pathName;
 
 @end
 
@@ -42,7 +40,6 @@
     if (self) {
         _carrier = carrier;
         _showTimestamp = GrowingULTimeUtil.currentTimeMillis;
-        _title = [carrier growingPageTitle];
         _childPages = [NSPointerArray pointerArrayWithOptions:NSPointerFunctionsWeakMemory];
         GROWING_LOCK_INIT(lock);
     }
@@ -81,6 +78,19 @@
 }
 
 #pragma mark - Setter & Getter
+
+// 所有属性都通过动态获取，不做内存存储
+- (NSString *)title {
+    return self.carrier.growingPageTitle;
+}
+
+- (NSDictionary<NSString *,NSString *> *)attributes {
+    return self.carrier.growingPageAttributes;
+}
+
+- (NSString *)alias {
+    return self.carrier.growingPageAlias;
+}
 
 - (NSString *)pathName {
     if (self.carrier == nil) {
@@ -123,13 +133,8 @@
 }
 
 - (NSString *)path {
-    if (self.pathCopy != nil) {
-        return self.pathCopy;
-    }
-
-    if (self.alias != nil) {
-        _pathCopy = [NSString stringWithFormat:@"/%@", self.alias];
-        return self.pathCopy;
+    if (![NSString growingHelper_isBlankString:self.alias]) {
+        return [NSString stringWithFormat:@"/%@", self.alias];
     }
 
     NSMutableArray<GrowingPage *> *pageTree = [NSMutableArray array];
@@ -152,8 +157,7 @@
         NSString *subpath = [NSString stringWithFormat:@"/%@", pageTree[i].pathName];
         path = [NSString stringWithFormat:@"%@%@", subpath, path];
     }
-    _pathCopy = path;
-    return self.pathCopy;
+    return path;
 }
 
 @end

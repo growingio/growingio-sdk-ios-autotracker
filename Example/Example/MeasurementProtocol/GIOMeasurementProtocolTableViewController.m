@@ -31,6 +31,8 @@ typedef NS_ENUM(NSInteger, GIOMeasurementProtocolCount) { GIOAutoTrack = 0, GIOM
     self.tableView.accessibilityIdentifier = @"MeasurementProtocolTableView";
     
     self.dataCollectionEnabledSwitch.on = self.dataCollectionEnabled;
+    
+    self.growingAutotrackEnabled = YES;
 }
 
 - (void)didReceiveMemoryWarning {

@@ -24,11 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingNodeHelper : NSObject
 
-+ (nullable NSString *)xPathSimilarForNode:(id<GrowingNode>)node;
-+ (nullable NSString *)xPathForNode:(id<GrowingNode>)node;
-
 + (NSString *)xPathForView:(nullable UIView *)view similar:(BOOL)isSimilar;
-+ (NSString *)xPathForViewController:(UIViewController *)vc;
 
 + (NSString *)buildElementContentForNode:(id<GrowingNode> _Nullable)view;
 

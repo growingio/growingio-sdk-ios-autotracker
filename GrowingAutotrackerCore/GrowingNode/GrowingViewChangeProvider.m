@@ -36,9 +36,6 @@
         return;
     }
     GrowingPage *page = [[GrowingPageManager sharedInstance] findPageByView:view];
-    if (!page) {
-        page = [[GrowingPageManager sharedInstance] currentPage];
-    }
     GrowingViewNode *node = [GrowingNodeHelper getViewNode:view];
     [self sendChangeEvent:page viewNode:node];
 }
@@ -50,7 +47,7 @@
                                              .setIndex(node.index)
                                              .setTextValue(node.viewContent);
 
-    if ([GrowingPageManager.sharedInstance pageNeedAutotrack:page.carrier]) {
+    if ([GrowingPageManager.sharedInstance isAutotrackPage:page.carrier]) {
         builder.setAttributes([page.carrier growingPageAttributes]);
     }
 
