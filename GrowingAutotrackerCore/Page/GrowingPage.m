@@ -84,7 +84,7 @@
     return self.carrier.growingPageTitle;
 }
 
-- (NSDictionary<NSString *,NSString *> *)attributes {
+- (NSDictionary<NSString *, NSString *> *)attributes {
     return self.carrier.growingPageAttributes;
 }
 

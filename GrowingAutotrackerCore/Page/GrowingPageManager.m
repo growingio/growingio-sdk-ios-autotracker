@@ -57,7 +57,7 @@
 - (void)viewControllerDidAppear:(UIViewController *)controller {
     if (![self isPrivateViewController:controller]) {
         GrowingPage *page = [self createdViewControllerPage:controller];
-        
+
         if (!self.visiablePages) {
             self.visiablePages = [NSPointerArray weakObjectsPointerArray];
         }
@@ -120,7 +120,7 @@
     if (!controller) {
         return nil;
     }
-    
+
     GrowingPage *page = [controller growingPageObject];
     if (!page) {
         // 一般来说，page对象在viewDidAppear时就已创建
@@ -158,11 +158,11 @@
     while ([self isPrivateViewController:controller]) {
         controller = (UIViewController *)controller.growingNodeParent;
     }
-    
+
     if (!controller) {
         return self.currentPage;
     }
-    
+
     GrowingPage *page = controller.growingPageObject;
     if (!page) {
         // 一般来说，page对象在viewDidAppear时就已创建
