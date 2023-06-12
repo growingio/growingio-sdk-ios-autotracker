@@ -92,5 +92,7 @@ Standard:        Auto
 StatementMacros:
   - GrowingMod
   - GrowingService
+  - GrowingPropertyDefine
+  - GrowingSafeStringPropertyImplementation
 TabWidth:        4
 UseTab:          Never

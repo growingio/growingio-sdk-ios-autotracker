@@ -24,9 +24,9 @@
 #import "GrowingAutotrackerCore/GrowingNode/GrowingViewChangeProvider.h"
 
 GrowingPropertyDefine(UITextField, NSString *, growingHookOldText, setGrowingHookOldText)
-    GrowingPropertyDefine(UITextView, NSString *, growingHookOldText, setGrowingHookOldText)
+GrowingPropertyDefine(UITextView, NSString *, growingHookOldText, setGrowingHookOldText)
 
-        @implementation NSNotificationCenter(GrowingAutotracker)
+@implementation NSNotificationCenter(GrowingAutotracker)
 
 - (void)growing_postNotificationName:(NSNotificationName)aName object:(id)anObject userInfo:(NSDictionary *)aUserInfo {
     if ([aName isEqualToString:UITextFieldTextDidEndEditingNotification]) {

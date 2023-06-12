@@ -69,7 +69,7 @@ static char kGrowingPageAttributesKey;
 
 GrowingSafeStringPropertyImplementation(growingPageAlias, setGrowingPageAlias)
 
-    - (void)setGrowingPageAttributes : (NSDictionary<NSString *, NSString *> *)attributes {
+- (void)setGrowingPageAttributes : (NSDictionary<NSString *, NSString *> *)attributes {
     [GrowingDispatchManager
                  trackApiSel:_cmd
         dispatchInMainThread:^{
