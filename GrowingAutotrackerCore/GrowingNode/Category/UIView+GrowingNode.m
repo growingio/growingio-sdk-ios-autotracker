@@ -322,7 +322,7 @@
 
 GrowingSafeStringPropertyImplementation(growingUniqueTag, setGrowingUniqueTag)
 
-    @end
+@end
 
 #pragma mark - section
 
