@@ -20,6 +20,8 @@
 #ifndef GrowingConstApi_h
 #define GrowingConstApi_h
 
+#import <Foundation/Foundation.h>
+
 #define kGrowingEventApiTemplate @"v3/projects/%@/collect?stm=%llu"
 
 #endif /* GrowingConstApi_h */
