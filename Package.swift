@@ -78,11 +78,11 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/growingio/growingio-sdk-ios-utilities.git",
-            exact: "0.0.5"
+            "0.0.5" ..< "1.0.0"
         ),
         .package(
             url: "https://github.com/growingio/growingio-sdk-ios-performance-ext.git",
-            branch: "master"
+            "0.0.14" ..< "1.0.0"
         ),
         .package(
             url: "https://github.com/apple/swift-protobuf.git",
