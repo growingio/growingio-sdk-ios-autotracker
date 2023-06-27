@@ -15,6 +15,7 @@ target 'Example' do
 #  pod 'GrowingAnalytics/Hybrid', :path => './'
   pod 'GrowingAnalytics/Protobuf', :path => './'
   pod 'GrowingAnalytics/Advert', :path => './'
+  pod 'GrowingAnalytics/V2Adapter', :path => './'
 #  pod 'GrowingAnalytics/Flutter', :path => './'
 #  pod 'GrowingAnalytics/DISABLE_IDFA', :path => './' #禁用idfa
 

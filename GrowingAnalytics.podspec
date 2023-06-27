@@ -160,6 +160,21 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     apm.dependency 'GrowingAPM/Core'
   end
 
+  s.subspec 'V2Adapter' do |adapter|
+    adapter.ios.deployment_target = '9.0'
+    adapter.source_files = 'Modules/V2Adapter/**/*{.h,.m,.c,.cpp,.mm}'
+    adapter.public_header_files = 'Modules/V2Adapter/Public/*.h'
+    adapter.dependency 'GrowingAnalytics/AutotrackerCore', s.version.to_s
+    adapter.dependency 'GrowingAnalytics/V2AdapterTrackOnly', s.version.to_s
+  end
+
+  s.subspec 'V2AdapterTrackOnly' do |adapter|
+    adapter.ios.deployment_target = '9.0'
+    adapter.source_files = 'Modules/V2AdapterTrackOnly/**/*{.h,.m,.c,.cpp,.mm}'
+    adapter.public_header_files = 'Modules/V2AdapterTrackOnly/Public/*.h'
+    adapter.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
+  end
+
   # 使用flutter无埋点插件时，将自动导入该库，正常情况下请勿手动导入
   s.subspec 'Flutter' do |flutter|
     flutter.source_files = 'Modules/Flutter/**/*{.h,.m,.c,.cpp,.mm}'
