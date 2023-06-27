@@ -40,15 +40,13 @@ typedef NS_ENUM(NSInteger, GrowingAspectMode) {
 + (void)track:(NSString *)eventId;
 + (void)track:(NSString *)eventId withNumber:(NSNumber *)number;
 + (void)track:(NSString *)eventId withVariable:(NSDictionary<NSString *, id> *)variable;
-+ (void)track:(NSString *)eventId
-     withNumber:(NSNumber *)number
-  andVariable:(NSDictionary<NSString *, id> *)variable;
++ (void)track:(NSString *)eventId withNumber:(NSNumber *)number andVariable:(NSDictionary<NSString *, id> *)variable;
 + (void)setUserId:(NSString *)userId;
 + (void)clearUserId;
 + (void)setPeopleVariable:(NSDictionary<NSString *, NSObject *> *)variable;
 + (void)setPeopleVariableWithKey:(NSString *)key andStringValue:(NSString *)stringValue;
 + (void)setPeopleVariableWithKey:(NSString *)key andNumberValue:(NSNumber *)numberValue;
-+ (void)setUserAttributes:(NSDictionary<NSString *, id>*)attributes; // cdp
++ (void)setUserAttributes:(NSDictionary<NSString *, id> *)attributes;  // cdp
 
 #pragma mark - Configuration
 
@@ -116,10 +114,15 @@ typedef NS_ENUM(NSInteger, GrowingAspectMode) {
 + (void)startWithAccountId:(NSString *)accountId NS_UNAVAILABLE;
 
 // cdp
-+ (void)startWithAccountId:(NSString *)accountId dataSourceId:(NSString *)dataSourceId withSampling:(CGFloat)sampling NS_UNAVAILABLE;
++ (void)startWithAccountId:(NSString *)accountId
+              dataSourceId:(NSString *)dataSourceId
+              withSampling:(CGFloat)sampling NS_UNAVAILABLE;
 + (void)startWithAccountId:(NSString *)accountId dataSourceId:(NSString *)dataSourceId NS_UNAVAILABLE;
 + (void)track:(NSString *)eventId withItem:(NSString *)itemId itemKey:(NSString *)itemKey NS_UNAVAILABLE;
-+ (void)track:(NSString *)eventId withVariable:(NSDictionary<NSString *, id> *)variable forItem:(NSString *)itemId itemKey:(NSString *)itemKey NS_UNAVAILABLE;
++ (void)track:(NSString *)eventId
+    withVariable:(NSDictionary<NSString *, id> *)variable
+         forItem:(NSString *)itemId
+         itemKey:(NSString *)itemKey NS_UNAVAILABLE;
 + (void)trackPage:(NSString *)pageName NS_UNAVAILABLE;
 + (void)trackPage:(NSString *)pageName withVariable:(NSDictionary<NSString *, id> *)variable NS_UNAVAILABLE;
 

@@ -19,13 +19,13 @@
 
 #if __has_include(<UIKit/UIKit.h>)
 #import "Modules/V2Adapter/Public/GrowingAutoTrackKit.h"
-#import "Modules/V2AdapterTrackOnly/Public/GrowingV2Adapter.h"
 #import <objc/message.h>
 #import <objc/runtime.h>
 #import "GrowingAutotrackerCore/Public/GrowingAutotrackConfiguration.h"
 #import "GrowingTrackerCore/GrowingRealTracker.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
+#import "Modules/V2AdapterTrackOnly/Public/GrowingV2Adapter.h"
 
 @interface UIView (Internal)
 
@@ -169,7 +169,7 @@
 
 - (double)growingImpScale {
     GIOLogDebug(@"[V2Adapter] %s 已废弃", __FUNCTION__);
-    
+
     GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
     if ([configuration isKindOfClass:[GrowingAutotrackConfiguration class]]) {
         return ((GrowingAutotrackConfiguration *)configuration).impressionScale;

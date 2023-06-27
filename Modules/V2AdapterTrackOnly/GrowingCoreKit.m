@@ -18,7 +18,6 @@
 //  limitations under the License.
 
 #import "Modules/V2AdapterTrackOnly/Public/GrowingCoreKit.h"
-#import "Modules/V2AdapterTrackOnly/Public/GrowingV2Adapter.h"
 #import <objc/message.h>
 #import <objc/runtime.h>
 #import "GrowingTrackerCore/GrowingRealTracker.h"
@@ -26,6 +25,7 @@
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
+#import "Modules/V2AdapterTrackOnly/Public/GrowingV2Adapter.h"
 
 static id growing_getTracker(void) {
     Class class = NSClassFromString(@"GrowingAutotracker") ?: NSClassFromString(@"GrowingTracker");
@@ -114,9 +114,7 @@ static id growing_getTracker(void) {
     ((void (*)(id, SEL, NSString *, NSDictionary *))objc_msgSend)(tracker, selector, eventId, variable);
 }
 
-+ (void)track:(NSString *)eventId
-     withNumber:(NSNumber *)number
-  andVariable:(NSDictionary<NSString *, id> *)variable {
++ (void)track:(NSString *)eventId withNumber:(NSNumber *)number andVariable:(NSDictionary<NSString *, id> *)variable {
     [self track:eventId withVariable:variable];
 }
 
@@ -174,7 +172,7 @@ static id growing_getTracker(void) {
     [self setPeopleVariable:@{key: numberValue.stringValue}];
 }
 
-+ (void)setUserAttributes:(NSDictionary<NSString *, id>*)attributes {
++ (void)setUserAttributes:(NSDictionary<NSString *, id> *)attributes {
     [self setPeopleVariable:attributes];
 }
 
