@@ -17,8 +17,8 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Event/GrowingBaseAttributesEvent.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingAutotrackEventType.h"
+#import "GrowingTrackerCore/Event/GrowingBaseAttributesEvent.h"
 
 // 泛型类型，可以生成多个类型event，故可以设置eventType
 
@@ -31,6 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *path;
 @property (nonatomic, copy, readonly) NSString *textValue;
 @property (nonatomic, copy, readonly) NSString *xpath;
+@property (nonatomic, copy, readonly) NSString *xindex;
 @property (nonatomic, assign, readonly) int index;
 
 + (GrowingViewElementBuilder *)builder;
@@ -42,13 +43,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *pageName;
 @property (nonatomic, copy, readonly) NSString *textValue;
 @property (nonatomic, copy, readonly) NSString *xpath;
+@property (nonatomic, copy, readonly) NSString *xindex;
 @property (nonatomic, assign, readonly) int index;
 
 - (GrowingViewElementBuilder * (^)(NSString *value))setPath;
 - (GrowingViewElementBuilder * (^)(NSString *value))setTextValue;
 - (GrowingViewElementBuilder * (^)(NSString *value))setXpath;
+- (GrowingViewElementBuilder * (^)(NSString *value))setXindex;
 - (GrowingViewElementBuilder * (^)(int value))setIndex;
-- (GrowingViewElementBuilder *(^)(NSDictionary <NSString *, NSObject *>*value))setAttributes;
+- (GrowingViewElementBuilder * (^)(NSDictionary<NSString *, NSObject *> *value))setAttributes;
 
 // extra add
 // 覆盖返回值类型为GrowingViewElementBuilder

@@ -20,7 +20,6 @@
 #import "GrowingAutotrackerCore/GrowingNode/GrowingNodeHelper.h"
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
-#import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 
@@ -29,81 +28,40 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
 
 @implementation GrowingNodeHelper
 
-// 当node为列表视图时，返回路径为 TableView/cell[-]，序号在index字段中返回
-+ (nullable NSString *)xPathSimilarForNode:(id<GrowingNode>)node {
-    if ([node isKindOfClass:[UIView class]]) {
-        return [self xPathForView:(UIView *)node similar:YES];
-    } else if ([node isKindOfClass:[UIViewController class]]) {
-        return [self xPathForViewController:(UIViewController *)node];
-    }
-    return nil;
-}
-
-+ (nullable NSString *)xPathForNode:(id<GrowingNode>)node {
-    if ([node isKindOfClass:[UIView class]]) {
-        return [self xPathForView:(UIView *)node similar:NO];
-    } else if ([node isKindOfClass:[UIViewController class]]) {
-        return [self xPathForViewController:(UIViewController *)node];
-    }
-    return nil;
-}
-
-/// 获取某个view的xpath
-/// @param view 节点
-/// @param isSimilar 是否返回相似路径
-+ (NSString *)xPathForView:(nullable UIView *)view similar:(BOOL)isSimilar {
-    NSMutableArray *viewPathArray = [NSMutableArray array];
++ (void)recalculateXpath:(UIView *)view
+                   block:(void (^)(NSString *xpath, NSString *xindex, NSString *originxindex))block {
     id<GrowingNode> node = view;
-
+    NSMutableArray *viewPathArray = [NSMutableArray array];
+    NSMutableArray *xindexArray = [NSMutableArray array];
+    NSMutableArray *originxindexArray = [NSMutableArray array];
+    BOOL isSimilar = YES;
     while (node && [node isKindOfClass:[UIView class]]) {
-        if (isSimilar) {
-            if (node.growingNodeSubSimilarPath.length > 0) {
-                [viewPathArray addObject:node.growingNodeSubSimilarPath];
-                isSimilar = NO;
-            }
-        } else {
-            if (node.growingNodeSubPath.length > 0) [viewPathArray addObject:node.growingNodeSubPath];
+        if (node.growingNodeSubPath == nil) {
+            continue;
         }
+        [viewPathArray addObject:node.growingNodeSubPath];
+        [xindexArray addObject:node.growingNodeSubIndex];
+        if (isSimilar) {
+            [originxindexArray addObject:node.growingNodeSubSimilarIndex];
+            isSimilar = NO;
+        } else {
+            [originxindexArray addObject:node.growingNodeSubIndex];
+        }
+
         node = node.growingNodeParent;
     }
-    // 当检测到viewController时，会替换成page字段
-    // 此时则需要判断是否ignored以及过滤
-    if ([node isKindOfClass:[UIViewController class]]) {
-        // vc.view不计入xpath
-        // eg:UIViewController/view => /Page/
-        // eg:UIViewController/TableView => /Page/
-        if (viewPathArray.count > 0) {
-            [viewPathArray removeLastObject];
-        }
-        while (node) {
-            if ([[GrowingPageManager sharedInstance] isPrivateViewControllerIgnored:(UIViewController *)node]) {
-                if (node.growingNodeSubPath.length > 0) [viewPathArray addObject:node.growingNodeSubPath];
-            } else {
-                GrowingPageGroup *page = [(UIViewController *)node growingPageObject];
-                if (page.isIgnored) {
-                    if (node.growingNodeSubPath.length > 0) [viewPathArray addObject:node.growingNodeSubPath];
-                } else {
-                    [viewPathArray addObject:kGrowingNodeRootPage];
-                    break;
-                }
-            }
-            node = node.growingNodeParent;
-        }
-        // 如果遍历到了根节点(即没有parent)，说明所有层级vc都被过滤，则添加IgnorePage
-        if (!node) {
-            [viewPathArray addObject:kGrowingNodeRootIgnore];
-        }
+
+    NSString * (^toStringBlock)(NSArray *) = ^(NSArray *array) {
+        NSArray *reverse = array.reverseObjectEnumerator.allObjects;
+        return [@"/" stringByAppendingString:[reverse componentsJoinedByString:@"/"]];
+    };
+
+    NSString *xpath = toStringBlock(viewPathArray);
+    NSString *xindex = toStringBlock(xindexArray);
+    NSString *originxindex = toStringBlock(originxindexArray);
+    if (block) {
+        block(xpath, xindex, originxindex);
     }
-
-    NSString *viewPath = [[[viewPathArray reverseObjectEnumerator] allObjects] componentsJoinedByString:@"/"];
-    viewPath = [@"/" stringByAppendingString:viewPath];
-    return viewPath;
-}
-
-+ (NSString *)xPathForViewController:(UIViewController *)vc {
-    NSAssert(vc, @"+xPathForViewController: vc is nil");
-    GrowingPageGroup *page = [[GrowingPageManager sharedInstance] findPageByViewController:vc];
-    return page.path;
 }
 
 + (NSString *)buildElementContentForNode:(id<GrowingNode> _Nullable)view {
@@ -136,7 +94,7 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
 + (GrowingViewNode *)getViewNode:(UIView *)view {
     NSPointerArray *weakArray = [NSPointerArray weakObjectsPointerArray];
     GrowingViewNode *viewNode = [self getTopViewNode:view array:weakArray];
-    for (int i = (int)weakArray.count - 2; i >= 0; i--) {
+    for (int i = (int)weakArray.count - 1; i >= 0; i--) {
         UIView *parent = [weakArray pointerAtIndex:i];
         if (parent) {
             viewNode = [viewNode appendNode:parent isRecalculate:NO];
@@ -157,13 +115,12 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
     } while ([parent isKindOfClass:[UIView class]]);
 
     UIView *rootview = [weakArray pointerAtIndex:weakArray.count - 1];
-    NSString *xpath = [self xPathForView:rootview similar:YES];
-    NSString *originXPath = [self xPathForView:rootview similar:NO];
     return GrowingViewNode.builder.setView(rootview)
         .setIndex(-1)
         .setViewContent([self buildElementContentForNode:rootview])
-        .setXPath(xpath)
-        .setOriginXPath(originXPath)
+        .setXpath(@"")
+        .setXindex(@"")
+        .setOriginXindex(@"")
         .setNodeType([self getViewNodeType:rootview])
         .build;
 }

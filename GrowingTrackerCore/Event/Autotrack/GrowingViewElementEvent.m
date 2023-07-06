@@ -31,6 +31,7 @@
         _path = subBuilder.pageName;
         _textValue = subBuilder.textValue;
         _xpath = subBuilder.xpath;
+        _xindex = subBuilder.xindex;
         _index = subBuilder.index;
     }
     return self;
@@ -41,6 +42,7 @@
     dataDictM[@"path"] = self.path;
     dataDictM[@"textValue"] = self.textValue;
     dataDictM[@"xpath"] = self.xpath;
+    dataDictM[@"xindex"] = self.xindex;
     dataDictM[@"index"] = self.index >= 0 ? @(self.index) : nil;
     return dataDictM;
 }
@@ -68,6 +70,13 @@
 - (GrowingViewElementBuilder * (^)(NSString *value))setXpath {
     return ^(NSString *value) {
         self->_xpath = value;
+        return self;
+    };
+}
+
+- (GrowingViewElementBuilder * (^)(NSString *value))setXindex {
+    return ^(NSString *value) {
+        self->_xindex = value;
         return self;
     };
 }

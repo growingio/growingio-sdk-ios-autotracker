@@ -35,7 +35,6 @@
     dto.deviceId = self.deviceId;
     dto.platform = self.platform;
     dto.platformVersion = self.platformVersion;
-    dto.globalSequenceId = self.globalSequenceId;
     dto.eventSequenceId = (int)self.eventSequenceId;
     dto.appState = (self.appState == GrowingAppStateForeground) ? @"FOREGROUND" : @"BACKGROUND";
     dto.URLScheme = self.urlScheme;
@@ -52,7 +51,6 @@
     dto.longitude = self.longitude;
     dto.sdkVersion = self.sdkVersion;
     dto.userKey = self.userKey;
-    dto.gioId = self.gioId;
 
     __weak typeof(self) weakSelf = self;
     NSString * (^stringBlock)(NSString *) = ^(NSString *selectorString) {
@@ -72,16 +70,6 @@
             return result > 0 ? result : 0;
         }
         return 0;
-    };
-
-    int64_t (^int64Block)(NSString *) = ^(NSString *selectorString) {
-        __strong typeof(weakSelf) self = weakSelf;
-        SEL selector = NSSelectorFromString(selectorString);
-        if ([self respondsToSelector:selector]) {
-            int64_t result = ((int64_t(*)(id, SEL))objc_msgSend)(self, selector);
-            return result > 0 ? result : (int64_t)0;
-        }
-        return (int64_t)0;
     };
 
     NSDictionary<NSString *, NSString *> * (^dicBlock)(NSString *) = ^(NSString *selectorString) {

@@ -28,8 +28,10 @@
 #import "GrowingAutotrackerCore/Autotrack/UIView+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIAlertController+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UISegmentedControl+GrowingNode.h"
+#import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/Impression/GrowingImpressionTrack.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingULSwizzle.h"
 #import "GrowingULViewControllerLifecycle.h"
@@ -47,6 +49,16 @@
     }
 
     return self;
+}
+
+- (void)autotrackPage:(UIViewController *)controller alias:(NSString *)alias {
+    [GrowingPageManager.sharedInstance autotrackPage:controller alias:alias attributes:nil];
+}
+
+- (void)autotrackPage:(UIViewController *)controller
+                alias:(NSString *)alias
+           attributes:(NSDictionary<NSString *, NSString *> *)attributes {
+    [GrowingPageManager.sharedInstance autotrackPage:controller alias:alias attributes:attributes];
 }
 
 - (void)addAutoTrackSwizzles {

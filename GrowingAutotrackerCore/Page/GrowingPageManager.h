@@ -18,8 +18,9 @@
 // limitations under the License.
 
 #import <UIKit/UIKit.h>
-#import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
-#import "GrowingULViewControllerLifecycle.h"
+#import "GrowingAutotrackerCore/Page/GrowingPage.h"
+
+NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingPageManager : NSObject
 
@@ -27,25 +28,17 @@
 
 - (void)start;
 
-- (void)createdViewControllerPage:(UIViewController *)viewController;
+- (GrowingPage *)currentPage;
+- (NSArray<GrowingPage *> *)allDidAppearPages;
 
-- (BOOL)isPrivateViewControllerIgnored:(UIViewController *)viewController;
-
-// All ViewControllers that did appeared
-- (NSArray<UIViewController *> *)allDidAppearViewControllers;
-
-// Current ViewController show in window
-- (UIViewController *)currentViewController;
-
-// Root ViewController in DidAppearControllers eg:UIWindow/Root/xxx/xxx/Current
-- (UIViewController *)rootViewController;
-
-// Whether a vc is did appeared
 - (BOOL)isDidAppearController:(UIViewController *)vc;
 
-- (GrowingPageGroup *)findPageByView:(UIView *)view;
-- (GrowingPageGroup *)findPageByViewController:(UIViewController *)current;
-
-- (GrowingPageGroup *)currentPage;
+- (void)autotrackPage:(UIViewController *)controller
+                alias:(NSString *)alias
+           attributes:(NSDictionary<NSString *, NSString *> *_Nullable)attributes;
+- (GrowingPage *)findPageByView:(UIView *)view;
+- (GrowingPage *_Nullable)findAutotrackPageByPage:(GrowingPage *)page;
 
 @end
+
+NS_ASSUME_NONNULL_END

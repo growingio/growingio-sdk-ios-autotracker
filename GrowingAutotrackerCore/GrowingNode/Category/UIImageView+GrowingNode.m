@@ -23,13 +23,9 @@
 @implementation UIImageView (GrowingNode)
 
 - (NSString *)growingViewContent {
-    if (self.accessibilityLabel.length) {
-        return self.accessibilityLabel;
-    } else {
-        for (UIView *view in self.subviews) {
-            if ([view isKindOfClass:[UILabel class]] && [view growingViewContent].length) {
-                return [view growingViewContent];
-            }
+    for (UIView *view in self.subviews) {
+        if ([view isKindOfClass:[UILabel class]] && [view growingViewContent].length) {
+            return [view growingViewContent];
         }
     }
 

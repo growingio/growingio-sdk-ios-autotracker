@@ -70,25 +70,16 @@
     return nil;
 }
 
-- (NSString *)growingNodeSubSimilarPath {
-    // 如果手动标识了该view,返回标识
-    if ([self respondsToSelector:@selector(growingUniqueTag)]) {
-        if (self.growingUniqueTag.length > 0) {
-            return self.growingUniqueTag;
-        }
-    }
-
-    NSString *className = NSStringFromClass(self.class);
-    return index < 0 ? className : [NSString stringWithFormat:@"%@[-]", className];
+- (NSString *)growingNodeSubSimilarIndex {
+    return @"-";
 }
 
 - (NSString *)growingNodeContent {
     NSString *nodeContent = [UISegmentedControl growing_titleForSegment:(id)self];
     if (nodeContent.length) {
         return nodeContent;
-    } else {
-        return self.accessibilityLabel;
     }
+    return nil;
 }
 
 @end

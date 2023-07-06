@@ -41,7 +41,6 @@
         _domain = builder.domain;
         _urlScheme = builder.urlScheme;
         _appState = builder.appState;
-        _globalSequenceId = builder.globalSequenceId;
         _eventSequenceId = builder.eventSequenceId;
         _platform = builder.platform;
         _platformVersion = builder.platformVersion;
@@ -59,7 +58,6 @@
         _longitude = builder.longitude;
         _sdkVersion = builder.sdkVersion;
         _userKey = builder.userKey;
-        _gioId = builder.gioId;
     }
     return self;
 }
@@ -86,7 +84,6 @@
     dataDict[@"deviceId"] = self.deviceId;
     dataDict[@"platform"] = self.platform;
     dataDict[@"platformVersion"] = self.platformVersion;
-    dataDict[@"globalSequenceId"] = @(self.globalSequenceId);
     dataDict[@"eventSequenceId"] = @(self.eventSequenceId);
     dataDict[@"appState"] = (self.appState == GrowingAppStateForeground) ? @"FOREGROUND" : @"BACKGROUND";
     dataDict[@"urlScheme"] = self.urlScheme;
@@ -103,7 +100,6 @@
     dataDict[@"longitude"] = ABS(self.longitude) > 0 ? @(self.longitude) : nil;
     dataDict[@"sdkVersion"] = self.sdkVersion;
     dataDict[@"userKey"] = self.userKey.length > 0 ? self.userKey : nil;
-    dataDict[@"gioId"] = self.gioId.length > 0 ? self.gioId : nil;
     return [dataDict copy];
 }
 
@@ -115,7 +111,7 @@
 
 @implementation GrowingBaseBuilder
 
-// 赋值属性，eg:deviceId,userId,sessionId,globalSequenceId,eventSequenceId
+// 赋值属性，eg:deviceId,userId,sessionId,eventSequenceId
 - (void)readPropertyInTrackThread {
     GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
     _dataSourceId = config.dataSourceId;
@@ -130,15 +126,13 @@
 
     GrowingEventSequenceObject *sequence =
         [[GrowingPersistenceDataProvider sharedInstance] getAndIncrement:self.eventType];
-    _globalSequenceId = sequence.globalId;
-    _eventSequenceId = sequence.eventTypeId;
+    _eventSequenceId = sequence.sequenceId;
     GrowingSession *session = [GrowingSession currentSession];
     _userId = session.loginUserId;
     _sessionId = session.sessionId;
     _latitude = session.latitude;
     _longitude = session.longitude;
     _userKey = session.loginUserKey;
-    _gioId = session.latestNonNullUserId;
 
     _timestamp = _timestamp > 0 ? _timestamp : [GrowingULTimeUtil currentTimeMillis];
     _screenWidth = [GrowingFieldsIgnore isIgnoreFields:@"screenWidth"] ? 0 : deviceInfo.screenWidth;
@@ -207,13 +201,6 @@
 - (GrowingBaseBuilder * (^)(int value))setAppState {
     return ^(int value) {
         self->_appState = value;
-        return self;
-    };
-}
-
-- (GrowingBaseBuilder * (^)(long long value))setGlobalSequenceId {
-    return ^(long long value) {
-        self->_globalSequenceId = value;
         return self;
     };
 }
@@ -340,13 +327,6 @@
 - (GrowingBaseBuilder * (^)(NSString *value))setUserKey {
     return ^(NSString *value) {
         self->_userKey = value;
-        return self;
-    };
-}
-
-- (GrowingBaseBuilder * (^)(NSString *value))setGioId {
-    return ^(NSString *value) {
-        self->_gioId = value;
         return self;
     };
 }

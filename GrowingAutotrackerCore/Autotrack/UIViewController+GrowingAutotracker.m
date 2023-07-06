@@ -20,28 +20,16 @@
 #import <objc/runtime.h>
 #import "GrowingAutotrackerCore/Autotrack/GrowingPropertyDefine.h"
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
-#import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
+#import "GrowingAutotrackerCore/Page/GrowingPage.h"
 #import "GrowingAutotrackerCore/Public/GrowingAutotrackConfiguration.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
 #import "GrowingULViewControllerLifecycle.h"
 
 static char kGrowingPageObjectKey;
-static char kGrowingPageIgnorePolicyKey;
 static char kGrowingPageAttributesKey;
 
 @implementation UIViewController (GrowingAutotracker)
-
-- (NSString *)growingPageName {
-    NSString *pageName = nil;
-    NSString *growingAttributesPageName = [self growingPageAlias];
-    if (growingAttributesPageName.length > 0) {
-        pageName = growingAttributesPageName;
-    } else {
-        pageName = NSStringFromClass(self.class);
-    }
-    return pageName;
-}
 
 - (nullable NSString *)growingPageTitle {
     NSString *currentPageName = self.title;
@@ -59,11 +47,11 @@ static char kGrowingPageAttributesKey;
            [UIApplication sharedApplication].keyWindow.rootViewController != self;
 }
 
-- (void)setGrowingPageObject:(GrowingPageGroup *)page {
+- (void)setGrowingPageObject:(GrowingPage *)page {
     objc_setAssociatedObject(self, &kGrowingPageObjectKey, page, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (GrowingPageGroup *)growingPageObject {
+- (GrowingPage *)growingPageObject {
     return objc_getAssociatedObject(self, &kGrowingPageObjectKey);
 }
 
@@ -86,50 +74,6 @@ GrowingSafeStringPropertyImplementation(growingPageAlias, setGrowingPageAlias)
 
 - (NSDictionary<NSString *, NSString *> *)growingPageAttributes {
     return [objc_getAssociatedObject(self, &kGrowingPageAttributesKey) copy];
-}
-
-- (void)setGrowingPageIgnorePolicy:(GrowingIgnorePolicy)growingPageIgnorePolicy {
-    objc_setAssociatedObject(self,
-                             &kGrowingPageIgnorePolicyKey,
-                             [NSNumber numberWithUnsignedInteger:growingPageIgnorePolicy],
-                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (GrowingIgnorePolicy)growingPageIgnorePolicy {
-    id policyObjc = objc_getAssociatedObject(self, &kGrowingPageIgnorePolicyKey);
-    if (!policyObjc) {
-        return GrowingIgnoreNone;
-    }
-
-    if ([policyObjc isKindOfClass:NSNumber.class]) {
-        NSNumber *policyNum = (NSNumber *)policyObjc;
-        return policyNum.unsignedIntegerValue;
-    }
-
-    return GrowingIgnoreNone;
-}
-
-- (BOOL)growingPageDidIgnore {
-    // judge self firstly
-    GrowingIgnorePolicy selfPolicy = self.growingPageIgnorePolicy;
-    if (GrowingIgnoreAll == selfPolicy || GrowingIgnoreSelf == selfPolicy) {
-        return YES;
-    }
-
-    // judge parent
-    UIViewController *current = self;
-    while (current.parentViewController) {
-        UIViewController *parent = current.parentViewController;
-        GrowingIgnorePolicy parentPolicy = parent.growingPageIgnorePolicy;
-
-        if (GrowingIgnoreChildren == parentPolicy || GrowingIgnoreAll == parentPolicy) {
-            return YES;
-        }
-
-        current = parent;
-    }
-
-    return NO;
 }
 
 @end

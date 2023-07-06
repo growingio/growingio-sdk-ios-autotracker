@@ -32,10 +32,11 @@
         _zLevel = builder.zLevel;
         _content = builder.content;
         _xpath = builder.xpath;
+        _xindex = builder.xindex;
         _nodeType = builder.nodeType;
         _isContainer = builder.isContainer;
         _index = builder.index;
-        _parentXPath = builder.parentXPath;
+        _parentXpath = builder.parentXpath;
         _page = builder.page;
         _domain = [GrowingDeviceInfo currentDeviceInfo].bundleID;
     }
@@ -52,10 +53,11 @@
     dataDict[@"zLevel"] = @(self.zLevel);
     dataDict[@"content"] = self.content;
     dataDict[@"xpath"] = self.xpath;
+    dataDict[@"xindex"] = self.xindex;
     dataDict[@"nodeType"] = self.nodeType;
     dataDict[@"isContainer"] = @(self.isContainer);
     dataDict[@"index"] = self.index >= 0 ? @(self.index) : nil;
-    dataDict[@"parentXPath"] = self.parentXPath;
+    dataDict[@"parentXpath"] = self.parentXpath;
     dataDict[@"page"] = self.page;
     dataDict[@"domain"] = self.domain;
     return [dataDict copy];
@@ -71,24 +73,35 @@
         return self;
     };
 }
+
 - (GrowingWebCircleElementBuilder * (^)(int value))setZLevel {
     return ^(int value) {
         self->_zLevel = value;
         return self;
     };
 }
+
 - (GrowingWebCircleElementBuilder * (^)(NSString *value))setContent {
     return ^(NSString *value) {
         self->_content = value;
         return self;
     };
 }
+
 - (GrowingWebCircleElementBuilder * (^)(NSString *value))setXpath {
     return ^(NSString *value) {
         self->_xpath = value;
         return self;
     };
 }
+
+- (GrowingWebCircleElementBuilder * (^)(NSString *value))setXindex {
+    return ^(NSString *value) {
+        self->_xindex = value;
+        return self;
+    };
+}
+
 - (GrowingWebCircleElementBuilder * (^)(NSString *value))setNodeType {
     return ^(NSString *value) {
         self->_nodeType = value;
@@ -96,9 +109,9 @@
     };
 }
 
-- (GrowingWebCircleElementBuilder * (^)(NSString *value))setParentXPath {
+- (GrowingWebCircleElementBuilder * (^)(NSString *value))setParentXpath {
     return ^(NSString *value) {
-        self->_parentXPath = value;
+        self->_parentXpath = value;
         return self;
     };
 }
@@ -109,6 +122,7 @@
         return self;
     };
 }
+
 - (GrowingWebCircleElementBuilder * (^)(int value))setIndex {
     return ^(int value) {
         self->_index = value;

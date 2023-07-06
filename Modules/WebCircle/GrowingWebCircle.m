@@ -25,7 +25,6 @@
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIViewController+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIWindow+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/GrowingNodeHelper.h"
-#import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
 #import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingAutotrackEventType.h"
@@ -126,13 +125,12 @@ GrowingMod(GrowingWebCircle)
    "left": 0,
    "top": 0,
    "width": 720,
-   "height": 1520,
-   "isIgnored": true
+   "height": 1520
  }
  */
-- (NSMutableDictionary *)dictFromPage:(id<GrowingNode>)aNode xPath:(NSString *)xPath {
+- (NSMutableDictionary *)dictFromPage:(GrowingPage *)page {
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-    CGRect frame = [aNode growingNodeFrame];
+    CGRect frame = [page.carrier growingNodeFrame];
     if (!CGRectEqualToRect(frame, CGRectZero)) {
         CGFloat scale = MIN([UIScreen mainScreen].scale, 2);
         dict[@"left"] = [NSNumber numberWithInt:(int)(frame.origin.x * scale)];
@@ -140,14 +138,8 @@ GrowingMod(GrowingWebCircle)
         dict[@"width"] = [NSNumber numberWithInt:(int)(frame.size.width * scale)];
         dict[@"height"] = [NSNumber numberWithInt:(int)(frame.size.height * scale)];
     }
-    dict[@"path"] = xPath;
-
-    UIViewController *vc = (UIViewController *)aNode;
-    if (vc.title) {
-        dict[@"title"] = vc.title;
-    }
-
-    dict[@"isIgnored"] = @([vc growingPageDidIgnore]);
+    dict[@"path"] = page.alias;
+    dict[@"title"] = page.title;
     return dict;
 }
 
@@ -161,10 +153,11 @@ GrowingMod(GrowingWebCircle)
                                            .setContent(node.viewContent)
                                            .setZLevel(self.zLevel++)
                                            .setIndex(node.index)
-                                           .setXpath(node.xPath)
-                                           .setParentXPath(node.clickableParentXPath)
+                                           .setXpath(node.xpath)
+                                           .setXindex(node.xindex)
+                                           .setParentXpath(node.clickableParentXpath)
                                            .setNodeType(node.nodeType)
-                                           .setPage(page.path)
+                                           .setPage(page.alias)
                                            .build;
 
     return [NSMutableDictionary dictionaryWithDictionary:element.toDictionary];
@@ -264,8 +257,9 @@ GrowingMod(GrowingWebCircle)
         [self traverseViewNode:GrowingViewNode.builder.setView(topwindow)
                                    .setIndex(-1)
                                    .setViewContent([GrowingNodeHelper buildElementContentForNode:topwindow])
-                                   .setXPath([GrowingNodeHelper xPathForView:topwindow similar:NO])
-                                   .setOriginXPath([GrowingNodeHelper xPathForView:topwindow similar:NO])
+                                   .setXpath(topwindow.growingNodeSubPath)
+                                   .setXindex(topwindow.growingNodeSubIndex)
+                                   .setOriginXindex(topwindow.growingNodeSubSimilarIndex)
                                    .setNodeType([GrowingNodeHelper getViewNodeType:topwindow])
                                    .build];
         if (self.isPageDontShow) {
@@ -275,12 +269,13 @@ GrowingMod(GrowingWebCircle)
     }
 
     NSMutableArray *pages = [NSMutableArray array];
-    NSArray *vcs = [[GrowingPageManager sharedInstance] allDidAppearViewControllers];
-    for (int i = 0; i < vcs.count; i++) {
-        UIViewController *tmp = vcs[i];
-        GrowingPage *page = [[GrowingPageManager sharedInstance] findPageByViewController:tmp];
-        NSMutableDictionary *dict = [self dictFromPage:tmp xPath:page.path];
-        [pages addObject:dict];
+    NSArray *allDidAppearPages = [[GrowingPageManager sharedInstance] allDidAppearPages];
+    for (int i = 0; i < allDidAppearPages.count; i++) {
+        GrowingPage *page = allDidAppearPages[i];
+        if (page.isAutotrack) {
+            NSMutableDictionary *dict = [self dictFromPage:page];
+            [pages addObject:dict];
+        }
     }
 
     NSDictionary *flutterData = self.flutterCircleData;

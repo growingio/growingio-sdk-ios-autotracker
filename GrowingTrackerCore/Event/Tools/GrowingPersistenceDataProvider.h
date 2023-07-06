@@ -47,10 +47,8 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface GrowingEventSequenceObject : NSObject
-// 全局 序列id
-@property (nonatomic, assign) long long globalId;
-// 事件类型 序列id
-@property (nonatomic, assign) long long eventTypeId;
+
+@property (nonatomic, assign) long long sequenceId;
 
 @end
 

@@ -24,9 +24,8 @@
 - (NSString *)growingViewContent {
     if (self.text.length) {
         return self.text;
-    } else {
-        return self.accessibilityLabel;
     }
+    return nil;
 }
 
 @end

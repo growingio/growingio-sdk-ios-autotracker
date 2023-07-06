@@ -31,7 +31,7 @@
 - (void)configRandomPageAttributes {
 #if defined(AUTOTRACKER)
 #if defined(SDK3rd)
-    self.growingPageAttributes = [self getRandomAttributes];
+    [[GrowingAutotracker sharedInstance] autotrackPage:self alias:@"页面属性测试" attributes:[self getRandomAttributes]];
 #endif
 #endif
 }
@@ -41,11 +41,10 @@
 }
 
 - (IBAction)setPageAttributesOutRangeBtnClick:(UIButton *)sender {
-    
     NSDictionary *pval = [GIOConstants getLargeDictionary];
 #if defined(AUTOTRACKER)
 #if defined(SDK3rd)
-    self.growingPageAttributes = pval;
+    [[GrowingAutotracker sharedInstance] autotrackPage:self alias:@"页面属性测试" attributes:pval];
 #endif
 #endif
     NSLog(@"setPageVariable largeDic length is:%ld",pval.count);

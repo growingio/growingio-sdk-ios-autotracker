@@ -13,7 +13,6 @@
     
 - (void)viewDidLoad {
     [super viewDidLoad];
-//    self.growingPageIgnorePolicy = GrowingIgnoreSelf;
 }
 
 @end
@@ -30,9 +29,7 @@
     UIViewController *parent = self.parentViewController;
     while (parent.parentViewController) {
         parent = parent.parentViewController;
-    }
-//    parent.growingPageIgnorePolicy = GrowingIgnoreAll;
-    
+    }    
     
     CGFloat width = [UIScreen mainScreen].bounds.size.width;
     CGFloat height = [UIScreen mainScreen].bounds.size.height;

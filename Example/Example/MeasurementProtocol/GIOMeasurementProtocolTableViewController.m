@@ -25,7 +25,7 @@ typedef NS_ENUM(NSInteger, GIOMeasurementProtocolCount) { GIOAutoTrack = 0, GIOM
     [super viewDidLoad];
 #if defined(AUTOTRACKER)
 #if defined(SDK3rd)
-    self.growingPageAttributes = @{@"xxx" : @"111mmm"};
+    [[GrowingAutotracker sharedInstance] autotrackPage:self alias:@"首页" attributes:@{@"xxx" : @"111mmm"}];
 #endif
 #endif
     self.tableView.accessibilityIdentifier = @"MeasurementProtocolTableView";

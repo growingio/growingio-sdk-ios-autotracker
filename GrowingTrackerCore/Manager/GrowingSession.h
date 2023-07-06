@@ -47,6 +47,8 @@ typedef NS_ENUM(NSInteger, GrowingSessionState) {
 
 + (instancetype)currentSession;
 
+- (void)refreshSessionId;
+
 - (void)generateVisit;
 
 - (void)addUserIdChangedDelegate:(id<GrowingUserIdChangedDelegate>)delegate;

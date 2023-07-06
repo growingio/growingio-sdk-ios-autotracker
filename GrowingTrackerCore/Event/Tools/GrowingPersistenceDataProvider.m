@@ -23,7 +23,7 @@
 static NSString *kGrowingUserdefault_file = @"growingio.userdefault";
 static NSString *kGrowingUserdefault_loginUserId = @"growingio.userdefault.loginUserId";
 static NSString *kGrowingUserdefault_loginUserKey = @"growingio.userdefault.loginUserKey";
-static NSString *kGrowingUserdefault_globalId = @"growingio.userdefault.globalId";
+static NSString *kGrowingUserdefault_sequenceId = @"growingio.userdefault.sequenceId";
 static NSString *kGrowingUserdefault_prefix = @"growingio.userdefault";
 
 @interface GrowingPersistenceDataProvider ()
@@ -94,12 +94,15 @@ static GrowingPersistenceDataProvider *persistence = nil;
 { return [_growingUserdefault valueForKey:key]; }
 
 - (GrowingEventSequenceObject *)getAndIncrement:(NSString *)eventType {
-    long long globalId = [self increaseFor:kGrowingUserdefault_globalId spanValue:1];
-    long long eventTypeId =
-        [self increaseFor:[NSString stringWithFormat:@"%@.%@", kGrowingUserdefault_prefix, eventType] spanValue:1];
+    int increase = 0;
+    if ([eventType isEqualToString:@"VISIT"] || [eventType isEqualToString:@"PAGE"] ||
+        [eventType isEqualToString:@"VIEW_CLICK"] || [eventType isEqualToString:@"VIEW_CHANGE"] ||
+        [eventType isEqualToString:@"CUSTOM"]) {
+        increase = 1;
+    }
+    long long sequenceId = [self increaseFor:kGrowingUserdefault_sequenceId spanValue:increase];
     GrowingEventSequenceObject *obj = [[GrowingEventSequenceObject alloc] init];
-    obj.globalId = globalId;
-    obj.eventTypeId = eventTypeId;
+    obj.sequenceId = sequenceId;
     return obj;
 }
 

@@ -40,7 +40,6 @@ typedef NS_OPTIONS(NSUInteger, GrowingEventSendPolicy) {
 @property (nonatomic, copy, readonly) NSString *_Nonnull domain;
 @property (nonatomic, copy, readonly) NSString *_Nonnull urlScheme;
 @property (nonatomic, assign, readonly) int appState;
-@property (nonatomic, assign, readonly) long long globalSequenceId;
 @property (nonatomic, assign, readonly) long long eventSequenceId;
 @property (nonatomic, copy, readonly) NSString *_Nonnull platform;
 @property (nonatomic, copy, readonly) NSString *_Nonnull platformVersion;
@@ -59,7 +58,6 @@ typedef NS_OPTIONS(NSUInteger, GrowingEventSendPolicy) {
 @property (nonatomic, assign, readonly) double longitude;
 @property (nonatomic, copy, readonly) NSString *_Nonnull sdkVersion;
 @property (nonatomic, copy, readonly) NSString *_Nullable userKey;
-@property (nonatomic, copy, readonly) NSString *_Nullable gioId;
 @property (nonatomic, assign) GrowingEventSendPolicy sendPolicy;
 
 - (NSDictionary *_Nonnull)toDictionary;
@@ -84,7 +82,6 @@ typedef NS_OPTIONS(NSUInteger, GrowingEventSendPolicy) {
 @property (nonatomic, copy, readonly) NSString *_Nonnull domain;
 @property (nonatomic, copy, readonly) NSString *_Nonnull urlScheme;
 @property (nonatomic, assign, readonly) int appState;
-@property (nonatomic, assign, readonly) long long globalSequenceId;
 @property (nonatomic, assign, readonly) long long eventSequenceId;
 @property (nonatomic, copy, readonly) NSString *_Nonnull platform;
 @property (nonatomic, copy, readonly) NSString *_Nonnull platformVersion;
@@ -103,11 +100,10 @@ typedef NS_OPTIONS(NSUInteger, GrowingEventSendPolicy) {
 @property (nonatomic, assign, readonly) double longitude;
 @property (nonatomic, copy, readonly) NSString *_Nonnull sdkVersion;
 @property (nonatomic, copy, readonly) NSString *_Nullable userKey;
-@property (nonatomic, copy, readonly) NSString *_Nullable gioId;
 
 NS_ASSUME_NONNULL_BEGIN
 
-// 赋值属性，eg:deviceId,userId,sessionId,globalSequenceId,eventSequenceId
+// 赋值属性，eg:deviceId,userId,sessionId,eventSequenceId
 - (void)readPropertyInTrackThread;
 
 - (GrowingBaseBuilder * (^)(NSString *value))setDataSourceId;
@@ -118,7 +114,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (GrowingBaseBuilder * (^)(NSString *value))setDomain;
 - (GrowingBaseBuilder * (^)(NSString *value))setUrlScheme;
 - (GrowingBaseBuilder * (^)(int value))setAppState;
-- (GrowingBaseBuilder * (^)(long long value))setGlobalSequenceId;
 - (GrowingBaseBuilder * (^)(long long value))setEventSequenceId;
 - (GrowingBaseBuilder * (^)(NSString *value))setPlatform;
 - (GrowingBaseBuilder * (^)(NSString *value))setPlatformVersion;
@@ -136,7 +131,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (GrowingBaseBuilder * (^)(double value))setLongitude;
 - (GrowingBaseBuilder * (^)(NSString *value))setSdkVersion;
 - (GrowingBaseBuilder * (^)(NSString *value))setUserKey;
-- (GrowingBaseBuilder * (^)(NSString *value))setGioId;
 - (GrowingBaseBuilder * (^)(NSString *value))setEventType;
 - (GrowingBaseEvent *)build;
 

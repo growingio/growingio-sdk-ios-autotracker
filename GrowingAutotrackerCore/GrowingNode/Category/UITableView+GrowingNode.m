@@ -56,24 +56,31 @@
 }
 
 - (NSString *)growingNodeSubPath {
+    if (self.growingUniqueTag.length > 0) {
+        return self.growingUniqueTag;
+    }
+
     NSIndexPath *indexpath = [self growingNodeIndexPath];
     if (indexpath) {
-        return [NSString stringWithFormat:@"Section[%ld]/%@[%ld]",
-                                          (long)indexpath.section,
-                                          NSStringFromClass(self.class),
-                                          (long)indexpath.row];
-        ;
+        return [NSString stringWithFormat:@"Section/%@", NSStringFromClass(self.class)];
     }
     return [super growingNodeSubPath];
 }
 
-- (NSString *)growingNodeSubSimilarPath {
+- (NSString *)growingNodeSubIndex {
     NSIndexPath *indexpath = [self growingNodeIndexPath];
     if (indexpath) {
-        return
-            [NSString stringWithFormat:@"Section[%ld]/%@[-]", (long)indexpath.section, NSStringFromClass(self.class)];
+        return [NSString stringWithFormat:@"%ld/%ld", (long)indexpath.section, (long)indexpath.row];
     }
-    return [super growingNodeSubPath];
+    return [super growingNodeSubIndex];
+}
+
+- (NSString *)growingNodeSubSimilarIndex {
+    NSIndexPath *indexpath = [self growingNodeIndexPath];
+    if (indexpath) {
+        return [NSString stringWithFormat:@"%ld/-", (long)indexpath.section];
+    }
+    return [super growingNodeSubIndex];
 }
 
 - (NSArray<id<GrowingNode>> *)growingNodeChilds {

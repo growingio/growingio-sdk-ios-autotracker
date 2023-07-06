@@ -63,25 +63,6 @@
     // Put teardown code here. This method is called after the invocation of each test method in the class.
 }
 
-- (void)test01SendMockVisitEvent {
-    KIFUIViewTestActor *actor = [viewTester usingLabel:@"HybridWebView"];
-    [self webView:actor.view evaluateJavaScript:@"sendMockVisitEvent()"];
-    [viewTester waitForTimeInterval:1];
-
-    NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeVisit];
-    XCTAssertEqual(events.count, 1);
-    
-    GrowingHybridViewElementEvent *event = (GrowingHybridViewElementEvent *)events.firstObject;
-    NSDictionary *dic = event.toDictionary;
-    XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeVisit);
-    XCTAssertTrue([ManualTrackHelper visitEventCheck:dic]);
-    XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
-    
-    XCTAssertEqualObjects(dic[@"domain"], @"test-browser.growingio.com");
-    XCTAssertEqualObjects(dic[@"path"], @"/push/web.html");
-    XCTAssertEqualObjects(dic[@"query"], @"a=1&b=2");
-}
-
 - (void)test02SendMockCustomEvent {
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"HybridWebView"];
     [self webView:actor.view evaluateJavaScript:@"sendMockCustomEvent()"];
@@ -138,23 +119,6 @@
     
     XCTAssertEqualObjects(dic[@"attributes"][@"key1"], @"value1");
     XCTAssertEqualObjects(dic[@"attributes"][@"key2"], @"value2");
-}
-
-- (void)test05SendMockConversionVariablesEvent {
-    KIFUIViewTestActor *actor = [viewTester usingLabel:@"HybridWebView"];
-    [self webView:actor.view evaluateJavaScript:@"sendMockConversionVariablesEvent()"];
-    [viewTester waitForTimeInterval:1];
-
-    NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeConversionVariables];
-    XCTAssertEqual(events.count, 1);
-    
-    GrowingConversionVariableEvent *event = (GrowingConversionVariableEvent *)events.firstObject;
-    NSDictionary *dic = event.toDictionary;
-    XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeConversionVariables);
-    XCTAssertTrue([ManualTrackHelper conversionVariablesEventCheck:dic]);
-    XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
-    
-    XCTAssertNotNil(dic[@"attributes"]);
 }
 
 - (void)test06SendMockPageEvent {

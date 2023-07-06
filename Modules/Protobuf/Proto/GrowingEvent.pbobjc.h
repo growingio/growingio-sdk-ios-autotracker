@@ -83,7 +83,6 @@ GPB_FINAL @interface GrowingPBEventV3Root : GPBRootObject
 typedef GPB_ENUM(GrowingPBEventV3Dto_FieldNumber) {
   GrowingPBEventV3Dto_FieldNumber_DeviceId = 1,
   GrowingPBEventV3Dto_FieldNumber_UserId = 2,
-  GrowingPBEventV3Dto_FieldNumber_GioId = 3,
   GrowingPBEventV3Dto_FieldNumber_SessionId = 4,
   GrowingPBEventV3Dto_FieldNumber_DataSourceId = 5,
   GrowingPBEventV3Dto_FieldNumber_EventType = 6,
@@ -94,7 +93,6 @@ typedef GPB_ENUM(GrowingPBEventV3Dto_FieldNumber) {
   GrowingPBEventV3Dto_FieldNumber_Query = 11,
   GrowingPBEventV3Dto_FieldNumber_Title = 12,
   GrowingPBEventV3Dto_FieldNumber_ReferralPage = 13,
-  GrowingPBEventV3Dto_FieldNumber_GlobalSequenceId = 14,
   GrowingPBEventV3Dto_FieldNumber_EventSequenceId = 15,
   GrowingPBEventV3Dto_FieldNumber_ScreenHeight = 16,
   GrowingPBEventV3Dto_FieldNumber_ScreenWidth = 17,
@@ -103,7 +101,6 @@ typedef GPB_ENUM(GrowingPBEventV3Dto_FieldNumber) {
   GrowingPBEventV3Dto_FieldNumber_AppVersion = 20,
   GrowingPBEventV3Dto_FieldNumber_ExtraSdk = 21,
   GrowingPBEventV3Dto_FieldNumber_EventName = 22,
-  GrowingPBEventV3Dto_FieldNumber_PageShowTimestamp = 23,
   GrowingPBEventV3Dto_FieldNumber_Attributes = 24,
   GrowingPBEventV3Dto_FieldNumber_ResourceItem = 25,
   GrowingPBEventV3Dto_FieldNumber_ProtocolType = 26,
@@ -142,8 +139,6 @@ GPB_FINAL @interface GrowingPBEventV3Dto : GPBMessage
 
 @property (nonatomic, readwrite, copy, null_resettable) NSString *userId;
 
-@property (nonatomic, readwrite, copy, null_resettable) NSString *gioId;
-
 @property (nonatomic, readwrite, copy, null_resettable) NSString *sessionId;
 
 @property (nonatomic, readwrite, copy, null_resettable) NSString *dataSourceId;
@@ -168,8 +163,6 @@ GPB_FINAL @interface GrowingPBEventV3Dto : GPBMessage
 /** PageEvent */
 @property (nonatomic, readwrite, copy, null_resettable) NSString *referralPage;
 
-@property (nonatomic, readwrite) int64_t globalSequenceId;
-
 @property (nonatomic, readwrite) int32_t eventSequenceId;
 
 @property (nonatomic, readwrite) int32_t screenHeight;
@@ -189,9 +182,6 @@ GPB_FINAL @interface GrowingPBEventV3Dto : GPBMessage
 
 /** customEvent */
 @property (nonatomic, readwrite, copy, null_resettable) NSString *eventName;
-
-/** PageAttributesEvent */
-@property (nonatomic, readwrite) int64_t pageShowTimestamp;
 
 /** BaseAttributesEvent */
 @property (nonatomic, readwrite, strong, null_resettable) NSMutableDictionary<NSString*, NSString*> *attributes;

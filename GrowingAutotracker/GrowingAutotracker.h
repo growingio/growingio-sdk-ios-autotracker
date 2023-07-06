@@ -116,6 +116,23 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)clearTrackTimer;
 
 ///-------------------------------
+#pragma mark Autotrack Event
+///-------------------------------
+
+/// 追踪页面展示事件
+/// @param controller 被追踪页面
+/// @param alias 页面别名
+- (void)autotrackPage:(UIViewController *)controller alias:(NSString *)alias;
+
+/// 追踪页面展示事件
+/// @param controller 被追踪页面
+/// @param alias 页面别名
+/// @param attributes 事件发生时所伴随的维度信息
+- (void)autotrackPage:(UIViewController *)controller
+                alias:(NSString *)alias
+           attributes:(NSDictionary<NSString *, NSString *> *)attributes;
+
+///-------------------------------
 #pragma mark Unavailable
 ///-------------------------------
 
@@ -163,19 +180,6 @@ NS_ASSUME_NONNULL_BEGIN
 // 手动标识该view的tag
 // 这个tag必须是全局唯一的，在代码结构改变时也请保持不变
 @property (nonatomic, copy) NSString *growingUniqueTag;
-
-@end
-
-// 该属性setter方法均使用 objc_setAssociatedObject实现
-// 如果是自定义的UIViewController不要使用重写getter方法来实现,因为SDK在set方法内部有逻辑处理
-@interface UIViewController (GrowingAttributes)
-
-// 手动标识该页面的标题，必须在该UIViewController显示之前设置
-@property (nonatomic, copy) NSString *growingPageAlias;
-
-@property (nonatomic, copy) NSDictionary<NSString *, NSString *> *growingPageAttributes;
-
-@property (nonatomic, assign) GrowingIgnorePolicy growingPageIgnorePolicy;
 
 @end
 

@@ -19,23 +19,23 @@
 
 #import "GrowingAutotrackerCore/Page/GrowingPage.h"
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
-#import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
+#import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 #import "GrowingULTimeUtil.h"
 
-@interface GrowingPage ()
-@property (nonatomic, copy, readonly) NSString *pathCopy;
-@end
+@implementation GrowingPage {
+    GROWING_LOCK_DECLARE(lock);
+}
 
-@implementation GrowingPage
+#pragma mark - Init
 
 - (instancetype)initWithCarrier:(UIViewController *)carrier {
     self = [super init];
     if (self) {
         _carrier = carrier;
         _showTimestamp = GrowingULTimeUtil.currentTimeMillis;
-        _isIgnored = [carrier growingPageDidIgnore];
-        _title = [carrier growingPageTitle];
+        _childPages = [NSPointerArray pointerArrayWithOptions:NSPointerFunctionsWeakMemory];
+        GROWING_LOCK_INIT(lock);
     }
 
     return self;
@@ -45,26 +45,49 @@
     return [[self alloc] initWithCarrier:carrier];
 }
 
+#pragma mark - Public
+
 - (void)refreshShowTimestamp {
     _showTimestamp = GrowingULTimeUtil.currentTimeMillis;
 }
 
-- (NSString *)name {
-    if (self.carrier == nil) {
-        return nil;
+- (void)addChildrenPage:(GrowingPage *)page {
+    GROWING_LOCK(lock);
+    if (![self.childPages.allObjects containsObject:page]) {
+        [self.childPages addPointer:(__bridge void *)page];
     }
+    GROWING_UNLOCK(lock);
+}
 
-    if (![NSString growingHelper_isBlankString:self.alias]) {
-        return self.alias;
-    }
+- (void)removeChildrenPage:(GrowingPage *)page {
+    GROWING_LOCK(lock);
+    [self.childPages.allObjects enumerateObjectsWithOptions:NSEnumerationReverse
+                                                 usingBlock:^(NSObject *obj, NSUInteger idx, BOOL *_Nonnull stop) {
+                                                     if (page == obj) {
+                                                         [self.childPages removePointerAtIndex:idx];
+                                                         *stop = YES;
+                                                     }
+                                                 }];
+    GROWING_UNLOCK(lock);
+}
 
-    NSString *clazz = NSStringFromClass(self.carrier.class);
-    NSString *tag = self.tag;
-    if (tag == nil) {
-        return clazz;
-    } else {
-        return [NSString stringWithFormat:@"%@[%@]", clazz, tag];
-    }
+#pragma mark - Setter & Getter
+
+// 所有属性都通过动态获取，不做内存存储
+- (BOOL)isAutotrack {
+    return self.carrier.growingPageAlias != nil;
+}
+
+- (NSString *)title {
+    return self.carrier.growingPageTitle;
+}
+
+- (NSDictionary<NSString *, NSString *> *)attributes {
+    return self.carrier.growingPageAttributes;
+}
+
+- (NSString *)alias {
+    return self.carrier.growingPageAlias;
 }
 
 - (NSString *)tag {
@@ -89,38 +112,24 @@
     return nil;
 }
 
-- (NSString *)path {
-    if (self.pathCopy != nil) {
-        return self.pathCopy;
-    }
-
-    if (self.alias != nil) {
-        _pathCopy = [NSString stringWithFormat:@"/%@", self.alias];
-        return self.pathCopy;
-    }
-
-    NSMutableArray<GrowingPage *> *pageTree = [NSMutableArray array];
-    [pageTree addObject:self];
-    GrowingPageGroup *pageParent = self.parent;
-    while (pageParent != nil) {
-        [pageTree addObject:pageParent];
-        if (![NSString growingHelper_isBlankString:pageParent.alias]) {
-            break;
-        }
+- (NSDictionary *)pathInfo {
+    NSPointerArray *pageTree = [NSPointerArray pointerArrayWithOptions:NSPointerFunctionsWeakMemory];
+    GrowingPage *pageParent = self;
+    do {
+        [pageTree addPointer:(__bridge void *)pageParent];
         pageParent = pageParent.parent;
+    } while (pageParent != nil);
+
+    NSMutableString *xpath = [NSMutableString string];
+    NSMutableString *xindex = [NSMutableString string];
+    NSArray *array = pageTree.allObjects;
+    for (int i = (int)(array.count - 1); i >= 0; i--) {
+        GrowingPage *page = array[i];
+        [xpath appendFormat:@"/%@", NSStringFromClass(page.carrier.class)];
+        [xindex appendFormat:@"/%@", page.tag ?: @"0"];
     }
-    NSString *path = [NSString string];
-    for (NSInteger i = 0; i < pageTree.count; ++i) {
-        if (i >= 3) {
-            // SDK3.0 xpath逻辑调整,仅遍历UIViewController的三层视图
-            path = [NSString stringWithFormat:@"*%@", path];
-            break;
-        }
-        NSString *subpath = [NSString stringWithFormat:@"/%@", pageTree[i].name];
-        path = [NSString stringWithFormat:@"%@%@", subpath, path];
-    }
-    _pathCopy = path;
-    return self.pathCopy;
+
+    return @{@"xpath": xpath, @"xindex": xindex};
 }
 
 @end
