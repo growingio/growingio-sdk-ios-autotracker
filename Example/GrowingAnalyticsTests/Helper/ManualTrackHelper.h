@@ -31,6 +31,8 @@
 
 + (BOOL)viewChangeEventCheck:(NSDictionary *)event;
 
++ (BOOL)hybridFormSubmitEventCheck:(NSDictionary *)event;
+
 + (BOOL)contextOptionalPropertyCheck:(NSDictionary *)event;
 
 @end
