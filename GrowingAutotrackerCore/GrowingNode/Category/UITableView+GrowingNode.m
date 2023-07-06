@@ -113,7 +113,7 @@
     do {
         view = view.superview;
     } while (view && ![view isKindOfClass:[UITableView class]]);
-    
+
     if (view) {
         UITableView *tableView = (UITableView *)view;
         for (NSInteger i = 0; i < tableView.numberOfSections; i++) {
@@ -125,7 +125,7 @@
             }
         }
     }
-    
+
     return [super growingNodeSubIndex];
 }
 
