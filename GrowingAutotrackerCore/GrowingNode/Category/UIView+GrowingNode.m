@@ -330,32 +330,6 @@ GrowingSafeStringPropertyImplementation(growingUniqueTag, setGrowingUniqueTag)
 
 @end
 
-#pragma mark - section
-
-@implementation UITableViewHeaderFooterView (GrowingNode)
-
-- (NSString *)growingNodeSubPath {
-    UITableView *tableView = (UITableView *)self.superview;
-
-    while (![tableView isKindOfClass:UITableView.class]) {
-        tableView = (UITableView *)tableView.superview;
-        if (!tableView) {
-            return super.growingNodeSubPath;
-        }
-    }
-    for (NSInteger i = 0; i < tableView.numberOfSections; i++) {
-        if (self == [tableView headerViewForSection:i]) {
-            return [NSString stringWithFormat:@"%@[%ld]", NSStringFromClass([self class]), (long)i];
-        }
-        if (self == [tableView footerViewForSection:i]) {
-            return [NSString stringWithFormat:@"%@[%ld]", NSStringFromClass([self class]), (long)i];
-        }
-    }
-    return [super growingNodeSubPath];
-}
-
-@end
-
 @implementation UIView (GrowingImpression)
 
 - (void)growingTrackImpression:(NSString *)eventName {

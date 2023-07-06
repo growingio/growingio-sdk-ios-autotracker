@@ -80,21 +80,25 @@
 }
 
 - (NSString *)growingNodeSubPath {
-    NSString *subpath = @"Button";
+    return @"Button";
+}
 
+- (NSString *)growingNodeSubIndex {
+    NSString *subIndex = @"0";
     UIViewController *responderVC = [self growingHelper_viewController];
     if ([responderVC isKindOfClass:UIAlertController.class]) {
         UIAlertController *alertVC = (UIAlertController *)responderVC;
-
         UIAlertAction *action = [UIAlertController growing_actionForActionView:(id)self];
         NSInteger index = -1;
         if (alertVC.actions && action) {
             index = [alertVC.actions indexOfObject:action];
         }
-        subpath = (index < 0) ? subpath : [NSString stringWithFormat:@"Button[%ld]", (long)index];
+        if (index >= 0) {
+            subIndex = [NSString stringWithFormat:@"%ld", (long)index];
+        }
     }
 
-    return subpath;
+    return subIndex;
 }
 
 - (BOOL)growingNodeUserInteraction {

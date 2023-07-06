@@ -32,9 +32,3 @@
 - (BOOL)growingViewDontTrack;
 
 @end
-
-#pragma mark - section
-
-@interface UITableViewHeaderFooterView (GrowingNode) <GrowingNode>
-
-@end
