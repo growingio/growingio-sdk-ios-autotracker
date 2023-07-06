@@ -105,3 +105,28 @@
 }
 
 @end
+
+@implementation UITableViewHeaderFooterView (GrowingNode)
+
+- (NSString *)growingNodeSubIndex {
+    UIView *view = self;
+    do {
+        view = view.superview;
+    } while (view && ![view isKindOfClass:[UITableView class]]);
+    
+    if (view) {
+        UITableView *tableView = (UITableView *)view;
+        for (NSInteger i = 0; i < tableView.numberOfSections; i++) {
+            if (self == [tableView headerViewForSection:i]) {
+                return [NSString stringWithFormat:@"%ld", (long)i];
+            }
+            if (self == [tableView footerViewForSection:i]) {
+                return [NSString stringWithFormat:@"%ld", (long)i];
+            }
+        }
+    }
+    
+    return [super growingNodeSubIndex];
+}
+
+@end
