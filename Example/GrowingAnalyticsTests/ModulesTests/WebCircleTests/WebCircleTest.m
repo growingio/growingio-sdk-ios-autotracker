@@ -33,7 +33,7 @@
 
 @interface GrowingWebCircle (XCTest)
 
-- (NSMutableDictionary *)dictFromPage:(id<GrowingNode>)aNode xPath:(NSString *)xPath;
+- (NSMutableDictionary *)dictFromPage:(GrowingPage *)page;
 
 - (unsigned long)getSnapshotKey;
 
@@ -63,6 +63,12 @@
 - (void)webSocketDidOpen:(id <GrowingWebSocketService>)webSocket;
 
 - (void)webSocket:(id <GrowingWebSocketService>)webSocket didReceiveMessage:(id)message;
+
+@end
+
+@interface GrowingPageManager (XCTest)
+
+- (GrowingPage *)createdViewControllerPage:(UIViewController *)controller;
 
 @end
 
@@ -107,7 +113,7 @@
         [[GrowingPageManager sharedInstance] createdViewControllerPage:current];
         page = [current growingPageObject];
     }
-    XCTAssertNotNil([circle dictFromPage:(id<GrowingNode>)current xPath:page.path]);
+    XCTAssertNotNil([circle dictFromPage:page]);
     XCTAssertNotNil([circle elements]);
     
     [circle sendScreenShot];
@@ -131,8 +137,9 @@
                                               .setZLevel(10)
                                               .setContent(@"test")
                                               .setXpath(@"Xpath")
+                                              .setXindex(@"xindex")
                                               .setNodeType(@"Button")
-                                              .setParentXPath(@"parentXPath")
+                                              .setParentXpath(@"parentXpath")
                                               .setIsContainer(YES)
                                               .setIndex(10)
                                               .setPage(@"page")
@@ -147,10 +154,11 @@
     XCTAssertEqualObjects(dic[@"zLevel"], @10);
     XCTAssertEqualObjects(dic[@"content"], @"test");
     XCTAssertEqualObjects(dic[@"xpath"], @"Xpath");
+    XCTAssertEqualObjects(dic[@"xindex"], @"xindex");
     XCTAssertEqualObjects(dic[@"nodeType"], @"Button");
     XCTAssertEqualObjects(dic[@"isContainer"], @1);
     XCTAssertEqualObjects(dic[@"index"], @10);
-    XCTAssertEqualObjects(dic[@"parentXPath"], @"parentXPath");
+    XCTAssertEqualObjects(dic[@"parentXpath"], @"parentXpath");
     XCTAssertEqualObjects(dic[@"page"], @"page");
     XCTAssertEqualObjects(dic[@"domain"], [GrowingDeviceInfo currentDeviceInfo].bundleID);
 }

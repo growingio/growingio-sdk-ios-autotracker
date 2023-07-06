@@ -198,6 +198,8 @@
     
     XCTAssertEqualObjects(dic[@"domain"], @"test-browser.growingio.com");
     XCTAssertEqualObjects(dic[@"path"], @"/push/web.html");
+    XCTAssertEqualObjects(dic[@"xpath"], @"/div/button");
+    XCTAssertEqualObjects(dic[@"xcontent"], @"/divClass/buttonId");
     XCTAssertEqualObjects(dic[@"query"], @"a=1&b=2");
     XCTAssertEqualObjects(dic[@"textValue"], @"登录");
 }
@@ -218,27 +220,10 @@
     
     XCTAssertEqualObjects(dic[@"domain"], @"test-browser.growingio.com");
     XCTAssertEqualObjects(dic[@"path"], @"/push/web.html");
+    XCTAssertEqualObjects(dic[@"xpath"], @"/div/form/input");
+    XCTAssertEqualObjects(dic[@"xcontent"], @"/divClass/formClass/inputId");
     XCTAssertEqualObjects(dic[@"query"], @"a=1&b=2");
     XCTAssertEqualObjects(dic[@"textValue"], @"输入内容");
-}
-
-- (void)test11SendMockFormSubmitEvent {
-    KIFUIViewTestActor *actor = [viewTester usingLabel:@"HybridWebView"];
-    [self webView:actor.view evaluateJavaScript:@"sendMockFormSubmitEvent()"];
-    [viewTester waitForTimeInterval:1];
-
-    NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeFormSubmit];
-    XCTAssertEqual(events.count, 1);
-    
-    GrowingHybridViewElementEvent *event = (GrowingHybridViewElementEvent *)events.firstObject;
-    NSDictionary *dic = event.toDictionary;
-    XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeFormSubmit);
-    XCTAssertTrue([ManualTrackHelper hybridFormSubmitEventCheck:dic]);
-    XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
-    
-    XCTAssertEqualObjects(dic[@"domain"], @"test-browser.growingio.com");
-    XCTAssertEqualObjects(dic[@"path"], @"/push/web.html");
-    XCTAssertEqualObjects(dic[@"query"], @"a=1&b=2");
 }
 
 - (void)test12MockSetUserId {

@@ -76,7 +76,6 @@
                                       .setAppState(0)
                                       .setExtraParams(@{})
                                       .setSessionId(@"testSessionId")
-                                      .setGlobalSequenceId(0)
                                       .setEventSequenceId(0)
                                       .setPlatformVersion(@"testPlatformVersion");
     XCTAssertNotNil(builder);

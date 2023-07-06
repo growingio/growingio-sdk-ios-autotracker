@@ -475,7 +475,6 @@
         GrowingHybridViewElementEvent *event = (GrowingHybridViewElementEvent *)(GrowingHybridViewElementEvent.builder
                                                                                  .setEventType(GrowingEventTypeFormSubmit)
                                                                                  .setPath(@"path")
-                                                                                 .setPageShowTimestamp(1638857558209)
                                                                                  .setXpath(@"xpath")
                                                                                  .setIndex(1)
                                                                                  .setQuery(@"query")
@@ -485,7 +484,6 @@
         XCTAssertEqualObjects(GrowingEventTypeFormSubmit, event.eventType);
         XCTAssertEqual(GrowingPBEventType_FormSubmit, protobuf.eventType);
         XCTAssertEqualObjects(event.path ?: @"", protobuf.path);
-        XCTAssertEqual(event.pageShowTimestamp, protobuf.pageShowTimestamp);
         XCTAssertEqualObjects(event.xpath ?: @"", protobuf.xpath);
         XCTAssertEqual(event.index, protobuf.index);
         XCTAssertEqualObjects(event.query ?: @"", protobuf.query);
@@ -499,7 +497,6 @@
         XCTAssertEqualObjects(GrowingEventTypeFormSubmit, event.eventType);
         XCTAssertEqual(GrowingPBEventType_FormSubmit, protobuf.eventType);
         XCTAssertEqualObjects(event.path ?: @"", protobuf.path);
-        XCTAssertEqual(event.pageShowTimestamp, protobuf.pageShowTimestamp);
         XCTAssertEqualObjects(event.xpath ?: @"", protobuf.xpath);
         XCTAssertEqual(event.index, protobuf.index);
         XCTAssertEqualObjects(event.query ?: @"", protobuf.query);
@@ -522,10 +519,8 @@
     XCTAssertEqualObjects(event.domain ?: @"", protobuf.domain);
     XCTAssertEqualObjects(event.urlScheme ?: @"", protobuf.URLScheme);
     XCTAssertEqualObjects((event.appState == GrowingAppStateForeground ? @"FOREGROUND" : @"BACKGROUND"), protobuf.appState);
-    XCTAssertEqual(event.globalSequenceId, protobuf.globalSequenceId);
     XCTAssertEqual(event.eventSequenceId, protobuf.eventSequenceId);
     XCTAssertEqualObjects(event.extraParams[@"dataSourceId"] ?: @"", protobuf.dataSourceId);
-    XCTAssertEqualObjects(event.extraParams[@"gioId"] ?: @"", protobuf.gioId);
     // 3.2.0
     XCTAssertEqualObjects(event.networkState ?: @"", protobuf.networkState);
     XCTAssertEqualObjects(event.appChannel ?: @"", protobuf.appChannel);

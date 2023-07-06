@@ -53,13 +53,11 @@
         XCTAssertTrue([ManualTrackHelper viewClickEventCheck:dic]);
         XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
         
-        XCTAssertEqualObjects(dic[@"path"],
-                              @"/UITabBarController/UINavigationController[1]/GIOLabelAttributeViewController[0]");
+        XCTAssertEqualObjects(dic[@"path"], @"");
         XCTAssertEqualObjects(dic[@"textValue"], @"取消");
         XCTAssertEqualObjects(dic[@"xpath"],
-            @"/Page/UIAlertController/UIView[0]/_UIAlertControllerInterfaceActionGroupView[0]/UIView[0]/"
-            @"_UIInterfaceActionRepresentationsSequenceView[0]/_UIInterfaceActionSeparatableSequenceView[0]/"
-            @"UIStackView[0]/_UIInterfaceActionCustomViewRepresentationView[1]/Button[0]");
+            @"/UITabBarController/UINavigationController/GIOLabelAttributeViewController/_UIAlertControllerPhoneTVMacView/UIView/_UIAlertControllerInterfaceActionGroupView/UIView/_UIInterfaceActionRepresentationsSequenceView/_UIInterfaceActionSeparatableSequenceView/UIStackView/_UIInterfaceActionCustomViewRepresentationView/Button");
+        XCTAssertEqualObjects(dic[@"xindex"], @"/0/1/0/0/0/0/0/0/0/0/1/0");
     }
 
     {
@@ -69,10 +67,10 @@
         XCTAssertTrue([ManualTrackHelper viewClickEventCheck:dic]);
         XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
         
-        XCTAssertEqualObjects(dic[@"path"],
-                              @"/UITabBarController/UINavigationController[1]/GIOLabelAttributeViewController[0]");
+        XCTAssertEqualObjects(dic[@"path"], @"");
         XCTAssertEqualObjects(dic[@"textValue"], @"ShowAlert");
-        XCTAssertEqualObjects(dic[@"xpath"], @"/Page/UIButton[3]");
+        XCTAssertEqualObjects(dic[@"xpath"], @"/UITabBarController/UINavigationController/GIOLabelAttributeViewController/UIView/UIButton");
+        XCTAssertEqualObjects(dic[@"xindex"], @"/0/1/0/0/3");
     }
 }
 
@@ -137,7 +135,8 @@
         XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
         
         XCTAssertEqualObjects(dic[@"textValue"], @"Food");
-        XCTAssertEqualObjects(dic[@"xpath"], @"/Page/UIView[0]/UIButton[0]");
+        XCTAssertEqualObjects(dic[@"xpath"], @"/UITabBarController/UINavigationController/GIOSimpleUIElemtsViewController/UIView/UIView/UIButton");
+        XCTAssertEqualObjects(dic[@"xindex"], @"/0/1/0/0/0/0");
     }
 }
 
@@ -158,7 +157,8 @@
         XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
         
         XCTAssertEqualObjects(dic[@"textValue"], @"Fire");
-        XCTAssertEqualObjects(dic[@"xpath"], @"/Page/UIView[0]/UIButton[1]");
+        XCTAssertEqualObjects(dic[@"xpath"], @"/UITabBarController/UINavigationController/GIOSimpleUIElemtsViewController/UIView/UIView/UIButton");
+        XCTAssertEqualObjects(dic[@"xindex"], @"/0/1/0/0/0/1");
     }
 }
 
@@ -180,8 +180,9 @@
         XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
         
         XCTAssertEqualObjects(dic[@"textValue"], @"Third");
-        XCTAssertEqualObjects(dic[@"xpath"], @"/Page/UISegmentedControl[0]/UISegment[-]");
+        XCTAssertEqualObjects(dic[@"xpath"], @"/UITabBarController/UINavigationController/GIOSimpleUIElemtsViewController/UIView/UISegmentedControl/UISegment");
         XCTAssertEqualObjects(dic[@"index"], @(2));
+        XCTAssertEqualObjects(dic[@"xindex"], @"/0/1/0/0/0/-");
     }
 }
 
@@ -208,7 +209,8 @@
         XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
         
         XCTAssertEqualObjects(dic[@"textValue"], @"Water");
-        XCTAssertEqualObjects(dic[@"xpath"], @"/Page/UIView[0]/UIButton[1]");
+        XCTAssertEqualObjects(dic[@"xpath"], @"/UITabBarController/UINavigationController/GIOSimpleUIElemtsViewController/UIView/UIView/UIButton");
+        XCTAssertEqualObjects(dic[@"xindex"], @"/0/1/0/0/0/1");
     }
     
     [[viewTester usingLabel:@"好的"] tap];
