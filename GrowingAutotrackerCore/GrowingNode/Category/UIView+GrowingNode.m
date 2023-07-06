@@ -66,14 +66,22 @@
     if (self.growingUniqueTag.length > 0) {
         return self.growingUniqueTag;
     }
-    // 返回类型+index
-    NSInteger index = [self growingNodeKeyIndex];
-    NSString *className = NSStringFromClass(self.class);
-    return index < 0 ? className : [NSString stringWithFormat:@"%@[%ld]", className, (long)index];
+
+    return NSStringFromClass(self.class);
 }
 
-- (NSString *)growingNodeSubSimilarPath {
-    return [self growingNodeSubPath];
+- (NSString *)growingNodeSubIndex {
+    // UITableViewWrapperView 为 iOS11 以下 UITableView 与 cell 之间的 view
+    if ([NSStringFromClass(self.class) isEqualToString:@"UITableViewWrapperView"]) {
+        return nil;
+    }
+
+    NSInteger index = [self growingNodeKeyIndex];
+    return index < 0 ? @"0" : [NSString stringWithFormat:@"%ld", (long)index];
+}
+
+- (NSString *)growingNodeSubSimilarIndex {
+    return [self growingNodeSubIndex];
 }
 
 - (NSArray<id<GrowingNode>> *)growingNodeChilds {
@@ -198,28 +206,26 @@
 }
 
 - (NSString *)growingViewContent {
-    // apple在11.1.2的部分机型上很小概率对于class为UIPickerTableView的对象调用accessibilityLabel可能会崩溃
-    // 此为apple bug
-    NSString *className = NSStringFromClass(self.class);
-    NSString *prefixString = @"UIPicke";
-    NSString *suffixString = @"rTableView";
-    if ([className hasPrefix:prefixString] && [className hasSuffix:suffixString] &&
-        className.length == (prefixString.length + suffixString.length)) {
-        return nil;
-    } else {
-        // https://growingio.atlassian.net/browse/PI-839 美图IOS崩溃
-        // 目前无法预知什么情况下还会有类似crash, 不再对控件类名做判断,
-        // 直接try/catch处理
-        NSString *accessibilityLabel = nil;
-        @try {
-            accessibilityLabel = self.accessibilityLabel;
-        } @catch (NSException *exception) {
-            accessibilityLabel = nil;
-        } @finally {
-            // do nothing
-        }
-        return accessibilityLabel;
+    NSMutableArray<UIView *> *unvisted = [[NSMutableArray alloc] init];
+    if (self.subviews.count) {
+        [unvisted addObjectsFromArray:self.subviews];
     }
+
+    while (unvisted.count) {
+        UIView *current = unvisted.firstObject;
+        [unvisted removeObject:current];
+        if ([current isKindOfClass:[UILabel class]] && [current growingViewContent].length) {
+            return [current growingViewContent];
+        }
+        if ([current isKindOfClass:[UIImageView class]] && [(UIImageView *)current growingViewContent].length) {
+            return [(UIImageView *)current growingViewContent];
+        }
+        if (current.subviews.count) {
+            unvisted = [[current.subviews arrayByAddingObjectsFromArray:unvisted] mutableCopy];
+        }
+    }
+
+    return nil;
 }
 
 #pragma mark - GrowingNodeProtocol

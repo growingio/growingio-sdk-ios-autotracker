@@ -33,24 +33,6 @@
             return GrowingWebViewJavascriptBridge.configuration = JSON.parse(window.GrowingWebViewJavascriptBridge.getConfiguration());
         }
 
-        function sendMockVisitEvent() {
-            let event = {
-                "deviceId": "7196f014-d7bc-4bd8-b920-757cb2375ff6",
-                "sessionId": "d5cbcf77-b38b-4223-954f-c6a2fdc0c098",
-                "eventType": "VISIT",
-                "platform": "Web",
-                "timestamp": 1602485628504,
-                "domain": "test-browser.growingio.com",
-                "path": "/push/web.html",
-                "query": "a=1&b=2",
-                "title": "Hybrid测试页面",
-                "referralPage": "http://test-browser.growingio.com/push",
-                "globalSequenceId": 99,
-                "eventSequenceId": 3,
-            };
-            sendMockEvent(event);
-        }
-
         function sendMockCustomEvent() {
             let event = {
                 "deviceId": "7196f014-d7bc-4bd8-b920-757cb2375ff6",
@@ -96,61 +78,11 @@
             sendMockEvent(event);
         }
 
-        function sendMockVisitorAttributesEvent() {
-            let event = {
-                "deviceId": "7196f014-d7bc-4bd8-b920-757cb2375ff6",
-                "sessionId": "d5cbcf77-b38b-4223-954f-c6a2fdc0c098",
-                "eventType": "VISITOR_ATTRIBUTES",
-                "platform": "Web",
-                "timestamp": 1602485628504,
-                "domain": "test-browser.growingio.com",
-                "path": "/push/web.html",
-                "query": "a=1&b=2",
-                "title": "Hybrid测试页面",
-                "referralPage": "http://test-browser.growingio.com/push",
-                "globalSequenceId": 99,
-                "eventSequenceId": 3,
-                "attributes": {
-                    "key1": "value1",
-                    "key2": "value2",
-                    "key3": "",
-                    "key4": null,
-                    "key5": undefined
-                }
-            };
-            sendMockEvent(event);
-        }
-
         function sendMockLoginUserAttributesEvent() {
             let event = {
                 "deviceId": "7196f014-d7bc-4bd8-b920-757cb2375ff6",
                 "sessionId": "d5cbcf77-b38b-4223-954f-c6a2fdc0c098",
                 "eventType": "LOGIN_USER_ATTRIBUTES",
-                "platform": "Web",
-                "timestamp": 1602485628504,
-                "domain": "test-browser.growingio.com",
-                "path": "/push/web.html",
-                "query": "a=1&b=2",
-                "title": "Hybrid测试页面",
-                "referralPage": "http://test-browser.growingio.com/push",
-                "globalSequenceId": 99,
-                "eventSequenceId": 3,
-                "attributes": {
-                    "key1": "value1",
-                    "key2": "value2",
-                    "key3": "",
-                    "key4": null,
-                    "key5": undefined
-                }
-            };
-            sendMockEvent(event);
-        }
-
-        function sendMockConversionVariablesEvent() {
-            let event = {
-                "deviceId": "7196f014-d7bc-4bd8-b920-757cb2375ff6",
-                "sessionId": "d5cbcf77-b38b-4223-954f-c6a2fdc0c098",
-                "eventType": "CONVERSION_VARIABLES",
                 "platform": "Web",
                 "timestamp": 1602485628504,
                 "domain": "test-browser.growingio.com",
@@ -355,14 +287,8 @@
                     <button class="button" onclick="javascript:sendMockCustomEventWithAttributes()" type="button">
                         sendMockCustomEventWithAttributes
                     </button>
-                    <button class="button" onclick="javascript:sendMockVisitorAttributesEvent()" type="button">
-                        sendMockVisitorAttributesEvent
-                    </button>
                     <button class="button" onclick="javascript:sendMockLoginUserAttributesEvent()" type="button">
                         sendMockLoginUserAttributesEvent
-                    </button>
-                    <button class="button" onclick="javascript:sendMockConversionVariablesEvent()" type="button">
-                        sendMockConversionVariablesEvent
                     </button>
                     <button class="button" onclick="javascript:sendMockPageEvent()" type="button">
                         sendMockPageEvent

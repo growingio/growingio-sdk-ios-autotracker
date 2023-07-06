@@ -265,6 +265,7 @@ const int GrowingTrackerVersionCode = 30700;
         }
         trackConfiguration.dataCollectionEnabled = enabled;
         if (enabled) {
+            [[GrowingSession currentSession] refreshSessionId];
             [[GrowingSession currentSession] generateVisit];
         } else {
             [GrowingEventTimer clearAllTimers];

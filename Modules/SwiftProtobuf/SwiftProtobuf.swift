@@ -96,7 +96,6 @@ extension GrowingBaseEvent {
         var dto = EventV3Dto()
 
         dto.dataSourceID = self.dataSourceId ?? ""
-        dto.gioID = self.gioId ?? ""
         dto.sessionID = self.sessionId ?? ""
         dto.timestamp = self.timestamp
         dto.domain = self.domain
@@ -104,7 +103,6 @@ extension GrowingBaseEvent {
         dto.deviceID = self.deviceId
         dto.platform = self.platform
         dto.platformVersion = self.platformVersion
-        dto.globalSequenceID = self.globalSequenceId
         dto.eventSequenceID = Int32(self.eventSequenceId)
         dto.appState = self.appState == GrowingAppState.foreground.rawValue ? "FOREGROUND" : "BACKGROUND"
         dto.urlScheme = self.urlScheme

@@ -22,7 +22,6 @@
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIViewController+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIWindow+GrowingNode.h"
-#import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
 
 @implementation UIViewController (GrowingNode)
@@ -74,7 +73,7 @@
     // UIAlertController的presentingViewController 为 UIApplicationRotationFollowingController
     // 取最上层的视图控制器，则无法使用上面两种方式。
     if ([self isKindOfClass:UIAlertController.class]) {
-        return [[GrowingPageManager sharedInstance] currentViewController];
+        return [[GrowingPageManager sharedInstance] currentPage].carrier;
     } else {
         return self.parentViewController;
     }
@@ -105,7 +104,7 @@
 }
 
 - (NSString *)growingNodeContent {
-    return self.accessibilityLabel;
+    return nil;
 }
 
 #pragma mark - xpath
@@ -131,17 +130,16 @@
 }
 
 - (NSString *)growingNodeSubPath {
-    // 如果别名存在，则直接返回别名
-    if (self.growingPageAlias) {
-        return self.growingPageAlias;
-    }
-    NSInteger index = [self growingNodeKeyIndex];
-    NSString *className = NSStringFromClass(self.class);
-    return index < 0 ? className : [NSString stringWithFormat:@"%@[%ld]", className, (long)index];
+    return NSStringFromClass(self.class);
 }
 
-- (NSString *)growingNodeSubSimilarPath {
-    return [self growingNodeSubPath];
+- (NSString *)growingNodeSubIndex {
+    NSInteger index = [self growingNodeKeyIndex];
+    return index < 0 ? @"0" : [NSString stringWithFormat:@"%ld", (long)index];
+}
+
+- (NSString *)growingNodeSubSimilarIndex {
+    return [self growingNodeSubIndex];
 }
 
 - (NSArray<id<GrowingNode>> *)growingNodeChilds {

@@ -22,10 +22,8 @@
 #import "GrowingAutotrackerCore/GrowingNode/GrowingNodeHelper.h"
 #import "GrowingAutotrackerCore/GrowingNode/GrowingViewNode.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
-#import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
-#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogMacros.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 
 @implementation GrowingViewClickProvider
@@ -35,26 +33,25 @@
         GIOLogDebug(@"viewOnClick %@ is donotTrack", view);
         return;
     }
-    GrowingPageGroup *page = [[GrowingPageManager sharedInstance] findPageByView:view];
-    if (!page) {
-        page = [[GrowingPageManager sharedInstance] currentPage];
-    }
-    GrowingViewNode *node = [GrowingNodeHelper getViewNode:view];
-    [self sendClickEvent:page viewNode:node];
-}
 
-+ (void)sendClickEvent:(GrowingPageGroup *)page viewNode:(GrowingViewNode *)node {
-    GrowingViewElementBuilder *builder = GrowingViewElementEvent.builder
-        .setEventType(GrowingEventTypeViewClick)
-        .setPath(page.path)
-        .setXpath(node.xPath)
-        .setIndex(node.index)
-        .setTextValue(node.viewContent);
-    
-    if (!page.isIgnored) {
-        builder.setAttributes([page.carrier growingPageAttributes]);
+    GrowingPage *page = [GrowingPageManager.sharedInstance findPageByView:view];
+    GrowingPage *autotrackPage = [GrowingPageManager.sharedInstance findAutotrackPageByPage:page];
+    GrowingViewNode *node = [GrowingNodeHelper getViewNode:view];
+
+    NSDictionary *pathInfo = page.pathInfo;
+    NSString *pagexpath = pathInfo[@"xpath"];
+    NSString *pagexindex = pathInfo[@"xindex"];
+    GrowingViewElementBuilder *builder = GrowingViewElementEvent.builder.setEventType(GrowingEventTypeViewClick)
+                                             .setPath(@"")
+                                             .setXpath([NSString stringWithFormat:@"%@%@", pagexpath, node.xpath])
+                                             .setXindex([NSString stringWithFormat:@"%@%@", pagexindex, node.xindex])
+                                             .setIndex(node.index)
+                                             .setTextValue(node.viewContent);
+
+    if (autotrackPage) {
+        builder.setPath(autotrackPage.alias).setAttributes(autotrackPage.attributes);
     }
-    
+
     [[GrowingEventManager sharedInstance] postEventBuilder:builder];
 }
 

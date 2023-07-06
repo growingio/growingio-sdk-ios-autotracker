@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingHybridViewElementEvent : GrowingViewElementEvent
 
+@property (nonatomic, copy, readonly) NSString *xcontent;
 @property (nonatomic, copy, readonly) NSString *hyperlink;
 @property (nonatomic, copy, readonly) NSString *query;
 
@@ -34,9 +35,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingHybridViewElementBuilder : GrowingViewElementBuilder
 
+@property (nonatomic, copy, readonly) NSString *xcontent;
 @property (nonatomic, copy, readonly) NSString *hyperlink;
 @property (nonatomic, copy, readonly) NSString *query;
 
+- (GrowingHybridViewElementBuilder * (^)(NSString *value))setXcontent;
 - (GrowingHybridViewElementBuilder * (^)(NSString *value))setQuery;
 - (GrowingHybridViewElementBuilder * (^)(NSString *value))setHyperlink;
 
@@ -45,8 +48,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (GrowingHybridViewElementBuilder * (^)(NSString *value))setTextValue;
 - (GrowingHybridViewElementBuilder * (^)(NSString *value))setXpath;
 - (GrowingHybridViewElementBuilder * (^)(int value))setIndex;
-- (GrowingHybridViewElementBuilder *(^)(NSString *value))setDomain;
-- (GrowingHybridViewElementBuilder *(^)(NSDictionary <NSString *, NSObject *>*value))setAttributes;
+- (GrowingHybridViewElementBuilder * (^)(NSString *value))setDomain;
+- (GrowingHybridViewElementBuilder * (^)(NSDictionary<NSString *, NSObject *> *value))setAttributes;
 
 // extra add
 - (GrowingHybridViewElementBuilder * (^)(NSString *value))setEventType;

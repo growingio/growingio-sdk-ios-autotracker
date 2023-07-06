@@ -32,9 +32,6 @@
     if (self.userId.length > 0) {
         [dic setObject:self.userId forKey:@"userId"];
     }
-    if (self.gioId.length > 0) {
-        [dic setObject:self.gioId forKey:@"gioId"];
-    }
     if (self.sessionId.length > 0) {
         [dic setObject:self.sessionId forKey:@"sessionId"];
     }
@@ -98,9 +95,6 @@
     }
     if (self.referralPage.length > 0) {
         [dic setObject:self.referralPage forKey:@"referralPage"];
-    }
-    if (self.globalSequenceId > 0) {
-        [dic setObject:@(self.globalSequenceId) forKey:@"globalSequenceId"];
     }
     if (self.eventSequenceId > 0) {
         [dic setObject:@(self.eventSequenceId) forKey:@"eventSequenceId"];

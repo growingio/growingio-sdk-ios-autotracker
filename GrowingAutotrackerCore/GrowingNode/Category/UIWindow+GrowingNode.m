@@ -46,8 +46,4 @@
     return NO;
 }
 
-- (NSString *)growingViewContent {
-    return self.accessibilityLabel;
-}
-
 @end

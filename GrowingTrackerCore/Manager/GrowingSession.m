@@ -218,9 +218,8 @@ static GrowingSession *currentSession = nil;
     if (![NSString growingHelper_isBlankString:newUserId]) {
         NSString *latestNonNullUserId = self.latestNonNullUserId.copy;
         self.latestNonNullUserId = newUserId;
-        if ([NSString growingHelper_isBlankString:latestNonNullUserId]) {
-            [self generateVisit];
-        } else if (![newUserId isEqualToString:latestNonNullUserId]) {
+        if (![NSString growingHelper_isBlankString:latestNonNullUserId] &&
+            ![newUserId isEqualToString:latestNonNullUserId]) {
             [self refreshSessionId];
             [self generateVisit];
         }
@@ -228,13 +227,6 @@ static GrowingSession *currentSession = nil;
 }
 
 - (void)setLocation:(double)latitude longitude:(double)longitude {
-    // 经纬度从无到有会发visit
-    if ((_latitude == 0 && (ABS(latitude) > 0)) || (_longitude == 0 && ABS(longitude) > 0)) {
-        _latitude = latitude;
-        _longitude = longitude;
-        [self generateVisit];
-        return;
-    }
     _latitude = latitude;
     _longitude = longitude;
 }

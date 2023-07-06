@@ -89,14 +89,9 @@ GrowingMod(GrowingFlutterPlugin)
     if (!path || ![path isKindOfClass:[NSString class]] || path.length == 0) {
         return;
     }
-    NSNumber *ptm = arguments[@"pageShowTimestamp"];
-    if (!ptm || ![ptm isKindOfClass:[NSNumber class]]) {
-        return;
-    }
 
     GrowingViewElementBuilder *builder =
-        GrowingViewElementEvent.builder.setEventType(eventType).setXpath(xpath).setPath(path).setPageShowTimestamp(
-            ptm.longLongValue);
+        GrowingViewElementEvent.builder.setEventType(eventType).setXpath(xpath).setPath(path);
     NSString *viewContent = arguments[@"textValue"];
     if (viewContent && [viewContent isKindOfClass:[NSString class]] && viewContent.length > 0) {
         builder = builder.setTextValue(viewContent);

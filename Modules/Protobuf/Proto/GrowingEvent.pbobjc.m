@@ -117,7 +117,6 @@ BOOL GrowingPBEventType_IsValidValue(int32_t value__) {
 
 @dynamic deviceId;
 @dynamic userId;
-@dynamic gioId;
 @dynamic sessionId;
 @dynamic dataSourceId;
 @dynamic eventType;
@@ -128,7 +127,6 @@ BOOL GrowingPBEventType_IsValidValue(int32_t value__) {
 @dynamic query;
 @dynamic title;
 @dynamic referralPage;
-@dynamic globalSequenceId;
 @dynamic eventSequenceId;
 @dynamic screenHeight;
 @dynamic screenWidth;
@@ -137,7 +135,6 @@ BOOL GrowingPBEventType_IsValidValue(int32_t value__) {
 @dynamic appVersion;
 @dynamic extraSdk, extraSdk_Count;
 @dynamic eventName;
-@dynamic pageShowTimestamp;
 @dynamic attributes, attributes_Count;
 @dynamic hasResourceItem, resourceItem;
 @dynamic protocolType;
@@ -178,7 +175,6 @@ typedef struct GrowingPBEventV3Dto__storage_ {
   int32_t index;
   NSString *deviceId;
   NSString *userId;
-  NSString *gioId;
   NSString *sessionId;
   NSString *dataSourceId;
   NSString *platform;
@@ -219,8 +215,6 @@ typedef struct GrowingPBEventV3Dto__storage_ {
   NSString *projectKey;
   NSString *userKey;
   int64_t timestamp;
-  int64_t globalSequenceId;
-  int64_t pageShowTimestamp;
   double latitude;
   double longitude;
   int64_t sendTime;
@@ -247,15 +241,6 @@ typedef struct GrowingPBEventV3Dto__storage_ {
         .number = GrowingPBEventV3Dto_FieldNumber_UserId,
         .hasIndex = 1,
         .offset = (uint32_t)offsetof(GrowingPBEventV3Dto__storage_, userId),
-        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldClearHasIvarOnZero),
-        .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "gioId",
-        .dataTypeSpecific.clazz = Nil,
-        .number = GrowingPBEventV3Dto_FieldNumber_GioId,
-        .hasIndex = 2,
-        .offset = (uint32_t)offsetof(GrowingPBEventV3Dto__storage_, gioId),
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldClearHasIvarOnZero),
         .dataType = GPBDataTypeString,
       },
@@ -350,15 +335,6 @@ typedef struct GrowingPBEventV3Dto__storage_ {
         .dataType = GPBDataTypeString,
       },
       {
-        .name = "globalSequenceId",
-        .dataTypeSpecific.clazz = Nil,
-        .number = GrowingPBEventV3Dto_FieldNumber_GlobalSequenceId,
-        .hasIndex = 13,
-        .offset = (uint32_t)offsetof(GrowingPBEventV3Dto__storage_, globalSequenceId),
-        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldClearHasIvarOnZero),
-        .dataType = GPBDataTypeInt64,
-      },
-      {
         .name = "eventSequenceId",
         .dataTypeSpecific.clazz = Nil,
         .number = GrowingPBEventV3Dto_FieldNumber_EventSequenceId,
@@ -429,15 +405,6 @@ typedef struct GrowingPBEventV3Dto__storage_ {
         .offset = (uint32_t)offsetof(GrowingPBEventV3Dto__storage_, eventName),
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldClearHasIvarOnZero),
         .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "pageShowTimestamp",
-        .dataTypeSpecific.clazz = Nil,
-        .number = GrowingPBEventV3Dto_FieldNumber_PageShowTimestamp,
-        .hasIndex = 21,
-        .offset = (uint32_t)offsetof(GrowingPBEventV3Dto__storage_, pageShowTimestamp),
-        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldClearHasIvarOnZero),
-        .dataType = GPBDataTypeInt64,
       },
       {
         .name = "attributes",

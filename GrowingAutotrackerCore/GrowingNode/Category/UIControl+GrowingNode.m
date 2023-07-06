@@ -43,7 +43,6 @@
         }
     }
 
-    // TODO: Improve the logic and performance using DFS
     while (unvisted.count) {
         UIView *current = unvisted.firstObject;
         [unvisted removeObject:current];

@@ -27,11 +27,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak, readonly) UIView *_Nullable view;
 @property (nonatomic, copy, readonly) NSString *_Nullable viewContent;
-@property (nonatomic, copy, readonly) NSString *_Nonnull xPath;
-// 原始的xpath
-@property (nonatomic, copy, readonly) NSString *_Nonnull originXPath;
+@property (nonatomic, copy, readonly) NSString *_Nonnull xpath;
+@property (nonatomic, copy, readonly) NSString *_Nonnull xindex;
+// 原始的位置组
+@property (nonatomic, copy, readonly) NSString *_Nonnull originxindex;
 // 可点击的父节点xpath
-@property (nonatomic, copy, readonly) NSString *_Nonnull clickableParentXPath;
+@property (nonatomic, copy, readonly) NSString *_Nonnull clickableParentXpath;
 @property (nonatomic, copy, readonly) NSString *_Nullable nodeType;
 // 如果有父节点，且父节点为列表，则index有值，和父节点一致，否则为-1
 @property (nonatomic, assign, readonly) int index;
@@ -57,11 +58,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) UIView *_Nullable view;
 @property (nonatomic, copy, readonly) NSString *_Nullable viewContent;
-@property (nonatomic, copy, readonly) NSString *_Nonnull xPath;
-// 原始的xpath
-@property (nonatomic, copy, readonly) NSString *_Nonnull originXPath;
+@property (nonatomic, copy, readonly) NSString *_Nonnull xpath;
+@property (nonatomic, copy, readonly) NSString *_Nonnull xindex;
+// 原始的位置组
+@property (nonatomic, copy, readonly) NSString *_Nonnull originxindex;
 // 可点击的父节点xpath
-@property (nonatomic, copy, readonly) NSString *_Nonnull clickableParentXPath;
+@property (nonatomic, copy, readonly) NSString *_Nonnull clickableParentXpath;
 @property (nonatomic, copy, readonly) NSString *_Nullable nodeType;
 // 如果有父节点，且父节点为列表，则index有值，和父节点一致，否则为-1
 @property (nonatomic, assign, readonly) int index;
@@ -72,9 +74,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign, readonly) BOOL needRecalculate;
 
 - (GrowingViewNodeBuilder * (^)(UIView *value))setView;
-- (GrowingViewNodeBuilder * (^)(NSString *value))setXPath;
-- (GrowingViewNodeBuilder * (^)(NSString *value))setOriginXPath;
-- (GrowingViewNodeBuilder * (^)(NSString *value))setClickableParentXPath;
+- (GrowingViewNodeBuilder * (^)(NSString *value))setXpath;
+- (GrowingViewNodeBuilder * (^)(NSString *value))setXindex;
+- (GrowingViewNodeBuilder * (^)(NSString *value))setOriginXindex;
+- (GrowingViewNodeBuilder * (^)(NSString *value))setClickableParentXpath;
 - (GrowingViewNodeBuilder * (^)(int value))setIndex;
 - (GrowingViewNodeBuilder * (^)(int value))setPosition;
 - (GrowingViewNodeBuilder * (^)(long long value))setTimestamp;

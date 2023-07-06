@@ -103,12 +103,10 @@
 
 - (NSString *)growingNodeContent {
     NSString *nodeContent = [[UIAlertController growing_actionForActionView:(id)self] title];
-
     if (nodeContent.length) {
         return nodeContent;
-    } else {
-        return self.accessibilityLabel;
     }
+    return nil;
 }
 
 @end

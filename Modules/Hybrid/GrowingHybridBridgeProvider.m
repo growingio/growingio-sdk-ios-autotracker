@@ -61,6 +61,7 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
 #define KEY_INDEX "index"
 #define KEY_TEXT_VALUE "textValue"
 #define KEY_XPATH "xpath"
+#define KEY_XCONTENT "xcontent"
 
 @interface UIView (GrowingNode) <GrowingNode>
 @end
@@ -250,9 +251,10 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
         .setIndex([dict growingHelper_intForKey:@KEY_INDEX fallback:-1])
         .setTextValue(dict[@KEY_TEXT_VALUE])
         .setXpath(dict[@KEY_XPATH])
+        .setXcontent(dict[@KEY_XCONTENT])
         .setPath(dict[@KEY_PATH])
         .setDomain([self getDomain:dict])
-        .setAttributes([self safeAttributesFromDict:dict]);;
+        .setAttributes([self safeAttributesFromDict:dict]);
 }
 
 @end
