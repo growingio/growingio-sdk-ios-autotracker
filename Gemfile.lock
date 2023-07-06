@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/CocoaPods/CocoaPods.git
-  revision: 57735585a6aca1ca62a25876d41804bde705eef7
+  revision: 7234edf38f6e8bafc4ab75d42945af0f100b80df
   specs:
     cocoapods (1.12.1)
       addressable (~> 2.8)
@@ -23,7 +23,7 @@ GIT
 
 GIT
   remote: https://github.com/CocoaPods/Xcodeproj.git
-  revision: 2fe65ce43a244370c245bcbf4176f16ff0f442cf
+  revision: 2ce68b60856c4680c2b3cd7aa5b221529120c7c4
   specs:
     xcodeproj (1.22.0)
       CFPropertyList (>= 2.3.3, < 4.0)
@@ -45,12 +45,11 @@ GEM
   specs:
     CFPropertyList (3.0.6)
       rexml
-    activesupport (6.1.7.3)
+    activesupport (7.0.6)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
-      zeitwerk (~> 2.3)
     addressable (2.8.4)
       public_suffix (>= 2.0.2, < 6.0)
     algoliasearch (1.27.5)
@@ -88,10 +87,10 @@ GEM
     fuzzy_match (2.0.4)
     gh_inspector (1.1.3)
     httpclient (2.8.3)
-    i18n (1.13.0)
+    i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     json (2.6.3)
-    minitest (5.18.0)
+    minitest (5.18.1)
     molinillo (0.8.0)
     nanaimo (0.3.0)
     nap (1.1.0)
@@ -103,10 +102,9 @@ GEM
       ethon (>= 0.9.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    zeitwerk (2.6.7)
 
 PLATFORMS
-  ruby
+  arm64-darwin-22
 
 DEPENDENCIES
   cocoapods!

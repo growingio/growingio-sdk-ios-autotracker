@@ -174,7 +174,6 @@
 		6F7A64B402BF8E5ED466E56A /* Pods_GrowingAnalyticsTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0257123D870B44A9FDA90A22 /* Pods_GrowingAnalyticsTests.framework */; };
 		7E20527CFF34511EE464C33F /* Pods_GrowingAnalyticsStartTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1769255A062869A5D219F683 /* Pods_GrowingAnalyticsStartTests.framework */; };
 		8016AAD2B2E1BE4321C4AA76 /* Pods_AdvertTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6CD8BC1E7857B5F760A5EF6 /* Pods_AdvertTests.framework */; };
-		813BAB07E78F29715302F2A9 /* Pods_GrowingAnalyticsCDPTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B917B3D306DA7615DB939CF1 /* Pods_GrowingAnalyticsCDPTests.framework */; };
 		997DAC68973F1F4FAF34EA2E /* Pods_Example_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B524BD63EF3439946134E74 /* Pods_Example_macOS.framework */; };
 		A61E1E81175885070AAD10A9 /* Pods_ExampleiOS13.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7CCC2E00F858DC5B58D4FA6 /* Pods_ExampleiOS13.framework */; };
 		A9D21D06460258FAC4736A26 /* Pods_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90476D1583D0EE778FCBED5E /* Pods_Example.framework */; };
@@ -506,7 +505,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				813BAB07E78F29715302F2A9 /* Pods_GrowingAnalyticsCDPTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -712,8 +710,6 @@
 				03D85F7CFC2FCDB001B3D5D4 /* Pods-Example-macOS.release.xcconfig */,
 				F625366B1611DA7E27D0E32C /* Pods-ExampleiOS13.debug.xcconfig */,
 				E1800E7E573CE2BD70F0B706 /* Pods-ExampleiOS13.release.xcconfig */,
-				FF93145D0D866B2292B78207 /* Pods-GrowingAnalyticsCDPTests.debug.xcconfig */,
-				E358AB81E170FF3B9BD33067 /* Pods-GrowingAnalyticsCDPTests.release.xcconfig */,
 				0B3751A8D7A8C11CD50B544E /* Pods-GrowingAnalyticsStartTests.debug.xcconfig */,
 				CFC074E90BAC4B828194DC02 /* Pods-GrowingAnalyticsStartTests.release.xcconfig */,
 				6F9B4F11B90235A2D461CA2C /* Pods-GrowingAnalyticsTests.debug.xcconfig */,
@@ -1332,7 +1328,6 @@
 				90476D1583D0EE778FCBED5E /* Pods_Example.framework */,
 				7B524BD63EF3439946134E74 /* Pods_Example_macOS.framework */,
 				C7CCC2E00F858DC5B58D4FA6 /* Pods_ExampleiOS13.framework */,
-				B917B3D306DA7615DB939CF1 /* Pods_GrowingAnalyticsCDPTests.framework */,
 				1769255A062869A5D219F683 /* Pods_GrowingAnalyticsStartTests.framework */,
 				0257123D870B44A9FDA90A22 /* Pods_GrowingAnalyticsTests.framework */,
 				42F5EA0EFE2552358C35A0F5 /* Pods_HostApplicationTests.framework */,
@@ -1518,11 +1513,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 34D932FB27BF8A400038430E /* Build configuration list for PBXNativeTarget "GrowingAnalyticsCDPTests" */;
 			buildPhases = (
-				3CEBDA37D6A7D501E79089BA /* [CP] Check Pods Manifest.lock */,
 				34D932F327BF8A400038430E /* Sources */,
 				34D932F427BF8A400038430E /* Frameworks */,
 				34D932F527BF8A400038430E /* Resources */,
-				A523D526C1FE97C2DBAC19A0 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1833,15 +1826,13 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-GrowingAnalyticsStartTests/Pods-GrowingAnalyticsStartTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-fbb9594a/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-0637fae5/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore/GrowingUtils.framework",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-cdp/GrowingAnalytics_cdp.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GrowingAnalytics.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GrowingUtils.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GrowingAnalytics_cdp.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1886,28 +1877,6 @@
 			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-AdvertTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		3CEBDA37D6A7D501E79089BA /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-GrowingAnalyticsCDPTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2044,28 +2013,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-GrowingAnalyticsTests/Pods-GrowingAnalyticsTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		A523D526C1FE97C2DBAC19A0 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-GrowingAnalyticsCDPTests/Pods-GrowingAnalyticsCDPTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-fbb9594a/GrowingAnalytics.framework",
-				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore/GrowingUtils.framework",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-cdp/GrowingAnalytics_cdp.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GrowingAnalytics.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GrowingUtils.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GrowingAnalytics_cdp.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-GrowingAnalyticsCDPTests/Pods-GrowingAnalyticsCDPTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		BD21E0F09980000364B80451 /* [CP] Embed Pods Frameworks */ = {
@@ -3346,7 +3293,6 @@
 		};
 		34D932FC27BF8A400038430E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FF93145D0D866B2292B78207 /* Pods-GrowingAnalyticsCDPTests.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -3391,7 +3337,6 @@
 		};
 		34D932FD27BF8A400038430E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E358AB81E170FF3B9BD33067 /* Pods-GrowingAnalyticsCDPTests.release.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
