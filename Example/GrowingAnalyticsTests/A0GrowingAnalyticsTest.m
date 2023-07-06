@@ -19,6 +19,8 @@
 #import "GrowingTrackerCore/Event/GrowingLoginUserAttributesEvent.h"
 #import "GrowingTrackerCore/Event/GrowingVisitorAttributesEvent.h"
 #import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
+#import "GrowingTrackerCore/Event/Autotrack/GrowingAutotrackEventType.h"
+#import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
 
 static NSString * const kGrowingEventDuration = @"event_duration";
 
@@ -635,19 +637,6 @@ static NSString * const kGrowingEventDuration = @"event_duration";
     [self waitForExpectationsWithTimeout:10.0f handler:nil];
 }
 
-- (void)testSetLocationSendVisit {
-    [[GrowingAutotracker sharedInstance] cleanLocation];
-    double latitude = 30.11;
-    double longitude = 32.22;
-    [[GrowingAutotracker sharedInstance] setLocation:latitude longitude:longitude];
-    NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeVisit];
-    XCTAssertEqual(events.count, 1);
-    
-    GrowingVisitEvent *event = (GrowingVisitEvent *)events.firstObject;
-    XCTAssertEqual(event.latitude, latitude);
-    XCTAssertEqual(event.longitude, longitude);
-}
-
 - (void)testSetDataCollectionEnabled {
     NSString *eventName = @"name";
     [[GrowingAutotracker sharedInstance] setDataCollectionEnabled:NO];
@@ -681,13 +670,84 @@ static NSString * const kGrowingEventDuration = @"event_duration";
 
 #pragma mark - GrowingAutoTracker API Test
 
-- (void)testPageVariableToViewControllerTest {
-    UIViewController *vc = [UIViewController new];
-    vc.growingPageAttributes = @{@"key" : @"value"};
-    XCTAssertEqualObjects(vc.growingPageAttributes[@"key"], @"value");
+- (void)testAutotrackPageWithoutAttributesNotTrackTest {
+    UIViewController *controller = [[UIViewController alloc] init];
+    [[GrowingAutotracker sharedInstance] autotrackPage:controller alias:@"XCTest"];
     
-    vc.growingPageAttributes = nil;
-    XCTAssertEqualObjects(vc.growingPageAttributes[@"key"], nil);
+    XCTestExpectation *expectation = [self expectationWithDescription:@"testAutotrackPageWithoutAttributesNotTrackTest Test failed : timeout"];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
+        XCTAssertEqual(events.count, 0);
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:3.0f handler:nil];
+}
+
+- (void)testAutotrackPageWithoutAttributesTest {
+    UIViewController *controller = [[UIViewController alloc] init];
+    [[GrowingAutotracker sharedInstance] autotrackPage:controller alias:@"XCTest"];
+    [controller viewDidAppear:NO];
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"testAutotrackPageWithoutAttributesTest Test failed : timeout"];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
+        XCTAssertEqual(events.count, 1);
+        
+        GrowingPageEvent *event = (GrowingPageEvent *)events.firstObject;
+        XCTAssertEqualObjects(event.eventType, GrowingEventTypePage);
+        XCTAssertEqualObjects(event.pageName, @"XCTest");
+        XCTAssertEqualObjects(event.attributes[@"key"], nil);
+
+        NSDictionary *dic = event.toDictionary;
+        XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypePage);
+        XCTAssertEqualObjects(dic[@"path"], @"XCTest");
+        XCTAssertEqualObjects(dic[@"attributes"][@"key"], nil);
+
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:3.0f handler:nil];
+}
+
+- (void)testAutotrackPageWithAttributesNotTrackTest {
+    UIViewController *controller = [[UIViewController alloc] init];
+    [[GrowingAutotracker sharedInstance] autotrackPage:controller alias:@"XCTest" attributes:@{@"key" : @"value"}];
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"testAutotrackPageWithAttributesNotTrackTest Test failed : timeout"];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
+        XCTAssertEqual(events.count, 0);
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:3.0f handler:nil];
+}
+
+- (void)testAutotrackPageWithAttributesTest {
+    UIViewController *controller = [[UIViewController alloc] init];
+    [[GrowingAutotracker sharedInstance] autotrackPage:controller alias:@"XCTest" attributes:@{@"key" : @"value"}];
+    [controller viewDidAppear:NO];
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"testAutotrackPageWithAttributesTest Test failed : timeout"];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
+        XCTAssertEqual(events.count, 1);
+        
+        GrowingPageEvent *event = (GrowingPageEvent *)events.firstObject;
+        XCTAssertEqualObjects(event.eventType, GrowingEventTypePage);
+        XCTAssertEqualObjects(event.pageName, @"XCTest");
+        XCTAssertEqualObjects(event.attributes[@"key"], @"value");
+
+        NSDictionary *dic = event.toDictionary;
+        XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypePage);
+        XCTAssertEqualObjects(dic[@"path"], @"XCTest");
+        XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
+
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:3.0f handler:nil];
 }
 
 @end

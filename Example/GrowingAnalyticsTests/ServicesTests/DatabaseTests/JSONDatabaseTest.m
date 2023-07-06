@@ -129,7 +129,6 @@
                                    .setDomain(@"com.bundle.id")
                                    .setUrlScheme(@"growing.xxxxxx")
                                    .setAppState(GrowingAppStateForeground)
-                                   .setGlobalSequenceId(999)
                                    .setEventSequenceId(999)
                                    .setExtraParams(@{@"dataSourceId": @"123456", @"gioId": @"654321"})
                                    .setNetworkState(@"5G")
@@ -177,7 +176,6 @@
     XCTAssertEqualObjects(event.urlScheme ?: @"", jsonObject[@"urlScheme"]);
     XCTAssertEqualObjects((event.appState == GrowingAppStateForeground ? @"FOREGROUND" : @"BACKGROUND"),
                           jsonObject[@"appState"]);
-    XCTAssertEqual(event.globalSequenceId, ((NSNumber *)(jsonObject[@"globalSequenceId"])).longLongValue);
     XCTAssertEqual(event.eventSequenceId, ((NSNumber *)(jsonObject[@"eventSequenceId"])).longLongValue);
     // 3.2.0
     XCTAssertEqualObjects(event.networkState ?: @"", jsonObject[@"networkState"]);

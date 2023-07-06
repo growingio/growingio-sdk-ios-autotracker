@@ -45,7 +45,8 @@
     [vc1 performSelector:@selector(growingNodeContent)];
     [vc1 performSelector:@selector(growingNodeKeyIndex)];
     [vc1 performSelector:@selector(growingNodeSubPath)];
-    [vc1 performSelector:@selector(growingNodeSubSimilarPath)];
+    [vc1 performSelector:@selector(growingNodeSubIndex)];
+    [vc1 performSelector:@selector(growingNodeSubSimilarIndex)];
     [vc1 performSelector:@selector(growingNodeChilds)];
 #pragma clang diagnostic pop
 }
@@ -63,7 +64,8 @@
     [view1 performSelector:@selector(growingNodeChilds)];
     [cell performSelector:@selector(growingNodeKeyIndex)];
     [cell performSelector:@selector(growingNodeSubPath)];
-    [cell performSelector:@selector(growingNodeSubSimilarPath)];
+    [cell performSelector:@selector(growingNodeSubIndex)];
+    [cell performSelector:@selector(growingNodeSubSimilarIndex)];
     [cell performSelector:@selector(growingNodeDonotCircle)];
     [cell performSelector:@selector(growingNodeUserInteraction)];
     [cell performSelector:@selector(growingViewUserInteraction)];
@@ -79,7 +81,8 @@
     UIView *view2 = [[UIView alloc] init];
     [view2 performSelector:@selector(growingNodeKeyIndex)];
     [view2 performSelector:@selector(growingNodeSubPath)];
-    [view2 performSelector:@selector(growingNodeSubSimilarPath)];
+    [view2 performSelector:@selector(growingNodeSubIndex)];
+    [view2 performSelector:@selector(growingNodeSubSimilarIndex)];
     [view2 performSelector:@selector(growingNodeChilds)];
     [view2 performSelector:@selector(growingNodeParent)];
     [view2 performSelector:@selector(growingViewNodeIsInvisiable)];

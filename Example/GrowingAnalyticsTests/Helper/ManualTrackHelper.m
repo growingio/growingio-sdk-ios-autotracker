@@ -75,8 +75,8 @@
     if (event.count == 0) {
         return NO;
     }
-    NSArray *protocol = [self.context arrayByAddingObjectsFromArray:@[@"path", @"xpath"]];
-    NSArray *optional = @[@"textValue", @"index", @"hyperlink", @"query"];
+    NSArray *protocol = [self.context arrayByAddingObjectsFromArray:@[@"xpath"]];
+    NSArray *optional = @[@"path", @"textValue", @"index", @"hyperlink", @"query", @"xindex", @"xcontent"];
     return [self protocolCheck:event protocol:protocol] && [self emptyPropertyCheck:event optional:optional];
 }
 
@@ -84,17 +84,8 @@
     if (event.count == 0) {
         return NO;
     }
-    NSArray *protocol = [self.context arrayByAddingObjectsFromArray:@[@"path", @"xpath"]];
-    NSArray *optional = @[@"textValue", @"index", @"hyperlink", @"query"];
-    return [self protocolCheck:event protocol:protocol] && [self emptyPropertyCheck:event optional:optional];
-}
-
-+ (BOOL)hybridFormSubmitEventCheck:(NSDictionary *)event {
-    if (event.count == 0) {
-        return NO;
-    }
-    NSArray *protocol = [self.context arrayByAddingObjectsFromArray:@[@"path", @"pageShowTimestamp", @"xpath"]];
-    NSArray *optional = @[@"index", @"query"];
+    NSArray *protocol = [self.context arrayByAddingObjectsFromArray:@[@"xpath"]];
+    NSArray *optional = @[@"path", @"textValue", @"index", @"hyperlink", @"query", @"xindex", @"xcontent"];
     return [self protocolCheck:event protocol:protocol] && [self emptyPropertyCheck:event optional:optional];
 }
 
@@ -261,7 +252,6 @@
                          @"domain",
                          @"urlScheme",
                          @"appState",
-                         @"globalSequenceId",
                          @"eventSequenceId",
                          @"networkState",
                          @"screenHeight",
