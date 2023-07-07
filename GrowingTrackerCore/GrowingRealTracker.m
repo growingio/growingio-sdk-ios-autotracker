@@ -56,7 +56,7 @@ const int GrowingTrackerVersionCode = 30700;
     if (self) {
         _configuration = [configuration copyWithZone:nil];
         _launchOptions = [launchOptions copy];
-        GrowingConfigurationManager.sharedInstance.trackConfiguration = self.configuration;
+        GrowingConfigurationManager.sharedInstance.trackConfiguration = _configuration;
         if (configuration.urlScheme.length > 0) {
             [GrowingDeviceInfo configUrlScheme:configuration.urlScheme.copy];
         }

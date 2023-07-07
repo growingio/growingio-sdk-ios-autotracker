@@ -21,7 +21,6 @@
 #import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
 
 @implementation GrowingConfigurationManager
-@synthesize trackConfiguration = _trackConfiguration;
 
 + (instancetype)sharedInstance {
     static id _sharedInstance = nil;
@@ -31,10 +30,6 @@
     });
 
     return _sharedInstance;
-}
-
-- (void)setTrackConfiguration:(GrowingTrackConfiguration *)configuration {
-    _trackConfiguration = [configuration copyWithZone:nil];
 }
 
 @end

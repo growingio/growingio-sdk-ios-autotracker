@@ -73,6 +73,12 @@ NS_ASSUME_NONNULL_BEGIN
 /// 同步获取设备id，又称为匿名用户id，SDK 自动生成用来定义唯一设备。
 - (NSString *)getDeviceId;
 
+/// 配置忽略追踪的元素类型
+- (void)ignoreViewClass:(Class)clazz;
+
+/// 配置忽略追踪的元素类型数组
+- (void)ignoreViewClasses:(NSArray<Class> *)classes;
+
 ///-------------------------------
 #pragma mark Track Event
 ///-------------------------------
