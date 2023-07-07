@@ -153,21 +153,21 @@ GrowingMod(GrowingWebCircle)
     NSDictionary *pathInfo = page.pathInfo;
     NSString *pagexpath = pathInfo[@"xpath"];
     NSString *pagexindex = pathInfo[@"xindex"];
-    GrowingWebCircleElementBuilder *builder = GrowingWebCircleElement.builder
-        .setRect(node.view.growingNodeFrame)
-        .setContent(node.viewContent)
-        .setZLevel(self.zLevel++)
-        .setIndex(node.index)
-        .setXpath([NSString stringWithFormat:@"%@/%@", pagexpath, node.xpath])
-        .setXindex([NSString stringWithFormat:@"%@/%@", pagexindex, node.xindex])
-        .setNodeType(node.nodeType)
-        .setPage(autotrackPage ? autotrackPage.alias : @"");
+    GrowingWebCircleElementBuilder *builder =
+        GrowingWebCircleElement.builder.setRect(node.view.growingNodeFrame)
+            .setContent(node.viewContent)
+            .setZLevel(self.zLevel++)
+            .setIndex(node.index)
+            .setXpath([NSString stringWithFormat:@"%@/%@", pagexpath, node.xpath])
+            .setXindex([NSString stringWithFormat:@"%@/%@", pagexindex, node.xindex])
+            .setNodeType(node.nodeType)
+            .setPage(autotrackPage ? autotrackPage.alias : @"");
     if (node.clickableParentXpath) {
         builder = builder.setParentXpath([NSString stringWithFormat:@"%@/%@", pagexpath, node.clickableParentXpath])
-            .setParentXindex([NSString stringWithFormat:@"%@/%@", pagexindex, node.clickableParentXindex]);
+                      .setParentXindex([NSString stringWithFormat:@"%@/%@", pagexindex, node.clickableParentXindex]);
     }
     GrowingWebCircleElement *element = builder.build;
-    
+
     return [NSMutableDictionary dictionaryWithDictionary:element.toDictionary];
 }
 
