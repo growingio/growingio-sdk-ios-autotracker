@@ -53,7 +53,7 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
 
     NSString * (^toStringBlock)(NSArray *) = ^(NSArray *array) {
         NSArray *reverse = array.reverseObjectEnumerator.allObjects;
-        return [@"/" stringByAppendingString:[reverse componentsJoinedByString:@"/"]];
+        return [reverse componentsJoinedByString:@"/"];
     };
 
     NSString *xpath = toStringBlock(viewPathArray);
@@ -94,7 +94,7 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
 + (GrowingViewNode *)getViewNode:(UIView *)view {
     NSPointerArray *weakArray = [NSPointerArray weakObjectsPointerArray];
     GrowingViewNode *viewNode = [self getTopViewNode:view array:weakArray];
-    for (int i = (int)weakArray.count - 1; i >= 0; i--) {
+    for (int i = (int)weakArray.count - 2; i >= 0; i--) {
         UIView *parent = [weakArray pointerAtIndex:i];
         if (parent) {
             viewNode = [viewNode appendNode:parent isRecalculate:NO];

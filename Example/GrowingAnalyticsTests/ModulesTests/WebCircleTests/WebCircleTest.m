@@ -158,7 +158,7 @@
     XCTAssertEqualObjects(dic[@"nodeType"], @"Button");
     XCTAssertEqualObjects(dic[@"isContainer"], @1);
     XCTAssertEqualObjects(dic[@"index"], @10);
-    XCTAssertEqualObjects(dic[@"parentXpath"], @"parentXpath");
+    XCTAssertEqualObjects(dic[@"parentXPath"], @"parentXpath");
     XCTAssertEqualObjects(dic[@"page"], @"page");
     XCTAssertEqualObjects(dic[@"domain"], [GrowingDeviceInfo currentDeviceInfo].bundleID);
 }
