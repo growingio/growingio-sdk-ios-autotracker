@@ -1,9 +1,9 @@
 //
-//  GrowingAutotrackConfiguration.h
+//  GrowingAutotrackConfiguration+Private.h
 //  GrowingAnalytics
 //
-//  Created by sheng on 2021/5/8.
-//  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2023/7/7.
+//  Copyright (C) 2023 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,21 +17,16 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackConfiguration.h"
+#import "GrowingAutotrackerCore/Public/GrowingAutotrackConfiguration.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSUInteger, GrowingIgnorePolicy) {
-    GrowingIgnoreNone = 0,
-    GrowingIgnoreSelf = 1,      // 忽略自身
-    GrowingIgnoreChildren = 2,  // 忽略所有子页面和孙子页面
-    GrowingIgnoreAll = 3,       // 忽略自身 + 忽略所有子页面和孙子页面
-};
+@interface GrowingAutotrackConfiguration (Private)
 
-@interface GrowingAutotrackConfiguration : GrowingTrackConfiguration
+@property (nonatomic, strong, readonly) NSMutableSet *ignoreViewClasses;
 
-@property (nonatomic, assign) BOOL autotrackEnabled;
-@property (nonatomic, assign) float impressionScale;
+- (void)ignoreViewClass:(Class)clazz;
+- (void)ignoreViewClasses:(NSArray<Class> *)classes;
 
 @end
 

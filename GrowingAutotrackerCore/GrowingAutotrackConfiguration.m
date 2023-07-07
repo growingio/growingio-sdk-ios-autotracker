@@ -18,13 +18,47 @@
 //  limitations under the License.
 
 #import "GrowingAutotrackerCore/Public/GrowingAutotrackConfiguration.h"
+#import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 
-@implementation GrowingAutotrackConfiguration
+@interface GrowingAutotrackConfiguration ()
+
+@property (nonatomic, strong, readwrite) NSMutableSet *ignoreViewClasses;
+
+@end
+
+@implementation GrowingAutotrackConfiguration {
+    GROWING_LOCK_DECLARE(lock);
+}
+
+- (instancetype)initWithProjectId:(NSString *)projectId {
+    if (self = [super initWithProjectId:projectId]) {
+        _autotrackEnabled = YES;
+        _impressionScale = 0.0f;
+        GROWING_LOCK_INIT(lock);
+        _ignoreViewClasses = [NSMutableSet set];
+    }
+
+    return self;
+}
 
 - (id)copyWithZone:(NSZone *)zone {
     GrowingAutotrackConfiguration *configuration = (GrowingAutotrackConfiguration *)[super copyWithZone:zone];
+    configuration->_autotrackEnabled = _autotrackEnabled;
     configuration->_impressionScale = _impressionScale;
+    configuration->_ignoreViewClasses = _ignoreViewClasses;
     return configuration;
+}
+
+- (void)ignoreViewClass:(Class)clazz {
+    GROWING_LOCK(lock);
+    [self.ignoreViewClasses addObject:clazz];
+    GROWING_UNLOCK(lock);
+}
+
+- (void)ignoreViewClasses:(NSArray<Class> *)classes {
+    GROWING_LOCK(lock);
+    [self.ignoreViewClasses addObjectsFromArray:classes];
+    GROWING_UNLOCK(lock);
 }
 
 @end

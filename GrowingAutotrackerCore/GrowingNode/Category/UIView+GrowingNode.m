@@ -24,7 +24,7 @@
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingAutotrackerCore/Impression/GrowingImpressionTrack.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
-#import "GrowingAutotrackerCore/Public/GrowingAutotrackConfiguration.h"
+#import "GrowingAutotrackerCore/GrowingAutotrackConfiguration+Private.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Public/GrowingBaseEvent.h"
@@ -136,7 +136,7 @@
     BOOL isInScreen;
     double impScale = 0.0;
     GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
-    if ([configuration isKindOfClass:NSClassFromString(@"GrowingAutotrackConfiguration")]) {
+    if ([configuration isKindOfClass:[GrowingAutotrackConfiguration class]]) {
         impScale = ((GrowingAutotrackConfiguration *)configuration).impressionScale;
     }
 
@@ -177,6 +177,14 @@
 
 - (BOOL)growingViewDontTrack {
     // judge self firstly
+    GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    if ([configuration isKindOfClass:[GrowingAutotrackConfiguration class]]) {
+        NSSet *ignoreViewClasses = ((GrowingAutotrackConfiguration *)configuration).ignoreViewClasses;
+        if ([ignoreViewClasses containsObject:[self class]]) {
+            return YES;
+        }
+    }
+
     GrowingIgnorePolicy selfPolicy = self.growingViewIgnorePolicy;
     if (GrowingIgnoreAll == selfPolicy || GrowingIgnoreSelf == selfPolicy) {
         return YES;

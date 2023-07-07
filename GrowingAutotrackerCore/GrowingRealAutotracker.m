@@ -29,6 +29,7 @@
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIAlertController+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UISegmentedControl+GrowingNode.h"
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
+#import "GrowingAutotrackerCore/GrowingAutotrackConfiguration+Private.h"
 #import "GrowingAutotrackerCore/Impression/GrowingImpressionTrack.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
@@ -36,19 +37,35 @@
 #import "GrowingULSwizzle.h"
 #import "GrowingULViewControllerLifecycle.h"
 
+@interface GrowingRealAutotracker (Private)
+
+@property (nonatomic, strong) GrowingAutotrackConfiguration *configuration;
+
+@end
+
 @implementation GrowingRealAutotracker
 
 - (instancetype)initWithConfiguration:(GrowingTrackConfiguration *)configuration
                         launchOptions:(NSDictionary *)launchOptions {
     self = [super initWithConfiguration:configuration launchOptions:launchOptions];
     if (self) {
-        [self addAutoTrackSwizzles];
-        [GrowingULViewControllerLifecycle setup];
-        [GrowingPageManager.sharedInstance start];
-        [GrowingImpressionTrack.sharedInstance start];
+        if (self.configuration.autotrackEnabled) {
+            [self addAutoTrackSwizzles];
+            [GrowingULViewControllerLifecycle setup];
+            [GrowingPageManager.sharedInstance start];
+            [GrowingImpressionTrack.sharedInstance start];
+        }
     }
 
     return self;
+}
+
+- (void)ignoreViewClass:(Class)clazz {
+    [self.configuration ignoreViewClass:clazz];
+}
+
+- (void)ignoreViewClasses:(NSArray<Class> *)classes {
+    [self.configuration ignoreViewClasses:classes];
 }
 
 - (void)autotrackPage:(UIViewController *)controller alias:(NSString *)alias {
