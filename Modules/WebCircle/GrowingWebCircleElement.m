@@ -37,6 +37,7 @@
         _isContainer = builder.isContainer;
         _index = builder.index;
         _parentXpath = builder.parentXpath;
+        _parentXindex = builder.parentXindex;
         _page = builder.page;
         _domain = [GrowingDeviceInfo currentDeviceInfo].bundleID;
     }
@@ -57,7 +58,8 @@
     dataDict[@"nodeType"] = self.nodeType;
     dataDict[@"isContainer"] = @(self.isContainer);
     dataDict[@"index"] = self.index >= 0 ? @(self.index) : nil;
-    dataDict[@"parentXpath"] = self.parentXpath;
+    dataDict[@"parentXPath"] = self.parentXpath;
+    dataDict[@"parentXIndex"] = self.parentXindex;
     dataDict[@"page"] = self.page;
     dataDict[@"domain"] = self.domain;
     return [dataDict copy];
@@ -112,6 +114,13 @@
 - (GrowingWebCircleElementBuilder * (^)(NSString *value))setParentXpath {
     return ^(NSString *value) {
         self->_parentXpath = value;
+        return self;
+    };
+}
+
+- (GrowingWebCircleElementBuilder * (^)(NSString *value))setParentXindex {
+    return ^(NSString *value) {
+        self->_parentXindex = value;
         return self;
     };
 }

@@ -40,12 +40,12 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
             continue;
         }
         [viewPathArray addObject:node.growingNodeSubPath];
-        [xindexArray addObject:node.growingNodeSubIndex];
+        [originxindexArray addObject:node.growingNodeSubIndex];
         if (isSimilar) {
-            [originxindexArray addObject:node.growingNodeSubSimilarIndex];
+            [xindexArray addObject:node.growingNodeSubSimilarIndex];
             isSimilar = NO;
         } else {
-            [originxindexArray addObject:node.growingNodeSubIndex];
+            [xindexArray addObject:node.growingNodeSubIndex];
         }
 
         node = node.growingNodeParent;
@@ -118,9 +118,9 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
     return GrowingViewNode.builder.setView(rootview)
         .setIndex(-1)
         .setViewContent([self buildElementContentForNode:rootview])
-        .setXpath(@"")
-        .setXindex(@"")
-        .setOriginXindex(@"")
+        .setXpath(rootview.growingNodeSubPath)
+        .setXindex(rootview.growingNodeSubSimilarIndex)
+        .setOriginXindex(rootview.growingNodeSubIndex)
         .setNodeType([self getViewNodeType:rootview])
         .build;
 }
