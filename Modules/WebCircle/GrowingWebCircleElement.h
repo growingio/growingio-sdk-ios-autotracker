@@ -30,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *_Nonnull xindex;
 @property (nonatomic, copy, readonly) NSString *_Nonnull nodeType;
 @property (nonatomic, copy, readonly) NSString *_Nullable parentXpath;
+@property (nonatomic, copy, readonly) NSString *_Nullable parentXindex;
 @property (nonatomic, assign, readonly) BOOL isContainer;
 @property (nonatomic, assign, readonly) int index;
 @property (nonatomic, copy, readonly) NSString *_Nonnull page;
@@ -53,6 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *_Nonnull xindex;
 @property (nonatomic, copy, readonly) NSString *_Nonnull nodeType;
 @property (nonatomic, copy, readonly) NSString *_Nullable parentXpath;
+@property (nonatomic, copy, readonly) NSString *_Nullable parentXindex;
 @property (nonatomic, assign, readonly) BOOL isContainer;
 @property (nonatomic, assign, readonly) int index;
 @property (nonatomic, copy, readonly) NSString *_Nonnull page;
@@ -64,6 +66,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (GrowingWebCircleElementBuilder * (^)(NSString *value))setXindex;
 - (GrowingWebCircleElementBuilder * (^)(NSString *value))setNodeType;
 - (GrowingWebCircleElementBuilder * (^)(NSString *value))setParentXpath;
+- (GrowingWebCircleElementBuilder * (^)(NSString *value))setParentXindex;
 - (GrowingWebCircleElementBuilder * (^)(BOOL value))setIsContainer;
 - (GrowingWebCircleElementBuilder * (^)(int value))setIndex;
 - (GrowingWebCircleElementBuilder * (^)(NSString *value))setPage;

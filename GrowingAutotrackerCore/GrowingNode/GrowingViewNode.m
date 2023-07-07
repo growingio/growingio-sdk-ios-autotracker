@@ -43,6 +43,7 @@
         _xindex = builder.xindex;
         _originxindex = builder.originxindex;
         _clickableParentXpath = builder.clickableParentXpath;
+        _clickableParentXindex = builder.clickableParentXindex;
         _nodeType = builder.nodeType;
         _index = builder.index;
         _position = builder.position;
@@ -82,6 +83,7 @@
             .setXindex(self.xindex)
             .setOriginXindex(self.originxindex)
             .setClickableParentXpath(self.clickableParentXpath)
+            .setClickableParentXindex(self.clickableParentXindex)
             .setHasListParent(self.hasListParent)
             .setViewContent(self.viewContent)
             .setPosition(self.position)
@@ -104,6 +106,7 @@
     }
 
     NSString *parentXpath = self.view.growingNodeUserInteraction ? self.xpath : self.clickableParentXpath;
+    NSString *parentXindex = self.view.growingNodeUserInteraction ? self.xindex : self.clickableParentXindex;
     NSString *content = view.growingNodeContent;
 
     return GrowingViewNode.builder.setView(view)
@@ -112,6 +115,7 @@
         .setXindex([self.originxindex stringByAppendingFormat:@"/%@", view.growingNodeSubSimilarIndex])
         .setOriginXindex([self.originxindex stringByAppendingFormat:@"/%@", view.growingNodeSubIndex])
         .setClickableParentXpath(parentXpath)
+        .setClickableParentXindex(parentXindex)
         .setHasListParent(haslistParent)
         .setViewContent(content ? [content growingHelper_safeSubStringWithLength:50] : nil)
         .setPosition((int)view.growingNodeKeyIndex)
@@ -158,18 +162,28 @@
         return self;
     };
 }
+
+- (GrowingViewNodeBuilder * (^)(NSString *value))setClickableParentXindex {
+    return ^(NSString *value) {
+        self->_clickableParentXindex = value;
+        return self;
+    };
+}
+
 - (GrowingViewNodeBuilder * (^)(int value))setIndex {
     return ^(int value) {
         self->_index = value;
         return self;
     };
 }
+
 - (GrowingViewNodeBuilder * (^)(int value))setPosition {
     return ^(int value) {
         self->_position = value;
         return self;
     };
 }
+
 - (GrowingViewNodeBuilder * (^)(long long value))setTimestamp {
     return ^(long long value) {
         self->_timestamp = value;
@@ -183,6 +197,7 @@
         return self;
     };
 }
+
 - (GrowingViewNodeBuilder * (^)(NSString *value))setNodeType {
     return ^(NSString *value) {
         self->_nodeType = value;

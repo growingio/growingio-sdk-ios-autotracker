@@ -42,8 +42,8 @@
     NSString *pagexindex = pathInfo[@"xindex"];
     GrowingViewElementBuilder *builder = GrowingViewElementEvent.builder.setEventType(GrowingEventTypeViewChange)
                                              .setPath(@"")
-                                             .setXpath([NSString stringWithFormat:@"%@%@", pagexpath, node.xpath])
-                                             .setXindex([NSString stringWithFormat:@"%@%@", pagexindex, node.xindex])
+                                             .setXpath([NSString stringWithFormat:@"%@/%@", pagexpath, node.xpath])
+                                             .setXindex([NSString stringWithFormat:@"%@/%@", pagexindex, node.xindex])
                                              .setIndex(node.index)
                                              .setTextValue(node.viewContent);
 

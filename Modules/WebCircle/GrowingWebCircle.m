@@ -145,19 +145,24 @@ GrowingMod(GrowingWebCircle)
 
 - (NSMutableDictionary *)dictFromNode:(GrowingViewNode *)node {
     GrowingPage *page = [[GrowingPageManager sharedInstance] findPageByView:node.view];
+    GrowingPage *autotrackPage = [GrowingPageManager.sharedInstance findAutotrackPageByPage:page];
     if (!page) {
         self.isPageDontShow = YES;
         GIOLogDebug(@"[GrowingWebCircle] page of view %@ not found", node.view);
     }
+    NSDictionary *pathInfo = page.pathInfo;
+    NSString *pagexpath = pathInfo[@"xpath"];
+    NSString *pagexindex = pathInfo[@"xindex"];
     GrowingWebCircleElement *element = GrowingWebCircleElement.builder.setRect(node.view.growingNodeFrame)
                                            .setContent(node.viewContent)
                                            .setZLevel(self.zLevel++)
                                            .setIndex(node.index)
-                                           .setXpath(node.xpath)
-                                           .setXindex(node.xindex)
-                                           .setParentXpath(node.clickableParentXpath)
+                                           .setXpath([NSString stringWithFormat:@"%@%@", pagexpath, node.xpath])
+                                           .setXindex([NSString stringWithFormat:@"%@%@", pagexindex, node.xindex])
+                                           .setParentXpath([NSString stringWithFormat:@"%@%@", pagexpath, node.clickableParentXpath])
+                                           .setParentXindex([NSString stringWithFormat:@"%@%@", pagexpath, node.clickableParentXindex])
                                            .setNodeType(node.nodeType)
-                                           .setPage(page.alias)
+                                           .setPage(autotrackPage ? autotrackPage.alias : @"")
                                            .build;
 
     return [NSMutableDictionary dictionaryWithDictionary:element.toDictionary];
@@ -258,8 +263,8 @@ GrowingMod(GrowingWebCircle)
                                    .setIndex(-1)
                                    .setViewContent([GrowingNodeHelper buildElementContentForNode:topwindow])
                                    .setXpath(topwindow.growingNodeSubPath)
-                                   .setXindex(topwindow.growingNodeSubIndex)
-                                   .setOriginXindex(topwindow.growingNodeSubSimilarIndex)
+                                   .setXindex(topwindow.growingNodeSubSimilarIndex)
+                                   .setOriginXindex(topwindow.growingNodeSubIndex)
                                    .setNodeType([GrowingNodeHelper getViewNodeType:topwindow])
                                    .build];
         if (self.isPageDontShow) {
