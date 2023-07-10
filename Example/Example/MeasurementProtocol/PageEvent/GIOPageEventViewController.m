@@ -8,6 +8,7 @@
 
 #import "GIOPageEventViewController.h"
 #import "GIOContainerViewController.h"
+#import "GrowingAutotrackPageViewController.h"
 
 @interface GIOPageEventViewController ()
 
@@ -17,19 +18,38 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    switch (indexPath.row) {
+        case 0: {
+            GrowingAutotrackPageViewController *controller = [[GrowingAutotrackPageViewController alloc] init];
+            controller.type = GrowingDemoAutotrackPageTypeDefault;
+            [self.navigationController pushViewController:controller animated:YES];
+        } break;
+        case 1: {
+            GrowingAutotrackPageViewController *controller = [[GrowingAutotrackPageViewController alloc] init];
+            controller.type = GrowingDemoAutotrackPageTypeDelay;
+            [self.navigationController pushViewController:controller animated:YES];
+        } break;
+        case 2: {
+            GrowingAutotrackPageViewController *controller = [[GrowingAutotrackPageViewController alloc] init];
+            controller.type = GrowingDemoAutotrackPageTypeNotViewDidAppear;
+            [self.navigationController pushViewController:controller animated:YES];
+        } break;
+        case 3: {
+            GrowingAutotrackPageViewController *controller = [[GrowingAutotrackPageViewController alloc] init];
+            controller.type = GrowingDemoAutotrackPageTypeDelayNotViewDidAppear;
+            [self.navigationController pushViewController:controller animated:YES];
+        } break;
+        case 4: {
+            // 参考：https://onevcat.com/2012/02/uiviewcontroller/
+            GIOContainerViewController *container = [GIOContainerViewController new];
+            [self.navigationController pushViewController:container animated:YES];
+        } break;
+        default:
+            break;
+    }
 }
-
-//参考：https://onevcat.com/2012/02/uiviewcontroller/
-- (IBAction)toViewControllerWhichContainTwoChildControllers:(id)sender {
-    GIOContainerViewController *container = [GIOContainerViewController new];
-    [self.navigationController pushViewController:container animated:YES];
-}
-
 
 @end

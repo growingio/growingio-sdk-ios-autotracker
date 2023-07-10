@@ -161,6 +161,7 @@
 		34BF77CB279562AC00CA18BA /* ManualTrackHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962653224DA66B600032551 /* ManualTrackHelper.m */; };
 		34C0BF3A277EA7C90047ADC4 /* DataTrafficTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C0BF39277EA7C90047ADC4 /* DataTrafficTest.m */; };
 		34C0BF3D277EA9BA0047ADC4 /* MobileDebuggerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C0BF3C277EA9BA0047ADC4 /* MobileDebuggerTest.m */; };
+		34ECFDBF2A5C082A0059F87C /* GrowingAutotrackPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34ECFDBE2A5C082A0059F87C /* GrowingAutotrackPageViewController.m */; };
 		46B566A91FF28564AA03491F /* Pods_ProtobufTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E2C01C3AC89773BC3F4BE1 /* Pods_ProtobufTests.framework */; };
 		4916270F24E157BB00444AF2 /* GIOPresentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916270E24E157BB00444AF2 /* GIOPresentViewController.m */; };
 		4916271224E157CF00444AF2 /* GIOPagingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916271124E157CF00444AF2 /* GIOPagingViewController.m */; };
@@ -383,6 +384,8 @@
 		34BF77C52795568B00CA18BA /* GrowingKeyChainTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingKeyChainTest.m; sourceTree = "<group>"; };
 		34C0BF39277EA7C90047ADC4 /* DataTrafficTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DataTrafficTest.m; sourceTree = "<group>"; };
 		34C0BF3C277EA9BA0047ADC4 /* MobileDebuggerTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MobileDebuggerTest.m; sourceTree = "<group>"; };
+		34ECFDBD2A5C082A0059F87C /* GrowingAutotrackPageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GrowingAutotrackPageViewController.h; sourceTree = "<group>"; };
+		34ECFDBE2A5C082A0059F87C /* GrowingAutotrackPageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GrowingAutotrackPageViewController.m; sourceTree = "<group>"; };
 		3D63F725A31AE372B485C361 /* Pods-HostApplicationTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HostApplicationTests.debug.xcconfig"; path = "Target Support Files/Pods-HostApplicationTests/Pods-HostApplicationTests.debug.xcconfig"; sourceTree = "<group>"; };
 		42ADE26B250B292900CA7268 /* HybridTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HybridTest.m; sourceTree = "<group>"; };
 		42F5EA0EFE2552358C35A0F5 /* Pods_HostApplicationTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HostApplicationTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -580,6 +583,8 @@
 				046530F924DD4271002D254C /* GIOFirstViewController.m */,
 				046530F624DD4271002D254C /* GIOSecondViewController.h */,
 				046530FA24DD4271002D254C /* GIOSecondViewController.m */,
+				34ECFDBD2A5C082A0059F87C /* GrowingAutotrackPageViewController.h */,
+				34ECFDBE2A5C082A0059F87C /* GrowingAutotrackPageViewController.m */,
 			);
 			path = PageEvent;
 			sourceTree = "<group>";
@@ -2239,6 +2244,7 @@
 				349F1489285B503B00437F53 /* GIOH5BrowserViewController.m in Sources */,
 				0465314424DD4272002D254C /* GIOMeasurementProtocolTableViewController.m in Sources */,
 				0465314024DD4272002D254C /* GIOKeyValueCell.m in Sources */,
+				34ECFDBF2A5C082A0059F87C /* GrowingAutotrackPageViewController.m in Sources */,
 				0465314D24DD4272002D254C /* AppDelegate.m in Sources */,
 				0465315024DD4272002D254C /* GIOCollectionViewController.m in Sources */,
 				0465315424DD4272002D254C /* GIOSimpleUIElemtsViewController.m in Sources */,
