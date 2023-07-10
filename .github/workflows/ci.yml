@@ -24,9 +24,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Force Xcode 13.4.1
-        run: sudo xcode-select -switch /Applications/Xcode_13.4.1.app
-
       - name: Cache cocoapods
         uses: actions/cache@v3
         with:
