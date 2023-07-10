@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface GIOPageEventViewController : UIViewController
+@interface GIOPageEventViewController : UITableViewController
 
 @end

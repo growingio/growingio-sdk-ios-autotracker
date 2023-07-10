@@ -74,6 +74,9 @@
             enumerateObjectsWithOptions:NSEnumerationReverse
                              usingBlock:^(GrowingPage *page, NSUInteger idx, BOOL *_Nonnull stop) {
                                  if (page.carrier == controller) {
+                                     if (page.parent != nil) {
+                                         [page.parent removeChildrenPage:page];
+                                     }
                                      [self.visiablePages removePointerAtIndex:idx];
                                  }
                              }];
@@ -163,8 +166,9 @@
 
     GrowingPage *page = controller.growingPageObject;
     if (!page) {
-        // 一般来说，page对象在viewDidAppear时就已创建
-        // 此处兼容viewDidAppear未执行的特殊情况，比如：
+        // 执行到此，执行流程大概是view -> findPageByView -> findPageByViewController
+        // view所在viewcontroller必定到了viewDidAppear生命周期
+        // 一般来说，page对象在viewDidAppear时就已创建，此处兼容page对象未生成的特殊情况，比如：
         // 用户未在自定义的ViewController viewDidAppear中调用super viewDidAppear
         page = [self createdPage:controller];
     }
@@ -186,6 +190,13 @@
 
     BOOL needAutotrackPage = NO;
     GrowingPage *page = controller.growingPageObject;
+    if (!page) {
+        // 如果没有page对象，那么可能是(1)controller还未执行到viewDidAppear；
+        // (2)controller到了viewDidAppear但未生成page对象，这里兼容(2)
+        if (controller.isViewLoaded && controller.view.window) {
+            page = [self createdPage:controller];
+        }
+    }
     if (page && !page.isAutotrack) {
         // 当前页面已经进入viewDidAppear，但未发送过PAGE事件，需要补发
         needAutotrackPage = YES;
