@@ -130,7 +130,6 @@
                                    .setUrlScheme(@"growing.xxxxxx")
                                    .setAppState(GrowingAppStateForeground)
                                    .setEventSequenceId(999)
-                                   .setExtraParams(@{@"dataSourceId": @"123456", @"gioId": @"654321"})
                                    .setNetworkState(@"5G")
                                    .setScreenHeight(1334)
                                    .setScreenWidth(750)
@@ -144,6 +143,7 @@
                                    .setLongitude(32.22)
                                    .setSdkVersion(@"3.3.3")
                                    .setUserKey(@"iPhone")
+                                   .setDataSourceId(@"1234567890")
                                    .build);
     NSString *uuid = [NSUUID UUID].UUIDString;
     GrowingEventJSONPersistence *persistenceIn = [GrowingEventJSONPersistence persistenceEventWithEvent:event
@@ -192,6 +192,8 @@
     XCTAssertEqualObjects(event.sdkVersion ?: @"", jsonObject[@"sdkVersion"]);
     // 3.3.0
     XCTAssertEqualObjects(event.userKey ?: @"", jsonObject[@"userKey"]);
+    // 3.5.0
+    XCTAssertEqualObjects(event.dataSourceId ?: @"", jsonObject[@"dataSourceId"]);
     // CUSTOM
     XCTAssertEqualObjects(event.eventName ?: @"", jsonObject[@"eventName"]);
     XCTAssertEqualObjects(event.attributes ?: @{}, jsonObject[@"attributes"]);
