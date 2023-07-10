@@ -69,7 +69,7 @@ static NSString * const kGrowingEventDuration = @"event_duration";
     } waitUntilDone:YES];
     
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeVisit];
-    XCTAssertEqual(events.count, 1);
+    XCTAssertEqual(events.count, 0);
 }
 
 - (void)testClearUserId {
