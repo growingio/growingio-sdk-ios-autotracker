@@ -136,8 +136,6 @@
                                                        .setUrlScheme(@"growing.xxxxxx")
                                                        .setAppState(GrowingAppStateForeground)
                                                        .setEventSequenceId(999)
-                                                       .setExtraParams(@{@"dataSourceId" : @"123456",
-                                                                         @"gioId" : @"654321"})
                                                        .setNetworkState(@"5G")
                                                        .setScreenHeight(1334)
                                                        .setScreenWidth(750)
@@ -183,7 +181,6 @@
     XCTAssertEqualObjects(event.urlScheme ?: @"", protobuf.URLScheme);
     XCTAssertEqualObjects((event.appState == GrowingAppStateForeground ? @"FOREGROUND" : @"BACKGROUND"), protobuf.appState);
     XCTAssertEqual(event.eventSequenceId, protobuf.eventSequenceId);
-    XCTAssertEqualObjects(event.dataSourceId, protobuf.dataSourceId);
     // 3.2.0
     XCTAssertEqualObjects(event.networkState ?: @"", protobuf.networkState);
     XCTAssertEqualObjects(event.appChannel ?: @"", protobuf.appChannel);
@@ -200,6 +197,9 @@
     XCTAssertEqualObjects(event.sdkVersion ?: @"", protobuf.sdkVersion);
     // 3.3.0
     XCTAssertEqualObjects(event.userKey ?: @"", protobuf.userKey);
+    // 3.5.0
+    XCTAssertEqualObjects(event.dataSourceId ?: @"", protobuf.dataSourceId);
+    // CUSTOM
     XCTAssertEqual(GrowingPBEventType_Custom, protobuf.eventType);
     XCTAssertEqualObjects(event.eventName ?: @"", protobuf.eventName);
     XCTAssertEqualObjects(event.attributes ?: @{}, protobuf.attributes);
