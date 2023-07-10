@@ -21,6 +21,7 @@
 #import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingAutotrackEventType.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
+#import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
 
 static NSString * const kGrowingEventDuration = @"event_duration";
 
@@ -34,6 +35,9 @@ static NSString * const kGrowingEventDuration = @"event_duration";
 @implementation A0GrowingAnalyticsTest
 
 + (void)setUp {
+    [[GrowingPersistenceDataProvider sharedInstance] setLoginUserId:nil];
+    [[GrowingPersistenceDataProvider sharedInstance] setLoginUserKey:nil];
+    
     GrowingAutotrackConfiguration *configuration = [GrowingAutotrackConfiguration configurationWithProjectId:@"test"];
     configuration.dataSourceId = @"test";
     configuration.idMappingEnabled = YES;

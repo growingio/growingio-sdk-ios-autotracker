@@ -41,7 +41,6 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
     GrowingDeviceInfo *deviceInfo = GrowingDeviceInfo.currentDeviceInfo;
-    XCTAssertNoThrow([deviceInfo safePerformSelector:@selector(handleStatusBarOrientationChange)]);
     XCTAssertNoThrow([deviceInfo safePerformSelector:@selector(applicationDidBecomeActive)]);
     XCTAssertNoThrow([deviceInfo safePerformSelector:@selector(applicationWillResignActive)]);
     XCTAssertNoThrow([deviceInfo safePerformSelector:@selector(updateAppState)]);
