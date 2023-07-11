@@ -36,9 +36,11 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
     NSMutableArray *originxindexArray = [NSMutableArray array];
     BOOL isSimilar = YES;
     while (node && [node isKindOfClass:[UIView class]]) {
-        if (node.growingNodeSubPath == nil) {
+        if (node.growingNodeSubPath == nil || [self isIgnoredPrivateView:node]) {
+            node = node.growingNodeParent;
             continue;
         }
+        
         [viewPathArray addObject:node.growingNodeSubPath];
         [originxindexArray addObject:node.growingNodeSubIndex];
         if (isSimilar) {
@@ -110,7 +112,9 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
 
     id<GrowingNode> parent = view;
     do {
-        [weakArray addPointer:(void *)parent];
+        if (![self isIgnoredPrivateView:parent]) {
+            [weakArray addPointer:(void *)parent];
+        }
         parent = parent.growingNodeParent;
     } while ([parent isKindOfClass:[UIView class]]);
 
@@ -123,6 +127,11 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
         .setOriginXindex(rootview.growingNodeSubIndex)
         .setNodeType([self getViewNodeType:rootview])
         .build;
+}
+
++ (BOOL)isIgnoredPrivateView:(id<GrowingNode>)view {
+    NSArray <NSString *>*ignoredViews = @[@"_UIAlertControllerPhoneTVMacView", @"_UIAlertControllerView", @"UITableViewWrapperView"];
+    return [ignoredViews containsObject:NSStringFromClass(view.class)];
 }
 
 // 文本
