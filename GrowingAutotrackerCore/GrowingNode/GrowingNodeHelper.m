@@ -40,7 +40,7 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
             node = node.growingNodeParent;
             continue;
         }
-        
+
         [viewPathArray addObject:node.growingNodeSubPath];
         [originxindexArray addObject:node.growingNodeSubIndex];
         if (isSimilar) {
@@ -130,7 +130,8 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
 }
 
 + (BOOL)isIgnoredPrivateView:(id<GrowingNode>)view {
-    NSArray <NSString *>*ignoredViews = @[@"_UIAlertControllerPhoneTVMacView", @"_UIAlertControllerView", @"UITableViewWrapperView"];
+    NSArray<NSString *> *ignoredViews =
+        @[@"_UIAlertControllerPhoneTVMacView", @"_UIAlertControllerView", @"UITableViewWrapperView"];
     return [ignoredViews containsObject:NSStringFromClass(view.class)];
 }
 
