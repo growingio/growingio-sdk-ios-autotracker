@@ -22,8 +22,6 @@
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 
-static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\\[]{},.<>/?";
-
 @implementation NSString (GrowingHelper)
 
 - (NSString *)growingHelper_safeSubStringWithLength:(NSInteger)length {
@@ -73,23 +71,6 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\\[]{}
     return output;
 }
 
-- (BOOL)growingHelper_isLegal {
-    if (self.length != 1) {
-        return NO;
-    }
-
-    unichar character = [self characterAtIndex:0];
-
-    BOOL isNum = isdigit(character);
-    BOOL isLetter = (character >= 'a' && character <= 'z') || (character >= 'A' && character <= 'Z');
-    BOOL isSpecialCharacter = ([kGrowingSpecialCharactersString rangeOfString:self].location != NSNotFound);
-    if (isNum || isLetter || isSpecialCharacter) {
-        return YES;
-    } else {
-        return NO;
-    }
-}
-
 - (BOOL)growingHelper_isValidU {
     if (!self.length) {
         return NO;
@@ -106,14 +87,6 @@ static NSString *const kGrowingSpecialCharactersString = @"_!@#$%^&*()-=+|\\[]{}
     }
 
     return NO;
-}
-
-- (NSString *)growingHelper_encryptString {
-    if ([GrowingDeviceInfo currentDeviceInfo].encryptStringBlock) {
-        return [GrowingDeviceInfo currentDeviceInfo].encryptStringBlock(self);
-    } else {
-        return self;
-    }
 }
 
 - (instancetype)initWithJsonObject_growingHelper:(id)obj {

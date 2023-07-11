@@ -66,33 +66,6 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
     }
 }
 
-+ (NSString *)buildElementContentForNode:(id<GrowingNode> _Nullable)view {
-    NSString *content = [view growingNodeContent];
-    if (!content) {
-        content = @"";
-    } else if ([content isKindOfClass:NSDictionary.class]) {
-        content = [[(NSDictionary *)content allValues] componentsJoinedByString:@""];
-    } else if ([content isKindOfClass:NSArray.class]) {
-        content = [(NSArray *)content componentsJoinedByString:@""];
-    } else {
-        content = content.description;
-    }
-
-    if (![content isKindOfClass:NSString.class]) {
-        content = @"";
-    }
-
-    content = [content growingHelper_safeSubStringWithLength:100];
-
-    if (content.growingHelper_isLegal) {
-        content = @"";
-    } else {
-        content = content.growingHelper_encryptString;
-    }
-
-    return content;
-}
-
 + (GrowingViewNode *)getViewNode:(UIView *)view {
     NSPointerArray *weakArray = [NSPointerArray weakObjectsPointerArray];
     GrowingViewNode *viewNode = [self getTopViewNode:view array:weakArray];
@@ -121,7 +94,7 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
     UIView *rootview = [weakArray pointerAtIndex:weakArray.count - 1];
     return GrowingViewNode.builder.setView(rootview)
         .setIndex(-1)
-        .setViewContent([self buildElementContentForNode:rootview])
+        .setViewContent(rootview.growingNodeContent)
         .setXpath(rootview.growingNodeSubPath)
         .setXindex(rootview.growingNodeSubSimilarIndex)
         .setOriginXindex(rootview.growingNodeSubIndex)

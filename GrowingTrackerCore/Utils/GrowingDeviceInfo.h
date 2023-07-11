@@ -39,7 +39,6 @@
 @property (nonatomic, readonly, assign) int appState;
 @property (nonatomic, readonly, assign) CGFloat screenWidth;
 @property (nonatomic, readonly, assign) CGFloat screenHeight;
-@property (nonatomic, copy) NSString * (^encryptStringBlock)(NSString *string);
 
 + (instancetype)currentDeviceInfo;
 + (void)configUrlScheme:(NSString *)urlScheme;

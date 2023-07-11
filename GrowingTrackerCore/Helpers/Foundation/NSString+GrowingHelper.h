@@ -33,12 +33,7 @@
 
 - (NSString *)growingHelper_sha1;
 
-- (BOOL)growingHelper_isLegal;
-
 - (BOOL)growingHelper_isValidU;
-
-// 若用户设置加密method 则返回加密后的string,否则返回原值
-- (NSString *)growingHelper_encryptString;
 
 - (instancetype)initWithJsonObject_growingHelper:(id)obj;
 

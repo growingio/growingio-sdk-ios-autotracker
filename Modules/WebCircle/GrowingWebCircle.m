@@ -264,7 +264,7 @@ GrowingMod(GrowingWebCircle)
         self.isPageDontShow = NO;
         [self traverseViewNode:GrowingViewNode.builder.setView(topwindow)
                                    .setIndex(-1)
-                                   .setViewContent([GrowingNodeHelper buildElementContentForNode:topwindow])
+                                   .setViewContent(topwindow.growingNodeContent)
                                    .setXpath(topwindow.growingNodeSubPath)
                                    .setXindex(topwindow.growingNodeSubSimilarIndex)
                                    .setOriginXindex(topwindow.growingNodeSubIndex)
