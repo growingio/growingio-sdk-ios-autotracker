@@ -26,9 +26,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)recalculateXpath:(UIView *)view
                    block:(void (^)(NSString *xpath, NSString *xindex, NSString *originxindex))block;
-
-+ (NSString *)buildElementContentForNode:(id<GrowingNode> _Nullable)view;
-
 + (GrowingViewNode *)getViewNode:(UIView *)view;
 + (NSString *)getViewNodeType:(UIView *)view;
 
