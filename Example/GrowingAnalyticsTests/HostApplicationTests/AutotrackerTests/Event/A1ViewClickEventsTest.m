@@ -57,7 +57,7 @@
         XCTAssertEqualObjects(dic[@"textValue"], @"取消");
         XCTAssertEqualObjects(dic[@"xpath"],
             @"/UITabBarController/UINavigationController/GIOLabelAttributeViewController/UIView/_UIAlertControllerInterfaceActionGroupView/UIView/_UIInterfaceActionRepresentationsSequenceView/_UIInterfaceActionSeparatableSequenceView/UIStackView/_UIInterfaceActionCustomViewRepresentationView/Button");
-        XCTAssertEqualObjects(dic[@"xindex"], @"/0/1/0/0/0/0/0/0/0/0/1/0");
+        XCTAssertEqualObjects(dic[@"xindex"], @"/0/1/0/0/0/0/0/0/0/1/0");
     }
 
     {

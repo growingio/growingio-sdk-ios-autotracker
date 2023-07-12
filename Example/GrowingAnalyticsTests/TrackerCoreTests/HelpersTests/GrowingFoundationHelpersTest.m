@@ -89,9 +89,7 @@
     [a growingHelper_queryObject];
     [a growingHelper_safeSubStringWithLength:1];
     [a growingHelper_sha1];
-    [a growingHelper_isLegal];
     [a growingHelper_isValidU];
-    [a growingHelper_encryptString];
     XCTAssertNotNil([[NSString alloc] initWithJsonObject_growingHelper:@{@"key" : @"value"}]);
     XCTAssertFalse([NSString growingHelper_isBlankString:@"t"]);
     a = [@"https://www.baidu.com" growingHelper_absoluteURLStringWithPath:@"path" andQuery:@{@"key" : @"value"}];
