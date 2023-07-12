@@ -30,6 +30,8 @@
 #import "GrowingAutotrackerCore/GrowingNode/Category/UISegmentedControl+GrowingNode.h"
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingAutotrackConfiguration+Private.h"
+#import "GrowingAutotrackerCore/GrowingNode/Category/UIAlertController+GrowingNode.h"
+#import "GrowingAutotrackerCore/GrowingNode/Category/UISegmentedControl+GrowingNode.h"
 #import "GrowingAutotrackerCore/Impression/GrowingImpressionTrack.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
@@ -51,6 +53,8 @@
     if (self) {
         if (self.configuration.autotrackEnabled) {
             [self addAutoTrackSwizzles];
+            [GrowingAlertVCActionView addAutoTrackSwizzles];
+            [GrowingSegmentButton addAutoTrackSwizzles];
             [GrowingULViewControllerLifecycle setup];
             [GrowingPageManager.sharedInstance start];
             [GrowingImpressionTrack.sharedInstance start];
