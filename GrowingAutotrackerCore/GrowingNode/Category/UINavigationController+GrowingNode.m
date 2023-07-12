@@ -21,7 +21,6 @@
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIApplication+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UINavigationController+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
-#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 
 @implementation UINavigationController (GrowingNode)
 
