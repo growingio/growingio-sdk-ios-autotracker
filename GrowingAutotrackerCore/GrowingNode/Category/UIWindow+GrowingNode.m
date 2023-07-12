@@ -18,7 +18,6 @@
 //  limitations under the License.
 
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIWindow+GrowingNode.h"
-#import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
 
 @implementation UIWindow (GrowingNode)
 

@@ -27,6 +27,4 @@
 
 + (void)addAutoTrackSwizzles;
 
-+ (void)addAutoTrackSwizzles;
-
 @end

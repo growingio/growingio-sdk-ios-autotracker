@@ -47,7 +47,6 @@
         _nodeType = builder.nodeType;
         _index = builder.index;
         _position = builder.position;
-        _timestamp = builder.timestamp;
         _hasListParent = builder.hasListParent;
         _needRecalculate = builder.needRecalculate;
         if (_needRecalculate) {
@@ -180,13 +179,6 @@
 - (GrowingViewNodeBuilder * (^)(int value))setPosition {
     return ^(int value) {
         self->_position = value;
-        return self;
-    };
-}
-
-- (GrowingViewNodeBuilder * (^)(long long value))setTimestamp {
-    return ^(long long value) {
-        self->_timestamp = value;
         return self;
     };
 }

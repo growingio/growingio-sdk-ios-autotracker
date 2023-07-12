@@ -18,16 +18,13 @@
 //  limitations under the License.
 
 #import "GrowingAutotrackerCore/Autotrack/GrowingPropertyDefine.h"
-#import "GrowingAutotrackerCore/Autotrack/UITableView+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/Autotrack/UITapGestureRecognizer+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingAutotrackConfiguration+Private.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIApplication+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingAutotrackerCore/Impression/GrowingImpressionTrack.h"
-#import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
-#import "GrowingTrackerCore/Public/GrowingBaseEvent.h"
 
 @implementation UIView (GrowingNode)
 

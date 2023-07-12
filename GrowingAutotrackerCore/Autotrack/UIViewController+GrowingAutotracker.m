@@ -19,9 +19,7 @@
 
 #import <objc/runtime.h>
 #import "GrowingAutotrackerCore/Autotrack/GrowingPropertyDefine.h"
-#import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/Page/GrowingPage.h"
-#import "GrowingAutotrackerCore/Public/GrowingAutotrackConfiguration.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
 #import "GrowingULViewControllerLifecycle.h"

@@ -39,7 +39,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign, readonly) int index;
 // 视图在父节点的排序index，称之为position,例如UIView下的第一个UIButton,postion=0
 @property (nonatomic, assign, readonly) int position;
-@property (nonatomic, assign, readonly) long long timestamp;
 @property (nonatomic, assign, readonly) BOOL hasListParent;
 // 当圈选时，从上至下的路径不一定和正常事件(从下至上)的路径一致，我们需要从新计算xpath
 @property (nonatomic, assign, readonly) BOOL needRecalculate;
@@ -71,7 +70,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign, readonly) int index;
 // 视图在父节点的排序index，称之为position,例如UIView下的第一个UIButton,postion=0
 @property (nonatomic, assign, readonly) int position;
-@property (nonatomic, assign, readonly) long long timestamp;
 @property (nonatomic, assign, readonly) BOOL hasListParent;
 @property (nonatomic, assign, readonly) BOOL needRecalculate;
 
@@ -83,7 +81,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (GrowingViewNodeBuilder * (^)(NSString *value))setClickableParentXindex;
 - (GrowingViewNodeBuilder * (^)(int value))setIndex;
 - (GrowingViewNodeBuilder * (^)(int value))setPosition;
-- (GrowingViewNodeBuilder * (^)(long long value))setTimestamp;
 - (GrowingViewNodeBuilder * (^)(NSString *value))setViewContent;
 - (GrowingViewNodeBuilder * (^)(NSString *value))setNodeType;
 - (GrowingViewNodeBuilder * (^)(BOOL value))setHasListParent;
