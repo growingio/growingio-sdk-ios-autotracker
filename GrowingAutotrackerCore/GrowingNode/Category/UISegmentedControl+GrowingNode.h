@@ -25,4 +25,6 @@
 /// 用于圈选，圈选UISegement
 @interface GrowingSegmentButton : UIView
 
++ (void)addAutoTrackSwizzles;
+
 @end

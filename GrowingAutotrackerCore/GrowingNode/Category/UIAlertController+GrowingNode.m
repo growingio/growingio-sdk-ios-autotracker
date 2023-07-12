@@ -51,13 +51,13 @@
 
 @implementation GrowingAlertVCActionView
 
-+ (void)load {
++ (void)addAutoTrackSwizzles {
     unsigned int count = 0;
     Method *methods = class_copyMethodList(self, &count);
     NSMutableArray *classes = [[NSMutableArray alloc] init];
     NSArray *classNames = @[
-        [NSString stringWithFormat:@"_UI%@Controller%@", @"Alert", @"CollectionViewCell"],
-        [NSString stringWithFormat:@"_UI%@Controller%@View", @"Alert", @"Action"]
+        [NSString stringWithFormat:@"_UI%@Controller%@", @"Alert", @"CollectionViewCell"],  // iOS 9
+        [NSString stringWithFormat:@"_UI%@Controller%@View", @"Alert", @"Action"]           // iOS 10(+)
     ];
     for (NSString *clsname in classNames) {
         Class clazz = NSClassFromString(clsname);

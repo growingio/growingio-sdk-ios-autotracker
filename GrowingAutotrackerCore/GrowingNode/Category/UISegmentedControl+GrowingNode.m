@@ -40,8 +40,7 @@
 
 @implementation GrowingSegmentButton
 
-+ (void)load {
-    //    metamacro_foreach(GrowingCategoryBindCheckName, ,__VA_ARGS__ )
++ (void)addAutoTrackSwizzles {
     unsigned int count = 0;
     Method *methods = class_copyMethodList(self, &count);
     NSMutableArray *classes = [[NSMutableArray alloc] init];
