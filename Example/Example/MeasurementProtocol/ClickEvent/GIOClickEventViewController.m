@@ -25,11 +25,6 @@
 #if defined(AUTOTRACKER)
 #if defined(SDK3rd)
     [[GrowingAutotracker sharedInstance] autotrackPage:self alias:@"点击事件测试" attributes:@{@"greet": @"hello"}];
-#endif
-#endif
-    
-#if defined(AUTOTRACKER)
-#if defined(SDK3rd)
     self.segmentControl.growingUniqueTag = @"language-selector";
     [self.sendEventButton growingTrackImpression:@"hello_track_impression"];
     [self.view growingTrackImpression:@"self_view_imp_track" attributes:@{@"self_view_key": @"self_view_value"}];

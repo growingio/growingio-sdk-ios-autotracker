@@ -108,31 +108,6 @@ static NSString * const kGrowingEventDuration = @"event_duration";
     [self waitForExpectationsWithTimeout:10.0f handler:nil];
 }
 
-//- (void)testSetConversionVariables {
-//    {
-//        [[GrowingAutotracker sharedInstance] setConversionVariables:@{@"key" : @"value"}];
-//        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeConversionVariables];
-//        XCTAssertEqual(events.count, 1);
-//
-//        GrowingConversionVariableEvent *event = (GrowingConversionVariableEvent *)events.firstObject;
-//        XCTAssertEqualObjects(event.attributes[@"key"], @"value");
-//    }
-//
-//    {
-//        [MockEventQueue.sharedQueue cleanQueue];
-//#pragma clang diagnostic push
-//#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
-//#pragma clang diagnostic ignored "-Wobjc-literal-conversion"
-//        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setConversionVariables:nil]);
-//        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setConversionVariables:@"value"]);
-//        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setConversionVariables:@{@1 : @"value"}]);
-//        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setConversionVariables:@{@"key" : @1}]);
-//#pragma clang diagnostic pop
-//        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeConversionVariables];
-//        XCTAssertEqual(events.count, 0);
-//    }
-//}
-
 - (void)testSetLoginUserAttributes {
     {
         [[GrowingAutotracker sharedInstance] setLoginUserAttributes:@{@"key" : @"value"}];
@@ -157,31 +132,6 @@ static NSString * const kGrowingEventDuration = @"event_duration";
         XCTAssertEqual(events.count, 0);
     }
 }
-
-//- (void)testSetVisitorAttributes {
-//    {
-//        [[GrowingAutotracker sharedInstance] setVisitorAttributes:@{@"key" : @"value"}];
-//        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeVisitorAttributes];
-//        XCTAssertEqual(events.count, 1);
-//
-//        GrowingVisitorAttributesEvent *event = (GrowingVisitorAttributesEvent *)events.firstObject;
-//        XCTAssertEqualObjects(event.attributes[@"key"], @"value");
-//    }
-//
-//    {
-//        [MockEventQueue.sharedQueue cleanQueue];
-//#pragma clang diagnostic push
-//#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
-//#pragma clang diagnostic ignored "-Wobjc-literal-conversion"
-//        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setVisitorAttributes:nil]);
-//        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setVisitorAttributes:@"value"]);
-//        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setVisitorAttributes:@{@1 : @"value"}]);
-//        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setVisitorAttributes:@{@"key" : @1}]);
-//#pragma clang diagnostic pop
-//        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeVisitorAttributes];
-//        XCTAssertEqual(events.count, 0);
-//    }
-//}
 
 - (void)testTrackCustomEvent {
     {
@@ -752,6 +702,61 @@ static NSString * const kGrowingEventDuration = @"event_duration";
     });
     
     [self waitForExpectationsWithTimeout:3.0f handler:nil];
+}
+
+- (void)testAutotrackPageWithInvalidAliasTest {
+    UIViewController *controller = [[UIViewController alloc] init];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+    [[GrowingAutotracker sharedInstance] autotrackPage:nil alias:@"XCTest"];
+    [[GrowingAutotracker sharedInstance] autotrackPage:controller alias:nil];
+    [[GrowingAutotracker sharedInstance] autotrackPage:controller alias:@""];
+    [[GrowingAutotracker sharedInstance] autotrackPage:controller alias:@1];
+#pragma clang diagnostic pop
+    [controller viewDidAppear:NO];
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"testAutotrackPageWithInvalidAliasTest Test failed : timeout"];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
+        XCTAssertEqual(events.count, 0);
+
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:3.0f handler:nil];
+}
+
+- (void)testAutotrackPageWithInvalidAttributesTest {
+    UIViewController *controller = [[UIViewController alloc] init];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+#pragma clang diagnostic ignored "-Wobjc-literal-conversion"
+    [[GrowingAutotracker sharedInstance] autotrackPage:controller alias:@"XCTest" attributes:nil];
+    [[GrowingAutotracker sharedInstance] autotrackPage:controller alias:@"XCTest" attributes:@"value"];
+    [[GrowingAutotracker sharedInstance] autotrackPage:controller alias:@"XCTest" attributes:@{@1 : @"value"}];
+    [[GrowingAutotracker sharedInstance] autotrackPage:controller alias:@"XCTest" attributes:@{@"key" : @1}];
+#pragma clang diagnostic pop
+    [controller viewDidAppear:NO];
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"testAutotrackPageWithInvalidAttributesTest Test failed : timeout"];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
+        XCTAssertEqual(events.count, 0);
+
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:3.0f handler:nil];
+}
+
+- (void)testAutotrackPageInNotMainThreadTest {
+    {
+        UIViewController *controller = [[UIViewController alloc] init];
+        dispatch_sync(dispatch_get_global_queue(0, 0), ^{
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] autotrackPage:controller alias:@"XCTest"]);
+            XCTAssertNoThrow([[GrowingAutotracker sharedInstance] autotrackPage:controller alias:@"XCTest" attributes:@{@"key" : @"value"}]);
+        });
+    }
 }
 
 @end

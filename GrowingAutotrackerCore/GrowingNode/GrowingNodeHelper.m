@@ -79,10 +79,6 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
 }
 
 + (GrowingViewNode *)getTopViewNode:(UIView *)view array:(NSPointerArray *)weakArray {
-    if (weakArray == nil) {
-        weakArray = [NSPointerArray weakObjectsPointerArray];
-    }
-
     id<GrowingNode> parent = view;
     do {
         if (![self isIgnoredPrivateView:parent]) {

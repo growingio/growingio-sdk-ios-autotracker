@@ -23,7 +23,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+
     self.searchbartest.placeholder = @"搜索";
     self.searchbartest.accessibilityLabel = @"SearchBarTest";
     //[self.searchbartest resignFirstResponder];
@@ -32,7 +32,6 @@
     self.dataPickerOper.datePickerMode = UIDatePickerModeDate;
     self.dataPickerOper.accessibilityLabel = @"dataPickerOper";
     [self.dataPickerOper addTarget:self action:@selector(dateChange:) forControlEvents:UIControlEventValueChanged];
-    
 }
 
 - (void)didReceiveMemoryWarning {
