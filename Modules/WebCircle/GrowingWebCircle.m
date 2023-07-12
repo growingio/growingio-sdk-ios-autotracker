@@ -609,9 +609,6 @@ GrowingMod(GrowingWebCircle)
     [self _stopWithError:@"服务器链接失败"];
 }
 
-- (void)webSocket:(id<GrowingWebSocketService>)webSocket didReceivePong:(NSData *)pongPayload {
-}
-
 #pragma mark - GrowingWebViewDomChangedDelegate
 // Hybrid变动，重新发送dom tree
 - (void)webViewDomDidChanged {
