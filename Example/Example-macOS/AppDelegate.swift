@@ -29,9 +29,6 @@ import GrowingAnalytics
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-    
-
-
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Insert code here to initialize your application
         let config = GrowingTrackConfiguration(projectId: "bcc4fc9dea27f25d")

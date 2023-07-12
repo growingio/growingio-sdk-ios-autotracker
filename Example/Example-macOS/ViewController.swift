@@ -19,12 +19,7 @@
 
 
 import Cocoa
-
-#if canImport(GrowingAnalytics_cdp)
-import GrowingAnalytics_cdp
-#elseif canImport(GrowingAnalytics)
 import GrowingAnalytics
-#endif
 
 class ViewController: NSViewController {
 
@@ -71,18 +66,6 @@ class ViewController: NSViewController {
     
     @IBAction func sendLoginUserAttributesEventAction(_ sender: Any) {
         GrowingTracker.sharedInstance().setLoginUserAttributes(["key": "value"])
-    }
-    
-    @IBAction func sendConversionVariablesEventAction(_ sender: Any) {
-#if !canImport(GrowingAnalytics_cdp)
-        GrowingTracker.sharedInstance().setConversionVariables(["key": "value"])
-#endif
-    }
-    
-    @IBAction func sendVisitorAttributesEventAction(_ sender: Any) {
-#if !canImport(GrowingAnalytics_cdp)
-        GrowingTracker.sharedInstance().setVisitorAttributes(["key": "value"])
-#endif
     }
     
     @IBAction func startTimerAction(_ sender: Any) {
