@@ -38,7 +38,7 @@
 
 @end
 
-@implementation GrowingSegmentButton
+@implementation GrowingSegmentSwizzleHelper
 
 + (void)addAutoTrackSwizzles {
     unsigned int count = 0;

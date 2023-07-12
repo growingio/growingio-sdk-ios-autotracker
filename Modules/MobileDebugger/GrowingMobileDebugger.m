@@ -21,7 +21,6 @@
 #import <arpa/inet.h>
 #import <ifaddrs.h>
 #import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
-#import "GrowingTrackerCore/GrowingAttributesConst.h"
 #import "GrowingTrackerCore/GrowingRealTracker.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"

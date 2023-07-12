@@ -39,12 +39,6 @@
         lable = [segment performSelector:@selector(label)];
     }
 #pragma clang diagnostic pop
-#if DEBUG
-    else {
-        // hook 失败了
-        assert(0);
-    }
-#endif
     return lable;
 }
 

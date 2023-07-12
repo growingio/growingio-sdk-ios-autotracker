@@ -41,8 +41,6 @@
     self = [super initWithConfiguration:configuration launchOptions:launchOptions];
     if (self) {
         [self addAutoTrackSwizzles];
-        [GrowingAlertVCActionView addAutoTrackSwizzles];
-        [GrowingSegmentButton addAutoTrackSwizzles];
         [GrowingULViewControllerLifecycle setup];
         [GrowingPageManager.sharedInstance start];
         [GrowingImpressionTrack.sharedInstance start];
@@ -64,6 +62,7 @@
         }
 
         // UISegmentControl
+        [GrowingSegmentSwizzleHelper addAutoTrackSwizzles];
         NSError *segmentControlError = NULL;
         [UISegmentedControl growingul_swizzleMethod:@selector(initWithCoder:)
                                          withMethod:@selector(growing_initWithCoder:)
@@ -109,7 +108,7 @@
             GIOLogError(@"Failed to swizzle ListView. Details: %@", listViewError);
         }
 
-        // UITapGesture
+        // UITapGestureRecognizer
         NSError *gestureError = NULL;
         [UITapGestureRecognizer growingul_swizzleMethod:@selector(initWithCoder:)
                                              withMethod:@selector(growing_initWithCoder:)
@@ -122,6 +121,7 @@
         }
 
         // UIAlertController
+        [GrowingAlertSwizzleHelper addAutoTrackSwizzles];
         SEL oldDismissActionSEL =
             NSSelectorFromString([NSString stringWithFormat:@"_%@:%@:", @"dismissAnimated", @"triggeringAction"]);
 

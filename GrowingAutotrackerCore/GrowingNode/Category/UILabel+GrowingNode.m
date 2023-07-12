@@ -18,7 +18,6 @@
 //  limitations under the License.
 
 #import "GrowingAutotrackerCore/GrowingNode/Category/UILabel+GrowingNode.h"
-#import "GrowingTrackerCore/GrowingAttributesConst.h"
 
 @implementation UILabel (GrowingNode)
 

@@ -49,7 +49,7 @@
 
 @end
 
-@implementation GrowingAlertVCActionView
+@implementation GrowingAlertSwizzleHelper
 
 + (void)addAutoTrackSwizzles {
     unsigned int count = 0;

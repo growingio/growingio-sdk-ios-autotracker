@@ -24,7 +24,7 @@
 
 @end
 
-@interface GrowingAlertVCActionView : UIView
+@interface GrowingAlertSwizzleHelper : UIView
 
 + (void)addAutoTrackSwizzles;
 

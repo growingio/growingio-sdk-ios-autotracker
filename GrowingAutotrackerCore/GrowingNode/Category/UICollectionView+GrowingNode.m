@@ -20,7 +20,6 @@
 #import <pthread.h>
 #import "GrowingAutotrackerCore/GrowingNode/Category/UICollectionView+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
-#import "GrowingTrackerCore/GrowingAttributesConst.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 
 @implementation UICollectionView (GrowingNode)
@@ -76,10 +75,6 @@
     return [super growingNodeSubPath];
 }
 
-- (BOOL)growingNodeDonotCircle {
-    return [super growingNodeDonotCircle];
-}
-
 - (BOOL)growingNodeUserInteraction {
     return YES;
 }
@@ -95,10 +90,6 @@
 @end
 
 @implementation UICollectionReusableView (GrowingNode)
-
-- (BOOL)growingNodeDonotCircle {
-    return [super growingNodeDonotCircle];
-}
 
 - (BOOL)growingNodeUserInteraction {
     return YES;

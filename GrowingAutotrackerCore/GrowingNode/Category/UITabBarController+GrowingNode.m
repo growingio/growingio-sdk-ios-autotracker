@@ -19,7 +19,6 @@
 
 #import "GrowingAutotrackerCore/GrowingNode/Category/UITabBarController+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIViewController+GrowingNode.h"
-#import "GrowingTrackerCore/GrowingAttributesConst.h"
 
 @implementation UITabBarController (GrowingNode)
 
