@@ -53,8 +53,6 @@
     if (self) {
         if (self.configuration.autotrackEnabled) {
             [self addAutoTrackSwizzles];
-            [GrowingAlertVCActionView addAutoTrackSwizzles];
-            [GrowingSegmentButton addAutoTrackSwizzles];
             [GrowingULViewControllerLifecycle setup];
             [GrowingPageManager.sharedInstance start];
             [GrowingImpressionTrack.sharedInstance start];

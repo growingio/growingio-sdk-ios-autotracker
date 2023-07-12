@@ -21,7 +21,6 @@
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIApplication+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
-#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogMacros.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingULAppLifecycle.h"

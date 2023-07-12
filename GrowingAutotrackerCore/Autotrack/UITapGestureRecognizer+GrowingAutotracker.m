@@ -18,9 +18,7 @@
 //  limitations under the License.
 
 #import "GrowingAutotrackerCore/Autotrack/UITapGestureRecognizer+GrowingAutotracker.h"
-#import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/GrowingViewClickProvider.h"
-#import "GrowingULSwizzle.h"
 
 @interface GrowingUIGestureRecognizerObserver : NSObject
 

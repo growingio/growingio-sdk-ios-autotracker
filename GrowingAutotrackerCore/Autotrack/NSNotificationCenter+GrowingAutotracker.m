@@ -20,7 +20,6 @@
 #import <UIKit/UIKit.h>
 #import "GrowingAutotrackerCore/Autotrack/GrowingPropertyDefine.h"
 #import "GrowingAutotrackerCore/Autotrack/NSNotificationCenter+GrowingAutotracker.h"
-#import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/GrowingViewChangeProvider.h"
 
 GrowingPropertyDefine(UITextField, NSString *, growingHookOldText, setGrowingHookOldText)
