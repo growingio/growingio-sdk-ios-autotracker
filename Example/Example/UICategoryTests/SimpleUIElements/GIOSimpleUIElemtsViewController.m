@@ -27,6 +27,8 @@ const NSUInteger kProgressViewControllerMaxProgress = 100;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.defaultSlider.accessibilityLabel = @"defaultSlider";
+    
     [self configureRightNavButtonItem];
     [self configureSearchBar];
     [self configureSegmentedControl];

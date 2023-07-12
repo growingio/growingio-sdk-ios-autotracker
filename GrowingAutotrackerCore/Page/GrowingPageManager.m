@@ -181,12 +181,6 @@
     if (controller == nil) {
         return;
     }
-    if ([NSString growingHelper_isBlankString:alias]) {
-        return;
-    }
-    if (attributes != nil && [GrowingArgumentChecker isIllegalAttributes:attributes]) {
-        return;
-    }
 
     BOOL needAutotrackPage = NO;
     GrowingPage *page = controller.growingPageObject;

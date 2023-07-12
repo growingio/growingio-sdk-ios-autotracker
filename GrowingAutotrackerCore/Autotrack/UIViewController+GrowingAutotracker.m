@@ -20,8 +20,6 @@
 #import <objc/runtime.h>
 #import "GrowingAutotrackerCore/Autotrack/GrowingPropertyDefine.h"
 #import "GrowingAutotrackerCore/Page/GrowingPage.h"
-#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
-#import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
 #import "GrowingULViewControllerLifecycle.h"
 
 static char kGrowingPageObjectKey;
@@ -56,18 +54,7 @@ static char kGrowingPageAttributesKey;
 GrowingSafeStringPropertyImplementation(growingPageAlias, setGrowingPageAlias)
 
 - (void)setGrowingPageAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
-    [GrowingDispatchManager
-                 trackApiSel:_cmd
-        dispatchInMainThread:^{
-            if (!attributes || ([attributes isKindOfClass:NSDictionary.class] && attributes.count == 0)) {
-                objc_setAssociatedObject(self, &kGrowingPageAttributesKey, nil, OBJC_ASSOCIATION_COPY_NONATOMIC);
-            } else {
-                if ([GrowingArgumentChecker isIllegalAttributes:attributes]) {
-                    return;
-                }
-                objc_setAssociatedObject(self, &kGrowingPageAttributesKey, attributes, OBJC_ASSOCIATION_COPY_NONATOMIC);
-            }
-        }];
+    objc_setAssociatedObject(self, &kGrowingPageAttributesKey, attributes, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
 - (NSDictionary<NSString *, NSString *> *)growingPageAttributes {

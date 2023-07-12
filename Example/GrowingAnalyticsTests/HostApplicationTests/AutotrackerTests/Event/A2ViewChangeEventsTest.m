@@ -101,4 +101,35 @@
     [[viewTester usingLabel:@"协议/接口"] tap];
 }
 
+- (void)test04Slider {
+    [[viewTester usingLabel:@"UI界面"] tap];
+    [[viewTester usingLabel:@"Simple UI Elements"] tap];
+    [viewTester waitForAnimationsToFinish];
+    
+    KIFUIViewTestActor *actor = [viewTester usingLabel:@"defaultSlider"];
+    {
+        actor.view.growingViewIgnorePolicy = GrowingIgnoreSelf;
+        [actor setSliderValue:75.0f];
+
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewChange];
+        XCTAssertEqual(events.count, 0);
+    }
+    
+    {
+        actor.view.growingViewIgnorePolicy = GrowingIgnoreNone;
+        [actor setSliderValue:50.0f];
+
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewChange];
+        XCTAssertEqual(events.count, 1);
+        
+        GrowingViewElementEvent *event = (GrowingViewElementEvent *)events.firstObject;
+        NSDictionary *dic = event.toDictionary;
+        XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeViewChange);
+        XCTAssertTrue([ManualTrackHelper viewChangeEventCheck:dic]);
+        XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
+    }
+
+    [[viewTester usingLabel:@"UI界面"] tap];
+}
+
 @end

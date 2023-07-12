@@ -22,7 +22,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+#if defined(AUTOTRACKER)
+#if defined(SDK3rd)
+    [[GrowingAutotracker sharedInstance] autotrackPage:self alias:@"输入事件测试" attributes:@{@"greet": @"hello"}];
+#endif
+#endif
     [self configureTextField];
     [self configureTintedTextField];
     [self configureSecureTextField];
