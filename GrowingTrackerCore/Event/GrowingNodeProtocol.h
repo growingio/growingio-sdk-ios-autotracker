@@ -26,12 +26,12 @@
 /// UILabel[0] UILabel[1]
 @property (nonatomic, assign, readonly) NSInteger growingNodeKeyIndex;
 /// 完整的xpath由各个node的subPath拼接而成
-@property (nonatomic, copy, readonly) NSString *_Nullable growingNodeSubPath;
+@property (nonatomic, copy, readonly) NSString *growingNodeSubPath;
 /// 完整的xindex由各个node的subIndex拼接而成
-@property (nonatomic, copy, readonly) NSString *_Nullable growingNodeSubIndex;
+@property (nonatomic, copy, readonly) NSString *growingNodeSubIndex;
 /// 当同一视图下相同class的两个node点击行为相似
 /// 当不需要区分点击哪一个node，仅需要区分点击那种类型时，使用该属性
-@property (nonatomic, copy, readonly) NSString *_Nullable growingNodeSubSimilarIndex;
+@property (nonatomic, copy, readonly) NSString *growingNodeSubSimilarIndex;
 /// 原始父节点
 - (id<GrowingNode> _Nullable)growingNodeParent;
 /// 不进行track

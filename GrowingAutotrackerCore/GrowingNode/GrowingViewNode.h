@@ -22,18 +22,20 @@
 #import "GrowingTrackerCore/Event/GrowingNodeProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
 @class GrowingViewNodeBuilder;
+
 @interface GrowingViewNode : NSObject
 
-@property (nonatomic, weak, readonly) UIView *_Nullable view;
+@property (nonatomic, weak, readonly) UIView *view;
 @property (nonatomic, copy, readonly) NSString *_Nullable viewContent;
-@property (nonatomic, copy, readonly) NSString *_Nonnull xpath;
-@property (nonatomic, copy, readonly) NSString *_Nonnull xindex;
+@property (nonatomic, copy, readonly) NSString *xpath;
+@property (nonatomic, copy, readonly) NSString *xindex;
 // 原始的位置组
-@property (nonatomic, copy, readonly) NSString *_Nonnull originxindex;
+@property (nonatomic, copy, readonly) NSString *originxindex;
 // 可点击的父节点xpath
-@property (nonatomic, copy, readonly) NSString *_Nonnull clickableParentXpath;
-@property (nonatomic, copy, readonly) NSString *_Nonnull clickableParentXindex;
+@property (nonatomic, copy, readonly) NSString *clickableParentXpath;
+@property (nonatomic, copy, readonly) NSString *clickableParentXindex;
 @property (nonatomic, copy, readonly) NSString *_Nullable nodeType;
 // 如果有父节点，且父节点为列表，则index有值，和父节点一致，否则为-1
 @property (nonatomic, assign, readonly) int index;
@@ -43,8 +45,8 @@ NS_ASSUME_NONNULL_BEGIN
 // 当圈选时，从上至下的路径不一定和正常事件(从下至上)的路径一致，我们需要从新计算xpath
 @property (nonatomic, assign, readonly) BOOL needRecalculate;
 
-- (instancetype _Nonnull)init NS_UNAVAILABLE;
-+ (instancetype _Nonnull)new NS_UNAVAILABLE;
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
 
 - (instancetype)initWithBuilder:(GrowingViewNodeBuilder *)builder;
 + (GrowingViewNodeBuilder *)builder;
@@ -56,15 +58,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingViewNodeBuilder : NSObject
 
-@property (nonatomic, strong, readonly) UIView *_Nullable view;
+@property (nonatomic, strong, readonly) UIView *view;
 @property (nonatomic, copy, readonly) NSString *_Nullable viewContent;
-@property (nonatomic, copy, readonly) NSString *_Nonnull xpath;
-@property (nonatomic, copy, readonly) NSString *_Nonnull xindex;
+@property (nonatomic, copy, readonly) NSString *xpath;
+@property (nonatomic, copy, readonly) NSString *xindex;
 // 原始的位置组
-@property (nonatomic, copy, readonly) NSString *_Nonnull originxindex;
+@property (nonatomic, copy, readonly) NSString *originxindex;
 // 可点击的父节点xpath
-@property (nonatomic, copy, readonly) NSString *_Nonnull clickableParentXpath;
-@property (nonatomic, copy, readonly) NSString *_Nonnull clickableParentXindex;
+@property (nonatomic, copy, readonly) NSString *clickableParentXpath;
+@property (nonatomic, copy, readonly) NSString *clickableParentXindex;
 @property (nonatomic, copy, readonly) NSString *_Nullable nodeType;
 // 如果有父节点，且父节点为列表，则index有值，和父节点一致，否则为-1
 @property (nonatomic, assign, readonly) int index;
