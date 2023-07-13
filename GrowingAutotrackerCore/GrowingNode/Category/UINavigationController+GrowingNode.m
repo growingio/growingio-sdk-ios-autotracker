@@ -37,19 +37,5 @@
 
     return rect;
 }
-- (NSArray<id<GrowingNode>> *)growingNodeChilds {
-    NSMutableArray *childs = [NSMutableArray array];
-    if (self.presentedViewController) {
-        [childs addObject:self.presentedViewController];
-        return childs;
-    }
-
-    [childs addObject:self.topViewController];
-
-    if (self.isViewLoaded && [self.navigationBar growingImpNodeIsVisible]) {
-        [childs addObject:self.navigationBar];
-    }
-    return childs;
-}
 
 @end

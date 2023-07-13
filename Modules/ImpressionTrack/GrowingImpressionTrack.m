@@ -2,8 +2,8 @@
 //  GrowingImpressionTrack.m
 //  GrowingAnalytics
 //
-//  Created by GrowingIO on 2019/5/9.
-//  Copyright (C) 2019 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2023/7/13.
+//  Copyright (C) 2023 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,14 +17,18 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingAutotrackerCore/Impression/GrowingImpressionTrack.h"
+#import "Modules/ImpressionTrack/GrowingImpressionTrack.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIApplication+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingULAppLifecycle.h"
+#import "GrowingULSwizzle.h"
 #import "GrowingULViewControllerLifecycle.h"
+#import "Modules/ImpressionTrack/UIView+GrowingImpressionInternal.h"
+
+GrowingMod(GrowingImpressionTrack)
 
 @interface GrowingImpressionTrack () <GrowingULAppLifecycleDelegate, GrowingULViewControllerLifecycleDelegate>
 
@@ -36,36 +40,47 @@
 static BOOL isInResignSate;
 
 @implementation GrowingImpressionTrack
-- (void)applicationDidBecomeActive {
-    [self becomeActive];
+
++ (BOOL)singleton {
+    return YES;
 }
 
-- (void)applicationWillResignActive {
-    [self resignActive];
+- (void)growingModInit:(GrowingContext *)context {
+    [self track];
 }
 
-- (void)viewControllerDidAppear:(UIViewController *)controller {
-    [self markInvisibleNodes];
-    [self addWindowNodes];
++ (instancetype)sharedInstance {
+    static id _sharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _sharedInstance = [[self alloc] init];
+    });
+    return _sharedInstance;
 }
 
-- (void)becomeActive {
-    if (isInResignSate) {
-        [self.bgSourceTable.allObjects
-            enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-                ((UIView *)obj).growingIMPTracked = NO;
-            }];
-        isInResignSate = NO;
+- (instancetype)init {
+    if (self = [super init]) {
+        self.sourceTable = [[NSHashTable alloc]
+            initWithOptions:NSPointerFunctionsWeakMemory | NSPointerFunctionsObjectPointerPersonality
+                   capacity:100];
+        self.bgSourceTable = [[NSHashTable alloc]
+            initWithOptions:NSPointerFunctionsWeakMemory | NSPointerFunctionsObjectPointerPersonality
+                   capacity:100];
+        self.IMPInterval = 0.0;
     }
-    [self.bgSourceTable removeAllObjects];
+    return self;
 }
 
-- (void)resignActive {
-    isInResignSate = YES;
+- (void)track {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [UIView growingul_swizzleMethod:@selector(didMoveToSuperview)
+                             withMethod:@selector(growing_didMoveToSuperview)
+                                  error:nil];
+    });
 
-    [self.sourceTable.allObjects enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
-        [self.bgSourceTable addObject:obj];
-    }];
+    [GrowingULAppLifecycle.sharedInstance addAppLifecycleDelegate:self];
+    [GrowingULViewControllerLifecycle.sharedInstance addViewControllerLifecycleDelegate:self];
 }
 
 - (void)markInvisibleNodes {
@@ -119,38 +134,6 @@ static BOOL isInResignSate;
         block(subView);
         [self enumerateSubViewsWithNode:subView block:block];
     }
-}
-
-static GrowingImpressionTrack *impTrack = nil;
-
-+ (instancetype)sharedInstance {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        impTrack = [[GrowingImpressionTrack alloc] init];
-        impTrack.IMPInterval = 0.0;
-    });
-    return impTrack;
-}
-
-- (void)start {
-    [GrowingULAppLifecycle.sharedInstance addAppLifecycleDelegate:self];
-    [GrowingULViewControllerLifecycle.sharedInstance addViewControllerLifecycleDelegate:self];
-}
-
-- (instancetype)init {
-    if (impTrack != nil) {
-        return nil;
-    }
-
-    if (self = [super init]) {
-        self.sourceTable = [[NSHashTable alloc]
-            initWithOptions:NSPointerFunctionsWeakMemory | NSPointerFunctionsObjectPointerPersonality
-                   capacity:100];
-        self.bgSourceTable = [[NSHashTable alloc]
-            initWithOptions:NSPointerFunctionsWeakMemory | NSPointerFunctionsObjectPointerPersonality
-                   capacity:100];
-    }
-    return self;
 }
 
 static BOOL impTrackIsRegistered = NO;
@@ -280,6 +263,34 @@ static BOOL impTrackIsRegistered = NO;
     node.growingIMPTrackVariable = nil;
     node.growingIMPTracked = NO;
     [self.sourceTable removeObject:node];
+}
+
+#pragma mark - GrowingULAppLifecycleDelegate
+
+- (void)applicationDidBecomeActive {
+    if (isInResignSate) {
+        [self.bgSourceTable.allObjects
+            enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+                ((UIView *)obj).growingIMPTracked = NO;
+            }];
+        isInResignSate = NO;
+    }
+    [self.bgSourceTable removeAllObjects];
+}
+
+- (void)applicationWillResignActive {
+    isInResignSate = YES;
+
+    [self.sourceTable.allObjects enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
+        [self.bgSourceTable addObject:obj];
+    }];
+}
+
+#pragma mark - GrowingULViewControllerLifecycleDelegate
+
+- (void)viewControllerDidAppear:(UIViewController *)controller {
+    [self markInvisibleNodes];
+    [self addWindowNodes];
 }
 
 @end

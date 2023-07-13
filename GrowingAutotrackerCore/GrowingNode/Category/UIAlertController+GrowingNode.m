@@ -29,24 +29,6 @@
     return [self.view growingNodeFrame];
 }
 
-- (NSArray<id<GrowingNode> > *)growingNodeChilds {
-    NSMutableArray *childs = [NSMutableArray array];
-    NSMapTable *allButton = [self growing_allActionViews];
-    for (UIView *view in [allButton keyEnumerator]) {
-        [childs addObject:view];
-    }
-
-    UIView *view = nil;
-    if ([self.view growingHelper_getIvar:"_titleLabel" outObj:&view]) {
-        [childs addObject:view];
-    }
-    if ([self.view growingHelper_getIvar:"_messageLabel" outObj:&view]) {
-        [childs addObject:view];
-    }
-
-    return childs;
-}
-
 @end
 
 @implementation GrowingAlertSwizzleHelper

@@ -8,6 +8,7 @@
 
 #import "GIOClickEventViewController.h"
 #import "AppDelegate.h"
+#import "UIView+GrowingImpression.h"
 
 @interface GIOClickEventViewController ()
 

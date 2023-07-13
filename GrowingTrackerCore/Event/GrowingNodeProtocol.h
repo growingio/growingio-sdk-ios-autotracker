@@ -34,8 +34,6 @@
 @property (nonatomic, copy, readonly) NSString *_Nullable growingNodeSubSimilarIndex;
 /// 原始父节点
 - (id<GrowingNode> _Nullable)growingNodeParent;
-/// 过滤后的子节点,例如UITableView子节点只需要是cell和footter
-- (NSArray<id<GrowingNode>> *_Nullable)growingNodeChilds;
 /// 不进行track
 - (BOOL)growingNodeDonotTrack;
 /// 不进行圈选
@@ -48,7 +46,7 @@
 - (CGRect)growingNodeFrame;
 
 @optional
-
-- (BOOL)growingImpNodeIsVisible;
+/// 过滤后的子节点,例如UITableView子节点只需要是cell和footter
+- (NSArray<id<GrowingNode>> *_Nullable)growingNodeChilds;
 
 @end

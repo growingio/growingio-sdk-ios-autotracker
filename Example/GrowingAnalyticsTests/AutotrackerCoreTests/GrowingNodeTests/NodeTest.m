@@ -47,7 +47,6 @@
     [vc1 performSelector:@selector(growingNodeSubPath)];
     [vc1 performSelector:@selector(growingNodeSubIndex)];
     [vc1 performSelector:@selector(growingNodeSubSimilarIndex)];
-    [vc1 performSelector:@selector(growingNodeChilds)];
 #pragma clang diagnostic pop
 }
 
