@@ -54,10 +54,6 @@
 }
 
 - (NSString *)growingNodeSubPath {
-    // UITableViewWrapperView 为 iOS11 以下 UITableView 与 cell 之间的 view
-    if ([NSStringFromClass(self.class) isEqualToString:@"UITableViewWrapperView"]) {
-        return nil;
-    }
     // 如果手动标识了该view,返回标识
     if (self.growingUniqueTag.length > 0) {
         return self.growingUniqueTag;
@@ -67,11 +63,6 @@
 }
 
 - (NSString *)growingNodeSubIndex {
-    // UITableViewWrapperView 为 iOS11 以下 UITableView 与 cell 之间的 view
-    if ([NSStringFromClass(self.class) isEqualToString:@"UITableViewWrapperView"]) {
-        return nil;
-    }
-
     NSInteger index = [self growingNodeKeyIndex];
     return index < 0 ? @"0" : [NSString stringWithFormat:@"%ld", (long)index];
 }

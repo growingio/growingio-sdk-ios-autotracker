@@ -27,9 +27,9 @@
 
 @interface GrowingViewNode ()
 
-@property (nonatomic, copy, readwrite) NSString *_Nonnull xpath;
-@property (nonatomic, copy, readwrite) NSString *_Nonnull xindex;
-@property (nonatomic, copy, readwrite) NSString *_Nonnull originxindex;
+@property (nonatomic, copy, readwrite) NSString *xpath;
+@property (nonatomic, copy, readwrite) NSString *xindex;
+@property (nonatomic, copy, readwrite) NSString *originxindex;
 
 @end
 

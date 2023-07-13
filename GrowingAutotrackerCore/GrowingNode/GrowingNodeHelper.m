@@ -36,7 +36,7 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
     NSMutableArray *originxindexArray = [NSMutableArray array];
     BOOL isSimilar = YES;
     while (node && [node isKindOfClass:[UIView class]]) {
-        if (node.growingNodeSubPath == nil || [self isIgnoredPrivateView:node]) {
+        if ([self isIgnoredPrivateView:node]) {
             node = node.growingNodeParent;
             continue;
         }
