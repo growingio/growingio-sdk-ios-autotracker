@@ -1,9 +1,9 @@
 //
-//  UIView+GrowingAutoTrack.m
+//  UIView+GrowingImpressionInternal.h
 //  GrowingAnalytics
 //
-//  Created by GrowingIO on 2020/7/23.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2023/7/13.
+//  Copyright (C) 2023 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,17 +17,19 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingAutotrackerCore/Autotrack/UIView+GrowingAutotracker.h"
-#import "GrowingAutotrackerCore/Impression/GrowingImpressionTrack.h"
+#import <UIKit/UIKit.h>
 
-@implementation UIView (GrowingAutotracker)
+NS_ASSUME_NONNULL_BEGIN
 
-- (void)growing_didMoveToSuperview {
-    [self growing_didMoveToSuperview];
+@interface UIView (GrowingImpressionInternal)
 
-    if (self.superview && self.window) {
-        [[GrowingImpressionTrack sharedInstance] addNode:self inSubView:YES];
-    }
-}
+@property (nonatomic, assign) BOOL growingIMPTracked;
+@property (nonatomic, copy, nullable) NSString *growingIMPTrackEventName;
+@property (nonatomic, copy, nullable) NSDictionary *growingIMPTrackVariable;
+
+- (void)growing_didMoveToSuperview;
+- (BOOL)growingImpNodeIsVisible;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -1730,7 +1730,7 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Example/Pods-Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/GrowingAPM/GrowingAPM.framework",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-4a08faf1/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-411db831/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingToolsKit/GrowingToolsKit.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/LBXScan/LBXScan.framework",
@@ -1937,7 +1937,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-GrowingAnalyticsTests/Pods-GrowingAnalyticsTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-0637fae5/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-bae859d0/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore/GrowingUtils.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";

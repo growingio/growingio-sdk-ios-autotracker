@@ -25,14 +25,10 @@
 #import "GrowingAutotrackerCore/Autotrack/UISegmentedControl+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/Autotrack/UITableView+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/Autotrack/UITapGestureRecognizer+GrowingAutotracker.h"
-#import "GrowingAutotrackerCore/Autotrack/UIView+GrowingAutotracker.h"
-#import "GrowingAutotrackerCore/GrowingNode/Category/UIAlertController+GrowingNode.h"
-#import "GrowingAutotrackerCore/GrowingNode/Category/UISegmentedControl+GrowingNode.h"
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingAutotrackConfiguration+Private.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIAlertController+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UISegmentedControl+GrowingNode.h"
-#import "GrowingAutotrackerCore/Impression/GrowingImpressionTrack.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
@@ -57,7 +53,6 @@
             [self addAutoTrackSwizzles];
             [GrowingULViewControllerLifecycle setup];
             [GrowingPageManager.sharedInstance start];
-            [GrowingImpressionTrack.sharedInstance start];
         }
     }
 
@@ -121,15 +116,6 @@
                                               error:&segmentControlError];
         if (segmentControlError) {
             GIOLogError(@"Failed to swizzle UISegmentControl. Details: %@", segmentControlError);
-        }
-
-        // UIView
-        NSError *viewError = NULL;
-        [UIView growingul_swizzleMethod:@selector(didMoveToSuperview)
-                             withMethod:@selector(growing_didMoveToSuperview)
-                                  error:&viewError];
-        if (viewError) {
-            GIOLogError(@"Failed to swizzle UIView. Details: %@", viewError);
         }
 
         // NSNotificationCenter

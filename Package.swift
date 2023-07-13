@@ -43,6 +43,10 @@ let package = Package(
             targets: ["GrowingTracker_NoIDFA_Wrapper"]
         ),
         .library(
+            name: "GrowingModule_ImpressionTrack",
+            targets: ["GrowingModule_ImpressionTrack"]
+        ),
+        .library(
             name: "GrowingModule_Hybrid",
             targets: ["GrowingModule_Hybrid"]
         ),
@@ -276,6 +280,15 @@ let package = Package(
             path: "Modules/WebCircle",
             cSettings: [
                 .headerSearchPath("../.."),
+            ]
+        ),
+        .target(
+            name: "GrowingModule_ImpressionTrack",
+            dependencies: ["GrowingAutotrackerCore"],
+            path: "Modules/ImpressionTrack",
+            publicHeadersPath: "Public",
+            cSettings: [
+                .headerSearchPath("../..")
             ]
         ),
         .target(

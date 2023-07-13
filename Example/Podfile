@@ -22,6 +22,8 @@ target 'Example' do
 #  pod 'GrowingAPM/UIMonitor'
 #  pod 'GrowingAPM/CrashMonitor'
   pod 'GrowingAnalytics/APM', :path => '../'
+  
+  pod 'GrowingAnalytics/ImpressionTrack', :path => '../'
 
   pod 'SDCycleScrollView', '~> 1.75'
   pod 'LBXScan/LBXNative', '2.3'
@@ -33,11 +35,12 @@ end
 target 'GrowingAnalyticsTests' do
    pod 'GrowingAnalytics/Autotracker', :path => '../'
    pod 'GrowingAnalytics/Tracker', :path => '../'
+   pod 'GrowingAnalytics/ImpressionTrack', :path => '../'
 end
 
 target 'GrowingAnalyticsStartTests' do
-   pod 'GrowingAnalytics/Autotracker', :path => './'
-   pod 'GrowingAnalytics/Tracker', :path => './'
+   pod 'GrowingAnalytics/Autotracker', :path => '../'
+   pod 'GrowingAnalytics/Tracker', :path => '../'
 end
 
 target 'HostApplicationTests' do

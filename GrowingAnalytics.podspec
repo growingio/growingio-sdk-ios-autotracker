@@ -125,6 +125,13 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     webcircle.dependency 'GrowingAnalytics/Screenshot', s.version.to_s
   end
 
+  s.subspec 'ImpressionTrack' do |imptrack|
+    imptrack.ios.deployment_target = '9.0'
+    imptrack.source_files = 'Modules/ImpressionTrack/**/*{.h,.m,.c,.cpp,.mm}'
+    imptrack.public_header_files = 'Modules/ImpressionTrack/Public/*.h'
+    imptrack.dependency 'GrowingAnalytics/AutotrackerCore', s.version.to_s
+  end
+
   s.subspec 'Hybrid' do |hybrid|
     hybrid.ios.deployment_target = '10.0'
     hybrid.source_files = 'Modules/Hybrid/**/*{.h,.m,.c,.cpp,.mm}'

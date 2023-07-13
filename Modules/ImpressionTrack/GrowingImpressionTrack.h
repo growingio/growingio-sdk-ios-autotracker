@@ -2,8 +2,8 @@
 //  GrowingImpressionTrack.h
 //  GrowingAnalytics
 //
-//  Created by GrowingIO on 2019/5/9.
-//  Copyright (C) 2019 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2023/7/13.
+//  Copyright (C) 2023 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -19,25 +19,15 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "GrowingModuleProtocol.h"
 
-@interface GrowingImpressionTrack : NSObject
+@interface GrowingImpressionTrack : NSObject <GrowingModuleProtocol>
 
 @property (nonatomic, assign) NSTimeInterval IMPInterval;
-
 @property (nonatomic, assign) BOOL impTrackActive;
 
 + (instancetype)sharedInstance;
-
-- (void)start;
-
-- (void)markInvisibleNodes;
-
-- (void)markInvisibleNode:(UIView *)node inSubView:(BOOL)flag;
-
-- (void)addWindowNodes;
-
 - (void)addNode:(UIView *)node inSubView:(BOOL)flag;
-
 - (void)clearNode:(UIView *)node;
 
 @end
