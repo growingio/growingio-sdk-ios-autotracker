@@ -251,7 +251,7 @@
     
     NSNumber *n = [[self columnNameToIndexMap] objectForKey:columnName];
     
-    if (n) {
+    if (n != nil) {
         return [n intValue];
     }
     

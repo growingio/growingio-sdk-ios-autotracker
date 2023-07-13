@@ -19,6 +19,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol GrowingNode <NSObject>
 
 @required
@@ -50,3 +52,5 @@
 - (NSArray<id<GrowingNode>> *_Nullable)growingNodeChilds;
 
 @end
+
+NS_ASSUME_NONNULL_END

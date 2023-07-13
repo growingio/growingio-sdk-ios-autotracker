@@ -19,6 +19,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class GrowingBaseBuilder;
 
 typedef NS_ENUM(NSUInteger, GrowingAppState) { GrowingAppStateForeground, GrowingAppStateBackground };
@@ -31,33 +33,33 @@ typedef NS_OPTIONS(NSUInteger, GrowingEventSendPolicy) {
 
 @interface GrowingBaseEvent : NSObject
 
-@property (nonatomic, copy, readonly) NSString *_Nullable dataSourceId;
-@property (nonatomic, copy, readonly) NSString *_Nonnull deviceId;
-@property (nonatomic, copy, readonly) NSString *_Nullable userId;
-@property (nonatomic, copy, readonly) NSString *_Nullable sessionId;
-@property (nonatomic, copy, readonly) NSString *_Nonnull eventType;
+@property (nonatomic, copy, readonly, nullable) NSString *dataSourceId;
+@property (nonatomic, copy, readonly) NSString *deviceId;
+@property (nonatomic, copy, readonly, nullable) NSString *userId;
+@property (nonatomic, copy, readonly, nullable) NSString *sessionId;
+@property (nonatomic, copy, readonly) NSString *eventType;
 @property (nonatomic, assign, readonly) long long timestamp;
-@property (nonatomic, copy, readonly) NSString *_Nonnull domain;
-@property (nonatomic, copy, readonly) NSString *_Nonnull urlScheme;
+@property (nonatomic, copy, readonly) NSString *domain;
+@property (nonatomic, copy, readonly) NSString *urlScheme;
 @property (nonatomic, assign, readonly) int appState;
 @property (nonatomic, assign, readonly) long long eventSequenceId;
-@property (nonatomic, copy, readonly) NSString *_Nonnull platform;
-@property (nonatomic, copy, readonly) NSString *_Nonnull platformVersion;
-@property (nonatomic, strong, readonly) NSDictionary *_Nonnull extraParams;
-@property (nonatomic, copy, readonly) NSString *_Nullable networkState;
-@property (nonatomic, copy, readonly) NSString *_Nullable appChannel;
+@property (nonatomic, copy, readonly) NSString *platform;
+@property (nonatomic, copy, readonly) NSString *platformVersion;
+@property (nonatomic, strong, readonly) NSDictionary *extraParams;
+@property (nonatomic, copy, readonly, nullable) NSString *networkState;
+@property (nonatomic, copy, readonly, nullable) NSString *appChannel;
 @property (nonatomic, assign, readonly) NSInteger screenHeight;
 @property (nonatomic, assign, readonly) NSInteger screenWidth;
-@property (nonatomic, copy, readonly) NSString *_Nonnull deviceBrand;
-@property (nonatomic, copy, readonly) NSString *_Nonnull deviceModel;
-@property (nonatomic, copy, readonly) NSString *_Nonnull deviceType;
-@property (nonatomic, copy, readonly) NSString *_Nonnull appName;
-@property (nonatomic, copy, readonly) NSString *_Nonnull appVersion;
-@property (nonatomic, copy, readonly) NSString *_Nonnull language;
+@property (nonatomic, copy, readonly, nullable) NSString *deviceBrand;
+@property (nonatomic, copy, readonly, nullable) NSString *deviceModel;
+@property (nonatomic, copy, readonly, nullable) NSString *deviceType;
+@property (nonatomic, copy, readonly) NSString *appName;
+@property (nonatomic, copy, readonly) NSString *appVersion;
+@property (nonatomic, copy, readonly) NSString *language;
 @property (nonatomic, assign, readonly) double latitude;
 @property (nonatomic, assign, readonly) double longitude;
-@property (nonatomic, copy, readonly) NSString *_Nonnull sdkVersion;
-@property (nonatomic, copy, readonly) NSString *_Nullable userKey;
+@property (nonatomic, copy, readonly) NSString *sdkVersion;
+@property (nonatomic, copy, readonly, nullable) NSString *userKey;
 @property (nonatomic, assign) GrowingEventSendPolicy sendPolicy;
 
 - (NSDictionary *_Nonnull)toDictionary;
@@ -73,35 +75,33 @@ typedef NS_OPTIONS(NSUInteger, GrowingEventSendPolicy) {
 /// builder
 @interface GrowingBaseBuilder : NSObject
 
-@property (nonatomic, copy, readonly) NSString *_Nullable dataSourceId;
-@property (nonatomic, copy, readonly) NSString *_Nonnull deviceId;
-@property (nonatomic, copy, readonly) NSString *_Nullable userId;
-@property (nonatomic, copy, readonly) NSString *_Nullable sessionId;
-@property (nonatomic, copy, readonly) NSString *_Nonnull eventType;
+@property (nonatomic, copy, readonly, nullable) NSString *dataSourceId;
+@property (nonatomic, copy, readonly) NSString *deviceId;
+@property (nonatomic, copy, readonly, nullable) NSString *userId;
+@property (nonatomic, copy, readonly, nullable) NSString *sessionId;
+@property (nonatomic, copy, readonly) NSString *eventType;
 @property (nonatomic, assign, readonly) long long timestamp;
-@property (nonatomic, copy, readonly) NSString *_Nonnull domain;
-@property (nonatomic, copy, readonly) NSString *_Nonnull urlScheme;
+@property (nonatomic, copy, readonly) NSString *domain;
+@property (nonatomic, copy, readonly) NSString *urlScheme;
 @property (nonatomic, assign, readonly) int appState;
 @property (nonatomic, assign, readonly) long long eventSequenceId;
-@property (nonatomic, copy, readonly) NSString *_Nonnull platform;
-@property (nonatomic, copy, readonly) NSString *_Nonnull platformVersion;
-@property (nonatomic, strong, readonly) NSDictionary *_Nonnull extraParams;
-@property (nonatomic, copy, readonly) NSString *_Nullable networkState;
-@property (nonatomic, copy, readonly) NSString *_Nullable appChannel;
+@property (nonatomic, copy, readonly) NSString *platform;
+@property (nonatomic, copy, readonly) NSString *platformVersion;
+@property (nonatomic, strong, readonly) NSDictionary *extraParams;
+@property (nonatomic, copy, readonly, nullable) NSString *networkState;
+@property (nonatomic, copy, readonly, nullable) NSString *appChannel;
 @property (nonatomic, assign, readonly) NSInteger screenHeight;
 @property (nonatomic, assign, readonly) NSInteger screenWidth;
-@property (nonatomic, copy, readonly) NSString *_Nonnull deviceBrand;
-@property (nonatomic, copy, readonly) NSString *_Nonnull deviceModel;
-@property (nonatomic, copy, readonly) NSString *_Nonnull deviceType;
-@property (nonatomic, copy, readonly) NSString *_Nonnull appName;
-@property (nonatomic, copy, readonly) NSString *_Nonnull appVersion;
-@property (nonatomic, copy, readonly) NSString *_Nonnull language;
+@property (nonatomic, copy, readonly, nullable) NSString *deviceBrand;
+@property (nonatomic, copy, readonly, nullable) NSString *deviceModel;
+@property (nonatomic, copy, readonly, nullable) NSString *deviceType;
+@property (nonatomic, copy, readonly) NSString *appName;
+@property (nonatomic, copy, readonly) NSString *appVersion;
+@property (nonatomic, copy, readonly) NSString *language;
 @property (nonatomic, assign, readonly) double latitude;
 @property (nonatomic, assign, readonly) double longitude;
-@property (nonatomic, copy, readonly) NSString *_Nonnull sdkVersion;
-@property (nonatomic, copy, readonly) NSString *_Nullable userKey;
-
-NS_ASSUME_NONNULL_BEGIN
+@property (nonatomic, copy, readonly) NSString *sdkVersion;
+@property (nonatomic, copy, readonly, nullable) NSString *userKey;
 
 // 赋值属性，eg:deviceId,userId,sessionId,eventSequenceId
 - (void)readPropertyInTrackThread;
@@ -134,5 +134,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (GrowingBaseBuilder * (^)(NSString *value))setEventType;
 - (GrowingBaseEvent *)build;
 
-NS_ASSUME_NONNULL_END
 @end
+
+NS_ASSUME_NONNULL_END

@@ -136,7 +136,7 @@ static NSString *kSetDataCollectionEnabledSelector = @"growingModSetDataCollecti
 - (void)handleModulesInitEvent:(NSDictionary *)customParam {
     GrowingContext *context = [GrowingContext sharedInstance].copy;
     context.customEvent = GrowingMInitEvent;
-    context.customParam = customParam;
+    context.customParam = customParam ?: @{};
 
     NSArray *moduleInstances = [self.modulesByEvent objectForKey:@(GrowingMInitEvent)];
     for (id<GrowingModuleProtocol> module in moduleInstances) {
@@ -159,7 +159,7 @@ static NSString *kSetDataCollectionEnabledSelector = @"growingModSetDataCollecti
 
     GrowingContext *context = [GrowingContext sharedInstance].copy;
     context.customEvent = eventType;
-    context.customParam = customParam;
+    context.customParam = customParam ?: @{};
 
     NSArray *moduleInstances = [self.modulesByEvent objectForKey:@(eventType)];
     for (id<GrowingModuleProtocol> module in moduleInstances) {

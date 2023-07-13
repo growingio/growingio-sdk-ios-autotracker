@@ -108,7 +108,7 @@ static GrowingPersistenceDataProvider *persistence = nil;
 
 - (long long)increaseFor:(NSString *)key spanValue:(int)span {
     NSNumber *value = [_growingUserdefault valueForKey:key];
-    if (!value) {
+    if (value == nil) {
         value = [NSNumber numberWithLongLong:0];
     }
 

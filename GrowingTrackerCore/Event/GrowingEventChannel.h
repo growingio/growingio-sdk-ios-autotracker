@@ -43,7 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 根据channels数组，返回 eventType 为key，channel对象为object的字典
 + (NSDictionary *)eventChannelMapFromAllChannels:(NSArray<GrowingEventChannel *> *)channels;
 
-+ (GrowingEventChannel *)otherEventChannelFromAllChannels:(NSArray<GrowingEventChannel *> *)allEventChannels;
++ (GrowingEventChannel *)otherEventChannelFromAllChannels:(NSArray<GrowingEventChannel *> *)channels;
 
 @end
 

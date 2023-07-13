@@ -49,10 +49,8 @@ static const NSInteger kGIOMaxCachesLogNumber = 100;
 
 - (void)logMessage:(GrowingLogMessage *)logMessage {
     NSString *logMsg = logMessage->_message;
-    BOOL isFormatted = NO;
     if (_logFormatter) {
         logMsg      = [_logFormatter formatLogMessage:logMessage];
-        isFormatted = logMsg != logMessage->_message;
     }
     
     if (logMsg) {
