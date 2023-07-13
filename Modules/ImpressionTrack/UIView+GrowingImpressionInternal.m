@@ -118,8 +118,9 @@
     }
 
     if (self.growingIMPTrackEventName && [eventName isEqualToString:self.growingIMPTrackEventName]) {
-        if ((attributes && [attributes isEqualToDictionary:self.growingIMPTrackVariable]) ||
-            attributes == self.growingIMPTrackVariable) {
+        if ((attributes && self.growingIMPTrackVariable &&
+             [attributes isEqualToDictionary:self.growingIMPTrackVariable]) ||
+            (attributes == nil && self.growingIMPTrackVariable == nil)) {
             return;
         }
     }

@@ -25,8 +25,8 @@
 
 @interface GrowingServiceManager ()
 
-@property (nonatomic, copy) NSMutableDictionary *allServiceDict;
-@property (nonatomic, copy) NSMutableDictionary *allServiceInstanceDict;
+@property (nonatomic, strong) NSMutableDictionary *allServiceDict;
+@property (nonatomic, strong) NSMutableDictionary *allServiceInstanceDict;
 
 @end
 
@@ -77,7 +77,7 @@
     [self.allServiceDict setValue:NSStringFromClass(serviceClass) forKey:NSStringFromProtocol(service)];
 }
 
-- (id)createService:(Protocol *)service {
+- (nullable id)createService:(Protocol *)service {
     NSString *serviceString = NSStringFromProtocol(service);
     id instance = [self.allServiceInstanceDict objectForKey:serviceString];
     if (instance) {

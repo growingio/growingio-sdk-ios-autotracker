@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)registerService:(Protocol *)service implClass:(Class)serviceClass;
 
-- (id)createService:(Protocol *)service;
+- (nullable id)createService:(Protocol *)service;
 
 - (id)serviceImplClass:(Protocol *)service;
 

@@ -79,11 +79,6 @@ static NSMutableArray *eventChannels = nil;
 }
 
 + (NSDictionary *)eventChannelMapFromAllChannels:(NSArray<GrowingEventChannel *> *)channels {
-    NSArray *allEventChannels = channels;
-    if (!allEventChannels.count) {
-        allEventChannels = [self buildAllEventChannels];
-    }
-    // TODO: 添加page以及pageAttributes类型
     NSMutableDictionary *dictM = [NSMutableDictionary dictionary];
     for (GrowingEventChannel *obj in channels) {
         for (NSString *key in obj.eventTypes) {
@@ -93,12 +88,8 @@ static NSMutableArray *eventChannels = nil;
     return dictM;
 }
 
-+ (GrowingEventChannel *)otherEventChannelFromAllChannels:(NSArray<GrowingEventChannel *> *)allEventChannels {
-    if (!allEventChannels.count) {
-        return [self buildAllEventChannels].lastObject;
-    }
-
-    return allEventChannels.lastObject;
++ (GrowingEventChannel *)otherEventChannelFromAllChannels:(NSArray<GrowingEventChannel *> *)channels {
+    return channels.lastObject;
 }
 
 @end
