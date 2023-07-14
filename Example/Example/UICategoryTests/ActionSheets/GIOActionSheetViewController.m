@@ -18,7 +18,7 @@ typedef NS_ENUM(NSInteger, GIOActionSheetsViewControllerTableRow) {
     GrwingAlertTwoTextMenuRow,
 };
 
-@interface GIOActionSheetViewController ()<UIActionSheetDelegate>
+@interface GIOActionSheetViewController ()
 
 @end
 
@@ -40,14 +40,10 @@ typedef NS_ENUM(NSInteger, GIOActionSheetsViewControllerTableRow) {
     NSString *cancelButtonTitle = NSLocalizedString(@"Cancel", nil);
     NSString *destructiveButtonTitle = NSLocalizedString(@"OK", nil);
     
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil
-                                                             delegate:self
-                                                    cancelButtonTitle:cancelButtonTitle
-                                               destructiveButtonTitle:destructiveButtonTitle otherButtonTitles:nil];
-    
-    actionSheet.actionSheetStyle = UIActionSheetStyleDefault;
-    
-    [actionSheet showInView:self.view];
+    UIAlertController *controller = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    [controller addAction:[UIAlertAction actionWithTitle:cancelButtonTitle style:UIAlertActionStyleCancel handler:nil]];
+    [controller addAction:[UIAlertAction actionWithTitle:destructiveButtonTitle style:UIAlertActionStyleDestructive handler:nil]];
+    [self presentViewController:controller animated:YES completion:nil];
 }
 
 // Show a dialog with two custom buttons.
@@ -55,11 +51,10 @@ typedef NS_ENUM(NSInteger, GIOActionSheetsViewControllerTableRow) {
     NSString *destructiveButtonTitle = NSLocalizedString(@"Destructive Choice", nil);
     NSString *otherButtonTitle = NSLocalizedString(@"Safe Choice", nil);
     
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:destructiveButtonTitle otherButtonTitles:otherButtonTitle, nil];
-    
-    actionSheet.actionSheetStyle = UIActionSheetStyleDefault;
-    
-    [actionSheet showInView:self.view];
+    UIAlertController *controller = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    [controller addAction:[UIAlertAction actionWithTitle:destructiveButtonTitle style:UIAlertActionStyleDestructive handler:nil]];
+    [controller addAction:[UIAlertAction actionWithTitle:otherButtonTitle style:UIAlertActionStyleDefault handler:nil]];
+    [self presentViewController:controller animated:YES completion:nil];
 }
 
 - (void)showGrowingAlertMenuOne {
@@ -122,19 +117,6 @@ typedef NS_ENUM(NSInteger, GIOActionSheetsViewControllerTableRow) {
     }];
     [alert showAlertAnimated:YES];
 
-}
-
-#pragma mark - UIActionSheetDelegate
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (actionSheet.destructiveButtonIndex == buttonIndex) {
-        NSLog(@"Action sheet clicked with the destructive button index.");
-    }
-    else if (actionSheet.cancelButtonIndex == buttonIndex) {
-        NSLog(@"Action sheet clicked with the cancel button index.");
-    }
-    else {
-        NSLog(@"Action sheet clicked with button at index %ld.", (long)buttonIndex);
-    }
 }
 
 #pragma mark - UITableViewDelegate
