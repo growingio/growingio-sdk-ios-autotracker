@@ -8,7 +8,6 @@ end
 
 project.targets.each do |target|
 	if target.name == "GrowingAnalytics" || 
-	target.name == "GrowingAnalytics-cdp" || 
 	target.name == "GrowingUtils" || 
 	target.name == "GrowingAPM" ||
 	target.name == "Protobuf"
