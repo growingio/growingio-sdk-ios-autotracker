@@ -216,4 +216,62 @@
     [[viewTester usingLabel:@"好的"] tap];
 }
 
+- (void)test07IgnoreViewClass {
+    [[viewTester usingLabel:@"IgnoreViewClass"] tap];
+    [viewTester waitForAnimationsToFinish];
+    
+    [[viewTester usingLabel:@"ignoreViewClass"] tap];
+    [viewTester waitForAnimationsToFinish];
+    
+    [MockEventQueue.sharedQueue cleanQueue];
+
+    [[viewTester usingLabel:@"IgnoreButton1"] tap];
+    NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
+    XCTAssertEqual(events.count, 0);
+    
+    [[viewTester usingLabel:@"IgnoreButton2"] tap];
+    [[viewTester usingLabel:@"IgnoreButton3"] tap];
+    [[viewTester usingLabel:@"NotIgnoreButton4"] tap];
+    events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
+    XCTAssertEqual(events.count, 3);
+    GrowingViewElementEvent *event = (GrowingViewElementEvent *)events.firstObject;
+    NSDictionary *dic = event.toDictionary;
+    XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeViewClick);
+    XCTAssertTrue([ManualTrackHelper viewClickEventCheck:dic]);
+    XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
+    
+    XCTAssertEqualObjects(dic[@"textValue"], @"IgnoreButton2");
+    XCTAssertEqualObjects(dic[@"xpath"], @"/UITabBarController/UINavigationController/GrowingIgnoreViewViewController/UIView/GrowingIgnoreButton2");
+    XCTAssertEqualObjects(dic[@"xindex"], @"/0/1/0/0/0");
+}
+
+- (void)test08IgnoreViewClasses {
+    [[viewTester usingLabel:@"IgnoreViewClass"] tap];
+    [viewTester waitForAnimationsToFinish];
+    
+    [[viewTester usingLabel:@"ignoreViewClasses"] tap];
+    [viewTester waitForAnimationsToFinish];
+    
+    [MockEventQueue.sharedQueue cleanQueue];
+
+    [[viewTester usingLabel:@"IgnoreButton1"] tap];
+    [[viewTester usingLabel:@"IgnoreButton2"] tap];
+    [[viewTester usingLabel:@"IgnoreButton3"] tap];
+    NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
+    XCTAssertEqual(events.count, 0);
+    
+    [[viewTester usingLabel:@"NotIgnoreButton4"] tap];
+    events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
+    XCTAssertEqual(events.count, 1);
+    GrowingViewElementEvent *event = (GrowingViewElementEvent *)events.firstObject;
+    NSDictionary *dic = event.toDictionary;
+    XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeViewClick);
+    XCTAssertTrue([ManualTrackHelper viewClickEventCheck:dic]);
+    XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
+    
+    XCTAssertEqualObjects(dic[@"textValue"], @"NotIgnoreButton4");
+    XCTAssertEqualObjects(dic[@"xpath"], @"/UITabBarController/UINavigationController/GrowingIgnoreViewViewController/UIView/GrowingNotIgnoreButton4");
+    XCTAssertEqualObjects(dic[@"xindex"], @"/0/1/0/0/0");
+}
+
 @end

@@ -87,6 +87,12 @@
 		347B8F432A0A46DD00B8A114 /* ScreenshotTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 347B8F422A0A46DD00B8A114 /* ScreenshotTest.m */; };
 		34821C6727B247DB006C8B8E /* UISegmentedControlAutotrackTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34821C6627B247DB006C8B8E /* UISegmentedControlAutotrackTest.m */; };
 		34821C6C27B25AE7006C8B8E /* HybridTest_HostApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 34821C6B27B25AE7006C8B8E /* HybridTest_HostApp.m */; };
+		348C86A52A60FC1100310C22 /* GrowingIgnoreViewClsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 348C86A42A60FC1100310C22 /* GrowingIgnoreViewClsViewController.m */; };
+		348C86A92A60FC7900310C22 /* GrowingIgnoreButton1.m in Sources */ = {isa = PBXBuildFile; fileRef = 348C86A82A60FC7900310C22 /* GrowingIgnoreButton1.m */; };
+		348C86AC2A60FC8300310C22 /* GrowingIgnoreButton2.m in Sources */ = {isa = PBXBuildFile; fileRef = 348C86AB2A60FC8300310C22 /* GrowingIgnoreButton2.m */; };
+		348C86AF2A60FC9000310C22 /* GrowingIgnoreButton3.m in Sources */ = {isa = PBXBuildFile; fileRef = 348C86AE2A60FC9000310C22 /* GrowingIgnoreButton3.m */; };
+		348C86B22A60FCA200310C22 /* GrowingNotIgnoreButton4.m in Sources */ = {isa = PBXBuildFile; fileRef = 348C86B12A60FCA200310C22 /* GrowingNotIgnoreButton4.m */; };
+		348C86B52A60FCE400310C22 /* GrowingIgnoreViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 348C86B42A60FCE400310C22 /* GrowingIgnoreViewViewController.m */; };
 		3494DD0328597E2E00A6CE46 /* DeepLinkTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BA7B41277D8EC30030AC21 /* DeepLinkTest.m */; };
 		3494DD092859CCF300A6CE46 /* GrowingDeepLinkHandler+XCTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3494DD072859CCF300A6CE46 /* GrowingDeepLinkHandler+XCTest.m */; };
 		3494DD122859E07500A6CE46 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3494DD112859E07500A6CE46 /* AppDelegate.m */; };
@@ -306,6 +312,18 @@
 		347B8F422A0A46DD00B8A114 /* ScreenshotTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ScreenshotTest.m; sourceTree = "<group>"; };
 		34821C6627B247DB006C8B8E /* UISegmentedControlAutotrackTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UISegmentedControlAutotrackTest.m; sourceTree = "<group>"; };
 		34821C6B27B25AE7006C8B8E /* HybridTest_HostApp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HybridTest_HostApp.m; sourceTree = "<group>"; };
+		348C86A32A60FC1100310C22 /* GrowingIgnoreViewClsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GrowingIgnoreViewClsViewController.h; sourceTree = "<group>"; };
+		348C86A42A60FC1100310C22 /* GrowingIgnoreViewClsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GrowingIgnoreViewClsViewController.m; sourceTree = "<group>"; };
+		348C86A72A60FC7900310C22 /* GrowingIgnoreButton1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GrowingIgnoreButton1.h; sourceTree = "<group>"; };
+		348C86A82A60FC7900310C22 /* GrowingIgnoreButton1.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GrowingIgnoreButton1.m; sourceTree = "<group>"; };
+		348C86AA2A60FC8300310C22 /* GrowingIgnoreButton2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GrowingIgnoreButton2.h; sourceTree = "<group>"; };
+		348C86AB2A60FC8300310C22 /* GrowingIgnoreButton2.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GrowingIgnoreButton2.m; sourceTree = "<group>"; };
+		348C86AD2A60FC9000310C22 /* GrowingIgnoreButton3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GrowingIgnoreButton3.h; sourceTree = "<group>"; };
+		348C86AE2A60FC9000310C22 /* GrowingIgnoreButton3.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GrowingIgnoreButton3.m; sourceTree = "<group>"; };
+		348C86B02A60FCA200310C22 /* GrowingNotIgnoreButton4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GrowingNotIgnoreButton4.h; sourceTree = "<group>"; };
+		348C86B12A60FCA200310C22 /* GrowingNotIgnoreButton4.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GrowingNotIgnoreButton4.m; sourceTree = "<group>"; };
+		348C86B32A60FCE400310C22 /* GrowingIgnoreViewViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GrowingIgnoreViewViewController.h; sourceTree = "<group>"; };
+		348C86B42A60FCE400310C22 /* GrowingIgnoreViewViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GrowingIgnoreViewViewController.m; sourceTree = "<group>"; };
 		3494DCF828597E1A00A6CE46 /* GrowingAnalyticsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrowingAnalyticsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3494DD072859CCF300A6CE46 /* GrowingDeepLinkHandler+XCTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GrowingDeepLinkHandler+XCTest.m"; sourceTree = "<group>"; };
 		3494DD082859CCF300A6CE46 /* GrowingDeepLinkHandler+XCTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GrowingDeepLinkHandler+XCTest.h"; sourceTree = "<group>"; };
@@ -591,6 +609,7 @@
 				34BDC35127707BA40030B3CE /* SimpleUIElements */,
 				34BDC35227707BB20030B3CE /* AttributeLabel */,
 				34BDC35327707BBE0030B3CE /* CollectionView */,
+				348C86A22A60FBEC00310C22 /* IgnoreViewClass */,
 				34BDC35427707BC80030B3CE /* Banner&TableView */,
 				0465310F24DD4271002D254C /* PageStructure */,
 				34BDC35527707BD00030B3CE /* ActionSheets */,
@@ -795,6 +814,33 @@
 				34821C6B27B25AE7006C8B8E /* HybridTest_HostApp.m */,
 			);
 			path = HybridTests;
+			sourceTree = "<group>";
+		};
+		348C86A22A60FBEC00310C22 /* IgnoreViewClass */ = {
+			isa = PBXGroup;
+			children = (
+				348C86A62A60FC6100310C22 /* View */,
+				348C86A32A60FC1100310C22 /* GrowingIgnoreViewClsViewController.h */,
+				348C86A42A60FC1100310C22 /* GrowingIgnoreViewClsViewController.m */,
+				348C86B32A60FCE400310C22 /* GrowingIgnoreViewViewController.h */,
+				348C86B42A60FCE400310C22 /* GrowingIgnoreViewViewController.m */,
+			);
+			path = IgnoreViewClass;
+			sourceTree = "<group>";
+		};
+		348C86A62A60FC6100310C22 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				348C86A72A60FC7900310C22 /* GrowingIgnoreButton1.h */,
+				348C86A82A60FC7900310C22 /* GrowingIgnoreButton1.m */,
+				348C86AA2A60FC8300310C22 /* GrowingIgnoreButton2.h */,
+				348C86AB2A60FC8300310C22 /* GrowingIgnoreButton2.m */,
+				348C86AD2A60FC9000310C22 /* GrowingIgnoreButton3.h */,
+				348C86AE2A60FC9000310C22 /* GrowingIgnoreButton3.m */,
+				348C86B02A60FCA200310C22 /* GrowingNotIgnoreButton4.h */,
+				348C86B12A60FCA200310C22 /* GrowingNotIgnoreButton4.m */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		3494DCF928597E1A00A6CE46 /* GrowingAnalyticsUITests */ = {
@@ -2214,9 +2260,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				04A6FAF224E662E9006C72F0 /* GIOChildsAddViewController.m in Sources */,
+				348C86AF2A60FC9000310C22 /* GrowingIgnoreButton3.m in Sources */,
 				349F1492285B560200437F53 /* UIColor+Hex.m in Sources */,
+				348C86A52A60FC1100310C22 /* GrowingIgnoreViewClsViewController.m in Sources */,
 				349F1489285B503B00437F53 /* GIOH5BrowserViewController.m in Sources */,
 				0465314424DD4272002D254C /* GIOMeasurementProtocolTableViewController.m in Sources */,
+				348C86B52A60FCE400310C22 /* GrowingIgnoreViewViewController.m in Sources */,
 				0465314024DD4272002D254C /* GIOKeyValueCell.m in Sources */,
 				34ECFDBF2A5C082A0059F87C /* GrowingAutotrackPageViewController.m in Sources */,
 				0465314D24DD4272002D254C /* AppDelegate.m in Sources */,
@@ -2239,6 +2288,9 @@
 				0465315B24DD4272002D254C /* GIOCollectionViewCell.m in Sources */,
 				0465314F24DD4272002D254C /* GIOTextFieldViewController.m in Sources */,
 				4916271224E157CF00444AF2 /* GIOPagingViewController.m in Sources */,
+				348C86A92A60FC7900310C22 /* GrowingIgnoreButton1.m in Sources */,
+				348C86AC2A60FC8300310C22 /* GrowingIgnoreButton2.m in Sources */,
+				348C86B22A60FCA200310C22 /* GrowingNotIgnoreButton4.m in Sources */,
 				0465313F24DD4272002D254C /* GIOInputChangeEventViewController.m in Sources */,
 				04A6FAF524E67215006C72F0 /* GIOBaseViewController.m in Sources */,
 				0465315A24DD4272002D254C /* GIOFoodTableViewCell.m in Sources */,
