@@ -2,10 +2,9 @@
 set -x
 
 POD_BETA_VERSOIN=`cat GrowingAnalytics.podspec | grep 's.version\s*=' | grep -Eo '[0-9]+.[0-9]+.[0-9]+'-beta`
-POD_BETA_VERSOIN_CDP=`cat GrowingAnalytics-cdp.podspec | grep 's.version\s*=' | grep -Eo '[0-9]+.[0-9]+.[0-9]+'-beta`
 BETA='beta'
 
-if [[ $POD_BETA_VERSOIN == *$BETA* && $POD_BETA_VERSOIN_CDP == *$BETA* && $POD_BETA_VERSOIN == $POD_BETA_VERSOIN_CDP ]]
+if [[ $POD_BETA_VERSOIN == *$BETA* ]]
 then
     echo "spec文件中，版本号包含beta，且配置正确，继续"
 else
@@ -26,10 +25,8 @@ fi
 
 echo "删除trunk上的cocoapods库"
 echo y | pod trunk delete GrowingAnalytics $POD_BETA_VERSOIN 
-echo y | pod trunk delete GrowingAnalytics-cdp $POD_BETA_VERSOIN 
 
 git tag $POD_BETA_VERSOIN
 git push --tags
 
 pod trunk push GrowingAnalytics.podspec --allow-warnings --use-libraries
-pod trunk push GrowingAnalytics-cdp.podspec --allow-warnings --use-libraries --synchronous

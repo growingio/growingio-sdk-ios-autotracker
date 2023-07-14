@@ -13,30 +13,6 @@ logger() {
 	fi
 }
 
-IS_SAAS=false
-chooseSaasOrCdp() {
-	PS3='Please choose SaaS or CDP:'
-	options=("SaaS" "CDP" "Quit")
-	select opt in "${options[@]}"; do
-		case $opt in
-		"SaaS")
-			IS_SAAS=true
-			break
-			;;
-		"CDP")
-			break
-			;;
-		"Quit")
-			exit 0
-			break
-			;;
-		*)
-			logger -e invalid option
-			;;
-		esac
-	done
-}
-
 MAIN_BUNDLE=""
 chooseMainBundle() {
 	PS3='Please choose which bundle you wanna build:'
@@ -125,9 +101,6 @@ chooseModulesWith() {
 MAIN_FRAMEWORK_NAME='GrowingAnalytics'
 copyAndModifyPodspec() {
 	logger -v "step: backup podspec"
-	if [ $IS_SAAS == false ]; then
-		MAIN_FRAMEWORK_NAME='GrowingAnalytics-cdp'
-	fi
 	cp "${MAIN_FRAMEWORK_NAME}.podspec" "${MAIN_FRAMEWORK_NAME}-backup.podspec"
 	modifyPodspec "${MAIN_FRAMEWORK_NAME}.podspec"
 }
@@ -181,28 +154,7 @@ generateProject() {
 		args+=" --verbose"
 	fi
 
-	if [ $IS_SAAS == false ]; then
-		# 会出现找不到GrowingAnalytics对应版本的报错，处理方法在下面
-		logger -i "tip: please ignore error message under, this script handled it perfectly"
-		bundle exec pod gen ${MAIN_FRAMEWORK_NAME}.podspec $args
-		logger -i "tip: please ignore error message above, this script handled it perfectly"
-	else
-		bundle exec pod gen ${MAIN_FRAMEWORK_NAME}.podspec $args || exit 1
-	fi
-
-	if [ $IS_SAAS == false ]; then
-		logger -v "step: modify CocoaPods.podfile.yaml"
-		# 这里用了比较绕的办法，让生成的GrowingAnalytics-cdp xcodeproj使用本地环境的GrowingAnalytics代码而不是Cocoapods Spec Repo上的对应的
-		# 另外一种办法是使用[.gen_config.yml](https://github.com/square/cocoapods-generate#gen_configyml)，添加external_source_pods:
-		# external_source_pods:
-		#	- "GrowingAnalytics":
-     	#	 - git: "https://github.com/growingio/growingio-sdk-ios-autotracker.git"
-     	# 这样在生成xcodeproj时将使用git url对应最新的GrowingAnalytics.podspec，无需先执行pod repo push REPO_NAME PODSPEC_NAME更新podspec
-		ruby ./scripts/modifyPodfileYAML.ruby "${PROJECT_FOR_IOS_PATH}/${MAIN_FRAMEWORK_NAME}/CocoaPods.podfile.yaml"
-		pushd ${PROJECT_FOR_IOS_PATH}/${MAIN_FRAMEWORK_NAME}
-		bundle exec pod update --no-repo-update
-		popd
-	fi
+	bundle exec pod gen ${MAIN_FRAMEWORK_NAME}.podspec $args || exit 1
 
 	logger -v "step: modify build settings using CocoaPods/Xcodeproj"
 	targets=$(ruby ./scripts/modifyPodsXcodeproj.ruby "./${PROJECT_FOR_IOS_PATH}/${MAIN_FRAMEWORK_NAME}/Pods/Pods.xcodeproj")
@@ -210,9 +162,6 @@ generateProject() {
 	for target in ${targets[@]}; do
 		if [ $target == "GrowingAnalytics" ]; then
 			schemes+=("GrowingAnalytics")
-		fi
-		if [ $target == "GrowingAnalytics-cdp" ]; then
-			schemes+=("GrowingAnalytics-cdp")
 		fi
 		if [ $target == "GrowingUtils" ]; then
 			schemes+=("GrowingUtils")
@@ -327,7 +276,6 @@ beginGenerate() {
 }
 
 main() {
-	chooseSaasOrCdp
 	chooseMainBundle
 	chooseModules
 	beginGenerate
