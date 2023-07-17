@@ -124,9 +124,11 @@
     _platform = deviceInfo.platform;
     _platformVersion = deviceInfo.platformVersion;
 
-    GrowingEventSequenceObject *sequence =
-        [[GrowingPersistenceDataProvider sharedInstance] getAndIncrement:self.eventType];
-    _eventSequenceId = sequence.sequenceId;
+    long long sequenceId =
+        [[GrowingPersistenceDataProvider sharedInstance] sequenceIdForEventType:self.eventType];
+    if (sequenceId > 0) {
+        _eventSequenceId = sequenceId;
+    }
     GrowingSession *session = [GrowingSession currentSession];
     _userId = session.loginUserId;
     _sessionId = session.sessionId;

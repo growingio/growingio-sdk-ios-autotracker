@@ -93,17 +93,13 @@ static GrowingPersistenceDataProvider *persistence = nil;
 - (NSString *)getStringforKey:(NSString *)key;
 { return [_growingUserdefault valueForKey:key]; }
 
-- (GrowingEventSequenceObject *)getAndIncrement:(NSString *)eventType {
-    int increase = 0;
+- (long long)sequenceIdForEventType:(NSString *)eventType {
     if ([eventType isEqualToString:@"VISIT"] || [eventType isEqualToString:@"PAGE"] ||
         [eventType isEqualToString:@"VIEW_CLICK"] || [eventType isEqualToString:@"VIEW_CHANGE"] ||
         [eventType isEqualToString:@"CUSTOM"]) {
-        increase = 1;
+        return [self increaseFor:kGrowingUserdefault_sequenceId spanValue:1];
     }
-    long long sequenceId = [self increaseFor:kGrowingUserdefault_sequenceId spanValue:increase];
-    GrowingEventSequenceObject *obj = [[GrowingEventSequenceObject alloc] init];
-    obj.sequenceId = sequenceId;
-    return obj;
+    return 0;
 }
 
 - (long long)increaseFor:(NSString *)key spanValue:(int)span {
@@ -118,9 +114,5 @@ static GrowingPersistenceDataProvider *persistence = nil;
     [_growingUserdefault synchronize];
     return result;
 }
-
-@end
-
-@implementation GrowingEventSequenceObject
 
 @end
