@@ -124,8 +124,7 @@
     _platform = deviceInfo.platform;
     _platformVersion = deviceInfo.platformVersion;
 
-    long long sequenceId =
-        [[GrowingPersistenceDataProvider sharedInstance] sequenceIdForEventType:self.eventType];
+    long long sequenceId = [[GrowingPersistenceDataProvider sharedInstance] sequenceIdForEventType:self.eventType];
     if (sequenceId > 0) {
         _eventSequenceId = sequenceId;
     }
