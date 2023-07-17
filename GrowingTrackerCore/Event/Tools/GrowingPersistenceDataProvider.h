@@ -21,8 +21,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class GrowingEventSequenceObject;
-
 @interface GrowingPersistenceDataProvider : NSObject
 
 + (instancetype)sharedInstance;
@@ -38,17 +36,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSString *)getStringforKey:(NSString *)key;
 
-- (GrowingEventSequenceObject *)getAndIncrement:(NSString *)eventType;
+- (long long)sequenceIdForEventType:(NSString *)eventType;
 
 // 防止xcode编码提示使用KVC来获取值
 - (void)setValue:(id _Nullable)value forKey:(NSString *_Nonnull)key UNAVAILABLE_ATTRIBUTE;
 - (id)valueForKey:(NSString *_Nonnull)key UNAVAILABLE_ATTRIBUTE;
-
-@end
-
-@interface GrowingEventSequenceObject : NSObject
-
-@property (nonatomic, assign) long long sequenceId;
 
 @end
 
