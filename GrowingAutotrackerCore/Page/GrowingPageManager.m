@@ -148,31 +148,8 @@
 }
 
 - (BOOL)isPrivateViewController:(UIViewController *)viewController {
-    if (!viewController) {
-        return NO;
-    }
     NSString *vcName = NSStringFromClass([viewController class]);
     return [self.ignoredPrivateControllers containsObject:vcName];
-}
-
-- (GrowingPage *)findPageByViewController:(UIViewController *)controller {
-    while ([self isPrivateViewController:controller]) {
-        controller = (UIViewController *)controller.growingNodeParent;
-    }
-
-    if (!controller) {
-        return self.currentPage;
-    }
-
-    GrowingPage *page = controller.growingPageObject;
-    if (!page) {
-        // 执行到此，执行流程大概是view -> findPageByView -> findPageByViewController
-        // view所在viewcontroller必定到了viewDidAppear生命周期
-        // 一般来说，page对象在viewDidAppear时就已创建，此处兼容page对象未生成的特殊情况，比如：
-        // 用户未在自定义的ViewController viewDidAppear中调用super viewDidAppear
-        page = [self createdPage:controller];
-    }
-    return page;
 }
 
 - (void)autotrackPage:(UIViewController *)controller
@@ -205,10 +182,22 @@
 
 - (GrowingPage *)findPageByView:(UIView *)view {
     UIViewController *current = [view growingHelper_viewController];
+    while (current && [self isPrivateViewController:current]) {
+        current = (UIViewController *)current.growingNodeParent;
+    }
     if (!current) {
         return self.currentPage;
     }
-    return [self findPageByViewController:current];
+
+    GrowingPage *page = current.growingPageObject;
+    if (!page) {
+        // 执行到此，执行流程大概是view -> findPageByView
+        // view所在viewcontroller必定到了viewDidAppear生命周期
+        // 一般来说，page对象在viewDidAppear时就已创建，此处兼容page对象未生成的特殊情况，比如：
+        // 用户未在自定义的ViewController viewDidAppear中调用super viewDidAppear
+        page = [self createdPage:current];
+    }
+    return page;
 }
 
 - (GrowingPage *)findAutotrackPageByPage:(GrowingPage *)page {
