@@ -22,11 +22,7 @@
 @implementation UIWindow (GrowingNode)
 
 - (id<GrowingNode>)growingNodeParent {
-    if (self.superview) {
-        return self.superview;
-    } else {
-        return nil;
-    }
+    return self.superview;
 }
 
 - (CGRect)growingNodeFrame {

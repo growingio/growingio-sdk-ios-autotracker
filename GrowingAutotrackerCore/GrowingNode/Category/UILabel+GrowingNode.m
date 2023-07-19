@@ -22,10 +22,7 @@
 @implementation UILabel (GrowingNode)
 
 - (NSString *)growingViewContent {
-    if (self.text.length) {
-        return self.text;
-    }
-    return nil;
+    return self.text;
 }
 
 @end

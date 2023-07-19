@@ -20,7 +20,6 @@
 #import <objc/runtime.h>
 #import "GrowingAutotrackerCore/Autotrack/GrowingPropertyDefine.h"
 #import "GrowingAutotrackerCore/Page/GrowingPage.h"
-#import "GrowingULViewControllerLifecycle.h"
 
 static char kGrowingPageObjectKey;
 static char kGrowingPageAttributesKey;
@@ -36,11 +35,6 @@ static char kGrowingPageAttributesKey;
         currentPageName = self.tabBarItem.title;
     }
     return currentPageName;
-}
-
-- (BOOL)growingHookIsCustomAddVC {
-    return !self.growingul_didAppear && self.parentViewController == nil &&
-           [UIApplication sharedApplication].keyWindow.rootViewController != self;
 }
 
 - (void)setGrowingPageObject:(GrowingPage *)page {

@@ -12,6 +12,8 @@
 #import "MockEventQueue.h"
 #import "ManualTrackHelper.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
+#import "GrowingAutotrackerCore/GrowingNode/GrowingNodeHelper.h"
+#import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
 
 @interface A1ViewClickEventsTest : KIFTestCase
 
@@ -35,14 +37,38 @@
     [[viewTester usingLabel:@"UI界面"] tap];
 }
 
+- (void)checkWebCirclePathWithView:(UIView *)view xpath:(NSString *)xpathForView xindex:(NSString *)xindexForView originxindex:(NSString *)originxindexForView {
+    // 检查圈选的计算逻辑得出的xpath、xindex是否正确
+    GrowingPage *page = [[GrowingPageManager sharedInstance] findPageByView:view];
+    NSDictionary *pathInfo = page.pathInfo;
+    NSString *pagexpath = pathInfo[@"xpath"];
+    NSString *pagexindex = pathInfo[@"xindex"];
+    [GrowingNodeHelper recalculateXpath:view block:^(NSString * _Nonnull xpath, NSString * _Nonnull xindex, NSString * _Nonnull originxindex) {
+        xpath = [NSString stringWithFormat:@"%@/%@", pagexpath, xpath];
+        xindex = [NSString stringWithFormat:@"%@/%@", pagexindex, xindex];
+        originxindex = [NSString stringWithFormat:@"%@/%@", pagexindex, originxindex];
+        XCTAssertEqualObjects(xpathForView, xpath);
+        XCTAssertEqualObjects(xindexForView, xindex);
+        XCTAssertEqualObjects(originxindexForView, originxindex);
+    }];
+}
+
 - (void)test01AlertButtonClick {
     // 对话框按钮点击，检测click事件
     [[viewTester usingLabel:@"AttributeLabel"] tap];
     [viewTester waitForAnimationsToFinish];
     [[viewTester usingLabel:@"ShowAlert"] tap];
     [viewTester waitForAnimationsToFinish];
-    [[viewTester usingLabel:@"取消"] tap];
     
+    KIFUIViewTestActor *actor = [viewTester usingLabel:@"取消"];
+    NSString *xpathForView = @"/UITabBarController/UINavigationController/GIOLabelAttributeViewController/UIView/"
+    @"_UIAlertControllerInterfaceActionGroupView/UIView/_UIInterfaceActionRepresentationsSequenceView/_UIInterfac"
+    @"eActionSeparatableSequenceView/UIStackView/_UIInterfaceActionCustomViewRepresentationView/Button";
+    NSString *xindexForView = @"/0/1/0/0/0/0/0/0/0/1/0";
+    NSString *originxindexForView = @"/0/1/0/0/0/0/0/0/0/1/0";
+    [self checkWebCirclePathWithView:actor.view xpath:xpathForView xindex:xindexForView originxindex:originxindexForView];
+    [actor tap];
+
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
     XCTAssertGreaterThanOrEqual(events.count, 2);
     
@@ -55,9 +81,8 @@
         
         XCTAssertEqualObjects(dic[@"path"], @"");
         XCTAssertEqualObjects(dic[@"textValue"], @"取消");
-        XCTAssertEqualObjects(dic[@"xpath"],
-            @"/UITabBarController/UINavigationController/GIOLabelAttributeViewController/UIView/_UIAlertControllerInterfaceActionGroupView/UIView/_UIInterfaceActionRepresentationsSequenceView/_UIInterfaceActionSeparatableSequenceView/UIStackView/_UIInterfaceActionCustomViewRepresentationView/Button");
-        XCTAssertEqualObjects(dic[@"xindex"], @"/0/1/0/0/0/0/0/0/0/1/0");
+        XCTAssertEqualObjects(dic[@"xpath"], xpathForView);
+        XCTAssertEqualObjects(dic[@"xindex"], xindexForView);
     }
 
     {
@@ -121,7 +146,13 @@
     // 单击ButtonWithImageView，检测click事件
     [[viewTester usingLabel:@"Simple UI Elements"] tap];
     [viewTester waitForAnimationsToFinish];
-    [[viewTester usingLabel:@"Food"] tap];
+    
+    KIFUIViewTestActor *actor = [viewTester usingLabel:@"Food"];
+    NSString *xpathForView = @"/UITabBarController/UINavigationController/GIOSimpleUIElemtsViewController/UIView/UIView/UIButton";
+    NSString *xindexForView = @"/0/1/0/0/0/0";
+    NSString *originxindexForView = @"/0/1/0/0/0/0";
+    [self checkWebCirclePathWithView:actor.view xpath:xpathForView xindex:xindexForView originxindex:originxindexForView];
+    [actor tap];
     [[viewTester usingLabel:@"好的"] tap];
     
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
@@ -135,8 +166,8 @@
         XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
         
         XCTAssertEqualObjects(dic[@"textValue"], @"Food");
-        XCTAssertEqualObjects(dic[@"xpath"], @"/UITabBarController/UINavigationController/GIOSimpleUIElemtsViewController/UIView/UIView/UIButton");
-        XCTAssertEqualObjects(dic[@"xindex"], @"/0/1/0/0/0/0");
+        XCTAssertEqualObjects(dic[@"xpath"], xpathForView);
+        XCTAssertEqualObjects(dic[@"xindex"], xindexForView);
     }
 }
 
@@ -144,8 +175,15 @@
     // 单击UIViewButton，检测click事件
     [[viewTester usingLabel:@"Simple UI Elements"] tap];
     [viewTester waitForAnimationsToFinish];
-    [[viewTester usingLabel:@"Fire"] tap];
+    
+    KIFUIViewTestActor *actor = [viewTester usingLabel:@"Fire"];
+    NSString *xpathForView = @"/UITabBarController/UINavigationController/GIOSimpleUIElemtsViewController/UIView/UIView/UIButton";
+    NSString *xindexForView = @"/0/1/0/0/0/1";
+    NSString *originxindexForView = @"/0/1/0/0/0/1";
+    [self checkWebCirclePathWithView:actor.view xpath:xpathForView xindex:xindexForView originxindex:originxindexForView];
+    [actor tap];
     [[viewTester usingLabel:@"好的"] tap];
+    
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
     XCTAssertEqual(events.count, 3);
 
@@ -157,8 +195,8 @@
         XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
         
         XCTAssertEqualObjects(dic[@"textValue"], @"Fire");
-        XCTAssertEqualObjects(dic[@"xpath"], @"/UITabBarController/UINavigationController/GIOSimpleUIElemtsViewController/UIView/UIView/UIButton");
-        XCTAssertEqualObjects(dic[@"xindex"], @"/0/1/0/0/0/1");
+        XCTAssertEqualObjects(dic[@"xpath"], xpathForView);
+        XCTAssertEqualObjects(dic[@"xindex"], xindexForView);
     }
 }
 
@@ -167,7 +205,13 @@
     [[viewTester usingLabel:@"Simple UI Elements"] tap];
     [viewTester waitForAnimationsToFinish];
     [[viewTester usingLabel:@"SecondSegment"] tap];
-    [[viewTester usingLabel:@"ThirdSegment"] tap];
+    
+    KIFUIViewTestActor *actor = [viewTester usingLabel:@"ThirdSegment"];
+    NSString *xpathForView = @"/UITabBarController/UINavigationController/GIOSimpleUIElemtsViewController/UIView/UISegmentedControl/UISegment";
+    NSString *xindexForView = @"/0/1/0/0/0/-";
+    NSString *originxindexForView = @"/0/1/0/0/0/2";
+    [self checkWebCirclePathWithView:actor.view xpath:xpathForView xindex:xindexForView originxindex:originxindexForView];
+    [actor tap];
     [viewTester waitForAnimationsToFinish];
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
     XCTAssertEqual(events.count, 3);
@@ -180,9 +224,9 @@
         XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
         
         XCTAssertEqualObjects(dic[@"textValue"], @"Third");
-        XCTAssertEqualObjects(dic[@"xpath"], @"/UITabBarController/UINavigationController/GIOSimpleUIElemtsViewController/UIView/UISegmentedControl/UISegment");
+        XCTAssertEqualObjects(dic[@"xpath"], xpathForView);
         XCTAssertEqualObjects(dic[@"index"], @(2));
-        XCTAssertEqualObjects(dic[@"xindex"], @"/0/1/0/0/0/-");
+        XCTAssertEqualObjects(dic[@"xindex"], xindexForView);
     }
 }
 
@@ -216,7 +260,35 @@
     [[viewTester usingLabel:@"好的"] tap];
 }
 
-- (void)test07IgnoreViewClass {
+- (void)test07UITableViewHeaderFooterViewButtonClick {
+    // 单击UITableViewHeaderFooterView上的Button，检测click事件
+    [[viewTester usingLabel:@"协议/接口"] tap];
+    [viewTester waitForAnimationsToFinish];
+    
+    KIFUIViewTestActor *actor = [viewTester usingLabel:@"header1"];
+    NSString *xpathForView = @"/UITabBarController/UINavigationController/GIOMeasurementProtocolTableViewController/UITableView/UITableViewHeaderFooterView/UIButton";
+    NSString *xindexForView = @"/0/0/0/0/1/0";
+    NSString *originxindexForView = @"/0/0/0/0/1/0";
+    [self checkWebCirclePathWithView:actor.view xpath:xpathForView xindex:xindexForView originxindex:originxindexForView];
+    [actor tap];
+
+    NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
+    XCTAssertEqual(events.count, 2);
+
+    {
+        GrowingViewElementEvent *event = (GrowingViewElementEvent *)events[events.count - 1];
+        NSDictionary *dic = event.toDictionary;
+        XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeViewClick);
+        XCTAssertTrue([ManualTrackHelper viewClickEventCheck:dic]);
+        XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
+        
+        XCTAssertEqualObjects(dic[@"textValue"], @"header1");
+        XCTAssertEqualObjects(dic[@"xpath"], xpathForView);
+        XCTAssertEqualObjects(dic[@"xindex"], xindexForView);
+    }
+}
+
+- (void)test08IgnoreViewClass {
     [[viewTester usingLabel:@"IgnoreViewClass"] tap];
     [viewTester waitForAnimationsToFinish];
     
@@ -245,7 +317,7 @@
     XCTAssertEqualObjects(dic[@"xindex"], @"/0/1/0/0/0");
 }
 
-- (void)test08IgnoreViewClasses {
+- (void)test09IgnoreViewClasses {
     [[viewTester usingLabel:@"IgnoreViewClass"] tap];
     [viewTester waitForAnimationsToFinish];
     

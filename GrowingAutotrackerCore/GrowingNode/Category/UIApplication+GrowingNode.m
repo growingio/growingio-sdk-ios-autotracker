@@ -22,13 +22,15 @@
 @implementation UIApplication (GrowingNode)
 
 - (UIWindow *)growingMainWindow {
+    UIWindow *w = nil;
     for (NSUInteger i = 0; i < self.windows.count; i++) {
         UIWindow *window = self.windows[i];
         if (window.windowLevel == UIWindowLevelNormal && window.hidden == NO) {
-            return window;
+            w = window;
+            break;
         }
     }
-    return nil;
+    return w;
 }
 
 @end

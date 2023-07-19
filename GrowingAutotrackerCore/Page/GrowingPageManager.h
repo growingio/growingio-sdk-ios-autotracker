@@ -31,8 +31,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (GrowingPage *)currentPage;
 - (NSArray<GrowingPage *> *)allDidAppearPages;
 
-- (BOOL)isDidAppearController:(UIViewController *)vc;
-
 - (void)autotrackPage:(UIViewController *)controller
                 alias:(NSString *)alias
            attributes:(NSDictionary<NSString *, NSString *> *_Nullable)attributes;

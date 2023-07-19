@@ -36,20 +36,20 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *growingNodeSubSimilarIndex;
 /// 原始父节点
 - (id<GrowingNode> _Nullable)growingNodeParent;
-/// 不进行track
-- (BOOL)growingNodeDonotTrack;
-/// 不进行圈选
-- (BOOL)growingNodeDonotCircle;
-/// 是否可交互
-- (BOOL)growingNodeUserInteraction;
-/// 内容
-- (NSString *_Nullable)growingNodeContent;
 /// 在主window的frame
 - (CGRect)growingNodeFrame;
 
 @optional
 /// 过滤后的子节点,例如UITableView子节点只需要是cell和footter
 - (NSArray<id<GrowingNode>> *_Nullable)growingNodeChilds;
+/// 是否可交互（仅UIView）
+- (BOOL)growingNodeUserInteraction;
+/// 不进行track（仅UIView）
+- (BOOL)growingNodeDonotTrack;
+/// 不进行圈选（仅UIView）
+- (BOOL)growingNodeDonotCircle;
+/// 内容（仅UIView）
+- (NSString *_Nullable)growingNodeContent;
 
 @end
 

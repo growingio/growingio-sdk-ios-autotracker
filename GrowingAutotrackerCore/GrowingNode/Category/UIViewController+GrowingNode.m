@@ -78,34 +78,6 @@
     }
 }
 
-- (BOOL)growingAppearStateCanTrack {
-    if ([[GrowingPageManager sharedInstance] isDidAppearController:self]) {
-        return YES;
-    }
-    // 此处判断意义在于避免没有使用addChildViewController方法的childVC没有调用didappear
-    // 造成checknode失败 页面元素无法收集
-    if ([self growingHookIsCustomAddVC]) {
-        return YES;
-    }
-    return NO;
-}
-
-- (BOOL)growingNodeDonotTrack {
-    return (![self isViewLoaded] || !self.view.window || ![self growingAppearStateCanTrack]);
-}
-
-- (BOOL)growingNodeDonotCircle {
-    return NO;
-}
-
-- (BOOL)growingNodeUserInteraction {
-    return NO;
-}
-
-- (NSString *)growingNodeContent {
-    return nil;
-}
-
 #pragma mark - xpath
 - (NSInteger)growingNodeKeyIndex {
     NSString *classString = NSStringFromClass(self.class);

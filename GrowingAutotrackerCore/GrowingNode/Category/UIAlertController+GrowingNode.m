@@ -83,16 +83,12 @@
     return subIndex;
 }
 
-- (BOOL)growingNodeUserInteraction {
+- (BOOL)growingViewUserInteraction {
     return YES;
 }
 
 - (NSString *)growingNodeContent {
-    NSString *nodeContent = [[UIAlertController growing_actionForActionView:(id)self] title];
-    if (nodeContent.length) {
-        return nodeContent;
-    }
-    return nil;
+    return [[UIAlertController growing_actionForActionView:(id)self] title];
 }
 
 @end
