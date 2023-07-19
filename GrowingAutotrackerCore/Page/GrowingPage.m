@@ -91,9 +91,6 @@
 }
 
 - (NSString *)tag {
-    if (self.carrier == nil) {
-        return nil;
-    }
     UIViewController *parentViewController = self.carrier.parentViewController;
     if (parentViewController == nil) {
         return nil;
@@ -102,14 +99,13 @@
     int index = 0;
     for (UIViewController *child in childs) {
         if (self.carrier == child) {
-            return [NSString stringWithFormat:@"%d", index];
+            break;
         }
-
         if (self.carrier.class == child.class) {
             index++;
         }
     }
-    return nil;
+    return [NSString stringWithFormat:@"%d", index];
 }
 
 - (NSDictionary *)pathInfo {

@@ -83,26 +83,6 @@
     return [super growingNodeSubIndex];
 }
 
-- (BOOL)growingNodeUserInteraction {
-    return YES;
-}
-
-- (BOOL)growingViewUserInteraction {
-    return YES;
-}
-
-@end
-
-@interface UICollectionReusableView (GrowingNode) <GrowingNode>
-
-@end
-
-@implementation UICollectionReusableView (GrowingNode)
-
-- (BOOL)growingNodeUserInteraction {
-    return YES;
-}
-
 - (BOOL)growingViewUserInteraction {
     return YES;
 }

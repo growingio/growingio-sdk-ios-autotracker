@@ -38,11 +38,6 @@
 #pragma clang diagnostic ignored "-Wundeclared-selector"
     UIViewController *vc1 = [[UIViewController alloc]init];
     [vc1 performSelector:@selector(growingNodeParent)];
-    [vc1 performSelector:@selector(growingAppearStateCanTrack)];
-    [vc1 performSelector:@selector(growingNodeDonotTrack)];
-    [vc1 performSelector:@selector(growingNodeDonotCircle)];
-    [vc1 performSelector:@selector(growingNodeUserInteraction)];
-    [vc1 performSelector:@selector(growingNodeContent)];
     [vc1 performSelector:@selector(growingNodeKeyIndex)];
     [vc1 performSelector:@selector(growingNodeSubPath)];
     [vc1 performSelector:@selector(growingNodeSubIndex)];

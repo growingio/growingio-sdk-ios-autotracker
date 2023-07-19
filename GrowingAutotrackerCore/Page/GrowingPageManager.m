@@ -138,15 +138,6 @@
     return self.visiablePages.allObjects;
 }
 
-- (BOOL)isDidAppearController:(UIViewController *)vc {
-    for (GrowingPage *page in self.visiablePages) {
-        if (page.carrier == vc) {
-            return YES;
-        }
-    }
-    return NO;
-}
-
 - (BOOL)isPrivateViewController:(UIViewController *)viewController {
     NSString *vcName = NSStringFromClass([viewController class]);
     return [self.ignoredPrivateControllers containsObject:vcName];

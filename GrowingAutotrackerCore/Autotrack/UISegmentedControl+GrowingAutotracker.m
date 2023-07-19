@@ -48,10 +48,8 @@
 
 - (nullable NSArray *)growing_segmentViews {
     NSArray *array = nil;
-    if ([self growingHelper_getIvar:"_segments" outObj:&array]) {
-        return array;
-    }
-    return nil;
+    [self growingHelper_getIvar:"_segments" outObj:&array];
+    return array;
 }
 
 static void growingUISegmentedControlSetUp(UISegmentedControl *self) {

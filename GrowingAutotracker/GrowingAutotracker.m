@@ -20,7 +20,6 @@
 #import "GrowingAutotracker/GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingRealAutotracker.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
-#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 
 static GrowingAutotracker *sharedInstance = nil;
 

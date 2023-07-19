@@ -78,7 +78,7 @@ typedef NS_ENUM(NSInteger, GIOMeasurementProtocolCount) { GIOAutoTrack = 0, GIOM
     
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     button.translatesAutoresizingMaskIntoConstraints = NO;
-    [button setTitle:@"button" forState:UIControlStateNormal];
+    [button setTitle:[NSString stringWithFormat:@"header%ld", (long)section] forState:UIControlStateNormal];
     [button setBackgroundColor:UIColor.grayColor];
     [button addTarget:self action:@selector(buttonAction) forControlEvents:UIControlEventTouchUpInside];
     [vHeader addSubview:button];
