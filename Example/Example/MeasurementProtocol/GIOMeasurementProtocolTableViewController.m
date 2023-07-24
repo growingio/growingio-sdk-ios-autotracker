@@ -79,14 +79,13 @@ typedef NS_ENUM(NSInteger, GIOMeasurementProtocolCount) { GIOAutoTrack = 0, GIOM
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     button.translatesAutoresizingMaskIntoConstraints = NO;
     [button setTitle:[NSString stringWithFormat:@"header%ld", (long)section] forState:UIControlStateNormal];
-    [button setBackgroundColor:UIColor.grayColor];
     [button addTarget:self action:@selector(buttonAction) forControlEvents:UIControlEventTouchUpInside];
     [vHeader addSubview:button];
     
     [NSLayoutConstraint activateConstraints:@[
         [button.centerYAnchor constraintEqualToAnchor:vHeader.centerYAnchor],
         [button.trailingAnchor constraintEqualToAnchor:vHeader.trailingAnchor constant:-15.0f],
-        [button.widthAnchor constraintEqualToConstant:60.0f],
+        [button.widthAnchor constraintEqualToConstant:80.0f],
         [button.heightAnchor constraintEqualToConstant:35.0f]
     ]];
 

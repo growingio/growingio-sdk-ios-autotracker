@@ -85,6 +85,7 @@
 		346EABE5277EE1FD00A32B03 /* HybridTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 42ADE26B250B292900CA7268 /* HybridTest.m */; };
 		346EABEB277EE53200A32B03 /* DeviceInfoTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 346EABEA277EE53200A32B03 /* DeviceInfoTest.m */; };
 		346EABF2277EE63F00A32B03 /* NodeTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 346EABF1277EE63F00A32B03 /* NodeTest.m */; };
+		34734EE52A69118E00BF54F4 /* WebCircleTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BA7B44277D91900030AC21 /* WebCircleTest.m */; };
 		347B8F432A0A46DD00B8A114 /* ScreenshotTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 347B8F422A0A46DD00B8A114 /* ScreenshotTest.m */; };
 		34821C6727B247DB006C8B8E /* UISegmentedControlAutotrackTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34821C6627B247DB006C8B8E /* UISegmentedControlAutotrackTest.m */; };
 		34821C6C27B25AE7006C8B8E /* HybridTest_HostApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 34821C6B27B25AE7006C8B8E /* HybridTest_HostApp.m */; };
@@ -154,7 +155,6 @@
 		34BA7B37277C64070030AC21 /* ProtobufPersistenceTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A4C02C276C3A7E0056C8C4 /* ProtobufPersistenceTest.m */; };
 		34BA7B38277C640B0030AC21 /* ProtobufEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A4C02D276C3A7E0056C8C4 /* ProtobufEventsTest.m */; };
 		34BA7B39277C640F0030AC21 /* ProtobufRequestHeaderTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A4C02E276C3A7E0056C8C4 /* ProtobufRequestHeaderTest.m */; };
-		34BA7B45277D91900030AC21 /* WebCircleTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BA7B44277D91900030AC21 /* WebCircleTest.m */; };
 		34BA7B48277D92840030AC21 /* FileStorageTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BA7B47277D92840030AC21 /* FileStorageTest.m */; };
 		34BDC35A277088D40030B3CE /* UICatalogTests.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 34BDC359277088D40030B3CE /* UICatalogTests.storyboard */; };
 		34BF77AE2795095100CA18BA /* GrowingSessionTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BF77AD2795095100CA18BA /* GrowingSessionTest.m */; };
@@ -2196,7 +2196,6 @@
 				34AC7AC92798270500C0DFA5 /* GrowingUIKitHelpersTest.m in Sources */,
 				34BA7B24277C62E70030AC21 /* HybridEventTest.m in Sources */,
 				34B2147C27966142004E2CE3 /* DatabaseTest.m in Sources */,
-				34BA7B45277D91900030AC21 /* WebCircleTest.m in Sources */,
 				34BA7B2A277C63660030AC21 /* MockEventQueue.m in Sources */,
 				34AC7ACB2798271E00C0DFA5 /* GrowingFoundationHelpersTest.m in Sources */,
 				34B2148727969562004E2CE3 /* DynamicProxyTest.m in Sources */,
@@ -2247,6 +2246,7 @@
 			files = (
 				34AC7ACE279829FC00C0DFA5 /* GrowingUIKitHelpersTest.m in Sources */,
 				34AC7ACD2798289C00C0DFA5 /* InvocationHelper.m in Sources */,
+				34734EE52A69118E00BF54F4 /* WebCircleTest.m in Sources */,
 				34BF77CB279562AC00CA18BA /* ManualTrackHelper.m in Sources */,
 				34821C6C27B25AE7006C8B8E /* HybridTest_HostApp.m in Sources */,
 				34BF77C92795571000CA18BA /* MockEventQueue.m in Sources */,
