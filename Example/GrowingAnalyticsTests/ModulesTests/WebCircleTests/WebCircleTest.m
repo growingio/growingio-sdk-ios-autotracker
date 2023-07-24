@@ -159,11 +159,11 @@ static __weak GrowingWebCircle *webCircle;
     [viewTester tapRowInTableViewAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
     [viewTester tapRowInTableViewAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
 
-    XCTestExpectation *expectation = [self expectationWithDescription:@"testWebCircle Test failed : timeout"];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"WebCircle Test failed : timeout"];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSString *message = MockWebSocket.sharedInstance.lastMessage;
-        NSMutableDictionary *dict = [[message growingHelper_jsonObject] mutableCopy];
-
+        NSMutableDictionary *dic = [[message growingHelper_jsonObject] mutableCopy];
+        [self webCircleSocketParamsCheck:dic];
         [expectation fulfill];
     });
 
@@ -190,17 +190,16 @@ static __weak GrowingWebCircle *webCircle;
     [webCircle webSocketDidOpen:nil];
     [webCircle webSocket:nil didReceiveMessage:@"{\"msgType\":\"ready\"}"];
 }
-//
-//- (void)test05SocketOpenTimeOut {
-//    XCTestExpectation *expectation = [self expectationWithDescription:@""];
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(11.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        [[viewTester usingLabel:@"知道了"] tap];
-//        [viewTester waitForAnimationsToFinish];
-//        [expectation fulfill];
-//    });
-//
-//    [self waitForExpectationsWithTimeout:15.0f handler:nil];
-//}
+
+- (void)test05SocketOpenTimeOut {
+    XCTestExpectation *expectation = [self expectationWithDescription:@""];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(11.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [[viewTester usingLabel:@"知道了"] tap];
+        [expectation fulfill];
+    });
+
+    [self waitForExpectationsWithTimeout:15.0f handler:nil];
+}
 
 - (void)test06StatusTap {
     [webCircle webSocket:nil didReceiveMessage:@"{\"msgType\":\"ready\"}"];
@@ -220,6 +219,27 @@ static __weak GrowingWebCircle *webCircle;
     [webCircle webSocket:nil didReceiveMessage:@"{\"msgType\":\"ready\"}"];
     // 尝试通过tapPoint点击到html中的button
     [viewTester tapScreenAtPoint:CGPointMake(100, 200)];
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"WebCircle Test failed : timeout"];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSString *message = MockWebSocket.sharedInstance.lastMessage;
+        NSMutableDictionary *dic = [[message growingHelper_jsonObject] mutableCopy];
+        [self webCircleSocketParamsCheck:dic];
+        
+        // webView圈选数据
+        NSArray *elements = dic[@"elements"];
+        XCTAssertNotNil(elements);
+        for (NSDictionary *element in elements) {
+            if ([element[@"nodeType"] isEqualToString:@"WEB_VIEW"]) {
+                XCTAssertNotNil(element[@"webView"]);
+            }
+        }
+        
+        [expectation fulfill];
+    });
+
+    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+    
     [[viewTester usingLabel:@"UI界面"] tap];
 }
 
@@ -233,8 +253,39 @@ static __weak GrowingWebCircle *webCircle;
     [[viewTester usingLabel:@"知道了"] tap];
 }
 
-- (BOOL)webCircleSocketParamsCheck:(NSDictionary *)dic {
-    return YES;
+- (void)webCircleSocketParamsCheck:(NSDictionary *)dic {
+    XCTAssertEqualObjects(dic[@"msgType"], @"refreshScreenshot");
+    XCTAssertNotNil(dic[@"screenWidth"]);
+    XCTAssertNotNil(dic[@"screenHeight"]);
+    XCTAssertNotNil(dic[@"snapshotKey"]);
+    XCTAssertNotNil(dic[@"scale"]);
+    XCTAssertNotNil(dic[@"screenshot"]);
+    
+    NSArray *elements = dic[@"elements"];
+    XCTAssertNotNil(elements);
+    for (NSDictionary *element in elements) {
+        XCTAssertNotNil(element[@"left"]);
+        XCTAssertNotNil(element[@"top"]);
+        XCTAssertNotNil(element[@"width"]);
+        XCTAssertNotNil(element[@"height"]);
+        XCTAssertNotNil(element[@"nodeType"]);
+        XCTAssertNotNil(element[@"domain"]);
+        XCTAssertNotNil(element[@"zLevel"]);
+        XCTAssertNotNil(element[@"xpath"]);
+        XCTAssertNotNil(element[@"xindex"]);
+        XCTAssertNotNil(element[@"page"]);
+        XCTAssertNotNil(element[@"isContainer"]);
+    }
+    
+    NSArray *pages = dic[@"pages"];
+    XCTAssertNotNil(pages);
+    for (NSDictionary *page in pages) {
+        XCTAssertNotNil(page[@"path"]);
+        XCTAssertNotNil(page[@"top"]);
+        XCTAssertNotNil(page[@"width"]);
+        XCTAssertNotNil(page[@"left"]);
+        XCTAssertNotNil(page[@"height"]);
+    }
 }
 
 @end

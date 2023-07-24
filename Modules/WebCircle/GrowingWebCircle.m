@@ -33,7 +33,6 @@
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Menu/GrowingAlert.h"
-#import "GrowingTrackerCore/Menu/GrowingStatusBar.h"
 #import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
 #import "GrowingTrackerCore/Public/GrowingFlutterService.h"
 #import "GrowingTrackerCore/Public/GrowingScreenshotService.h"
@@ -43,6 +42,7 @@
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "Modules/WebCircle/GrowingWebCircleElement.h"
+#import "Modules/WebCircle/GrowingWebCircleStatusView.h"
 
 #import <JavaScriptCore/JavaScriptCore.h>
 #import "Modules/Hybrid/GrowingHybridBridgeProvider.h"
@@ -59,10 +59,7 @@ GrowingMod(GrowingWebCircle)
 // 表示web和app是否同时准备好数据发送，此时表示可以发送数据
 @property (nonatomic, assign) BOOL isReady;
 
-@property (nonatomic, copy) void (^onReadyBlock)(void);
-@property (nonatomic, copy) void (^onFinishBlock)(void);
-
-@property (nonatomic, retain) GrowingStatusBar *statusWindow;
+@property (nonatomic, retain) GrowingWebCircleStatusView *statusView;
 
 @property (nonatomic, retain) NSMutableArray<NSString *> *cachedEvents;
 
@@ -101,7 +98,7 @@ GrowingMod(GrowingWebCircle)
     NSString *serviceType = params[@"serviceType"];
     NSString *wsurl = params[@"wsUrl"];
     if (serviceType.length > 0 && [serviceType isEqualToString:@"circle"] && wsurl.length > 0) {
-        [self runWithCircle:[NSURL URLWithString:wsurl] readyBlock:nil finishBlock:nil];
+        [self runWithCircle:[NSURL URLWithString:wsurl]];
         return YES;
     }
     return NO;
@@ -110,7 +107,9 @@ GrowingMod(GrowingWebCircle)
 #pragma mark - actions
 
 - (void)_setNeedUpdateScreen {
-    [self sendScreenShot];
+    if (self.isReady) {
+        [self sendScreenShot];
+    }
 }
 
 #pragma mark - screenShot
@@ -174,13 +173,6 @@ GrowingMod(GrowingWebCircle)
 - (void)resetSnapshotKey {
     // running in main thread
     _snapNumber = 0;
-}
-
-- (NSMutableArray *)elements {
-    if (!_elements) {
-        _elements = [NSMutableArray array];
-    }
-    return _elements;
 }
 
 - (void)traverseViewNode:(GrowingViewNode *)viewNode {
@@ -292,10 +284,6 @@ GrowingMod(GrowingWebCircle)
 }
 
 - (NSDictionary *)dictForUserAction:(NSString *)action {
-    if (action.length == 0) {
-        return nil;
-    }
-
     UIImage *image = [self.screenshotProvider screenShot];
     NSData *data = [image growingHelper_JPEG:0.8];
 
@@ -327,22 +315,11 @@ GrowingMod(GrowingWebCircle)
 }
 
 - (void)sendScreenShot {
-    if (self.isReady) {
-        [self sendScreenShotWithCallback:nil];
-    }
-}
-
-- (void)sendScreenShotWithCallback:(void (^)(NSString *))callback  // in case of error, the
-                                                                   // callback parameter is nil
-{
     // eventType已经忽略
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     NSString *userAction = @"refreshScreenshot";
     [dict addEntriesFromDictionary:[self dictForUserAction:userAction]];
     if (dict.count == 0) {
-        if (callback != nil) {
-            callback(nil);
-        }
         return;
     }
 
@@ -353,18 +330,10 @@ GrowingMod(GrowingWebCircle)
                             if (sself != nil && dict) {
                                 [sself sendJson:dict];
                             }
-                            if (callback != nil) {
-                                NSString *dictString = [dict growingHelper_jsonString];
-                                callback(dictString);  // dictString == nil for error
-                            }
                         }];
 }
 
-- (void)remoteReady {
-    [self sendScreenShot];
-}
-
-- (void)runWithCircle:(NSURL *)url readyBlock:(void (^)(void))readyBlock finishBlock:(void (^)(void))finishBlock {
+- (void)runWithCircle:(NSURL *)url {
     if (self.webSocket) {
         [self.webSocket close];
         self.webSocket.delegate = nil;
@@ -375,9 +344,7 @@ GrowingMod(GrowingWebCircle)
         Class<GrowingWebSocketService> serviceClass =
             [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingWebSocketService)];
         if (!serviceClass) {
-            GIOLogError(
-                @"[GrowingWebCircle] -runWithCircle:readyBlock:finishBlock: web circle error : no websocket service "
-                @"support");
+            GIOLogError(@"[GrowingWebCircle] -runWithCircle: web circle error : no websocket service support");
             return;
         }
 
@@ -402,25 +369,12 @@ GrowingMod(GrowingWebCircle)
             [self.webSocket open];
         }
 
-        if (!self.statusWindow) {
-            self.statusWindow = [[GrowingStatusBar alloc] initWithFrame:[UIScreen mainScreen].bounds];
-            self.statusWindow.hidden = NO;
-            self.statusWindow.statusLable.text = @"正在等待web链接";
-            self.statusWindow.statusLable.textAlignment = NSTextAlignmentCenter;
+        if (!self.statusView) {
+            self.statusView = [[GrowingWebCircleStatusView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+            self.statusView.status = GrowingWebCircleStatusWaitConnect;
 
             __weak typeof(self) wself = self;
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                if (wself && [wself.statusWindow.statusLable.text isEqualToString:@"正在等待web链接"]) {
-                    GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert
-                                                                       title:@"提示"
-                                                                     message:
-                                                                         @"电脑端连接超时，请刷新电脑页面，"
-                                                                         @"再次尝试扫码圈选。"];
-                    [alert addOkWithTitle:@"知道了" handler:nil];
-                    [alert showAlertAnimated:NO];
-                }
-            });
-            self.statusWindow.onButtonClick = ^{
+            self.statusView.onButtonClick = ^{
                 NSString *content = [NSString stringWithFormat:@"APP版本: %@\nSDK版本: %@",
                                                                [GrowingDeviceInfo currentDeviceInfo].appFullVersion,
                                                                GrowingTrackerVersionName];
@@ -436,9 +390,6 @@ GrowingMod(GrowingWebCircle)
                 [alert showAlertAnimated:NO];
             };
         }
-
-        self.onReadyBlock = readyBlock;
-        self.onFinishBlock = finishBlock;
     }
 }
 
@@ -457,15 +408,10 @@ GrowingMod(GrowingWebCircle)
 }
 
 - (void)start {
-    self.statusWindow.statusLable.text = @"正在进行GrowingIO移动端圈选";
-    self.statusWindow.statusLable.textAlignment = NSTextAlignmentCenter;
-    if (self.onReadyBlock) {
-        self.onReadyBlock();
-        self.onReadyBlock = nil;
-    }
+    self.statusView.status = GrowingWebCircleStatusOpening;
     [self resetSnapshotKey];
     self.isReady = YES;
-    [self remoteReady];
+    [self sendScreenShot];
     // Hybrid的布局改变回调代理设置
     [GrowingHybridBridgeProvider sharedInstance].domChangedDelegate = self;
     // 监听原生事件，变动时发送
@@ -477,8 +423,7 @@ GrowingMod(GrowingWebCircle)
     GIOLogDebug(@"[GrowingWebCircle] 开始断开连接");
     NSDictionary *dict = @{@"msgType": @"quit"};
     [self sendJson:dict];
-    self.statusWindow.statusLable.text = @"正在关闭web圈选...";
-    self.statusWindow.statusLable.textAlignment = NSTextAlignmentCenter;
+    self.statusView.status = GrowingWebCircleStatusClosing;
     self.isReady = NO;
     [self _stopWithError:nil];
 }
@@ -499,17 +444,7 @@ GrowingMod(GrowingWebCircle)
         [self.webSocket close];
         self.webSocket = nil;
     }
-    if (self.onFinishBlock) {
-        self.onFinishBlock();
-        self.onFinishBlock = nil;
-    }
-    if (self.onReadyBlock) {
-        self.onReadyBlock = nil;
-    }
-    if (self.statusWindow) {
-        self.statusWindow.hidden = YES;
-        self.statusWindow = nil;
-    }
+    self.statusView = nil;
     if (error.length) {
         GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert
                                                            title:@"设备已断开连接"
@@ -636,7 +571,7 @@ GrowingMod(GrowingWebCircle)
                                  usingBlock:^(__kindof NSString *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
                                      if ([obj isEqualToString:GrowingEventTypeViewClick] ||
                                          [obj isEqualToString:GrowingEventTypePage]) {
-                                         [self sendScreenShotWithCallback:nil];
+                                         [self sendScreenShot];
                                          *stop = YES;
                                      }
                                  }];
