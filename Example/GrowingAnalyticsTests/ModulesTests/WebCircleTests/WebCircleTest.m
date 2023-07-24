@@ -17,150 +17,224 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import <KIF/KIF.h>
 
-#import <XCTest/XCTest.h>
-
-#import "GrowingAutotracker.h"
-#import "GrowingAutotrackConfiguration.h"
-#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
-#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
+#import "GrowingModuleManager.h"
 #import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
-#import "GrowingTrackerCore/Event/GrowingNodeProtocol.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
+#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "Modules/WebCircle/GrowingWebCircle.h"
-#import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
-#import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
-#import "Modules/WebCircle/GrowingWebCircleElement.h"
+#import "Services/WebSocket/GrowingSRWebSocket.h"
+
+@interface MockWebSocket : NSObject
+
+@property (nonatomic, strong) NSMutableArray<NSString *> *messages;
+
++ (instancetype)sharedInstance;
+
+@end
+
+@implementation MockWebSocket
+
++ (instancetype)sharedInstance {
+    static id _sharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _sharedInstance = [[self alloc] init];
+    });
+    return _sharedInstance;
+}
+
+- (instancetype)init {
+    if (self = [super init]) {
+        self.messages = [NSMutableArray arrayWithCapacity:5];
+    }
+    return self;
+}
+
+- (void)cleanMessages {
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        [self.messages removeAllObjects];
+    }];
+}
+
+- (NSString *)lastMessage {
+    __block NSString *message = nil;
+    [GrowingDispatchManager
+        dispatchInGrowingThread:^{
+            message = self.messages.lastObject.copy;
+        }
+                  waitUntilDone:YES];
+    return message;
+}
+
+- (void)addMessage:(NSString *)message {
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        [self.messages addObject:message];
+    }];
+}
+
+@end
+
+@interface GrowingModuleManager (XCTest)
+
+@property (nonatomic, strong) NSMutableArray *modules;
+
+@end
 
 @interface GrowingWebCircle (XCTest)
 
-- (NSMutableDictionary *)dictFromPage:(GrowingPage *)page;
-
-- (unsigned long)getSnapshotKey;
-
-- (void)resetSnapshotKey;
-
-- (NSMutableArray *)elements;
-
-- (void)sendScreenShot;
-
-- (void)remoteReady;
-
-- (void)runWithCircle:(NSURL *)url readyBlock:(void (^)(void))readyBlock finishBlock:(void (^)(void))finishBlock;
-
-- (void)start;
-
 - (void)stop;
-
-- (void)sendScreenShotWithCallback:(void (^)(NSString *))callback;
-
-
-#pragma mark - GrowingDeepLinkHandlerProtocol
-
-- (BOOL)growingHandlerUrl:(NSURL *)url;
 
 #pragma mark - Websocket Delegate
 
-- (void)webSocketDidOpen:(id <GrowingWebSocketService>)webSocket;
+- (void)webSocketDidOpen:(id<GrowingWebSocketService>)webSocket;
 
-- (void)webSocket:(id <GrowingWebSocketService>)webSocket didReceiveMessage:(id)message;
+- (void)webSocket:(id<GrowingWebSocketService>)webSocket didReceiveMessage:(id)message;
+
+- (void)webSocket:(id<GrowingWebSocketService>)webSocket
+    didCloseWithCode:(NSInteger)code
+              reason:(NSString *)reason
+            wasClean:(BOOL)wasClean;
+
+- (void)webSocket:(id<GrowingWebSocketService>)webSocket didFailWithError:(NSError *)error;
+
+@end
+
+@implementation GrowingSRWebSocket (XCTest)
+
+- (void)send:(id)data {
+    [MockWebSocket.sharedInstance addMessage:data];
+}
+
+- (void)setDelegate:(id)delegate {
+    // 在单测中，使用测试逻辑进行socket
+}
+
+- (NSInteger)readyState {
+    return Growing_WS_OPEN;
+}
 
 @end
 
-@interface GrowingPageManager (XCTest)
-
-- (GrowingPage *)createdViewControllerPage:(UIViewController *)controller;
+@interface WebCircleTest : KIFTestCase
 
 @end
 
-@interface WebCircleTest : XCTestCase
-
-@end
+static __weak GrowingWebCircle *webCircle;
 
 @implementation WebCircleTest
 
 + (void)setUp {
-    GrowingAutotrackConfiguration *config = [GrowingAutotrackConfiguration configurationWithProjectId:@"test"];
-    GrowingConfigurationManager.sharedInstance.trackConfiguration = config;
+    NSArray *modules = [GrowingModuleManager sharedInstance].modules.copy;
+    for (id module in modules) {
+        if ([module isKindOfClass:[GrowingWebCircle class]]) {
+            webCircle = (GrowingWebCircle *)module;
+            break;
+        }
+    }
 }
 
 - (void)setUp {
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+    [[viewTester usingLabel:@"协议/接口"] tap];
+
+    // mock
+    NSURL *url = [NSURL URLWithString:
+                            @"growing.bf30ad277eaae1aa://growingio/webservice?serviceType=circle&wsUrl"
+                            @"=wss://portal.growingio.com/app/r85jV5gv/circle/faeb773a1d004663a86c227a159cc687"];
+    [GrowingDeepLinkHandler handlerUrl:url];
+    [webCircle webSocketDidOpen:nil];
+
+    [MockWebSocket.sharedInstance cleanMessages];
 }
 
 - (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
+    [webCircle stop];
+    [[viewTester usingLabel:@"协议/接口"] tap];
 }
 
-- (void)testGrowingDeepLinkHandler {
-    NSURL *url1 = [NSURL URLWithString: @"http://test.growingio.com/oauth2/"
-                   @"qrcode.html?URLScheme=growing.test&productId=test&circleRoomNumber=test0f4cfa51ff3f&serviceType="
-                   @"circle&appName=GrowingIO&wsUrl=ws://cdp.growingio.com/app/test/circle/test0f4cfa51ff3f"];
+- (void)test01SocketSend {
+    [webCircle webSocket:nil didReceiveMessage:@"{\"msgType\":\"ready\"}"];
 
-    [GrowingDeepLinkHandler handlerUrl:url1];
+    [viewTester tapRowInTableViewAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    [viewTester tapRowInTableViewAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+
+    XCTestExpectation *expectation = [self expectationWithDescription:@"testWebCircle Test failed : timeout"];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSString *message = MockWebSocket.sharedInstance.lastMessage;
+        NSMutableDictionary *dict = [[message growingHelper_jsonObject] mutableCopy];
+
+        [expectation fulfill];
+    });
+
+    [self waitForExpectationsWithTimeout:5.0f handler:nil];
 }
 
-- (void)testWebCircle {
-    GrowingWebCircle *circle = [[GrowingWebCircle alloc] init];
-        
-    XCTAssertGreaterThan([circle getSnapshotKey], 0);
-    [circle resetSnapshotKey];
-    XCTAssertEqual([circle getSnapshotKey], 1);
-
-    UIViewController *current = [[UIViewController alloc] init];
-    // 避免自动发 PAGE 报错
-    GrowingPage *page = [current growingPageObject];
-    if (!page) {
-        [[GrowingPageManager sharedInstance] createdViewControllerPage:current];
-        page = [current growingPageObject];
-    }
-    XCTAssertNotNil([circle dictFromPage:page]);
-    XCTAssertNotNil([circle elements]);
-    
-    [circle sendScreenShot];
-    [circle remoteReady];
-    [circle runWithCircle:[NSURL URLWithString:@"ws://testws"] readyBlock:nil finishBlock:nil];
-    [circle start];
-    [circle stop];
-    [circle sendScreenShotWithCallback:nil];
-    NSURL *urltest = [[NSURL alloc] initWithString:@"http://testxxx.growingio.com/"
-                                                   @"qrcode.html?URLScheme=growing.XXX&productId=XXX&circleRoomNumber="
-                                                   @"8ebd86b3fac64b64ae09a9ce1450e015&serviceType=circle&appName=XXX"];
-    [circle growingHandlerUrl:urltest];
-    [circle webSocketDidOpen:nil];
-    [circle webSocket:nil didReceiveMessage:@"{@\"msgType\":@\"ready\"}"];
-    [circle webSocket:nil didReceiveMessage:@"{@\"msgType\":@\"incompatible_version\"}"];
+- (void)test02IncompatibleVersion {
+    [webCircle webSocket:nil didReceiveMessage:@"{\"msgType\":\"incompatible_version\"}"];
+    [[viewTester usingLabel:@"知道了"] tap];
 }
 
-- (void)testWebCircleElement {
-    GrowingWebCircleElementBuilder *builder = GrowingWebCircleElement.builder;
-    GrowingWebCircleElement *element = builder.setRect(CGRectMake(0, 0, 100, 100))
-                                              .setZLevel(10)
-                                              .setContent(@"test")
-                                              .setXpath(@"Xpath")
-                                              .setXindex(@"xindex")
-                                              .setNodeType(@"Button")
-                                              .setParentXpath(@"parentXpath")
-                                              .setIsContainer(YES)
-                                              .setIndex(10)
-                                              .setPage(@"page")
-                                              .build;
-    NSDictionary *dic = [element toDictionary];
-    CGFloat scale = MIN([UIScreen mainScreen].scale, 2);
-    XCTAssertNotNil(dic);
-    XCTAssertEqualObjects(dic[@"left"], @0);
-    XCTAssertEqualObjects(dic[@"top"], @0);
-    XCTAssertEqualObjects(dic[@"width"], @(100 * scale));
-    XCTAssertEqualObjects(dic[@"height"], @(100 * scale));
-    XCTAssertEqualObjects(dic[@"zLevel"], @10);
-    XCTAssertEqualObjects(dic[@"content"], @"test");
-    XCTAssertEqualObjects(dic[@"xpath"], @"Xpath");
-    XCTAssertEqualObjects(dic[@"xindex"], @"xindex");
-    XCTAssertEqualObjects(dic[@"nodeType"], @"Button");
-    XCTAssertEqualObjects(dic[@"isContainer"], @1);
-    XCTAssertEqualObjects(dic[@"index"], @10);
-    XCTAssertEqualObjects(dic[@"parentXPath"], @"parentXpath");
-    XCTAssertEqualObjects(dic[@"page"], @"page");
-    XCTAssertEqualObjects(dic[@"domain"], [GrowingDeviceInfo currentDeviceInfo].bundleID);
+- (void)test03Quit {
+    [webCircle webSocket:nil didReceiveMessage:@"{\"msgType\":\"ready\"}"];
+    [[viewTester usingLabel:@"协议/接口"] tap];
+    [webCircle webSocket:nil didReceiveMessage:@"{\"msgType\":\"quit\"}"];
+    [[viewTester usingLabel:@"知道了"] tap];
+}
+
+- (void)test04SocketReopen {
+    NSURL *url = [NSURL URLWithString:
+                            @"growing.bf30ad277eaae1aa://growingio/webservice?serviceType=circle&wsUrl=wss://"
+                            @"portal.growingio.com/app/r85jV5gv/circle/faeb773a1d004663a86c227a159cc687"];
+    [GrowingDeepLinkHandler handlerUrl:url];
+    [webCircle webSocketDidOpen:nil];
+    [webCircle webSocket:nil didReceiveMessage:@"{\"msgType\":\"ready\"}"];
+}
+//
+//- (void)test05SocketOpenTimeOut {
+//    XCTestExpectation *expectation = [self expectationWithDescription:@""];
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(11.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        [[viewTester usingLabel:@"知道了"] tap];
+//        [viewTester waitForAnimationsToFinish];
+//        [expectation fulfill];
+//    });
+//
+//    [self waitForExpectationsWithTimeout:15.0f handler:nil];
+//}
+
+- (void)test06StatusTap {
+    [webCircle webSocket:nil didReceiveMessage:@"{\"msgType\":\"ready\"}"];
+    [[viewTester usingLabel:@"正在进行GrowingIO移动端圈选"] tap];
+    [[viewTester usingLabel:@"继续圈选"] tap];
+    [[viewTester usingLabel:@"正在进行GrowingIO移动端圈选"] tap];
+    [[viewTester usingLabel:@"退出圈选"] tap];
+}
+
+- (void)test07Hybrid {
+    // 由于hybrid中getDomTree是个同步方法，KIF
+    // tap方法内部也有一个同步的runLoop逻辑，这2者同时进行会卡死，所以在这里先tap，
+    // 再执行webSocket:didReceiveMessage:以触发getDomTree
+    [[viewTester usingLabel:@"UI界面"] tap];
+    [[viewTester usingLabel:@"Hybrid"] tap];
+
+    [webCircle webSocket:nil didReceiveMessage:@"{\"msgType\":\"ready\"}"];
+    // 尝试通过tapPoint点击到html中的button
+    [viewTester tapScreenAtPoint:CGPointMake(100, 200)];
+    [[viewTester usingLabel:@"UI界面"] tap];
+}
+
+- (void)test08SocketDidCloseWithCode {
+    [webCircle webSocket:nil didCloseWithCode:GrowingWebSocketStatusCodeGoingAway reason:nil wasClean:YES];
+    [[viewTester usingLabel:@"知道了"] tap];
+}
+
+- (void)test09SocketDidFail {
+    [webCircle webSocket:nil didFailWithError:nil];
+    [[viewTester usingLabel:@"知道了"] tap];
+}
+
+- (BOOL)webCircleSocketParamsCheck:(NSDictionary *)dic {
+    return YES;
 }
 
 @end

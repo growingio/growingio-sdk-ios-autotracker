@@ -69,8 +69,6 @@ GrowingMod(GrowingWebCircle)
 @property (nonatomic, assign) int zLevel;
 @property (nonatomic, assign) unsigned long snapNumber;  // 数据发出序列号
 @property (nonatomic, assign) BOOL onProcessing;
-// 当页面vc的page未生成，即viewDidAppear未执行，此时忽略数据，并不发送
-@property (nonatomic, assign) BOOL isPageDontShow;
 @property (nonatomic, strong) NSMutableArray *elements;
 @property (nonatomic, weak) UIWindow *lastKeyWindow;
 
@@ -146,10 +144,6 @@ GrowingMod(GrowingWebCircle)
 - (NSMutableDictionary *)dictFromNode:(GrowingViewNode *)node {
     GrowingPage *page = [[GrowingPageManager sharedInstance] findPageByView:node.view];
     GrowingPage *autotrackPage = [GrowingPageManager.sharedInstance findAutotrackPageByPage:page];
-    if (!page) {
-        self.isPageDontShow = YES;
-        GIOLogDebug(@"[GrowingWebCircle] page of view %@ not found", node.view);
-    }
     NSDictionary *pathInfo = page.pathInfo;
     NSString *pagexpath = pathInfo[@"xpath"];
     NSString *pagexindex = pathInfo[@"xindex"];
@@ -190,9 +184,6 @@ GrowingMod(GrowingWebCircle)
 }
 
 - (void)traverseViewNode:(GrowingViewNode *)viewNode {
-    if (self.isPageDontShow) {
-        return;
-    }
     UIView *node = viewNode.view;
     if ([node growingNodeDonotCircle]) {
         GIOLogDebug(@"[GrowingWebCircle] 过滤节点：%@ 因不可见，无法圈选", [node class]);
@@ -261,7 +252,6 @@ GrowingMod(GrowingWebCircle)
 
     if (topwindow) {
         self.zLevel = 0;
-        self.isPageDontShow = NO;
         [self traverseViewNode:GrowingViewNode.builder.setView(topwindow)
                                    .setIndex(-1)
                                    .setViewContent(topwindow.growingNodeContent)
@@ -270,10 +260,6 @@ GrowingMod(GrowingWebCircle)
                                    .setOriginXindex(topwindow.growingNodeSubIndex)
                                    .setNodeType([GrowingNodeHelper getViewNodeType:topwindow])
                                    .build];
-        if (self.isPageDontShow) {
-            completion(nil);
-            return;
-        }
     }
 
     NSMutableArray *pages = [NSMutableArray array];
@@ -548,7 +534,7 @@ GrowingMod(GrowingWebCircle)
 #pragma mark - Websocket Delegate
 
 - (void)webSocket:(id<GrowingWebSocketService>)webSocket didReceiveMessage:(id)message {
-    if ([message isKindOfClass:[NSString class]] || ((NSString *)message).length > 0) {
+    if ([message isKindOfClass:[NSString class]] && ((NSString *)message).length > 0) {
         GIOLogDebug(@"[GrowingWebCircle] didReceiveMessage: %@", message);
         NSMutableDictionary *dict = [[message growingHelper_jsonObject] mutableCopy];
 
