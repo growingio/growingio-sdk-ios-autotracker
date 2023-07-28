@@ -68,16 +68,16 @@ PODS:
     - GrowingAPM/Core
   - GrowingAPM/UIMonitor (0.0.14):
     - GrowingAPM/Core
-  - GrowingToolsKit (1.1.3):
-    - GrowingToolsKit/Default (= 1.1.3)
-  - GrowingToolsKit/APMCore (1.1.3):
+  - GrowingToolsKit (1.2.0):
+    - GrowingToolsKit/Default (= 1.2.0)
+  - GrowingToolsKit/APMCore (1.2.0):
     - GrowingAPM/Core
     - GrowingToolsKit/Core
-  - GrowingToolsKit/Core (1.1.3)
-  - GrowingToolsKit/CrashMonitor (1.1.3):
+  - GrowingToolsKit/Core (1.2.0)
+  - GrowingToolsKit/CrashMonitor (1.2.0):
     - GrowingAPM/CrashMonitor
     - GrowingToolsKit/APMCore
-  - GrowingToolsKit/Default (1.1.3):
+  - GrowingToolsKit/Default (1.2.0):
     - GrowingToolsKit/Core
     - GrowingToolsKit/CrashMonitor
     - GrowingToolsKit/EventsList
@@ -87,20 +87,20 @@ PODS:
     - GrowingToolsKit/SDKInfo
     - GrowingToolsKit/Settings
     - GrowingToolsKit/XPathTrack
-  - GrowingToolsKit/EventsList (1.1.3):
+  - GrowingToolsKit/EventsList (1.2.0):
     - GrowingToolsKit/Core
-  - GrowingToolsKit/LaunchTime (1.1.3):
+  - GrowingToolsKit/LaunchTime (1.2.0):
     - GrowingAPM/UIMonitor
     - GrowingToolsKit/APMCore
-  - GrowingToolsKit/NetFlow (1.1.3):
+  - GrowingToolsKit/NetFlow (1.2.0):
     - GrowingToolsKit/Core
-  - GrowingToolsKit/Realtime (1.1.3):
+  - GrowingToolsKit/Realtime (1.2.0):
     - GrowingToolsKit/Core
-  - GrowingToolsKit/SDKInfo (1.1.3):
+  - GrowingToolsKit/SDKInfo (1.2.0):
     - GrowingToolsKit/Core
-  - GrowingToolsKit/Settings (1.1.3):
+  - GrowingToolsKit/Settings (1.2.0):
     - GrowingToolsKit/Core
-  - GrowingToolsKit/XPathTrack (1.1.3):
+  - GrowingToolsKit/XPathTrack (1.2.0):
     - GrowingToolsKit/Core
   - GrowingUtils/AutotrackerCore (0.0.5):
     - GrowingUtils/TrackerCore
@@ -113,12 +113,12 @@ PODS:
   - LBXScan/Types (2.3)
   - LBXScan/UI (2.3):
     - LBXScan/Types (~> 2.2)
-  - Protobuf (3.23.3)
+  - Protobuf (3.23.4)
   - SDCycleScrollView (1.82):
     - SDWebImage (>= 5.0.0)
-  - SDWebImage (5.16.0):
-    - SDWebImage/Core (= 5.16.0)
-  - SDWebImage/Core (5.16.0)
+  - SDWebImage (5.17.0):
+    - SDWebImage/Core (= 5.17.0)
+  - SDWebImage/Core (5.17.0)
 
 DEPENDENCIES:
   - GrowingAnalytics/Advert (from `./`)
@@ -152,13 +152,13 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   GrowingAnalytics: a01857dc934fa4b0b0b4a04b46d888d2472d5fa2
   GrowingAPM: 79fe4f4a12d94432fa4a552d56c41940ea13961a
-  GrowingToolsKit: 88b144e858f8895f1d84c518642ce34ce0f5aa07
+  GrowingToolsKit: 9c0d6e41c9678397dbaa3304b1738a2867b023ae
   GrowingUtils: 5212c5c0501ea0c3863a29c33ccefbde5be77353
   KIF: 7660c626b0f2d4562533590960db70a36d640558
   LBXScan: e51449f0832d1fe17da632af0d22adeb3cfa3543
-  Protobuf: d9c3d7e5a3574aa6a5d521f2d9f733c76d294be8
+  Protobuf: c6bc59bbab3d38a71c67f62d7cb7ca8f8ea4eca1
   SDCycleScrollView: a0d74c3384caa72bdfc81470bdbc8c14b3e1fbcf
-  SDWebImage: 2aea163b50bfcb569a2726b6a754c54a4506fcf6
+  SDWebImage: 750adf017a315a280c60fde706ab1e552a3ae4e9
 
 PODFILE CHECKSUM: d18ae04aaea2c73be8383f04c6feea89caed3e99
 
