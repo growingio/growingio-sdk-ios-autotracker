@@ -129,6 +129,12 @@
     if (self.xpath.length > 0) {
         [dic setObject:self.xpath forKey:@"xpath"];
     }
+    if (self.xcontent.length > 0) {
+        [dic setObject:self.xcontent forKey:@"xcontent"];
+    }
+    if (self.xindex.length > 0) {
+        [dic setObject:self.xindex forKey:@"xindex"];
+    }
     if (self.index > 0) {
         [dic setObject:@(self.index) forKey:@"index"];
     }

@@ -20,11 +20,15 @@
 import Foundation
 import GrowingTrackerCore
 
+typealias EventDto = Io_Growing_Tunnel_Protocol_EventV3Dto
+typealias EventList = Io_Growing_Tunnel_Protocol_EventV3List
+typealias EventType = Io_Growing_Tunnel_Protocol_EventType
+
 @objc(GrowingSwiftProtobuf)
 public class SwiftProtobufWrapper: NSObject {
-    var unbox: EventV3Dto
+    var unbox: EventDto
     @objc public let data: Data?
-    init(_ unbox: EventV3Dto) {
+    init(_ unbox: EventDto) {
         self.unbox = unbox
         self.data = try? unbox.serializedData()
     }
@@ -32,7 +36,7 @@ public class SwiftProtobufWrapper: NSObject {
     @objc(parseFromData:)
     public static func parse(from data: Data) -> SwiftProtobufWrapper? {
         do {
-            let dto = try EventV3Dto(serializedData: data)
+            let dto = try EventDto(serializedData: data)
             return SwiftProtobufWrapper(dto)
         } catch {
             return nil
@@ -59,7 +63,7 @@ public class SwiftProtobufWrapper: NSObject {
     @objc(serializedDatasFromList:)
     public static func serializedDatas(from boxes: [SwiftProtobufWrapper]) -> Data? {
         do {
-            var list = EventV3List()
+            var list = EventList()
             for box in boxes {
                 list.values.append(box.unbox)
             }
@@ -75,7 +79,7 @@ extension SwiftProtobufWrapper {
     @objc(convertProtobufDataToJsonArray:)
     public static func convertProtobufDataToJsonArray(from data: Data) -> [[String: AnyObject]]? {
         do {
-            let list = try EventV3List(serializedData: data)
+            let list = try EventList(serializedData: data)
             var array = [[String: AnyObject]]()
             for dto in list.values {
                 let jsonData = try dto.jsonUTF8Data()
@@ -93,7 +97,7 @@ extension SwiftProtobufWrapper {
 
 extension GrowingBaseEvent {
     @objc public func toProtobuf() -> SwiftProtobufWrapper {
-        var dto = EventV3Dto()
+        var dto = EventDto()
 
         dto.dataSourceID = self.dataSourceId ?? ""
         dto.sessionID = self.sessionId ?? ""
@@ -109,9 +113,9 @@ extension GrowingBaseEvent {
         dto.networkState = self.networkState ?? ""
         dto.screenWidth = Int32(self.screenWidth)
         dto.screenHeight = Int32(self.screenHeight)
-        dto.deviceBrand = self.deviceBrand
-        dto.deviceModel = self.deviceModel
-        dto.deviceType = self.deviceType
+        dto.deviceBrand = self.deviceBrand ?? ""
+        dto.deviceModel = self.deviceModel ?? ""
+        dto.deviceType = self.deviceType ?? ""
         dto.appName = self.appName
         dto.appVersion = self.appVersion
         dto.language = self.language
@@ -127,6 +131,8 @@ extension GrowingBaseEvent {
         dto.path = path()
         dto.textValue = textValue()
         dto.xpath = xpath()
+        dto.xcontent = xcontent()
+        dto.xindex = xindex()
         dto.index = index()
         dto.query = query()
         dto.hyperlink = hyperlink()
@@ -221,6 +227,24 @@ extension GrowingBaseEvent {
 
     fileprivate func xpath() -> String {
         let selector = Selector(("xpath"))
+        if self.responds(to: selector) {
+            let imp: IMP = method_getImplementation(class_getInstanceMethod(type(of: self), selector)!)
+            return unsafeBitCast(imp, to: (@convention(c)(GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
+        }
+        return ""
+    }
+    
+    fileprivate func xcontent() -> String {
+        let selector = Selector(("xcontent"))
+        if self.responds(to: selector) {
+            let imp: IMP = method_getImplementation(class_getInstanceMethod(type(of: self), selector)!)
+            return unsafeBitCast(imp, to: (@convention(c)(GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
+        }
+        return ""
+    }
+    
+    fileprivate func xindex() -> String {
+        let selector = Selector(("xindex"))
         if self.responds(to: selector) {
             let imp: IMP = method_getImplementation(class_getInstanceMethod(type(of: self), selector)!)
             return unsafeBitCast(imp, to: (@convention(c)(GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""

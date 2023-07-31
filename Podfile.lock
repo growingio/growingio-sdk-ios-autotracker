@@ -42,7 +42,7 @@ PODS:
   - GrowingAnalytics/Protobuf/Proto (3.5.0):
     - GrowingAnalytics/Database (= 3.5.0)
     - GrowingAnalytics/TrackerCore (= 3.5.0)
-    - Protobuf
+    - Protobuf (>= 3.22.0)
   - GrowingAnalytics/Screenshot (3.5.0):
     - GrowingAnalytics/TrackerCore
   - GrowingAnalytics/Tracker (3.5.0):
@@ -150,7 +150,7 @@ EXTERNAL SOURCES:
     :path: "./"
 
 SPEC CHECKSUMS:
-  GrowingAnalytics: a01857dc934fa4b0b0b4a04b46d888d2472d5fa2
+  GrowingAnalytics: f51d83c651a545a18f3642df92c722350de286ac
   GrowingAPM: 79fe4f4a12d94432fa4a552d56c41940ea13961a
   GrowingToolsKit: 9c0d6e41c9678397dbaa3304b1738a2867b023ae
   GrowingUtils: 5212c5c0501ea0c3863a29c33ccefbde5be77353
