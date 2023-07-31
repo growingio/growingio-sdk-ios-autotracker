@@ -233,7 +233,7 @@ extension GrowingBaseEvent {
         }
         return ""
     }
-    
+
     fileprivate func xcontent() -> String {
         let selector = Selector(("xcontent"))
         if self.responds(to: selector) {
@@ -242,7 +242,7 @@ extension GrowingBaseEvent {
         }
         return ""
     }
-    
+
     fileprivate func xindex() -> String {
         let selector = Selector(("xindex"))
         if self.responds(to: selector) {
