@@ -26,13 +26,13 @@
 - (NSArray<id<GrowingNode>> *)growingNodeChilds {
     NSMutableArray *childs = [NSMutableArray array];
     [childs addObjectsFromArray:self.visibleCells];
-    
+
     NSArray<NSIndexPath *> *indexPaths = self.indexPathsForVisibleRows;
     NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
     for (NSIndexPath *indexPath in indexPaths) {
         [indexSet addIndex:indexPath.section];
     }
-    [indexSet enumerateIndexesUsingBlock:^(NSUInteger section, BOOL * _Nonnull stop) {
+    [indexSet enumerateIndexesUsingBlock:^(NSUInteger section, BOOL *_Nonnull stop) {
         UITableViewHeaderFooterView *headerView = [self headerViewForSection:section];
         if (headerView) {
             [childs addObject:headerView];
@@ -42,7 +42,7 @@
             [childs addObject:footerView];
         }
     }];
-    
+
     if (self.tableFooterView) {
         [childs addObject:self.tableFooterView];
     }
