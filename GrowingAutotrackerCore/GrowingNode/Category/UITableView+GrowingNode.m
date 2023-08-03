@@ -24,9 +24,25 @@
 @implementation UITableView (GrowingNode)
 
 - (NSArray<id<GrowingNode>> *)growingNodeChilds {
-    // 对于collectionView我们仅需要返回可见cell
     NSMutableArray *childs = [NSMutableArray array];
     [childs addObjectsFromArray:self.visibleCells];
+    
+    NSArray<NSIndexPath *> *indexPaths = self.indexPathsForVisibleRows;
+    NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+    for (NSIndexPath *indexPath in indexPaths) {
+        [indexSet addIndex:indexPath.section];
+    }
+    [indexSet enumerateIndexesUsingBlock:^(NSUInteger section, BOOL * _Nonnull stop) {
+        UITableViewHeaderFooterView *headerView = [self headerViewForSection:section];
+        if (headerView) {
+            [childs addObject:headerView];
+        }
+        UITableViewHeaderFooterView *footerView = [self footerViewForSection:section];
+        if (footerView) {
+            [childs addObject:footerView];
+        }
+    }];
+    
     if (self.tableFooterView) {
         [childs addObject:self.tableFooterView];
     }
