@@ -23,6 +23,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     autotracker.dependency 'GrowingAnalytics/AutotrackerCore', s.version.to_s
 
     # Modules
+    autotracker.dependency 'GrowingAnalytics/Protobuf', s.version.to_s
     autotracker.ios.dependency 'GrowingAnalytics/Hybrid', s.version.to_s
     autotracker.ios.dependency 'GrowingAnalytics/MobileDebugger', s.version.to_s
     autotracker.ios.dependency 'GrowingAnalytics/WebCircle', s.version.to_s
@@ -35,6 +36,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     tracker.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
 
     # Modules
+    tracker.dependency 'GrowingAnalytics/Protobuf', s.version.to_s
     tracker.ios.dependency 'GrowingAnalytics/MobileDebugger', s.version.to_s
     tracker.dependency 'GrowingAnalytics/DefaultServices', s.version.to_s
   end

@@ -19,77 +19,66 @@
 
 #import "GrowingTrackerCore/Event/GrowingEventChannel.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingAutotrackEventType.h"
-#import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
 
 @implementation GrowingEventChannel
 
-- (instancetype)initWithTypes:(NSArray<NSString *> *)eventTypes
-                  urlTemplate:(NSString *)urlTemplate
-                isCustomEvent:(BOOL)isCustomEvent
-                  isUploading:(BOOL)isUploading {
+- (instancetype)initWithName:(NSString *)name
+                  eventTypes:(NSArray<NSString *> *_Nullable)eventTypes
+             persistenceType:(GrowingEventPersistenceType)persistenceType
+             isRealtimeEvent:(BOOL)isRealtimeEvent
+                 isUploading:(BOOL)isUploading {
     if (self = [super init]) {
+        _name = name;
         _eventTypes = eventTypes;
-        _urlTemplate = urlTemplate;
-        _isCustomEvent = isCustomEvent;
+        _persistenceType = persistenceType;
+        _isRealtimeEvent = isRealtimeEvent;
         _isUploading = isUploading;
     }
     return self;
 }
 
-+ (instancetype)eventChannelWithEventTypes:(NSArray<NSString *> *)eventTypes
-                               urlTemplate:(NSString *)urlTemplate
-                             isCustomEvent:(BOOL)isCustomEvent {
-    return [[GrowingEventChannel alloc] initWithTypes:eventTypes
-                                          urlTemplate:urlTemplate
-                                        isCustomEvent:isCustomEvent
-                                          isUploading:NO];
++ (instancetype)eventChannelWithName:(NSString *)name
+                          eventTypes:(NSArray<NSString *> *_Nullable)eventTypes
+                     persistenceType:(GrowingEventPersistenceType)persistenceType
+                     isRealtimeEvent:(BOOL)isRealtimeEvent {
+    return [[GrowingEventChannel alloc] initWithName:name
+                                          eventTypes:eventTypes
+                                     persistenceType:persistenceType
+                                     isRealtimeEvent:isRealtimeEvent
+                                         isUploading:NO];
 }
 
 static NSMutableArray *eventChannels = nil;
-
 + (NSMutableArray<GrowingEventChannel *> *)eventChannels {
     if (!eventChannels) {
         eventChannels = [NSMutableArray array];
-        [eventChannels addObject:[GrowingEventChannel eventChannelWithEventTypes:@[
-                           GrowingEventTypeVisit,
-                           GrowingEventTypeAppClosed,
-                           GrowingEventTypePage
-                       ]
-                                                                     urlTemplate:kGrowingEventApiTemplate
-                                                                   isCustomEvent:NO]];
-        [eventChannels addObject:[GrowingEventChannel eventChannelWithEventTypes:@[
-                           GrowingEventTypeCustom,
-                           GrowingEventTypeConversionVariables,
-                           GrowingEventTypeLoginUserAttributes,
-                           GrowingEventTypeVisitorAttributes
-                       ]
-                                                                     urlTemplate:kGrowingEventApiTemplate
-                                                                   isCustomEvent:YES]];
+        NSArray *autotrackEventTypes = @[
+            GrowingEventTypePage,
+            GrowingEventTypeViewClick,
+            GrowingEventTypeViewChange,
+            GrowingEventTypeAppClosed,
+            @"FORM_SUBMIT" /* GrowingEventTypeFormSubmit */
+        ];
+        NSArray *trackEventTypes =
+            @[GrowingEventTypeVisit, GrowingEventTypeCustom, GrowingEventTypeLoginUserAttributes];
+        [eventChannels addObject:[GrowingEventChannel eventChannelWithName:@"Autotrack"
+                                                                eventTypes:autotrackEventTypes
+                                                           persistenceType:GrowingEventPersistenceTypeJSON
+                                                           isRealtimeEvent:NO]];
+        [eventChannels addObject:[GrowingEventChannel eventChannelWithName:@"Track"
+                                                                eventTypes:trackEventTypes
+                                                           persistenceType:GrowingEventPersistenceTypeJSON
+                                                           isRealtimeEvent:YES]];
+        [eventChannels addObject:[GrowingEventChannel eventChannelWithName:@"Autotrack-Protobuf"
+                                                                eventTypes:autotrackEventTypes
+                                                           persistenceType:GrowingEventPersistenceTypeProtobuf
+                                                           isRealtimeEvent:NO]];
+        [eventChannels addObject:[GrowingEventChannel eventChannelWithName:@"Track-Protobuf"
+                                                                eventTypes:trackEventTypes
+                                                           persistenceType:GrowingEventPersistenceTypeProtobuf
+                                                           isRealtimeEvent:YES]];
     }
     return eventChannels;
-}
-
-+ (NSArray<GrowingEventChannel *> *)buildAllEventChannels {
-    NSMutableArray *channels = [[self eventChannels] mutableCopy];
-    eventChannels = nil;
-    [channels addObject:[GrowingEventChannel eventChannelWithEventTypes:nil
-                                                            urlTemplate:kGrowingEventApiTemplate
-                                                          isCustomEvent:NO]];
-    return channels;
-}
-
-+ (NSDictionary *)eventChannelMapFromAllChannels:(NSArray<GrowingEventChannel *> *)channels {
-    NSMutableDictionary *dictM = [NSMutableDictionary dictionary];
-    for (GrowingEventChannel *obj in channels) {
-        for (NSString *key in obj.eventTypes) {
-            [dictM setObject:obj forKey:key];
-        }
-    }
-    return dictM;
-}
-
-+ (GrowingEventChannel *)otherEventChannelFromAllChannels:(NSArray<GrowingEventChannel *> *)channels {
-    return channels.lastObject;
 }
 
 @end

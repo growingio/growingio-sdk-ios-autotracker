@@ -41,7 +41,7 @@
 
 - (instancetype)initWithUUID:(NSString *)uuid
                    eventType:(NSString *)eventType
-                        data:(NSData *)data
+                        data:(id)data
                       policy:(GrowingEventSendPolicy)policy {
     if (self = [super init]) {
         _eventUUID = uuid;

@@ -28,6 +28,7 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
 @interface GrowingEventDatabase ()
 
 @property (nonatomic, strong) id<GrowingEventDatabaseService> db;
+@property (nonatomic, assign) BOOL isProtobuf;
 @property (nonatomic, strong) NSMutableArray *updateKeys;
 @property (nonatomic, strong) NSMutableArray *updateValues;
 
@@ -39,18 +40,25 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
 
 #pragma mark - Init
 
-+ (instancetype)databaseWithPath:(NSString *)path {
-    return [[self alloc] initWithFilePath:path];
++ (instancetype)databaseWithPath:(NSString *)path isProtobuf:(BOOL)isProtobuf {
+    return [[self alloc] initWithFilePath:path isProtobuf:isProtobuf];
 }
 
-- (instancetype)initWithFilePath:(NSString *)filePath {
+- (instancetype)initWithFilePath:(NSString *)filePath isProtobuf:(BOOL)isProtobuf {
     if (self = [super init]) {
         _updateValues = [[NSMutableArray alloc] init];
         _updateKeys = [[NSMutableArray alloc] init];
+        _isProtobuf = isProtobuf;
         GROWING_LOCK_INIT(lock);
 
-        Class<GrowingEventDatabaseService> serviceClass =
-            [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingEventDatabaseService)];
+        Class<GrowingEventDatabaseService> serviceClass = nil;
+        if (isProtobuf) {
+            serviceClass =
+                [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingPBEventDatabaseService)];
+        } else {
+            serviceClass =
+                [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingEventDatabaseService)];
+        }
         if (!serviceClass) {
             GIOLogError(@"-databaseWithPath: event database error : no event database service support");
             return nil;
@@ -61,6 +69,7 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
         if (error) {
             [self handleDatabaseError:error];
         }
+        [self cleanExpiredDataIfNeeded];
     }
 
     return self;
@@ -195,24 +204,12 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
     return events ?: [[NSArray alloc] init];
 }
 
-+ (NSData *)buildRawEventsFromEvents:(NSArray<id<GrowingEventPersistenceProtocol>> *)events {
-    Class<GrowingEventDatabaseService> serviceClass =
-        [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingEventDatabaseService)];
-    if (!serviceClass) {
-        return nil;
-    }
-
-    return [serviceClass buildRawEventsFromEvents:events];
+- (NSData *)buildRawEventsFromEvents:(NSArray<id<GrowingEventPersistenceProtocol>> *)events {
+    return [self.db buildRawEventsFromEvents:events];
 }
 
-+ (id<GrowingEventPersistenceProtocol>)persistenceEventWithEvent:(GrowingBaseEvent *)event uuid:(NSString *)uuid {
-    Class<GrowingEventDatabaseService> serviceClass =
-        [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingEventDatabaseService)];
-    if (!serviceClass) {
-        return nil;
-    }
-
-    return [serviceClass persistenceEventWithEvent:event uuid:uuid];
+- (id<GrowingEventPersistenceProtocol>)persistenceEventWithEvent:(GrowingBaseEvent *)event uuid:(NSString *)uuid {
+    return [self.db persistenceEventWithEvent:event uuid:uuid];
 }
 
 #pragma mark - Perform Block

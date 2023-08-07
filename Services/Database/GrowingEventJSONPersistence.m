@@ -24,12 +24,12 @@
 
 - (instancetype)initWithUUID:(NSString *)uuid
                    eventType:(NSString *)eventType
-                  jsonString:(NSString *)jsonString
+                        data:(id)data
                       policy:(GrowingEventSendPolicy)policy {
     if (self = [super init]) {
         _eventUUID = uuid;
         _eventType = eventType;
-        _rawJsonString = jsonString;
+        _data = data;
         _policy = policy;
     }
     return self;
@@ -40,14 +40,14 @@
 
     return [[GrowingEventJSONPersistence alloc] initWithUUID:uuid
                                                    eventType:event.eventType
-                                                  jsonString:eventJsonString
+                                                        data:eventJsonString
                                                       policy:event.sendPolicy];
 }
 
 + (NSData *)buildRawEventsFromEvents:(NSArray<GrowingEventJSONPersistence *> *)events {
     NSMutableArray *raws = [NSMutableArray array];
     for (GrowingEventJSONPersistence *e in events) {
-        NSString *rawStr = e.rawJsonString;
+        NSString *rawStr = e.data;
         if (rawStr && rawStr.length > 0) {
             [raws addObject:rawStr];
         }
@@ -58,7 +58,7 @@
 }
 
 - (id)toJSONObject {
-    return self.rawJsonString.growingHelper_jsonObject;
+    return ((NSString *)self.data).growingHelper_jsonObject;
 }
 
 - (void)appendExtraParams:(NSDictionary<NSString *, id> *)extraParams {
@@ -71,7 +71,7 @@
     [attributes addEntriesFromDictionary:extraParams];
     dictM[@"attributes"] = attributes.copy;
     NSString *eventJsonString = [[NSString alloc] initWithJsonObject_growingHelper:dictM];
-    _rawJsonString = eventJsonString;
+    _data = eventJsonString;
 }
 
 @end

@@ -24,15 +24,13 @@
 
 @property (nonatomic, assign) NSUInteger autoFlushCount;
 
-+ (instancetype)databaseWithPath:(NSString *)path;
++ (instancetype)databaseWithPath:(NSString *)path isProtobuf:(BOOL)isProtobuf;
 
 - (NSUInteger)countOfEvents;
 
 - (BOOL)flush;
 
 - (BOOL)clearAllItems;
-
-- (BOOL)cleanExpiredDataIfNeeded;
 
 - (void)setEvent:(id<GrowingEventPersistenceProtocol>)event forKey:(NSString *)key;
 
@@ -41,8 +39,8 @@
 
 - (NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsWithPackageNum:(NSUInteger)packageNum;
 
-+ (NSData *)buildRawEventsFromEvents:(NSArray<id<GrowingEventPersistenceProtocol>> *)events;
+- (NSData *)buildRawEventsFromEvents:(NSArray<id<GrowingEventPersistenceProtocol>> *)events;
 
-+ (id<GrowingEventPersistenceProtocol>)persistenceEventWithEvent:(GrowingBaseEvent *)event uuid:(NSString *)uuid;
+- (id<GrowingEventPersistenceProtocol>)persistenceEventWithEvent:(GrowingBaseEvent *)event uuid:(NSString *)uuid;
 
 @end

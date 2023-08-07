@@ -1,9 +1,9 @@
 //
-//  GrowingEventProtobufDatabase.h
+//  GrowingEventJSONDatabase.h
 //  GrowingAnalytics
 //
-//  Created by YoloMao on 2022/5/11.
-//  Copyright (C) 2022 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2023/8/7.
+//  Copyright (C) 2023 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingEventProtobufDatabase : GrowingEventFMDatabase
+@interface GrowingEventJSONDatabase : GrowingEventFMDatabase
 
 @end
 
