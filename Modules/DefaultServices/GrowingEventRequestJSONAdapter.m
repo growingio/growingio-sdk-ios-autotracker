@@ -18,6 +18,7 @@
 //  limitations under the License.
 
 #import "Modules/DefaultServices/GrowingEventRequestJSONAdapter.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 
 @implementation GrowingEventRequestJSONAdapter
 
@@ -33,7 +34,8 @@
 }
 
 - (NSUInteger)priority {
-    return 1;
+    GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    return trackConfiguration.useProtobuf ? 1 : 5;
 }
 
 @end

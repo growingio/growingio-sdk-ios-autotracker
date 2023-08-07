@@ -19,22 +19,34 @@
 
 #import "GrowingTrackerCore/Event/GrowingEventChannel.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingAutotrackEventType.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 
 @implementation GrowingEventChannel
 
 - (instancetype)initWithName:(NSString *)name
                   eventTypes:(NSArray<NSString *> *_Nullable)eventTypes
              persistenceType:(GrowingEventPersistenceType)persistenceType
-             isRealtimeEvent:(BOOL)isRealtimeEvent
-                 isUploading:(BOOL)isUploading {
+             isRealtimeEvent:(BOOL)isRealtimeEvent {
     if (self = [super init]) {
         _name = name;
         _eventTypes = eventTypes;
         _persistenceType = persistenceType;
         _isRealtimeEvent = isRealtimeEvent;
-        _isUploading = isUploading;
+        _isUploading = NO;
     }
     return self;
+}
+
++ (instancetype)eventChannelWithName:(NSString *)name
+                          eventTypes:(NSArray<NSString *> *_Nullable)eventTypes
+                     isRealtimeEvent:(BOOL)isRealtimeEvent {
+    GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    GrowingEventPersistenceType type =
+        trackConfiguration.useProtobuf ? GrowingEventPersistenceTypeProtobuf : GrowingEventPersistenceTypeJSON;
+    return [[GrowingEventChannel alloc] initWithName:name
+                                          eventTypes:eventTypes
+                                     persistenceType:type
+                                     isRealtimeEvent:isRealtimeEvent];
 }
 
 + (instancetype)eventChannelWithName:(NSString *)name
@@ -44,8 +56,7 @@
     return [[GrowingEventChannel alloc] initWithName:name
                                           eventTypes:eventTypes
                                      persistenceType:persistenceType
-                                     isRealtimeEvent:isRealtimeEvent
-                                         isUploading:NO];
+                                     isRealtimeEvent:isRealtimeEvent];
 }
 
 static NSMutableArray *eventChannels = nil;

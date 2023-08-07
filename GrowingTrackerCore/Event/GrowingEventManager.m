@@ -74,7 +74,6 @@ static GrowingEventManager *sharedInstance = nil;
 - (instancetype)init {
     if (self = [super init]) {
         _allInterceptor = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
-        _persistenceType = GrowingEventPersistenceTypeProtobuf;
     }
     return self;
 }
@@ -123,9 +122,13 @@ static GrowingEventManager *sharedInstance = nil;
             }
             self->_allEventChannels = eventChannels;
 
+            GrowingTrackConfiguration *trackConfiguration =
+                GrowingConfigurationManager.sharedInstance.trackConfiguration;
+            GrowingEventPersistenceType currentType =
+                trackConfiguration.useProtobuf ? GrowingEventPersistenceTypeProtobuf : GrowingEventPersistenceTypeJSON;
             NSMutableDictionary *dictM = [NSMutableDictionary dictionary];
             for (GrowingEventChannel *ec in eventChannels) {
-                if (ec.persistenceType != self->_persistenceType) {
+                if (ec.persistenceType != currentType) {
                     continue;
                 }
                 for (NSString *key in ec.eventTypes) {
