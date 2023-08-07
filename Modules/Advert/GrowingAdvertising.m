@@ -107,7 +107,6 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
 - (void)growingEventManagerChannels:(NSMutableArray<GrowingEventChannel *> *)channels {
     [channels addObject:[GrowingEventChannel eventChannelWithName:@"Advert"
                                                        eventTypes:@[GrowingEventTypeActivate]
-                                                  persistenceType:GrowingEventManager.sharedInstance.persistenceType
                                                   isRealtimeEvent:YES]];
 }
 

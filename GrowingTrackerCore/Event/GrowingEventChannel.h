@@ -39,7 +39,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)eventChannelWithName:(NSString *)name
                           eventTypes:(NSArray<NSString *> *_Nullable)eventTypes
-                     persistenceType:(GrowingEventPersistenceType)persistenceType
                      isRealtimeEvent:(BOOL)isRealtimeEvent;
 
 + (NSMutableArray<GrowingEventChannel *> *)eventChannels;

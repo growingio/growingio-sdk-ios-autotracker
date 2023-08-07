@@ -18,6 +18,7 @@
 //  limitations under the License.
 
 #import "Modules/Protobuf/GrowingEventRequestProtobufAdapter.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 
 @implementation GrowingEventRequestProtobufAdapter
 
@@ -33,7 +34,8 @@
 }
 
 - (NSUInteger)priority {
-    return 5;
+    GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    return trackConfiguration.useProtobuf ? 5 : 1;
 }
 
 @end
