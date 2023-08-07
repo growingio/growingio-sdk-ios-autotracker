@@ -26,17 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy, readonly) NSString *eventUUID;
 @property (nonatomic, copy, readonly) NSString *eventType;
-@property (nonatomic, copy, readonly) NSString *rawJsonString;
+@property (nonatomic, strong, readonly) id data;
 @property (nonatomic, assign, readonly) GrowingEventSendPolicy policy;
-
-- (instancetype)initWithUUID:(NSString *)uuid
-                   eventType:(NSString *)eventType
-                  jsonString:(NSString *)jsonString
-                      policy:(GrowingEventSendPolicy)policy;
-
-+ (instancetype)persistenceEventWithEvent:(GrowingBaseEvent *)event uuid:(NSString *)uuid;
-
-+ (NSData *)buildRawEventsFromEvents:(NSArray<GrowingEventJSONPersistence *> *)events;
 
 @end
 

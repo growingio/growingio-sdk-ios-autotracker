@@ -47,12 +47,12 @@ extern NSString *const GrowingEventDatabaseErrorDomain;
 
 /// 生成事件数组的二进制数据
 /// @param events 事件数据数组
-+ (NSData *)buildRawEventsFromEvents:(NSArray<id<GrowingEventPersistenceProtocol>> *)events;
+- (NSData *)buildRawEventsFromEvents:(NSArray<id<GrowingEventPersistenceProtocol>> *)events;
 
 /// 生成持久化事件对象
 /// @param event 事件数据
 /// @param uuid 唯一key
-+ (id<GrowingEventPersistenceProtocol>)persistenceEventWithEvent:(GrowingBaseEvent *)event uuid:(NSString *)uuid;
+- (id<GrowingEventPersistenceProtocol>)persistenceEventWithEvent:(GrowingBaseEvent *)event uuid:(NSString *)uuid;
 
 /// 获取已存储的事件数量
 /// @return 事件数量，大于等于0；若返回值为-1，表示读取错误
@@ -103,6 +103,10 @@ extern NSString *const GrowingEventDatabaseErrorDomain;
 ///                     code:GrowingEventDatabaseError
 ///                 userInfo:@{NSLocalizedDescriptionKey : @"some message"}]
 - (NSError *)lastError;
+
+@end
+
+@protocol GrowingPBEventDatabaseService <GrowingEventDatabaseService>
 
 @end
 

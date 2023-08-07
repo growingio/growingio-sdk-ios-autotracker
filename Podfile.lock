@@ -9,6 +9,7 @@ PODS:
     - GrowingAnalytics/DefaultServices (= 3.5.0)
     - GrowingAnalytics/Hybrid (= 3.5.0)
     - GrowingAnalytics/MobileDebugger (= 3.5.0)
+    - GrowingAnalytics/Protobuf (= 3.5.0)
     - GrowingAnalytics/WebCircle (= 3.5.0)
   - GrowingAnalytics/AutotrackerCore (3.5.0):
     - GrowingAnalytics/TrackerCore (= 3.5.0)
@@ -48,6 +49,7 @@ PODS:
   - GrowingAnalytics/Tracker (3.5.0):
     - GrowingAnalytics/DefaultServices (= 3.5.0)
     - GrowingAnalytics/MobileDebugger (= 3.5.0)
+    - GrowingAnalytics/Protobuf (= 3.5.0)
     - GrowingAnalytics/TrackerCore (= 3.5.0)
   - GrowingAnalytics/TrackerCore (3.5.0):
     - GrowingUtils/TrackerCore (= 0.0.5)
@@ -150,7 +152,7 @@ EXTERNAL SOURCES:
     :path: "./"
 
 SPEC CHECKSUMS:
-  GrowingAnalytics: f51d83c651a545a18f3642df92c722350de286ac
+  GrowingAnalytics: 88f565a894472016ecd0c1354c231bd7896f13f5
   GrowingAPM: 79fe4f4a12d94432fa4a552d56c41940ea13961a
   GrowingToolsKit: 9c0d6e41c9678397dbaa3304b1738a2867b023ae
   GrowingUtils: 5212c5c0501ea0c3863a29c33ccefbde5be77353

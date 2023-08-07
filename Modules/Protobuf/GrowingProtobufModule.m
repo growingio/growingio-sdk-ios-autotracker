@@ -23,13 +23,12 @@
 #import "Modules/Protobuf/GrowingEventRequestProtobufAdapter.h"
 
 GrowingMod(GrowingProtobufModule)
+GrowingService(GrowingPBEventDatabaseService, GrowingEventProtobufDatabase)
 
 @implementation GrowingProtobufModule
 
 - (void)growingModInit:(GrowingContext *)context {
     [GrowingEventRequestAdapters.sharedInstance addAdapter:GrowingEventRequestProtobufAdapter.class];
-    [GrowingServiceManager.sharedInstance registerService:@protocol(GrowingEventDatabaseService)
-                                                implClass:GrowingEventProtobufDatabase.class];
 }
 
 @end

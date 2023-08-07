@@ -19,17 +19,14 @@
 
 #import "Services/Database/GrowingEventFMDatabase.h"
 #import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
+#import "GrowingTrackerCore/Public/GrowingEventPersistenceProtocol.h"
 #import "GrowingULTimeUtil.h"
 #import "Services/Database/FMDB/GrowingFMDB.h"
-#import "Services/Database/GrowingEventJSONPersistence.h"
-
-GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
-
-#define VACUUM_DATE(name) [NSString stringWithFormat:@"GIO_VACUUM_DATE_E7B96C4E-6EE2-49CD-87F0-B2E62D4EE96A-%@", name]
 
 @interface GrowingEventFMDatabase ()
 
-@property (nonatomic, copy, readonly) NSString *name;
+@property (nonatomic, copy, readonly) NSString *lastPathComponent;
+@property (nonatomic, strong) Class persistenceClass;
 
 @end
 
@@ -38,22 +35,25 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
 #pragma mark - Init
 
 + (instancetype)databaseWithPath:(NSString *)path error:(NSError **)error {
-    return [[self alloc] initWithFilePath:path error:error];
+    @throw [NSException
+        exceptionWithName:NSInternalInconsistencyException
+                   reason:[NSString stringWithFormat:@"You must override %@ in a subclass.", NSStringFromSelector(_cmd)]
+                 userInfo:nil];
 }
 
-- (instancetype)initWithFilePath:(NSString *)filePath error:(NSError **)error {
++ (instancetype)databaseWithPath:(NSString *)path persistenceClass:(Class)cls error:(NSError **)error {
+    return [[self alloc] initWithFilePath:path persistenceClass:cls error:error];
+}
+
+- (instancetype)initWithFilePath:(NSString *)filePath persistenceClass:(Class)cls error:(NSError **)error {
     if (self = [super init]) {
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
             [self makeDirByFileName:filePath];
         });
 
-        if ([filePath isEqualToString:[GrowingFileStorage getTimingDatabasePath]]) {
-            _name = @"growingtimingevent";
-        } else if ([filePath isEqualToString:[GrowingFileStorage getRealtimeDatabasePath]]) {
-            _name = @"growingrealtimevent";
-        }
-
+        _lastPathComponent = [NSURL fileURLWithPath:filePath].lastPathComponent;
+        _persistenceClass = cls;
         _db = [GrowingFMDatabaseQueue databaseQueueWithPath:filePath];
         if (!_db) {
             _databaseError = [self createDBErrorInDatabase:nil];
@@ -71,12 +71,12 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
 
 #pragma mark - Public Methods
 
-+ (NSData *)buildRawEventsFromEvents:(NSArray<GrowingEventJSONPersistence *> *)events {
-    return [GrowingEventJSONPersistence buildRawEventsFromEvents:events];
+- (NSData *)buildRawEventsFromEvents:(NSArray<id<GrowingEventPersistenceProtocol>> *)events {
+    return [self.persistenceClass buildRawEventsFromEvents:events];
 }
 
-+ (GrowingEventJSONPersistence *)persistenceEventWithEvent:(GrowingBaseEvent *)event uuid:(NSString *)uuid {
-    return [GrowingEventJSONPersistence persistenceEventWithEvent:event uuid:uuid];
+- (instancetype)persistenceEventWithEvent:(GrowingBaseEvent *)event uuid:(NSString *)uuid {
+    return [self.persistenceClass persistenceEventWithEvent:event uuid:uuid];
 }
 
 - (NSInteger)countOfEvents {
@@ -87,9 +87,7 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
             count = -1;
             return;
         }
-        GrowingFMResultSet *set = [db executeQuery:@"select count(*) from namedcachetable where name=?"
-                                            values:@[self.name]
-                                             error:nil];
+        GrowingFMResultSet *set = [db executeQuery:@"SELECT COUNT(*) FROM namedcachetable"];
         if (!set) {
             self.databaseError = [self readErrorInDatabase:db];
             count = -1;
@@ -106,49 +104,41 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
     return count;
 }
 
-- (nullable NSArray<GrowingEventJSONPersistence *> *)getEventsByCount:(NSUInteger)count {
+- (nullable NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsByCount:(NSUInteger)count {
     if (self.countOfEvents == 0) {
         return [[NSArray alloc] init];
     }
 
-    NSMutableArray<GrowingEventJSONPersistence *> *events = [[NSMutableArray alloc] init];
-    [self enumerateKeysAndValuesUsingBlock:^(NSString *key,
-                                             NSString *value,
-                                             NSString *type,
-                                             NSUInteger policy,
-                                             BOOL *stop) {
-        GrowingEventJSONPersistence *event = [[GrowingEventJSONPersistence alloc] initWithUUID:key
-                                                                                     eventType:type
-                                                                                    jsonString:value
-                                                                                        policy:policy];
+    NSMutableArray<id<GrowingEventPersistenceProtocol>> *events = [[NSMutableArray alloc] init];
+    [self enumerateKeysAndValuesUsingBlock:^(NSString *key, id value, NSString *type, NSUInteger policy, BOOL **stop) {
+        id<GrowingEventPersistenceProtocol> event = [[self.persistenceClass alloc] initWithUUID:key
+                                                                                      eventType:type
+                                                                                           data:value
+                                                                                         policy:policy];
         [events addObject:event];
         if (events.count >= count) {
-            *stop = YES;
+            **stop = YES;
         }
     }];
 
     return events.count != 0 ? events : nil;
 }
 
-- (nullable NSArray<GrowingEventJSONPersistence *> *)getEventsByCount:(NSUInteger)count policy:(NSUInteger)mask {
+- (nullable NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsByCount:(NSUInteger)count policy:(NSUInteger)mask {
     if (self.countOfEvents == 0) {
         return [[NSArray alloc] init];
     }
 
-    NSMutableArray<GrowingEventJSONPersistence *> *events = [[NSMutableArray alloc] init];
-    [self enumerateKeysAndValuesUsingBlock:^(NSString *key,
-                                             NSString *value,
-                                             NSString *type,
-                                             NSUInteger policy,
-                                             BOOL *stop) {
+    NSMutableArray<id<GrowingEventPersistenceProtocol>> *events = [[NSMutableArray alloc] init];
+    [self enumerateKeysAndValuesUsingBlock:^(NSString *key, id value, NSString *type, NSUInteger policy, BOOL **stop) {
         if (mask & policy) {
-            GrowingEventJSONPersistence *event = [[GrowingEventJSONPersistence alloc] initWithUUID:key
-                                                                                         eventType:type
-                                                                                        jsonString:value
-                                                                                            policy:policy];
+            id<GrowingEventPersistenceProtocol> event = [[self.persistenceClass alloc] initWithUUID:key
+                                                                                          eventType:type
+                                                                                               data:value
+                                                                                             policy:policy];
             [events addObject:event];
             if (events.count >= count) {
-                *stop = YES;
+                **stop = YES;
             }
         }
     }];
@@ -156,21 +146,19 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
     return events.count != 0 ? events : nil;
 }
 
-- (BOOL)insertEvent:(GrowingEventJSONPersistence *)event {
+- (BOOL)insertEvent:(id<GrowingEventPersistenceProtocol>)event {
     __block BOOL result = NO;
     [self performDatabaseBlock:^(GrowingFMDatabase *db, NSError *error) {
         if (error) {
             self.databaseError = error;
             return;
         }
-        result =
-            [db executeUpdate:@"insert into namedcachetable(name,key,value,createAt,type,policy) values(?,?,?,?,?,?)",
-                              self.name,
-                              event.eventUUID,
-                              ((GrowingEventJSONPersistence *)event).rawJsonString,
-                              @([GrowingULTimeUtil currentTimeMillis]),
-                              event.eventType,
-                              @(event.policy)];
+        result = [db executeUpdate:@"INSERT INTO namedcachetable(key,value,createAt,type,policy) values(?,?,?,?,?)",
+                                   event.eventUUID,
+                                   event.data,
+                                   @([GrowingULTimeUtil currentTimeMillis]),
+                                   event.eventType,
+                                   @(event.policy)];
 
         if (!result) {
             self.databaseError = [self writeErrorInDatabase:db];
@@ -180,7 +168,7 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
     return result;
 }
 
-- (BOOL)insertEvents:(NSArray<GrowingEventJSONPersistence *> *)events {
+- (BOOL)insertEvents:(NSArray<id<GrowingEventPersistenceProtocol>> *)events {
     if (!events || events.count == 0) {
         return YES;
     }
@@ -192,15 +180,13 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
             return;
         }
         for (int i = 0; i < events.count; i++) {
-            GrowingEventJSONPersistence *event = (GrowingEventJSONPersistence *)events[i];
-            result = [db
-                executeUpdate:@"insert into namedcachetable(name,key,value,createAt,type,policy) values(?,?,?,?,?,?)",
-                              self.name,
-                              event.eventUUID,
-                              event.rawJsonString,
-                              @([GrowingULTimeUtil currentTimeMillis]),
-                              event.eventType,
-                              @(event.policy)];
+            id<GrowingEventPersistenceProtocol> event = events[i];
+            result = [db executeUpdate:@"INSERT INTO namedcachetable(key,value,createAt,type,policy) values(?,?,?,?,?)",
+                                       event.eventUUID,
+                                       event.data,
+                                       @([GrowingULTimeUtil currentTimeMillis]),
+                                       event.eventType,
+                                       @(event.policy)];
 
             if (!result) {
                 self.databaseError = [self writeErrorInDatabase:db];
@@ -219,7 +205,7 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
             self.databaseError = error;
             return;
         }
-        result = [db executeUpdate:@"delete from namedcachetable where name=? and key=?;", self.name, key];
+        result = [db executeUpdate:@"DELETE FROM namedcachetable WHERE key=?;", key];
 
         if (!result) {
             self.databaseError = [self writeErrorInDatabase:db];
@@ -242,7 +228,7 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
         }
 
         for (NSString *key in keys) {
-            result = [db executeUpdate:@"delete from namedcachetable where name=? and key=?;", self.name, key];
+            result = [db executeUpdate:@"DELETE FROM namedcachetable WHERE key=?;", key];
             if (!result) {
                 self.databaseError = [self writeErrorInDatabase:db];
                 break;
@@ -260,7 +246,7 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
             self.databaseError = error;
             return;
         }
-        result = [db executeUpdate:@"delete from namedcachetable where name=?" values:@[self.name] error:nil];
+        result = [db executeUpdate:@"DELETE FROM namedcachetable"];
         if (!result) {
             self.databaseError = [self writeErrorInDatabase:db];
         }
@@ -279,8 +265,7 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
             self.databaseError = error;
             return;
         }
-        result =
-            [db executeUpdate:@"delete from namedcachetable where name=? and createAt<=?;", self.name, sevenDayBefore];
+        result = [db executeUpdate:@"DELETE FROM namedcachetable WHERE createAt<=?;", sevenDayBefore];
         if (!result) {
             self.databaseError = [self writeErrorInDatabase:db];
         }
@@ -296,6 +281,13 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
 #pragma mark - Private Methods
 
 - (BOOL)initDB {
+    @throw [NSException
+        exceptionWithName:NSInternalInconsistencyException
+                   reason:[NSString stringWithFormat:@"You must override %@ in a subclass.", NSStringFromSelector(_cmd)]
+                 userInfo:nil];
+}
+
+- (BOOL)initDB:(NSString *)sqlInit createIndex:(NSString *)sqlCreateIndex {
     __block BOOL result = NO;
     [self performTransactionBlock:^(GrowingFMDatabase *db, BOOL *rollback, NSError *error) {
         if (error) {
@@ -303,32 +295,17 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
             return;
         }
 
-        NSString *sql =
-            @"create table if not exists namedcachetable("
-            @"id INTEGER PRIMARY KEY,"
-            @"name text,"
-            @"key text,"
-            @"value text,"
-            @"createAt INTEGER NOT NULL,"
-            @"type text,"
-            @"policy INTEGER);";
-        NSString *sqlCreateIndexNameKey =
-            @"create index if not exists namedcachetable_name_key on namedcachetable (name, key);";
-        NSString *sqlCreateIndexNameId =
-            @"create index if not exists namedcachetable_name_id on namedcachetable (name, id);";
-        NSString *sqlCreateColumnIfNotExist = @"ALTER TABLE namedcachetable ADD policy INTEGER default 6";
-        if (![db executeUpdate:sql]) {
+        if (![db executeUpdate:sqlInit]) {
             self.databaseError = [self createDBErrorInDatabase:db];
             return;
         }
-        if (![db executeUpdate:sqlCreateIndexNameKey]) {
+        if (![db executeUpdate:sqlCreateIndex]) {
             self.databaseError = [self createDBErrorInDatabase:db];
             return;
         }
-        if (![db executeUpdate:sqlCreateIndexNameId]) {
-            self.databaseError = [self createDBErrorInDatabase:db];
-            return;
-        }
+
+        // 兼容早期无policy
+        NSString *sqlCreateColumnIfNotExist = @"ALTER TABLE namedcachetable ADD policy INTEGER DEFAULT 6";
         if (![db columnExists:@"policy" inTableWithName:@"namedcachetable"]) {
             if (![db executeUpdate:sqlCreateColumnIfNotExist]) {
                 self.databaseError = [self createDBErrorInDatabase:db];
@@ -346,7 +323,7 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
 }
 
 - (BOOL)vacuum {
-    if (!isExecuteVacuum(self.name)) {
+    if (!isExecuteVacuum(self.lastPathComponent)) {
         return YES;
     }
 
@@ -369,8 +346,9 @@ static BOOL isExecuteVacuum(NSString *name) {
     if (name.length == 0) {
         return NO;
     }
+    NSString *vacuumDate = [NSString stringWithFormat:@"GIO_VACUUM_DATE_E7B96C4E-6EE2-49CD-87F0-B2E62D4EE96A-%@", name];
     NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-    NSDate *beforeDate = [userDefault objectForKey:VACUUM_DATE(name)];
+    NSDate *beforeDate = [userDefault objectForKey:vacuumDate];
     NSDate *nowDate = [NSDate date];
 
     if (beforeDate) {
@@ -380,12 +358,12 @@ static BOOL isExecuteVacuum(NSString *name) {
                                                                    options:0];
         BOOL flag = delta.day > 7 || delta.day < 0;
         if (flag) {
-            [userDefault setObject:nowDate forKey:VACUUM_DATE(name)];
+            [userDefault setObject:nowDate forKey:vacuumDate];
             [userDefault synchronize];
         }
         return flag;
     } else {
-        [userDefault setObject:nowDate forKey:VACUUM_DATE(name)];
+        [userDefault setObject:nowDate forKey:vacuumDate];
         [userDefault synchronize];
         return YES;
     }
@@ -399,7 +377,14 @@ static BOOL isExecuteVacuum(NSString *name) {
 }
 
 - (void)enumerateKeysAndValuesUsingBlock:
-    (void (^)(NSString *key, NSString *value, NSString *type, NSUInteger policy, BOOL *stop))block {
+    (void (^)(NSString *key, id value, NSString *type, NSUInteger policy, BOOL **stop))block {
+    @throw [NSException
+        exceptionWithName:NSInternalInconsistencyException
+                   reason:[NSString stringWithFormat:@"You must override %@ in a subclass.", NSStringFromSelector(_cmd)]
+                 userInfo:nil];
+}
+
+- (void)enumerateTableUsingBlock:(void (^)(GrowingFMResultSet *set, BOOL *stop))block {
     if (!block) {
         return;
     }
@@ -409,9 +394,7 @@ static BOOL isExecuteVacuum(NSString *name) {
             self.databaseError = error;
             return;
         }
-        GrowingFMResultSet *set = [db executeQuery:@"select * from namedcachetable where name=? order by id asc"
-                                            values:@[self.name]
-                                             error:nil];
+        GrowingFMResultSet *set = [db executeQuery:@"SELECT * FROM namedcachetable ORDER BY id ASC"];
         if (!set) {
             self.databaseError = [self readErrorInDatabase:db];
             return;
@@ -419,11 +402,7 @@ static BOOL isExecuteVacuum(NSString *name) {
 
         BOOL stop = NO;
         while (!stop && [set next]) {
-            NSString *key = [set stringForColumn:@"key"];
-            NSString *value = [set stringForColumn:@"value"];
-            NSString *type = [set stringForColumn:@"type"];
-            NSUInteger policy = [set intForColumn:@"policy"];
-            block(key, value, type, policy, &stop);
+            block(set, &stop);
         }
 
         [set close];

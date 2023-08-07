@@ -1,9 +1,9 @@
 //
-//  GrowingEventProtobufDatabase.h
+//  GrowingEventFMDatabase+Private.h
 //  GrowingAnalytics
 //
-//  Created by YoloMao on 2022/5/11.
-//  Copyright (C) 2022 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2023/8/7.
+//  Copyright (C) 2023 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,12 +17,15 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <Foundation/Foundation.h>
 #import "Services/Database/GrowingEventFMDatabase.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingEventProtobufDatabase : GrowingEventFMDatabase
+@interface GrowingEventFMDatabase (Private)
+
++ (instancetype)databaseWithPath:(NSString *)path persistenceClass:(Class)cls error:(NSError **)error;
+- (BOOL)initDB:(NSString *)sqlInit createIndex:(NSString *)sqlCreateIndex;
+- (void)enumerateTableUsingBlock:(void (^)(GrowingFMResultSet *set, BOOL *stop))block;
 
 @end
 

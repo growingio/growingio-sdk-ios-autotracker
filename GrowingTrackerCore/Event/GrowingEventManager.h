@@ -68,6 +68,8 @@
 
 @interface GrowingEventManager : NSObject
 
+@property (nonatomic, assign) GrowingEventPersistenceType persistenceType;
+
 + (_Nonnull instancetype)sharedInstance;
 
 /// 配置事件管理者
