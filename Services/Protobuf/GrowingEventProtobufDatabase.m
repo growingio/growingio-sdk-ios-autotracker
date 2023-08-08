@@ -18,9 +18,9 @@
 //  limitations under the License.
 
 #import "Services/Protobuf/GrowingEventProtobufDatabase.h"
-#import "Services/Protobuf/GrowingEventProtobufPersistence.h"
 #import "Services/Database/FMDB/GrowingFMDB.h"
 #import "Services/Database/GrowingEventFMDatabase+Private.h"
+#import "Services/Protobuf/GrowingEventProtobufPersistence.h"
 
 GrowingService(GrowingPBEventDatabaseService, GrowingEventProtobufDatabase)
 
