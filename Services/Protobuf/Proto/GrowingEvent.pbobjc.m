@@ -23,7 +23,7 @@
 
 #import <stdatomic.h>
 
-#import "Modules/Protobuf/Proto/GrowingEvent.pbobjc.h"
+#import "Services/Protobuf/Proto/GrowingEvent.pbobjc.h"
 // @@protoc_insertion_point(imports)
 
 #pragma clang diagnostic push

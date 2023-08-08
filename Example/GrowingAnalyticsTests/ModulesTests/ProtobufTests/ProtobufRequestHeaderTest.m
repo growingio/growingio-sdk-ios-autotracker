@@ -19,7 +19,7 @@
 
 
 #import <XCTest/XCTest.h>
-#import "Modules/Protobuf/GrowingEventRequestProtobufAdapter.h"
+#import "Services/Protobuf/GrowingEventRequestProtobufAdapter.h"
 #import "Modules/DefaultServices/GrowingEventRequestJSONAdapter.h"
 
 @interface ProtobufRequestHeaderTest : XCTestCase

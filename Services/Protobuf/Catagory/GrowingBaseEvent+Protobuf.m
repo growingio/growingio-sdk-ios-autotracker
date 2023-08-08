@@ -18,9 +18,9 @@
 //  limitations under the License.
 
 #import <objc/message.h>
-#import "Modules/Protobuf/Catagory/GrowingBaseEvent+Protobuf.h"
-#import "Modules/Protobuf/Catagory/GrowingPBEventV3Dto+GrowingHelper.h"
-#import "Modules/Protobuf/Proto/GrowingEvent.pbobjc.h"
+#import "Services/Protobuf/Catagory/GrowingBaseEvent+Protobuf.h"
+#import "Services/Protobuf/Catagory/GrowingPBEventV3Dto+GrowingHelper.h"
+#import "Services/Protobuf/Proto/GrowingEvent.pbobjc.h"
 
 @implementation GrowingBaseEvent (Protobuf)
 

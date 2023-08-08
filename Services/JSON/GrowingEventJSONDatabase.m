@@ -1,9 +1,9 @@
 //
-//  GrowingEventProtobufDatabase.m
+//  GrowingEventJSONDatabase.m
 //  GrowingAnalytics
 //
-//  Created by YoloMao on 2022/5/11.
-//  Copyright (C) 2022 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2023/8/7.
+//  Copyright (C) 2023 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,22 +17,19 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "Modules/Protobuf/GrowingEventProtobufDatabase.h"
-#import "Modules/Protobuf/GrowingEventProtobufPersistence.h"
+#import "Services/JSON/GrowingEventJSONDatabase.h"
 #import "Services/Database/FMDB/GrowingFMDB.h"
 #import "Services/Database/GrowingEventFMDatabase+Private.h"
+#import "Services/JSON/GrowingEventJSONPersistence.h"
 
-@implementation GrowingEventProtobufDatabase
+GrowingService(GrowingEventDatabaseService, GrowingEventJSONDatabase)
+
+@implementation GrowingEventJSONDatabase
 
 #pragma mark - Init
 
 + (instancetype)databaseWithPath:(NSString *)path error:(NSError **)error {
-    NSString *lastPathComponent = [NSURL fileURLWithPath:path].lastPathComponent;
-    lastPathComponent = [NSString stringWithFormat:@"enc_%@", lastPathComponent];
-    NSURL *url = [NSURL fileURLWithPath:path].URLByDeletingLastPathComponent;
-    path = [url URLByAppendingPathComponent:lastPathComponent].path;
-
-    return [super databaseWithPath:path persistenceClass:GrowingEventProtobufPersistence.class error:error];
+    return [super databaseWithPath:path persistenceClass:GrowingEventJSONPersistence.class error:error];
 }
 
 #pragma mark - Private Methods
@@ -41,8 +38,9 @@
     NSString *sqlInit =
         @"CREATE TABLE IF NOT EXISTS namedcachetable("
         @"id INTEGER PRIMARY KEY,"
+        @"name TEXT,"
         @"key TEXT,"
-        @"value BLOB,"
+        @"value TEXT,"
         @"createAt INTEGER NOT NULL,"
         @"type TEXT,"
         @"policy INTEGER);";
@@ -54,7 +52,7 @@
     (void (^)(NSString *key, id value, NSString *type, NSUInteger policy, BOOL **stop))block {
     [self enumerateTableUsingBlock:^(GrowingFMResultSet *set, BOOL *s) {
         NSString *key = [set stringForColumn:@"key"];
-        id value = [set dataForColumn:@"value"];
+        id value = [set stringForColumn:@"value"];
         NSString *type = [set stringForColumn:@"type"];
         NSUInteger policy = [set intForColumn:@"policy"];
         block(key, value, type, policy, &s);

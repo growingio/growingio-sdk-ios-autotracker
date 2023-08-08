@@ -22,6 +22,7 @@
 #import "Modules/DefaultServices/GrowingEventRequestCompressionAdapter.h"
 #import "Modules/DefaultServices/GrowingEventRequestEncryptionAdapter.h"
 #import "Modules/DefaultServices/GrowingEventRequestJSONAdapter.h"
+#import "Modules/DefaultServices/GrowingEventRequestProtobufAdapter.h"
 
 GrowingMod(GrowingDefaultServicesWrapper)
 
@@ -29,6 +30,7 @@ GrowingMod(GrowingDefaultServicesWrapper)
 
 - (void)growingModInit:(GrowingContext *)context {
     [GrowingEventRequestAdapters.sharedInstance addAdapter:GrowingEventRequestJSONAdapter.class];
+    [GrowingEventRequestAdapters.sharedInstance addAdapter:GrowingEventRequestProtobufAdapter.class];
     [GrowingEventRequestAdapters.sharedInstance addAdapter:GrowingEventRequestCompressionAdapter.class];
     [GrowingEventRequestAdapters.sharedInstance addAdapter:GrowingEventRequestEncryptionAdapter.class];
 }

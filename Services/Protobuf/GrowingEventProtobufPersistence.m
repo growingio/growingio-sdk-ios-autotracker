@@ -17,14 +17,14 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "Modules/Protobuf/GrowingEventProtobufPersistence.h"
+#import "Services/Protobuf/GrowingEventProtobufPersistence.h"
 
 #if SWIFT_PACKAGE
-@import GrowingModule_SwiftProtobuf;
+@import GrowingService_SwiftProtobuf;
 #else
-#import "Modules/Protobuf/Catagory/GrowingBaseEvent+Protobuf.h"
-#import "Modules/Protobuf/Catagory/GrowingPBEventV3Dto+GrowingHelper.h"
-#import "Modules/Protobuf/Proto/GrowingEvent.pbobjc.h"
+#import "Services/Protobuf/Catagory/GrowingBaseEvent+Protobuf.h"
+#import "Services/Protobuf/Catagory/GrowingPBEventV3Dto+GrowingHelper.h"
+#import "Services/Protobuf/Proto/GrowingEvent.pbobjc.h"
 #endif
 
 @interface GrowingEventProtobufPersistence ()
