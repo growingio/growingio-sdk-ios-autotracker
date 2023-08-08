@@ -17,7 +17,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "Modules/Protobuf/Catagory/GrowingPBEventV3Dto+GrowingHelper.h"
+#import "Services/Protobuf/Catagory/GrowingPBEventV3Dto+GrowingHelper.h"
 
 @implementation GrowingPBEventV3Dto (GrowingHelper)
 

@@ -19,8 +19,8 @@
 
 
 #import <XCTest/XCTest.h>
-#import "Modules/Protobuf/GrowingEventProtobufPersistence.h"
-#import "Modules/Protobuf/Proto/GrowingEvent.pbobjc.h"
+#import "Services/Protobuf/GrowingEventProtobufPersistence.h"
+#import "Services/Protobuf/Proto/GrowingEvent.pbobjc.h"
 #import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
 #import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingPageCustomEvent.h"

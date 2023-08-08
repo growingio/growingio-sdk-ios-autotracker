@@ -17,7 +17,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "Services/Database/GrowingEventJSONPersistence.h"
+#import "Services/JSON/GrowingEventJSONPersistence.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 
 @implementation GrowingEventJSONPersistence

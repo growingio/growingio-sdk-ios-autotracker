@@ -19,10 +19,10 @@
 
 
 #import <XCTest/XCTest.h>
-#import "Modules/Protobuf/GrowingEventProtobufPersistence.h"
+#import "Services/Protobuf/GrowingEventProtobufPersistence.h"
 #import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
-#import "Modules/Protobuf/Proto/GrowingEvent.pbobjc.h"
-#import "Modules/Protobuf/Catagory/GrowingBaseEvent+Protobuf.h"
+#import "Services/Protobuf/Proto/GrowingEvent.pbobjc.h"
+#import "Services/Protobuf/Catagory/GrowingBaseEvent+Protobuf.h"
 
 @interface ProtobufPersistenceTest : XCTestCase
 

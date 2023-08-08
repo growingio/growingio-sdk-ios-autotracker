@@ -1,9 +1,9 @@
 //
-//  GrowingPBEventV3Dto+GrowingHelper.h
+//  dummy.h
 //  GrowingAnalytics
 //
-//  Created by YoloMao on 2021/12/9.
-//  Copyright (C) 2021 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2022/3/18.
+//  Copyright (C) 2022 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,16 +17,5 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "Modules/Protobuf/Proto/GrowingEvent.pbobjc.h"
-
-NS_ASSUME_NONNULL_BEGIN
-
-@interface GrowingPBEventV3Dto (GrowingHelper)
-
-- (id)growingHelper_jsonObject;
-
-- (NSMutableDictionary<NSString *, NSString *> *)growingHelper_safeMap:(NSDictionary *)originMap;
-
-@end
-
-NS_ASSUME_NONNULL_END
+// There are no actual public headers in the lib. This is a dummy public header to prevent Cocoapods
+// from adding all internal headers as public.

@@ -23,7 +23,6 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     autotracker.dependency 'GrowingAnalytics/AutotrackerCore', s.version.to_s
 
     # Modules
-    autotracker.dependency 'GrowingAnalytics/Protobuf', s.version.to_s
     autotracker.ios.dependency 'GrowingAnalytics/Hybrid', s.version.to_s
     autotracker.ios.dependency 'GrowingAnalytics/MobileDebugger', s.version.to_s
     autotracker.ios.dependency 'GrowingAnalytics/WebCircle', s.version.to_s
@@ -36,7 +35,6 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     tracker.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
 
     # Modules
-    tracker.dependency 'GrowingAnalytics/Protobuf', s.version.to_s
     tracker.ios.dependency 'GrowingAnalytics/MobileDebugger', s.version.to_s
     tracker.dependency 'GrowingAnalytics/DefaultServices', s.version.to_s
   end
@@ -63,6 +61,26 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     service.source_files = 'Services/Database/**/*{.h,.m,.c,.cpp,.mm}'
     service.public_header_files = 'Services/Database/include/*.h'
     service.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
+  end
+
+  s.subspec 'JSON' do |service|
+    service.source_files = 'Services/JSON/**/*{.h,.m,.c,.cpp,.mm}'
+    service.public_header_files = 'Services/JSON/include/*.h'
+    service.dependency 'GrowingAnalytics/Database', s.version.to_s
+  end
+
+  s.subspec 'Protobuf' do |protobuf|
+    protobuf.source_files = 'Services/Protobuf/**/*{.h,.m,.c,.cpp,.mm}'
+    protobuf.exclude_files = 'Services/Protobuf/Proto/**/*{.h,.m,.c,.cpp,.mm}'
+    protobuf.public_header_files = 'Services/Protobuf/include/*.h'
+    protobuf.dependency 'GrowingAnalytics/Database', s.version.to_s
+    
+    protobuf.subspec 'Proto' do |proto|
+      proto.source_files = 'Services/Protobuf/Proto/**/*{.h,.m,.c,.cpp,.mm}'
+      proto.public_header_files = 'Services/Protobuf/Proto/include/*.h'
+      proto.requires_arc = false
+      proto.dependency 'Protobuf', '>= 3.22.0'
+    end
   end
   
   s.subspec 'Network' do |service|
@@ -102,7 +120,8 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     services.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
 
     # Default Services
-    services.dependency 'GrowingAnalytics/Database', s.version.to_s
+    services.dependency 'GrowingAnalytics/JSON', s.version.to_s
+    services.dependency 'GrowingAnalytics/Protobuf', s.version.to_s
     services.dependency 'GrowingAnalytics/Network', s.version.to_s
     services.dependency 'GrowingAnalytics/Encryption', s.version.to_s
     services.dependency 'GrowingAnalytics/Compression', s.version.to_s
@@ -148,21 +167,6 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     advert.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
   end
   
-  s.subspec 'Protobuf' do |protobuf|
-    protobuf.source_files = 'Modules/Protobuf/**/*{.h,.m,.c,.cpp,.mm}'
-    protobuf.exclude_files = 'Modules/Protobuf/Proto/**/*{.h,.m,.c,.cpp,.mm}'
-    protobuf.public_header_files = 'Modules/Protobuf/include/*.h'
-    protobuf.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
-    protobuf.dependency 'GrowingAnalytics/Database', s.version.to_s
-    
-    protobuf.subspec 'Proto' do |proto|
-      proto.source_files = 'Modules/Protobuf/Proto/**/*{.h,.m,.c,.cpp,.mm}'
-      proto.public_header_files = 'Modules/Protobuf/Proto/include/*.h'
-      proto.requires_arc = false
-      proto.dependency 'Protobuf', '>= 3.22.0'
-    end
-  end
-
   s.subspec 'APM' do |apm|
     apm.ios.deployment_target = '10.0'
     apm.source_files = 'Modules/APM/**/*{.h,.m,.c,.cpp,.mm}'

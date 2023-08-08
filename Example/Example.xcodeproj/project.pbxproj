@@ -1779,7 +1779,7 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Example/Pods-Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/GrowingAPM/GrowingAPM.framework",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-411db831/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-f61463e2/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingToolsKit/GrowingToolsKit.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/LBXScan/LBXScan.framework",
@@ -1810,7 +1810,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-GrowingAnalyticsStartTests/Pods-GrowingAnalyticsStartTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-9f864bbd/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-88384491/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf-iOS/Protobuf.framework",
 			);
@@ -1965,7 +1965,7 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ExampleiOS13/Pods-ExampleiOS13-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/GrowingAPM/GrowingAPM.framework",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-c1567d15/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-30913d41/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingToolsKit/GrowingToolsKit.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf-iOS/Protobuf.framework",
@@ -1990,7 +1990,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-GrowingAnalyticsTests/Pods-GrowingAnalyticsTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-8e13d3d1/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-b35945a7/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf-iOS/Protobuf.framework",
 			);
@@ -2012,7 +2012,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-HostApplicationTests/Pods-HostApplicationTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-61b6cda4/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-d5b2e835/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf-iOS/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/KIF/KIF.framework",
@@ -2080,7 +2080,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ProtobufTests/Pods-ProtobufTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-61b6cda4/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-d5b2e835/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf-iOS/Protobuf.framework",
 			);
@@ -2102,7 +2102,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Example-macOS/Pods-Example-macOS-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-39d19e2e/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-19c77ac5/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-TrackerCore/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf-macOS/Protobuf.framework",
 			);
@@ -2124,7 +2124,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-AdvertTests/Pods-AdvertTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-c1567d15/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-30913d41/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf-iOS/Protobuf.framework",
 			);
