@@ -51,6 +51,7 @@
 
 - (BOOL)growingHandlerUrl:(NSURL *)url {
     XCTAssertEqualObjects(url.absoluteString, @"https://www.baidu.com");
+    return YES;
 }
 
 @end

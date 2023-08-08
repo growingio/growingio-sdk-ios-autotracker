@@ -8,46 +8,23 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: macos-latest
+    runs-on: macos-13
     env:
-      SONAR_SCANNER_VERSION: 4.6.2.2472
-      SONAR_SERVER_URL: "https://sonarcloud.io"
       DERIVED_DATA: $HOME/.DerivedData
       XCTEST_WORKSPACE: GrowingAnalytics.xcworkspace
       XCTEST_SCHEME: GrowingAnalyticsTests
       XCTEST_TESTPLAN: GrowingAnalyticsTests
-      XCTEST_DESTINATION: "platform=iOS Simulator,name=iPhone 13"
+      XCTEST_DESTINATION: "platform=iOS Simulator,name=iPhone 14"
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
-      - name: Force Xcode 13.4.1
-        run: sudo xcode-select -switch /Applications/Xcode_13.4.1.app
+      - name: Force Xcode 15 beta
+        run: sudo xcode-select -switch /Applications/Xcode_15.0.app
 
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: 11
-
-      - name: Download and set up sonar-scanner
-        env:
-          SONAR_SCANNER_DOWNLOAD_URL: https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${{ env.SONAR_SCANNER_VERSION }}-macosx.zip
-        run: |
-          mkdir -p $HOME/.sonar
-          mkdir -p $HOME/.cache
-          curl -sSLo $HOME/.sonar/sonar-scanner.zip ${{ env.SONAR_SCANNER_DOWNLOAD_URL }} 
-          unzip -o $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/
-          echo "$HOME/.sonar/sonar-scanner-${{ env.SONAR_SCANNER_VERSION }}-macosx/bin" >> $GITHUB_PATH
-
-      - name: Download and set up build-wrapper
-        env:
-          BUILD_WRAPPER_DOWNLOAD_URL: ${{ env.SONAR_SERVER_URL }}/static/cpp/build-wrapper-macosx-x86.zip
-        run: |
-          curl -sSLo $HOME/.sonar/build-wrapper-macosx-x86.zip ${{ env.BUILD_WRAPPER_DOWNLOAD_URL }}
-          unzip -o $HOME/.sonar/build-wrapper-macosx-x86.zip -d $HOME/.sonar/
-          echo "$HOME/.sonar/build-wrapper-macosx-x86" >> $GITHUB_PATH
+      - name: Install sonar-scanner and build-wrapper
+        uses: sonarsource/sonarcloud-github-c-cpp@v2
 
       - name: Cache cocoapods
         uses: actions/cache@v3
@@ -60,22 +37,22 @@ jobs:
       - name: Pod Install
         run: pod install
 
-      - name: Run build-wrapper
+      - name: Run build-wrapper # https://sonarsource.atlassian.net/browse/CPP-3987
         run: |
           mkdir -p ${{ env.DERIVED_DATA }}
-          build-wrapper-macosx-x86 --out-dir ${{ env.DERIVED_DATA }}/compilation-database \
           xcodebuild test -workspace ${{ env.XCTEST_WORKSPACE }} \
           -scheme ${{ env.XCTEST_SCHEME }} \
           -testPlan ${{ env.XCTEST_TESTPLAN }} \
           -destination "${{ env.XCTEST_DESTINATION }}" \
           -enableCodeCoverage YES \
-          -derivedDataPath ${{ env.DERIVED_DATA }}
+          -derivedDataPath ${{ env.DERIVED_DATA }} \
+          OTHER_CFLAGS="\$(inherited) -gen-cdb-fragment-path \${{ env.DERIVED_DATA }}/compilation-database"
 
-      - name: Parse xcresult to Sonarqube xml
+      - name: Parse xcresult to Sonar coverage xml
         run: |
           brew tap a7ex/homebrew-formulae
           brew install xcresultparser
-          xcresultparser -c -o xml ${{ env.DERIVED_DATA }}/Logs/Test/*.xcresult/ > ${{ env.DERIVED_DATA }}/sonarqube-generic-coverage.xml
+          xcresultparser -c -o xml ${{ env.DERIVED_DATA }}/Logs/Test/*.xcresult/ > ${{ env.DERIVED_DATA }}/generic-coverage.xml
 
       - name: Run sonar-scanner
         env:
@@ -83,6 +60,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           sonar-scanner \
-          -Dsonar.host.url="${{ env.SONAR_SERVER_URL }}" \
           -Dsonar.cfamily.build-wrapper-output="${{ env.DERIVED_DATA }}/compilation-database" \
-          -Dsonar.coverageReportPaths="${{ env.DERIVED_DATA }}/sonarqube-generic-coverage.xml"
+          -Dsonar.coverageReportPaths="${{ env.DERIVED_DATA }}/generic-coverage.xml"
+
+# https://github.com/sonarsource-cfamily-examples/macos-xcode-coverage-gh-actions-sc/blob/main/.github/workflows/build.yml
+# https://github.com/SonarSource/sonarcloud-github-c-cpp

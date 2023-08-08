@@ -15,7 +15,7 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: macos-latest
+    runs-on: macos-13
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -24,8 +24,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Force Xcode 13.4.1
-        run: sudo xcode-select -switch /Applications/Xcode_13.4.1.app
+      - name: Force Xcode 15 beta
+        run: sudo xcode-select -switch /Applications/Xcode_15.0.app
+
+      - name: Diable Automatically Sync Pasteboard
+        run: defaults write com.apple.iphonesimulator PasteboardAutomaticSync -bool false
 
       - name: Cache cocoapods
         uses: actions/cache@v3
@@ -44,7 +47,7 @@ jobs:
           xcodebuild test -workspace GrowingAnalytics.xcworkspace \
           -scheme GrowingAnalyticsTests \
           -testPlan GrowingAnalyticsTests \
-          -destination 'platform=iOS Simulator,name=iPhone 13' \
+          -destination 'platform=iOS Simulator,name=iPhone 14' \
           -enableCodeCoverage YES
 
       - name: Upload coverage to Codecov
