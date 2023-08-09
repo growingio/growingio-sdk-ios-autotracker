@@ -28,7 +28,6 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
 @interface GrowingEventDatabase ()
 
 @property (nonatomic, strong) id<GrowingEventDatabaseService> db;
-@property (nonatomic, assign) BOOL isProtobuf;
 @property (nonatomic, strong) NSMutableArray *updateKeys;
 @property (nonatomic, strong) NSMutableArray *updateValues;
 
@@ -48,7 +47,6 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
     if (self = [super init]) {
         _updateValues = [[NSMutableArray alloc] init];
         _updateKeys = [[NSMutableArray alloc] init];
-        _isProtobuf = isProtobuf;
         GROWING_LOCK_INIT(lock);
 
         Class<GrowingEventDatabaseService> serviceClass = nil;
@@ -205,11 +203,11 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
 }
 
 - (NSData *)buildRawEventsFromEvents:(NSArray<id<GrowingEventPersistenceProtocol>> *)events {
-    return [self.db buildRawEventsFromEvents:events];
+    return [self.db.class buildRawEventsFromEvents:events];
 }
 
 - (id<GrowingEventPersistenceProtocol>)persistenceEventWithEvent:(GrowingBaseEvent *)event uuid:(NSString *)uuid {
-    return [self.db persistenceEventWithEvent:event uuid:uuid];
+    return [self.db.class persistenceEventWithEvent:event uuid:uuid];
 }
 
 #pragma mark - Perform Block

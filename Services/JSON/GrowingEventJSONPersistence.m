@@ -57,6 +57,11 @@
     return JSONData;
 }
 
++ (NSData *)buildRawEventsFromJsonObjects:(NSArray<NSDictionary *> *)jsonObjects {
+    // 如果是3.x的数据，会多出gioId/globalSequenceId字段
+    return [jsonObjects growingHelper_jsonData];
+}
+
 - (id)toJSONObject {
     return ((NSString *)self.data).growingHelper_jsonObject;
 }

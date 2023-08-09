@@ -187,6 +187,54 @@
     return dic;
 }
 
++ (nullable instancetype)growingHelper_parseFromJsonObject:(NSDictionary *)jsonObject {
+    GrowingPBEventV3Dto *dto = [[GrowingPBEventV3Dto alloc] init];
+    dto.dataSourceId = jsonObject[@"dataSourceId"];
+    dto.sessionId = jsonObject[@"sessionId"];
+    dto.timestamp = ((NSNumber *)jsonObject[@"timestamp"]).longLongValue;
+    dto.eventType = [dto growingHelper_eventType:jsonObject[@"eventType"]];
+    dto.domain = jsonObject[@"domain"];
+    dto.userId = jsonObject[@"userId"];
+    dto.deviceId = jsonObject[@"deviceId"];
+    dto.platform = jsonObject[@"platform"];
+    dto.platformVersion = jsonObject[@"platformVersion"];
+    dto.eventSequenceId = ((NSNumber *)jsonObject[@"eventSequenceId"]).intValue;
+    dto.appState = jsonObject[@"appState"];
+    dto.URLScheme = jsonObject[@"urlScheme"];
+    dto.networkState = jsonObject[@"networkState"];
+    dto.screenWidth = ((NSNumber *)jsonObject[@"screenWidth"]).intValue;
+    dto.screenHeight = ((NSNumber *)jsonObject[@"screenHeight"]).intValue;
+    dto.deviceBrand = jsonObject[@"deviceBrand"];
+    dto.deviceModel = jsonObject[@"deviceModel"];
+    dto.deviceType = jsonObject[@"deviceType"];
+    dto.appName = jsonObject[@"appName"];
+    dto.appVersion = jsonObject[@"appVersion"];
+    dto.language = jsonObject[@"language"];
+    dto.latitude = ((NSNumber *)jsonObject[@"latitude"]).doubleValue;
+    dto.longitude = ((NSNumber *)jsonObject[@"longitude"]).doubleValue;
+    dto.sdkVersion = jsonObject[@"sdkVersion"];
+    dto.userKey = jsonObject[@"userKey"];
+    dto.idfa = jsonObject[@"idfa"];
+    dto.idfv = jsonObject[@"idfv"];
+    dto.extraSdk = jsonObject[@"extraSdk"];
+    dto.path = jsonObject[@"path"];
+    dto.textValue = jsonObject[@"textValue"];
+    dto.xpath = jsonObject[@"xpath"];
+    dto.xcontent = jsonObject[@"xcontent"];
+    dto.xindex = jsonObject[@"xindex"];
+    dto.index = ((NSNumber *)jsonObject[@"index"]).intValue;
+    dto.query = jsonObject[@"query"];
+    dto.hyperlink = jsonObject[@"hyperlink"];
+    dto.attributes = jsonObject[@"attributes"];
+    dto.orientation = jsonObject[@"orientation"];
+    dto.title = jsonObject[@"title"];
+    dto.referralPage = jsonObject[@"referralPage"];
+    dto.protocolType = jsonObject[@"protocolType"];
+    dto.eventName = jsonObject[@"eventName"];
+
+    return dto;
+}
+
 - (NSMutableDictionary<NSString *, NSString *> *)growingHelper_safeMap:(NSDictionary *)originMap {
     NSMutableDictionary<NSString *, NSString *> *map = originMap.mutableCopy;
     for (NSString *key in map.allKeys) {
@@ -197,6 +245,34 @@
     }
 
     return map;
+}
+
+- (GrowingPBEventType)growingHelper_eventType:(NSString *)eventType {
+    if ([eventType isEqualToString:@"VISIT"]) {
+        return GrowingPBEventType_Visit;
+    } else if ([eventType isEqualToString:@"CUSTOM"]) {
+        return GrowingPBEventType_Custom;
+    } else if ([eventType isEqualToString:@"VISITOR_ATTRIBUTES"]) {
+        return GrowingPBEventType_VisitorAttributes;
+    } else if ([eventType isEqualToString:@"LOGIN_USER_ATTRIBUTES"]) {
+        return GrowingPBEventType_LoginUserAttributes;
+    } else if ([eventType isEqualToString:@"CONVERSION_VARIABLES"]) {
+        return GrowingPBEventType_ConversionVariables;
+    } else if ([eventType isEqualToString:@"APP_CLOSED"]) {
+        return GrowingPBEventType_AppClosed;
+    } else if ([eventType isEqualToString:@"PAGE"]) {
+        return GrowingPBEventType_Page;
+    } else if ([eventType isEqualToString:@"VIEW_CLICK"]) {
+        return GrowingPBEventType_ViewClick;
+    } else if ([eventType isEqualToString:@"VIEW_CHANGE"]) {
+        return GrowingPBEventType_ViewChange;
+    } else if ([eventType isEqualToString:@"FORM_SUBMIT"]) {
+        return GrowingPBEventType_FormSubmit;
+    } else if ([eventType isEqualToString:@"ACTIVATE"]) {
+        return GrowingPBEventType_Activate;
+    }
+
+    return GrowingPBEventType_GPBUnrecognizedEnumeratorValue;
 }
 
 @end

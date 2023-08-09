@@ -232,7 +232,8 @@ static GrowingEventManager *sharedInstance = nil;
 
 // 非安全 发送日志
 - (void)sendEventsOfChannel_unsafe:(GrowingEventChannel *)channel {
-    NSString *projectId = GrowingConfigurationManager.sharedInstance.trackConfiguration.projectId;
+    GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    NSString *projectId = trackConfiguration.projectId;
     if (projectId.length == 0) {
         GIOLogError(@"No valid ProjectId (channel = %@).", channel.name);
         return;
@@ -281,7 +282,7 @@ static GrowingEventManager *sharedInstance = nil;
 #ifdef DEBUG
     [self prettyLogForEvents:events withChannel:channel];
 #endif
-    /// 如果需要改变发送地址以及请求参数
+    // 如果需要改变发送地址以及请求参数
     NSObject<GrowingRequestProtocol> *eventRequest = nil;
     for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
         if ([obj respondsToSelector:@selector(growingEventManagerRequestWithChannel:)]) {
@@ -292,11 +293,52 @@ static GrowingEventManager *sharedInstance = nil;
         }
     }
 
-    NSData *rawEvents = [channel.db buildRawEventsFromEvents:events];
+    NSData *rawEvents = nil;
+    if ((channel.persistenceType == GrowingEventPersistenceTypeJSON && trackConfiguration.useProtobuf) ||
+        (channel.persistenceType == GrowingEventPersistenceTypeProtobuf && !trackConfiguration.useProtobuf)) {
+        // 该channel的持久化数据格式与配置不同，需要转换为配置的数据格式
+        // 步骤为先转成jsonObject，再转成对应格式
+        Class<GrowingEventDatabaseService> dbClass = nil;
+        if (trackConfiguration.useProtobuf) {
+            dbClass =
+                [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingPBEventDatabaseService)];
+        } else {
+            dbClass = [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingEventDatabaseService)];
+        }
+        if (!dbClass) {
+            GIOLogError(@"-sendEventsOfChannel_unsafe: error : no event database service support");
+            return;
+        }
+        NSMutableArray *jsonObjects = [NSMutableArray array];
+        for (id<GrowingEventPersistenceProtocol> e in events) {
+            id jsonObject = e.toJSONObject;
+            if (jsonObject) {
+                NSString *eventType = jsonObject[@"eventType"];
+                NSString *sdkVersion = jsonObject[@"sdkVersion"];
+                if ([sdkVersion hasPrefix:@"3."]) {
+                    if ([eventType isEqualToString:@"PAGE"] || [eventType isEqualToString:@"VIEW_CLICK"] ||
+                        [eventType isEqualToString:@"VIEW_CHANGE"] || [eventType isEqualToString:@"FORM_SUBMIT"] ||
+                        [eventType isEqualToString:@"APP_CLOSED"]) {
+                        // 不兼容3.x的无埋点
+                        continue;
+                    }
+                }
+                [jsonObjects addObject:jsonObject];
+            }
+        }
+
+        rawEvents = [dbClass buildRawEventsFromJsonObjects:jsonObjects];
+    }
+
+    if (!rawEvents) {
+        // 该channel的持久化数据格式与配置相同
+        rawEvents = [channel.db buildRawEventsFromEvents:events];
+    }
+
     if (!eventRequest) {
         eventRequest = [[GrowingEventRequest alloc] initWithEvents:rawEvents];
     } else {
-        if ([eventRequest respondsToSelector:@selector(events)]) {
+        if ([eventRequest respondsToSelector:@selector(setEvents:)]) {
             eventRequest.events = rawEvents;
         }
     }

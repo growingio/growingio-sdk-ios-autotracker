@@ -42,6 +42,17 @@ public class SwiftProtobufWrapper: NSObject {
             return nil
         }
     }
+    
+    @objc(parseFromJsonObject:)
+    public static func parse(from jsonObject: [String: AnyObject]) -> SwiftProtobufWrapper? {
+        do {
+            let data = try JSONSerialization.data(withJSONObject: jsonObject)
+            let dto = try EventDto(jsonUTF8Data: data)
+            return SwiftProtobufWrapper(dto)
+        } catch {
+            return nil
+        }
+    }
 
     @objc
     public func toJsonObject() -> [String: AnyObject]? {

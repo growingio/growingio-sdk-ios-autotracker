@@ -45,14 +45,21 @@ extern NSString *const GrowingEventDatabaseErrorDomain;
 /// @return 事件数据库实例对象
 + (instancetype)databaseWithPath:(NSString *)path error:(NSError **)error;
 
+/// 返回对应的数据持久化Class
++ (Class)persistenceClass;
+
 /// 生成事件数组的二进制数据
 /// @param events 事件数据数组
-- (NSData *)buildRawEventsFromEvents:(NSArray<id<GrowingEventPersistenceProtocol>> *)events;
++ (NSData *)buildRawEventsFromEvents:(NSArray<id<GrowingEventPersistenceProtocol>> *)events;
+
+/// 生成事件数组的二进制数据
+/// @param jsonObjects 事件数据数组
++ (NSData *)buildRawEventsFromJsonObjects:(NSArray<NSDictionary *> *)jsonObjects;
 
 /// 生成持久化事件对象
 /// @param event 事件数据
 /// @param uuid 唯一key
-- (id<GrowingEventPersistenceProtocol>)persistenceEventWithEvent:(GrowingBaseEvent *)event uuid:(NSString *)uuid;
++ (id<GrowingEventPersistenceProtocol>)persistenceEventWithEvent:(GrowingBaseEvent *)event uuid:(NSString *)uuid;
 
 /// 获取已存储的事件数量
 /// @return 事件数量，大于等于0；若返回值为-1，表示读取错误

@@ -34,7 +34,11 @@ GrowingService(GrowingPBEventDatabaseService, GrowingEventProtobufDatabase)
     NSURL *url = [NSURL fileURLWithPath:path].URLByDeletingLastPathComponent;
     path = [url URLByAppendingPathComponent:lastPathComponent].path;
 
-    return [super databaseWithPath:path persistenceClass:GrowingEventProtobufPersistence.class error:error];
+    return [super databaseWithPath:path error:error];
+}
+
++ (Class)persistenceClass {
+    return GrowingEventProtobufPersistence.class;
 }
 
 #pragma mark - Private Methods
