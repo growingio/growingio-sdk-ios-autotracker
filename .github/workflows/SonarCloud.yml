@@ -1,0 +1,64 @@
+name: SonarCloud
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [opened, synchronize, reopened]
+jobs:
+  build:
+    name: Build
+    runs-on: macos-latest
+    env:
+      DERIVED_DATA: $HOME/.DerivedData
+      XCTEST_WORKSPACE: GrowingAnalytics.xcworkspace
+      XCTEST_SCHEME: GrowingAnalyticsTests
+      XCTEST_TESTPLAN: GrowingAnalyticsTests
+      XCTEST_DESTINATION: "platform=iOS Simulator,name=iPhone 13"
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+
+      - name: Install sonar-scanner and build-wrapper
+        uses: sonarsource/sonarcloud-github-c-cpp@v2
+
+      - name: Cache cocoapods
+        uses: actions/cache@v3
+        with:
+          path: Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+
+      - name: Pod Install
+        run: pod install
+
+      - name: Run build-wrapper # https://sonarsource.atlassian.net/browse/CPP-3987
+        run: |
+          mkdir -p ${{ env.DERIVED_DATA }}
+          xcodebuild test -workspace ${{ env.XCTEST_WORKSPACE }} \
+          -scheme ${{ env.XCTEST_SCHEME }} \
+          -testPlan ${{ env.XCTEST_TESTPLAN }} \
+          -destination "${{ env.XCTEST_DESTINATION }}" \
+          -enableCodeCoverage YES \
+          -derivedDataPath ${{ env.DERIVED_DATA }} \
+          OTHER_CFLAGS="\$(inherited) -gen-cdb-fragment-path \${{ env.DERIVED_DATA }}/compilation-database"
+
+      - name: Parse xcresult to Sonar coverage xml
+        run: |
+          brew tap a7ex/homebrew-formulae
+          brew install xcresultparser
+          xcresultparser -c -o xml ${{ env.DERIVED_DATA }}/Logs/Test/*.xcresult/ > ${{ env.DERIVED_DATA }}/generic-coverage.xml
+
+      - name: Run sonar-scanner
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          sonar-scanner \
+          -Dsonar.cfamily.build-wrapper-output="${{ env.DERIVED_DATA }}/compilation-database" \
+          -Dsonar.coverageReportPaths="${{ env.DERIVED_DATA }}/generic-coverage.xml"
+
+# https://github.com/sonarsource-cfamily-examples/macos-xcode-coverage-gh-actions-sc/blob/main/.github/workflows/build.yml
+# https://github.com/SonarSource/sonarcloud-github-c-cpp
