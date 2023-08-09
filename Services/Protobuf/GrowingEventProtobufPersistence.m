@@ -93,6 +93,28 @@
 #endif
 }
 
++ (NSData *)buildRawEventsFromJsonObjects:(NSArray<NSDictionary *> *)jsonObjects {
+#if SWIFT_PACKAGE
+    NSMutableArray *list = [NSMutableArray array];
+    for (NSDictionary *jsonObject in jsonObjects) {
+        GrowingSwiftProtobuf *dtoBox = [GrowingSwiftProtobuf parseFromJsonObject:jsonObject];
+        if (dtoBox) {
+            [list addObject:dtoBox];
+        }
+    }
+    return [GrowingSwiftProtobuf serializedDatasFromList:list];
+#else
+    GrowingPBEventV3List *list = [[GrowingPBEventV3List alloc] init];
+    for (NSDictionary *jsonObject in jsonObjects) {
+        GrowingPBEventV3Dto *dto = [GrowingPBEventV3Dto growingHelper_parseFromJsonObject:jsonObject];
+        if (dto) {
+            [list.valuesArray addObject:dto];
+        }
+    }
+    return list.data;
+#endif
+}
+
 - (id)toJSONObject {
 #if SWIFT_PACKAGE
     return self.dtoBox.toJsonObject;

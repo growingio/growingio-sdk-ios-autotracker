@@ -33,6 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSData *)buildRawEventsFromEvents:(NSArray<id<GrowingEventPersistenceProtocol>> *)events;
 
++ (NSData *)buildRawEventsFromJsonObjects:(NSArray<NSDictionary *> *)jsonObjects;
+
 - (instancetype)initWithUUID:(NSString *)uuid
                    eventType:(NSString *)eventType
                         data:(id)data

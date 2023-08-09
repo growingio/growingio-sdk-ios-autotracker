@@ -25,7 +25,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (id)growingHelper_jsonObject;
 
++ (nullable instancetype)growingHelper_parseFromJsonObject:(NSDictionary *)jsonObject;
+
 - (NSMutableDictionary<NSString *, NSString *> *)growingHelper_safeMap:(NSDictionary *)originMap;
+
+- (GrowingPBEventType)growingHelper_eventType:(NSString *)eventType;
 
 @end
 

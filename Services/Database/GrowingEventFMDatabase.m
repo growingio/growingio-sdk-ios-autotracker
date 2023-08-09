@@ -26,7 +26,6 @@
 @interface GrowingEventFMDatabase ()
 
 @property (nonatomic, copy, readonly) NSString *lastPathComponent;
-@property (nonatomic, strong) Class persistenceClass;
 
 @end
 
@@ -35,17 +34,10 @@
 #pragma mark - Init
 
 + (instancetype)databaseWithPath:(NSString *)path error:(NSError **)error {
-    @throw [NSException
-        exceptionWithName:NSInternalInconsistencyException
-                   reason:[NSString stringWithFormat:@"You must override %@ in a subclass.", NSStringFromSelector(_cmd)]
-                 userInfo:nil];
+    return [[self alloc] initWithFilePath:path error:error];
 }
 
-+ (instancetype)databaseWithPath:(NSString *)path persistenceClass:(Class)cls error:(NSError **)error {
-    return [[self alloc] initWithFilePath:path persistenceClass:cls error:error];
-}
-
-- (instancetype)initWithFilePath:(NSString *)filePath persistenceClass:(Class)cls error:(NSError **)error {
+- (instancetype)initWithFilePath:(NSString *)filePath error:(NSError **)error {
     if (self = [super init]) {
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
@@ -53,7 +45,6 @@
         });
 
         _lastPathComponent = [NSURL fileURLWithPath:filePath].lastPathComponent;
-        _persistenceClass = cls;
         _db = [GrowingFMDatabaseQueue databaseQueueWithPath:filePath];
         if (!_db) {
             _databaseError = [self createDBErrorInDatabase:nil];
@@ -69,13 +60,24 @@
     return self;
 }
 
++ (Class)persistenceClass {
+    @throw [NSException
+        exceptionWithName:NSInternalInconsistencyException
+                   reason:[NSString stringWithFormat:@"You must override %@ in a subclass.", NSStringFromSelector(_cmd)]
+                 userInfo:nil];
+}
+
 #pragma mark - Public Methods
 
-- (NSData *)buildRawEventsFromEvents:(NSArray<id<GrowingEventPersistenceProtocol>> *)events {
++ (NSData *)buildRawEventsFromEvents:(NSArray<id<GrowingEventPersistenceProtocol>> *)events {
     return [self.persistenceClass buildRawEventsFromEvents:events];
 }
 
-- (instancetype)persistenceEventWithEvent:(GrowingBaseEvent *)event uuid:(NSString *)uuid {
++ (NSData *)buildRawEventsFromJsonObjects:(NSArray<NSDictionary *> *)jsonObjects {
+    return [self.persistenceClass buildRawEventsFromJsonObjects:jsonObjects];
+}
+
++ (id<GrowingEventPersistenceProtocol>)persistenceEventWithEvent:(GrowingBaseEvent *)event uuid:(NSString *)uuid {
     return [self.persistenceClass persistenceEventWithEvent:event uuid:uuid];
 }
 
@@ -111,10 +113,10 @@
 
     NSMutableArray<id<GrowingEventPersistenceProtocol>> *events = [[NSMutableArray alloc] init];
     [self enumerateKeysAndValuesUsingBlock:^(NSString *key, id value, NSString *type, NSUInteger policy, BOOL **stop) {
-        id<GrowingEventPersistenceProtocol> event = [[self.persistenceClass alloc] initWithUUID:key
-                                                                                      eventType:type
-                                                                                           data:value
-                                                                                         policy:policy];
+        id<GrowingEventPersistenceProtocol> event = [[self.class.persistenceClass alloc] initWithUUID:key
+                                                                                            eventType:type
+                                                                                                 data:value
+                                                                                               policy:policy];
         [events addObject:event];
         if (events.count >= count) {
             **stop = YES;
@@ -132,10 +134,10 @@
     NSMutableArray<id<GrowingEventPersistenceProtocol>> *events = [[NSMutableArray alloc] init];
     [self enumerateKeysAndValuesUsingBlock:^(NSString *key, id value, NSString *type, NSUInteger policy, BOOL **stop) {
         if (mask & policy) {
-            id<GrowingEventPersistenceProtocol> event = [[self.persistenceClass alloc] initWithUUID:key
-                                                                                          eventType:type
-                                                                                               data:value
-                                                                                             policy:policy];
+            id<GrowingEventPersistenceProtocol> event = [[self.class.persistenceClass alloc] initWithUUID:key
+                                                                                                eventType:type
+                                                                                                     data:value
+                                                                                                   policy:policy];
             [events addObject:event];
             if (events.count >= count) {
                 **stop = YES;

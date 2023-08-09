@@ -29,7 +29,7 @@
     dto.dataSourceId = self.dataSourceId;
     dto.sessionId = self.sessionId;
     dto.timestamp = self.timestamp;
-    dto.eventType = self.pbEventType;
+    dto.eventType = [dto growingHelper_eventType:self.eventType];
     dto.domain = self.domain;
     dto.userId = self.userId;
     dto.deviceId = self.deviceId;
@@ -100,34 +100,6 @@
     dto.eventName = stringBlock(@"eventName");
 
     return dto;
-}
-
-- (GrowingPBEventType)pbEventType {
-    if ([self.eventType isEqualToString:@"VISIT"]) {
-        return GrowingPBEventType_Visit;
-    } else if ([self.eventType isEqualToString:@"CUSTOM"]) {
-        return GrowingPBEventType_Custom;
-    } else if ([self.eventType isEqualToString:@"VISITOR_ATTRIBUTES"]) {
-        return GrowingPBEventType_VisitorAttributes;
-    } else if ([self.eventType isEqualToString:@"LOGIN_USER_ATTRIBUTES"]) {
-        return GrowingPBEventType_LoginUserAttributes;
-    } else if ([self.eventType isEqualToString:@"CONVERSION_VARIABLES"]) {
-        return GrowingPBEventType_ConversionVariables;
-    } else if ([self.eventType isEqualToString:@"APP_CLOSED"]) {
-        return GrowingPBEventType_AppClosed;
-    } else if ([self.eventType isEqualToString:@"PAGE"]) {
-        return GrowingPBEventType_Page;
-    } else if ([self.eventType isEqualToString:@"VIEW_CLICK"]) {
-        return GrowingPBEventType_ViewClick;
-    } else if ([self.eventType isEqualToString:@"VIEW_CHANGE"]) {
-        return GrowingPBEventType_ViewChange;
-    } else if ([self.eventType isEqualToString:@"FORM_SUBMIT"]) {
-        return GrowingPBEventType_FormSubmit;
-    } else if ([self.eventType isEqualToString:@"ACTIVATE"]) {
-        return GrowingPBEventType_Activate;
-    }
-
-    return GrowingPBEventType_GPBUnrecognizedEnumeratorValue;
 }
 
 @end

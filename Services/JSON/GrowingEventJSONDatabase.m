@@ -28,8 +28,8 @@ GrowingService(GrowingEventDatabaseService, GrowingEventJSONDatabase)
 
 #pragma mark - Init
 
-+ (instancetype)databaseWithPath:(NSString *)path error:(NSError **)error {
-    return [super databaseWithPath:path persistenceClass:GrowingEventJSONPersistence.class error:error];
++ (Class)persistenceClass {
+    return GrowingEventJSONPersistence.class;
 }
 
 #pragma mark - Private Methods
