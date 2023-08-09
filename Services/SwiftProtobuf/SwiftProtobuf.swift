@@ -42,7 +42,7 @@ public class SwiftProtobufWrapper: NSObject {
             return nil
         }
     }
-    
+
     @objc(parseFromJsonObject:)
     public static func parse(from jsonObject: [String: AnyObject]) -> SwiftProtobufWrapper? {
         do {
