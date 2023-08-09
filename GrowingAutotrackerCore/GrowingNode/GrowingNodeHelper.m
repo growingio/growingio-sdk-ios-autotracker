@@ -41,7 +41,6 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
             continue;
         }
 
-        [viewPathArray addObject:node.growingNodeSubPath];
         [originxcontentArray addObject:node.growingNodeSubIndex];
         if (isSimilar) {
             [xcontentArray addObject:node.growingNodeSubSimilarIndex];
@@ -50,7 +49,14 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
             [xcontentArray addObject:node.growingNodeSubIndex];
         }
 
-        node = node.growingNodeParent;
+        NSString *uniqueTag = ((UIView *)node).growingUniqueTag;
+        if (uniqueTag && uniqueTag.length > 0) {
+            [viewPathArray addObject:uniqueTag];
+            node = nil;
+        } else {
+            [viewPathArray addObject:node.growingNodeSubPath];
+            node = node.growingNodeParent;
+        }
     }
 
     NSString * (^toStringBlock)(NSArray *) = ^(NSArray *array) {

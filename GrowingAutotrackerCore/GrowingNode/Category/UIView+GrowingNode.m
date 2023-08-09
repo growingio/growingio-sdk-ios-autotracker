@@ -54,11 +54,6 @@
 }
 
 - (NSString *)growingNodeSubPath {
-    // 如果手动标识了该view,返回标识
-    if (self.growingUniqueTag.length > 0) {
-        return self.growingUniqueTag;
-    }
-
     return NSStringFromClass(self.class);
 }
 

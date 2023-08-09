@@ -73,24 +73,6 @@
 }
 
 - (GrowingViewNode *)appendNode:(UIView *)view isRecalculate:(BOOL)recalculate {
-    NSString *subpath = view.growingNodeSubPath;
-    // 如果节点path不存在，说明被过滤了，除了view之外，全部copy父级属性
-    if (!subpath) {
-        return GrowingViewNode.builder.setView(view)
-            .setIndex(self.index)
-            .setXpath(self.xpath)
-            .setXcontent(self.xcontent)
-            .setOriginXcontent(self.originxcontent)
-            .setClickableParentXpath(self.clickableParentXpath)
-            .setClickableParentXcontent(self.clickableParentXcontent)
-            .setHasListParent(self.hasListParent)
-            .setViewContent(self.viewContent)
-            .setPosition(self.position)
-            .setNodeType(self.nodeType)
-            .setNeedRecalculate(recalculate)
-            .build;
-    }
-
     BOOL haslistParent = self.hasListParent || [self.view isKindOfClass:[UITableView class]] ||
                          [self.view isKindOfClass:[UICollectionView class]];
     // 是否是相似元素
@@ -104,15 +86,25 @@
         index = self.index;
     }
 
+    NSString *uniqueTag = view.growingUniqueTag;
+    NSString *xpath = uniqueTag && uniqueTag.length > 0
+                          ? [NSString stringWithFormat:@"/%@", uniqueTag]
+                          : [self.xpath stringByAppendingFormat:@"/%@", view.growingNodeSubPath];
+    NSString *xcontent = uniqueTag && uniqueTag.length > 0
+                             ? [NSString stringWithFormat:@"/%@", view.growingNodeSubSimilarIndex]
+                             : [self.originxcontent stringByAppendingFormat:@"/%@", view.growingNodeSubSimilarIndex];
+    NSString *originxcontent = uniqueTag && uniqueTag.length > 0
+                                   ? [NSString stringWithFormat:@"/%@", view.growingNodeSubIndex]
+                                   : [self.originxcontent stringByAppendingFormat:@"/%@", view.growingNodeSubIndex];
     NSString *parentXpath = self.view.growingNodeUserInteraction ? self.xpath : self.clickableParentXpath;
     NSString *parentXcontent = self.view.growingNodeUserInteraction ? self.xcontent : self.clickableParentXcontent;
     NSString *content = view.growingNodeContent;
 
     return GrowingViewNode.builder.setView(view)
         .setIndex((int)index)
-        .setXpath([self.xpath stringByAppendingFormat:@"/%@", view.growingNodeSubPath])
-        .setXcontent([self.originxcontent stringByAppendingFormat:@"/%@", view.growingNodeSubSimilarIndex])
-        .setOriginXcontent([self.originxcontent stringByAppendingFormat:@"/%@", view.growingNodeSubIndex])
+        .setXpath(xpath)
+        .setXcontent(xcontent)
+        .setOriginXcontent(originxcontent)
         .setClickableParentXpath(parentXpath)
         .setClickableParentXcontent(parentXcontent)
         .setHasListParent(haslistParent)
