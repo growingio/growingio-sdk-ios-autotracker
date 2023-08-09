@@ -56,10 +56,6 @@
 }
 
 - (NSString *)growingNodeSubPath {
-    if (self.growingUniqueTag.length > 0) {
-        return self.growingUniqueTag;
-    }
-
     NSIndexPath *indexpath = [self growingNodeIndexPath];
     if (indexpath) {
         return [NSString stringWithFormat:@"Section/%@", NSStringFromClass(self.class)];
