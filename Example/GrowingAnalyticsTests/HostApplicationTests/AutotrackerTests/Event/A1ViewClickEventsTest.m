@@ -37,19 +37,19 @@
     [[viewTester usingLabel:@"UI界面"] tap];
 }
 
-- (void)checkWebCirclePathWithView:(UIView *)view xpath:(NSString *)xpathForView xindex:(NSString *)xindexForView originxindex:(NSString *)originxindexForView {
-    // 检查圈选的计算逻辑得出的xpath、xindex是否正确
+- (void)checkWebCirclePathWithView:(UIView *)view xpath:(NSString *)xpathForView xcontent:(NSString *)xcontentForView originxcontent:(NSString *)originxcontentForView {
+    // 检查圈选的计算逻辑得出的xpath、xcontent是否正确
     GrowingPage *page = [[GrowingPageManager sharedInstance] findPageByView:view];
     NSDictionary *pathInfo = page.pathInfo;
     NSString *pagexpath = pathInfo[@"xpath"];
-    NSString *pagexindex = pathInfo[@"xindex"];
-    [GrowingNodeHelper recalculateXpath:view block:^(NSString * _Nonnull xpath, NSString * _Nonnull xindex, NSString * _Nonnull originxindex) {
+    NSString *pagexcontent = pathInfo[@"xcontent"];
+    [GrowingNodeHelper recalculateXpath:view block:^(NSString * _Nonnull xpath, NSString * _Nonnull xcontent, NSString * _Nonnull originxcontent) {
         xpath = [NSString stringWithFormat:@"%@/%@", pagexpath, xpath];
-        xindex = [NSString stringWithFormat:@"%@/%@", pagexindex, xindex];
-        originxindex = [NSString stringWithFormat:@"%@/%@", pagexindex, originxindex];
+        xcontent = [NSString stringWithFormat:@"%@/%@", pagexcontent, xcontent];
+        originxcontent = [NSString stringWithFormat:@"%@/%@", pagexcontent, originxcontent];
         XCTAssertEqualObjects(xpathForView, xpath);
-        XCTAssertEqualObjects(xindexForView, xindex);
-        XCTAssertEqualObjects(originxindexForView, originxindex);
+        XCTAssertEqualObjects(xcontentForView, xcontent);
+        XCTAssertEqualObjects(originxcontentForView, originxcontent);
     }];
 }
 
@@ -64,9 +64,9 @@
     NSString *xpathForView = @"/UITabBarController/UINavigationController/GIOLabelAttributeViewController/UIView/"
     @"_UIAlertControllerInterfaceActionGroupView/UIView/_UIInterfaceActionRepresentationsSequenceView/_UIInterfac"
     @"eActionSeparatableSequenceView/UIStackView/_UIInterfaceActionCustomViewRepresentationView/Button";
-    NSString *xindexForView = @"/0/1/0/0/0/0/0/0/0/1/0";
-    NSString *originxindexForView = @"/0/1/0/0/0/0/0/0/0/1/0";
-    [self checkWebCirclePathWithView:actor.view xpath:xpathForView xindex:xindexForView originxindex:originxindexForView];
+    NSString *xcontentForView = @"/0/1/0/0/0/0/0/0/0/1/0";
+    NSString *originxcontentForView = @"/0/1/0/0/0/0/0/0/0/1/0";
+    [self checkWebCirclePathWithView:actor.view xpath:xpathForView xcontent:xcontentForView originxcontent:originxcontentForView];
     [actor tap];
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
@@ -82,7 +82,7 @@
         XCTAssertEqualObjects(dic[@"path"], @"");
         XCTAssertEqualObjects(dic[@"textValue"], @"取消");
         XCTAssertEqualObjects(dic[@"xpath"], xpathForView);
-        XCTAssertEqualObjects(dic[@"xindex"], xindexForView);
+        XCTAssertEqualObjects(dic[@"xcontent"], xcontentForView);
     }
 
     {
@@ -95,7 +95,7 @@
         XCTAssertEqualObjects(dic[@"path"], @"");
         XCTAssertEqualObjects(dic[@"textValue"], @"ShowAlert");
         XCTAssertEqualObjects(dic[@"xpath"], @"/UITabBarController/UINavigationController/GIOLabelAttributeViewController/UIView/UIButton");
-        XCTAssertEqualObjects(dic[@"xindex"], @"/0/1/0/0/3");
+        XCTAssertEqualObjects(dic[@"xcontent"], @"/0/1/0/0/3");
     }
 }
 
@@ -149,9 +149,9 @@
     
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"Food"];
     NSString *xpathForView = @"/UITabBarController/UINavigationController/GIOSimpleUIElemtsViewController/UIView/UIView/UIButton";
-    NSString *xindexForView = @"/0/1/0/0/0/0";
-    NSString *originxindexForView = @"/0/1/0/0/0/0";
-    [self checkWebCirclePathWithView:actor.view xpath:xpathForView xindex:xindexForView originxindex:originxindexForView];
+    NSString *xcontentForView = @"/0/1/0/0/0/0";
+    NSString *originxcontentForView = @"/0/1/0/0/0/0";
+    [self checkWebCirclePathWithView:actor.view xpath:xpathForView xcontent:xcontentForView originxcontent:originxcontentForView];
     [actor tap];
     [[viewTester usingLabel:@"好的"] tap];
     
@@ -167,7 +167,7 @@
         
         XCTAssertEqualObjects(dic[@"textValue"], @"Food");
         XCTAssertEqualObjects(dic[@"xpath"], xpathForView);
-        XCTAssertEqualObjects(dic[@"xindex"], xindexForView);
+        XCTAssertEqualObjects(dic[@"xcontent"], xcontentForView);
     }
 }
 
@@ -178,9 +178,9 @@
     
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"Fire"];
     NSString *xpathForView = @"/UITabBarController/UINavigationController/GIOSimpleUIElemtsViewController/UIView/UIView/UIButton";
-    NSString *xindexForView = @"/0/1/0/0/0/1";
-    NSString *originxindexForView = @"/0/1/0/0/0/1";
-    [self checkWebCirclePathWithView:actor.view xpath:xpathForView xindex:xindexForView originxindex:originxindexForView];
+    NSString *xcontentForView = @"/0/1/0/0/0/1";
+    NSString *originxcontentForView = @"/0/1/0/0/0/1";
+    [self checkWebCirclePathWithView:actor.view xpath:xpathForView xcontent:xcontentForView originxcontent:originxcontentForView];
     [actor tap];
     [[viewTester usingLabel:@"好的"] tap];
     
@@ -196,7 +196,7 @@
         
         XCTAssertEqualObjects(dic[@"textValue"], @"Fire");
         XCTAssertEqualObjects(dic[@"xpath"], xpathForView);
-        XCTAssertEqualObjects(dic[@"xindex"], xindexForView);
+        XCTAssertEqualObjects(dic[@"xcontent"], xcontentForView);
     }
 }
 
@@ -208,9 +208,9 @@
     
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"ThirdSegment"];
     NSString *xpathForView = @"/UITabBarController/UINavigationController/GIOSimpleUIElemtsViewController/UIView/UISegmentedControl/UISegment";
-    NSString *xindexForView = @"/0/1/0/0/0/-";
-    NSString *originxindexForView = @"/0/1/0/0/0/2";
-    [self checkWebCirclePathWithView:actor.view xpath:xpathForView xindex:xindexForView originxindex:originxindexForView];
+    NSString *xcontentForView = @"/0/1/0/0/0/-";
+    NSString *originxcontentForView = @"/0/1/0/0/0/2";
+    [self checkWebCirclePathWithView:actor.view xpath:xpathForView xcontent:xcontentForView originxcontent:originxcontentForView];
     [actor tap];
     [viewTester waitForAnimationsToFinish];
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
@@ -226,7 +226,7 @@
         XCTAssertEqualObjects(dic[@"textValue"], @"Third");
         XCTAssertEqualObjects(dic[@"xpath"], xpathForView);
         XCTAssertEqualObjects(dic[@"index"], @(2));
-        XCTAssertEqualObjects(dic[@"xindex"], xindexForView);
+        XCTAssertEqualObjects(dic[@"xcontent"], xcontentForView);
     }
 }
 
@@ -254,7 +254,7 @@
         
         XCTAssertEqualObjects(dic[@"textValue"], @"Water");
         XCTAssertEqualObjects(dic[@"xpath"], @"/UITabBarController/UINavigationController/GIOSimpleUIElemtsViewController/UIView/UIView/UIButton");
-        XCTAssertEqualObjects(dic[@"xindex"], @"/0/1/0/0/0/1");
+        XCTAssertEqualObjects(dic[@"xcontent"], @"/0/1/0/0/0/1");
     }
     
     [[viewTester usingLabel:@"好的"] tap];
@@ -267,9 +267,9 @@
     
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"header1"];
     NSString *xpathForView = @"/UITabBarController/UINavigationController/GIOMeasurementProtocolTableViewController/UITableView/UITableViewHeaderFooterView/UIButton";
-    NSString *xindexForView = @"/0/0/0/0/1/0";
-    NSString *originxindexForView = @"/0/0/0/0/1/0";
-    [self checkWebCirclePathWithView:actor.view xpath:xpathForView xindex:xindexForView originxindex:originxindexForView];
+    NSString *xcontentForView = @"/0/0/0/0/1/0";
+    NSString *originxcontentForView = @"/0/0/0/0/1/0";
+    [self checkWebCirclePathWithView:actor.view xpath:xpathForView xcontent:xcontentForView originxcontent:originxcontentForView];
     [actor tap];
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
@@ -284,7 +284,7 @@
         
         XCTAssertEqualObjects(dic[@"textValue"], @"header1");
         XCTAssertEqualObjects(dic[@"xpath"], xpathForView);
-        XCTAssertEqualObjects(dic[@"xindex"], xindexForView);
+        XCTAssertEqualObjects(dic[@"xcontent"], xcontentForView);
     }
 }
 
@@ -314,7 +314,7 @@
     
     XCTAssertEqualObjects(dic[@"textValue"], @"IgnoreButton2");
     XCTAssertEqualObjects(dic[@"xpath"], @"/UITabBarController/UINavigationController/GrowingIgnoreViewViewController/UIView/GrowingIgnoreButton2");
-    XCTAssertEqualObjects(dic[@"xindex"], @"/0/1/0/0/0");
+    XCTAssertEqualObjects(dic[@"xcontent"], @"/0/1/0/0/0");
 }
 
 - (void)test09IgnoreViewClasses {
@@ -343,7 +343,7 @@
     
     XCTAssertEqualObjects(dic[@"textValue"], @"NotIgnoreButton4");
     XCTAssertEqualObjects(dic[@"xpath"], @"/UITabBarController/UINavigationController/GrowingIgnoreViewViewController/UIView/GrowingNotIgnoreButton4");
-    XCTAssertEqualObjects(dic[@"xindex"], @"/0/1/0/0/0");
+    XCTAssertEqualObjects(dic[@"xcontent"], @"/0/1/0/0/0");
 }
 
 @end

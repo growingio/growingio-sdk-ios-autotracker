@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *path;
 @property (nonatomic, copy, readonly) NSString *textValue;
 @property (nonatomic, copy, readonly) NSString *xpath;
-@property (nonatomic, copy, readonly) NSString *xindex;
+@property (nonatomic, copy, readonly) NSString *xcontent;
 @property (nonatomic, assign, readonly) int index;
 
 + (GrowingViewElementBuilder *)builder;
@@ -43,13 +43,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *pageName;
 @property (nonatomic, copy, readonly) NSString *textValue;
 @property (nonatomic, copy, readonly) NSString *xpath;
-@property (nonatomic, copy, readonly) NSString *xindex;
+@property (nonatomic, copy, readonly) NSString *xcontent;
 @property (nonatomic, assign, readonly) int index;
 
 - (GrowingViewElementBuilder * (^)(NSString *value))setPath;
 - (GrowingViewElementBuilder * (^)(NSString *value))setTextValue;
 - (GrowingViewElementBuilder * (^)(NSString *value))setXpath;
-- (GrowingViewElementBuilder * (^)(NSString *value))setXindex;
+- (GrowingViewElementBuilder * (^)(NSString *value))setXcontent;
 - (GrowingViewElementBuilder * (^)(int value))setIndex;
 - (GrowingViewElementBuilder * (^)(NSDictionary<NSString *, NSObject *> *value))setAttributes;
 

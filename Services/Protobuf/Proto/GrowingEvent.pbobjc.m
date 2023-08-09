@@ -168,7 +168,6 @@ BOOL GrowingPBEventType_IsValidValue(int32_t value__) {
 @dynamic sendTime;
 @dynamic userKey;
 @dynamic xcontent;
-@dynamic xindex;
 
 typedef struct GrowingPBEventV3Dto__storage_ {
   uint32_t _has_storage_[2];
@@ -219,7 +218,6 @@ typedef struct GrowingPBEventV3Dto__storage_ {
   NSString *projectKey;
   NSString *userKey;
   NSString *xcontent;
-  NSString *xindex;
   int64_t timestamp;
   double latitude;
   double longitude;
@@ -689,15 +687,6 @@ typedef struct GrowingPBEventV3Dto__storage_ {
         .number = GrowingPBEventV3Dto_FieldNumber_Xcontent,
         .hasIndex = 48,
         .offset = (uint32_t)offsetof(GrowingPBEventV3Dto__storage_, xcontent),
-        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldClearHasIvarOnZero),
-        .dataType = GPBDataTypeString,
-      },
-      {
-        .name = "xindex",
-        .dataTypeSpecific.clazz = Nil,
-        .number = GrowingPBEventV3Dto_FieldNumber_Xindex,
-        .hasIndex = 49,
-        .offset = (uint32_t)offsetof(GrowingPBEventV3Dto__storage_, xindex),
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldClearHasIvarOnZero),
         .dataType = GPBDataTypeString,
       },

@@ -117,15 +117,15 @@
     } while (pageParent != nil);
 
     NSMutableString *xpath = [NSMutableString string];
-    NSMutableString *xindex = [NSMutableString string];
+    NSMutableString *xcontent = [NSMutableString string];
     NSArray *array = pageTree.allObjects;
     for (int i = (int)(array.count - 1); i >= 0; i--) {
         GrowingPage *page = array[i];
         [xpath appendFormat:@"/%@", NSStringFromClass(page.carrier.class)];
-        [xindex appendFormat:@"/%@", page.tag ?: @"0"];
+        [xcontent appendFormat:@"/%@", page.tag ?: @"0"];
     }
 
-    return @{@"xpath": xpath, @"xindex": xindex};
+    return @{@"xpath": xpath, @"xcontent": xcontent};
 }
 
 @end

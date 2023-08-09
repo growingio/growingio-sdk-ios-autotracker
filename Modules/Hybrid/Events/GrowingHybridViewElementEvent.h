@@ -25,7 +25,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingHybridViewElementEvent : GrowingViewElementEvent
 
-@property (nonatomic, copy, readonly) NSString *xcontent;
 @property (nonatomic, copy, readonly) NSString *hyperlink;
 @property (nonatomic, copy, readonly) NSString *query;
 
@@ -35,11 +34,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingHybridViewElementBuilder : GrowingViewElementBuilder
 
-@property (nonatomic, copy, readonly) NSString *xcontent;
 @property (nonatomic, copy, readonly) NSString *hyperlink;
 @property (nonatomic, copy, readonly) NSString *query;
 
-- (GrowingHybridViewElementBuilder * (^)(NSString *value))setXcontent;
 - (GrowingHybridViewElementBuilder * (^)(NSString *value))setQuery;
 - (GrowingHybridViewElementBuilder * (^)(NSString *value))setHyperlink;
 

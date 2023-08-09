@@ -27,10 +27,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign, readonly) int zLevel;
 @property (nonatomic, copy, readonly) NSString *_Nullable content;
 @property (nonatomic, copy, readonly) NSString *_Nonnull xpath;
-@property (nonatomic, copy, readonly) NSString *_Nonnull xindex;
+@property (nonatomic, copy, readonly) NSString *_Nonnull xcontent;
 @property (nonatomic, copy, readonly) NSString *_Nonnull nodeType;
 @property (nonatomic, copy, readonly) NSString *_Nullable parentXpath;
-@property (nonatomic, copy, readonly) NSString *_Nullable parentXindex;
+@property (nonatomic, copy, readonly) NSString *_Nullable parentXcontent;
 @property (nonatomic, assign, readonly) BOOL isContainer;
 @property (nonatomic, assign, readonly) int index;
 @property (nonatomic, copy, readonly) NSString *_Nonnull page;
@@ -51,10 +51,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign, readonly) int zLevel;
 @property (nonatomic, copy, readonly) NSString *_Nullable content;
 @property (nonatomic, copy, readonly) NSString *_Nonnull xpath;
-@property (nonatomic, copy, readonly) NSString *_Nonnull xindex;
+@property (nonatomic, copy, readonly) NSString *_Nonnull xcontent;
 @property (nonatomic, copy, readonly) NSString *_Nonnull nodeType;
 @property (nonatomic, copy, readonly) NSString *_Nullable parentXpath;
-@property (nonatomic, copy, readonly) NSString *_Nullable parentXindex;
+@property (nonatomic, copy, readonly) NSString *_Nullable parentXcontent;
 @property (nonatomic, assign, readonly) BOOL isContainer;
 @property (nonatomic, assign, readonly) int index;
 @property (nonatomic, copy, readonly) NSString *_Nonnull page;
@@ -63,10 +63,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (GrowingWebCircleElementBuilder * (^)(int value))setZLevel;
 - (GrowingWebCircleElementBuilder * (^)(NSString *value))setContent;
 - (GrowingWebCircleElementBuilder * (^)(NSString *value))setXpath;
-- (GrowingWebCircleElementBuilder * (^)(NSString *value))setXindex;
+- (GrowingWebCircleElementBuilder * (^)(NSString *value))setXcontent;
 - (GrowingWebCircleElementBuilder * (^)(NSString *value))setNodeType;
 - (GrowingWebCircleElementBuilder * (^)(NSString *value))setParentXpath;
-- (GrowingWebCircleElementBuilder * (^)(NSString *value))setParentXindex;
+- (GrowingWebCircleElementBuilder * (^)(NSString *value))setParentXcontent;
 - (GrowingWebCircleElementBuilder * (^)(BOOL value))setIsContainer;
 - (GrowingWebCircleElementBuilder * (^)(int value))setIndex;
 - (GrowingWebCircleElementBuilder * (^)(NSString *value))setPage;

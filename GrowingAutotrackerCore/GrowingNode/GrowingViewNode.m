@@ -28,8 +28,8 @@
 @interface GrowingViewNode ()
 
 @property (nonatomic, copy, readwrite) NSString *xpath;
-@property (nonatomic, copy, readwrite) NSString *xindex;
-@property (nonatomic, copy, readwrite) NSString *originxindex;
+@property (nonatomic, copy, readwrite) NSString *xcontent;
+@property (nonatomic, copy, readwrite) NSString *originxcontent;
 
 @end
 
@@ -40,10 +40,10 @@
         _view = builder.view;
         _viewContent = builder.viewContent;
         _xpath = builder.xpath;
-        _xindex = builder.xindex;
-        _originxindex = builder.originxindex;
+        _xcontent = builder.xcontent;
+        _originxcontent = builder.originxcontent;
         _clickableParentXpath = builder.clickableParentXpath;
-        _clickableParentXindex = builder.clickableParentXindex;
+        _clickableParentXcontent = builder.clickableParentXcontent;
         _nodeType = builder.nodeType;
         _index = builder.index;
         _position = builder.position;
@@ -60,11 +60,11 @@
     __weak typeof(self) weakSelf = self;
     [GrowingNodeHelper
         recalculateXpath:self.view
-                   block:^(NSString *_Nonnull xpath, NSString *_Nonnull xindex, NSString *_Nonnull originxindex) {
+                   block:^(NSString *_Nonnull xpath, NSString *_Nonnull xcontent, NSString *_Nonnull originxcontent) {
                        __strong typeof(weakSelf) self = weakSelf;
                        self.xpath = xpath;
-                       self.xindex = xindex;
-                       self.originxindex = originxindex;
+                       self.xcontent = xcontent;
+                       self.originxcontent = originxcontent;
                    }];
 }
 
@@ -79,10 +79,10 @@
         return GrowingViewNode.builder.setView(view)
             .setIndex(self.index)
             .setXpath(self.xpath)
-            .setXindex(self.xindex)
-            .setOriginXindex(self.originxindex)
+            .setXcontent(self.xcontent)
+            .setOriginXcontent(self.originxcontent)
             .setClickableParentXpath(self.clickableParentXpath)
-            .setClickableParentXindex(self.clickableParentXindex)
+            .setClickableParentXcontent(self.clickableParentXcontent)
             .setHasListParent(self.hasListParent)
             .setViewContent(self.viewContent)
             .setPosition(self.position)
@@ -105,16 +105,16 @@
     }
 
     NSString *parentXpath = self.view.growingNodeUserInteraction ? self.xpath : self.clickableParentXpath;
-    NSString *parentXindex = self.view.growingNodeUserInteraction ? self.xindex : self.clickableParentXindex;
+    NSString *parentXcontent = self.view.growingNodeUserInteraction ? self.xcontent : self.clickableParentXcontent;
     NSString *content = view.growingNodeContent;
 
     return GrowingViewNode.builder.setView(view)
         .setIndex((int)index)
         .setXpath([self.xpath stringByAppendingFormat:@"/%@", view.growingNodeSubPath])
-        .setXindex([self.originxindex stringByAppendingFormat:@"/%@", view.growingNodeSubSimilarIndex])
-        .setOriginXindex([self.originxindex stringByAppendingFormat:@"/%@", view.growingNodeSubIndex])
+        .setXcontent([self.originxcontent stringByAppendingFormat:@"/%@", view.growingNodeSubSimilarIndex])
+        .setOriginXcontent([self.originxcontent stringByAppendingFormat:@"/%@", view.growingNodeSubIndex])
         .setClickableParentXpath(parentXpath)
-        .setClickableParentXindex(parentXindex)
+        .setClickableParentXcontent(parentXcontent)
         .setHasListParent(haslistParent)
         .setViewContent(content ? [content growingHelper_safeSubStringWithLength:50] : nil)
         .setPosition((int)view.growingNodeKeyIndex)
@@ -141,16 +141,16 @@
     };
 }
 
-- (GrowingViewNodeBuilder * (^)(NSString *value))setXindex {
+- (GrowingViewNodeBuilder * (^)(NSString *value))setXcontent {
     return ^(NSString *value) {
-        self->_xindex = value;
+        self->_xcontent = value;
         return self;
     };
 }
 
-- (GrowingViewNodeBuilder * (^)(NSString *value))setOriginXindex {
+- (GrowingViewNodeBuilder * (^)(NSString *value))setOriginXcontent {
     return ^(NSString *value) {
-        self->_originxindex = value;
+        self->_originxcontent = value;
         return self;
     };
 }
@@ -162,9 +162,9 @@
     };
 }
 
-- (GrowingViewNodeBuilder * (^)(NSString *value))setClickableParentXindex {
+- (GrowingViewNodeBuilder * (^)(NSString *value))setClickableParentXcontent {
     return ^(NSString *value) {
-        self->_clickableParentXindex = value;
+        self->_clickableParentXcontent = value;
         return self;
     };
 }

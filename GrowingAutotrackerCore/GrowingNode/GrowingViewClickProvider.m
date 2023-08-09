@@ -40,11 +40,11 @@
 
     NSDictionary *pathInfo = page.pathInfo;
     NSString *pagexpath = pathInfo[@"xpath"];
-    NSString *pagexindex = pathInfo[@"xindex"];
+    NSString *pagexcontent = pathInfo[@"xcontent"];
     GrowingViewElementBuilder *builder = GrowingViewElementEvent.builder.setEventType(GrowingEventTypeViewClick)
                                              .setPath(@"")
                                              .setXpath([NSString stringWithFormat:@"%@/%@", pagexpath, node.xpath])
-                                             .setXindex([NSString stringWithFormat:@"%@/%@", pagexindex, node.xindex])
+                                             .setXcontent([NSString stringWithFormat:@"%@/%@", pagexcontent, node.xcontent])
                                              .setIndex(node.index)
                                              .setTextValue(node.viewContent);
 

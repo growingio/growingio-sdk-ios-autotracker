@@ -133,7 +133,6 @@ typedef GPB_ENUM(GrowingPBEventV3Dto_FieldNumber) {
   GrowingPBEventV3Dto_FieldNumber_SendTime = 54,
   GrowingPBEventV3Dto_FieldNumber_UserKey = 55,
   GrowingPBEventV3Dto_FieldNumber_Xcontent = 56,
-  GrowingPBEventV3Dto_FieldNumber_Xindex = 57,
 };
 
 GPB_FINAL @interface GrowingPBEventV3Dto : GPBMessage
@@ -246,8 +245,6 @@ GPB_FINAL @interface GrowingPBEventV3Dto : GPBMessage
 @property(nonatomic, readwrite, copy, null_resettable) NSString *userKey;
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *xcontent;
-
-@property(nonatomic, readwrite, copy, null_resettable) NSString *xindex;
 
 @end
 

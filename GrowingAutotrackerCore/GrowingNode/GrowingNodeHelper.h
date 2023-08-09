@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GrowingNodeHelper : NSObject
 
 + (void)recalculateXpath:(UIView *)view
-                   block:(void (^)(NSString *xpath, NSString *xindex, NSString *originxindex))block;
+                   block:(void (^)(NSString *xpath, NSString *xcontent, NSString *originxcontent))block;
 + (GrowingViewNode *)getViewNode:(UIView *)view;
 + (NSString *)getViewNodeType:(UIView *)view;
 

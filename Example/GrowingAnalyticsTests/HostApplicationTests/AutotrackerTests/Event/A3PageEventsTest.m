@@ -86,7 +86,7 @@
         XCTAssertEqualObjects(
             dic[@"xpath"],
             @"/UITabBarController/UINavigationController/GrowingAutotrackPageViewController/UIView/UIButton");
-        XCTAssertEqualObjects(dic[@"xindex"], @"/0/0/0/0/0");
+        XCTAssertEqualObjects(dic[@"xcontent"], @"/0/0/0/0/0");
         XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
     }
 }
@@ -114,7 +114,7 @@
         XCTAssertEqualObjects(
             dic[@"xpath"],
             @"/UITabBarController/UINavigationController/GrowingAutotrackPageViewController/UIView/UIButton");
-        XCTAssertEqualObjects(dic[@"xindex"], @"/0/0/0/0/0");
+        XCTAssertEqualObjects(dic[@"xcontent"], @"/0/0/0/0/0");
         XCTAssertEqualObjects(dic[@"attributes"][@"key"], nil);
     }
 
@@ -155,7 +155,7 @@
             XCTAssertEqualObjects(
                 dic[@"xpath"],
                 @"/UITabBarController/UINavigationController/GrowingAutotrackPageViewController/UIView/UIButton");
-            XCTAssertEqualObjects(dic[@"xindex"], @"/0/0/0/0/0");
+            XCTAssertEqualObjects(dic[@"xcontent"], @"/0/0/0/0/0");
             XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
         }
 
@@ -194,7 +194,7 @@
         XCTAssertEqualObjects(
             dic[@"xpath"],
             @"/UITabBarController/UINavigationController/GrowingAutotrackPageViewController/UIView/UIButton");
-        XCTAssertEqualObjects(dic[@"xindex"], @"/0/0/0/0/0");
+        XCTAssertEqualObjects(dic[@"xcontent"], @"/0/0/0/0/0");
         XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
     }
 }
@@ -222,7 +222,7 @@
         XCTAssertEqualObjects(
             dic[@"xpath"],
             @"/UITabBarController/UINavigationController/GrowingAutotrackPageViewController/UIView/UIButton");
-        XCTAssertEqualObjects(dic[@"xindex"], @"/0/0/0/0/0");
+        XCTAssertEqualObjects(dic[@"xcontent"], @"/0/0/0/0/0");
         XCTAssertEqualObjects(dic[@"attributes"][@"key"], nil);
     }
 
@@ -263,7 +263,7 @@
             XCTAssertEqualObjects(
                 dic[@"xpath"],
                 @"/UITabBarController/UINavigationController/GrowingAutotrackPageViewController/UIView/UIButton");
-            XCTAssertEqualObjects(dic[@"xindex"], @"/0/0/0/0/0");
+            XCTAssertEqualObjects(dic[@"xcontent"], @"/0/0/0/0/0");
             XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
         }
 
@@ -318,7 +318,7 @@
             XCTAssertEqualObjects(
                 dic[@"xpath"],
                 @"/UITabBarController/UINavigationController/GrowingAutotrackPageViewController/UIView/UIButton");
-            XCTAssertEqualObjects(dic[@"xindex"], @"/0/0/0/0/0");
+            XCTAssertEqualObjects(dic[@"xcontent"], @"/0/0/0/0/0");
             XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
         }
 

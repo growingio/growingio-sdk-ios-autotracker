@@ -32,12 +32,12 @@
         _zLevel = builder.zLevel;
         _content = builder.content;
         _xpath = builder.xpath;
-        _xindex = builder.xindex;
+        _xcontent = builder.xcontent;
         _nodeType = builder.nodeType;
         _isContainer = builder.isContainer;
         _index = builder.index;
         _parentXpath = builder.parentXpath;
-        _parentXindex = builder.parentXindex;
+        _parentXcontent = builder.parentXcontent;
         _page = builder.page;
         _domain = [GrowingDeviceInfo currentDeviceInfo].bundleID;
     }
@@ -54,12 +54,12 @@
     dataDict[@"zLevel"] = @(self.zLevel);
     dataDict[@"content"] = self.content;
     dataDict[@"xpath"] = self.xpath;
-    dataDict[@"xindex"] = self.xindex;
+    dataDict[@"xcontent"] = self.xcontent;
     dataDict[@"nodeType"] = self.nodeType;
     dataDict[@"isContainer"] = @(self.isContainer);
     dataDict[@"index"] = self.index >= 0 ? @(self.index) : nil;
     dataDict[@"parentXPath"] = self.parentXpath;
-    dataDict[@"parentXIndex"] = self.parentXindex;
+    dataDict[@"parentXContent"] = self.parentXcontent;
     dataDict[@"page"] = self.page;
     dataDict[@"domain"] = self.domain;
     return [dataDict copy];
@@ -97,9 +97,9 @@
     };
 }
 
-- (GrowingWebCircleElementBuilder * (^)(NSString *value))setXindex {
+- (GrowingWebCircleElementBuilder * (^)(NSString *value))setXcontent {
     return ^(NSString *value) {
-        self->_xindex = value;
+        self->_xcontent = value;
         return self;
     };
 }
@@ -118,9 +118,9 @@
     };
 }
 
-- (GrowingWebCircleElementBuilder * (^)(NSString *value))setParentXindex {
+- (GrowingWebCircleElementBuilder * (^)(NSString *value))setParentXcontent {
     return ^(NSString *value) {
-        self->_parentXindex = value;
+        self->_parentXcontent = value;
         return self;
     };
 }
