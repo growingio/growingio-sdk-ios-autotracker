@@ -43,7 +43,7 @@ jobs:
           -destination "${{ env.XCTEST_DESTINATION }}" \
           -enableCodeCoverage YES \
           -derivedDataPath ${{ env.DERIVED_DATA }} \
-          OTHER_CFLAGS="\$(inherited) -gen-cdb-fragment-path \${{ env.DERIVED_DATA }}/compilation-database"
+          OTHER_CFLAGS="\$(inherited) -gen-cdb-fragment-path ${{ env.DERIVED_DATA }}/compilation-database"
 
       - name: Parse xcresult to Sonar coverage xml
         run: |

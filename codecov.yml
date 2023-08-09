@@ -3,8 +3,8 @@ codecov:
 ignore:
   - "Example"
   - "GrowingTrackerCore/Thirdparty"
-  - "Modules/Protobuf/Proto/*.pbobjc.m"
   - "Modules/Flutter"
+  - "Services/Protobuf/Proto/*.pbobjc.m"
   - "Services/Compression/LZ4"
   - "Services/Database/FMDB"
   - "Services/WebSocket"
