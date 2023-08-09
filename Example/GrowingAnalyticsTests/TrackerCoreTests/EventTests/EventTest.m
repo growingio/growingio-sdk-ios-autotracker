@@ -25,7 +25,7 @@
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "GrowingServiceManager.h"
 #import "GrowingEventDatabaseService.h"
-#import "Services/Database/GrowingEventFMDatabase.h"
+#import "Services/Protobuf/GrowingEventProtobufDatabase.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "MockEventQueue.h"
 #import "ManualTrackHelper.h"
@@ -55,8 +55,8 @@
     GrowingConfigurationManager.sharedInstance.trackConfiguration = config;
     
     // 避免insertEventToDatabase异常
-    [GrowingServiceManager.sharedInstance registerService:@protocol(GrowingEventDatabaseService)
-                                                implClass:GrowingEventFMDatabase.class];
+    [GrowingServiceManager.sharedInstance registerService:@protocol(GrowingPBEventDatabaseService)
+                                                implClass:GrowingEventProtobufDatabase.class];
     // 初始化sessionId
     [GrowingSession startSession];
     // userId userKey

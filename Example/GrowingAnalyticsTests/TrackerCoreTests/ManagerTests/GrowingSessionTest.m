@@ -24,7 +24,7 @@
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingServiceManager.h"
 #import "GrowingEventDatabaseService.h"
-#import "Services/Database/GrowingEventFMDatabase.h"
+#import "Services/Protobuf/GrowingEventProtobufDatabase.h"
 #import "MockEventQueue.h"
 #import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
 #import "InvocationHelper.h"
@@ -43,8 +43,8 @@
     GrowingConfigurationManager.sharedInstance.trackConfiguration = config;
     
     // 避免insertEventToDatabase异常
-    [GrowingServiceManager.sharedInstance registerService:@protocol(GrowingEventDatabaseService)
-                                                implClass:GrowingEventFMDatabase.class];
+    [GrowingServiceManager.sharedInstance registerService:@protocol(GrowingPBEventDatabaseService)
+                                                implClass:GrowingEventProtobufDatabase.class];
     
     [GrowingSession startSession];
     [GrowingSession.currentSession generateVisit];

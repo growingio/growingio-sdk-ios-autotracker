@@ -23,9 +23,9 @@
 #import "InvocationHelper.h"
 #import "GrowingServiceManager.h"
 #import "GrowingEventDatabaseService.h"
-#import "Services/Database/GrowingEventFMDatabase.h"
+#import "Services/JSON/GrowingEventJSONDatabase.h"
 #import "GrowingTrackerCore/Database/GrowingEventDatabase.h"
-#import "Services/Database/GrowingEventJSONPersistence.h"
+#import "Services/JSON/GrowingEventJSONPersistence.h"
 #import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
@@ -42,11 +42,11 @@
 
 + (void)setUp {
     [GrowingServiceManager.sharedInstance registerService:@protocol(GrowingEventDatabaseService)
-                                                implClass:GrowingEventFMDatabase.class];
+                                                implClass:GrowingEventJSONDatabase.class];
 }
 
 - (void)setUp {
-    GrowingEventDatabase *database = [GrowingEventDatabase databaseWithPath:[GrowingFileStorage getTimingDatabasePath]];
+    GrowingEventDatabase *database = [GrowingEventDatabase databaseWithPath:[GrowingFileStorage getTimingDatabasePath] isProtobuf:NO];
     XCTAssertNotNil(database);
     self.database = database;
 
@@ -80,7 +80,6 @@
 - (void)testDatabase {
     {
         XCTAssertTrue([self.database clearAllItems]);
-        XCTAssertTrue([self.database cleanExpiredDataIfNeeded]);
         XCTAssertEqual(self.database.countOfEvents, 0);
 
         NSArray *events = [self.database getEventsWithPackageNum:1];
@@ -94,7 +93,7 @@
         GrowingEventJSONPersistence *event =
             [[GrowingEventJSONPersistence alloc] initWithUUID:uuid
                                                     eventType:GrowingEventTypeVisit
-                                                   jsonString:self.event.toDictionary.growingHelper_jsonString
+                                                   data:self.event.toDictionary.growingHelper_jsonString
                                                        policy:GrowingEventSendPolicyInstant];
         XCTAssertNoThrow([self.database setEvent:event forKey:uuid]);
         XCTAssertEqual(self.database.countOfEvents, 1);
@@ -107,10 +106,10 @@
         GrowingEventJSONPersistence *event =
             [[GrowingEventJSONPersistence alloc] initWithUUID:uuid
                                                     eventType:GrowingEventTypeVisit
-                                                   jsonString:self.event.toDictionary.growingHelper_jsonString
+                                                         data:self.event.toDictionary.growingHelper_jsonString
                                                        policy:GrowingEventSendPolicyInstant];
-        XCTAssertNoThrow([GrowingEventDatabase buildRawEventsFromEvents:@[event]]);
-        XCTAssertNoThrow([GrowingEventDatabase persistenceEventWithEvent:self.event uuid:uuid]);
+        XCTAssertNoThrow([self.database buildRawEventsFromEvents:@[event]]);
+        XCTAssertNoThrow([self.database persistenceEventWithEvent:self.event uuid:uuid]);
     }
 }
 

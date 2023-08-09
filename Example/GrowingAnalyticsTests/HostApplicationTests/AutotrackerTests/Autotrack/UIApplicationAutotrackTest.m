@@ -24,7 +24,6 @@
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingServiceManager.h"
 #import "GrowingEventDatabaseService.h"
-#import "Services/Database/GrowingEventFMDatabase.h"
 #import "GrowingAutotrackerCore/Autotrack/UIApplication+GrowingAutotracker.h"
 #import "MockEventQueue.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
