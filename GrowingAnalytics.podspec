@@ -147,7 +147,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   end
 
   s.subspec 'ImpressionTrack' do |imptrack|
-    imptrack.ios.deployment_target = '9.0'
+    imptrack.ios.deployment_target = '10.0'
     imptrack.source_files = 'Modules/ImpressionTrack/**/*{.h,.m,.c,.cpp,.mm}'
     imptrack.public_header_files = 'Modules/ImpressionTrack/Public/*.h'
     imptrack.dependency 'GrowingAnalytics/AutotrackerCore', s.version.to_s
