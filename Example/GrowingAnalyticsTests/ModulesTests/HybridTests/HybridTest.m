@@ -31,7 +31,7 @@
 #import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
 #import "GrowingServiceManager.h"
 #import "GrowingEventDatabaseService.h"
-#import "Services/Database/GrowingEventFMDatabase.h"
+#import "Services/Protobuf/GrowingEventProtobufDatabase.h"
 
 @interface GrowingHybridBridgeProvider (XCTest)
 
@@ -54,8 +54,8 @@
 - (void)setUp {
     self.provider = GrowingHybridBridgeProvider.sharedInstance;
     
-    [GrowingServiceManager.sharedInstance registerService:@protocol(GrowingEventDatabaseService)
-                                                implClass:GrowingEventFMDatabase.class];
+    [GrowingServiceManager.sharedInstance registerService:@protocol(GrowingPBEventDatabaseService)
+                                                implClass:GrowingEventProtobufDatabase.class];
     [GrowingSession startSession];
     GrowingTrackConfiguration *config = [GrowingTrackConfiguration configurationWithProjectId:@"test"];
     config.idMappingEnabled = YES;

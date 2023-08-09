@@ -19,7 +19,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "Services/Database/GrowingEventJSONPersistence.h"
+#import "Services/JSON/GrowingEventJSONPersistence.h"
 #import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 
@@ -41,13 +41,13 @@
     GrowingEventJSONPersistence *p =
         [[GrowingEventJSONPersistence alloc] initWithUUID:uuid
                                                 eventType:self.event.eventType
-                                               jsonString:self.event.toDictionary.growingHelper_jsonString
+                                               data:self.event.toDictionary.growingHelper_jsonString
                                                    policy:self.event.sendPolicy];
     XCTAssertNotNil(p);
     XCTAssertEqualObjects(p.eventUUID, uuid);
     XCTAssertEqualObjects(p.eventType, self.event.eventType);
     XCTAssertEqual(p.policy, self.event.sendPolicy);
-    XCTAssertEqualObjects(p.rawJsonString, self.event.toDictionary.growingHelper_jsonString);
+    XCTAssertEqualObjects(p.data, self.event.toDictionary.growingHelper_jsonString);
 }
 
 - (void)testPersistenceWithEvent {
@@ -57,7 +57,7 @@
     XCTAssertEqualObjects(p.eventUUID, uuid);
     XCTAssertEqualObjects(p.eventType, self.event.eventType);
     XCTAssertEqual(p.policy, self.event.sendPolicy);
-    XCTAssertEqualObjects(p.rawJsonString, self.event.toDictionary.growingHelper_jsonString);
+    XCTAssertEqualObjects(p.data, self.event.toDictionary.growingHelper_jsonString);
 }
 
 - (void)testBuildRawEventsFromEvents {

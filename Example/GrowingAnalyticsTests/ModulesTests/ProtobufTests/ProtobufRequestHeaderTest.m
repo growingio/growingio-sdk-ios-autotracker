@@ -19,7 +19,10 @@
 
 
 #import <XCTest/XCTest.h>
-#import "Services/Protobuf/GrowingEventRequestProtobufAdapter.h"
+#import "GrowingAutotrackerCore/GrowingRealAutotracker.h"
+#import "GrowingAutotrackConfiguration.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "Modules/DefaultServices/GrowingEventRequestProtobufAdapter.h"
 #import "Modules/DefaultServices/GrowingEventRequestJSONAdapter.h"
 
 @interface ProtobufRequestHeaderTest : XCTestCase
@@ -36,7 +39,11 @@
     // Put teardown code here. This method is called after the invocation of each test method in the class.
 }
 
-- (void)testRequestHeader {
+- (void)test01RequestHeaderProtobufFirst {
+    GrowingAutotrackConfiguration *config = [GrowingAutotrackConfiguration configurationWithProjectId:@"test"];
+    config.useProtobuf = YES;
+    [GrowingRealAutotracker trackerWithConfiguration:config launchOptions:nil];
+    
     GrowingEventRequestProtobufAdapter *adapter = [GrowingEventRequestProtobufAdapter adapterWithRequest:nil];
     GrowingEventRequestJSONAdapter *adapter2 = [GrowingEventRequestJSONAdapter adapterWithRequest:nil];
     XCTAssertLessThan(adapter2.priority, adapter.priority);
@@ -50,6 +57,29 @@
         if ([key isEqualToString:@"Content-Type"]) {
             NSString *value = allHTTPHeaderFields[key];
             XCTAssertEqualObjects(value, @"application/protobuf");
+            break;
+        }
+    }
+}
+
+- (void)test02RequestHeaderJSONFirst {
+    GrowingAutotrackConfiguration *config = [GrowingAutotrackConfiguration configurationWithProjectId:@"test"];
+    config.useProtobuf = NO;
+    [GrowingRealAutotracker trackerWithConfiguration:config launchOptions:nil];
+    
+    GrowingEventRequestProtobufAdapter *adapter = [GrowingEventRequestProtobufAdapter adapterWithRequest:nil];
+    GrowingEventRequestJSONAdapter *adapter2 = [GrowingEventRequestJSONAdapter adapterWithRequest:nil];
+    XCTAssertLessThan(adapter.priority, adapter2.priority);
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://www.growingio.com"]];
+    request = [adapter adaptedURLRequest:request];
+    request = [adapter2 adaptedURLRequest:request];
+    
+    NSDictionary<NSString *, NSString *> *allHTTPHeaderFields = request.allHTTPHeaderFields;
+    for (NSString *key in allHTTPHeaderFields.allKeys) {
+        if ([key isEqualToString:@"Content-Type"]) {
+            NSString *value = allHTTPHeaderFields[key];
+            XCTAssertEqualObjects(value, @"application/json");
             break;
         }
     }
