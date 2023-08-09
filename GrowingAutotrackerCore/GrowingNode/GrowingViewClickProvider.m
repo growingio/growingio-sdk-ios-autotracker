@@ -41,12 +41,13 @@
     NSDictionary *pathInfo = page.pathInfo;
     NSString *pagexpath = pathInfo[@"xpath"];
     NSString *pagexcontent = pathInfo[@"xcontent"];
-    GrowingViewElementBuilder *builder = GrowingViewElementEvent.builder.setEventType(GrowingEventTypeViewClick)
-                                             .setPath(@"")
-                                             .setXpath([NSString stringWithFormat:@"%@/%@", pagexpath, node.xpath])
-                                             .setXcontent([NSString stringWithFormat:@"%@/%@", pagexcontent, node.xcontent])
-                                             .setIndex(node.index)
-                                             .setTextValue(node.viewContent);
+    GrowingViewElementBuilder *builder =
+        GrowingViewElementEvent.builder.setEventType(GrowingEventTypeViewClick)
+            .setPath(@"")
+            .setXpath([NSString stringWithFormat:@"%@/%@", pagexpath, node.xpath])
+            .setXcontent([NSString stringWithFormat:@"%@/%@", pagexcontent, node.xcontent])
+            .setIndex(node.index)
+            .setTextValue(node.viewContent);
 
     if (autotrackPage) {
         builder.setPath(autotrackPage.alias).setAttributes(autotrackPage.attributes);

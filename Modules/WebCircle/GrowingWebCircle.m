@@ -156,8 +156,9 @@ GrowingMod(GrowingWebCircle)
             .setNodeType(node.nodeType)
             .setPage(autotrackPage ? autotrackPage.alias : @"");
     if (node.clickableParentXpath) {
-        builder = builder.setParentXpath([NSString stringWithFormat:@"%@/%@", pagexpath, node.clickableParentXpath])
-                      .setParentXcontent([NSString stringWithFormat:@"%@/%@", pagexcontent, node.clickableParentXcontent]);
+        builder =
+            builder.setParentXpath([NSString stringWithFormat:@"%@/%@", pagexpath, node.clickableParentXpath])
+                .setParentXcontent([NSString stringWithFormat:@"%@/%@", pagexcontent, node.clickableParentXcontent]);
     }
     GrowingWebCircleElement *element = builder.build;
 
