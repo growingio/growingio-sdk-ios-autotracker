@@ -143,7 +143,6 @@ extension GrowingBaseEvent {
         dto.textValue = textValue()
         dto.xpath = xpath()
         dto.xcontent = xcontent()
-        dto.xindex = xindex()
         dto.index = index()
         dto.query = query()
         dto.hyperlink = hyperlink()
@@ -247,15 +246,6 @@ extension GrowingBaseEvent {
 
     fileprivate func xcontent() -> String {
         let selector = Selector(("xcontent"))
-        if self.responds(to: selector) {
-            let imp: IMP = method_getImplementation(class_getInstanceMethod(type(of: self), selector)!)
-            return unsafeBitCast(imp, to: (@convention(c)(GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
-        }
-        return ""
-    }
-
-    fileprivate func xindex() -> String {
-        let selector = Selector(("xindex"))
         if self.responds(to: selector) {
             let imp: IMP = method_getImplementation(class_getInstanceMethod(type(of: self), selector)!)
             return unsafeBitCast(imp, to: (@convention(c)(GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""

@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign, readonly) NSInteger growingNodeKeyIndex;
 /// 完整的xpath由各个node的subPath拼接而成
 @property (nonatomic, copy, readonly) NSString *growingNodeSubPath;
-/// 完整的xindex由各个node的subIndex拼接而成
+/// 完整的xcontent由各个node的subIndex拼接而成
 @property (nonatomic, copy, readonly) NSString *growingNodeSubIndex;
 /// 当同一视图下相同class的两个node点击行为相似
 /// 当不需要区分点击哪一个node，仅需要区分点击那种类型时，使用该属性

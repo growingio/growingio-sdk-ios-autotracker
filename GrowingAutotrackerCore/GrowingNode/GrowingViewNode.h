@@ -30,12 +30,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak, readonly) UIView *view;
 @property (nonatomic, copy, readonly) NSString *_Nullable viewContent;
 @property (nonatomic, copy, readonly) NSString *xpath;
-@property (nonatomic, copy, readonly) NSString *xindex;
+@property (nonatomic, copy, readonly) NSString *xcontent;
 // 原始的位置组
-@property (nonatomic, copy, readonly) NSString *originxindex;
+@property (nonatomic, copy, readonly) NSString *originxcontent;
 // 可点击的父节点xpath
 @property (nonatomic, copy, readonly) NSString *clickableParentXpath;
-@property (nonatomic, copy, readonly) NSString *clickableParentXindex;
+@property (nonatomic, copy, readonly) NSString *clickableParentXcontent;
 @property (nonatomic, copy, readonly) NSString *_Nullable nodeType;
 // 如果有父节点，且父节点为列表，则index有值，和父节点一致，否则为-1
 @property (nonatomic, assign, readonly) int index;
@@ -61,12 +61,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) UIView *view;
 @property (nonatomic, copy, readonly) NSString *_Nullable viewContent;
 @property (nonatomic, copy, readonly) NSString *xpath;
-@property (nonatomic, copy, readonly) NSString *xindex;
+@property (nonatomic, copy, readonly) NSString *xcontent;
 // 原始的位置组
-@property (nonatomic, copy, readonly) NSString *originxindex;
+@property (nonatomic, copy, readonly) NSString *originxcontent;
 // 可点击的父节点xpath
 @property (nonatomic, copy, readonly) NSString *clickableParentXpath;
-@property (nonatomic, copy, readonly) NSString *clickableParentXindex;
+@property (nonatomic, copy, readonly) NSString *clickableParentXcontent;
 @property (nonatomic, copy, readonly) NSString *_Nullable nodeType;
 // 如果有父节点，且父节点为列表，则index有值，和父节点一致，否则为-1
 @property (nonatomic, assign, readonly) int index;
@@ -77,10 +77,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (GrowingViewNodeBuilder * (^)(UIView *value))setView;
 - (GrowingViewNodeBuilder * (^)(NSString *value))setXpath;
-- (GrowingViewNodeBuilder * (^)(NSString *value))setXindex;
-- (GrowingViewNodeBuilder * (^)(NSString *value))setOriginXindex;
+- (GrowingViewNodeBuilder * (^)(NSString *value))setXcontent;
+- (GrowingViewNodeBuilder * (^)(NSString *value))setOriginXcontent;
 - (GrowingViewNodeBuilder * (^)(NSString *value))setClickableParentXpath;
-- (GrowingViewNodeBuilder * (^)(NSString *value))setClickableParentXindex;
+- (GrowingViewNodeBuilder * (^)(NSString *value))setClickableParentXcontent;
 - (GrowingViewNodeBuilder * (^)(int value))setIndex;
 - (GrowingViewNodeBuilder * (^)(int value))setPosition;
 - (GrowingViewNodeBuilder * (^)(NSString *value))setViewContent;

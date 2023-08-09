@@ -33,17 +33,18 @@
         GIOLogDebug(@"viewOnChange %@ is donotTrack", view);
         return;
     }
+    
     GrowingPage *page = [GrowingPageManager.sharedInstance findPageByView:view];
     GrowingPage *autotrackPage = [GrowingPageManager.sharedInstance findAutotrackPageByPage:page];
     GrowingViewNode *node = [GrowingNodeHelper getViewNode:view];
 
     NSDictionary *pathInfo = page.pathInfo;
     NSString *pagexpath = pathInfo[@"xpath"];
-    NSString *pagexindex = pathInfo[@"xindex"];
+    NSString *pagexcontent = pathInfo[@"xcontent"];
     GrowingViewElementBuilder *builder = GrowingViewElementEvent.builder.setEventType(GrowingEventTypeViewChange)
                                              .setPath(@"")
                                              .setXpath([NSString stringWithFormat:@"%@/%@", pagexpath, node.xpath])
-                                             .setXindex([NSString stringWithFormat:@"%@/%@", pagexindex, node.xindex])
+                                             .setXcontent([NSString stringWithFormat:@"%@/%@", pagexcontent, node.xcontent])
                                              .setIndex(node.index)
                                              .setTextValue(node.viewContent);
 

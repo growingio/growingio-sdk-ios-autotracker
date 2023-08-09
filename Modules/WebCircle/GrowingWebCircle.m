@@ -145,19 +145,19 @@ GrowingMod(GrowingWebCircle)
     GrowingPage *autotrackPage = [GrowingPageManager.sharedInstance findAutotrackPageByPage:page];
     NSDictionary *pathInfo = page.pathInfo;
     NSString *pagexpath = pathInfo[@"xpath"];
-    NSString *pagexindex = pathInfo[@"xindex"];
+    NSString *pagexcontent = pathInfo[@"xcontent"];
     GrowingWebCircleElementBuilder *builder =
         GrowingWebCircleElement.builder.setRect(node.view.growingNodeFrame)
             .setContent(node.viewContent)
             .setZLevel(self.zLevel++)
             .setIndex(node.index)
             .setXpath([NSString stringWithFormat:@"%@/%@", pagexpath, node.xpath])
-            .setXindex([NSString stringWithFormat:@"%@/%@", pagexindex, node.xindex])
+            .setXcontent([NSString stringWithFormat:@"%@/%@", pagexcontent, node.xcontent])
             .setNodeType(node.nodeType)
             .setPage(autotrackPage ? autotrackPage.alias : @"");
     if (node.clickableParentXpath) {
         builder = builder.setParentXpath([NSString stringWithFormat:@"%@/%@", pagexpath, node.clickableParentXpath])
-                      .setParentXindex([NSString stringWithFormat:@"%@/%@", pagexindex, node.clickableParentXindex]);
+                      .setParentXcontent([NSString stringWithFormat:@"%@/%@", pagexcontent, node.clickableParentXcontent]);
     }
     GrowingWebCircleElement *element = builder.build;
 
@@ -248,8 +248,8 @@ GrowingMod(GrowingWebCircle)
                                    .setIndex(-1)
                                    .setViewContent(topwindow.growingNodeContent)
                                    .setXpath(topwindow.growingNodeSubPath)
-                                   .setXindex(topwindow.growingNodeSubSimilarIndex)
-                                   .setOriginXindex(topwindow.growingNodeSubIndex)
+                                   .setXcontent(topwindow.growingNodeSubSimilarIndex)
+                                   .setOriginXcontent(topwindow.growingNodeSubIndex)
                                    .setNodeType([GrowingNodeHelper getViewNodeType:topwindow])
                                    .build];
     }

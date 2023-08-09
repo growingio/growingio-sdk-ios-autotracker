@@ -29,11 +29,11 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
 @implementation GrowingNodeHelper
 
 + (void)recalculateXpath:(UIView *)view
-                   block:(void (^)(NSString *xpath, NSString *xindex, NSString *originxindex))block {
+                   block:(void (^)(NSString *xpath, NSString *xcontent, NSString *originxcontent))block {
     id<GrowingNode> node = view;
     NSMutableArray *viewPathArray = [NSMutableArray array];
-    NSMutableArray *xindexArray = [NSMutableArray array];
-    NSMutableArray *originxindexArray = [NSMutableArray array];
+    NSMutableArray *xcontentArray = [NSMutableArray array];
+    NSMutableArray *originxcontentArray = [NSMutableArray array];
     BOOL isSimilar = YES;
     while (node && [node isKindOfClass:[UIView class]]) {
         if ([self isIgnoredPrivateView:node]) {
@@ -42,12 +42,12 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
         }
 
         [viewPathArray addObject:node.growingNodeSubPath];
-        [originxindexArray addObject:node.growingNodeSubIndex];
+        [originxcontentArray addObject:node.growingNodeSubIndex];
         if (isSimilar) {
-            [xindexArray addObject:node.growingNodeSubSimilarIndex];
+            [xcontentArray addObject:node.growingNodeSubSimilarIndex];
             isSimilar = NO;
         } else {
-            [xindexArray addObject:node.growingNodeSubIndex];
+            [xcontentArray addObject:node.growingNodeSubIndex];
         }
 
         node = node.growingNodeParent;
@@ -59,10 +59,10 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
     };
 
     NSString *xpath = toStringBlock(viewPathArray);
-    NSString *xindex = toStringBlock(xindexArray);
-    NSString *originxindex = toStringBlock(originxindexArray);
+    NSString *xcontent = toStringBlock(xcontentArray);
+    NSString *originxcontent = toStringBlock(originxcontentArray);
     if (block) {
-        block(xpath, xindex, originxindex);
+        block(xpath, xcontent, originxcontent);
     }
 }
 
@@ -92,8 +92,8 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
         .setIndex(-1)
         .setViewContent(rootview.growingNodeContent)
         .setXpath(rootview.growingNodeSubPath)
-        .setXindex(rootview.growingNodeSubSimilarIndex)
-        .setOriginXindex(rootview.growingNodeSubIndex)
+        .setXcontent(rootview.growingNodeSubSimilarIndex)
+        .setOriginXcontent(rootview.growingNodeSubIndex)
         .setNodeType([self getViewNodeType:rootview])
         .build;
 }

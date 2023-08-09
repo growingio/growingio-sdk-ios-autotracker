@@ -88,7 +88,6 @@
     dto.textValue = stringBlock(@"textValue");
     dto.xpath = stringBlock(@"xpath");
     dto.xcontent = stringBlock(@"xcontent");
-    dto.xindex = stringBlock(@"xindex");
     dto.index = int32Block(@"index");
     dto.query = stringBlock(@"query");
     dto.hyperlink = stringBlock(@"hyperlink");

@@ -272,7 +272,7 @@ static __weak GrowingWebCircle *webCircle;
         XCTAssertNotNil(element[@"domain"]);
         XCTAssertNotNil(element[@"zLevel"]);
         XCTAssertNotNil(element[@"xpath"]);
-        XCTAssertNotNil(element[@"xindex"]);
+        XCTAssertNotNil(element[@"xcontent"]);
         XCTAssertNotNil(element[@"page"]);
         XCTAssertNotNil(element[@"isContainer"]);
     }

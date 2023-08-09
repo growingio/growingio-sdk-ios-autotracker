@@ -132,9 +132,6 @@
     if (self.xcontent.length > 0) {
         [dic setObject:self.xcontent forKey:@"xcontent"];
     }
-    if (self.xindex.length > 0) {
-        [dic setObject:self.xindex forKey:@"xindex"];
-    }
     if (self.index > 0) {
         [dic setObject:@(self.index) forKey:@"index"];
     }
@@ -221,7 +218,6 @@
     dto.textValue = jsonObject[@"textValue"];
     dto.xpath = jsonObject[@"xpath"];
     dto.xcontent = jsonObject[@"xcontent"];
-    dto.xindex = jsonObject[@"xindex"];
     dto.index = ((NSNumber *)jsonObject[@"index"]).intValue;
     dto.query = jsonObject[@"query"];
     dto.hyperlink = jsonObject[@"hyperlink"];

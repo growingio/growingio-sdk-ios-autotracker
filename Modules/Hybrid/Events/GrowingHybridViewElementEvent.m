@@ -24,7 +24,6 @@
 - (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
     if (self = [super initWithBuilder:builder]) {
         GrowingHybridViewElementBuilder *subBuilder = (GrowingHybridViewElementBuilder *)builder;
-        _xcontent = subBuilder.xcontent;
         _query = subBuilder.query;
         _hyperlink = subBuilder.hyperlink;
     }
@@ -37,7 +36,6 @@
 
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
-    dataDictM[@"xcontent"] = self.xcontent;
     dataDictM[@"query"] = self.query;
     dataDictM[@"hyperlink"] = self.hyperlink;
     return dataDictM;
@@ -49,13 +47,6 @@
 #pragma clang diagnostic ignored "-Wincomplete-implementation"
 
 @implementation GrowingHybridViewElementBuilder
-
-- (GrowingHybridViewElementBuilder * (^)(NSString *value))setXcontent {
-    return ^(NSString *value) {
-        self->_xcontent = value;
-        return self;
-    };
-}
 
 - (GrowingHybridViewElementBuilder * (^)(NSString *value))setQuery {
     return ^(NSString *value) {

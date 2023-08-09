@@ -62,7 +62,6 @@ message EventV3Dto {
     int64 send_time = 54;
     string user_key = 55;
     string xcontent = 56;
-    string xindex = 57;
 }
 
 message ResourceItem {
