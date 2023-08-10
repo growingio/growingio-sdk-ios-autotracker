@@ -45,7 +45,7 @@ jobs:
           -derivedDataPath ${{ env.DERIVED_DATA }} \
           OTHER_CFLAGS="\$(inherited) -gen-cdb-fragment-path ${{ env.DERIVED_DATA }}/compilation-database"
           pushd ${{ env.DERIVED_DATA }}/compilation-database
-          sed -e '1s/^/[\'$'\n''/' -e '$s/,$/\'$'\n'']/' *.json > ../../compile_commands.json
+          sed -e '1s/^/[\'$'\n''/' -e '$s/,$/\'$'\n'']/' *.json > ${{ env.DERIVED_DATA }}/compile_commands.json
           popd
 
       - name: Parse xcresult to Sonar coverage xml
@@ -59,7 +59,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          sonar-scanner -Dsonar.coverageReportPaths="${{ env.DERIVED_DATA }}/generic-coverage.xml"
+          sonar-scanner \
+          -Dsonar.cfamily.compile-commands="${{ env.DERIVED_DATA }}/compile_commands.json" \
+          -Dsonar.coverageReportPaths="${{ env.DERIVED_DATA }}/generic-coverage.xml"
 
 # https://github.com/sonarsource-cfamily-examples/macos-xcode-coverage-gh-actions-sc/blob/main/.github/workflows/build.yml
 # https://github.com/SonarSource/sonarcloud-github-c-cpp
