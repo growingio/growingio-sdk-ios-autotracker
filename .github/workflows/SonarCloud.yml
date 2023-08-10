@@ -44,6 +44,9 @@ jobs:
           -enableCodeCoverage YES \
           -derivedDataPath ${{ env.DERIVED_DATA }} \
           OTHER_CFLAGS="\$(inherited) -gen-cdb-fragment-path ${{ env.DERIVED_DATA }}/compilation-database"
+          pushd ${{ env.DERIVED_DATA }}/compilation-database
+          sed -e '1s/^/[\'$'\n''/' -e '$s/,$/\'$'\n'']/' *.json > ./build-wrapper-dump.json
+          popd
 
       - name: Parse xcresult to Sonar coverage xml
         run: |
