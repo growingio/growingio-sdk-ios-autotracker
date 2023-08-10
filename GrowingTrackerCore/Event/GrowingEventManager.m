@@ -326,6 +326,9 @@ static GrowingEventManager *sharedInstance = nil;
                 [jsonObjects addObject:jsonObject];
             }
         }
+        if (jsonObjects.count == 0) {
+            return;
+        }
 
         rawEvents = [dbClass buildRawEventsFromJsonObjects:jsonObjects];
     }
