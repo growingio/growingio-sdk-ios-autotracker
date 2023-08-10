@@ -74,7 +74,6 @@ static NSString *kWKWebViewJavascriptBridge_js(void) {
             }
 
             function _doSend(messageType, data) {
-                console.log("Growing hybrid send message: messageType = " + messageType + ", data = " + data);
                 var messageString = JSON.stringify({messageType: messageType, data: data});
                 window.webkit.messageHandlers.GrowingWKWebViewJavascriptBridge.postMessage(messageString);
             }
