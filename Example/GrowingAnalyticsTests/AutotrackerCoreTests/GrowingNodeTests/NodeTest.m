@@ -33,10 +33,10 @@
     // Put teardown code here. This method is called after the invocation of each test method in the class.
 }
 
--(void)testGrowingUIViewController {
+- (void)testGrowingUIViewController {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
-    UIViewController *vc1 = [[UIViewController alloc]init];
+    UIViewController *vc1 = [[UIViewController alloc] init];
     [vc1 performSelector:@selector(growingNodeParent)];
     [vc1 performSelector:@selector(growingNodeKeyIndex)];
     [vc1 performSelector:@selector(growingNodeSubPath)];

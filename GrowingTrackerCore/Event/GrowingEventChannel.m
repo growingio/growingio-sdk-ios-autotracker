@@ -64,14 +64,15 @@ static NSMutableArray *eventChannels = nil;
     if (!eventChannels) {
         eventChannels = [NSMutableArray array];
         NSArray *autotrackEventTypes = @[
+            GrowingEventTypeVisit,
             GrowingEventTypePage,
             GrowingEventTypeViewClick,
             GrowingEventTypeViewChange,
             GrowingEventTypeAppClosed,
-            @"FORM_SUBMIT" /* GrowingEventTypeFormSubmit */
+            @"FORM_SUBMIT", /* GrowingEventTypeFormSubmit */
+            @"ACTIVATE"     /* GrowingEventTypeActivate */
         ];
-        NSArray *trackEventTypes =
-            @[GrowingEventTypeVisit, GrowingEventTypeCustom, GrowingEventTypeLoginUserAttributes];
+        NSArray *trackEventTypes = @[GrowingEventTypeCustom, GrowingEventTypeLoginUserAttributes];
         [eventChannels addObject:[GrowingEventChannel eventChannelWithName:@"Autotrack"
                                                                 eventTypes:autotrackEventTypes
                                                            persistenceType:GrowingEventPersistenceTypeJSON

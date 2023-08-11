@@ -17,11 +17,10 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <XCTest/XCTest.h>
 
-#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
+#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 
 @interface FileStorageTest : XCTestCase
 
@@ -47,12 +46,12 @@
                                                        directory:GrowingUserDirectoryDocuments
                                                           crypto:nil]);
     }
-    
+
     {
         GrowingFileStorage *storage = [[GrowingFileStorage alloc] initWithName:@"testGrowingFileStorage"];
         [storage resetAll];
         [storage removeKey:@"testKey"];
-        [storage setArray:@[ @"testa", @"testb"] forKey:@"testKey"];
+        [storage setArray:@[@"testa", @"testb"] forKey:@"testKey"];
         [storage arrayForKey:@"testKey"];
         [storage setNumber:@1 forKey:@"testKeyNum"];
         XCTAssertNotNil([storage numberForKey:@"testKeyNum"]);

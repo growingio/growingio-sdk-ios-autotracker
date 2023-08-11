@@ -28,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *eventType;
 @property (nonatomic, strong, readonly) id data;
 @property (nonatomic, assign, readonly) GrowingEventSendPolicy policy;
+@property (nonatomic, copy, readonly) NSString *sdkVersion;
 
 @end
 

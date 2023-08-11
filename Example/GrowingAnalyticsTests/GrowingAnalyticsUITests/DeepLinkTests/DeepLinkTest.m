@@ -28,13 +28,15 @@
 
 - (void)setUp {
     // Put setup code here. This method is called before the invocation of each test method in the class.
-    
+
     // In UI tests it is usually best to stop immediately when a failure occurs.
     self.continueAfterFailure = NO;
 
-    // UI tests must launch the application that they test. Doing this in setup will make sure it happens for each test method.
+    // UI tests must launch the application that they test. Doing this in setup will make sure it happens for each test
+    // method.
 
-    // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
+    // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests
+    // before they run. The setUp method is a good place to do this.
 }
 
 - (void)tearDown {
@@ -126,14 +128,14 @@
 //    NSString *url = @"growing.deeplink://growingio/webservice?serviceType=circle"
 //                    @"&wsUrl=ws://uat-gdp.growingio.com/app/weDq7mpE/circle/f1bcb578cdc347fc872192b55d2bb764"
 //                    @"&xctest=DeepLinkTest";
-//    
+//
 //    XCUIApplication *app = [[XCUIApplication alloc] init];
 //    [app launch];
 //    [app terminate];
-//    
+//
 //    [DeepLinkTestHelper openFromSafari:url];
 //    XCTAssertTrue([app waitForState:XCUIApplicationStateRunningForeground timeout:15]);
-//    
+//
 //    // 不出现deepLinkCallback弹窗
 //    XCUIElement *testButton = app.buttons[@"XCTest"];
 //    XCTAssertFalse([testButton waitForExistenceWithTimeout:15]);

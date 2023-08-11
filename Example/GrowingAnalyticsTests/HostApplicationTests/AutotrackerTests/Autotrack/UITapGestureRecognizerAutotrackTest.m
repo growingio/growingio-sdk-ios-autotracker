@@ -17,14 +17,13 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <KIF/KIF.h>
 
 #import "GrowingAutotracker.h"
-#import "MockEventQueue.h"
-#import "ManualTrackHelper.h"
-#import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
 #import "GrowingAutotrackerCore/Autotrack/UITapGestureRecognizer+GrowingAutotracker.h"
+#import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
+#import "ManualTrackHelper.h"
+#import "MockEventQueue.h"
 
 // 使用"click请求"页面，测试-[UITapGestureRecognizer growing_initWithCoder:]函数
 
@@ -39,7 +38,7 @@
     [GrowingAutotracker.sharedInstance setLoginUserId:@"xctest_userId" userKey:@"xctest_userKey"];
     // latitude longitude
     [GrowingAutotracker.sharedInstance setLocation:30.12345 longitude:31.123456];
-    
+
     [[viewTester usingLabel:@"协议/接口"] tap];
     [[viewTester usingLabel:@"CLICK请求"] tap];
     [viewTester waitForTimeInterval:1];
@@ -54,17 +53,16 @@
 }
 
 - (void)tearDown {
-    
 }
 
 - (void)testTapGestureHook {
     // initWithCoder:
     {
         [[viewTester usingLabel:@"singleTapView"] tap];
-        
+
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
         XCTAssertEqual(events.count, 1);
-        
+
         GrowingViewElementEvent *event = (GrowingViewElementEvent *)events.firstObject;
         NSDictionary *dic = event.toDictionary;
         XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeViewClick);
@@ -79,10 +77,10 @@
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(class)];
         [[viewTester usingLabel:@"doubleTapView"].view addGestureRecognizer:tap];
         [[viewTester usingLabel:@"doubleTapView"] tap];
-        
+
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
         XCTAssertEqual(events.count, 1);
-        
+
         GrowingViewElementEvent *event = (GrowingViewElementEvent *)events.firstObject;
         NSDictionary *dic = event.toDictionary;
         XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeViewClick);

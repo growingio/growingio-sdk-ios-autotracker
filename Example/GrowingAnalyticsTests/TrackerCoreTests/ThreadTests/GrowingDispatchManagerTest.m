@@ -40,7 +40,7 @@
     [GrowingDispatchManager dispatchInGrowingThread:^{
         XCTAssertTrue([[NSThread currentThread] isEqual:[GrowingThread sharedThread]]);
     }];
-    
+
     [GrowingDispatchManager dispatchInGrowingThread:^{
         XCTAssertTrue([[NSThread currentThread] isEqual:[GrowingThread sharedThread]]);
         [GrowingDispatchManager dispatchInGrowingThread:^{
@@ -49,30 +49,36 @@
     }];
 
     __block int i = 0;
-    [GrowingDispatchManager dispatchInGrowingThread:^{
-        XCTAssertTrue([[NSThread currentThread] isEqual:[GrowingThread sharedThread]]);
-        i = 1;
-    } waitUntilDone:YES];
+    [GrowingDispatchManager
+        dispatchInGrowingThread:^{
+            XCTAssertTrue([[NSThread currentThread] isEqual:[GrowingThread sharedThread]]);
+            i = 1;
+        }
+                  waitUntilDone:YES];
 
     XCTAssertTrue(i == 1);
 
     [GrowingDispatchManager dispatchInMainThread:^{
         XCTAssertTrue([NSThread isMainThread]);
     }];
-    
-    [GrowingDispatchManager trackApiSel:@selector(test) dispatchInMainThread:^{
-        XCTAssertTrue([NSThread isMainThread]);
-    }];
-    
-    [GrowingDispatchManager dispatchInGrowingThread:^{
-        [GrowingDispatchManager dispatchInMainThread:^{
-            XCTAssertTrue([NSThread isMainThread]);
-        }];
-        
-        [GrowingDispatchManager trackApiSel:@selector(test) dispatchInMainThread:^{
-            XCTAssertTrue([NSThread isMainThread]);
-        }];
-    } waitUntilDone:YES];
+
+    [GrowingDispatchManager trackApiSel:@selector(test)
+                   dispatchInMainThread:^{
+                       XCTAssertTrue([NSThread isMainThread]);
+                   }];
+
+    [GrowingDispatchManager
+        dispatchInGrowingThread:^{
+            [GrowingDispatchManager dispatchInMainThread:^{
+                XCTAssertTrue([NSThread isMainThread]);
+            }];
+
+            [GrowingDispatchManager trackApiSel:@selector(test)
+                           dispatchInMainThread:^{
+                               XCTAssertTrue([NSThread isMainThread]);
+                           }];
+        }
+                  waitUntilDone:YES];
 }
 
 - (void)testGrowingThread {

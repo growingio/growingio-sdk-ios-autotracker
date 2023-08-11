@@ -17,40 +17,38 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <XCTest/XCTest.h>
 
+#import "GrowingAutotrackerCore/Autotrack/UIApplication+GrowingAutotracker.h"
+#import "GrowingAutotrackerCore/GrowingRealAutotracker.h"
+#import "GrowingEventDatabaseService.h"
+#import "GrowingServiceManager.h"
+#import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
-#import "GrowingServiceManager.h"
-#import "GrowingEventDatabaseService.h"
-#import "GrowingAutotrackerCore/Autotrack/UIApplication+GrowingAutotracker.h"
-#import "MockEventQueue.h"
-#import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
 #import "InvocationHelper.h"
-#import "GrowingAutotrackerCore/GrowingRealAutotracker.h"
+#import "MockEventQueue.h"
 
 // 需要有HostApplication，不然UIApplication.sharedApplication为nil
 
 // 可配置growingNodeDonotTrack，从而配置可否生成VIEW_CLICK，以供测试
-#define AutotrackXCTestClassDefine(cls)                                         \
-@interface Autotrack##cls##_XCTest : cls                                        \
-@property(nonatomic, assign) BOOL growingNodeDonotTrack_XCTest;                 \
-@end                                                                            \
-@implementation Autotrack##cls##_XCTest                                         \
-@end                                                                            \
-@implementation Autotrack##cls##_XCTest (DonotTrack)                            \
-- (BOOL)growingNodeDonotTrack { return self.growingNodeDonotTrack_XCTest; }     \
-@end
+#define AutotrackXCTestClassDefine(cls)                                                  \
+    @interface Autotrack                                                                 \
+    ##cls##_XCTest : cls @property(nonatomic, assign) BOOL growingNodeDonotTrack_XCTest; \
+    @end                                                                                 \
+    @implementation Autotrack                                                            \
+    ##cls##_XCTest @end                                                                  \
+    @implementation Autotrack                                                            \
+    ##cls##_XCTest(DonotTrack) - (BOOL)growingNodeDonotTrack {                           \
+        return self.growingNodeDonotTrack_XCTest;                                        \
+    }                                                                                    \
+    @end
 
-AutotrackXCTestClassDefine(UITabBarItem)
-AutotrackXCTestClassDefine(UIBarButtonItem)
-AutotrackXCTestClassDefine(UISegmentedControl)
-AutotrackXCTestClassDefine(UISwitch)
-AutotrackXCTestClassDefine(UIStepper)
-AutotrackXCTestClassDefine(UIPageControl)
+AutotrackXCTestClassDefine(UITabBarItem) AutotrackXCTestClassDefine(UIBarButtonItem)
+    AutotrackXCTestClassDefine(UISegmentedControl) AutotrackXCTestClassDefine(UISwitch)
+        AutotrackXCTestClassDefine(UIStepper) AutotrackXCTestClassDefine(UIPageControl)
 
-@interface UIApplicationAutotrackTest : XCTestCase
+            @interface UIApplicationAutotrackTest : XCTestCase
 
 @property (nonatomic, strong) UIEvent *event;
 @property (nonatomic, strong) AutotrackUITabBarItem_XCTest *tabBarItem;
@@ -83,10 +81,7 @@ AutotrackXCTestClassDefine(UIPageControl)
     self.switchT = AutotrackUISwitch_XCTest.new;
     self.switchT.growingNodeDonotTrack_XCTest = NO;
 
-    [UIApplication.sharedApplication sendAction:@selector(class)
-                                             to:UITabBar.new
-                                           from:self.switchT
-                                       forEvent:self.event];
+    [UIApplication.sharedApplication sendAction:@selector(class) to:UITabBar.new from:self.switchT forEvent:self.event];
     dispatch_block_t block = ^{
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
         XCTAssertEqual(events.count, 1);
@@ -127,7 +122,7 @@ AutotrackXCTestClassDefine(UIPageControl)
 - (void)testUIBarButtonItemAction {
     self.barButtonItem = AutotrackUIBarButtonItem_XCTest.new;
     self.barButtonItem.growingNodeDonotTrack_XCTest = NO;
-    
+
     [UIApplication.sharedApplication sendAction:@selector(barButtonItemAction:)
                                              to:self
                                            from:self.barButtonItem
@@ -142,7 +137,7 @@ AutotrackXCTestClassDefine(UIPageControl)
 - (void)testUISegmentedControlAction {
     self.segmentedControl = AutotrackUISegmentedControl_XCTest.new;
     self.segmentedControl.growingNodeDonotTrack_XCTest = NO;
-    
+
     [UIApplication.sharedApplication sendAction:@selector(segmentedControlAction:)
                                              to:self
                                            from:self.segmentedControl
@@ -157,11 +152,8 @@ AutotrackXCTestClassDefine(UIPageControl)
 - (void)testUISwitchAction {
     self.switchT = AutotrackUISwitch_XCTest.new;
     self.switchT.growingNodeDonotTrack_XCTest = NO;
-    
-    [UIApplication.sharedApplication sendAction:@selector(switchAction:)
-                                             to:self
-                                           from:self.switchT
-                                       forEvent:self.event];
+
+    [UIApplication.sharedApplication sendAction:@selector(switchAction:) to:self from:self.switchT forEvent:self.event];
     dispatch_block_t block = ^{
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
         XCTAssertEqual(events.count, 1);
@@ -172,7 +164,7 @@ AutotrackXCTestClassDefine(UIPageControl)
 - (void)testUIStepperAction {
     self.stepper = AutotrackUIStepper_XCTest.new;
     self.stepper.growingNodeDonotTrack_XCTest = NO;
-    
+
     [UIApplication.sharedApplication sendAction:@selector(stepperAction:)
                                              to:self
                                            from:self.stepper
@@ -187,7 +179,7 @@ AutotrackXCTestClassDefine(UIPageControl)
 - (void)testUIPageControlAction {
     self.pageControl = AutotrackUIPageControl_XCTest.new;
     self.pageControl.growingNodeDonotTrack_XCTest = NO;
-    
+
     [UIApplication.sharedApplication sendAction:@selector(pageControlAction:)
                                              to:self
                                            from:self.pageControl

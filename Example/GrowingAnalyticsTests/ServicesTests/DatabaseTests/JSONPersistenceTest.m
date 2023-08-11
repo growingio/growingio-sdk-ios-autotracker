@@ -19,9 +19,9 @@
 
 #import <XCTest/XCTest.h>
 
-#import "Services/JSON/GrowingEventJSONPersistence.h"
 #import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
+#import "Services/JSON/GrowingEventJSONPersistence.h"
 
 @interface JSONPersistenceTest : XCTestCase
 
@@ -41,8 +41,9 @@
     GrowingEventJSONPersistence *p =
         [[GrowingEventJSONPersistence alloc] initWithUUID:uuid
                                                 eventType:self.event.eventType
-                                               data:self.event.toDictionary.growingHelper_jsonString
-                                                   policy:self.event.sendPolicy];
+                                                     data:self.event.toDictionary.growingHelper_jsonString
+                                                   policy:self.event.sendPolicy
+                                               sdkVersion:self.event.sdkVersion];
     XCTAssertNotNil(p);
     XCTAssertEqualObjects(p.eventUUID, uuid);
     XCTAssertEqualObjects(p.eventType, self.event.eventType);

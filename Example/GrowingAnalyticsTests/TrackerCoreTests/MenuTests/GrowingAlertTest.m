@@ -41,22 +41,22 @@
                                                      message:@"test"];
     [alert addActionWithTitle:@"Default"
                         style:UIAlertActionStyleDefault
-                      handler:^(UIAlertAction *_Nonnull action, NSArray<UITextField *> *_Nonnull textFields) {
+                      handler:^(UIAlertAction *_Nonnull action, NSArray<UITextField *> *_Nonnull textFields){
 
                       }];
     [alert addOkWithTitle:@"OK"
-                  handler:^(UIAlertAction *_Nonnull action, NSArray<UITextField *> *_Nonnull textFields) {
+                  handler:^(UIAlertAction *_Nonnull action, NSArray<UITextField *> *_Nonnull textFields){
 
                   }];
     [alert addCancelWithTitle:@"Cancel"
-                      handler:^(UIAlertAction *_Nonnull action, NSArray<UITextField *> *_Nonnull textFields) {
+                      handler:^(UIAlertAction *_Nonnull action, NSArray<UITextField *> *_Nonnull textFields){
 
                       }];
     [alert addDestructiveWithTitle:@"Destructive"
-                           handler:^(UIAlertAction *_Nonnull action, NSArray<UITextField *> *_Nonnull textFields) {
+                           handler:^(UIAlertAction *_Nonnull action, NSArray<UITextField *> *_Nonnull textFields){
 
                            }];
-    [alert addTextFieldWithConfigurationHandler:^(UITextField *_Nonnull textField) {
+    [alert addTextFieldWithConfigurationHandler:^(UITextField *_Nonnull textField){
 
     }];
 

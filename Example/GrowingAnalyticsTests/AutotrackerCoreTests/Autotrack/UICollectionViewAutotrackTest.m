@@ -17,26 +17,25 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <XCTest/XCTest.h>
 
+#import "GrowingAutotrackerCore/Autotrack/UICollectionView+GrowingAutotracker.h"
+#import "GrowingAutotrackerCore/GrowingRealAutotracker.h"
+#import "GrowingEventDatabaseService.h"
+#import "GrowingServiceManager.h"
+#import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
-#import "GrowingServiceManager.h"
-#import "GrowingEventDatabaseService.h"
-#import "Services/Protobuf/GrowingEventProtobufDatabase.h"
-#import "GrowingAutotrackerCore/Autotrack/UICollectionView+GrowingAutotracker.h"
-#import "MockEventQueue.h"
-#import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
 #import "InvocationHelper.h"
-#import "GrowingAutotrackerCore/GrowingRealAutotracker.h"
+#import "MockEventQueue.h"
+#import "Services/Protobuf/GrowingEventProtobufDatabase.h"
 
 // 可配置growingNodeDonotTrack，从而配置可否生成VIEW_CLICK，以供测试
 // -------------------------------------------------------------------------------
 // UICollectionViewCell
 @interface AutotrackUICollectionViewCell_XCTest : UICollectionViewCell
 
-@property(nonatomic, assign) BOOL growingNodeDonotTrack_XCTest;
+@property (nonatomic, assign) BOOL growingNodeDonotTrack_XCTest;
 
 @end
 
@@ -55,7 +54,7 @@
 // UICollectionView
 @interface AutotrackUICollectionView_XCTest : UICollectionView
 
-@property(nonatomic, assign) BOOL growingNodeDonotTrack_XCTest;
+@property (nonatomic, assign) BOOL growingNodeDonotTrack_XCTest;
 
 @end
 
@@ -80,15 +79,15 @@
 
 @interface AutotrackUICollectionView_Delegate_2_XCTest : NSObject <UICollectionViewDelegate>
 
-@property (nonatomic, weak) id <UICollectionViewDelegate> target;
+@property (nonatomic, weak) id<UICollectionViewDelegate> target;
 
-- (instancetype)initWithTarget:(id <UICollectionViewDelegate>)target;
+- (instancetype)initWithTarget:(id<UICollectionViewDelegate>)target;
 
 @end
 
 @interface UICollectionViewAutotrackTest : XCTestCase <UICollectionViewDelegate>
 
-@property (nonatomic, strong) id <UICollectionViewDelegate> delegate;
+@property (nonatomic, strong) id<UICollectionViewDelegate> delegate;
 
 @end
 
@@ -102,7 +101,7 @@
     // 避免不执行readPropertyInTrackThread
     config.dataCollectionEnabled = YES;
     GrowingConfigurationManager.sharedInstance.trackConfiguration = config;
-    
+
     // 避免insertEventToDatabase异常
     [GrowingServiceManager.sharedInstance registerService:@protocol(GrowingPBEventDatabaseService)
                                                 implClass:GrowingEventProtobufDatabase.class];
@@ -121,13 +120,13 @@
 }
 
 - (void)test01UICollectionViewAutotrack {
-    AutotrackUICollectionView_XCTest *collectionView = [[AutotrackUICollectionView_XCTest alloc] initWithFrame:CGRectMake(0, 0, 100, 100)
-                                                                                          collectionViewLayout:UICollectionViewLayout.new];
+    AutotrackUICollectionView_XCTest *collectionView =
+        [[AutotrackUICollectionView_XCTest alloc] initWithFrame:CGRectMake(0, 0, 100, 100)
+                                           collectionViewLayout:UICollectionViewLayout.new];
     collectionView.delegate = self;
-    
-    [collectionView.delegate collectionView:collectionView
-                   didSelectItemAtIndexPath:[NSIndexPath indexPathWithIndex:0]];
-    
+
+    [collectionView.delegate collectionView:collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathWithIndex:0]];
+
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
     XCTAssertEqual(events.count, 1);
 }
@@ -136,20 +135,20 @@ static BOOL kDelegateDidCalled = NO;
 static BOOL kRealDelegateDidCalled = NO;
 - (void)test02UICollectionViewRealDelegate {
     // 普通 delegate 对象，仅实现了 UICollectionViewDelegate 方法
-    AutotrackUICollectionView_XCTest *collectionView = [[AutotrackUICollectionView_XCTest alloc] initWithFrame:CGRectMake(0, 0, 100, 100)
-                                                                                          collectionViewLayout:UICollectionViewLayout.new];
+    AutotrackUICollectionView_XCTest *collectionView =
+        [[AutotrackUICollectionView_XCTest alloc] initWithFrame:CGRectMake(0, 0, 100, 100)
+                                           collectionViewLayout:UICollectionViewLayout.new];
     self.delegate = [[AutotrackUICollectionView_Delegate_XCTest alloc] init];
     collectionView.delegate = self.delegate;
-    
+
     kDelegateDidCalled = NO;
     kRealDelegateDidCalled = NO;
-    [collectionView.delegate collectionView:collectionView
-                   didSelectItemAtIndexPath:[NSIndexPath indexPathWithIndex:0]];
-    
+    [collectionView.delegate collectionView:collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathWithIndex:0]];
+
     // 触发了无埋点点击事件
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
     XCTAssertEqual(events.count, 1);
-    
+
     // 触发了 AutotrackUICollectionView_Delegate_XCTest didSelectItemAtIndexPath
     XCTAssertTrue(kRealDelegateDidCalled);
 }
@@ -157,24 +156,24 @@ static BOOL kRealDelegateDidCalled = NO;
 - (void)test03UICollectionViewRealDelegate_2 {
     // 特殊 delegate 对象，实现了 UICollectionViewDelegate 方法，并重写了 class 方法
     // 模拟动态子类
-    AutotrackUICollectionView_XCTest *collectionView = [[AutotrackUICollectionView_XCTest alloc] initWithFrame:CGRectMake(0, 0, 100, 100)
-                                                                                          collectionViewLayout:UICollectionViewLayout.new];
+    AutotrackUICollectionView_XCTest *collectionView =
+        [[AutotrackUICollectionView_XCTest alloc] initWithFrame:CGRectMake(0, 0, 100, 100)
+                                           collectionViewLayout:UICollectionViewLayout.new];
     self.delegate = [[AutotrackUICollectionView_Delegate_2_XCTest alloc] initWithTarget:self];
     collectionView.delegate = self.delegate;
-    
+
     kDelegateDidCalled = NO;
     kRealDelegateDidCalled = NO;
-    [collectionView.delegate collectionView:collectionView
-                   didSelectItemAtIndexPath:[NSIndexPath indexPathWithIndex:0]];
-    
+    [collectionView.delegate collectionView:collectionView didSelectItemAtIndexPath:[NSIndexPath indexPathWithIndex:0]];
+
     // 触发了无埋点点击事件
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
     // 因为上面 test01UICollectionViewAutotrack 也对 self 进行了 hook，所以如果一起执行这里会等于 2
     XCTAssertGreaterThanOrEqual(events.count, 1);
-    
+
     // 触发了 UICollectionViewAutotrackTest didSelectItemAtIndexPath
     XCTAssertTrue(kDelegateDidCalled);
-    
+
     // 触发了 AutotrackUICollectionView_Delegate_2_XCTest didSelectItemAtIndexPath
     XCTAssertTrue(kRealDelegateDidCalled);
 }
@@ -203,7 +202,7 @@ static BOOL kRealDelegateDidCalled = NO;
 
 @implementation AutotrackUICollectionView_Delegate_2_XCTest
 
-- (instancetype)initWithTarget:(id <UICollectionViewDelegate>)target {
+- (instancetype)initWithTarget:(id<UICollectionViewDelegate>)target {
     if (self = [super init]) {
         _target = target;
     }
@@ -216,7 +215,7 @@ static BOOL kRealDelegateDidCalled = NO;
     if (self.target && [self.target respondsToSelector:@selector(collectionView:didSelectItemAtIndexPath:)]) {
         [self.target collectionView:collectionView didSelectItemAtIndexPath:indexPath];
     }
-    
+
     kRealDelegateDidCalled = YES;
     NSLog(@"AutotrackUICollectionView_Delegate_XCTest didSelectItemAtIndexPath");
 }

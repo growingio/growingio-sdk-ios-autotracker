@@ -19,10 +19,10 @@
 
 #import <XCTest/XCTest.h>
 
-#import "Services/Encryption/GrowingDataEncoder.h"
 #import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingULTimeUtil.h"
+#import "Services/Encryption/GrowingDataEncoder.h"
 
 @interface EncryptionTest : XCTestCase
 
@@ -35,7 +35,7 @@
 - (void)setUp {
     self.dict = GrowingVisitEvent.builder.setIdfa(@"testIdfa")
                     .setIdfv(@"testIdfv")
-                    .setExtraSdk(@{@"testkey" : @"value"})
+                    .setExtraSdk(@{@"testkey": @"value"})
                     .setNetworkState(@"testNetworkState")
                     .setScreenHeight(1920)
                     .setScreenWidth(1280)

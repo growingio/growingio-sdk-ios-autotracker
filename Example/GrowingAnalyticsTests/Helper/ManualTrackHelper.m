@@ -116,7 +116,7 @@
             return NO;
         }
     }
-    
+
     return YES;
 }
 
@@ -168,7 +168,7 @@
                     }
                 }
             }
-            
+
             if (!thisEmptyKeyIsOptional) {
                 allEmptyKeysAreOptional = NO;
                 break;
@@ -205,9 +205,9 @@
     NSArray *reduce = [arr1 filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF in %@)", arr2]];
     NSArray *incre = [arr2 filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF in %@)", arr1]];
     if (reduce.count == 0 && incre.count == 0) {
-        cmpres = @{@"chres" : @"same", @"reduce" : @"", @"incre" : @""};
+        cmpres = @{@"chres": @"same", @"reduce": @"", @"incre": @""};
     } else {
-        cmpres = @{@"chres" : @"different", @"reduce" : reduce, @"incre" : incre};
+        cmpres = @{@"chres": @"different", @"reduce": reduce, @"incre": incre};
     }
     return cmpres;
 }
@@ -220,7 +220,7 @@
     for (NSString *key in checkDict) {
         id value = checkDict[key];
         NSString *waitForCheckString = nil;
-        //添加对多重字典的支持
+        // 添加对多重字典的支持
         if ([value isKindOfClass:[NSDictionary class]]) {
             [self checkDictEmpty:value];
             continue;
@@ -242,9 +242,9 @@
     }
 
     if (emptykeys.count > 0) {
-        dechres = @{@"chres" : @"Failed", @"EmptyKeys" : emptykeys};
+        dechres = @{@"chres": @"Failed", @"EmptyKeys": emptykeys};
     } else {
-        dechres = @{@"chres" : @"Passed", @"EmptyKeys" : @""};
+        dechres = @{@"chres": @"Passed", @"EmptyKeys": @""};
     }
     return dechres;
 }
@@ -252,34 +252,17 @@
 #pragma mark - Setter & Getter
 
 + (NSArray *)context {
-    NSArray *context = @[@"platform",
-                         @"platformVersion",
-                         @"deviceId",
-                         @"sessionId",
-                         @"eventType",
-                         @"timestamp",
-                         @"domain",
-                         @"urlScheme",
-                         @"appState",
-                         @"eventSequenceId",
-                         @"networkState",
-                         @"screenHeight",
-                         @"screenWidth",
-                         @"deviceBrand",
-                         @"deviceModel",
-                         @"deviceType",
-                         @"appVersion",
-                         @"appName",
-                         @"language",
-                         @"sdkVersion"];
+    NSArray *context = @[
+        @"platform",     @"platformVersion", @"deviceId",    @"sessionId",   @"eventType",
+        @"timestamp",    @"domain",          @"urlScheme",   @"appState",    @"eventSequenceId",
+        @"networkState", @"screenHeight",    @"screenWidth", @"deviceBrand", @"deviceModel",
+        @"deviceType",   @"appVersion",      @"appName",     @"language",    @"sdkVersion"
+    ];
     return context;
 }
 
 + (NSArray *)contextOptional {
-    NSArray *contextOptional = @[@"userId",
-                                 @"latitude",
-                                 @"longitude",
-                                 @"userKey"];
+    NSArray *contextOptional = @[@"userId", @"latitude", @"longitude", @"userKey"];
     return contextOptional;
 }
 

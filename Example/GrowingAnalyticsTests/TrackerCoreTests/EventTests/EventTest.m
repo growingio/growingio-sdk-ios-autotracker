@@ -17,26 +17,25 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <XCTest/XCTest.h>
 
+#import "GrowingEventDatabaseService.h"
+#import "GrowingServiceManager.h"
+#import "GrowingTrackerCore/Event/Autotrack/GrowingAutotrackEventType.h"
+#import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
+#import "GrowingTrackerCore/Event/GrowingAppCloseEvent.h"
+#import "GrowingTrackerCore/Event/GrowingConversionVariableEvent.h"
+#import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
+#import "GrowingTrackerCore/Event/GrowingEventManager.h"
+#import "GrowingTrackerCore/Event/GrowingLoginUserAttributesEvent.h"
+#import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
+#import "GrowingTrackerCore/Event/GrowingVisitorAttributesEvent.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
-#import "GrowingServiceManager.h"
-#import "GrowingEventDatabaseService.h"
-#import "Services/Protobuf/GrowingEventProtobufDatabase.h"
-#import "GrowingTrackerCore/Event/GrowingEventManager.h"
-#import "MockEventQueue.h"
 #import "ManualTrackHelper.h"
-#import "GrowingTrackerCore/Event/Autotrack/GrowingAutotrackEventType.h"
-#import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
-#import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
-#import "GrowingTrackerCore/Event/GrowingAppCloseEvent.h"
-#import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
-#import "GrowingTrackerCore/Event/GrowingVisitorAttributesEvent.h"
-#import "GrowingTrackerCore/Event/GrowingConversionVariableEvent.h"
-#import "GrowingTrackerCore/Event/GrowingLoginUserAttributesEvent.h"
+#import "MockEventQueue.h"
+#import "Services/Protobuf/GrowingEventProtobufDatabase.h"
 
 @interface EventTest : XCTestCase
 
@@ -47,13 +46,13 @@
 + (void)setUp {
     GrowingTrackConfiguration *config = [GrowingTrackConfiguration configurationWithProjectId:@"test"];
     config.dataSourceId = @"test";
-    
+
     // 避免不执行readPropertyInTrackThread
     config.dataCollectionEnabled = YES;
     // 开启idMapping
     config.idMappingEnabled = YES;
     GrowingConfigurationManager.sharedInstance.trackConfiguration = config;
-    
+
     // 避免insertEventToDatabase异常
     [GrowingServiceManager.sharedInstance registerService:@protocol(GrowingPBEventDatabaseService)
                                                 implClass:GrowingEventProtobufDatabase.class];
@@ -76,7 +75,7 @@
 - (void)testGrowingVisitEvent {
     GrowingVisitEvent.builder.setIdfa(@"testIdfa")
         .setIdfv(@"testIdfv")
-        .setExtraSdk(@{@"testkey" : @"value"})
+        .setExtraSdk(@{@"testkey": @"value"})
         .setNetworkState(@"testNetworkState")
         .setScreenHeight(1920)
         .setScreenWidth(1280)
@@ -96,16 +95,16 @@
         .setUserId(@"zhangsan")
         .setUserKey(@"phone")
         .setDeviceId(@"testdeviceID");
-    
+
     GrowingBaseBuilder *builder = GrowingVisitEvent.builder;
     [GrowingEventManager.sharedInstance postEventBuilder:builder];
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeVisit];
     XCTAssertEqual(events.count, 1);
-    
+
     GrowingVisitEvent *event = (GrowingVisitEvent *)events.firstObject;
     XCTAssertEqualObjects(event.eventType, GrowingEventTypeVisit);
-    
+
     NSDictionary *dic = event.toDictionary;
     XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeVisit);
     XCTAssertTrue([ManualTrackHelper visitEventCheck:dic]);
@@ -113,17 +112,17 @@
 }
 
 - (void)testGrowingCustomEvent {
-    GrowingBaseBuilder *builder = GrowingCustomEvent.builder.setEventName(@"custom").setAttributes(@{@"key" : @"value"});
+    GrowingBaseBuilder *builder = GrowingCustomEvent.builder.setEventName(@"custom").setAttributes(@{@"key": @"value"});
     [GrowingEventManager.sharedInstance postEventBuilder:builder];
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
     XCTAssertEqual(events.count, 1);
-    
+
     GrowingCustomEvent *event = (GrowingCustomEvent *)events.firstObject;
     XCTAssertEqualObjects(event.eventType, GrowingEventTypeCustom);
     XCTAssertEqualObjects(event.eventName, @"custom");
     XCTAssertEqualObjects(event.attributes[@"key"], @"value");
-    
+
     NSDictionary *dic = event.toDictionary;
     XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeCustom);
     XCTAssertEqualObjects(dic[@"eventName"], @"custom");
@@ -133,16 +132,16 @@
 }
 
 - (void)testGrowingLoginUserAttributesEvent {
-    GrowingBaseBuilder *builder = GrowingLoginUserAttributesEvent.builder.setAttributes(@{@"key" : @"value"});
+    GrowingBaseBuilder *builder = GrowingLoginUserAttributesEvent.builder.setAttributes(@{@"key": @"value"});
     [GrowingEventManager.sharedInstance postEventBuilder:builder];
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeLoginUserAttributes];
     XCTAssertEqual(events.count, 1);
-    
+
     GrowingLoginUserAttributesEvent *event = (GrowingLoginUserAttributesEvent *)events.firstObject;
     XCTAssertEqualObjects(event.eventType, GrowingEventTypeLoginUserAttributes);
     XCTAssertEqualObjects(event.attributes[@"key"], @"value");
-    
+
     NSDictionary *dic = event.toDictionary;
     XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeLoginUserAttributes);
     XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
@@ -151,16 +150,16 @@
 }
 
 - (void)testGrowingConversionVariableEvent {
-    GrowingBaseBuilder *builder = GrowingConversionVariableEvent.builder.setAttributes(@{@"key" : @"value"});
+    GrowingBaseBuilder *builder = GrowingConversionVariableEvent.builder.setAttributes(@{@"key": @"value"});
     [GrowingEventManager.sharedInstance postEventBuilder:builder];
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeConversionVariables];
     XCTAssertEqual(events.count, 1);
-    
+
     GrowingConversionVariableEvent *event = (GrowingConversionVariableEvent *)events.firstObject;
     XCTAssertEqualObjects(event.eventType, GrowingEventTypeConversionVariables);
     XCTAssertEqualObjects(event.attributes[@"key"], @"value");
-    
+
     NSDictionary *dic = event.toDictionary;
     XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeConversionVariables);
     XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
@@ -169,16 +168,16 @@
 }
 
 - (void)testGrowingVisitorAttributesEvent {
-    GrowingBaseBuilder *builder = GrowingVisitorAttributesEvent.builder.setAttributes(@{@"key" : @"value"});
+    GrowingBaseBuilder *builder = GrowingVisitorAttributesEvent.builder.setAttributes(@{@"key": @"value"});
     [GrowingEventManager.sharedInstance postEventBuilder:builder];
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeVisitorAttributes];
     XCTAssertEqual(events.count, 1);
-    
+
     GrowingVisitorAttributesEvent *event = (GrowingVisitorAttributesEvent *)events.firstObject;
     XCTAssertEqualObjects(event.eventType, GrowingEventTypeVisitorAttributes);
     XCTAssertEqualObjects(event.attributes[@"key"], @"value");
-    
+
     NSDictionary *dic = event.toDictionary;
     XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeVisitorAttributes);
     XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
@@ -192,10 +191,10 @@
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeAppClosed];
     XCTAssertEqual(events.count, 1);
-    
+
     GrowingAppCloseEvent *event = (GrowingAppCloseEvent *)events.firstObject;
     XCTAssertEqualObjects(event.eventType, GrowingEventTypeAppClosed);
-    
+
     NSDictionary *dic = event.toDictionary;
     XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeAppClosed);
     XCTAssertTrue([ManualTrackHelper appCloseEventCheck:dic]);
@@ -204,12 +203,11 @@
 
 - (void)testGrowingPageEvent {
     NSString *orientation = self.deviceOrientation;
-    GrowingBaseBuilder *builder = GrowingPageEvent.builder
-        .setPath(@"path")
-        .setOrientation(orientation)
-        .setTitle(@"title")
-        .setReferralPage(@"referralPage")
-        .setAttributes(@{@"key" : @"value"});
+    GrowingBaseBuilder *builder = GrowingPageEvent.builder.setPath(@"path")
+                                      .setOrientation(orientation)
+                                      .setTitle(@"title")
+                                      .setReferralPage(@"referralPage")
+                                      .setAttributes(@{@"key": @"value"});
     [GrowingEventManager.sharedInstance postEventBuilder:builder];
 
     // !!! 注意：这里有个隐藏的死锁问题 !!!
@@ -237,7 +235,7 @@
         XCTAssertEqualObjects(dic[@"title"], @"title");
         XCTAssertEqualObjects(dic[@"referralPage"], @"referralPage");
         XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
-        
+
         NSMutableDictionary *mDic = dic.mutableCopy;
         if (dic[@"orientation"] == nil && orientation == nil) {
             // 在无HostApplication的Logic Test时，orientation将为nil，这里手动赋值为PORTRAIT
@@ -245,10 +243,10 @@
         }
         XCTAssertTrue([ManualTrackHelper pageEventCheck:mDic]);
         XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:mDic]);
-        
+
         [expectation fulfill];
     });
-    
+
     [self waitForExpectationsWithTimeout:3.0f handler:nil];
 }
 

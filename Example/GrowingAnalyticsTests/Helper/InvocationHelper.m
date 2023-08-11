@@ -127,8 +127,7 @@
     NSUInteger argsCount = invocation.methodSignature.numberOfArguments - 2;
     for (NSUInteger i = 0; i < argsCount; ++i) {
         const char *argType = [invocation.methodSignature getArgumentTypeAtIndex:i + 2];
-        if (argType[0] == _C_CONST)
-            argType++;
+        if (argType[0] == _C_CONST) argType++;
         if (argType[0] == '@') {  // id and block
             ARG_GET_SET(id);
         } else if (strcmp(argType, @encode(Class)) == 0) {  // Class
@@ -159,9 +158,9 @@
             ARG_GET_SET(int);
         } else if (strcmp(argType, @encode(unsigned int)) == 0) {
             ARG_GET_SET(unsigned int);
-        } else if (strcmp(argType, @encode(BOOL)) == 0 || strcmp(argType, @encode(bool)) == 0
-                   || strcmp(argType, @encode(char)) == 0 || strcmp(argType, @encode(unsigned char)) == 0
-                   || strcmp(argType, @encode(short)) == 0 || strcmp(argType, @encode(unsigned short)) == 0) {
+        } else if (strcmp(argType, @encode(BOOL)) == 0 || strcmp(argType, @encode(bool)) == 0 ||
+                   strcmp(argType, @encode(char)) == 0 || strcmp(argType, @encode(unsigned char)) == 0 ||
+                   strcmp(argType, @encode(short)) == 0 || strcmp(argType, @encode(unsigned short)) == 0) {
             ARG_GET_SET(int);
         } else {
             // struct union and array

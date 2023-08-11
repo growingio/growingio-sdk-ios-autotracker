@@ -17,23 +17,22 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <XCTest/XCTest.h>
+#import "GrowingTrackerCore/Event/Autotrack/GrowingPageCustomEvent.h"
+#import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
+#import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
+#import "GrowingTrackerCore/Event/GrowingAppCloseEvent.h"
+#import "GrowingTrackerCore/Event/GrowingConversionVariableEvent.h"
+#import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
+#import "GrowingTrackerCore/Event/GrowingLoginUserAttributesEvent.h"
+#import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
+#import "GrowingTrackerCore/Event/GrowingVisitorAttributesEvent.h"
+#import "Modules/Hybrid/Events/GrowingHybridCustomEvent.h"
+#import "Modules/Hybrid/Events/GrowingHybridEventType.h"
+#import "Modules/Hybrid/Events/GrowingHybridPageEvent.h"
+#import "Modules/Hybrid/Events/GrowingHybridViewElementEvent.h"
 #import "Services/Protobuf/GrowingEventProtobufPersistence.h"
 #import "Services/Protobuf/Proto/GrowingEvent.pbobjc.h"
-#import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
-#import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
-#import "GrowingTrackerCore/Event/Autotrack/GrowingPageCustomEvent.h"
-#import "Modules/Hybrid/Events/GrowingHybridCustomEvent.h"
-#import "GrowingTrackerCore/Event/GrowingVisitorAttributesEvent.h"
-#import "GrowingTrackerCore/Event/GrowingLoginUserAttributesEvent.h"
-#import "GrowingTrackerCore/Event/GrowingConversionVariableEvent.h"
-#import "GrowingTrackerCore/Event/GrowingAppCloseEvent.h"
-#import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
-#import "Modules/Hybrid/Events/GrowingHybridPageEvent.h"
-#import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
-#import "Modules/Hybrid/Events/GrowingHybridViewElementEvent.h"
-#import "Modules/Hybrid/Events/GrowingHybridEventType.h"
 
 @interface ProtobufEventsTest : XCTestCase
 
@@ -52,11 +51,9 @@
 - (void)testEventConvertToPB_Visit {
     // GrowingVisitEvent
     {
-        GrowingVisitEvent *event = (GrowingVisitEvent *)(GrowingVisitEvent.builder
-                                                         .setIdfa(@"idfa")
-                                                         .setIdfv(@"idfv")
-                                                         .setExtraSdk(@{@"key": @"value"})
-                                                         .build);
+        GrowingVisitEvent *event =
+            (GrowingVisitEvent
+                 *)(GrowingVisitEvent.builder.setIdfa(@"idfa").setIdfv(@"idfv").setExtraSdk(@{@"key": @"value"}).build);
         GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
         [self contrastOfDefaultParamter:event protobuf:protobuf];
         XCTAssertEqualObjects(GrowingEventTypeVisit, event.eventType);
@@ -75,16 +72,16 @@
         XCTAssertEqualObjects(event.idfv ?: @"", protobuf.idfv);
         XCTAssertEqualObjects(event.extraSdk ?: @{}, protobuf.extraSdk);
     }
-    
+
     // GrowingHybridViewElementEvent - Useless
     {
-        GrowingHybridViewElementEvent *event = (GrowingHybridViewElementEvent *)(GrowingHybridViewElementEvent.builder
-                                                                                 .setEventType(GrowingEventTypeVisit)
-                                                                                 .setPath(@"path")
-                                                                                 .setXpath(@"xpath")
-                                                                                 .setIndex(1)
-                                                                                 .setQuery(@"query")
-                                                                                 .build);
+        GrowingHybridViewElementEvent *event =
+            (GrowingHybridViewElementEvent *)(GrowingHybridViewElementEvent.builder.setEventType(GrowingEventTypeVisit)
+                                                  .setPath(@"path")
+                                                  .setXpath(@"xpath")
+                                                  .setIndex(1)
+                                                  .setQuery(@"query")
+                                                  .build);
         GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
         [self contrastOfDefaultParamter:event protobuf:protobuf];
         XCTAssertEqualObjects(GrowingEventTypeVisit, event.eventType);
@@ -99,10 +96,9 @@
 - (void)testEventConvertToPB_Custom {
     // GrowingCustomEvent
     {
-        GrowingCustomEvent *event = (GrowingCustomEvent *)(GrowingCustomEvent.builder
-                                                           .setEventName(@"custom")
-                                                           .setAttributes(@{@"key": @"value"})
-                                                           .build);
+        GrowingCustomEvent *event = (GrowingCustomEvent *)(GrowingCustomEvent.builder.setEventName(@"custom")
+                                                               .setAttributes(@{@"key": @"value"})
+                                                               .build);
         GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
         [self contrastOfDefaultParamter:event protobuf:protobuf];
         XCTAssertEqualObjects(GrowingEventTypeCustom, event.eventType);
@@ -122,11 +118,11 @@
 
     // GrowingPageCustomEvent
     {
-        GrowingPageCustomEvent *event = (GrowingPageCustomEvent *)(GrowingPageCustomEvent.builder
-                                                                   .setEventName(@"custom")
-                                                                   .setPath(@"path")
-                                                                   .setAttributes(@{@"key": @"value"})
-                                                                   .build);
+        GrowingPageCustomEvent *event =
+            (GrowingPageCustomEvent *)(GrowingPageCustomEvent.builder.setEventName(@"custom")
+                                           .setPath(@"path")
+                                           .setAttributes(@{@"key": @"value"})
+                                           .build);
         GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
         [self contrastOfDefaultParamter:event protobuf:protobuf];
         XCTAssertEqualObjects(GrowingEventTypeCustom, event.eventType);
@@ -148,12 +144,12 @@
 
     // GrowingHybridCustomEvent
     {
-        GrowingHybridCustomEvent *event = (GrowingHybridCustomEvent *)(GrowingHybridCustomEvent.builder
-                                                                       .setEventName(@"custom")
-                                                                       .setPath(@"path")
-                                                                       .setAttributes(@{@"key": @"value"})
-                                                                       .setQuery(@"query")
-                                                                       .build);
+        GrowingHybridCustomEvent *event =
+            (GrowingHybridCustomEvent *)(GrowingHybridCustomEvent.builder.setEventName(@"custom")
+                                             .setPath(@"path")
+                                             .setAttributes(@{@"key": @"value"})
+                                             .setQuery(@"query")
+                                             .build);
         GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
         [self contrastOfDefaultParamter:event protobuf:protobuf];
         XCTAssertEqualObjects(GrowingEventTypeCustom, event.eventType);
@@ -179,9 +175,9 @@
 - (void)testEventConvertToPB_VisitorAttributes {
     // GrowingVisitorAttributesEvent
     {
-        GrowingVisitorAttributesEvent *event = (GrowingVisitorAttributesEvent *)(GrowingVisitorAttributesEvent.builder
-                                                                                 .setAttributes(@{@"key": @"value"})
-                                                                                 .build);
+        GrowingVisitorAttributesEvent *event =
+            (GrowingVisitorAttributesEvent *)(GrowingVisitorAttributesEvent.builder.setAttributes(@{@"key": @"value"})
+                                                  .build);
         GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
         [self contrastOfDefaultParamter:event protobuf:protobuf];
         XCTAssertEqualObjects(GrowingEventTypeVisitorAttributes, event.eventType);
@@ -189,7 +185,8 @@
         XCTAssertEqualObjects(event.attributes ?: @{}, protobuf.attributes);
     }
     {
-        GrowingVisitorAttributesEvent *event = (GrowingVisitorAttributesEvent *)(GrowingVisitorAttributesEvent.builder.build);
+        GrowingVisitorAttributesEvent *event =
+            (GrowingVisitorAttributesEvent *)(GrowingVisitorAttributesEvent.builder.build);
         GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
         [self contrastOfDefaultParamter:event protobuf:protobuf];
         XCTAssertEqualObjects(GrowingEventTypeVisitorAttributes, event.eventType);
@@ -201,9 +198,9 @@
 - (void)testEventConvertToPB_LoginUserAttributes {
     // GrowingLoginUserAttributesEvent
     {
-        GrowingLoginUserAttributesEvent *event = (GrowingLoginUserAttributesEvent *)(GrowingLoginUserAttributesEvent.builder
-                                                                                     .setAttributes(@{@"key": @"value"})
-                                                                                     .build);
+        GrowingLoginUserAttributesEvent *event =
+            (GrowingLoginUserAttributesEvent
+                 *)(GrowingLoginUserAttributesEvent.builder.setAttributes(@{@"key": @"value"}).build);
         GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
         [self contrastOfDefaultParamter:event protobuf:protobuf];
         XCTAssertEqualObjects(GrowingEventTypeLoginUserAttributes, event.eventType);
@@ -211,7 +208,8 @@
         XCTAssertEqualObjects(event.attributes ?: @{}, protobuf.attributes);
     }
     {
-        GrowingLoginUserAttributesEvent *event = (GrowingLoginUserAttributesEvent *)(GrowingLoginUserAttributesEvent.builder.build);
+        GrowingLoginUserAttributesEvent *event =
+            (GrowingLoginUserAttributesEvent *)(GrowingLoginUserAttributesEvent.builder.build);
         GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
         [self contrastOfDefaultParamter:event protobuf:protobuf];
         XCTAssertEqualObjects(GrowingEventTypeLoginUserAttributes, event.eventType);
@@ -223,9 +221,9 @@
 - (void)testEventConvertToPB_ConversionVariable {
     // GrowingConversionVariableEvent
     {
-        GrowingConversionVariableEvent *event = (GrowingConversionVariableEvent *)(GrowingConversionVariableEvent.builder
-                                                                                   .setAttributes(@{@"key": @"value"})
-                                                                                   .build);
+        GrowingConversionVariableEvent *event =
+            (GrowingConversionVariableEvent *)(GrowingConversionVariableEvent.builder.setAttributes(@{@"key": @"value"})
+                                                   .build);
         GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
         [self contrastOfDefaultParamter:event protobuf:protobuf];
         XCTAssertEqualObjects(GrowingEventTypeConversionVariables, event.eventType);
@@ -233,7 +231,8 @@
         XCTAssertEqualObjects(event.attributes ?: @{}, protobuf.attributes);
     }
     {
-        GrowingConversionVariableEvent *event = (GrowingConversionVariableEvent *)(GrowingConversionVariableEvent.builder.build);
+        GrowingConversionVariableEvent *event =
+            (GrowingConversionVariableEvent *)(GrowingConversionVariableEvent.builder.build);
         GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
         [self contrastOfDefaultParamter:event protobuf:protobuf];
         XCTAssertEqualObjects(GrowingEventTypeConversionVariables, event.eventType);
@@ -256,13 +255,12 @@
 - (void)testEventConvertToPB_Page {
     // GrowingPageEvent
     {
-        GrowingPageEvent *event = (GrowingPageEvent *)(GrowingPageEvent.builder
-                                                       .setPath(@"path")
-                                                       .setOrientation(@"PORTRAIT")
-                                                       .setTitle(@"title")
-                                                       .setReferralPage(@"referralPage")
-                                                       .setAttributes(@{@"key" : @"value"})
-                                                       .build);
+        GrowingPageEvent *event = (GrowingPageEvent *)(GrowingPageEvent.builder.setPath(@"path")
+                                                           .setOrientation(@"PORTRAIT")
+                                                           .setTitle(@"title")
+                                                           .setReferralPage(@"referralPage")
+                                                           .setAttributes(@{@"key": @"value"})
+                                                           .build);
         GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
         [self contrastOfDefaultParamter:event protobuf:protobuf];
         XCTAssertEqualObjects(GrowingEventTypePage, event.eventType);
@@ -288,15 +286,14 @@
 
     // GrowingHybridPageEvent
     {
-        GrowingHybridPageEvent *event = (GrowingHybridPageEvent *)(GrowingHybridPageEvent.builder
-                                                                   .setPath(@"path")
-                                                                   .setOrientation(@"PORTRAIT")
-                                                                   .setTitle(@"title")
-                                                                   .setReferralPage(@"referralPage")
-                                                                   .setQuery(@"query")
-                                                                   .setProtocolType(@"https")
-                                                                   .setAttributes(@{@"key" : @"value"})
-                                                                   .build);
+        GrowingHybridPageEvent *event = (GrowingHybridPageEvent *)(GrowingHybridPageEvent.builder.setPath(@"path")
+                                                                       .setOrientation(@"PORTRAIT")
+                                                                       .setTitle(@"title")
+                                                                       .setReferralPage(@"referralPage")
+                                                                       .setQuery(@"query")
+                                                                       .setProtocolType(@"https")
+                                                                       .setAttributes(@{@"key": @"value"})
+                                                                       .build);
         GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
         [self contrastOfDefaultParamter:event protobuf:protobuf];
         XCTAssertEqualObjects(GrowingEventTypePage, event.eventType);
@@ -328,13 +325,13 @@
 - (void)testEventConvertToPB_ViewClick {
     // GrowingViewElementEvent
     {
-        GrowingViewElementEvent *event = (GrowingViewElementEvent *)(GrowingViewElementEvent.builder
-                                                                     .setEventType(GrowingEventTypeViewClick)
-                                                                     .setPath(@"path")
-                                                                     .setTextValue(@"textvalue")
-                                                                     .setXpath(@"xpath")
-                                                                     .setIndex(1)
-                                                                     .build);
+        GrowingViewElementEvent *event =
+            (GrowingViewElementEvent *)(GrowingViewElementEvent.builder.setEventType(GrowingEventTypeViewClick)
+                                            .setPath(@"path")
+                                            .setTextValue(@"textvalue")
+                                            .setXpath(@"xpath")
+                                            .setIndex(1)
+                                            .build);
         GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
         [self contrastOfDefaultParamter:event protobuf:protobuf];
         XCTAssertEqualObjects(GrowingEventTypeViewClick, event.eventType);
@@ -345,9 +342,8 @@
         XCTAssertEqual(event.index, protobuf.index);
     }
     {
-        GrowingViewElementEvent *event = (GrowingViewElementEvent *)(GrowingViewElementEvent.builder
-                                                                     .setEventType(GrowingEventTypeViewClick)
-                                                                     .build);
+        GrowingViewElementEvent *event =
+            (GrowingViewElementEvent *)(GrowingViewElementEvent.builder.setEventType(GrowingEventTypeViewClick).build);
         GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
         [self contrastOfDefaultParamter:event protobuf:protobuf];
         XCTAssertEqualObjects(GrowingEventTypeViewClick, event.eventType);
@@ -360,15 +356,16 @@
 
     // GrowingHybridViewElementEvent
     {
-        GrowingHybridViewElementEvent *event = (GrowingHybridViewElementEvent *)(GrowingHybridViewElementEvent.builder
-                                                                                 .setEventType(GrowingEventTypeViewClick)
-                                                                                 .setPath(@"path")
-                                                                                 .setTextValue(@"textvalue")
-                                                                                 .setXpath(@"xpath")
-                                                                                 .setIndex(1)
-                                                                                 .setHyperlink(@"hyperlink")
-                                                                                 .setQuery(@"query")
-                                                                                 .build);
+        GrowingHybridViewElementEvent *event =
+            (GrowingHybridViewElementEvent *)(GrowingHybridViewElementEvent.builder
+                                                  .setEventType(GrowingEventTypeViewClick)
+                                                  .setPath(@"path")
+                                                  .setTextValue(@"textvalue")
+                                                  .setXpath(@"xpath")
+                                                  .setIndex(1)
+                                                  .setHyperlink(@"hyperlink")
+                                                  .setQuery(@"query")
+                                                  .build);
         GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
         [self contrastOfDefaultParamter:event protobuf:protobuf];
         XCTAssertEqualObjects(GrowingEventTypeViewClick, event.eventType);
@@ -381,9 +378,9 @@
         XCTAssertEqualObjects(event.query ?: @"", protobuf.query);
     }
     {
-        GrowingHybridViewElementEvent *event = (GrowingHybridViewElementEvent *)(GrowingHybridViewElementEvent.builder
-                                                                                 .setEventType(GrowingEventTypeViewClick)
-                                                                                 .build);
+        GrowingHybridViewElementEvent *event =
+            (GrowingHybridViewElementEvent
+                 *)(GrowingHybridViewElementEvent.builder.setEventType(GrowingEventTypeViewClick).build);
         GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
         [self contrastOfDefaultParamter:event protobuf:protobuf];
         XCTAssertEqualObjects(GrowingEventTypeViewClick, event.eventType);
@@ -400,13 +397,13 @@
 - (void)testEventConvertToPB_ViewChange {
     // GrowingViewElementEvent
     {
-        GrowingViewElementEvent *event = (GrowingViewElementEvent *)(GrowingViewElementEvent.builder
-                                                                     .setEventType(GrowingEventTypeViewChange)
-                                                                     .setPath(@"path")
-                                                                     .setTextValue(@"textvalue")
-                                                                     .setXpath(@"xpath")
-                                                                     .setIndex(1)
-                                                                     .build);
+        GrowingViewElementEvent *event =
+            (GrowingViewElementEvent *)(GrowingViewElementEvent.builder.setEventType(GrowingEventTypeViewChange)
+                                            .setPath(@"path")
+                                            .setTextValue(@"textvalue")
+                                            .setXpath(@"xpath")
+                                            .setIndex(1)
+                                            .build);
         GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
         [self contrastOfDefaultParamter:event protobuf:protobuf];
         XCTAssertEqualObjects(GrowingEventTypeViewChange, event.eventType);
@@ -417,9 +414,8 @@
         XCTAssertEqual(event.index, protobuf.index);
     }
     {
-        GrowingViewElementEvent *event = (GrowingViewElementEvent *)(GrowingViewElementEvent.builder
-                                                                     .setEventType(GrowingEventTypeViewChange)
-                                                                     .build);
+        GrowingViewElementEvent *event =
+            (GrowingViewElementEvent *)(GrowingViewElementEvent.builder.setEventType(GrowingEventTypeViewChange).build);
         GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
         [self contrastOfDefaultParamter:event protobuf:protobuf];
         XCTAssertEqualObjects(GrowingEventTypeViewChange, event.eventType);
@@ -432,15 +428,16 @@
 
     // GrowingHybridViewElementEvent
     {
-        GrowingHybridViewElementEvent *event = (GrowingHybridViewElementEvent *)(GrowingHybridViewElementEvent.builder
-                                                                                 .setEventType(GrowingEventTypeViewChange)
-                                                                                 .setPath(@"path")
-                                                                                 .setTextValue(@"textvalue")
-                                                                                 .setXpath(@"xpath")
-                                                                                 .setIndex(1)
-                                                                                 .setHyperlink(@"hyperlink")
-                                                                                 .setQuery(@"query")
-                                                                                 .build);
+        GrowingHybridViewElementEvent *event =
+            (GrowingHybridViewElementEvent *)(GrowingHybridViewElementEvent.builder
+                                                  .setEventType(GrowingEventTypeViewChange)
+                                                  .setPath(@"path")
+                                                  .setTextValue(@"textvalue")
+                                                  .setXpath(@"xpath")
+                                                  .setIndex(1)
+                                                  .setHyperlink(@"hyperlink")
+                                                  .setQuery(@"query")
+                                                  .build);
         GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
         [self contrastOfDefaultParamter:event protobuf:protobuf];
         XCTAssertEqualObjects(GrowingEventTypeViewChange, event.eventType);
@@ -453,9 +450,9 @@
         XCTAssertEqualObjects(event.query ?: @"", protobuf.query);
     }
     {
-        GrowingHybridViewElementEvent *event = (GrowingHybridViewElementEvent *)(GrowingHybridViewElementEvent.builder
-                                                                                 .setEventType(GrowingEventTypeViewChange)
-                                                                                 .build);
+        GrowingHybridViewElementEvent *event =
+            (GrowingHybridViewElementEvent
+                 *)(GrowingHybridViewElementEvent.builder.setEventType(GrowingEventTypeViewChange).build);
         GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
         [self contrastOfDefaultParamter:event protobuf:protobuf];
         XCTAssertEqualObjects(GrowingEventTypeViewChange, event.eventType);
@@ -472,13 +469,14 @@
 - (void)testEventConvertToPB_FormSubmit {
     // GrowingHybridViewElementEvent
     {
-        GrowingHybridViewElementEvent *event = (GrowingHybridViewElementEvent *)(GrowingHybridViewElementEvent.builder
-                                                                                 .setEventType(GrowingEventTypeFormSubmit)
-                                                                                 .setPath(@"path")
-                                                                                 .setXpath(@"xpath")
-                                                                                 .setIndex(1)
-                                                                                 .setQuery(@"query")
-                                                                                 .build);
+        GrowingHybridViewElementEvent *event =
+            (GrowingHybridViewElementEvent *)(GrowingHybridViewElementEvent.builder
+                                                  .setEventType(GrowingEventTypeFormSubmit)
+                                                  .setPath(@"path")
+                                                  .setXpath(@"xpath")
+                                                  .setIndex(1)
+                                                  .setQuery(@"query")
+                                                  .build);
         GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
         [self contrastOfDefaultParamter:event protobuf:protobuf];
         XCTAssertEqualObjects(GrowingEventTypeFormSubmit, event.eventType);
@@ -489,9 +487,9 @@
         XCTAssertEqualObjects(event.query ?: @"", protobuf.query);
     }
     {
-        GrowingHybridViewElementEvent *event = (GrowingHybridViewElementEvent *)(GrowingHybridViewElementEvent.builder
-                                                                                 .setEventType(GrowingEventTypeFormSubmit)
-                                                                                 .build);
+        GrowingHybridViewElementEvent *event =
+            (GrowingHybridViewElementEvent
+                 *)(GrowingHybridViewElementEvent.builder.setEventType(GrowingEventTypeFormSubmit).build);
         GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
         [self contrastOfDefaultParamter:event protobuf:protobuf];
         XCTAssertEqualObjects(GrowingEventTypeFormSubmit, event.eventType);
@@ -504,8 +502,8 @@
 }
 
 - (GrowingPBEventV3Dto *)protobufFromEvent:(GrowingBaseEvent *)event {
-    GrowingEventProtobufPersistence *p = [GrowingEventProtobufPersistence persistenceEventWithEvent:event
-                                                                                               uuid:[NSUUID UUID].UUIDString];
+    GrowingEventProtobufPersistence *p =
+        [GrowingEventProtobufPersistence persistenceEventWithEvent:event uuid:[NSUUID UUID].UUIDString];
     return [GrowingPBEventV3Dto parseFromData:p.data error:nil];
 }
 
@@ -518,7 +516,8 @@
     XCTAssertEqual(event.timestamp, protobuf.timestamp);
     XCTAssertEqualObjects(event.domain ?: @"", protobuf.domain);
     XCTAssertEqualObjects(event.urlScheme ?: @"", protobuf.URLScheme);
-    XCTAssertEqualObjects((event.appState == GrowingAppStateForeground ? @"FOREGROUND" : @"BACKGROUND"), protobuf.appState);
+    XCTAssertEqualObjects((event.appState == GrowingAppStateForeground ? @"FOREGROUND" : @"BACKGROUND"),
+                          protobuf.appState);
     XCTAssertEqual(event.eventSequenceId, protobuf.eventSequenceId);
     XCTAssertEqualObjects(event.extraParams[@"dataSourceId"] ?: @"", protobuf.dataSourceId);
     // 3.2.0

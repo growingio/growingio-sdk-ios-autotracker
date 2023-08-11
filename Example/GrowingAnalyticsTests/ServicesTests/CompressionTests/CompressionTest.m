@@ -19,9 +19,9 @@
 
 #import <XCTest/XCTest.h>
 
-#import "Services/Compression/GrowingDataCompression.h"
 #import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
+#import "Services/Compression/GrowingDataCompression.h"
 
 @interface CompressionTest : XCTestCase
 
@@ -34,7 +34,7 @@
 - (void)setUp {
     self.dict = GrowingVisitEvent.builder.setIdfa(@"testIdfa")
                     .setIdfv(@"testIdfv")
-                    .setExtraSdk(@{@"testkey" : @"value"})
+                    .setExtraSdk(@{@"testkey": @"value"})
                     .setNetworkState(@"testNetworkState")
                     .setScreenHeight(1920)
                     .setScreenWidth(1280)

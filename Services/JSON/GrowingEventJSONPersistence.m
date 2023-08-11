@@ -25,12 +25,14 @@
 - (instancetype)initWithUUID:(NSString *)uuid
                    eventType:(NSString *)eventType
                         data:(id)data
-                      policy:(GrowingEventSendPolicy)policy {
+                      policy:(GrowingEventSendPolicy)policy
+                  sdkVersion:(NSString *)sdkVersion {
     if (self = [super init]) {
         _eventUUID = uuid;
         _eventType = eventType;
         _data = data;
         _policy = policy;
+        _sdkVersion = sdkVersion;
     }
     return self;
 }
@@ -41,7 +43,8 @@
     return [[GrowingEventJSONPersistence alloc] initWithUUID:uuid
                                                    eventType:event.eventType
                                                         data:eventJsonString
-                                                      policy:event.sendPolicy];
+                                                      policy:event.sendPolicy
+                                                  sdkVersion:event.sdkVersion];
 }
 
 + (NSData *)buildRawEventsFromEvents:(NSArray<GrowingEventJSONPersistence *> *)events {

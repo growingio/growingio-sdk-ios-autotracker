@@ -17,12 +17,11 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <XCTest/XCTest.h>
 
-#import "InvocationHelper.h"
-#import "GrowingAutotrackerCore/GrowingRealAutotracker.h"
 #import "GrowingAutotrackerCore/Autotrack/UISegmentedControl+GrowingAutotracker.h"
+#import "GrowingAutotrackerCore/GrowingRealAutotracker.h"
+#import "InvocationHelper.h"
 
 @interface UISegmentedControlAutotrackTest : XCTestCase
 
@@ -47,7 +46,7 @@
     Class cls = NSClassFromString(@"GrowingUISegmentedControlObserver");
     id sharedInstance = [cls safePerformSelector:@selector(sharedInstance)];
     XCTAssertNotNil(sharedInstance);
-    
+
     // initWithFrame:
     {
         UISegmentedControl *control = [[UISegmentedControl alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
@@ -59,10 +58,11 @@
         UISegmentedControl *control = [[UISegmentedControl alloc] initWithItems:@[@"1", @"2"]];
         XCTAssertTrue([control.allTargets containsObject:sharedInstance]);
     }
-    
+
     // 多次 init
     {
-        UISegmentedControl *control = [[[UISegmentedControl alloc] initWithFrame:CGRectMake(0, 0, 100, 100)] initWithFrame:CGRectMake(0, 0, 100, 100)];
+        UISegmentedControl *control = [[[UISegmentedControl alloc] initWithFrame:CGRectMake(0, 0, 100, 100)]
+            initWithFrame:CGRectMake(0, 0, 100, 100)];
         XCTAssertTrue([control.allTargets containsObject:sharedInstance]);
     }
 }

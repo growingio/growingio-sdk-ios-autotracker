@@ -43,19 +43,21 @@ GrowingService(GrowingEventDatabaseService, GrowingEventJSONDatabase)
         @"value TEXT,"
         @"createAt INTEGER NOT NULL,"
         @"type TEXT,"
+        @"sdkVersion TEXT,"
         @"policy INTEGER);";
     NSString *sqlCreateIndex = @"CREATE INDEX IF NOT EXISTS namedcachetable_key ON namedcachetable (key);";
     return [self initDB:sqlInit createIndex:sqlCreateIndex];
 }
 
 - (void)enumerateKeysAndValuesUsingBlock:
-    (void (^)(NSString *key, id value, NSString *type, NSUInteger policy, BOOL **stop))block {
+    (void (^)(NSString *key, id value, NSString *type, NSUInteger policy, NSString *sdkVersion, BOOL **stop))block {
     [self enumerateTableUsingBlock:^(GrowingFMResultSet *set, BOOL *s) {
         NSString *key = [set stringForColumn:@"key"];
         id value = [set stringForColumn:@"value"];
         NSString *type = [set stringForColumn:@"type"];
         NSUInteger policy = [set intForColumn:@"policy"];
-        block(key, value, type, policy, &s);
+        NSString *sdkVersion = [set stringForColumn:@"sdkVersion"];
+        block(key, value, type, policy, sdkVersion, &s);
     }];
 }
 

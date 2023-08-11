@@ -20,17 +20,17 @@
 #import <KIF/KIF.h>
 #import <WebKit/WebKit.h>
 #import "GrowingAutotracker.h"
-#import "MockEventQueue.h"
-#import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
-#import "GrowingTrackerCore/Event/GrowingLoginUserAttributesEvent.h"
 #import "GrowingTrackerCore/Event/GrowingConversionVariableEvent.h"
-#import "Modules/Hybrid/Events/GrowingHybridEventType.h"
-#import "Modules/Hybrid/Events/GrowingHybridViewElementEvent.h"
-#import "Modules/Hybrid/Events/GrowingHybridPageEvent.h"
-#import "Modules/Hybrid/Events/GrowingHybridCustomEvent.h"
-#import "ManualTrackHelper.h"
-#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
+#import "GrowingTrackerCore/Event/GrowingLoginUserAttributesEvent.h"
+#import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
 #import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
+#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
+#import "ManualTrackHelper.h"
+#import "MockEventQueue.h"
+#import "Modules/Hybrid/Events/GrowingHybridCustomEvent.h"
+#import "Modules/Hybrid/Events/GrowingHybridEventType.h"
+#import "Modules/Hybrid/Events/GrowingHybridPageEvent.h"
+#import "Modules/Hybrid/Events/GrowingHybridViewElementEvent.h"
 #import "Modules/Hybrid/GrowingHybridBridgeProvider.h"
 #import "Modules/Hybrid/GrowingWebViewDomChangedDelegate.h"
 
@@ -45,7 +45,7 @@
     [GrowingAutotracker.sharedInstance setLoginUserId:@"xctest_userId" userKey:@"xctest_userKey"];
     // latitude longitude
     [GrowingAutotracker.sharedInstance setLocation:30.12345 longitude:31.123456];
-    
+
     [[viewTester usingLabel:@"UI界面"] tap];
     [[viewTester usingLabel:@"Hybrid"] tap];
     [viewTester waitForTimeInterval:10];
@@ -70,13 +70,13 @@
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
     XCTAssertEqual(events.count, 1);
-    
+
     GrowingHybridCustomEvent *event = (GrowingHybridCustomEvent *)events.firstObject;
     NSDictionary *dic = event.toDictionary;
     XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeCustom);
     XCTAssertTrue([ManualTrackHelper customEventCheck:dic]);
     XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
-    
+
     XCTAssertEqualObjects(dic[@"domain"], @"test-browser.growingio.com");
     XCTAssertEqualObjects(dic[@"path"], @"/push/web.html");
     XCTAssertEqualObjects(dic[@"query"], @"a=1&b=2");
@@ -90,13 +90,13 @@
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
     XCTAssertEqual(events.count, 1);
-    
+
     GrowingHybridCustomEvent *event = (GrowingHybridCustomEvent *)events.firstObject;
     NSDictionary *dic = event.toDictionary;
     XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeCustom);
     XCTAssertTrue([ManualTrackHelper customEventCheck:dic]);
     XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
-    
+
     XCTAssertEqualObjects(dic[@"domain"], @"test-browser.growingio.com");
     XCTAssertEqualObjects(dic[@"path"], @"/push/web.html");
     XCTAssertEqualObjects(dic[@"query"], @"a=1&b=2");
@@ -110,13 +110,13 @@
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeLoginUserAttributes];
     XCTAssertEqual(events.count, 1);
-    
+
     GrowingLoginUserAttributesEvent *event = (GrowingLoginUserAttributesEvent *)events.firstObject;
     NSDictionary *dic = event.toDictionary;
     XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeLoginUserAttributes);
     XCTAssertTrue([ManualTrackHelper loginUserAttributesEventCheck:dic]);
     XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
-    
+
     XCTAssertEqualObjects(dic[@"attributes"][@"key1"], @"value1");
     XCTAssertEqualObjects(dic[@"attributes"][@"key2"], @"value2");
 }
@@ -128,13 +128,13 @@
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
     XCTAssertEqual(events.count, 1);
-    
+
     GrowingHybridPageEvent *event = (GrowingHybridPageEvent *)events.firstObject;
     NSDictionary *dic = event.toDictionary;
     XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypePage);
     XCTAssertTrue([ManualTrackHelper pageEventCheck:dic]);
     XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
-    
+
     XCTAssertEqualObjects(dic[@"domain"], @"test-browser.growingio.com");
     XCTAssertEqualObjects(dic[@"path"], @"/push/web.html");
     XCTAssertEqualObjects(dic[@"title"], @"Hybrid测试页面");
@@ -147,13 +147,13 @@
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
     XCTAssertEqual(events.count, 1);
-    
+
     GrowingHybridPageEvent *event = (GrowingHybridPageEvent *)events.firstObject;
     NSDictionary *dic = event.toDictionary;
     XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypePage);
     XCTAssertTrue([ManualTrackHelper pageEventCheck:dic]);
     XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
-    
+
     XCTAssertEqualObjects(dic[@"domain"], @"test-browser.growingio.com");
     XCTAssertEqualObjects(dic[@"path"], @"/push/web.html");
     XCTAssertEqualObjects(dic[@"title"], @"Hybrid测试页面");
@@ -167,13 +167,13 @@
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
     XCTAssertEqual(events.count, 1);
-    
+
     GrowingHybridPageEvent *event = (GrowingHybridPageEvent *)events.firstObject;
     NSDictionary *dic = event.toDictionary;
     XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypePage);
     XCTAssertTrue([ManualTrackHelper pageEventCheck:dic]);
     XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
-    
+
     XCTAssertEqualObjects(dic[@"domain"], @"test-browser.growingio.com");
     XCTAssertEqualObjects(dic[@"path"], @"/push/web.html");
     XCTAssertEqualObjects(dic[@"title"], @"Hybrid测试页面");
@@ -189,13 +189,13 @@
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
     XCTAssertEqual(events.count, 1);
-    
+
     GrowingHybridViewElementEvent *event = (GrowingHybridViewElementEvent *)events.firstObject;
     NSDictionary *dic = event.toDictionary;
     XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeViewClick);
     XCTAssertTrue([ManualTrackHelper viewClickEventCheck:dic]);
     XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
-    
+
     XCTAssertEqualObjects(dic[@"domain"], @"test-browser.growingio.com");
     XCTAssertEqualObjects(dic[@"path"], @"/push/web.html");
     XCTAssertEqualObjects(dic[@"xpath"], @"/div/button");
@@ -211,13 +211,13 @@
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewChange];
     XCTAssertEqual(events.count, 1);
-    
+
     GrowingHybridViewElementEvent *event = (GrowingHybridViewElementEvent *)events.firstObject;
     NSDictionary *dic = event.toDictionary;
     XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeViewChange);
     XCTAssertTrue([ManualTrackHelper viewChangeEventCheck:dic]);
     XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
-    
+
     XCTAssertEqualObjects(dic[@"domain"], @"test-browser.growingio.com");
     XCTAssertEqualObjects(dic[@"path"], @"/push/web.html");
     XCTAssertEqualObjects(dic[@"xpath"], @"/div/form/input");
@@ -250,47 +250,59 @@
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"HybridWebView"];
     [self webView:actor.view evaluateJavaScript:@"mockSetUserId('xctest_userId_hybrid')"];
     [viewTester waitForTimeInterval:1];
-    
-    [GrowingDispatchManager dispatchInGrowingThread:^{
-        XCTAssertEqualObjects([[GrowingPersistenceDataProvider sharedInstance] loginUserId], @"xctest_userId_hybrid");
-    } waitUntilDone:YES];
+
+    [GrowingDispatchManager
+        dispatchInGrowingThread:^{
+            XCTAssertEqualObjects([[GrowingPersistenceDataProvider sharedInstance] loginUserId],
+                                  @"xctest_userId_hybrid");
+        }
+                  waitUntilDone:YES];
 }
 
 - (void)test13MockClearUserId {
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"HybridWebView"];
     [self webView:actor.view evaluateJavaScript:@"mockClearUserId()"];
     [viewTester waitForTimeInterval:1];
-    
-    [GrowingDispatchManager dispatchInGrowingThread:^{
-        XCTAssertEqualObjects([[GrowingPersistenceDataProvider sharedInstance] loginUserId], @"");
-    } waitUntilDone:YES];
+
+    [GrowingDispatchManager
+        dispatchInGrowingThread:^{
+            XCTAssertEqualObjects([[GrowingPersistenceDataProvider sharedInstance] loginUserId], @"");
+        }
+                  waitUntilDone:YES];
 }
 
 - (void)test14MockSetUserIdAndUserKey {
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"HybridWebView"];
-    [self webView:actor.view evaluateJavaScript:@"mockSetUserIdAndUserKey('xctest_userId_hybrid2', 'xctest_userKey_hybrid2')"];
+    [self webView:actor.view
+        evaluateJavaScript:@"mockSetUserIdAndUserKey('xctest_userId_hybrid2', 'xctest_userKey_hybrid2')"];
     [viewTester waitForTimeInterval:1];
-    [GrowingDispatchManager dispatchInGrowingThread:^{
-        XCTAssertEqualObjects([[GrowingPersistenceDataProvider sharedInstance] loginUserId], @"xctest_userId_hybrid2");
-        XCTAssertEqualObjects([[GrowingPersistenceDataProvider sharedInstance] loginUserKey], @"xctest_userKey_hybrid2");
-    } waitUntilDone:YES];
+    [GrowingDispatchManager
+        dispatchInGrowingThread:^{
+            XCTAssertEqualObjects([[GrowingPersistenceDataProvider sharedInstance] loginUserId],
+                                  @"xctest_userId_hybrid2");
+            XCTAssertEqualObjects([[GrowingPersistenceDataProvider sharedInstance] loginUserKey],
+                                  @"xctest_userKey_hybrid2");
+        }
+                  waitUntilDone:YES];
 }
 
 - (void)test15MockClearUserIdAndUserKey {
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"HybridWebView"];
     [self webView:actor.view evaluateJavaScript:@"mockClearUserIdAndUserKey()"];
     [viewTester waitForTimeInterval:1];
-    
-    [GrowingDispatchManager dispatchInGrowingThread:^{
-        XCTAssertEqualObjects([[GrowingPersistenceDataProvider sharedInstance] loginUserId], @"");
-        XCTAssertEqualObjects([[GrowingPersistenceDataProvider sharedInstance] loginUserKey], @"");
-    } waitUntilDone:YES];
+
+    [GrowingDispatchManager
+        dispatchInGrowingThread:^{
+            XCTAssertEqualObjects([[GrowingPersistenceDataProvider sharedInstance] loginUserId], @"");
+            XCTAssertEqualObjects([[GrowingPersistenceDataProvider sharedInstance] loginUserKey], @"");
+        }
+                  waitUntilDone:YES];
 }
 
 static int XCTest_didDomChanged = 0;
 - (void)test16MockDomChanged {
     [GrowingHybridBridgeProvider sharedInstance].domChangedDelegate = self;
-    
+
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"HybridWebView"];
     [self webView:actor.view evaluateJavaScript:@"mockDomChanged()"];
     [viewTester waitForTimeInterval:1];

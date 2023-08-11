@@ -17,12 +17,11 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <XCTest/XCTest.h>
-#import "Services/Protobuf/GrowingEventProtobufPersistence.h"
-#import "Services/Protobuf/GrowingEventProtobufDatabase.h"
-#import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
 #import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
+#import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
+#import "Services/Protobuf/GrowingEventProtobufDatabase.h"
+#import "Services/Protobuf/GrowingEventProtobufPersistence.h"
 #import "Services/Protobuf/Proto/GrowingEvent.pbobjc.h"
 
 @interface ProtobufDatabaseTest : XCTestCase
@@ -38,9 +37,9 @@
     NSString *path = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES).firstObject;
     NSURL *pathURL = [NSURL fileURLWithPath:path];
     NSString *dirName = [NSString stringWithFormat:@"%@/%@%@",
-                         @"com.growingio.core" /* kGrowingResidentDirName */,
-                         @"com.growingio." /* kGrowingDirCommonPrefix */,
-                         @"event/XCTest.sqlite"];
+                                                   @"com.growingio.core" /* kGrowingResidentDirName */,
+                                                   @"com.growingio." /* kGrowingDirCommonPrefix */,
+                                                   @"event/XCTest.sqlite"];
     self.path = [pathURL URLByAppendingPathComponent:dirName].path;
 }
 
@@ -65,19 +64,19 @@
 
     // clean expired event if need
     XCTAssertEqual(database.cleanExpiredEventIfNeeded, YES);
-    
+
     // clear all events
     XCTAssertEqual(database.clearAllEvents, YES);
-    
+
     NSInteger count = database.countOfEvents;
-    
+
     // insert single event
     GrowingEventProtobufPersistence *event = self.customEventPersistence;
     XCTAssertEqual([database insertEvent:event], YES);
-        
+
     NSInteger count2 = database.countOfEvents;
     XCTAssertNotEqual(count, count2);
-        
+
     // delete single event
     XCTAssertEqual([database deleteEvent:event.eventUUID], YES);
 
@@ -85,30 +84,28 @@
     NSMutableArray *keys = [NSMutableArray array];
     NSInteger insertCount = 3;
     for (int i = 0; i < insertCount; i++) {
-        GrowingEventProtobufPersistence *e = self.visitEventPersistence; // GrowingEventSendPolicyInstant
+        GrowingEventProtobufPersistence *e = self.visitEventPersistence;  // GrowingEventSendPolicyInstant
         [events addObject:e];
         [keys addObject:e.eventUUID];
     }
 
     // clear all events
     XCTAssertEqual(database.clearAllEvents, YES);
-    
+
     // insert events
     XCTAssertEqual([database insertEvents:events], YES);
-    
-    NSArray *array = [database getEventsByCount:insertCount];
-    XCTAssertEqual(array.count, insertCount);
 
     NSArray *array2 = [database getEventsByCount:insertCount policy:GrowingEventSendPolicyInstant];
     XCTAssertEqual(array2.count, insertCount);
 
     // delete events
     XCTAssertEqual([database deleteEvents:keys], YES);
-    
+
     // last error
     NSString *errorPath = @"errorPath";
     NSError *error = nil;
-    GrowingEventProtobufDatabase *errorDatabase = [GrowingEventProtobufDatabase databaseWithPath:errorPath error:&error];
+    GrowingEventProtobufDatabase *errorDatabase = [GrowingEventProtobufDatabase databaseWithPath:errorPath
+                                                                                           error:&error];
     if (error) {
         // 这里使用一个错误/无权限路径来实现 Database 初始化异常
         // 使用模拟器运行，实测不会因错误/无权限路径导致初始化异常，error 为 nil，不会进到这一步
@@ -122,43 +119,45 @@
 
     // clear all events
     XCTAssertEqual(database.clearAllEvents, YES);
-    
-    GrowingCustomEvent *event = (GrowingCustomEvent *)(GrowingCustomEvent.builder
-                                                       .setEventName(@"custom")
-                                                       .setAttributes(@{@"key" : @"value"})
-                                                       .setPlatform(@"platform")
-                                                       .setPlatformVersion(@"20")
-                                                       .setDeviceId([NSUUID UUID].UUIDString)
-                                                       .setUserId(@"userId")
-                                                       .setSessionId([NSUUID UUID].UUIDString)
-                                                       .setTimestamp(1638857558209)
-                                                       .setDomain(@"com.bundle.id")
-                                                       .setUrlScheme(@"growing.xxxxxx")
-                                                       .setAppState(GrowingAppStateForeground)
-                                                       .setEventSequenceId(999)
-                                                       .setNetworkState(@"5G")
-                                                       .setScreenHeight(1334)
-                                                       .setScreenWidth(750)
-                                                       .setDeviceBrand(@"device brand")
-                                                       .setDeviceModel(@"device model")
-                                                       .setDeviceType(@"device type")
-                                                       .setAppVersion(@"3.0.0")
-                                                       .setAppName(@"Example")
-                                                       .setLanguage(@"zh-Hans-CN")
-                                                       .setLatitude(30.11)
-                                                       .setLongitude(32.22)
-                                                       .setSdkVersion(@"3.3.3")
-                                                       .setUserKey(@"iPhone")
-                                                       .setDataSourceId(@"1234567890")
-                                                       .build);
+
+    GrowingCustomEvent *event = (GrowingCustomEvent *)(GrowingCustomEvent.builder.setEventName(@"custom")
+                                                           .setAttributes(@{@"key": @"value"})
+                                                           .setPlatform(@"platform")
+                                                           .setPlatformVersion(@"20")
+                                                           .setDeviceId([NSUUID UUID].UUIDString)
+                                                           .setUserId(@"userId")
+                                                           .setSessionId([NSUUID UUID].UUIDString)
+                                                           .setTimestamp(1638857558209)
+                                                           .setDomain(@"com.bundle.id")
+                                                           .setUrlScheme(@"growing.xxxxxx")
+                                                           .setAppState(GrowingAppStateForeground)
+                                                           .setEventSequenceId(999)
+                                                           .setNetworkState(@"5G")
+                                                           .setScreenHeight(1334)
+                                                           .setScreenWidth(750)
+                                                           .setDeviceBrand(@"device brand")
+                                                           .setDeviceModel(@"device model")
+                                                           .setDeviceType(@"device type")
+                                                           .setAppVersion(@"3.0.0")
+                                                           .setAppName(@"Example")
+                                                           .setLanguage(@"zh-Hans-CN")
+                                                           .setLatitude(30.11)
+                                                           .setLongitude(32.22)
+                                                           .setSdkVersion(@"3.3.3")
+                                                           .setUserKey(@"iPhone")
+                                                           .setDataSourceId(@"1234567890")
+                                                           .build);
     NSString *uuid = [NSUUID UUID].UUIDString;
     GrowingEventProtobufPersistence *persistenceIn = [GrowingEventProtobufPersistence persistenceEventWithEvent:event
                                                                                                            uuid:uuid];
     // insert
     XCTAssertEqual([database insertEvent:persistenceIn], YES);
-    
+
     NSInteger insertCount = 1;
-    NSArray *array = [database getEventsByCount:5]; // 避免多线程情况下，刚好还有其他事件产生入库，这里数值设定大一点
+    NSArray *array = [database
+        getEventsByCount:5
+                  policy:GrowingEventSendPolicyInstant | GrowingEventSendPolicyMobileData |
+                         GrowingEventSendPolicyWiFi];  // 避免多线程情况下，刚好还有其他事件产生入库，这里数值设定大一点
     XCTAssertGreaterThanOrEqual(array.count, insertCount);
 
     GrowingEventProtobufPersistence *persistenceOut;
@@ -179,7 +178,8 @@
     XCTAssertEqual(event.timestamp, protobuf.timestamp);
     XCTAssertEqualObjects(event.domain ?: @"", protobuf.domain);
     XCTAssertEqualObjects(event.urlScheme ?: @"", protobuf.URLScheme);
-    XCTAssertEqualObjects((event.appState == GrowingAppStateForeground ? @"FOREGROUND" : @"BACKGROUND"), protobuf.appState);
+    XCTAssertEqualObjects((event.appState == GrowingAppStateForeground ? @"FOREGROUND" : @"BACKGROUND"),
+                          protobuf.appState);
     XCTAssertEqual(event.eventSequenceId, protobuf.eventSequenceId);
     // 3.2.0
     XCTAssertEqualObjects(event.networkState ?: @"", protobuf.networkState);
@@ -207,14 +207,12 @@
 
 - (GrowingEventProtobufPersistence *)customEventPersistence {
     GrowingCustomEvent *event = (GrowingCustomEvent *)(GrowingCustomEvent.builder.build);
-    return [GrowingEventProtobufPersistence persistenceEventWithEvent:event
-                                                                uuid:[NSUUID UUID].UUIDString];
+    return [GrowingEventProtobufPersistence persistenceEventWithEvent:event uuid:[NSUUID UUID].UUIDString];
 }
 
 - (GrowingEventProtobufPersistence *)visitEventPersistence {
     GrowingVisitEvent *event = (GrowingVisitEvent *)(GrowingVisitEvent.builder.build);
-    return [GrowingEventProtobufPersistence persistenceEventWithEvent:event
-                                                                uuid:[NSUUID UUID].UUIDString];
+    return [GrowingEventProtobufPersistence persistenceEventWithEvent:event uuid:[NSUUID UUID].UUIDString];
 }
 
 @end

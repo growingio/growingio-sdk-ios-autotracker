@@ -17,7 +17,6 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <XCTest/XCTest.h>
 
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
@@ -69,7 +68,7 @@
         [button safePerformSelector:@selector(__growingHelper_onClick_handle)];
         XCTAssertEqual(a, 4);
     }
-    
+
     {
         UITextField *textField = [[UITextField alloc] init];
         textField.growingHelper_onTextChange = nil;

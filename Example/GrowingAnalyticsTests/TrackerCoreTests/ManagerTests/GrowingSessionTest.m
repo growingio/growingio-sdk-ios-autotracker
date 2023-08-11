@@ -17,17 +17,16 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <XCTest/XCTest.h>
 
-#import "GrowingTrackerCore/Manager/GrowingSession.h"
-#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
-#import "GrowingServiceManager.h"
 #import "GrowingEventDatabaseService.h"
-#import "Services/Protobuf/GrowingEventProtobufDatabase.h"
-#import "MockEventQueue.h"
+#import "GrowingServiceManager.h"
 #import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "InvocationHelper.h"
+#import "MockEventQueue.h"
+#import "Services/Protobuf/GrowingEventProtobufDatabase.h"
 
 @interface GrowingSessionTest : XCTestCase <GrowingUserIdChangedDelegate>
 
@@ -41,11 +40,11 @@
     config.dataCollectionEnabled = YES;
     config.sessionInterval = 5.0f;
     GrowingConfigurationManager.sharedInstance.trackConfiguration = config;
-    
+
     // 避免insertEventToDatabase异常
     [GrowingServiceManager.sharedInstance registerService:@protocol(GrowingPBEventDatabaseService)
                                                 implClass:GrowingEventProtobufDatabase.class];
-    
+
     [GrowingSession startSession];
     [GrowingSession.currentSession generateVisit];
 }
@@ -66,10 +65,10 @@
 - (void)testGenerateVisit {
     GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionEnabled = NO;
     [GrowingSession.currentSession generateVisit];
-    
+
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeVisit];
     XCTAssertEqual(events.count, 0);
-    
+
     GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionEnabled = YES;
     [GrowingSession.currentSession generateVisit];
     NSArray<GrowingBaseEvent *> *events2 = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeVisit];
@@ -84,22 +83,20 @@
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeAppClosed];
         XCTAssertEqual(events.count, 1);
     }
-    
+
     {
         [GrowingSession.currentSession performSelector:@selector(applicationWillResignActive)];
         NSNumber *sessionInterval = [GrowingSession.currentSession safePerformSelector:@selector(sessionInterval)];
         sleep((int)(sessionInterval.longLongValue / 1000LL) + 1);
-        
+
         NSString *oldSessionId = GrowingSession.currentSession.sessionId;
         [GrowingSession.currentSession performSelector:@selector(applicationDidBecomeActive)];
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeVisit];
         XCTAssertEqual(events.count, 1);
         XCTAssertNotEqualObjects(oldSessionId, GrowingSession.currentSession.sessionId);
     }
-    
-    {
-        [GrowingSession.currentSession performSelector:@selector(applicationWillTerminate)];
-    }
+
+    { [GrowingSession.currentSession performSelector:@selector(applicationWillTerminate)]; }
 #pragma clang diagnostic pop
 }
 

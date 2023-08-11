@@ -17,7 +17,6 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <XCTest/XCTest.h>
 
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
@@ -90,17 +89,17 @@
     [a growingHelper_safeSubStringWithLength:1];
     [a growingHelper_sha1];
     [a growingHelper_isValidU];
-    XCTAssertNotNil([[NSString alloc] initWithJsonObject_growingHelper:@{@"key" : @"value"}]);
+    XCTAssertNotNil([[NSString alloc] initWithJsonObject_growingHelper:@{@"key": @"value"}]);
     XCTAssertFalse([NSString growingHelper_isBlankString:@"t"]);
-    a = [@"https://www.baidu.com" growingHelper_absoluteURLStringWithPath:@"path" andQuery:@{@"key" : @"value"}];
+    a = [@"https://www.baidu.com" growingHelper_absoluteURLStringWithPath:@"path" andQuery:@{@"key": @"value"}];
     XCTAssertEqualObjects(a, @"https://www.baidu.com/path?key=value");
     XCTAssertFalse([NSString growingHelper_isEqualStringA:@"A" andStringB:@"B"]);
 }
 
 - (void)testNSURLHelper {
     NSURL *url = [NSURL URLWithString:
-                             @"growing.3612b67ce562c755://growingio/webservice?serviceType=debugger&wsUrl=wss://"
-                             @"gta0.growingio.com/app/0wDaZmQ1/circle/ec7f5925458f458b8ae6f3901cacaa92"];
+                            @"growing.3612b67ce562c755://growingio/webservice?serviceType=debugger&wsUrl=wss://"
+                            @"gta0.growingio.com/app/0wDaZmQ1/circle/ec7f5925458f458b8ae6f3901cacaa92"];
     XCTAssertNotNil(url.growingHelper_queryDict);
 }
 

@@ -17,20 +17,19 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <XCTest/XCTest.h>
 
 #import <WebKit/WebKit.h>
-#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
-#import "Modules/Hybrid/GrowingHybridBridgeProvider.h"
-#import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
-#import "Modules/Hybrid/Events/GrowingHybridPageEvent.h"
-#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
-#import "GrowingTrackerCore/Manager/GrowingSession.h"
-#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
-#import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
-#import "GrowingServiceManager.h"
 #import "GrowingEventDatabaseService.h"
+#import "GrowingServiceManager.h"
+#import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
+#import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Manager/GrowingSession.h"
+#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
+#import "Modules/Hybrid/Events/GrowingHybridPageEvent.h"
+#import "Modules/Hybrid/GrowingHybridBridgeProvider.h"
 #import "Services/Protobuf/GrowingEventProtobufDatabase.h"
 
 @interface GrowingHybridBridgeProvider (XCTest)
@@ -53,7 +52,7 @@
 
 - (void)setUp {
     self.provider = GrowingHybridBridgeProvider.sharedInstance;
-    
+
     [GrowingServiceManager.sharedInstance registerService:@protocol(GrowingPBEventDatabaseService)
                                                 implClass:GrowingEventProtobufDatabase.class];
     [GrowingSession startSession];
@@ -67,7 +66,7 @@
 
     GrowingBaseBuilder *builder = GrowingHybridPageEvent.builder.setQuery(@"QUERY")
                                       .setPath(@"KEY_PATH")
-                                      .setAttributes(@{@"test" : @"value"})
+                                      .setAttributes(@{@"test": @"value"})
                                       .setDomain(@"domain")
                                       .setUserId(@"testUserId")
                                       .setPlatform(@"testPlatform")
@@ -82,9 +81,10 @@
     [self.provider handleJavascriptBridgeMessage:@"{@'messageType':@'messagedata'}"];
     [self.provider dispatchWebViewDomChanged];
     WKWebView *_webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
-    [self.provider getDomTreeForWebView:_webView completionHandler:^(NSDictionary *_Nullable dom, NSError *_Nullable error) {
-       NSLog(@"test");
-    }];
+    [self.provider getDomTreeForWebView:_webView
+                      completionHandler:^(NSDictionary *_Nullable dom, NSError *_Nullable error) {
+                          NSLog(@"test");
+                      }];
     NSString *jsonString =
         @"{\"messageType\":\"dispatchEvent\",\"data\":\"{\"eventType\":\"PAGE\",\"protocolType\":\"http\",\"deviceId\":"
         @"\"4a6e5b29-3a32-42f6-abc0-5bf81beecff9\",\"sessionId\":\"485de03a-7188-49a3-bae2-d915bf17847d\","
@@ -93,7 +93,7 @@
         @"uat.html\",\"platform\":\"web\",\"screenHeight\":844,\"screenWidth\":390,\"sdkVersion\":\"3.3.0\","
         @"\"language\":\"en-us\",\"title\":\"SDKAutoCheck\",\"globalSequenceId\":2,\"eventSequenceId\":1}\"}";
     [self.provider parseEventJsonString:jsonString];
-    
+
     NSDictionary *dict = (NSDictionary *)[jsonString growingHelper_jsonObject];
     builder = [self.provider transformViewElementBuilder:dict];
     XCTAssertNotNil(builder);
@@ -104,21 +104,25 @@
         @"{\"messageType\":\"setNativeUserIdAndUserKey\",\"data\":\"{\\\"userId\\\":\\\"zhangsan2\\\",\\\"userKey\\\":"
         @"\\\"邮箱\\\"}\"}";
     [self.provider handleJavascriptBridgeMessage:dict];
-    
-    [GrowingDispatchManager dispatchInGrowingThread:^{
-        XCTAssertEqualObjects([[GrowingPersistenceDataProvider sharedInstance] loginUserId], @"zhangsan2");
-        XCTAssertEqualObjects([[GrowingPersistenceDataProvider sharedInstance] loginUserKey], @"邮箱");
-    } waitUntilDone:YES];
+
+    [GrowingDispatchManager
+        dispatchInGrowingThread:^{
+            XCTAssertEqualObjects([[GrowingPersistenceDataProvider sharedInstance] loginUserId], @"zhangsan2");
+            XCTAssertEqualObjects([[GrowingPersistenceDataProvider sharedInstance] loginUserKey], @"邮箱");
+        }
+                  waitUntilDone:YES];
 }
 
 - (void)testClearNativeUserIdAndUserKey {
-    NSDictionary *dict = @{@"messageType" : @"clearNativeUserIdAndUserKey", @"data" : @""};
+    NSDictionary *dict = @{@"messageType": @"clearNativeUserIdAndUserKey", @"data": @""};
     [self.provider handleJavascriptBridgeMessage:[dict growingHelper_jsonString]];
-    
-    [GrowingDispatchManager dispatchInGrowingThread:^{
-        XCTAssertEqualObjects([[GrowingPersistenceDataProvider sharedInstance] loginUserId], @"");
-        XCTAssertEqualObjects([[GrowingPersistenceDataProvider sharedInstance] loginUserKey], @"");
-    } waitUntilDone:YES];
+
+    [GrowingDispatchManager
+        dispatchInGrowingThread:^{
+            XCTAssertEqualObjects([[GrowingPersistenceDataProvider sharedInstance] loginUserId], @"");
+            XCTAssertEqualObjects([[GrowingPersistenceDataProvider sharedInstance] loginUserKey], @"");
+        }
+                  waitUntilDone:YES];
 }
 
 @end
