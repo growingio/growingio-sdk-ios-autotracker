@@ -143,11 +143,6 @@ const int GrowingTrackerVersionCode = 40000;
     [GrowingEventGenerator generateCustomEvent:eventName attributes:attributes];
 }
 
-- (void)trackCustomEvent:(NSString *)eventName withAttributesBuilder:(GrowingAttributesBuilder *)attributesBuilder {
-    NSDictionary *attributes = attributesBuilder.build;
-    [self trackCustomEvent:eventName withAttributes:attributes];
-}
-
 - (void)setLoginUserAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
     if ([GrowingArgumentChecker isIllegalAttributes:attributes]) {
         return;
@@ -191,11 +186,6 @@ const int GrowingTrackerVersionCode = 40000;
     [GrowingEventTimer trackTimerEnd:timerId withAttributes:attributes];
 }
 
-- (void)trackTimerEnd:(NSString *)timerId withAttributesBuilder:(GrowingAttributesBuilder *)attributesBuilder {
-    NSDictionary *attributes = attributesBuilder.build;
-    [self trackTimerEnd:timerId withAttributes:attributes];
-}
-
 - (void)removeTimer:(NSString *)timerId {
     if ([GrowingArgumentChecker isIllegalEventName:timerId]) {
         return;
@@ -205,35 +195,6 @@ const int GrowingTrackerVersionCode = 40000;
 
 - (void)clearTrackTimer {
     [GrowingEventTimer clearAllTimers];
-}
-
-- (void)setLoginUserAttributesWithAttributesBuilder:(GrowingAttributesBuilder *)attributesBuilder {
-    NSDictionary *attributes = attributesBuilder.build;
-    [self setLoginUserAttributes:attributes];
-}
-
-- (void)setVisitorAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
-    if ([GrowingArgumentChecker isIllegalAttributes:attributes]) {
-        return;
-    }
-    [GrowingEventGenerator generateVisitorAttributesEvent:attributes];
-}
-
-- (void)setVisitorAttributesWithAttributesBuilder:(GrowingAttributesBuilder *)attributesBuilder {
-    NSDictionary *attributes = attributesBuilder.build;
-    [self setVisitorAttributes:attributes];
-}
-
-- (void)setConversionVariables:(NSDictionary<NSString *, NSString *> *)variables {
-    if ([GrowingArgumentChecker isIllegalAttributes:variables]) {
-        return;
-    }
-    [GrowingEventGenerator generateConversionAttributesEvent:variables];
-}
-
-- (void)setConversionVariablesWithAttributesBuilder:(GrowingAttributesBuilder *)attributesBuilder {
-    NSDictionary *attributes = attributesBuilder.build;
-    [self setConversionVariables:attributes];
 }
 
 - (void)setLoginUserId:(NSString *)userId {

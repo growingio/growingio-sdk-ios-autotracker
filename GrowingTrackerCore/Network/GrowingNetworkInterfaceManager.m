@@ -81,21 +81,7 @@
         return @"WIFI";
 #if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
     } else if (self.WWANValid) {
-        NSArray *typeStrings2G =
-            @[CTRadioAccessTechnologyEdge, CTRadioAccessTechnologyGPRS, CTRadioAccessTechnologyCDMA1x];
-
-        NSArray *typeStrings3G = @[
-            CTRadioAccessTechnologyHSDPA,
-            CTRadioAccessTechnologyWCDMA,
-            CTRadioAccessTechnologyHSUPA,
-            CTRadioAccessTechnologyCDMAEVDORev0,
-            CTRadioAccessTechnologyCDMAEVDORevA,
-            CTRadioAccessTechnologyCDMAEVDORevB,
-            CTRadioAccessTechnologyeHRPD
-        ];
-
         NSArray *typeStrings4G = @[CTRadioAccessTechnologyLTE];
-
         NSString *accessString = CTRadioAccessTechnologyLTE;  // default 4G
         if (@available(iOS 12.0, *)) {
             if ([self.teleInfo respondsToSelector:@selector(serviceCurrentRadioAccessTechnology)]) {
@@ -110,10 +96,6 @@
 
         if ([typeStrings4G containsObject:accessString]) {
             return @"4G";
-        } else if ([typeStrings3G containsObject:accessString]) {
-            return @"3G";
-        } else if ([typeStrings2G containsObject:accessString]) {
-            return @"2G";
 #if defined(__IPHONE_14_1) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_14_1)
         } else if (@available(iOS 14.1, *)) {
             NSArray *typeStrings5G = @[CTRadioAccessTechnologyNR, CTRadioAccessTechnologyNRNSA];

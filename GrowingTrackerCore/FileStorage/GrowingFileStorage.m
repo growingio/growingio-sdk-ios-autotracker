@@ -264,17 +264,4 @@ NSString *const kGrowingDirCommonPrefix = @"com.growingio.";
     [self setData:data forKey:key];
 }
 
-- (NSData *_Nullable)dataFromJSON:(id)json {
-    if (json == nil) {
-        return nil;
-    }
-
-    NSError *error = nil;
-    NSData *data = [NSJSONSerialization dataWithJSONObject:json options:0 error:&error];
-    if (error) {
-        GIOLogError(@"Unable to serialize data from json object; %@, %@", error, json);
-    }
-    return data;
-}
-
 @end

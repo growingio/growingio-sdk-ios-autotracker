@@ -21,7 +21,6 @@
 #import <Foundation/Foundation.h>
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
-#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 
 @implementation GrowingNetworkConfig
 
@@ -33,25 +32,6 @@ static GrowingNetworkConfig *sharedInstance;
         sharedInstance = [[self alloc] init];
     });
     return sharedInstance;
-}
-
-+ (NSString *)generateValidEndPoint:(NSString *)customHost {
-    NSString *validEndPoint =
-        [[customHost stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] copy];
-    if (!validEndPoint.length) {
-        GIOLogError(@"An empty string is set as tracker host.");
-        return @"";
-    }
-    if (![validEndPoint hasPrefix:@"http://"] && ![validEndPoint hasPrefix:@"https://"]) {
-        validEndPoint = [NSString stringWithFormat:@"https://%@", validEndPoint];
-    }
-
-    NSURL *url = [NSURL URLWithString:validEndPoint];
-    if (url == nil) {
-        GIOLogError(@"An Invalid URL is set as tracker host.");
-        return @"";
-    }
-    return validEndPoint;
 }
 
 // 获取url字段
@@ -68,13 +48,6 @@ static GrowingNetworkConfig *sharedInstance;
     NSString *accountId = [GrowingConfigurationManager sharedInstance].trackConfiguration.projectId ?: @"";
     NSString *path = [NSString stringWithFormat:@"v3/projects/%@/collect", accountId];
     return path;
-}
-
-- (void)setCustomDataHost:(NSString *)customHost {
-    NSString *validEndPoint = [GrowingNetworkConfig generateValidEndPoint:customHost];
-    if (validEndPoint.length) {
-        _customDataHost = validEndPoint;
-    }
 }
 
 - (NSString *)growingApiHostEnd {
