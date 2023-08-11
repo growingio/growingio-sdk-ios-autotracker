@@ -19,12 +19,12 @@
 
 #import <XCTest/XCTest.h>
 
+#import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
+#import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
+#import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
 #import "InvocationHelper.h"
 #import "Services/JSON/GrowingEventJSONDatabase.h"
 #import "Services/JSON/GrowingEventJSONPersistence.h"
-#import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
-#import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
-#import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
 
 @interface JSONDatabaseTest : XCTestCase
 
@@ -90,9 +90,6 @@
     // insert events
     XCTAssertEqual([database insertEvents:events], YES);
 
-    NSArray *array = [database getEventsByCount:insertCount];
-    XCTAssertEqual(array.count, insertCount);
-
     NSArray *array2 = [database getEventsByCount:insertCount policy:GrowingEventSendPolicyInstant];
     XCTAssertEqual(array2.count, insertCount);
 
@@ -117,34 +114,33 @@
     // clear all events
     XCTAssertEqual(database.clearAllEvents, YES);
 
-    GrowingCustomEvent *event =
-        (GrowingCustomEvent *)(GrowingCustomEvent.builder.setEventName(@"custom")
-                                   .setAttributes(@{@"key": @"value"})
-                                   .setPlatform(@"platform")
-                                   .setPlatformVersion(@"20")
-                                   .setDeviceId([NSUUID UUID].UUIDString)
-                                   .setUserId(@"userId")
-                                   .setSessionId([NSUUID UUID].UUIDString)
-                                   .setTimestamp(1638857558209)
-                                   .setDomain(@"com.bundle.id")
-                                   .setUrlScheme(@"growing.xxxxxx")
-                                   .setAppState(GrowingAppStateForeground)
-                                   .setEventSequenceId(999)
-                                   .setNetworkState(@"5G")
-                                   .setScreenHeight(1334)
-                                   .setScreenWidth(750)
-                                   .setDeviceBrand(@"device brand")
-                                   .setDeviceModel(@"device model")
-                                   .setDeviceType(@"device type")
-                                   .setAppVersion(@"3.0.0")
-                                   .setAppName(@"Example")
-                                   .setLanguage(@"zh-Hans-CN")
-                                   .setLatitude(30.11)
-                                   .setLongitude(32.22)
-                                   .setSdkVersion(@"3.3.3")
-                                   .setUserKey(@"iPhone")
-                                   .setDataSourceId(@"1234567890")
-                                   .build);
+    GrowingCustomEvent *event = (GrowingCustomEvent *)(GrowingCustomEvent.builder.setEventName(@"custom")
+                                                           .setAttributes(@{@"key": @"value"})
+                                                           .setPlatform(@"platform")
+                                                           .setPlatformVersion(@"20")
+                                                           .setDeviceId([NSUUID UUID].UUIDString)
+                                                           .setUserId(@"userId")
+                                                           .setSessionId([NSUUID UUID].UUIDString)
+                                                           .setTimestamp(1638857558209)
+                                                           .setDomain(@"com.bundle.id")
+                                                           .setUrlScheme(@"growing.xxxxxx")
+                                                           .setAppState(GrowingAppStateForeground)
+                                                           .setEventSequenceId(999)
+                                                           .setNetworkState(@"5G")
+                                                           .setScreenHeight(1334)
+                                                           .setScreenWidth(750)
+                                                           .setDeviceBrand(@"device brand")
+                                                           .setDeviceModel(@"device model")
+                                                           .setDeviceType(@"device type")
+                                                           .setAppVersion(@"3.0.0")
+                                                           .setAppName(@"Example")
+                                                           .setLanguage(@"zh-Hans-CN")
+                                                           .setLatitude(30.11)
+                                                           .setLongitude(32.22)
+                                                           .setSdkVersion(@"3.3.3")
+                                                           .setUserKey(@"iPhone")
+                                                           .setDataSourceId(@"1234567890")
+                                                           .build);
     NSString *uuid = [NSUUID UUID].UUIDString;
     GrowingEventJSONPersistence *persistenceIn = [GrowingEventJSONPersistence persistenceEventWithEvent:event
                                                                                                    uuid:uuid];
@@ -152,7 +148,10 @@
     XCTAssertEqual([database insertEvent:persistenceIn], YES);
 
     NSInteger insertCount = 1;
-    NSArray *array = [database getEventsByCount:5];  // 避免多线程情况下，刚好还有其他事件产生入库，这里数值设定大一点
+    NSArray *array = [database
+        getEventsByCount:5
+                  policy:GrowingEventSendPolicyInstant | GrowingEventSendPolicyMobileData |
+                         GrowingEventSendPolicyWiFi];  // 避免多线程情况下，刚好还有其他事件产生入库，这里数值设定大一点
     XCTAssertGreaterThanOrEqual(array.count, insertCount);
 
     GrowingEventJSONPersistence *persistenceOut;
@@ -200,12 +199,12 @@
 }
 
 - (GrowingEventJSONPersistence *)customEventPersistence {
-    GrowingCustomEvent *event = (GrowingCustomEvent *)(GrowingCustomEvent.builder.build);
+    GrowingCustomEvent *event = (GrowingCustomEvent *)(GrowingCustomEvent.builder.setSdkVersion(@"4.0.0").build);
     return [GrowingEventJSONPersistence persistenceEventWithEvent:event uuid:[NSUUID UUID].UUIDString];
 }
 
 - (GrowingEventJSONPersistence *)visitEventPersistence {
-    GrowingVisitEvent *event = (GrowingVisitEvent *)(GrowingVisitEvent.builder.build);
+    GrowingVisitEvent *event = (GrowingVisitEvent *)(GrowingVisitEvent.builder.setSdkVersion(@"4.0.0").build);
     return [GrowingEventJSONPersistence persistenceEventWithEvent:event uuid:[NSUUID UUID].UUIDString];
 }
 

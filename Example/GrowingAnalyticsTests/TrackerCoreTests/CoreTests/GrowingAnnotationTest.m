@@ -17,7 +17,6 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <XCTest/XCTest.h>
 
 #import "GrowingAnnotationCore.h"
@@ -42,7 +41,7 @@ GrowingService(GrowingAnnotationTestService, GrowingAnnotationTest)
 
 - (void)testAnnotationMethod {
     growing_section section = growingSectionDataModule();
-    XCTAssertTrue(section.count != 0,"growing_section can`t be nil");
+    XCTAssertTrue(section.count != 0, "growing_section can`t be nil");
     BOOL isFindMod = NO;
     for (int i = 0; i < section.count; i++) {
         char *string = (char *)section.charAddress[i];

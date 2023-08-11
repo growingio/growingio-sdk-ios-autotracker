@@ -17,12 +17,11 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <XCTest/XCTest.h>
-#import "Services/Protobuf/GrowingEventProtobufPersistence.h"
 #import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
-#import "Services/Protobuf/Proto/GrowingEvent.pbobjc.h"
 #import "Services/Protobuf/Catagory/GrowingBaseEvent+Protobuf.h"
+#import "Services/Protobuf/GrowingEventProtobufPersistence.h"
+#import "Services/Protobuf/Proto/GrowingEvent.pbobjc.h"
 
 @interface ProtobufPersistenceTest : XCTestCase
 
@@ -34,10 +33,8 @@
 
 - (void)setUp {
     // Put setup code here. This method is called before the invocation of each test method in the class.
-    self.event = (GrowingCustomEvent *)(GrowingCustomEvent.builder
-                                        .setEventName(@"custom")
-                                        .setAttributes(@{@"key": @"value"})
-                                        .build);
+    self.event = (GrowingCustomEvent
+                      *)(GrowingCustomEvent.builder.setEventName(@"custom").setAttributes(@{@"key": @"value"}).build);
 }
 
 - (void)tearDown {
@@ -50,7 +47,8 @@
     GrowingEventProtobufPersistence *p = [[GrowingEventProtobufPersistence alloc] initWithUUID:uuid
                                                                                      eventType:self.event.eventType
                                                                                           data:protobuf.data
-                                                                                        policy:self.event.sendPolicy];
+                                                                                        policy:self.event.sendPolicy
+                                                                                    sdkVersion:self.event.sdkVersion];
     XCTAssertNotNil(p);
     XCTAssertEqualObjects(p.eventUUID, uuid);
     XCTAssertEqualObjects(p.eventType, self.event.eventType);
@@ -60,7 +58,8 @@
 
 - (void)testPersistenceWithEvent {
     NSString *uuid = [NSUUID UUID].UUIDString;
-    GrowingEventProtobufPersistence *p = [GrowingEventProtobufPersistence persistenceEventWithEvent:self.event uuid:uuid];
+    GrowingEventProtobufPersistence *p = [GrowingEventProtobufPersistence persistenceEventWithEvent:self.event
+                                                                                               uuid:uuid];
     XCTAssertNotNil(p);
     XCTAssertEqualObjects(p.eventUUID, uuid);
     XCTAssertEqualObjects(p.eventType, self.event.eventType);
@@ -69,12 +68,12 @@
 }
 
 - (void)testBuildRawEventsFromEvents {
-    GrowingEventProtobufPersistence *p1 = [GrowingEventProtobufPersistence persistenceEventWithEvent:self.event
-                                                                                               uuid:[NSUUID UUID].UUIDString];
-    GrowingEventProtobufPersistence *p2 = [GrowingEventProtobufPersistence persistenceEventWithEvent:self.event
-                                                                                                uuid:[NSUUID UUID].UUIDString];
-    GrowingEventProtobufPersistence *p3 = [GrowingEventProtobufPersistence persistenceEventWithEvent:self.event
-                                                                                                uuid:[NSUUID UUID].UUIDString];
+    GrowingEventProtobufPersistence *p1 =
+        [GrowingEventProtobufPersistence persistenceEventWithEvent:self.event uuid:[NSUUID UUID].UUIDString];
+    GrowingEventProtobufPersistence *p2 =
+        [GrowingEventProtobufPersistence persistenceEventWithEvent:self.event uuid:[NSUUID UUID].UUIDString];
+    GrowingEventProtobufPersistence *p3 =
+        [GrowingEventProtobufPersistence persistenceEventWithEvent:self.event uuid:[NSUUID UUID].UUIDString];
     NSData *data = [GrowingEventProtobufPersistence buildRawEventsFromEvents:@[p1, p2, p3]];
     XCTAssertNotNil(data);
     GrowingPBEventV3List *list = [GrowingPBEventV3List parseFromData:data error:nil];
@@ -87,8 +86,8 @@
 }
 
 - (void)testPersistenceToJSONObject {
-    GrowingEventProtobufPersistence *p = [GrowingEventProtobufPersistence persistenceEventWithEvent:self.event
-                                                                                               uuid:[NSUUID UUID].UUIDString];
+    GrowingEventProtobufPersistence *p =
+        [GrowingEventProtobufPersistence persistenceEventWithEvent:self.event uuid:[NSUUID UUID].UUIDString];
     XCTAssertNotNil(p);
     id jsonObject = p.toJSONObject;
     XCTAssertNotNil(jsonObject);

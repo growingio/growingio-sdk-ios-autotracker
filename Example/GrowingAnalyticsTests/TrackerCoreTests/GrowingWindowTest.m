@@ -42,7 +42,8 @@
                                                                             [UIScreen mainScreen].bounds.size.height)];
     XCTAssertTrue(window.rootViewController.shouldAutorotate);
     XCTAssertEqual(window.rootViewController.supportedInterfaceOrientations, UIInterfaceOrientationMaskAll);
-    XCTAssertEqual(window.rootViewController.preferredInterfaceOrientationForPresentation, [[UIApplication sharedApplication]statusBarOrientation]);
+    XCTAssertEqual(window.rootViewController.preferredInterfaceOrientationForPresentation,
+                   [[UIApplication sharedApplication] statusBarOrientation]);
 }
 
 - (void)testGrowingWindow {
@@ -63,11 +64,10 @@
     }
     XCTAssertNoThrow([sharedInstance hitTest:CGPointMake(0, 0) withEvent:nil]);
 
-
     GrowingWindowView *windowView = [[GrowingWindowView alloc] init];
     windowView.growingViewLevel = 2;
     XCTAssertEqual(windowView.growingViewLevel, 2);
-    
+
     XCTAssertNoThrow([window hitTest:CGPointMake(0, 0) withEvent:nil]);
 #pragma clang diagnostic pop
 }

@@ -17,26 +17,25 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <XCTest/XCTest.h>
 
+#import "GrowingAutotrackerCore/Autotrack/UITableView+GrowingAutotracker.h"
+#import "GrowingAutotrackerCore/GrowingRealAutotracker.h"
+#import "GrowingEventDatabaseService.h"
+#import "GrowingServiceManager.h"
+#import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
-#import "GrowingServiceManager.h"
-#import "GrowingEventDatabaseService.h"
-#import "Services/Protobuf/GrowingEventProtobufDatabase.h"
-#import "GrowingAutotrackerCore/Autotrack/UITableView+GrowingAutotracker.h"
-#import "MockEventQueue.h"
-#import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
 #import "InvocationHelper.h"
-#import "GrowingAutotrackerCore/GrowingRealAutotracker.h"
+#import "MockEventQueue.h"
+#import "Services/Protobuf/GrowingEventProtobufDatabase.h"
 
 // 可配置growingNodeDonotTrack，从而配置可否生成VIEW_CLICK，以供测试
 // -------------------------------------------------------------------------------
 // UITableViewCell
 @interface AutotrackUITableViewCell_XCTest : UITableViewCell
 
-@property(nonatomic, assign) BOOL growingNodeDonotTrack_XCTest;
+@property (nonatomic, assign) BOOL growingNodeDonotTrack_XCTest;
 
 @end
 
@@ -55,7 +54,7 @@
 // UITableView
 @interface AutotrackUITableView_XCTest : UITableView
 
-@property(nonatomic, assign) BOOL growingNodeDonotTrack_XCTest;
+@property (nonatomic, assign) BOOL growingNodeDonotTrack_XCTest;
 
 @end
 
@@ -80,15 +79,15 @@
 
 @interface AutotrackUITableView_Delegate_2_XCTest : NSObject <UITableViewDelegate>
 
-@property (nonatomic, weak) id <UITableViewDelegate> target;
+@property (nonatomic, weak) id<UITableViewDelegate> target;
 
-- (instancetype)initWithTarget:(id <UITableViewDelegate>)target;
+- (instancetype)initWithTarget:(id<UITableViewDelegate>)target;
 
 @end
 
 @interface UITableViewAutotrackTest : XCTestCase <UITableViewDelegate>
 
-@property (nonatomic, strong) id <UITableViewDelegate> delegate;
+@property (nonatomic, strong) id<UITableViewDelegate> delegate;
 
 @end
 
@@ -102,7 +101,7 @@
     // 避免不执行readPropertyInTrackThread
     config.dataCollectionEnabled = YES;
     GrowingConfigurationManager.sharedInstance.trackConfiguration = config;
-    
+
     // 避免insertEventToDatabase异常
     [GrowingServiceManager.sharedInstance registerService:@protocol(GrowingPBEventDatabaseService)
                                                 implClass:GrowingEventProtobufDatabase.class];
@@ -121,11 +120,12 @@
 }
 
 - (void)test01UITableViewAutotrack {
-    AutotrackUITableView_XCTest *tableView = [[AutotrackUITableView_XCTest alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+    AutotrackUITableView_XCTest *tableView =
+        [[AutotrackUITableView_XCTest alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
     tableView.delegate = self;
-    
+
     [tableView.delegate tableView:tableView didSelectRowAtIndexPath:[NSIndexPath indexPathWithIndex:0]];
-    
+
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
     XCTAssertEqual(events.count, 1);
 }
@@ -134,18 +134,19 @@ static BOOL kDelegateDidCalled = NO;
 static BOOL kRealDelegateDidCalled = NO;
 - (void)test02UITableViewRealDelegate {
     // 普通 delegate 对象，仅实现了 UITableViewDelegate 方法
-    AutotrackUITableView_XCTest *tableView = [[AutotrackUITableView_XCTest alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+    AutotrackUITableView_XCTest *tableView =
+        [[AutotrackUITableView_XCTest alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
     self.delegate = [AutotrackUITableView_Delegate_XCTest new];
     tableView.delegate = self.delegate;
-    
+
     kDelegateDidCalled = NO;
     kRealDelegateDidCalled = NO;
     [tableView.delegate tableView:tableView didSelectRowAtIndexPath:[NSIndexPath indexPathWithIndex:0]];
-    
+
     // 触发了无埋点点击事件
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
     XCTAssertEqual(events.count, 1);
-    
+
     // 触发了 AutotrackUITableView_Delegate_XCTest didSelectRowAtIndexPath
     XCTAssertTrue(kRealDelegateDidCalled);
 }
@@ -153,22 +154,23 @@ static BOOL kRealDelegateDidCalled = NO;
 - (void)test03UITableViewRealDelegate_2 {
     // 特殊 delegate 对象，实现了 UITableViewDelegate 方法，并重写了 class 方法
     // 模拟动态子类
-    AutotrackUITableView_XCTest *tableView = [[AutotrackUITableView_XCTest alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+    AutotrackUITableView_XCTest *tableView =
+        [[AutotrackUITableView_XCTest alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
     self.delegate = [[AutotrackUITableView_Delegate_2_XCTest alloc] initWithTarget:self];
     tableView.delegate = self.delegate;
-    
+
     kDelegateDidCalled = NO;
     kRealDelegateDidCalled = NO;
     [tableView.delegate tableView:tableView didSelectRowAtIndexPath:[NSIndexPath indexPathWithIndex:0]];
-    
+
     // 触发了无埋点点击事件
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
     // 因为上面 test01UITableViewAutotrack 也对 self 进行了 hook，所以如果一起执行这里会等于 2
     XCTAssertGreaterThanOrEqual(events.count, 1);
-    
+
     // 触发了 UITableViewAutotrackTest didSelectRowAtIndexPath
     XCTAssertTrue(kDelegateDidCalled);
-    
+
     // 触发了 AutotrackUITableView_Delegate_2_XCTest didSelectRowAtIndexPath
     XCTAssertTrue(kRealDelegateDidCalled);
 }
@@ -197,7 +199,7 @@ static BOOL kRealDelegateDidCalled = NO;
 
 @implementation AutotrackUITableView_Delegate_2_XCTest
 
-- (instancetype)initWithTarget:(id <UITableViewDelegate>)target {
+- (instancetype)initWithTarget:(id<UITableViewDelegate>)target {
     if (self = [super init]) {
         _target = target;
     }

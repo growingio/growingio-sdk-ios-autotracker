@@ -28,11 +28,9 @@
 @implementation DeepLinkTest
 
 - (void)setUp {
-
 }
 
 - (void)tearDown {
-
 }
 
 - (void)testDeepLinkhandlerUrl {

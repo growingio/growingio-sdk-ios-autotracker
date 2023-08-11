@@ -43,15 +43,21 @@
     XCTAssertNotNil(sharedInstance);
     XCTAssertNoThrow([sharedInstance safePerformSelector:@selector(setupAppStateNotification)]);
     XCTAssertNoThrow([sharedInstance safePerformSelector:@selector(addSceneNotification)]);
-    
+
     XCTAssertNoThrow([sharedInstance addAppLifecycleDelegate:self]);
-    
-    [NSNotificationCenter.defaultCenter postNotificationName:UIApplicationDidFinishLaunchingNotification object:UIApplication.sharedApplication];
-    [NSNotificationCenter.defaultCenter postNotificationName:UIApplicationWillTerminateNotification object:UIApplication.sharedApplication];
-    [NSNotificationCenter.defaultCenter postNotificationName:UIApplicationDidBecomeActiveNotification object:UIApplication.sharedApplication];
-    [NSNotificationCenter.defaultCenter postNotificationName:UIApplicationWillEnterForegroundNotification object:UIApplication.sharedApplication];
-    [NSNotificationCenter.defaultCenter postNotificationName:UIApplicationWillResignActiveNotification object:UIApplication.sharedApplication];
-    [NSNotificationCenter.defaultCenter postNotificationName:UIApplicationDidEnterBackgroundNotification object:UIApplication.sharedApplication];
+
+    [NSNotificationCenter.defaultCenter postNotificationName:UIApplicationDidFinishLaunchingNotification
+                                                      object:UIApplication.sharedApplication];
+    [NSNotificationCenter.defaultCenter postNotificationName:UIApplicationWillTerminateNotification
+                                                      object:UIApplication.sharedApplication];
+    [NSNotificationCenter.defaultCenter postNotificationName:UIApplicationDidBecomeActiveNotification
+                                                      object:UIApplication.sharedApplication];
+    [NSNotificationCenter.defaultCenter postNotificationName:UIApplicationWillEnterForegroundNotification
+                                                      object:UIApplication.sharedApplication];
+    [NSNotificationCenter.defaultCenter postNotificationName:UIApplicationWillResignActiveNotification
+                                                      object:UIApplication.sharedApplication];
+    [NSNotificationCenter.defaultCenter postNotificationName:UIApplicationDidEnterBackgroundNotification
+                                                      object:UIApplication.sharedApplication];
 
     XCTAssertNoThrow([sharedInstance removeAppLifecycleDelegate:self]);
     sharedInstance = nil;
@@ -61,27 +67,21 @@
 #pragma mark - GrowingULAppLifecycleDelegate
 
 - (void)applicationDidFinishLaunching:(NSDictionary *)userInfo {
-    
 }
 
 - (void)applicationWillTerminate {
-    
 }
 
 - (void)applicationDidBecomeActive {
-    
 }
 
 - (void)applicationWillResignActive {
-    
 }
 
 - (void)applicationDidEnterBackground {
-    
 }
 
 - (void)applicationWillEnterForeground {
-    
 }
 
 @end

@@ -102,14 +102,6 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
     return [self growingHandlerUrl:url isManual:NO callback:nil];
 }
 
-#pragma mark - GrowingEventInterceptor
-
-- (void)growingEventManagerChannels:(NSMutableArray<GrowingEventChannel *> *)channels {
-    [channels addObject:[GrowingEventChannel eventChannelWithName:@"Advert"
-                                                       eventTypes:@[GrowingEventTypeActivate]
-                                                  isRealtimeEvent:YES]];
-}
-
 #pragma mark - GrowingULAppLifecycleDelegate
 
 - (void)applicationDidBecomeActive {

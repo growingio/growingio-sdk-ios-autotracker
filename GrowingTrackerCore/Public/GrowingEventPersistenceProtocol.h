@@ -28,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *eventType;
 @property (nonatomic, strong, readonly) id data;
 @property (nonatomic, assign, readonly) GrowingEventSendPolicy policy;
+@property (nonatomic, copy, readonly) NSString *sdkVersion;
 
 + (instancetype)persistenceEventWithEvent:(GrowingBaseEvent *)event uuid:(NSString *)uuid;
 
@@ -38,7 +39,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithUUID:(NSString *)uuid
                    eventType:(NSString *)eventType
                         data:(id)data
-                      policy:(GrowingEventSendPolicy)policy;
+                      policy:(GrowingEventSendPolicy)policy
+                  sdkVersion:(NSString *)sdkVersion;
 
 - (id)toJSONObject;
 

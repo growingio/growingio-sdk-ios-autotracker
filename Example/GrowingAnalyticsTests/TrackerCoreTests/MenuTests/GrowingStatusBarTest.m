@@ -17,7 +17,6 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <XCTest/XCTest.h>
 
 #import "GrowingTrackerCore/Menu/GrowingStatusBar.h"
@@ -38,12 +37,13 @@
 }
 
 - (void)testGrowingStatusBar {
-    GrowingStatusBar *statusBar = [[GrowingStatusBar alloc] initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, 20)];
+    GrowingStatusBar *statusBar =
+        [[GrowingStatusBar alloc] initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, 20)];
     [statusBar setNeedsLayout];
     [statusBar layoutIfNeeded];
     [statusBar hitTest:CGPointMake(0, 0) withEvent:nil];
     [statusBar setOnButtonClick:^{
-        
+
     }];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
@@ -51,6 +51,5 @@
 #pragma clang diagnostic pop
     statusBar = nil;
 }
-
 
 @end

@@ -19,10 +19,10 @@
 
 #import <XCTest/XCTest.h>
 
+#import <objc/message.h>
+#import <objc/runtime.h>
 #import "GrowingULSwizzle.h"
 #import "GrowingULSwizzler.h"
-#import <objc/runtime.h>
-#import <objc/message.h>
 
 static NSInteger b = 0;
 
@@ -113,7 +113,8 @@ static NSInteger b = 0;
 - (void)delegateSelector {
 }
 
-static void fooMethod(id obj, SEL _cmd) {}
+static void fooMethod(id obj, SEL _cmd) {
+}
 
 + (BOOL)resolveInstanceMethod:(SEL)sel {
     if (sel == @selector(delegateSelector2)) {

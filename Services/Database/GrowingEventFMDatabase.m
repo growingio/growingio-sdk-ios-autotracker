@@ -106,38 +106,24 @@
     return count;
 }
 
-- (nullable NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsByCount:(NSUInteger)count {
-    if (self.countOfEvents == 0) {
-        return [[NSArray alloc] init];
-    }
-
-    NSMutableArray<id<GrowingEventPersistenceProtocol>> *events = [[NSMutableArray alloc] init];
-    [self enumerateKeysAndValuesUsingBlock:^(NSString *key, id value, NSString *type, NSUInteger policy, BOOL **stop) {
-        id<GrowingEventPersistenceProtocol> event = [[self.class.persistenceClass alloc] initWithUUID:key
-                                                                                            eventType:type
-                                                                                                 data:value
-                                                                                               policy:policy];
-        [events addObject:event];
-        if (events.count >= count) {
-            **stop = YES;
-        }
-    }];
-
-    return events.count != 0 ? events : nil;
-}
-
 - (nullable NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsByCount:(NSUInteger)count policy:(NSUInteger)mask {
     if (self.countOfEvents == 0) {
         return [[NSArray alloc] init];
     }
 
     NSMutableArray<id<GrowingEventPersistenceProtocol>> *events = [[NSMutableArray alloc] init];
-    [self enumerateKeysAndValuesUsingBlock:^(NSString *key, id value, NSString *type, NSUInteger policy, BOOL **stop) {
+    [self enumerateKeysAndValuesUsingBlock:^(NSString *key,
+                                             id value,
+                                             NSString *type,
+                                             NSUInteger policy,
+                                             NSString *sdkVersion,
+                                             BOOL **stop) {
         if (mask & policy) {
             id<GrowingEventPersistenceProtocol> event = [[self.class.persistenceClass alloc] initWithUUID:key
                                                                                                 eventType:type
                                                                                                      data:value
-                                                                                                   policy:policy];
+                                                                                                   policy:policy
+                                                                                               sdkVersion:sdkVersion];
             [events addObject:event];
             if (events.count >= count) {
                 **stop = YES;
@@ -155,12 +141,14 @@
             self.databaseError = error;
             return;
         }
-        result = [db executeUpdate:@"INSERT INTO namedcachetable(key,value,createAt,type,policy) values(?,?,?,?,?)",
-                                   event.eventUUID,
-                                   event.data,
-                                   @([GrowingULTimeUtil currentTimeMillis]),
-                                   event.eventType,
-                                   @(event.policy)];
+        result = [db
+            executeUpdate:@"INSERT INTO namedcachetable(key,value,createAt,type,sdkVersion,policy) values(?,?,?,?,?,?)",
+                          event.eventUUID,
+                          event.data,
+                          @([GrowingULTimeUtil currentTimeMillis]),
+                          event.eventType,
+                          event.sdkVersion,
+                          @(event.policy)];
 
         if (!result) {
             self.databaseError = [self writeErrorInDatabase:db];
@@ -183,12 +171,15 @@
         }
         for (int i = 0; i < events.count; i++) {
             id<GrowingEventPersistenceProtocol> event = events[i];
-            result = [db executeUpdate:@"INSERT INTO namedcachetable(key,value,createAt,type,policy) values(?,?,?,?,?)",
-                                       event.eventUUID,
-                                       event.data,
-                                       @([GrowingULTimeUtil currentTimeMillis]),
-                                       event.eventType,
-                                       @(event.policy)];
+            result =
+                [db executeUpdate:
+                        @"INSERT INTO namedcachetable(key,value,createAt,type,sdkVersion,policy) values(?,?,?,?,?,?)",
+                        event.eventUUID,
+                        event.data,
+                        @([GrowingULTimeUtil currentTimeMillis]),
+                        event.eventType,
+                        event.sdkVersion,
+                        @(event.policy)];
 
             if (!result) {
                 self.databaseError = [self writeErrorInDatabase:db];
@@ -306,14 +297,24 @@
             return;
         }
 
-        // 兼容早期无policy
-        NSString *sqlCreateColumnIfNotExist = @"ALTER TABLE namedcachetable ADD policy INTEGER DEFAULT 6";
+        // 兼容3.x早期版本无policy
+        NSString *sqlCreatePolicy = @"ALTER TABLE namedcachetable ADD policy INTEGER DEFAULT 6";
         if (![db columnExists:@"policy" inTableWithName:@"namedcachetable"]) {
-            if (![db executeUpdate:sqlCreateColumnIfNotExist]) {
+            if (![db executeUpdate:sqlCreatePolicy]) {
                 self.databaseError = [self createDBErrorInDatabase:db];
                 return;
             }
         }
+
+        // 4.x新增sdkVersion，用于与3.x区分，过滤不兼容的事件类型
+        NSString *sqlCreateSDKVersion = @"ALTER TABLE namedcachetable ADD sdkVersion TEXT DEFAULT '' NOT NULL";
+        if (![db columnExists:@"sdkVersion" inTableWithName:@"namedcachetable"]) {
+            if (![db executeUpdate:sqlCreateSDKVersion]) {
+                self.databaseError = [self createDBErrorInDatabase:db];
+                return;
+            }
+        }
+
         result = YES;
     }];
 
@@ -379,7 +380,7 @@ static BOOL isExecuteVacuum(NSString *name) {
 }
 
 - (void)enumerateKeysAndValuesUsingBlock:
-    (void (^)(NSString *key, id value, NSString *type, NSUInteger policy, BOOL **stop))block {
+    (void (^)(NSString *key, id value, NSString *type, NSUInteger policy, NSString *sdkVersion, BOOL **stop))block {
     @throw [NSException
         exceptionWithName:NSInternalInconsistencyException
                    reason:[NSString stringWithFormat:@"You must override %@ in a subclass.", NSStringFromSelector(_cmd)]

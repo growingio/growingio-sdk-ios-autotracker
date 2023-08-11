@@ -42,7 +42,8 @@
 - (instancetype)initWithUUID:(NSString *)uuid
                    eventType:(NSString *)eventType
                         data:(id)data
-                      policy:(GrowingEventSendPolicy)policy {
+                      policy:(GrowingEventSendPolicy)policy
+                  sdkVersion:(NSString *)sdkVersion {
     if (self = [super init]) {
         _eventUUID = uuid;
         _eventType = eventType;
@@ -53,6 +54,7 @@
         _dto = [GrowingPBEventV3Dto parseFromData:data error:nil];
 #endif
         _policy = policy;
+        _sdkVersion = sdkVersion;
     }
     return self;
 }
@@ -62,6 +64,7 @@
     persistence->_eventUUID = uuid;
     persistence->_eventType = event.eventType;
     persistence->_policy = event.sendPolicy;
+    persistence->_sdkVersion = event.sdkVersion;
 
 #if SWIFT_PACKAGE
     persistence->_dtoBox = event.toProtobuf;

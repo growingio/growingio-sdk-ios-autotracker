@@ -17,7 +17,6 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <XCTest/XCTest.h>
 
 #import "Modules/Hybrid/Events/GrowingHybridCustomEvent.h"
@@ -39,11 +38,13 @@
 }
 
 - (void)testGrowingHybridCustomEvent {
-    GrowingHybridCustomEvent *event = (GrowingHybridCustomEvent *)GrowingHybridCustomEvent.builder.setPath(@"/hybrid/test")
-    .setQuery(@"testquery")
-    .setEventName(@"testEventName")
-    .setAttributes(@{@"test":@"value"}).build;
-    
+    GrowingHybridCustomEvent *event =
+        (GrowingHybridCustomEvent *)GrowingHybridCustomEvent.builder.setPath(@"/hybrid/test")
+            .setQuery(@"testquery")
+            .setEventName(@"testEventName")
+            .setAttributes(@{@"test": @"value"})
+            .build;
+
     XCTAssertEqual(event.path, @"/hybrid/test");
     XCTAssertEqual(event.query, @"testquery");
     XCTAssertEqual(event.eventName, @"testEventName");
@@ -52,22 +53,22 @@
 }
 
 - (void)testGrowingHybridPageEvent {
-    GrowingHybridPageEvent *event = (GrowingHybridPageEvent *)GrowingHybridPageEvent.builder
-    .setQuery(@"testquery")
-    .setProtocolType(@"testProtocol")
-    .setAttributes(@{@"test":@"value"}).build;
-    
+    GrowingHybridPageEvent *event = (GrowingHybridPageEvent *)GrowingHybridPageEvent.builder.setQuery(@"testquery")
+                                        .setProtocolType(@"testProtocol")
+                                        .setAttributes(@{@"test": @"value"})
+                                        .build;
+
     XCTAssertEqual(event.query, @"testquery");
     XCTAssertEqual(event.protocolType, @"testProtocol");
     XCTAssertEqualObjects(event.attributes[@"test"], @"value");
 }
 
 - (void)testGrowingPageCustomEvent {
-    GrowingPageCustomEvent *event = (GrowingPageCustomEvent *)GrowingPageCustomEvent.builder
-    .setPath(@"path")
-    .setEventName(@"testEventName")
-    .setAttributes(@{@"test":@"value"}).build;
-    
+    GrowingPageCustomEvent *event = (GrowingPageCustomEvent *)GrowingPageCustomEvent.builder.setPath(@"path")
+                                        .setEventName(@"testEventName")
+                                        .setAttributes(@{@"test": @"value"})
+                                        .build;
+
     XCTAssertEqualObjects(event.path, @"path");
     XCTAssertEqualObjects(event.eventName, @"testEventName");
     NSString *value = (NSString *)event.attributes[@"test"];
@@ -75,10 +76,11 @@
 }
 
 - (void)testGrowingHybridViewElementEvent {
-    GrowingHybridViewElementEvent *event = (GrowingHybridViewElementEvent *)GrowingHybridViewElementEvent.builder
-    .setHyperlink(@"testHyperlink")
-    .setQuery(@"testquery").build;
-    
+    GrowingHybridViewElementEvent *event =
+        (GrowingHybridViewElementEvent *)GrowingHybridViewElementEvent.builder.setHyperlink(@"testHyperlink")
+            .setQuery(@"testquery")
+            .build;
+
     XCTAssertEqual(event.query, @"testquery");
     XCTAssertEqual(event.hyperlink, @"testHyperlink");
 }

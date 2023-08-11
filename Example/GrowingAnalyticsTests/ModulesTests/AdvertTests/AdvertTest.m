@@ -17,11 +17,10 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <XCTest/XCTest.h>
 
-#import "GrowingAutotracker.h"
 #import "GrowingAdvertising.h"
+#import "GrowingAutotracker.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 
@@ -41,7 +40,6 @@
 }
 
 - (void)tearDown {
-
 }
 
 - (void)test00SendActivateEvent {
@@ -49,7 +47,7 @@
     configuration.dataSourceId = @"test";
     configuration.urlScheme = @"growing.530c8231345c492d";
     [GrowingAutotracker startWithConfiguration:configuration launchOptions:nil];
-    
+
     XCTestExpectation *expectation = [self expectationWithDescription:@"SendActivateEvent Test failed : timeout"];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         // 给 webView 一点时间
@@ -65,11 +63,12 @@
     // 恢复为未发送激活事件
     [GrowingAdUtils setActivateWrote:NO];
     [GrowingAdUtils setActivateSent:NO];
-    
+
     [[GrowingAutotracker sharedInstance] setDataCollectionEnabled:NO];
     [[GrowingAutotracker sharedInstance] setDataCollectionEnabled:YES];
-    
-    XCTestExpectation *expectation = [self expectationWithDescription:@"SetDataCollectionEnabled Test failed : timeout"];
+
+    XCTestExpectation *expectation =
+        [self expectationWithDescription:@"SetDataCollectionEnabled Test failed : timeout"];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         // 给 webView 一点时间
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeActivate];

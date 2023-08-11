@@ -9,9 +9,9 @@
 #import <KIF/KIF.h>
 
 #import "GrowingAutotracker.h"
-#import "MockEventQueue.h"
-#import "ManualTrackHelper.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
+#import "ManualTrackHelper.h"
+#import "MockEventQueue.h"
 
 @interface A2ViewChangeEventsTest : KIFTestCase
 
@@ -37,16 +37,16 @@
     [[viewTester usingLabel:@"fisrtTF"] tap];
     [[viewTester usingFirstResponder] enterText:@"Good"];
     [[viewTester usingFirstResponder].view resignFirstResponder];
-    
+
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewChange];
     XCTAssertEqual(events.count, 1);
-    
+
     GrowingViewElementEvent *event = (GrowingViewElementEvent *)events.firstObject;
     NSDictionary *dic = event.toDictionary;
     XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeViewChange);
     XCTAssertTrue([ManualTrackHelper viewChangeEventCheck:dic]);
     XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
-    
+
     [[viewTester usingLabel:@"UI界面"] tap];
 }
 
@@ -54,7 +54,7 @@
     [[viewTester usingLabel:@"UI界面"] tap];
     [[viewTester usingLabel:@"Text Fields"] tap];
     [viewTester waitForAnimationsToFinish];
-    
+
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"fisrtTF"];
     {
         actor.view.growingViewIgnorePolicy = GrowingIgnoreSelf;
@@ -65,7 +65,7 @@
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewChange];
         XCTAssertEqual(events.count, 0);
     }
-    
+
     {
         actor.view.growingViewIgnorePolicy = GrowingIgnoreNone;
         [actor tap];
@@ -74,7 +74,7 @@
 
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewChange];
         XCTAssertEqual(events.count, 1);
-        
+
         GrowingViewElementEvent *event = (GrowingViewElementEvent *)events.firstObject;
         NSDictionary *dic = event.toDictionary;
         XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeViewChange);
@@ -90,14 +90,14 @@
     [[viewTester usingLabel:@"VIEW_CHANGE请求"] tap];
     [viewTester waitForAnimationsToFinish];
     [[viewTester usingLabel:@"dataPickerOper"] tap];
-    
+
     NSArray *date = @[@"June", @"10", @"2019"];
     [viewTester selectDatePickerValue:date];
     [viewTester tapScreenAtPoint:CGPointMake(100, 100)];
-    
+
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewChange];
     XCTAssertEqual(events.count, 0);
-    
+
     [[viewTester usingLabel:@"协议/接口"] tap];
 }
 
@@ -105,7 +105,7 @@
     [[viewTester usingLabel:@"UI界面"] tap];
     [[viewTester usingLabel:@"Simple UI Elements"] tap];
     [viewTester waitForAnimationsToFinish];
-    
+
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"defaultSlider"];
     {
         actor.view.growingViewIgnorePolicy = GrowingIgnoreSelf;
@@ -114,14 +114,14 @@
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewChange];
         XCTAssertEqual(events.count, 0);
     }
-    
+
     {
         actor.view.growingViewIgnorePolicy = GrowingIgnoreNone;
         [actor setSliderValue:50.0f];
 
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewChange];
         XCTAssertEqual(events.count, 1);
-        
+
         GrowingViewElementEvent *event = (GrowingViewElementEvent *)events.firstObject;
         NSDictionary *dic = event.toDictionary;
         XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeViewChange);

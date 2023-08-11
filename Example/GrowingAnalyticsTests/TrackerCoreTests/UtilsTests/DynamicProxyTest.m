@@ -17,7 +17,6 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <XCTest/XCTest.h>
 
 #import "GrowingDynamicProxy.h"
@@ -96,9 +95,7 @@
         XCTAssertTrue([dynamicObject respondsToSelector:@selector(instanceMethod)]);
         XCTAssertTrue([dynamicObject instanceMethod]);
         XCTAssertEqualObjects(dynamicObject.string, realObject.string);
-        
 
-        
         XCTAssertTrue([dynamicObject isEqual:realObject]);
         XCTAssertEqual(dynamicObject.hash, realObject.hash);
         XCTAssertEqualObjects(dynamicObject.superclass, realObject.superclass);
@@ -110,7 +107,7 @@
         XCTAssertEqualObjects([dynamicObject description], [realObject description]);
         XCTAssertEqualObjects([dynamicObject debugDescription], [realObject description]);
     }
-    
+
     {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wnonnull"

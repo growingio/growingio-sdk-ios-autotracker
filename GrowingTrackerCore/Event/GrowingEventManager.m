@@ -100,11 +100,7 @@ static GrowingEventManager *sharedInstance = nil;
                 [GrowingEventDatabase databaseWithPath:[GrowingFileStorage getRealtimeDatabasePath] isProtobuf:YES];
 
             NSMutableArray *eventChannels = [GrowingEventChannel eventChannels];
-            for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
-                if ([obj respondsToSelector:@selector(growingEventManagerChannels:)]) {
-                    [obj growingEventManagerChannels:eventChannels];
-                }
-            }
+            // 发送通道的eventTypes不能修改，并与数据库一一对应
             for (GrowingEventChannel *ec in eventChannels) {
                 if (ec.isRealtimeEvent) {
                     if (ec.persistenceType == GrowingEventPersistenceTypeProtobuf) {
@@ -268,13 +264,29 @@ static GrowingEventManager *sharedInstance = nil;
     }
 
     NSArray<id<GrowingEventPersistenceProtocol>> *events = [self getEventsToBeUploadUnsafe:channel policy:policyMask];
+
+    // 过滤3.x的无埋点事件
+    NSMutableArray *removeV3AutotrackEvents = [NSMutableArray arrayWithArray:events];
+    for (id<GrowingEventPersistenceProtocol> e in events) {
+        if ([e.sdkVersion hasPrefix:@"4."]) {
+            continue;
+        }
+        if ([e.eventType isEqualToString:@"PAGE"] || [e.eventType isEqualToString:@"VIEW_CLICK"] ||
+            [e.eventType isEqualToString:@"VIEW_CHANGE"] || [e.eventType isEqualToString:@"FORM_SUBMIT"] ||
+            [e.eventType isEqualToString:@"APP_CLOSED"]) {
+            [removeV3AutotrackEvents removeObject:e];
+        }
+    }
+    events = removeV3AutotrackEvents.copy;
+
+    if (events.count == 0) {
+        return;
+    }
+
     for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
         if ([obj respondsToSelector:@selector(growingEventManagerEventsWillSend:channel:)]) {
             events = [obj growingEventManagerEventsWillSend:events channel:channel];
         }
-    }
-    if (events.count == 0) {
-        return;
     }
 
     channel.isUploading = YES;
@@ -282,22 +294,12 @@ static GrowingEventManager *sharedInstance = nil;
 #ifdef DEBUG
     [self prettyLogForEvents:events withChannel:channel];
 #endif
-    // 如果需要改变发送地址以及请求参数
-    NSObject<GrowingRequestProtocol> *eventRequest = nil;
-    for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
-        if ([obj respondsToSelector:@selector(growingEventManagerRequestWithChannel:)]) {
-            eventRequest = [obj growingEventManagerRequestWithChannel:channel];
-            if (eventRequest) {
-                break;
-            }
-        }
-    }
 
     NSData *rawEvents = nil;
     if ((channel.persistenceType == GrowingEventPersistenceTypeJSON && trackConfiguration.useProtobuf) ||
         (channel.persistenceType == GrowingEventPersistenceTypeProtobuf && !trackConfiguration.useProtobuf)) {
         // 该channel的持久化数据格式与配置不同，需要转换为配置的数据格式
-        // 步骤为先转成jsonObject，再转成对应格式
+        // 先转成jsonObject，再转成对应格式
         Class<GrowingEventDatabaseService> dbClass = nil;
         if (trackConfiguration.useProtobuf) {
             dbClass =
@@ -313,21 +315,8 @@ static GrowingEventManager *sharedInstance = nil;
         for (id<GrowingEventPersistenceProtocol> e in events) {
             id jsonObject = e.toJSONObject;
             if (jsonObject) {
-                NSString *eventType = jsonObject[@"eventType"];
-                NSString *sdkVersion = jsonObject[@"sdkVersion"];
-                if ([sdkVersion hasPrefix:@"3."]) {
-                    if ([eventType isEqualToString:@"PAGE"] || [eventType isEqualToString:@"VIEW_CLICK"] ||
-                        [eventType isEqualToString:@"VIEW_CHANGE"] || [eventType isEqualToString:@"FORM_SUBMIT"] ||
-                        [eventType isEqualToString:@"APP_CLOSED"]) {
-                        // 不兼容3.x的无埋点
-                        continue;
-                    }
-                }
                 [jsonObjects addObject:jsonObject];
             }
-        }
-        if (jsonObjects.count == 0) {
-            return;
         }
 
         rawEvents = [dbClass buildRawEventsFromJsonObjects:jsonObjects];
@@ -338,14 +327,7 @@ static GrowingEventManager *sharedInstance = nil;
         rawEvents = [channel.db buildRawEventsFromEvents:events];
     }
 
-    if (!eventRequest) {
-        eventRequest = [[GrowingEventRequest alloc] initWithEvents:rawEvents];
-    } else {
-        if ([eventRequest respondsToSelector:@selector(setEvents:)]) {
-            eventRequest.events = rawEvents;
-        }
-    }
-
+    NSObject<GrowingRequestProtocol> *eventRequest = [[GrowingEventRequest alloc] initWithEvents:rawEvents];
     id<GrowingEventNetworkService> service =
         [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingEventNetworkService)];
     if (!service) {
@@ -427,7 +409,7 @@ static GrowingEventManager *sharedInstance = nil;
 
 - (NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsToBeUploadUnsafe:(GrowingEventChannel *)channel
                                                                      policy:(NSUInteger)mask {
-    return [channel.db getEventsWithPackageNum:kGrowingMaxBatchSize policy:mask];
+    return [channel.db getEventsByCount:kGrowingMaxBatchSize policy:mask];
 }
 
 #pragma mark Event Log

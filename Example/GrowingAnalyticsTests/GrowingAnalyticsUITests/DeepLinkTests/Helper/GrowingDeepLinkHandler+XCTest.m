@@ -17,19 +17,19 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingDeepLinkHandler+XCTest.h"
-#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
 #import <UIKit/UIKit.h>
 #import <objc/runtime.h>
+#import "GrowingDeepLinkHandler+XCTest.h"
+#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
 
 @implementation GrowingDeepLinkHandler (XCTest)
 
 + (void)load {
     SEL originSelector = @selector(handlerUrl:);
     SEL swizzleSelector = @selector(XCTest_handlerUrl:);
-    
+
     id handler = object_getClass(self);
-    
+
     Method originMethod = class_getInstanceMethod(handler, originSelector);
     if (!originMethod) {
         return;
@@ -46,7 +46,7 @@
                     swizzleSelector,
                     class_getMethodImplementation(handler, swizzleSelector),
                     method_getTypeEncoding(swizzleMethod));
-    
+
     method_exchangeImplementations(class_getInstanceMethod(handler, originSelector),
                                    class_getInstanceMethod(handler, swizzleSelector));
 }
@@ -57,12 +57,14 @@
             UIAlertController *controller = [UIAlertController alertControllerWithTitle:@"XCTest_handlerUrl"
                                                                                 message:@""
                                                                          preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"XCTest" style:UIAlertActionStyleCancel handler:nil];
+            UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"XCTest"
+                                                             style:UIAlertActionStyleCancel
+                                                           handler:nil];
             [controller addAction:cancel];
             [self.XCTest_keywindow.rootViewController presentViewController:controller animated:YES completion:nil];
         });
     }
-    
+
     return [self XCTest_handlerUrl:url];
 }
 

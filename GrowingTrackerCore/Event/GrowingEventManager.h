@@ -30,10 +30,6 @@
 
 @optional
 
-/// 可配置事件发送通道
-/// @param channels 默认的事件发送通道
-- (void)growingEventManagerChannels:(NSMutableArray<GrowingEventChannel *> *_Nullable)channels;
-
 /// 事件被触发
 /// @param eventType 当前事件类型
 - (void)growingEventManagerEventTriggered:(NSString *_Nullable)eventType;
@@ -49,10 +45,6 @@
 /// 事件入库完毕
 /// @param event 当前事件
 - (void)growingEventManagerEventDidWrite:(GrowingBaseEvent *_Nullable)event;
-
-/// 自定义event发送请求
-/// @param channel 事件发送通道
-- (id<GrowingRequestProtocol> _Nullable)growingEventManagerRequestWithChannel:(GrowingEventChannel *_Nullable)channel;
 
 /// 即将发送事件
 /// @param events 发送的事件

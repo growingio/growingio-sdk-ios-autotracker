@@ -17,7 +17,6 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <XCTest/XCTest.h>
 
 #import "GrowingAutotrackConfiguration.h"
@@ -71,16 +70,16 @@
 
 #pragma mark - websocket delegate
 
-- (void)webSocketDidOpen:(id <GrowingWebSocketService>)webSocket;
+- (void)webSocketDidOpen:(id<GrowingWebSocketService>)webSocket;
 
-- (void)webSocket:(id <GrowingWebSocketService>)webSocket didReceiveMessage:(id)message;
+- (void)webSocket:(id<GrowingWebSocketService>)webSocket didReceiveMessage:(id)message;
 
-- (void)webSocket:(id <GrowingWebSocketService>)webSocket
- didCloseWithCode:(NSInteger)code
-           reason:(NSString *)reason
-         wasClean:(BOOL)wasClean;
+- (void)webSocket:(id<GrowingWebSocketService>)webSocket
+    didCloseWithCode:(NSInteger)code
+              reason:(NSString *)reason
+            wasClean:(BOOL)wasClean;
 
-- (void)webSocket:(id <GrowingWebSocketService>)webSocket didFailWithError:(NSError *)error;
+- (void)webSocket:(id<GrowingWebSocketService>)webSocket didFailWithError:(NSError *)error;
 
 @end
 
@@ -101,8 +100,8 @@
 
 - (void)testGrowingMobileDebugger {
     NSURL *url = [NSURL URLWithString:
-                             @"growing.3612b67ce562c755://growingio/webservice?serviceType=debugger&wsUrl=wss://"
-                             @"gta0.growingio.com/app/0wDaZmQ1/circle/ec7f5925458f458b8ae6f3901cacaa92"];
+                            @"growing.3612b67ce562c755://growingio/webservice?serviceType=debugger&wsUrl=wss://"
+                            @"gta0.growingio.com/app/0wDaZmQ1/circle/ec7f5925458f458b8ae6f3901cacaa92"];
     GrowingMobileDebugger *mobileDebugger = [[GrowingMobileDebugger alloc] init];
     [mobileDebugger start];
     [mobileDebugger stop];
