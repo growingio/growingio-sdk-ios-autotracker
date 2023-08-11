@@ -28,8 +28,6 @@
 
 @interface GrowingNetworkConfig : NSObject
 
-@property (nonatomic, copy) NSString *customDataHost;
-
 + (instancetype)sharedInstance;
 
 /// 返回 growingApiHostEnd 拼接的事件上传地址 eg:https://napi.growingio.com/v3/projects/91eaf9b283361032/collect
