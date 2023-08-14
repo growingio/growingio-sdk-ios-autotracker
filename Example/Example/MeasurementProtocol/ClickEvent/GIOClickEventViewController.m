@@ -16,6 +16,12 @@
 @property (weak, nonatomic) IBOutlet UIButton *sendEventButton;
 @property (weak, nonatomic) IBOutlet UISwitch *trackEnabledSwitch;
 @property (weak, nonatomic) IBOutlet UISwitch *uploadEnabledSwitch;
+@property (weak, nonatomic) IBOutlet UIButton *buttonA;
+@property (weak, nonatomic) IBOutlet UIButton *buttonB;
+@property (weak, nonatomic) IBOutlet UIButton *buttonC;
+@property (weak, nonatomic) IBOutlet UIView *CView;
+@property (weak, nonatomic) IBOutlet UIView *DView;
+@property (weak, nonatomic) IBOutlet UIView *EView;
 
 @end
 
@@ -29,6 +35,10 @@
     self.sendEventButton.growingUniqueTag = @"UniqueTag-SendButton";
     [self.sendEventButton growingTrackImpression:@"hello_track_impression"];
     [self.view growingTrackImpression:@"self_view_imp_track" attributes:@{@"self_view_key": @"self_view_value"}];
+    self.CView.growingUniqueTag = @"CCCCC";
+    self.DView.growingUniqueTag = @"DDDDD";
+    self.EView.growingUniqueTag = @"EEEEE";
+    self.buttonA.growingUniqueTag = @"ButtonAAA";
 #endif
 #endif
 }
