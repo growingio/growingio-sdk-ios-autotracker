@@ -44,14 +44,52 @@ public class SwiftProtobufWrapper: NSObject {
     }
 
     @objc(parseFromJsonObject:)
-    public static func parse(from jsonObject: [String: AnyObject]) -> SwiftProtobufWrapper? {
-        do {
-            let data = try JSONSerialization.data(withJSONObject: jsonObject)
-            let dto = try EventDto(jsonUTF8Data: data)
-            return SwiftProtobufWrapper(dto)
-        } catch {
-            return nil
-        }
+    public static func parse(from jsonObject: [String: AnyObject]) -> SwiftProtobufWrapper {
+        var dto = EventDto()
+
+        dto.dataSourceID = jsonObject["dataSourceId"] as? String ?? ""
+        dto.sessionID = jsonObject["sessionId"] as? String ?? ""
+        dto.timestamp = (jsonObject["timestamp"] as? NSNumber)?.int64Value ?? 0
+        dto.domain = jsonObject["domain"] as? String ?? ""
+        dto.userID = jsonObject["userId"] as? String ?? ""
+        dto.deviceID = jsonObject["deviceId"] as? String ?? ""
+        dto.platform = jsonObject["platform"] as? String ?? ""
+        dto.platformVersion = jsonObject["platformVersion"] as? String ?? ""
+        dto.eventSequenceID = (jsonObject["eventSequenceId"] as? NSNumber)?.int32Value ?? 0
+        dto.appState = jsonObject["appState"] as? String ?? ""
+        dto.urlScheme = jsonObject["urlScheme"] as? String ?? ""
+        dto.networkState = jsonObject["networkState"] as? String ?? ""
+        dto.screenWidth = (jsonObject["screenWidth"] as? NSNumber)?.int32Value ?? 0
+        dto.screenHeight = (jsonObject["screenHeight"] as? NSNumber)?.int32Value ?? 0
+        dto.deviceBrand = jsonObject["deviceBrand"] as? String ?? ""
+        dto.deviceModel = jsonObject["deviceModel"] as? String ?? ""
+        dto.deviceType = jsonObject["deviceType"] as? String ?? ""
+        dto.appName = jsonObject["appName"] as? String ?? ""
+        dto.appVersion = jsonObject["appVersion"] as? String ?? ""
+        dto.language = jsonObject["language"] as? String ?? ""
+        dto.latitude = (jsonObject["latitude"] as? NSNumber)?.doubleValue ?? 0
+        dto.longitude = (jsonObject["longitude"] as? NSNumber)?.doubleValue ?? 0
+        dto.sdkVersion = jsonObject["sdkVersion"] as? String ?? ""
+        dto.userKey = jsonObject["userKey"] as? String ?? ""
+        dto.eventType = self.eventType(jsonObject["eventType"] as? String ?? "")
+        dto.idfa = jsonObject["idfa"] as? String ?? ""
+        dto.idfv = jsonObject["idfv"] as? String ?? ""
+        dto.extraSdk = jsonObject["extraSdk"] as? Dictionary<String,String> ?? [:]
+        dto.path = jsonObject["path"] as? String ?? ""
+        dto.textValue = jsonObject["textValue"] as? String ?? ""
+        dto.xpath = jsonObject["xpath"] as? String ?? ""
+        dto.xcontent = jsonObject["xcontent"] as? String ?? ""
+        dto.index = (jsonObject["index"] as? NSNumber)?.int32Value ?? 0
+        dto.query = jsonObject["query"] as? String ?? ""
+        dto.hyperlink = jsonObject["hyperlink"] as? String ?? ""
+        dto.attributes = jsonObject["extraSdk"] as? Dictionary<String,String> ?? [:]
+        dto.orientation = jsonObject["orientation"] as? String ?? ""
+        dto.title = jsonObject["title"] as? String ?? ""
+        dto.referralPage = jsonObject["referralPage"] as? String ?? ""
+        dto.protocolType = jsonObject["protocolType"] as? String ?? ""
+        dto.eventName = jsonObject["eventName"] as? String ?? ""
+
+        return SwiftProtobufWrapper(dto)
     }
 
     @objc
@@ -82,6 +120,34 @@ public class SwiftProtobufWrapper: NSObject {
         } catch {
             return nil
         }
+    }
+    
+    fileprivate static func eventType(_ eventType: String) -> EventType {
+        if eventType == "VISIT" {
+            return .visit
+        } else if eventType == "CUSTOM" {
+            return .custom
+        } else if eventType == "VISITOR_ATTRIBUTES" {
+            return .visitorAttributes
+        } else if eventType == "LOGIN_USER_ATTRIBUTES" {
+            return .loginUserAttributes
+        } else if eventType == "CONVERSION_VARIABLES" {
+            return .conversionVariables
+        } else if eventType == "APP_CLOSED" {
+            return .appClosed
+        } else if eventType == "PAGE" {
+            return .page
+        } else if eventType == "VIEW_CLICK" {
+            return .viewClick
+        } else if eventType == "VIEW_CHANGE" {
+            return .viewChange
+        } else if eventType == "FORM_SUBMIT" {
+            return .formSubmit
+        } else if eventType == "ACTIVATE" {
+            return .activate
+        }
+
+        return .UNRECOGNIZED(100)
     }
 }
 
@@ -135,7 +201,7 @@ extension GrowingBaseEvent {
         dto.sdkVersion = self.sdkVersion
         dto.userKey = self.userKey ?? ""
 
-        dto.eventType = eventType()
+        dto.eventType = SwiftProtobufWrapper.eventType(self.eventType)
         dto.idfa = idfa()
         dto.idfv = idfv()
         dto.extraSdk = extraSdk()
@@ -158,34 +224,6 @@ extension GrowingBaseEvent {
 }
 
 extension GrowingBaseEvent {
-    fileprivate func eventType() -> EventType {
-        if self.eventType == "VISIT" {
-            return .visit
-        } else if self.eventType == "CUSTOM" {
-            return .custom
-        } else if self.eventType == "VISITOR_ATTRIBUTES" {
-            return .visitorAttributes
-        } else if self.eventType == "LOGIN_USER_ATTRIBUTES" {
-            return .loginUserAttributes
-        } else if self.eventType == "CONVERSION_VARIABLES" {
-            return .conversionVariables
-        } else if self.eventType == "APP_CLOSED" {
-            return .appClosed
-        } else if self.eventType == "PAGE" {
-            return .page
-        } else if self.eventType == "VIEW_CLICK" {
-            return .viewClick
-        } else if self.eventType == "VIEW_CHANGE" {
-            return .viewChange
-        } else if self.eventType == "FORM_SUBMIT" {
-            return .formSubmit
-        } else if self.eventType == "ACTIVATE" {
-            return .activate
-        }
-
-        return .UNRECOGNIZED(100)
-    }
-
     fileprivate func idfa() -> String {
         let selector = Selector(("idfa"))
         if self.responds(to: selector) {
