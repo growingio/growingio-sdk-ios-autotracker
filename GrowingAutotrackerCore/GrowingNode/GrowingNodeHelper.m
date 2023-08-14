@@ -61,7 +61,7 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
 
     NSString * (^toStringBlock)(NSArray *) = ^(NSArray *array) {
         NSArray *reverse = array.reverseObjectEnumerator.allObjects;
-        return [reverse componentsJoinedByString:@"/"];
+        return [NSString stringWithFormat:@"/%@", [reverse componentsJoinedByString:@"/"]];
     };
 
     NSString *xpath = toStringBlock(viewPathArray);
@@ -97,9 +97,9 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
     return GrowingViewNode.builder.setView(rootview)
         .setIndex(-1)
         .setViewContent(rootview.growingNodeContent)
-        .setXpath(rootview.growingNodeSubPath)
-        .setXcontent(rootview.growingNodeSubSimilarIndex)
-        .setOriginXcontent(rootview.growingNodeSubIndex)
+        .setXpath([NSString stringWithFormat:@"/%@", rootview.growingNodeSubPath])
+        .setXcontent([NSString stringWithFormat:@"/%@", rootview.growingNodeSubSimilarIndex])
+        .setOriginXcontent([NSString stringWithFormat:@"/%@", rootview.growingNodeSubIndex])
         .setNodeType([self getViewNodeType:rootview])
         .build;
 }

@@ -49,9 +49,9 @@
     [GrowingNodeHelper
         recalculateXpath:view
                    block:^(NSString *_Nonnull xpath, NSString *_Nonnull xcontent, NSString *_Nonnull originxcontent) {
-                       xpath = [NSString stringWithFormat:@"%@/%@", pagexpath, xpath];
-                       xcontent = [NSString stringWithFormat:@"%@/%@", pagexcontent, xcontent];
-                       originxcontent = [NSString stringWithFormat:@"%@/%@", pagexcontent, originxcontent];
+                       xpath = [NSString stringWithFormat:@"%@%@", pagexpath, xpath];
+                       xcontent = [NSString stringWithFormat:@"%@%@", pagexcontent, xcontent];
+                       originxcontent = [NSString stringWithFormat:@"%@%@", pagexcontent, originxcontent];
                        XCTAssertEqualObjects(xpathForView, xpath);
                        XCTAssertEqualObjects(xcontentForView, xcontent);
                        XCTAssertEqualObjects(originxcontentForView, originxcontent);

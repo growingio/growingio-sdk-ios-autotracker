@@ -151,14 +151,15 @@ GrowingMod(GrowingWebCircle)
             .setContent(node.viewContent)
             .setZLevel(self.zLevel++)
             .setIndex(node.index)
-            .setXpath([NSString stringWithFormat:@"%@/%@", pagexpath, node.xpath])
-            .setXcontent([NSString stringWithFormat:@"%@/%@", pagexcontent, node.xcontent])
+            .setXpath(node.isBreak ? node.xpath : [NSString stringWithFormat:@"%@%@", pagexpath, node.xpath])
+            .setXcontent(node.isBreak ? node.xcontent
+                                      : [NSString stringWithFormat:@"%@%@", pagexcontent, node.xcontent])
             .setNodeType(node.nodeType)
             .setPage(autotrackPage ? autotrackPage.alias : @"");
     if (node.clickableParentXpath) {
         builder =
-            builder.setParentXpath([NSString stringWithFormat:@"%@/%@", pagexpath, node.clickableParentXpath])
-                .setParentXcontent([NSString stringWithFormat:@"%@/%@", pagexcontent, node.clickableParentXcontent]);
+            builder.setParentXpath([NSString stringWithFormat:@"%@%@", pagexpath, node.clickableParentXpath])
+                .setParentXcontent([NSString stringWithFormat:@"%@%@", pagexcontent, node.clickableParentXcontent]);
     }
     GrowingWebCircleElement *element = builder.build;
 
