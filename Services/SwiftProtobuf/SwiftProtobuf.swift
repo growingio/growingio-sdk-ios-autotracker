@@ -74,7 +74,7 @@ public class SwiftProtobufWrapper: NSObject {
         dto.eventType = self.eventType(jsonObject["eventType"] as? String ?? "")
         dto.idfa = jsonObject["idfa"] as? String ?? ""
         dto.idfv = jsonObject["idfv"] as? String ?? ""
-        dto.extraSdk = jsonObject["extraSdk"] as? Dictionary<String,String> ?? [:]
+        dto.extraSdk = jsonObject["extraSdk"] as? [String: String] ?? [:]
         dto.path = jsonObject["path"] as? String ?? ""
         dto.textValue = jsonObject["textValue"] as? String ?? ""
         dto.xpath = jsonObject["xpath"] as? String ?? ""
@@ -82,7 +82,7 @@ public class SwiftProtobufWrapper: NSObject {
         dto.index = (jsonObject["index"] as? NSNumber)?.int32Value ?? 0
         dto.query = jsonObject["query"] as? String ?? ""
         dto.hyperlink = jsonObject["hyperlink"] as? String ?? ""
-        dto.attributes = jsonObject["extraSdk"] as? Dictionary<String,String> ?? [:]
+        dto.attributes = jsonObject["extraSdk"] as? [String: String] ?? [:]
         dto.orientation = jsonObject["orientation"] as? String ?? ""
         dto.title = jsonObject["title"] as? String ?? ""
         dto.referralPage = jsonObject["referralPage"] as? String ?? ""
@@ -121,7 +121,7 @@ public class SwiftProtobufWrapper: NSObject {
             return nil
         }
     }
-    
+
     fileprivate static func eventType(_ eventType: String) -> EventType {
         if eventType == "VISIT" {
             return .visit
