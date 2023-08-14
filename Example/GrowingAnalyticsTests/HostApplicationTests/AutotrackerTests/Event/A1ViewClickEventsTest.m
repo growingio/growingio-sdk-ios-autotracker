@@ -381,4 +381,55 @@
     XCTAssertEqualObjects(dic[@"xcontent"], @"/0/1/0/0/0");
 }
 
+- (void)test10UniqueButton {
+    [[viewTester usingLabel:@"协议/接口"] tap];
+    [[viewTester usingLabel:@"CLICK请求"] tap];
+    [MockEventQueue.sharedQueue cleanQueue];
+    [[viewTester usingLabel:@"ButtonA-UniqueTag"] tap];
+    [[viewTester usingLabel:@"ButtonB"] tap];
+    [[viewTester usingLabel:@"ButtonC"] tap];
+    NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
+    XCTAssertEqual(events.count, 3);
+    
+    {
+        GrowingViewElementEvent *event = (GrowingViewElementEvent *)events[0];
+        NSDictionary *dic = event.toDictionary;
+        XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeViewClick);
+        XCTAssertTrue([ManualTrackHelper viewClickEventCheck:dic]);
+        XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
+
+        XCTAssertEqualObjects(dic[@"textValue"], @"ButtonA-UniqueTag");
+        XCTAssertEqualObjects(dic[@"path"], @"点击事件测试");
+        XCTAssertEqualObjects(dic[@"xpath"], @"/ButtonAAA");
+        XCTAssertEqualObjects(dic[@"xcontent"], @"/0");
+    }
+    
+    {
+        GrowingViewElementEvent *event = (GrowingViewElementEvent *)events[1];
+        NSDictionary *dic = event.toDictionary;
+        XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeViewClick);
+        XCTAssertTrue([ManualTrackHelper viewClickEventCheck:dic]);
+        XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
+
+        XCTAssertEqualObjects(dic[@"textValue"], @"ButtonB");
+        XCTAssertEqualObjects(dic[@"path"], @"点击事件测试");
+        XCTAssertEqualObjects(dic[@"xpath"], @"/CCCCC/UIButton");
+        XCTAssertEqualObjects(dic[@"xcontent"], @"/1/0");
+    }
+    
+    {
+        GrowingViewElementEvent *event = (GrowingViewElementEvent *)events[2];
+        NSDictionary *dic = event.toDictionary;
+        XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeViewClick);
+        XCTAssertTrue([ManualTrackHelper viewClickEventCheck:dic]);
+        XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
+
+        XCTAssertEqualObjects(dic[@"textValue"], @"ButtonC");
+        XCTAssertEqualObjects(dic[@"path"], @"点击事件测试");
+        XCTAssertEqualObjects(dic[@"xpath"], @"/EEEEE/UIButton");
+        XCTAssertEqualObjects(dic[@"xcontent"], @"/0/0");
+    }
+    [[viewTester usingLabel:@"协议/接口"] tap];
+}
+
 @end
