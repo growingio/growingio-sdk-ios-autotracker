@@ -46,8 +46,8 @@
         _clickableParentXcontent = builder.clickableParentXcontent;
         _nodeType = builder.nodeType;
         _index = builder.index;
-        _position = builder.position;
         _hasListParent = builder.hasListParent;
+        _isBreak = builder.isBreak;
         _needRecalculate = builder.needRecalculate;
         if (_needRecalculate) {
             [self recalculate];
@@ -87,13 +87,14 @@
     }
 
     NSString *uniqueTag = view.growingUniqueTag;
-    NSString *xpath = uniqueTag && uniqueTag.length > 0
-                          ? [NSString stringWithFormat:@"/%@", uniqueTag]
-                          : [self.xpath stringByAppendingFormat:@"/%@", view.growingNodeSubPath];
-    NSString *xcontent = uniqueTag && uniqueTag.length > 0
+    BOOL hasUniqueTag = uniqueTag && uniqueTag.length > 0;
+    BOOL isBreak = self.isBreak || hasUniqueTag;
+    NSString *xpath = hasUniqueTag ? [NSString stringWithFormat:@"/%@", uniqueTag]
+                                   : [self.xpath stringByAppendingFormat:@"/%@", view.growingNodeSubPath];
+    NSString *xcontent = hasUniqueTag
                              ? [NSString stringWithFormat:@"/%@", view.growingNodeSubSimilarIndex]
                              : [self.originxcontent stringByAppendingFormat:@"/%@", view.growingNodeSubSimilarIndex];
-    NSString *originxcontent = uniqueTag && uniqueTag.length > 0
+    NSString *originxcontent = hasUniqueTag
                                    ? [NSString stringWithFormat:@"/%@", view.growingNodeSubIndex]
                                    : [self.originxcontent stringByAppendingFormat:@"/%@", view.growingNodeSubIndex];
     NSString *parentXpath = self.view.growingNodeUserInteraction ? self.xpath : self.clickableParentXpath;
@@ -108,8 +109,8 @@
         .setClickableParentXpath(parentXpath)
         .setClickableParentXcontent(parentXcontent)
         .setHasListParent(haslistParent)
+        .setIsBreak(isBreak)
         .setViewContent(content ? [content growingHelper_safeSubStringWithLength:50] : nil)
-        .setPosition((int)view.growingNodeKeyIndex)
         .setNodeType([GrowingNodeHelper getViewNodeType:view])
         .setNeedRecalculate(recalculate)
         .build;
@@ -168,13 +169,6 @@
     };
 }
 
-- (GrowingViewNodeBuilder * (^)(int value))setPosition {
-    return ^(int value) {
-        self->_position = value;
-        return self;
-    };
-}
-
 - (GrowingViewNodeBuilder * (^)(NSString *value))setViewContent {
     return ^(NSString *value) {
         self->_viewContent = value;
@@ -192,6 +186,13 @@
 - (GrowingViewNodeBuilder * (^)(BOOL value))setHasListParent {
     return ^(BOOL value) {
         self->_hasListParent = value;
+        return self;
+    };
+}
+
+- (GrowingViewNodeBuilder * (^)(BOOL value))setIsBreak {
+    return ^(BOOL value) {
+        self->_isBreak = value;
         return self;
     };
 }

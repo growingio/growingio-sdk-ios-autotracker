@@ -38,16 +38,19 @@
     GrowingPage *autotrackPage = [GrowingPageManager.sharedInstance findAutotrackPageByPage:page];
     GrowingViewNode *node = [GrowingNodeHelper getViewNode:view];
 
-    NSDictionary *pathInfo = page.pathInfo;
-    NSString *pagexpath = pathInfo[@"xpath"];
-    NSString *pagexcontent = pathInfo[@"xcontent"];
-    GrowingViewElementBuilder *builder =
-        GrowingViewElementEvent.builder.setEventType(GrowingEventTypeViewChange)
-            .setPath(@"")
-            .setXpath([NSString stringWithFormat:@"%@/%@", pagexpath, node.xpath])
-            .setXcontent([NSString stringWithFormat:@"%@/%@", pagexcontent, node.xcontent])
-            .setIndex(node.index)
-            .setTextValue(node.viewContent);
+    GrowingViewElementBuilder *builder = GrowingViewElementEvent.builder.setEventType(GrowingEventTypeViewChange)
+                                             .setPath(@"")
+                                             .setIndex(node.index)
+                                             .setTextValue(node.viewContent);
+    if (node.isBreak) {
+        builder.setXpath(node.xpath).setXcontent(node.xcontent);
+    } else {
+        NSDictionary *pathInfo = page.pathInfo;
+        NSString *pagexpath = pathInfo[@"xpath"];
+        NSString *pagexcontent = pathInfo[@"xcontent"];
+        builder.setXpath([NSString stringWithFormat:@"%@%@", pagexpath, node.xpath])
+            .setXcontent([NSString stringWithFormat:@"%@%@", pagexcontent, node.xcontent]);
+    }
 
     if (autotrackPage) {
         builder.setPath(autotrackPage.alias).setAttributes(autotrackPage.attributes);

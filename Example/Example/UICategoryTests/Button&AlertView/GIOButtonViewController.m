@@ -36,7 +36,6 @@ typedef NS_ENUM(NSInteger, AAPLAlertsViewControllerTableRow) {
 #if defined(AUTOTRACKER)
 #if defined(SDK3rd)
     [[GrowingAutotracker sharedInstance] autotrackPage:self alias:@"Button测试"];
-    self.view.growingUniqueTag = @"我是一个特别的view";
 #endif
 #endif
     self.title = @"Buttons & AlertView";
