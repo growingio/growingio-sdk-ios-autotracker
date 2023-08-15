@@ -120,13 +120,23 @@
 
 - (id)toJSONObject {
 #if SWIFT_PACKAGE
-    return self.dtoBox.toJsonObject;
-#else
-    if (!self.dto) {
-        return [NSDictionary dictionary];
+    if (self.dtoBox) {
+        NSDictionary *jsonObject = self.dtoBox.toJsonObject;
+        if ([self.eventType isEqualToString:@"VISIT"]
+            && [jsonObject isKindOfClass:[NSDictionary class]]) {
+            // 由于VISIT在SwiftProtobuf中默认值为0，转JSON会丢失eventType
+            NSMutableDictionary *jsonObjectM = [NSMutableDictionary dictionaryWithDictionary:jsonObject];
+            [jsonObjectM setObject:@"VISIT" forKey:@"eventType"];
+            return jsonObjectM;
+        }
+        return jsonObject;
     }
-    return self.dto.growingHelper_jsonObject;
+#else
+    if (self.dto) {
+        return self.dto.growingHelper_jsonObject;
+    }
 #endif
+    return @{};
 }
 
 - (void)appendExtraParams:(NSDictionary<NSString *, id> *)extraParams {
