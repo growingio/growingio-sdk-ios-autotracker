@@ -1,28 +1,22 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
 on:
   push:
     branches: [ master ]
   pull_request:
     branches: [ master ]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: macos-13
+    env:
+      DERIVED_DATA: $HOME/.DerivedData
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - name: Checkout Repo
+        uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
 
       - name: Force Xcode 15 beta
         run: sudo xcode-select -switch /Applications/Xcode_15.0.app
@@ -39,17 +33,32 @@ jobs:
             ${{ runner.os }}-pods-
 
       - name: Pod Install
-        run: |
-          pod install
+        run: pod install
 
-      - name: Run Logic Tests
+      - name: Run tests to generate coverage statistics
         run: |
+          mkdir -p ${{ env.DERIVED_DATA }}
           xcodebuild test -workspace GrowingAnalytics.xcworkspace \
           -scheme GrowingAnalyticsTests \
           -testPlan GrowingAnalyticsTests \
           -destination 'platform=iOS Simulator,name=iPhone 14' \
-          -enableCodeCoverage YES
+          -enableCodeCoverage YES \
+          -derivedDataPath ${{ env.DERIVED_DATA }}
 
-      - name: Upload coverage to Codecov
-        if: always()
-        run: bash <(curl -s https://codecov.io/bash)
+      - name: Brew Install Xcresultparser
+        run: |
+          brew tap a7ex/homebrew-formulae
+          brew install xcresultparser
+
+      - name: Parse xcresult to Cobertura xml
+        run: |
+          xcresultparser -o cobertura ${{ env.DERIVED_DATA }}/Logs/Test/*.xcresult/ \
+          > ${{ env.DERIVED_DATA }}/cobertura-coverage.xml
+          pwd
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        with: 
+          files: /Users/runner/.DerivedData/cobertura-coverage.xml
