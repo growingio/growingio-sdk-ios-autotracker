@@ -122,8 +122,7 @@
 #if SWIFT_PACKAGE
     if (self.dtoBox) {
         NSDictionary *jsonObject = self.dtoBox.toJsonObject;
-        if ([self.eventType isEqualToString:@"VISIT"]
-            && [jsonObject isKindOfClass:[NSDictionary class]]) {
+        if ([self.eventType isEqualToString:@"VISIT"] && [jsonObject isKindOfClass:[NSDictionary class]]) {
             // 由于VISIT在SwiftProtobuf中默认值为0，转JSON会丢失eventType
             NSMutableDictionary *jsonObjectM = [NSMutableDictionary dictionaryWithDictionary:jsonObject];
             [jsonObjectM setObject:@"VISIT" forKey:@"eventType"];
