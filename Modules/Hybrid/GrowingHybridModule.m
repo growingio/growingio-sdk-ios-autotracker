@@ -19,9 +19,9 @@
 
 #import "Modules/Hybrid/Public/GrowingHybridModule.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
+#import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 #import "GrowingULSwizzle.h"
 #import "Modules/Hybrid/WKWebView+GrowingAutotracker.h"
-#import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 
 GrowingMod(GrowingHybridModule)
 
@@ -72,9 +72,9 @@ GrowingMod(GrowingHybridModule)
         GIOLogError(@"调用异常，请在主线程调用 %@", NSStringFromSelector(_cmd));
         GROWING_LOCK(lock);
     }
-    
+
     [self.enableBridgeWebViews addObject:webView];
-    
+
     if (![NSThread isMainThread]) {
         GROWING_UNLOCK(lock);
     }
@@ -85,9 +85,9 @@ GrowingMod(GrowingHybridModule)
         GIOLogError(@"调用异常，请在主线程调用 %@", NSStringFromSelector(_cmd));
         GROWING_LOCK(lock);
     }
-    
+
     [self.enableBridgeWebViews removeObject:webView];
-    
+
     if (![NSThread isMainThread]) {
         GROWING_UNLOCK(lock);
     }

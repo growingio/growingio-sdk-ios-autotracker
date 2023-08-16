@@ -24,12 +24,12 @@
 #import "GrowingTrackerCore/Event/GrowingNodeProtocol.h"
 #import "GrowingTrackerCore/GrowingRealTracker.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
-#import "Modules/Hybrid/GrowingHybridModule+Private.h"
 #import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogMacros.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "Modules/Hybrid/GrowingHybridBridgeProvider.h"
+#import "Modules/Hybrid/GrowingHybridModule+Private.h"
 #import "Modules/Hybrid/GrowingWKWebViewJavascriptBridge_JS.h"
 #import "Modules/Hybrid/GrowingWebViewJavascriptBridgeConfiguration.h"
 
@@ -63,7 +63,7 @@ static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJav
         GIOLogDebug(@"WKWebview Bridge %@ is donotTrack", webView);
         return;
     }
-    
+
     if (![GrowingHybridModule isBridgeForWebViewEnabled:webView]) {
         GIOLogDebug(@"WKWebview Bridge %@ is disabled", webView);
         return;
