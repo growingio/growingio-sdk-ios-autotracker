@@ -1,71 +1,71 @@
 PODS:
-  - GrowingAnalytics-cdp/Autotracker (3.4.8-hotfix.1):
-    - GrowingAnalytics/AutotrackerCore (= 3.4.8-hotfix.1)
-    - GrowingAnalytics/DefaultServices (= 3.4.8-hotfix.1)
-    - GrowingAnalytics/Hybrid (= 3.4.8-hotfix.1)
-    - GrowingAnalytics/MobileDebugger (= 3.4.8-hotfix.1)
-    - GrowingAnalytics/WebCircle (= 3.4.8-hotfix.1)
-  - GrowingAnalytics-cdp/Tracker (3.4.8-hotfix.1):
-    - GrowingAnalytics/DefaultServices (= 3.4.8-hotfix.1)
-    - GrowingAnalytics/MobileDebugger (= 3.4.8-hotfix.1)
-    - GrowingAnalytics/TrackerCore (= 3.4.8-hotfix.1)
-  - GrowingAnalytics/Advert (3.4.8-hotfix.1):
-    - GrowingAnalytics/TrackerCore (= 3.4.8-hotfix.1)
-  - GrowingAnalytics/APM (3.4.8-hotfix.1):
-    - GrowingAnalytics/TrackerCore (= 3.4.8-hotfix.1)
+  - GrowingAnalytics-cdp/Autotracker (3.5.0):
+    - GrowingAnalytics/AutotrackerCore (= 3.5.0)
+    - GrowingAnalytics/DefaultServices (= 3.5.0)
+    - GrowingAnalytics/Hybrid (= 3.5.0)
+    - GrowingAnalytics/MobileDebugger (= 3.5.0)
+    - GrowingAnalytics/WebCircle (= 3.5.0)
+  - GrowingAnalytics-cdp/Tracker (3.5.0):
+    - GrowingAnalytics/DefaultServices (= 3.5.0)
+    - GrowingAnalytics/MobileDebugger (= 3.5.0)
+    - GrowingAnalytics/TrackerCore (= 3.5.0)
+  - GrowingAnalytics/Advert (3.5.0):
+    - GrowingAnalytics/TrackerCore (= 3.5.0)
+  - GrowingAnalytics/APM (3.5.0):
+    - GrowingAnalytics/TrackerCore (= 3.5.0)
     - GrowingAPM/Core
-  - GrowingAnalytics/Autotracker (3.4.8-hotfix.1):
-    - GrowingAnalytics/AutotrackerCore (= 3.4.8-hotfix.1)
-    - GrowingAnalytics/DefaultServices (= 3.4.8-hotfix.1)
-    - GrowingAnalytics/Hybrid (= 3.4.8-hotfix.1)
-    - GrowingAnalytics/MobileDebugger (= 3.4.8-hotfix.1)
-    - GrowingAnalytics/WebCircle (= 3.4.8-hotfix.1)
-  - GrowingAnalytics/AutotrackerCore (3.4.8-hotfix.1):
-    - GrowingAnalytics/TrackerCore (= 3.4.8-hotfix.1)
+  - GrowingAnalytics/Autotracker (3.5.0):
+    - GrowingAnalytics/AutotrackerCore (= 3.5.0)
+    - GrowingAnalytics/DefaultServices (= 3.5.0)
+    - GrowingAnalytics/Hybrid (= 3.5.0)
+    - GrowingAnalytics/MobileDebugger (= 3.5.0)
+    - GrowingAnalytics/WebCircle (= 3.5.0)
+  - GrowingAnalytics/AutotrackerCore (3.5.0):
+    - GrowingAnalytics/TrackerCore (= 3.5.0)
     - GrowingUtils/AutotrackerCore (= 0.0.5)
-  - GrowingAnalytics/Compression (3.4.8-hotfix.1):
-    - GrowingAnalytics/TrackerCore (= 3.4.8-hotfix.1)
-  - GrowingAnalytics/Database (3.4.8-hotfix.1):
-    - GrowingAnalytics/TrackerCore (= 3.4.8-hotfix.1)
-  - GrowingAnalytics/DefaultServices (3.4.8-hotfix.1):
-    - GrowingAnalytics/Compression (= 3.4.8-hotfix.1)
-    - GrowingAnalytics/Database (= 3.4.8-hotfix.1)
-    - GrowingAnalytics/Encryption (= 3.4.8-hotfix.1)
-    - GrowingAnalytics/Network (= 3.4.8-hotfix.1)
-    - GrowingAnalytics/TrackerCore (= 3.4.8-hotfix.1)
-  - GrowingAnalytics/Encryption (3.4.8-hotfix.1):
-    - GrowingAnalytics/TrackerCore (= 3.4.8-hotfix.1)
-  - GrowingAnalytics/Hybrid (3.4.8-hotfix.1):
-    - GrowingAnalytics/TrackerCore (= 3.4.8-hotfix.1)
-  - GrowingAnalytics/MobileDebugger (3.4.8-hotfix.1):
-    - GrowingAnalytics/Screenshot (= 3.4.8-hotfix.1)
-    - GrowingAnalytics/TrackerCore (= 3.4.8-hotfix.1)
-    - GrowingAnalytics/WebSocket (= 3.4.8-hotfix.1)
-  - GrowingAnalytics/Network (3.4.8-hotfix.1):
-    - GrowingAnalytics/TrackerCore (= 3.4.8-hotfix.1)
-  - GrowingAnalytics/Protobuf (3.4.8-hotfix.1):
-    - GrowingAnalytics/Database (= 3.4.8-hotfix.1)
-    - GrowingAnalytics/Protobuf/Proto (= 3.4.8-hotfix.1)
-    - GrowingAnalytics/TrackerCore (= 3.4.8-hotfix.1)
-  - GrowingAnalytics/Protobuf/Proto (3.4.8-hotfix.1):
-    - GrowingAnalytics/Database (= 3.4.8-hotfix.1)
-    - GrowingAnalytics/TrackerCore (= 3.4.8-hotfix.1)
+  - GrowingAnalytics/Compression (3.5.0):
+    - GrowingAnalytics/TrackerCore (= 3.5.0)
+  - GrowingAnalytics/Database (3.5.0):
+    - GrowingAnalytics/TrackerCore (= 3.5.0)
+  - GrowingAnalytics/DefaultServices (3.5.0):
+    - GrowingAnalytics/Compression (= 3.5.0)
+    - GrowingAnalytics/Database (= 3.5.0)
+    - GrowingAnalytics/Encryption (= 3.5.0)
+    - GrowingAnalytics/Network (= 3.5.0)
+    - GrowingAnalytics/TrackerCore (= 3.5.0)
+  - GrowingAnalytics/Encryption (3.5.0):
+    - GrowingAnalytics/TrackerCore (= 3.5.0)
+  - GrowingAnalytics/Hybrid (3.5.0):
+    - GrowingAnalytics/TrackerCore (= 3.5.0)
+  - GrowingAnalytics/MobileDebugger (3.5.0):
+    - GrowingAnalytics/Screenshot (= 3.5.0)
+    - GrowingAnalytics/TrackerCore (= 3.5.0)
+    - GrowingAnalytics/WebSocket (= 3.5.0)
+  - GrowingAnalytics/Network (3.5.0):
+    - GrowingAnalytics/TrackerCore (= 3.5.0)
+  - GrowingAnalytics/Protobuf (3.5.0):
+    - GrowingAnalytics/Database (= 3.5.0)
+    - GrowingAnalytics/Protobuf/Proto (= 3.5.0)
+    - GrowingAnalytics/TrackerCore (= 3.5.0)
+  - GrowingAnalytics/Protobuf/Proto (3.5.0):
+    - GrowingAnalytics/Database (= 3.5.0)
+    - GrowingAnalytics/TrackerCore (= 3.5.0)
     - Protobuf
-  - GrowingAnalytics/Screenshot (3.4.8-hotfix.1):
+  - GrowingAnalytics/Screenshot (3.5.0):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/Tracker (3.4.8-hotfix.1):
-    - GrowingAnalytics/DefaultServices (= 3.4.8-hotfix.1)
-    - GrowingAnalytics/MobileDebugger (= 3.4.8-hotfix.1)
-    - GrowingAnalytics/TrackerCore (= 3.4.8-hotfix.1)
-  - GrowingAnalytics/TrackerCore (3.4.8-hotfix.1):
+  - GrowingAnalytics/Tracker (3.5.0):
+    - GrowingAnalytics/DefaultServices (= 3.5.0)
+    - GrowingAnalytics/MobileDebugger (= 3.5.0)
+    - GrowingAnalytics/TrackerCore (= 3.5.0)
+  - GrowingAnalytics/TrackerCore (3.5.0):
     - GrowingUtils/TrackerCore (= 0.0.5)
-  - GrowingAnalytics/WebCircle (3.4.8-hotfix.1):
-    - GrowingAnalytics/AutotrackerCore (= 3.4.8-hotfix.1)
-    - GrowingAnalytics/Hybrid (= 3.4.8-hotfix.1)
-    - GrowingAnalytics/Screenshot (= 3.4.8-hotfix.1)
-    - GrowingAnalytics/WebSocket (= 3.4.8-hotfix.1)
-  - GrowingAnalytics/WebSocket (3.4.8-hotfix.1):
-    - GrowingAnalytics/TrackerCore (= 3.4.8-hotfix.1)
+  - GrowingAnalytics/WebCircle (3.5.0):
+    - GrowingAnalytics/AutotrackerCore (= 3.5.0)
+    - GrowingAnalytics/Hybrid (= 3.5.0)
+    - GrowingAnalytics/Screenshot (= 3.5.0)
+    - GrowingAnalytics/WebSocket (= 3.5.0)
+  - GrowingAnalytics/WebSocket (3.5.0):
+    - GrowingAnalytics/TrackerCore (= 3.5.0)
   - GrowingAPM (0.0.14):
     - GrowingAPM/Core (= 0.0.14)
     - GrowingAPM/CrashMonitor (= 0.0.14)
@@ -161,8 +161,8 @@ EXTERNAL SOURCES:
     :path: "./"
 
 SPEC CHECKSUMS:
-  GrowingAnalytics: 9c4c3c7e33523f3daba012a06f0f419b77e02544
-  GrowingAnalytics-cdp: 273939219903d141466237a703700cfb6bb0b689
+  GrowingAnalytics: d1d706fe8205b8139b62a5717053a03ee33962a0
+  GrowingAnalytics-cdp: 0c3605344c9870ac9982cb0315c498f7a12298c3
   GrowingAPM: 79fe4f4a12d94432fa4a552d56c41940ea13961a
   GrowingToolsKit: 88b144e858f8895f1d84c518642ce34ce0f5aa07
   GrowingUtils: 5212c5c0501ea0c3863a29c33ccefbde5be77353
@@ -172,6 +172,6 @@ SPEC CHECKSUMS:
   SDCycleScrollView: a0d74c3384caa72bdfc81470bdbc8c14b3e1fbcf
   SDWebImage: 2aea163b50bfcb569a2726b6a754c54a4506fcf6
 
-PODFILE CHECKSUM: 82c0924b772d0db457a4d610670c1ac33475aeae
+PODFILE CHECKSUM: cbf7540faaee5eacde16e6a695caa559cb26e455
 
 COCOAPODS: 1.12.1
