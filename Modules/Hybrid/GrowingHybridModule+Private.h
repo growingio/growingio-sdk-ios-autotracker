@@ -1,9 +1,9 @@
 //
-//  dummy.h
-//  GrowingAnalytics
+// GrowingHybridModule.h
+// GrowingAnalytics
 //
-//  Created by YoloMao on 2022/3/18.
-//  Copyright (C) 2022 Beijing Yishu Technology Co., Ltd.
+//  Created by sheng on 2023/8/16.
+//  Copyright (C) 2023 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,5 +17,17 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-// There are no actual public headers in the lib. This is a dummy public header to prevent Cocoapods
-// from adding all internal headers as public.
+#import "Modules/Hybrid/Public/GrowingHybridModule.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+@class WKWebView;
+
+@interface GrowingHybridModule (Private)
+
+// 判断webView是否可注入
++ (BOOL)isBridgeForWebViewEnabled:(WKWebView *)webView;
+
+@end
+
+NS_ASSUME_NONNULL_END

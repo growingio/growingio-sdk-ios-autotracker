@@ -22,7 +22,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class WKWebView;
+
 @interface GrowingHybridModule : NSObject <GrowingModuleProtocol>
+
+// 是否自动注入Hybrid SDK
+@property (nonatomic, assign) BOOL autoBridgeEnabled;
+
+// 对单个webView启用Hybrid注入，请在主线程调用
+- (void)enableBridgeForWebView:(WKWebView *)webView;
+
+// 对单个webView关闭Hybrid注入，请在主线程调用
+- (void)disableBridgeForWebView:(WKWebView *)webView;
 
 @end
 

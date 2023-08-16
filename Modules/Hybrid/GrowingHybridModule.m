@@ -17,18 +17,88 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "Modules/Hybrid/GrowingHybridModule.h"
+#import "Modules/Hybrid/Public/GrowingHybridModule.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingULSwizzle.h"
 #import "Modules/Hybrid/WKWebView+GrowingAutotracker.h"
+#import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 
 GrowingMod(GrowingHybridModule)
 
-@implementation GrowingHybridModule
+@interface GrowingHybridModule ()
+
+@property (nonatomic, strong) NSHashTable *enableBridgeWebViews;
+
+@end
+
+@implementation GrowingHybridModule {
+    GROWING_LOCK_DECLARE(lock);
+}
+
+#pragma mark - Init
+
++ (instancetype)sharedInstance {
+    static id _sharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _sharedInstance = [[self alloc] init];
+    });
+    return _sharedInstance;
+}
+
+- (instancetype)init {
+    if (self = [super init]) {
+        _autoBridgeEnabled = YES;
+        _enableBridgeWebViews = [NSHashTable weakObjectsHashTable];
+        GROWING_LOCK_INIT(lock);
+    }
+    return self;
+}
+
+#pragma mark - GrowingModuleProtocol
+
++ (BOOL)singleton {
+    return YES;
+}
 
 - (void)growingModInit:(GrowingContext *)context {
     [self track];
 }
+
+#pragma mark - Public Methods
+
+- (void)enableBridgeForWebView:(WKWebView *)webView {
+    if (![NSThread isMainThread]) {
+        GIOLogError(@"调用异常，请在主线程调用 %@", NSStringFromSelector(_cmd));
+        GROWING_LOCK(lock);
+    }
+    
+    [self.enableBridgeWebViews addObject:webView];
+    
+    if (![NSThread isMainThread]) {
+        GROWING_UNLOCK(lock);
+    }
+}
+
+- (void)disableBridgeForWebView:(WKWebView *)webView {
+    if (![NSThread isMainThread]) {
+        GIOLogError(@"调用异常，请在主线程调用 %@", NSStringFromSelector(_cmd));
+        GROWING_LOCK(lock);
+    }
+    
+    [self.enableBridgeWebViews removeObject:webView];
+    
+    if (![NSThread isMainThread]) {
+        GROWING_UNLOCK(lock);
+    }
+}
+
++ (BOOL)isBridgeForWebViewEnabled:(WKWebView *)webView {
+    GrowingHybridModule *module = GrowingHybridModule.sharedInstance;
+    return (module.autoBridgeEnabled || [module.enableBridgeWebViews containsObject:webView]);
+}
+
+#pragma mark - Private Methods
 
 - (void)track {
     static dispatch_once_t onceToken;

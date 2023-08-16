@@ -126,7 +126,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   s.subspec 'Hybrid' do |hybrid|
     hybrid.ios.deployment_target = '9.0'
     hybrid.source_files = 'Modules/Hybrid/**/*{.h,.m,.c,.cpp,.mm}'
-    hybrid.public_header_files = 'Modules/Hybrid/include/*.h'
+    hybrid.public_header_files = 'Modules/Hybrid/Public/*.h'
     hybrid.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
   end
 
