@@ -21,12 +21,13 @@ jobs:
           
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GIOSDK_PAT }}
 
       - name: Conventional Changelog
         id: changelog
         uses: TriPSs/conventional-changelog-action@v3
         with:
-          github-token: ${{ secrets.github_token}}
           preset: 'angular'
           skip-version-file: 'true'
           skip-commit: 'true'
@@ -36,6 +37,8 @@ jobs:
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: |
           sh ./scripts/update_version.sh ${{ steps.changelog.outputs.tag }}
+          git config user.name GIOSDK
+          git config user.email sdk-integration@growingio.com
           git commit -am "feat: release ${{ steps.changelog.outputs.tag }}"
           git push
           git tag -d ${{ steps.changelog.outputs.tag }}

@@ -21,12 +21,13 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GIOSDK_PAT }}
 
       - name: Conventional Changelog
         id: changelog
         uses: TriPSs/conventional-changelog-action@v3
         with:
-          github-token: ${{ secrets.github_token}}
           preset: 'angular'
           skip-version-file: 'true'
           skip-commit: 'true'
@@ -36,6 +37,8 @@ jobs:
       - name: Generate xcframework
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: 
+          git config user.name GIOSDK
+          git config user.email sdk-integration@growingio.com
           sh ./scripts/generate_xcframework.sh releaseDefaultAutotracker --verbose
 
       - name: Archive
