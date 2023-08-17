@@ -61,9 +61,7 @@
 - (void)test01AlertButtonClick {
     // 对话框按钮点击，检测click事件
     [[viewTester usingLabel:@"AttributeLabel"] tap];
-    [viewTester waitForAnimationsToFinish];
     [[viewTester usingLabel:@"ShowAlert"] tap];
-    [viewTester waitForAnimationsToFinish];
 
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"取消"];
     NSString *xpathForView =
@@ -112,7 +110,6 @@
 
 - (void)test02ClickDoNotTrack {
     [[viewTester usingLabel:@"AttributeLabel"] tap];
-    [viewTester waitForAnimationsToFinish];
 
     [MockEventQueue.sharedQueue cleanQueue];
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"GIODontTrackBtn"];
@@ -156,7 +153,6 @@
 - (void)test03ButtonWithImageViewClick {
     // 单击ButtonWithImageView，检测click事件
     [[viewTester usingLabel:@"Simple UI Elements"] tap];
-    [viewTester waitForAnimationsToFinish];
 
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"Food"];
     NSString *xpathForView =
@@ -189,7 +185,6 @@
 - (void)test04UIViewButtonClick {
     // 单击UIViewButton，检测click事件
     [[viewTester usingLabel:@"Simple UI Elements"] tap];
-    [viewTester waitForAnimationsToFinish];
 
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"Fire"];
     NSString *xpathForView =
@@ -222,7 +217,6 @@
 - (void)test05UISegmentedControlClick {
     // 单击UISegmentedControl，检测click事件
     [[viewTester usingLabel:@"Simple UI Elements"] tap];
-    [viewTester waitForAnimationsToFinish];
     [[viewTester usingLabel:@"SecondSegment"] tap];
 
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"ThirdSegment"];
@@ -236,7 +230,6 @@
                             xcontent:xcontentForView
                       originxcontent:originxcontentForView];
     [actor tap];
-    [viewTester waitForAnimationsToFinish];
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
     XCTAssertEqual(events.count, 3);
 
@@ -257,7 +250,6 @@
 - (void)test06ClickCustomContent {
     // 单击自定义content的UISegmentedControl，检测textValue
     [[viewTester usingLabel:@"Simple UI Elements"] tap];
-    [viewTester waitForAnimationsToFinish];
 
     [MockEventQueue.sharedQueue cleanQueue];
 
@@ -289,7 +281,6 @@
 - (void)test07UITableViewHeaderFooterViewButtonClick {
     // 单击UITableViewHeaderFooterView上的Button，检测click事件
     [[viewTester usingLabel:@"协议/接口"] tap];
-    [viewTester waitForAnimationsToFinish];
 
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"header1"];
     NSString *xpathForView =
@@ -321,11 +312,8 @@
 
 - (void)test08IgnoreViewClass {
     [[viewTester usingLabel:@"IgnoreViewClass"] tap];
-    [viewTester waitForAnimationsToFinish];
-
     [[viewTester usingLabel:@"ignoreViewClass"] tap];
-    [viewTester waitForAnimationsToFinish];
-
+    
     [MockEventQueue.sharedQueue cleanQueue];
 
     [[viewTester usingLabel:@"IgnoreButton1"] tap];
@@ -352,11 +340,8 @@
 
 - (void)test09IgnoreViewClasses {
     [[viewTester usingLabel:@"IgnoreViewClass"] tap];
-    [viewTester waitForAnimationsToFinish];
-
     [[viewTester usingLabel:@"ignoreViewClasses"] tap];
-    [viewTester waitForAnimationsToFinish];
-
+    
     [MockEventQueue.sharedQueue cleanQueue];
 
     [[viewTester usingLabel:@"IgnoreButton1"] tap];

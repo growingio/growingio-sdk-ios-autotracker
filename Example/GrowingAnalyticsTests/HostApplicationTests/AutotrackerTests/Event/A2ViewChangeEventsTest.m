@@ -33,7 +33,6 @@
 - (void)test01TextFields {
     [[viewTester usingLabel:@"UI界面"] tap];
     [[viewTester usingLabel:@"Text Fields"] tap];
-    [viewTester waitForAnimationsToFinish];
     [[viewTester usingLabel:@"fisrtTF"] tap];
     [[viewTester usingFirstResponder] enterText:@"Good"];
     [[viewTester usingFirstResponder].view resignFirstResponder];
@@ -53,7 +52,6 @@
 - (void)test02TextFieldsIgnore {
     [[viewTester usingLabel:@"UI界面"] tap];
     [[viewTester usingLabel:@"Text Fields"] tap];
-    [viewTester waitForAnimationsToFinish];
 
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"fisrtTF"];
     {
@@ -88,7 +86,6 @@
 - (void)test03DataPicker {
     [[viewTester usingLabel:@"协议/接口"] tap];
     [[viewTester usingLabel:@"VIEW_CHANGE请求"] tap];
-    [viewTester waitForAnimationsToFinish];
     [[viewTester usingLabel:@"dataPickerOper"] tap];
 
     NSArray *date = @[@"June", @"10", @"2019"];
@@ -104,7 +101,6 @@
 - (void)test04Slider {
     [[viewTester usingLabel:@"UI界面"] tap];
     [[viewTester usingLabel:@"Simple UI Elements"] tap];
-    [viewTester waitForAnimationsToFinish];
 
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"defaultSlider"];
     {

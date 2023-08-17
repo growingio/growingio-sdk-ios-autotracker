@@ -66,7 +66,7 @@
 - (void)test02SendMockCustomEvent {
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"HybridWebView"];
     [self webView:actor.view evaluateJavaScript:@"sendMockCustomEvent()"];
-    [viewTester waitForTimeInterval:1];
+    [viewTester waitForTimeInterval:0.5];
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
     XCTAssertEqual(events.count, 1);
@@ -86,7 +86,7 @@
 - (void)test03SendMockCustomEventWithAttributes {
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"HybridWebView"];
     [self webView:actor.view evaluateJavaScript:@"sendMockCustomEventWithAttributes()"];
-    [viewTester waitForTimeInterval:1];
+    [viewTester waitForTimeInterval:0.5];
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
     XCTAssertEqual(events.count, 1);
@@ -106,7 +106,7 @@
 - (void)test04SendMockLoginUserAttributesEvent {
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"HybridWebView"];
     [self webView:actor.view evaluateJavaScript:@"sendMockLoginUserAttributesEvent()"];
-    [viewTester waitForTimeInterval:1];
+    [viewTester waitForTimeInterval:0.5];
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeLoginUserAttributes];
     XCTAssertEqual(events.count, 1);
@@ -124,7 +124,7 @@
 - (void)test06SendMockPageEvent {
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"HybridWebView"];
     [self webView:actor.view evaluateJavaScript:@"sendMockPageEvent()"];
-    [viewTester waitForTimeInterval:1];
+    [viewTester waitForTimeInterval:0.5];
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
     XCTAssertEqual(events.count, 1);
@@ -143,7 +143,7 @@
 - (void)test07SendMockPageEventWithQuery {
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"HybridWebView"];
     [self webView:actor.view evaluateJavaScript:@"sendMockPageEventWithQuery()"];
-    [viewTester waitForTimeInterval:1];
+    [viewTester waitForTimeInterval:0.5];
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
     XCTAssertEqual(events.count, 1);
@@ -163,7 +163,7 @@
 - (void)test08SendMockPageEventWithAttributes {
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"HybridWebView"];
     [self webView:actor.view evaluateJavaScript:@"sendMockPageEventWithAttributes()"];
-    [viewTester waitForTimeInterval:1];
+    [viewTester waitForTimeInterval:0.5];
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
     XCTAssertEqual(events.count, 1);
@@ -185,7 +185,7 @@
 - (void)test09SendMockViewClickEvent {
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"HybridWebView"];
     [self webView:actor.view evaluateJavaScript:@"sendMockViewClickEvent()"];
-    [viewTester waitForTimeInterval:1];
+    [viewTester waitForTimeInterval:0.5];
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
     XCTAssertEqual(events.count, 1);
@@ -207,7 +207,7 @@
 - (void)test10SendMockViewChangeEvent {
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"HybridWebView"];
     [self webView:actor.view evaluateJavaScript:@"sendMockViewChangeEvent()"];
-    [viewTester waitForTimeInterval:1];
+    [viewTester waitForTimeInterval:0.5];
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewChange];
     XCTAssertEqual(events.count, 1);
@@ -229,7 +229,7 @@
 - (void)test11SendMockFormSubmitEvent {
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"HybridWebView"];
     [self webView:actor.view evaluateJavaScript:@"sendMockFormSubmitEvent()"];
-    [viewTester waitForTimeInterval:1];
+    [viewTester waitForTimeInterval:0.5];
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeFormSubmit];
     XCTAssertEqual(events.count, 1);
@@ -249,7 +249,7 @@
 - (void)test12MockSetUserId {
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"HybridWebView"];
     [self webView:actor.view evaluateJavaScript:@"mockSetUserId('xctest_userId_hybrid')"];
-    [viewTester waitForTimeInterval:1];
+    [viewTester waitForTimeInterval:0.5];
 
     [GrowingDispatchManager
         dispatchInGrowingThread:^{
@@ -262,7 +262,7 @@
 - (void)test13MockClearUserId {
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"HybridWebView"];
     [self webView:actor.view evaluateJavaScript:@"mockClearUserId()"];
-    [viewTester waitForTimeInterval:1];
+    [viewTester waitForTimeInterval:0.5];
 
     [GrowingDispatchManager
         dispatchInGrowingThread:^{
@@ -275,7 +275,7 @@
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"HybridWebView"];
     [self webView:actor.view
         evaluateJavaScript:@"mockSetUserIdAndUserKey('xctest_userId_hybrid2', 'xctest_userKey_hybrid2')"];
-    [viewTester waitForTimeInterval:1];
+    [viewTester waitForTimeInterval:0.5];
     [GrowingDispatchManager
         dispatchInGrowingThread:^{
             XCTAssertEqualObjects([[GrowingPersistenceDataProvider sharedInstance] loginUserId],
@@ -289,7 +289,7 @@
 - (void)test15MockClearUserIdAndUserKey {
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"HybridWebView"];
     [self webView:actor.view evaluateJavaScript:@"mockClearUserIdAndUserKey()"];
-    [viewTester waitForTimeInterval:1];
+    [viewTester waitForTimeInterval:0.5];
 
     [GrowingDispatchManager
         dispatchInGrowingThread:^{
@@ -305,7 +305,7 @@ static int XCTest_didDomChanged = 0;
 
     KIFUIViewTestActor *actor = [viewTester usingLabel:@"HybridWebView"];
     [self webView:actor.view evaluateJavaScript:@"mockDomChanged()"];
-    [viewTester waitForTimeInterval:1];
+    [viewTester waitForTimeInterval:0.5];
     XCTAssertEqual(XCTest_didDomChanged, 1);
 }
 

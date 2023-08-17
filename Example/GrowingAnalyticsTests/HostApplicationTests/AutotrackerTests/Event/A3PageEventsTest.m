@@ -49,9 +49,7 @@
 
 - (void)test01AutotrackPage {
     [viewTester tapRowInTableViewAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
-    [viewTester waitForAnimationsToFinish];
     [viewTester tapRowInTableViewAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
-    [viewTester waitForAnimationsToFinish];
     [[viewTester usingLabel:@"Button"] tap];
 
     {
@@ -93,9 +91,7 @@
 
 - (void)test02AutotrackPageDelay {
     [viewTester tapRowInTableViewAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
-    [viewTester waitForAnimationsToFinish];
     [viewTester tapRowInTableViewAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
-    [viewTester waitForAnimationsToFinish];
     [[viewTester usingLabel:@"Button"] tap];
 
     // 立即点击按钮，由于尚未调用autotrackPage，path字段无值
@@ -166,9 +162,7 @@
 
 - (void)test03AutotrackPageWithoutCallSuperViewDidAppear {
     [viewTester tapRowInTableViewAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
-    [viewTester waitForAnimationsToFinish];
     [viewTester tapRowInTableViewAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0]];
-    [viewTester waitForAnimationsToFinish];
     [[viewTester usingLabel:@"Button"] tap];
 
     // 不兼容在viewDidLoad调用autotrackPage，却未调用super viewDidAppear的情况
@@ -201,9 +195,7 @@
 
 - (void)test04AutotrackPageDelayWithoutCallSuperViewDidAppear {
     [viewTester tapRowInTableViewAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
-    [viewTester waitForAnimationsToFinish];
     [viewTester tapRowInTableViewAtIndexPath:[NSIndexPath indexPathForRow:3 inSection:0]];
-    [viewTester waitForAnimationsToFinish];
     [[viewTester usingLabel:@"Button"] tap];
 
     // 立即点击按钮，走findPageByView内部的补page逻辑，由于尚未调用autotrackPage，path字段无值
@@ -274,9 +266,7 @@
 
 - (void)test05AutotrackPageDelayWithoutCallSuperViewDidAppear {
     [viewTester tapRowInTableViewAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
-    [viewTester waitForAnimationsToFinish];
     [viewTester tapRowInTableViewAtIndexPath:[NSIndexPath indexPathForRow:3 inSection:0]];
-    [viewTester waitForAnimationsToFinish];
     [[viewTester usingLabel:@"Button"] tap];
 
     // 不点击按钮，走autotrackPage内部的补page逻辑
