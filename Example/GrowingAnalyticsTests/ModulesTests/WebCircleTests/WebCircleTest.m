@@ -160,7 +160,7 @@ static __weak GrowingWebCircle *webCircle;
     [viewTester tapRowInTableViewAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
 
     XCTestExpectation *expectation = [self expectationWithDescription:@"WebCircle Test failed : timeout"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSString *message = MockWebSocket.sharedInstance.lastMessage;
         NSMutableDictionary *dic = [[message growingHelper_jsonObject] mutableCopy];
         [self webCircleSocketParamsCheck:dic];
@@ -215,10 +215,11 @@ static __weak GrowingWebCircle *webCircle;
     // 再执行webSocket:didReceiveMessage:以触发getDomTree
     [[viewTester usingLabel:@"UI界面"] tap];
     [[viewTester usingLabel:@"Hybrid"] tap];
+    [viewTester waitForTimeInterval:5];
 
     [webCircle webSocket:nil didReceiveMessage:@"{\"msgType\":\"ready\"}"];
     // 尝试通过tapPoint点击到html中的button
-    [viewTester tapScreenAtPoint:CGPointMake(100, 300)];
+    [viewTester tapScreenAtPoint:CGPointMake(100, 200)];
 
     XCTestExpectation *expectation = [self expectationWithDescription:@"WebCircle Test failed : timeout"];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{

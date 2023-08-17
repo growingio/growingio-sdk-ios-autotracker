@@ -41,7 +41,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
     GrowingAutotrackConfiguration *configuration = [GrowingAutotrackConfiguration configurationWithProjectId:@"test"];
     configuration.dataSourceId = @"test";
     configuration.idMappingEnabled = YES;
-    configuration.sessionInterval = 10.0f;
+    configuration.sessionInterval = 3.0f;
     configuration.urlScheme = @"growing.xctest";
     [GrowingAutotracker startWithConfiguration:configuration launchOptions:nil];
 }
@@ -202,7 +202,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
 - (void)testTrackTimer {
     {
         NSString *timerId = [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
-        usleep(1000);
+        usleep(100);
         [[GrowingAutotracker sharedInstance] trackTimerEnd:timerId];
 
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
@@ -244,7 +244,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
         // wrong timerId
         [MockEventQueue.sharedQueue cleanQueue];
         [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
-        usleep(1000);
+        usleep(100);
         [[GrowingAutotracker sharedInstance] trackTimerEnd:@"eventName"];
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
         XCTAssertEqual(events.count, 0);
@@ -256,7 +256,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
         // remove timer
         [MockEventQueue.sharedQueue cleanQueue];
         NSString *timerId = [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
-        usleep(1000);
+        usleep(100);
         [[GrowingAutotracker sharedInstance] removeTimer:timerId];
         [[GrowingAutotracker sharedInstance] trackTimerEnd:timerId];
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
@@ -267,7 +267,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
         // clear all timers
         [MockEventQueue.sharedQueue cleanQueue];
         NSString *timerId = [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
-        usleep(1000);
+        usleep(100);
         [[GrowingAutotracker sharedInstance] clearTrackTimer];
         [[GrowingAutotracker sharedInstance] trackTimerEnd:timerId];
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
@@ -361,7 +361,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
 - (void)testTrackTimerWithAttributes {
     {
         NSString *timerId = [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
-        usleep(1000);
+        usleep(100);
         [[GrowingAutotracker sharedInstance] trackTimerEnd:timerId withAttributes:@{@"key": @"value"}];
 
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
@@ -377,7 +377,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
         // wrong timerId
         [MockEventQueue.sharedQueue cleanQueue];
         [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
-        usleep(1000);
+        usleep(100);
         [[GrowingAutotracker sharedInstance] trackTimerEnd:@"eventName" withAttributes:@{@"key": @"value"}];
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
         XCTAssertEqual(events.count, 0);
@@ -389,7 +389,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
         // remove timer
         [MockEventQueue.sharedQueue cleanQueue];
         NSString *timerId = [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
-        usleep(1000);
+        usleep(100);
         [[GrowingAutotracker sharedInstance] removeTimer:timerId];
         [[GrowingAutotracker sharedInstance] trackTimerEnd:timerId withAttributes:@{@"key": @"value"}];
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
@@ -400,7 +400,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
         // clear all timers
         [MockEventQueue.sharedQueue cleanQueue];
         NSString *timerId = [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
-        usleep(1000);
+        usleep(100);
         [[GrowingAutotracker sharedInstance] clearTrackTimer];
         [[GrowingAutotracker sharedInstance] trackTimerEnd:timerId withAttributes:@{@"key": @"value"}];
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];

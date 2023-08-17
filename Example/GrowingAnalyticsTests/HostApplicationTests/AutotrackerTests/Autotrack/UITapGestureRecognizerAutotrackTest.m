@@ -41,7 +41,6 @@
 
     [[viewTester usingLabel:@"协议/接口"] tap];
     [[viewTester usingLabel:@"CLICK请求"] tap];
-    [viewTester waitForTimeInterval:1];
 }
 
 - (void)afterAll {
