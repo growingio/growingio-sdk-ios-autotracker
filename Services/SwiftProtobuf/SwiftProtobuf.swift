@@ -252,12 +252,8 @@ extension GrowingBaseEvent {
     }
 
     fileprivate func path() -> String {
-        if self.responds(to: Selector(("pageName"))) {
-            let selector = Selector(("pageName"))
-            let imp: IMP = method_getImplementation(class_getInstanceMethod(type(of: self), selector)!)
-            return unsafeBitCast(imp, to: (@convention(c)(GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
-        } else if self.responds(to: Selector(("path"))) {
-            let selector = Selector(("path"))
+    let selector = Selector(("path"))
+        if self.responds(to: selector) {
             let imp: IMP = method_getImplementation(class_getInstanceMethod(type(of: self), selector)!)
             return unsafeBitCast(imp, to: (@convention(c)(GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
         }

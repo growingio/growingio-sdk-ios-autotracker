@@ -662,12 +662,12 @@ static NSString *const kGrowingEventDuration = @"event_duration";
 
         GrowingPageEvent *event = (GrowingPageEvent *)events.firstObject;
         XCTAssertEqualObjects(event.eventType, GrowingEventTypePage);
-        XCTAssertEqualObjects(event.pageName, @"XCTest");
+        XCTAssertEqualObjects(event.path, @"/XCTest");
         XCTAssertEqualObjects(event.attributes[@"key"], nil);
 
         NSDictionary *dic = event.toDictionary;
         XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypePage);
-        XCTAssertEqualObjects(dic[@"path"], @"XCTest");
+        XCTAssertEqualObjects(dic[@"path"], @"/XCTest");
         XCTAssertEqualObjects(dic[@"attributes"][@"key"], nil);
 
         [expectation fulfill];
@@ -704,12 +704,12 @@ static NSString *const kGrowingEventDuration = @"event_duration";
 
         GrowingPageEvent *event = (GrowingPageEvent *)events.firstObject;
         XCTAssertEqualObjects(event.eventType, GrowingEventTypePage);
-        XCTAssertEqualObjects(event.pageName, @"XCTest");
+        XCTAssertEqualObjects(event.path, @"/XCTest");
         XCTAssertEqualObjects(event.attributes[@"key"], @"value");
 
         NSDictionary *dic = event.toDictionary;
         XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypePage);
-        XCTAssertEqualObjects(dic[@"path"], @"XCTest");
+        XCTAssertEqualObjects(dic[@"path"], @"/XCTest");
         XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
 
         [expectation fulfill];

@@ -60,14 +60,14 @@
 
         GrowingPageEvent *event = (GrowingPageEvent *)events.firstObject;
         XCTAssertEqualObjects(event.eventType, GrowingEventTypePage);
-        XCTAssertEqualObjects(event.pageName, @"页面测试");
+        XCTAssertEqualObjects(event.path, @"/页面测试");
         XCTAssertEqualObjects(event.attributes[@"key"], @"value");
 
         NSDictionary *dic = event.toDictionary;
         XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypePage);
         XCTAssertTrue([ManualTrackHelper pageEventCheck:dic]);
         XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
-        XCTAssertEqualObjects(dic[@"path"], @"页面测试");
+        XCTAssertEqualObjects(dic[@"path"], @"/页面测试");
         XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
     }
 
@@ -81,7 +81,7 @@
         XCTAssertTrue([ManualTrackHelper viewClickEventCheck:dic]);
         XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
 
-        XCTAssertEqualObjects(dic[@"path"], @"页面测试");
+        XCTAssertEqualObjects(dic[@"path"], @"/页面测试");
         XCTAssertEqualObjects(dic[@"textValue"], @"Button");
         XCTAssertEqualObjects(
             dic[@"xpath"],
@@ -127,14 +127,14 @@
 
             GrowingPageEvent *event = (GrowingPageEvent *)events.firstObject;
             XCTAssertEqualObjects(event.eventType, GrowingEventTypePage);
-            XCTAssertEqualObjects(event.pageName, @"页面测试");
+            XCTAssertEqualObjects(event.path, @"/页面测试");
             XCTAssertEqualObjects(event.attributes[@"key"], @"value");
 
             NSDictionary *dic = event.toDictionary;
             XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypePage);
             XCTAssertTrue([ManualTrackHelper pageEventCheck:dic]);
             XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
-            XCTAssertEqualObjects(dic[@"path"], @"页面测试");
+            XCTAssertEqualObjects(dic[@"path"], @"/页面测试");
             XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
         }
 
@@ -150,7 +150,7 @@
             XCTAssertTrue([ManualTrackHelper viewClickEventCheck:dic]);
             XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
 
-            XCTAssertEqualObjects(dic[@"path"], @"页面测试");
+            XCTAssertEqualObjects(dic[@"path"], @"/页面测试");
             XCTAssertEqualObjects(dic[@"textValue"], @"Button");
             XCTAssertEqualObjects(
                 dic[@"xpath"],
@@ -189,7 +189,7 @@
         XCTAssertTrue([ManualTrackHelper viewClickEventCheck:dic]);
         XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
 
-        XCTAssertEqualObjects(dic[@"path"], @"页面测试");
+        XCTAssertEqualObjects(dic[@"path"], @"/页面测试");
         XCTAssertEqualObjects(dic[@"textValue"], @"Button");
         XCTAssertEqualObjects(
             dic[@"xpath"],
@@ -235,14 +235,14 @@
 
             GrowingPageEvent *event = (GrowingPageEvent *)events.firstObject;
             XCTAssertEqualObjects(event.eventType, GrowingEventTypePage);
-            XCTAssertEqualObjects(event.pageName, @"页面测试");
+            XCTAssertEqualObjects(event.path, @"/页面测试");
             XCTAssertEqualObjects(event.attributes[@"key"], @"value");
 
             NSDictionary *dic = event.toDictionary;
             XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypePage);
             XCTAssertTrue([ManualTrackHelper pageEventCheck:dic]);
             XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
-            XCTAssertEqualObjects(dic[@"path"], @"页面测试");
+            XCTAssertEqualObjects(dic[@"path"], @"/页面测试");
             XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
         }
 
@@ -258,7 +258,7 @@
             XCTAssertTrue([ManualTrackHelper viewClickEventCheck:dic]);
             XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
 
-            XCTAssertEqualObjects(dic[@"path"], @"页面测试");
+            XCTAssertEqualObjects(dic[@"path"], @"/页面测试");
             XCTAssertEqualObjects(dic[@"textValue"], @"Button");
             XCTAssertEqualObjects(
                 dic[@"xpath"],
@@ -290,14 +290,14 @@
 
             GrowingPageEvent *event = (GrowingPageEvent *)events.firstObject;
             XCTAssertEqualObjects(event.eventType, GrowingEventTypePage);
-            XCTAssertEqualObjects(event.pageName, @"页面测试");
+            XCTAssertEqualObjects(event.path, @"/页面测试");
             XCTAssertEqualObjects(event.attributes[@"key"], @"value");
 
             NSDictionary *dic = event.toDictionary;
             XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypePage);
             XCTAssertTrue([ManualTrackHelper pageEventCheck:dic]);
             XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
-            XCTAssertEqualObjects(dic[@"path"], @"页面测试");
+            XCTAssertEqualObjects(dic[@"path"], @"/页面测试");
             XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
         }
 
@@ -313,7 +313,7 @@
             XCTAssertTrue([ManualTrackHelper viewClickEventCheck:dic]);
             XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
 
-            XCTAssertEqualObjects(dic[@"path"], @"页面测试");
+            XCTAssertEqualObjects(dic[@"path"], @"/页面测试");
             XCTAssertEqualObjects(dic[@"textValue"], @"Button");
             XCTAssertEqualObjects(
                 dic[@"xpath"],

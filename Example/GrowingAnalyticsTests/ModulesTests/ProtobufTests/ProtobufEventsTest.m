@@ -265,7 +265,7 @@
         [self contrastOfDefaultParamter:event protobuf:protobuf];
         XCTAssertEqualObjects(GrowingEventTypePage, event.eventType);
         XCTAssertEqual(GrowingPBEventType_Page, protobuf.eventType);
-        XCTAssertEqualObjects(event.pageName ?: @"", protobuf.path);
+        XCTAssertEqualObjects(event.path ?: @"", protobuf.path);
         XCTAssertEqualObjects(event.orientation ?: @"", protobuf.orientation);
         XCTAssertEqualObjects(event.title ?: @"", protobuf.title);
         XCTAssertEqualObjects(event.referralPage ?: @"", protobuf.referralPage);
@@ -277,7 +277,7 @@
         [self contrastOfDefaultParamter:event protobuf:protobuf];
         XCTAssertEqualObjects(GrowingEventTypePage, event.eventType);
         XCTAssertEqual(GrowingPBEventType_Page, protobuf.eventType);
-        XCTAssertEqualObjects(event.pageName ?: @"", protobuf.path);
+        XCTAssertEqualObjects(event.path ?: @"", protobuf.path);
         XCTAssertEqualObjects(event.orientation ?: @"", protobuf.orientation);
         XCTAssertEqualObjects(event.title ?: @"", protobuf.title);
         XCTAssertEqualObjects(event.referralPage ?: @"", protobuf.referralPage);
@@ -298,7 +298,7 @@
         [self contrastOfDefaultParamter:event protobuf:protobuf];
         XCTAssertEqualObjects(GrowingEventTypePage, event.eventType);
         XCTAssertEqual(GrowingPBEventType_Page, protobuf.eventType);
-        XCTAssertEqualObjects(event.pageName ?: @"", protobuf.path);
+        XCTAssertEqualObjects(event.path ?: @"", protobuf.path);
         XCTAssertEqualObjects(event.orientation ?: @"", protobuf.orientation);
         XCTAssertEqualObjects(event.title ?: @"", protobuf.title);
         XCTAssertEqualObjects(event.referralPage ?: @"", protobuf.referralPage);
@@ -312,7 +312,7 @@
         [self contrastOfDefaultParamter:event protobuf:protobuf];
         XCTAssertEqualObjects(GrowingEventTypePage, event.eventType);
         XCTAssertEqual(GrowingPBEventType_Page, protobuf.eventType);
-        XCTAssertEqualObjects(event.pageName ?: @"", protobuf.path);
+        XCTAssertEqualObjects(event.path ?: @"", protobuf.path);
         XCTAssertEqualObjects(event.orientation ?: @"", protobuf.orientation);
         XCTAssertEqualObjects(event.title ?: @"", protobuf.title);
         XCTAssertEqualObjects(event.referralPage ?: @"", protobuf.referralPage);

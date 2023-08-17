@@ -28,7 +28,7 @@
 - (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
     if (self = [super initWithBuilder:builder]) {
         GrowingPageCustomBuilder *subBuilder = (GrowingPageCustomBuilder *)builder;
-        _path = subBuilder.pageName;
+        _path = subBuilder.path;
     }
     return self;
 }
@@ -47,7 +47,7 @@
 
 - (GrowingPageCustomBuilder * (^)(NSString *value))setPath {
     return ^(NSString *value) {
-        self->_pageName = value;
+        self->_path = value;
         return self;
     };
 }
