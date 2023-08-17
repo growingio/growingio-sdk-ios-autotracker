@@ -203,7 +203,7 @@
 
 - (void)testGrowingPageEvent {
     NSString *orientation = self.deviceOrientation;
-    GrowingBaseBuilder *builder = GrowingPageEvent.builder.setPath(@"path")
+    GrowingBaseBuilder *builder = GrowingPageEvent.builder.setPath(@"/path")
                                       .setOrientation(orientation)
                                       .setTitle(@"title")
                                       .setReferralPage(@"referralPage")
@@ -222,7 +222,7 @@
 
         GrowingPageEvent *event = (GrowingPageEvent *)events.firstObject;
         XCTAssertEqualObjects(event.eventType, GrowingEventTypePage);
-        XCTAssertEqualObjects(event.pageName, @"path");
+        XCTAssertEqualObjects(event.path, @"/path");
         XCTAssertEqualObjects(event.orientation, orientation);
         XCTAssertEqualObjects(event.title, @"title");
         XCTAssertEqualObjects(event.referralPage, @"referralPage");
@@ -230,7 +230,7 @@
 
         NSDictionary *dic = event.toDictionary;
         XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypePage);
-        XCTAssertEqualObjects(dic[@"path"], @"path");
+        XCTAssertEqualObjects(dic[@"path"], @"/path");
         XCTAssertEqualObjects(dic[@"orientation"], orientation);
         XCTAssertEqualObjects(dic[@"title"], @"title");
         XCTAssertEqualObjects(dic[@"referralPage"], @"referralPage");

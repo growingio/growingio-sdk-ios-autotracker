@@ -27,14 +27,14 @@ static char kGrowingPageAttributesKey;
 @implementation UIViewController (GrowingAutotracker)
 
 - (nullable NSString *)growingPageTitle {
-    NSString *currentPageName = self.title;
-    if (!currentPageName.length) {
-        currentPageName = self.navigationItem.title;
+    NSString *title = self.title;
+    if (!title.length) {
+        title = self.navigationItem.title;
     }
-    if (!currentPageName.length) {
-        currentPageName = self.tabBarItem.title;
+    if (!title.length) {
+        title = self.tabBarItem.title;
     }
-    return currentPageName;
+    return title;
 }
 
 - (void)setGrowingPageObject:(GrowingPage *)page {

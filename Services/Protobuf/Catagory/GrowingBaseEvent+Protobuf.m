@@ -84,7 +84,7 @@
     dto.idfa = stringBlock(@"idfa");
     dto.idfv = stringBlock(@"idfv");
     dto.extraSdk = dicBlock(@"extraSdk").mutableCopy;
-    dto.path = stringBlock(@"pageName").length > 0 ? stringBlock(@"pageName") : stringBlock(@"path");
+    dto.path = stringBlock(@"path");
     dto.textValue = stringBlock(@"textValue");
     dto.xpath = stringBlock(@"xpath");
     dto.xcontent = stringBlock(@"xcontent");

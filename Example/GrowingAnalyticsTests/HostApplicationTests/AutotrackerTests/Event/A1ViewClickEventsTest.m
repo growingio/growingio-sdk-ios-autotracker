@@ -399,7 +399,7 @@
         XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
 
         XCTAssertEqualObjects(dic[@"textValue"], @"ButtonA-UniqueTag");
-        XCTAssertEqualObjects(dic[@"path"], @"点击事件测试");
+        XCTAssertEqualObjects(dic[@"path"], @"/点击事件测试");
         XCTAssertEqualObjects(dic[@"xpath"], @"/ButtonAAA");
         XCTAssertEqualObjects(dic[@"xcontent"], @"/0");
     }
@@ -412,7 +412,7 @@
         XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
 
         XCTAssertEqualObjects(dic[@"textValue"], @"ButtonB");
-        XCTAssertEqualObjects(dic[@"path"], @"点击事件测试");
+        XCTAssertEqualObjects(dic[@"path"], @"/点击事件测试");
         XCTAssertEqualObjects(dic[@"xpath"], @"/CCCCC/UIButton");
         XCTAssertEqualObjects(dic[@"xcontent"], @"/1/0");
     }
@@ -425,7 +425,7 @@
         XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
 
         XCTAssertEqualObjects(dic[@"textValue"], @"ButtonC");
-        XCTAssertEqualObjects(dic[@"path"], @"点击事件测试");
+        XCTAssertEqualObjects(dic[@"path"], @"/点击事件测试");
         XCTAssertEqualObjects(dic[@"xpath"], @"/EEEEE/UIButton");
         XCTAssertEqualObjects(dic[@"xcontent"], @"/0/0");
     }

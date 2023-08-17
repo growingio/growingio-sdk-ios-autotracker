@@ -218,7 +218,7 @@ static __weak GrowingWebCircle *webCircle;
 
     [webCircle webSocket:nil didReceiveMessage:@"{\"msgType\":\"ready\"}"];
     // 尝试通过tapPoint点击到html中的button
-    [viewTester tapScreenAtPoint:CGPointMake(100, 200)];
+    [viewTester tapScreenAtPoint:CGPointMake(100, 300)];
 
     XCTestExpectation *expectation = [self expectationWithDescription:@"WebCircle Test failed : timeout"];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{

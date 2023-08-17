@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingPageCustomBuilder : GrowingCustomBuilder
 
-@property (nonatomic, copy, readonly) NSString *pageName;
+@property (nonatomic, copy, readonly) NSString *path;
 
 - (GrowingPageCustomBuilder * (^)(NSString *value))setPath;
 

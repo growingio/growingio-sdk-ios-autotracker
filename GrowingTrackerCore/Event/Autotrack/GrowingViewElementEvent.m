@@ -28,7 +28,7 @@
 - (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
     if (self = [super initWithBuilder:builder]) {
         GrowingViewElementBuilder *subBuilder = (GrowingViewElementBuilder *)builder;
-        _path = subBuilder.pageName;
+        _path = subBuilder.path;
         _textValue = subBuilder.textValue;
         _xpath = subBuilder.xpath;
         _xcontent = subBuilder.xcontent;
@@ -55,7 +55,7 @@
 
 - (GrowingViewElementBuilder * (^)(NSString *value))setPath {
     return ^(NSString *value) {
-        self->_pageName = value;
+        self->_path = value;
         return self;
     };
 }

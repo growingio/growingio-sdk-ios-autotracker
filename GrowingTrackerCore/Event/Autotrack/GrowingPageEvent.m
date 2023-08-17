@@ -25,7 +25,7 @@
 - (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
     if (self = [super initWithBuilder:builder]) {
         GrowingPageBuilder *subBuilder = (GrowingPageBuilder *)builder;
-        _pageName = subBuilder.pageName;
+        _path = subBuilder.path;
         _orientation = subBuilder.orientation;
         _title = subBuilder.title;
         _referralPage = subBuilder.referralPage;
@@ -35,7 +35,7 @@
 
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
-    dataDictM[@"path"] = self.pageName;
+    dataDictM[@"path"] = self.path;
     dataDictM[@"orientation"] = self.orientation;
     dataDictM[@"title"] = self.title;
     dataDictM[@"referralPage"] = self.referralPage;
@@ -59,7 +59,7 @@
 
 - (GrowingPageBuilder * (^)(NSString *value))setPath {
     return ^(NSString *value) {
-        self->_pageName = value;
+        self->_path = value;
         return self;
     };
 }
