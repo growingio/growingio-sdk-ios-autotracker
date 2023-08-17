@@ -56,6 +56,8 @@ jobs:
               echo "All Code formatted correctly."
           else
               git checkout ${{ github.head_ref }}
+              git config user.name GIOSDK
+              git config user.email sdk-integration@growingio.com
               git commit -am "style: code format"
-              git push --set-upstream origin ${{ github.head_ref }}
+              git push origin ${{ github.head_ref }}
           fi
