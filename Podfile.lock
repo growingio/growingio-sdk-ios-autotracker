@@ -150,7 +150,7 @@ EXTERNAL SOURCES:
     :path: "./"
 
 SPEC CHECKSUMS:
-  GrowingAnalytics: 8cae5a0b3a8785c219e4c6ea8ddf8af59d0a37ba
+  GrowingAnalytics: 926677553410bebc3a1e8d6fd90f816c7913fc44
   GrowingAPM: 79fe4f4a12d94432fa4a552d56c41940ea13961a
   GrowingToolsKit: 9c0d6e41c9678397dbaa3304b1738a2867b023ae
   GrowingUtils: 5212c5c0501ea0c3863a29c33ccefbde5be77353
