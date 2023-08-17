@@ -53,7 +53,8 @@
     }
 
     if (autotrackPage) {
-        builder.setPath(autotrackPage.alias).setAttributes(autotrackPage.attributes);
+        builder.setPath([NSString stringWithFormat:@"/%@", autotrackPage.alias])
+            .setAttributes(autotrackPage.attributes);
     }
 
     [[GrowingEventManager sharedInstance] postEventBuilder:builder];

@@ -100,7 +100,7 @@
 
 - (void)sendPageEventWithPage:(GrowingPage *)page {
     GrowingBaseBuilder *builder = GrowingPageEvent.builder.setTitle(page.title)
-                                      .setPath(page.alias)
+                                      .setPath([NSString stringWithFormat:@"/%@", page.alias])
                                       .setTimestamp(page.showTimestamp)
                                       .setAttributes(page.attributes);
     [[GrowingEventManager sharedInstance] postEventBuilder:builder];
