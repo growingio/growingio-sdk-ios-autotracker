@@ -167,6 +167,8 @@
 		34C0BF3A277EA7C90047ADC4 /* DataTrafficTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C0BF39277EA7C90047ADC4 /* DataTrafficTest.m */; };
 		34C0BF3D277EA9BA0047ADC4 /* MobileDebuggerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C0BF3C277EA9BA0047ADC4 /* MobileDebuggerTest.m */; };
 		34ECFDBF2A5C082A0059F87C /* GrowingAutotrackPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34ECFDBE2A5C082A0059F87C /* GrowingAutotrackPageViewController.m */; };
+		34FCF7E12A937ECA009611B3 /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34FCF7E02A937ECA009611B3 /* SwiftUIView.swift */; };
+		34FCF7E42A937F4F009611B3 /* GIOSwiftUIContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34FCF7E32A937F4F009611B3 /* GIOSwiftUIContentViewController.m */; };
 		46B566A91FF28564AA03491F /* Pods_ProtobufTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E2C01C3AC89773BC3F4BE1 /* Pods_ProtobufTests.framework */; };
 		4916270F24E157BB00444AF2 /* GIOPresentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916270E24E157BB00444AF2 /* GIOPresentViewController.m */; };
 		4916271224E157CF00444AF2 /* GIOPagingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916271124E157CF00444AF2 /* GIOPagingViewController.m */; };
@@ -400,6 +402,10 @@
 		34C0BF3C277EA9BA0047ADC4 /* MobileDebuggerTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MobileDebuggerTest.m; sourceTree = "<group>"; };
 		34ECFDBD2A5C082A0059F87C /* GrowingAutotrackPageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GrowingAutotrackPageViewController.h; sourceTree = "<group>"; };
 		34ECFDBE2A5C082A0059F87C /* GrowingAutotrackPageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GrowingAutotrackPageViewController.m; sourceTree = "<group>"; };
+		34F94ED82A938725002CB9FC /* Example-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Example-Bridging-Header.h"; path = "Example/Example-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
+		34FCF7E02A937ECA009611B3 /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
+		34FCF7E22A937F4F009611B3 /* GIOSwiftUIContentViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIOSwiftUIContentViewController.h; sourceTree = "<group>"; };
+		34FCF7E32A937F4F009611B3 /* GIOSwiftUIContentViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOSwiftUIContentViewController.m; sourceTree = "<group>"; };
 		3D63F725A31AE372B485C361 /* Pods-HostApplicationTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HostApplicationTests.debug.xcconfig"; path = "Target Support Files/Pods-HostApplicationTests/Pods-HostApplicationTests.debug.xcconfig"; sourceTree = "<group>"; };
 		42ADE26B250B292900CA7268 /* HybridTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HybridTest.m; sourceTree = "<group>"; };
 		42F5EA0EFE2552358C35A0F5 /* Pods_HostApplicationTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HostApplicationTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -543,6 +549,7 @@
 				046530FF24DD4271002D254C /* AppDelegate.m */,
 				046530D124DD4271002D254C /* Assets.xcassets */,
 				04A6FAE024E2BF11006C72F0 /* Example.entitlements */,
+				34F94ED82A938725002CB9FC /* Example-Bridging-Header.h */,
 				046530FD24DD4271002D254C /* GrowingIO-Info.plist */,
 				046530BD24DD4271002D254C /* GrowingIO-Prefix.pch */,
 				046530DA24DD4271002D254C /* LaunchScreen.storyboard */,
@@ -936,6 +943,9 @@
 				34106BB328FECB0E00E7DB01 /* Crasher.mm */,
 				349DA46A28F2BF9400C4281F /* GIOCrashMonitorTableViewController.h */,
 				349DA46B28F2BF9400C4281F /* GIOCrashMonitorTableViewController.mm */,
+				34FCF7E02A937ECA009611B3 /* SwiftUIView.swift */,
+				34FCF7E22A937F4F009611B3 /* GIOSwiftUIContentViewController.h */,
+				34FCF7E32A937F4F009611B3 /* GIOSwiftUIContentViewController.m */,
 			);
 			path = Others;
 			sourceTree = "<group>";
@@ -1611,6 +1621,7 @@
 					};
 					6003F589195388D20070C39A = {
 						DevelopmentTeam = SXBU677CPT;
+						LastSwiftMigration = 1430;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -2277,6 +2288,7 @@
 			files = (
 				04A6FAF224E662E9006C72F0 /* GIOChildsAddViewController.m in Sources */,
 				348C86AF2A60FC9000310C22 /* GrowingIgnoreButton3.m in Sources */,
+				34FCF7E12A937ECA009611B3 /* SwiftUIView.swift in Sources */,
 				349F1492285B560200437F53 /* UIColor+Hex.m in Sources */,
 				348C86A52A60FC1100310C22 /* GrowingIgnoreViewClsViewController.m in Sources */,
 				349F1489285B503B00437F53 /* GIOH5BrowserViewController.m in Sources */,
@@ -2312,6 +2324,7 @@
 				0465315A24DD4272002D254C /* GIOFoodTableViewCell.m in Sources */,
 				0465314524DD4272002D254C /* GIOCustomEventViewController.m in Sources */,
 				0465314724DD4272002D254C /* GIOContainerViewController.m in Sources */,
+				34FCF7E42A937F4F009611B3 /* GIOSwiftUIContentViewController.m in Sources */,
 				0465314E24DD4272002D254C /* GIOLabelAttributeViewController.m in Sources */,
 				349F1488285B503B00437F53 /* GIODefaultWebViewController.m in Sources */,
 				0465315324DD4272002D254C /* GIOActionSheetViewController.m in Sources */,
@@ -2532,6 +2545,7 @@
 		3494DD0128597E1A00A6CE46 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -2577,6 +2591,7 @@
 		3494DD0228597E1A00A6CE46 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -3192,6 +3207,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3D63F725A31AE372B485C361 /* Pods-HostApplicationTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -3239,6 +3255,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = FAB05E3514907518EF7B9514 /* Pods-HostApplicationTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -3361,6 +3378,7 @@
 			baseConfigurationReference = 91EEE76F9E0E94DB389A9D21 /* Pods-Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Example/Example.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -3381,6 +3399,8 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = YES;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Example/Example-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
@@ -3392,6 +3412,7 @@
 			baseConfigurationReference = DDE20EE0BB4E138A407A5D1C /* Pods-Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Example/Example.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -3412,6 +3433,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = YES;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Example/Example-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
