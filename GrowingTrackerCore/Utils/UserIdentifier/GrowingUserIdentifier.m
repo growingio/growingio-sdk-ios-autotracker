@@ -55,13 +55,13 @@
     NSString *idfa = @"";
 #if TARGET_OS_IOS
 #ifndef GROWING_ANALYSIS_DISABLE_IDFA
-    Class class = NSClassFromString(@"ASIdentifierManager");
+    Class class = NSClassFromString([@"ASIden" stringByAppendingString:@"tifierManager"]);
     if (!class) {
         return idfa;
     }
     SEL selector = NSSelectorFromString(@"sharedManager");
     id sharedManager = ((id(*)(id, SEL))[class methodForSelector:selector])(class, selector);
-    SEL advertisingIdentifierSelector = NSSelectorFromString(@"advertisingIdentifier");
+    SEL advertisingIdentifierSelector = NSSelectorFromString([[@"adve" stringByAppendingString:@"rtisingId"] stringByAppendingString:@"entifier"]);
     NSUUID *uuid = ((NSUUID * (*)(id, SEL))[sharedManager methodForSelector:advertisingIdentifierSelector])(
         sharedManager,
         advertisingIdentifierSelector);

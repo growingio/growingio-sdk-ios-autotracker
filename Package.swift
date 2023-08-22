@@ -126,7 +126,6 @@ extension Target {
         static let trackerCore = target(name: .trackerCore,
                                         dependencies: [.trackerUtils],
                                         path: .trackerCore,
-                                        exclude: ["Utils/UserIdentifier/GrowingUserIdentifier_NoIDFA.m"],
                                         publicHeadersPath: .Path.publicHeaders,
                                         cSettings: [.hspFor(.trackerCore)],
                                         linkerSettings: [
