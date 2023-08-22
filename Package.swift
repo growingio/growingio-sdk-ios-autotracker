@@ -48,13 +48,9 @@ let package = Package(
         )
     ],
     targets: [
-        // MARK: - GrowingAnalytics Public API
+        // MARK: - Public
         .autotracker,
         .tracker,
-
-        // MARK: - GrowingAnalytics Wrapper
-        .Wrapper.autotracker,
-        .Wrapper.tracker,
 
         // MARK: - GrowingAnalytics Core
         .Core.trackerCore,
@@ -83,8 +79,8 @@ let package = Package(
 )
 
 extension Product {
-    static let autotracker = library(name: .autotracker, targets: [.Wrapper.autotracker])
-    static let tracker = library(name: .tracker, targets: [.Wrapper.tracker])
+    static let autotracker = library(name: .autotracker, targets: [.autotracker])
+    static let tracker = library(name: .tracker, targets: [.tracker])
 
     enum Module {
         static let imp = library(name: .imp, targets: [.imp])
@@ -96,35 +92,26 @@ extension Product {
 
 extension Target {
     static let autotracker = target(name: .autotracker,
-                                    dependencies: [.Core.autotrackerCore],
+                                    dependencies: [
+                                        .Core.autotrackerCore,
+                                        .Module.coreServices,
+                                        .Module.hybrid,
+                                        .Module.mobileDebugger,
+                                        .Module.webCircle
+                                    ],
                                     path: .autotracker,
                                     publicHeadersPath: ".",
                                     cSettings: [.hspFor(.autotracker)])
+    
     static let tracker = target(name: .tracker,
-                                dependencies: [.Core.trackerCore],
+                                dependencies: [
+                                    .Core.trackerCore,
+                                    .Module.coreServices,
+                                    .Module.mobileDebugger
+                                ],
                                 path: .tracker,
                                 publicHeadersPath: ".",
                                 cSettings: [.hspFor(.tracker)])
-
-    enum Wrapper {
-        static let autotracker = target(name: .Wrapper.autotracker,
-                                        dependencies: [
-                                            .autotracker,
-                                            .Module.coreServices,
-                                            .Module.hybrid,
-                                            .Module.mobileDebugger,
-                                            .Module.webCircle
-                                        ],
-                                        path: "SwiftPM-Wrap/GrowingAutotracker-Wrapper")
-
-        static let tracker = target(name: .Wrapper.tracker,
-                                    dependencies: [
-                                        .tracker,
-                                        .Module.coreServices,
-                                        .Module.mobileDebugger
-                                    ],
-                                    path: "SwiftPM-Wrap/GrowingTracker-Wrapper")
-    }
 
     enum Core {
         static let autotrackerCore = target(name: .autotrackerCore,
@@ -337,11 +324,6 @@ extension String {
     static let compress = "GrowingService_Compression"
     static let encrypt = "GrowingService_Encryption"
     static let screenshot = "GrowingService_Screenshot"
-
-    enum Wrapper {
-        static let autotracker = "GrowingAutotracker_Wrapper"
-        static let tracker = "GrowingTracker_Wrapper"
-    }
 
     enum Path {
         static let publicHeaders = "Public"
