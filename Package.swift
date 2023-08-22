@@ -26,43 +26,17 @@ let package = Package(
     name: "GrowingAnalytics",
     platforms: [.iOS(.v10), .macCatalyst(.v13), .macOS(.v10_12)],
     products: [
-        .library(
-            name: "GrowingAutotracker",
-            targets: ["GrowingAutotracker_Wrapper"]
-        ),
-        .library(
-            name: "GrowingTracker",
-            targets: ["GrowingTracker_Wrapper"]
-        ),
-        .library(
-            name: "GrowingAutotracker_NoIDFA",
-            targets: ["GrowingAutotracker_NoIDFA_Wrapper"]
-        ),
-        .library(
-            name: "GrowingTracker_NoIDFA",
-            targets: ["GrowingTracker_NoIDFA_Wrapper"]
-        ),
-        .library(
-            name: "GrowingModule_ImpressionTrack",
-            targets: ["GrowingModule_ImpressionTrack"]
-        ),
-        .library(
-            name: "GrowingModule_Hybrid",
-            targets: ["GrowingModule_Hybrid"]
-        ),
-        .library(
-            name: "GrowingModule_Advert",
-            targets: ["GrowingModule_Advert"]
-        ),
-        .library(
-            name: "GrowingModule_APM",
-            targets: ["GrowingModule_APM"]
-        ),
+        .autotracker,
+        .tracker,
+        .Module.imp,
+        .Module.hybrid,
+        .Module.advert,
+        .Module.apm
     ],
     dependencies: [
         .package(
             url: "https://github.com/growingio/growingio-sdk-ios-utilities.git",
-            "0.0.7" ..< "1.0.0"
+            "0.0.5" ..< "1.0.0"
         ),
         .package(
             url: "https://github.com/growingio/growingio-sdk-ios-performance-ext.git",
@@ -71,308 +45,325 @@ let package = Package(
         .package(
             url: "https://github.com/apple/swift-protobuf.git",
             from: "1.21.0"
-        ),
+        )
     ],
     targets: [
-        // MARK: - GrowingAnalytics Wrapper
-
-        .target(
-            name: "GrowingAutotracker_Wrapper",
-            dependencies: [
-                "GrowingAutotracker",
-                "GrowingUserIdentifier",
-                "GrowingModule_DefaultServices",
-                .target(name: "GrowingModule_Hybrid", condition: .when(platforms: [.iOS, .macCatalyst])),
-                .target(name: "GrowingModule_MobileDebugger", condition: .when(platforms: [.iOS])),
-                .target(name: "GrowingModule_WebCircle", condition: .when(platforms: [.iOS])),
-            ],
-            path: "SwiftPM-Wrap/GrowingAutotracker-Wrapper"
-        ),
-        .target(
-            name: "GrowingTracker_Wrapper",
-            dependencies: [
-                "GrowingTracker",
-                "GrowingUserIdentifier",
-                "GrowingModule_DefaultServices",
-                .target(name: "GrowingModule_MobileDebugger", condition: .when(platforms: [.iOS])),
-            ],
-            path: "SwiftPM-Wrap/GrowingTracker-Wrapper"
-        ),
-
         // MARK: - GrowingAnalytics Public API
+        .autotracker,
+        .tracker,
 
-        .target(
-            name: "GrowingAutotracker",
-            dependencies: ["GrowingAutotrackerCore"],
-            path: "GrowingAutotracker",
-            publicHeadersPath: ".",
-            cSettings: [
-                .headerSearchPath(".."),
-            ]
-        ),
-        .target(
-            name: "GrowingTracker",
-            dependencies: ["GrowingTrackerCore"],
-            path: "GrowingTracker",
-            publicHeadersPath: ".",
-            cSettings: [
-                .headerSearchPath(".."),
-            ]
-        ),
-
-        // MARK: - GrowingAnalytics Resources
-
-        .target(
-            name: "GrowingResources",
-            path: "SwiftPM-Wrap/GrowingResources-Wrapper",
-            resources: [.copy("Resources/PrivacyInfo.xcprivacy")]
-        ),
-        .target(
-            name: "GrowingResources_macOS",
-            path: "SwiftPM-Wrap/GrowingResources-macOS-Wrapper",
-            resources: [.copy("Resources/PrivacyInfo.xcprivacy")]
-        ),
+        // MARK: - GrowingAnalytics Wrapper
+        .Wrapper.autotracker,
+        .Wrapper.tracker,
 
         // MARK: - GrowingAnalytics Core
-
-        .target(
-            name: "GrowingUserIdentifier",
-            dependencies: [],
-            path: "GrowingTrackerCore/Utils/UserIdentifier",
-            exclude: ["GrowingUserIdentifier_NoIDFA.m"],
-            publicHeadersPath: ".",
-            cSettings: [
-                .headerSearchPath("../../.."),
-            ]
-        ),
-        .target(
-            name: "GrowingUserIdentifier_NoIDFA",
-            dependencies: [],
-            path: "GrowingTrackerCore/Utils/UserIdentifier",
-            exclude: ["GrowingUserIdentifier.m"],
-            publicHeadersPath: ".",
-            cSettings: [
-                .headerSearchPath("../../.."),
-            ]
-        ),
-        .target(
-            name: "GrowingTrackerCore",
-            dependencies: [
-                .product(name: "GrowingUtilsTrackerCore", package: "growingio-sdk-ios-utilities"),
-                .target(name: "GrowingResources", condition: .when(platforms: [.iOS, .macCatalyst])),
-                .target(name: "GrowingResources_macOS", condition: .when(platforms: [.macOS])),
-            ],
-            path: "GrowingTrackerCore",
-            exclude: ["Utils/UserIdentifier"],
-            publicHeadersPath: "Public",
-            cSettings: [
-                .headerSearchPath(".."),
-            ],
-            linkerSettings: [
-                .linkedLibrary("c++"),
-                .linkedFramework("UIKit", .when(platforms: [.iOS, .macCatalyst])),
-            ]
-        ),
-        .target(
-            name: "GrowingAutotrackerCore",
-            dependencies: [
-                "GrowingTrackerCore",
-                .product(name: "GrowingUtilsAutotrackerCore", package: "growingio-sdk-ios-utilities"),
-            ],
-            path: "GrowingAutotrackerCore",
-            publicHeadersPath: "Public",
-            cSettings: [
-                .headerSearchPath(".."),
-            ]
-        ),
-
-        // MARK: - GrowingAnalytics Services
-
-        .target(
-            name: "GrowingService_Database",
-            dependencies: ["GrowingTrackerCore"],
-            path: "Services/Database",
-            cSettings: [
-                .headerSearchPath("../.."),
-            ]
-        ),
-        .target(
-            name: "GrowingService_JSON",
-            dependencies: ["GrowingService_Database"],
-            path: "Services/JSON",
-            cSettings: [
-                .headerSearchPath("../..")
-            ]
-        ),
-        .target(
-            name: "GrowingService_Protobuf",
-            dependencies: [
-                "GrowingService_Database",
-                "GrowingService_SwiftProtobuf"
-            ],
-            path: "Services/Protobuf",
-            exclude: ["Proto", "Catagory"],
-            cSettings: [
-                .headerSearchPath("../..")
-            ]
-        ),
-        .target(
-            name: "GrowingService_SwiftProtobuf",
-            dependencies: [
-                "GrowingTrackerCore",
-                .product(name: "SwiftProtobuf", package: "swift-protobuf")
-            ],
-            path: "Services/SwiftProtobuf"
-        ),
-        .target(
-            name: "GrowingService_Network",
-            dependencies: ["GrowingTrackerCore"],
-            path: "Services/Network",
-            cSettings: [
-                .headerSearchPath("../.."),
-            ]
-        ),
-        .target(
-            name: "GrowingService_WebSocket",
-            dependencies: ["GrowingTrackerCore"],
-            path: "Services/WebSocket",
-            cSettings: [
-                .headerSearchPath("../.."),
-            ]
-        ),
-        .target(
-            name: "GrowingService_Compression",
-            dependencies: ["GrowingTrackerCore"],
-            path: "Services/Compression",
-            cSettings: [
-                .headerSearchPath("../.."),
-            ]
-        ),
-        .target(
-            name: "GrowingService_Encryption",
-            dependencies: ["GrowingTrackerCore"],
-            path: "Services/Encryption",
-            cSettings: [
-                .headerSearchPath("../.."),
-            ]
-        ),
-        .target(
-            name: "GrowingService_Screenshot",
-            dependencies: ["GrowingTrackerCore"],
-            path: "Services/Screenshot",
-            cSettings: [
-                .headerSearchPath("../.."),
-            ]
-        ),
+        .Core.trackerCore,
+        .Core.autotrackerCore,
 
         // MARK: - GrowingAnalytics Modules
+        .Module.coreServices,
+        .Module.mobileDebugger,
+        .Module.webCircle,
+        .Module.imp,
+        .Module.hybrid,
+        .Module.advert,
+        .Module.apm,
 
-        .target(
-            name: "GrowingModule_DefaultServices",
-            dependencies: [
-                "GrowingTrackerCore",
-                "GrowingService_JSON",
-                "GrowingService_Protobuf",
-                "GrowingService_Network",
-                "GrowingService_Encryption",
-                "GrowingService_Compression",
-            ],
-            path: "Modules/DefaultServices",
-            cSettings: [
-                .headerSearchPath("../.."),
-            ]
-        ),
-        .target(
-            name: "GrowingModule_MobileDebugger",
-            dependencies: [
-                "GrowingTrackerCore",
-                "GrowingService_WebSocket",
-                .target(name: "GrowingService_Screenshot", condition: .when(platforms: [.iOS])),
-            ],
-            path: "Modules/MobileDebugger",
-            cSettings: [
-                .headerSearchPath("../.."),
-            ]
-        ),
-        .target(
-            name: "GrowingModule_WebCircle",
-            dependencies: [
-                "GrowingAutotrackerCore",
-                "GrowingService_WebSocket",
-                .target(name: "GrowingService_Screenshot", condition: .when(platforms: [.iOS])),
-                .target(name: "GrowingModule_Hybrid", condition: .when(platforms: [.iOS, .macCatalyst])),
-            ],
-            path: "Modules/WebCircle",
-            cSettings: [
-                .headerSearchPath("../.."),
-            ]
-        ),
-        .target(
-            name: "GrowingModule_ImpressionTrack",
-            dependencies: ["GrowingAutotrackerCore"],
-            path: "Modules/ImpressionTrack",
-            publicHeadersPath: "Public",
-            cSettings: [
-                .headerSearchPath("../..")
-            ]
-        ),
-        .target(
-            name: "GrowingModule_Hybrid",
-            dependencies: ["GrowingTrackerCore"],
-            path: "Modules/Hybrid",
-            publicHeadersPath: "Public",
-            cSettings: [
-                .headerSearchPath("../.."),
-            ],
-            linkerSettings: [
-                .linkedFramework("WebKit", .when(platforms: [.iOS, .macCatalyst])),
-            ]
-        ),
-        .target(
-            name: "GrowingModule_Advert",
-            dependencies: ["GrowingTrackerCore"],
-            path: "Modules/Advert",
-            publicHeadersPath: "Public",
-            cSettings: [
-                .headerSearchPath("../.."),
-            ]
-        ),
-        .target(
-            name: "GrowingModule_APM",
-            dependencies: [
-                "GrowingTrackerCore",
-                .product(name: "GrowingAPM", package: "growingio-sdk-ios-performance-ext"),
-            ],
-            path: "Modules/APM",
-            publicHeadersPath: "Public",
-            cSettings: [
-                .headerSearchPath("../.."),
-            ]
-        ),
-
-        // MARK: - GrowingAnalytics Wrapper (No IDFA)
-
-        .target(
-            name: "GrowingAutotracker_NoIDFA_Wrapper",
-            dependencies: [
-                "GrowingAutotracker",
-                "GrowingUserIdentifier_NoIDFA",
-                "GrowingModule_DefaultServices",
-                .target(name: "GrowingModule_Hybrid", condition: .when(platforms: [.iOS, .macCatalyst])),
-                .target(name: "GrowingModule_MobileDebugger", condition: .when(platforms: [.iOS])),
-                .target(name: "GrowingModule_WebCircle", condition: .when(platforms: [.iOS])),
-            ],
-            path: "SwiftPM-Wrap/GrowingAutotracker-NoIDFA-Wrapper"
-        ),
-        .target(
-            name: "GrowingTracker_NoIDFA_Wrapper",
-            dependencies: [
-                "GrowingTracker",
-                "GrowingUserIdentifier_NoIDFA",
-                "GrowingModule_DefaultServices",
-                .target(name: "GrowingModule_MobileDebugger", condition: .when(platforms: [.iOS])),
-            ],
-            path: "SwiftPM-Wrap/GrowingTracker-NoIDFA-Wrapper"
-        ),
+        // MARK: - GrowingAnalytics Services
+        .Service.database,
+        .Service.JSON,
+        .Service.protobuf,
+        .Service.swiftProtobuf,
+        .Service.network,
+        .Service.webSocket,
+        .Service.compress,
+        .Service.encrypt,
+        .Service.screenshot
     ]
 )
+
+extension Product {
+    static let autotracker = library(name: .autotracker, targets: [.Wrapper.autotracker])
+    static let tracker = library(name: .tracker, targets: [.Wrapper.tracker])
+
+    enum Module {
+        static let imp = library(name: .imp, targets: [.imp])
+        static let hybrid = library(name: .hybrid, targets: [.hybrid])
+        static let advert = library(name: .advert, targets: [.advert])
+        static let apm = library(name: .apm, targets: [.apm])
+    }
+}
+
+extension Target {
+    static let autotracker = target(name: .autotracker,
+                                    dependencies: [.Core.autotrackerCore],
+                                    path: .autotracker,
+                                    publicHeadersPath: ".",
+                                    cSettings: [.hspFor(.autotracker)])
+    static let tracker = target(name: .tracker,
+                                dependencies: [.Core.trackerCore],
+                                path: .tracker,
+                                publicHeadersPath: ".",
+                                cSettings: [.hspFor(.tracker)])
+
+    enum Wrapper {
+        static let autotracker = target(name: .Wrapper.autotracker,
+                                        dependencies: [
+                                            .autotracker,
+                                            .Module.coreServices,
+                                            .Module.hybrid,
+                                            .Module.mobileDebugger,
+                                            .Module.webCircle
+                                        ],
+                                        path: "SwiftPM-Wrap/GrowingAutotracker-Wrapper")
+
+        static let tracker = target(name: .Wrapper.tracker,
+                                    dependencies: [
+                                        .tracker,
+                                        .Module.coreServices,
+                                        .Module.mobileDebugger
+                                    ],
+                                    path: "SwiftPM-Wrap/GrowingTracker-Wrapper")
+    }
+
+    enum Core {
+        static let autotrackerCore = target(name: .autotrackerCore,
+                                            dependencies: [
+                                                .Core.trackerCore,
+                                                .autotrackerUtils
+                                            ],
+                                            path: .autotrackerCore,
+                                            publicHeadersPath: .Path.publicHeaders,
+                                            cSettings: [.hspFor(.autotrackerCore)])
+
+        static let trackerCore = target(name: .trackerCore,
+                                        dependencies: [.trackerUtils],
+                                        path: .trackerCore,
+                                        exclude: ["Utils/UserIdentifier/GrowingUserIdentifier_NoIDFA.m"],
+                                        publicHeadersPath: .Path.publicHeaders,
+                                        cSettings: [.hspFor(.trackerCore)],
+                                        linkerSettings: [
+                                            .cPlusPlusLibrary,
+                                            .UIKit
+                                        ])
+    }
+
+    enum Module {
+        static let coreServices = target(name: .coreServices,
+                                         dependencies: [
+                                            .Core.trackerCore,
+                                            .Service.JSON,
+                                            .Service.protobuf,
+                                            .Service.network,
+                                            .Service.encrypt,
+                                            .Service.compress
+                                         ],
+                                         path: .Path.coreServices,
+                                         cSettings: [.hspFor(.Path.coreServices)])
+
+        static let mobileDebugger = target(name: .mobileDebugger,
+                                           dependencies: [
+                                            .Core.trackerCore,
+                                            .Service.webSocket,
+                                            .Service.screenshot
+                                           ],
+                                           path: .Path.mobileDebugger,
+                                           cSettings: [.hspFor(.Path.mobileDebugger)])
+
+        static let webCircle = target(name: .webCircle,
+                                      dependencies: [
+                                        .Core.autotrackerCore,
+                                        .Service.webSocket,
+                                        .Service.screenshot,
+                                        .Module.hybrid
+                                      ],
+                                      path: .Path.webCircle,
+                                      cSettings: [.hspFor(.Path.webCircle)])
+        
+        static let imp = target(name: .imp,
+                                dependencies: [.Core.autotrackerCore],
+                                path: .Path.imp,
+                                publicHeadersPath: .Path.publicHeaders,
+                                cSettings: [.hspFor(.Path.imp)])
+        
+        static let hybrid = target(name: .hybrid,
+                                   dependencies: [.Core.trackerCore],
+                                   path: .Path.hybrid,
+                                   publicHeadersPath: .Path.publicHeaders,
+                                   cSettings: [.hspFor(.Path.hybrid)],
+                                   linkerSettings: [.WebKit])
+        
+        static let advert = target(name: .advert,
+                                   dependencies: [.Core.trackerCore],
+                                   path: .Path.advert,
+                                   publicHeadersPath: .Path.publicHeaders,
+                                   cSettings: [.hspFor(.Path.advert)])
+        
+        static let apm = target(name: .apm,
+                                dependencies: [
+                                    .Core.trackerCore,
+                                    .apm
+                                ],
+                                path: .Path.apm,
+                                publicHeadersPath: .Path.publicHeaders,
+                                cSettings: [.hspFor(.Path.apm)])
+    }
+
+    enum Service {
+        static let database = target(name: .database,
+                                     dependencies: [.Core.trackerCore],
+                                     path: .Path.database,
+                                     cSettings: [.hspFor(.Path.database)])
+
+        static let JSON = target(name: .JSON,
+                                 dependencies: [.Service.database],
+                                 path: .Path.JSON,
+                                 cSettings: [.hspFor(.Path.JSON)])
+        
+        static let protobuf = target(name: .protobuf,
+                                     dependencies: [
+                                        .Service.database,
+                                        .Service.swiftProtobuf
+                                     ],
+                                     path: .Path.protobuf,
+                                     exclude: ["Proto", "Catagory"],
+                                     cSettings: [.hspFor(.Path.protobuf)])
+        
+        static let swiftProtobuf = target(name: .swiftProtobuf,
+                                          dependencies: [
+                                            .Core.trackerCore,
+                                            .protobuf
+                                          ],
+                                          path: .Path.swiftProtobuf)
+        
+        static let network = target(name: .network,
+                                    dependencies: [.Core.trackerCore],
+                                    path: .Path.network,
+                                    cSettings: [.hspFor(.Path.network)])
+        
+        static let webSocket = target(name: .webSocket,
+                                      dependencies: [.Core.trackerCore],
+                                      path: .Path.webSocket,
+                                      cSettings: [.hspFor(.Path.webSocket)])
+        
+        static let compress = target(name: .compress,
+                                     dependencies: [.Core.trackerCore],
+                                     path: .Path.compress,
+                                     cSettings: [.hspFor(.Path.compress)])
+        
+        static let encrypt = target(name: .encrypt,
+                                    dependencies: [.Core.trackerCore],
+                                    path: .Path.encrypt,
+                                    cSettings: [.hspFor(.Path.encrypt)])
+        
+        static let screenshot = target(name: .screenshot,
+                                       dependencies: [.Core.trackerCore],
+                                       path: .Path.screenshot,
+                                       cSettings: [.hspFor(.Path.screenshot)])
+    }
+}
+
+extension Target.Dependency {
+    static let autotracker = byName(name: .autotracker)
+    static let tracker = byName(name: .tracker)
+    
+    static let autotrackerUtils = product(name: "GrowingUtilsAutotrackerCore", package: "growingio-sdk-ios-utilities")
+    static let trackerUtils = product(name: "GrowingUtilsTrackerCore", package: "growingio-sdk-ios-utilities")
+    static let apm = product(name: "GrowingAPM", package: "growingio-sdk-ios-performance-ext")
+    static let protobuf = product(name: "SwiftProtobuf", package: "swift-protobuf")
+    
+    enum Core {
+        static let autotrackerCore = byName(name: .autotrackerCore)
+        static let trackerCore = byName(name: .trackerCore)
+    }
+
+    enum Module {
+        static let coreServices = byName(name: .coreServices)
+        static let mobileDebugger = byName(name: .mobileDebugger, condition: .when(platforms: [.iOS]))
+        static let webCircle = byName(name: .webCircle, condition: .when(platforms: [.iOS]))
+        static let hybrid = byName(name: .hybrid, condition: .when(platforms: [.iOS, .macCatalyst]))
+    }
+
+    enum Service {
+        static let database = byName(name: .database)
+        static let JSON = byName(name: .JSON)
+        static let protobuf = byName(name: .protobuf)
+        static let swiftProtobuf = byName(name: .swiftProtobuf)
+        static let network = byName(name: .network)
+        static let webSocket = byName(name: .webSocket)
+        static let compress = byName(name: .compress)
+        static let encrypt = byName(name: .encrypt)
+        static let screenshot = byName(name: .screenshot)
+    }
+}
+
+extension CSetting {
+    static func hspFor(_ path: String) -> PackageDescription.CSetting {
+        let count = path.filter { $0 == "/" }.count
+        return count == 0 ? headerSearchPath("..") : headerSearchPath("../..")
+    }
+}
+
+extension LinkerSetting {
+    static let cPlusPlusLibrary = linkedLibrary("c++")
+    static let UIKit = linkedFramework("UIKit", .when(platforms: [.iOS, .macCatalyst]))
+    static let WebKit = linkedFramework("WebKit", .when(platforms: [.iOS, .macCatalyst]))
+}
+
+extension String {
+    static let autotracker = "GrowingAutotracker"
+    static let tracker = "GrowingTracker"
+    
+    // Core
+    static let autotrackerCore = "GrowingAutotrackerCore"
+    static let trackerCore = "GrowingTrackerCore"
+    
+    // Modules
+    static let coreServices = "GrowingModule_DefaultServices"
+    static let mobileDebugger = "GrowingModule_MobileDebugger"
+    static let webCircle = "GrowingModule_WebCircle"
+    static let imp = "GrowingModule_ImpressionTrack"
+    static let hybrid = "GrowingModule_Hybrid"
+    static let advert = "GrowingModule_Advert"
+    static let apm = "GrowingModule_APM"
+
+    // Services
+    static let database = "GrowingService_Database"
+    static let JSON = "GrowingService_JSON"
+    static let protobuf = "GrowingService_Protobuf"
+    static let swiftProtobuf = "GrowingService_SwiftProtobuf"
+    static let network = "GrowingService_Network"
+    static let webSocket = "GrowingService_WebSocket"
+    static let compress = "GrowingService_Compression"
+    static let encrypt = "GrowingService_Encryption"
+    static let screenshot = "GrowingService_Screenshot"
+
+    enum Wrapper {
+        static let autotracker = "GrowingAutotracker_Wrapper"
+        static let tracker = "GrowingTracker_Wrapper"
+    }
+
+    enum Path {
+        static let publicHeaders = "Public"
+
+        // Modules
+        static let mobileDebugger = "Modules/MobileDebugger"
+        static let webCircle = "Modules/WebCircle"
+        static let imp = "Modules/ImpressionTrack"
+        static let hybrid = "Modules/Hybrid"
+        static let advert = "Modules/Advert"
+        static let apm = "Modules/APM"
+        static let coreServices = "Modules/DefaultServices"
+
+        // Services
+        static let database = "Services/Database"
+        static let JSON = "Services/JSON"
+        static let protobuf = "Services/Protobuf"
+        static let swiftProtobuf = "Services/SwiftProtobuf"
+        static let network = "Services/Network"
+        static let webSocket = "Services/WebSocket"
+        static let compress = "Services/Compression"
+        static let encrypt = "Services/Encryption"
+        static let screenshot = "Services/Screenshot"
+    }
+}
