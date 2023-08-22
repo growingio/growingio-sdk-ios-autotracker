@@ -17,7 +17,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingAutotrackerCore/Public/GrowingAutotrackConfiguration.h"
+#import "GrowingAutotrackConfiguration.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
