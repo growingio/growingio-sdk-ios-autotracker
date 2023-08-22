@@ -102,7 +102,7 @@ extension Target {
                                     path: .autotracker,
                                     publicHeadersPath: ".",
                                     cSettings: [.hspFor(.autotracker)])
-    
+
     static let tracker = target(name: .tracker,
                                 dependencies: [
                                     .Core.trackerCore,
@@ -165,26 +165,26 @@ extension Target {
                                       ],
                                       path: .Path.webCircle,
                                       cSettings: [.hspFor(.Path.webCircle)])
-        
+
         static let imp = target(name: .imp,
                                 dependencies: [.Core.autotrackerCore],
                                 path: .Path.imp,
                                 publicHeadersPath: .Path.publicHeaders,
                                 cSettings: [.hspFor(.Path.imp)])
-        
+
         static let hybrid = target(name: .hybrid,
                                    dependencies: [.Core.trackerCore],
                                    path: .Path.hybrid,
                                    publicHeadersPath: .Path.publicHeaders,
                                    cSettings: [.hspFor(.Path.hybrid)],
                                    linkerSettings: [.WebKit])
-        
+
         static let advert = target(name: .advert,
                                    dependencies: [.Core.trackerCore],
                                    path: .Path.advert,
                                    publicHeadersPath: .Path.publicHeaders,
                                    cSettings: [.hspFor(.Path.advert)])
-        
+
         static let apm = target(name: .apm,
                                 dependencies: [
                                     .Core.trackerCore,
@@ -205,7 +205,7 @@ extension Target {
                                  dependencies: [.Service.database],
                                  path: .Path.JSON,
                                  cSettings: [.hspFor(.Path.JSON)])
-        
+
         static let protobuf = target(name: .protobuf,
                                      dependencies: [
                                         .Service.database,
@@ -214,34 +214,34 @@ extension Target {
                                      path: .Path.protobuf,
                                      exclude: ["Proto", "Catagory"],
                                      cSettings: [.hspFor(.Path.protobuf)])
-        
+
         static let swiftProtobuf = target(name: .swiftProtobuf,
                                           dependencies: [
                                             .Core.trackerCore,
                                             .protobuf
                                           ],
                                           path: .Path.swiftProtobuf)
-        
+
         static let network = target(name: .network,
                                     dependencies: [.Core.trackerCore],
                                     path: .Path.network,
                                     cSettings: [.hspFor(.Path.network)])
-        
+
         static let webSocket = target(name: .webSocket,
                                       dependencies: [.Core.trackerCore],
                                       path: .Path.webSocket,
                                       cSettings: [.hspFor(.Path.webSocket)])
-        
+
         static let compress = target(name: .compress,
                                      dependencies: [.Core.trackerCore],
                                      path: .Path.compress,
                                      cSettings: [.hspFor(.Path.compress)])
-        
+
         static let encrypt = target(name: .encrypt,
                                     dependencies: [.Core.trackerCore],
                                     path: .Path.encrypt,
                                     cSettings: [.hspFor(.Path.encrypt)])
-        
+
         static let screenshot = target(name: .screenshot,
                                        dependencies: [.Core.trackerCore],
                                        path: .Path.screenshot,
@@ -252,12 +252,12 @@ extension Target {
 extension Target.Dependency {
     static let autotracker = byName(name: .autotracker)
     static let tracker = byName(name: .tracker)
-    
+
     static let autotrackerUtils = product(name: "GrowingUtilsAutotrackerCore", package: "growingio-sdk-ios-utilities")
     static let trackerUtils = product(name: "GrowingUtilsTrackerCore", package: "growingio-sdk-ios-utilities")
     static let apm = product(name: "GrowingAPM", package: "growingio-sdk-ios-performance-ext")
     static let protobuf = product(name: "SwiftProtobuf", package: "swift-protobuf")
-    
+
     enum Core {
         static let autotrackerCore = byName(name: .autotrackerCore)
         static let trackerCore = byName(name: .trackerCore)
@@ -299,11 +299,11 @@ extension LinkerSetting {
 extension String {
     static let autotracker = "GrowingAutotracker"
     static let tracker = "GrowingTracker"
-    
+
     // Core
     static let autotrackerCore = "GrowingAutotrackerCore"
     static let trackerCore = "GrowingTrackerCore"
-    
+
     // Modules
     static let coreServices = "GrowingModule_DefaultServices"
     static let mobileDebugger = "GrowingModule_MobileDebugger"
