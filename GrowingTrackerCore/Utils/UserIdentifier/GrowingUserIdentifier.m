@@ -61,7 +61,8 @@
     }
     SEL selector = NSSelectorFromString(@"sharedManager");
     id sharedManager = ((id(*)(id, SEL))[class methodForSelector:selector])(class, selector);
-    SEL advertisingIdentifierSelector = NSSelectorFromString([[@"adve" stringByAppendingString:@"rtisingId"] stringByAppendingString:@"entifier"]);
+    SEL advertisingIdentifierSelector =
+        NSSelectorFromString([[@"adve" stringByAppendingString:@"rtisingId"] stringByAppendingString:@"entifier"]);
     NSUUID *uuid = ((NSUUID * (*)(id, SEL))[sharedManager methodForSelector:advertisingIdentifierSelector])(
         sharedManager,
         advertisingIdentifierSelector);
