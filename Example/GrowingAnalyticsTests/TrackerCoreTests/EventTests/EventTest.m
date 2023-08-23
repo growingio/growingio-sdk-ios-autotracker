@@ -94,7 +94,8 @@
         .setTimestamp(12345678)
         .setUserId(@"zhangsan")
         .setUserKey(@"phone")
-        .setDeviceId(@"testdeviceID");
+        .setDeviceId(@"testdeviceID")
+        .setTimezoneOffset(-480);
 
     GrowingBaseBuilder *builder = GrowingVisitEvent.builder;
     [GrowingEventManager.sharedInstance postEventBuilder:builder];

@@ -536,6 +536,8 @@
     XCTAssertEqualObjects(event.sdkVersion ?: @"", protobuf.sdkVersion);
     // 3.3.0
     XCTAssertEqualObjects(event.userKey ?: @"", protobuf.userKey);
+    // 4.0.0
+    XCTAssertEqual(event.timezoneOffset, protobuf.timezoneOffset);
 }
 
 @end

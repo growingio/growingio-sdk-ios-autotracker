@@ -180,6 +180,7 @@
     if (self.userKey.length > 0) {
         [dic setObject:self.userKey forKey:@"userKey"];
     }
+    [dic setObject:@(self.timezoneOffset) forKey:@"timezoneOffset"];
 
     return dic;
 }
@@ -227,7 +228,8 @@
     dto.referralPage = jsonObject[@"referralPage"];
     dto.protocolType = jsonObject[@"protocolType"];
     dto.eventName = jsonObject[@"eventName"];
-
+    dto.timezoneOffset = ((NSNumber *)jsonObject[@"timezoneOffset"]).intValue;
+    
     return dto;
 }
 
