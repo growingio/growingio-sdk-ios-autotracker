@@ -229,7 +229,7 @@
     dto.protocolType = jsonObject[@"protocolType"];
     dto.eventName = jsonObject[@"eventName"];
     dto.timezoneOffset = ((NSNumber *)jsonObject[@"timezoneOffset"]).intValue;
-    
+
     return dto;
 }
 
