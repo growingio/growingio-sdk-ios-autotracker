@@ -55,6 +55,7 @@
                     .setUserId(@"zhangsan")
                     .setUserKey(@"phone")
                     .setDeviceId(@"testdeviceID")
+                    .setTimezoneOffset(-480)
                     .build.toDictionary;
 }
 

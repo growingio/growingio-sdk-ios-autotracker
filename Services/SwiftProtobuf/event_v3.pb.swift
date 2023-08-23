@@ -365,6 +365,11 @@ struct Io_Growing_Tunnel_Protocol_EventV3Dto {
     set {_uniqueStorage()._xcontent = newValue}
   }
 
+  var timezoneOffset: Int32 {
+    get {return _storage._timezoneOffset}
+    set {_uniqueStorage()._timezoneOffset = newValue}
+  }
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   init() {}
@@ -482,6 +487,7 @@ extension Io_Growing_Tunnel_Protocol_EventV3Dto: SwiftProtobuf.Message, SwiftPro
     54: .standard(proto: "send_time"),
     55: .standard(proto: "user_key"),
     56: .same(proto: "xcontent"),
+    57: .standard(proto: "timezone_offset"),
   ]
 
   fileprivate class _StorageClass {
@@ -536,6 +542,7 @@ extension Io_Growing_Tunnel_Protocol_EventV3Dto: SwiftProtobuf.Message, SwiftPro
     var _sendTime: Int64 = 0
     var _userKey: String = String()
     var _xcontent: String = String()
+    var _timezoneOffset: Int32 = 0
 
     static let defaultInstance = _StorageClass()
 
@@ -593,6 +600,7 @@ extension Io_Growing_Tunnel_Protocol_EventV3Dto: SwiftProtobuf.Message, SwiftPro
       _sendTime = source._sendTime
       _userKey = source._userKey
       _xcontent = source._xcontent
+      _timezoneOffset = source._timezoneOffset
     }
   }
 
@@ -662,6 +670,7 @@ extension Io_Growing_Tunnel_Protocol_EventV3Dto: SwiftProtobuf.Message, SwiftPro
         case 54: try { try decoder.decodeSingularInt64Field(value: &_storage._sendTime) }()
         case 55: try { try decoder.decodeSingularStringField(value: &_storage._userKey) }()
         case 56: try { try decoder.decodeSingularStringField(value: &_storage._xcontent) }()
+        case 57: try { try decoder.decodeSingularInt32Field(value: &_storage._timezoneOffset) }()
         default: break
         }
       }
@@ -827,6 +836,9 @@ extension Io_Growing_Tunnel_Protocol_EventV3Dto: SwiftProtobuf.Message, SwiftPro
       if !_storage._xcontent.isEmpty {
         try visitor.visitSingularStringField(value: _storage._xcontent, fieldNumber: 56)
       }
+      if _storage._timezoneOffset != 0 {
+        try visitor.visitSingularInt32Field(value: _storage._timezoneOffset, fieldNumber: 57)
+      }
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -887,6 +899,7 @@ extension Io_Growing_Tunnel_Protocol_EventV3Dto: SwiftProtobuf.Message, SwiftPro
         if _storage._sendTime != rhs_storage._sendTime {return false}
         if _storage._userKey != rhs_storage._userKey {return false}
         if _storage._xcontent != rhs_storage._xcontent {return false}
+        if _storage._timezoneOffset != rhs_storage._timezoneOffset {return false}
         return true
       }
       if !storagesAreEqual {return false}

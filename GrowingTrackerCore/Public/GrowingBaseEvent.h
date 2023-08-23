@@ -60,6 +60,7 @@ typedef NS_OPTIONS(NSUInteger, GrowingEventSendPolicy) {
 @property (nonatomic, assign, readonly) double longitude;
 @property (nonatomic, copy, readonly) NSString *sdkVersion;
 @property (nonatomic, copy, readonly, nullable) NSString *userKey;
+@property (nonatomic, assign, readonly) NSInteger timezoneOffset;
 @property (nonatomic, assign) GrowingEventSendPolicy sendPolicy;
 
 - (NSDictionary *_Nonnull)toDictionary;
@@ -102,6 +103,7 @@ typedef NS_OPTIONS(NSUInteger, GrowingEventSendPolicy) {
 @property (nonatomic, assign, readonly) double longitude;
 @property (nonatomic, copy, readonly) NSString *sdkVersion;
 @property (nonatomic, copy, readonly, nullable) NSString *userKey;
+@property (nonatomic, assign, readonly) NSInteger timezoneOffset;
 
 // 赋值属性，eg:deviceId,userId,sessionId,eventSequenceId
 - (void)readPropertyInTrackThread;
@@ -132,6 +134,7 @@ typedef NS_OPTIONS(NSUInteger, GrowingEventSendPolicy) {
 - (GrowingBaseBuilder * (^)(NSString *value))setSdkVersion;
 - (GrowingBaseBuilder * (^)(NSString *value))setUserKey;
 - (GrowingBaseBuilder * (^)(NSString *value))setEventType;
+- (GrowingBaseBuilder * (^)(NSInteger value))setTimezoneOffset;
 - (GrowingBaseEvent *)build;
 
 @end

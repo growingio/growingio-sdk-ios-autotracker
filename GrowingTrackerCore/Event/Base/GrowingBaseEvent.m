@@ -58,6 +58,7 @@
         _longitude = builder.longitude;
         _sdkVersion = builder.sdkVersion;
         _userKey = builder.userKey;
+        _timezoneOffset = builder.timezoneOffset;
     }
     return self;
 }
@@ -100,6 +101,7 @@
     dataDict[@"longitude"] = ABS(self.longitude) > 0 ? @(self.longitude) : nil;
     dataDict[@"sdkVersion"] = self.sdkVersion;
     dataDict[@"userKey"] = self.userKey.length > 0 ? self.userKey : nil;
+    dataDict[@"timezoneOffset"] = @(self.timezoneOffset);
     return [dataDict copy];
 }
 
@@ -148,6 +150,7 @@
     _appName = deviceInfo.displayName;
     _appVersion = deviceInfo.appVersion;
     _language = deviceInfo.language;
+    _timezoneOffset = -([[NSTimeZone defaultTimeZone] secondsFromGMT] / 60);
 }
 
 - (GrowingBaseBuilder * (^)(NSString *value))setDataSourceId {
@@ -328,6 +331,13 @@
 - (GrowingBaseBuilder * (^)(NSString *value))setUserKey {
     return ^(NSString *value) {
         self->_userKey = value;
+        return self;
+    };
+}
+
+- (GrowingBaseBuilder * (^)(NSInteger value))setTimezoneOffset {
+    return ^(NSInteger value) {
+        self->_timezoneOffset = value;
         return self;
     };
 }

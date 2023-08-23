@@ -168,6 +168,7 @@ BOOL GrowingPBEventType_IsValidValue(int32_t value__) {
 @dynamic sendTime;
 @dynamic userKey;
 @dynamic xcontent;
+@dynamic timezoneOffset;
 
 typedef struct GrowingPBEventV3Dto__storage_ {
   uint32_t _has_storage_[2];
@@ -176,6 +177,7 @@ typedef struct GrowingPBEventV3Dto__storage_ {
   int32_t screenHeight;
   int32_t screenWidth;
   int32_t index;
+  int32_t timezoneOffset;
   NSString *deviceId;
   NSString *userId;
   NSString *sessionId;
@@ -689,6 +691,15 @@ typedef struct GrowingPBEventV3Dto__storage_ {
         .offset = (uint32_t)offsetof(GrowingPBEventV3Dto__storage_, xcontent),
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldClearHasIvarOnZero),
         .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "timezoneOffset",
+        .dataTypeSpecific.clazz = Nil,
+        .number = GrowingPBEventV3Dto_FieldNumber_TimezoneOffset,
+        .hasIndex = 49,
+        .offset = (uint32_t)offsetof(GrowingPBEventV3Dto__storage_, timezoneOffset),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldClearHasIvarOnZero),
+        .dataType = GPBDataTypeInt32,
       },
     };
     GPBDescriptor *localDescriptor =

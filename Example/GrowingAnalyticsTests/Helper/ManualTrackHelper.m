@@ -256,7 +256,8 @@
         @"platform",     @"platformVersion", @"deviceId",    @"sessionId",   @"eventType",
         @"timestamp",    @"domain",          @"urlScheme",   @"appState",    @"eventSequenceId",
         @"networkState", @"screenHeight",    @"screenWidth", @"deviceBrand", @"deviceModel",
-        @"deviceType",   @"appVersion",      @"appName",     @"language",    @"sdkVersion"
+        @"deviceType",   @"appVersion",      @"appName",     @"language",    @"sdkVersion",
+        @"timezoneOffset"
     ];
     return context;
 }
