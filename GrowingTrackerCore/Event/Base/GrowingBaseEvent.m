@@ -150,7 +150,7 @@
     _appName = deviceInfo.displayName;
     _appVersion = deviceInfo.appVersion;
     _language = deviceInfo.language;
-    _timezoneOffset = -([[NSTimeZone defaultTimeZone] secondsFromGMT] / 60);
+    _timezoneOffset = deviceInfo.timezoneOffset;
 }
 
 - (GrowingBaseBuilder * (^)(NSString *value))setDataSourceId {
