@@ -65,6 +65,7 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 @property (nonatomic, readwrite, assign) int appState;
 @property (nonatomic, readwrite, assign) CGFloat screenWidth;
 @property (nonatomic, readwrite, assign) CGFloat screenHeight;
+@property (nonatomic, readwrite, assign) NSInteger timezoneOffset;
 
 @end
 
@@ -80,6 +81,19 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
         _infoDictionary = [[NSBundle mainBundle] infoDictionary];
         _deviceBrand = @"Apple";
         _appState = 0;
+        _timezoneOffset = -([[NSTimeZone defaultTimeZone] secondsFromGMT] / 60);
+
+#if !TARGET_OS_OSX
+        UIScreen *screen = [UIScreen mainScreen];
+        CGFloat width = screen.bounds.size.width * screen.scale;
+        CGFloat height = screen.bounds.size.height * screen.scale;
+        // make sure the size is in portrait to keep consistency
+        _screenWidth = MIN(width, height);
+        _screenHeight = MAX(width, height);
+#else
+        _screenWidth = NSScreen.mainScreen.frame.size.width;
+        _screenHeight = NSScreen.mainScreen.frame.size.height;
+#endif
 
         [[GrowingULAppLifecycle sharedInstance] addAppLifecycleDelegate:self];
 
@@ -338,36 +352,6 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
         _idfa = [GrowingUserIdentifier idfa];
     }
     return _idfa;
-}
-
-- (CGFloat)screenWidth {
-    if (!_screenWidth) {
-#if !TARGET_OS_OSX
-        UIScreen *screen = [UIScreen mainScreen];
-        CGFloat width = screen.bounds.size.width * screen.scale;
-        CGFloat height = screen.bounds.size.height * screen.scale;
-        // make sure the size is in portrait to keep consistency
-        _screenWidth = MIN(width, height);
-#else
-        _screenWidth = NSScreen.mainScreen.frame.size.width;
-#endif
-    }
-    return _screenWidth;
-}
-
-- (CGFloat)screenHeight {
-    if (!_screenHeight) {
-#if !TARGET_OS_OSX
-        UIScreen *screen = [UIScreen mainScreen];
-        CGFloat width = screen.bounds.size.width * screen.scale;
-        CGFloat height = screen.bounds.size.height * screen.scale;
-        // make sure the size is in portrait to keep consistency
-        _screenHeight = MAX(width, height);
-#else
-        _screenHeight = NSScreen.mainScreen.frame.size.height;
-#endif
-    }
-    return _screenHeight;
 }
 
 @end

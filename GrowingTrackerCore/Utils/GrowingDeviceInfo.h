@@ -39,6 +39,7 @@
 @property (nonatomic, readonly, assign) int appState;
 @property (nonatomic, readonly, assign) CGFloat screenWidth;
 @property (nonatomic, readonly, assign) CGFloat screenHeight;
+@property (nonatomic, readonly, assign) NSInteger timezoneOffset;
 
 + (instancetype)currentDeviceInfo;
 + (void)configUrlScheme:(NSString *)urlScheme;
