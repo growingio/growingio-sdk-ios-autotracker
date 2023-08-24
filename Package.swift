@@ -273,7 +273,7 @@ extension Target.Dependency {
     static let protobuf = product(name: "SwiftProtobuf", package: "swift-protobuf")
 
     enum Core {
-        static let autotrackerCore = byName(name: .autotrackerCore)
+        static let autotrackerCore = byName(name: .autotrackerCore, condition: .when(platforms: [.iOS, .macCatalyst]))
         static let trackerCore = byName(name: .trackerCore)
     }
 
@@ -293,7 +293,7 @@ extension Target.Dependency {
         static let webSocket = byName(name: .webSocket)
         static let compress = byName(name: .compress)
         static let encrypt = byName(name: .encrypt)
-        static let screenshot = byName(name: .screenshot)
+        static let screenshot = byName(name: .screenshot, condition: .when(platforms: [.iOS]))
     }
 }
 
