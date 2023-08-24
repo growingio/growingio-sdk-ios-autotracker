@@ -48,9 +48,13 @@ let package = Package(
         )
     ],
     targets: [
-        // MARK: - Public
+        // MARK: - GrowingAnalytics Public API
         .autotracker,
         .tracker,
+
+        // MARK: - GrowingAnalytics Wrapper
+        .Wrapper.autotracker,
+        .Wrapper.tracker,
 
         // MARK: - GrowingAnalytics Core
         .Core.trackerCore,
@@ -79,8 +83,8 @@ let package = Package(
 )
 
 extension Product {
-    static let autotracker = library(name: .autotracker, targets: [.autotracker])
-    static let tracker = library(name: .tracker, targets: [.tracker])
+    static let autotracker = library(name: .autotracker, targets: [.Wrapper.autotracker])
+    static let tracker = library(name: .tracker, targets: [.Wrapper.tracker])
 
     enum Module {
         static let imp = library(name: .imp, targets: [.imp])
@@ -92,26 +96,36 @@ extension Product {
 
 extension Target {
     static let autotracker = target(name: .autotracker,
-                                    dependencies: [
-                                        .Core.autotrackerCore,
-                                        .Module.coreServices,
-                                        .Module.hybrid,
-                                        .Module.mobileDebugger,
-                                        .Module.webCircle
-                                    ],
+                                    dependencies: [.Core.autotrackerCore],
                                     path: .autotracker,
                                     publicHeadersPath: ".",
                                     cSettings: [.hspFor(.autotracker)])
 
     static let tracker = target(name: .tracker,
-                                dependencies: [
-                                    .Core.trackerCore,
-                                    .Module.coreServices,
-                                    .Module.mobileDebugger
-                                ],
+                                dependencies: [.Core.trackerCore],
                                 path: .tracker,
                                 publicHeadersPath: ".",
                                 cSettings: [.hspFor(.tracker)])
+
+    enum Wrapper {
+        static let autotracker = target(name: .Wrapper.autotracker,
+                                        dependencies: [
+                                            .autotracker,
+                                            .Module.coreServices,
+                                            .Module.hybrid,
+                                            .Module.mobileDebugger,
+                                            .Module.webCircle
+                                        ],
+                                        path: "SwiftPM-Wrap/GrowingAutotracker-Wrapper")
+
+        static let tracker = target(name: .Wrapper.tracker,
+                                    dependencies: [
+                                        .tracker,
+                                        .Module.coreServices,
+                                        .Module.mobileDebugger
+                                    ],
+                                    path: "SwiftPM-Wrap/GrowingTracker-Wrapper")
+    }
 
     enum Core {
         static let autotrackerCore = target(name: .autotrackerCore,
@@ -250,7 +264,7 @@ extension Target {
 }
 
 extension Target.Dependency {
-    static let autotracker = byName(name: .autotracker)
+    static let autotracker = byName(name: .autotracker, condition: .when(platforms: [.iOS, .macCatalyst]))
     static let tracker = byName(name: .tracker)
 
     static let autotrackerUtils = product(name: "GrowingUtilsAutotrackerCore", package: "growingio-sdk-ios-utilities")
@@ -323,6 +337,11 @@ extension String {
     static let compress = "GrowingService_Compression"
     static let encrypt = "GrowingService_Encryption"
     static let screenshot = "GrowingService_Screenshot"
+
+    enum Wrapper {
+        static let autotracker = "GrowingAutotracker_Wrapper"
+        static let tracker = "GrowingTracker_Wrapper"
+    }
 
     enum Path {
         static let publicHeaders = "Public"
