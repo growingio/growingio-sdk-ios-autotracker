@@ -2,7 +2,7 @@
 
 # file options
 
---exclude Modules/SwiftProtobuf/event_v3.pb.swift
+--exclude Services/SwiftProtobuf/event_v3.pb.swift
 
 # format options
 
