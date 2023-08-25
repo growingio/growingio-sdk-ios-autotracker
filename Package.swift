@@ -48,19 +48,19 @@ let package = Package(
         )
     ],
     targets: [
-        // MARK: - GrowingAnalytics Public API
+        // MARK: - Objc Headers
+        .autotracker_objc,
+        .tracker_objc,
+
+        // MARK: - Swift Wrapper
         .autotracker,
         .tracker,
 
-        // MARK: - GrowingAnalytics Wrapper
-        .Wrapper.autotracker,
-        .Wrapper.tracker,
-
-        // MARK: - GrowingAnalytics Core
+        // MARK: - Core
         .Core.trackerCore,
         .Core.autotrackerCore,
 
-        // MARK: - GrowingAnalytics Modules
+        // MARK: - Modules
         .Module.coreServices,
         .Module.mobileDebugger,
         .Module.webCircle,
@@ -69,7 +69,7 @@ let package = Package(
         .Module.advert,
         .Module.apm,
 
-        // MARK: - GrowingAnalytics Services
+        // MARK: - Services
         .Service.database,
         .Service.JSON,
         .Service.protobuf,
@@ -83,8 +83,8 @@ let package = Package(
 )
 
 extension Product {
-    static let autotracker = library(name: .autotracker, targets: [.Wrapper.autotracker])
-    static let tracker = library(name: .tracker, targets: [.Wrapper.tracker])
+    static let autotracker = library(name: .autotracker, targets: [.autotracker])
+    static let tracker = library(name: .tracker, targets: [.tracker])
 
     enum Module {
         static let imp = library(name: .imp, targets: [.imp])
@@ -96,36 +96,34 @@ extension Product {
 
 extension Target {
     static let autotracker = target(name: .autotracker,
-                                    dependencies: [.Core.autotrackerCore],
-                                    path: .autotracker,
-                                    publicHeadersPath: ".",
-                                    cSettings: [.hspFor(.autotracker)])
+                                    dependencies: [
+                                        .autotracker_objc,
+                                        .Module.coreServices,
+                                        .Module.hybrid,
+                                        .Module.mobileDebugger,
+                                        .Module.webCircle
+                                    ],
+                                    path: .Path.autotracker)
 
     static let tracker = target(name: .tracker,
+                                dependencies: [
+                                    .tracker_objc,
+                                    .Module.coreServices,
+                                    .Module.mobileDebugger
+                                ],
+                                path: .Path.tracker)
+
+    static let autotracker_objc = target(name: .autotracker_objc,
+                                    dependencies: [.Core.autotrackerCore],
+                                         path: .Path.autotracker_objc,
+                                    publicHeadersPath: ".",
+                                    cSettings: [.hspFor(.Path.autotracker_objc)])
+
+    static let tracker_objc = target(name: .tracker_objc,
                                 dependencies: [.Core.trackerCore],
-                                path: .tracker,
+                                     path: .Path.tracker_objc,
                                 publicHeadersPath: ".",
-                                cSettings: [.hspFor(.tracker)])
-
-    enum Wrapper {
-        static let autotracker = target(name: .Wrapper.autotracker,
-                                        dependencies: [
-                                            .autotracker,
-                                            .Module.coreServices,
-                                            .Module.hybrid,
-                                            .Module.mobileDebugger,
-                                            .Module.webCircle
-                                        ],
-                                        path: "SwiftPM-Wrap/GrowingAutotracker-Wrapper")
-
-        static let tracker = target(name: .Wrapper.tracker,
-                                    dependencies: [
-                                        .tracker,
-                                        .Module.coreServices,
-                                        .Module.mobileDebugger
-                                    ],
-                                    path: "SwiftPM-Wrap/GrowingTracker-Wrapper")
-    }
+                                cSettings: [.hspFor(.Path.tracker_objc)])
 
     enum Core {
         static let autotrackerCore = target(name: .autotrackerCore,
@@ -133,15 +131,15 @@ extension Target {
                                                 .Core.trackerCore,
                                                 .autotrackerUtils
                                             ],
-                                            path: .autotrackerCore,
+                                            path: .Path.autotrackerCore,
                                             publicHeadersPath: .Path.publicHeaders,
-                                            cSettings: [.hspFor(.autotrackerCore)])
+                                            cSettings: [.hspFor(.Path.autotrackerCore)])
 
         static let trackerCore = target(name: .trackerCore,
                                         dependencies: [.trackerUtils],
-                                        path: .trackerCore,
+                                        path: .Path.trackerCore,
                                         publicHeadersPath: .Path.publicHeaders,
-                                        cSettings: [.hspFor(.trackerCore)],
+                                        cSettings: [.hspFor(.Path.trackerCore)],
                                         linkerSettings: [
                                             .cPlusPlusLibrary,
                                             .UIKit
@@ -264,8 +262,8 @@ extension Target {
 }
 
 extension Target.Dependency {
-    static let autotracker = byName(name: .autotracker, condition: .when(platforms: [.iOS, .macCatalyst]))
-    static let tracker = byName(name: .tracker)
+    static let autotracker_objc = byName(name: .autotracker_objc, condition: .when(platforms: [.iOS, .macCatalyst]))
+    static let tracker_objc = byName(name: .tracker_objc)
 
     static let autotrackerUtils = product(name: "GrowingUtilsAutotrackerCore", package: "growingio-sdk-ios-utilities")
     static let trackerUtils = product(name: "GrowingUtilsTrackerCore", package: "growingio-sdk-ios-utilities")
@@ -313,6 +311,8 @@ extension LinkerSetting {
 extension String {
     static let autotracker = "GrowingAutotracker"
     static let tracker = "GrowingTracker"
+    static let autotracker_objc = "GrowingAutotracker_Objc"
+    static let tracker_objc = "GrowingTracker_Objc"
 
     // Core
     static let autotrackerCore = "GrowingAutotrackerCore"
@@ -338,13 +338,16 @@ extension String {
     static let encrypt = "GrowingService_Encryption"
     static let screenshot = "GrowingService_Screenshot"
 
-    enum Wrapper {
-        static let autotracker = "GrowingAutotracker_Wrapper"
-        static let tracker = "GrowingTracker_Wrapper"
-    }
-
     enum Path {
         static let publicHeaders = "Public"
+        static let autotracker = "SwiftPM-Wrap/GrowingAutotracker"
+        static let tracker = "SwiftPM-Wrap/GrowingTracker"
+        static let autotracker_objc = "GrowingAutotracker"
+        static let tracker_objc = "GrowingTracker"
+
+        // Core
+        static let autotrackerCore = "GrowingAutotrackerCore"
+        static let trackerCore = "GrowingTrackerCore"
 
         // Modules
         static let mobileDebugger = "Modules/MobileDebugger"
