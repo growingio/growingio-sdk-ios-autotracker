@@ -31,7 +31,7 @@ let package = Package(
         .Module.imp,
         .Module.hybrid,
         .Module.advert,
-        .Module.apm
+        .Module.apm,
     ],
     dependencies: [
         .package(
@@ -45,22 +45,26 @@ let package = Package(
         .package(
             url: "https://github.com/apple/swift-protobuf.git",
             from: "1.21.0"
-        )
+        ),
     ],
     targets: [
         // MARK: - Objc Headers
+
         .autotracker_objc,
         .tracker_objc,
 
         // MARK: - Swift Wrapper
+
         .autotracker,
         .tracker,
 
         // MARK: - Core
+
         .Core.trackerCore,
         .Core.autotrackerCore,
 
         // MARK: - Modules
+
         .Module.coreServices,
         .Module.mobileDebugger,
         .Module.webCircle,
@@ -70,6 +74,7 @@ let package = Package(
         .Module.apm,
 
         // MARK: - Services
+
         .Service.database,
         .Service.JSON,
         .Service.protobuf,
@@ -78,7 +83,7 @@ let package = Package(
         .Service.webSocket,
         .Service.compress,
         .Service.encrypt,
-        .Service.screenshot
+        .Service.screenshot,
     ]
 )
 
@@ -101,7 +106,7 @@ extension Target {
                                         .Module.coreServices,
                                         .Module.hybrid,
                                         .Module.mobileDebugger,
-                                        .Module.webCircle
+                                        .Module.webCircle,
                                     ],
                                     path: .Path.autotracker)
 
@@ -109,27 +114,27 @@ extension Target {
                                 dependencies: [
                                     .tracker_objc,
                                     .Module.coreServices,
-                                    .Module.mobileDebugger
+                                    .Module.mobileDebugger,
                                 ],
                                 path: .Path.tracker)
 
     static let autotracker_objc = target(name: .autotracker_objc,
-                                    dependencies: [.Core.autotrackerCore],
+                                         dependencies: [.Core.autotrackerCore],
                                          path: .Path.autotracker_objc,
-                                    publicHeadersPath: ".",
-                                    cSettings: [.hspFor(.Path.autotracker_objc)])
+                                         publicHeadersPath: ".",
+                                         cSettings: [.hspFor(.Path.autotracker_objc)])
 
     static let tracker_objc = target(name: .tracker_objc,
-                                dependencies: [.Core.trackerCore],
+                                     dependencies: [.Core.trackerCore],
                                      path: .Path.tracker_objc,
-                                publicHeadersPath: ".",
-                                cSettings: [.hspFor(.Path.tracker_objc)])
+                                     publicHeadersPath: ".",
+                                     cSettings: [.hspFor(.Path.tracker_objc)])
 
     enum Core {
         static let autotrackerCore = target(name: .autotrackerCore,
                                             dependencies: [
                                                 .Core.trackerCore,
-                                                .autotrackerUtils
+                                                .autotrackerUtils,
                                             ],
                                             path: .Path.autotrackerCore,
                                             publicHeadersPath: .Path.publicHeaders,
@@ -142,38 +147,38 @@ extension Target {
                                         cSettings: [.hspFor(.Path.trackerCore)],
                                         linkerSettings: [
                                             .cPlusPlusLibrary,
-                                            .UIKit
+                                            .UIKit,
                                         ])
     }
 
     enum Module {
         static let coreServices = target(name: .coreServices,
                                          dependencies: [
-                                            .Core.trackerCore,
-                                            .Service.JSON,
-                                            .Service.protobuf,
-                                            .Service.network,
-                                            .Service.encrypt,
-                                            .Service.compress
+                                             .Core.trackerCore,
+                                             .Service.JSON,
+                                             .Service.protobuf,
+                                             .Service.network,
+                                             .Service.encrypt,
+                                             .Service.compress,
                                          ],
                                          path: .Path.coreServices,
                                          cSettings: [.hspFor(.Path.coreServices)])
 
         static let mobileDebugger = target(name: .mobileDebugger,
                                            dependencies: [
-                                            .Core.trackerCore,
-                                            .Service.webSocket,
-                                            .Service.screenshot
+                                               .Core.trackerCore,
+                                               .Service.webSocket,
+                                               .Service.screenshot,
                                            ],
                                            path: .Path.mobileDebugger,
                                            cSettings: [.hspFor(.Path.mobileDebugger)])
 
         static let webCircle = target(name: .webCircle,
                                       dependencies: [
-                                        .Core.autotrackerCore,
-                                        .Service.webSocket,
-                                        .Service.screenshot,
-                                        .Module.hybrid
+                                          .Core.autotrackerCore,
+                                          .Service.webSocket,
+                                          .Service.screenshot,
+                                          .Module.hybrid,
                                       ],
                                       path: .Path.webCircle,
                                       cSettings: [.hspFor(.Path.webCircle)])
@@ -200,7 +205,7 @@ extension Target {
         static let apm = target(name: .apm,
                                 dependencies: [
                                     .Core.trackerCore,
-                                    .apm
+                                    .apm,
                                 ],
                                 path: .Path.apm,
                                 publicHeadersPath: .Path.publicHeaders,
@@ -220,8 +225,8 @@ extension Target {
 
         static let protobuf = target(name: .protobuf,
                                      dependencies: [
-                                        .Service.database,
-                                        .Service.swiftProtobuf
+                                         .Service.database,
+                                         .Service.swiftProtobuf,
                                      ],
                                      path: .Path.protobuf,
                                      exclude: ["Proto", "Catagory"],
@@ -229,8 +234,8 @@ extension Target {
 
         static let swiftProtobuf = target(name: .swiftProtobuf,
                                           dependencies: [
-                                            .Core.trackerCore,
-                                            .protobuf
+                                              .Core.trackerCore,
+                                              .protobuf,
                                           ],
                                           path: .Path.swiftProtobuf)
 
