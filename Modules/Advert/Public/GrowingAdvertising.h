@@ -37,6 +37,7 @@ typedef void (^_Nullable GrowingAdDeepLinkCallback)(NSDictionary *_Nullable para
                                                     NSTimeInterval processTime,
                                                     NSError *_Nullable error);
 
+NS_SWIFT_NAME(Advertising)
 @interface GrowingAdvertising : NSObject <GrowingModuleProtocol>
 
 /// 单例获取
