@@ -39,7 +39,8 @@ NS_ASSUME_NONNULL_BEGIN
  @param attributes 自定义属性
  */
 - (void)growingTrackImpression:(NSString *)eventName
-                    attributes:(NSDictionary<NSString *, NSString *> *_Nullable)attributes NS_SWIFT_NAME(trackImp(_:attributes:));
+                    attributes:(NSDictionary<NSString *, NSString *> *_Nullable)attributes
+    NS_SWIFT_NAME(trackImp(_:attributes:));
 
 // 停止该元素展示追踪
 // 通常应用于列表中的重用元素
