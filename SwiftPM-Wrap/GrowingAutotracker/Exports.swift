@@ -27,8 +27,8 @@ public struct Autotracker {
     @available(*, unavailable)
     public init() { }
 
-    public static func start(_ config: AutotrackConfig, launchOptions: [String: Any] = [:]) {
-        GrowingAutotracker.start(with: config, launchOptions: launchOptions)
+    public static func start(_ config: AutotrackConfig, launchOptions: [AnyHashable: Any]? = [:]) {
+        GrowingAutotracker.start(with: config, launchOptions: launchOptions ?? [:])
     }
 
     public static func setDataCollectionEnabled(_ enabled: Bool) {

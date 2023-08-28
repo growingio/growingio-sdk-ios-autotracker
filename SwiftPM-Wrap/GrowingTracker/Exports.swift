@@ -27,8 +27,8 @@ public struct Tracker {
     @available(*, unavailable)
     public init() { }
 
-    public static func start(_ config: TrackConfig, launchOptions: [String: Any] = [:]) {
-        GrowingTracker.start(with: config, launchOptions: launchOptions)
+    public static func start(_ config: TrackConfig, launchOptions: [AnyHashable: Any]? = [:]) {
+        GrowingTracker.start(with: config, launchOptions: launchOptions ?? [:])
     }
 
     public static func setDataCollectionEnabled(_ enabled: Bool) {
