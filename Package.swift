@@ -326,6 +326,7 @@ let package = Package(
             name: "GrowingModule_Hybrid",
             dependencies: ["GrowingTrackerCore"],
             path: "Modules/Hybrid",
+            publicHeadersPath: "Public",
             cSettings: [
                 .headerSearchPath("../..")
             ],

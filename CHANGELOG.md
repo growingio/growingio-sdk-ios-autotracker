@@ -1,4 +1,18 @@
+# [3.6.0](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.5.0...3.6.0) (2023-08-16)
+
+
+### Features
+
+* hybrid add enable/disable bridge APIs ([#272](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/272)) ([d273ca0](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/d273ca04f3b351192433376c244c4ceabcd9f21b))
+
+
+
 # [3.5.0](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.4.8-hotfix.1...3.5.0) (2023-07-06)
+
+
+### Features
+
+* release 3.5.0 ([9166b0c](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/9166b0c7698062ab0669eeb574bc8711df5bcbf2))
 
 
 
@@ -69,15 +83,6 @@
 
 * page attributes ([acece74](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/acece749cbffe6358ac337655c95eccfee20f192))
 * release 3.4.6 ([4e1fbcb](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/4e1fbcbc24218d55b104e722579b5277e6a7718b))
-
-
-
-## [3.4.5](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/3.4.5-beta...3.4.5) (2022-11-16)
-
-
-### Features
-
-* release 3.4.5 ([11c5395](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/11c539570d628901e5d6b21bcdc54acc1b58ed04))
 
 
 
