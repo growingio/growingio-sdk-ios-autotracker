@@ -29,6 +29,8 @@ NS_SWIFT_NAME(Hybrid)
 
 + (instancetype)sharedInstance;
 
+// 以下配置的生效时机在webView的下一个load
+
 // 是否对所有webView自动注入Hybrid SDK，默认为YES
 @property (nonatomic, assign) BOOL autoBridgeEnabled;
 

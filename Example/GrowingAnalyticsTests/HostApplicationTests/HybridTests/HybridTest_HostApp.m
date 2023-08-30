@@ -33,6 +33,7 @@
 #import "Modules/Hybrid/Events/GrowingHybridViewElementEvent.h"
 #import "Modules/Hybrid/GrowingHybridBridgeProvider.h"
 #import "Modules/Hybrid/GrowingWebViewDomChangedDelegate.h"
+#import "Modules/Hybrid/Public/GrowingHybridModule.h"
 
 @interface HybridTest_HostApp : KIFTestCase <GrowingWebViewDomChangedDelegate>
 
@@ -307,6 +308,61 @@ static int XCTest_didDomChanged = 0;
     [self webView:actor.view evaluateJavaScript:@"mockDomChanged()"];
     [viewTester waitForTimeInterval:0.5];
     XCTAssertEqual(XCTest_didDomChanged, 1);
+}
+
+- (void)test17HybridBridgeSettings {
+    // autoBridgeEnabled = YES
+    {
+        [[viewTester usingLabel:@"UI界面"] tap];
+        GrowingHybridModule.sharedInstance.autoBridgeEnabled = YES;
+        [[viewTester usingLabel:@"Hybrid"] tap];
+        KIFUIViewTestActor *actor = [viewTester usingLabel:@"HybridWebView"];
+        WKWebView *webView = (WKWebView *)actor.view;
+        XCTAssertTrue([GrowingHybridModule.sharedInstance isBridgeForWebViewEnabled:webView]);
+    }
+    
+    // autoBridgeEnabled = NO
+    {
+        [[viewTester usingLabel:@"UI界面"] tap];
+        GrowingHybridModule.sharedInstance.autoBridgeEnabled = NO;
+        [[viewTester usingLabel:@"Hybrid"] tap];
+        KIFUIViewTestActor *actor = [viewTester usingLabel:@"HybridWebView"];
+        WKWebView *webView = (WKWebView *)actor.view;
+        XCTAssertFalse([GrowingHybridModule.sharedInstance isBridgeForWebViewEnabled:webView]);
+    }
+    
+    // enableBridgeForWebView
+    {
+        [[viewTester usingLabel:@"UI界面"] tap];
+        GrowingHybridModule.sharedInstance.autoBridgeEnabled = NO;
+        [[viewTester usingLabel:@"Hybrid"] tap];
+        KIFUIViewTestActor *actor = [viewTester usingLabel:@"HybridWebView"];
+        WKWebView *webView = (WKWebView *)actor.view;
+        [GrowingHybridModule.sharedInstance enableBridgeForWebView:webView];
+        XCTAssertTrue([GrowingHybridModule.sharedInstance isBridgeForWebViewEnabled:webView]);
+    }
+    
+    // disableBridgeForWebView
+    {
+        [[viewTester usingLabel:@"UI界面"] tap];
+        GrowingHybridModule.sharedInstance.autoBridgeEnabled = YES;
+        [[viewTester usingLabel:@"Hybrid"] tap];
+        KIFUIViewTestActor *actor = [viewTester usingLabel:@"HybridWebView"];
+        WKWebView *webView = (WKWebView *)actor.view;
+        [GrowingHybridModule.sharedInstance disableBridgeForWebView:webView];
+        XCTAssertFalse([GrowingHybridModule.sharedInstance isBridgeForWebViewEnabled:webView]);
+    }
+    
+    // resetBridgeSettings
+    {
+        [[viewTester usingLabel:@"UI界面"] tap];
+        GrowingHybridModule.sharedInstance.autoBridgeEnabled = NO;
+        [[viewTester usingLabel:@"Hybrid"] tap];
+        KIFUIViewTestActor *actor = [viewTester usingLabel:@"HybridWebView"];
+        WKWebView *webView = (WKWebView *)actor.view;
+        [GrowingHybridModule.sharedInstance resetBridgeSettings];
+        XCTAssertTrue([GrowingHybridModule.sharedInstance isBridgeForWebViewEnabled:webView]);
+    }
 }
 
 #pragma mark - GrowingWebViewDomChangedDelegate
