@@ -17,58 +17,19 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <XCTest/XCTest.h>
+#import <KIF/KIF.h>
 
-#import "GrowingAutotrackConfiguration.h"
-#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
-#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
+#import "ManualTrackHelper.h"
+#import "WebSocketTestHelper.h"
+#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "Modules/MobileDebugger/GrowingMobileDebugger.h"
 
 @interface GrowingMobileDebugger (XCTest)
 
-- (void)start;
-
 - (void)stop;
 
-- (NSString *)absoluteURL;
-
-- (void)runWithMobileDebugger:(NSURL *)url;
-
-- (void)_setNeedUpdateScreen;
-
-+ (CGFloat)impressScale;
-
-- (unsigned long)getSnapshotKey;
-
-- (void)sendScreenShot;
-
-- (UIImage *)screenShot;
-
-- (void)remoteReady;
-
-- (void)_stopWithError:(NSString *)error;
-
-- (BOOL)isRunning;
-
-- (void)sendJson:(id)json;
-
-- (void)nextOne;
-
-- (void)startTimer;
-
-- (void)stopTimer;
-
-- (NSDictionary *)userInfo;
-
-#pragma mark - GrowingDeepLinkHandlerProtocol
-
-- (BOOL)growingHandlerUrl:(NSURL *)url;
-
-#pragma mark - GrowingApplicationEventManager
-
-- (void)growingApplicationEventSendEvent:(UIEvent *)event;
-
-#pragma mark - websocket delegate
+#pragma mark - Websocket Delegate
 
 - (void)webSocketDidOpen:(id<GrowingWebSocketService>)webSocket;
 
@@ -83,37 +44,174 @@
 
 @end
 
-@interface MobileDebuggerTest : XCTestCase
+@interface MobileDebuggerTest : KIFTestCase
 
 @end
 
+static __weak GrowingMobileDebugger *mobileDebugger;
+
 @implementation MobileDebuggerTest
 
++ (void)setUp {
+    NSArray *modules = [GrowingModuleManager sharedInstance].modules.copy;
+    for (id module in modules) {
+        if ([module isKindOfClass:[GrowingMobileDebugger class]]) {
+            mobileDebugger = (GrowingMobileDebugger *)module;
+            break;
+        }
+    }
+}
+
 - (void)setUp {
-    GrowingAutotrackConfiguration *config = [GrowingAutotrackConfiguration configurationWithProjectId:@"test"];
-    GrowingConfigurationManager.sharedInstance.trackConfiguration = config;
+    [[viewTester usingLabel:@"协议/接口"] tap];
+    
+    // mock
+    NSURL *url = [NSURL URLWithString:
+                  @"growing.3612b67ce562c755://growingio/webservice?serviceType=debugger&wsUrl=wss://"
+                  @"gta0.growingio.com/app/0wDaZmQ1/circle/ec7f5925458f458b8ae6f3901cacaa92"];
+    [GrowingDeepLinkHandler handlerUrl:url];
+    [mobileDebugger webSocketDidOpen:nil];
+
+    [MockWebSocket.sharedInstance cleanMessages];
 }
 
 - (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
+    [mobileDebugger stop];
+    [[viewTester usingLabel:@"协议/接口"] tap];
 }
 
-- (void)testGrowingMobileDebugger {
+- (void)test01SocketSend {
+    [mobileDebugger webSocket:nil didReceiveMessage:@"{\"msgType\":\"ready\"}"];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    SEL selector = NSSelectorFromString(@"isRunning");
+    if (mobileDebugger && [mobileDebugger respondsToSelector:selector]) {
+        XCTAssertTrue([mobileDebugger performSelector:selector]);
+    }
+#pragma clang diagnostic pop
+
+    [viewTester tapRowInTableViewAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    [viewTester tapRowInTableViewAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+
+    XCTestExpectation *expectation = [self expectationWithDescription:@"MobileDebugger Test failed : timeout"];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        for (NSString *message in MockWebSocket.sharedInstance.messages) {
+            NSMutableDictionary *dic = [[message growingHelper_jsonObject] mutableCopy];
+            [self mobileDebuggerSocketParamsCheck:dic];
+        }
+        [expectation fulfill];
+    });
+
+    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+}
+
+- (void)test02IncompatibleVersion {
+    [mobileDebugger webSocket:nil didReceiveMessage:@"{\"msgType\":\"incompatible_version\"}"];
+    [[viewTester usingLabel:@"知道了"] tap];
+}
+
+- (void)test03Quit {
+    [mobileDebugger webSocket:nil didReceiveMessage:@"{\"msgType\":\"ready\"}"];
+    [[viewTester usingLabel:@"协议/接口"] tap];
+    [mobileDebugger webSocket:nil didReceiveMessage:@"{\"msgType\":\"quit\"}"];
+    [[viewTester usingLabel:@"知道了"] tap];
+}
+
+- (void)test04SocketReopen {
     NSURL *url = [NSURL URLWithString:
-                            @"growing.3612b67ce562c755://growingio/webservice?serviceType=debugger&wsUrl=wss://"
-                            @"gta0.growingio.com/app/0wDaZmQ1/circle/ec7f5925458f458b8ae6f3901cacaa92"];
-    GrowingMobileDebugger *mobileDebugger = [[GrowingMobileDebugger alloc] init];
-    [mobileDebugger start];
-    [mobileDebugger stop];
-    [mobileDebugger absoluteURL];
-    [mobileDebugger nextOne];
-    [mobileDebugger startTimer];
-    [mobileDebugger stopTimer];
+                  @"growing.3612b67ce562c755://growingio/webservice?serviceType=debugger&wsUrl=wss://"
+                  @"gta0.growingio.com/app/0wDaZmQ1/circle/ec7f5925458f458b8ae6f3901cacaa92"];
+    [GrowingDeepLinkHandler handlerUrl:url];
     [mobileDebugger webSocketDidOpen:nil];
-    [mobileDebugger webSocket:nil didReceiveMessage:@"{@\"msgType\":@\"ready\"}"];
+    [mobileDebugger webSocket:nil didReceiveMessage:@"{\"msgType\":\"ready\"}"];
+}
+
+- (void)test05StatusTap {
+    [mobileDebugger webSocket:nil didReceiveMessage:@"{\"msgType\":\"ready\"}"];
+    [[viewTester usingLabel:@"正在进行Debugger"] tap];
+    [[viewTester usingLabel:@"继续Debugger"] tap];
+    [[viewTester usingLabel:@"正在进行Debugger"] tap];
+    [[viewTester usingLabel:@"退出Debugger"] tap];
+}
+
+- (void)test06SocketDidCloseWithCode {
+    [mobileDebugger webSocket:nil didCloseWithCode:GrowingWebSocketStatusCodeGoingAway reason:nil wasClean:YES];
+    [[viewTester usingLabel:@"知道了"] tap];
+}
+
+- (void)test07SocketDidFail {
     [mobileDebugger webSocket:nil didFailWithError:nil];
-    [mobileDebugger growingHandlerUrl:url];
-    [mobileDebugger growingApplicationEventSendEvent:nil];
+    [[viewTester usingLabel:@"知道了"] tap];
+}
+
+- (void)test08Logger {
+    [mobileDebugger webSocket:nil didReceiveMessage:@"{\"msgType\":\"ready\"}"];
+    [mobileDebugger webSocket:nil didReceiveMessage:@"{\"msgType\":\"logger_open\"}"];
+
+    [viewTester tapRowInTableViewAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    [viewTester tapRowInTableViewAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+
+    XCTestExpectation *expectation = [self expectationWithDescription:@"MobileDebugger Test failed : timeout"];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        for (NSString *message in MockWebSocket.sharedInstance.messages) {
+            NSMutableDictionary *dic = [[message growingHelper_jsonObject] mutableCopy];
+            [self mobileDebuggerSocketParamsCheck:dic];
+        }
+        [expectation fulfill];
+    });
+
+    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+    
+    [mobileDebugger webSocket:nil didReceiveMessage:@"{\"msgType\":\"logger_close\"}"];
+}
+
+- (void)mobileDebuggerSocketParamsCheck:(NSDictionary *)dic {
+    NSString *msgType = dic[@"msgType"];
+    if ([msgType isEqualToString:@"refreshScreenshot"]) {
+        XCTAssertNotNil(dic[@"screenWidth"]);
+        XCTAssertNotNil(dic[@"screenHeight"]);
+        XCTAssertNotNil(dic[@"snapshotKey"]);
+        XCTAssertNotNil(dic[@"scale"]);
+        XCTAssertNotNil(dic[@"screenshot"]);
+    } else if ([msgType isEqualToString:@"debugger_data"]) {
+        XCTAssertNotNil(dic[@"sdkVersion"]);
+
+        NSDictionary *event = dic[@"data"];
+        XCTAssertNotNil(event);
+        NSString *eventType = event[@"eventType"];
+        if ([eventType isEqualToString:@"VISIT"]) {
+            XCTAssertTrue([ManualTrackHelper visitEventCheck:event]);
+        } else if ([eventType isEqualToString:@"CUSTOM"]) {
+            XCTAssertTrue([ManualTrackHelper customEventCheck:event]);
+        } else if ([eventType isEqualToString:@"PAGE"]) {
+            XCTAssertTrue([ManualTrackHelper pageEventCheck:event]);
+        } else if ([eventType isEqualToString:@"VIEW_CLICK"]) {
+            XCTAssertTrue([ManualTrackHelper viewClickEventCheck:event]);
+        }
+    } else if ([msgType isEqualToString:@"client_info"]) {
+        XCTAssertNotNil(dic[@"sdkVersion"]);
+
+        NSDictionary *info = dic[@"data"];
+        XCTAssertNotNil(info);
+        XCTAssertNotNil(info[@"os"]);
+        XCTAssertNotNil(info[@"appVersion"]);
+        XCTAssertNotNil(info[@"appChannel"]);
+        XCTAssertNotNil(info[@"osVersion"]);
+        XCTAssertNotNil(info[@"deviceType"]);
+        XCTAssertNotNil(info[@"deviceBrand"]);
+        XCTAssertNotNil(info[@"deviceModel"]);
+    } else if ([msgType isEqualToString:@"logger_data"]) {
+        XCTAssertNotNil(dic[@"sdkVersion"]);
+
+        NSArray *logs = dic[@"data"];
+        XCTAssertNotNil(logs);
+        for (NSDictionary *log in logs) {
+            XCTAssertNotNil(log[@"message"]);
+            XCTAssertNotNil(log[@"subType"]);
+            XCTAssertNotNil(log[@"type"]);
+            XCTAssertNotNil(log[@"time"]);
+        }
+    }
 }
 
 @end

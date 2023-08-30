@@ -19,68 +19,10 @@
 
 #import <KIF/KIF.h>
 
-#import "GrowingModuleManager.h"
+#import "WebSocketTestHelper.h"
 #import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
-#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "Modules/WebCircle/GrowingWebCircle.h"
-#import "Services/WebSocket/GrowingSRWebSocket.h"
-
-@interface MockWebSocket : NSObject
-
-@property (nonatomic, strong) NSMutableArray<NSString *> *messages;
-
-+ (instancetype)sharedInstance;
-
-@end
-
-@implementation MockWebSocket
-
-+ (instancetype)sharedInstance {
-    static id _sharedInstance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _sharedInstance = [[self alloc] init];
-    });
-    return _sharedInstance;
-}
-
-- (instancetype)init {
-    if (self = [super init]) {
-        self.messages = [NSMutableArray arrayWithCapacity:5];
-    }
-    return self;
-}
-
-- (void)cleanMessages {
-    [GrowingDispatchManager dispatchInGrowingThread:^{
-        [self.messages removeAllObjects];
-    }];
-}
-
-- (NSString *)lastMessage {
-    __block NSString *message = nil;
-    [GrowingDispatchManager
-        dispatchInGrowingThread:^{
-            message = self.messages.lastObject.copy;
-        }
-                  waitUntilDone:YES];
-    return message;
-}
-
-- (void)addMessage:(NSString *)message {
-    [GrowingDispatchManager dispatchInGrowingThread:^{
-        [self.messages addObject:message];
-    }];
-}
-
-@end
-
-@interface GrowingModuleManager (XCTest)
-
-@property (nonatomic, strong) NSMutableArray *modules;
-
-@end
 
 @interface GrowingWebCircle (XCTest)
 
@@ -98,22 +40,6 @@
             wasClean:(BOOL)wasClean;
 
 - (void)webSocket:(id<GrowingWebSocketService>)webSocket didFailWithError:(NSError *)error;
-
-@end
-
-@implementation GrowingSRWebSocket (XCTest)
-
-- (void)send:(id)data {
-    [MockWebSocket.sharedInstance addMessage:data];
-}
-
-- (void)setDelegate:(id)delegate {
-    // 在单测中，使用测试逻辑进行socket
-}
-
-- (NSInteger)readyState {
-    return Growing_WS_OPEN;
-}
 
 @end
 
