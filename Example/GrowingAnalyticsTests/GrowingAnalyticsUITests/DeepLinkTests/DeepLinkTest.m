@@ -43,34 +43,34 @@
     // Put teardown code here. This method is called after the invocation of each test method in the class.
 }
 
-//- (void)test01DeeplinkFromSafari_fromBackgroundedApp {
-//    // 长链-urlscheme无参数
-//    NSString *url = @"growing.deeplink://growing?link_id=dMbpE&click_id=85b9310f-d903-4b02-ae7d-3b696e730937"
-//                    @"&tm_click=1654775879497&custom_params=%7B%7D";
-//    [DeepLinkTestHelper openSafariDeeplink:url terminateFirst:NO];
-//}
-//
-//- (void)test02DeeplinkFromSafari_fromBackgroundedApp {
-//    // 长链-urlscheme带参数
-//    NSString *url = @"growing.deeplink://growing?link_id=dMbpE&click_id=85b9310f-d903-4b02-ae7d-3b696e730937"
-//                    @"&tm_click=1654775879497&custom_params=%7B%22key%22%3A%22value%22%2C%22key2%22%3A%22value2%22%7D";
-//    [DeepLinkTestHelper openSafariDeeplink:url terminateFirst:NO];
-//}
-//
-//- (void)test03DeeplinkFromSafari_thatLaunchesTheApp {
-//    // 长链-urlscheme无参数
-//    NSString *url = @"growing.deeplink://growing?link_id=dMbpE&click_id=85b9310f-d903-4b02-ae7d-3b696e730937"
-//                    @"&tm_click=1654775879497&custom_params=%7B%7D";
-//    [DeepLinkTestHelper openSafariDeeplink:url terminateFirst:YES];
-//}
-//
-//- (void)test04DeeplinkFromSafari_thatLaunchesTheApp {
-//    // 长链-urlscheme带参数
-//    NSString *url = @"growing.deeplink://growing?link_id=dMbpE&click_id=85b9310f-d903-4b02-ae7d-3b696e730937"
-//                    @"&tm_click=1654775879497&custom_params=%7B%22key%22%3A%22value%22%2C%22key2%22%3A%22value2%22%7D";
-//    [DeepLinkTestHelper openSafariDeeplink:url terminateFirst:YES];
-//}
-//
+- (void)test01DeeplinkFromSafari_fromBackgroundedApp {
+    // 长链-urlscheme无参数
+    NSString *url = @"growing.deeplink://growing?link_id=dMbpE&click_id=85b9310f-d903-4b02-ae7d-3b696e730937"
+                    @"&tm_click=1654775879497&custom_params=%7B%7D";
+    [DeepLinkTestHelper openSafariDeeplink:url terminateFirst:NO];
+}
+
+- (void)test02DeeplinkFromSafari_fromBackgroundedApp {
+    // 长链-urlscheme带参数
+    NSString *url = @"growing.deeplink://growing?link_id=dMbpE&click_id=85b9310f-d903-4b02-ae7d-3b696e730937"
+                    @"&tm_click=1654775879497&custom_params=%7B%22key%22%3A%22value%22%2C%22key2%22%3A%22value2%22%7D";
+    [DeepLinkTestHelper openSafariDeeplink:url terminateFirst:NO];
+}
+
+- (void)test03DeeplinkFromSafari_thatLaunchesTheApp {
+    // 长链-urlscheme无参数
+    NSString *url = @"growing.deeplink://growing?link_id=dMbpE&click_id=85b9310f-d903-4b02-ae7d-3b696e730937"
+                    @"&tm_click=1654775879497&custom_params=%7B%7D";
+    [DeepLinkTestHelper openSafariDeeplink:url terminateFirst:YES];
+}
+
+- (void)test04DeeplinkFromSafari_thatLaunchesTheApp {
+    // 长链-urlscheme带参数
+    NSString *url = @"growing.deeplink://growing?link_id=dMbpE&click_id=85b9310f-d903-4b02-ae7d-3b696e730937"
+                    @"&tm_click=1654775879497&custom_params=%7B%22key%22%3A%22value%22%2C%22key2%22%3A%22value2%22%7D";
+    [DeepLinkTestHelper openSafariDeeplink:url terminateFirst:YES];
+}
+
 //- (void)test05UniversalLinkFromMessages_fromBackgroundedApp {
 //    // 短链1-无参数
 //    NSString *url = @"https://datayi.cn/v8dsd2kdN";
@@ -122,23 +122,24 @@
 //                    @"&tm_click=1655898560655&custom_params=%7B%22key3%22%3A%22value3%22%2C%22key4%22%3A%22value4%22%7D";
 //    [DeepLinkTestHelper openMessagesUniversalLink:url terminateFirst:YES];
 //}
-//
-//- (void)test13WebCircleFromSafari_thatLaunchesTheApp {
-//    // 圈选，测试不会进入GrowingAdvertising逻辑
-//    NSString *url = @"growing.deeplink://growingio/webservice?serviceType=circle"
-//                    @"&wsUrl=ws://uat-gdp.growingio.com/app/weDq7mpE/circle/f1bcb578cdc347fc872192b55d2bb764"
-//                    @"&xctest=DeepLinkTest";
-//
-//    XCUIApplication *app = [[XCUIApplication alloc] init];
-//    [app launch];
-//    [app terminate];
-//
-//    [DeepLinkTestHelper openFromSafari:url];
-//    XCTAssertTrue([app waitForState:XCUIApplicationStateRunningForeground timeout:15]);
-//
-//    // 不出现deepLinkCallback弹窗
-//    XCUIElement *testButton = app.buttons[@"XCTest"];
-//    XCTAssertFalse([testButton waitForExistenceWithTimeout:15]);
-//}
+
+- (void)test13WebCircleFromSafari_thatLaunchesTheApp {
+    // 圈选，测试不会进入GrowingAdvertising逻辑
+    NSString *url = @"growing.deeplink://growingio/webservice?serviceType=circle"
+                    @"&wsUrl=ws://uat-gdp.growingio.com/app/weDq7mpE/circle/f1bcb578cdc347fc872192b55d2bb764"
+                    @"&xctest=DeepLinkTest";
+
+    XCUIApplication *app = [[XCUIApplication alloc] init];
+    [app launch];
+    [app terminate];
+
+    [DeepLinkTestHelper openFromSafari:url];
+    XCTAssertTrue([app waitForState:XCUIApplicationStateRunningForeground timeout:15]);
+
+    // 不出现deepLinkCallback弹窗
+    XCUIElement *testButton = app.buttons[@"XCTest"];
+    XCTAssertFalse([testButton waitForExistenceWithTimeout:15]);
+    [app terminate];
+}
 
 @end
