@@ -1,0 +1,118 @@
+name: SPM
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  autotracker-build-iOS:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Build
+        run: xcodebuild build -scheme GrowingAutotracker -destination 'platform=iOS Simulator,name=iPhone 14' | xcpretty
+
+  autotracker-build-catalyst:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Build
+        run: xcodebuild build -scheme GrowingAutotracker -destination 'platform=macOS,variant=Mac Catalyst' | xcpretty
+
+  tracker-build-iOS:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Build
+        run: xcodebuild build -scheme GrowingTracker -destination 'platform=iOS Simulator,name=iPhone 14' | xcpretty
+
+  tracker-build-catalyst:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Build
+        run: xcodebuild build -scheme GrowingTracker -destination 'platform=macOS,variant=Mac Catalyst' | xcpretty
+
+  tracker-build-macos:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Build
+        run: xcodebuild build -scheme GrowingTracker -destination 'platform=macOS' | xcpretty
+
+  advert-build-iOS:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Build
+        run: xcodebuild build -scheme GrowingModule_Advert -destination 'platform=iOS Simulator,name=iPhone 14' | xcpretty
+
+  apm-build-iOS:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Build
+        run: xcodebuild build -scheme GrowingModule_APM -destination 'platform=iOS Simulator,name=iPhone 14' | xcpretty
+
+  apm-build-catalyst:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Build
+        run: xcodebuild build -scheme GrowingModule_APM -destination 'platform=macOS,variant=Mac Catalyst' | xcpretty
+
+  hybrid-build-iOS:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Build
+        run: xcodebuild build -scheme GrowingModule_Hybrid -destination 'platform=iOS Simulator,name=iPhone 14' | xcpretty
+
+  hybrid-build-catalyst:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Build
+        run: xcodebuild build -scheme GrowingModule_Hybrid -destination 'platform=macOS,variant=Mac Catalyst' | xcpretty
+
+  imp-build-iOS:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Build
+        run: xcodebuild build -scheme GrowingModule_ImpressionTrack -destination 'platform=iOS Simulator,name=iPhone 14' | xcpretty
