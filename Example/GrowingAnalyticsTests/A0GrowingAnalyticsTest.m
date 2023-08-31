@@ -37,13 +37,6 @@ static NSString *const kGrowingEventDuration = @"event_duration";
 + (void)setUp {
     [[GrowingPersistenceDataProvider sharedInstance] setLoginUserId:nil];
     [[GrowingPersistenceDataProvider sharedInstance] setLoginUserKey:nil];
-
-    GrowingAutotrackConfiguration *configuration = [GrowingAutotrackConfiguration configurationWithProjectId:@"test"];
-    configuration.dataSourceId = @"test";
-    configuration.idMappingEnabled = YES;
-    configuration.sessionInterval = 3.0f;
-    configuration.urlScheme = @"growing.xctest";
-    [GrowingAutotracker startWithConfiguration:configuration launchOptions:nil];
 }
 
 - (void)setUp {
@@ -63,7 +56,20 @@ static NSString *const kGrowingEventDuration = @"event_duration";
 
 #pragma mark - GrowingCoreKit API Test
 
-- (void)testSetUserId {
+- (void)test01InitializedSuccessfully {
+    XCTAssertFalse([GrowingAutotracker isInitializedSuccessfully]);
+    
+    GrowingAutotrackConfiguration *configuration = [GrowingAutotrackConfiguration configurationWithProjectId:@"test"];
+    configuration.dataSourceId = @"test";
+    configuration.idMappingEnabled = YES;
+    configuration.sessionInterval = 3.0f;
+    configuration.urlScheme = @"growing.xctest";
+    [GrowingAutotracker startWithConfiguration:configuration launchOptions:nil];
+    
+    XCTAssertTrue([GrowingAutotracker isInitializedSuccessfully]);
+}
+
+- (void)test02SetUserId {
     [[GrowingAutotracker sharedInstance] cleanLoginUserId];
     NSString *userId = @"123456789";
     [[GrowingAutotracker sharedInstance] setLoginUserId:userId];
@@ -78,7 +84,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
     XCTAssertEqual(events.count, 0);
 }
 
-- (void)testClearUserId {
+- (void)test03ClearUserId {
     [[GrowingAutotracker sharedInstance] cleanLoginUserId];
 
     [GrowingDispatchManager
@@ -88,7 +94,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
                   waitUntilDone:YES];
 }
 
-- (void)testSetUserIdAndUserKeyTest {
+- (void)test04SetUserIdAndUserKeyTest {
     [[GrowingAutotracker sharedInstance] cleanLoginUserId];
 
     XCTestExpectation *expectation = [self expectationWithDescription:@"setUserIdAndUserKey Test failed : timeout"];
@@ -112,7 +118,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
     [self waitForExpectationsWithTimeout:10.0f handler:nil];
 }
 
-- (void)testSetLoginUserAttributes {
+- (void)test05SetLoginUserAttributes {
     {
         [[GrowingAutotracker sharedInstance] setLoginUserAttributes:@{@"key": @"value"}];
         NSArray<GrowingBaseEvent *> *events =
@@ -139,7 +145,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
     }
 }
 
-- (void)testTrackCustomEvent {
+- (void)test06TrackCustomEvent {
     {
         [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"];
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
@@ -164,7 +170,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
     }
 }
 
-- (void)testTrackCustomEventWithAttributes {
+- (void)test07TrackCustomEventWithAttributes {
     {
         [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName" withAttributes:@{@"key": @"value"}];
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
@@ -199,7 +205,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
     }
 }
 
-- (void)testTrackTimer {
+- (void)test08TrackTimer {
     {
         NSString *timerId = [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
         usleep(100);
@@ -358,7 +364,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
     }
 }
 
-- (void)testTrackTimerWithAttributes {
+- (void)test09TrackTimerWithAttributes {
     {
         NSString *timerId = [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
         usleep(100);
@@ -462,7 +468,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
     }
 }
 
-- (void)testTrackTimerWithAttributesBuilder {
+- (void)test10TrackTimerWithAttributesBuilder {
     {
         NSString *timerId = [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
         GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
@@ -560,15 +566,15 @@ static NSString *const kGrowingEventDuration = @"event_duration";
     }
 }
 
-- (void)testGetDeviceId {
+- (void)test11GetDeviceId {
     XCTAssertNotNil([[GrowingAutotracker sharedInstance] getDeviceId]);
 }
 
-- (void)testGetSessionId {
+- (void)test12GetSessionId {
     XCTAssertNotNil([[GrowingSession currentSession] sessionId]);
 }
 
-- (void)testSetLocation {
+- (void)test13SetLocation {
     double latitude = 31.111111111;
     double longitude = 32.2222222222;
     [[GrowingAutotracker sharedInstance] setLocation:latitude longitude:longitude];
@@ -595,7 +601,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
     [self waitForExpectationsWithTimeout:10.0f handler:nil];
 }
 
-- (void)testSetDataCollectionEnabled {
+- (void)test14SetDataCollectionEnabled {
     NSString *eventName = @"name";
     [[GrowingAutotracker sharedInstance] setDataCollectionEnabled:NO];
 
@@ -634,7 +640,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
 
 #pragma mark - GrowingAutoTracker API Test
 
-- (void)testAutotrackPageWithoutAttributesNotTrackTest {
+- (void)test15AutotrackPageWithoutAttributesNotTrackTest {
     UIViewController *controller = [[UIViewController alloc] init];
     [[GrowingAutotracker sharedInstance] autotrackPage:controller alias:@"XCTest"];
 
@@ -649,7 +655,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
     [self waitForExpectationsWithTimeout:3.0f handler:nil];
 }
 
-- (void)testAutotrackPageWithoutAttributesTest {
+- (void)test16AutotrackPageWithoutAttributesTest {
     UIViewController *controller = [[UIViewController alloc] init];
     [[GrowingAutotracker sharedInstance] autotrackPage:controller alias:@"XCTest"];
     [controller viewDidAppear:NO];
@@ -676,7 +682,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
     [self waitForExpectationsWithTimeout:3.0f handler:nil];
 }
 
-- (void)testAutotrackPageWithAttributesNotTrackTest {
+- (void)test17AutotrackPageWithAttributesNotTrackTest {
     UIViewController *controller = [[UIViewController alloc] init];
     [[GrowingAutotracker sharedInstance] autotrackPage:controller alias:@"XCTest" attributes:@{@"key": @"value"}];
 
@@ -691,7 +697,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
     [self waitForExpectationsWithTimeout:3.0f handler:nil];
 }
 
-- (void)testAutotrackPageWithAttributesTest {
+- (void)test18AutotrackPageWithAttributesTest {
     UIViewController *controller = [[UIViewController alloc] init];
     [[GrowingAutotracker sharedInstance] autotrackPage:controller alias:@"XCTest" attributes:@{@"key": @"value"}];
     [controller viewDidAppear:NO];
@@ -718,7 +724,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
     [self waitForExpectationsWithTimeout:3.0f handler:nil];
 }
 
-- (void)testAutotrackPageWithInvalidAliasTest {
+- (void)test19AutotrackPageWithInvalidAliasTest {
     UIViewController *controller = [[UIViewController alloc] init];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wincompatible-pointer-types"
@@ -741,7 +747,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
     [self waitForExpectationsWithTimeout:3.0f handler:nil];
 }
 
-- (void)testAutotrackPageWithInvalidAttributesTest {
+- (void)test20AutotrackPageWithInvalidAttributesTest {
     UIViewController *controller = [[UIViewController alloc] init];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wincompatible-pointer-types"
@@ -765,7 +771,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
     [self waitForExpectationsWithTimeout:3.0f handler:nil];
 }
 
-- (void)testAutotrackPageInNotMainThreadTest {
+- (void)test21AutotrackPageInNotMainThreadTest {
     {
         UIViewController *controller = [[UIViewController alloc] init];
         dispatch_sync(dispatch_get_global_queue(0, 0), ^{

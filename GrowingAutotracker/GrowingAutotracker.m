@@ -57,6 +57,10 @@ static GrowingAutotracker *sharedInstance = nil;
     });
 }
 
++ (BOOL)isInitializedSuccessfully {
+    return sharedInstance != nil;
+}
+
 + (instancetype)sharedInstance {
     if (!sharedInstance) {
         @throw [NSException

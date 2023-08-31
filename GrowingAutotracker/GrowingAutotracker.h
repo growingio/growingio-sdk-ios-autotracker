@@ -35,6 +35,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param launchOptions 启动参数
 + (void)startWithConfiguration:(GrowingTrackConfiguration *)configuration launchOptions:(NSDictionary *)launchOptions;
 
+/// 是否成功初始化
++ (BOOL)isInitializedSuccessfully;
+
 /// 单例获取
 + (instancetype)sharedInstance;
 
