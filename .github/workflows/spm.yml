@@ -3,8 +3,10 @@ name: SPM
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  workflow_run:
+    workflows: [Code Format]
+    types:
+      - completed
 
 jobs:
   autotracker-build-iOS:
