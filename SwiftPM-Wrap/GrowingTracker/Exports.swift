@@ -30,6 +30,10 @@ public struct Tracker {
     public static func start(_ config: TrackConfig, launchOptions: [AnyHashable: Any]? = [:]) {
         GrowingTracker.start(with: config, launchOptions: launchOptions ?? [:])
     }
+    
+    public static func isInitializedSuccessfully() -> Bool {
+        GrowingTracker.isInitializedSuccessfully()
+    }
 
     public static func setDataCollectionEnabled(_ enabled: Bool) {
         tracker.setDataCollectionEnabled(enabled)
