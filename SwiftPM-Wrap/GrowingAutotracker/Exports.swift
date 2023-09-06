@@ -30,6 +30,10 @@ public struct Autotracker {
     public static func start(_ config: AutotrackConfig, launchOptions: [AnyHashable: Any]? = [:]) {
         GrowingAutotracker.start(with: config, launchOptions: launchOptions ?? [:])
     }
+    
+    public static func isInitializedSuccessfully() -> Bool {
+        GrowingAutotracker.isInitializedSuccessfully()
+    }
 
     public static func setDataCollectionEnabled(_ enabled: Bool) {
         autotracker.setDataCollectionEnabled(enabled)
