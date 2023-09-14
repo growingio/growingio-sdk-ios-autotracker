@@ -288,7 +288,7 @@ GrowingMod(GrowingMobileDebugger)
 }
 
 - (void)webSocket:(id<GrowingWebSocketService>)webSocket didReceiveMessage:(id)message {
-    if ([message isKindOfClass:[NSString class]] || ((NSString *)message).length > 0) {
+    if ([message isKindOfClass:[NSString class]] && ((NSString *)message).length > 0) {
         GIOLogDebug(@"didReceiveMessage: %@", message);
         NSMutableDictionary *dict = [message growingHelper_jsonObject];
 
