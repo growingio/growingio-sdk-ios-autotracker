@@ -161,7 +161,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   end
 
   s.subspec 'V2Adapter' do |adapter|
-    adapter.ios.deployment_target = '9.0'
+    adapter.ios.deployment_target = '10.0'
     adapter.source_files = 'Modules/V2Adapter/**/*{.h,.m,.c,.cpp,.mm}'
     adapter.public_header_files = 'Modules/V2Adapter/Public/*.h'
     adapter.dependency 'GrowingAnalytics/AutotrackerCore', s.version.to_s
@@ -169,7 +169,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   end
 
   s.subspec 'V2AdapterTrackOnly' do |adapter|
-    adapter.ios.deployment_target = '9.0'
+    adapter.ios.deployment_target = '10.0'
     adapter.source_files = 'Modules/V2AdapterTrackOnly/**/*{.h,.m,.c,.cpp,.mm}'
     adapter.public_header_files = 'Modules/V2AdapterTrackOnly/Public/*.h'
     adapter.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
