@@ -9,7 +9,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   s.license          = { :type => 'Apache2.0', :file => 'LICENSE' }
   s.author           = { 'GrowingIO' => 'support@growingio.com' }
   s.source           = { :git => 'https://github.com/growingio/growingio-sdk-ios-autotracker.git', :tag => s.version.to_s }
-  s.ios.deployment_target = '9.0'
+  s.ios.deployment_target = '10.0'
   s.osx.deployment_target = '10.12'
   s.ios.framework = 'WebKit'
   s.requires_arc = true
@@ -17,7 +17,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   s.pod_target_xcconfig = { 'HEADER_SEARCH_PATHS' => '"${PODS_TARGET_SRCROOT}"' }
 
   s.subspec 'Autotracker' do |autotracker|
-    autotracker.ios.deployment_target = '9.0'
+    autotracker.ios.deployment_target = '10.0'
     autotracker.source_files = 'GrowingAutotracker/**/*{.h,.m,.c,.cpp,.mm}'
     autotracker.public_header_files = 'GrowingAutotracker/*.h'
     autotracker.dependency 'GrowingAnalytics/AutotrackerCore', s.version.to_s
@@ -49,7 +49,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   end
   
   s.subspec 'AutotrackerCore' do |autotrackerCore|
-    autotrackerCore.ios.deployment_target = '9.0'
+    autotrackerCore.ios.deployment_target = '10.0'
     autotrackerCore.dependency 'GrowingUtils/AutotrackerCore', '0.0.7'
     autotrackerCore.source_files = 'GrowingAutotrackerCore/**/*{.h,.m,.c,.cpp,.mm}'
     autotrackerCore.public_header_files = 'GrowingAutotrackerCore/Public/*.h'
@@ -87,7 +87,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   end
 
   s.subspec 'Screenshot' do |service|
-    service.ios.deployment_target = '9.0'
+    service.ios.deployment_target = '10.0'
     service.source_files = 'Services/Screenshot/**/*{.h,.m,.c,.cpp,.mm}'
     service.public_header_files = 'Services/Screenshot/include/*.h'
     service.dependency 'GrowingAnalytics/TrackerCore'
@@ -106,7 +106,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   end
 
   s.subspec 'MobileDebugger' do |debugger|
-    debugger.ios.deployment_target = '9.0'
+    debugger.ios.deployment_target = '10.0'
     debugger.source_files = 'Modules/MobileDebugger/**/*{.h,.m,.c,.cpp,.mm}'
     debugger.public_header_files = 'Modules/MobileDebugger/include/*.h'
     debugger.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
@@ -115,7 +115,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   end
 
   s.subspec 'WebCircle' do |webcircle|
-    webcircle.ios.deployment_target = '9.0'
+    webcircle.ios.deployment_target = '10.0'
     webcircle.source_files = 'Modules/WebCircle/**/*{.h,.m,.c,.cpp,.mm}'
     webcircle.public_header_files = 'Modules/WebCircle/include/*.h'
     webcircle.dependency 'GrowingAnalytics/AutotrackerCore', s.version.to_s
@@ -125,14 +125,14 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   end
 
   s.subspec 'Hybrid' do |hybrid|
-    hybrid.ios.deployment_target = '9.0'
+    hybrid.ios.deployment_target = '10.0'
     hybrid.source_files = 'Modules/Hybrid/**/*{.h,.m,.c,.cpp,.mm}'
     hybrid.public_header_files = 'Modules/Hybrid/Public/*.h'
     hybrid.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
   end
 
   s.subspec 'Advert' do |advert|
-    advert.ios.deployment_target = '9.0'
+    advert.ios.deployment_target = '10.0'
     advert.source_files = 'Modules/Advert/**/*{.h,.m,.c,.cpp,.mm}'
     advert.public_header_files = 'Modules/Advert/Public/*.h'
     advert.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
@@ -154,7 +154,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   end
 
   s.subspec 'APM' do |apm|
-    apm.ios.deployment_target = '9.0'
+    apm.ios.deployment_target = '10.0'
     apm.source_files = 'Modules/APM/**/*{.h,.m,.c,.cpp,.mm}'
     apm.public_header_files = 'Modules/APM/Public/*.h'
     apm.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s

@@ -42,11 +42,6 @@
     [[GrowingDeepLinkHandler sharedInstance] removeHandlersObject:self];
 }
 
-- (void)testGrowingWebWatcher {
-    NSURL *url = [NSURL URLWithString:@"growing.deeplink://growing/oauth2/token?openConsoleLog=Yes"];
-    [GrowingDeepLinkHandler handlerUrl:url];
-}
-
 #pragma mark - GrowingDeepLinkHandlerProtocol
 
 - (BOOL)growingHandlerUrl:(NSURL *)url {

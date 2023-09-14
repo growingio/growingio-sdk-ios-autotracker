@@ -87,12 +87,7 @@ const int GrowingTrackerVersionCode = 30600;
 
 - (void)loggerSetting {
     GrowingLogLevel level = self.logLevel;
-    if (@available(iOS 10.0, *)) {
-        [GrowingLog addLogger:[GrowingOSLogger sharedInstance] withLevel:level];
-    } else {
-        [GrowingLog addLogger:[GrowingTTYLogger sharedInstance] withLevel:level];
-        [GrowingLog addLogger:[GrowingASLLogger sharedInstance] withLevel:level];
-    }
+    [GrowingLog addLogger:[GrowingOSLogger sharedInstance] withLevel:level];
     [GrowingLog addLogger:[GrowingWSLogger sharedInstance] withLevel:GrowingLogLevelVerbose];
     [GrowingWSLogger sharedInstance].logFormatter = [GrowingWSLoggerFormat new];
 }

@@ -15,8 +15,6 @@
 
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLoggerNames.h"
 
-GrowingLoggerName const GrowingLoggerNameASL    = @"groing.aslLogger";
-GrowingLoggerName const GrowingLoggerNameTTY    = @"growing.ttyLogger";
 GrowingLoggerName const GrowingLoggerNameOS     = @"growing.osLogger";
 GrowingLoggerName const GrowingLoggerNameFile   = @"growing.fileLogger";
 GrowingLoggerName const GrowingLoggerNameWS   = @"growing.wsLogger";

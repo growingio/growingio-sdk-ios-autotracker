@@ -79,8 +79,6 @@ FOUNDATION_EXPORT const unsigned char GrowingCocoaLumberjackVersionString[];
 // Loggers
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLoggerNames.h"
 
-#import "GrowingTrackerCore/Thirdparty/Logger/GrowingTTYLogger.h"
-#import "GrowingTrackerCore/Thirdparty/Logger/GrowingASLLogger.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingWSLogger.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingOSLogger.h"
 

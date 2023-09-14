@@ -24,7 +24,6 @@
 #import <objc/runtime.h>
 #import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
 #import "GrowingTrackerCore/DeepLink/GrowingSceneDelegateAutotracker.h"
-#import "GrowingTrackerCore/LogFormat/GrowingASLLoggerFormat.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingULSwizzle.h"
 
