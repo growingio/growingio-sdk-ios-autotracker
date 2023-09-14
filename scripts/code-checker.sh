@@ -59,7 +59,7 @@ fi
 echo "==== Root Path : ${RootDir} ===="
 # 生成编译配置文件，oclint使用clang分析的话，需要知道编译环境，这里就是生成编译环境的一个环节
 # 1.workspace的编译
-xcodebuild -workspace GrowingAnalytics.xcworkspace -scheme Example -configuration Release -sdk iphonesimulator -arch x86_64 clean build | xcpretty -r json-compilation-database -o compile_commands.json
+xcodebuild -workspace Example/GrowingAnalytics.xcworkspace -scheme Example -configuration Release -sdk iphonesimulator -arch x86_64 clean build | xcpretty -r json-compilation-database -o compile_commands.json
 
 
 # 2.默认target编译

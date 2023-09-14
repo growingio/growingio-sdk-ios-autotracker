@@ -1,28 +1,25 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
 on:
   push:
     branches: [ master ]
   pull_request:
     branches: [ master ]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: macos-latest
+    env:
+      DERIVED_DATA: $HOME/.DerivedData
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - name: Checkout Repo
+        uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+
+      - name: Install sonar-scanner and build-wrapper
+        uses: sonarsource/sonarcloud-github-c-cpp@v2
 
       - name: Cache cocoapods
         uses: actions/cache@v3
@@ -33,17 +30,53 @@ jobs:
             ${{ runner.os }}-pods-
 
       - name: Pod Install
-        run: |
-          pod install
+        run: cd Example && pod install && cd ..
 
-      - name: Run Logic Tests
+      - name: Run tests to generate coverage statistics # https://sonarsource.atlassian.net/browse/CPP-3987
         run: |
-          xcodebuild test -workspace GrowingAnalytics.xcworkspace \
+          mkdir -p ${{ env.DERIVED_DATA }}
+          xcodebuild test -workspace Example/GrowingAnalytics.xcworkspace \
           -scheme GrowingAnalyticsTests \
           -testPlan GrowingAnalyticsTests \
-          -destination 'platform=iOS Simulator,name=iPhone 13' \
-          -enableCodeCoverage YES
+          -destination 'platform=iOS Simulator,name=iPhone 14' \
+          -enableCodeCoverage YES \
+          -derivedDataPath ${{ env.DERIVED_DATA }} \
+          OTHER_CFLAGS="\$(inherited) -gen-cdb-fragment-path ${{ env.DERIVED_DATA }}/compilation-database"
+          pushd ${{ env.DERIVED_DATA }}/compilation-database
+          sed -e '1s/^/[\'$'\n''/' -e '$s/,$/\'$'\n'']/' *.json > ${{ env.DERIVED_DATA }}/compile_commands.json
+          popd
 
-      - name: Upload coverage to Codecov
-        if: always()
-        run: bash <(curl -s https://codecov.io/bash)
+      - name: Brew Install Xcresultparser
+        run: |
+          brew tap a7ex/homebrew-formulae
+          brew install xcresultparser
+
+      - name: Parse xcresult to Cobertura xml
+        run: |
+          xcresultparser -o cobertura ${{ env.DERIVED_DATA }}/Logs/Test/*.xcresult/ \
+          > ${{ env.DERIVED_DATA }}/cobertura-coverage.xml
+          pwd
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        with: 
+          files: /Users/runner/.DerivedData/cobertura-coverage.xml
+
+      - name: Parse xcresult to Sonarqube xml
+        run: |
+          xcresultparser -c -o xml ${{ env.DERIVED_DATA }}/Logs/Test/*.xcresult/ \
+          > ${{ env.DERIVED_DATA }}/sonar-coverage.xml
+
+      - name: Run sonar-scanner
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          sonar-scanner \
+          -Dsonar.cfamily.compile-commands="${{ env.DERIVED_DATA }}/compile_commands.json" \
+          -Dsonar.coverageReportPaths="${{ env.DERIVED_DATA }}/sonar-coverage.xml"
+
+# https://github.com/sonarsource-cfamily-examples/macos-xcode-coverage-gh-actions-sc/blob/main/.github/workflows/build.yml
+# https://github.com/SonarSource/sonarcloud-github-c-cpp
