@@ -7,21 +7,21 @@ use_frameworks!
 install!'cocoapods',:deterministic_uuids=>false, :warn_for_unused_master_specs_repo=>false
 
 workspace 'GrowingAnalytics.xcworkspace'
+project 'Example'
 
 target 'Example' do
-  project 'Example/Example'
-  pod 'GrowingAnalytics/Autotracker', :path => './'
-#  pod 'GrowingAnalytics/Tracker', :path => './'
-#  pod 'GrowingAnalytics/Hybrid', :path => './'
-  pod 'GrowingAnalytics/Protobuf', :path => './'
-  pod 'GrowingAnalytics/Advert', :path => './'
-#  pod 'GrowingAnalytics/Flutter', :path => './'
-#  pod 'GrowingAnalytics/DISABLE_IDFA', :path => './' #禁用idfa
+  pod 'GrowingAnalytics/Autotracker', :path => '../'
+#  pod 'GrowingAnalytics/Tracker', :path => '../'
+#  pod 'GrowingAnalytics/Hybrid', :path => '../'
+  pod 'GrowingAnalytics/Protobuf', :path => '../'
+  pod 'GrowingAnalytics/Advert', :path => '../'
+#  pod 'GrowingAnalytics/Flutter', :path => '../'
+#  pod 'GrowingAnalytics/DISABLE_IDFA', :path => '../' #禁用idfa
 
   pod 'GrowingAPM'
 #  pod 'GrowingAPM/UIMonitor'
 #  pod 'GrowingAPM/CrashMonitor'
-  pod 'GrowingAnalytics/APM', :path => './'
+  pod 'GrowingAnalytics/APM', :path => '../'
 
   pod 'SDCycleScrollView', '~> 1.75'
   pod 'LBXScan/LBXNative', '2.3'
@@ -31,45 +31,38 @@ target 'Example' do
 end
 
 target 'GrowingAnalyticsTests' do
-   project 'Example/Example'
-   pod 'GrowingAnalytics/Autotracker', :path => './'
-   pod 'GrowingAnalytics/Tracker', :path => './'
+   pod 'GrowingAnalytics/Autotracker', :path => '../'
+   pod 'GrowingAnalytics/Tracker', :path => '../'
 end
 
 target 'GrowingAnalyticsCDPTests' do
-   project 'Example/Example'
-   pod 'GrowingAnalytics-cdp/Autotracker', :path => './'
-   pod 'GrowingAnalytics-cdp/Tracker', :path => './'
+   pod 'GrowingAnalytics-cdp/Autotracker', :path => '../'
+   pod 'GrowingAnalytics-cdp/Tracker', :path => '../'
 end
 
 target 'GrowingAnalyticsStartTests' do
-   project 'Example/Example'
-   pod 'GrowingAnalytics-cdp/Autotracker', :path => './'
-   pod 'GrowingAnalytics-cdp/Tracker', :path => './'
+   pod 'GrowingAnalytics-cdp/Autotracker', :path => '../'
+   pod 'GrowingAnalytics-cdp/Tracker', :path => '../'
 end
 
 target 'HostApplicationTests' do
-   project 'Example/Example'
-   pod 'GrowingAnalytics/Autotracker', :path => './'
+   pod 'GrowingAnalytics/Autotracker', :path => '../'
    pod 'KIF', :configurations => ['Debug']
 end
 
 target 'ProtobufTests' do
-   project 'Example/Example'
-   pod 'GrowingAnalytics/Autotracker', :path => './'
-   pod 'GrowingAnalytics/Protobuf', :path => './'
+   pod 'GrowingAnalytics/Autotracker', :path => '../'
+   pod 'GrowingAnalytics/Protobuf', :path => '../'
 end
 
 target 'AdvertTests' do
-   project 'Example/Example'
-   pod 'GrowingAnalytics/Autotracker', :path => './'
-   pod 'GrowingAnalytics/Advert', :path => './'
+   pod 'GrowingAnalytics/Autotracker', :path => '../'
+   pod 'GrowingAnalytics/Advert', :path => '../'
 end
 
 target 'ExampleiOS13' do
-  project 'Example/Example'
-  pod 'GrowingAnalytics/Autotracker', :path => './'
-  pod 'GrowingAnalytics/Advert', :path => './'
+  pod 'GrowingAnalytics/Autotracker', :path => '../'
+  pod 'GrowingAnalytics/Advert', :path => '../'
   
   # 这一行勿删，避免 Multiple commands produce 报错
   # 背景：GrowingToolsKit(version 1.0.9+) 依赖 GrowingAPM
@@ -82,8 +75,7 @@ end
 
 target 'Example-macOS' do
   platform :osx, '11.0'
-  project 'Example/Example'
-  pod 'GrowingAnalytics/Tracker', :path => './'
+  pod 'GrowingAnalytics/Tracker', :path => '../'
 end
 
 post_install do |installer|

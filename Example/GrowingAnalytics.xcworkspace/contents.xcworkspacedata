@@ -2,10 +2,10 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:Example/GrowingAnalyticsTests/GrowingAnalyticsTests.xctestplan">
+      location = "group:GrowingAnalyticsTests/GrowingAnalyticsTests.xctestplan">
    </FileRef>
    <FileRef
-      location = "group:Example/Example.xcodeproj">
+      location = "group:Example.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">
