@@ -15,7 +15,6 @@ target 'Example' do
 #  pod 'GrowingAnalytics/Hybrid', :path => './'
   pod 'GrowingAnalytics/Protobuf', :path => './'
   pod 'GrowingAnalytics/Advert', :path => './'
-  pod 'GrowingAnalytics/V2Adapter', :path => './'
 #  pod 'GrowingAnalytics/Flutter', :path => './'
 #  pod 'GrowingAnalytics/DISABLE_IDFA', :path => './' #禁用idfa
 
@@ -89,9 +88,6 @@ end
 
 post_install do |installer|
   installer.pods_project.targets.each do |target|
-    target.build_configurations.each do |config|
-      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '11.0'
-    end
     if target.respond_to?(:product_type) and target.product_type == "com.apple.product-type.bundle"
       target.build_configurations.each do |config|
           config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
