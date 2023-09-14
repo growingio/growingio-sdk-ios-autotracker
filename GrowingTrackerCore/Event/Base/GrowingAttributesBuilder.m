@@ -17,7 +17,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Public/GrowingAttributesBuilder.h"
+#import "GrowingTrackerCore/include/GrowingAttributesBuilder.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 
 @interface GrowingAttributesBuilder ()
