@@ -12,7 +12,7 @@ PODS:
     - GrowingAnalytics/WebCircle (= 4.0.0)
   - GrowingAnalytics/AutotrackerCore (4.0.0):
     - GrowingAnalytics/TrackerCore (= 4.0.0)
-    - GrowingUtils/AutotrackerCore (= 0.0.6)
+    - GrowingUtils/AutotrackerCore (= 0.0.7)
   - GrowingAnalytics/Compression (4.0.0):
     - GrowingAnalytics/TrackerCore (= 4.0.0)
   - GrowingAnalytics/Database (4.0.0):
@@ -51,7 +51,7 @@ PODS:
     - GrowingAnalytics/MobileDebugger (= 4.0.0)
     - GrowingAnalytics/TrackerCore (= 4.0.0)
   - GrowingAnalytics/TrackerCore (4.0.0):
-    - GrowingUtils/TrackerCore (= 0.0.6)
+    - GrowingUtils/TrackerCore (= 0.0.7)
   - GrowingAnalytics/WebCircle (4.0.0):
     - GrowingAnalytics/AutotrackerCore (= 4.0.0)
     - GrowingAnalytics/Hybrid (= 4.0.0)
@@ -103,9 +103,9 @@ PODS:
     - GrowingToolsKit/Core
   - GrowingToolsKit/XPathTrack (1.2.0):
     - GrowingToolsKit/Core
-  - GrowingUtils/AutotrackerCore (0.0.6):
+  - GrowingUtils/AutotrackerCore (0.0.7):
     - GrowingUtils/TrackerCore
-  - GrowingUtils/TrackerCore (0.0.6)
+  - GrowingUtils/TrackerCore (0.0.7)
   - KIF (3.8.9):
     - KIF/Core (= 3.8.9)
   - KIF/Core (3.8.9)
@@ -150,10 +150,10 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  GrowingAnalytics: 41c46567360ba0434d95b58f014a0d2307963be7
+  GrowingAnalytics: 65812d59bab32721b11ae34941541fc2ec1f70e7
   GrowingAPM: 79fe4f4a12d94432fa4a552d56c41940ea13961a
   GrowingToolsKit: 9c0d6e41c9678397dbaa3304b1738a2867b023ae
-  GrowingUtils: 0cc2fa6ca1a98e24c684a4dcdbbdea74d4c28769
+  GrowingUtils: e8ba72794651ade9ad60a71662d11baa08d526c8
   KIF: 7660c626b0f2d4562533590960db70a36d640558
   LBXScan: e51449f0832d1fe17da632af0d22adeb3cfa3543
   Protobuf: 970f7ee93a3a08e3cf64859b8efd95ee32b4f87f
