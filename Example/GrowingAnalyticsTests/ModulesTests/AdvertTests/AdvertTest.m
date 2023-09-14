@@ -37,6 +37,10 @@
 @implementation AdvertTest
 
 - (void)setUp {
+    // 恢复为未发送激活事件
+    [GrowingAdUtils setActivateWrote:NO];
+    [GrowingAdUtils setActivateSent:NO];
+    
     [MockEventQueue.sharedQueue cleanQueue];
 }
 
@@ -48,6 +52,7 @@
     GrowingAutotrackConfiguration *configuration = [GrowingAutotrackConfiguration configurationWithProjectId:@"test"];
     configuration.dataSourceId = @"test";
     configuration.urlScheme = @"growing.530c8231345c492d";
+    configuration.readClipboardEnabled = NO;
     [GrowingAutotracker startWithConfiguration:configuration launchOptions:nil];
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"SendActivateEvent Test failed : timeout"];
@@ -62,10 +67,6 @@
 }
 
 - (void)test01SetDataCollectionEnabled {
-    // 恢复为未发送激活事件
-    [GrowingAdUtils setActivateWrote:NO];
-    [GrowingAdUtils setActivateSent:NO];
-    
     [[GrowingAutotracker sharedInstance] setDataCollectionEnabled:NO];
     [[GrowingAutotracker sharedInstance] setDataCollectionEnabled:YES];
     
@@ -78,6 +79,16 @@
         [expectation fulfill];
     });
     [self waitForExpectationsWithTimeout:10.0f handler:nil];
+}
+
+- (void)test02SetReadClipboardEnabled {
+    [GrowingAdvertising.sharedInstance setReadClipboardEnabled:YES];
+    
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+        XCTAssertEqual(configuration.readClipboardEnabled, YES);
+    }
+    waitUntilDone:YES];
 }
 
 @end
