@@ -24,8 +24,8 @@ jobs:
       - name: Install clang-format
         run: brew install clang-format
 
-      - name: Install swiftlint
-        run: swiftlint --version
+      - name: Install swiftformat
+        run: swiftformat --version
 
       - name: Code Format
         run: |
@@ -48,7 +48,7 @@ jobs:
           \%^(Growing|Modules/|Services/).*\.swift% p
           \%Package.swift% p
           ' \
-          | xargs swiftlint --fix
+          | xargs swiftformat
 
       - name: Commit
         run: |

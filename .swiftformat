@@ -1,0 +1,9 @@
+# https://github.com/nicklockwood/SwiftFormat/blob/main/.swiftformat
+
+# file options
+
+--exclude Modules/SwiftProtobuf/event_v3.pb.swift
+
+# format options
+
+--swiftversion 5
