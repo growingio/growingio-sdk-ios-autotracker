@@ -18,9 +18,7 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
-#import "GrowingTrackerCore/DeepLink/GrowingWebWatcher.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
-#import "GrowingTrackerCore/LogFormat/GrowingASLLoggerFormat.h"
 #import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
@@ -87,11 +85,7 @@
 }
 
 + (BOOL)handlerUrl:(NSURL *)url {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:[GrowingWebWatcher sharedInstance]];
-    });
-    return [[self sharedInstance] dispatchHandlerUrl:url];
+    return [[GrowingDeepLinkHandler sharedInstance] dispatchHandlerUrl:url];
 }
 
 @end

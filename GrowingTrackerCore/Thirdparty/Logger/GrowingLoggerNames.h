@@ -21,12 +21,6 @@ typedef NSString *GrowingLoggerName NS_TYPED_EXTENSIBLE_ENUM;
 
 FOUNDATION_EXPORT GrowingLoggerName const GrowingLoggerNameOS NS_SWIFT_NAME(GrowingLoggerName.os); // GrowingOSLogger
 FOUNDATION_EXPORT GrowingLoggerName const GrowingLoggerNameFile NS_SWIFT_NAME(GrowingLoggerName.file); // GrowingFileLogger
-
-FOUNDATION_EXPORT GrowingLoggerName const GrowingLoggerNameTTY NS_SWIFT_NAME(GrowingLoggerName.tty); // GrowingTTYLogger
-
-API_DEPRECATED("Use GrowingOSLogger instead", macosx(10.4, 10.12), ios(2.0, 10.0), watchos(2.0, 3.0), tvos(9.0, 10.0))
-FOUNDATION_EXPORT GrowingLoggerName const GrowingLoggerNameASL NS_SWIFT_NAME(GrowingLoggerName.asl); // GrowingASLLogger
-
 FOUNDATION_EXPORT GrowingLoggerName const GrowingLoggerNameWS NS_SWIFT_NAME(GrowingLoggerName.ws); // GrowingWSLogger
 
 NS_ASSUME_NONNULL_END

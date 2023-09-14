@@ -6,7 +6,7 @@ data = YAML.load_file(file_path)
 new_dependency = {
   'GrowingAnalytics/TrackerCore' => [
     {
-      :path => '../../GrowingAnalytics.podspec'
+      :path => '../../../../GrowingAnalytics.podspec'
     }
   ]
 }

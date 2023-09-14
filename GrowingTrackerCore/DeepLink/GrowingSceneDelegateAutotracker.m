@@ -23,7 +23,6 @@
 #import <objc/message.h>
 #import <objc/runtime.h>
 #import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
-#import "GrowingTrackerCore/LogFormat/GrowingASLLoggerFormat.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 
 @implementation GrowingSceneDelegateAutotracker
