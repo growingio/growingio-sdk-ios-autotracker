@@ -15,6 +15,7 @@ jobs:
   code-format:
     name: Code Format
     runs-on: macos-latest
+    if: ${{ github.actor != 'GIOSDK' }} # 禁止套娃
     steps:
       - name: Checkout
         uses: actions/checkout@v3

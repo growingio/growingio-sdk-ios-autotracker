@@ -1,0 +1,9 @@
+version: 1
+builder:
+  configs:
+  - platform: ios
+    scheme: GrowingAutotracker
+  - platform: macos-xcodebuild
+    scheme: GrowingTracker
+  - platform: macos-spm
+    target: GrowingTracker
