@@ -21,7 +21,7 @@
 #import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
-#import "GrowingTrackerCore/Public/GrowingAttributesBuilder.h"
+#import "GrowingTrackerCore/include/GrowingAttributesBuilder.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingULAppLifecycle.h"
 

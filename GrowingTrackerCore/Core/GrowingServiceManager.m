@@ -17,10 +17,10 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Public/GrowingServiceManager.h"
+#import "GrowingTrackerCore/include/GrowingServiceManager.h"
 #import <objc/message.h>
-#import "GrowingTrackerCore/Public/GrowingAnnotationCore.h"
-#import "GrowingTrackerCore/Public/GrowingBaseService.h"
+#import "GrowingTrackerCore/include/GrowingAnnotationCore.h"
+#import "GrowingTrackerCore/include/GrowingBaseService.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 
 @interface GrowingServiceManager ()

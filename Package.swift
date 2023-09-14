@@ -36,7 +36,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/growingio/growingio-sdk-ios-utilities.git",
-            "0.0.6" ..< "1.0.0"
+            "0.0.7" ..< "1.0.0"
         ),
         .package(
             url: "https://github.com/growingio/growingio-sdk-ios-performance-ext.git",
@@ -143,7 +143,7 @@ extension Target {
         static let trackerCore = target(name: .trackerCore,
                                         dependencies: [.trackerUtils],
                                         path: .Path.trackerCore,
-                                        publicHeadersPath: .Path.publicHeaders,
+                                        resources: [.copy("Resources/PrivacyInfo.xcprivacy")],
                                         cSettings: [.hspFor(.Path.trackerCore)],
                                         linkerSettings: [
                                             .cPlusPlusLibrary,

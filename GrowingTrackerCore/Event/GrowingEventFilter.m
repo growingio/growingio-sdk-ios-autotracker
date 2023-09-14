@@ -17,7 +17,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Public/GrowingEventFilter.h"
+#import "GrowingTrackerCore/include/GrowingEventFilter.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 
 NSUInteger const GrowingFilterClickChange = (GrowingFilterEventViewClick | GrowingFilterEventViewChange);
