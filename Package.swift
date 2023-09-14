@@ -78,7 +78,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/growingio/growingio-sdk-ios-utilities.git",
-            "0.0.5" ..< "1.0.0"
+            "0.0.7" ..< "1.0.0"
         ),
         .package(
             url: "https://github.com/growingio/growingio-sdk-ios-performance-ext.git",
@@ -208,7 +208,7 @@ let package = Package(
             ],
             path: "GrowingTrackerCore",
             exclude: ["Utils/UserIdentifier"],
-            publicHeadersPath: "Public",
+            resources: [.copy("Resources/PrivacyInfo.xcprivacy")],
             cSettings: [
                 .headerSearchPath("..")
             ],

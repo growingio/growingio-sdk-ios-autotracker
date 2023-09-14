@@ -17,12 +17,12 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Public/GrowingModuleManager.h"
+#import "GrowingTrackerCore/include/GrowingModuleManager.h"
 #import <objc/message.h>
 #import <objc/runtime.h>
 #import "GrowingTrackerCore/Core/GrowingContext.h"
-#import "GrowingTrackerCore/Public/GrowingAnnotationCore.h"
-#import "GrowingTrackerCore/Public/GrowingModuleProtocol.h"
+#import "GrowingTrackerCore/include/GrowingAnnotationCore.h"
+#import "GrowingTrackerCore/include/GrowingModuleProtocol.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 
 static NSString *kInitSelector = @"growingModInit:";
