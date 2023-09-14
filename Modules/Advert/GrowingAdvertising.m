@@ -32,11 +32,11 @@
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
-#import "GrowingTrackerCore/include/GrowingEventNetworkService.h"
-#import "GrowingTrackerCore/include/GrowingServiceManager.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
+#import "GrowingTrackerCore/include/GrowingEventNetworkService.h"
+#import "GrowingTrackerCore/include/GrowingServiceManager.h"
 #import "GrowingULAppLifecycle.h"
 
 #import <WebKit/WebKit.h>
