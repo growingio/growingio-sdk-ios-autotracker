@@ -128,7 +128,6 @@ copyAndModifyPodspec() {
 	if [ $IS_SAAS == false ]; then
 		MAIN_FRAMEWORK_NAME='GrowingAnalytics-cdp'
 	fi
-	PREFIX_PATH="./${FOLDER_NAME}/${MAIN_FRAMEWORK_NAME}"
 	cp "${MAIN_FRAMEWORK_NAME}.podspec" "${MAIN_FRAMEWORK_NAME}-backup.podspec"
 	modifyPodspec "${MAIN_FRAMEWORK_NAME}.podspec"
 }
@@ -161,14 +160,15 @@ modifyPodspec() {
 }
 
 FOLDER_NAME='generate'
-PREFIX_PATH=''
+PROJECT_FOR_IOS_PATH=${FOLDER_NAME}/Project/ios
+PROJECT_FOR_MACOS_PATH=${FOLDER_NAME}/Project/macos
 generateProject() {
 	logger -v "step: gem bundle install"
 	sudo -E bundle install || exit 1
 	rm -rf $FOLDER_NAME
 	mkdir $FOLDER_NAME
 	logger -v "step: generate xcodeproj from podspec using square/cocoapods-generate"
-	args="--local-sources=./ --platforms=ios --gen-directory=${FOLDER_NAME} --clean"
+	args="--local-sources=./ --platforms=ios --gen-directory=${PROJECT_FOR_IOS_PATH} --clean"
 	if [[ $LOGGER_MODE -eq 0 ]]; then
 		args+=" --silent"
 	elif [[ $LOGGER_MODE -eq 2 ]]; then
@@ -192,14 +192,14 @@ generateProject() {
 		#	- "GrowingAnalytics":
      	#	 - git: "https://github.com/growingio/growingio-sdk-ios-autotracker.git"
      	# 这样在生成xcodeproj时将使用git url对应最新的GrowingAnalytics.podspec，无需先执行pod repo push REPO_NAME PODSPEC_NAME更新podspec
-		ruby ./scripts/modifyPodfileYAML.ruby "${PREFIX_PATH}/CocoaPods.podfile.yaml"
-		pushd ${PREFIX_PATH}
+		ruby ./scripts/modifyPodfileYAML.ruby "${PROJECT_FOR_IOS_PATH}/${MAIN_FRAMEWORK_NAME}/CocoaPods.podfile.yaml"
+		pushd ${PROJECT_FOR_IOS_PATH}/${MAIN_FRAMEWORK_NAME}
 		bundle exec pod update --no-repo-update
 		popd
 	fi
 
 	logger -v "step: modify build settings using CocoaPods/Xcodeproj"
-	targets=$(ruby ./scripts/modifyPodsXcodeproj.ruby "${PREFIX_PATH}/Pods/Pods.xcodeproj")
+	targets=$(ruby ./scripts/modifyPodsXcodeproj.ruby "./${PROJECT_FOR_IOS_PATH}/${MAIN_FRAMEWORK_NAME}/Pods/Pods.xcodeproj")
 	schemes=$1
 	for target in ${targets[@]}; do
 		if [ $target == "GrowingAnalytics" ]; then
@@ -219,10 +219,17 @@ generateProject() {
 		fi
 	done
 
+	if [ $MAIN_BUNDLE == 'GrowingTracker' ]; then
+		logger -v "step: generate xcodeproj for macos(Only Tracker)"
+		args_for_macos=$(echo "$args" | sed 's/ios/macos/g')
+		bundle exec pod gen ${MAIN_FRAMEWORK_NAME}.podspec $args_for_macos || exit 1
+		targets=$(ruby ./scripts/modifyPodsXcodeproj.ruby "./${PROJECT_FOR_MACOS_PATH}/${MAIN_FRAMEWORK_NAME}/Pods/Pods.xcodeproj")
+	fi
+
 	logger -v "step: reset podspec"
 	mv "${MAIN_FRAMEWORK_NAME}.podspec" "./${FOLDER_NAME}/${MAIN_FRAMEWORK_NAME}.podspec"
 	mv "${MAIN_FRAMEWORK_NAME}-backup.podspec" "${MAIN_FRAMEWORK_NAME}.podspec"
-	# open ./${PREFIX_PATH}/${MAIN_FRAMEWORK_NAME}.xcworkspace
+	# open ./${PROJECT_FOR_IOS_PATH}/${MAIN_FRAMEWORK_NAME}/${MAIN_FRAMEWORK_NAME}.xcworkspace
 }
 
 generate_xcframework() {
@@ -230,14 +237,13 @@ generate_xcframework() {
 
 	for i in $@; do
 		framework_name=$i
+		framework_path_suffix=.xcarchive/Products/Library/Frameworks/${framework_name//-/_}.framework
 		iphone_os_archive_path="${archive_path}/iphoneos"
-		iphone_os_framework_path=${iphone_os_archive_path}.xcarchive/Products/Library/Frameworks/${framework_name//-/_}.framework
 		iphone_simulator_archive_path="${archive_path}/iphonesimulator"
-		iphone_simulator_framework_path=${iphone_simulator_archive_path}.xcarchive/Products/Library/Frameworks/${framework_name//-/_}.framework
 		mac_catalyst_archive_path="${archive_path}/maccatalyst"
-		mac_catalyst_framework_path=${mac_catalyst_archive_path}.xcarchive/Products/Library/Frameworks/${framework_name//-/_}.framework
+		mac_os_archive_path="${archive_path}/macos"
 		output_path="./${FOLDER_NAME}/Release/${framework_name//-/_}.xcframework"
-		common_args="archive -workspace ./${PREFIX_PATH}/${MAIN_FRAMEWORK_NAME}.xcworkspace \
+		common_args="archive -workspace ./${PROJECT_FOR_IOS_PATH}/${MAIN_FRAMEWORK_NAME}/${MAIN_FRAMEWORK_NAME}.xcworkspace \
 		-scheme ${framework_name} -configuration 'Release' -derivedDataPath ./${FOLDER_NAME}/derivedData"
 		if [[ $LOGGER_MODE -eq 0 ]]; then
 			common_args+=' -quiet'
@@ -257,27 +263,43 @@ generate_xcframework() {
 			-destination "generic/platform=iOS Simulator" \
 			-archivePath ${iphone_simulator_archive_path} || exit 1
 
+		logger -v "step: delete _CodeSignature folder in iphonesimulator framework which is unnecessary"
+		rm -rf ${iphone_simulator_archive_path}${framework_path_suffix}/_CodeSignature
+
 		logger -v "step: generate ${framework_name} ios-arm64_x86_64-maccatalyst framework"
 		xcodebuild ${common_args} \
 			-destination "generic/platform=macOS,variant=Mac Catalyst" \
 			-archivePath ${mac_catalyst_archive_path} || exit 1
 
-		logger -v "step: delete _CodeSignature folder in iphonesimulator framework which is unnecessary"
-		rm -rf ${iphone_simulator_framework_path}/_CodeSignature
+		if [[ $MAIN_BUNDLE == 'GrowingTracker' && $framework_name != 'GrowingAPM' ]]; then
+			logger -v "step: generate ${framework_name} macos-arm64_x86_64 framework(Only Tracker)"
+			common_args_for_macos=$(echo "$common_args" | sed 's/ios/macos/g')
+			xcodebuild ${common_args_for_macos} \
+				-destination "generic/platform=macOS" \
+				-archivePath ${mac_os_archive_path} || exit 1
 
-		logger -v "step: generate ${framework_name} xcframework"
-		xcodebuild -create-xcframework \
-			-framework ${iphone_os_framework_path} \
-			-framework ${iphone_simulator_framework_path} \
-			-framework ${mac_catalyst_framework_path} \
-			-output ${output_path} || exit 1
+			logger -v "step: generate ${framework_name} xcframework"
+			xcodebuild -create-xcframework \
+				-framework ${iphone_os_archive_path}${framework_path_suffix} \
+				-framework ${iphone_simulator_archive_path}${framework_path_suffix} \
+				-framework ${mac_catalyst_archive_path}${framework_path_suffix} \
+				-framework ${mac_os_archive_path}${framework_path_suffix} \
+				-output ${output_path} || exit 1
+		else
+			logger -v "step: generate ${framework_name} xcframework"
+			xcodebuild -create-xcframework \
+				-framework ${iphone_os_archive_path}${framework_path_suffix} \
+				-framework ${iphone_simulator_archive_path}${framework_path_suffix} \
+				-framework ${mac_catalyst_archive_path}${framework_path_suffix} \
+				-output ${output_path} || exit 1
+		fi
 	done
 }
 
 copy_apm_modules_xcframework() {
 	for module in ${APMMODULES[@]}; do
 		logger -v "step: copy ${module} xcframework"
-		path="${PREFIX_PATH}/Pods/GrowingAPM/${module}/GrowingAPM${module}.xcframework"
+		path="./${PROJECT_FOR_IOS_PATH}/${MAIN_FRAMEWORK_NAME}/Pods/GrowingAPM/${module}/GrowingAPM${module}.xcframework"
 		output_path="./${FOLDER_NAME}/Release/GrowingAPM${module}.xcframework"
 		cp -r $path $output_path
 	done
