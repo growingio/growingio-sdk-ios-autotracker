@@ -3,13 +3,13 @@ GrowingIO Autotracker
 ![GrowingIO](https://www.growingio.com/vassets/images/home_v3/gio-logo-primary.svg)  
 [![CI](https://github.com/growingio/growingio-sdk-ios-autotracker/workflows/CI/badge.svg)](https://github.com/growingio/growingio-sdk-ios-autotracker/actions)
 [![codecov](https://codecov.io/gh/growingio/growingio-sdk-ios-autotracker/branch/master/graph/badge.svg?token=L8N62ZKPJI)](https://codecov.io/gh/growingio/growingio-sdk-ios-autotracker)
-[![GitHub](https://img.shields.io/github/license/growingio/growingio-sdk-ios-autotracker)](https://github.com/growingio/growingio-sdk-ios-autotracker/blob/master/LICENSE)
-[![Platform iOS](https://img.shields.io/badge/platform-iOS-brightgreen)]()
-[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fgrowingio%2Fgrowingio-sdk-ios-autotracker%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/growingio/growingio-sdk-ios-autotracker)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fgrowingio%2Fgrowingio-sdk-ios-autotracker%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/growingio/growingio-sdk-ios-autotracker)
+[![License](https://img.shields.io/github/license/growingio/growingio-sdk-ios-autotracker)](https://github.com/growingio/growingio-sdk-ios-autotracker/blob/master/LICENSE)
 
 ## GrowingIO简介
-[**GrowingIO**](https://www.growingio.com/)（北京易数科技有限公司）是基于用户行为数据的增长平台，国内领先的数据运营解决方案供应商。为产品、运营、市场、数据团队及管理者等，提供客户数据平台、获客分析、产品分析、智能运营等产品和咨询服务，帮助企业在数据化升级的路上，提升数据驱动能力，实现更好的增长。  
-[**GrowingIO**](https://www.growingio.com/) 专注于零售、电商、金融、酒旅航司、教育、内容社区、B2B等行业，成立以来，服务上千家企业级客户，获得迪奥、安踏、喜茶、招商仁和人寿、上汽集团、东航、春航、首旅如家、陌陌、滴滴、爱奇艺、新东方等客户的青睐。
+创立于 2015 年，GrowingIO 是国内领先的一站式数据增长引擎方案服务商，属 StartDT 奇点云集团旗下品牌。**以数据智能分析为核心，GrowingIO 通过构建客户数据平台，打造增长营销闭环**，帮助企业提升数据驱动能力，赋能商业决策、实现业务增长。   
+GrowingIO 专注于零售、电商、保险、酒旅航司、教育、内容社区等行业，成立以来，累计服务超过 1500 家企业级客户，获得 LVMH 集团、百事、达能、老佛爷百货、戴尔、lululemon、美素佳儿、宜家、乐高、美的、海尔、安踏、汉光百货、中原地产、上汽集团、广汽蔚来、理想汽车、招商仁和人寿、飞鹤、红星美凯龙、东方航空、滴滴、新东方、喜茶、每日优鲜、奈雪的茶、永辉超市等客户的青睐。
 
 ## SDK 简介
 **GrowingIO Autotracker** 具备自动采集基本的用户行为事件，比如访问和行为数据等。目前支持代码埋点、无埋点、可视化圈选、热图等功能。
