@@ -46,7 +46,7 @@ GrowingMod(GrowingMobileDebugger)
 
 // 表示web和app是否同时准备好数据发送，此时表示可以发送数据
 @property (nonatomic, assign) BOOL isReady;
-@property (nonatomic, strong) NSMutableArray *cacheArray;
+@property (nonatomic, strong) NSMutableArray *cacheLogs;
 @property (nonatomic, strong) NSMutableArray *cacheEvent;
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, retain) GrowingStatusBar *statusWindow;
@@ -61,8 +61,6 @@ GrowingMod(GrowingMobileDebugger)
     GROWING_LOCK_DECLARE(lock);
 }
 
-// static GrowingMobileDebugger *sharedInstance = nil;
-
 - (void)growingModInit:(GrowingContext *)context {
     self.screenshotProvider =
         [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingScreenshotService)];
@@ -74,6 +72,7 @@ GrowingMod(GrowingMobileDebugger)
     if (self = [super init]) {
         GROWING_LOCK_INIT(lock);
         _cacheEvent = [NSMutableArray arrayWithCapacity:0];
+        _cacheLogs = [NSMutableArray arrayWithCapacity:0];
     }
     return self;
 }
@@ -123,11 +122,6 @@ GrowingMod(GrowingMobileDebugger)
 
 - (void)_setNeedUpdateScreen {
     [self sendScreenShot];
-}
-
-+ (CGFloat)impressScale {
-    CGFloat scale = [UIScreen mainScreen].scale;
-    return MIN(scale, 2);
 }
 
 - (unsigned long)getSnapshotKey {
@@ -191,6 +185,7 @@ GrowingMod(GrowingMobileDebugger)
         };
     }
     [self.screenshotProvider addApplicationEventObserver:self];
+    [self startTimer];
 }
 
 - (void)stop {
@@ -223,6 +218,7 @@ GrowingMod(GrowingMobileDebugger)
         [alert showAlertAnimated:NO];
     }
     [GrowingWSLogger sharedInstance].loggerBlock = nil;
+    [self stopTimer];
 }
 
 - (BOOL)isRunning {
@@ -239,13 +235,13 @@ GrowingMod(GrowingMobileDebugger)
 }
 
 - (void)nextOne {
-    if (self.cacheArray.count > 0) {
+    if (self.cacheLogs.count > 0) {
         NSMutableDictionary *cacheDic = [NSMutableDictionary dictionary];
         cacheDic[@"msgType"] = @"logger_data";
         cacheDic[@"sdkVersion"] = GrowingTrackerVersionName;
         GROWING_LOCK(lock);
-        cacheDic[@"data"] = self.cacheArray.copy;
-        [self.cacheArray removeAllObjects];
+        cacheDic[@"data"] = self.cacheLogs.copy;
+        [self.cacheLogs removeAllObjects];
         GROWING_UNLOCK(lock);
         [self sendJson:cacheDic];
     }
@@ -270,7 +266,6 @@ GrowingMod(GrowingMobileDebugger)
 
 - (void)startTimer {
     if (!self.timer) {
-        self.cacheArray = [NSMutableArray arrayWithCapacity:0];
         self.timer = [NSTimer timerWithTimeInterval:1.0
                                              target:self
                                            selector:@selector(nextOne)
@@ -292,10 +287,9 @@ GrowingMod(GrowingMobileDebugger)
         GIOLogDebug(@"didReceiveMessage: %@", message);
         NSMutableDictionary *dict = [message growingHelper_jsonObject];
 
-        // 如果收到了ready消息，说明可以发送数据了
         if ([[dict objectForKey:@"msgType"] isEqualToString:@"ready"]) {
+            // 如果收到了ready消息，说明可以发送数据了
             [self start];
-            [self startTimer];
             __weak typeof(self) weakSelf = self;
             [GrowingDebuggerEventQueue currentQueue].debuggerBlock = ^(NSArray *_Nonnull events) {
                 __strong typeof(weakSelf) self = weakSelf;
@@ -305,46 +299,33 @@ GrowingMod(GrowingMobileDebugger)
                     GROWING_UNLOCK(self->lock);
                 }
             };
-            // 队列出队
             [[GrowingDebuggerEventQueue currentQueue] dequeue];
-            return;
-        }
-        // 发送log信息
-        NSString *msg = dict[@"msgType"];
-        if ([msg isKindOfClass:NSString.class]) {
-            if ([msg isEqualToString:@"logger_open"]) {
-                [self startTimer];
-                __weak typeof(self) weakSelf = self;
-                [GrowingWSLogger sharedInstance].loggerBlock = ^(NSArray *logMessageArray) {
-                    __strong typeof(weakSelf) self = weakSelf;
-                    if (logMessageArray.count > 0) {
-                        GROWING_LOCK(self->lock);
-                        [self.cacheArray addObjectsFromArray:logMessageArray];
-                        GROWING_UNLOCK(self->lock);
-                    }
-                };
-            } else if ([msg isEqualToString:@"logger_close"]) {
-                [self stopTimer];
-                [GrowingWSLogger sharedInstance].loggerBlock = nil;
-            }
-            return;
-        }
-        // 版本号不适配
-        if ([[dict objectForKey:@"msgType"] isEqualToString:@"incompatible_version"]) {
+        } else if ([[dict objectForKey:@"msgType"] isEqualToString:@"logger_open"]) {
+            // 发送log信息
+            __weak typeof(self) weakSelf = self;
+            [GrowingWSLogger sharedInstance].loggerBlock = ^(NSArray *logMessageArray) {
+                __strong typeof(weakSelf) self = weakSelf;
+                if (logMessageArray.count > 0) {
+                    GROWING_LOCK(self->lock);
+                    [self.cacheLogs addObjectsFromArray:logMessageArray];
+                    GROWING_UNLOCK(self->lock);
+                }
+            };
+        } else if ([[dict objectForKey:@"msgType"] isEqualToString:@"logger_close"]) {
+            // 停止发送log信息
+            [GrowingWSLogger sharedInstance].loggerBlock = nil;
+        } else if ([[dict objectForKey:@"msgType"] isEqualToString:@"incompatible_version"]) {
+            // 版本号不适配
             GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert
                                                                title:@"抱歉"
                                                              message:@"您使用的SDK版本号过低,请升级SDK后再使用"];
             [alert addOkWithTitle:@"知道了" handler:nil];
             [alert showAlertAnimated:NO];
             [self stop];
-            return;
-        }
-
-        // web端退出了调试
-        if ([[dict objectForKey:@"msgType"] isEqualToString:@"quit"]) {
+        } else if ([[dict objectForKey:@"msgType"] isEqualToString:@"quit"]) {
+            // web端退出了调试
             self.isReady = NO;
             [self _stopWithError:@"当前设备已与Web端断开连接,如需继续调试请扫码重新连接。"];
-            return;
         }
     }
 }
