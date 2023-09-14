@@ -22,7 +22,7 @@ PODS:
     - GrowingAnalytics/WebCircle (= 3.6.0)
   - GrowingAnalytics/AutotrackerCore (3.6.0):
     - GrowingAnalytics/TrackerCore (= 3.6.0)
-    - GrowingUtils/AutotrackerCore (= 0.0.5)
+    - GrowingUtils/AutotrackerCore (= 0.0.7)
   - GrowingAnalytics/Compression (3.6.0):
     - GrowingAnalytics/TrackerCore (= 3.6.0)
   - GrowingAnalytics/Database (3.6.0):
@@ -58,7 +58,7 @@ PODS:
     - GrowingAnalytics/MobileDebugger (= 3.6.0)
     - GrowingAnalytics/TrackerCore (= 3.6.0)
   - GrowingAnalytics/TrackerCore (3.6.0):
-    - GrowingUtils/TrackerCore (= 0.0.5)
+    - GrowingUtils/TrackerCore (= 0.0.7)
   - GrowingAnalytics/WebCircle (3.6.0):
     - GrowingAnalytics/AutotrackerCore (= 3.6.0)
     - GrowingAnalytics/Hybrid (= 3.6.0)
@@ -76,16 +76,16 @@ PODS:
     - GrowingAPM/Core
   - GrowingAPM/UIMonitor (0.0.14):
     - GrowingAPM/Core
-  - GrowingToolsKit (1.1.3):
-    - GrowingToolsKit/Default (= 1.1.3)
-  - GrowingToolsKit/APMCore (1.1.3):
+  - GrowingToolsKit (1.2.0):
+    - GrowingToolsKit/Default (= 1.2.0)
+  - GrowingToolsKit/APMCore (1.2.0):
     - GrowingAPM/Core
     - GrowingToolsKit/Core
-  - GrowingToolsKit/Core (1.1.3)
-  - GrowingToolsKit/CrashMonitor (1.1.3):
+  - GrowingToolsKit/Core (1.2.0)
+  - GrowingToolsKit/CrashMonitor (1.2.0):
     - GrowingAPM/CrashMonitor
     - GrowingToolsKit/APMCore
-  - GrowingToolsKit/Default (1.1.3):
+  - GrowingToolsKit/Default (1.2.0):
     - GrowingToolsKit/Core
     - GrowingToolsKit/CrashMonitor
     - GrowingToolsKit/EventsList
@@ -95,24 +95,24 @@ PODS:
     - GrowingToolsKit/SDKInfo
     - GrowingToolsKit/Settings
     - GrowingToolsKit/XPathTrack
-  - GrowingToolsKit/EventsList (1.1.3):
+  - GrowingToolsKit/EventsList (1.2.0):
     - GrowingToolsKit/Core
-  - GrowingToolsKit/LaunchTime (1.1.3):
+  - GrowingToolsKit/LaunchTime (1.2.0):
     - GrowingAPM/UIMonitor
     - GrowingToolsKit/APMCore
-  - GrowingToolsKit/NetFlow (1.1.3):
+  - GrowingToolsKit/NetFlow (1.2.0):
     - GrowingToolsKit/Core
-  - GrowingToolsKit/Realtime (1.1.3):
+  - GrowingToolsKit/Realtime (1.2.0):
     - GrowingToolsKit/Core
-  - GrowingToolsKit/SDKInfo (1.1.3):
+  - GrowingToolsKit/SDKInfo (1.2.0):
     - GrowingToolsKit/Core
-  - GrowingToolsKit/Settings (1.1.3):
+  - GrowingToolsKit/Settings (1.2.0):
     - GrowingToolsKit/Core
-  - GrowingToolsKit/XPathTrack (1.1.3):
+  - GrowingToolsKit/XPathTrack (1.2.0):
     - GrowingToolsKit/Core
-  - GrowingUtils/AutotrackerCore (0.0.5):
+  - GrowingUtils/AutotrackerCore (0.0.7):
     - GrowingUtils/TrackerCore
-  - GrowingUtils/TrackerCore (0.0.5)
+  - GrowingUtils/TrackerCore (0.0.7)
   - KIF (3.8.9):
     - KIF/Core (= 3.8.9)
   - KIF/Core (3.8.9)
@@ -124,9 +124,9 @@ PODS:
   - Protobuf (3.24.3)
   - SDCycleScrollView (1.82):
     - SDWebImage (>= 5.0.0)
-  - SDWebImage (5.16.0):
-    - SDWebImage/Core (= 5.16.0)
-  - SDWebImage/Core (5.16.0)
+  - SDWebImage (5.18.1):
+    - SDWebImage/Core (= 5.18.1)
+  - SDWebImage/Core (5.18.1)
 
 DEPENDENCIES:
   - GrowingAnalytics-cdp/Autotracker (from `../`)
@@ -161,16 +161,16 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  GrowingAnalytics: 468d73222d8def851f75468b419e47f2301203e9
+  GrowingAnalytics: 184d771cd73537db523f669ad037e1bcd0a3e33b
   GrowingAnalytics-cdp: 46c87f38b8561465c243f9302fb1c8bc45697be6
   GrowingAPM: 79fe4f4a12d94432fa4a552d56c41940ea13961a
-  GrowingToolsKit: 88b144e858f8895f1d84c518642ce34ce0f5aa07
-  GrowingUtils: 5212c5c0501ea0c3863a29c33ccefbde5be77353
+  GrowingToolsKit: 9c0d6e41c9678397dbaa3304b1738a2867b023ae
+  GrowingUtils: e8ba72794651ade9ad60a71662d11baa08d526c8
   KIF: 7660c626b0f2d4562533590960db70a36d640558
   LBXScan: e51449f0832d1fe17da632af0d22adeb3cfa3543
   Protobuf: 970f7ee93a3a08e3cf64859b8efd95ee32b4f87f
   SDCycleScrollView: a0d74c3384caa72bdfc81470bdbc8c14b3e1fbcf
-  SDWebImage: 2aea163b50bfcb569a2726b6a754c54a4506fcf6
+  SDWebImage: ebdbcebc7933a45226d9313bd0118bc052ad458b
 
 PODFILE CHECKSUM: 81da6e462af8169c5f556b95bac2c3f1f2d91b2a
 
