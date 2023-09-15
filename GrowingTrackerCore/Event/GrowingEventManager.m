@@ -26,14 +26,14 @@
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
 #import "GrowingTrackerCore/Network/Request/GrowingEventRequest.h"
+#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
+#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
+#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "GrowingTrackerCore/include/GrowingBaseEvent.h"
 #import "GrowingTrackerCore/include/GrowingEventFilter.h"
 #import "GrowingTrackerCore/include/GrowingEventNetworkService.h"
 #import "GrowingTrackerCore/include/GrowingServiceManager.h"
 #import "GrowingTrackerCore/include/GrowingTrackConfiguration.h"
-#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
-#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
-#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 
 static const NSUInteger kGrowingMaxQueueSize = 10000;  // default: max event queue size there are 10000 events
 static const NSUInteger kGrowingFillQueueSize = 1000;  // default: determine when event queue is filled from DB

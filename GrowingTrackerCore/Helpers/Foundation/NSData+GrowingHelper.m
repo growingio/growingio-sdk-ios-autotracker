@@ -19,10 +19,10 @@
 
 #import "GrowingTrackerCore/Helpers/Foundation/NSData+GrowingHelper.h"
 #import "GrowingTrackerCore/Helpers/Foundation/NSString+GrowingHelper.h"
+#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/include/GrowingCompressService.h"
 #import "GrowingTrackerCore/include/GrowingEncryptionService.h"
 #import "GrowingTrackerCore/include/GrowingServiceManager.h"
-#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 
 #import <CommonCrypto/CommonCrypto.h>
 
