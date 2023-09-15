@@ -18,8 +18,8 @@
 //  limitations under the License.
 
 #import "Services/Network/GrowingNetworkManager.h"
-#import "GrowingTrackerCore/include/GrowingAnnotationCore.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
+#import "GrowingTrackerCore/include/GrowingAnnotationCore.h"
 #import "Services/Network/NSURLSession+GrowingURLSessionHelper.h"
 
 GrowingService(GrowingEventNetworkService, GrowingNetworkManager)

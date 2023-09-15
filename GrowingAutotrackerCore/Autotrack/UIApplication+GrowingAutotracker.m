@@ -56,7 +56,8 @@
     }
 
     NSObject<GrowingNode> *node = (NSObject<GrowingNode> *)sender;
-    if ([sender isKindOfClass:UIStepper.class] || [sender isKindOfClass:UIPageControl.class] || [sender isKindOfClass:UISwitch.class]) {
+    if ([sender isKindOfClass:UIStepper.class] || [sender isKindOfClass:UIPageControl.class] ||
+        [sender isKindOfClass:UISwitch.class]) {
         [GrowingViewClickProvider viewOnClick:(UIView *)node];
     } else if ([event isKindOfClass:[UIEvent class]] && event.type == UIEventTypeTouches &&
                [[[event allTouches] anyObject] phase] == UITouchPhaseEnded) {

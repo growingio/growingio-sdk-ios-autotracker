@@ -23,8 +23,8 @@
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
-#import "GrowingTrackerCore/include/GrowingFieldsIgnore.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
+#import "GrowingTrackerCore/include/GrowingFieldsIgnore.h"
 #import "GrowingULTimeUtil.h"
 
 @implementation GrowingBaseEvent
