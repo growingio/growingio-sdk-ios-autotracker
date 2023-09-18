@@ -59,6 +59,7 @@ let package = Package(
         .tracker,
 
         // MARK: - Resources
+
         .Resources.privacy,
         .Resources.privacy_macos,
 
@@ -136,8 +137,8 @@ extension Target {
 
     enum Resources {
         static let privacy = target(name: .privacy,
-                                      path: .Path.privacy,
-                                      resources: [.copy("Resources/PrivacyInfo.xcprivacy")])
+                                    path: .Path.privacy,
+                                    resources: [.copy("Resources/PrivacyInfo.xcprivacy")])
 
         static let privacy_macos = target(name: .privacy_macos,
                                           path: .Path.privacy_macos,
