@@ -27,7 +27,7 @@
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogMacros.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
-#import "GrowingTrackerCore/include/GrowingTrackConfiguration.h"
+#import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
 #import "Modules/Hybrid/GrowingHybridBridgeProvider.h"
 #import "Modules/Hybrid/GrowingWKWebViewJavascriptBridge_JS.h"
 #import "Modules/Hybrid/GrowingWebViewJavascriptBridgeConfiguration.h"
