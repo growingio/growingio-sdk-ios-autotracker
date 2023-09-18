@@ -21,9 +21,9 @@
 #import <objc/message.h>
 #import <objc/runtime.h>
 #import "GrowingTrackerCore/Core/GrowingContext.h"
-#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Public/GrowingAnnotationCore.h"
 #import "GrowingTrackerCore/Public/GrowingModuleProtocol.h"
+#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 
 static NSString *kInitSelector = @"growingModInit:";
 static NSString *kSetDataCollectionEnabledSelector = @"growingModSetDataCollectionEnabled:";
