@@ -316,7 +316,7 @@ let package = Package(
             dependencies: [
                 "GrowingTrackerCore",
                 "GrowingService_WebSocket",
-                "GrowingService_Screenshot",
+                .target(name: "GrowingService_Screenshot", condition: .when(platforms: [.iOS])),
             ],
             path: "Modules/MobileDebugger",
             cSettings: [
@@ -328,8 +328,8 @@ let package = Package(
             dependencies: [
                 "GrowingAutotrackerCore",
                 "GrowingService_WebSocket",
-                "GrowingService_Screenshot",
-                "GrowingModule_Hybrid",
+                .target(name: "GrowingService_Screenshot", condition: .when(platforms: [.iOS])),
+                .target(name: "GrowingModule_Hybrid", condition: .when(platforms: [.iOS, .macCatalyst])),
             ],
             path: "Modules/WebCircle",
             cSettings: [
