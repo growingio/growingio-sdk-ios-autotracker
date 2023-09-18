@@ -23,12 +23,12 @@
 #import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogMacros.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Timer/GrowingEventTimer.h"
 #import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
-#import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
 #import "GrowingULAppLifecycle.h"
 #import "GrowingULTimeUtil.h"
 
