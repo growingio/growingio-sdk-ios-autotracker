@@ -17,7 +17,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/include/GrowingFieldsIgnore.h"
+#import "GrowingTrackerCore/Public/GrowingFieldsIgnore.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 
 // 忽略当前所有可设置的属性掩码值

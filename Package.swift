@@ -178,6 +178,19 @@ let package = Package(
             ]
         ),
 
+        // MARK: - GrowingAnalytics Resources
+
+        .target(
+            name: "GrowingResources",
+            path: "SwiftPM-Wrap/GrowingResources-Wrapper",
+            resources: [.copy("Resources/PrivacyInfo.xcprivacy")]
+        ),
+        .target(
+            name: "GrowingResources_macOS",
+            path: "SwiftPM-Wrap/GrowingResources-macOS-Wrapper",
+            resources: [.copy("Resources/PrivacyInfo.xcprivacy")]
+        ),
+
         // MARK: - GrowingAnalytics Core
 
         .target(
@@ -204,10 +217,12 @@ let package = Package(
             name: "GrowingTrackerCore",
             dependencies: [
                 .product(name: "GrowingUtilsTrackerCore", package: "growingio-sdk-ios-utilities"),
+                .target(name: "GrowingResources", condition: .when(platforms: [.iOS, .macCatalyst])),
+                .target(name: "GrowingResources_macOS", condition: .when(platforms: [.macOS])),
             ],
             path: "GrowingTrackerCore",
             exclude: ["Utils/UserIdentifier"],
-            resources: [.copy("Resources/PrivacyInfo.xcprivacy")],
+            publicHeadersPath: "Public",
             cSettings: [
                 .headerSearchPath(".."),
             ],
