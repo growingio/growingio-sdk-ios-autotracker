@@ -19,7 +19,7 @@
 
 #import "Services/Database/GrowingEventFMDatabase.h"
 #import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
-#import "GrowingTrackerCore/include/GrowingEventPersistenceProtocol.h"
+#import "GrowingTrackerCore/Public/GrowingEventPersistenceProtocol.h"
 #import "GrowingULTimeUtil.h"
 #import "Services/Database/FMDB/GrowingFMDB.h"
 

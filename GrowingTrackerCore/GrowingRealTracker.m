@@ -32,10 +32,10 @@
 #import "GrowingTrackerCore/Timer/GrowingEventTimer.h"
 #import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
-#import "GrowingTrackerCore/include/GrowingAttributesBuilder.h"
-#import "GrowingTrackerCore/include/GrowingModuleManager.h"
-#import "GrowingTrackerCore/include/GrowingServiceManager.h"
-#import "GrowingTrackerCore/include/GrowingTrackConfiguration.h"
+#import "GrowingTrackerCore/Public/GrowingAttributesBuilder.h"
+#import "GrowingTrackerCore/Public/GrowingModuleManager.h"
+#import "GrowingTrackerCore/Public/GrowingServiceManager.h"
+#import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
 #import "GrowingULAppLifecycle.h"
 
 NSString *const GrowingTrackerVersionName = @"4.0.0";

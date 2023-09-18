@@ -29,11 +29,11 @@
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
-#import "GrowingTrackerCore/include/GrowingBaseEvent.h"
-#import "GrowingTrackerCore/include/GrowingEventFilter.h"
-#import "GrowingTrackerCore/include/GrowingEventNetworkService.h"
-#import "GrowingTrackerCore/include/GrowingServiceManager.h"
-#import "GrowingTrackerCore/include/GrowingTrackConfiguration.h"
+#import "GrowingTrackerCore/Public/GrowingBaseEvent.h"
+#import "GrowingTrackerCore/Public/GrowingEventFilter.h"
+#import "GrowingTrackerCore/Public/GrowingEventNetworkService.h"
+#import "GrowingTrackerCore/Public/GrowingServiceManager.h"
+#import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
 
 static const NSUInteger kGrowingMaxDBCacheSize = 100;  // default: write to DB as soon as there are 100 events
 static const NSUInteger kGrowingMaxBatchSize = 500;    // default: send no more than 500 events in every batch
