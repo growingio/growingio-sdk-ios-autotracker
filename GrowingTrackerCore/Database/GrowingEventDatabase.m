@@ -20,7 +20,7 @@
 #import "GrowingTrackerCore/Database/GrowingEventDatabase.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
-#import "GrowingTrackerCore/include/GrowingServiceManager.h"
+#import "GrowingTrackerCore/Public/GrowingServiceManager.h"
 
 long long const GrowingEventDatabaseExpirationTime = 86400000 * 7;
 NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.error";

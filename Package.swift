@@ -58,6 +58,10 @@ let package = Package(
         .autotracker,
         .tracker,
 
+        // MARK: - Resources
+        .Resources.privacy,
+        .Resources.privacy_macos,
+
         // MARK: - Core
 
         .Core.trackerCore,
@@ -130,6 +134,16 @@ extension Target {
                                      publicHeadersPath: ".",
                                      cSettings: [.hspFor(.Path.tracker_objc)])
 
+    enum Resources {
+        static let privacy = target(name: .privacy,
+                                      path: .Path.privacy,
+                                      resources: [.copy("Resources/PrivacyInfo.xcprivacy")])
+
+        static let privacy_macos = target(name: .privacy_macos,
+                                          path: .Path.privacy_macos,
+                                          resources: [.copy("Resources/PrivacyInfo.xcprivacy")])
+    }
+
     enum Core {
         static let autotrackerCore = target(name: .autotrackerCore,
                                             dependencies: [
@@ -141,9 +155,13 @@ extension Target {
                                             cSettings: [.hspFor(.Path.autotrackerCore)])
 
         static let trackerCore = target(name: .trackerCore,
-                                        dependencies: [.trackerUtils],
+                                        dependencies: [
+                                            .trackerUtils,
+                                            .Resources.privacy,
+                                            .Resources.privacy_macos,
+                                        ],
                                         path: .Path.trackerCore,
-                                        resources: [.copy("Resources/PrivacyInfo.xcprivacy")],
+                                        publicHeadersPath: .Path.publicHeaders,
                                         cSettings: [.hspFor(.Path.trackerCore)],
                                         linkerSettings: [
                                             .cPlusPlusLibrary,
@@ -275,6 +293,11 @@ extension Target.Dependency {
     static let apm = product(name: "GrowingAPM", package: "growingio-sdk-ios-performance-ext")
     static let protobuf = product(name: "SwiftProtobuf", package: "swift-protobuf")
 
+    enum Resources {
+        static let privacy = byName(name: .privacy, condition: .when(platforms: [.iOS, .macCatalyst]))
+        static let privacy_macos = byName(name: .privacy_macos, condition: .when(platforms: [.macOS]))
+    }
+
     enum Core {
         static let autotrackerCore = byName(name: .autotrackerCore, condition: .when(platforms: [.iOS, .macCatalyst]))
         static let trackerCore = byName(name: .trackerCore)
@@ -319,6 +342,10 @@ extension String {
     static let autotracker_objc = "GrowingAutotracker_Objc"
     static let tracker_objc = "GrowingTracker_Objc"
 
+    // Resources
+    static let privacy = "GrowingPrivacy"
+    static let privacy_macos = "GrowingPrivacy_macOS"
+
     // Core
     static let autotrackerCore = "GrowingAutotrackerCore"
     static let trackerCore = "GrowingTrackerCore"
@@ -349,6 +376,10 @@ extension String {
         static let tracker = "SwiftPM-Wrap/GrowingTracker"
         static let autotracker_objc = "GrowingAutotracker"
         static let tracker_objc = "GrowingTracker"
+
+        // Resources
+        static let privacy = "SwiftPM-Wrap/GrowingPrivacy-Wrapper"
+        static let privacy_macos = "SwiftPM-Wrap/GrowingPrivacy-macOS-Wrapper"
 
         // Core
         static let autotrackerCore = "GrowingAutotrackerCore"
