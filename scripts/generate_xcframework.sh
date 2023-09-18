@@ -114,15 +114,9 @@ modifyPodspec() {
 	numberOfLine=$(sed -n "/s.subspec '${default_subspec}' do |${default_subspec_alias}|/=" $podspec)
 	logger -v "step: add additional modules"
 	for module in ${MODULES[@]}; do
-		if [[ ${module} == "Protobuf" ]]; then
-			sed -i '' "${numberOfLine}a\\ 
-			${default_subspec_alias}.dependency 'GrowingAnalytics\/${module}', s.version.to_s\\
-			" $podspec
-		else
-			sed -i '' "${numberOfLine}a\\ 
-			${default_subspec_alias}.ios.dependency 'GrowingAnalytics\/${module}', s.version.to_s\\
-			" $podspec
-		fi
+		sed -i '' "${numberOfLine}a\\ 
+		${default_subspec_alias}.ios.dependency 'GrowingAnalytics\/${module}', s.version.to_s\\
+		" $podspec
 	done
 
 	logger -v "step: add apm modules"
