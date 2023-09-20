@@ -150,7 +150,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  GrowingAnalytics: 65812d59bab32721b11ae34941541fc2ec1f70e7
+  GrowingAnalytics: ea695e9b0ceeefbf6b4cebaeaa88f6867713a0d1
   GrowingAPM: 83118328af06eec2a987f47b8e62a9d6d986994c
   GrowingToolsKit: 134a78b023c4ab7da51e0a1111e9956a96e42dab
   GrowingUtils: e8ba72794651ade9ad60a71662d11baa08d526c8
@@ -160,6 +160,6 @@ SPEC CHECKSUMS:
   SDCycleScrollView: a0d74c3384caa72bdfc81470bdbc8c14b3e1fbcf
   SDWebImage: ebdbcebc7933a45226d9313bd0118bc052ad458b
 
-PODFILE CHECKSUM: ac7b541f25e4e618ea008977e92d56a0bdf2270e
+PODFILE CHECKSUM: eadc8a2cddef5401cfafd1d713a6bacab48232e6
 
 COCOAPODS: 1.12.1
