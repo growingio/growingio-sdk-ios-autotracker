@@ -40,7 +40,7 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/growingio/growingio-sdk-ios-performance-ext.git",
-            "0.0.15" ..< "1.0.0"
+            "0.0.16" ..< "1.0.0"
         ),
         .package(
             url: "https://github.com/apple/swift-protobuf.git",
@@ -138,11 +138,11 @@ extension Target {
     enum Resources {
         static let privacy = target(name: .privacy,
                                     path: .Path.privacy,
-                                    resources: [.copy("Resources/PrivacyInfo.xcprivacy")])
+                                    resources: [.copy("Resources/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy")])
 
         static let privacy_macos = target(name: .privacy_macos,
                                           path: .Path.privacy_macos,
-                                          resources: [.copy("Resources/PrivacyInfo.xcprivacy")])
+                                          resources: [.copy("Resources/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy")])
     }
 
     enum Core {
