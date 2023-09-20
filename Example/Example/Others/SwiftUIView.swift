@@ -20,7 +20,13 @@
 // 参考：https://github.com/firebase/firebase-ios-sdk/tree/master/FirebaseAnalyticsSwift
 #if canImport(SwiftUI)
 import SwiftUI
+#if canImport(GrowingAnalytics)
 import GrowingAnalytics
+#endif
+
+#if canImport(GrowingAutotracker)
+import GrowingAutotracker
+#endif
 
 @available(iOS 13.0, macOS 10.15, macCatalyst 13.0, tvOS 13.0, *)
 @objc class SwiftUIViewWrapper: NSObject {
