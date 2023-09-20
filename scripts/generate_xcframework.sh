@@ -249,6 +249,10 @@ copy_apm_modules_xcframework() {
 	done
 }
 
+copy_privacy_manifest() {
+	cp -r "./Resources" "./${FOLDER_NAME}/Release/"
+}
+
 beginGenerate() {
 	logger -i "you chose bundle is $MAIN_BUNDLE, additional modules is ${MODULES[@]}, and apm modules is ${APMMODULES[@]}"
 	logger -i "job: backup and modify podspec"
@@ -260,6 +264,7 @@ beginGenerate() {
 	generate_xcframework ${schemes[*]}
 	logger -i "job: copy apm xcframework if necessary"
 	copy_apm_modules_xcframework
+	copy_privacy_manifest
 
 	echo "\033[36m[GrowingAnalytics] WINNER WINNER, CHICKEN DINNER!\033[0m"
 }
