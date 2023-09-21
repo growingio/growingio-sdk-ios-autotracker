@@ -78,6 +78,7 @@
 		341A579A2ABAA23E0052840A /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 341A57992ABAA2380052840A /* libc++.tbd */; };
 		34486D3D27B1049000FA8223 /* UITapGestureRecognizerAutotrackTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34486D3B27B102B000FA8223 /* UITapGestureRecognizerAutotrackTest.m */; };
 		34664587278EEEA6009C351C /* A0GrowingAnalyticsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3A224F638BB0028FE94 /* A0GrowingAnalyticsTest.m */; };
+		346D6C7A2ABC355C00676A32 /* GIOWebViewWarmuper.m in Sources */ = {isa = PBXBuildFile; fileRef = 346D6C792ABC355C00676A32 /* GIOWebViewWarmuper.m */; };
 		346E0B3B29F2724400A12E4E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346E0B3A29F2724400A12E4E /* AppDelegate.swift */; };
 		346E0B3D29F2724400A12E4E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346E0B3C29F2724400A12E4E /* ViewController.swift */; };
 		346E0B3F29F2724400A12E4E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 346E0B3E29F2724400A12E4E /* Assets.xcassets */; };
@@ -307,6 +308,8 @@
 		34106BB328FECB0E00E7DB01 /* Crasher.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Crasher.mm; sourceTree = "<group>"; };
 		341A57992ABAA2380052840A /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/usr/lib/libc++.tbd"; sourceTree = DEVELOPER_DIR; };
 		34486D3B27B102B000FA8223 /* UITapGestureRecognizerAutotrackTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UITapGestureRecognizerAutotrackTest.m; sourceTree = "<group>"; };
+		346D6C782ABC355C00676A32 /* GIOWebViewWarmuper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIOWebViewWarmuper.h; sourceTree = "<group>"; };
+		346D6C792ABC355C00676A32 /* GIOWebViewWarmuper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOWebViewWarmuper.m; sourceTree = "<group>"; };
 		346E0B3829F2724300A12E4E /* Example-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Example-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		346E0B3A29F2724400A12E4E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		346E0B3C29F2724400A12E4E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -573,6 +576,8 @@
 				046530D724DD4271002D254C /* GIOConstants.m */,
 				046530D624DD4271002D254C /* GIODataProcessOperation.h */,
 				046530D324DD4271002D254C /* GIODataProcessOperation.m */,
+				346D6C782ABC355C00676A32 /* GIOWebViewWarmuper.h */,
+				346D6C792ABC355C00676A32 /* GIOWebViewWarmuper.m */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -2331,6 +2336,7 @@
 				0465315B24DD4272002D254C /* GIOCollectionViewCell.m in Sources */,
 				0465314F24DD4272002D254C /* GIOTextFieldViewController.m in Sources */,
 				4916271224E157CF00444AF2 /* GIOPagingViewController.m in Sources */,
+				346D6C7A2ABC355C00676A32 /* GIOWebViewWarmuper.m in Sources */,
 				348C86A92A60FC7900310C22 /* GrowingIgnoreButton1.m in Sources */,
 				348C86AC2A60FC8300310C22 /* GrowingIgnoreButton2.m in Sources */,
 				348C86B22A60FCA200310C22 /* GrowingNotIgnoreButton4.m in Sources */,

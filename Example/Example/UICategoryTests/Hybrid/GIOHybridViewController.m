@@ -7,6 +7,7 @@
 //
 
 #import "GIOHybridViewController.h"
+#import "GIOWebViewWarmuper.h"
 @import WebKit;
 
 @interface GIOHybridViewController () <WKUIDelegate, WKNavigationDelegate>
@@ -114,7 +115,7 @@
 - (WKWebView *)webView {
     if (!_webView) {
         [self.view setNeedsLayout];
-        _webView = [[WKWebView alloc] initWithFrame:CGRectZero];
+        _webView = [[GIOWebViewWarmuper sharedInstance] dequeue];
         _webView.UIDelegate = self;
         _webView.navigationDelegate = self;
         _webView.backgroundColor = [UIColor whiteColor];

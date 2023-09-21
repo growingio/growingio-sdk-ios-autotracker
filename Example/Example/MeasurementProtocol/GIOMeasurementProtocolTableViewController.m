@@ -9,6 +9,7 @@
 #import "GIOMeasurementProtocolTableViewController.h"
 #import "GIOAttributesTrackViewController.h"
 #import "GIOConstants.h"
+#import "GIOWebViewWarmuper.h"
 
 //测量协议规定的数据分类：埋点、无埋点和API测试
 typedef NS_ENUM(NSInteger, GIOMeasurementProtocolCount) { GIOAutoTrack = 0, GIOManualTrack, GIOAPI };
@@ -31,6 +32,11 @@ typedef NS_ENUM(NSInteger, GIOMeasurementProtocolCount) { GIOAutoTrack = 0, GIOM
     self.tableView.accessibilityIdentifier = @"MeasurementProtocolTableView";
     
     self.dataCollectionEnabledSwitch.on = self.dataCollectionEnabled;
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [[GIOWebViewWarmuper sharedInstance] prepare];
 }
 
 - (void)didReceiveMemoryWarning {

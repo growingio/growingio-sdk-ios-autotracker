@@ -7,6 +7,7 @@
 //
 
 #import "GIODefaultWebViewController.h"
+#import "GIOWebViewWarmuper.h"
 #import <WebKit/WebKit.h>
 
 @interface GIODefaultWebViewController ()
@@ -57,7 +58,8 @@
 
 - (WKWebView *)webView {
     if (!_webView) {
-        _webView = [[WKWebView alloc] initWithFrame:self.view.bounds];
+        _webView = [[GIOWebViewWarmuper sharedInstance] dequeue];
+        _webView.frame = self.view.bounds;
 #if defined(__IPHONE_16_4) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_16_4)
         if (@available(macOS 13.3, iOS 16.4, tvOS 16.4, *)) {
             _webView.inspectable = YES;
