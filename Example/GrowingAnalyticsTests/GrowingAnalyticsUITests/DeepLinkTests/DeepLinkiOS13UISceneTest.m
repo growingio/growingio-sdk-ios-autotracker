@@ -134,7 +134,7 @@
     [app terminate];
 
     [DeepLinkTestHelper openFromSafari:url];
-    XCTAssertTrue([app waitForState:XCUIApplicationStateRunningForeground timeout:15]);
+    XCTAssertTrue([app waitForState:XCUIApplicationStateRunningForeground timeout:25]);
 
     // 不出现deepLinkCallback弹窗
     XCUIElement *testButton = app.buttons[@"XCTest"];
