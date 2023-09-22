@@ -101,7 +101,7 @@
     dataDict[@"longitude"] = ABS(self.longitude) > 0 ? @(self.longitude) : nil;
     dataDict[@"sdkVersion"] = self.sdkVersion;
     dataDict[@"userKey"] = self.userKey.length > 0 ? self.userKey : nil;
-    dataDict[@"timezoneOffset"] = @(self.timezoneOffset);
+    dataDict[@"timezoneOffset"] = self.timezoneOffset;
     return [dataDict copy];
 }
 
@@ -150,7 +150,7 @@
     _appName = deviceInfo.displayName;
     _appVersion = deviceInfo.appVersion;
     _language = deviceInfo.language;
-    _timezoneOffset = deviceInfo.timezoneOffset;
+    _timezoneOffset = [NSString stringWithFormat:@"%@", @(deviceInfo.timezoneOffset)];
 }
 
 - (GrowingBaseBuilder * (^)(NSString *value))setDataSourceId {
@@ -335,8 +335,8 @@
     };
 }
 
-- (GrowingBaseBuilder * (^)(NSInteger value))setTimezoneOffset {
-    return ^(NSInteger value) {
+- (GrowingBaseBuilder * (^)(NSString *value))setTimezoneOffset {
+    return ^(NSString *value) {
         self->_timezoneOffset = value;
         return self;
     };

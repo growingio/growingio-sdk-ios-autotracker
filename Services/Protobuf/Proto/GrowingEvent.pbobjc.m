@@ -177,7 +177,6 @@ typedef struct GrowingPBEventV3Dto__storage_ {
   int32_t screenHeight;
   int32_t screenWidth;
   int32_t index;
-  int32_t timezoneOffset;
   NSString *deviceId;
   NSString *userId;
   NSString *sessionId;
@@ -220,6 +219,7 @@ typedef struct GrowingPBEventV3Dto__storage_ {
   NSString *projectKey;
   NSString *userKey;
   NSString *xcontent;
+  NSString *timezoneOffset;
   int64_t timestamp;
   double latitude;
   double longitude;
@@ -699,7 +699,7 @@ typedef struct GrowingPBEventV3Dto__storage_ {
         .hasIndex = 49,
         .offset = (uint32_t)offsetof(GrowingPBEventV3Dto__storage_, timezoneOffset),
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldClearHasIvarOnZero),
-        .dataType = GPBDataTypeInt32,
+        .dataType = GPBDataTypeString,
       },
     };
     GPBDescriptor *localDescriptor =

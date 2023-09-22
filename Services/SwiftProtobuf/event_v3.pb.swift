@@ -365,7 +365,7 @@ struct Io_Growing_Tunnel_Protocol_EventV3Dto {
     set {_uniqueStorage()._xcontent = newValue}
   }
 
-  var timezoneOffset: Int32 {
+  var timezoneOffset: String {
     get {return _storage._timezoneOffset}
     set {_uniqueStorage()._timezoneOffset = newValue}
   }
@@ -542,7 +542,7 @@ extension Io_Growing_Tunnel_Protocol_EventV3Dto: SwiftProtobuf.Message, SwiftPro
     var _sendTime: Int64 = 0
     var _userKey: String = String()
     var _xcontent: String = String()
-    var _timezoneOffset: Int32 = 0
+    var _timezoneOffset: String = String()
 
     static let defaultInstance = _StorageClass()
 
@@ -670,7 +670,7 @@ extension Io_Growing_Tunnel_Protocol_EventV3Dto: SwiftProtobuf.Message, SwiftPro
         case 54: try { try decoder.decodeSingularInt64Field(value: &_storage._sendTime) }()
         case 55: try { try decoder.decodeSingularStringField(value: &_storage._userKey) }()
         case 56: try { try decoder.decodeSingularStringField(value: &_storage._xcontent) }()
-        case 57: try { try decoder.decodeSingularInt32Field(value: &_storage._timezoneOffset) }()
+        case 57: try { try decoder.decodeSingularStringField(value: &_storage._timezoneOffset) }()
         default: break
         }
       }
@@ -836,8 +836,8 @@ extension Io_Growing_Tunnel_Protocol_EventV3Dto: SwiftProtobuf.Message, SwiftPro
       if !_storage._xcontent.isEmpty {
         try visitor.visitSingularStringField(value: _storage._xcontent, fieldNumber: 56)
       }
-      if _storage._timezoneOffset != 0 {
-        try visitor.visitSingularInt32Field(value: _storage._timezoneOffset, fieldNumber: 57)
+      if !_storage._timezoneOffset.isEmpty {
+        try visitor.visitSingularStringField(value: _storage._timezoneOffset, fieldNumber: 57)
       }
     }
     try unknownFields.traverse(visitor: &visitor)
