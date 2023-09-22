@@ -51,7 +51,7 @@
     dto.longitude = self.longitude;
     dto.sdkVersion = self.sdkVersion;
     dto.userKey = self.userKey;
-    dto.timezoneOffset = (int)self.timezoneOffset;
+    dto.timezoneOffset = self.timezoneOffset;
 
     __weak typeof(self) weakSelf = self;
     NSString * (^stringBlock)(NSString *) = ^(NSString *selectorString) {

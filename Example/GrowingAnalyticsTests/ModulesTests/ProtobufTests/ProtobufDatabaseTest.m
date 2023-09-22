@@ -146,7 +146,7 @@
                                                            .setSdkVersion(@"3.3.3")
                                                            .setUserKey(@"iPhone")
                                                            .setDataSourceId(@"1234567890")
-                                                           .setTimezoneOffset(-480)
+                                                           .setTimezoneOffset(@"-480")
                                                            .build);
     NSString *uuid = [NSUUID UUID].UUIDString;
     GrowingEventProtobufPersistence *persistenceIn = [GrowingEventProtobufPersistence persistenceEventWithEvent:event
@@ -205,7 +205,7 @@
     XCTAssertEqualObjects(event.eventName ?: @"", protobuf.eventName);
     XCTAssertEqualObjects(event.attributes ?: @{}, protobuf.attributes);
     // 4.0.0
-    XCTAssertEqual(event.timezoneOffset, protobuf.timezoneOffset);
+    XCTAssertEqualObjects(event.timezoneOffset, protobuf.timezoneOffset);
 }
 
 - (GrowingEventProtobufPersistence *)customEventPersistence {

@@ -247,7 +247,7 @@ GPB_FINAL @interface GrowingPBEventV3Dto : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *xcontent;
 
-@property(nonatomic, readwrite) int32_t timezoneOffset;
+@property(nonatomic, readwrite, copy, null_resettable) NSString *timezoneOffset;
 
 @end
 

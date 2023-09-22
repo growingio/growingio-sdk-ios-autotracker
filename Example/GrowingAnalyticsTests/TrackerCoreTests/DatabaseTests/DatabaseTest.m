@@ -70,7 +70,7 @@
                      .setUserId(@"zhangsan")
                      .setUserKey(@"phone")
                      .setDeviceId(@"testdeviceID")
-                     .setTimezoneOffset(-480)
+                     .setTimezoneOffset(@"-480")
                      .build;
 }
 
