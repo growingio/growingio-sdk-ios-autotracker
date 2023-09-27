@@ -88,7 +88,7 @@ public class SwiftProtobufWrapper: NSObject {
         dto.referralPage = jsonObject["referralPage"] as? String ?? ""
         dto.protocolType = jsonObject["protocolType"] as? String ?? ""
         dto.eventName = jsonObject["eventName"] as? String ?? ""
-        dto.timezoneOffset = (jsonObject["timezoneOffset"] as? NSNumber)?.int32Value ?? 0
+        dto.timezoneOffset = jsonObject["timezoneOffset"] as? String ?? ""
 
         return SwiftProtobufWrapper(dto)
     }
@@ -201,7 +201,7 @@ public extension GrowingBaseEvent {
         dto.longitude = longitude
         dto.sdkVersion = sdkVersion
         dto.userKey = userKey ?? ""
-        dto.timezoneOffset = Int32(timezoneOffset)
+        dto.timezoneOffset = timezoneOffset
 
         dto.eventType = SwiftProtobufWrapper.eventType(eventType)
         dto.idfa = idfa()
