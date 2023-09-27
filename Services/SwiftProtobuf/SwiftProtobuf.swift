@@ -97,7 +97,15 @@ public class SwiftProtobufWrapper: NSObject {
     public func toJsonObject() -> [String: AnyObject]? {
         do {
             let data = try unbox.jsonUTF8Data()
-            let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String: AnyObject]
+            guard var json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String: AnyObject] else {
+                return nil
+            }
+            // Int64 类型在 proto3 JSON Mapping 默认为 String 类型，apple/swift-protobuf 有将 Int64 转为 Number 的提案，但
+            // 截止 SwiftProtobuf 1.23.0，该提案尚未合并到 1_x_release_branch 分支上，仅合并入 main 分支
+            // 见：https://github.com/growingio/growingio-sdk-ios-autotracker/pull/248#issuecomment-1515913736
+            if let timestamp = json["timestamp"] as? String, let tm = Int64(timestamp) {
+                json["timestamp"] = tm as AnyObject
+            }
             return json
         } catch {
             return nil
@@ -161,10 +169,16 @@ public extension SwiftProtobufWrapper {
             var array = [[String: AnyObject]]()
             for dto in list.values {
                 let jsonData = try dto.jsonUTF8Data()
-                let dic = try JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers) as? [String: AnyObject]
-                if let dic = dic {
-                    array.append(dic)
+                guard var json = try JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers) as? [String: AnyObject] else {
+                    continue
                 }
+                // Int64 类型在 proto3 JSON Mapping 默认为 String 类型，apple/swift-protobuf 有将 Int64 转为 Number 的提案，但
+                // 截止 SwiftProtobuf 1.23.0，该提案尚未合并到 1_x_release_branch 分支上，仅合并入 main 分支
+                // 见：https://github.com/growingio/growingio-sdk-ios-autotracker/pull/248#issuecomment-1515913736
+                if let timestamp = json["timestamp"] as? String, let tm = Int64(timestamp) {
+                    json["timestamp"] = tm as AnyObject
+                }
+                array.append(json)
             }
             return array
         } catch {
