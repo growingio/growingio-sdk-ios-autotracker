@@ -32,16 +32,18 @@
         GrowingULSwizzleInstanceMethod(class,
                                        selector,
                                        GUSWReturnType(void),
-                                       GUSWArguments(UITableView *tableView, NSIndexPath *indexPath),
+                                       GUSWArguments(UITableView * tableView, NSIndexPath * indexPath),
                                        GUSWReplacement({
-            GUSWCallOriginal(tableView, indexPath);
-            if (tableView && indexPath) {
-                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                if (cell) {
-                    [GrowingViewClickProvider viewOnClick:cell];
-                }
-            }
-        }), GrowingULSwizzleModeOncePerClassAndSuperclasses, key);
+                                           GUSWCallOriginal(tableView, indexPath);
+                                           if (tableView && indexPath) {
+                                               UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                                               if (cell) {
+                                                   [GrowingViewClickProvider viewOnClick:cell];
+                                               }
+                                           }
+                                       }),
+                                       GrowingULSwizzleModeOncePerClassAndSuperclasses,
+                                       key);
     }
 
     [self growing_setDelegate:delegate];
