@@ -32,7 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
                       fetchTime:(long long)fetchTime;
 - (void)saveToDisk;
 - (void)removeFromDisk;
-+ (NSDictionary<NSString *, GrowingABTExperiment *> *)allExperiments;
++ (nullable GrowingABTExperiment *)findExperiment:(NSString *)layerId;
+- (id)toJSONObject;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

@@ -35,12 +35,6 @@ static NSString *const kABTExpLayerId = @"$exp_layer_id";
 static NSString *const kABTExpId = @"$exp_id";
 static NSString *const kABTExpStrategyId = @"$exp_strategy_id";
 
-@interface GrowingABTesting ()
-
-@property (nonatomic, strong) NSMutableDictionary<NSString *, GrowingABTExperiment *> *experiments;
-
-@end
-
 @implementation GrowingABTesting
 
 #pragma mark - GrowingModuleProtocol
@@ -61,8 +55,6 @@ static NSString *const kABTExpStrategyId = @"$exp_strategy_id";
     } else {
         @throw [NSException exceptionWithName:@"初始化异常" reason:@"请在SDK初始化时，配置ABTestingHost" userInfo:nil];
     }
-
-    [self.experiments addEntriesFromDictionary:[GrowingABTExperiment allExperiments]];
 }
 
 #pragma mark - Private Method
@@ -93,13 +85,12 @@ static NSString *const kABTExpStrategyId = @"$exp_strategy_id";
 - (void)fetchExperiment:(NSString *)layerId
          completedBlock:(void (^)(GrowingABTExperiment *_Nullable))completedBlock
              retryCount:(NSInteger)retryCount {
-    GrowingABTExperiment *exp = self.experiments[layerId];
+    GrowingABTExperiment *exp = [GrowingABTExperiment findExperiment:layerId];
     if (exp) {
         BOOL outdated = ![self isToday:exp.fetchTime];
         if (outdated) {
             // 超过自然日，清除本地缓存
             [exp removeFromDisk];
-            self.experiments[layerId] = nil;
         } else {
             GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
             long long now = GrowingULTimeUtil.currentTimeMillis;
@@ -174,11 +165,9 @@ static NSString *const kABTExpStrategyId = @"$exp_strategy_id";
                                                               variables:variables
                                                               fetchTime:GrowingULTimeUtil.currentTimeMillis];
 
-                      if (!experimentId || !strategyId) {
-                          // 未命中实验
-                      } else {
+                      if (experimentId && experimentId.length > 0 && strategyId && strategyId.length > 0) {
                           // 命中实验
-                          GrowingABTExperiment *lastExp = self.experiments[layerId];
+                          GrowingABTExperiment *lastExp = [GrowingABTExperiment findExperiment:layerId];
                           if (![exp isEqual:lastExp]) {
                               // 和缓存实验数据不同，上报入组埋点
                               [self trackExperiment:exp];
@@ -186,7 +175,6 @@ static NSString *const kABTExpStrategyId = @"$exp_strategy_id";
                       }
 
                       // 更新缓存
-                      self.experiments[layerId] = exp;
                       [exp saveToDisk];
 
                       // 返回实验结果
@@ -218,15 +206,6 @@ static NSString *const kABTExpStrategyId = @"$exp_strategy_id";
         return;
     }
     [self fetchExperiment:layerId completedBlock:completedBlock retryCount:3];
-}
-
-#pragma mark - Setter & Getter
-
-- (NSMutableDictionary<NSString *, GrowingABTExperiment *> *)experiments {
-    if (!_experiments) {
-        _experiments = [NSMutableDictionary dictionary];
-    }
-    return _experiments;
 }
 
 @end

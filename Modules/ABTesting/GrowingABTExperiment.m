@@ -55,13 +55,8 @@
     [GrowingABTExperimentStorage removeExperiment:self];
 }
 
-+ (NSDictionary<NSString *, GrowingABTExperiment *> *)allExperiments {
-    NSArray *experiments = [GrowingABTExperimentStorage allExperiments];
-    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    for (GrowingABTExperiment *exp in experiments) {
-        [dic setObject:exp forKey:exp.layerId];
-    }
-    return dic.copy;
++ (nullable GrowingABTExperiment *)findExperiment:(NSString *)layerId {
+    return [GrowingABTExperimentStorage findExperiment:layerId];
 }
 
 - (BOOL)isEqual:(id)object {
@@ -85,6 +80,22 @@
 
 - (NSUInteger)hash {
     return self.layerId.hash ^ self.experimentId.hash ^ self.strategyId.hash ^ self.variables.hash;
+}
+
+- (id)toJSONObject {
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"layerId"] = self.layerId.copy;
+    dic[@"fetchTime"] = @(self.fetchTime);
+    if (self.experimentId) {
+        dic[@"experimentId"] = self.experimentId.copy;
+    }
+    if (self.strategyId) {
+        dic[@"strategyId"] = self.strategyId.copy;
+    }
+    if (self.variables) {
+        dic[@"variables"] = self.variables.copy;
+    }
+    return dic;
 }
 
 @end

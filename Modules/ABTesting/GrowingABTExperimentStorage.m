@@ -20,6 +20,7 @@
 #import "Modules/ABTesting/GrowingABTExperimentStorage.h"
 #import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
 #import "Modules/ABTesting/GrowingABTExperiment+Private.h"
+#import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 
 static NSString *const kGrowingABTestingExperimentKey = @"GrowingABTestingExperimentKey";
 
@@ -30,17 +31,32 @@ static NSString *const kGrowingABTestingExperimentKey = @"GrowingABTestingExperi
 
 @end
 
-@implementation GrowingABTExperimentStorage
+@implementation GrowingABTExperimentStorage {
+    GROWING_LOCK_DECLARE(lock);
+}
 
 #pragma mark - Init
 
 - (instancetype)init {
     if (self = [super init]) {
+        GROWING_LOCK_INIT(lock);
         _storage = [[GrowingFileStorage alloc] initWithName:@"config"];
         _experiments = [NSMutableArray array];
         NSArray *array = [_storage arrayForKey:kGrowingABTestingExperimentKey];
         if ([array isKindOfClass:[NSArray class]]) {
-            [_experiments addObjectsFromArray:array];
+            for (NSDictionary *dic in array) {
+                NSString *layerId = dic[@"layerId"];
+                NSString *experimentId = dic[@"experimentId"];
+                NSString *strategyId = dic[@"strategyId"];
+                NSDictionary *variables = dic[@"variables"];
+                long long fetchTime = ((NSNumber *)dic[@"fetchTime"]).longLongValue;
+                GrowingABTExperiment *e = [[GrowingABTExperiment alloc] initWithLayerId:layerId
+                                                                           experimentId:experimentId
+                                                                             strategyId:strategyId
+                                                                              variables:variables
+                                                                              fetchTime:fetchTime];
+                [_experiments addObject:e];
+            }
         }
     }
     return self;
@@ -55,20 +71,57 @@ static NSString *const kGrowingABTestingExperimentKey = @"GrowingABTestingExperi
     return instance;
 }
 
+#pragma mark - Private Method
+
+- (void)synchronize {
+    NSMutableArray *array = [NSMutableArray array];
+    for (GrowingABTExperiment *exp in self.experiments) {
+        [array addObject:exp.toJSONObject];
+    }
+    [self.storage setArray:array forKey:kGrowingABTestingExperimentKey];
+}
+
+- (nullable GrowingABTExperiment *)findExperiment:(NSString *)layerId {
+    for (GrowingABTExperiment *exp in self.experiments) {
+        if ([exp.layerId isEqualToString:layerId]) {
+            return exp;
+        }
+    }
+    return nil;
+}
+
+- (void)addExperiment:(GrowingABTExperiment *)experiment {
+    GROWING_LOCK(lock);
+    for (GrowingABTExperiment *exp in self.experiments) {
+        if ([exp.layerId isEqualToString:experiment.layerId]) {
+            [self.experiments removeObject:exp];
+            break;
+        }
+    }
+    [self.experiments addObject:experiment];
+    [self synchronize];
+    GROWING_UNLOCK(lock);
+}
+
+- (void)removeExperiment:(GrowingABTExperiment *)experiment {
+    GROWING_LOCK(lock);
+    [self.experiments removeObject:experiment];
+    [self synchronize];
+    GROWING_UNLOCK(lock);
+}
+
+#pragma mark - Public Method
+
++ (nullable GrowingABTExperiment *)findExperiment:(NSString *)layerId {
+    return [GrowingABTExperimentStorage.sharedInstance findExperiment:layerId];
+}
+
 + (void)addExperiment:(GrowingABTExperiment *)experiment {
-    GrowingABTExperimentStorage *storage = GrowingABTExperimentStorage.sharedInstance;
-    [storage.experiments addObject:experiment];
-    [storage.storage setArray:storage.experiments forKey:kGrowingABTestingExperimentKey];
+    return [GrowingABTExperimentStorage.sharedInstance addExperiment:experiment];
 }
 
 + (void)removeExperiment:(GrowingABTExperiment *)experiment {
-    GrowingABTExperimentStorage *storage = GrowingABTExperimentStorage.sharedInstance;
-    [storage.experiments removeObject:experiment];
-    [storage.storage setArray:storage.experiments forKey:kGrowingABTestingExperimentKey];
-}
-
-+ (NSArray<GrowingABTExperiment *> *)allExperiments {
-    return GrowingABTExperimentStorage.sharedInstance.experiments.copy;
+    return [GrowingABTExperimentStorage.sharedInstance removeExperiment:experiment];
 }
 
 @end
