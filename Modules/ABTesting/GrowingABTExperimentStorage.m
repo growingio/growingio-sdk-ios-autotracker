@@ -19,8 +19,8 @@
 
 #import "Modules/ABTesting/GrowingABTExperimentStorage.h"
 #import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
-#import "Modules/ABTesting/GrowingABTExperiment+Private.h"
 #import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
+#import "Modules/ABTesting/GrowingABTExperiment+Private.h"
 
 static NSString *const kGrowingABTestingExperimentKey = @"GrowingABTestingExperimentKey";
 
