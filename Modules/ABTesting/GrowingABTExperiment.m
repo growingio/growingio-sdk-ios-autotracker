@@ -33,9 +33,9 @@
 @implementation GrowingABTExperiment
 
 - (instancetype)initWithLayerId:(NSString *)layerId
-                   experimentId:(NSString * _Nullable)experimentId
-                     strategyId:(NSString * _Nullable)strategyId
-                      variables:(NSDictionary * _Nullable)variables
+                   experimentId:(NSString *_Nullable)experimentId
+                     strategyId:(NSString *_Nullable)strategyId
+                      variables:(NSDictionary *_Nullable)variables
                       fetchTime:(long long)fetchTime {
     if (self = [super init]) {
         _layerId = layerId.copy;
@@ -68,16 +68,19 @@
     if (self == object) {
         return YES;
     }
-    
+
     if (!object || ![object isKindOfClass:[GrowingABTExperiment class]]) {
         return NO;
     }
-    
+
     return [self isEqualExperiment:(GrowingABTExperiment *)object];
 }
 
 - (BOOL)isEqualExperiment:(GrowingABTExperiment *)experiment {
-    return [self.layerId isEqualToString:experiment.layerId] && [self.experimentId isEqualToString:experiment.experimentId] && [self.strategyId isEqualToString:experiment.strategyId] && [self.variables isEqualToDictionary:experiment.variables];
+    return [self.layerId isEqualToString:experiment.layerId] &&
+           [self.experimentId isEqualToString:experiment.experimentId] &&
+           [self.strategyId isEqualToString:experiment.strategyId] &&
+           [self.variables isEqualToDictionary:experiment.variables];
 }
 
 - (NSUInteger)hash {

@@ -18,9 +18,9 @@
 //  limitations under the License.
 
 #import <Foundation/Foundation.h>
+#import "GrowingABTExperiment.h"
 #import "GrowingModuleProtocol.h"
 #import "GrowingTrackConfiguration.h"
-#import "GrowingABTExperiment.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -29,7 +29,7 @@ NS_SWIFT_NAME(ABTesting)
 
 + (instancetype)sharedInstance;
 
-- (void)fetchExperiment:(NSString *)layerId completedBlock:(void(^)(GrowingABTExperiment * _Nullable))completedBlock;
+- (void)fetchExperiment:(NSString *)layerId completedBlock:(void (^)(GrowingABTExperiment *_Nullable))completedBlock;
 
 @end
 

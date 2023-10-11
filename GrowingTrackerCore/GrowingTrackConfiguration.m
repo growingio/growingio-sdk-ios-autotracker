@@ -70,7 +70,7 @@ NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growing
 
         // APM
         _APMConfig = nil;
-        
+
         // ABTesting
         _abtestingHost = nil;
         _experimentTTL = 5;
@@ -114,11 +114,11 @@ NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growing
 
     // APM
     configuration->_APMConfig = [_APMConfig copy];
-    
+
     // ABTesting
     configuration->_abtestingHost = [_abtestingHost copy];
     configuration->_experimentTTL = _experimentTTL;
-    
+
     return configuration;
 }
 

@@ -48,12 +48,12 @@
     NSString *datasourceId = config.dataSourceId ?: @"";
     NSString *distinctId = [GrowingDeviceInfo currentDeviceInfo].deviceIDString;
     bodyAdapter.parameters = @{
-        @"projectKey" : projectKey,
-        @"datasourceId" : datasourceId,
-        @"distinctId" : distinctId,
-        @"layerId" : self.layerId.copy
+        @"projectKey": projectKey,
+        @"datasourceId": datasourceId,
+        @"distinctId": distinctId,
+        @"layerId": self.layerId.copy
     };
-    
+
     GrowingRequestMethodAdapter *methodAdapter = [GrowingRequestMethodAdapter adapterWithRequest:self];
     NSMutableArray *adapters = [NSMutableArray arrayWithObjects:bodyAdapter, methodAdapter, nil];
     return adapters;

@@ -18,8 +18,8 @@
 //  limitations under the License.
 
 #import "Modules/ABTesting/GrowingABTExperimentStorage.h"
-#import "Modules/ABTesting/GrowingABTExperiment+Private.h"
 #import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
+#import "Modules/ABTesting/GrowingABTExperiment+Private.h"
 
 static NSString *const kGrowingABTestingExperimentKey = @"GrowingABTestingExperimentKey";
 
