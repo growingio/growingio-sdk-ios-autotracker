@@ -25,22 +25,25 @@
 
 - (void)growing_setDelegate:(id<UITableViewDelegate>)delegate {
     SEL selector = @selector(tableView:didSelectRowAtIndexPath:);
-    id<UITableViewDelegate> realDelegate = [GrowingULSwizzler realDelegate:delegate toSelector:selector];
+    id<UITableViewDelegate> realDelegate = [GrowingULSwizzle realDelegate:delegate toSelector:selector];
     Class class = realDelegate.class;
-    if ([GrowingULSwizzler realDelegateClass:class respondsToSelector:selector]) {
-        void (^didSelectBlock)(id, SEL, id, id) =
-            ^(id view, SEL command, UITableView *tableView, NSIndexPath *indexPath) {
-                if (tableView && indexPath) {
-                    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                    if (cell) {
-                        [GrowingViewClickProvider viewOnClick:cell];
-                    }
-                }
-            };
-        [GrowingULSwizzler growingul_swizzleSelector:selector
-                                             onClass:class
-                                           withBlock:didSelectBlock
-                                               named:@"growing_tableView_didSelect"];
+    if ([GrowingULSwizzle realDelegateClass:class respondsToSelector:selector]) {
+        static const void *key = &key;
+        GrowingULSwizzleInstanceMethod(class,
+                                       selector,
+                                       GUSWReturnType(void),
+                                       GUSWArguments(UITableView * tableView, NSIndexPath * indexPath),
+                                       GUSWReplacement({
+                                           GUSWCallOriginal(tableView, indexPath);
+                                           if (tableView && indexPath) {
+                                               UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                                               if (cell) {
+                                                   [GrowingViewClickProvider viewOnClick:cell];
+                                               }
+                                           }
+                                       }),
+                                       GrowingULSwizzleModeOncePerClassAndSuperclasses,
+                                       key);
     }
 
     [self growing_setDelegate:delegate];

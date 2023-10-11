@@ -25,23 +25,26 @@
 
 - (void)growing_setDelegate:(id<UICollectionViewDelegate>)delegate {
     SEL selector = @selector(collectionView:didSelectItemAtIndexPath:);
-    id<UICollectionViewDelegate> realDelegate = [GrowingULSwizzler realDelegate:delegate toSelector:selector];
+    id<UICollectionViewDelegate> realDelegate = [GrowingULSwizzle realDelegate:delegate toSelector:selector];
     Class class = realDelegate.class;
-    if ([GrowingULSwizzler realDelegateClass:class respondsToSelector:selector]) {
-        void (^didSelectItemBlock)(id, SEL, id, id) =
-            ^(id view, SEL command, UICollectionView *collectionView, NSIndexPath *indexPath) {
-                if (collectionView && indexPath) {
-                    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-                    if (cell) {
-                        [GrowingViewClickProvider viewOnClick:cell];
-                    }
-                }
-            };
-
-        [GrowingULSwizzler growingul_swizzleSelector:selector
-                                             onClass:class
-                                           withBlock:didSelectItemBlock
-                                               named:@"growing_collectionView_didSelect"];
+    if ([GrowingULSwizzle realDelegateClass:class respondsToSelector:selector]) {
+        static const void *key = &key;
+        GrowingULSwizzleInstanceMethod(class,
+                                       selector,
+                                       GUSWReturnType(void),
+                                       GUSWArguments(UICollectionView * collectionView, NSIndexPath * indexPath),
+                                       GUSWReplacement({
+                                           GUSWCallOriginal(collectionView, indexPath);
+                                           if (collectionView && indexPath) {
+                                               UICollectionViewCell *cell =
+                                                   [collectionView cellForItemAtIndexPath:indexPath];
+                                               if (cell) {
+                                                   [GrowingViewClickProvider viewOnClick:cell];
+                                               }
+                                           }
+                                       }),
+                                       GrowingULSwizzleModeOncePerClassAndSuperclasses,
+                                       key);
     }
 
     [self growing_setDelegate:delegate];

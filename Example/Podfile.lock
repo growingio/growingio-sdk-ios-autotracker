@@ -1,64 +1,64 @@
 PODS:
-  - GrowingAnalytics/Advert (4.0.0):
-    - GrowingAnalytics/TrackerCore (= 4.0.0)
-  - GrowingAnalytics/APM (4.0.0):
-    - GrowingAnalytics/TrackerCore (= 4.0.0)
+  - GrowingAnalytics/Advert (4.0.0-beta):
+    - GrowingAnalytics/TrackerCore (= 4.0.0-beta)
+  - GrowingAnalytics/APM (4.0.0-beta):
+    - GrowingAnalytics/TrackerCore (= 4.0.0-beta)
     - GrowingAPM/Core
-  - GrowingAnalytics/Autotracker (4.0.0):
-    - GrowingAnalytics/AutotrackerCore (= 4.0.0)
-    - GrowingAnalytics/DefaultServices (= 4.0.0)
-    - GrowingAnalytics/Hybrid (= 4.0.0)
-    - GrowingAnalytics/MobileDebugger (= 4.0.0)
-    - GrowingAnalytics/WebCircle (= 4.0.0)
-  - GrowingAnalytics/AutotrackerCore (4.0.0):
-    - GrowingAnalytics/TrackerCore (= 4.0.0)
-    - GrowingUtils/AutotrackerCore (= 0.0.7)
-  - GrowingAnalytics/Compression (4.0.0):
-    - GrowingAnalytics/TrackerCore (= 4.0.0)
-  - GrowingAnalytics/Database (4.0.0):
-    - GrowingAnalytics/TrackerCore (= 4.0.0)
-  - GrowingAnalytics/DefaultServices (4.0.0):
-    - GrowingAnalytics/Compression (= 4.0.0)
-    - GrowingAnalytics/Encryption (= 4.0.0)
-    - GrowingAnalytics/JSON (= 4.0.0)
-    - GrowingAnalytics/Network (= 4.0.0)
-    - GrowingAnalytics/Protobuf (= 4.0.0)
-    - GrowingAnalytics/TrackerCore (= 4.0.0)
-  - GrowingAnalytics/Encryption (4.0.0):
-    - GrowingAnalytics/TrackerCore (= 4.0.0)
-  - GrowingAnalytics/Hybrid (4.0.0):
-    - GrowingAnalytics/TrackerCore (= 4.0.0)
-  - GrowingAnalytics/ImpressionTrack (4.0.0):
-    - GrowingAnalytics/AutotrackerCore (= 4.0.0)
-  - GrowingAnalytics/JSON (4.0.0):
-    - GrowingAnalytics/Database (= 4.0.0)
-  - GrowingAnalytics/MobileDebugger (4.0.0):
-    - GrowingAnalytics/Screenshot (= 4.0.0)
-    - GrowingAnalytics/TrackerCore (= 4.0.0)
-    - GrowingAnalytics/WebSocket (= 4.0.0)
-  - GrowingAnalytics/Network (4.0.0):
-    - GrowingAnalytics/TrackerCore (= 4.0.0)
-  - GrowingAnalytics/Protobuf (4.0.0):
-    - GrowingAnalytics/Database (= 4.0.0)
-    - GrowingAnalytics/Protobuf/Proto (= 4.0.0)
-  - GrowingAnalytics/Protobuf/Proto (4.0.0):
-    - GrowingAnalytics/Database (= 4.0.0)
+  - GrowingAnalytics/Autotracker (4.0.0-beta):
+    - GrowingAnalytics/AutotrackerCore (= 4.0.0-beta)
+    - GrowingAnalytics/DefaultServices (= 4.0.0-beta)
+    - GrowingAnalytics/Hybrid (= 4.0.0-beta)
+    - GrowingAnalytics/MobileDebugger (= 4.0.0-beta)
+    - GrowingAnalytics/WebCircle (= 4.0.0-beta)
+  - GrowingAnalytics/AutotrackerCore (4.0.0-beta):
+    - GrowingAnalytics/TrackerCore (= 4.0.0-beta)
+    - GrowingUtils/AutotrackerCore (= 1.0.0)
+  - GrowingAnalytics/Compression (4.0.0-beta):
+    - GrowingAnalytics/TrackerCore (= 4.0.0-beta)
+  - GrowingAnalytics/Database (4.0.0-beta):
+    - GrowingAnalytics/TrackerCore (= 4.0.0-beta)
+  - GrowingAnalytics/DefaultServices (4.0.0-beta):
+    - GrowingAnalytics/Compression (= 4.0.0-beta)
+    - GrowingAnalytics/Encryption (= 4.0.0-beta)
+    - GrowingAnalytics/JSON (= 4.0.0-beta)
+    - GrowingAnalytics/Network (= 4.0.0-beta)
+    - GrowingAnalytics/Protobuf (= 4.0.0-beta)
+    - GrowingAnalytics/TrackerCore (= 4.0.0-beta)
+  - GrowingAnalytics/Encryption (4.0.0-beta):
+    - GrowingAnalytics/TrackerCore (= 4.0.0-beta)
+  - GrowingAnalytics/Hybrid (4.0.0-beta):
+    - GrowingAnalytics/TrackerCore (= 4.0.0-beta)
+  - GrowingAnalytics/ImpressionTrack (4.0.0-beta):
+    - GrowingAnalytics/AutotrackerCore (= 4.0.0-beta)
+  - GrowingAnalytics/JSON (4.0.0-beta):
+    - GrowingAnalytics/Database (= 4.0.0-beta)
+  - GrowingAnalytics/MobileDebugger (4.0.0-beta):
+    - GrowingAnalytics/Screenshot (= 4.0.0-beta)
+    - GrowingAnalytics/TrackerCore (= 4.0.0-beta)
+    - GrowingAnalytics/WebSocket (= 4.0.0-beta)
+  - GrowingAnalytics/Network (4.0.0-beta):
+    - GrowingAnalytics/TrackerCore (= 4.0.0-beta)
+  - GrowingAnalytics/Protobuf (4.0.0-beta):
+    - GrowingAnalytics/Database (= 4.0.0-beta)
+    - GrowingAnalytics/Protobuf/Proto (= 4.0.0-beta)
+  - GrowingAnalytics/Protobuf/Proto (4.0.0-beta):
+    - GrowingAnalytics/Database (= 4.0.0-beta)
     - Protobuf (>= 3.22.0)
-  - GrowingAnalytics/Screenshot (4.0.0):
+  - GrowingAnalytics/Screenshot (4.0.0-beta):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/Tracker (4.0.0):
-    - GrowingAnalytics/DefaultServices (= 4.0.0)
-    - GrowingAnalytics/MobileDebugger (= 4.0.0)
-    - GrowingAnalytics/TrackerCore (= 4.0.0)
-  - GrowingAnalytics/TrackerCore (4.0.0):
-    - GrowingUtils/TrackerCore (= 0.0.7)
-  - GrowingAnalytics/WebCircle (4.0.0):
-    - GrowingAnalytics/AutotrackerCore (= 4.0.0)
-    - GrowingAnalytics/Hybrid (= 4.0.0)
-    - GrowingAnalytics/Screenshot (= 4.0.0)
-    - GrowingAnalytics/WebSocket (= 4.0.0)
-  - GrowingAnalytics/WebSocket (4.0.0):
-    - GrowingAnalytics/TrackerCore (= 4.0.0)
+  - GrowingAnalytics/Tracker (4.0.0-beta):
+    - GrowingAnalytics/DefaultServices (= 4.0.0-beta)
+    - GrowingAnalytics/MobileDebugger (= 4.0.0-beta)
+    - GrowingAnalytics/TrackerCore (= 4.0.0-beta)
+  - GrowingAnalytics/TrackerCore (4.0.0-beta):
+    - GrowingUtils/TrackerCore (= 1.0.0)
+  - GrowingAnalytics/WebCircle (4.0.0-beta):
+    - GrowingAnalytics/AutotrackerCore (= 4.0.0-beta)
+    - GrowingAnalytics/Hybrid (= 4.0.0-beta)
+    - GrowingAnalytics/Screenshot (= 4.0.0-beta)
+    - GrowingAnalytics/WebSocket (= 4.0.0-beta)
+  - GrowingAnalytics/WebSocket (4.0.0-beta):
+    - GrowingAnalytics/TrackerCore (= 4.0.0-beta)
   - GrowingAPM (0.0.15):
     - GrowingAPM/Core (= 0.0.15)
     - GrowingAPM/CrashMonitor (= 0.0.15)
@@ -103,9 +103,9 @@ PODS:
     - GrowingToolsKit/Core
   - GrowingToolsKit/XPathTrack (1.2.1):
     - GrowingToolsKit/Core
-  - GrowingUtils/AutotrackerCore (0.0.7):
+  - GrowingUtils/AutotrackerCore (1.0.0):
     - GrowingUtils/TrackerCore
-  - GrowingUtils/TrackerCore (0.0.7)
+  - GrowingUtils/TrackerCore (1.0.0)
   - KIF (3.8.9):
     - KIF/Core (= 3.8.9)
   - KIF/Core (3.8.9)
@@ -114,12 +114,12 @@ PODS:
   - LBXScan/Types (2.3)
   - LBXScan/UI (2.3):
     - LBXScan/Types (~> 2.2)
-  - Protobuf (3.24.3)
+  - Protobuf (3.24.4)
   - SDCycleScrollView (1.82):
     - SDWebImage (>= 5.0.0)
-  - SDWebImage (5.18.1):
-    - SDWebImage/Core (= 5.18.1)
-  - SDWebImage/Core (5.18.1)
+  - SDWebImage (5.18.2):
+    - SDWebImage/Core (= 5.18.2)
+  - SDWebImage/Core (5.18.2)
 
 DEPENDENCIES:
   - GrowingAnalytics/Advert (from `../`)
@@ -150,16 +150,16 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  GrowingAnalytics: ea695e9b0ceeefbf6b4cebaeaa88f6867713a0d1
+  GrowingAnalytics: 7f5da039bce1b155fb10e2d5699049a4b984fb1a
   GrowingAPM: 83118328af06eec2a987f47b8e62a9d6d986994c
   GrowingToolsKit: 134a78b023c4ab7da51e0a1111e9956a96e42dab
-  GrowingUtils: e8ba72794651ade9ad60a71662d11baa08d526c8
+  GrowingUtils: f0a9858cfd15dc584367957f24a784813a68d637
   KIF: 7660c626b0f2d4562533590960db70a36d640558
   LBXScan: e51449f0832d1fe17da632af0d22adeb3cfa3543
-  Protobuf: 970f7ee93a3a08e3cf64859b8efd95ee32b4f87f
+  Protobuf: 351e9022fe13a6e2af00e9aefc22077cb88520f8
   SDCycleScrollView: a0d74c3384caa72bdfc81470bdbc8c14b3e1fbcf
-  SDWebImage: ebdbcebc7933a45226d9313bd0118bc052ad458b
+  SDWebImage: c0de394d7cf7f9838aed1fd6bb6037654a4572e4
 
 PODFILE CHECKSUM: eadc8a2cddef5401cfafd1d713a6bacab48232e6
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.13.0
