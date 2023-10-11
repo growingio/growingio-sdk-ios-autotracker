@@ -33,6 +33,10 @@ NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growing
 // APM
 @property (nonatomic, copy) NSObject *APMConfig;
 
+// ABTesting
+@property (nonatomic, copy) NSString *abtestingHost;
+@property (nonatomic, assign) NSUInteger experimentTTL;
+
 @end
 
 @implementation GrowingTrackConfiguration
@@ -66,6 +70,10 @@ NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growing
 
         // APM
         _APMConfig = nil;
+        
+        // ABTesting
+        _abtestingHost = nil;
+        _experimentTTL = 5;
     }
 
     return self;
@@ -106,6 +114,11 @@ NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growing
 
     // APM
     configuration->_APMConfig = [_APMConfig copy];
+    
+    // ABTesting
+    configuration->_abtestingHost = [_abtestingHost copy];
+    configuration->_experimentTTL = _experimentTTL;
+    
     return configuration;
 }
 

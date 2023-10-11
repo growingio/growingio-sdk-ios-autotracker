@@ -188,6 +188,13 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     adapter.public_header_files = 'Modules/V2AdapterTrackOnly/Public/*.h'
     adapter.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
   end
+  
+  s.subspec 'ABTesting' do |ab|
+    ab.ios.deployment_target = '10.0'
+    ab.source_files = 'Modules/ABTesting/**/*{.h,.m,.c,.cpp,.mm}'
+    ab.public_header_files = 'Modules/ABTesting/Public/*.h'
+    ab.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
+  end
 
   # 使用flutter无埋点插件时，将自动导入该库，正常情况下请勿手动导入
   s.subspec 'Flutter' do |flutter|
