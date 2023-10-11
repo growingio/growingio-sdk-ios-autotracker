@@ -21,6 +21,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+NS_SWIFT_NAME(ABTExperiment)
 @interface GrowingABTExperiment : NSObject
 
 @property (nonatomic, copy, readonly) NSString *layerId;

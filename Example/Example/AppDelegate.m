@@ -66,7 +66,7 @@
 #endif
     
 #if defined(SDKABTESTINGMODULE)
-    configuration.abtestingHost = @"https://n.datayi.cn";
+    configuration.abTestingServerHost = @"https://n.datayi.cn";
     configuration.experimentTTL = 5;
 #endif
     

@@ -43,10 +43,19 @@ static NSString *const kABTExpStrategyId = @"$exp_strategy_id";
     return YES;
 }
 
++ (instancetype)sharedInstance {
+    static id _sharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _sharedInstance = [[self alloc] init];
+    });
+    return _sharedInstance;
+}
+
 - (void)growingModInit:(GrowingContext *)context {
     GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
-    if (config.abtestingHost && config.abtestingHost.length > 0) {
-        NSString *host = [NSURL URLWithString:config.abtestingHost].host;
+    if (config.abTestingServerHost && config.abTestingServerHost.length > 0) {
+        NSString *host = [NSURL URLWithString:config.abTestingServerHost].host;
         if (!host) {
             @throw [NSException exceptionWithName:@"初始化异常"
                                            reason:@"您所配置的ABTestingHost不符合规范"
@@ -59,7 +68,7 @@ static NSString *const kABTExpStrategyId = @"$exp_strategy_id";
 
 #pragma mark - Private Method
 
-- (BOOL)isToday:(double)timestamp {
++ (BOOL)isToday:(double)timestamp {
     NSCalendar *calendar = [NSCalendar currentCalendar];
     NSCalendarUnit unit = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay;
 
@@ -73,7 +82,7 @@ static NSString *const kABTExpStrategyId = @"$exp_strategy_id";
     return [today isEqualToDate:otherDay];
 }
 
-- (void)trackExperiment:(GrowingABTExperiment *)experiment {
++ (void)trackExperiment:(GrowingABTExperiment *)experiment {
     [GrowingEventGenerator generateCustomEvent:kABTExpHit
                                     attributes:@{
                                         kABTExpLayerId: experiment.layerId.copy,
@@ -82,7 +91,7 @@ static NSString *const kABTExpStrategyId = @"$exp_strategy_id";
                                     }];
 }
 
-- (void)fetchExperiment:(NSString *)layerId
++ (void)fetchExperiment:(NSString *)layerId
          completedBlock:(void (^)(GrowingABTExperiment *_Nullable))completedBlock
              retryCount:(NSInteger)retryCount {
     GrowingABTExperiment *exp = [GrowingABTExperiment findExperiment:layerId];
@@ -121,7 +130,7 @@ static NSString *const kABTExpStrategyId = @"$exp_strategy_id";
                  retryCount:retryCount];
 }
 
-- (void)requestExperiment:(NSString *)layerId
++ (void)requestExperiment:(NSString *)layerId
            completedBlock:(void (^)(BOOL, GrowingABTExperiment *, NSInteger))completedBlock
                retryCount:(NSInteger)retryCount {
     GrowingABTRequest *request = [[GrowingABTRequest alloc] init];
@@ -192,16 +201,7 @@ static NSString *const kABTExpStrategyId = @"$exp_strategy_id";
 
 #pragma mark - Public Method
 
-+ (instancetype)sharedInstance {
-    static id _sharedInstance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _sharedInstance = [[self alloc] init];
-    });
-    return _sharedInstance;
-}
-
-- (void)fetchExperiment:(NSString *)layerId completedBlock:(void (^)(GrowingABTExperiment *))completedBlock {
++ (void)fetchExperiment:(NSString *)layerId completedBlock:(void (^)(GrowingABTExperiment *))completedBlock {
     if (!layerId || ![layerId isKindOfClass:[NSString class]] || layerId.length == 0) {
         return;
     }

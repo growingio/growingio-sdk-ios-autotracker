@@ -33,7 +33,7 @@
 
 - (NSURL *)absoluteURL {
     GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
-    NSURL *baseURL = [NSURL URLWithString:config.abtestingHost];
+    NSURL *baseURL = [NSURL URLWithString:config.abTestingServerHost];
     return [NSURL URLWithString:self.path relativeToURL:baseURL];
 }
 

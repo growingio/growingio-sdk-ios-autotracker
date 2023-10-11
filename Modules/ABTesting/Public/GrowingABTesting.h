@@ -27,15 +27,13 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(ABTesting)
 @interface GrowingABTesting : NSObject <GrowingModuleProtocol>
 
-+ (instancetype)sharedInstance;
-
-- (void)fetchExperiment:(NSString *)layerId completedBlock:(void (^)(GrowingABTExperiment *_Nullable))completedBlock;
++ (void)fetchExperiment:(NSString *)layerId completedBlock:(void (^)(GrowingABTExperiment *_Nullable))completedBlock;
 
 @end
 
 @interface GrowingTrackConfiguration (ABTesting)
 
-@property (nonatomic, copy) NSString *abtestingHost;
+@property (nonatomic, copy) NSString *abTestingServerHost;
 @property (nonatomic, assign) NSUInteger experimentTTL;
 
 @end

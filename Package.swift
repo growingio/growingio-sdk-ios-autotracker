@@ -32,6 +32,7 @@ let package = Package(
         .Module.hybrid,
         .Module.ads,
         .Module.apm,
+        .Module.abTesting,
     ],
     dependencies: [
         .package(
@@ -77,6 +78,7 @@ let package = Package(
         .Module.hybrid,
         .Module.ads,
         .Module.apm,
+        .Module.abTesting,
 
         // MARK: - Services
 
@@ -101,6 +103,7 @@ extension Product {
         static let hybrid = library(name: .hybrid, targets: [.hybrid])
         static let ads = library(name: .ads, targets: [.ads])
         static let apm = library(name: .apm, targets: [.apm])
+        static let abTesting = library(name: .abTesting, targets: [.abTesting])
     }
 }
 
@@ -229,6 +232,12 @@ extension Target {
                                 path: .Path.apm,
                                 publicHeadersPath: .Path.publicHeaders,
                                 cSettings: [.hspFor(.Path.apm)])
+        
+        static let abTesting = target(name: .abTesting,
+                                      dependencies: [.Core.trackerCore],
+                                      path: .Path.abTesting,
+                                      publicHeadersPath: .Path.publicHeaders,
+                                      cSettings: [.hspFor(.Path.abTesting)])
     }
 
     enum Service {
@@ -359,6 +368,7 @@ extension String {
     static let hybrid = "GrowingModule_Hybrid"
     static let ads = "GrowingModule_Ads"
     static let apm = "GrowingModule_APM"
+    static let abTesting = "GrowingModule_ABTesting"
 
     // Services
     static let database = "GrowingService_Database"
@@ -393,6 +403,7 @@ extension String {
         static let hybrid = "Modules/Hybrid"
         static let ads = "Modules/Advertising"
         static let apm = "Modules/APM"
+        static let abTesting = "Modules/ABTesting"
         static let coreServices = "Modules/DefaultServices"
 
         // Services
