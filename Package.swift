@@ -232,7 +232,7 @@ extension Target {
                                 path: .Path.apm,
                                 publicHeadersPath: .Path.publicHeaders,
                                 cSettings: [.hspFor(.Path.apm)])
-        
+
         static let abTesting = target(name: .abTesting,
                                       dependencies: [.Core.trackerCore],
                                       path: .Path.abTesting,
