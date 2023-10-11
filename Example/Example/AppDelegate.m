@@ -65,6 +65,11 @@
     configuration.APMConfig = config;
 #endif
     
+#if defined(SDKABTESTINGMODULE)
+    configuration.abtestingHost = @"https://n.datayi.cn";
+    configuration.experimentTTL = 5;
+#endif
+    
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wnonnull"
     [GrowingSDK startWithConfiguration:configuration launchOptions:nil];
