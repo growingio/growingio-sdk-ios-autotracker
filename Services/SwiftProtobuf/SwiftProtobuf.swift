@@ -82,7 +82,7 @@ public class SwiftProtobufWrapper: NSObject {
         dto.index = (jsonObject["index"] as? NSNumber)?.int32Value ?? 0
         dto.query = jsonObject["query"] as? String ?? ""
         dto.hyperlink = jsonObject["hyperlink"] as? String ?? ""
-        dto.attributes = jsonObject["extraSdk"] as? [String: String] ?? [:]
+        dto.attributes = jsonObject["attributes"] as? [String: String] ?? [:]
         dto.orientation = jsonObject["orientation"] as? String ?? ""
         dto.title = jsonObject["title"] as? String ?? ""
         dto.referralPage = jsonObject["referralPage"] as? String ?? ""
