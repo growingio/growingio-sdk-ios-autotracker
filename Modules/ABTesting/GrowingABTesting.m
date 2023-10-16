@@ -146,60 +146,60 @@ static NSString *const kABTExpStrategyId = @"$exp_strategy_id";
                   if (!completedBlock) {
                       return;
                   }
-        if (httpResponse.statusCode < 200 || httpResponse.statusCode >= 300) {
-            // 请求失败
-            completedBlock(NO, nil, retryCount);
-            return;
-        }
-                      NSInteger code = -1;
-                      NSString *strategyId = nil;
-                      NSString *experimentId = nil;
-                      NSDictionary *variables = nil;
-                      @try {
-                          NSDictionary *dic = [data growingHelper_dictionaryObject];
-                          code = ((NSNumber *)dic[@"code"]).integerValue;
-                          if ([dic[@"strategyId"] isKindOfClass:[NSNumber class]]) {
-                              strategyId = ((NSNumber *)dic[@"strategyId"]).stringValue;
-                          }
-                          if ([dic[@"experimentId"] isKindOfClass:[NSNumber class]]) {
-                              experimentId = ((NSNumber *)dic[@"experimentId"]).stringValue;
-                          }
-                          if ([dic[@"variables"] isKindOfClass:[NSDictionary class]]) {
-                              variables = dic[@"variables"];
-                          }
-                      } @catch (NSException *exception) {
-                          // 接口返回数据结构异常，SDK无法解析，不上报不缓存
-                          completedBlock(NO, nil, retryCount);
-                          return;
+                  if (httpResponse.statusCode < 200 || httpResponse.statusCode >= 300) {
+                      // 请求失败
+                      completedBlock(NO, nil, retryCount);
+                      return;
+                  }
+                  NSInteger code = -1;
+                  NSString *strategyId = nil;
+                  NSString *experimentId = nil;
+                  NSDictionary *variables = nil;
+                  @try {
+                      NSDictionary *dic = [data growingHelper_dictionaryObject];
+                      code = ((NSNumber *)dic[@"code"]).integerValue;
+                      if ([dic[@"strategyId"] isKindOfClass:[NSNumber class]]) {
+                          strategyId = ((NSNumber *)dic[@"strategyId"]).stringValue;
                       }
-                      
-                      if (code != 0) {
-                          // 请求失败
-                          completedBlock(NO, nil, retryCount);
-                          return;
+                      if ([dic[@"experimentId"] isKindOfClass:[NSNumber class]]) {
+                          experimentId = ((NSNumber *)dic[@"experimentId"]).stringValue;
                       }
-
-                      GrowingABTExperiment *exp =
-                          [[GrowingABTExperiment alloc] initWithLayerId:layerId
-                                                           experimentId:experimentId
-                                                             strategyId:strategyId
-                                                              variables:variables
-                                                              fetchTime:GrowingULTimeUtil.currentTimeMillis];
-
-                      if (experimentId && experimentId.length > 0 && strategyId && strategyId.length > 0) {
-                          // 命中实验
-                          GrowingABTExperiment *lastExp = [GrowingABTExperiment findExperiment:layerId];
-                          if (![exp isEqual:lastExp]) {
-                              // 和缓存实验数据不同，上报入组埋点
-                              [self trackExperiment:exp];
-                          }
+                      if ([dic[@"variables"] isKindOfClass:[NSDictionary class]]) {
+                          variables = dic[@"variables"];
                       }
+                  } @catch (NSException *exception) {
+                      // 接口返回数据结构异常，SDK无法解析，不上报不缓存
+                      completedBlock(NO, nil, retryCount);
+                      return;
+                  }
 
-                      // 更新缓存
-                      [exp saveToDisk];
+                  if (code != 0) {
+                      // 请求失败
+                      completedBlock(NO, nil, retryCount);
+                      return;
+                  }
 
-                      // 返回实验结果
-                      completedBlock(YES, exp, 0);
+                  GrowingABTExperiment *exp =
+                      [[GrowingABTExperiment alloc] initWithLayerId:layerId
+                                                       experimentId:experimentId
+                                                         strategyId:strategyId
+                                                          variables:variables
+                                                          fetchTime:GrowingULTimeUtil.currentTimeMillis];
+
+                  if (experimentId && experimentId.length > 0 && strategyId && strategyId.length > 0) {
+                      // 命中实验
+                      GrowingABTExperiment *lastExp = [GrowingABTExperiment findExperiment:layerId];
+                      if (![exp isEqual:lastExp]) {
+                          // 和缓存实验数据不同，上报入组埋点
+                          [self trackExperiment:exp];
+                      }
+                  }
+
+                  // 更新缓存
+                  [exp saveToDisk];
+
+                  // 返回实验结果
+                  completedBlock(YES, exp, 0);
               }];
 }
 

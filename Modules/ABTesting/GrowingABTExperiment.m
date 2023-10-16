@@ -75,31 +75,31 @@
     if (![self.layerId isEqualToString:experiment.layerId]) {
         return NO;
     }
-    
+
     if (experiment.experimentId != nil && ![self.experimentId isEqualToString:experiment.experimentId]) {
         return NO;
     }
-    
+
     if (experiment.experimentId == nil && self.experimentId != nil) {
         return NO;
     }
-    
+
     if (experiment.strategyId != nil && ![self.strategyId isEqualToString:experiment.strategyId]) {
         return NO;
     }
-    
+
     if (experiment.strategyId == nil && self.strategyId != nil) {
         return NO;
     }
-    
+
     if (experiment.variables != nil && ![self.variables isEqualToDictionary:experiment.variables]) {
         return NO;
     }
-    
+
     if (experiment.variables == nil && self.variables != nil) {
         return NO;
     }
-    
+
     return YES;
 }
 
