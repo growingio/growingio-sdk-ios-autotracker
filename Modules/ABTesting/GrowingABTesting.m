@@ -79,7 +79,7 @@ static NSString *const kABTExpStrategyId = @"$exp_strategy_id";
     components = [calendar components:unit fromDate:date];
     NSDate *otherDay = [calendar dateFromComponents:components];
 
-    return [today isEqualToDate:otherDay];
+    return today && otherDay && [today isEqualToDate:otherDay];
 }
 
 + (void)trackExperiment:(GrowingABTExperiment *)experiment {
@@ -143,13 +143,21 @@ static NSString *const kABTExpStrategyId = @"$exp_strategy_id";
     }
     [service sendRequest:request
               completion:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data, NSError *_Nonnull error) {
-                  if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
+                  if (!completedBlock) {
+                      return;
+                  }
+        if (httpResponse.statusCode < 200 || httpResponse.statusCode >= 300) {
+            // 请求失败
+            completedBlock(NO, nil, retryCount);
+            return;
+        }
+                      NSInteger code = -1;
                       NSString *strategyId = nil;
                       NSString *experimentId = nil;
                       NSDictionary *variables = nil;
-                      // TODO: 将未命中和服务端请求错误区分
                       @try {
                           NSDictionary *dic = [data growingHelper_dictionaryObject];
+                          code = ((NSNumber *)dic[@"code"]).integerValue;
                           if ([dic[@"strategyId"] isKindOfClass:[NSNumber class]]) {
                               strategyId = ((NSNumber *)dic[@"strategyId"]).stringValue;
                           }
@@ -161,9 +169,13 @@ static NSString *const kABTExpStrategyId = @"$exp_strategy_id";
                           }
                       } @catch (NSException *exception) {
                           // 接口返回数据结构异常，SDK无法解析，不上报不缓存
-                          if (completedBlock) {
-                              completedBlock(NO, nil, retryCount);
-                          }
+                          completedBlock(NO, nil, retryCount);
+                          return;
+                      }
+                      
+                      if (code != 0) {
+                          // 请求失败
+                          completedBlock(NO, nil, retryCount);
                           return;
                       }
 
@@ -187,15 +199,7 @@ static NSString *const kABTExpStrategyId = @"$exp_strategy_id";
                       [exp saveToDisk];
 
                       // 返回实验结果
-                      if (completedBlock) {
-                          completedBlock(YES, exp, 0);
-                      }
-                  } else {
-                      // 请求失败
-                      if (completedBlock) {
-                          completedBlock(NO, nil, retryCount);
-                      }
-                  }
+                      completedBlock(YES, exp, 0);
               }];
 }
 
@@ -205,7 +209,7 @@ static NSString *const kABTExpStrategyId = @"$exp_strategy_id";
     if (!layerId || ![layerId isKindOfClass:[NSString class]] || layerId.length == 0) {
         return;
     }
-    [self fetchExperiment:layerId completedBlock:completedBlock retryCount:3];
+    [self fetchExperiment:layerId completedBlock:completedBlock retryCount:1];
 }
 
 @end

@@ -27,6 +27,10 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(ABTesting)
 @interface GrowingABTesting : NSObject <GrowingModuleProtocol>
 
+/// 根据传入的 layerId，获取实验变量
+/// @param layerId 层 id
+/// @param completedBlock 根据返回的 experiment 判断，若 experiment 为 nil，则为请求失败，请按需重试；
+/// 若 experiment.experimentId 或 experiment.strategyId 为 nil，则未命中实验
 + (void)fetchExperiment:(NSString *)layerId completedBlock:(void (^)(GrowingABTExperiment *_Nullable))completedBlock;
 
 @end
