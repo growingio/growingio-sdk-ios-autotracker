@@ -143,12 +143,11 @@ static NSString *const kABTExpStrategyId = @"$exp_strategy_id";
     }
     [service sendRequest:request
               completion:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data, NSError *_Nonnull error) {
-                  if (!completedBlock) {
-                      return;
-                  }
                   if (httpResponse.statusCode < 200 || httpResponse.statusCode >= 300) {
                       // 请求失败
-                      completedBlock(NO, nil, retryCount);
+                      if (completedBlock) {
+                          completedBlock(NO, nil, retryCount);
+                      }
                       return;
                   }
                   NSInteger code = -1;
@@ -169,13 +168,17 @@ static NSString *const kABTExpStrategyId = @"$exp_strategy_id";
                       }
                   } @catch (NSException *exception) {
                       // 接口返回数据结构异常，SDK无法解析，不上报不缓存
-                      completedBlock(NO, nil, retryCount);
+                      if (completedBlock) {
+                          completedBlock(NO, nil, retryCount);
+                      }
                       return;
                   }
 
                   if (code != 0) {
                       // 请求失败
-                      completedBlock(NO, nil, retryCount);
+                      if (completedBlock) {
+                          completedBlock(NO, nil, retryCount);
+                      }
                       return;
                   }
 
@@ -199,7 +202,9 @@ static NSString *const kABTExpStrategyId = @"$exp_strategy_id";
                   [exp saveToDisk];
 
                   // 返回实验结果
-                  completedBlock(YES, exp, 0);
+                  if (completedBlock) {
+                      completedBlock(YES, exp, 0);
+                  }
               }];
 }
 

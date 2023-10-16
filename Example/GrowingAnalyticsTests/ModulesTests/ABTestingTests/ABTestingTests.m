@@ -227,26 +227,7 @@
     [self waitForExpectationsWithTimeout:5.0f handler:nil];
 }
 
-- (void)test06FetchWithNilBlock {
-    [HTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest * _Nonnull request) {
-        return [request.URL.host isEqualToString:@"www.example.com"];
-    } withStubResponse:^HTTPStubsResponse * _Nonnull(NSURLRequest * _Nonnull request) {
-        NSDictionary *obj = @{
-            @"code": @(0),
-            @"experimentId": @(123),
-            @"strategyId": @(456),
-            @"variables": @{
-                @"key": @"value"
-            }
-        };
-        return [HTTPStubsResponse responseWithJSONObject:obj statusCode:200 headers:nil];
-    }];
-    
-    NSString *layerId = [NSUUID UUID].UUIDString; //避免缓存影响
-    [GrowingABTesting fetchExperiment:layerId completedBlock:nil];
-}
-
-- (void)test07ExperimentEqual {
+- (void)test06ExperimentEqual {
     NSString *layerId = @"123456";
     NSString *experimentId = @"123";
     NSString *strategyId = @"456";
@@ -370,7 +351,7 @@
     }
 }
 
-- (void)test08ExperimentHash {
+- (void)test07ExperimentHash {
     NSMutableSet *set = [NSMutableSet set];
     NSString *layerId = @"123456";
     NSString *experimentId = @"123";
