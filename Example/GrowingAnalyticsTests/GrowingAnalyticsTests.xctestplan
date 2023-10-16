@@ -60,6 +60,13 @@
         "identifier" : "349B528A28C0884400EE88FE",
         "name" : "AdvertisingTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Example.xcodeproj",
+        "identifier" : "346521DE2ADD0E540091E815",
+        "name" : "ABTestingTests"
+      }
     }
   ],
   "version" : 1

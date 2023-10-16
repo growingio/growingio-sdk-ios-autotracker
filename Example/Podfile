@@ -57,6 +57,12 @@ target 'AdvertisingTests' do
   pod 'GrowingAnalytics/Ads', :path => '../'
 end
 
+target 'ABTestingTests' do
+  pod 'GrowingAnalytics/Autotracker', :path => '../'
+  pod 'GrowingAnalytics/ABTesting', :path => '../'
+  pod 'OHHTTPStubs'
+end
+
 target 'ExampleiOS13' do
   pod 'GrowingAnalytics/Autotracker', :path => '../'
   pod 'GrowingAnalytics/Ads', :path => '../'

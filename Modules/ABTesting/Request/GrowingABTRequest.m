@@ -44,11 +44,11 @@
 - (NSArray<id<GrowingRequestAdapter>> *)adapters {
     GrowingABTRequestAdapter *bodyAdapter = [GrowingABTRequestAdapter adapterWithRequest:self];
     GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
-    NSString *projectKey = config.projectId ?: @"";
-    NSString *datasourceId = config.dataSourceId ?: @"";
+    NSString *accountId = config.projectId;
+    NSString *datasourceId = config.dataSourceId;
     NSString *distinctId = [GrowingDeviceInfo currentDeviceInfo].deviceIDString;
     bodyAdapter.parameters = @{
-        @"projectKey": projectKey,
+        @"accountId": accountId,
         @"datasourceId": datasourceId,
         @"distinctId": distinctId,
         @"layerId": self.layerId.copy
