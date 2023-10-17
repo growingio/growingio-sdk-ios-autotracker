@@ -26,12 +26,21 @@
 #import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
 #import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
 #import "Modules/ABTesting/GrowingABTExperiment+Private.h"
+#import "Modules/ABTesting/GrowingABTExperimentStorage.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "MockEventQueue.h"
 
 @interface GrowingABTesting (XCTest)
 
 + (BOOL)isToday:(double)timestamp;
+
+@end
+
+@interface GrowingABTExperimentStorage (XCTest)
+
+- (nullable GrowingABTExperiment *)findExperiment:(NSString *)layerId;
+- (void)addExperiment:(GrowingABTExperiment *)experiment;
+- (void)removeExperiment:(GrowingABTExperiment *)experiment;
 
 @end
 
@@ -42,6 +51,7 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wnonnull"
 #pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+#pragma clang diagnostic ignored "-Wcompound-token-split-by-macro"
 
 @implementation ABTestingTests
 
@@ -61,6 +71,50 @@
 
 - (void)tearDown {
     
+}
+
+- (void)test00ExperimentStorage {
+    NSString *layerId = @"123456";
+    GrowingABTExperiment *exp = [[GrowingABTExperiment alloc] initWithLayerId:layerId
+                                                                 experimentId:@"123"
+                                                                   strategyId:@"456"
+                                                                    variables:@{}
+                                                                    fetchTime:1602485628504];
+    
+    {
+        // 测试在初始化storage时，会从本地获取experiment缓存
+        // 测试addExperiment/removeExperiment
+        GrowingABTExperimentStorage *storage1 = [[GrowingABTExperimentStorage alloc] init];
+        [storage1 addExperiment:exp];
+        
+        GrowingABTExperimentStorage *storage2 = [[GrowingABTExperimentStorage alloc] init];
+        GrowingABTExperiment *exp2 = [storage2 findExperiment:layerId];
+        XCTAssertEqualObjects(exp, exp2);
+        
+        [storage2 removeExperiment:exp2];
+        GrowingABTExperimentStorage *storage3 = [[GrowingABTExperimentStorage alloc] init];
+        GrowingABTExperiment *exp3 = [storage3 findExperiment:layerId];
+        XCTAssertNil(exp3);
+    }
+    
+    {
+        // 多线程场景下不崩溃
+        XCTestExpectation *expectation = [self expectationWithDescription:@"test00ExperimentStorage Test failed : timeout"];
+        XCTAssertNoThrow({
+            for (int i = 0; i < 1000; i++) {
+                dispatch_async(dispatch_get_global_queue(0, 0), ^{
+                    [GrowingABTExperimentStorage removeExperiment:exp];
+                    [GrowingABTExperimentStorage addExperiment:exp];
+                });
+            }
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                GrowingABTExperiment *exp2 = [GrowingABTExperimentStorage findExperiment:layerId];
+                XCTAssertEqualObjects(exp, exp2);
+                [expectation fulfill];
+            });
+        });
+        [self waitForExpectationsWithTimeout:5.0f handler:nil];
+    }
 }
 
 - (void)test01FetchSuccess {
