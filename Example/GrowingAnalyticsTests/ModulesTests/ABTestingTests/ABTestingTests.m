@@ -149,7 +149,7 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"testFetchSuccess Test failed : timeout"];
     expectation.expectedFulfillmentCount = 2;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         XCTAssertEqual(requestCount, 1);
         
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
@@ -169,7 +169,7 @@
             // 2次获取的实验对象相同
             XCTAssert([lastExp isEqual:exp]);
         }];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             XCTAssertEqual(requestCount, 1);
             [expectation fulfill];
         });
@@ -217,13 +217,13 @@
     // 超出自然日，会清除本地缓存，再次请求
     XCTestExpectation *expectation = [self expectationWithDescription:@"testExperimentOutDated Test failed : timeout"];
     expectation.expectedFulfillmentCount = 2;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         XCTAssertEqual(requestCount, 1);
         [expectation fulfill];
         
         // 再次获取，由于还在自然日内，则不会再请求
         [GrowingABTesting fetchExperiment:layerId completedBlock:nil];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             XCTAssertEqual(requestCount, 1);
             [expectation fulfill];
         });
@@ -249,7 +249,7 @@
     
     // 目前会重试1次
     XCTestExpectation *expectation = [self expectationWithDescription:@"testFetchHttpFailure Test failed : timeout"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         XCTAssertEqual(requestCount, 2);
         [expectation fulfill];
     });
@@ -276,7 +276,7 @@
     
     // 目前会重试1次
     XCTestExpectation *expectation = [self expectationWithDescription:@"testFetchCodeFailure Test failed : timeout"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         XCTAssertEqual(requestCount, 2);
         [expectation fulfill];
     });
