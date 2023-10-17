@@ -99,21 +99,24 @@
     
     {
         // 多线程场景下不崩溃
-        XCTestExpectation *expectation = [self expectationWithDescription:@"test00ExperimentStorage Test failed : timeout"];
         XCTAssertNoThrow({
+            XCTestExpectation *expectation = [self expectationWithDescription:@"test00ExperimentStorage Test failed : timeout"];
             for (int i = 0; i < 1000; i++) {
                 dispatch_async(dispatch_get_global_queue(0, 0), ^{
                     [GrowingABTExperimentStorage removeExperiment:exp];
                     [GrowingABTExperimentStorage addExperiment:exp];
+                    GrowingABTExperiment *exp2 = [GrowingABTExperimentStorage findExperiment:layerId];
+                    if (exp2) {
+                        // 读异步写同步，因此需要判断非nil情况
+                        XCTAssertEqualObjects(exp, exp2);
+                    }
                 });
             }
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                GrowingABTExperiment *exp2 = [GrowingABTExperimentStorage findExperiment:layerId];
-                XCTAssertEqualObjects(exp, exp2);
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [expectation fulfill];
             });
+            [self waitForExpectationsWithTimeout:5.0f handler:nil];
         });
-        [self waitForExpectationsWithTimeout:5.0f handler:nil];
     }
 }
 
