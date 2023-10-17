@@ -135,7 +135,7 @@ GrowingMod(GrowingWebCircle)
         dict[@"width"] = [NSNumber numberWithInt:(int)(frame.size.width * scale)];
         dict[@"height"] = [NSNumber numberWithInt:(int)(frame.size.height * scale)];
     }
-    dict[@"path"] = page.alias;
+    dict[@"path"] = [NSString stringWithFormat:@"/%@", page.alias];
     dict[@"title"] = page.title;
     return dict;
 }
