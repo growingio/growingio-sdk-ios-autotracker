@@ -82,7 +82,12 @@ static NSString *const kGrowingABTestingExperimentKey = @"GrowingABTestingExperi
 }
 
 - (nullable GrowingABTExperiment *)findExperiment:(NSString *)layerId {
-    for (GrowingABTExperiment *exp in self.experiments.copy) {
+    NSArray<GrowingABTExperiment *> *experiments;
+    GROWING_LOCK(lock);
+    experiments = self.experiments.copy;
+    GROWING_UNLOCK(lock);
+
+    for (GrowingABTExperiment *exp in experiments) {
         if ([exp.layerId isEqualToString:layerId]) {
             return exp;
         }
