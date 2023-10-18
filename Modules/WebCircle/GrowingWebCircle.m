@@ -425,7 +425,6 @@ GrowingMod(GrowingWebCircle)
     GIOLogDebug(@"[GrowingWebCircle] 开始断开连接");
     NSDictionary *dict = @{@"msgType": @"quit"};
     [self sendJson:dict];
-    self.statusView.status = GrowingWebCircleStatusClosing;
     self.isReady = NO;
     [self _stopWithError:nil];
 }
@@ -446,6 +445,7 @@ GrowingMod(GrowingWebCircle)
         [self.webSocket close];
         self.webSocket = nil;
     }
+    self.statusView.status = GrowingWebCircleStatusClosing;
     self.statusView = nil;
     if (error.length) {
         GrowingAlert *alert = [GrowingAlert createAlertWithStyle:UIAlertControllerStyleAlert
