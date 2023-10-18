@@ -67,10 +67,6 @@
 }
 
 - (NSArray<id<GrowingNode>> *)growingNodeChilds {
-    // 由于WKWebView具有内容视图，不再对其子元素进行遍历
-    if ([self isKindOfClass:NSClassFromString(@"WKWebView")]) {
-        return nil;
-    }
     return self.subviews;
 }
 
