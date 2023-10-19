@@ -69,8 +69,9 @@ static NSMutableArray *eventChannels = nil;
             GrowingEventTypeViewClick,
             GrowingEventTypeViewChange,
             GrowingEventTypeAppClosed,
-            @"FORM_SUBMIT", /* GrowingEventTypeFormSubmit */
-            @"ACTIVATE"     /* GrowingEventTypeActivate */
+            @"FORM_SUBMIT",    /* GrowingEventTypeFormSubmit */
+            @"ACTIVATE",       /* GrowingEventTypeActivate */
+            @"PAGE_ATTRIBUTES" /* GrowingEventTypePageAttributes Deprecated */
         ];
         NSArray *trackEventTypes = @[GrowingEventTypeCustom, GrowingEventTypeLoginUserAttributes];
         [eventChannels addObject:[GrowingEventChannel eventChannelWithName:@"Autotrack"
