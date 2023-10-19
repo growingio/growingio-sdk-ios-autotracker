@@ -51,14 +51,11 @@
 }
 
 - (NSString *)toJsonString {
-    NSMutableDictionary *configuration = [self dictionaryWithValuesForKeys:@[
-        @"appId",
-        @"appPackage",
-        @"nativeSdkVersion",
-        @"nativeSdkVersionCode"
-    ]].mutableCopy;
+    NSMutableDictionary *configuration =
+        [self dictionaryWithValuesForKeys:@[@"appId", @"appPackage", @"nativeSdkVersion", @"nativeSdkVersionCode"]]
+            .mutableCopy;
     configuration[@"projectId"] = self.accountId;
-    
+
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:configuration
                                                        options:NSJSONWritingPrettyPrinted
