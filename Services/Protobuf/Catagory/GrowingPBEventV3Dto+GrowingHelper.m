@@ -72,6 +72,9 @@
         case GrowingPBEventType_Activate: {
             [dic setObject:@"ACTIVATE" forKey:@"eventType"];
         } break;
+        case GrowingPBEventType_PageAttributes: { /* Deprecated */
+            [dic setObject:@"PAGE_ATTRIBUTES" forKey:@"eventType"];
+        } break;
         default:
             break;
     }
@@ -270,6 +273,8 @@
         return GrowingPBEventType_FormSubmit;
     } else if ([eventType isEqualToString:@"ACTIVATE"]) {
         return GrowingPBEventType_Activate;
+    } else if ([eventType isEqualToString:@"PAGE_ATTRIBUTES"] /* Deprecated */) {
+        return GrowingPBEventType_PageAttributes;
     }
 
     return GrowingPBEventType_GPBUnrecognizedEnumeratorValue;
