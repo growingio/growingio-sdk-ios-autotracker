@@ -154,6 +154,8 @@ public class SwiftProtobufWrapper: NSObject {
             return .formSubmit
         } else if eventType == "ACTIVATE" {
             return .activate
+        } else if eventType == "PAGE_ATTRIBUTES" /* Deprecated */ {
+            return .pageAttributes
         }
 
         return .UNRECOGNIZED(100)
