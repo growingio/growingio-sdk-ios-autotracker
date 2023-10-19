@@ -21,14 +21,14 @@
 
 @implementation GrowingWebViewJavascriptBridgeConfiguration
 
-- (instancetype)initWithProjectId:(NSString *)projectId
+- (instancetype)initWithAccountId:(NSString *)accountId
                             appId:(NSString *)appId
                        appPackage:(NSString *)appPackage
                  nativeSdkVersion:(NSString *)nativeSdkVersion
              nativeSdkVersionCode:(int)nativeSdkVersionCode {
     self = [super init];
     if (self) {
-        _projectId = [projectId copy];
+        _accountId = [accountId copy];
         _appId = [appId copy];
         _appPackage = [appPackage copy];
         _nativeSdkVersion = [nativeSdkVersion copy];
@@ -38,12 +38,12 @@
     return self;
 }
 
-+ (instancetype)configurationWithProjectId:(NSString *)projectId
++ (instancetype)configurationWithAccountId:(NSString *)accountId
                                      appId:(NSString *)appId
                                 appPackage:(NSString *)appPackage
                           nativeSdkVersion:(NSString *)nativeSdkVersion
                       nativeSdkVersionCode:(int)nativeSdkVersionCode {
-    return [[self alloc] initWithProjectId:projectId
+    return [[self alloc] initWithAccountId:accountId
                                      appId:appId
                                 appPackage:appPackage
                           nativeSdkVersion:nativeSdkVersion
@@ -51,13 +51,14 @@
 }
 
 - (NSString *)toJsonString {
-    NSDictionary *configuration = [self dictionaryWithValuesForKeys:@[
-        @"projectId",
+    NSMutableDictionary *configuration = [self dictionaryWithValuesForKeys:@[
         @"appId",
         @"appPackage",
         @"nativeSdkVersion",
         @"nativeSdkVersionCode"
-    ]];
+    ]].mutableCopy;
+    configuration[@"projectId"] = self.accountId;
+    
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:configuration
                                                        options:NSJSONWritingPrettyPrinted

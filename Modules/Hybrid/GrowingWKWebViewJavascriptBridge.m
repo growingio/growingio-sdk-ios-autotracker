@@ -92,11 +92,11 @@ static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJav
         }];
 
         if (!isContainUserScripts) {
-            NSString *projectId = GrowingConfigurationManager.sharedInstance.trackConfiguration.projectId;
+            NSString *accountId = GrowingConfigurationManager.sharedInstance.trackConfiguration.accountId;
             NSString *bundleId = [GrowingDeviceInfo currentDeviceInfo].bundleID;
             NSString *urlScheme = [GrowingDeviceInfo currentDeviceInfo].urlScheme;
             GrowingWebViewJavascriptBridgeConfiguration *config =
-                [GrowingWebViewJavascriptBridgeConfiguration configurationWithProjectId:projectId
+                [GrowingWebViewJavascriptBridgeConfiguration configurationWithAccountId:accountId
                                                                                   appId:urlScheme
                                                                              appPackage:bundleId
                                                                        nativeSdkVersion:GrowingTrackerVersionName

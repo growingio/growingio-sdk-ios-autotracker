@@ -59,7 +59,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
 - (void)test01InitializedSuccessfully {
     XCTAssertFalse([GrowingAutotracker isInitializedSuccessfully]);
     
-    GrowingAutotrackConfiguration *configuration = [GrowingAutotrackConfiguration configurationWithProjectId:@"test"];
+    GrowingAutotrackConfiguration *configuration = [GrowingAutotrackConfiguration configurationWithAccountId:@"test"];
     configuration.dataSourceId = @"test";
     configuration.idMappingEnabled = YES;
     configuration.sessionInterval = 3.0f;

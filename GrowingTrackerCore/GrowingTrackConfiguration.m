@@ -37,10 +37,10 @@ NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growing
 
 @implementation GrowingTrackConfiguration
 
-- (instancetype)initWithProjectId:(NSString *)projectId {
+- (instancetype)initWithAccountId:(NSString *)accountId {
     self = [super init];
     if (self) {
-        _projectId = [projectId copy];
+        _accountId = [accountId copy];
         _dataSourceId = nil;
 
         _debugEnabled = NO;
@@ -70,13 +70,17 @@ NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growing
     return self;
 }
 
-+ (instancetype)configurationWithProjectId:(NSString *)projectId {
-    return [[self alloc] initWithProjectId:projectId];
++ (instancetype)configurationWithAccountId:(NSString *)accountId {
+    return [[self alloc] initWithAccountId:accountId];
+}
+
++ (instancetype)configurationWithProjectId:(NSString *)accountId {
+    return [self configurationWithAccountId:accountId];
 }
 
 - (id)copyWithZone:(NSZone *)zone {
     GrowingTrackConfiguration *configuration = [[[self class] allocWithZone:zone] init];
-    configuration->_projectId = [_projectId copy];
+    configuration->_accountId = [_accountId copy];
     configuration->_dataSourceId = [_dataSourceId copy];
     configuration->_debugEnabled = _debugEnabled;
     configuration->_cellularDataLimit = _cellularDataLimit;

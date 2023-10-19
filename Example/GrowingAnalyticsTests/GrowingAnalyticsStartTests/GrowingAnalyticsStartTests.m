@@ -48,7 +48,7 @@
 - (void)testGrowingTrackerStart {
     XCTAssertThrowsSpecificNamed(GrowingTracker.sharedInstance, NSException, @"GrowingTracker未初始化");
 
-    GrowingTrackConfiguration *config = [GrowingTrackConfiguration configurationWithProjectId:@"xctest"];
+    GrowingTrackConfiguration *config = [GrowingTrackConfiguration configurationWithAccountId:@"xctest"];
     XCTAssertThrowsSpecificNamed([GrowingTracker startWithConfiguration:config launchOptions:nil],
                                  NSException,
                                  @"初始化异常");
@@ -64,7 +64,7 @@
         }
                   waitUntilDone:YES];
 
-    GrowingTrackConfiguration *config2 = [GrowingTrackConfiguration configurationWithProjectId:@""];
+    GrowingTrackConfiguration *config2 = [GrowingTrackConfiguration configurationWithAccountId:@""];
     XCTAssertThrowsSpecificNamed([GrowingTracker startWithConfiguration:config2 launchOptions:nil],
                                  NSException,
                                  @"初始化异常");
@@ -73,7 +73,7 @@
 - (void)testGrowingAutotrackerStart {
     XCTAssertThrowsSpecificNamed(GrowingAutotracker.sharedInstance, NSException, @"GrowingAutotracker未初始化");
 
-    GrowingAutotrackConfiguration *config = [GrowingAutotrackConfiguration configurationWithProjectId:@"xctest"];
+    GrowingAutotrackConfiguration *config = [GrowingAutotrackConfiguration configurationWithAccountId:@"xctest"];
     XCTAssertThrowsSpecificNamed([GrowingAutotracker startWithConfiguration:config launchOptions:nil],
                                  NSException,
                                  @"初始化异常");
@@ -89,7 +89,7 @@
         }
                   waitUntilDone:YES];
 
-    GrowingAutotrackConfiguration *config2 = [GrowingAutotrackConfiguration configurationWithProjectId:@""];
+    GrowingAutotrackConfiguration *config2 = [GrowingAutotrackConfiguration configurationWithAccountId:@""];
     XCTAssertThrowsSpecificNamed([GrowingAutotracker startWithConfiguration:config2 launchOptions:nil],
                                  NSException,
                                  @"初始化异常");
@@ -98,7 +98,7 @@
 #pragma clang diagnostic pop
 
 - (void)testDefaultConfiguration_Autotracker {
-    GrowingAutotrackConfiguration *config = [GrowingAutotrackConfiguration configurationWithProjectId:@"test"];
+    GrowingAutotrackConfiguration *config = [GrowingAutotrackConfiguration configurationWithAccountId:@"test"];
     [GrowingRealAutotracker trackerWithConfiguration:config launchOptions:nil];
 
     GrowingAutotrackConfiguration *configuration =
@@ -120,7 +120,7 @@
 }
 
 - (void)testSetConfiguration_Autotracker {
-    GrowingAutotrackConfiguration *config = [GrowingAutotrackConfiguration configurationWithProjectId:@"test"];
+    GrowingAutotrackConfiguration *config = [GrowingAutotrackConfiguration configurationWithAccountId:@"test"];
     config.debugEnabled = YES;
     config.cellularDataLimit = 5;
     config.dataUploadInterval = 10;
@@ -156,7 +156,7 @@
 }
 
 - (void)testDefaultConfiguration_Tracker {
-    GrowingTrackConfiguration *config = [GrowingTrackConfiguration configurationWithProjectId:@"test"];
+    GrowingTrackConfiguration *config = [GrowingTrackConfiguration configurationWithAccountId:@"test"];
     [GrowingRealTracker trackerWithConfiguration:config launchOptions:nil];
 
     GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
@@ -176,7 +176,7 @@
 }
 
 - (void)testSetConfiguration_Tracker {
-    GrowingTrackConfiguration *config = [GrowingTrackConfiguration configurationWithProjectId:@"test"];
+    GrowingTrackConfiguration *config = [GrowingTrackConfiguration configurationWithAccountId:@"test"];
     config.debugEnabled = YES;
     config.cellularDataLimit = 5;
     config.dataUploadInterval = 10;

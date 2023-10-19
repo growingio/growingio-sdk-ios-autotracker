@@ -44,8 +44,8 @@
 
 - (NSString *)path {
     GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
-    NSString *projectKey = config.projectId ?: @"";
-    NSString *datasourceId = config.dataSourceId ?: @"";
+    NSString *projectKey = config.accountId;
+    NSString *datasourceId = config.dataSourceId;
     NSString *path = [NSString stringWithFormat:@"deep/v1/%@/ios/%@/%@/%@",
                                                 self.isManual ? @"inapp" : @"defer",
                                                 projectKey,

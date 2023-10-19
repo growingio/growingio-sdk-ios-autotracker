@@ -40,8 +40,8 @@ static GrowingAutotracker *sharedInstance = nil;
                      userInfo:nil];
     }
 
-    if (!configuration.projectId.length) {
-        @throw [NSException exceptionWithName:@"初始化异常" reason:@"ProjectId不能为空" userInfo:nil];
+    if (!configuration.accountId.length) {
+        @throw [NSException exceptionWithName:@"初始化异常" reason:@"AccountId不能为空" userInfo:nil];
     }
 
     if (!configuration.dataSourceId.length) {
