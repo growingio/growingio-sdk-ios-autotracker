@@ -54,7 +54,7 @@
 }
 
 - (NSString *)path {
-    NSString *accountId = [GrowingConfigurationManager sharedInstance].trackConfiguration.projectId ?: @"";
+    NSString *accountId = [GrowingConfigurationManager sharedInstance].trackConfiguration.accountId;
     NSString *path = [NSString stringWithFormat:@"v3/projects/%@/collect", accountId];
     return path;
 }

@@ -22,8 +22,6 @@
 @import GrowingAnalytics;
 #import "GrowingAdvertising.h"
 
-static NSString *const kGrowingProjectId = @"bc675c65b3b0290e";
-
 @interface AppDelegate ()
 
 @end
@@ -33,7 +31,7 @@ static NSString *const kGrowingProjectId = @"bc675c65b3b0290e";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    GrowingAutotrackConfiguration *configuration = [GrowingAutotrackConfiguration configurationWithProjectId:kGrowingProjectId];
+    GrowingAutotrackConfiguration *configuration = [GrowingAutotrackConfiguration configurationWithAccountId:@"bc675c65b3b0290e"];
     configuration.dataSourceId = @"1234567890";
     configuration.debugEnabled = YES;
     // 暂时设置host为mocky链接，防止请求404，实际是没有上传到服务器的，正式使用请去掉，或设置正确的host

@@ -1,9 +1,9 @@
 //
-//  GrowingAnalyticsStartTests.m
+//  GrowingAnalyticsStartTests2.m
 //  GrowingAnalytics
 //
-//  Created by YoloMao on 2022/1/13.
-//  Copyright (C) 2021 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2023/10/20.
+//  Copyright (C) 2023 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -28,11 +28,12 @@
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 
-@interface GrowingAnalyticsStartTests : XCTestCase
+// 对老版本API configurationWithProjectId的测试
+@interface GrowingAnalyticsStartTests2 : XCTestCase
 
 @end
 
-@implementation GrowingAnalyticsStartTests
+@implementation GrowingAnalyticsStartTests2
 
 - (void)setUp {
     // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -42,73 +43,8 @@
     // Put teardown code here. This method is called after the invocation of each test method in the class.
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wnonnull"
-
-- (void)testGrowingTrackerStart {
-    XCTAssertThrowsSpecificNamed(GrowingTracker.sharedInstance, NSException, @"GrowingTracker未初始化");
-
-    GrowingTrackConfiguration *config = [GrowingTrackConfiguration configurationWithAccountId:@"xctest"];
-    XCTAssertThrowsSpecificNamed([GrowingTracker startWithConfiguration:config launchOptions:nil],
-                                 NSException,
-                                 @"初始化异常");
-
-    config.dataSourceId = @"xctest";
-    [GrowingTracker startWithConfiguration:config launchOptions:nil];
-
-    [GrowingDispatchManager
-        dispatchInGrowingThread:^{
-            XCTAssertThrowsSpecificNamed([GrowingTracker startWithConfiguration:config launchOptions:nil],
-                                         NSException,
-                                         @"初始化异常");
-        }
-                  waitUntilDone:YES];
-
-    GrowingTrackConfiguration *config2 = [GrowingTrackConfiguration configurationWithAccountId:@""];
-    XCTAssertThrowsSpecificNamed([GrowingTracker startWithConfiguration:config2 launchOptions:nil],
-                                 NSException,
-                                 @"初始化异常");
-    
-    GrowingTrackConfiguration *config3 = [GrowingTrackConfiguration configurationWithAccountId:nil];
-    XCTAssertThrowsSpecificNamed([GrowingTracker startWithConfiguration:config3 launchOptions:nil],
-                                 NSException,
-                                 @"初始化异常");
-}
-
-- (void)testGrowingAutotrackerStart {
-    XCTAssertThrowsSpecificNamed(GrowingAutotracker.sharedInstance, NSException, @"GrowingAutotracker未初始化");
-
-    GrowingAutotrackConfiguration *config = [GrowingAutotrackConfiguration configurationWithAccountId:@"xctest"];
-    XCTAssertThrowsSpecificNamed([GrowingAutotracker startWithConfiguration:config launchOptions:nil],
-                                 NSException,
-                                 @"初始化异常");
-
-    config.dataSourceId = @"xctest";
-    [GrowingAutotracker startWithConfiguration:config launchOptions:nil];
-
-    [GrowingDispatchManager
-        dispatchInGrowingThread:^{
-            XCTAssertThrowsSpecificNamed([GrowingAutotracker startWithConfiguration:config launchOptions:nil],
-                                         NSException,
-                                         @"初始化异常");
-        }
-                  waitUntilDone:YES];
-
-    GrowingAutotrackConfiguration *config2 = [GrowingAutotrackConfiguration configurationWithAccountId:@""];
-    XCTAssertThrowsSpecificNamed([GrowingAutotracker startWithConfiguration:config2 launchOptions:nil],
-                                 NSException,
-                                 @"初始化异常");
-    
-    GrowingAutotrackConfiguration *config3 = [GrowingAutotrackConfiguration configurationWithAccountId:nil];
-    XCTAssertThrowsSpecificNamed([GrowingAutotracker startWithConfiguration:config3 launchOptions:nil],
-                                 NSException,
-                                 @"初始化异常");
-}
-
-#pragma clang diagnostic pop
-
 - (void)testDefaultConfiguration_Autotracker {
-    GrowingAutotrackConfiguration *config = [GrowingAutotrackConfiguration configurationWithAccountId:@"test"];
+    GrowingAutotrackConfiguration *config = [GrowingAutotrackConfiguration configurationWithProjectId:@"test"];
     [GrowingRealAutotracker trackerWithConfiguration:config launchOptions:nil];
 
     GrowingAutotrackConfiguration *configuration =
@@ -130,7 +66,7 @@
 }
 
 - (void)testSetConfiguration_Autotracker {
-    GrowingAutotrackConfiguration *config = [GrowingAutotrackConfiguration configurationWithAccountId:@"test"];
+    GrowingAutotrackConfiguration *config = [GrowingAutotrackConfiguration configurationWithProjectId:@"test"];
     config.debugEnabled = YES;
     config.cellularDataLimit = 5;
     config.dataUploadInterval = 10;
@@ -166,7 +102,7 @@
 }
 
 - (void)testDefaultConfiguration_Tracker {
-    GrowingTrackConfiguration *config = [GrowingTrackConfiguration configurationWithAccountId:@"test"];
+    GrowingTrackConfiguration *config = [GrowingTrackConfiguration configurationWithProjectId:@"test"];
     [GrowingRealTracker trackerWithConfiguration:config launchOptions:nil];
 
     GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
@@ -186,7 +122,7 @@
 }
 
 - (void)testSetConfiguration_Tracker {
-    GrowingTrackConfiguration *config = [GrowingTrackConfiguration configurationWithAccountId:@"test"];
+    GrowingTrackConfiguration *config = [GrowingTrackConfiguration configurationWithProjectId:@"test"];
     config.debugEnabled = YES;
     config.cellularDataLimit = 5;
     config.dataUploadInterval = 10;
@@ -216,16 +152,6 @@
     XCTAssertEqualObjects(configuration.urlScheme, @"growing.tracker");
     XCTAssertEqual(configuration.encryptEnabled, YES);
     XCTAssertEqualObjects(configuration.dataSourceId, @"12345");
-}
-
-- (void)testVersionNameAndVersionCode {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wundeclared-selector"
-    NSString *versionName = [GrowingRealTracker performSelector:@selector(versionName)];
-    NSString *versionCode = [GrowingRealTracker performSelector:@selector(versionCode)];
-    XCTAssertNotNil(versionName);
-    XCTAssertNotNil(versionCode);
-#pragma clang diagnostic pop
 }
 
 @end

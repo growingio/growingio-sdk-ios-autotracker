@@ -169,6 +169,7 @@
 		34BF77C92795571000CA18BA /* MockEventQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962653324DA66B600032551 /* MockEventQueue.m */; };
 		34BF77CB279562AC00CA18BA /* ManualTrackHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962653224DA66B600032551 /* ManualTrackHelper.m */; };
 		34C0BF3A277EA7C90047ADC4 /* DataTrafficTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C0BF39277EA7C90047ADC4 /* DataTrafficTest.m */; };
+		34ECD0FF2AE22F3A00DA3EBD /* GrowingAnalyticsStartTests2.m in Sources */ = {isa = PBXBuildFile; fileRef = 34ECD0FE2AE22F3A00DA3EBD /* GrowingAnalyticsStartTests2.m */; };
 		34ECFDBF2A5C082A0059F87C /* GrowingAutotrackPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34ECFDBE2A5C082A0059F87C /* GrowingAutotrackPageViewController.m */; };
 		34FCF7E12A937ECA009611B3 /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34FCF7E02A937ECA009611B3 /* SwiftUIView.swift */; };
 		34FCF7E42A937F4F009611B3 /* GIOSwiftUIContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34FCF7E32A937F4F009611B3 /* GIOSwiftUIContentViewController.m */; };
@@ -408,6 +409,7 @@
 		34BF77C52795568B00CA18BA /* GrowingKeyChainTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingKeyChainTest.m; sourceTree = "<group>"; };
 		34C0BF39277EA7C90047ADC4 /* DataTrafficTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DataTrafficTest.m; sourceTree = "<group>"; };
 		34C0BF3C277EA9BA0047ADC4 /* MobileDebuggerTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MobileDebuggerTest.m; sourceTree = "<group>"; };
+		34ECD0FE2AE22F3A00DA3EBD /* GrowingAnalyticsStartTests2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GrowingAnalyticsStartTests2.m; sourceTree = "<group>"; };
 		34ECFDBD2A5C082A0059F87C /* GrowingAutotrackPageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GrowingAutotrackPageViewController.h; sourceTree = "<group>"; };
 		34ECFDBE2A5C082A0059F87C /* GrowingAutotrackPageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GrowingAutotrackPageViewController.m; sourceTree = "<group>"; };
 		34F94ED82A938725002CB9FC /* Example-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Example-Bridging-Header.h"; path = "Example/Example-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
@@ -982,6 +984,7 @@
 			isa = PBXGroup;
 			children = (
 				34AB4E49279000F5002549FF /* GrowingAnalyticsStartTests.m */,
+				34ECD0FE2AE22F3A00DA3EBD /* GrowingAnalyticsStartTests2.m */,
 			);
 			path = GrowingAnalyticsStartTests;
 			sourceTree = "<group>";
@@ -2224,6 +2227,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				34ECD0FF2AE22F3A00DA3EBD /* GrowingAnalyticsStartTests2.m in Sources */,
 				34AB4E4A279000F5002549FF /* GrowingAnalyticsStartTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

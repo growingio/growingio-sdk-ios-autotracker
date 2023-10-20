@@ -228,13 +228,6 @@ static GrowingEventManager *sharedInstance = nil;
 
 // 非安全 发送日志
 - (void)sendEventsOfChannel_unsafe:(GrowingEventChannel *)channel {
-    GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
-    NSString *projectId = trackConfiguration.projectId;
-    if (projectId.length == 0) {
-        GIOLogError(@"No valid ProjectId (channel = %@).", channel.name);
-        return;
-    }
-
     if (channel.isUploading) {
         return;
     }
@@ -296,6 +289,7 @@ static GrowingEventManager *sharedInstance = nil;
 #endif
 
     NSData *rawEvents = nil;
+    GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
     if ((channel.persistenceType == GrowingEventPersistenceTypeJSON && trackConfiguration.useProtobuf) ||
         (channel.persistenceType == GrowingEventPersistenceTypeProtobuf && !trackConfiguration.useProtobuf)) {
         // 该channel的持久化数据格式与配置不同，需要转换为配置的数据格式

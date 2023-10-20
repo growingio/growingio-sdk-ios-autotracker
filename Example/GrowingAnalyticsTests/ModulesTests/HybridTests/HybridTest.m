@@ -56,7 +56,7 @@
     [GrowingServiceManager.sharedInstance registerService:@protocol(GrowingPBEventDatabaseService)
                                                 implClass:GrowingEventProtobufDatabase.class];
     [GrowingSession startSession];
-    GrowingTrackConfiguration *config = [GrowingTrackConfiguration configurationWithProjectId:@"test"];
+    GrowingTrackConfiguration *config = [GrowingTrackConfiguration configurationWithAccountId:@"test"];
     config.idMappingEnabled = YES;
     GrowingConfigurationManager.sharedInstance.trackConfiguration = config;
 }

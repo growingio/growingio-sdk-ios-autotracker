@@ -355,9 +355,9 @@ GrowingMod(GrowingMobileDebugger)
 
 - (void)webSocketDidOpen:(id<GrowingWebSocketService>)webSocket {
     GIOLogDebug(@"websocket已连接");
-    NSString *projectId = GrowingConfigurationManager.sharedInstance.trackConfiguration.projectId;
+    NSString *accountId = GrowingConfigurationManager.sharedInstance.trackConfiguration.accountId;
     NSDictionary *dict = @{
-        @"projectId": projectId,
+        @"projectId": accountId,
         @"msgType": @"ready",
         @"timestamp": @([GrowingULTimeUtil currentTimeMillis]),
         @"domain": [GrowingDeviceInfo currentDeviceInfo].bundleID,

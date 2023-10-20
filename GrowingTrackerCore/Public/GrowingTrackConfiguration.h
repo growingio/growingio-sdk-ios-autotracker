@@ -25,7 +25,7 @@ FOUNDATION_EXPORT NSString *const kGrowingDefaultDataCollectionServerHost;
 
 @interface GrowingTrackConfiguration : NSObject <NSCopying>
 
-@property (nonatomic, copy, readonly) NSString *projectId;
+@property (nonatomic, copy, readonly) NSString *accountId;
 @property (nonatomic, copy) NSString *dataSourceId;
 @property (nonatomic, assign) BOOL debugEnabled;
 @property (nonatomic, assign) NSUInteger cellularDataLimit;
@@ -41,8 +41,9 @@ FOUNDATION_EXPORT NSString *const kGrowingDefaultDataCollectionServerHost;
 @property (nonatomic, assign) BOOL encryptEnabled;
 @property (nonatomic, assign) BOOL useProtobuf;
 
-- (instancetype)initWithProjectId:(NSString *)projectId;
+- (instancetype)initWithAccountId:(NSString *)accountId;
 
-+ (instancetype)configurationWithProjectId:(NSString *)projectId;
++ (instancetype)configurationWithAccountId:(NSString *)accountId;
++ (instancetype)configurationWithProjectId:(NSString *)accountId;
 
 @end

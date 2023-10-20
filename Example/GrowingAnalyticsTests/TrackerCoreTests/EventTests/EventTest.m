@@ -44,7 +44,7 @@
 @implementation EventTest
 
 + (void)setUp {
-    GrowingTrackConfiguration *config = [GrowingTrackConfiguration configurationWithProjectId:@"test"];
+    GrowingTrackConfiguration *config = [GrowingTrackConfiguration configurationWithAccountId:@"test"];
     config.dataSourceId = @"test";
 
     // 避免不执行readPropertyInTrackThread

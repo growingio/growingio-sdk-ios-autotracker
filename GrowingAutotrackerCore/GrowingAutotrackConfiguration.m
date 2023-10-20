@@ -30,8 +30,8 @@
     GROWING_LOCK_DECLARE(lock);
 }
 
-- (instancetype)initWithProjectId:(NSString *)projectId {
-    if (self = [super initWithProjectId:projectId]) {
+- (instancetype)initWithAccountId:(NSString *)accountId {
+    if (self = [super initWithAccountId:accountId]) {
         _autotrackEnabled = YES;
         _impressionScale = 0.0f;
         GROWING_LOCK_INIT(lock);

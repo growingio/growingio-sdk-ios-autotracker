@@ -499,9 +499,9 @@ GrowingMod(GrowingWebCircle)
 
 - (void)webSocketDidOpen:(id<GrowingWebSocketService>)webSocket {
     GIOLogDebug(@"[GrowingWebCircle] websocket已连接");
-    NSString *projectId = GrowingConfigurationManager.sharedInstance.trackConfiguration.projectId;
+    NSString *accountId = GrowingConfigurationManager.sharedInstance.trackConfiguration.accountId;
     NSDictionary *dict = @{
-        @"projectId": projectId,
+        @"projectId": accountId,
         @"msgType": @"ready",
         @"timestamp": @([[NSDate date] timeIntervalSince1970]),
         @"domain": [GrowingDeviceInfo currentDeviceInfo].bundleID,

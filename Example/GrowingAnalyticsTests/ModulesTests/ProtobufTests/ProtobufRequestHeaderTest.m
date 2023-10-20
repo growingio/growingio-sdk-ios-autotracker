@@ -39,7 +39,7 @@
 }
 
 - (void)test01RequestHeaderProtobufFirst {
-    GrowingAutotrackConfiguration *config = [GrowingAutotrackConfiguration configurationWithProjectId:@"test"];
+    GrowingAutotrackConfiguration *config = [GrowingAutotrackConfiguration configurationWithAccountId:@"test"];
     config.useProtobuf = YES;
     [GrowingRealAutotracker trackerWithConfiguration:config launchOptions:nil];
 
@@ -63,7 +63,7 @@
 }
 
 - (void)test02RequestHeaderJSONFirst {
-    GrowingAutotrackConfiguration *config = [GrowingAutotrackConfiguration configurationWithProjectId:@"test"];
+    GrowingAutotrackConfiguration *config = [GrowingAutotrackConfiguration configurationWithAccountId:@"test"];
     config.useProtobuf = NO;
     [GrowingRealAutotracker trackerWithConfiguration:config launchOptions:nil];
 

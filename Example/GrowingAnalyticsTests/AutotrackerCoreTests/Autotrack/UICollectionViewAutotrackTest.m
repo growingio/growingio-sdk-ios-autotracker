@@ -97,7 +97,7 @@
 @implementation UICollectionViewAutotrackTest
 
 + (void)setUp {
-    GrowingTrackConfiguration *config = [GrowingTrackConfiguration configurationWithProjectId:@"test"];
+    GrowingTrackConfiguration *config = [GrowingTrackConfiguration configurationWithAccountId:@"test"];
     // 避免不执行readPropertyInTrackThread
     config.dataCollectionEnabled = YES;
     GrowingConfigurationManager.sharedInstance.trackConfiguration = config;
