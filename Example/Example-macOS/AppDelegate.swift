@@ -26,7 +26,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Insert code here to initialize your application
-        let config = GrowingTrackConfiguration(projectId: "bcc4fc9dea27f25d")
+        let config = GrowingTrackConfiguration(accountId: "bcc4fc9dea27f25d")
         config?.dataSourceId = "be46cd165dcc3c7e"
         config?.dataCollectionServerHost = "https://run.mocky.io/v3/08999138-a180-431d-a136-051f3c6bd306"
         config?.idMappingEnabled = true

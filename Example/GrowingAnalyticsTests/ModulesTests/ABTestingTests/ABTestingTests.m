@@ -56,7 +56,7 @@
 @implementation ABTestingTests
 
 + (void)setUp {
-    GrowingAutotrackConfiguration *configuration = [GrowingAutotrackConfiguration configurationWithProjectId:@"test"];
+    GrowingAutotrackConfiguration *configuration = [GrowingAutotrackConfiguration configurationWithAccountId:@"test"];
     configuration.dataSourceId = @"test";
     configuration.urlScheme = @"growing.530c8231345c492d";
     configuration.abTestingServerHost = @"https://www.example.com";

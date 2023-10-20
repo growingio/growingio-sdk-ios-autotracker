@@ -44,7 +44,7 @@
 - (NSArray<id<GrowingRequestAdapter>> *)adapters {
     GrowingABTRequestAdapter *bodyAdapter = [GrowingABTRequestAdapter adapterWithRequest:self];
     GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
-    NSString *accountId = config.projectId;
+    NSString *accountId = config.accountId;
     NSString *datasourceId = config.dataSourceId;
     NSString *distinctId = [GrowingDeviceInfo currentDeviceInfo].deviceIDString;
     bodyAdapter.parameters = @{
