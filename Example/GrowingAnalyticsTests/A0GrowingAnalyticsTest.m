@@ -783,6 +783,171 @@ static NSString *const kGrowingEventDuration = @"event_duration";
     }
 }
 
+#pragma mark - GeneralProps Test
+
+- (void)test22SetGeneralProps {
+    {
+        // set generalProps
+        {
+            // set generalProps
+            [MockEventQueue.sharedQueue cleanQueue];
+            
+            [[GrowingAutotracker sharedInstance] setGeneralProps:@{@"key" : @"value"}];
+            
+            [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"];
+            NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+            XCTAssertEqual(events.count, 1);
+
+            GrowingCustomEvent *event = (GrowingCustomEvent *)events.lastObject;
+            XCTAssertEqualObjects(event.eventName, @"eventName");
+            XCTAssertEqualObjects(event.attributes[@"key"], @"value");
+        }
+        
+        {
+            // merge generalProps
+            [MockEventQueue.sharedQueue cleanQueue];
+            
+            [[GrowingAutotracker sharedInstance] setGeneralProps:@{@"key2" : @"value2"}];
+            
+            [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"];
+            NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+            XCTAssertEqual(events.count, 1);
+
+            GrowingCustomEvent *event = (GrowingCustomEvent *)events.lastObject;
+            XCTAssertEqualObjects(event.eventName, @"eventName");
+            XCTAssertEqualObjects(event.attributes[@"key2"], @"value2");
+        }
+        
+        {
+            // replace generalProps
+            [MockEventQueue.sharedQueue cleanQueue];
+            
+            [[GrowingAutotracker sharedInstance] setGeneralProps:@{@"key" : @"value_modif"}];
+            
+            [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"];
+            NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+            XCTAssertEqual(events.count, 1);
+
+            GrowingCustomEvent *event = (GrowingCustomEvent *)events.lastObject;
+            XCTAssertEqualObjects(event.eventName, @"eventName");
+            XCTAssertEqualObjects(event.attributes[@"key"], @"value_modif");
+        }
+    }
+    
+    {
+        // clear generalProps
+        {
+            // clear generalProps
+            [MockEventQueue.sharedQueue cleanQueue];
+            
+            [[GrowingAutotracker sharedInstance] clearGeneralProps];
+            
+            [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"];
+            NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+            XCTAssertEqual(events.count, 1);
+
+            GrowingCustomEvent *event = (GrowingCustomEvent *)events.lastObject;
+            XCTAssertEqualObjects(event.eventName, @"eventName");
+            XCTAssertEqual(event.attributes.count, 0);
+        }
+        
+        {
+            // re-clear generalProps
+            [MockEventQueue.sharedQueue cleanQueue];
+            
+            [[GrowingAutotracker sharedInstance] setGeneralProps:@{@"key" : @"value"}];
+            [[GrowingAutotracker sharedInstance] setGeneralProps:@{@"key2" : @"value2"}];
+            [[GrowingAutotracker sharedInstance] clearGeneralProps];
+            
+            [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"];
+            NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+            XCTAssertEqual(events.count, 1);
+
+            GrowingCustomEvent *event = (GrowingCustomEvent *)events.lastObject;
+            XCTAssertEqualObjects(event.eventName, @"eventName");
+            XCTAssertEqual(event.attributes.count, 0);
+        }
+    }
+    
+    {
+        // remove generalProps
+        {
+            // remove key
+            [MockEventQueue.sharedQueue cleanQueue];
+
+            [[GrowingAutotracker sharedInstance] setGeneralProps:@{@"key" : @"value"}];
+            [[GrowingAutotracker sharedInstance] setGeneralProps:@{@"key2" : @"value2"}];
+            [[GrowingAutotracker sharedInstance] removeGeneralProps:@[@"key"]];
+            
+            [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"];
+            NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+            XCTAssertEqual(events.count, 1);
+
+            GrowingCustomEvent *event = (GrowingCustomEvent *)events.lastObject;
+            XCTAssertEqualObjects(event.eventName, @"eventName");
+            XCTAssertEqual(event.attributes.count, 1);
+            XCTAssertEqualObjects(event.attributes[@"key2"], @"value2");
+        }
+        
+        {
+            // remove key2
+            [MockEventQueue.sharedQueue cleanQueue];
+
+            [[GrowingAutotracker sharedInstance] removeGeneralProps:@[@"key2"]];
+            
+            [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"];
+            NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+            XCTAssertEqual(events.count, 1);
+
+            GrowingCustomEvent *event = (GrowingCustomEvent *)events.lastObject;
+            XCTAssertEqualObjects(event.eventName, @"eventName");
+            XCTAssertEqual(event.attributes.count, 0);
+        }
+    }
+
+    {
+        // set wrong generalProps
+        [MockEventQueue.sharedQueue cleanQueue];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+#pragma clang diagnostic ignored "-Wobjc-literal-conversion"
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setGeneralProps:nil]);
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setGeneralProps:@"value"]);
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setGeneralProps:@{ @1: @"value" }]);
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setGeneralProps:@{@"key": @1}]);
+#pragma clang diagnostic pop
+        [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName" withAttributes:@{@"key2": @"value"}];
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+        XCTAssertEqual(events.count, 1);
+
+        GrowingCustomEvent *event = (GrowingCustomEvent *)events.lastObject;
+        XCTAssertEqualObjects(event.eventName, @"eventName");
+        XCTAssertEqual(event.attributes.count, 1);
+        XCTAssertEqualObjects(event.attributes[@"key2"], @"value");
+    }
+    
+    {
+        // remove generalProps with wrong keys
+        [MockEventQueue.sharedQueue cleanQueue];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+#pragma clang diagnostic ignored "-Wobjc-literal-conversion"
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] removeGeneralProps:nil]);
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] removeGeneralProps:@"value"]);
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] removeGeneralProps:@{@"key": @"value"}]);
+        NSArray *array = @[@"key", @(1)];
+        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] removeGeneralProps:array]);
+#pragma clang diagnostic pop
+        [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"];
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+        XCTAssertEqual(events.count, 1);
+
+        GrowingCustomEvent *event = (GrowingCustomEvent *)events.lastObject;
+        XCTAssertEqualObjects(event.eventName, @"eventName");
+        XCTAssertEqual(event.attributes.count, 0);
+    }
+}
+
 @end
 
 #pragma clang diagnostic pop
