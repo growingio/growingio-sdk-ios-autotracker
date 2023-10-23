@@ -132,7 +132,14 @@ const int GrowingTrackerVersionCode = 40000;
     if ([GrowingArgumentChecker isIllegalEventName:eventName]) {
         return;
     }
-    [GrowingEventGenerator generateCustomEvent:eventName attributes:nil];
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        NSDictionary *generalProps = [GrowingEventManager sharedInstance].generalProps;
+        NSDictionary *dic = nil;
+        if (generalProps.count > 0) {
+            dic = generalProps;
+        }
+        [GrowingEventGenerator generateCustomEvent:eventName attributes:dic];
+    }];
 }
 
 - (void)trackCustomEvent:(NSString *)eventName withAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
