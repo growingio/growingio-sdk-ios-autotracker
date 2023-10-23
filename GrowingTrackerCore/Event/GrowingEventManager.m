@@ -34,6 +34,7 @@
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
+#import "GrowingTrackerCore/Event/GrowingGeneralProps.h"
 
 static const NSUInteger kGrowingMaxDBCacheSize = 100;  // default: write to DB as soon as there are 100 events
 static const NSUInteger kGrowingMaxBatchSize = 500;    // default: send no more than 500 events in every batch
@@ -42,6 +43,7 @@ static const NSUInteger kGrowingUnit_MB = 1024 * 1024;
 @interface GrowingEventManager ()
 
 @property (nonatomic, strong) NSHashTable *allInterceptor;
+@property (nonatomic, strong) GrowingGeneralProps *gProps;
 
 @property (nonatomic, strong, readonly) NSArray<GrowingEventChannel *> *allEventChannels;
 @property (nonatomic, strong, readonly) NSDictionary<NSString *, GrowingEventChannel *> *currentEventChannelMap;
@@ -74,6 +76,7 @@ static GrowingEventManager *sharedInstance = nil;
 - (instancetype)init {
     if (self = [super init]) {
         _allInterceptor = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+        _gProps = [[GrowingGeneralProps alloc] init];
     }
     return self;
 }
@@ -159,6 +162,25 @@ static GrowingEventManager *sharedInstance = nil;
 }
 
 #pragma mark - Event
+
+#pragma mark General Props
+
+- (NSDictionary<NSString *, NSString *> *)generalProps {
+    return self.gProps.props;
+}
+
+- (void)setGeneralProps:(NSDictionary<NSString *, NSString *> *)props {
+    [self.gProps setGeneralProps:props];
+}
+
+- (void)removeGeneralProps:(NSArray<NSString *> *)keys {
+    [self.gProps removeGeneralProps:keys];
+}
+    
+- (void)clearGeneralProps {
+    [self.gProps clearGeneralProps];
+}
+
 #pragma mark Event Send
 
 - (void)postEventBuilder:(GrowingBaseBuilder *_Nullable)builder {
