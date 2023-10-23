@@ -28,9 +28,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setGeneralProps:(NSDictionary<NSString *, NSString *> *)props;
 
 - (void)removeGeneralProps:(NSArray<NSString *> *)keys;
-    
+
 - (void)clearGeneralProps;
-    
+
 @end
 
 NS_ASSUME_NONNULL_END

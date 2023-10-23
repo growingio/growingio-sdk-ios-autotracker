@@ -20,6 +20,7 @@
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Event/GrowingDataTraffic.h"
 #import "GrowingTrackerCore/Event/GrowingEventChannel.h"
+#import "GrowingTrackerCore/Event/GrowingGeneralProps.h"
 #import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
@@ -34,7 +35,6 @@
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
-#import "GrowingTrackerCore/Event/GrowingGeneralProps.h"
 
 static const NSUInteger kGrowingMaxDBCacheSize = 100;  // default: write to DB as soon as there are 100 events
 static const NSUInteger kGrowingMaxBatchSize = 500;    // default: send no more than 500 events in every batch
@@ -176,7 +176,7 @@ static GrowingEventManager *sharedInstance = nil;
 - (void)removeGeneralProps:(NSArray<NSString *> *)keys {
     [self.gProps removeGeneralProps:keys];
 }
-    
+
 - (void)clearGeneralProps {
     [self.gProps clearGeneralProps];
 }

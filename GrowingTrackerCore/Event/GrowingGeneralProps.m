@@ -34,18 +34,18 @@
 - (void)removeGeneralProps:(NSArray<NSString *> *)keys {
     [self.internalProps removeObjectsForKeys:keys];
 }
-    
+
 - (void)clearGeneralProps {
     [self.internalProps removeAllObjects];
 }
 
 #pragma mark - Setter && Getter
 
-- (NSDictionary<NSString *,NSString *> *)props {
+- (NSDictionary<NSString *, NSString *> *)props {
     return self.internalProps.copy;
 }
 
-- (NSMutableDictionary<NSString *,NSString *> *)internalProps {
+- (NSMutableDictionary<NSString *, NSString *> *)internalProps {
     if (!_internalProps) {
         _internalProps = [NSMutableDictionary dictionary];
     }
