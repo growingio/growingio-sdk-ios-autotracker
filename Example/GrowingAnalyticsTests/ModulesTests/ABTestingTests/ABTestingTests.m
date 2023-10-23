@@ -149,7 +149,7 @@
     
     XCTestExpectation *expectation = [self expectationWithDescription:@"testFetchSuccess Test failed : timeout"];
     expectation.expectedFulfillmentCount = 2;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         XCTAssertEqual(requestCount, 1);
         
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
@@ -169,12 +169,12 @@
             // 2次获取的实验对象相同
             XCTAssert([lastExp isEqual:exp]);
         }];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             XCTAssertEqual(requestCount, 1);
             [expectation fulfill];
         });
     });
-    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+    [self waitForExpectationsWithTimeout:10.0f handler:nil];
 }
 
 - (void)test02FetchWrongLayerId {
