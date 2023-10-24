@@ -834,7 +834,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
         
         {
             // merge generalProps 4 (hybrid)
-            // customEventType = 2，不是track调用，不加generalProps
+            // customEventType = 0，不是track调用，不加generalProps
             [MockEventQueue.sharedQueue cleanQueue];
 
             Class class = NSClassFromString(@"GrowingHybridBridgeProvider");
@@ -846,7 +846,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
                     NSString *jsonString = @"{\"deviceId\":\"7196f014-d7bc-4bd8-b920-757cb2375ff6\",\"sessionId\":\"d5cbcf77-b38b-4223-954f-c6a2fdc0c098\","
                     @"\"eventType\":\"CUSTOM\",\"platform\":\"Web\",\"timestamp\":1602485628504,\"domain\":\"test-browser.growingio.com\",\"path\":\"/push/"
                     @"web.html\",\"query\":\"a=1&b=2\",\"title\":\"Hybrid测试页面\",\"referralPage\":\"http://test-browser.growingio.com/push\",\"globalSeque"
-                    @"nceId\":99,\"eventSequenceId\":3,\"eventName\":\"eventName\",\"customEventType\":2,\"attributes\":{\"key\":\"value_hybrid\",\"key3\":\"\",\"key4\":null}}";
+                    @"nceId\":99,\"eventSequenceId\":3,\"eventName\":\"eventName\",\"customEventType\":0,\"attributes\":{\"key\":\"value_hybrid\",\"key3\":\"\",\"key4\":null}}";
                     [sharedInstance performSelector:selector2 withObject:jsonString];
                     
                     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
