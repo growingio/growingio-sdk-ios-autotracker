@@ -803,7 +803,8 @@ static NSString *const kGrowingEventDuration = @"event_duration";
         }
         
         {
-            // merge generalProps 3
+            // merge generalProps 3 (hybrid)
+            // customEventType = 1，track调用
             [MockEventQueue.sharedQueue cleanQueue];
 
             Class class = NSClassFromString(@"GrowingHybridBridgeProvider");
@@ -812,7 +813,69 @@ static NSString *const kGrowingEventDuration = @"event_duration";
                 id sharedInstance = [class performSelector:selector];
                 SEL selector2 = NSSelectorFromString(@"parseEventJsonString:");
                 if (sharedInstance && [sharedInstance respondsToSelector:selector2]) {
-                    NSString *jsonString = @"{\"deviceId\":\"7196f014-d7bc-4bd8-b920-757cb2375ff6\",\"sessionId\":\"d5cbcf77-b38b-4223-954f-c6a2fdc0c098\",\"eventType\":\"CUSTOM\",\"platform\":\"Web\",\"timestamp\":1602485628504,\"domain\":\"test-browser.growingio.com\",\"path\":\"/push/web.html\",\"query\":\"a=1&b=2\",\"title\":\"Hybrid测试页面\",\"referralPage\":\"http://test-browser.growingio.com/push\",\"globalSequenceId\":99,\"eventSequenceId\":3,\"eventName\":\"eventName\",\"attributes\":{\"key\":\"value_hybrid\",\"key2\":\"value2\",\"key3\":\"\",\"key4\":null}}";
+                    NSString *jsonString = @"{\"deviceId\":\"7196f014-d7bc-4bd8-b920-757cb2375ff6\",\"sessionId\":\"d5cbcf77-b38b-4223-954f-c6a2fdc0c098\","
+                    @"\"eventType\":\"CUSTOM\",\"platform\":\"Web\",\"timestamp\":1602485628504,\"domain\":\"test-browser.growingio.com\",\"path\":\"/push/"
+                    @"web.html\",\"query\":\"a=1&b=2\",\"title\":\"Hybrid测试页面\",\"referralPage\":\"http://test-browser.growingio.com/push\",\"globalSeque"
+                    @"nceId\":99,\"eventSequenceId\":3,\"eventName\":\"eventName\",\"customEventType\":1,\"attributes\":{\"key\":\"value_hybrid\",\"key3\":\"\",\"key4\":null}}";
+                    [sharedInstance performSelector:selector2 withObject:jsonString];
+                    
+                    NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+                    XCTAssertEqual(events.count, 1);
+
+                    GrowingCustomEvent *event = (GrowingCustomEvent *)events.lastObject;
+                    XCTAssertEqualObjects(event.eventName, @"eventName");
+                    XCTAssertEqual(event.attributes.count, 3);
+                    XCTAssertEqualObjects(event.attributes[@"key"], @"value_hybrid"); //hybrid优先
+                    XCTAssertEqualObjects(event.attributes[@"key2"], @"value2"); //合并generalProps
+                    XCTAssertEqualObjects(event.attributes[@"key3"], @"");
+                }
+            }
+        }
+        
+        {
+            // merge generalProps 4 (hybrid)
+            // customEventType = 2，不是track调用，不加generalProps
+            [MockEventQueue.sharedQueue cleanQueue];
+
+            Class class = NSClassFromString(@"GrowingHybridBridgeProvider");
+            SEL selector = NSSelectorFromString(@"sharedInstance");
+            if (class && [class respondsToSelector:selector]) {
+                id sharedInstance = [class performSelector:selector];
+                SEL selector2 = NSSelectorFromString(@"parseEventJsonString:");
+                if (sharedInstance && [sharedInstance respondsToSelector:selector2]) {
+                    NSString *jsonString = @"{\"deviceId\":\"7196f014-d7bc-4bd8-b920-757cb2375ff6\",\"sessionId\":\"d5cbcf77-b38b-4223-954f-c6a2fdc0c098\","
+                    @"\"eventType\":\"CUSTOM\",\"platform\":\"Web\",\"timestamp\":1602485628504,\"domain\":\"test-browser.growingio.com\",\"path\":\"/push/"
+                    @"web.html\",\"query\":\"a=1&b=2\",\"title\":\"Hybrid测试页面\",\"referralPage\":\"http://test-browser.growingio.com/push\",\"globalSeque"
+                    @"nceId\":99,\"eventSequenceId\":3,\"eventName\":\"eventName\",\"customEventType\":2,\"attributes\":{\"key\":\"value_hybrid\",\"key3\":\"\",\"key4\":null}}";
+                    [sharedInstance performSelector:selector2 withObject:jsonString];
+                    
+                    NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+                    XCTAssertEqual(events.count, 1);
+
+                    GrowingCustomEvent *event = (GrowingCustomEvent *)events.lastObject;
+                    XCTAssertEqualObjects(event.eventName, @"eventName");
+                    XCTAssertEqual(event.attributes.count, 2);
+                    XCTAssertEqualObjects(event.attributes[@"key"], @"value_hybrid");
+                    XCTAssertEqualObjects(event.attributes[@"key3"], @"");
+                }
+            }
+        }
+        
+        {
+            // merge generalProps 5 (hybrid)
+            // customEventType = nil，无法判断是否track调用，统一加generalProps
+            [MockEventQueue.sharedQueue cleanQueue];
+
+            Class class = NSClassFromString(@"GrowingHybridBridgeProvider");
+            SEL selector = NSSelectorFromString(@"sharedInstance");
+            if (class && [class respondsToSelector:selector]) {
+                id sharedInstance = [class performSelector:selector];
+                SEL selector2 = NSSelectorFromString(@"parseEventJsonString:");
+                if (sharedInstance && [sharedInstance respondsToSelector:selector2]) {
+                    NSString *jsonString = @"{\"deviceId\":\"7196f014-d7bc-4bd8-b920-757cb2375ff6\",\"sessionId\":\"d5cbcf77-b38b-4223-954f-c6a2fdc0c098\","
+                    @"\"eventType\":\"CUSTOM\",\"platform\":\"Web\",\"timestamp\":1602485628504,\"domain\":\"test-browser.growingio.com\",\"path\":\"/push/"
+                    @"web.html\",\"query\":\"a=1&b=2\",\"title\":\"Hybrid测试页面\",\"referralPage\":\"http://test-browser.growingio.com/push\",\"globalSeque"
+                    @"nceId\":99,\"eventSequenceId\":3,\"eventName\":\"eventName\",\"attributes\":{\"key\":\"value_hybrid\",\"key3\":\"\",\"key4\":null}}";
                     [sharedInstance performSelector:selector2 withObject:jsonString];
                     
                     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
