@@ -31,6 +31,10 @@ static NSString *const kGrowingEventDuration = @"event_duration";
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wnonnull"
+#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
+#pragma clang diagnostic ignored "-Wobjc-literal-conversion"
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 
 @implementation A0GrowingAnalyticsTest
 
@@ -131,14 +135,10 @@ static NSString *const kGrowingEventDuration = @"event_duration";
 
     {
         [MockEventQueue.sharedQueue cleanQueue];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
-#pragma clang diagnostic ignored "-Wobjc-literal-conversion"
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setLoginUserAttributes:nil]);
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setLoginUserAttributes:@"value"]);
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setLoginUserAttributes:@{@1: @"value"}]);
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setLoginUserAttributes:@{@"key": @1}]);
-#pragma clang diagnostic pop
         NSArray<GrowingBaseEvent *> *events =
             [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeLoginUserAttributes];
         XCTAssertEqual(events.count, 0);
@@ -158,13 +158,9 @@ static NSString *const kGrowingEventDuration = @"event_duration";
 
     {
         [MockEventQueue.sharedQueue cleanQueue];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wobjc-literal-conversion"
-#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:nil]);
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@""]);
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@1]);
-#pragma clang diagnostic pop
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
         XCTAssertEqual(events.count, 0);
     }
@@ -183,9 +179,6 @@ static NSString *const kGrowingEventDuration = @"event_duration";
 
     {
         [MockEventQueue.sharedQueue cleanQueue];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
-#pragma clang diagnostic ignored "-Wobjc-literal-conversion"
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:nil withAttributes:@{@"key": @"value"}]);
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"" withAttributes:@{@"key": @"value"}]);
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@1 withAttributes:@{@"key": @"value"}]);
@@ -199,7 +192,6 @@ static NSString *const kGrowingEventDuration = @"event_duration";
                                                                 withAttributes:@{
                                                                     @"key": @1
                                                                 }]);
-#pragma clang diagnostic pop
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
         XCTAssertEqual(events.count, 0);
     }
@@ -223,9 +215,6 @@ static NSString *const kGrowingEventDuration = @"event_duration";
     {
         // wrong eventName
         [MockEventQueue.sharedQueue cleanQueue];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wobjc-literal-conversion"
-#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerStart:nil]);
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerStart:@""]);
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerStart:@1]);
@@ -241,7 +230,6 @@ static NSString *const kGrowingEventDuration = @"event_duration";
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] removeTimer:nil]);
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] removeTimer:@""]);
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] removeTimer:@1]);
-#pragma clang diagnostic pop
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
         XCTAssertEqual(events.count, 0);
     }
@@ -347,7 +335,6 @@ static NSString *const kGrowingEventDuration = @"event_duration";
         NSNumber *sessionInterval = [GrowingSession.currentSession safePerformSelector:@selector(sessionInterval)];
         sleep((int)(sessionInterval.longLongValue / 1000LL) + 1);
 
-        NSString *oldSessionId = GrowingSession.currentSession.sessionId;
         [GrowingSession.currentSession performSelector:@selector(applicationDidBecomeActive)];
 
         sleep(1);  // 2 > duration > 1
@@ -449,9 +436,6 @@ static NSString *const kGrowingEventDuration = @"event_duration";
 
     {
         [MockEventQueue.sharedQueue cleanQueue];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
-#pragma clang diagnostic ignored "-Wobjc-literal-conversion"
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerEnd:nil withAttributes:@{@"key": @"value"}]);
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerEnd:@"" withAttributes:@{@"key": @"value"}]);
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerEnd:@1 withAttributes:@{@"key": @"value"}]);
@@ -462,7 +446,6 @@ static NSString *const kGrowingEventDuration = @"event_duration";
                                                                  @1: @"value"
                                                              }]);
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerEnd:@"eventName" withAttributes:@{@"key": @1}]);
-#pragma clang diagnostic pop
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
         XCTAssertEqual(events.count, 0);
     }
@@ -503,10 +486,6 @@ static NSString *const kGrowingEventDuration = @"event_duration";
     {
         [MockEventQueue.sharedQueue cleanQueue];
         NSString *timerId = [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
-#pragma clang diagnostic ignored "-Wobjc-literal-conversion"
         GrowingAttributesBuilder *builder = GrowingAttributesBuilder.new;
         [builder setString:@"value" forKey:@"key"];
         [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@"key2"];
@@ -560,7 +539,6 @@ static NSString *const kGrowingEventDuration = @"event_duration";
             [builder setArray:@[@"value1", @"value2", @"value3"] forKey:@1];
             XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackTimerEnd:timerId withAttributes:builder.build]);
         }
-#pragma clang diagnostic pop
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
         XCTAssertEqual(events.count, 0);
     }
@@ -726,13 +704,10 @@ static NSString *const kGrowingEventDuration = @"event_duration";
 
 - (void)test19AutotrackPageWithInvalidAliasTest {
     UIViewController *controller = [[UIViewController alloc] init];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
     [[GrowingAutotracker sharedInstance] autotrackPage:nil alias:@"XCTest"];
     [[GrowingAutotracker sharedInstance] autotrackPage:controller alias:nil];
     [[GrowingAutotracker sharedInstance] autotrackPage:controller alias:@""];
     [[GrowingAutotracker sharedInstance] autotrackPage:controller alias:@1];
-#pragma clang diagnostic pop
     [controller viewDidAppear:NO];
 
     XCTestExpectation *expectation =
@@ -749,14 +724,10 @@ static NSString *const kGrowingEventDuration = @"event_duration";
 
 - (void)test20AutotrackPageWithInvalidAttributesTest {
     UIViewController *controller = [[UIViewController alloc] init];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
-#pragma clang diagnostic ignored "-Wobjc-literal-conversion"
     [[GrowingAutotracker sharedInstance] autotrackPage:controller alias:@"XCTest" attributes:nil];
     [[GrowingAutotracker sharedInstance] autotrackPage:controller alias:@"XCTest" attributes:@"value"];
     [[GrowingAutotracker sharedInstance] autotrackPage:controller alias:@"XCTest" attributes:@{@1: @"value"}];
     [[GrowingAutotracker sharedInstance] autotrackPage:controller alias:@"XCTest" attributes:@{@"key": @1}];
-#pragma clang diagnostic pop
     [controller viewDidAppear:NO];
 
     XCTestExpectation *expectation =
@@ -816,6 +787,45 @@ static NSString *const kGrowingEventDuration = @"event_duration";
             GrowingCustomEvent *event = (GrowingCustomEvent *)events.lastObject;
             XCTAssertEqualObjects(event.eventName, @"eventName");
             XCTAssertEqualObjects(event.attributes[@"key2"], @"value2");
+        }
+        
+        {
+            // merge generalProps 2
+            [MockEventQueue.sharedQueue cleanQueue];
+                        
+            [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName" withAttributes:@{@"key" : @"value_merged"}];
+            NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+            XCTAssertEqual(events.count, 1);
+
+            GrowingCustomEvent *event = (GrowingCustomEvent *)events.lastObject;
+            XCTAssertEqualObjects(event.eventName, @"eventName");
+            XCTAssertEqualObjects(event.attributes[@"key"], @"value_merged");
+        }
+        
+        {
+            // merge generalProps 3
+            [MockEventQueue.sharedQueue cleanQueue];
+
+            Class class = NSClassFromString(@"GrowingHybridBridgeProvider");
+            SEL selector = NSSelectorFromString(@"sharedInstance");
+            if (class && [class respondsToSelector:selector]) {
+                id sharedInstance = [class performSelector:selector];
+                SEL selector2 = NSSelectorFromString(@"parseEventJsonString:");
+                if (sharedInstance && [sharedInstance respondsToSelector:selector2]) {
+                    NSString *jsonString = @"{\"deviceId\":\"7196f014-d7bc-4bd8-b920-757cb2375ff6\",\"sessionId\":\"d5cbcf77-b38b-4223-954f-c6a2fdc0c098\",\"eventType\":\"CUSTOM\",\"platform\":\"Web\",\"timestamp\":1602485628504,\"domain\":\"test-browser.growingio.com\",\"path\":\"/push/web.html\",\"query\":\"a=1&b=2\",\"title\":\"Hybrid测试页面\",\"referralPage\":\"http://test-browser.growingio.com/push\",\"globalSequenceId\":99,\"eventSequenceId\":3,\"eventName\":\"eventName\",\"attributes\":{\"key\":\"value_hybrid\",\"key2\":\"value2\",\"key3\":\"\",\"key4\":null}}";
+                    [sharedInstance performSelector:selector2 withObject:jsonString];
+                    
+                    NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+                    XCTAssertEqual(events.count, 1);
+
+                    GrowingCustomEvent *event = (GrowingCustomEvent *)events.lastObject;
+                    XCTAssertEqualObjects(event.eventName, @"eventName");
+                    XCTAssertEqual(event.attributes.count, 3);
+                    XCTAssertEqualObjects(event.attributes[@"key"], @"value_hybrid");
+                    XCTAssertEqualObjects(event.attributes[@"key2"], @"value2");
+                    XCTAssertEqualObjects(event.attributes[@"key3"], @"");
+                }
+            }
         }
         
         {
@@ -908,14 +918,10 @@ static NSString *const kGrowingEventDuration = @"event_duration";
     {
         // set wrong generalProps
         [MockEventQueue.sharedQueue cleanQueue];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
-#pragma clang diagnostic ignored "-Wobjc-literal-conversion"
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setGeneralProps:nil]);
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setGeneralProps:@"value"]);
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setGeneralProps:@{ @1: @"value" }]);
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setGeneralProps:@{@"key": @1}]);
-#pragma clang diagnostic pop
         [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName" withAttributes:@{@"key2": @"value"}];
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
         XCTAssertEqual(events.count, 1);
@@ -929,15 +935,11 @@ static NSString *const kGrowingEventDuration = @"event_duration";
     {
         // remove generalProps with wrong keys
         [MockEventQueue.sharedQueue cleanQueue];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wincompatible-pointer-types"
-#pragma clang diagnostic ignored "-Wobjc-literal-conversion"
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] removeGeneralProps:nil]);
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] removeGeneralProps:@"value"]);
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] removeGeneralProps:@{@"key": @"value"}]);
         NSArray *array = @[@"key", @(1)];
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] removeGeneralProps:array]);
-#pragma clang diagnostic pop
         [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"];
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
         XCTAssertEqual(events.count, 1);

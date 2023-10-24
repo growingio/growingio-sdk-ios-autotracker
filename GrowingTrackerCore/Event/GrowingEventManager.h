@@ -83,7 +83,7 @@
 /// @param interceptor 拦截者
 - (void)removeInterceptor:(NSObject<GrowingEventInterceptor> *_Nonnull)interceptor;
 
-- (NSDictionary<NSString *, NSString *> *)generalProps;
+- (NSDictionary<NSString *, NSString *> *_Nonnull)generalProps;
 - (void)setGeneralProps:(NSDictionary<NSString *, NSString *> *_Nonnull)props;
 - (void)removeGeneralProps:(NSArray<NSString *> *_Nonnull)keys;
 - (void)clearGeneralProps;
