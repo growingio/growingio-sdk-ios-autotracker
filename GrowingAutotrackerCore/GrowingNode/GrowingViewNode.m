@@ -98,7 +98,8 @@
         originxcontent = [NSString stringWithFormat:@"/%@", view.growingNodeSubIndex];
     } else {
         xpath = [self.xpath stringByAppendingFormat:@"/%@", view.growingNodeSubPath];
-        xcontent = isSimilar ? [self.originxcontent stringByAppendingFormat:@"/%@", view.growingNodeSubSimilarIndex] : [self.xcontent stringByAppendingFormat:@"/%@", view.growingNodeSubSimilarIndex];
+        xcontent = isSimilar ? [self.originxcontent stringByAppendingFormat:@"/%@", view.growingNodeSubSimilarIndex]
+                             : [self.xcontent stringByAppendingFormat:@"/%@", view.growingNodeSubSimilarIndex];
         originxcontent = [self.originxcontent stringByAppendingFormat:@"/%@", view.growingNodeSubIndex];
     }
     NSString *parentXpath = self.view.growingNodeUserInteraction ? self.xpath : self.clickableParentXpath;

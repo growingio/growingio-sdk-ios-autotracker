@@ -44,7 +44,7 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
         BOOL isSimilar = [node isKindOfClass:[UITableViewCell class]] ||
                          [node isKindOfClass:[UICollectionReusableView class]] ||
                          [node isKindOfClass:NSClassFromString(@"UISegment")];
-        
+
         [originxcontentArray addObject:node.growingNodeSubIndex];
         if (isSimilar && !hasSimilarIndexInside) {
             [xcontentArray addObject:node.growingNodeSubSimilarIndex];
