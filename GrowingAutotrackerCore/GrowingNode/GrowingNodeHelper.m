@@ -34,17 +34,21 @@ static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
     NSMutableArray *viewPathArray = [NSMutableArray array];
     NSMutableArray *xcontentArray = [NSMutableArray array];
     NSMutableArray *originxcontentArray = [NSMutableArray array];
-    BOOL isSimilar = YES;
+    BOOL hasSimilarIndexInside = NO;
     while (node && [node isKindOfClass:[UIView class]]) {
         if ([self isIgnoredPrivateView:node]) {
             node = node.growingNodeParent;
             continue;
         }
 
+        BOOL isSimilar = [node isKindOfClass:[UITableViewCell class]] ||
+                         [node isKindOfClass:[UICollectionReusableView class]] ||
+                         [node isKindOfClass:NSClassFromString(@"UISegment")];
+        
         [originxcontentArray addObject:node.growingNodeSubIndex];
-        if (isSimilar) {
+        if (isSimilar && !hasSimilarIndexInside) {
             [xcontentArray addObject:node.growingNodeSubSimilarIndex];
-            isSimilar = NO;
+            hasSimilarIndexInside = YES;
         } else {
             [xcontentArray addObject:node.growingNodeSubIndex];
         }
