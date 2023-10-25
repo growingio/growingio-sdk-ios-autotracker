@@ -3,7 +3,7 @@ PODS:
     - GrowingAnalytics/TrackerCore (= 4.0.0-beta)
   - GrowingAnalytics/APM (4.0.0-beta):
     - GrowingAnalytics/TrackerCore (= 4.0.0-beta)
-    - GrowingAPM/Core
+    - GrowingAPM/Core (~> 1.0.0)
   - GrowingAnalytics/Autotracker (4.0.0-beta):
     - GrowingAnalytics/AutotrackerCore (= 4.0.0-beta)
     - GrowingAnalytics/DefaultServices (= 4.0.0-beta)
@@ -12,7 +12,7 @@ PODS:
     - GrowingAnalytics/WebCircle (= 4.0.0-beta)
   - GrowingAnalytics/AutotrackerCore (4.0.0-beta):
     - GrowingAnalytics/TrackerCore (= 4.0.0-beta)
-    - GrowingUtils/AutotrackerCore (= 1.0.0)
+    - GrowingUtils/AutotrackerCore (~> 1.0.0)
   - GrowingAnalytics/Compression (4.0.0-beta):
     - GrowingAnalytics/TrackerCore (= 4.0.0-beta)
   - GrowingAnalytics/Database (4.0.0-beta):
@@ -51,7 +51,7 @@ PODS:
     - GrowingAnalytics/MobileDebugger (= 4.0.0-beta)
     - GrowingAnalytics/TrackerCore (= 4.0.0-beta)
   - GrowingAnalytics/TrackerCore (4.0.0-beta):
-    - GrowingUtils/TrackerCore (= 1.0.0)
+    - GrowingUtils/TrackerCore (~> 1.0.0)
   - GrowingAnalytics/WebCircle (4.0.0-beta):
     - GrowingAnalytics/AutotrackerCore (= 4.0.0-beta)
     - GrowingAnalytics/Hybrid (= 4.0.0-beta)
@@ -59,15 +59,15 @@ PODS:
     - GrowingAnalytics/WebSocket (= 4.0.0-beta)
   - GrowingAnalytics/WebSocket (4.0.0-beta):
     - GrowingAnalytics/TrackerCore (= 4.0.0-beta)
-  - GrowingAPM (0.0.15):
-    - GrowingAPM/Core (= 0.0.15)
-    - GrowingAPM/CrashMonitor (= 0.0.15)
-    - GrowingAPM/UIMonitor (= 0.0.15)
-  - GrowingAPM/Core (0.0.15):
+  - GrowingAPM (1.0.0):
+    - GrowingAPM/Core (= 1.0.0)
+    - GrowingAPM/CrashMonitor (= 1.0.0)
+    - GrowingAPM/UIMonitor (= 1.0.0)
+  - GrowingAPM/Core (1.0.0):
     - GrowingUtils/TrackerCore
-  - GrowingAPM/CrashMonitor (0.0.15):
+  - GrowingAPM/CrashMonitor (1.0.0):
     - GrowingAPM/Core
-  - GrowingAPM/UIMonitor (0.0.15):
+  - GrowingAPM/UIMonitor (1.0.0):
     - GrowingAPM/Core
   - GrowingToolsKit (1.2.1):
     - GrowingToolsKit/Default (= 1.2.1)
@@ -117,9 +117,9 @@ PODS:
   - Protobuf (3.24.4)
   - SDCycleScrollView (1.82):
     - SDWebImage (>= 5.0.0)
-  - SDWebImage (5.18.2):
-    - SDWebImage/Core (= 5.18.2)
-  - SDWebImage/Core (5.18.2)
+  - SDWebImage (5.18.3):
+    - SDWebImage/Core (= 5.18.3)
+  - SDWebImage/Core (5.18.3)
 
 DEPENDENCIES:
   - GrowingAnalytics/Advert (from `../`)
@@ -150,15 +150,15 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  GrowingAnalytics: 7f5da039bce1b155fb10e2d5699049a4b984fb1a
-  GrowingAPM: 83118328af06eec2a987f47b8e62a9d6d986994c
+  GrowingAnalytics: 0e4304f7a24ce879564f1139678ec114540e57d9
+  GrowingAPM: 6750d66ca6876c2c7d22c1c087625bc9ccc3430c
   GrowingToolsKit: 134a78b023c4ab7da51e0a1111e9956a96e42dab
   GrowingUtils: f0a9858cfd15dc584367957f24a784813a68d637
   KIF: 7660c626b0f2d4562533590960db70a36d640558
   LBXScan: e51449f0832d1fe17da632af0d22adeb3cfa3543
   Protobuf: 351e9022fe13a6e2af00e9aefc22077cb88520f8
   SDCycleScrollView: a0d74c3384caa72bdfc81470bdbc8c14b3e1fbcf
-  SDWebImage: c0de394d7cf7f9838aed1fd6bb6037654a4572e4
+  SDWebImage: 96e0c18ef14010b7485210e92fac888587ebb958
 
 PODFILE CHECKSUM: eadc8a2cddef5401cfafd1d713a6bacab48232e6
 
