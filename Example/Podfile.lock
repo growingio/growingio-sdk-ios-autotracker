@@ -1,4 +1,6 @@
 PODS:
+  - GrowingAnalytics/ABTesting (4.0.0-beta.3):
+    - GrowingAnalytics/TrackerCore (= 4.0.0-beta.3)
   - GrowingAnalytics/Ads (4.0.0-beta.3):
     - GrowingAnalytics/TrackerCore (= 4.0.0-beta.3)
   - GrowingAnalytics/APM (4.0.0-beta.3):
@@ -114,7 +116,20 @@ PODS:
   - LBXScan/Types (2.3)
   - LBXScan/UI (2.3):
     - LBXScan/Types (~> 2.2)
-  - Protobuf (3.24.4)
+  - OHHTTPStubs (9.1.0):
+    - OHHTTPStubs/Default (= 9.1.0)
+  - OHHTTPStubs/Core (9.1.0)
+  - OHHTTPStubs/Default (9.1.0):
+    - OHHTTPStubs/Core
+    - OHHTTPStubs/JSON
+    - OHHTTPStubs/NSURLSession
+    - OHHTTPStubs/OHPathHelpers
+  - OHHTTPStubs/JSON (9.1.0):
+    - OHHTTPStubs/Core
+  - OHHTTPStubs/NSURLSession (9.1.0):
+    - OHHTTPStubs/Core
+  - OHHTTPStubs/OHPathHelpers (9.1.0)
+  - Protobuf (3.25.1)
   - SDCycleScrollView (1.82):
     - SDWebImage (>= 5.0.0)
   - SDWebImage (5.18.3):
@@ -122,6 +137,7 @@ PODS:
   - SDWebImage/Core (5.18.3)
 
 DEPENDENCIES:
+  - GrowingAnalytics/ABTesting (from `../`)
   - GrowingAnalytics/Ads (from `../`)
   - GrowingAnalytics/APM (from `../`)
   - GrowingAnalytics/Autotracker (from `../`)
@@ -132,6 +148,7 @@ DEPENDENCIES:
   - KIF
   - LBXScan/LBXNative (= 2.3)
   - LBXScan/UI (= 2.3)
+  - OHHTTPStubs
   - SDCycleScrollView (~> 1.75)
 
 SPEC REPOS:
@@ -141,6 +158,7 @@ SPEC REPOS:
     - GrowingUtils
     - KIF
     - LBXScan
+    - OHHTTPStubs
     - Protobuf
     - SDCycleScrollView
     - SDWebImage
@@ -150,16 +168,17 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  GrowingAnalytics: 785217dface3f19e7be09ecf92b5b2fd5897ba7e
+  GrowingAnalytics: a2fa61fd737c1b955d7b99bc7e5471057f963852
   GrowingAPM: 6750d66ca6876c2c7d22c1c087625bc9ccc3430c
   GrowingToolsKit: faf259faa5e760150ae8d352acbb841ba84f3913
   GrowingUtils: f0a9858cfd15dc584367957f24a784813a68d637
   KIF: 7660c626b0f2d4562533590960db70a36d640558
   LBXScan: e51449f0832d1fe17da632af0d22adeb3cfa3543
-  Protobuf: 351e9022fe13a6e2af00e9aefc22077cb88520f8
+  OHHTTPStubs: 90eac6d8f2c18317baeca36698523dc67c513831
+  Protobuf: d94761c33f1239c0a43a0817ca1a5f7f7c900241
   SDCycleScrollView: a0d74c3384caa72bdfc81470bdbc8c14b3e1fbcf
   SDWebImage: 96e0c18ef14010b7485210e92fac888587ebb958
 
-PODFILE CHECKSUM: 681f1e137fba0fda695485811bb29927d7d0e144
+PODFILE CHECKSUM: dfb36e622af589899783fb30a642b3bf79e3a960
 
 COCOAPODS: 1.14.2
