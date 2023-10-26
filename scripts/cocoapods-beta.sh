@@ -3,11 +3,11 @@ set -x
 
 POD_BETA_VERSION=`cat GrowingAnalytics.podspec | grep 's.version\s*=' | grep -Eo '[0-9]+.[0-9]+.[0-9]+-beta.[0-9]+'`
 
-if  [ ! -n "$POD_BETA_VERSION" ] ;then
+if  [ -n "$POD_BETA_VERSION" ] ;then
     echo "spec文件中，版本号包含beta，且配置正确，继续"
 else
     echo "spec文件中，版本号配置beta错误，无法进行beta版本发布"
-    exit 1
+    exit 0
 fi
 
 TAG_VERSION=$(git tag | grep $POD_BETA_VERSION)
