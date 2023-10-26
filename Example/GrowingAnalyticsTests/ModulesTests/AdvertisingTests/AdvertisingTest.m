@@ -1,5 +1,5 @@
 //
-//  AdvertTest.m
+//  AdvertisingTest.m
 //  GrowingAnalytics
 //
 //  Created by YoloMao on 2022/9/1.
@@ -24,16 +24,16 @@
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 
-#import "Modules/Advert/Event/GrowingAdvertEventType.h"
-#import "Modules/Advert/Utils/GrowingAdUtils.h"
+#import "Modules/Advertising/Event/GrowingAdEventType.h"
+#import "Modules/Advertising/Utils/GrowingAdUtils.h"
 
 #import "MockEventQueue.h"
 
-@interface AdvertTest : XCTestCase
+@interface AdvertisingTest : XCTestCase
 
 @end
 
-@implementation AdvertTest
+@implementation AdvertisingTest
 
 - (void)setUp {
     // 恢复为未发送激活事件

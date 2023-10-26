@@ -17,11 +17,11 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "Modules/Advert/Utils/GrowingAdUtils.h"
+#import "Modules/Advertising/Utils/GrowingAdUtils.h"
 #import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
-#import "Modules/Advert/Public/GrowingAdvertising.h"
+#import "Modules/Advertising/Public/GrowingAdvertising.h"
 
 static NSString *const kGrowingAdertisingFileKey = @"GrowingAdertisingFileKey";
 static NSString *const kGrowingAdIsActivateDeferKey = @"GrowingAdvertisingActivateDefer";

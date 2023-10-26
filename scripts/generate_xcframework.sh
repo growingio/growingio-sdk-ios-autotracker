@@ -42,10 +42,10 @@ MODULES=()
 APMMODULES=()
 chooseModules() {
 	if [ $MAIN_BUNDLE == 'GrowingAutotracker' ]; then
-		modules=("Advert" "APMUIMonitor" "APMCrashMonitor" "Done" "Quit")
+		modules=("Ads" "APMUIMonitor" "APMCrashMonitor" "Done" "Quit")
 		chooseModulesWith ${modules[*]}
 	elif [ $MAIN_BUNDLE == 'GrowingTracker' ]; then
-		modules=("Hybrid" "Advert" "APMUIMonitor" "APMCrashMonitor" "Done" "Quit")
+		modules=("Hybrid" "Ads" "APMUIMonitor" "APMCrashMonitor" "Done" "Quit")
 		chooseModulesWith ${modules[*]}
 	fi
 }
@@ -58,9 +58,9 @@ chooseModulesWith() {
 				MODULES+=("Hybrid")
 			fi
 			;;
-		"Advert")
-			if [[ ! ${MODULES[*]} =~ "Advert" ]]; then
-				MODULES+=("Advert")
+		"Ads")
+			if [[ ! ${MODULES[*]} =~ "Ads" ]]; then
+				MODULES+=("Ads")
 			fi
 			;;
 		"APMUIMonitor")

@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'GrowingAnalytics'
-  s.version          = '4.0.0-beta.1'
+  s.version          = '4.0.0-beta.2'
   s.summary          = 'iOS SDK of GrowingIO.'
   s.description      = <<-DESC
 GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和行为数据等。目前支持代码埋点、无埋点、可视化圈选、热图等功能。
@@ -159,11 +159,11 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     hybrid.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
   end
 
-  s.subspec 'Advert' do |advert|
-    advert.ios.deployment_target = '10.0'
-    advert.source_files = 'Modules/Advert/**/*{.h,.m,.c,.cpp,.mm}'
-    advert.public_header_files = 'Modules/Advert/Public/*.h'
-    advert.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
+  s.subspec 'Ads' do |ads|
+    ads.ios.deployment_target = '10.0'
+    ads.source_files = 'Modules/Advertising/**/*{.h,.m,.c,.cpp,.mm}'
+    ads.public_header_files = 'Modules/Advertising/Public/*.h'
+    ads.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
   end
   
   s.subspec 'APM' do |apm|

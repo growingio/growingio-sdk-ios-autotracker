@@ -11,7 +11,7 @@ project 'Example'
 
 target 'Example' do
   pod 'GrowingAnalytics/Autotracker', :path => '../'
-  pod 'GrowingAnalytics/Advert', :path => '../'
+  pod 'GrowingAnalytics/Ads', :path => '../'
   pod 'GrowingAnalytics/ImpressionTrack', :path => '../'
 
 #  pod 'GrowingAnalytics/Tracker', :path => '../'
@@ -51,14 +51,14 @@ target 'ProtobufTests' do
   pod 'GrowingAnalytics/Autotracker', :path => '../'
 end
 
-target 'AdvertTests' do
+target 'AdvertisingTests' do
   pod 'GrowingAnalytics/Autotracker', :path => '../'
-  pod 'GrowingAnalytics/Advert', :path => '../'
+  pod 'GrowingAnalytics/Ads', :path => '../'
 end
 
 target 'ExampleiOS13' do
   pod 'GrowingAnalytics/Autotracker', :path => '../'
-  pod 'GrowingAnalytics/Advert', :path => '../'
+  pod 'GrowingAnalytics/Ads', :path => '../'
 
   # 这一行勿删，避免 Multiple commands produce 报错
   # 背景：GrowingToolsKit(version 1.0.9+) 依赖 GrowingAPM

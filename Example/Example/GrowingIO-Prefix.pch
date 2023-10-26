@@ -28,9 +28,9 @@
 #endif
 
 #if __has_include("GrowingAdvertising.h")
-// Advert Module
+// Ads Module
 #import "GrowingAdvertising.h"
-#define SDKADVERTMODULE
+#define SDKADSMODULE
 #endif
 
 #if __has_include("GrowingAPM+Private.h")

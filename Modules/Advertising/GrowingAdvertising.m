@@ -17,12 +17,12 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "Modules/Advert/Public/GrowingAdvertising.h"
-#import "Modules/Advert/AppleSearchAds/GrowingAsaFetcher.h"
-#import "Modules/Advert/Event/GrowingActivateEvent.h"
-#import "Modules/Advert/Event/GrowingAdvertEventType.h"
-#import "Modules/Advert/Request/GrowingAdPreRequest.h"
-#import "Modules/Advert/Utils/GrowingAdUtils.h"
+#import "Modules/Advertising/Public/GrowingAdvertising.h"
+#import "Modules/Advertising/AppleSearchAds/GrowingAsaFetcher.h"
+#import "Modules/Advertising/Event/GrowingActivateEvent.h"
+#import "Modules/Advertising/Event/GrowingAdEventType.h"
+#import "Modules/Advertising/Request/GrowingAdPreRequest.h"
+#import "Modules/Advertising/Utils/GrowingAdUtils.h"
 
 #import "GrowingTrackerCore/Core/GrowingContext.h"
 #import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
@@ -395,7 +395,7 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
             return;
         }
 
-        GrowingActivateBuilder *builder = GrowingActivateEvent.builder.setEventName(GrowingAdvertEventNameActivate);
+        GrowingActivateBuilder *builder = GrowingActivateEvent.builder.setEventName(GrowingAdEventNameActivate);
         if (userAgent.length > 0) {
             builder.setAttributes(@{@"userAgent": userAgent.copy});
         }
@@ -411,7 +411,7 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
         }
 
         GrowingActivateBuilder *builder =
-            GrowingActivateEvent.builder.setEventName(GrowingAdvertEventNameDefer).setAttributes(dic);
+            GrowingActivateEvent.builder.setEventName(GrowingAdEventNameDefer).setAttributes(dic);
         [[GrowingEventManager sharedInstance] postEventBuilder:builder];
         [GrowingAdUtils setActivateWrote:YES];
         [GrowingAdUtils setActivateDefer:YES];
@@ -425,7 +425,7 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
         }
 
         GrowingActivateBuilder *builder =
-            GrowingActivateEvent.builder.setEventName(GrowingAdvertEventNameReengage).setAttributes(dic);
+            GrowingActivateEvent.builder.setEventName(GrowingAdEventNameReengage).setAttributes(dic);
         if ([GrowingSession currentSession].state == GrowingSessionStateActive) {
             [[GrowingEventManager sharedInstance] postEventBuilder:builder];
         } else {
