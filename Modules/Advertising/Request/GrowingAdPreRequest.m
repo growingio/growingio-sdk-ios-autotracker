@@ -17,9 +17,9 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "Modules/Advert/Request/GrowingAdPreRequest.h"
-#import "Modules/Advert/Public/GrowingAdvertising.h"
-#import "Modules/Advert/Request/GrowingAdRequestHeaderAdapter.h"
+#import "Modules/Advertising/Request/GrowingAdPreRequest.h"
+#import "Modules/Advertising/Public/GrowingAdvertising.h"
+#import "Modules/Advertising/Request/GrowingAdRequestHeaderAdapter.h"
 
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Network/Request/Adapter/GrowingRequestAdapter.h"

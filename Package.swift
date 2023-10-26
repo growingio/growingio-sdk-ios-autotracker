@@ -30,7 +30,7 @@ let package = Package(
         .tracker,
         .Module.imp,
         .Module.hybrid,
-        .Module.advert,
+        .Module.ads,
         .Module.apm,
     ],
     dependencies: [
@@ -75,7 +75,7 @@ let package = Package(
         .Module.webCircle,
         .Module.imp,
         .Module.hybrid,
-        .Module.advert,
+        .Module.ads,
         .Module.apm,
 
         // MARK: - Services
@@ -99,7 +99,7 @@ extension Product {
     enum Module {
         static let imp = library(name: .imp, targets: [.imp])
         static let hybrid = library(name: .hybrid, targets: [.hybrid])
-        static let advert = library(name: .advert, targets: [.advert])
+        static let ads = library(name: .ads, targets: [.ads])
         static let apm = library(name: .apm, targets: [.apm])
     }
 }
@@ -215,11 +215,11 @@ extension Target {
                                    cSettings: [.hspFor(.Path.hybrid)],
                                    linkerSettings: [.WebKit])
 
-        static let advert = target(name: .advert,
+        static let ads = target(name: .ads,
                                    dependencies: [.Core.trackerCore],
-                                   path: .Path.advert,
+                                   path: .Path.ads,
                                    publicHeadersPath: .Path.publicHeaders,
-                                   cSettings: [.hspFor(.Path.advert)])
+                                   cSettings: [.hspFor(.Path.ads)])
 
         static let apm = target(name: .apm,
                                 dependencies: [
@@ -357,7 +357,7 @@ extension String {
     static let webCircle = "GrowingModule_WebCircle"
     static let imp = "GrowingModule_ImpressionTrack"
     static let hybrid = "GrowingModule_Hybrid"
-    static let advert = "GrowingModule_Advert"
+    static let ads = "GrowingModule_Ads"
     static let apm = "GrowingModule_APM"
 
     // Services
@@ -391,7 +391,7 @@ extension String {
         static let webCircle = "Modules/WebCircle"
         static let imp = "Modules/ImpressionTrack"
         static let hybrid = "Modules/Hybrid"
-        static let advert = "Modules/Advert"
+        static let ads = "Modules/Advertising"
         static let apm = "Modules/APM"
         static let coreServices = "Modules/DefaultServices"
 

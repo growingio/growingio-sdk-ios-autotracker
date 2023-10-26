@@ -76,6 +76,7 @@
 		33A0F692F1D1738D6854E19A /* Pods_HostApplicationTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42F5EA0EFE2552358C35A0F5 /* Pods_HostApplicationTests.framework */; };
 		3406842B2A668EB700E25216 /* A3PageEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3406842A2A668EB700E25216 /* A3PageEventsTest.m */; };
 		341A579A2ABAA23E0052840A /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 341A57992ABAA2380052840A /* libc++.tbd */; };
+		3432CF372AEA58A800E555A9 /* AdvertisingTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3432CF362AEA58A800E555A9 /* AdvertisingTest.m */; };
 		34486D3D27B1049000FA8223 /* UITapGestureRecognizerAutotrackTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34486D3B27B102B000FA8223 /* UITapGestureRecognizerAutotrackTest.m */; };
 		34664587278EEEA6009C351C /* A0GrowingAnalyticsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3A224F638BB0028FE94 /* A0GrowingAnalyticsTest.m */; };
 		346D6C7A2ABC355C00676A32 /* GIOWebViewWarmuper.m in Sources */ = {isa = PBXBuildFile; fileRef = 346D6C792ABC355C00676A32 /* GIOWebViewWarmuper.m */; };
@@ -119,7 +120,6 @@
 		349975FA28BF301500466640 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 349975F928BF301500466640 /* iAd.framework */; };
 		349975FB28BF303100466640 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 349975F928BF301500466640 /* iAd.framework */; };
 		349975FC28BF303B00466640 /* AdServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 349975F728BF300F00466640 /* AdServices.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		349B529228C088F100EE88FE /* AdvertTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 349B528528C086C600EE88FE /* AdvertTest.m */; };
 		349DA46828F2BD5400C4281F /* Others.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 349DA46728F2BC5400C4281F /* Others.storyboard */; };
 		349F1488285B503B00437F53 /* GIODefaultWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 349F1484285B503A00437F53 /* GIODefaultWebViewController.m */; };
 		349F1489285B503B00437F53 /* GIOH5BrowserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 349F1487285B503A00437F53 /* GIOH5BrowserViewController.m */; };
@@ -182,10 +182,10 @@
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
 		6F7A64B402BF8E5ED466E56A /* Pods_GrowingAnalyticsTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0257123D870B44A9FDA90A22 /* Pods_GrowingAnalyticsTests.framework */; };
 		7E20527CFF34511EE464C33F /* Pods_GrowingAnalyticsStartTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1769255A062869A5D219F683 /* Pods_GrowingAnalyticsStartTests.framework */; };
-		8016AAD2B2E1BE4321C4AA76 /* Pods_AdvertTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6CD8BC1E7857B5F760A5EF6 /* Pods_AdvertTests.framework */; };
 		997DAC68973F1F4FAF34EA2E /* Pods_Example_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B524BD63EF3439946134E74 /* Pods_Example_macOS.framework */; };
 		A61E1E81175885070AAD10A9 /* Pods_ExampleiOS13.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7CCC2E00F858DC5B58D4FA6 /* Pods_ExampleiOS13.framework */; };
 		A9D21D06460258FAC4736A26 /* Pods_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90476D1583D0EE778FCBED5E /* Pods_Example.framework */; };
+		DC414ADEC8E1A738BA63089E /* Pods_AdvertisingTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5655CC09B9A2CE16091DB52F /* Pods_AdvertisingTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -308,6 +308,7 @@
 		34106BB228FECB0D00E7DB01 /* Crasher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Crasher.h; sourceTree = "<group>"; };
 		34106BB328FECB0E00E7DB01 /* Crasher.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Crasher.mm; sourceTree = "<group>"; };
 		341A57992ABAA2380052840A /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/usr/lib/libc++.tbd"; sourceTree = DEVELOPER_DIR; };
+		3432CF362AEA58A800E555A9 /* AdvertisingTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdvertisingTest.m; sourceTree = "<group>"; };
 		34486D3B27B102B000FA8223 /* UITapGestureRecognizerAutotrackTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UITapGestureRecognizerAutotrackTest.m; sourceTree = "<group>"; };
 		346D6C782ABC355C00676A32 /* GIOWebViewWarmuper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIOWebViewWarmuper.h; sourceTree = "<group>"; };
 		346D6C792ABC355C00676A32 /* GIOWebViewWarmuper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOWebViewWarmuper.m; sourceTree = "<group>"; };
@@ -364,8 +365,7 @@
 		34986DF828C6EFDA00401612 /* GIOTrackTimerTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOTrackTimerTableViewCell.m; sourceTree = "<group>"; };
 		349975F728BF300F00466640 /* AdServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdServices.framework; path = System/Library/Frameworks/AdServices.framework; sourceTree = SDKROOT; };
 		349975F928BF301500466640 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
-		349B528528C086C600EE88FE /* AdvertTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AdvertTest.m; sourceTree = "<group>"; };
-		349B528B28C0884400EE88FE /* AdvertTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AdvertTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		349B528B28C0884400EE88FE /* AdvertisingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AdvertisingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		349DA46728F2BC5400C4281F /* Others.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Others.storyboard; sourceTree = "<group>"; };
 		349DA46A28F2BF9400C4281F /* GIOCrashMonitorTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIOCrashMonitorTableViewController.h; sourceTree = "<group>"; };
 		349DA46B28F2BF9400C4281F /* GIOCrashMonitorTableViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GIOCrashMonitorTableViewController.mm; sourceTree = "<group>"; };
@@ -428,12 +428,13 @@
 		4962653224DA66B600032551 /* ManualTrackHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManualTrackHelper.m; sourceTree = "<group>"; };
 		4962653324DA66B600032551 /* MockEventQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockEventQueue.m; sourceTree = "<group>"; };
 		4962653824DA66B600032551 /* ManualTrackHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManualTrackHelper.h; sourceTree = "<group>"; };
+		5655CC09B9A2CE16091DB52F /* Pods_AdvertisingTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AdvertisingTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58A195388D20070C39A /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		6003F58F195388D20070C39A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		6003F591195388D20070C39A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		6003F5AF195388D20070C39A /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		6CED0EF3C2998D1807B54226 /* Pods-AdvertTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdvertTests.release.xcconfig"; path = "../Example/Pods/Target Support Files/Pods-AdvertTests/Pods-AdvertTests.release.xcconfig"; sourceTree = "<group>"; };
+		68B97EA7A6285797FDDCE335 /* Pods-AdvertisingTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdvertisingTests.debug.xcconfig"; path = "../Example/Pods/Target Support Files/Pods-AdvertisingTests/Pods-AdvertisingTests.debug.xcconfig"; sourceTree = "<group>"; };
 		6F9B4F11B90235A2D461CA2C /* Pods-GrowingAnalyticsTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GrowingAnalyticsTests.debug.xcconfig"; path = "../Example/Pods/Target Support Files/Pods-GrowingAnalyticsTests/Pods-GrowingAnalyticsTests.debug.xcconfig"; sourceTree = "<group>"; };
 		7B524BD63EF3439946134E74 /* Pods_Example_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		90476D1583D0EE778FCBED5E /* Pods_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -446,10 +447,9 @@
 		D1AA342F735CCEF5565AEEE7 /* Pods-GrowingAnalyticsTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GrowingAnalyticsTests.release.xcconfig"; path = "../Example/Pods/Target Support Files/Pods-GrowingAnalyticsTests/Pods-GrowingAnalyticsTests.release.xcconfig"; sourceTree = "<group>"; };
 		DBB8310F70301DB55003E65C /* Pods-ProtobufTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ProtobufTests.release.xcconfig"; path = "../Example/Pods/Target Support Files/Pods-ProtobufTests/Pods-ProtobufTests.release.xcconfig"; sourceTree = "<group>"; };
 		DDE20EE0BB4E138A407A5D1C /* Pods-Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.release.xcconfig"; path = "../Example/Pods/Target Support Files/Pods-Example/Pods-Example.release.xcconfig"; sourceTree = "<group>"; };
+		DE5443FE362C1AE18B5F4C84 /* Pods-AdvertisingTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdvertisingTests.release.xcconfig"; path = "../Example/Pods/Target Support Files/Pods-AdvertisingTests/Pods-AdvertisingTests.release.xcconfig"; sourceTree = "<group>"; };
 		E1800E7E573CE2BD70F0B706 /* Pods-ExampleiOS13.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExampleiOS13.release.xcconfig"; path = "../Example/Pods/Target Support Files/Pods-ExampleiOS13/Pods-ExampleiOS13.release.xcconfig"; sourceTree = "<group>"; };
-		EE40DB36AB9D5F726C4E5C5D /* Pods-AdvertTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdvertTests.debug.xcconfig"; path = "../Example/Pods/Target Support Files/Pods-AdvertTests/Pods-AdvertTests.debug.xcconfig"; sourceTree = "<group>"; };
 		F625366B1611DA7E27D0E32C /* Pods-ExampleiOS13.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExampleiOS13.debug.xcconfig"; path = "../Example/Pods/Target Support Files/Pods-ExampleiOS13/Pods-ExampleiOS13.debug.xcconfig"; sourceTree = "<group>"; };
-		F6CD8BC1E7857B5F760A5EF6 /* Pods_AdvertTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AdvertTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAB05E3514907518EF7B9514 /* Pods-HostApplicationTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HostApplicationTests.release.xcconfig"; path = "../Example/Pods/Target Support Files/Pods-HostApplicationTests/Pods-HostApplicationTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -490,7 +490,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8016AAD2B2E1BE4321C4AA76 /* Pods_AdvertTests.framework in Frameworks */,
+				DC414ADEC8E1A738BA63089E /* Pods_AdvertisingTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -725,8 +725,6 @@
 		1172AEB47E26DD658BEEA1BB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				EE40DB36AB9D5F726C4E5C5D /* Pods-AdvertTests.debug.xcconfig */,
-				6CED0EF3C2998D1807B54226 /* Pods-AdvertTests.release.xcconfig */,
 				91EEE76F9E0E94DB389A9D21 /* Pods-Example.debug.xcconfig */,
 				DDE20EE0BB4E138A407A5D1C /* Pods-Example.release.xcconfig */,
 				BBC64B438435E91D8D408C70 /* Pods-Example-macOS.debug.xcconfig */,
@@ -741,9 +739,19 @@
 				FAB05E3514907518EF7B9514 /* Pods-HostApplicationTests.release.xcconfig */,
 				B2DC29AD1846CC827998F01D /* Pods-ProtobufTests.debug.xcconfig */,
 				DBB8310F70301DB55003E65C /* Pods-ProtobufTests.release.xcconfig */,
+				68B97EA7A6285797FDDCE335 /* Pods-AdvertisingTests.debug.xcconfig */,
+				DE5443FE362C1AE18B5F4C84 /* Pods-AdvertisingTests.release.xcconfig */,
 			);
 			name = Pods;
 			path = ../Pods;
+			sourceTree = "<group>";
+		};
+		3432CF352AEA58A800E555A9 /* AdvertisingTests */ = {
+			isa = PBXGroup;
+			children = (
+				3432CF362AEA58A800E555A9 /* AdvertisingTest.m */,
+			);
+			path = AdvertisingTests;
 			sourceTree = "<group>";
 		};
 		346E0B3929F2724400A12E4E /* Example-macOS */ = {
@@ -947,14 +955,6 @@
 			path = View;
 			sourceTree = "<group>";
 		};
-		349B528428C0869800EE88FE /* AdvertTests */ = {
-			isa = PBXGroup;
-			children = (
-				349B528528C086C600EE88FE /* AdvertTest.m */,
-			);
-			path = AdvertTests;
-			sourceTree = "<group>";
-		};
 		349DA46928F2BF5A00C4281F /* Others */ = {
 			isa = PBXGroup;
 			children = (
@@ -1004,7 +1004,7 @@
 			isa = PBXGroup;
 			children = (
 				3477233F2A9F1ABC004FE07F /* Helper */,
-				349B528428C0869800EE88FE /* AdvertTests */,
+				3432CF352AEA58A800E555A9 /* AdvertisingTests */,
 				04A4C058276C4DF40056C8C4 /* HybridTests */,
 				34C0BF3B277EA95A0047ADC4 /* MobileDebuggerTests */,
 				34BA7B30277C63D00030AC21 /* ProtobufTests */,
@@ -1352,7 +1352,7 @@
 				3494DCF828597E1A00A6CE46 /* GrowingAnalyticsUITests.xctest */,
 				3494DD0E2859E07500A6CE46 /* ExampleiOS13.app */,
 				3494DD2D2859E27B00A6CE46 /* GrowingAnalyticsiOS13UITests.xctest */,
-				349B528B28C0884400EE88FE /* AdvertTests.xctest */,
+				349B528B28C0884400EE88FE /* AdvertisingTests.xctest */,
 				346E0B3829F2724300A12E4E /* Example-macOS.app */,
 			);
 			name = Products;
@@ -1370,7 +1370,6 @@
 				6003F58F195388D20070C39A /* CoreGraphics.framework */,
 				6003F591195388D20070C39A /* UIKit.framework */,
 				6003F5AF195388D20070C39A /* XCTest.framework */,
-				F6CD8BC1E7857B5F760A5EF6 /* Pods_AdvertTests.framework */,
 				90476D1583D0EE778FCBED5E /* Pods_Example.framework */,
 				7B524BD63EF3439946134E74 /* Pods_Example_macOS.framework */,
 				C7CCC2E00F858DC5B58D4FA6 /* Pods_ExampleiOS13.framework */,
@@ -1378,6 +1377,7 @@
 				0257123D870B44A9FDA90A22 /* Pods_GrowingAnalyticsTests.framework */,
 				42F5EA0EFE2552358C35A0F5 /* Pods_HostApplicationTests.framework */,
 				C2E2C01C3AC89773BC3F4BE1 /* Pods_ProtobufTests.framework */,
+				5655CC09B9A2CE16091DB52F /* Pods_AdvertisingTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1459,9 +1459,9 @@
 			productReference = 3494DD2D2859E27B00A6CE46 /* GrowingAnalyticsiOS13UITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
-		349B528A28C0884400EE88FE /* AdvertTests */ = {
+		349B528A28C0884400EE88FE /* AdvertisingTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 349B528F28C0884400EE88FE /* Build configuration list for PBXNativeTarget "AdvertTests" */;
+			buildConfigurationList = 349B528F28C0884400EE88FE /* Build configuration list for PBXNativeTarget "AdvertisingTests" */;
 			buildPhases = (
 				343BCF0CA69BCDF66483968C /* [CP] Check Pods Manifest.lock */,
 				349B528728C0884400EE88FE /* Sources */,
@@ -1473,9 +1473,9 @@
 			);
 			dependencies = (
 			);
-			name = AdvertTests;
-			productName = AdvertTests;
-			productReference = 349B528B28C0884400EE88FE /* AdvertTests.xctest */;
+			name = AdvertisingTests;
+			productName = AdvertisingTests;
+			productReference = 349B528B28C0884400EE88FE /* AdvertisingTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		34AB4E46279000F5002549FF /* GrowingAnalyticsStartTests */ = {
@@ -1672,7 +1672,7 @@
 				3494DCF728597E1A00A6CE46 /* GrowingAnalyticsUITests */,
 				3494DD0D2859E07500A6CE46 /* ExampleiOS13 */,
 				3494DD2C2859E27B00A6CE46 /* GrowingAnalyticsiOS13UITests */,
-				349B528A28C0884400EE88FE /* AdvertTests */,
+				349B528A28C0884400EE88FE /* AdvertisingTests */,
 				346E0B3729F2724300A12E4E /* Example-macOS */,
 			);
 		};
@@ -1812,7 +1812,7 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Example/Pods-Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/GrowingAPM/GrowingAPM.framework",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-f61463e2/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-95c7138f/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingToolsKit/GrowingToolsKit.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/LBXScan/LBXScan.framework",
@@ -1895,7 +1895,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-AdvertTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-AdvertisingTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1998,7 +1998,7 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ExampleiOS13/Pods-ExampleiOS13-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/GrowingAPM/GrowingAPM.framework",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-30913d41/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-8f52182e/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingToolsKit/GrowingToolsKit.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf-iOS/Protobuf.framework",
@@ -2156,8 +2156,8 @@
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AdvertTests/Pods-AdvertTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-30913d41/GrowingAnalytics.framework",
+				"${PODS_ROOT}/Target Support Files/Pods-AdvertisingTests/Pods-AdvertisingTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-8f52182e/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf-iOS/Protobuf.framework",
 			);
@@ -2169,7 +2169,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AdvertTests/Pods-AdvertTests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AdvertisingTests/Pods-AdvertisingTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -2218,8 +2218,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3432CF372AEA58A800E555A9 /* AdvertisingTest.m in Sources */,
 				34B21A7C28C17B3200137F3A /* MockEventQueue.m in Sources */,
-				349B529228C088F100EE88FE /* AdvertTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2864,7 +2864,7 @@
 		};
 		349B529028C0884400EE88FE /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EE40DB36AB9D5F726C4E5C5D /* Pods-AdvertTests.debug.xcconfig */;
+			baseConfigurationReference = 68B97EA7A6285797FDDCE335 /* Pods-AdvertisingTests.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -2900,7 +2900,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.growingio.AdvertTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.growingio.AdvertisingTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2909,7 +2909,7 @@
 		};
 		349B529128C0884400EE88FE /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6CED0EF3C2998D1807B54226 /* Pods-AdvertTests.release.xcconfig */;
+			baseConfigurationReference = DE5443FE362C1AE18B5F4C84 /* Pods-AdvertisingTests.release.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -2946,7 +2946,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.growingio.AdvertTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.growingio.AdvertisingTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -3528,7 +3528,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		349B528F28C0884400EE88FE /* Build configuration list for PBXNativeTarget "AdvertTests" */ = {
+		349B528F28C0884400EE88FE /* Build configuration list for PBXNativeTarget "AdvertisingTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				349B529028C0884400EE88FE /* Debug */,

@@ -17,11 +17,11 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "Modules/Advert/AppleSearchAds/GrowingAsaFetcher.h"
-#import "Modules/Advert/Event/GrowingActivateEvent.h"
-#import "Modules/Advert/Event/GrowingAdvertEventType.h"
-#import "Modules/Advert/Public/GrowingAdvertising.h"
-#import "Modules/Advert/Utils/GrowingAdUtils.h"
+#import "Modules/Advertising/AppleSearchAds/GrowingAsaFetcher.h"
+#import "Modules/Advertising/Event/GrowingActivateEvent.h"
+#import "Modules/Advertising/Event/GrowingAdEventType.h"
+#import "Modules/Advertising/Public/GrowingAdvertising.h"
+#import "Modules/Advertising/Utils/GrowingAdUtils.h"
 
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
@@ -85,7 +85,7 @@ static pthread_rwlock_t _lock = PTHREAD_RWLOCK_INITIALIZER;
             if ([jsonObject isKindOfClass:[NSDictionary class]]) {
                 NSDictionary *dic = (NSDictionary *)jsonObject;
                 if (!dic[@"eventName"]  // 兼容旧版无 eventName
-                    || [dic[@"eventName"] isEqualToString:GrowingAdvertEventNameActivate]) {
+                    || [dic[@"eventName"] isEqualToString:GrowingAdEventNameActivate]) {
                     activate = event;
                     break;
                 }
@@ -133,8 +133,8 @@ static pthread_rwlock_t _lock = PTHREAD_RWLOCK_INITIALIZER;
             id jsonObject = event.toJSONObject;
             if ([jsonObject isKindOfClass:[NSDictionary class]]) {
                 NSDictionary *dic = (NSDictionary *)jsonObject;
-                if ([dic[@"eventName"] isEqualToString:GrowingAdvertEventNameActivate] ||
-                    [dic[@"eventName"] isEqualToString:GrowingAdvertEventNameDefer]) {
+                if ([dic[@"eventName"] isEqualToString:GrowingAdEventNameActivate] ||
+                    [dic[@"eventName"] isEqualToString:GrowingAdEventNameDefer]) {
                     // 普通激活和 defer 都可视为激活已发送
                     GrowingAsaFetcher.status = GrowingAsaFetcherStatusCompleted;
                     [GrowingAdUtils setActivateSent:YES];

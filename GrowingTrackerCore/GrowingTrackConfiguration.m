@@ -24,7 +24,7 @@ NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growing
 
 @interface GrowingTrackConfiguration ()
 
-// Advert
+// Ads
 @property (nonatomic, assign) BOOL ASAEnabled;
 @property (nonatomic, copy) NSString *deepLinkHost;
 @property (nonatomic, copy) id deepLinkCallback;
@@ -57,7 +57,7 @@ NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growing
         _encryptEnabled = NO;
         _useProtobuf = YES;
 
-        // Advert
+        // Ads
         _ASAEnabled = NO;
         _deepLinkHost = nil;
         _deepLinkCallback = nil;
@@ -96,7 +96,7 @@ NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growing
     configuration->_encryptEnabled = _encryptEnabled;
     configuration->_useProtobuf = _useProtobuf;
 
-    // Advert
+    // Ads
     configuration->_ASAEnabled = _ASAEnabled;
     configuration->_deepLinkHost = [_deepLinkHost copy];
     configuration->_deepLinkCallback = [_deepLinkCallback copy];

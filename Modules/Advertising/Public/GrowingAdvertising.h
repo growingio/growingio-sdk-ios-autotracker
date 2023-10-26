@@ -55,7 +55,7 @@ NS_SWIFT_NAME(Advertising)
 
 @end
 
-@interface GrowingTrackConfiguration (Advert)
+@interface GrowingTrackConfiguration (Ads)
 
 @property (nonatomic, assign) BOOL ASAEnabled;
 @property (nonatomic, copy) NSString *deepLinkHost;

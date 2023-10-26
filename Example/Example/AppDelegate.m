@@ -47,7 +47,7 @@
     configuration.idMappingEnabled = YES;
     configuration.dataSourceId = @"ab555003531e0fd1";
     
-#if defined(SDKADVERTMODULE)
+#if defined(SDKADSMODULE)
     configuration.ASAEnabled = YES;
     configuration.deepLinkHost = @"https://n.datayi.cn";
     configuration.deepLinkCallback = ^(NSDictionary * _Nullable params, NSTimeInterval processTime, NSError * _Nullable error) {

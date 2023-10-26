@@ -55,7 +55,7 @@ jobs:
       - name: Build
         run: xcodebuild build -scheme GrowingTracker -destination 'platform=macOS' -quiet
 
-  advert-build-iOS:
+  ads-build-iOS:
     runs-on: macos-latest
 
     steps:
@@ -63,7 +63,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Build
-        run: xcodebuild build -scheme GrowingModule_Advert -destination 'platform=iOS Simulator,name=iPhone 14' -quiet
+        run: xcodebuild build -scheme GrowingModule_Ads -destination 'platform=iOS Simulator,name=iPhone 14' -quiet
 
   apm-build-iOS:
     runs-on: macos-latest

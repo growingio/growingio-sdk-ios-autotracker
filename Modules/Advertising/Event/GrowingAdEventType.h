@@ -1,5 +1,5 @@
 //
-//  GrowingAdvertEventType.h
+//  GrowingAdEventType.h
 //  GrowingAnalytics
 //
 //  Created by YoloMao on 2022/8/29.
@@ -20,6 +20,6 @@
 #import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
 
 FOUNDATION_EXPORT GrowingEventType const GrowingEventTypeActivate;
-FOUNDATION_EXPORT NSString *const GrowingAdvertEventNameActivate;
-FOUNDATION_EXPORT NSString *const GrowingAdvertEventNameDefer;
-FOUNDATION_EXPORT NSString *const GrowingAdvertEventNameReengage;
+FOUNDATION_EXPORT NSString *const GrowingAdEventNameActivate;
+FOUNDATION_EXPORT NSString *const GrowingAdEventNameDefer;
+FOUNDATION_EXPORT NSString *const GrowingAdEventNameReengage;

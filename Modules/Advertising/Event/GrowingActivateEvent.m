@@ -17,13 +17,13 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "Modules/Advert/Event/GrowingActivateEvent.h"
+#import "Modules/Advertising/Event/GrowingActivateEvent.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 
 NSString *const GrowingEventTypeActivate = @"ACTIVATE";
-NSString *const GrowingAdvertEventNameActivate = @"$app_activation";
-NSString *const GrowingAdvertEventNameDefer = @"$app_defer";
-NSString *const GrowingAdvertEventNameReengage = @"$app_reengage";
+NSString *const GrowingAdEventNameActivate = @"$app_activation";
+NSString *const GrowingAdEventNameDefer = @"$app_defer";
+NSString *const GrowingAdEventNameReengage = @"$app_reengage";
 
 @implementation GrowingActivateEvent
 

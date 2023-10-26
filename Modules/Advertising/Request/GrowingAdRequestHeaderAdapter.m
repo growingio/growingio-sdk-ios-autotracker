@@ -17,7 +17,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "Modules/Advert/Request/GrowingAdRequestHeaderAdapter.h"
+#import "Modules/Advertising/Request/GrowingAdRequestHeaderAdapter.h"
 #import "GrowingULTimeUtil.h"
 
 @interface GrowingAdRequestHeaderAdapter ()
