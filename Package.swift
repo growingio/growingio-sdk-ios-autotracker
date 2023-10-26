@@ -216,10 +216,10 @@ extension Target {
                                    linkerSettings: [.WebKit])
 
         static let ads = target(name: .ads,
-                                   dependencies: [.Core.trackerCore],
-                                   path: .Path.ads,
-                                   publicHeadersPath: .Path.publicHeaders,
-                                   cSettings: [.hspFor(.Path.ads)])
+                                dependencies: [.Core.trackerCore],
+                                path: .Path.ads,
+                                publicHeadersPath: .Path.publicHeaders,
+                                cSettings: [.hspFor(.Path.ads)])
 
         static let apm = target(name: .apm,
                                 dependencies: [
