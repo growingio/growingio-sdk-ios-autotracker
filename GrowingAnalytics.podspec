@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'GrowingAnalytics'
-  s.version          = '4.0.0-beta'
+  s.version          = '4.0.0-beta.1'
   s.summary          = 'iOS SDK of GrowingIO.'
   s.description      = <<-DESC
 GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和行为数据等。目前支持代码埋点、无埋点、可视化圈选、热图等功能。
@@ -40,7 +40,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   end
 
   s.subspec 'TrackerCore' do |trackerCore|
-    trackerCore.dependency 'GrowingUtils/TrackerCore', '1.0.0'
+    trackerCore.dependency 'GrowingUtils/TrackerCore', '~> 1.0.0'
     trackerCore.source_files = 'GrowingTrackerCore/**/*{.h,.m,.c,.cpp,.mm}'
     trackerCore.public_header_files = 'GrowingTrackerCore/Public/*.h'
     trackerCore.ios.resource_bundles = {'GrowingAnalytics' => ['Resources/iOS/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy']}
@@ -50,7 +50,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   
   s.subspec 'AutotrackerCore' do |autotrackerCore|
     autotrackerCore.ios.deployment_target = '10.0'
-    autotrackerCore.dependency 'GrowingUtils/AutotrackerCore', '1.0.0'
+    autotrackerCore.dependency 'GrowingUtils/AutotrackerCore', '~> 1.0.0'
     autotrackerCore.source_files = 'GrowingAutotrackerCore/**/*{.h,.m,.c,.cpp,.mm}'
     autotrackerCore.public_header_files = 'GrowingAutotrackerCore/Public/*.h'
     autotrackerCore.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
@@ -171,7 +171,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     apm.source_files = 'Modules/APM/**/*{.h,.m,.c,.cpp,.mm}'
     apm.public_header_files = 'Modules/APM/Public/*.h'
     apm.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
-    apm.dependency 'GrowingAPM/Core'
+    apm.dependency 'GrowingAPM/Core', '~> 1.0.0'
   end
 
   s.subspec 'V2Adapter' do |adapter|

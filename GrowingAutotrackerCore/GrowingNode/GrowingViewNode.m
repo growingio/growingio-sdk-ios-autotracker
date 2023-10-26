@@ -89,14 +89,19 @@
     NSString *uniqueTag = view.growingUniqueTag;
     BOOL hasUniqueTag = uniqueTag && uniqueTag.length > 0;
     BOOL isBreak = self.isBreak || hasUniqueTag;
-    NSString *xpath = hasUniqueTag ? [NSString stringWithFormat:@"/%@", uniqueTag]
-                                   : [self.xpath stringByAppendingFormat:@"/%@", view.growingNodeSubPath];
-    NSString *xcontent = hasUniqueTag
-                             ? [NSString stringWithFormat:@"/%@", view.growingNodeSubSimilarIndex]
-                             : [self.originxcontent stringByAppendingFormat:@"/%@", view.growingNodeSubSimilarIndex];
-    NSString *originxcontent = hasUniqueTag
-                                   ? [NSString stringWithFormat:@"/%@", view.growingNodeSubIndex]
-                                   : [self.originxcontent stringByAppendingFormat:@"/%@", view.growingNodeSubIndex];
+    NSString *xpath = nil;
+    NSString *xcontent = nil;
+    NSString *originxcontent = nil;
+    if (hasUniqueTag) {
+        xpath = [NSString stringWithFormat:@"/%@", uniqueTag];
+        xcontent = [NSString stringWithFormat:@"/%@", view.growingNodeSubSimilarIndex];
+        originxcontent = [NSString stringWithFormat:@"/%@", view.growingNodeSubIndex];
+    } else {
+        xpath = [self.xpath stringByAppendingFormat:@"/%@", view.growingNodeSubPath];
+        xcontent = isSimilar ? [self.originxcontent stringByAppendingFormat:@"/%@", view.growingNodeSubSimilarIndex]
+                             : [self.xcontent stringByAppendingFormat:@"/%@", view.growingNodeSubSimilarIndex];
+        originxcontent = [self.originxcontent stringByAppendingFormat:@"/%@", view.growingNodeSubIndex];
+    }
     NSString *parentXpath = self.view.growingNodeUserInteraction ? self.xpath : self.clickableParentXpath;
     NSString *parentXcontent = self.view.growingNodeUserInteraction ? self.xcontent : self.clickableParentXcontent;
     NSString *content = view.growingNodeContent;

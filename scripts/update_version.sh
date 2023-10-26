@@ -1,6 +1,6 @@
 NEW_VERSION=$@
 
-REGEX1="[0-9]+\\.[0-9]+\\.[0-9]+((-hotfix.[0-9]+)|-beta)*"
+REGEX1="[0-9]+\\.[0-9]+\\.[0-9]+(-(hotfix|beta).[0-9]+)?"
 REGEX2="[0-9]+"
 SDK_VERSION_FILE1=./GrowingTrackerCore/GrowingRealTracker.m
 SDK_VERSION_FILE2=./GrowingAnalytics.podspec
