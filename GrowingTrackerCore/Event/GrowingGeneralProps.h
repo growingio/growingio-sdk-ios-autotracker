@@ -1,9 +1,9 @@
 //
-//  GrowingArgumentChecker.h
+//  GrowingGeneralProps.h
 //  GrowingAnalytics
 //
-// Created by xiangyang on 2020/11/13.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2023/10/20.
+//  Copyright (C) 2023 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -19,10 +19,18 @@
 
 #import <Foundation/Foundation.h>
 
-@interface GrowingArgumentChecker : NSObject
+NS_ASSUME_NONNULL_BEGIN
 
-+ (BOOL)isIllegalEventName:(NSString *)eventName;
-+ (BOOL)isIllegalAttributes:(NSDictionary *)attributes;
-+ (BOOL)isIllegalKeys:(NSArray *)keys;
+@interface GrowingGeneralProps : NSObject
+
+@property (nonatomic, readonly, copy) NSDictionary<NSString *, NSString *> *props;
+
+- (void)setGeneralProps:(NSDictionary<NSString *, NSString *> *)props;
+
+- (void)removeGeneralProps:(NSArray<NSString *> *)keys;
+
+- (void)clearGeneralProps;
 
 @end
+
+NS_ASSUME_NONNULL_END

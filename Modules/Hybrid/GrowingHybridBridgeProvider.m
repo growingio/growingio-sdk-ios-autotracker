@@ -29,6 +29,7 @@
 #import "GrowingTrackerCore/Public/GrowingAnnotationCore.h"
 #import "GrowingTrackerCore/Public/GrowingBaseEvent.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
+#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "GrowingULTimeUtil.h"
 #import "Modules/Hybrid/Events/GrowingHybridCustomEvent.h"
@@ -62,6 +63,7 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
 #define KEY_TEXT_VALUE "textValue"
 #define KEY_XPATH "xpath"
 #define KEY_XCONTENT "xcontent"
+#define CUSTOM_EVENT_TYPE "customEventType"
 
 @interface UIView (GrowingNode) <GrowingNode>
 @end
@@ -207,35 +209,51 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
     NSDictionary *evetDataDict = (NSDictionary *)dict;
     NSString *type = evetDataDict[@"eventType"];
 
-    GrowingBaseBuilder *builder = nil;
-    if ([type isEqualToString:GrowingEventTypePage]) {
-        builder = GrowingHybridPageEvent.builder.setProtocolType(dict[@KEY_PROTOCOL_TYPE])
-                      .setQuery(dict[@KEY_QUERY])
-                      .setTitle(dict[@KEY_TITLE])
-                      .setReferralPage(dict[@KEY_REFERRAL_PAGE])
-                      .setPath(dict[@KEY_PATH])
-                      .setTimestamp([dict growingHelper_longlongForKey:@KEY_TIMESTAMP
-                                                              fallback:[GrowingULTimeUtil currentTimeMillis]])
-                      .setAttributes([self safeAttributesFromDict:dict])
-                      .setDomain([self getDomain:dict]);
-    } else if ([type isEqualToString:GrowingEventTypeViewClick]) {
-        builder = [self transformViewElementBuilder:dict].setEventType(type);
-    } else if ([type isEqualToString:GrowingEventTypeViewChange]) {
-        builder = [self transformViewElementBuilder:dict].setEventType(type);
-    } else if ([type isEqualToString:GrowingEventTypeFormSubmit]) {
-        builder = [self transformViewElementBuilder:dict].setEventType(type);
-    } else if ([type isEqualToString:GrowingEventTypeCustom]) {
-        builder = GrowingHybridCustomEvent.builder.setQuery(dict[@KEY_QUERY])
-                      .setPath(dict[@KEY_PATH])
-                      .setAttributes([self safeAttributesFromDict:dict])
-                      .setEventName(dict[@KEY_EVENT_NAME])
-                      .setDomain([self getDomain:dict]);
-    } else if ([type isEqualToString:GrowingEventTypeLoginUserAttributes]) {
-        builder = GrowingLoginUserAttributesEvent.builder.setAttributes([self safeAttributesFromDict:dict]);
-    }
-    if (builder) {
-        [[GrowingEventManager sharedInstance] postEventBuilder:builder];
-    }
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        GrowingBaseBuilder *builder = nil;
+        if ([type isEqualToString:GrowingEventTypePage]) {
+            builder = GrowingHybridPageEvent.builder.setProtocolType(dict[@KEY_PROTOCOL_TYPE])
+                          .setQuery(dict[@KEY_QUERY])
+                          .setTitle(dict[@KEY_TITLE])
+                          .setReferralPage(dict[@KEY_REFERRAL_PAGE])
+                          .setPath(dict[@KEY_PATH])
+                          .setTimestamp([dict growingHelper_longlongForKey:@KEY_TIMESTAMP
+                                                                  fallback:[GrowingULTimeUtil currentTimeMillis]])
+                          .setAttributes([self safeAttributesFromDict:dict])
+                          .setDomain([self getDomain:dict]);
+        } else if ([type isEqualToString:GrowingEventTypeViewClick]) {
+            builder = [self transformViewElementBuilder:dict].setEventType(type);
+        } else if ([type isEqualToString:GrowingEventTypeViewChange]) {
+            builder = [self transformViewElementBuilder:dict].setEventType(type);
+        } else if ([type isEqualToString:GrowingEventTypeFormSubmit]) {
+            builder = [self transformViewElementBuilder:dict].setEventType(type);
+        } else if ([type isEqualToString:GrowingEventTypeCustom]) {
+            NSString *customEventType = dict[@CUSTOM_EVENT_TYPE];
+            if ([customEventType isKindOfClass:[NSNumber class]]) {
+                customEventType = ((NSNumber *)dict[@CUSTOM_EVENT_TYPE]).stringValue;
+            }
+            NSDictionary *mergedDic = [self safeAttributesFromDict:dict].copy;
+            if (customEventType == nil || [customEventType isEqualToString:@"1"]) {
+                // hybrid通过track接口调用
+                NSDictionary *generalProps = [GrowingEventManager sharedInstance].generalProps;
+                if (generalProps.count > 0) {
+                    NSMutableDictionary *dicM = [NSMutableDictionary dictionaryWithDictionary:generalProps];
+                    [dicM addEntriesFromDictionary:mergedDic];
+                    mergedDic = dicM.copy;
+                }
+            }
+            builder = GrowingHybridCustomEvent.builder.setQuery(dict[@KEY_QUERY])
+                          .setPath(dict[@KEY_PATH])
+                          .setAttributes(mergedDic)
+                          .setEventName(dict[@KEY_EVENT_NAME])
+                          .setDomain([self getDomain:dict]);
+        } else if ([type isEqualToString:GrowingEventTypeLoginUserAttributes]) {
+            builder = GrowingLoginUserAttributesEvent.builder.setAttributes([self safeAttributesFromDict:dict]);
+        }
+        if (builder) {
+            [[GrowingEventManager sharedInstance] postEventBuilder:builder];
+        }
+    }];
 }
 
 - (GrowingBaseBuilder *)transformViewElementBuilder:(NSDictionary *)dict {

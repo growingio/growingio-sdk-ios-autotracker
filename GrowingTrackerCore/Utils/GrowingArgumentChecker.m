@@ -65,4 +65,25 @@
     return NO;
 }
 
++ (BOOL)isIllegalKeys:(NSArray *)keys {
+    if (keys == nil) {
+        GIOLogError(@"keys is NULL");
+        return YES;
+    }
+
+    if (![keys isKindOfClass:NSArray.class]) {
+        GIOLogError(@"keys is not kind of NSArray class");
+        return YES;
+    }
+
+    for (NSString *key in keys) {
+        if (![key isKindOfClass:NSString.class]) {
+            GIOLogError(@"Key %@ is not kind of NSString class", key);
+            return YES;
+        }
+    }
+
+    return NO;
+}
+
 @end

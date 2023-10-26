@@ -132,7 +132,14 @@ const int GrowingTrackerVersionCode = 40000;
     if ([GrowingArgumentChecker isIllegalEventName:eventName]) {
         return;
     }
-    [GrowingEventGenerator generateCustomEvent:eventName attributes:nil];
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        NSDictionary *generalProps = [GrowingEventManager sharedInstance].generalProps;
+        NSDictionary *dic = nil;
+        if (generalProps.count > 0) {
+            dic = generalProps;
+        }
+        [GrowingEventGenerator generateCustomEvent:eventName attributes:dic];
+    }];
 }
 
 - (void)trackCustomEvent:(NSString *)eventName withAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
@@ -140,7 +147,16 @@ const int GrowingTrackerVersionCode = 40000;
         [GrowingArgumentChecker isIllegalAttributes:attributes]) {
         return;
     }
-    [GrowingEventGenerator generateCustomEvent:eventName attributes:attributes];
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        NSDictionary *generalProps = [GrowingEventManager sharedInstance].generalProps;
+        NSDictionary *dic = attributes.copy;
+        if (generalProps.count > 0) {
+            NSMutableDictionary *dicM = [NSMutableDictionary dictionaryWithDictionary:generalProps];
+            [dicM addEntriesFromDictionary:dic];
+            dic = dicM.copy;
+        }
+        [GrowingEventGenerator generateCustomEvent:eventName attributes:dic];
+    }];
 }
 
 - (void)setLoginUserAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
@@ -195,6 +211,30 @@ const int GrowingTrackerVersionCode = 40000;
 
 - (void)clearTrackTimer {
     [GrowingEventTimer clearAllTimers];
+}
+
+- (void)setGeneralProps:(NSDictionary<NSString *, NSString *> *)props {
+    if ([GrowingArgumentChecker isIllegalAttributes:props]) {
+        return;
+    }
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        [[GrowingEventManager sharedInstance] setGeneralProps:props];
+    }];
+}
+
+- (void)removeGeneralProps:(NSArray<NSString *> *)keys {
+    if ([GrowingArgumentChecker isIllegalKeys:keys]) {
+        return;
+    }
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        [[GrowingEventManager sharedInstance] removeGeneralProps:keys];
+    }];
+}
+
+- (void)clearGeneralProps {
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        [[GrowingEventManager sharedInstance] clearGeneralProps];
+    }];
 }
 
 - (void)setLoginUserId:(NSString *)userId {
