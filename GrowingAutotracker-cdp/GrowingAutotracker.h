@@ -17,10 +17,14 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <UIKit/UIKit.h>
+@import UIKit;
+#if __has_include(<GrowingAnalytics/GrowingTrackConfiguration.h>) // Cocoapods or Manual
+@import GrowingAnalytics;
+#else
 #import "GrowingAttributesBuilder.h"
 #import "GrowingAutotrackConfiguration.h"
 #import "GrowingDynamicProxy.h"
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
