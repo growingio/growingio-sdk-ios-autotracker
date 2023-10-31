@@ -26,4 +26,4 @@ fi
 git tag $POD_BETA_VERSION
 git push --tags
 
-pod trunk push GrowingAnalytics.podspec --allow-warnings --use-libraries
+pod trunk push GrowingAnalytics.podspec --allow-warnings
