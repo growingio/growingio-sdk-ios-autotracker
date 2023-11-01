@@ -31,5 +31,5 @@ echo y | pod trunk delete GrowingAnalytics-cdp $POD_BETA_VERSOIN
 git tag $POD_BETA_VERSOIN
 git push --tags
 
-pod trunk push GrowingAnalytics.podspec --allow-warnings --use-libraries
-pod trunk push GrowingAnalytics-cdp.podspec --allow-warnings --use-libraries --synchronous
+pod trunk push GrowingAnalytics.podspec --allow-warnings
+pod trunk push GrowingAnalytics-cdp.podspec --allow-warnings --synchronous
