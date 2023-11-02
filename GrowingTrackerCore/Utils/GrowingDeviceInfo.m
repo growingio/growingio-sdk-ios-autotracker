@@ -151,17 +151,17 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
     return uuid;
 }
 
-+ (NSString *)getSysInfoByName:(char *)typeSpeifier {
++ (NSString *)getSysInfoByName:(char *)name {
     size_t size;
-    sysctlbyname(typeSpeifier, NULL, &size, NULL, 0);
-    char *answer = (char *)malloc(size);
-    sysctlbyname(typeSpeifier, answer, &size, NULL, 0);
-    NSString *results = [NSString stringWithCString:answer encoding:NSUTF8StringEncoding];
-    if (results == nil) {
-        results = @"";
+    NSString *results = nil;
+    if (sysctlbyname(name, NULL, &size, NULL, 0) == 0) {
+        char *machine = calloc(1, size);
+        if (sysctlbyname(name, machine, &size, NULL, 0) == 0) {
+            results = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
+        }
+        free(machine);
     }
-    free(answer);
-    return results;
+    return results ?: @"";
 }
 
 #if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
