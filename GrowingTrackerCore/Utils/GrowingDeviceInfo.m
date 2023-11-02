@@ -29,8 +29,9 @@
 
 #import <CoreTelephony/CTCarrier.h>
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
+
 #import <pthread.h>
-#include <sys/sysctl.h>
+#import <sys/sysctl.h>
 #import <sys/utsname.h>
 
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
@@ -83,16 +84,16 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
         _appState = 0;
         _timezoneOffset = -([[NSTimeZone defaultTimeZone] secondsFromGMT] / 60);
 
-#if !TARGET_OS_OSX
+#if TARGET_OS_OSX
+        _screenWidth = NSScreen.mainScreen.frame.size.width;
+        _screenHeight = NSScreen.mainScreen.frame.size.height;
+#elif TARGET_OS_IOS || TARGET_OS_MACCATALYST
         UIScreen *screen = [UIScreen mainScreen];
         CGFloat width = screen.bounds.size.width * screen.scale;
         CGFloat height = screen.bounds.size.height * screen.scale;
         // make sure the size is in portrait to keep consistency
         _screenWidth = MIN(width, height);
         _screenHeight = MAX(width, height);
-#else
-        _screenWidth = NSScreen.mainScreen.frame.size.width;
-        _screenHeight = NSScreen.mainScreen.frame.size.height;
 #endif
 
         [[GrowingULAppLifecycle sharedInstance] addAppLifecycleDelegate:self];
@@ -177,7 +178,7 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
     dispatch_block_t block = ^{
 #if TARGET_OS_OSX
         self->_appState = [NSApplication sharedApplication].isActive ? 0 : 1;
-#else
+#elif TARGET_OS_IOS || TARGET_OS_MACCATALYST
         self->_appState = [UIApplication sharedApplication].applicationState == UIApplicationStateActive ? 0 : 1;
 #endif
     };
