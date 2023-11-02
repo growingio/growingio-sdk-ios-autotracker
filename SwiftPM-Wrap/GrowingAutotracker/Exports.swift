@@ -113,6 +113,18 @@ public struct Autotracker {
     public static func clearTimers() {
         autotracker.clearTrackTimer()
     }
+    
+    public static func setGeneralProps(_ props: [String: String]) {
+        autotracker.setGeneralProps(props)
+    }
+    
+    public static func removeGeneralProps(_ keys: [String]) {
+        autotracker.removeGeneralProps(keys)
+    }
+    
+    public static func clearGeneralProps() {
+        autotracker.clearGeneralProps()
+    }
 
     public static func autotrackPage(_ viewController: UIViewController,
                                      alias: String,

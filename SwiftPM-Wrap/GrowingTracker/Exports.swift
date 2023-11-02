@@ -105,4 +105,16 @@ public struct Tracker {
     public static func clearTimers() {
         tracker.clearTrackTimer()
     }
+    
+    public static func setGeneralProps(_ props: [String: String]) {
+        tracker.setGeneralProps(props)
+    }
+    
+    public static func removeGeneralProps(_ keys: [String]) {
+        tracker.removeGeneralProps(keys)
+    }
+    
+    public static func clearGeneralProps() {
+        tracker.clearGeneralProps()
+    }
 }
