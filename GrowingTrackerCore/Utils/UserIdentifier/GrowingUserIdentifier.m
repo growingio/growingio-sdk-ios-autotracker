@@ -24,17 +24,21 @@
 #import <UIKit/UIKit.h>
 #endif
 
+#if __has_include(<WatchKit/WatchKit.h>)
+#import <WatchKit/WatchKit.h>
+#endif
+
 @implementation GrowingUserIdentifier
 
 + (NSString *)getUserIdentifier {
     NSString *uuid = nil;
-#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
+#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST || TARGET_OS_WATCH
     NSString *idfaString = [self idfa];
     if (!idfaString.growingHelper_isValidU) {
         idfaString = [self idfv];
     }
     uuid = idfaString;
-#else
+#elif TARGET_OS_OSX || TARGET_OS_MACCATALYST
     uuid = [self platformUUID];
 #endif
     // 失败了随机生成 UUID
@@ -47,6 +51,8 @@
 + (nullable NSString *)idfv {
 #if TARGET_OS_IOS
     return [[UIDevice currentDevice].identifierForVendor UUIDString];
+#elif TARGET_OS_WATCH
+    return [[WKInterfaceDevice currentDevice].identifierForVendor UUIDString];
 #endif
     return @"";
 }

@@ -20,6 +20,8 @@
 
  */
 
+#if !TARGET_OS_WATCH
+
 #import <arpa/inet.h>
 #import <ifaddrs.h>
 #import <netdb.h>
@@ -258,3 +260,4 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 
 
 @end
+#endif

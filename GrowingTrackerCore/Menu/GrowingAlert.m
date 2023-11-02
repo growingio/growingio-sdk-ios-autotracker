@@ -16,7 +16,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#if __has_include(<UIKit/UIKit.h>)
+#if __has_include(<UIKit/UIKit.h>) && !TARGET_OS_WATCH
 #import "GrowingTrackerCore/Menu/GrowingAlert.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 

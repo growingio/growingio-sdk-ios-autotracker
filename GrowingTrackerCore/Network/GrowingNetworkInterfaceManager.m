@@ -26,7 +26,10 @@
 
 @interface GrowingNetworkInterfaceManager ()
 
+#if !TARGET_OS_WATCH
 @property (nonatomic, strong) GrowingReachability *internetReachability;
+#endif
+
 @property (nonatomic, assign) BOOL isUnknown;
 @property (nonatomic, assign, readwrite) BOOL WWANValid;
 @property (nonatomic, assign, readwrite) BOOL WiFiValid;
@@ -52,8 +55,10 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
+#if !TARGET_OS_WATCH
         _internetReachability = [GrowingReachability reachabilityForInternetConnection];
         [_internetReachability startNotifier];
+#endif
         _isUnknown = YES;
 
 #if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
@@ -64,11 +69,17 @@
 }
 
 - (void)updateInterfaceInfo {
+#if !TARGET_OS_WATCH
     GrowingNetworkStatus netStatus = [self.internetReachability currentReachabilityStatus];
     BOOL connectionRequired = [self.internetReachability connectionRequired];
     self.isUnknown = (netStatus == GrowingUnknown);
     self.WiFiValid = (netStatus == GrowingReachableViaWiFi && !connectionRequired);
     self.WWANValid = (netStatus == GrowingReachableViaWWAN && !connectionRequired);
+#else
+    self.isUnknown = YES;
+    self.WiFiValid = YES;
+    self.WWANValid = YES;
+#endif
     self.isReachable = (self.WiFiValid || self.WWANValid);
 }
 

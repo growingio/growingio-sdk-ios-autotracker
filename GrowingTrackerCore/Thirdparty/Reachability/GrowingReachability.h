@@ -6,6 +6,7 @@
  Basic demonstration of how to use the SystemConfiguration Reachablity APIs.
  */
 
+#if !TARGET_OS_WATCH
 #import <Foundation/Foundation.h>
 #import <SystemConfiguration/SystemConfiguration.h>
 #import <netinet/in.h>
@@ -61,4 +62,4 @@ extern NSString *kGrowingReachabilityChangedNotification;
 
 @end
 
-
+#endif

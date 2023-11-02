@@ -1,9 +1,9 @@
 //
-//  UIWindow+GrowingHelper.h
+//  Example_watchOSApp.swift
 //  GrowingAnalytics
 //
-//  Created by GrowingIO on 2/17/16.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2023/10/27.
+//  Copyright (C) 2023 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,16 +17,16 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#if __has_include(<UIKit/UIKit.h>) && !TARGET_OS_WATCH
-#import <UIKit/UIKit.h>
 
-@interface UIWindow (GrowingHelper)
+import SwiftUI
 
-+ (UIImage *)growingHelper_screenshotWithWindows:(NSArray<UIWindow *> *)windows
-                                     andMaxScale:(CGFloat)maxScale
-                                           block:(void (^)(CGContextRef context))block;
+@main
+struct Example_watchOS_Watch_AppApp: App {
+    @WKApplicationDelegateAdaptor(AppDelegate.self) var delegate
 
-+ (UIImage *)growingHelper_screenshotWithWindows:(NSArray<UIWindow *> *)windows andMaxScale:(CGFloat)maxScale;
-
-@end
-#endif
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+        }
+    }
+}

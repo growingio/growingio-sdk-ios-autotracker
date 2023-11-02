@@ -17,7 +17,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#if __has_include(<UIKit/UIKit.h>)
+#if __has_include(<UIKit/UIKit.h>) && !TARGET_OS_WATCH
 #import "GrowingTrackerCore/Helpers/UIKit/UIView+GrowingHelper.h"
 
 @implementation UIView (GrowingHelper)
