@@ -35,7 +35,7 @@
         _xcontent = builder.xcontent;
         _nodeType = builder.nodeType;
         _isContainer = builder.isContainer;
-        _index = builder.index + 1; // SDK 4.x: 原生需要手动加1，而hybrid、flutter等等跨平台需要自行处理index
+        _index = builder.index + 1;  // SDK 4.x: 原生需要手动加1，而hybrid、flutter等等跨平台需要自行处理index
         _parentXpath = builder.parentXpath;
         _parentXcontent = builder.parentXcontent;
         _page = builder.page;
