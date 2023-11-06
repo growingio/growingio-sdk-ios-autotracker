@@ -23,11 +23,10 @@
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Public/GrowingAttributesBuilder.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
-#import "GrowingULAppLifecycle.h"
 
 GrowingMod(GrowingFlutterPlugin)
 
-@interface GrowingFlutterPlugin () <GrowingULAppLifecycleDelegate>
+@interface GrowingFlutterPlugin ()
 
 @end
 
@@ -36,7 +35,7 @@ GrowingMod(GrowingFlutterPlugin)
 #pragma mark - GrowingModuleProtocol
 
 - (void)growingModInit:(GrowingContext *)context {
-    [GrowingULAppLifecycle.sharedInstance addAppLifecycleDelegate:self];
+    
 }
 
 + (BOOL)singleton {
@@ -73,7 +72,7 @@ GrowingMod(GrowingFlutterPlugin)
     if (attributes) {
         builder = builder.setAttributes(attributes);
     }
-    [[GrowingEventManager sharedInstance] postEventBuilder:builder];
+    [self trackAutotrackEventWithBuilder:builder];
 }
 
 - (void)trackViewElementEvent:(NSDictionary *)arguments {
@@ -97,28 +96,15 @@ GrowingMod(GrowingFlutterPlugin)
         builder = builder.setTextValue(viewContent);
     }
     NSNumber *index = arguments[@"index"];
-    if (index && [index isKindOfClass:[NSNumber class]]) {
+    if (index && [index isKindOfClass:[NSNumber class]] && index.intValue > 0) {
         builder = builder.setIndex(index.intValue);
     }
+    [self trackAutotrackEventWithBuilder:builder];
+}
+
+- (void)trackAutotrackEventWithBuilder:(GrowingBaseBuilder *)builder {
+    builder = builder.setScene(GrowingEventSceneFlutter);
     [[GrowingEventManager sharedInstance] postEventBuilder:builder];
-}
-
-#pragma mark - GrowingULAppLifecycleDelegate
-
-- (void)applicationDidBecomeActive {
-    [GrowingDispatchManager dispatchInGrowingThread:^{
-        if (self.onAppDidBecomeActive) {
-            self.onAppDidBecomeActive();
-        }
-    }];
-}
-
-- (void)applicationDidEnterBackground {
-    [GrowingDispatchManager dispatchInGrowingThread:^{
-        if (self.onAppDidEnterBackground) {
-            self.onAppDidEnterBackground();
-        }
-    }];
 }
 
 @end

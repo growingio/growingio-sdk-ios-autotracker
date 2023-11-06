@@ -151,6 +151,7 @@
     _appVersion = deviceInfo.appVersion;
     _language = deviceInfo.language;
     _timezoneOffset = [NSString stringWithFormat:@"%@", @(deviceInfo.timezoneOffset)];
+    _scene = _scene >= GrowingEventSceneNative ? _scene : GrowingEventSceneNative;
 }
 
 - (GrowingBaseBuilder * (^)(NSString *value))setDataSourceId {
@@ -338,6 +339,13 @@
 - (GrowingBaseBuilder * (^)(NSString *value))setTimezoneOffset {
     return ^(NSString *value) {
         self->_timezoneOffset = value;
+        return self;
+    };
+}
+
+- (GrowingBaseBuilder * (^)(GrowingEventScene value))setScene {
+    return ^(GrowingEventScene value) {
+        self->_scene = value;
         return self;
     };
 }

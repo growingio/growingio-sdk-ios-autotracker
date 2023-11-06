@@ -35,7 +35,7 @@
         _xcontent = builder.xcontent;
         _nodeType = builder.nodeType;
         _isContainer = builder.isContainer;
-        _index = builder.index;
+        _index = builder.index + 1; // SDK 4.x: 原生需要手动加1，而hybrid、flutter等等跨平台需要自行处理index
         _parentXpath = builder.parentXpath;
         _parentXcontent = builder.parentXcontent;
         _page = builder.page;
@@ -57,7 +57,7 @@
     dataDict[@"xcontent"] = self.xcontent;
     dataDict[@"nodeType"] = self.nodeType;
     dataDict[@"isContainer"] = @(self.isContainer);
-    dataDict[@"index"] = self.index >= 0 ? @(self.index) : nil;
+    dataDict[@"index"] = self.index > 0 ? @(self.index) : nil;
     dataDict[@"parentXPath"] = self.parentXpath;
     dataDict[@"parentXContent"] = self.parentXcontent;
     dataDict[@"page"] = self.page;

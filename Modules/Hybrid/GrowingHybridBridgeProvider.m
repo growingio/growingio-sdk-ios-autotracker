@@ -251,6 +251,7 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
             builder = GrowingLoginUserAttributesEvent.builder.setAttributes([self safeAttributesFromDict:dict]);
         }
         if (builder) {
+            builder = builder.setScene(GrowingEventSceneHybrid);
             [[GrowingEventManager sharedInstance] postEventBuilder:builder];
         }
     }];

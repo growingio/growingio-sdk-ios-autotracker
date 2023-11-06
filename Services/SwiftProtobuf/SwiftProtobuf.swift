@@ -79,7 +79,11 @@ public class SwiftProtobufWrapper: NSObject {
         dto.textValue = jsonObject["textValue"] as? String ?? ""
         dto.xpath = jsonObject["xpath"] as? String ?? ""
         dto.xcontent = jsonObject["xcontent"] as? String ?? ""
-        dto.index = (jsonObject["index"] as? NSNumber)?.int32Value ?? 0
+        if let index = (jsonObject["index"] as? NSNumber)?.int32Value {
+            if index > 0 {
+                dto.index = index
+            }
+        }
         dto.query = jsonObject["query"] as? String ?? ""
         dto.hyperlink = jsonObject["hyperlink"] as? String ?? ""
         dto.attributes = jsonObject["attributes"] as? [String: String] ?? [:]
@@ -227,7 +231,10 @@ public extension GrowingBaseEvent {
         dto.textValue = textValue()
         dto.xpath = xpath()
         dto.xcontent = xcontent()
-        dto.index = index()
+        let index = index()
+        if index > 0 {
+            dto.index = index
+        }
         dto.query = query()
         dto.hyperlink = hyperlink()
         dto.attributes = attributes()

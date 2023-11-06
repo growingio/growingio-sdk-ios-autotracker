@@ -224,7 +224,10 @@
     dto.textValue = jsonObject[@"textValue"];
     dto.xpath = jsonObject[@"xpath"];
     dto.xcontent = jsonObject[@"xcontent"];
-    dto.index = ((NSNumber *)jsonObject[@"index"]).intValue;
+    int index = ((NSNumber *)jsonObject[@"index"]).intValue;
+    if (index > 0) {
+        dto.index = index;
+    }
     dto.query = jsonObject[@"query"];
     dto.hyperlink = jsonObject[@"hyperlink"];
     dto.attributes = jsonObject[@"attributes"];

@@ -89,7 +89,10 @@
     dto.textValue = stringBlock(@"textValue");
     dto.xpath = stringBlock(@"xpath");
     dto.xcontent = stringBlock(@"xcontent");
-    dto.index = int32Block(@"index");
+    int32_t index = int32Block(@"index");
+    if (index > 0) {
+        dto.index = index;
+    }
     dto.query = stringBlock(@"query");
     dto.hyperlink = stringBlock(@"hyperlink");
     dto.attributes = [dto growingHelper_safeMap:dicBlock(@"attributes")];  // hybrid 可能会返回 NSNull value

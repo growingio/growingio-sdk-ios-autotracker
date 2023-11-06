@@ -31,6 +31,12 @@ typedef NS_OPTIONS(NSUInteger, GrowingEventSendPolicy) {
     GrowingEventSendPolicyWiFi = 1 << 2,        /// 仅WiFi可发送（特殊事件数据，如大文件等）
 };
 
+typedef NS_ENUM(NSUInteger, GrowingEventScene) {
+    GrowingEventSceneNative = 0,
+    GrowingEventSceneHybrid,
+    GrowingEventSceneFlutter
+};
+
 @interface GrowingBaseEvent : NSObject
 
 @property (nonatomic, copy, readonly, nullable) NSString *dataSourceId;
@@ -61,6 +67,7 @@ typedef NS_OPTIONS(NSUInteger, GrowingEventSendPolicy) {
 @property (nonatomic, copy, readonly) NSString *sdkVersion;
 @property (nonatomic, copy, readonly, nullable) NSString *userKey;
 @property (nonatomic, copy, readonly) NSString *timezoneOffset;
+@property (nonatomic, assign, readonly) GrowingEventScene scene;
 @property (nonatomic, assign) GrowingEventSendPolicy sendPolicy;
 
 - (NSDictionary *_Nonnull)toDictionary;
@@ -104,6 +111,7 @@ typedef NS_OPTIONS(NSUInteger, GrowingEventSendPolicy) {
 @property (nonatomic, copy, readonly) NSString *sdkVersion;
 @property (nonatomic, copy, readonly, nullable) NSString *userKey;
 @property (nonatomic, copy, readonly) NSString *timezoneOffset;
+@property (nonatomic, assign, readonly) GrowingEventScene scene;
 
 // 赋值属性，eg:deviceId,userId,sessionId,eventSequenceId
 - (void)readPropertyInTrackThread;
@@ -135,6 +143,7 @@ typedef NS_OPTIONS(NSUInteger, GrowingEventSendPolicy) {
 - (GrowingBaseBuilder * (^)(NSString *value))setUserKey;
 - (GrowingBaseBuilder * (^)(NSString *value))setEventType;
 - (GrowingBaseBuilder * (^)(NSString *value))setTimezoneOffset;
+- (GrowingBaseBuilder * (^)(GrowingEventScene value))setScene;
 - (GrowingBaseEvent *)build;
 
 @end
