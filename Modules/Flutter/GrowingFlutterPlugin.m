@@ -35,7 +35,6 @@ GrowingMod(GrowingFlutterPlugin)
 #pragma mark - GrowingModuleProtocol
 
 - (void)growingModInit:(GrowingContext *)context {
-    
 }
 
 + (BOOL)singleton {
