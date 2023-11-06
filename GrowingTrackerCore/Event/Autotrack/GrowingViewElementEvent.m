@@ -32,7 +32,11 @@
         _textValue = subBuilder.textValue;
         _xpath = subBuilder.xpath;
         _xcontent = subBuilder.xcontent;
-        _index = subBuilder.index;
+        int index = subBuilder.index;
+        if (index >= 0) {
+            // SDK 4.x: 原生需要手动加1，而hybrid、flutter等等跨平台需要自行处理index
+            _index = (self.scene == GrowingEventSceneNative) ? index + 1 : index;
+        }
     }
     return self;
 }
@@ -43,7 +47,7 @@
     dataDictM[@"textValue"] = self.textValue;
     dataDictM[@"xpath"] = self.xpath;
     dataDictM[@"xcontent"] = self.xcontent;
-    dataDictM[@"index"] = self.index >= 0 ? @(self.index) : nil;
+    dataDictM[@"index"] = self.index > 0 ? @(self.index) : nil;
     return dataDictM;
 }
 
