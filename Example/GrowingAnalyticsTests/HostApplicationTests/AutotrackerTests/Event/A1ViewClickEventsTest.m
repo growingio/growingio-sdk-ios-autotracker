@@ -242,7 +242,7 @@
 
         XCTAssertEqualObjects(dic[@"textValue"], @"Third");
         XCTAssertEqualObjects(dic[@"xpath"], xpathForView);
-        XCTAssertEqualObjects(dic[@"index"], @(2));
+        XCTAssertEqualObjects(dic[@"index"], @(3));
         XCTAssertEqualObjects(dic[@"xcontent"], xcontentForView);
     }
 }
