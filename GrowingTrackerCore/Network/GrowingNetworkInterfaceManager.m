@@ -27,7 +27,6 @@
 @interface GrowingNetworkInterfaceManager ()
 
 @property (nonatomic, strong) GrowingReachability *internetReachability;
-@property (nonatomic, assign) BOOL isUnknown;
 @property (nonatomic, assign, readwrite) BOOL WWANValid;
 @property (nonatomic, assign, readwrite) BOOL WiFiValid;
 @property (nonatomic, assign, readwrite) BOOL isReachable;
@@ -54,7 +53,6 @@
     if (self) {
         _internetReachability = [GrowingReachability reachabilityForInternetConnection];
         [_internetReachability startNotifier];
-        _isUnknown = YES;
 
 #if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
         _teleInfo = [[CTTelephonyNetworkInfo alloc] init];
@@ -64,23 +62,18 @@
 }
 
 - (void)updateInterfaceInfo {
-    GrowingNetworkStatus netStatus = [self.internetReachability currentReachabilityStatus];
-    BOOL connectionRequired = [self.internetReachability connectionRequired];
-    self.isUnknown = (netStatus == GrowingUnknown);
-    self.WiFiValid = (netStatus == GrowingReachableViaWiFi && !connectionRequired);
-    self.WWANValid = (netStatus == GrowingReachableViaWWAN && !connectionRequired);
-    self.isReachable = (self.WiFiValid || self.WWANValid);
+    GrowingNetworkStatus netStatus = self.internetReachability.networkStatus;
+    self.WiFiValid = netStatus == GrowingReachabilityViaWiFi;
+    self.WWANValid = netStatus == GrowingReachabilityViaWWAN;
+    self.isReachable = netStatus != GrowingReachabilityNotReachable; // contain GrowingReachabilityUnknown
 }
 
 - (NSString *)networkType {
-    [self updateInterfaceInfo];
-
-    if (self.isUnknown) {
-        return @"UNKNOWN";
-    } else if (self.WiFiValid) {
+    GrowingNetworkStatus netStatus = self.internetReachability.networkStatus;
+    if (netStatus == GrowingReachabilityViaWiFi) {
         return @"WIFI";
 #if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
-    } else if (self.WWANValid) {
+    } else if (netStatus == GrowingReachabilityViaWWAN) {
         NSArray *typeStrings4G = @[CTRadioAccessTechnologyLTE];
         NSString *accessString = CTRadioAccessTechnologyLTE;  // default 4G
         if (@available(iOS 12.0, *)) {
@@ -107,6 +100,7 @@
 #endif
     }
 
+    // GrowingReachabilityUnknown or GrowingReachabilityNotReachable
     return @"UNKNOWN";
 }
 
