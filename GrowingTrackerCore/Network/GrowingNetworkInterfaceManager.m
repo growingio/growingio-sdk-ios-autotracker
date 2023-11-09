@@ -65,7 +65,7 @@
     GrowingNetworkStatus netStatus = self.internetReachability.networkStatus;
     self.WiFiValid = netStatus == GrowingReachabilityViaWiFi;
     self.WWANValid = netStatus == GrowingReachabilityViaWWAN;
-    self.isReachable = netStatus != GrowingReachabilityNotReachable; // contain GrowingReachabilityUnknown
+    self.isReachable = netStatus != GrowingReachabilityNotReachable;  // contain GrowingReachabilityUnknown
 }
 
 - (NSString *)networkType {
