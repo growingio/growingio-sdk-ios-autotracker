@@ -42,7 +42,13 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target,
 #if !TARGET_OS_WATCH
         SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault,
                                                                                        hostAddress);
-        _reachabilityRef = reachability;
+        if (reachability) {
+            _reachabilityRef = reachability;
+            SCNetworkReachabilityFlags flags = 0;
+            if (SCNetworkReachabilityGetFlags(reachability, &flags)) {
+                _networkStatus = [self networkStatusForFlags:flags];
+            }
+        }
 #endif
     }
     return self;
@@ -61,37 +67,46 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target,
 
 - (BOOL)startNotifier {
 #if TARGET_OS_WATCH
-  return NO;
+    return NO;
 #else
-	BOOL returnValue = NO;
-	SCNetworkReachabilityContext context = {0, (__bridge void *)(self), NULL, NULL, NULL};
-	if (SCNetworkReachabilitySetCallback(_reachabilityRef,
+    if (!_reachabilityRef) {
+        return NO;
+    }
+ 	SCNetworkReachabilityContext context = {
+        0,
+        (__bridge void *)(self),
+        NULL,
+        NULL,
+        NULL};
+	if (!SCNetworkReachabilitySetCallback(_reachabilityRef,
                                          ReachabilityCallback,
                                          &context)) {
-		if (SCNetworkReachabilityScheduleWithRunLoop(_reachabilityRef,
-                                                     CFRunLoopGetCurrent(),
-                                                     kCFRunLoopDefaultMode)) {
-			returnValue = YES;
-		}
+        return NO;
 	}
-	return returnValue;
+    if (!SCNetworkReachabilityScheduleWithRunLoop(_reachabilityRef,
+                                                 CFRunLoopGetCurrent(),
+                                                 kCFRunLoopDefaultMode)) {
+        return NO;
+    }
+	return YES;
 #endif
 }
 
 - (void)stopNotifier {
 #if !TARGET_OS_WATCH
-	if (_reachabilityRef != NULL) {
-		SCNetworkReachabilityUnscheduleFromRunLoop(_reachabilityRef,
-                                                   CFRunLoopGetCurrent(),
-                                                   kCFRunLoopDefaultMode);
-	}
+    if (!_reachabilityRef) {
+        return;
+    }
+    SCNetworkReachabilityUnscheduleFromRunLoop(_reachabilityRef,
+                                               CFRunLoopGetCurrent(),
+                                               kCFRunLoopDefaultMode);
     _networkStatus = GrowingReachabilityUnknown;
 #endif
 }
 
 - (void)dealloc {
 	[self stopNotifier];
-	if (_reachabilityRef != NULL) {
+	if (_reachabilityRef) {
 		CFRelease(_reachabilityRef);
         _reachabilityRef = nil;
 	}
