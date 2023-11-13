@@ -23,8 +23,7 @@
 
 @implementation UIWindow (GrowingHelper)
 
-+ (UIImage *)growingHelper_screenshotWithWindows:(NSArray<UIWindow *> *)windows
-                                     andMaxScale:(CGFloat)maxScale {
++ (UIImage *)growingHelper_screenshotWithWindows:(NSArray<UIWindow *> *)windows andMaxScale:(CGFloat)maxScale {
     CGFloat scale = [UIScreen mainScreen].scale;
     if (maxScale != 0 && maxScale < scale) {
         scale = maxScale;
