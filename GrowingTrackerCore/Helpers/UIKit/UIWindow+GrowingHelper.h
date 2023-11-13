@@ -22,10 +22,6 @@
 
 @interface UIWindow (GrowingHelper)
 
-+ (UIImage *)growingHelper_screenshotWithWindows:(NSArray<UIWindow *> *)windows
-                                     andMaxScale:(CGFloat)maxScale
-                                           block:(void (^)(CGContextRef context))block;
-
 + (UIImage *)growingHelper_screenshotWithWindows:(NSArray<UIWindow *> *)windows andMaxScale:(CGFloat)maxScale;
 
 @end

@@ -110,7 +110,7 @@ GrowingService(GrowingScreenshotService, GrowingScreenshotProvider)
         }
     }];
 
-    UIImage *image = [UIWindow growingHelper_screenshotWithWindows:windows andMaxScale:scale block:nil];
+    UIImage *image = [UIWindow growingHelper_screenshotWithWindows:windows andMaxScale:scale];
     return image;
 }
 

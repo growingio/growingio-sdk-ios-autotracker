@@ -18,25 +18,12 @@
 //  limitations under the License.
 
 #if __has_include(<UIKit/UIKit.h>)
-#import "GrowingTrackerCore/Helpers/Foundation/NSData+GrowingHelper.h"
 #import "GrowingTrackerCore/Helpers/UIKit/UIImage+GrowingHelper.h"
 
 @implementation UIImage (GrowingHelper)
 
 - (NSData *)growingHelper_JPEG:(CGFloat)compress {
     return UIImageJPEGRepresentation(self, compress);
-}
-
-- (NSData *)growingHelper_PNG {
-    return UIImagePNGRepresentation(self);
-}
-
-- (NSString *)growingHelper_Base64JPEG:(CGFloat)compress {
-    return [[self growingHelper_JPEG:compress] growingHelper_base64String];
-}
-
-- (NSString *)growingHelper_Base64PNG {
-    return [[self growingHelper_PNG] growingHelper_base64String];
 }
 
 @end

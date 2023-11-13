@@ -165,7 +165,7 @@
         self.statusLable = tipLabel;
 
         [self.btn addGestureRecognizer:self.panGestureRecognizer];
-        self.btn.growingHelper_onClick = self.onButtonClick;
+        [self.btn addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
         self.growingViewLevel = 0;
     }
     return self;
@@ -179,9 +179,10 @@
     return view;
 }
 
-- (void)setOnButtonClick:(void (^)(void))onButtonClick {
-    _onButtonClick = onButtonClick;
-    self.btn.growingHelper_onClick = self.onButtonClick;
+- (void)buttonAction:(UIControl *)sender {
+    if (self.onButtonClick) {
+        self.onButtonClick();
+    }
 }
 
 @end
