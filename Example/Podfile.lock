@@ -69,16 +69,16 @@ PODS:
     - GrowingAPM/Core
   - GrowingAPM/UIMonitor (1.0.0):
     - GrowingAPM/Core
-  - GrowingToolsKit (1.2.1):
-    - GrowingToolsKit/Default (= 1.2.1)
-  - GrowingToolsKit/APMCore (1.2.1):
+  - GrowingToolsKit (2.0.0-beta.3):
+    - GrowingToolsKit/Default (= 2.0.0-beta.3)
+  - GrowingToolsKit/APMCore (2.0.0-beta.3):
     - GrowingAPM/Core
     - GrowingToolsKit/Core
-  - GrowingToolsKit/Core (1.2.1)
-  - GrowingToolsKit/CrashMonitor (1.2.1):
+  - GrowingToolsKit/Core (2.0.0-beta.3)
+  - GrowingToolsKit/CrashMonitor (2.0.0-beta.3):
     - GrowingAPM/CrashMonitor
     - GrowingToolsKit/APMCore
-  - GrowingToolsKit/Default (1.2.1):
+  - GrowingToolsKit/Default (2.0.0-beta.3):
     - GrowingToolsKit/Core
     - GrowingToolsKit/CrashMonitor
     - GrowingToolsKit/EventsList
@@ -88,20 +88,20 @@ PODS:
     - GrowingToolsKit/SDKInfo
     - GrowingToolsKit/Settings
     - GrowingToolsKit/XPathTrack
-  - GrowingToolsKit/EventsList (1.2.1):
+  - GrowingToolsKit/EventsList (2.0.0-beta.3):
     - GrowingToolsKit/Core
-  - GrowingToolsKit/LaunchTime (1.2.1):
+  - GrowingToolsKit/LaunchTime (2.0.0-beta.3):
     - GrowingAPM/UIMonitor
     - GrowingToolsKit/APMCore
-  - GrowingToolsKit/NetFlow (1.2.1):
+  - GrowingToolsKit/NetFlow (2.0.0-beta.3):
     - GrowingToolsKit/Core
-  - GrowingToolsKit/Realtime (1.2.1):
+  - GrowingToolsKit/Realtime (2.0.0-beta.3):
     - GrowingToolsKit/Core
-  - GrowingToolsKit/SDKInfo (1.2.1):
+  - GrowingToolsKit/SDKInfo (2.0.0-beta.3):
     - GrowingToolsKit/Core
-  - GrowingToolsKit/Settings (1.2.1):
+  - GrowingToolsKit/Settings (2.0.0-beta.3):
     - GrowingToolsKit/Core
-  - GrowingToolsKit/XPathTrack (1.2.1):
+  - GrowingToolsKit/XPathTrack (2.0.0-beta.3):
     - GrowingToolsKit/Core
   - GrowingUtils/AutotrackerCore (1.0.0):
     - GrowingUtils/TrackerCore
@@ -128,7 +128,7 @@ DEPENDENCIES:
   - GrowingAnalytics/ImpressionTrack (from `../`)
   - GrowingAnalytics/Tracker (from `../`)
   - GrowingAPM
-  - GrowingToolsKit (>= 1.2.1)
+  - GrowingToolsKit (= 2.0.0-beta.3)
   - KIF
   - LBXScan/LBXNative (= 2.3)
   - LBXScan/UI (= 2.3)
@@ -152,7 +152,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   GrowingAnalytics: 785217dface3f19e7be09ecf92b5b2fd5897ba7e
   GrowingAPM: 6750d66ca6876c2c7d22c1c087625bc9ccc3430c
-  GrowingToolsKit: 134a78b023c4ab7da51e0a1111e9956a96e42dab
+  GrowingToolsKit: faf259faa5e760150ae8d352acbb841ba84f3913
   GrowingUtils: f0a9858cfd15dc584367957f24a784813a68d637
   KIF: 7660c626b0f2d4562533590960db70a36d640558
   LBXScan: e51449f0832d1fe17da632af0d22adeb3cfa3543
@@ -160,6 +160,6 @@ SPEC CHECKSUMS:
   SDCycleScrollView: a0d74c3384caa72bdfc81470bdbc8c14b3e1fbcf
   SDWebImage: 96e0c18ef14010b7485210e92fac888587ebb958
 
-PODFILE CHECKSUM: ab056def7c57fcd5747a7be922ee9fc2b5ce9783
+PODFILE CHECKSUM: 681f1e137fba0fda695485811bb29927d7d0e144
 
 COCOAPODS: 1.14.2
