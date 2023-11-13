@@ -23,7 +23,7 @@ target 'Example' do
 #  pod 'GrowingAPM/CrashMonitor'
   pod 'GrowingAnalytics/APM', :path => '../'
   
-  pod 'GrowingToolsKit', '>= 1.2.1'
+  pod 'GrowingToolsKit', '2.0.0-beta.3'
 
   pod 'SDCycleScrollView', '~> 1.75'
   pod 'LBXScan/LBXNative', '2.3'
@@ -66,7 +66,7 @@ target 'ExampleiOS13' do
   # 而不是再去集成一个新的 GrowingAPM，其将导致生成 2 个 GrowingAPM Pod Target，编译会出现 Multiple commands produce 报错
   pod 'GrowingAPM'
 
-  pod 'GrowingToolsKit', '>= 1.2.1'
+  pod 'GrowingToolsKit', '2.0.0-beta.3'
 end
 
 target 'Example-macOS' do
