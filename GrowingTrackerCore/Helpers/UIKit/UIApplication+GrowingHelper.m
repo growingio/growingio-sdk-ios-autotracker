@@ -46,28 +46,6 @@
     return [array arrayByAddingObject:keyWindow];
 }
 
-- (NSArray<UIWindow *> *)growingHelper_allWindowsSortedByWindowLevel {
-    NSArray *windows = [[UIApplication sharedApplication] growingHelper_allWindows];
-
-    NSMutableArray *sortedWindows = [NSMutableArray arrayWithArray:windows];
-    [sortedWindows sortWithOptions:NSSortStable
-                   usingComparator:^NSComparisonResult(id _Nonnull obj1, id _Nonnull obj2) {
-                       UIWindow *win1 = obj1;
-                       UIWindow *win2 = obj2;
-                       if (win1.windowLevel < win2.windowLevel) {
-                           return NSOrderedAscending;
-                       }
-
-                       if (win1.windowLevel > win2.windowLevel) {
-                           return NSOrderedDescending;
-                       }
-
-                       return NSOrderedSame;
-                   }];
-
-    return sortedWindows;
-}
-
 - (NSArray<UIWindow *> *)growingHelper_allWindowsWithoutGrowingWindow {
     NSMutableArray *windows = [[NSMutableArray alloc] initWithArray:self.growingHelper_allWindows];
     for (NSInteger i = windows.count - 1; i >= 0; i--) {

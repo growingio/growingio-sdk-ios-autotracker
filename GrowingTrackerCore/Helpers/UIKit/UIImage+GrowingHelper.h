@@ -23,9 +23,6 @@
 @interface UIImage (GrowingHelper)
 
 - (NSData *)growingHelper_JPEG:(CGFloat)compress;
-- (NSData *)growingHelper_PNG;
-- (NSString *)growingHelper_Base64JPEG:(CGFloat)compress;
-- (NSString *)growingHelper_Base64PNG;
 
 @end
 #endif

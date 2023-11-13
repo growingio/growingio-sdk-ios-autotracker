@@ -27,7 +27,6 @@
 #if __has_include(<UIKit/UIKit.h>)
 #import <UIKit/UIKit.h>
 #import "GrowingTrackerCore/Helpers/UIKit/UIApplication+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/UIKit/UIControl+GrowingHelper.h"
 #import "GrowingTrackerCore/Helpers/UIKit/UIImage+GrowingHelper.h"
 #import "GrowingTrackerCore/Helpers/UIKit/UIView+GrowingHelper.h"
 #import "GrowingTrackerCore/Helpers/UIKit/UIWindow+GrowingHelper.h"
