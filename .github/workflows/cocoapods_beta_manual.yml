@@ -32,5 +32,5 @@ jobs:
           chmod +x Scripts/cocoapods-beta.sh
           sh Scripts/cocoapods-beta.sh
         env:
-          COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
+          COCOAPODS_TRUNK_TOKEN: ${{ secrets.GIOSDK_COCOAPODS_TRUNK_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}

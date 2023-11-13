@@ -20,4 +20,4 @@ jobs:
           set -eo pipefail
           pod trunk push GrowingAnalytics.podspec --verbose --allow-warnings
         env:
-          COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
+          COCOAPODS_TRUNK_TOKEN: ${{ secrets.GIOSDK_COCOAPODS_TRUNK_TOKEN }}
