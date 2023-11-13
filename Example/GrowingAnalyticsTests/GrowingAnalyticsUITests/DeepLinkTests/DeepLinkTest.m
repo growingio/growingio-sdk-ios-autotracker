@@ -126,8 +126,7 @@
 - (void)test13WebCircleFromSafari_thatLaunchesTheApp {
     // 圈选，测试不会进入GrowingAdvertising逻辑
     NSString *url = @"growing.deeplink://growingio/webservice?serviceType=circle"
-                    @"&wsUrl=ws://uat-gdp.growingio.com/app/weDq7mpE/circle/f1bcb578cdc347fc872192b55d2bb764"
-                    @"&xctest=DeepLinkTest";
+                    @"&wsUrl=ws://uat-gdp.growingio.com/app/weDq7mpE/circle/f1bcb578cdc347fc872192b55d2bb764";
 
     XCUIApplication *app = [[XCUIApplication alloc] init];
     [app launch];
