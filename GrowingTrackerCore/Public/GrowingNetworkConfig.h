@@ -17,29 +17,12 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#ifndef GrowingConstApi_h
-#define GrowingConstApi_h
-
 #import <Foundation/Foundation.h>
 
-#define kGrowingEventApiTemplate @"v3/projects/%@/collect?stm=%llu"
+@interface GrowingNetworkConfig : NSObject <NSCopying>
 
-#endif /* GrowingConstApi_h */
+@property (nonatomic, assign) NSTimeInterval requestTimeoutInSec;
 
-@interface GrowingNetworkConfig : NSObject
-
-@property (nonatomic, copy) NSString *customDataHost;
-
-+ (instancetype)sharedInstance;
-
-/// 返回 growingApiHostEnd 拼接的事件上传地址 eg:https://napi.growingio.com/v3/projects/91eaf9b283361032/collect
-+ (NSString *)absoluteURL;
-
-/// 返回url path eg:v3/projects/91eaf9b283361032/collect
-+ (NSString *)path;
-
-/// 返回GrowingTrackConfiguration配置的dataCollectionServerHost，如果没有额外配置该参数的话，默认返回
-/// https://napi.growingio.com
-- (NSString *)growingApiHostEnd;
++ (instancetype)config;
 
 @end

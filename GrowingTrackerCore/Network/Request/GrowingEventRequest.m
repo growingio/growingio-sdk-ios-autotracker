@@ -22,7 +22,7 @@
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Network/Request/Adapter/GrowingEventRequestAdapters.h"
 #import "GrowingTrackerCore/Network/Request/Adapter/GrowingRequestAdapter.h"
-#import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
+#import "GrowingTrackerCore/Public/GrowingNetworkConfig.h"
 #import "GrowingULTimeUtil.h"
 
 @implementation GrowingEventRequest
@@ -44,7 +44,7 @@
 }
 
 - (NSURL *)absoluteURL {
-    NSString *baseUrl = [GrowingNetworkConfig sharedInstance].growingApiHostEnd;
+    NSString *baseUrl = GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionServerHost;
     if (!baseUrl.length) {
         return nil;
     }
@@ -73,6 +73,14 @@
 - (NSDictionary *)query {
     NSString *stm = [NSString stringWithFormat:@"%llu", self.stm];
     return @{@"stm": stm};
+}
+
+- (NSTimeInterval)timeoutInSeconds {
+    GrowingNetworkConfig *networkConfig = GrowingConfigurationManager.sharedInstance.trackConfiguration.networkConfig;
+    if (networkConfig && networkConfig.requestTimeoutInSec > 0) {
+        return networkConfig.requestTimeoutInSec;
+    }
+    return 60.0f;
 }
 
 @end

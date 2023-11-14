@@ -55,6 +55,7 @@ NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growing
         _idMappingEnabled = NO;
         _urlScheme = nil;
         _encryptEnabled = NO;
+        _networkConfig = nil;
 
         // Advert
         _ASAEnabled = NO;
@@ -89,6 +90,7 @@ NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growing
     configuration->_idMappingEnabled = _idMappingEnabled;
     configuration->_urlScheme = _urlScheme;
     configuration->_encryptEnabled = _encryptEnabled;
+    configuration->_networkConfig = [_networkConfig copy];
 
     // Advert
     configuration->_ASAEnabled = _ASAEnabled;

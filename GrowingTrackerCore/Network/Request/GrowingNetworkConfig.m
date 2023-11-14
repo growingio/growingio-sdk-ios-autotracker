@@ -17,68 +17,18 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
-#import <Foundation/Foundation.h>
-#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
-#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
-#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
+#import "GrowingTrackerCore/Public/GrowingNetworkConfig.h"
 
 @implementation GrowingNetworkConfig
 
-static GrowingNetworkConfig *sharedInstance;
-
-+ (instancetype)sharedInstance {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sharedInstance = [[self alloc] init];
-    });
-    return sharedInstance;
++ (instancetype)config {
+    return [[GrowingNetworkConfig alloc] init];
 }
 
-+ (NSString *)generateValidEndPoint:(NSString *)customHost {
-    NSString *validEndPoint =
-        [[customHost stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] copy];
-    if (!validEndPoint.length) {
-        GIOLogError(@"An empty string is set as tracker host.");
-        return @"";
-    }
-    if (![validEndPoint hasPrefix:@"http://"] && ![validEndPoint hasPrefix:@"https://"]) {
-        validEndPoint = [NSString stringWithFormat:@"https://%@", validEndPoint];
-    }
-
-    NSURL *url = [NSURL URLWithString:validEndPoint];
-    if (url == nil) {
-        GIOLogError(@"An Invalid URL is set as tracker host.");
-        return @"";
-    }
-    return validEndPoint;
-}
-
-// 获取url字段
-+ (NSString *)absoluteURL {
-    NSString *baseUrl = [GrowingNetworkConfig sharedInstance].growingApiHostEnd;
-    if (!baseUrl.length) {
-        return nil;
-    }
-    NSString *absoluteURLString = [baseUrl growingHelper_absoluteURLStringWithPath:self.path andQuery:nil];
-    return absoluteURLString;
-}
-
-+ (NSString *)path {
-    NSString *accountId = [GrowingConfigurationManager sharedInstance].trackConfiguration.projectId ?: @"";
-    NSString *path = [NSString stringWithFormat:@"v3/projects/%@/collect", accountId];
-    return path;
-}
-
-- (void)setCustomDataHost:(NSString *)customHost {
-    NSString *validEndPoint = [GrowingNetworkConfig generateValidEndPoint:customHost];
-    if (validEndPoint.length) {
-        _customDataHost = validEndPoint;
-    }
-}
-
-- (NSString *)growingApiHostEnd {
-    return GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionServerHost;
+- (id)copyWithZone:(NSZone *)zone {
+    GrowingNetworkConfig *config = [[[self class] allocWithZone:zone] init];
+    config->_requestTimeoutInSec = _requestTimeoutInSec;
+    return config;
 }
 
 @end
