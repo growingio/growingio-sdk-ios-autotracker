@@ -26,7 +26,6 @@
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Menu/GrowingAlert.h"
 #import "GrowingTrackerCore/Menu/GrowingStatusBar.h"
-#import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
 #import "GrowingTrackerCore/Public/GrowingAnnotationCore.h"
 #import "GrowingTrackerCore/Public/GrowingScreenshotService.h"
 #import "GrowingTrackerCore/Public/GrowingServiceManager.h"
@@ -77,10 +76,12 @@ GrowingMod(GrowingMobileDebugger)
     return self;
 }
 
-// 获取url字段
 - (NSString *)absoluteURL {
     if (!_absoluteURL) {
-        _absoluteURL = [GrowingNetworkConfig absoluteURL];
+        GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+        NSString *path = [NSString stringWithFormat:@"v3/projects/%@/collect", config.accountId];
+        NSString *baseUrl = config.dataCollectionServerHost;
+        _absoluteURL = [baseUrl growingHelper_absoluteURLStringWithPath:path andQuery:nil];
     }
     return _absoluteURL;
 }

@@ -17,41 +17,20 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
-#import <Foundation/Foundation.h>
-#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
-#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Public/GrowingNetworkConfig.h"
 
 @implementation GrowingNetworkConfig
 
 static GrowingNetworkConfig *sharedInstance;
 
-+ (instancetype)sharedInstance {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sharedInstance = [[self alloc] init];
-    });
-    return sharedInstance;
++ (instancetype)config {
+    return [[GrowingNetworkConfig alloc] init];
 }
 
-// 获取url字段
-+ (NSString *)absoluteURL {
-    NSString *baseUrl = [GrowingNetworkConfig sharedInstance].growingApiHostEnd;
-    if (!baseUrl.length) {
-        return nil;
-    }
-    NSString *absoluteURLString = [baseUrl growingHelper_absoluteURLStringWithPath:self.path andQuery:nil];
-    return absoluteURLString;
-}
-
-+ (NSString *)path {
-    NSString *accountId = [GrowingConfigurationManager sharedInstance].trackConfiguration.accountId;
-    NSString *path = [NSString stringWithFormat:@"v3/projects/%@/collect", accountId];
-    return path;
-}
-
-- (NSString *)growingApiHostEnd {
-    return GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionServerHost;
+- (id)copyWithZone:(NSZone *)zone {
+    GrowingNetworkConfig *config = [[[self class] allocWithZone:zone] init];
+    config->_requestTimeoutInSec = _requestTimeoutInSec;
+    return config;
 }
 
 @end

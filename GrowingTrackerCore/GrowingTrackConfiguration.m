@@ -55,6 +55,7 @@ NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growing
         _idMappingEnabled = NO;
         _urlScheme = nil;
         _encryptEnabled = NO;
+        _networkConfig = nil;
         _useProtobuf = YES;
 
         // Ads
@@ -94,6 +95,7 @@ NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growing
     configuration->_idMappingEnabled = _idMappingEnabled;
     configuration->_urlScheme = _urlScheme;
     configuration->_encryptEnabled = _encryptEnabled;
+    configuration->_networkConfig = [_networkConfig copy];
     configuration->_useProtobuf = _useProtobuf;
 
     // Ads
