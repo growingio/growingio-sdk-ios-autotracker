@@ -20,6 +20,7 @@
 #import <Foundation/Foundation.h>
 #import "GrowingEventFilter.h"
 #import "GrowingFieldsIgnore.h"
+#import "GrowingNetworkConfig.h"
 
 FOUNDATION_EXPORT NSString *const kGrowingDefaultDataCollectionServerHost;
 
@@ -39,6 +40,7 @@ FOUNDATION_EXPORT NSString *const kGrowingDefaultDataCollectionServerHost;
 @property (nonatomic, assign) BOOL idMappingEnabled;
 @property (nonatomic, copy) NSString *urlScheme;
 @property (nonatomic, assign) BOOL encryptEnabled;
+@property (nonatomic, copy) GrowingNetworkConfig *networkConfig;
 @property (nonatomic, assign) BOOL useProtobuf;
 
 - (instancetype)initWithAccountId:(NSString *)accountId;

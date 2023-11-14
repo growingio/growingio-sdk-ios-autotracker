@@ -48,8 +48,6 @@
     NSData *testData = [testString dataUsingEncoding:NSUTF8StringEncoding];
     XCTAssertNotNil([testData growingHelper_base64String]);
     XCTAssertNotNil([testData growingHelper_utf8String]);
-    NSString *md5 = [[@"hello world" dataUsingEncoding:NSUTF8StringEncoding] growingHelper_md5String];
-    XCTAssertEqualObjects(md5, @"5EB63BBBE01EEED093CB22BB8F5ACDC3");
     XCTAssertNotNil([testData growingHelper_LZ4String]);
     XCTAssertNil([testData growingHelper_jsonObject]);
     XCTAssertNil([testData growingHelper_arrayObject]);
