@@ -117,6 +117,7 @@
     XCTAssertEqual(configuration.encryptEnabled, NO);
     XCTAssertEqual(configuration.impressionScale, 0);
     XCTAssertEqualObjects(configuration.dataSourceId, nil);
+    XCTAssertEqualObjects(configuration.networkConfig, nil);
 }
 
 - (void)testSetConfiguration_Autotracker {
@@ -135,6 +136,9 @@
     config.encryptEnabled = YES;
     config.impressionScale = 0.5;
     config.dataSourceId = @"12345";
+    GrowingNetworkConfig *networkConfig = [GrowingNetworkConfig config];
+    networkConfig.requestTimeoutInSec = 0.3f;
+    config.networkConfig = networkConfig;
     [GrowingRealAutotracker trackerWithConfiguration:config launchOptions:nil];
 
     GrowingAutotrackConfiguration *configuration = (GrowingAutotrackConfiguration *)GrowingConfigurationManager.sharedInstance.trackConfiguration;
@@ -152,6 +156,8 @@
     XCTAssertEqual(configuration.encryptEnabled, YES);
     XCTAssertEqual(configuration.impressionScale, 0.5);
     XCTAssertEqualObjects(configuration.dataSourceId, @"12345");
+    XCTAssertNotNil(configuration.networkConfig);
+    XCTAssertEqual(configuration.networkConfig.requestTimeoutInSec, 0.3f);
 }
 
 - (void)testDefaultConfiguration_Tracker {
@@ -172,6 +178,7 @@
     XCTAssertEqualObjects(configuration.urlScheme, nil);
     XCTAssertEqual(configuration.encryptEnabled, NO);
     XCTAssertEqualObjects(configuration.dataSourceId, nil);
+    XCTAssertEqualObjects(configuration.networkConfig, nil);
 }
 
 - (void)testSetConfiguration_Tracker {
@@ -189,6 +196,9 @@
     config.urlScheme = @"growing.tracker";
     config.encryptEnabled = YES;
     config.dataSourceId = @"12345";
+    GrowingNetworkConfig *networkConfig = [GrowingNetworkConfig config];
+    networkConfig.requestTimeoutInSec = 0.3f;
+    config.networkConfig = networkConfig;
     [GrowingRealTracker trackerWithConfiguration:config launchOptions:nil];
 
     GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
@@ -205,6 +215,8 @@
     XCTAssertEqualObjects(configuration.urlScheme, @"growing.tracker");
     XCTAssertEqual(configuration.encryptEnabled, YES);
     XCTAssertEqualObjects(configuration.dataSourceId, @"12345");
+    XCTAssertNotNil(configuration.networkConfig);
+    XCTAssertEqual(configuration.networkConfig.requestTimeoutInSec, 0.3f);
 }
 
 - (void)testVersionNameAndVersionCode {
