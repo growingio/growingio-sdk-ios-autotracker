@@ -31,7 +31,6 @@
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
-#import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
 #import "GrowingTrackerCore/Public/GrowingEventNetworkService.h"
 #import "GrowingTrackerCore/Public/GrowingServiceManager.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
@@ -106,7 +105,6 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
 
 - (void)growingEventManagerChannels:(NSMutableArray<GrowingEventChannel *> *)channels {
     [channels addObject:[GrowingEventChannel eventChannelWithEventTypes:@[GrowingEventTypeActivate]
-                                                            urlTemplate:kGrowingEventApiTemplate
                                                           isCustomEvent:NO]];
 }
 

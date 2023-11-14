@@ -459,7 +459,7 @@ static GrowingEventManager *sharedInstance = nil;
     for (id<GrowingEventPersistenceProtocol> event in events) {
         [arrayM addObject:event.toJSONObject];
     }
-    GIOLogVerbose(@"(channel = %@, events = %@)\n", channel.urlTemplate, arrayM);
+    GIOLogVerbose(@"Send events = %@\n", arrayM);
 }
 
 #pragma mark - Interceptor

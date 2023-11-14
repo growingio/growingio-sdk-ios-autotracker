@@ -19,17 +19,14 @@
 
 #import "GrowingTrackerCore/Event/GrowingEventChannel.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingAutotrackEventType.h"
-#import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
 
 @implementation GrowingEventChannel
 
 - (instancetype)initWithTypes:(NSArray<NSString *> *)eventTypes
-                  urlTemplate:(NSString *)urlTemplate
                 isCustomEvent:(BOOL)isCustomEvent
                   isUploading:(BOOL)isUploading {
     if (self = [super init]) {
         _eventTypes = eventTypes;
-        _urlTemplate = urlTemplate;
         _isCustomEvent = isCustomEvent;
         _isUploading = isUploading;
     }
@@ -37,10 +34,8 @@
 }
 
 + (instancetype)eventChannelWithEventTypes:(NSArray<NSString *> *)eventTypes
-                               urlTemplate:(NSString *)urlTemplate
                              isCustomEvent:(BOOL)isCustomEvent {
     return [[GrowingEventChannel alloc] initWithTypes:eventTypes
-                                          urlTemplate:urlTemplate
                                         isCustomEvent:isCustomEvent
                                           isUploading:NO];
 }
@@ -55,7 +50,6 @@ static NSMutableArray *eventChannels = nil;
                            GrowingEventTypeAppClosed,
                            GrowingEventTypePage
                        ]
-                                                                     urlTemplate:kGrowingEventApiTemplate
                                                                    isCustomEvent:NO]];
         [eventChannels addObject:[GrowingEventChannel eventChannelWithEventTypes:@[
                            GrowingEventTypeCustom,
@@ -63,7 +57,6 @@ static NSMutableArray *eventChannels = nil;
                            GrowingEventTypeLoginUserAttributes,
                            GrowingEventTypeVisitorAttributes
                        ]
-                                                                     urlTemplate:kGrowingEventApiTemplate
                                                                    isCustomEvent:YES]];
     }
     return eventChannels;
@@ -73,7 +66,6 @@ static NSMutableArray *eventChannels = nil;
     NSMutableArray *channels = [[self eventChannels] mutableCopy];
     eventChannels = nil;
     [channels addObject:[GrowingEventChannel eventChannelWithEventTypes:nil
-                                                            urlTemplate:kGrowingEventApiTemplate
                                                           isCustomEvent:NO]];
     return channels;
 }

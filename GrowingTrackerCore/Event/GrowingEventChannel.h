@@ -24,17 +24,14 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GrowingEventChannel : NSObject
 
 @property (nonatomic, copy, nullable) NSArray<NSString *> *eventTypes;
-@property (nonatomic, copy) NSString *urlTemplate;
 @property (nonatomic, assign) BOOL isCustomEvent;
 @property (nonatomic, assign) BOOL isUploading;
 
 - (instancetype)initWithTypes:(NSArray<NSString *> *_Nullable)eventTypes
-                  urlTemplate:(NSString *)urlTemplate
                 isCustomEvent:(BOOL)isCustomEvent
                   isUploading:(BOOL)isUploading;
 
 + (instancetype)eventChannelWithEventTypes:(NSArray<NSString *> *_Nullable)eventTypes
-                               urlTemplate:(NSString *)urlTemplate
                              isCustomEvent:(BOOL)isCustomEvent;
 /// 所有的channels集合
 + (NSMutableArray<GrowingEventChannel *> *)eventChannels;

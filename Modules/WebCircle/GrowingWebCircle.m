@@ -35,7 +35,6 @@
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Menu/GrowingAlert.h"
 #import "GrowingTrackerCore/Menu/GrowingStatusBar.h"
-#import "GrowingTrackerCore/Network/Request/GrowingNetworkConfig.h"
 #import "GrowingTrackerCore/Public/GrowingFlutterService.h"
 #import "GrowingTrackerCore/Public/GrowingScreenshotService.h"
 #import "GrowingTrackerCore/Public/GrowingServiceManager.h"
