@@ -23,8 +23,6 @@
 
 - (NSString *)growingHelper_base64String;
 - (NSString *)growingHelper_utf8String;
-- (NSString *)growingHelper_md5String;
-- (void)growingHelper_md5value:(unsigned char *)valueArray;
 - (NSData *)growingHelper_LZ4String;
 - (id)growingHelper_jsonObject;
 - (NSArray *)growingHelper_arrayObject;
