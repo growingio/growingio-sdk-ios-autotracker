@@ -55,7 +55,7 @@ NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growing
         _idMappingEnabled = NO;
         _urlScheme = nil;
         _encryptEnabled = NO;
-        _networkConfig = nil;
+        _requestTimeout = 30;
 
         // Advert
         _ASAEnabled = NO;
@@ -90,7 +90,7 @@ NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growing
     configuration->_idMappingEnabled = _idMappingEnabled;
     configuration->_urlScheme = _urlScheme;
     configuration->_encryptEnabled = _encryptEnabled;
-    configuration->_networkConfig = [_networkConfig copy];
+    configuration->_requestTimeout = _requestTimeout;
 
     // Advert
     configuration->_ASAEnabled = _ASAEnabled;
@@ -101,6 +101,27 @@ NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growing
     // APM
     configuration->_APMConfig = [_APMConfig copy];
     return configuration;
+}
+
+- (void)setDataUploadInterval:(NSTimeInterval)dataUploadInterval {
+    if (dataUploadInterval <= 0) {
+        return;
+    }
+    _dataUploadInterval = dataUploadInterval;
+}
+
+- (void)setSessionInterval:(NSTimeInterval)sessionInterval {
+    if (sessionInterval <= 0) {
+        return;
+    }
+    _sessionInterval = sessionInterval;
+}
+
+- (void)setRequestTimeout:(NSTimeInterval)requestTimeout {
+    if (requestTimeout <= 0) {
+        return;
+    }
+    _requestTimeout = requestTimeout;
 }
 
 @end

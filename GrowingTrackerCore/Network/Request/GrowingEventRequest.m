@@ -22,7 +22,6 @@
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Network/Request/Adapter/GrowingEventRequestAdapters.h"
 #import "GrowingTrackerCore/Network/Request/Adapter/GrowingRequestAdapter.h"
-#import "GrowingTrackerCore/Public/GrowingNetworkConfig.h"
 #import "GrowingULTimeUtil.h"
 
 @implementation GrowingEventRequest
@@ -76,11 +75,7 @@
 }
 
 - (NSTimeInterval)timeoutInSeconds {
-    GrowingNetworkConfig *networkConfig = GrowingConfigurationManager.sharedInstance.trackConfiguration.networkConfig;
-    if (networkConfig && networkConfig.requestTimeoutInSec > 0) {
-        return networkConfig.requestTimeoutInSec;
-    }
-    return 60.0f;
+    return [GrowingConfigurationManager sharedInstance].trackConfiguration.requestTimeout;
 }
 
 @end
