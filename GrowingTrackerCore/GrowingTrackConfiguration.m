@@ -109,4 +109,20 @@ NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growing
     return configuration;
 }
 
+#pragma mark - Setter & Getter
+
+- (void)setDataUploadInterval:(NSTimeInterval)dataUploadInterval {
+    if (dataUploadInterval <= 0) {
+        return;
+    }
+    _dataUploadInterval = dataUploadInterval;
+}
+
+- (void)setSessionInterval:(NSTimeInterval)sessionInterval {
+    if (sessionInterval <= 0) {
+        return;
+    }
+    _sessionInterval = sessionInterval;
+}
+
 @end
