@@ -147,7 +147,7 @@
     config.impressionScale = 0.5;
     config.dataSourceId = @"12345";
     GrowingNetworkConfig *networkConfig = [GrowingNetworkConfig config];
-    networkConfig.requestTimeoutInSec = 0.3f;
+    networkConfig.requestTimeout = 0.3f;
     config.networkConfig = networkConfig;
     [GrowingRealAutotracker trackerWithConfiguration:config launchOptions:nil];
 
@@ -168,7 +168,7 @@
     XCTAssertEqual(configuration.impressionScale, 0.5);
     XCTAssertEqualObjects(configuration.dataSourceId, @"12345");
     XCTAssertNotNil(configuration.networkConfig);
-    XCTAssertEqual(configuration.networkConfig.requestTimeoutInSec, 0.3f);
+    XCTAssertEqual(configuration.networkConfig.requestTimeout, 0.3f);
 }
 
 - (void)testDefaultConfiguration_Tracker {
@@ -208,7 +208,7 @@
     config.encryptEnabled = YES;
     config.dataSourceId = @"12345";
     GrowingNetworkConfig *networkConfig = [GrowingNetworkConfig config];
-    networkConfig.requestTimeoutInSec = 0.3f;
+    networkConfig.requestTimeout = 0.3f;
     config.networkConfig = networkConfig;
     [GrowingRealTracker trackerWithConfiguration:config launchOptions:nil];
 
@@ -227,7 +227,7 @@
     XCTAssertEqual(configuration.encryptEnabled, YES);
     XCTAssertEqualObjects(configuration.dataSourceId, @"12345");
     XCTAssertNotNil(configuration.networkConfig);
-    XCTAssertEqual(configuration.networkConfig.requestTimeoutInSec, 0.3f);
+    XCTAssertEqual(configuration.networkConfig.requestTimeout, 0.3f);
 }
 
 - (void)testVersionNameAndVersionCode {

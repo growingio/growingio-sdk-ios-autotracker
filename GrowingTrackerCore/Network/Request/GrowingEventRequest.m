@@ -76,8 +76,8 @@
 
 - (NSTimeInterval)timeoutInSeconds {
     GrowingNetworkConfig *networkConfig = GrowingConfigurationManager.sharedInstance.trackConfiguration.networkConfig;
-    if (networkConfig && networkConfig.requestTimeoutInSec > 0) {
-        return networkConfig.requestTimeoutInSec;
+    if (networkConfig && networkConfig.requestTimeout > 0) {
+        return networkConfig.requestTimeout;
     }
     return 60.0f;
 }
