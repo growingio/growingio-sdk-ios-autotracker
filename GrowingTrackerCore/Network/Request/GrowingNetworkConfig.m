@@ -21,7 +21,12 @@
 
 @implementation GrowingNetworkConfig
 
-static GrowingNetworkConfig *sharedInstance;
+- (instancetype)init {
+    if (self = [super init]) {
+        _requestTimeout = 30;
+    }
+    return self;
+}
 
 + (instancetype)config {
     return [[GrowingNetworkConfig alloc] init];
@@ -31,6 +36,15 @@ static GrowingNetworkConfig *sharedInstance;
     GrowingNetworkConfig *config = [[[self class] allocWithZone:zone] init];
     config->_requestTimeout = _requestTimeout;
     return config;
+}
+
+#pragma mark - Setter & Getter
+
+- (void)setRequestTimeout:(NSTimeInterval)requestTimeout {
+    if (requestTimeout <= 0) {
+        return;
+    }
+    _requestTimeout = requestTimeout;
 }
 
 @end

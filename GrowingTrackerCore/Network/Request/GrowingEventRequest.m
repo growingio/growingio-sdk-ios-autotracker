@@ -79,7 +79,7 @@
     if (networkConfig && networkConfig.requestTimeout > 0) {
         return networkConfig.requestTimeout;
     }
-    return 60.0f;
+    return 30.0f;
 }
 
 @end
