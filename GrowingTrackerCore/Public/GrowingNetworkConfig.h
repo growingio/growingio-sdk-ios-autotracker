@@ -19,9 +19,10 @@
 
 #import <Foundation/Foundation.h>
 
+NS_SWIFT_NAME(NetworkConfig)
 @interface GrowingNetworkConfig : NSObject <NSCopying>
 
-@property (nonatomic, assign) NSTimeInterval requestTimeoutInSec;
+@property (nonatomic, assign) NSTimeInterval requestTimeout;
 
 + (instancetype)config;
 

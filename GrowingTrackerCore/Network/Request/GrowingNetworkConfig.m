@@ -29,7 +29,7 @@ static GrowingNetworkConfig *sharedInstance;
 
 - (id)copyWithZone:(NSZone *)zone {
     GrowingNetworkConfig *config = [[[self class] allocWithZone:zone] init];
-    config->_requestTimeoutInSec = _requestTimeoutInSec;
+    config->_requestTimeout = _requestTimeout;
     return config;
 }
 
