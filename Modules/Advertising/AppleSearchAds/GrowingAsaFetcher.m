@@ -127,6 +127,7 @@ static pthread_rwlock_t _lock = PTHREAD_RWLOCK_INITIALIZER;
 }
 
 - (void)growingEventManagerEventsDidSend:(NSArray<id<GrowingEventPersistenceProtocol>> *)events
+                                 request:(id<GrowingRequestProtocol>)request
                                  channel:(GrowingEventChannel *)channel {
     for (id<GrowingEventPersistenceProtocol> event in events) {
         if ([event.eventType isEqualToString:GrowingEventTypeActivate]) {
