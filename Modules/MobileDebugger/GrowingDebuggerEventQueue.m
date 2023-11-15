@@ -83,8 +83,21 @@ static GrowingDebuggerEventQueue *sharedInstance = nil;
     GROWING_UNLOCK(lock);
 }
 
-- (void)growingEventManagerEventDidBuild:(GrowingBaseEvent *)event {
-    [self enqueue:event.toDictionary];
+- (void)growingEventManagerEventsDidSend:(NSArray<id<GrowingEventPersistenceProtocol>> *)events
+                                 request:(id<GrowingRequestProtocol>)request
+                                 channel:(GrowingEventChannel *)channel {
+    if (events && request && request.absoluteURL) {
+        NSString *url = request.absoluteURL.absoluteString.copy;
+        for (id<GrowingEventPersistenceProtocol> event in events) {
+            NSDictionary *eventDic = event.toJSONObject;
+            if (!eventDic) {
+                continue;
+            }
+            NSMutableDictionary *dic = eventDic.mutableCopy;
+            [dic setObject:url forKey:@"url"];
+            [self enqueue:dic];
+        }
+    }
 }
 
 @end

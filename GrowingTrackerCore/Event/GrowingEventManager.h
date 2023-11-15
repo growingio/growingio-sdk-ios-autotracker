@@ -54,6 +54,7 @@
 /// 事件发送完毕
 /// @param events 发送的事件
 - (void)growingEventManagerEventsDidSend:(NSArray<id<GrowingEventPersistenceProtocol>> *_Nonnull)events
+                                 request:(id<GrowingRequestProtocol> _Nonnull)request
                                  channel:(GrowingEventChannel *_Nonnull)channel;
 
 @end

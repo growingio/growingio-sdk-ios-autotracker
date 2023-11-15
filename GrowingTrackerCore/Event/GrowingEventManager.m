@@ -366,8 +366,8 @@ static GrowingEventManager *sharedInstance = nil;
                           }
 
                           for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
-                              if ([obj respondsToSelector:@selector(growingEventManagerEventsDidSend:channel:)]) {
-                                  [obj growingEventManagerEventsDidSend:events channel:channel];
+                              if ([obj respondsToSelector:@selector(growingEventManagerEventsDidSend:request:channel:)]) {
+                                  [obj growingEventManagerEventsDidSend:events request:eventRequest channel:channel];
                               }
                           }
 

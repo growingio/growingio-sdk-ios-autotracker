@@ -76,16 +76,6 @@ GrowingMod(GrowingMobileDebugger)
     return self;
 }
 
-- (NSString *)absoluteURL {
-    if (!_absoluteURL) {
-        GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
-        NSString *path = [NSString stringWithFormat:@"v3/projects/%@/collect", config.accountId];
-        NSString *baseUrl = config.dataCollectionServerHost;
-        _absoluteURL = [baseUrl growingHelper_absoluteURLStringWithPath:path andQuery:nil];
-    }
-    return _absoluteURL;
-}
-
 - (void)runWithMobileDebugger:(NSURL *)url {
     Class<GrowingWebSocketService> serviceClass =
         [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingWebSocketService)];
@@ -254,13 +244,14 @@ GrowingMod(GrowingMobileDebugger)
         [self.cacheEvent removeAllObjects];
         GROWING_UNLOCK(lock);
         for (int i = 0; i < events.count; i++) {
-            NSMutableDictionary *attrs = [[NSMutableDictionary alloc] initWithDictionary:events[i]];
-            NSMutableDictionary *cacheDic = [NSMutableDictionary dictionary];
-            cacheDic[@"msgType"] = @"debugger_data";
-            cacheDic[@"sdkVersion"] = GrowingTrackerVersionName;
-            cacheDic[@"data"] = attrs;
-            cacheDic[@"data"][@"url"] = self.absoluteURL;
-            [self sendJson:cacheDic];
+            NSDictionary *attrs = events[i];
+            if ([attrs isKindOfClass:[NSDictionary class]]) {
+                NSMutableDictionary *cacheDic = [NSMutableDictionary dictionary];
+                cacheDic[@"msgType"] = @"debugger_data";
+                cacheDic[@"sdkVersion"] = GrowingTrackerVersionName;
+                cacheDic[@"data"] = attrs;
+                [self sendJson:cacheDic];
+            }
         }
     }
 }
