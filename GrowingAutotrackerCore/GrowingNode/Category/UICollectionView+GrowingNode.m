@@ -38,6 +38,10 @@
     return childs;
 }
 
+- (NSString *)growingViewContent {
+    return nil;
+}
+
 @end
 
 @implementation UICollectionViewCell (GrowingNode)
