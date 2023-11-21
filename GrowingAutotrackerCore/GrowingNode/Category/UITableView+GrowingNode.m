@@ -52,6 +52,10 @@
     return childs;
 }
 
+- (NSString *)growingViewContent {
+    return nil;
+}
+
 @end
 
 @implementation UITableViewCell (GrowingNode)
