@@ -148,6 +148,7 @@
     config.dataSourceId = @"12345";
     GrowingNetworkConfig *networkConfig = [GrowingNetworkConfig config];
     networkConfig.requestTimeout = 0.3f;
+    networkConfig.abTestingRequestTimeout = 0.5f;
     config.networkConfig = networkConfig;
     [GrowingRealAutotracker trackerWithConfiguration:config launchOptions:nil];
 
@@ -169,6 +170,7 @@
     XCTAssertEqualObjects(configuration.dataSourceId, @"12345");
     XCTAssertNotNil(configuration.networkConfig);
     XCTAssertEqual(configuration.networkConfig.requestTimeout, 0.3f);
+    XCTAssertEqual(configuration.networkConfig.abTestingRequestTimeout, 0.5f);
 }
 
 - (void)testDefaultConfiguration_Tracker {
@@ -209,6 +211,7 @@
     config.dataSourceId = @"12345";
     GrowingNetworkConfig *networkConfig = [GrowingNetworkConfig config];
     networkConfig.requestTimeout = 0.3f;
+    networkConfig.abTestingRequestTimeout = 0.5f;
     config.networkConfig = networkConfig;
     [GrowingRealTracker trackerWithConfiguration:config launchOptions:nil];
 
@@ -228,6 +231,7 @@
     XCTAssertEqualObjects(configuration.dataSourceId, @"12345");
     XCTAssertNotNil(configuration.networkConfig);
     XCTAssertEqual(configuration.networkConfig.requestTimeout, 0.3f);
+    XCTAssertEqual(configuration.networkConfig.abTestingRequestTimeout, 0.5f);
 }
 
 - (void)testVersionNameAndVersionCode {

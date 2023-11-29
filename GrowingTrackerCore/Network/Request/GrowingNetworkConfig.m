@@ -24,6 +24,7 @@
 - (instancetype)init {
     if (self = [super init]) {
         _requestTimeout = 30;
+        _abTestingRequestTimeout = 5;
     }
     return self;
 }
@@ -35,6 +36,7 @@
 - (id)copyWithZone:(NSZone *)zone {
     GrowingNetworkConfig *config = [[[self class] allocWithZone:zone] init];
     config->_requestTimeout = _requestTimeout;
+    config->_abTestingRequestTimeout = _abTestingRequestTimeout;
     return config;
 }
 
@@ -45,6 +47,13 @@
         return;
     }
     _requestTimeout = requestTimeout;
+}
+
+- (void)setAbTestingRequestTimeout:(NSTimeInterval)abTestingRequestTimeout {
+    if (abTestingRequestTimeout <= 0) {
+        return;
+    }
+    _abTestingRequestTimeout = abTestingRequestTimeout;
 }
 
 @end
