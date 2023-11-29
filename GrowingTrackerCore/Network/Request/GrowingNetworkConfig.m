@@ -19,6 +19,13 @@
 
 #import "GrowingTrackerCore/Public/GrowingNetworkConfig.h"
 
+@interface GrowingNetworkConfig ()
+
+// ABTesting
+@property (nonatomic, assign) NSTimeInterval abTestingRequestTimeout;
+
+@end
+
 @implementation GrowingNetworkConfig
 
 - (instancetype)init {

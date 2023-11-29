@@ -61,6 +61,9 @@
     configuration.urlScheme = @"growing.530c8231345c492d";
     configuration.abTestingServerHost = @"https://www.example.com";
     configuration.experimentTTL = 5.0f;
+    GrowingNetworkConfig *networkConfig = [GrowingNetworkConfig config];
+    networkConfig.abTestingRequestTimeout = 3.0f;
+    configuration.networkConfig = networkConfig;
     [GrowingAutotracker startWithConfiguration:configuration launchOptions:nil];
 }
 

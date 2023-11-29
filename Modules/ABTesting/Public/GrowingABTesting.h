@@ -42,4 +42,10 @@ NS_SWIFT_NAME(ABTesting)
 
 @end
 
+@interface GrowingNetworkConfig (ABTesting)
+
+@property (nonatomic, assign) NSTimeInterval abTestingRequestTimeout;
+
+@end
+
 NS_ASSUME_NONNULL_END

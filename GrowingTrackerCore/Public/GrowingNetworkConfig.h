@@ -23,7 +23,6 @@ NS_SWIFT_NAME(NetworkConfig)
 @interface GrowingNetworkConfig : NSObject <NSCopying>
 
 @property (nonatomic, assign) NSTimeInterval requestTimeout;
-@property (nonatomic, assign) NSTimeInterval abTestingRequestTimeout;
 
 + (instancetype)config;
 
