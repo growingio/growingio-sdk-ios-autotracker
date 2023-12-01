@@ -18,7 +18,6 @@
 //  limitations under the License.
 
 #import "Modules/ABTesting/Request/GrowingABTRequestAdapter.h"
-#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 
 @implementation GrowingABTRequestAdapter
 
@@ -33,7 +32,13 @@
     if (!self.parameters.count) {
         return needAdaptReq;
     }
-    needAdaptReq.HTTPBody = [self.parameters growingHelper_jsonData];
+    NSMutableArray *paramStrings = [NSMutableArray array];
+    [self.parameters enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        NSString *paramString = [NSString stringWithFormat:@"%@=%@", key, obj];
+        [paramStrings addObject:paramString];
+    }];
+    NSString *bodyString = [paramStrings componentsJoinedByString:@"&"];
+    needAdaptReq.HTTPBody = [bodyString dataUsingEncoding:NSUTF8StringEncoding];
     return needAdaptReq;
 }
 
