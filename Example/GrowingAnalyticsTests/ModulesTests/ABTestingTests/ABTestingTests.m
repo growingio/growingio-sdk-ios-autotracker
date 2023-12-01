@@ -277,10 +277,10 @@
         XCTAssertNil(exp);
     }];
     
-    // 目前会重试1次
+    // 非http请求失败不重试
     XCTestExpectation *expectation = [self expectationWithDescription:@"testFetchCodeFailure Test failed : timeout"];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        XCTAssertEqual(requestCount, 2);
+        XCTAssertEqual(requestCount, 1);
         [expectation fulfill];
     });
     
