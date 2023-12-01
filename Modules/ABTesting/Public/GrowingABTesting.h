@@ -38,7 +38,7 @@ NS_SWIFT_NAME(ABTesting)
 @interface GrowingTrackConfiguration (ABTesting)
 
 @property (nonatomic, copy) NSString *abTestingServerHost;
-@property (nonatomic, assign) NSUInteger experimentTTL;
+@property (nonatomic, assign) NSUInteger abTestingRequestInterval;
 
 @end
 

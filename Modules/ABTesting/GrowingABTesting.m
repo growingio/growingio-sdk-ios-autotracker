@@ -103,7 +103,7 @@ static NSString *const kABTExpStrategyId = @"$exp_strategy_id";
         } else {
             GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
             long long now = GrowingULTimeUtil.currentTimeMillis;
-            if (now - exp.fetchTime < config.experimentTTL * 60 * 1000LL) {
+            if (now - exp.fetchTime < config.abTestingRequestInterval * 60 * 1000LL) {
                 // TTL内
                 if (completedBlock) {
                     completedBlock(exp);

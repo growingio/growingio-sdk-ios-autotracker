@@ -35,7 +35,7 @@ NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growing
 
 // ABTesting
 @property (nonatomic, copy) NSString *abTestingServerHost;
-@property (nonatomic, assign) NSUInteger experimentTTL;
+@property (nonatomic, assign) NSUInteger abTestingRequestInterval;
 
 @end
 
@@ -73,7 +73,7 @@ NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growing
 
         // ABTesting
         _abTestingServerHost = nil;
-        _experimentTTL = 5;
+        _abTestingRequestInterval = 5;
     }
 
     return self;
@@ -117,7 +117,7 @@ NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growing
 
     // ABTesting
     configuration->_abTestingServerHost = [_abTestingServerHost copy];
-    configuration->_experimentTTL = _experimentTTL;
+    configuration->_abTestingRequestInterval = _abTestingRequestInterval;
 
     return configuration;
 }

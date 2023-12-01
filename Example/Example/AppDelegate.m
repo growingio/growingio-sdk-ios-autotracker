@@ -67,7 +67,7 @@
     
 #if defined(SDKABTESTINGMODULE)
     configuration.abTestingServerHost = @"https://n.datayi.cn";
-    configuration.experimentTTL = 5;
+    configuration.abTestingRequestInterval = 5;
 #endif
     
 #pragma clang diagnostic push
