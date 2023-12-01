@@ -32,13 +32,8 @@
 }
 
 - (NSURL *)absoluteURL {
-    NSURL *baseURL;
     GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
-    if (config.deepLinkHost && config.deepLinkHost.length > 0) {
-        baseURL = [NSURL URLWithString:config.deepLinkHost];
-    } else {
-        baseURL = [NSURL URLWithString:GrowingAdDefaultDeepLinkHost];
-    }
+    NSURL *baseURL = [NSURL URLWithString:config.deepLinkHost];
     return [NSURL URLWithString:self.path relativeToURL:baseURL];
 }
 

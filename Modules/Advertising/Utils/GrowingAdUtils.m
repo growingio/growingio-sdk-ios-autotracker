@@ -77,9 +77,6 @@ static NSString *const kGrowingAdIsActivateSentKey = @"GrowingAdvertisingActivat
 
     GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
     NSString *deepLinkHost = trackConfiguration.deepLinkHost;
-    if (!deepLinkHost || deepLinkHost.length == 0) {
-        deepLinkHost = GrowingAdDefaultDeepLinkHost;
-    }
     NSString *host = [NSURL URLWithString:deepLinkHost].host;
     return ([url.host isEqualToString:host] || [url.host hasSuffix:host]);
 }

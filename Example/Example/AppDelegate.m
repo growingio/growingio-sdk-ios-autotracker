@@ -49,7 +49,7 @@
     
 #if defined(SDKADSMODULE)
     configuration.ASAEnabled = YES;
-    configuration.deepLinkHost = @"https://n.datayi.cn";
+    configuration.deepLinkHost = @"https://link.growingio.com";
     configuration.deepLinkCallback = ^(NSDictionary * _Nullable params, NSTimeInterval processTime, NSError * _Nullable error) {
         if (error) {
             NSLog(@"error = %@", error);
@@ -66,7 +66,7 @@
 #endif
     
 #if defined(SDKABTESTINGMODULE)
-    configuration.abTestingServerHost = @"https://n.datayi.cn";
+    configuration.abTestingServerHost = @"https://ab.growingio.com";
     configuration.abTestingRequestInterval = 5;
 #endif
     

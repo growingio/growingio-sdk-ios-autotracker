@@ -21,6 +21,9 @@
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 
 NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growingio.com";
+NSString *const kGrowingDefaultDeepLinkHost = @"https://link.growingio.com";
+NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com";
+
 
 @interface GrowingTrackConfiguration ()
 
@@ -64,7 +67,7 @@ NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growing
 
         // Ads
         _ASAEnabled = NO;
-        _deepLinkHost = nil;
+        _deepLinkHost = kGrowingDefaultDeepLinkHost;
         _deepLinkCallback = nil;
         _readClipboardEnabled = YES;
 
@@ -72,7 +75,7 @@ NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growing
         _APMConfig = nil;
 
         // ABTesting
-        _abTestingServerHost = nil;
+        _abTestingServerHost = kGrowingDefaultABTestingServerHost;
         _abTestingRequestInterval = 5;
     }
 
