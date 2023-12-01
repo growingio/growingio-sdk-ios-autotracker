@@ -169,7 +169,7 @@ static NSString *const kABTExpStrategyId = @"$exp_strategy_id";
                   } @catch (NSException *exception) {
                       // 接口返回数据结构异常，SDK无法解析，不上报不缓存
                       if (completedBlock) {
-                          completedBlock(NO, nil, retryCount);
+                          completedBlock(NO, nil, 0);
                       }
                       return;
                   }
@@ -177,7 +177,7 @@ static NSString *const kABTExpStrategyId = @"$exp_strategy_id";
                   if (code != 0) {
                       // 请求失败
                       if (completedBlock) {
-                          completedBlock(NO, nil, retryCount);
+                          completedBlock(NO, nil, 0);
                       }
                       return;
                   }
