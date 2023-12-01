@@ -29,7 +29,7 @@
 
 - (NSMutableURLRequest *)adaptedURLRequest:(NSMutableURLRequest *)request {
     NSMutableURLRequest *needAdaptReq = request;
-    [needAdaptReq setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [needAdaptReq setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
     if (!self.parameters.count) {
         return needAdaptReq;
     }
