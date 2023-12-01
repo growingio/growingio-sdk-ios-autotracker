@@ -24,7 +24,6 @@ NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growing
 NSString *const kGrowingDefaultDeepLinkHost = @"https://link.growingio.com";
 NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com";
 
-
 @interface GrowingTrackConfiguration ()
 
 // Ads
