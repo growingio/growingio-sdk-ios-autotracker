@@ -56,12 +56,13 @@
 
 - (NSString *)toJsonString {
     NSMutableDictionary *configuration = [self dictionaryWithValuesForKeys:@[
-        @"dataSourceId",
-        @"appId",
-        @"appPackage",
-        @"nativeSdkVersion",
-        @"nativeSdkVersionCode"
-    ]].mutableCopy;
+                                             @"dataSourceId",
+                                             @"appId",
+                                             @"appPackage",
+                                             @"nativeSdkVersion",
+                                             @"nativeSdkVersionCode"
+                                         ]]
+                                             .mutableCopy;
     configuration[@"projectId"] = self.accountId;
 
     NSError *error;
