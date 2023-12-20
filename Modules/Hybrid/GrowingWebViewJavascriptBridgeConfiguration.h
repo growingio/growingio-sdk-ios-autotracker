@@ -20,23 +20,21 @@
 #import <Foundation/Foundation.h>
 
 @interface GrowingWebViewJavascriptBridgeConfiguration : NSObject
+
 @property (nonatomic, readonly, copy) NSString *accountId;
+@property (nonatomic, readonly, copy) NSString *dataSourceId;
 @property (nonatomic, readonly, copy) NSString *appId;
 @property (nonatomic, readonly, copy) NSString *appPackage;
 @property (nonatomic, readonly, copy) NSString *nativeSdkVersion;
 @property (nonatomic, readonly, assign) int nativeSdkVersionCode;
 
-- (instancetype)initWithAccountId:(NSString *)accountId
-                            appId:(NSString *)appId
-                       appPackage:(NSString *)appPackage
-                 nativeSdkVersion:(NSString *)nativeSdkVersion
-             nativeSdkVersionCode:(int)nativeSdkVersionCode;
-
 + (instancetype)configurationWithAccountId:(NSString *)accountId
+                              dataSourceId:(NSString *)dataSourceId
                                      appId:(NSString *)appId
                                 appPackage:(NSString *)appPackage
                           nativeSdkVersion:(NSString *)nativeSdkVersion
                       nativeSdkVersionCode:(int)nativeSdkVersionCode;
 
 - (NSString *)toJsonString;
+
 @end
