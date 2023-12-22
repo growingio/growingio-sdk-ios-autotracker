@@ -93,7 +93,7 @@
     }
 }
 
-- (BOOL)growingViewNodeIsInvisiable {
+- (BOOL)growingViewNodeIsInvisible {
     // 这个应该放在controller代码里 放这里可以提升效率
     // 逻辑冗余
     return (self.hidden || self.alpha < 0.001 || !self.superview || !self.window);
@@ -104,7 +104,7 @@
     if ([self isKindOfClass:NSClassFromString(@"_UINavigationItemButtonView")]) {
         return NO;
     }
-    return [self growingViewNodeIsInvisiable] || [self growingViewDontTrack];
+    return [self growingViewNodeIsInvisible] || [self growingViewDontTrack];
 }
 
 - (BOOL)growingViewDontTrack {
@@ -142,7 +142,7 @@
     if ([self isKindOfClass:NSClassFromString(@"_UINavigationItemButtonView")]) {
         return NO;
     }
-    return [self growingViewNodeIsInvisiable];
+    return [self growingViewNodeIsInvisible];
 }
 
 - (NSString *)growingViewContent {

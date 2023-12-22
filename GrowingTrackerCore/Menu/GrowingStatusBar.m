@@ -162,7 +162,7 @@
         [tipLabel setContentHuggingPriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
 
         self.btn = tipBtn;
-        self.statusLable = tipLabel;
+        self.statusLabel = tipLabel;
 
         [self.btn addGestureRecognizer:self.panGestureRecognizer];
         [self.btn addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];

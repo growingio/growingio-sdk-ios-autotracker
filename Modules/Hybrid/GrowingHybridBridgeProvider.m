@@ -108,9 +108,9 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
             return;
         }
         id dict = [messageData growingHelper_jsonObject];
-        NSDictionary *evetDataDict = (NSDictionary *)dict;
-        NSString *userId = [self safeConvertToString:evetDataDict[@"userId"]];
-        NSString *userKey = [self safeConvertToString:evetDataDict[@"userKey"]];
+        NSDictionary *eventDataDict = (NSDictionary *)dict;
+        NSString *userId = [self safeConvertToString:eventDataDict[@"userId"]];
+        NSString *userKey = [self safeConvertToString:eventDataDict[@"userKey"]];
         [[GrowingSession currentSession] setLoginUserId:userId userKey:userKey];
     } else if ([kGrowingJavascriptMessageType_clearNativeUserIdAndUserKey isEqualToString:messageType]) {
         [[GrowingSession currentSession] setLoginUserId:nil];
@@ -206,8 +206,8 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
         return;
     }
 
-    NSDictionary *evetDataDict = (NSDictionary *)dict;
-    NSString *type = evetDataDict[@"eventType"];
+    NSDictionary *eventDataDict = (NSDictionary *)dict;
+    NSString *type = eventDataDict[@"eventType"];
 
     [GrowingDispatchManager dispatchInGrowingThread:^{
         GrowingBaseBuilder *builder = nil;

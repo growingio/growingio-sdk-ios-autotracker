@@ -49,7 +49,7 @@ static NSString *kSetDataCollectionEnabledSelector = @"growingModSetDataCollecti
 
 #pragma mark - Public
 
-- (void)registedAllModules {
+- (void)registerAllModules {
     [self.modules removeAllObjects];
     NSArray *modules = [self loadLocalModules];
     for (Class moduleClass in modules) {
@@ -91,8 +91,8 @@ static NSString *kSetDataCollectionEnabledSelector = @"growingModSetDataCollecti
 
 - (id<GrowingModuleProtocol>)getModuleInstanceByClass:(Class)moduleClass {
     if ([[moduleClass class] respondsToSelector:@selector(singleton)]) {
-        BOOL (*sigletonImp)(id, SEL) = (BOOL(*)(id, SEL))objc_msgSend;
-        BOOL isSingleton = sigletonImp([moduleClass class], @selector(singleton));
+        BOOL (*singletonImp)(id, SEL) = (BOOL(*)(id, SEL))objc_msgSend;
+        BOOL isSingleton = singletonImp([moduleClass class], @selector(singleton));
         if (isSingleton) {
             if ([[moduleClass class] respondsToSelector:@selector(sharedInstance)]) {
                 return [[moduleClass class] performSelector:@selector(sharedInstance)];
@@ -152,8 +152,8 @@ static NSString *kSetDataCollectionEnabledSelector = @"growingModSetDataCollecti
         return;
     }
 
-    SEL seletor = NSSelectorFromString(selString);
-    if (!seletor) {
+    SEL selector = NSSelectorFromString(selString);
+    if (!selector) {
         return;
     }
 
@@ -163,9 +163,9 @@ static NSString *kSetDataCollectionEnabledSelector = @"growingModSetDataCollecti
 
     NSArray *moduleInstances = [self.modulesByEvent objectForKey:@(eventType)];
     for (id<GrowingModuleProtocol> module in moduleInstances) {
-        if ([module respondsToSelector:seletor]) {
+        if ([module respondsToSelector:selector]) {
             void (*imp)(id, SEL, id) = (void (*)(id, SEL, id))objc_msgSend;
-            imp(module, seletor, context);
+            imp(module, selector, context);
         }
     }
 }

@@ -23,7 +23,7 @@
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "Modules/Advertising/Public/GrowingAdvertising.h"
 
-static NSString *const kGrowingAdertisingFileKey = @"GrowingAdertisingFileKey";
+static NSString *const kGrowingAdvertisingFileKey = @"GrowingAdertisingFileKey";
 static NSString *const kGrowingAdIsActivateDeferKey = @"GrowingAdvertisingActivateDefer";
 static NSString *const kGrowingAdIsActivateWroteKey = @"GrowingAdvertisingActivateWrote";
 static NSString *const kGrowingAdIsActivateSentKey = @"GrowingAdvertisingActivateSent";
@@ -43,7 +43,7 @@ static NSString *const kGrowingAdIsActivateSentKey = @"GrowingAdvertisingActivat
     if (self = [super init]) {
         _storage = [[GrowingFileStorage alloc] initWithName:@"config"];
         _storeDic = [NSMutableDictionary dictionary];
-        NSDictionary *dic = [_storage dictionaryForKey:kGrowingAdertisingFileKey];
+        NSDictionary *dic = [_storage dictionaryForKey:kGrowingAdvertisingFileKey];
         if ([dic isKindOfClass:[NSDictionary class]]) {
             [_storeDic addEntriesFromDictionary:dic];
         }
@@ -148,7 +148,7 @@ static NSString *const kGrowingAdIsActivateSentKey = @"GrowingAdvertisingActivat
 + (void)setActivateDefer:(BOOL)activateDefer {
     [GrowingAdUtils.sharedInstance.storeDic setObject:@(activateDefer) forKey:kGrowingAdIsActivateDeferKey];
     [GrowingAdUtils.sharedInstance.storage setDictionary:GrowingAdUtils.sharedInstance.storeDic
-                                                  forKey:kGrowingAdertisingFileKey];
+                                                  forKey:kGrowingAdvertisingFileKey];
 }
 
 + (BOOL)isActivateDefer {
@@ -159,7 +159,7 @@ static NSString *const kGrowingAdIsActivateSentKey = @"GrowingAdvertisingActivat
 + (void)setActivateWrote:(BOOL)activateWrote {
     [GrowingAdUtils.sharedInstance.storeDic setObject:@(activateWrote) forKey:kGrowingAdIsActivateWroteKey];
     [GrowingAdUtils.sharedInstance.storage setDictionary:GrowingAdUtils.sharedInstance.storeDic
-                                                  forKey:kGrowingAdertisingFileKey];
+                                                  forKey:kGrowingAdvertisingFileKey];
 }
 
 + (BOOL)isActivateWrote {
@@ -178,7 +178,7 @@ static NSString *const kGrowingAdIsActivateSentKey = @"GrowingAdvertisingActivat
 + (void)setActivateSent:(BOOL)activateSent {
     [GrowingAdUtils.sharedInstance.storeDic setObject:@(activateSent) forKey:kGrowingAdIsActivateSentKey];
     [GrowingAdUtils.sharedInstance.storage setDictionary:GrowingAdUtils.sharedInstance.storeDic
-                                                  forKey:kGrowingAdertisingFileKey];
+                                                  forKey:kGrowingAdvertisingFileKey];
 }
 
 + (BOOL)isActivateSent {

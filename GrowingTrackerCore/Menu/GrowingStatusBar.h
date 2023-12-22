@@ -23,7 +23,7 @@
 
 @interface GrowingStatusBar : GrowingWindowView
 
-@property (nonatomic, retain) UILabel *statusLable;
+@property (nonatomic, retain) UILabel *statusLabel;
 @property (nonatomic, copy) void (^onButtonClick)(void);
 
 @end

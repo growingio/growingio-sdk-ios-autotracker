@@ -31,8 +31,8 @@
         CGSizeEqualToSize(rect.size, [UIApplication sharedApplication].growingMainWindow.bounds.size);
     if (isFullScreenShow && self.parentViewController &&
         [self.parentViewController isKindOfClass:[UITabBarController class]]) {
-        UITabBarController *tabbarvc = (UITabBarController *)self.parentViewController;
-        rect.size.height -= tabbarvc.tabBar.frame.size.height;
+        UITabBarController *controller = (UITabBarController *)self.parentViewController;
+        rect.size.height -= controller.tabBar.frame.size.height;
     }
 
     return rect;

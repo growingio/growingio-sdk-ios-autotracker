@@ -37,7 +37,7 @@
 
 - (void)testGrowingDataTraffic {
     unsigned long long size = 1024 * 1024;
-    [GrowingDataTraffic cellularNetworkStorgeEventSize:size];
+    [GrowingDataTraffic cellularNetworkStorageEventSize:size];
     XCTAssertEqual([GrowingDataTraffic cellularNetworkUploadEventSize], size);
 }
 

@@ -79,7 +79,7 @@
     [view2 performSelector:@selector(growingNodeSubSimilarIndex)];
     [view2 performSelector:@selector(growingNodeChilds)];
     [view2 performSelector:@selector(growingNodeParent)];
-    [view2 performSelector:@selector(growingViewNodeIsInvisiable)];
+    [view2 performSelector:@selector(growingViewNodeIsInvisible)];
     [view2 performSelector:@selector(growingImpNodeIsVisible)];
     [view2 performSelector:@selector(growingNodeDonotTrack)];
     [view2 performSelector:@selector(growingViewDontTrack)];

@@ -75,7 +75,7 @@
     NSMapTable *retMap = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsStrongMemory
                                                    valueOptions:NSPointerFunctionsStrongMemory
                                                        capacity:4];
-    // ios9以及以下
+    // iOS 9以及以下
     if (collectionView) {
         [[collectionView indexPathsForVisibleItems]
             enumerateObjectsUsingBlock:^(NSIndexPath *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
@@ -84,7 +84,7 @@
                     [retMap setObject:[NSNumber numberWithInteger:obj.row] forKey:cell];
                 }
             }];
-    } else {  //  ios10以及以上
+    } else {  //  iOS 10以及以上
         NSArray *views = nil;
         if ([self.view growingHelper_getIvar:"_actionViews" outObj:&views]) {
             [views enumerateObjectsUsingBlock:^(UIView *obj, NSUInteger idx, BOOL *_Nonnull stop) {

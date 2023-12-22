@@ -34,8 +34,8 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     if (indexPath.row == 3) {
-        GIOChildsAddViewController *childsvc = [[GIOChildsAddViewController alloc] init];
-        [self.navigationController pushViewController:childsvc animated:NO];
+        GIOChildsAddViewController *children = [[GIOChildsAddViewController alloc] init];
+        [self.navigationController pushViewController:children animated:NO];
     }
 }
 - (IBAction)clickRed:(id)sender {

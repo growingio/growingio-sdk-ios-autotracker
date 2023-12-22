@@ -60,12 +60,12 @@ static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJav
 
 + (void)bridgeForWebView:(WKWebView *)webView {
     if ([self webViewDontTrackCheck:webView]) {
-        GIOLogDebug(@"WKWebview Bridge %@ is donotTrack", webView);
+        GIOLogDebug(@"WKWebView Bridge %@ is donotTrack", webView);
         return;
     }
 
     if (![GrowingHybridModule.sharedInstance isBridgeForWebViewEnabled:webView]) {
-        GIOLogDebug(@"WKWebview Bridge %@ is disabled", webView);
+        GIOLogDebug(@"WKWebView Bridge %@ is disabled", webView);
         return;
     }
 
@@ -118,7 +118,7 @@ static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJav
 - (void)userContentController:(WKUserContentController *)userContentController
       didReceiveScriptMessage:(WKScriptMessage *)message {
     if ([GrowingWKWebViewJavascriptBridge webViewDontTrackCheck:message.webView]) {
-        GIOLogDebug(@"WKWebview Bridge %@ is donotTrack", message.webView);
+        GIOLogDebug(@"WKWebView Bridge %@ is donotTrack", message.webView);
         return;
     }
 

@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedInstance;
 
-- (void)registedAllModules;
+- (void)registerAllModules;
 
 - (void)triggerEvent:(NSInteger)eventType;
 

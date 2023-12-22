@@ -27,25 +27,25 @@
 }
 
 - (NSString *)growingViewContent {
-    NSMutableArray<UIView *> *unvisted = [[NSMutableArray alloc] init];
+    NSMutableArray<UIView *> *unvisited = [[NSMutableArray alloc] init];
 
     if (self.subviews.count) {
-        [unvisted addObjectsFromArray:self.subviews];
+        [unvisited addObjectsFromArray:self.subviews];
     } else {
         UIView *container = self.superview;
         if (container) {
             for (UIView *view in container.subviews) {
                 if (view == self) break;
                 if (CGRectContainsRect(self.frame, view.frame)) {
-                    [unvisted addObject:view];
+                    [unvisited addObject:view];
                 }
             }
         }
     }
 
-    while (unvisted.count) {
-        UIView *current = unvisted.firstObject;
-        [unvisted removeObject:current];
+    while (unvisited.count) {
+        UIView *current = unvisited.firstObject;
+        [unvisited removeObject:current];
         if ([current isKindOfClass:[UILabel class]] && [current growingViewContent].length) {
             return [current growingViewContent];
         }
@@ -53,7 +53,7 @@
             return [(UIImageView *)current growingViewContent];
         }
         if (current.subviews.count) {
-            unvisted = [[current.subviews arrayByAddingObjectsFromArray:unvisted] mutableCopy];
+            unvisited = [[current.subviews arrayByAddingObjectsFromArray:unvisited] mutableCopy];
         }
     }
 

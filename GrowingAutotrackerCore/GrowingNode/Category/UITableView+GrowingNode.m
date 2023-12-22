@@ -24,8 +24,8 @@
 @implementation UITableView (GrowingNode)
 
 - (NSArray<id<GrowingNode>> *)growingNodeChilds {
-    NSMutableArray *childs = [NSMutableArray array];
-    [childs addObjectsFromArray:self.visibleCells];
+    NSMutableArray *children = [NSMutableArray array];
+    [children addObjectsFromArray:self.visibleCells];
 
     NSArray<NSIndexPath *> *indexPaths = self.indexPathsForVisibleRows;
     NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
@@ -35,21 +35,21 @@
     [indexSet enumerateIndexesUsingBlock:^(NSUInteger section, BOOL *_Nonnull stop) {
         UITableViewHeaderFooterView *headerView = [self headerViewForSection:section];
         if (headerView) {
-            [childs addObject:headerView];
+            [children addObject:headerView];
         }
         UITableViewHeaderFooterView *footerView = [self footerViewForSection:section];
         if (footerView) {
-            [childs addObject:footerView];
+            [children addObject:footerView];
         }
     }];
 
     if (self.tableFooterView) {
-        [childs addObject:self.tableFooterView];
+        [children addObject:self.tableFooterView];
     }
     if (self.tableHeaderView) {
-        [childs addObject:self.tableHeaderView];
+        [children addObject:self.tableHeaderView];
     }
-    return childs;
+    return children;
 }
 
 - (NSString *)growingViewContent {
@@ -101,15 +101,15 @@
 
 - (NSArray<id<GrowingNode>> *)growingNodeChilds {
     UIView *cell = self;
-    NSMutableArray *childs = [NSMutableArray array];
+    NSMutableArray *children = [NSMutableArray array];
     for (UIView *v in cell.subviews) {
         if (v == self.selectedBackgroundView) {
             continue;
         } else {
-            [childs addObject:v];
+            [children addObject:v];
         }
     }
-    return childs;
+    return children;
 }
 
 - (BOOL)growingViewUserInteraction {

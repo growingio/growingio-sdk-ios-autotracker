@@ -127,8 +127,8 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 
 - (NSString *)getCurrentUrlScheme {
     for (NSDictionary *dic in _infoDictionary[@"CFBundleURLTypes"]) {
-        NSArray *shemes = dic[@"CFBundleURLSchemes"];
-        for (NSString *urlScheme in shemes) {
+        NSArray *schemes = dic[@"CFBundleURLSchemes"];
+        for (NSString *urlScheme in schemes) {
             if ([urlScheme isKindOfClass:[NSString class]] && [urlScheme hasPrefix:@"growing."]) {
                 return urlScheme;
             }

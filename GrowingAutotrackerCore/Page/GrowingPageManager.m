@@ -30,7 +30,7 @@
 
 @interface GrowingPageManager () <GrowingULViewControllerLifecycleDelegate>
 
-@property (nonatomic, strong) NSPointerArray *visiablePages;
+@property (nonatomic, strong) NSPointerArray *visiblePages;
 @property (nonatomic, strong) NSMutableArray<NSString *> *ignoredPrivateControllers;
 
 @end
@@ -58,26 +58,26 @@
     if (![self isPrivateViewController:controller]) {
         GrowingPage *page = [self createdViewControllerPage:controller];
 
-        if (!self.visiablePages) {
-            self.visiablePages = [NSPointerArray weakObjectsPointerArray];
+        if (!self.visiblePages) {
+            self.visiblePages = [NSPointerArray weakObjectsPointerArray];
         }
 
-        if (![self.visiablePages.allObjects containsObject:page]) {
-            [self.visiablePages addPointer:(__bridge void *)page];
+        if (![self.visiblePages.allObjects containsObject:page]) {
+            [self.visiblePages addPointer:(__bridge void *)page];
         }
     }
 }
 
 - (void)viewControllerDidDisappear:(UIViewController *)controller {
     if (![self isPrivateViewController:controller]) {
-        [self.visiablePages.allObjects
+        [self.visiblePages.allObjects
             enumerateObjectsWithOptions:NSEnumerationReverse
                              usingBlock:^(GrowingPage *page, NSUInteger idx, BOOL *_Nonnull stop) {
                                  if (page.carrier == controller) {
                                      if (page.parent != nil) {
                                          [page.parent removeChildrenPage:page];
                                      }
-                                     [self.visiablePages removePointerAtIndex:idx];
+                                     [self.visiblePages removePointerAtIndex:idx];
                                  }
                              }];
     }
@@ -132,10 +132,10 @@
     return page;
 }
 
-#pragma mark Visiable ViewController
+#pragma mark Visible ViewController
 
 - (NSArray<GrowingPage *> *)allDidAppearPages {
-    return self.visiablePages.allObjects;
+    return self.visiblePages.allObjects;
 }
 
 - (BOOL)isPrivateViewController:(UIViewController *)viewController {
@@ -183,7 +183,7 @@
     GrowingPage *page = current.growingPageObject;
     if (!page) {
         // 执行到此，执行流程大概是view -> findPageByView
-        // view所在viewcontroller必定到了viewDidAppear生命周期
+        // view所在viewController必定到了viewDidAppear生命周期
         // 一般来说，page对象在viewDidAppear时就已创建，此处兼容page对象未生成的特殊情况，比如：
         // 用户未在自定义的ViewController viewDidAppear中调用super viewDidAppear
         page = [self createdPage:current];
@@ -202,7 +202,7 @@
 }
 
 - (GrowingPage *)currentPage {
-    return self.visiablePages.allObjects.lastObject;
+    return self.visiblePages.allObjects.lastObject;
 }
 
 #pragma mark Lazy Load
