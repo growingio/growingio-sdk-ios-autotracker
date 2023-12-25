@@ -49,7 +49,7 @@
     
 #if defined(SDKADSMODULE)
     configuration.ASAEnabled = YES;
-    configuration.deepLinkHost = @"https://n.datayi.cn";
+    configuration.deepLinkHost = @"https://link.growingio.com";
     configuration.deepLinkCallback = ^(NSDictionary * _Nullable params, NSTimeInterval processTime, NSError * _Nullable error) {
         if (error) {
             NSLog(@"error = %@", error);
@@ -63,6 +63,11 @@
     GrowingAPMConfig *config = GrowingAPMConfig.config;
     config.monitors = GrowingAPMMonitorsCrash | GrowingAPMMonitorsUserInterface;
     configuration.APMConfig = config;
+#endif
+    
+#if defined(SDKABTESTINGMODULE)
+    configuration.abTestingServerHost = @"https://ab.growingio.com";
+    configuration.abTestingRequestInterval = 5;
 #endif
     
 #pragma clang diagnostic push

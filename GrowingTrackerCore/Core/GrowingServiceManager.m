@@ -90,8 +90,8 @@
     }
 
     if ([[implClass class] respondsToSelector:@selector(singleton)]) {
-        BOOL (*sigletonImp)(id, SEL) = (BOOL(*)(id, SEL))objc_msgSend;
-        BOOL isSingleton = sigletonImp([implClass class], @selector(singleton));
+        BOOL (*singletonImp)(id, SEL) = (BOOL(*)(id, SEL))objc_msgSend;
+        BOOL isSingleton = singletonImp([implClass class], @selector(singleton));
         if (isSingleton) {
             if ([[implClass class] respondsToSelector:@selector(sharedInstance)]) {
                 instance = [[implClass class] performSelector:@selector(sharedInstance)];

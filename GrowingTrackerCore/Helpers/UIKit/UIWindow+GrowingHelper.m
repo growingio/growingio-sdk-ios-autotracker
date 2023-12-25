@@ -29,7 +29,7 @@
         scale = maxScale;
     }
 
-    // SDK support version >= ios 8.0
+    // SDK support version >= iOS 8.0
     // the orientation is correct so we don't have to adjust it
     CGSize imageSize = [UIScreen mainScreen].bounds.size;
     UIGraphicsBeginImageContextWithOptions(imageSize, NO, scale);

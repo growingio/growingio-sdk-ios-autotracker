@@ -30,7 +30,7 @@
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        self.statusLable.textAlignment = NSTextAlignmentCenter;
+        self.statusLabel.textAlignment = NSTextAlignmentCenter;
     }
     return self;
 }
@@ -43,15 +43,15 @@
     _status = status;
     switch (status) {
         case GrowingWebCircleStatusWaitConnect: {
-            self.statusLable.text = @"正在等待web链接";
+            self.statusLabel.text = @"正在等待web链接";
             self.hidden = NO;
             [self startTimer];
         } break;
         case GrowingWebCircleStatusOpening: {
-            self.statusLable.text = @"正在进行GrowingIO移动端圈选";
+            self.statusLabel.text = @"正在进行GrowingIO移动端圈选";
         } break;
         case GrowingWebCircleStatusClosing: {
-            self.statusLable.text = @"正在关闭web圈选...";
+            self.statusLabel.text = @"正在关闭web圈选...";
             self.hidden = YES;
             [self stopTimer];
         } break;

@@ -23,6 +23,6 @@
 
 + (unsigned long long)cellularNetworkUploadEventSize;
 
-+ (void)cellularNetworkStorgeEventSize:(unsigned long long)uploadEventSize;
++ (void)cellularNetworkStorageEventSize:(unsigned long long)uploadEventSize;
 
 @end

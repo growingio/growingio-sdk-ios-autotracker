@@ -60,8 +60,8 @@ static GrowingDebuggerEventQueue *sharedInstance = nil;
 - (void)dequeue {
     GROWING_LOCK(lock);
     if (self.debuggerBlock) {
-        NSArray *arr = self.cacheArray.copy;
-        self.debuggerBlock(arr);
+        NSArray *array = self.cacheArray.copy;
+        self.debuggerBlock(array);
         [self.cacheArray removeAllObjects];
     }
     GROWING_UNLOCK(lock);
@@ -71,8 +71,8 @@ static GrowingDebuggerEventQueue *sharedInstance = nil;
     GROWING_LOCK(lock);
     if (self.debuggerBlock) {
         [self.cacheArray addObject:anObject];
-        NSArray *arr = self.cacheArray.copy;
-        self.debuggerBlock(arr);
+        NSArray *array = self.cacheArray.copy;
+        self.debuggerBlock(array);
         [self.cacheArray removeAllObjects];
     } else {
         while ((NSInteger)self.cacheArray.count >= self.maxCachesNumber) {

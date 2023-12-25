@@ -12,6 +12,7 @@ project 'Example'
 target 'Example' do
   pod 'GrowingAnalytics/Autotracker', :path => '../'
   pod 'GrowingAnalytics/Ads', :path => '../'
+  pod 'GrowingAnalytics/ABTesting', :path => '../'
   pod 'GrowingAnalytics/ImpressionTrack', :path => '../'
 
 #  pod 'GrowingAnalytics/Tracker', :path => '../'
@@ -54,6 +55,12 @@ end
 target 'AdvertisingTests' do
   pod 'GrowingAnalytics/Autotracker', :path => '../'
   pod 'GrowingAnalytics/Ads', :path => '../'
+end
+
+target 'ABTestingTests' do
+  pod 'GrowingAnalytics/Autotracker', :path => '../'
+  pod 'GrowingAnalytics/ABTesting', :path => '../'
+  pod 'OHHTTPStubs'
 end
 
 target 'ExampleiOS13' do

@@ -156,8 +156,8 @@ GrowingMod(GrowingMobileDebugger)
     if (!self.statusWindow) {
         self.statusWindow = [[GrowingStatusBar alloc] initWithFrame:[UIScreen mainScreen].bounds];
         self.statusWindow.hidden = NO;
-        self.statusWindow.statusLable.text = @"正在进行Debugger";
-        self.statusWindow.statusLable.textAlignment = NSTextAlignmentCenter;
+        self.statusWindow.statusLabel.text = @"正在进行Debugger";
+        self.statusWindow.statusLabel.textAlignment = NSTextAlignmentCenter;
 
         __weak typeof(self) wself = self;
         self.statusWindow.onButtonClick = ^{
@@ -183,8 +183,8 @@ GrowingMod(GrowingMobileDebugger)
     GIOLogDebug(@"开始断开连接");
     NSDictionary *dict = @{@"msgType": @"quit"};
     [self sendJson:dict];
-    self.statusWindow.statusLable.text = @"正在关闭Debugger";
-    self.statusWindow.statusLable.textAlignment = NSTextAlignmentCenter;
+    self.statusWindow.statusLabel.text = @"正在关闭Debugger";
+    self.statusWindow.statusLabel.textAlignment = NSTextAlignmentCenter;
     [self _stopWithError:nil];
 }
 

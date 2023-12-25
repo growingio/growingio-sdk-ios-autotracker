@@ -93,12 +93,12 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         // UIApplication
-        NSError *applicatonError = NULL;
+        NSError *applicationError = NULL;
         [UIApplication growingul_swizzleMethod:@selector(sendAction:to:from:forEvent:)
                                     withMethod:@selector(growing_sendAction:to:from:forEvent:)
-                                         error:&applicatonError];
-        if (applicatonError) {
-            GIOLogError(@"Failed to swizzle UIApplication. Details: %@", applicatonError);
+                                         error:&applicationError];
+        if (applicationError) {
+            GIOLogError(@"Failed to swizzle UIApplication. Details: %@", applicationError);
         }
 
         // UISegmentControl

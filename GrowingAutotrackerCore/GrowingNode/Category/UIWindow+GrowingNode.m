@@ -29,12 +29,12 @@
     return CGRectZero;
 }
 
-- (BOOL)growingWindowNodeIsInvisiable {
+- (BOOL)growingWindowNodeIsInvisible {
     return self.alpha <= 0.001 || self.hidden;
 }
 
 - (BOOL)growingNodeDonotCircle {
-    return [self growingWindowNodeIsInvisiable];
+    return [self growingWindowNodeIsInvisible];
 }
 
 - (BOOL)growingViewUserInteraction {

@@ -44,6 +44,12 @@
 #endif
 #endif
 
+#if __has_include("GrowingABTesting.h")
+// ABTesting Module
+#import "GrowingABTesting.h"
+#define SDKABTESTINGMODULE
+#endif
+
 #ifdef __OBJC__
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>

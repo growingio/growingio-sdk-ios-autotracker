@@ -67,7 +67,7 @@ const int GrowingTrackerVersionCode = 40000;
 #if TARGET_OS_IOS
         [GrowingAppDelegateAutotracker track];
 #endif
-        [[GrowingModuleManager sharedInstance] registedAllModules];
+        [[GrowingModuleManager sharedInstance] registerAllModules];
         [[GrowingServiceManager sharedInstance] registerAllServices];
         [[GrowingModuleManager sharedInstance] triggerEvent:GrowingMInitEvent];
         // 各个Module初始化init之后再进行事件定时发送

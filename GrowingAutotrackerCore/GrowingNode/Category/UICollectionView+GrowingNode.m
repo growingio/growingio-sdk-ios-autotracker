@@ -26,16 +26,15 @@
 
 - (NSArray<id<GrowingNode>> *)growingNodeChilds {
     // 对于collectionView我们仅需要返回可见cell
-    NSMutableArray *childs = [NSMutableArray array];
+    NSMutableArray *children = [NSMutableArray array];
     if (@available(iOS 9.0, *)) {
         NSArray *headers = [self visibleSupplementaryViewsOfKind:UICollectionElementKindSectionHeader];
         NSArray *footers = [self visibleSupplementaryViewsOfKind:UICollectionElementKindSectionFooter];
-        NSMutableArray *childs = [NSMutableArray array];
-        [childs addObjectsFromArray:headers];
-        [childs addObjectsFromArray:footers];
+        [children addObjectsFromArray:headers];
+        [children addObjectsFromArray:footers];
     }
-    [childs addObjectsFromArray:self.visibleCells];
-    return childs;
+    [children addObjectsFromArray:self.visibleCells];
+    return children;
 }
 
 - (NSString *)growingViewContent {

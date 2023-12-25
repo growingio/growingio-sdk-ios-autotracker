@@ -21,6 +21,8 @@
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 
 NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growingio.com";
+NSString *const kGrowingDefaultDeepLinkHost = @"https://link.growingio.com";
+NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com";
 
 @interface GrowingTrackConfiguration ()
 
@@ -32,6 +34,10 @@ NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growing
 
 // APM
 @property (nonatomic, copy) NSObject *APMConfig;
+
+// ABTesting
+@property (nonatomic, copy) NSString *abTestingServerHost;
+@property (nonatomic, assign) NSUInteger abTestingRequestInterval;
 
 @end
 
@@ -60,12 +66,16 @@ NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growing
 
         // Ads
         _ASAEnabled = NO;
-        _deepLinkHost = nil;
+        _deepLinkHost = kGrowingDefaultDeepLinkHost;
         _deepLinkCallback = nil;
         _readClipboardEnabled = YES;
 
         // APM
         _APMConfig = nil;
+
+        // ABTesting
+        _abTestingServerHost = kGrowingDefaultABTestingServerHost;
+        _abTestingRequestInterval = 5;
     }
 
     return self;
@@ -106,6 +116,11 @@ NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growing
 
     // APM
     configuration->_APMConfig = [_APMConfig copy];
+
+    // ABTesting
+    configuration->_abTestingServerHost = [_abTestingServerHost copy];
+    configuration->_abTestingRequestInterval = _abTestingRequestInterval;
+
     return configuration;
 }
 

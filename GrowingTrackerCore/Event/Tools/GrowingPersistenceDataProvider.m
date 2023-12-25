@@ -90,7 +90,7 @@ static GrowingPersistenceDataProvider *persistence = nil;
     [_growingUserdefault setValue:value forKey:key];
 }
 
-- (NSString *)getStringforKey:(NSString *)key;
+- (NSString *)getStringForKey:(NSString *)key;
 { return [_growingUserdefault valueForKey:key]; }
 
 - (long long)sequenceIdForEventType:(NSString *)eventType {

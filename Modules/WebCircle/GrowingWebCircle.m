@@ -191,9 +191,9 @@ GrowingMod(GrowingWebCircle)
             if ([node isKindOfClass:NSClassFromString(@"WKWebView")]) {
                 [[GrowingHybridBridgeProvider sharedInstance]
                     getDomTreeForWebView:(WKWebView *)node
-                       completionHandler:^(NSDictionary *_Nullable domTee, NSError *_Nullable error) {
-                           if (domTee.count > 0) {
-                               [dict setValue:domTee forKey:@"webView"];
+                       completionHandler:^(NSDictionary *_Nullable domTree, NSError *_Nullable error) {
+                           if (domTree.count > 0) {
+                               [dict setValue:domTree forKey:@"webView"];
                            }
                        }];
             }
@@ -201,10 +201,10 @@ GrowingMod(GrowingWebCircle)
         }
     }
 
-    NSArray *childs = [node growingNodeChilds];
-    if (childs.count > 0) {
-        for (int i = 0; i < childs.count; i++) {
-            GrowingViewNode *tmp = [viewNode appendNode:childs[i] isRecalculate:YES];
+    NSArray *children = [node growingNodeChilds];
+    if (children.count > 0) {
+        for (int i = 0; i < children.count; i++) {
+            GrowingViewNode *tmp = [viewNode appendNode:children[i] isRecalculate:YES];
             [self traverseViewNode:tmp];
         }
     }
@@ -213,12 +213,12 @@ GrowingMod(GrowingWebCircle)
 - (void)fillAllViewsForWebCircle:(NSDictionary *)dataDict completion:(void (^)(NSMutableDictionary *dict))completion {
     NSMutableDictionary *finalDataDict = [NSMutableDictionary dictionaryWithDictionary:dataDict];
     self.elements = [NSMutableArray array];
-    UIWindow *topwindow = nil;
+    UIWindow *topWindow = nil;
     UIWindow *highestWindow = nil;
     for (UIWindow *window in [UIApplication sharedApplication].growingHelper_allWindowsWithoutGrowingWindow) {
-        // 如果找到了keywindow跳出循环
+        // 如果找到了keyWindow跳出循环
         if (window.isKeyWindow) {
-            topwindow = window;
+            topWindow = window;
             break;
         }
 
@@ -232,26 +232,26 @@ GrowingMod(GrowingWebCircle)
         }
     }
 
-    if (!topwindow) {
+    if (!topWindow) {
         // keyWindow是GrowingWindow或其他内部window
         if (self.lastKeyWindow && self.lastKeyWindow.isHidden == NO) {
             // 用上一个KeyWindow
-            topwindow = self.lastKeyWindow;
+            topWindow = self.lastKeyWindow;
         } else {
             // 用当前windowLevel最高的window
-            topwindow = highestWindow;
+            topWindow = highestWindow;
         }
     }
 
-    if (topwindow) {
+    if (topWindow) {
         self.zLevel = 0;
-        [self traverseViewNode:GrowingViewNode.builder.setView(topwindow)
+        [self traverseViewNode:GrowingViewNode.builder.setView(topWindow)
                                    .setIndex(-1)
-                                   .setViewContent(topwindow.growingNodeContent)
-                                   .setXpath(topwindow.growingNodeSubPath)
-                                   .setXcontent(topwindow.growingNodeSubSimilarIndex)
-                                   .setOriginXcontent(topwindow.growingNodeSubIndex)
-                                   .setNodeType([GrowingNodeHelper getViewNodeType:topwindow])
+                                   .setViewContent(topWindow.growingNodeContent)
+                                   .setXpath(topWindow.growingNodeSubPath)
+                                   .setXcontent(topWindow.growingNodeSubSimilarIndex)
+                                   .setOriginXcontent(topWindow.growingNodeSubIndex)
+                                   .setNodeType([GrowingNodeHelper getViewNodeType:topWindow])
                                    .build];
     }
 
@@ -467,7 +467,7 @@ GrowingMod(GrowingWebCircle)
     }
 }
 
-#pragma mark - Websocket Delegate
+#pragma mark - WebSocket Delegate
 
 - (void)webSocket:(id<GrowingWebSocketService>)webSocket didReceiveMessage:(id)message {
     if ([message isKindOfClass:[NSString class]] && ((NSString *)message).length > 0) {
@@ -497,7 +497,7 @@ GrowingMod(GrowingWebCircle)
 }
 
 - (void)webSocketDidOpen:(id<GrowingWebSocketService>)webSocket {
-    GIOLogDebug(@"[GrowingWebCircle] websocket已连接");
+    GIOLogDebug(@"[GrowingWebCircle] web socket已连接");
     NSString *accountId = GrowingConfigurationManager.sharedInstance.trackConfiguration.accountId;
     NSDictionary *dict = @{
         @"projectId": accountId,
@@ -536,7 +536,7 @@ GrowingMod(GrowingWebCircle)
 #pragma mark - GrowingWebViewDomChangedDelegate
 // Hybrid变动，重新发送dom tree
 - (void)webViewDomDidChanged {
-    [self sendWebcircleWithType:GrowingEventTypeViewClick];
+    [self sendWebCircleWithType:GrowingEventTypeViewClick];
 }
 
 #pragma mark - GrowingApplicationEventManager
@@ -549,17 +549,17 @@ GrowingMod(GrowingWebCircle)
 #pragma mark - GrowingEventManagerObserver
 
 - (void)growingEventManagerEventTriggered:(NSString *_Nullable)eventType {
-    [self sendWebcircleWithType:eventType];
+    [self sendWebCircleWithType:eventType];
 }
 
-- (void)sendWebcircleWithType:(NSString *)eventType {
+- (void)sendWebCircleWithType:(NSString *)eventType {
     if (!self.isReady) {
         return;
     }
     if ([eventType isEqualToString:GrowingEventTypeViewClick] || [eventType isEqualToString:GrowingEventTypePage]) {
         [self.cachedEvents addObject:eventType];
         if (self.onProcessing) {
-            GIOLogDebug(@"[GrowingWebCircle] cached %lu event to webcircle", (unsigned long)self.cachedEvents.count);
+            GIOLogDebug(@"[GrowingWebCircle] cached %lu event to web circle", (unsigned long)self.cachedEvents.count);
             return;
         }
         self.onProcessing = YES;
@@ -596,7 +596,7 @@ GrowingMod(GrowingWebCircle)
         [serviceClass onFlutterCircleDataChange:^(NSDictionary *_Nonnull data) {
             weakSelf.flutterCircleData = data;
             // 由于没有传递eventType，这里假设为ViewClick
-            [weakSelf sendWebcircleWithType:GrowingEventTypeViewClick];
+            [weakSelf sendWebCircleWithType:GrowingEventTypeViewClick];
         }];
         [serviceClass onWebCircleStart];
     } else {

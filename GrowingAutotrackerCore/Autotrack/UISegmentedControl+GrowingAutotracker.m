@@ -32,14 +32,14 @@
 @implementation UISegmentedControl (GrowingAutotracker)
 
 + (UILabel *)growing_labelForSegment:(UIView *)segment {
-    UILabel *lable = nil;
+    UILabel *label = nil;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
     if ([segment respondsToSelector:@selector(label)]) {
-        lable = [segment performSelector:@selector(label)];
+        label = [segment performSelector:@selector(label)];
     }
 #pragma clang diagnostic pop
-    return lable;
+    return label;
 }
 
 + (NSString *)growing_titleForSegment:(UIView *)segment {
@@ -102,10 +102,10 @@ static void growingUISegmentedControlSetUp(UISegmentedControl *self) {
 
 - (void)growingSegmentAction:(UISegmentedControl *)segmentControl {
     NSInteger index = segmentControl.selectedSegmentIndex;
-    NSArray *arr = segmentControl.growing_segmentViews;
+    NSArray *array = segmentControl.growing_segmentViews;
 
-    if (index >= 0 && index < arr.count) {
-        UIView *segment = arr[index];
+    if (index >= 0 && index < array.count) {
+        UIView *segment = array[index];
         [GrowingViewClickProvider viewOnClick:segment];
     }
 }

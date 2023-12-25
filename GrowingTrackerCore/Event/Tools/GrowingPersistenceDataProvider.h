@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 设置NSString,NSNumber(upgrade)
 - (void)setString:(NSString *)value forKey:(NSString *)key;
 
-- (NSString *)getStringforKey:(NSString *)key;
+- (NSString *)getStringForKey:(NSString *)key;
 
 - (long long)sequenceIdForEventType:(NSString *)eventType;
 

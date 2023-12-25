@@ -1,9 +1,9 @@
 //
-//  GrowingStatusBar.h
+//  GrowingABTRequest.h
 //  GrowingAnalytics
 //
-//  Created by GrowingIO on 3/15/16.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2023/10/10.
+//  Copyright (C) 2023 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,14 +17,15 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#if __has_include(<UIKit/UIKit.h>)
-#import <UIKit/UIKit.h>
-#import "GrowingTrackerCore/GrowingWindow.h"
+#import <Foundation/Foundation.h>
+#import "GrowingRequestProtocol.h"
 
-@interface GrowingStatusBar : GrowingWindowView
+NS_ASSUME_NONNULL_BEGIN
 
-@property (nonatomic, retain) UILabel *statusLabel;
-@property (nonatomic, copy) void (^onButtonClick)(void);
+@interface GrowingABTRequest : NSObject <GrowingRequestProtocol>
+
+@property (nonatomic, copy) NSString *layerId;
 
 @end
-#endif
+
+NS_ASSUME_NONNULL_END

@@ -95,9 +95,9 @@
     if (parentViewController == nil) {
         return nil;
     }
-    NSArray<UIViewController *> *childs = parentViewController.childViewControllers;
+    NSArray<UIViewController *> *children = parentViewController.childViewControllers;
     int index = 0;
-    for (UIViewController *child in childs) {
+    for (UIViewController *child in children) {
         if (self.carrier == child) {
             break;
         }

@@ -66,7 +66,7 @@ static GrowingDataTraffic *_instance;
     }
 }
 
-+ (void)cellularNetworkStorgeEventSize:(unsigned long long)uploadEventSize {
++ (void)cellularNetworkStorageEventSize:(unsigned long long)uploadEventSize {
     NSString *todayUploadEvent =
         [NSString stringWithFormat:@"%@/%@", [NSString stringWithFormat:@"%llu", uploadEventSize], [self getTodayKey]];
     [[GrowingDataTraffic sharedInstance].storeDict setObject:todayUploadEvent forKey:kGrowingCellularUploadEventSize];

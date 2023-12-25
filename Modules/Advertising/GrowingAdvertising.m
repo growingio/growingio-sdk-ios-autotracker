@@ -42,8 +42,6 @@
 
 GrowingMod(GrowingAdvertising)
 
-NSString *const GrowingAdDefaultDeepLinkHost = @"https://n.datayi.cn";
-
 NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
 
 @interface GrowingAdvertising () <GrowingDeepLinkHandlerProtocol,
@@ -74,6 +72,8 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
                                            reason:@"您所配置的DeepLinkHost不符合规范"
                                          userInfo:nil];
         }
+    } else {
+        @throw [NSException exceptionWithName:@"初始化异常" reason:@"请在SDK初始化时，配置DeepLinkHost" userInfo:nil];
     }
 
     self.builders = [NSMutableArray array];

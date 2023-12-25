@@ -22,6 +22,7 @@
 @implementation GrowingWebViewJavascriptBridgeConfiguration
 
 - (instancetype)initWithAccountId:(NSString *)accountId
+                     dataSourceId:(NSString *)dataSourceId
                             appId:(NSString *)appId
                        appPackage:(NSString *)appPackage
                  nativeSdkVersion:(NSString *)nativeSdkVersion
@@ -29,6 +30,7 @@
     self = [super init];
     if (self) {
         _accountId = [accountId copy];
+        _dataSourceId = [dataSourceId copy];
         _appId = [appId copy];
         _appPackage = [appPackage copy];
         _nativeSdkVersion = [nativeSdkVersion copy];
@@ -39,11 +41,13 @@
 }
 
 + (instancetype)configurationWithAccountId:(NSString *)accountId
+                              dataSourceId:(NSString *)dataSourceId
                                      appId:(NSString *)appId
                                 appPackage:(NSString *)appPackage
                           nativeSdkVersion:(NSString *)nativeSdkVersion
                       nativeSdkVersionCode:(int)nativeSdkVersionCode {
     return [[self alloc] initWithAccountId:accountId
+                              dataSourceId:dataSourceId
                                      appId:appId
                                 appPackage:appPackage
                           nativeSdkVersion:nativeSdkVersion
@@ -51,9 +55,14 @@
 }
 
 - (NSString *)toJsonString {
-    NSMutableDictionary *configuration =
-        [self dictionaryWithValuesForKeys:@[@"appId", @"appPackage", @"nativeSdkVersion", @"nativeSdkVersionCode"]]
-            .mutableCopy;
+    NSMutableDictionary *configuration = [self dictionaryWithValuesForKeys:@[
+                                             @"dataSourceId",
+                                             @"appId",
+                                             @"appPackage",
+                                             @"nativeSdkVersion",
+                                             @"nativeSdkVersionCode"
+                                         ]]
+                                             .mutableCopy;
     configuration[@"projectId"] = self.accountId;
 
     NSError *error;

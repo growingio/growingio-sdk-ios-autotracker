@@ -259,7 +259,7 @@ static GrowingEventManager *sharedInstance = nil;
     // 没网络 直接返回
     if (![GrowingNetworkInterfaceManager sharedInstance].isReachable) {
         // 没网络 直接返回
-        GIOLogDebug(@"No availabel Internet connection, delay upload (channel = %@).", channel.name);
+        GIOLogDebug(@"No available Internet connection, delay upload (channel = %@).", channel.name);
         return;
     }
     NSUInteger policyMask = GrowingEventSendPolicyInstant;
@@ -467,7 +467,7 @@ static GrowingEventManager *sharedInstance = nil;
 }
 
 - (void)setUploadEventSize:(unsigned long long)uploadEventSize {
-    [GrowingDataTraffic cellularNetworkStorgeEventSize:uploadEventSize];
+    [GrowingDataTraffic cellularNetworkStorageEventSize:uploadEventSize];
 }
 
 @end
