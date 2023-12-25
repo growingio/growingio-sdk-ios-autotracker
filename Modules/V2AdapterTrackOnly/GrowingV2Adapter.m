@@ -28,7 +28,7 @@ static NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey
 @implementation GrowingV2Adapter
 
 + (void)upgrade {
-    NSString *isUpgraded = [[GrowingPersistenceDataProvider sharedInstance] getStringforKey:kGrowingUserdefault_2xto3x];
+    NSString *isUpgraded = [[GrowingPersistenceDataProvider sharedInstance] getStringForKey:kGrowingUserdefault_2xto3x];
     if (isUpgraded) {
         // 不考虑升级了之后又降级的场景，比如用户从AppStore更新又从其他渠道下载了老版本
         // 这种情况下isUpgraded=YES，下次再更新不再从本地获取userId/deviceId
