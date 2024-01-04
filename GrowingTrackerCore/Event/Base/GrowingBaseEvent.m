@@ -59,6 +59,7 @@
         _sdkVersion = builder.sdkVersion;
         _userKey = builder.userKey;
         _timezoneOffset = builder.timezoneOffset;
+        _scene = builder.scene;
     }
     return self;
 }
