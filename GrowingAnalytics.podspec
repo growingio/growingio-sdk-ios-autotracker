@@ -110,7 +110,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     service.ios.deployment_target = '10.0'
     service.source_files = 'Services/Screenshot/**/*{.h,.m,.c,.cpp,.mm}'
     service.public_header_files = 'Services/Screenshot/include/*.h'
-    service.dependency 'GrowingAnalytics/TrackerCore'
+    service.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
   end
 
   s.subspec 'DefaultServices' do |services|
