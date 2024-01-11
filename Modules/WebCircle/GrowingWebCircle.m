@@ -105,11 +105,11 @@ GrowingMod(GrowingWebCircle)
 
 - (void)_setNeedUpdateScreen {
     if (self.isReady) {
-        [self sendScreenShot];
+        [self sendScreenshot];
     }
 }
 
-#pragma mark - screenShot
+#pragma mark - Screenshot
 
 /*
  Page Json Data is like this:
@@ -208,8 +208,8 @@ GrowingMod(GrowingWebCircle)
     }
 }
 
-- (void)fillAllViewsInWindow:(UIWindow *)topWindow screenShot:(NSDictionary *)screenShot completion:(void (^)(NSMutableDictionary *dict))completion {
-    NSMutableDictionary *finalDataDict = [NSMutableDictionary dictionaryWithDictionary:screenShot];
+- (void)fillAllViewsInWindow:(UIWindow *)topWindow screenshot:(NSDictionary *)screenshot completion:(void (^)(NSMutableDictionary *dict))completion {
+    NSMutableDictionary *finalDataDict = [NSMutableDictionary dictionaryWithDictionary:screenshot];
     self.elements = [NSMutableArray array];
     if (topWindow) {
         self.zLevel = 0;
@@ -242,7 +242,7 @@ GrowingMod(GrowingWebCircle)
 }
 
 - (NSDictionary *)dictForUserAction:(NSString *)action {
-    UIImage *image = [self.screenshotProvider screenShot];
+    UIImage *image = [self.screenshotProvider screenshot];
     NSData *data = [image growingHelper_JPEG:0.8];
 
     NSString *imgBase64Str = [data growingHelper_base64String];
@@ -313,7 +313,7 @@ GrowingMod(GrowingWebCircle)
     return nil;
 }
 
-- (void)sendScreenShot {
+- (void)sendScreenshot {
     NSString *userAction = @"refreshScreenshot";
     NSDictionary *screenshot = [self dictForUserAction:userAction];
     if (!screenshot) {
@@ -324,14 +324,14 @@ GrowingMod(GrowingWebCircle)
     if (topWindow) {
         UIViewController *controller = [self topViewControllerForWindow:topWindow];
         if ([controller isKindOfClass:NSClassFromString(@"FlutterViewController")]) {
-            // flutter页面由flutter模块触发sendScreenShotForFlutter
+            // flutter页面由flutter模块触发sendScreenshotForFlutter
             return;
         }
     }
 
     __weak GrowingWebCircle *wself = self;
     [self fillAllViewsInWindow:topWindow
-                    screenShot:screenshot
+                    screenshot:screenshot
                     completion:^(NSMutableDictionary *dict) {
         GrowingWebCircle *sself = wself;
         if (sself != nil && dict) {
@@ -340,7 +340,7 @@ GrowingMod(GrowingWebCircle)
     }];
 }
 
-- (void)sendScreenShotForFlutter:(NSDictionary *)data {
+- (void)sendScreenshotForFlutter:(NSDictionary *)data {
     NSString *userAction = @"refreshScreenshot";
     NSDictionary *screenshot = [self dictForUserAction:userAction];
     if (!screenshot) {
@@ -445,7 +445,7 @@ GrowingMod(GrowingWebCircle)
     self.statusView.status = GrowingWebCircleStatusOpening;
     [self resetSnapshotKey];
     self.isReady = YES;
-    [self sendScreenShot];
+    [self sendScreenshot];
     // Hybrid的布局改变回调代理设置
     [GrowingHybridBridgeProvider sharedInstance].domChangedDelegate = self;
     // 监听原生事件，变动时发送
@@ -605,7 +605,7 @@ GrowingMod(GrowingWebCircle)
                                  usingBlock:^(__kindof NSString *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
                                      if ([obj isEqualToString:GrowingEventTypeViewClick] ||
                                          [obj isEqualToString:GrowingEventTypePage]) {
-                                         [self sendScreenShot];
+                                         [self sendScreenshot];
                                          *stop = YES;
                                      }
                                  }];
@@ -627,7 +627,7 @@ GrowingMod(GrowingWebCircle)
     if (isReady) {
         __weak typeof(self) weakSelf = self;
         [serviceClass onFlutterCircleDataChange:^(NSDictionary *_Nonnull data) {
-            [weakSelf sendScreenShotForFlutter:data];
+            [weakSelf sendScreenshotForFlutter:data];
         }];
         [serviceClass onWebCircleStart];
     } else {

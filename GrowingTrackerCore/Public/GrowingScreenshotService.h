@@ -31,7 +31,7 @@
 @protocol GrowingScreenshotService <GrowingBaseService>
 
 @required
-- (UIImage *)screenShot;
+- (UIImage *)screenshot;
 - (void)addSendEventSwizzle;
 - (void)addApplicationEventObserver:(id<GrowingApplicationEventProtocol>)delegate;
 - (void)removeApplicationEventObserver:(id<GrowingApplicationEventProtocol>)delegate;

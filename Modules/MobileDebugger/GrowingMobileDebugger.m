@@ -112,7 +112,7 @@ GrowingMod(GrowingMobileDebugger)
 #pragma mark - actions
 
 - (void)_setNeedUpdateScreen {
-    [self sendScreenShot];
+    [self sendScreenshot];
 }
 
 - (unsigned long)getSnapshotKey {
@@ -121,11 +121,11 @@ GrowingMod(GrowingMobileDebugger)
     return _snapNumber;
 }
 
-#pragma mark - screenShot
+#pragma mark - Screenshot
 
-- (void)sendScreenShot {
+- (void)sendScreenshot {
     if (self.isReady) {
-        UIImage *image = [self.screenshotProvider screenShot];
+        UIImage *image = [self.screenshotProvider screenshot];
         NSData *data = [image growingHelper_JPEG:0.8];
         NSString *imgBase64Str = [data growingHelper_base64String];
 
@@ -147,7 +147,7 @@ GrowingMod(GrowingMobileDebugger)
 
 - (void)remoteReady {
     [self sendJson:[self userInfo]];
-    [self sendScreenShot];
+    [self sendScreenshot];
 }
 
 - (void)start {

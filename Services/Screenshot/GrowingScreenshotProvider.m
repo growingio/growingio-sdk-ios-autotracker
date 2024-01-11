@@ -97,7 +97,7 @@ GrowingService(GrowingScreenshotService, GrowingScreenshotProvider)
 
 #pragma mark - GrowingScreenshotService
 
-- (UIImage *)screenShot {
+- (UIImage *)screenshot {
     CGFloat scale = MIN([UIScreen mainScreen].scale, 2);
     NSArray *windows = [UIApplication sharedApplication].growingHelper_allWindowsWithoutGrowingWindow;
     windows = [windows sortedArrayUsingComparator:^NSComparisonResult(UIWindow *obj1, UIWindow *obj2) {
