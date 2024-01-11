@@ -39,7 +39,7 @@
 - (void)testGrowingScreenshotProvider {
     GrowingScreenshotProvider *provider = GrowingScreenshotProvider.sharedInstance;
     XCTAssertNotNil(provider);
-    XCTAssertNoThrow([provider screenShot]);
+    XCTAssertNoThrow([provider screenshot]);
     XCTAssertNoThrow([provider addSendEventSwizzle]);
     XCTAssertNoThrow([provider addApplicationEventObserver:self]);
     XCTAssertNoThrow([provider dispatchApplicationEventSendEvent:self.event]);
