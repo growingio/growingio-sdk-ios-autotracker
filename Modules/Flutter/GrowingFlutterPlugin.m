@@ -70,7 +70,7 @@ GrowingMod(GrowingFlutterPlugin)
     [self trackAutotrackEventWithBuilder:builder];
 }
 
-- (void)trackViewElementEvent:(NSDictionary *)arguments 
+- (void)trackViewElementEvent:(NSDictionary *)arguments
                    attributes:(NSDictionary<NSString *, NSString *> *_Nullable)attributes {
     NSString *eventType = arguments[@"eventType"];
     if (!eventType || ![eventType isKindOfClass:[NSString class]] || eventType.length == 0) {
@@ -84,13 +84,10 @@ GrowingMod(GrowingFlutterPlugin)
     if (!xcontent || ![xcontent isKindOfClass:[NSString class]] || xcontent.length == 0) {
         return;
     }
-    
-    GrowingViewElementBuilder *builder = GrowingViewElementEvent.builder
-        .setEventType(eventType)
-        .setPath(@"")
-        .setXpath(xpath)
-        .setXcontent(xcontent);
-    
+
+    GrowingViewElementBuilder *builder =
+        GrowingViewElementEvent.builder.setEventType(eventType).setPath(@"").setXpath(xpath).setXcontent(xcontent);
+
     NSString *viewContent = arguments[@"textValue"];
     if (viewContent && [viewContent isKindOfClass:[NSString class]] && viewContent.length > 0) {
         builder = builder.setTextValue(viewContent);
@@ -99,7 +96,7 @@ GrowingMod(GrowingFlutterPlugin)
     if (index && [index isKindOfClass:[NSNumber class]] && index.intValue > 0) {
         builder = builder.setIndex(index.intValue);
     }
-    
+
     NSString *alias = arguments[@"path"];
     if (alias && [alias isKindOfClass:[NSString class]]) {
         builder = builder.setPath(alias);

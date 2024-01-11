@@ -30,9 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) void (^onWebCircleStop)(void);
 @property (nonatomic, copy) void (^_Nullable onFlutterCircleDataChange)(NSDictionary *data);
 
-- (void)trackPageEvent:(NSDictionary *)arguments 
-            attributes:(NSDictionary<NSString *, NSString *> *_Nullable)attributes;
-- (void)trackViewElementEvent:(NSDictionary *)arguments 
+- (void)trackPageEvent:(NSDictionary *)arguments attributes:(NSDictionary<NSString *, NSString *> *_Nullable)attributes;
+- (void)trackViewElementEvent:(NSDictionary *)arguments
                    attributes:(NSDictionary<NSString *, NSString *> *_Nullable)attributes;
 
 @end

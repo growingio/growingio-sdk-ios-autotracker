@@ -208,7 +208,9 @@ GrowingMod(GrowingWebCircle)
     }
 }
 
-- (void)fillAllViewsInWindow:(UIWindow *)topWindow screenshot:(NSDictionary *)screenshot completion:(void (^)(NSMutableDictionary *dict))completion {
+- (void)fillAllViewsInWindow:(UIWindow *)topWindow
+                  screenshot:(NSDictionary *)screenshot
+                  completion:(void (^)(NSMutableDictionary *dict))completion {
     NSMutableDictionary *finalDataDict = [NSMutableDictionary dictionaryWithDictionary:screenshot];
     self.elements = [NSMutableArray array];
     if (topWindow) {
@@ -319,7 +321,7 @@ GrowingMod(GrowingWebCircle)
     if (!screenshot) {
         return;
     }
-    
+
     UIWindow *topWindow = [self getTopWindow];
     if (topWindow) {
         UIViewController *controller = [self topViewControllerForWindow:topWindow];
@@ -333,11 +335,11 @@ GrowingMod(GrowingWebCircle)
     [self fillAllViewsInWindow:topWindow
                     screenshot:screenshot
                     completion:^(NSMutableDictionary *dict) {
-        GrowingWebCircle *sself = wself;
-        if (sself != nil && dict) {
-            [sself sendJson:dict];
-        }
-    }];
+                        GrowingWebCircle *sself = wself;
+                        if (sself != nil && dict) {
+                            [sself sendJson:dict];
+                        }
+                    }];
 }
 
 - (void)sendScreenshotForFlutter:(NSDictionary *)data {
@@ -359,7 +361,7 @@ GrowingMod(GrowingWebCircle)
     NSArray *elements = data[@"elements"];
     dict[@"elements"] = [elements isKindOfClass:[NSArray class]] ? elements : @[];
     NSArray *pages = data[@"pages"];
-    dict[@"pages"] = [pages isKindOfClass:[NSArray class]] ? pages: @[];
+    dict[@"pages"] = [pages isKindOfClass:[NSArray class]] ? pages : @[];
     [self sendJson:dict];
 }
 
