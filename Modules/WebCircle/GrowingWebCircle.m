@@ -68,8 +68,6 @@ GrowingMod(GrowingWebCircle)
 @property (nonatomic, strong) NSMutableArray *elements;
 @property (nonatomic, weak) UIWindow *lastKeyWindow;
 
-@property (nonatomic, copy) NSDictionary *flutterCircleData;
-
 @property (nonatomic, weak) id<GrowingScreenshotService> screenshotProvider;
 
 @end
@@ -210,9 +208,60 @@ GrowingMod(GrowingWebCircle)
     }
 }
 
-- (void)fillAllViewsForWebCircle:(NSDictionary *)dataDict completion:(void (^)(NSMutableDictionary *dict))completion {
-    NSMutableDictionary *finalDataDict = [NSMutableDictionary dictionaryWithDictionary:dataDict];
+- (void)fillAllViewsInWindow:(UIWindow *)topWindow screenShot:(NSDictionary *)screenShot completion:(void (^)(NSMutableDictionary *dict))completion {
+    NSMutableDictionary *finalDataDict = [NSMutableDictionary dictionaryWithDictionary:screenShot];
     self.elements = [NSMutableArray array];
+    if (topWindow) {
+        self.zLevel = 0;
+        [self traverseViewNode:GrowingViewNode.builder.setView(topWindow)
+                                   .setIndex(-1)
+                                   .setViewContent(topWindow.growingNodeContent)
+                                   .setXpath(topWindow.growingNodeSubPath)
+                                   .setXcontent(topWindow.growingNodeSubSimilarIndex)
+                                   .setOriginXcontent(topWindow.growingNodeSubIndex)
+                                   .setNodeType([GrowingNodeHelper getViewNodeType:topWindow])
+                                   .build];
+    }
+
+    NSMutableArray *pages = [NSMutableArray array];
+    NSArray *allDidAppearPages = [[GrowingPageManager sharedInstance] allDidAppearPages];
+    for (int i = 0; i < allDidAppearPages.count; i++) {
+        GrowingPage *page = allDidAppearPages[i];
+        if (page.isAutotrack) {
+            NSMutableDictionary *dict = [self dictFromPage:page];
+            [pages addObject:dict];
+        }
+    }
+
+    finalDataDict[@"elements"] = self.elements;
+    finalDataDict[@"pages"] = pages;
+
+    if (completion != nil) {
+        completion(finalDataDict);
+    }
+}
+
+- (NSDictionary *)dictForUserAction:(NSString *)action {
+    UIImage *image = [self.screenshotProvider screenShot];
+    NSData *data = [image growingHelper_JPEG:0.8];
+
+    NSString *imgBase64Str = [data growingHelper_base64String];
+
+    if (!data.length || !imgBase64Str.length) {
+        return nil;
+    }
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"screenshot"] = [@"data:image/jpeg;base64," stringByAppendingString:imgBase64Str];
+    dict[@"msgType"] = action;
+    dict[@"snapshotKey"] = @([self getSnapshotKey]);
+    dict[@"screenWidth"] = @(image.size.width * image.scale);
+    dict[@"screenHeight"] = @(image.size.height * image.scale);
+    dict[@"scale"] = @(1);
+
+    return dict;
+}
+
+- (UIWindow *)getTopWindow {
     UIWindow *topWindow = nil;
     UIWindow *highestWindow = nil;
     for (UIWindow *window in [UIApplication sharedApplication].growingHelper_allWindowsWithoutGrowingWindow) {
@@ -242,96 +291,80 @@ GrowingMod(GrowingWebCircle)
             topWindow = highestWindow;
         }
     }
-
-    if (topWindow) {
-        self.zLevel = 0;
-        [self traverseViewNode:GrowingViewNode.builder.setView(topWindow)
-                                   .setIndex(-1)
-                                   .setViewContent(topWindow.growingNodeContent)
-                                   .setXpath(topWindow.growingNodeSubPath)
-                                   .setXcontent(topWindow.growingNodeSubSimilarIndex)
-                                   .setOriginXcontent(topWindow.growingNodeSubIndex)
-                                   .setNodeType([GrowingNodeHelper getViewNodeType:topWindow])
-                                   .build];
-    }
-
-    NSMutableArray *pages = [NSMutableArray array];
-    NSArray *allDidAppearPages = [[GrowingPageManager sharedInstance] allDidAppearPages];
-    for (int i = 0; i < allDidAppearPages.count; i++) {
-        GrowingPage *page = allDidAppearPages[i];
-        if (page.isAutotrack) {
-            NSMutableDictionary *dict = [self dictFromPage:page];
-            [pages addObject:dict];
-        }
-    }
-
-    NSDictionary *flutterData = self.flutterCircleData;
-    NSArray *flutterElements = flutterData[@"elements"];
-    if ([flutterElements isKindOfClass:[NSArray class]]) {
-        [self.elements addObjectsFromArray:flutterElements];
-    }
-
-    NSArray *flutterPages = flutterData[@"pages"];
-    if ([flutterPages isKindOfClass:[NSArray class]]) {
-        [pages addObjectsFromArray:flutterPages];
-    }
-
-    finalDataDict[@"elements"] = self.elements;
-    finalDataDict[@"pages"] = pages;
-
-    if (completion != nil) {
-        completion(finalDataDict);
-    }
+    return topWindow;
 }
 
-- (NSDictionary *)dictForUserAction:(NSString *)action {
-    UIImage *image = [self.screenshotProvider screenShot];
-    NSData *data = [image growingHelper_JPEG:0.8];
-
-    NSString *imgBase64Str = [data growingHelper_base64String];
-
-    if (!data.length || !imgBase64Str.length) {
-        return nil;
+- (UIViewController *)topViewControllerForWindow:(UIWindow *)window {
+    UIViewController *controller = [self topViewController:window.rootViewController];
+    while (controller.presentedViewController) {
+        controller = [self topViewController:controller.presentedViewController];
     }
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    dict[@"screenshot"] = [@"data:image/jpeg;base64," stringByAppendingString:imgBase64Str];
-    dict[@"msgType"] = action;
-    dict[@"snapshotKey"] = @([self getSnapshotKey]);
-    dict[@"screenWidth"] = @(image.size.width * image.scale);
-    dict[@"screenHeight"] = @(image.size.height * image.scale);
-    dict[@"scale"] = @(1);
+    return controller;
+}
 
-    NSDictionary *flutterData = self.flutterCircleData;
-    if ([flutterData[@"width"] isKindOfClass:[NSNumber class]]) {
-        dict[@"screenWidth"] = flutterData[@"width"];
+- (UIViewController *)topViewController:(UIViewController *)controller {
+    if ([controller isKindOfClass:[UINavigationController class]]) {
+        return [self topViewController:[(UINavigationController *)controller topViewController]];
+    } else if ([controller isKindOfClass:[UITabBarController class]]) {
+        return [self topViewController:[(UITabBarController *)controller selectedViewController]];
+    } else {
+        return controller;
     }
-    if ([flutterData[@"height"] isKindOfClass:[NSNumber class]]) {
-        dict[@"screenHeight"] = flutterData[@"height"];
-    }
-    if ([flutterData[@"scale"] isKindOfClass:[NSNumber class]]) {
-        dict[@"scale"] = flutterData[@"scale"];
-    }
-
-    return dict;
+    return nil;
 }
 
 - (void)sendScreenShot {
-    // eventType已经忽略
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     NSString *userAction = @"refreshScreenshot";
-    [dict addEntriesFromDictionary:[self dictForUserAction:userAction]];
-    if (dict.count == 0) {
+    NSDictionary *screenshot = [self dictForUserAction:userAction];
+    if (!screenshot) {
         return;
+    }
+    
+    UIWindow *topWindow = [self getTopWindow];
+    if (topWindow) {
+        UIViewController *controller = [self topViewControllerForWindow:topWindow];
+        if ([controller isKindOfClass:NSClassFromString(@"FlutterViewController")]) {
+            // flutter页面由flutter模块触发sendScreenShotForFlutter
+            return;
+        }
     }
 
     __weak GrowingWebCircle *wself = self;
-    [self fillAllViewsForWebCircle:dict
-                        completion:^(NSMutableDictionary *dict) {
-                            GrowingWebCircle *sself = wself;
-                            if (sself != nil && dict) {
-                                [sself sendJson:dict];
-                            }
-                        }];
+    [self fillAllViewsInWindow:topWindow
+                    screenShot:screenshot
+                    completion:^(NSMutableDictionary *dict) {
+        GrowingWebCircle *sself = wself;
+        if (sself != nil && dict) {
+            [sself sendJson:dict];
+        }
+    }];
+}
+
+- (void)sendScreenShotForFlutter:(NSDictionary *)data {
+    NSString *userAction = @"refreshScreenshot";
+    NSDictionary *screenshot = [self dictForUserAction:userAction];
+    if (!screenshot) {
+        return;
+    }
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:screenshot];
+    if ([data[@"width"] isKindOfClass:[NSNumber class]]) {
+        dict[@"screenWidth"] = data[@"width"];
+    }
+    if ([data[@"height"] isKindOfClass:[NSNumber class]]) {
+        dict[@"screenHeight"] = data[@"height"];
+    }
+    if ([data[@"scale"] isKindOfClass:[NSNumber class]]) {
+        dict[@"scale"] = data[@"scale"];
+    }
+    NSArray *elements = data[@"elements"];
+    if ([elements isKindOfClass:[NSArray class]]) {
+        dict[@"elements"] = data[@"elements"];
+    }
+    NSArray *pages = data[@"pages"];
+    if ([pages isKindOfClass:[NSArray class]]) {
+        dict[@"pages"] = data[@"pages"];
+    }
+    [self sendJson:dict];
 }
 
 - (void)runWithCircle:(NSURL *)url {
@@ -594,13 +627,10 @@ GrowingMod(GrowingWebCircle)
     if (isReady) {
         __weak typeof(self) weakSelf = self;
         [serviceClass onFlutterCircleDataChange:^(NSDictionary *_Nonnull data) {
-            weakSelf.flutterCircleData = data;
-            // 由于没有传递eventType，这里假设为ViewClick
-            [weakSelf sendWebCircleWithType:GrowingEventTypeViewClick];
+            [weakSelf sendScreenShotForFlutter:data];
         }];
         [serviceClass onWebCircleStart];
     } else {
-        self.flutterCircleData = nil;
         [serviceClass onFlutterCircleDataChange:nil];
         [serviceClass onWebCircleStop];
     }
