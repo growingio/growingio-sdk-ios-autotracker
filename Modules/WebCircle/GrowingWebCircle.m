@@ -357,13 +357,9 @@ GrowingMod(GrowingWebCircle)
         dict[@"scale"] = data[@"scale"];
     }
     NSArray *elements = data[@"elements"];
-    if ([elements isKindOfClass:[NSArray class]]) {
-        dict[@"elements"] = data[@"elements"];
-    }
+    dict[@"elements"] = [elements isKindOfClass:[NSArray class]] ? elements : @[];
     NSArray *pages = data[@"pages"];
-    if ([pages isKindOfClass:[NSArray class]]) {
-        dict[@"pages"] = data[@"pages"];
-    }
+    dict[@"pages"] = [pages isKindOfClass:[NSArray class]] ? pages: @[];
     [self sendJson:dict];
 }
 
