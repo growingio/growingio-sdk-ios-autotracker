@@ -348,7 +348,7 @@ GrowingMod(GrowingWebCircle)
     if (!screenshot) {
         return;
     }
-    
+
     UIWindow *topWindow = [self getTopWindow];
     if (topWindow) {
         UIViewController *controller = [self topViewControllerForWindow:topWindow];
@@ -357,7 +357,7 @@ GrowingMod(GrowingWebCircle)
             return;
         }
     }
-    
+
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:screenshot];
     if ([data[@"width"] isKindOfClass:[NSNumber class]]) {
         dict[@"screenWidth"] = data[@"width"];
