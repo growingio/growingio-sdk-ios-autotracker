@@ -186,6 +186,7 @@
         // view所在viewController必定到了viewDidAppear生命周期
         // 一般来说，page对象在viewDidAppear时就已创建，此处兼容page对象未生成的特殊情况，比如：
         // 用户未在自定义的ViewController viewDidAppear中调用super viewDidAppear
+        // 或者，SDK的初始化在ViewController的生命周期之后
         page = [self createdPage:current];
     }
     return page;
@@ -216,7 +217,6 @@
             @"UICompatibilityInputViewController",
             @"UISystemInputAssistantViewController",
             @"UIPredictionViewController",
-            @"GrowingWindowViewController",
             @"UIApplicationRotationFollowingController",
             @"UIAlertController",
             @"_UIAlertControllerTextFieldViewController",
