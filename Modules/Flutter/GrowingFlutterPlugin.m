@@ -80,7 +80,7 @@ GrowingMod(GrowingFlutterPlugin)
     if (!xpath || ![xpath isKindOfClass:[NSString class]] || xpath.length == 0) {
         return;
     }
-    NSString *xcontent = arguments[@"xIndex"];
+    NSString *xcontent = arguments[@"xcontent"];
     if (!xcontent || ![xcontent isKindOfClass:[NSString class]] || xcontent.length == 0) {
         return;
     }
