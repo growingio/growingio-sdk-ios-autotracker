@@ -348,6 +348,16 @@ GrowingMod(GrowingWebCircle)
     if (!screenshot) {
         return;
     }
+    
+    UIWindow *topWindow = [self getTopWindow];
+    if (topWindow) {
+        UIViewController *controller = [self topViewControllerForWindow:topWindow];
+        if (![controller isKindOfClass:NSClassFromString(@"FlutterViewController")]) {
+            // 如果已经不是flutter页面，则不再发送（这是由于flutter侧针对圈选有做延时处理，当前可能已不在flutter页面）
+            return;
+        }
+    }
+    
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:screenshot];
     if ([data[@"width"] isKindOfClass:[NSNumber class]]) {
         dict[@"screenWidth"] = data[@"width"];
