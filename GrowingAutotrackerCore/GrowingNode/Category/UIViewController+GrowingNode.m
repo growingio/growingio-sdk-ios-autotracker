@@ -29,9 +29,8 @@
     CGRect rect = self.view.growingNodeFrame;
     // 是否全屏显示
     // 当ViewController全屏显示时，如果被NavigationController包裹,其frame大小高度应减去导航栏的高度
-    BOOL isFullScreenShow =
-        CGPointEqualToPoint(rect.origin, CGPointMake(0, 0)) &&
-        CGSizeEqualToSize(rect.size, UIScreen.mainScreen.bounds.size);
+    BOOL isFullScreenShow = CGPointEqualToPoint(rect.origin, CGPointMake(0, 0)) &&
+                            CGSizeEqualToSize(rect.size, UIScreen.mainScreen.bounds.size);
     if (isFullScreenShow) {
         UIViewController *parentVC = self.parentViewController;
         CGFloat statusBarHeight = [[GrowingULApplication sharedApplication] growingul_statusBarHeight];

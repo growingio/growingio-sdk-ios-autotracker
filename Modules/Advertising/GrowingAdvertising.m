@@ -36,8 +36,8 @@
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
-#import "GrowingULApplication.h"
 #import "GrowingULAppLifecycle.h"
+#import "GrowingULApplication.h"
 
 #import <WebKit/WebKit.h>
 

@@ -40,8 +40,8 @@
 #import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 #import "GrowingTrackerCore/Utils/GrowingKeyChainWrapper.h"
 #import "GrowingTrackerCore/Utils/UserIdentifier/GrowingUserIdentifier.h"
-#import "GrowingULApplication.h"
 #import "GrowingULAppLifecycle.h"
+#import "GrowingULApplication.h"
 
 static NSString *kGrowingUrlScheme = nil;
 NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
@@ -180,7 +180,8 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 #if TARGET_OS_OSX
         self->_appState = [[GrowingULApplication sharedApplication] isActive] ? 0 : 1;
 #elif TARGET_OS_IOS || TARGET_OS_MACCATALYST
-        self->_appState = [[GrowingULApplication sharedApplication] applicationState] == UIApplicationStateActive ? 0 : 1;
+        self->_appState =
+            [[GrowingULApplication sharedApplication] applicationState] == UIApplicationStateActive ? 0 : 1;
 #endif
     };
 

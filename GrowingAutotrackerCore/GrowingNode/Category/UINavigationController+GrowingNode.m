@@ -24,9 +24,8 @@
 
 - (CGRect)growingNodeFrame {
     CGRect rect = self.view.growingNodeFrame;
-    BOOL isFullScreenShow =
-        CGPointEqualToPoint(rect.origin, CGPointMake(0, 0)) &&
-        CGSizeEqualToSize(rect.size, UIScreen.mainScreen.bounds.size);
+    BOOL isFullScreenShow = CGPointEqualToPoint(rect.origin, CGPointMake(0, 0)) &&
+                            CGSizeEqualToSize(rect.size, UIScreen.mainScreen.bounds.size);
     if (isFullScreenShow && self.parentViewController &&
         [self.parentViewController isKindOfClass:[UITabBarController class]]) {
         UITabBarController *controller = (UITabBarController *)self.parentViewController;
