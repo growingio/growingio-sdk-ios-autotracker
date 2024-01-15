@@ -1,5 +1,5 @@
 #source 'https://github.com/growingio/giospec.git'
-#source 'https://github.com/CocoaPods/Specs.git'
+source 'https://github.com/CocoaPods/Specs.git'
 
 platform :ios, '12.0'
 use_frameworks!
@@ -28,6 +28,14 @@ target 'Example' do
 
   pod 'SDCycleScrollView', '~> 1.75'
 #  pod 'Bugly'
+end
+
+target 'ShareExtension' do
+  pod 'GrowingAnalytics/Autotracker', :path => '../'
+  pod 'GrowingAnalytics/Ads', :path => '../'
+  pod 'GrowingAnalytics/ABTesting', :path => '../'
+  pod 'GrowingAnalytics/ImpressionTrack', :path => '../'
+  pod 'GrowingAnalytics/APM', :path => '../'
 end
 
 target 'GrowingAnalyticsTests' do
