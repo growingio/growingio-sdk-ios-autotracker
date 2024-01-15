@@ -40,6 +40,7 @@
 #import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 #import "GrowingTrackerCore/Utils/GrowingKeyChainWrapper.h"
 #import "GrowingTrackerCore/Utils/UserIdentifier/GrowingUserIdentifier.h"
+#import "GrowingULApplication.h"
 #import "GrowingULAppLifecycle.h"
 
 static NSString *kGrowingUrlScheme = nil;
@@ -167,7 +168,7 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 
 #if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
 - (void)handleStatusBarOrientationChange:(NSNotification *)notification {
-    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+    UIInterfaceOrientation orientation = [[GrowingULApplication sharedApplication] statusBarOrientation];
     if (orientation != UIInterfaceOrientationUnknown) {
         _deviceOrientation = UIInterfaceOrientationIsPortrait(orientation) ? @"PORTRAIT" : @"LANDSCAPE";
     }
@@ -177,9 +178,9 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 - (void)updateAppState {
     dispatch_block_t block = ^{
 #if TARGET_OS_OSX
-        self->_appState = [NSApplication sharedApplication].isActive ? 0 : 1;
+        self->_appState = [[GrowingULApplication sharedApplication] isActive] ? 0 : 1;
 #elif TARGET_OS_IOS || TARGET_OS_MACCATALYST
-        self->_appState = [UIApplication sharedApplication].applicationState == UIApplicationStateActive ? 0 : 1;
+        self->_appState = [[GrowingULApplication sharedApplication] applicationState] == UIApplicationStateActive ? 0 : 1;
 #endif
     };
 
@@ -324,7 +325,7 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
         _deviceOrientation = @"PORTRAIT";
 #elif TARGET_OS_IOS
         dispatch_block_t block = ^{
-            UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+            UIInterfaceOrientation orientation = [[GrowingULApplication sharedApplication] statusBarOrientation];
             if (orientation != UIInterfaceOrientationUnknown) {
                 self->_deviceOrientation = UIInterfaceOrientationIsPortrait(orientation) ? @"PORTRAIT" : @"LANDSCAPE";
             }

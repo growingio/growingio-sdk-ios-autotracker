@@ -21,6 +21,7 @@
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
+#import "GrowingULApplication.h"
 #import "GrowingULSwizzle.h"
 #import "Services/Screenshot/UIApplication+Screenshot.h"
 
@@ -99,7 +100,8 @@ GrowingService(GrowingScreenshotService, GrowingScreenshotProvider)
 
 - (UIImage *)screenshot {
     CGFloat scale = MIN([UIScreen mainScreen].scale, 2);
-    NSArray *windows = [UIApplication sharedApplication].growingHelper_allWindowsWithoutGrowingWindow;
+    UIApplication *application = [GrowingULApplication sharedApplication];
+    NSArray *windows = application.growingHelper_allWindowsWithoutGrowingWindow;
     windows = [windows sortedArrayUsingComparator:^NSComparisonResult(UIWindow *obj1, UIWindow *obj2) {
         if (obj1.windowLevel == obj2.windowLevel) {
             return NSOrderedSame;

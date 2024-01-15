@@ -36,6 +36,7 @@
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
+#import "GrowingULApplication.h"
 #import "GrowingULAppLifecycle.h"
 
 #import <WebKit/WebKit.h>
@@ -64,6 +65,9 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
 }
 
 - (void)growingModInit:(GrowingContext *)context {
+    if ([GrowingULApplication isAppExtension]) {
+        return;
+    }
     GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
     if (config.deepLinkHost && config.deepLinkHost.length > 0) {
         NSString *host = [NSURL URLWithString:config.deepLinkHost].host;
@@ -84,6 +88,9 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
 }
 
 - (void)growingModSetDataCollectionEnabled:(GrowingContext *)context {
+    if ([GrowingULApplication isAppExtension]) {
+        return;
+    }
     NSDictionary *customParam = context.customParam;
     BOOL dataCollectionEnabled = ((NSNumber *)customParam[@"dataCollectionEnabled"]).boolValue;
     if (dataCollectionEnabled) {

@@ -19,72 +19,7 @@
 #if __has_include(<UIKit/UIKit.h>)
 #import "GrowingTrackerCore/Menu/GrowingAlert.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
-
-typedef NS_ENUM(NSUInteger, GrowingAlertError) {
-    alertControllerNil = 0,
-    popoverNotSet = 1,
-    sourceViewControllerNil = 2,
-};
-
-typedef NS_ENUM(NSUInteger, GrowingAlertResult) {
-    success = 0,
-    failure = 1,
-};
-
-@interface UIViewController (GrowingAlertHelper)
-
-- (UIViewController *)growing_topMostViewController;
-
-@end
-
-@implementation UIViewController (GrowingAlertHelper)
-
-- (UIViewController *)growing_topMostViewController {
-    UIViewController *presented = self.presentedViewController;
-    if (presented) {
-        return [presented growing_topMostViewController];
-    }
-
-    if ([self isKindOfClass:UINavigationController.class]) {
-        UINavigationController *navigation = (UINavigationController *)self;
-        return [navigation.visibleViewController growing_topMostViewController];
-    }
-
-    if ([self isKindOfClass:UITabBarController.class]) {
-        UITabBarController *tab = (UITabBarController *)self;
-        return [tab.selectedViewController growing_topMostViewController];
-    }
-
-    return self;
-}
-
-@end
-
-@interface UIApplication (GrowingAlertHelper)
-
-- (UIViewController *)growing_topMostViewController;
-
-@end
-
-@implementation UIApplication (GrowingAlertHelper)
-
-- (UIViewController *)growing_topMostViewController {
-    UIWindow *keyWindow = nil;
-    for (UIWindow *w in self.windows) {
-        if (w.isKeyWindow) {
-            keyWindow = w;
-            break;
-        }
-    }
-
-    if (!keyWindow) {
-        return nil;
-    }
-
-    return [keyWindow.rootViewController growing_topMostViewController];
-}
-
-@end
+#import "GrowingULApplication.h"
 
 @interface GrowingAlert ()
 
@@ -160,7 +95,7 @@ typedef NS_ENUM(NSUInteger, GrowingAlertResult) {
 }
 
 - (void)showAlertAnimated:(BOOL)animated {
-    UIViewController *sourceViewController = [[UIApplication sharedApplication] growing_topMostViewController];
+    UIViewController *sourceViewController = [[GrowingULApplication sharedApplication] growingul_topViewController];
     if (sourceViewController) {
         [sourceViewController presentViewController:self.alertController animated:YES completion:nil];
     } else {

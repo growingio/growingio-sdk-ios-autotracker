@@ -18,10 +18,10 @@
 //  limitations under the License.
 
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
-#import "GrowingAutotrackerCore/GrowingNode/Category/UIApplication+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIViewController+GrowingNode.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
+#import "GrowingULApplication.h"
 
 @implementation UIViewController (GrowingNode)
 
@@ -31,21 +31,19 @@
     // 当ViewController全屏显示时，如果被NavigationController包裹,其frame大小高度应减去导航栏的高度
     BOOL isFullScreenShow =
         CGPointEqualToPoint(rect.origin, CGPointMake(0, 0)) &&
-        CGSizeEqualToSize(rect.size, [UIApplication sharedApplication].growingMainWindow.bounds.size);
+        CGSizeEqualToSize(rect.size, UIScreen.mainScreen.bounds.size);
     if (isFullScreenShow) {
         UIViewController *parentVC = self.parentViewController;
+        CGFloat statusBarHeight = [[GrowingULApplication sharedApplication] growingul_statusBarHeight];
         while (parentVC) {
             if ([parentVC isKindOfClass:[UINavigationController class]]) {
                 UINavigationController *navi = (UINavigationController *)parentVC;
                 if (!navi.navigationBar.window || navi.navigationBar.hidden || navi.navigationBar.alpha < 0.001 ||
                     !navi.navigationBar.superview) {
                     break;
-                    ;
                 }
-                rect.origin.y += (navi.navigationBar.frame.size.height +
-                                  [[UIApplication sharedApplication] statusBarFrame].size.height);
-                rect.size.height -= (navi.navigationBar.frame.size.height +
-                                     [[UIApplication sharedApplication] statusBarFrame].size.height);
+                rect.origin.y += (navi.navigationBar.frame.size.height + statusBarHeight);
+                rect.size.height -= (navi.navigationBar.frame.size.height + statusBarHeight);
             }
 
             if ([parentVC isKindOfClass:[UITabBarController class]]) {

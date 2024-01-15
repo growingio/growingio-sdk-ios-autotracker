@@ -25,6 +25,7 @@
 #import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
 #import "GrowingTrackerCore/DeepLink/GrowingSceneDelegateAutotracker.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
+#import "GrowingULApplication.h"
 #import "GrowingULSwizzle.h"
 
 @implementation GrowingAppDelegateAutotracker
@@ -57,7 +58,7 @@
         Class sceneDelegateClass = self.sceneDelegateClass;
         if (!sceneDelegateClass) {
             // url scheme 跳转
-            NSObject *delegate = [UIApplication sharedApplication].delegate;
+            NSObject *delegate = [[GrowingULApplication sharedApplication] delegate];
             if (!delegate) {
                 return;
             }

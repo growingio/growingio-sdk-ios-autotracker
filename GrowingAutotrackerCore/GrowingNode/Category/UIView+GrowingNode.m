@@ -20,10 +20,10 @@
 #import "GrowingAutotrackerCore/Autotrack/GrowingPropertyDefine.h"
 #import "GrowingAutotrackerCore/Autotrack/UITapGestureRecognizer+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingAutotrackConfiguration+Private.h"
-#import "GrowingAutotrackerCore/GrowingNode/Category/UIApplication+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingULApplication.h"
 
 @implementation UIView (GrowingNode)
 
@@ -73,7 +73,7 @@
 #pragma mark -
 
 - (CGRect)growingNodeFrame {
-    UIWindow *mainWindow = [[UIApplication sharedApplication] growingMainWindow];
+    UIWindow *mainWindow = [[GrowingULApplication sharedApplication] growingul_keyWindow];
     UIWindow *parentWindow = self.window;
 
     CGRect frame = [self convertRect:self.bounds toView:parentWindow];

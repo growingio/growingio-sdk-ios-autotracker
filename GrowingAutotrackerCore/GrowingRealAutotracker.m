@@ -33,6 +33,7 @@
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
+#import "GrowingULApplication.h"
 #import "GrowingULSwizzle.h"
 #import "GrowingULViewControllerLifecycle.h"
 
@@ -48,7 +49,7 @@
                         launchOptions:(NSDictionary *)launchOptions {
     self = [super initWithConfiguration:configuration launchOptions:launchOptions];
     if (self) {
-        if (self.configuration.autotrackEnabled) {
+        if (self.configuration.autotrackEnabled && ![GrowingULApplication isAppExtension]) {
             [self addAutoTrackSwizzles];
             [GrowingULViewControllerLifecycle setup];
             [GrowingPageManager.sharedInstance start];
