@@ -111,11 +111,6 @@ PODS:
   - KIF (3.8.9):
     - KIF/Core (= 3.8.9)
   - KIF/Core (3.8.9)
-  - LBXScan/LBXNative (2.3):
-    - LBXScan/Types (~> 2.2)
-  - LBXScan/Types (2.3)
-  - LBXScan/UI (2.3):
-    - LBXScan/Types (~> 2.2)
   - OHHTTPStubs (9.1.0):
     - OHHTTPStubs/Default (= 9.1.0)
   - OHHTTPStubs/Core (9.1.0)
@@ -146,8 +141,6 @@ DEPENDENCIES:
   - GrowingAPM
   - GrowingToolsKit (= 2.0.0)
   - KIF
-  - LBXScan/LBXNative (= 2.3)
-  - LBXScan/UI (= 2.3)
   - OHHTTPStubs
   - SDCycleScrollView (~> 1.75)
 
@@ -157,7 +150,6 @@ SPEC REPOS:
     - GrowingToolsKit
     - GrowingUtils
     - KIF
-    - LBXScan
     - OHHTTPStubs
     - Protobuf
     - SDCycleScrollView
@@ -173,12 +165,11 @@ SPEC CHECKSUMS:
   GrowingToolsKit: edc93c96e47bd6ad1ff3deffe72fe276ae0a1fa8
   GrowingUtils: fde73d23911104a3dd2afc403335c8472c660a30
   KIF: 7660c626b0f2d4562533590960db70a36d640558
-  LBXScan: e51449f0832d1fe17da632af0d22adeb3cfa3543
   OHHTTPStubs: 90eac6d8f2c18317baeca36698523dc67c513831
   Protobuf: 34db13339da0d02d64fa8a2ac6a124cfcc603703
   SDCycleScrollView: a0d74c3384caa72bdfc81470bdbc8c14b3e1fbcf
   SDWebImage: fc8f2d48bbfd72ef39d70e981bd24a3f3be53fec
 
-PODFILE CHECKSUM: d72855ac83c6be98a27d9af4c242712dc6177000
+PODFILE CHECKSUM: 4ed607c8a4387bb56d7f914196a78a0d7964e17e
 
 COCOAPODS: 1.14.3
