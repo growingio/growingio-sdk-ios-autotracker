@@ -42,6 +42,7 @@
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "Modules/WebCircle/GrowingWebCircleElement.h"
 #import "Modules/WebCircle/GrowingWebCircleStatusView.h"
+#import "GrowingULApplication.h"
 
 #import <JavaScriptCore/JavaScriptCore.h>
 #import "Modules/Hybrid/GrowingHybridBridgeProvider.h"
@@ -264,55 +265,28 @@ GrowingMod(GrowingWebCircle)
 }
 
 - (UIWindow *)getTopWindow {
-    UIWindow *topWindow = nil;
-    UIWindow *highestWindow = nil;
-    for (UIWindow *window in [UIApplication sharedApplication].growingHelper_allWindowsWithoutGrowingWindow) {
-        // 如果找到了keyWindow跳出循环
-        if (window.isKeyWindow) {
-            topWindow = window;
-            break;
-        }
-
-        // 找到当前windowLevel最高的window
-        if (highestWindow) {
-            if (window.windowLevel >= highestWindow.windowLevel) {
-                highestWindow = window;
-            }
-        } else {
-            highestWindow = window;
-        }
-    }
-
-    if (!topWindow) {
-        // keyWindow是GrowingWindow或其他内部window
+    UIApplication *application = [GrowingULApplication sharedApplication];
+    UIWindow *topWindow = application.growingul_keyWindow;
+    if (!topWindow || [topWindow isKindOfClass:[GrowingWindow class]]) {
         if (self.lastKeyWindow && self.lastKeyWindow.isHidden == NO) {
             // 用上一个KeyWindow
             topWindow = self.lastKeyWindow;
         } else {
-            // 用当前windowLevel最高的window
+            // 找到当前windowLevel最高的window
+            UIWindow *highestWindow = nil;
+            for (UIWindow *window in application.growingHelper_allWindowsWithoutGrowingWindow) {
+                if (highestWindow) {
+                    if (window.windowLevel >= highestWindow.windowLevel) {
+                        highestWindow = window;
+                    }
+                } else {
+                    highestWindow = window;
+                }
+            }
             topWindow = highestWindow;
         }
     }
     return topWindow;
-}
-
-- (UIViewController *)topViewControllerForWindow:(UIWindow *)window {
-    UIViewController *controller = [self topViewController:window.rootViewController];
-    while (controller.presentedViewController) {
-        controller = [self topViewController:controller.presentedViewController];
-    }
-    return controller;
-}
-
-- (UIViewController *)topViewController:(UIViewController *)controller {
-    if ([controller isKindOfClass:[UINavigationController class]]) {
-        return [self topViewController:[(UINavigationController *)controller topViewController]];
-    } else if ([controller isKindOfClass:[UITabBarController class]]) {
-        return [self topViewController:[(UITabBarController *)controller selectedViewController]];
-    } else {
-        return controller;
-    }
-    return nil;
 }
 
 - (void)sendScreenshot {
@@ -322,17 +296,15 @@ GrowingMod(GrowingWebCircle)
         return;
     }
 
-    UIWindow *topWindow = [self getTopWindow];
-    if (topWindow) {
-        UIViewController *controller = [self topViewControllerForWindow:topWindow];
-        if ([controller isKindOfClass:NSClassFromString(@"FlutterViewController")]) {
-            // flutter页面由flutter模块触发sendScreenshotForFlutter
-            return;
-        }
+    UIApplication *application = [GrowingULApplication sharedApplication];
+    UIViewController *controller = application.growingul_topViewController;
+    if ([controller isKindOfClass:NSClassFromString(@"FlutterViewController")]) {
+        // flutter页面由flutter模块触发sendScreenshotForFlutter
+        return;
     }
-
+    
     __weak GrowingWebCircle *wself = self;
-    [self fillAllViewsInWindow:topWindow
+    [self fillAllViewsInWindow:[self getTopWindow]
                     screenshot:screenshot
                     completion:^(NSMutableDictionary *dict) {
                         GrowingWebCircle *sself = wself;
@@ -349,13 +321,11 @@ GrowingMod(GrowingWebCircle)
         return;
     }
 
-    UIWindow *topWindow = [self getTopWindow];
-    if (topWindow) {
-        UIViewController *controller = [self topViewControllerForWindow:topWindow];
-        if (![controller isKindOfClass:NSClassFromString(@"FlutterViewController")]) {
-            // 如果已经不是flutter页面，则不再发送（这是由于flutter侧针对圈选有做延时处理，当前可能已不在flutter页面）
-            return;
-        }
+    UIApplication *application = [GrowingULApplication sharedApplication];
+    UIViewController *controller = application.growingul_topViewController;
+    if (![controller isKindOfClass:NSClassFromString(@"FlutterViewController")]) {
+        // 如果已经不是flutter页面，则不再发送（这是由于flutter侧针对圈选有做延时处理，当前可能已不在flutter页面）
+        return;
     }
 
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:screenshot];
