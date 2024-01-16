@@ -40,9 +40,9 @@
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
+#import "GrowingULApplication.h"
 #import "Modules/WebCircle/GrowingWebCircleElement.h"
 #import "Modules/WebCircle/GrowingWebCircleStatusView.h"
-#import "GrowingULApplication.h"
 
 #import <JavaScriptCore/JavaScriptCore.h>
 #import "Modules/Hybrid/GrowingHybridBridgeProvider.h"
@@ -302,7 +302,7 @@ GrowingMod(GrowingWebCircle)
         // flutter页面由flutter模块触发sendScreenshotForFlutter
         return;
     }
-    
+
     __weak GrowingWebCircle *wself = self;
     [self fillAllViewsInWindow:[self getTopWindow]
                     screenshot:screenshot
