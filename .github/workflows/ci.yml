@@ -41,7 +41,8 @@ jobs:
           -destination 'platform=iOS Simulator,name=iPhone 14' \
           -enableCodeCoverage YES \
           -derivedDataPath ${{ env.DERIVED_DATA }} \
-          OTHER_CFLAGS="\$(inherited) -gen-cdb-fragment-path ${{ env.DERIVED_DATA }}/compilation-database"
+          OTHER_CFLAGS="\$(inherited) -gen-cdb-fragment-path ${{ env.DERIVED_DATA }}/compilation-database" \
+          | xcbeautify --renderer github-actions
           pushd ${{ env.DERIVED_DATA }}/compilation-database
           sed -e '1s/^/[\'$'\n''/' -e '$s/,$/\'$'\n'']/' *.json > ${{ env.DERIVED_DATA }}/compile_commands.json
           popd
