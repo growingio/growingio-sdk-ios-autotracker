@@ -27,8 +27,6 @@ target 'Example' do
   pod 'GrowingToolsKit', '2.0.0'
 
   pod 'SDCycleScrollView', '~> 1.75'
-  pod 'LBXScan/LBXNative', '2.3'
-  pod 'LBXScan/UI', '2.3'
 #  pod 'Bugly'
 end
 

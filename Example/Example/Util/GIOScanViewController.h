@@ -6,16 +6,13 @@
 //  Copyright © 2021 GrowingIO. All rights reserved.
 //
 
-#define LBXScan_Define_Native
-#define LBXScan_Define_UI
-
-#import <LBXScan/LBXScanViewController.h>
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void(^GIOScanResultBlock)(NSString *string);
 
-@interface GIOScanViewController : LBXScanViewController
+@interface GIOScanViewController : UIViewController
 
 @property (nonatomic, copy) GIOScanResultBlock resultBlock;
 
