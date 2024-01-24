@@ -4,6 +4,10 @@ on:
   push:
     branches: [ master ]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   autotracker-build-iOS:
     runs-on: macos-latest
