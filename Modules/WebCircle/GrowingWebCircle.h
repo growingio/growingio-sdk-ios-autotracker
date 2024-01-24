@@ -22,6 +22,7 @@
 
 @protocol GrowingWebSocketService;
 
+NS_EXTENSION_UNAVAILABLE("WebCircle is not supported for iOS extensions.")
 @interface GrowingWebCircle : NSObject <GrowingModuleProtocol>
 
 @property (nonatomic, strong) id<GrowingWebSocketService> webSocket;

@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class WKWebView;
 
+NS_EXTENSION_UNAVAILABLE("Hybrid is not supported for iOS extensions.")
 NS_SWIFT_NAME(Hybrid)
 @interface GrowingHybridModule : NSObject <GrowingModuleProtocol>
 

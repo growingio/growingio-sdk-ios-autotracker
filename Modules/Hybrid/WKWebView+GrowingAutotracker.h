@@ -23,13 +23,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface WKWebView (GrowingAutotracker)
 
-- (WKNavigation *)growing_loadRequest:(NSURLRequest *)request;
-- (WKNavigation *)growing_loadHTMLString:(NSString *)string baseURL:(NSURL *)baseURL;
-- (WKNavigation *)growing_loadFileURL:(NSURL *)URL allowingReadAccessToURL:(NSURL *)readAccessURL;
+- (WKNavigation *)growing_loadRequest:(NSURLRequest *)request NS_EXTENSION_UNAVAILABLE("Hybrid is not supported for iOS extensions.");
+- (WKNavigation *)growing_loadHTMLString:(NSString *)string baseURL:(NSURL *)baseURL NS_EXTENSION_UNAVAILABLE("Hybrid is not supported for iOS extensions.");;
+- (WKNavigation *)growing_loadFileURL:(NSURL *)URL allowingReadAccessToURL:(NSURL *)readAccessURL NS_EXTENSION_UNAVAILABLE("Hybrid is not supported for iOS extensions.");;
 - (WKNavigation *)growing_loadData:(NSData *)data
                           MIMEType:(NSString *)MIMEType
              characterEncodingName:(NSString *)characterEncodingName
-                           baseURL:(NSURL *)baseURL;
+                           baseURL:(NSURL *)baseURL NS_EXTENSION_UNAVAILABLE("Hybrid is not supported for iOS extensions.");;
 
 @end
 

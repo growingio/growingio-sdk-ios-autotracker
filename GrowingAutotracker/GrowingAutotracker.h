@@ -142,7 +142,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 追踪页面展示事件
 /// @param controller 被追踪页面
 /// @param alias 页面别名
-- (void)autotrackPage:(UIViewController *)controller alias:(NSString *)alias;
+- (void)autotrackPage:(UIViewController *)controller alias:(NSString *)alias NS_EXTENSION_UNAVAILABLE("AutotrackPage is not supported for iOS extensions.");
 
 /// 追踪页面展示事件
 /// @param controller 被追踪页面
@@ -150,7 +150,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param attributes 事件发生时所伴随的维度信息
 - (void)autotrackPage:(UIViewController *)controller
                 alias:(NSString *)alias
-           attributes:(NSDictionary<NSString *, NSString *> *)attributes;
+           attributes:(NSDictionary<NSString *, NSString *> *)attributes NS_EXTENSION_UNAVAILABLE("AutotrackPage is not supported for iOS extensions.");
 
 ///-------------------------------
 #pragma mark Unavailable
@@ -165,14 +165,14 @@ NS_ASSUME_NONNULL_BEGIN
 @interface UIView (GrowingAttributes)
 
 // 手动标识该view的忽略策略，请在该view被初始化后立刻赋值
-@property (nonatomic, assign) GrowingIgnorePolicy growingViewIgnorePolicy;
+@property (nonatomic, assign) GrowingIgnorePolicy growingViewIgnorePolicy NS_EXTENSION_UNAVAILABLE("Property growingViewIgnorePolicy is not supported for iOS extensions.");
 
 // 手动标识该view的取值，请在该view被初始化后立刻赋值
-@property (nonatomic, copy) NSString *growingViewCustomContent;
+@property (nonatomic, copy) NSString *growingViewCustomContent NS_EXTENSION_UNAVAILABLE("Property growingViewCustomContent is not supported for iOS extensions.");
 
 // 手动标识该view的tag
 // 这个tag必须是全局唯一的，在代码结构改变时也请保持不变
-@property (nonatomic, copy) NSString *growingUniqueTag;
+@property (nonatomic, copy) NSString *growingUniqueTag NS_EXTENSION_UNAVAILABLE("Property growingUniqueTag is not supported for iOS extensions.");
 
 @end
 
