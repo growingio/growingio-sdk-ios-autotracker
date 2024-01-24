@@ -3,6 +3,8 @@ name: SPM
 on:
   push:
     branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
@@ -17,7 +19,9 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Build
-        run: xcodebuild build -scheme GrowingAutotracker -destination 'platform=iOS Simulator,name=iPhone 14' -quiet
+        run: |
+          xcodebuild build -scheme GrowingAutotracker -destination 'platform=iOS Simulator,name=iPhone 14' \
+          | xcbeautify --renderer github-actions
 
   autotracker-build-catalyst:
     runs-on: macos-latest
@@ -27,7 +31,9 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Build
-        run: xcodebuild build -scheme GrowingAutotracker -destination 'platform=macOS,variant=Mac Catalyst' -quiet
+        run: |
+          xcodebuild build -scheme GrowingAutotracker -destination 'platform=macOS,variant=Mac Catalyst' \
+          | xcbeautify --renderer github-actions
 
   tracker-build-iOS:
     runs-on: macos-latest
@@ -37,7 +43,9 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Build
-        run: xcodebuild build -scheme GrowingTracker -destination 'platform=iOS Simulator,name=iPhone 14' -quiet
+        run: |
+          xcodebuild build -scheme GrowingTracker -destination 'platform=iOS Simulator,name=iPhone 14' \
+          | xcbeautify --renderer github-actions
 
   tracker-build-catalyst:
     runs-on: macos-latest
@@ -47,7 +55,9 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Build
-        run: xcodebuild build -scheme GrowingTracker -destination 'platform=macOS,variant=Mac Catalyst' -quiet
+        run: |
+          xcodebuild build -scheme GrowingTracker -destination 'platform=macOS,variant=Mac Catalyst' \
+          | xcbeautify --renderer github-actions
 
   tracker-build-macos:
     runs-on: macos-latest
@@ -57,7 +67,9 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Build
-        run: xcodebuild build -scheme GrowingTracker -destination 'platform=macOS' -quiet
+        run: |
+          xcodebuild build -scheme GrowingTracker -destination 'platform=macOS' \
+          | xcbeautify --renderer github-actions
 
   ads-build-iOS:
     runs-on: macos-latest
@@ -67,7 +79,9 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Build
-        run: xcodebuild build -scheme GrowingModule_Ads -destination 'platform=iOS Simulator,name=iPhone 14' -quiet
+        run: |
+          xcodebuild build -scheme GrowingModule_Ads -destination 'platform=iOS Simulator,name=iPhone 14' \
+          | xcbeautify --renderer github-actions
 
   apm-build-iOS:
     runs-on: macos-latest
@@ -77,7 +91,9 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Build
-        run: xcodebuild build -scheme GrowingModule_APM -destination 'platform=iOS Simulator,name=iPhone 14' -quiet
+        run: |
+          xcodebuild build -scheme GrowingModule_APM -destination 'platform=iOS Simulator,name=iPhone 14' \
+          | xcbeautify --renderer github-actions
 
   apm-build-catalyst:
     runs-on: macos-latest
@@ -87,7 +103,9 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Build
-        run: xcodebuild build -scheme GrowingModule_APM -destination 'platform=macOS,variant=Mac Catalyst' -quiet
+        run: |
+          xcodebuild build -scheme GrowingModule_APM -destination 'platform=macOS,variant=Mac Catalyst' \
+          | xcbeautify --renderer github-actions
 
   hybrid-build-iOS:
     runs-on: macos-latest
@@ -97,7 +115,9 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Build
-        run: xcodebuild build -scheme GrowingModule_Hybrid -destination 'platform=iOS Simulator,name=iPhone 14' -quiet
+        run: |
+          xcodebuild build -scheme GrowingModule_Hybrid -destination 'platform=iOS Simulator,name=iPhone 14' \
+          | xcbeautify --renderer github-actions
 
   hybrid-build-catalyst:
     runs-on: macos-latest
@@ -107,7 +127,9 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Build
-        run: xcodebuild build -scheme GrowingModule_Hybrid -destination 'platform=macOS,variant=Mac Catalyst' -quiet
+        run: |
+          xcodebuild build -scheme GrowingModule_Hybrid -destination 'platform=macOS,variant=Mac Catalyst' \
+          | xcbeautify --renderer github-actions
 
   imp-build-iOS:
     runs-on: macos-latest
@@ -117,4 +139,6 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Build
-        run: xcodebuild build -scheme GrowingModule_ImpressionTrack -destination 'platform=iOS Simulator,name=iPhone 14' -quiet
+        run: |
+          xcodebuild build -scheme GrowingModule_ImpressionTrack -destination 'platform=iOS Simulator,name=iPhone 14' \
+          | xcbeautify --renderer github-actions
