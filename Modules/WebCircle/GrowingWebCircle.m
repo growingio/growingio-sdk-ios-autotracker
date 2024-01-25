@@ -40,6 +40,7 @@
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
+#import "GrowingULApplication.h"
 #import "Modules/WebCircle/GrowingWebCircleElement.h"
 #import "Modules/WebCircle/GrowingWebCircleStatusView.h"
 
@@ -67,8 +68,6 @@ GrowingMod(GrowingWebCircle)
 @property (nonatomic, assign) BOOL onProcessing;
 @property (nonatomic, strong) NSMutableArray *elements;
 @property (nonatomic, weak) UIWindow *lastKeyWindow;
-
-@property (nonatomic, copy) NSDictionary *flutterCircleData;
 
 @property (nonatomic, weak) id<GrowingScreenshotService> screenshotProvider;
 
@@ -107,11 +106,11 @@ GrowingMod(GrowingWebCircle)
 
 - (void)_setNeedUpdateScreen {
     if (self.isReady) {
-        [self sendScreenShot];
+        [self sendScreenshot];
     }
 }
 
-#pragma mark - screenShot
+#pragma mark - Screenshot
 
 /*
  Page Json Data is like this:
@@ -210,39 +209,11 @@ GrowingMod(GrowingWebCircle)
     }
 }
 
-- (void)fillAllViewsForWebCircle:(NSDictionary *)dataDict completion:(void (^)(NSMutableDictionary *dict))completion {
-    NSMutableDictionary *finalDataDict = [NSMutableDictionary dictionaryWithDictionary:dataDict];
+- (void)fillAllViewsInWindow:(UIWindow *)topWindow
+                  screenshot:(NSDictionary *)screenshot
+                  completion:(void (^)(NSMutableDictionary *dict))completion {
+    NSMutableDictionary *finalDataDict = [NSMutableDictionary dictionaryWithDictionary:screenshot];
     self.elements = [NSMutableArray array];
-    UIWindow *topWindow = nil;
-    UIWindow *highestWindow = nil;
-    for (UIWindow *window in [UIApplication sharedApplication].growingHelper_allWindowsWithoutGrowingWindow) {
-        // 如果找到了keyWindow跳出循环
-        if (window.isKeyWindow) {
-            topWindow = window;
-            break;
-        }
-
-        // 找到当前windowLevel最高的window
-        if (highestWindow) {
-            if (window.windowLevel >= highestWindow.windowLevel) {
-                highestWindow = window;
-            }
-        } else {
-            highestWindow = window;
-        }
-    }
-
-    if (!topWindow) {
-        // keyWindow是GrowingWindow或其他内部window
-        if (self.lastKeyWindow && self.lastKeyWindow.isHidden == NO) {
-            // 用上一个KeyWindow
-            topWindow = self.lastKeyWindow;
-        } else {
-            // 用当前windowLevel最高的window
-            topWindow = highestWindow;
-        }
-    }
-
     if (topWindow) {
         self.zLevel = 0;
         [self traverseViewNode:GrowingViewNode.builder.setView(topWindow)
@@ -265,17 +236,6 @@ GrowingMod(GrowingWebCircle)
         }
     }
 
-    NSDictionary *flutterData = self.flutterCircleData;
-    NSArray *flutterElements = flutterData[@"elements"];
-    if ([flutterElements isKindOfClass:[NSArray class]]) {
-        [self.elements addObjectsFromArray:flutterElements];
-    }
-
-    NSArray *flutterPages = flutterData[@"pages"];
-    if ([flutterPages isKindOfClass:[NSArray class]]) {
-        [pages addObjectsFromArray:flutterPages];
-    }
-
     finalDataDict[@"elements"] = self.elements;
     finalDataDict[@"pages"] = pages;
 
@@ -285,7 +245,7 @@ GrowingMod(GrowingWebCircle)
 }
 
 - (NSDictionary *)dictForUserAction:(NSString *)action {
-    UIImage *image = [self.screenshotProvider screenShot];
+    UIImage *image = [self.screenshotProvider screenshot];
     NSData *data = [image growingHelper_JPEG:0.8];
 
     NSString *imgBase64Str = [data growingHelper_base64String];
@@ -301,37 +261,88 @@ GrowingMod(GrowingWebCircle)
     dict[@"screenHeight"] = @(image.size.height * image.scale);
     dict[@"scale"] = @(1);
 
-    NSDictionary *flutterData = self.flutterCircleData;
-    if ([flutterData[@"width"] isKindOfClass:[NSNumber class]]) {
-        dict[@"screenWidth"] = flutterData[@"width"];
-    }
-    if ([flutterData[@"height"] isKindOfClass:[NSNumber class]]) {
-        dict[@"screenHeight"] = flutterData[@"height"];
-    }
-    if ([flutterData[@"scale"] isKindOfClass:[NSNumber class]]) {
-        dict[@"scale"] = flutterData[@"scale"];
-    }
-
     return dict;
 }
 
-- (void)sendScreenShot {
-    // eventType已经忽略
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+- (UIWindow *)getTopWindow {
+    UIApplication *application = [GrowingULApplication sharedApplication];
+    UIWindow *topWindow = application.growingul_keyWindow;
+    if (!topWindow || [topWindow isKindOfClass:[GrowingWindow class]]) {
+        if (self.lastKeyWindow && self.lastKeyWindow.isHidden == NO) {
+            // 用上一个KeyWindow
+            topWindow = self.lastKeyWindow;
+        } else {
+            // 找到当前windowLevel最高的window
+            UIWindow *highestWindow = nil;
+            for (UIWindow *window in application.growingHelper_allWindowsWithoutGrowingWindow) {
+                if (highestWindow) {
+                    if (window.windowLevel >= highestWindow.windowLevel) {
+                        highestWindow = window;
+                    }
+                } else {
+                    highestWindow = window;
+                }
+            }
+            topWindow = highestWindow;
+        }
+    }
+    return topWindow;
+}
+
+- (void)sendScreenshot {
     NSString *userAction = @"refreshScreenshot";
-    [dict addEntriesFromDictionary:[self dictForUserAction:userAction]];
-    if (dict.count == 0) {
+    NSDictionary *screenshot = [self dictForUserAction:userAction];
+    if (!screenshot) {
+        return;
+    }
+
+    UIApplication *application = [GrowingULApplication sharedApplication];
+    UIViewController *controller = application.growingul_topViewController;
+    if ([controller isKindOfClass:NSClassFromString(@"FlutterViewController")]) {
+        // flutter页面由flutter模块触发sendScreenshotForFlutter
         return;
     }
 
     __weak GrowingWebCircle *wself = self;
-    [self fillAllViewsForWebCircle:dict
-                        completion:^(NSMutableDictionary *dict) {
-                            GrowingWebCircle *sself = wself;
-                            if (sself != nil && dict) {
-                                [sself sendJson:dict];
-                            }
-                        }];
+    [self fillAllViewsInWindow:[self getTopWindow]
+                    screenshot:screenshot
+                    completion:^(NSMutableDictionary *dict) {
+                        GrowingWebCircle *sself = wself;
+                        if (sself != nil && dict) {
+                            [sself sendJson:dict];
+                        }
+                    }];
+}
+
+- (void)sendScreenshotForFlutter:(NSDictionary *)data {
+    NSString *userAction = @"refreshScreenshot";
+    NSDictionary *screenshot = [self dictForUserAction:userAction];
+    if (!screenshot) {
+        return;
+    }
+
+    UIApplication *application = [GrowingULApplication sharedApplication];
+    UIViewController *controller = application.growingul_topViewController;
+    if (![controller isKindOfClass:NSClassFromString(@"FlutterViewController")]) {
+        // 如果已经不是flutter页面，则不再发送（这是由于flutter侧针对圈选有做延时处理，当前可能已不在flutter页面）
+        return;
+    }
+
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:screenshot];
+    if ([data[@"width"] isKindOfClass:[NSNumber class]]) {
+        dict[@"screenWidth"] = data[@"width"];
+    }
+    if ([data[@"height"] isKindOfClass:[NSNumber class]]) {
+        dict[@"screenHeight"] = data[@"height"];
+    }
+    if ([data[@"scale"] isKindOfClass:[NSNumber class]]) {
+        dict[@"scale"] = data[@"scale"];
+    }
+    NSArray *elements = data[@"elements"];
+    dict[@"elements"] = [elements isKindOfClass:[NSArray class]] ? elements : @[];
+    NSArray *pages = data[@"pages"];
+    dict[@"pages"] = [pages isKindOfClass:[NSArray class]] ? pages : @[];
+    [self sendJson:dict];
 }
 
 - (void)runWithCircle:(NSURL *)url {
@@ -412,7 +423,7 @@ GrowingMod(GrowingWebCircle)
     self.statusView.status = GrowingWebCircleStatusOpening;
     [self resetSnapshotKey];
     self.isReady = YES;
-    [self sendScreenShot];
+    [self sendScreenshot];
     // Hybrid的布局改变回调代理设置
     [GrowingHybridBridgeProvider sharedInstance].domChangedDelegate = self;
     // 监听原生事件，变动时发送
@@ -572,7 +583,7 @@ GrowingMod(GrowingWebCircle)
                                  usingBlock:^(__kindof NSString *_Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
                                      if ([obj isEqualToString:GrowingEventTypeViewClick] ||
                                          [obj isEqualToString:GrowingEventTypePage]) {
-                                         [self sendScreenShot];
+                                         [self sendScreenshot];
                                          *stop = YES;
                                      }
                                  }];
@@ -594,13 +605,10 @@ GrowingMod(GrowingWebCircle)
     if (isReady) {
         __weak typeof(self) weakSelf = self;
         [serviceClass onFlutterCircleDataChange:^(NSDictionary *_Nonnull data) {
-            weakSelf.flutterCircleData = data;
-            // 由于没有传递eventType，这里假设为ViewClick
-            [weakSelf sendWebCircleWithType:GrowingEventTypeViewClick];
+            [weakSelf sendScreenshotForFlutter:data];
         }];
         [serviceClass onWebCircleStart];
     } else {
-        self.flutterCircleData = nil;
         [serviceClass onFlutterCircleDataChange:nil];
         [serviceClass onWebCircleStop];
     }
