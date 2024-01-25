@@ -35,6 +35,7 @@ typedef void (^_Nullable GrowingAdDeepLinkCallback)(NSDictionary *_Nullable para
                                                     NSTimeInterval processTime,
                                                     NSError *_Nullable error);
 
+NS_EXTENSION_UNAVAILABLE("Advertising is not supported for iOS extensions.")
 NS_SWIFT_NAME(Advertising)
 @interface GrowingAdvertising : NSObject <GrowingModuleProtocol>
 

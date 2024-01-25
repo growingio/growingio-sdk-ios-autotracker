@@ -17,8 +17,6 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <objc/runtime.h>
-#import "GrowingAutotrackerCore/GrowingNode/Category/UIApplication+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UINavigationController+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 
@@ -26,9 +24,8 @@
 
 - (CGRect)growingNodeFrame {
     CGRect rect = self.view.growingNodeFrame;
-    BOOL isFullScreenShow =
-        CGPointEqualToPoint(rect.origin, CGPointMake(0, 0)) &&
-        CGSizeEqualToSize(rect.size, [UIApplication sharedApplication].growingMainWindow.bounds.size);
+    BOOL isFullScreenShow = CGPointEqualToPoint(rect.origin, CGPointMake(0, 0)) &&
+                            CGSizeEqualToSize(rect.size, UIScreen.mainScreen.bounds.size);
     if (isFullScreenShow && self.parentViewController &&
         [self.parentViewController isKindOfClass:[UITabBarController class]]) {
         UITabBarController *controller = (UITabBarController *)self.parentViewController;

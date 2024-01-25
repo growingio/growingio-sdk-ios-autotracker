@@ -19,6 +19,7 @@
 
 #if __has_include(<UIKit/UIKit.h>)
 #import "GrowingTrackerCore/GrowingWindow.h"
+#import "GrowingULApplication.h"
 
 @interface GrowingWindowViewController : UIViewController
 
@@ -35,7 +36,7 @@
 }
 
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
-    return [[UIApplication sharedApplication] statusBarOrientation];
+    return [[GrowingULApplication sharedApplication] statusBarOrientation];
 }
 
 @end
@@ -94,7 +95,7 @@
 }
 
 - (void)_growingWindowTrySetShow {
-    if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
+    if ([[GrowingULApplication sharedApplication] applicationState] == UIApplicationStateActive) {
         [self performSelector:@selector(_growingWindowSetShow) withObject:nil afterDelay:0.1];
     } else {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{

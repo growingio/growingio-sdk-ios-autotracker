@@ -19,6 +19,7 @@
 
 #import "Modules/Hybrid/Public/GrowingHybridModule.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
+#import "GrowingULApplication.h"
 #import "GrowingULSwizzle.h"
 #import "Modules/Hybrid/WKWebView+GrowingAutotracker.h"
 
@@ -60,6 +61,9 @@ GrowingMod(GrowingHybridModule)
 }
 
 - (void)growingModInit:(GrowingContext *)context {
+    if ([GrowingULApplication isAppExtension]) {
+        return;
+    }
     [self track];
 }
 

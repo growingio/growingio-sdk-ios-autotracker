@@ -22,6 +22,7 @@
 
 @protocol GrowingWebSocketService;
 
+NS_EXTENSION_UNAVAILABLE("MobileDebugger is not supported for iOS extensions.")
 @interface GrowingMobileDebugger : NSObject <GrowingModuleProtocol>
 
 @property (nonatomic, strong) id<GrowingWebSocketService> webSocket;

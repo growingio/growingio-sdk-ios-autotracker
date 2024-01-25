@@ -29,7 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
  事件类型为自定义事件(cstm)
  @param eventName 自定义事件名称
  */
-- (void)growingTrackImpression:(NSString *)eventName NS_SWIFT_NAME(trackImp(_:));
+- (void)growingTrackImpression:(NSString *)eventName NS_SWIFT_NAME(trackImp(_:))
+                                   NS_EXTENSION_UNAVAILABLE("ImpressionTrack is not supported for iOS extensions.");
 
 /**
  以下为元素展示打点事件
@@ -40,12 +41,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)growingTrackImpression:(NSString *)eventName
                     attributes:(NSDictionary<NSString *, NSString *> *_Nullable)attributes
-    NS_SWIFT_NAME(trackImp(_:attributes:));
+    NS_SWIFT_NAME(trackImp(_:attributes:))
+        NS_EXTENSION_UNAVAILABLE("ImpressionTrack is not supported for iOS extensions.");
 
 // 停止该元素展示追踪
 // 通常应用于列表中的重用元素
 // 例如您只想追踪列表中的第一行元素的展示,但当第四行出现时重用了第一行的元素,此时您可调用此函数避免事件触发
-- (void)growingStopTrackImpression NS_SWIFT_NAME(stopTrackImp());
+- (void)growingStopTrackImpression NS_SWIFT_NAME(stopTrackImp())
+    NS_EXTENSION_UNAVAILABLE("ImpressionTrack is not supported for iOS extensions.");
 
 @end
 

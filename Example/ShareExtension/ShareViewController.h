@@ -1,9 +1,9 @@
 //
-//  UIApplication+GrowingNode.h
+//  ShareViewController.h
 //  GrowingAnalytics
 //
-//  Created by GrowingIO on 15/11/15.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2024/1/12.
+//  Copyright (C) 2023 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -18,9 +18,8 @@
 //  limitations under the License.
 
 #import <UIKit/UIKit.h>
+#import <Social/Social.h>
 
-@interface UIApplication (GrowingNode)
-
-@property (nonatomic, readonly) UIWindow *growingMainWindow;
+@interface ShareViewController : SLComposeServiceViewController
 
 @end

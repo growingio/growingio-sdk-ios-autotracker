@@ -34,6 +34,7 @@
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
+#import "GrowingULApplication.h"
 #import "GrowingULTimeUtil.h"
 #import "Modules/MobileDebugger/GrowingDebuggerEventQueue.h"
 
@@ -61,6 +62,9 @@ GrowingMod(GrowingMobileDebugger)
 }
 
 - (void)growingModInit:(GrowingContext *)context {
+    if ([GrowingULApplication isAppExtension]) {
+        return;
+    }
     self.screenshotProvider =
         [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingScreenshotService)];
     [GrowingDebuggerEventQueue startQueue];

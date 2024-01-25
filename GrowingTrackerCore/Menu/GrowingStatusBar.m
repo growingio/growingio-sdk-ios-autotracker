@@ -20,6 +20,7 @@
 #if __has_include(<UIKit/UIKit.h>)
 #import "GrowingTrackerCore/Menu/GrowingStatusBar.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
+#import "GrowingULApplication.h"
 
 @interface GrowingStatusBar ()
 
@@ -41,8 +42,7 @@
     if (panGestureRecognizer.state == UIGestureRecognizerStateChanged) {
         CGPoint translation = [panGestureRecognizer translationInView:self];
 
-        double statusBarFrameHeight = [[UIApplication sharedApplication] statusBarFrame].size.height;
-
+        double statusBarFrameHeight = [[GrowingULApplication sharedApplication] growingul_statusBarHeight];
         bool topValid = (self.btn.frame.origin.y + translation.y) > statusBarFrameHeight;
         bool bottomValid =
             (self.btn.frame.origin.y + translation.y) < (self.frame.size.height - self.btn.frame.size.height);

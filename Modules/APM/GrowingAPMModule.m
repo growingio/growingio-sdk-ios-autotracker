@@ -22,6 +22,7 @@
 #import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
+#import "GrowingULApplication.h"
 
 GrowingMod(GrowingAPMModule)
 
@@ -42,6 +43,9 @@ static NSString *const kAPMPageDuration = @"page_launch_duration";
 #pragma mark - GrowingModuleProtocol
 
 - (void)growingModInit:(GrowingContext *)context {
+    if ([GrowingULApplication isAppExtension]) {
+        return;
+    }
     GrowingAPMConfig *config = [GrowingConfigurationManager sharedInstance].trackConfiguration.APMConfig;
     if (!config) {
         return;

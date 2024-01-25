@@ -18,12 +18,12 @@
 //  limitations under the License.
 
 #import "Modules/ImpressionTrack/GrowingImpressionTrack.h"
-#import "GrowingAutotrackerCore/GrowingNode/Category/UIApplication+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingULAppLifecycle.h"
+#import "GrowingULApplication.h"
 #import "GrowingULSwizzle.h"
 #import "GrowingULViewControllerLifecycle.h"
 #import "Modules/ImpressionTrack/UIView+GrowingImpressionInternal.h"
@@ -46,6 +46,9 @@ static BOOL isInResignSate;
 }
 
 - (void)growingModInit:(GrowingContext *)context {
+    if ([GrowingULApplication isAppExtension]) {
+        return;
+    }
     [self track];
 }
 
@@ -114,8 +117,7 @@ static BOOL isInResignSate;
 - (void)addWindowNodes {
     [self.sourceTable removeAllObjects];
 
-    UIWindow *window = [[UIApplication sharedApplication] growingMainWindow];
-
+    UIWindow *window = [[GrowingULApplication sharedApplication] growingul_keyWindow];
     if (window) {
         [self enumerateSubViewsWithNode:window
                                   block:^(UIView *view) {

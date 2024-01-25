@@ -21,7 +21,6 @@
 #import <arpa/inet.h>
 #import <ifaddrs.h>
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
-#import "GrowingAutotrackerCore/GrowingNode/Category/UIApplication+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIViewController+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIWindow+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/GrowingNodeHelper.h"
@@ -76,6 +75,9 @@ GrowingMod(GrowingWebCircle)
 @implementation GrowingWebCircle
 
 - (void)growingModInit:(GrowingContext *)context {
+    if ([GrowingULApplication isAppExtension]) {
+        return;
+    }
     self.screenshotProvider =
         [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingScreenshotService)];
     [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:self];
@@ -372,7 +374,8 @@ GrowingMod(GrowingWebCircle)
                                                      name:UIWindowDidResignKeyNotification
                                                    object:nil];
 
-        [UIApplication sharedApplication].idleTimerDisabled = YES;
+        UIApplication *application = [GrowingULApplication sharedApplication];
+        application.idleTimerDisabled = YES;
         GIOLogDebug(@"[GrowingWebCircle] 开始起服务");
 
         if (url) {
