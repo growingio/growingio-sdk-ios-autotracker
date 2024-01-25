@@ -28,9 +28,12 @@ jobs:
           | xcbeautify --renderer github-actions
 
   autotracker-build-catalyst:
-    runs-on: macos-latest
+    runs-on: macos-13
 
     steps:
+      - name: Force Xcode 15
+        run: sudo xcode-select -switch /Applications/Xcode_15.2.app
+
       - name: Checkout Repo
         uses: actions/checkout@v3
 
@@ -41,9 +44,12 @@ jobs:
           | xcbeautify --renderer github-actions
 
   tracker-build-iOS:
-    runs-on: macos-latest
+    runs-on: macos-13
 
     steps:
+      - name: Force Xcode 15
+        run: sudo xcode-select -switch /Applications/Xcode_15.2.app
+
       - name: Checkout Repo
         uses: actions/checkout@v3
 
@@ -54,9 +60,12 @@ jobs:
           | xcbeautify --renderer github-actions
 
   tracker-build-catalyst:
-    runs-on: macos-latest
+    runs-on: macos-13
 
     steps:
+      - name: Force Xcode 15
+        run: sudo xcode-select -switch /Applications/Xcode_15.2.app
+
       - name: Checkout Repo
         uses: actions/checkout@v3
 
@@ -67,9 +76,12 @@ jobs:
           | xcbeautify --renderer github-actions
 
   tracker-build-macos:
-    runs-on: macos-latest
+    runs-on: macos-13
 
     steps:
+      - name: Force Xcode 15
+        run: sudo xcode-select -switch /Applications/Xcode_15.2.app
+
       - name: Checkout Repo
         uses: actions/checkout@v3
 
@@ -80,9 +92,12 @@ jobs:
           | xcbeautify --renderer github-actions
 
   ads-build-iOS:
-    runs-on: macos-latest
+    runs-on: macos-13
 
     steps:
+      - name: Force Xcode 15
+        run: sudo xcode-select -switch /Applications/Xcode_15.2.app
+
       - name: Checkout Repo
         uses: actions/checkout@v3
 
@@ -93,9 +108,12 @@ jobs:
           | xcbeautify --renderer github-actions
 
   apm-build-iOS:
-    runs-on: macos-latest
+    runs-on: macos-13
 
     steps:
+      - name: Force Xcode 15
+        run: sudo xcode-select -switch /Applications/Xcode_15.2.app
+
       - name: Checkout Repo
         uses: actions/checkout@v3
 
@@ -106,9 +124,12 @@ jobs:
           | xcbeautify --renderer github-actions
 
   apm-build-catalyst:
-    runs-on: macos-latest
+    runs-on: macos-13
 
     steps:
+      - name: Force Xcode 15
+        run: sudo xcode-select -switch /Applications/Xcode_15.2.app
+
       - name: Checkout Repo
         uses: actions/checkout@v3
 
@@ -119,9 +140,12 @@ jobs:
           | xcbeautify --renderer github-actions
 
   hybrid-build-iOS:
-    runs-on: macos-latest
+    runs-on: macos-13
 
     steps:
+      - name: Force Xcode 15
+        run: sudo xcode-select -switch /Applications/Xcode_15.2.app
+
       - name: Checkout Repo
         uses: actions/checkout@v3
 
@@ -132,9 +156,12 @@ jobs:
           | xcbeautify --renderer github-actions
 
   hybrid-build-catalyst:
-    runs-on: macos-latest
+    runs-on: macos-13
 
     steps:
+      - name: Force Xcode 15
+        run: sudo xcode-select -switch /Applications/Xcode_15.2.app
+
       - name: Checkout Repo
         uses: actions/checkout@v3
 
@@ -145,9 +172,12 @@ jobs:
           | xcbeautify --renderer github-actions
 
   imp-build-iOS:
-    runs-on: macos-latest
+    runs-on: macos-13
 
     steps:
+      - name: Force Xcode 15
+        run: sudo xcode-select -switch /Applications/Xcode_15.2.app
+        
       - name: Checkout Repo
         uses: actions/checkout@v3
 
