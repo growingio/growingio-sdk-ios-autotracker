@@ -9,11 +9,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
-      # https://github.com/CocoaPods/CocoaPods/issues/9497
-      # https://github.com/CocoaPods/cocoapods-trunk/pull/147
-      - name: Install cocoapods-trunk
-        run: gem install cocoapods-trunk
         
       - name: Deploy to Cocoapods
         run: |

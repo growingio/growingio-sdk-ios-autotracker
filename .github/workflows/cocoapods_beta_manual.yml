@@ -20,11 +20,6 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          
-      # https://github.com/CocoaPods/CocoaPods/issues/9497
-      # https://github.com/CocoaPods/cocoapods-trunk/pull/147
-      - name: Install cocoapods-trunk
-        run: gem install cocoapods-trunk
 
       - name: Create CocoaPods beta
         run: |
