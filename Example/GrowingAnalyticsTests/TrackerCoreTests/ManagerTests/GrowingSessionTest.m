@@ -28,7 +28,7 @@
 #import "MockEventQueue.h"
 #import "Services/Protobuf/GrowingEventProtobufDatabase.h"
 
-@interface GrowingSessionTest : XCTestCase <GrowingUserIdChangedDelegate>
+@interface GrowingSessionTest : XCTestCase
 
 @end
 
@@ -98,18 +98,6 @@
 
     { [GrowingSession.currentSession performSelector:@selector(applicationWillTerminate)]; }
 #pragma clang diagnostic pop
-}
-
-- (void)testUserIdChangedDelegate {
-    [GrowingSession.currentSession addUserIdChangedDelegate:self];
-    [GrowingSession.currentSession setLoginUserId:@"testUserIdChangedDelegate" userKey:@"testUserIdChangedDelegate"];
-    [GrowingSession.currentSession removeUserIdChangedDelegate:self];
-}
-
-#pragma mark - GrowingUserIdChangedDelegate
-
-- (void)userIdDidChangedFrom:(NSString *)oldUserId to:(NSString *)newUserId {
-    XCTAssertNotEqualObjects(oldUserId, newUserId);
 }
 
 @end

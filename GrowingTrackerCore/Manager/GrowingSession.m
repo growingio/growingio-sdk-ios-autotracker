@@ -28,7 +28,6 @@
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Timer/GrowingEventTimer.h"
-#import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 #import "GrowingULAppLifecycle.h"
 #import "GrowingULTimeUtil.h"
 
@@ -40,16 +39,13 @@
 @property (nonatomic, copy, readwrite) NSString *latestNonNullUserId;
 @property (nonatomic, assign, readonly) long long sessionInterval;
 @property (nonatomic, assign) long long latestDidEnterBackgroundTime;
-@property (nonatomic, strong, readonly) NSHashTable *userIdChangedDelegates;
 @property (nonatomic, assign, readwrite) GrowingSessionState state;
 
 @end
 
 static GrowingSession *currentSession = nil;
 
-@implementation GrowingSession {
-    GROWING_LOCK_DECLARE(lock);
-}
+@implementation GrowingSession
 
 - (instancetype)initWithSessionInterval:(NSTimeInterval)sessionInterval {
     self = [super init];
@@ -60,9 +56,7 @@ static GrowingSession *currentSession = nil;
         _loginUserId = [GrowingPersistenceDataProvider sharedInstance].loginUserId;
         _loginUserKey = [GrowingPersistenceDataProvider sharedInstance].loginUserKey;
         _latestNonNullUserId = [GrowingPersistenceDataProvider sharedInstance].loginUserId;
-        _userIdChangedDelegates = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
         _state = GrowingSessionStateActive;
-        GROWING_LOCK_INIT(lock);
     }
 
     return self;
@@ -109,6 +103,10 @@ static GrowingSession *currentSession = nil;
         if (now - self.latestDidEnterBackgroundTime >= self.sessionInterval) {
             [self refreshSessionId];
             [self generateVisit];
+            [[GrowingModuleManager sharedInstance] triggerEvent:GrowingMSessionChangedEvent
+                                                withCustomParam:@{
+                @"sessionId": self.sessionId.copy
+            }];
         }
         [GrowingEventTimer handleAllTimersResume];
     }];
@@ -140,28 +138,6 @@ static GrowingSession *currentSession = nil;
                   waitUntilDone:YES];
 }
 
-- (void)addUserIdChangedDelegate:(id<GrowingUserIdChangedDelegate>)delegate {
-    GROWING_LOCK(lock);
-    [self.userIdChangedDelegates addObject:delegate];
-    GROWING_UNLOCK(lock);
-}
-
-- (void)removeUserIdChangedDelegate:(id<GrowingUserIdChangedDelegate>)delegate {
-    GROWING_LOCK(lock);
-    [self.userIdChangedDelegates removeObject:delegate];
-    GROWING_UNLOCK(lock);
-}
-
-- (void)dispatchUserIdDidChangedFrom:(NSString *)oldUserId to:(NSString *)newUserId {
-    GROWING_LOCK(lock);
-    for (id<GrowingUserIdChangedDelegate> delegate in self.userIdChangedDelegates) {
-        if ([delegate respondsToSelector:@selector(userIdDidChangedFrom:to:)]) {
-            [delegate userIdDidChangedFrom:oldUserId.copy to:newUserId.copy];
-        }
-    }
-    GROWING_UNLOCK(lock);
-}
-
 - (void)setLoginUserId:(NSString *)loginUserId userKey:(NSString *)userKey {
     GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
     if (!trackConfiguration.idMappingEnabled) {
@@ -181,10 +157,7 @@ static GrowingSession *currentSession = nil;
         _loginUserKey = nil;
         [[GrowingPersistenceDataProvider sharedInstance] setLoginUserId:nil];
         [[GrowingPersistenceDataProvider sharedInstance] setLoginUserKey:nil];
-        // 额外的处理者
-        if (oldUserId && oldUserId.length > 0) {
-            [self dispatchUserIdDidChangedFrom:oldUserId to:nil];
-        }
+        [[GrowingModuleManager sharedInstance] triggerEvent:GrowingMSetUserIdEvent withCustomParam:@{}];
         GIOLogDebug(@"setLoginUserId:userKey:, clean loginUserId and userKey");
         return;
     }
@@ -202,10 +175,13 @@ static GrowingSession *currentSession = nil;
     // 持久化
     [[GrowingPersistenceDataProvider sharedInstance] setLoginUserId:_loginUserId];
     [[GrowingPersistenceDataProvider sharedInstance] setLoginUserKey:_loginUserKey];
+    
+    [[GrowingModuleManager sharedInstance] triggerEvent:GrowingMSetUserIdEvent
+                                        withCustomParam:@{
+                                            @"userId": loginUserId.copy,
+                                            @"userKey": userKey.copy
+                                        }];
 
-    // 额外的处理者
-    [self dispatchUserIdDidChangedFrom:oldUserId to:_loginUserId.copy];
-    // 重发visit事件，必须在分发UserIdDidChangedFrom:to:方法之后，处理者可能修改visit中的数据内容
     [self resendVisitByUserIdDidChangedFrom:oldUserId to:_loginUserId.copy];
 }
 
@@ -222,6 +198,10 @@ static GrowingSession *currentSession = nil;
             ![newUserId isEqualToString:latestNonNullUserId]) {
             [self refreshSessionId];
             [self generateVisit];
+            [[GrowingModuleManager sharedInstance] triggerEvent:GrowingMSessionChangedEvent
+                                                withCustomParam:@{
+                @"sessionId": self.sessionId.copy
+            }];
         }
     }
 }

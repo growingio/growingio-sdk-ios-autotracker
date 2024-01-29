@@ -19,13 +19,6 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol GrowingUserIdChangedDelegate <NSObject>
-
-@required
-- (void)userIdDidChangedFrom:(NSString *)oldUserId to:(NSString *)newUserId;
-
-@end
-
 typedef NS_ENUM(NSInteger, GrowingSessionState) {
     GrowingSessionStateActive,
     GrowingSessionStateInactive,
@@ -50,10 +43,6 @@ typedef NS_ENUM(NSInteger, GrowingSessionState) {
 - (void)refreshSessionId;
 
 - (void)generateVisit;
-
-- (void)addUserIdChangedDelegate:(id<GrowingUserIdChangedDelegate>)delegate;
-
-- (void)removeUserIdChangedDelegate:(id<GrowingUserIdChangedDelegate>)delegate;
 
 - (void)setLoginUserId:(NSString *)loginUserId;
 

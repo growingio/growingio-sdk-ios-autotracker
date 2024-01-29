@@ -19,7 +19,12 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NS_ENUM(NSInteger, GrowingModuleEventType) { GrowingMInitEvent, GrowingMSetDataCollectionEnabledEvent };
+typedef NS_ENUM(NSInteger, GrowingModuleEventType) {
+    GrowingMInitEvent,
+    GrowingMSetDataCollectionEnabledEvent,
+    GrowingMSetUserIdEvent,
+    GrowingMSessionChangedEvent
+};
 
 NS_ASSUME_NONNULL_BEGIN
 
