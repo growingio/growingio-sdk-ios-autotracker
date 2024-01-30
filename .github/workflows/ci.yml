@@ -12,14 +12,11 @@ concurrency:
 
 jobs:
   build:
-    runs-on: macos-13
+    runs-on: macos-latest
     env:
       DERIVED_DATA: $HOME/.DerivedData
 
     steps:
-      - name: Force Xcode 15
-        run: sudo xcode-select -switch /Applications/Xcode_15.2.app
-        
       - name: Checkout Repo
         uses: actions/checkout@v4
         with:
@@ -47,7 +44,7 @@ jobs:
           xcodebuild test -workspace Example/GrowingAnalytics.xcworkspace \
           -scheme GrowingAnalyticsTests \
           -testPlan GrowingAnalyticsTests \
-          -destination 'platform=iOS Simulator,name=iPhone 15 Pro Max' \
+          -destination 'platform=iOS Simulator,name=iPhone 14' \
           -enableCodeCoverage YES \
           -derivedDataPath ${{ env.DERIVED_DATA }} \
           OTHER_CFLAGS="\$(inherited) -gen-cdb-fragment-path ${{ env.DERIVED_DATA }}/compilation-database" \

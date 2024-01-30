@@ -12,177 +12,133 @@ concurrency:
 
 jobs:
   autotracker-build-iOS:
-    runs-on: macos-13
+    runs-on: macos-latest
 
     steps:
-      - name: Force Xcode 15
-        run: sudo xcode-select -switch /Applications/Xcode_15.2.app
-
       - name: Checkout Repo
         uses: actions/checkout@v4
 
       - name: Build
         run: |
-          set -o pipefail
-          xcodebuild build -scheme GrowingAutotracker -destination 'platform=iOS Simulator,name=iPhone 15 Pro Max' \
+          xcodebuild build -scheme GrowingAutotracker -destination 'platform=iOS Simulator,name=iPhone 14' \
           | xcbeautify --renderer github-actions
 
   autotracker-build-catalyst:
-    runs-on: macos-13
+    runs-on: macos-latest
 
     steps:
-      - name: Force Xcode 15
-        run: sudo xcode-select -switch /Applications/Xcode_15.2.app
-
       - name: Checkout Repo
         uses: actions/checkout@v4
 
       - name: Build
         run: |
-          set -o pipefail
           xcodebuild build -scheme GrowingAutotracker -destination 'platform=macOS,variant=Mac Catalyst' \
           | xcbeautify --renderer github-actions
 
   tracker-build-iOS:
-    runs-on: macos-13
+    runs-on: macos-latest
 
     steps:
-      - name: Force Xcode 15
-        run: sudo xcode-select -switch /Applications/Xcode_15.2.app
-
       - name: Checkout Repo
         uses: actions/checkout@v4
 
       - name: Build
         run: |
-          set -o pipefail
-          xcodebuild build -scheme GrowingTracker -destination 'platform=iOS Simulator,name=iPhone 15 Pro Max' \
+          xcodebuild build -scheme GrowingTracker -destination 'platform=iOS Simulator,name=iPhone 14' \
           | xcbeautify --renderer github-actions
 
   tracker-build-catalyst:
-    runs-on: macos-13
+    runs-on: macos-latest
 
     steps:
-      - name: Force Xcode 15
-        run: sudo xcode-select -switch /Applications/Xcode_15.2.app
-
       - name: Checkout Repo
         uses: actions/checkout@v4
 
       - name: Build
         run: |
-          set -o pipefail
           xcodebuild build -scheme GrowingTracker -destination 'platform=macOS,variant=Mac Catalyst' \
           | xcbeautify --renderer github-actions
 
   tracker-build-macos:
-    runs-on: macos-13
+    runs-on: macos-latest
 
     steps:
-      - name: Force Xcode 15
-        run: sudo xcode-select -switch /Applications/Xcode_15.2.app
-
       - name: Checkout Repo
         uses: actions/checkout@v4
 
       - name: Build
         run: |
-          set -o pipefail
           xcodebuild build -scheme GrowingTracker -destination 'platform=macOS' \
           | xcbeautify --renderer github-actions
 
   ads-build-iOS:
-    runs-on: macos-13
+    runs-on: macos-latest
 
     steps:
-      - name: Force Xcode 15
-        run: sudo xcode-select -switch /Applications/Xcode_15.2.app
-
       - name: Checkout Repo
         uses: actions/checkout@v4
 
       - name: Build
         run: |
-          set -o pipefail
-          xcodebuild build -scheme GrowingModule_Ads -destination 'platform=iOS Simulator,name=iPhone 15 Pro Max' \
+          xcodebuild build -scheme GrowingModule_Ads -destination 'platform=iOS Simulator,name=iPhone 14' \
           | xcbeautify --renderer github-actions
 
   apm-build-iOS:
-    runs-on: macos-13
+    runs-on: macos-latest
 
     steps:
-      - name: Force Xcode 15
-        run: sudo xcode-select -switch /Applications/Xcode_15.2.app
-
       - name: Checkout Repo
         uses: actions/checkout@v4
 
       - name: Build
         run: |
-          set -o pipefail
-          xcodebuild build -scheme GrowingModule_APM -destination 'platform=iOS Simulator,name=iPhone 15 Pro Max' \
+          xcodebuild build -scheme GrowingModule_APM -destination 'platform=iOS Simulator,name=iPhone 14' \
           | xcbeautify --renderer github-actions
 
   apm-build-catalyst:
-    runs-on: macos-13
+    runs-on: macos-latest
 
     steps:
-      - name: Force Xcode 15
-        run: sudo xcode-select -switch /Applications/Xcode_15.2.app
-
       - name: Checkout Repo
         uses: actions/checkout@v4
 
       - name: Build
         run: |
-          set -o pipefail
           xcodebuild build -scheme GrowingModule_APM -destination 'platform=macOS,variant=Mac Catalyst' \
           | xcbeautify --renderer github-actions
 
   hybrid-build-iOS:
-    runs-on: macos-13
+    runs-on: macos-latest
 
     steps:
-      - name: Force Xcode 15
-        run: sudo xcode-select -switch /Applications/Xcode_15.2.app
-
       - name: Checkout Repo
         uses: actions/checkout@v4
 
       - name: Build
         run: |
-          set -o pipefail
-          xcodebuild build -scheme GrowingModule_Hybrid -destination 'platform=iOS Simulator,name=iPhone 15 Pro Max' \
+          xcodebuild build -scheme GrowingModule_Hybrid -destination 'platform=iOS Simulator,name=iPhone 14' \
           | xcbeautify --renderer github-actions
 
   hybrid-build-catalyst:
-    runs-on: macos-13
+    runs-on: macos-latest
 
     steps:
-      - name: Force Xcode 15
-        run: sudo xcode-select -switch /Applications/Xcode_15.2.app
-
       - name: Checkout Repo
         uses: actions/checkout@v4
 
       - name: Build
         run: |
-          set -o pipefail
           xcodebuild build -scheme GrowingModule_Hybrid -destination 'platform=macOS,variant=Mac Catalyst' \
           | xcbeautify --renderer github-actions
 
   imp-build-iOS:
-    runs-on: macos-13
+    runs-on: macos-latest
 
     steps:
-      - name: Force Xcode 15
-        run: sudo xcode-select -switch /Applications/Xcode_15.2.app
-        
       - name: Checkout Repo
         uses: actions/checkout@v4
 
       - name: Build
         run: |
-          set -o pipefail
-          xcodebuild build -scheme GrowingModule_ImpressionTrack -destination 'platform=iOS Simulator,name=iPhone 15 Pro Max' \
+          xcodebuild build -scheme GrowingModule_ImpressionTrack -destination 'platform=iOS Simulator,name=iPhone 14' \
           | xcbeautify --renderer github-actions
