@@ -21,7 +21,7 @@ jobs:
         run: sudo xcode-select -switch /Applications/Xcode_15.2.app
         
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
 
@@ -29,8 +29,9 @@ jobs:
         uses: sonarsource/sonarcloud-github-c-cpp@v2
 
       - name: Cache cocoapods
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
+          save-always: true
           path: ./Example/Pods
           key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
           restore-keys: |

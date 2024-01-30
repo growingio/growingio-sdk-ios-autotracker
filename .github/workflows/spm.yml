@@ -19,7 +19,7 @@ jobs:
         run: sudo xcode-select -switch /Applications/Xcode_15.2.app
 
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Build
         run: |
@@ -35,7 +35,7 @@ jobs:
         run: sudo xcode-select -switch /Applications/Xcode_15.2.app
 
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Build
         run: |
@@ -51,7 +51,7 @@ jobs:
         run: sudo xcode-select -switch /Applications/Xcode_15.2.app
 
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Build
         run: |
@@ -67,7 +67,7 @@ jobs:
         run: sudo xcode-select -switch /Applications/Xcode_15.2.app
 
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Build
         run: |
@@ -83,7 +83,7 @@ jobs:
         run: sudo xcode-select -switch /Applications/Xcode_15.2.app
 
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Build
         run: |
@@ -99,7 +99,7 @@ jobs:
         run: sudo xcode-select -switch /Applications/Xcode_15.2.app
 
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Build
         run: |
@@ -115,7 +115,7 @@ jobs:
         run: sudo xcode-select -switch /Applications/Xcode_15.2.app
 
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Build
         run: |
@@ -131,7 +131,7 @@ jobs:
         run: sudo xcode-select -switch /Applications/Xcode_15.2.app
 
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Build
         run: |
@@ -147,7 +147,7 @@ jobs:
         run: sudo xcode-select -switch /Applications/Xcode_15.2.app
 
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Build
         run: |
@@ -163,7 +163,7 @@ jobs:
         run: sudo xcode-select -switch /Applications/Xcode_15.2.app
 
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Build
         run: |
@@ -179,7 +179,7 @@ jobs:
         run: sudo xcode-select -switch /Applications/Xcode_15.2.app
         
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Build
         run: |
