@@ -42,6 +42,7 @@ jobs:
 
       - name: Run tests to generate coverage statistics # https://sonarsource.atlassian.net/browse/CPP-3987
         run: |
+          set -o pipefail
           mkdir -p ${{ env.DERIVED_DATA }}
           xcodebuild test -workspace Example/GrowingAnalytics.xcworkspace \
           -scheme GrowingAnalyticsTests \
