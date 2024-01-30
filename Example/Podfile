@@ -14,6 +14,7 @@ target 'Example' do
   pod 'GrowingAnalytics/Ads', :path => '../'
   pod 'GrowingAnalytics/ABTesting', :path => '../'
   pod 'GrowingAnalytics/ImpressionTrack', :path => '../'
+  pod 'GrowingAnalytics/MultiTracker', :path => '../'
 
 #  pod 'GrowingAnalytics/Tracker', :path => '../'
 #  pod 'GrowingAnalytics/Hybrid', :path => '../'
@@ -35,6 +36,7 @@ target 'ShareExtension' do
   pod 'GrowingAnalytics/Ads', :path => '../'
   pod 'GrowingAnalytics/ABTesting', :path => '../'
   pod 'GrowingAnalytics/ImpressionTrack', :path => '../'
+  pod 'GrowingAnalytics/MultiTracker', :path => '../'
   pod 'GrowingAnalytics/APM', :path => '../'
 end
 
