@@ -17,9 +17,10 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#if __has_include(<UIKit/UIKit.h>)
+#import "GrowingTargetConditionals.h"
+
+#if Growing_USE_UIKIT
 #import "GrowingTrackerCore/DeepLink/GrowingSceneDelegateAutotracker.h"
-#import <UIKit/UIKit.h>
 #import <objc/message.h>
 #import <objc/runtime.h>
 #import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"

@@ -1,12 +1,12 @@
-// swift-tools-version:5.6
+// swift-tools-version:5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 //
 //  Package.swift
 //  GrowingAnalytics
 //
-//  Created by YoloMao on 2022/03/17.
-//  Copyright (C) 2023 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2024/2/2.
+//  Copyright (C) 2024 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -25,11 +25,12 @@ import PackageDescription
 let package = Package(
     name: "GrowingAnalytics",
     platforms: [
-        .iOS(.v10),
+        .iOS(.v12),
         .macCatalyst(.v13),
-        .macOS(.v10_12),
-        .tvOS(.v10),
-        .watchOS(.v7)
+        .macOS(.v10_14),
+        .tvOS(.v12),
+        .watchOS(.v7),
+        .visionOS(.v1)
     ],
     products: [
         .autotracker,

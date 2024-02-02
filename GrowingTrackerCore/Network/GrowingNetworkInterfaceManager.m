@@ -19,8 +19,9 @@
 
 #import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
 #import "GrowingTrackerCore/Thirdparty/Reachability/GrowingReachability.h"
+#import "GrowingTargetConditionals.h"
 
-#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
+#if Growing_OS_PURE_IOS
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #endif
 
@@ -31,7 +32,7 @@
 @property (nonatomic, assign, readwrite) BOOL WiFiValid;
 @property (nonatomic, assign, readwrite) BOOL isReachable;
 
-#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
+#if Growing_OS_PURE_IOS
 @property (nonatomic, strong) CTTelephonyNetworkInfo *teleInfo;
 #endif
 
@@ -54,7 +55,7 @@
         _internetReachability = [GrowingReachability reachabilityForInternetConnection];
         [_internetReachability startNotifier];
 
-#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
+#if Growing_OS_PURE_IOS
         _teleInfo = [[CTTelephonyNetworkInfo alloc] init];
 #endif
     }
@@ -72,7 +73,7 @@
     GrowingNetworkStatus netStatus = self.internetReachability.networkStatus;
     if (netStatus == GrowingReachabilityViaWiFi) {
         return @"WIFI";
-#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
+#if Growing_OS_PURE_IOS
     } else if (netStatus == GrowingReachabilityViaWWAN) {
         NSArray *typeStrings4G = @[CTRadioAccessTechnologyLTE];
         NSString *accessString = CTRadioAccessTechnologyLTE;  // default 4G

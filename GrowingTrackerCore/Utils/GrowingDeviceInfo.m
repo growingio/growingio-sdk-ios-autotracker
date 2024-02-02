@@ -18,17 +18,7 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
-
-#if __has_include(<UIKit/UIKit.h>)
-#import <UIKit/UIKit.h>
-#endif
-
-#if __has_include(<AppKit/AppKit.h>)
-#import <AppKit/AppKit.h>
-#endif
-
-#import <CoreTelephony/CTCarrier.h>
-#import <CoreTelephony/CTTelephonyNetworkInfo.h>
+#import "GrowingTargetConditionals.h"
 
 #import <pthread.h>
 #import <sys/sysctl.h>
@@ -85,21 +75,24 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
         _appState = 0;
         _timezoneOffset = -([[NSTimeZone defaultTimeZone] secondsFromGMT] / 60);
 
-#if TARGET_OS_OSX
+#if Growing_USE_APPKIT
         _screenWidth = NSScreen.mainScreen.frame.size.width;
         _screenHeight = NSScreen.mainScreen.frame.size.height;
-#elif TARGET_OS_IOS || TARGET_OS_MACCATALYST
+#elif Growing_USE_UIKIT
         UIScreen *screen = [UIScreen mainScreen];
         CGFloat width = screen.bounds.size.width * screen.scale;
         CGFloat height = screen.bounds.size.height * screen.scale;
         // make sure the size is in portrait to keep consistency
         _screenWidth = MIN(width, height);
         _screenHeight = MAX(width, height);
+#elif Growing_USE_WATCHKIT
+        _screenWidth = WKInterfaceDevice.currentDevice.screenBounds.size.width;
+        _screenHeight = WKInterfaceDevice.currentDevice.screenBounds.size.height;
 #endif
 
         [[GrowingULAppLifecycle sharedInstance] addAppLifecycleDelegate:self];
 
-#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
+#if Growing_OS_PURE_IOS
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(handleStatusBarOrientationChange:)
                                                      name:UIApplicationDidChangeStatusBarOrientationNotification
@@ -139,7 +132,8 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 }
 
 - (NSString *)getDeviceIdString {
-#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
+    // TODO: tvOS/visionOS support
+#if Growing_OS_PURE_IOS || Growing_OS_WATCH
     NSString *deviceIdString = [GrowingKeyChainWrapper keyChainObjectForKey:kGrowingKeychainUserIdKey];
     if ([deviceIdString growingHelper_isValidU]) {
         return deviceIdString;
@@ -147,7 +141,7 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 #endif
 
     NSString *uuid = [GrowingUserIdentifier getUserIdentifier];
-#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
+#if Growing_OS_PURE_IOS || Growing_OS_WATCH
     [GrowingKeyChainWrapper setKeychainObject:uuid forKey:kGrowingKeychainUserIdKey];
 #endif
     return uuid;
@@ -166,7 +160,7 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
     return results ?: @"";
 }
 
-#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
+#if Growing_OS_PURE_IOS
 - (void)handleStatusBarOrientationChange:(NSNotification *)notification {
     UIInterfaceOrientation orientation = [[GrowingULApplication sharedApplication] statusBarOrientation];
     if (orientation != UIInterfaceOrientationUnknown) {
@@ -177,15 +171,17 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 
 - (void)updateAppState {
     dispatch_block_t block = ^{
-#if TARGET_OS_OSX
+#if Growing_USE_APPKIT
         self->_appState = [[GrowingULApplication sharedApplication] isActive] ? 0 : 1;
-#elif TARGET_OS_IOS || TARGET_OS_MACCATALYST
+#elif Growing_USE_UIKIT
         self->_appState =
             [[GrowingULApplication sharedApplication] applicationState] == UIApplicationStateActive ? 0 : 1;
+#elif Growing_USE_WATCHKIT
+        self->_appState = [WKApplication sharedApplication].applicationState == WKApplicationStateActive ? 0 : 1;
 #endif
     };
 
-#if !TARGET_OS_OSX
+#if !Growing_OS_OSX
     if (@available(iOS 13.0, *)) {
         // iOS 13当收到UISceneWillDeactivateNotification/UISceneDidActivateNotification时，applicationState并未转换
         NSDictionary *sceneManifestDict = _infoDictionary[@"UIApplicationSceneManifest"];
@@ -251,12 +247,14 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 
 - (NSString *)deviceModel {
     if (!_deviceModel) {
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+#if Growing_USE_APPKIT || Growing_OS_MACCATALYST
         _deviceModel = [GrowingDeviceInfo getSysInfoByName:(char *)"hw.model"];
-#elif TARGET_OS_IOS
+#elif Growing_USE_UIKIT
         struct utsname systemInfo;
         uname(&systemInfo);
         _deviceModel = @(systemInfo.machine);
+#elif Growing_USE_WATCHKIT
+        _deviceModel = [GrowingDeviceInfo getSysInfoByName:(char *)"hw.machine"];
 #endif
     }
     return _deviceModel;
@@ -264,10 +262,12 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 
 - (NSString *)deviceType {
     if (!_deviceType) {
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+#if Growing_USE_APPKIT || Growing_OS_MACCATALYST
         _deviceType = @"Mac";
-#elif TARGET_OS_IOS
+#elif Growing_USE_UIKIT
         _deviceType = [UIDevice currentDevice].model;
+#elif Growing_USE_WATCHKIT
+        _deviceType = [WKInterfaceDevice currentDevice].model;
 #endif
     }
     return _deviceType;
@@ -275,12 +275,18 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 
 - (NSString *)platform {
     if (!_platform) {
-#if TARGET_OS_OSX
+#if Growing_OS_OSX
         _platform = @"macOS";
-#elif TARGET_OS_MACCATALYST
+#elif Growing_OS_MACCATALYST
         _platform = @"MacCatalyst";
-#elif TARGET_OS_IOS
+#elif Growing_OS_PURE_IOS
         _platform = @"iOS";
+#elif Growing_OS_WATCH
+        _platform = @"watchOS";
+#elif Growing_OS_TV
+        _platform = @"tvOS";
+#elif Growing_OS_VISION
+        _platform = @"visionOS";
 #endif
     }
     return _platform;
@@ -288,12 +294,14 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 
 - (NSString *)platformVersion {
     if (!_platformVersion) {
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+#if Growing_USE_APPKIT || Growing_OS_MACCATALYST
         NSDictionary *dic =
             [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
         _platformVersion = dic[@"ProductVersion"];
-#elif TARGET_OS_IOS
+#elif Growing_USE_UIKIT
         _platformVersion = [UIDevice currentDevice].systemVersion;
+#elif Growing_USE_WATCHKIT
+        _platformVersion = [WKInterfaceDevice currentDevice].systemVersion;
 #endif
     }
     return _platformVersion;
@@ -322,9 +330,8 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 
 - (NSString *)deviceOrientation {
     if (!_deviceOrientation) {
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
         _deviceOrientation = @"PORTRAIT";
-#elif TARGET_OS_IOS
+#if Growing_OS_PURE_IOS
         dispatch_block_t block = ^{
             UIInterfaceOrientation orientation = [[GrowingULApplication sharedApplication] statusBarOrientation];
             if (orientation != UIInterfaceOrientationUnknown) {

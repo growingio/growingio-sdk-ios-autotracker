@@ -37,6 +37,7 @@
 #import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "GrowingULAppLifecycle.h"
+#import "GrowingTargetConditionals.h"
 
 NSString *const GrowingTrackerVersionName = @"4.2.0";
 const int GrowingTrackerVersionCode = 40200;
@@ -64,7 +65,7 @@ const int GrowingTrackerVersionCode = 40200;
         [self loggerSetting];
         [GrowingULAppLifecycle setup];
         [GrowingSession startSession];
-#if TARGET_OS_IOS
+#if Growing_OS_IOS
         [GrowingAppDelegateAutotracker track];
 #endif
         [[GrowingModuleManager sharedInstance] registerAllModules];

@@ -12,6 +12,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   s.ios.deployment_target = '10.0'
   s.osx.deployment_target = '10.12'
   s.watchos.deployment_target = '7.0'
+  s.tvos.deployment_target = '10.0'
   s.ios.framework = 'WebKit'
   s.requires_arc = true
   s.default_subspec = "Autotracker"
@@ -19,6 +20,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
 
   s.subspec 'Autotracker' do |autotracker|
     autotracker.ios.deployment_target = '10.0'
+    autotracker.tvos.deployment_target = '10.0'
     autotracker.source_files = 'GrowingAutotracker/**/*{.h,.m,.c,.cpp,.mm}'
     autotracker.public_header_files = 'GrowingAutotracker/*.h'
     autotracker.dependency 'GrowingAnalytics/AutotrackerCore', s.version.to_s
@@ -51,6 +53,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   
   s.subspec 'AutotrackerCore' do |autotrackerCore|
     autotrackerCore.ios.deployment_target = '10.0'
+    autotrackerCore.tvos.deployment_target = '10.0'
     autotrackerCore.dependency 'GrowingUtils/AutotrackerCore', '~> 1.2.0'
     autotrackerCore.source_files = 'GrowingAutotrackerCore/**/*{.h,.m,.c,.cpp,.mm}'
     autotrackerCore.public_header_files = 'GrowingAutotrackerCore/Public/*.h'
@@ -90,6 +93,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   end
   
   s.subspec 'WebSocket' do |service|
+    service.ios.deployment_target = '10.0'
     service.source_files = 'Services/WebSocket/**/*{.h,.m,.c,.cpp,.mm}'
     service.public_header_files = 'Services/WebSocket/include/*.h'
     service.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s

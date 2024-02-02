@@ -6,8 +6,8 @@
  Basic demonstration of how to use the SystemConfiguration Reachablity APIs.
  */
 
-#import <Foundation/Foundation.h>
-#if !TARGET_OS_WATCH
+#import "GrowingTargetConditionals.h"
+#if !Growing_OS_WATCH
 #import <SystemConfiguration/SystemConfiguration.h>
 #endif
 

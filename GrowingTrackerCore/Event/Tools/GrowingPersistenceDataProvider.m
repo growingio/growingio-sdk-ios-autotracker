@@ -19,6 +19,7 @@
 
 #import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
+#import "GrowingTargetConditionals.h"
 
 static NSString *kGrowingUserdefault_file = @"growingio.userdefault";
 static NSString *kGrowingUserdefault_loginUserId = @"growingio.userdefault.loginUserId";
@@ -47,7 +48,7 @@ static GrowingPersistenceDataProvider *persistence = nil;
 - (instancetype)init {
     if (self = [super init]) {
         NSString *suiteName = kGrowingUserdefault_file;
-#if TARGET_OS_OSX
+#if Growing_OS_OSX
         // 兼容非沙盒MacApp
         NSString *bundleId = [GrowingDeviceInfo currentDeviceInfo].bundleID;
         suiteName = [suiteName stringByAppendingFormat:@".%@", bundleId];

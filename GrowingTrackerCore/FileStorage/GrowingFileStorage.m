@@ -22,6 +22,7 @@
 #import "GrowingTrackerCore/Public/GrowingServiceManager.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
+#import "GrowingTargetConditionals.h"
 
 NSString *const kGrowingResidentDirName = @"com.growingio.core";
 NSString *const kGrowingDirCommonPrefix = @"com.growingio.";
@@ -105,7 +106,7 @@ NSString *const kGrowingDirCommonPrefix = @"com.growingio.";
 + (NSString *)fullPathWithName:(NSString *)dirName append:(NSString *_Nullable)lastPathComponent {
     NSString *fullPath =
         [NSString stringWithFormat:@"%@/%@%@", kGrowingResidentDirName, kGrowingDirCommonPrefix, dirName];
-#if TARGET_OS_OSX
+#if Growing_OS_OSX
     // 兼容非沙盒MacApp
     NSString *bundleId = [GrowingDeviceInfo currentDeviceInfo].bundleID;
     fullPath = [fullPath stringByAppendingFormat:@"/%@", bundleId];
