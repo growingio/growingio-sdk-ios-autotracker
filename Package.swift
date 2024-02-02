@@ -24,7 +24,7 @@ import PackageDescription
 
 let package = Package(
     name: "GrowingAnalytics",
-    platforms: [.iOS(.v10), .macCatalyst(.v13), .macOS(.v10_12)],
+    platforms: [.iOS(.v10), .macCatalyst(.v13), .macOS(.v10_12), .watchOS(.v7)],
     products: [
         .autotracker,
         .tracker,
@@ -37,7 +37,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/growingio/growingio-sdk-ios-utilities.git",
-            "1.1.0" ..< "1.2.0"
+            "1.2.0" ..< "1.3.0"
         ),
         .package(
             url: "https://github.com/growingio/growingio-sdk-ios-performance-ext.git",
