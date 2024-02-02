@@ -42,7 +42,7 @@
 #import <os/lock.h>
 
 #define GROWING_USE_OS_UNFAIR_LOCK                                                                           \
-    Growing_OS_MACCATALYST || (__IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_10_0) ||                          \
+    Growing_OS_MACCATALYST || (__IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_10_0) ||                         \
         (__MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_12) || (__TV_OS_VERSION_MIN_REQUIRED >= __TVOS_10_0) || \
         (__WATCH_OS_VERSION_MIN_REQUIRED >= __WATCHOS_3_0)
 

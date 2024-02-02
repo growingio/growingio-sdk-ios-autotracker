@@ -18,8 +18,8 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Utils/UserIdentifier/GrowingUserIdentifier.h"
-#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTargetConditionals.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 
 @implementation GrowingUserIdentifier
 
@@ -33,7 +33,7 @@
         uuid = [self idfv];
     }
 #endif
-    
+
     // 失败了随机生成 UUID
     if (!uuid.length || !uuid.growingHelper_isValidU) {
         uuid = [[NSUUID UUID] UUIDString];

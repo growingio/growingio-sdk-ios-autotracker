@@ -30,7 +30,7 @@ let package = Package(
         .macOS(.v10_14),
         .tvOS(.v12),
         .watchOS(.v7),
-        .visionOS(.v1)
+        .visionOS(.v1),
     ],
     products: [
         .autotracker,

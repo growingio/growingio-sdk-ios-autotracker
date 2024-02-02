@@ -29,7 +29,7 @@ let package = Package(
         .macCatalyst(.v13),
         .macOS(.v10_12),
         .tvOS(.v10),
-        .watchOS(.v7)
+        .watchOS(.v7),
     ],
     products: [
         .autotracker,

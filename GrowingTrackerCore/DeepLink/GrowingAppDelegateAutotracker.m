@@ -20,9 +20,9 @@
 #import "GrowingTargetConditionals.h"
 
 #if Growing_USE_UIKIT
-#import "GrowingTrackerCore/DeepLink/GrowingAppDelegateAutotracker.h"
 #import <objc/message.h>
 #import <objc/runtime.h>
+#import "GrowingTrackerCore/DeepLink/GrowingAppDelegateAutotracker.h"
 #import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
 #import "GrowingTrackerCore/DeepLink/GrowingSceneDelegateAutotracker.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"

@@ -20,8 +20,8 @@
 #import "GrowingTargetConditionals.h"
 
 #if Growing_USE_UIKIT
-#import "GrowingTrackerCore/Menu/GrowingStatusBar.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
+#import "GrowingTrackerCore/Menu/GrowingStatusBar.h"
 #import "GrowingULApplication.h"
 
 @interface GrowingStatusBar ()

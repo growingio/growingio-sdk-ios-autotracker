@@ -18,8 +18,8 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
-#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "GrowingTargetConditionals.h"
+#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 
 static NSString *kGrowingUserdefault_file = @"growingio.userdefault";
 static NSString *kGrowingUserdefault_loginUserId = @"growingio.userdefault.loginUserId";

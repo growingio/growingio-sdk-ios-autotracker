@@ -18,6 +18,7 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/GrowingRealTracker.h"
+#import "GrowingTargetConditionals.h"
 #import "GrowingTrackerCore/DeepLink/GrowingAppDelegateAutotracker.h"
 #import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
 #import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
@@ -37,7 +38,6 @@
 #import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "GrowingULAppLifecycle.h"
-#import "GrowingTargetConditionals.h"
 
 NSString *const GrowingTrackerVersionName = @"4.2.0";
 const int GrowingTrackerVersionCode = 40200;

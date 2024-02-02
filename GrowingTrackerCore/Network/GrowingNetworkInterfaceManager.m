@@ -18,8 +18,8 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
-#import "GrowingTrackerCore/Thirdparty/Reachability/GrowingReachability.h"
 #import "GrowingTargetConditionals.h"
+#import "GrowingTrackerCore/Thirdparty/Reachability/GrowingReachability.h"
 
 #if Growing_OS_PURE_IOS
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>

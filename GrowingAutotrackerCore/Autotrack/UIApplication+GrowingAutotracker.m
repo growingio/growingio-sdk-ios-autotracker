@@ -20,9 +20,9 @@
 #import "GrowingAutotrackerCore/Autotrack/UIApplication+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingNode/GrowingViewChangeProvider.h"
 #import "GrowingAutotrackerCore/GrowingNode/GrowingViewClickProvider.h"
+#import "GrowingTargetConditionals.h"
 #import "GrowingTrackerCore/Event/GrowingNodeProtocol.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
-#import "GrowingTargetConditionals.h"
 
 @implementation UIApplication (GrowingAutotracker)
 
@@ -55,7 +55,7 @@
         [sender isKindOfClass:UISegmentedControl.class]) {
         return;
     }
-    
+
     NSObject<GrowingNode> *node = (NSObject<GrowingNode> *)sender;
     if ([sender isKindOfClass:UIPageControl.class]) {
         [GrowingViewClickProvider viewOnClick:(UIView *)node];
