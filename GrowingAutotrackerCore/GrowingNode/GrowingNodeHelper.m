@@ -21,8 +21,8 @@
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
-#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTargetConditionals.h"
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 
 static NSString *const kGrowingNodeRootPage = @"Page";
 static NSString *const kGrowingNodeRootIgnore = @"IgnorePage";
