@@ -34,7 +34,7 @@ GrowingService(GrowingScreenshotService, GrowingScreenshotProvider)
     if (maxScale != 0 && maxScale < scale) {
         scale = maxScale;
     }
-    
+
     CGSize imageSize = [UIScreen mainScreen].bounds.size;
     UIGraphicsBeginImageContextWithOptions(imageSize, NO, scale);
     CGContextRef context = UIGraphicsGetCurrentContext();
