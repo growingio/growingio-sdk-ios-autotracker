@@ -88,6 +88,9 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 #elif Growing_USE_WATCHKIT
         _screenWidth = WKInterfaceDevice.currentDevice.screenBounds.size.width;
         _screenHeight = WKInterfaceDevice.currentDevice.screenBounds.size.height;
+#else
+        _screenWidth = 1;
+        _screenHeight = 1;
 #endif
 
         [[GrowingULAppLifecycle sharedInstance] addAppLifecycleDelegate:self];
@@ -255,6 +258,8 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
         _deviceModel = @(systemInfo.machine);
 #elif Growing_USE_WATCHKIT
         _deviceModel = [GrowingDeviceInfo getSysInfoByName:(char *)"hw.machine"];
+#else
+        _deviceModel = @"Undefined";
 #endif
     }
     return _deviceModel;
@@ -268,6 +273,8 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
         _deviceType = [UIDevice currentDevice].model;
 #elif Growing_USE_WATCHKIT
         _deviceType = [WKInterfaceDevice currentDevice].model;
+#else
+        _deviceType = @"Undefined";
 #endif
     }
     return _deviceType;
@@ -287,6 +294,8 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
         _platform = @"tvOS";
 #elif Growing_OS_VISION
         _platform = @"visionOS";
+#else
+        _platform = @"Undefined";
 #endif
     }
     return _platform;
@@ -302,6 +311,8 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
         _platformVersion = [UIDevice currentDevice].systemVersion;
 #elif Growing_USE_WATCHKIT
         _platformVersion = [WKInterfaceDevice currentDevice].systemVersion;
+#else
+        _platformVersion = @"1.0";
 #endif
     }
     return _platformVersion;

@@ -35,7 +35,7 @@
 #endif
 
     // 失败了随机生成 UUID
-    if (!uuid.length || !uuid.growingHelper_isValidU) {
+    if (!uuid.growingHelper_isValidU) {
         uuid = [[NSUUID UUID] UUIDString];
     }
     return uuid;
