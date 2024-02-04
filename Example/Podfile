@@ -92,6 +92,11 @@ target 'Example-watchOS Watch App' do
   pod 'GrowingAnalytics/Tracker', :path => '../'
 end
 
+# target 'Example-visionOS' do
+#   platform :visionos, '1.0'
+#   pod 'GrowingAnalytics/Tracker', :path => '../'
+# end
+
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
