@@ -78,7 +78,7 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 #if Growing_USE_APPKIT
         _screenWidth = NSScreen.mainScreen.frame.size.width;
         _screenHeight = NSScreen.mainScreen.frame.size.height;
-#elif Growing_USE_UIKIT
+#elif Growing_OS_IOS || Growing_OS_MACCATALYST || Growing_OS_TV
         UIScreen *screen = [UIScreen mainScreen];
         CGFloat width = screen.bounds.size.width * screen.scale;
         CGFloat height = screen.bounds.size.height * screen.scale;
@@ -135,8 +135,7 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 }
 
 - (NSString *)getDeviceIdString {
-    // TODO: tvOS/visionOS support
-#if Growing_OS_PURE_IOS || Growing_OS_WATCH
+#if Growing_OS_PURE_IOS || Growing_OS_WATCH || Growing_OS_VISION || Growing_OS_TV
     NSString *deviceIdString = [GrowingKeyChainWrapper keyChainObjectForKey:kGrowingKeychainUserIdKey];
     if ([deviceIdString growingHelper_isValidU]) {
         return deviceIdString;
@@ -144,7 +143,7 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 #endif
 
     NSString *uuid = [GrowingUserIdentifier getUserIdentifier];
-#if Growing_OS_PURE_IOS || Growing_OS_WATCH
+#if Growing_OS_PURE_IOS || Growing_OS_WATCH || Growing_OS_VISION || Growing_OS_TV
     [GrowingKeyChainWrapper setKeychainObject:uuid forKey:kGrowingKeychainUserIdKey];
 #endif
     return uuid;

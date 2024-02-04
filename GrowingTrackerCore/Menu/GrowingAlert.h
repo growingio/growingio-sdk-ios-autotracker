@@ -18,7 +18,7 @@
 
 #import "GrowingTargetConditionals.h"
 
-#if Growing_USE_UIKIT
+#if Growing_OS_IOS
 NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingAlert : NSObject

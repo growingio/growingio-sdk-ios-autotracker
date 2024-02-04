@@ -19,10 +19,9 @@
 
 #import "GrowingTargetConditionals.h"
 
-#if Growing_USE_UIKIT
+#if Growing_OS_IOS
 #import "GrowingTrackerCore/GrowingWindow.h"
 #import "GrowingTrackerCore/Helpers/UIKit/UIApplication+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/UIKit/UIWindow+GrowingHelper.h"
 
 @implementation UIApplication (GrowingHelper)
 

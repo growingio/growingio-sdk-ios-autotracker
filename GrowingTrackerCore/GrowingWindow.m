@@ -19,7 +19,7 @@
 
 #import "GrowingTargetConditionals.h"
 
-#if Growing_USE_UIKIT
+#if Growing_OS_IOS
 #import "GrowingTrackerCore/GrowingWindow.h"
 #import "GrowingULApplication.h"
 

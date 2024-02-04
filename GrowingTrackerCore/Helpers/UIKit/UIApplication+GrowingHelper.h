@@ -19,7 +19,7 @@
 
 #import "GrowingTargetConditionals.h"
 
-#if Growing_USE_UIKIT
+#if Growing_OS_IOS
 @interface UIApplication (GrowingHelper)
 
 - (NSArray<UIWindow *> *)growingHelper_allWindowsWithoutGrowingWindow;

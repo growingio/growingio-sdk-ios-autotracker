@@ -12,7 +12,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   s.ios.deployment_target = '10.0'
   s.osx.deployment_target = '10.12'
   s.watchos.deployment_target = '7.0'
-  s.tvos.deployment_target = '10.0'
+  s.tvos.deployment_target = '12.0'
   s.ios.framework = 'WebKit'
   s.requires_arc = true
   s.default_subspec = "Autotracker"
