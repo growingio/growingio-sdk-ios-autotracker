@@ -28,6 +28,7 @@
 #import "GrowingTrackerCore/LogFormat/GrowingWSLoggerFormat.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
+#import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
 #import "GrowingTrackerCore/Public/GrowingAttributesBuilder.h"
 #import "GrowingTrackerCore/Public/GrowingModuleManager.h"
 #import "GrowingTrackerCore/Public/GrowingServiceManager.h"
@@ -37,7 +38,6 @@
 #import "GrowingTrackerCore/Timer/GrowingEventTimer.h"
 #import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
-#import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
 #import "GrowingULAppLifecycle.h"
 
 NSString *const GrowingTrackerVersionName = @"4.2.0";

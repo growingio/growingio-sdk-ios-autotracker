@@ -254,7 +254,8 @@ static GrowingEventManager *sharedInstance = nil;
         return;
     }
 
-    GrowingNetworkReachabilityStatus reachabilityStatus = [[GrowingNetworkInterfaceManager sharedInstance] currentStatus];
+    GrowingNetworkReachabilityStatus reachabilityStatus =
+        [[GrowingNetworkInterfaceManager sharedInstance] currentStatus];
     BOOL isViaCellular = NO;
     // 没网络 直接返回
     if (reachabilityStatus == GrowingNetworkReachabilityNotReachable) {
@@ -262,9 +263,10 @@ static GrowingEventManager *sharedInstance = nil;
         GIOLogDebug(@"No available Internet connection, delay upload (channel = %@).", channel.name);
         return;
     }
-    NSUInteger policyMask = GrowingEventSendPolicyInstant | GrowingEventSendPolicyMobileData | GrowingEventSendPolicyWiFi;
-    if (reachabilityStatus == GrowingNetworkReachabilityReachableViaWiFi
-        || reachabilityStatus == GrowingNetworkReachabilityReachableViaEthernet) {
+    NSUInteger policyMask =
+        GrowingEventSendPolicyInstant | GrowingEventSendPolicyMobileData | GrowingEventSendPolicyWiFi;
+    if (reachabilityStatus == GrowingNetworkReachabilityReachableViaWiFi ||
+        reachabilityStatus == GrowingNetworkReachabilityReachableViaEthernet) {
         policyMask = GrowingEventSendPolicyInstant | GrowingEventSendPolicyMobileData | GrowingEventSendPolicyWiFi;
 
     } else if (reachabilityStatus == GrowingNetworkReachabilityReachableViaWWAN) {

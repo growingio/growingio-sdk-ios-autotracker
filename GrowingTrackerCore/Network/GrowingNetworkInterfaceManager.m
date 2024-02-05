@@ -19,8 +19,8 @@
 
 #import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
 #import "GrowingTargetConditionals.h"
-#import "GrowingTrackerCore/Thirdparty/Reachability/GrowingReachability.h"
 #import "GrowingTrackerCore/Network/GrowingNetworkPathMonitor.h"
+#import "GrowingTrackerCore/Thirdparty/Reachability/GrowingReachability.h"
 
 #if Growing_OS_PURE_IOS
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
@@ -100,17 +100,17 @@
         }
 #endif
     } else if (reachabilityStatus == GrowingNetworkReachabilityReachableViaEthernet) {
-        return @"WIFI"; // @"Ethernet"
+        return @"WIFI";  // @"Ethernet"
     }
 
     // GrowingNetworkReachabilityUndetermined or GrowingNetworkReachabilityNotReachable
     return @"UNKNOWN";
 }
-    
+
 - (GrowingNetworkReachabilityStatus)currentStatus {
     GrowingNetworkReachabilityStatus reachabilityStatus = GrowingNetworkReachabilityUndetermined;
 #if Growing_OS_VISION
-    if (1) { // if (@available(visionOS 1.0, *)) {
+    if (1) {  // if (@available(visionOS 1.0, *)) {
 #else
     if (@available(iOS 12.0, macCatalyst 13.0, macOS 10.14, tvOS 12.0, watchOS 6.0, *)) {
 #endif
@@ -124,7 +124,7 @@
 
 - (void)monitorInitialize {
 #if Growing_OS_VISION
-    if (1) { // if (@available(visionOS 1.0, *)) {
+    if (1) {  // if (@available(visionOS 1.0, *)) {
 #else
     if (@available(iOS 12.0, macCatalyst 13.0, macOS 10.14, tvOS 12.0, watchOS 6.0, *)) {
 #endif
@@ -136,7 +136,7 @@
 
 - (void)startMonitor {
 #if Growing_OS_VISION
-    if (1) { // if (@available(visionOS 1.0, *)) {
+    if (1) {  // if (@available(visionOS 1.0, *)) {
 #else
     if (@available(iOS 12.0, macCatalyst 13.0, macOS 10.14, tvOS 12.0, watchOS 6.0, *)) {
 #endif
