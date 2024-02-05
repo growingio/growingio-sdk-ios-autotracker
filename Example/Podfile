@@ -92,6 +92,11 @@ target 'Example-watchOS Watch App' do
   pod 'GrowingAnalytics/Tracker', :path => '../'
 end
 
+target 'Example-tvOS' do
+  platform :tvos, '12.0'
+  pod 'GrowingAnalytics/Autotracker', :path => '../'
+end
+
 # target 'Example-visionOS' do
 #   platform :visionos, '1.0'
 #   pod 'GrowingAnalytics/Tracker', :path => '../'

@@ -105,9 +105,9 @@ PODS:
     - GrowingToolsKit/Core
   - GrowingToolsKit/XPathTrack (2.0.0):
     - GrowingToolsKit/Core
-  - GrowingUtils/AutotrackerCore (1.2.0):
+  - GrowingUtils/AutotrackerCore (1.2.1):
     - GrowingUtils/TrackerCore
-  - GrowingUtils/TrackerCore (1.2.0)
+  - GrowingUtils/TrackerCore (1.2.1)
   - KIF (3.8.9):
     - KIF/Core (= 3.8.9)
   - KIF/Core (3.8.9)
@@ -163,13 +163,13 @@ SPEC CHECKSUMS:
   GrowingAnalytics: 183d75b3221b5becdeaca8954280a5d034febb66
   GrowingAPM: 3c4de0384935b654e6798b95606f47883a99418b
   GrowingToolsKit: edc93c96e47bd6ad1ff3deffe72fe276ae0a1fa8
-  GrowingUtils: 67f39629888d597a120b904213a128617ddcae25
+  GrowingUtils: 0247e21b431d295f1ea67e04a18f662c1af6aefc
   KIF: 7660c626b0f2d4562533590960db70a36d640558
   OHHTTPStubs: 90eac6d8f2c18317baeca36698523dc67c513831
   Protobuf: 34db13339da0d02d64fa8a2ac6a124cfcc603703
   SDCycleScrollView: a0d74c3384caa72bdfc81470bdbc8c14b3e1fbcf
   SDWebImage: fc8f2d48bbfd72ef39d70e981bd24a3f3be53fec
 
-PODFILE CHECKSUM: 04f75853a34f62d286d1953abbc3995558c3b15e
+PODFILE CHECKSUM: a6c6e36ec9a4330f52fb9f3ea4d2ea1be1c91bc5
 
 COCOAPODS: 1.15.0
