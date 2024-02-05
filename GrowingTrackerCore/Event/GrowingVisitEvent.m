@@ -21,7 +21,6 @@
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
 #import "GrowingTrackerCore/GrowingRealTracker.h"
-#import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 
 @implementation GrowingVisitEvent

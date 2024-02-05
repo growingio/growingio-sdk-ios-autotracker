@@ -254,19 +254,20 @@ static GrowingEventManager *sharedInstance = nil;
         return;
     }
 
-    [[GrowingNetworkInterfaceManager sharedInstance] updateInterfaceInfo];
+    GrowingNetworkReachabilityStatus reachabilityStatus = [[GrowingNetworkInterfaceManager sharedInstance] currentStatus];
     BOOL isViaCellular = NO;
     // 没网络 直接返回
-    if (![GrowingNetworkInterfaceManager sharedInstance].isReachable) {
+    if (reachabilityStatus == GrowingNetworkReachabilityNotReachable) {
         // 没网络 直接返回
         GIOLogDebug(@"No available Internet connection, delay upload (channel = %@).", channel.name);
         return;
     }
-    NSUInteger policyMask = GrowingEventSendPolicyInstant;
-    if ([GrowingNetworkInterfaceManager sharedInstance].WiFiValid) {
+    NSUInteger policyMask = GrowingEventSendPolicyInstant | GrowingEventSendPolicyMobileData | GrowingEventSendPolicyWiFi;
+    if (reachabilityStatus == GrowingNetworkReachabilityReachableViaWiFi
+        || reachabilityStatus == GrowingNetworkReachabilityReachableViaEthernet) {
         policyMask = GrowingEventSendPolicyInstant | GrowingEventSendPolicyMobileData | GrowingEventSendPolicyWiFi;
 
-    } else if ([GrowingNetworkInterfaceManager sharedInstance].WWANValid) {
+    } else if (reachabilityStatus == GrowingNetworkReachabilityReachableViaWWAN) {
         if (self.uploadEventSize < self.uploadLimitOfCellular) {
             GIOLogDebug(@"Upload key data with mobile network (channel = %@).", channel.name);
             policyMask = GrowingEventSendPolicyInstant | GrowingEventSendPolicyMobileData;

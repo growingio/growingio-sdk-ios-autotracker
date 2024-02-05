@@ -7,20 +7,14 @@
  */
 
 #import "GrowingTargetConditionals.h"
+#import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
 #if !Growing_OS_WATCH
 #import <SystemConfiguration/SystemConfiguration.h>
 #endif
 
-typedef enum : NSInteger {
-    GrowingReachabilityUnknown = 0,
-	GrowingReachabilityNotReachable,
-	GrowingReachabilityViaWiFi,
-	GrowingReachabilityViaWWAN,
-} GrowingNetworkStatus;
-
 @interface GrowingReachability : NSObject
 
-@property (nonatomic, assign, readonly) GrowingNetworkStatus networkStatus;
+@property (nonatomic, assign, readonly) GrowingNetworkReachabilityStatus reachabilityStatus;
 
 /*!
  * Checks whether the default route is available. Should be used by applications that do not connect to a particular host.

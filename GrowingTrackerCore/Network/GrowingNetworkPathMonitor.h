@@ -1,9 +1,9 @@
 //
-//  GrowingNetworkInterfaceManager.h
+//  GrowingNetworkPathMonitor.h
 //  GrowingAnalytics
 //
-//  Created by GrowingIO on 4/23/15.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2024/2/5.
+//  Copyright (C) 2024 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -18,20 +18,18 @@
 //  limitations under the License.
 
 #import <Foundation/Foundation.h>
+#import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
 
-typedef NS_ENUM(NSUInteger, GrowingNetworkReachabilityStatus) {
-    GrowingNetworkReachabilityUndetermined = 0,
-    GrowingNetworkReachabilityNotReachable,
-    GrowingNetworkReachabilityReachableViaEthernet,
-    GrowingNetworkReachabilityReachableViaWiFi,
-    GrowingNetworkReachabilityReachableViaWWAN,
-};
+NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingNetworkInterfaceManager : NSObject
+@interface GrowingNetworkPathMonitor : NSObject
 
-+ (instancetype)sharedInstance;
-+ (void)startMonitor;
-- (GrowingNetworkReachabilityStatus)currentStatus;
-- (NSString *)networkType;
+@property (nonatomic, assign, readonly) GrowingNetworkReachabilityStatus reachabilityStatus;
+
++ (instancetype)monitorWithQueue:(dispatch_queue_t)queue;
+- (void)startMonitor;
+- (void)stopMonitor;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -37,6 +37,7 @@
 #import "GrowingTrackerCore/Timer/GrowingEventTimer.h"
 #import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
+#import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
 #import "GrowingULAppLifecycle.h"
 
 NSString *const GrowingTrackerVersionName = @"4.2.0";
@@ -63,6 +64,7 @@ const int GrowingTrackerVersionCode = 40200;
         }
 
         [self loggerSetting];
+        [GrowingNetworkInterfaceManager startMonitor];
         [GrowingULAppLifecycle setup];
         [GrowingSession startSession];
 #if Growing_OS_IOS
