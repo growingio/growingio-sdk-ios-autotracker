@@ -20,7 +20,7 @@ jobs:
 
       - name: Build
         run: |
-          set -o pipefail
+          set -euo pipefail
           xcodebuild build -scheme GrowingAutotracker -destination 'platform=iOS Simulator,name=iPhone 14' \
           | xcbeautify --renderer github-actions
 
@@ -33,7 +33,7 @@ jobs:
 
       - name: Build
         run: |
-          set -o pipefail
+          set -euo pipefail
           xcodebuild build -scheme GrowingAutotracker -destination 'platform=macOS,variant=Mac Catalyst' \
           | xcbeautify --renderer github-actions
 
@@ -46,7 +46,7 @@ jobs:
 
       - name: Build
         run: |
-          set -o pipefail
+          set -euo pipefail
           xcodebuild build -scheme GrowingTracker -destination 'platform=iOS Simulator,name=iPhone 14' \
           | xcbeautify --renderer github-actions
 
@@ -59,7 +59,7 @@ jobs:
 
       - name: Build
         run: |
-          set -o pipefail
+          set -euo pipefail
           xcodebuild build -scheme GrowingTracker -destination 'platform=macOS,variant=Mac Catalyst' \
           | xcbeautify --renderer github-actions
 
@@ -72,7 +72,7 @@ jobs:
 
       - name: Build
         run: |
-          set -o pipefail
+          set -euo pipefail
           xcodebuild build -scheme GrowingTracker -destination 'platform=macOS' \
           | xcbeautify --renderer github-actions
 
@@ -85,7 +85,7 @@ jobs:
 
       - name: Build
         run: |
-          set -o pipefail
+          set -euo pipefail
           xcodebuild build -scheme GrowingModule_Ads -destination 'platform=iOS Simulator,name=iPhone 14' \
           | xcbeautify --renderer github-actions
 
@@ -98,7 +98,7 @@ jobs:
 
       - name: Build
         run: |
-          set -o pipefail
+          set -euo pipefail
           xcodebuild build -scheme GrowingModule_APM -destination 'platform=iOS Simulator,name=iPhone 14' \
           | xcbeautify --renderer github-actions
 
@@ -111,7 +111,7 @@ jobs:
 
       - name: Build
         run: |
-          set -o pipefail
+          set -euo pipefail
           xcodebuild build -scheme GrowingModule_APM -destination 'platform=macOS,variant=Mac Catalyst' \
           | xcbeautify --renderer github-actions
 
@@ -124,7 +124,7 @@ jobs:
 
       - name: Build
         run: |
-          set -o pipefail
+          set -euo pipefail
           xcodebuild build -scheme GrowingModule_Hybrid -destination 'platform=iOS Simulator,name=iPhone 14' \
           | xcbeautify --renderer github-actions
 
@@ -137,7 +137,7 @@ jobs:
 
       - name: Build
         run: |
-          set -o pipefail
+          set -euo pipefail
           xcodebuild build -scheme GrowingModule_Hybrid -destination 'platform=macOS,variant=Mac Catalyst' \
           | xcbeautify --renderer github-actions
 
@@ -150,6 +150,6 @@ jobs:
 
       - name: Build
         run: |
-          set -o pipefail
+          set -euo pipefail
           xcodebuild build -scheme GrowingModule_ImpressionTrack -destination 'platform=iOS Simulator,name=iPhone 14' \
           | xcbeautify --renderer github-actions
