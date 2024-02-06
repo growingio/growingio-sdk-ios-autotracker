@@ -86,8 +86,8 @@
 #if Growing_OS_VISION
 - (GrowingNetworkReachabilityStatus)reachabilityStatusForPath:(nw_path_t)path {
 #else
-- (GrowingNetworkReachabilityStatus)reachabilityStatusForPath:(nw_path_t)path
-    API_AVAILABLE(ios(12.0), tvos(12.0), macos(10.14), watchos(6.0)) {
+- (GrowingNetworkReachabilityStatus)reachabilityStatusForPath:(nw_path_t)path API_AVAILABLE(ios(12.0), tvos(12.0), macos(10.14), watchos(6.0)) {
+#endif
     nw_path_status_t status = nw_path_get_status(path);
     if (status != nw_path_status_satisfied) {
         return GrowingNetworkReachabilityNotReachable;
@@ -106,17 +106,16 @@
 
     return GrowingNetworkReachabilityUndetermined;
 }
-#endif
 
 #if Growing_OS_VISION
-    -(void)reachabilityPathChanged : (nw_path_t)path {
+- (void)reachabilityPathChanged:(nw_path_t)path {
 #else
 - (void)reachabilityPathChanged:(nw_path_t)path API_AVAILABLE(ios(12.0), tvos(12.0), macos(10.14), watchos(6.0)) {
+#endif
     GrowingNetworkReachabilityStatus status = [self reachabilityStatusForPath:path];
     if (self.reachabilityStatus != status) {
         self.reachabilityStatus = status;
     }
 }
-#endif
 
-        @end
+@end
