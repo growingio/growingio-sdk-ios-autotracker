@@ -11,145 +11,58 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  autotracker-build-iOS:
-    runs-on: macos-latest
-
+  spm-build:
+    strategy:
+      matrix:
+        target: [
+          iOS,
+          macOS,
+          macCatalyst,
+          tvOS,
+          watchOS
+        ]
+        os: [macos-12, macos-13]
+        include:
+          - os: macos-12
+            xcode: Xcode_14.2
+          - os: macos-13
+            xcode: Xcode_15.2
+          - target: iOS
+            platform: iOS Simulator,name=iPhone 14 Pro Max
+          - target: macOS
+            platform: macOS
+          - target: macCatalyst
+            platform: macOS,variant=Mac Catalyst
+          - target: tvOS
+            platform: tvOS Simulator,name=Apple TV
+          - target: watchOS
+            platform: watchOS Simulator,name=Apple Watch Ultra (49mm)
+          - scheme: GrowingAnalytics-Package
+            target: iOS
+          - scheme: GrowingAutotracker
+            target: macCatalyst
+          - scheme: GrowingAutotracker
+            target: tvOS
+          - scheme: GrowingTracker
+            target: macOS
+          - scheme: GrowingTracker
+            target: watchOS
+          - target: visionOS
+            os: macos-14
+            xcode: Xcode_15.2
+            platform: visionOS Simulator,name=Apple Vision Pro
+            scheme: GrowingTracker
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
-
+      - uses: mikehardy/buildcache-action@a50b89d53bb0a8da7b8d4c69f0bc0f0527b7b5c6
+        with:
+          cache_key: spm-build-${{ matrix.os }}-${{ matrix.xcode }}-${{ matrix.target }}-${{ matrix.scheme }}
+      - name: Xcode
+        run: sudo xcode-select -switch /Applications/${{ matrix.xcode }}.app
       - name: Build
         run: |
           set -euo pipefail
-          xcodebuild build -scheme GrowingAutotracker -destination 'platform=iOS Simulator,name=iPhone 14' \
-          | xcbeautify --renderer github-actions
-
-  autotracker-build-catalyst:
-    runs-on: macos-latest
-
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v4
-
-      - name: Build
-        run: |
-          set -euo pipefail
-          xcodebuild build -scheme GrowingAutotracker -destination 'platform=macOS,variant=Mac Catalyst' \
-          | xcbeautify --renderer github-actions
-
-  tracker-build-iOS:
-    runs-on: macos-latest
-
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v4
-
-      - name: Build
-        run: |
-          set -euo pipefail
-          xcodebuild build -scheme GrowingTracker -destination 'platform=iOS Simulator,name=iPhone 14' \
-          | xcbeautify --renderer github-actions
-
-  tracker-build-catalyst:
-    runs-on: macos-latest
-
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v4
-
-      - name: Build
-        run: |
-          set -euo pipefail
-          xcodebuild build -scheme GrowingTracker -destination 'platform=macOS,variant=Mac Catalyst' \
-          | xcbeautify --renderer github-actions
-
-  tracker-build-macos:
-    runs-on: macos-latest
-
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v4
-
-      - name: Build
-        run: |
-          set -euo pipefail
-          xcodebuild build -scheme GrowingTracker -destination 'platform=macOS' \
-          | xcbeautify --renderer github-actions
-
-  ads-build-iOS:
-    runs-on: macos-latest
-
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v4
-
-      - name: Build
-        run: |
-          set -euo pipefail
-          xcodebuild build -scheme GrowingModule_Ads -destination 'platform=iOS Simulator,name=iPhone 14' \
-          | xcbeautify --renderer github-actions
-
-  apm-build-iOS:
-    runs-on: macos-latest
-
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v4
-
-      - name: Build
-        run: |
-          set -euo pipefail
-          xcodebuild build -scheme GrowingModule_APM -destination 'platform=iOS Simulator,name=iPhone 14' \
-          | xcbeautify --renderer github-actions
-
-  apm-build-catalyst:
-    runs-on: macos-latest
-
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v4
-
-      - name: Build
-        run: |
-          set -euo pipefail
-          xcodebuild build -scheme GrowingModule_APM -destination 'platform=macOS,variant=Mac Catalyst' \
-          | xcbeautify --renderer github-actions
-
-  hybrid-build-iOS:
-    runs-on: macos-latest
-
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v4
-
-      - name: Build
-        run: |
-          set -euo pipefail
-          xcodebuild build -scheme GrowingModule_Hybrid -destination 'platform=iOS Simulator,name=iPhone 14' \
-          | xcbeautify --renderer github-actions
-
-  hybrid-build-catalyst:
-    runs-on: macos-latest
-
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v4
-
-      - name: Build
-        run: |
-          set -euo pipefail
-          xcodebuild build -scheme GrowingModule_Hybrid -destination 'platform=macOS,variant=Mac Catalyst' \
-          | xcbeautify --renderer github-actions
-
-  imp-build-iOS:
-    runs-on: macos-latest
-
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v4
-
-      - name: Build
-        run: |
-          set -euo pipefail
-          xcodebuild build -scheme GrowingModule_ImpressionTrack -destination 'platform=iOS Simulator,name=iPhone 14' \
+          xcodebuild build -scheme ${{ matrix.scheme }} -destination 'platform=${{ matrix.platform }}' \
           | xcbeautify --renderer github-actions

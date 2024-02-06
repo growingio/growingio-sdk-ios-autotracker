@@ -12,11 +12,14 @@ concurrency:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-13
     env:
       DERIVED_DATA: $HOME/.DerivedData
 
     steps:
+      - name: Force Xcode 15
+        run: sudo xcode-select -switch /Applications/Xcode_15.2.app
+
       - name: Checkout Repo
         uses: actions/checkout@v4
         with:
