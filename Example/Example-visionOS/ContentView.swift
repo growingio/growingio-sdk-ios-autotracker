@@ -18,16 +18,11 @@
 //  limitations under the License.
 
 import SwiftUI
-import RealityKit
-import RealityKitContent
 import GrowingAnalytics
 
 struct ContentView: View {
     var body: some View {
         VStack {
-            Model3D(named: "Scene", bundle: realityKitContentBundle)
-                .padding(.bottom, 50)
-
             Text("Hello, world!")
             Button("TrackCustomEvent") {
                 GrowingTracker.sharedInstance().trackCustomEvent("visionOS_custom_event",
