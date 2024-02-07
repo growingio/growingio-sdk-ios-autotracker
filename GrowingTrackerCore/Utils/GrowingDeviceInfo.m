@@ -25,12 +25,12 @@
 #import <sys/utsname.h>
 
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 #import "GrowingTrackerCore/Utils/GrowingKeyChainWrapper.h"
 #import "GrowingTrackerCore/Utils/UserIdentifier/GrowingUserIdentifier.h"
-#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingULAppLifecycle.h"
 #import "GrowingULApplication.h"
 
@@ -94,14 +94,14 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 #endif
         NSString *urlScheme = GrowingConfigurationManager.sharedInstance.trackConfiguration.urlScheme;
         _urlScheme = urlScheme.length > 0 ? urlScheme.copy : [self getCurrentUrlScheme];
-        
+
         _deviceOrientation = @"PORTRAIT";
 #if Growing_OS_PURE_IOS
         UIInterfaceOrientation orientation = [[GrowingULApplication sharedApplication] statusBarOrientation];
         if (orientation != UIInterfaceOrientationUnknown) {
             _deviceOrientation = UIInterfaceOrientationIsPortrait(orientation) ? @"PORTRAIT" : @"LANDSCAPE";
         }
-        
+
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(handleStatusBarOrientationChange:)
                                                      name:UIApplicationDidChangeStatusBarOrientationNotification
