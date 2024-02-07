@@ -30,10 +30,10 @@
 #import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 #import "GrowingTrackerCore/Utils/GrowingKeyChainWrapper.h"
 #import "GrowingTrackerCore/Utils/UserIdentifier/GrowingUserIdentifier.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingULAppLifecycle.h"
 #import "GrowingULApplication.h"
 
-static NSString *kGrowingUrlScheme = nil;
 NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 
 @interface GrowingDeviceInfo () <GrowingULAppLifecycleDelegate>
@@ -92,10 +92,16 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
         _screenWidth = 1;
         _screenHeight = 1;
 #endif
-
-        [[GrowingULAppLifecycle sharedInstance] addAppLifecycleDelegate:self];
-
+        NSString *urlScheme = GrowingConfigurationManager.sharedInstance.trackConfiguration.urlScheme;
+        _urlScheme = urlScheme.length > 0 ? urlScheme.copy : [self getCurrentUrlScheme];
+        
+        _deviceOrientation = @"PORTRAIT";
 #if Growing_OS_PURE_IOS
+        UIInterfaceOrientation orientation = [[GrowingULApplication sharedApplication] statusBarOrientation];
+        if (orientation != UIInterfaceOrientationUnknown) {
+            _deviceOrientation = UIInterfaceOrientationIsPortrait(orientation) ? @"PORTRAIT" : @"LANDSCAPE";
+        }
+        
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(handleStatusBarOrientationChange:)
                                                      name:UIApplicationDidChangeStatusBarOrientationNotification
@@ -107,6 +113,12 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 
 #pragma mark - Public Methods
 
++ (void)setup {
+    // 初始化urlScheme、appState、deviceOrientation等等（需要保证在主线程执行）
+    GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
+    [[GrowingULAppLifecycle sharedInstance] addAppLifecycleDelegate:deviceInfo];
+}
+
 + (instancetype)currentDeviceInfo {
     static GrowingDeviceInfo *info = nil;
     static dispatch_once_t onceToken;
@@ -116,14 +128,11 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
     return info;
 }
 
-+ (void)configUrlScheme:(NSString *)urlScheme {
-    kGrowingUrlScheme = urlScheme;
-}
-
 #pragma mark - Private Methods
 
 - (NSString *)getCurrentUrlScheme {
-    for (NSDictionary *dic in _infoDictionary[@"CFBundleURLTypes"]) {
+    NSArray *urlTypes = _infoDictionary[@"CFBundleURLTypes"];
+    for (NSDictionary *dic in urlTypes) {
         NSArray *schemes = dic[@"CFBundleURLSchemes"];
         for (NSString *urlScheme in schemes) {
             if ([urlScheme isKindOfClass:[NSString class]] && [urlScheme hasPrefix:@"growing."]) {
@@ -329,35 +338,6 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
         _appVersion = _infoDictionary[@"CFBundleShortVersionString"];
     }
     return _appVersion;
-}
-
-- (NSString *)urlScheme {
-    if (!_urlScheme) {
-        _urlScheme = kGrowingUrlScheme ?: [self getCurrentUrlScheme];
-    }
-    return _urlScheme;
-}
-
-- (NSString *)deviceOrientation {
-    if (!_deviceOrientation) {
-        _deviceOrientation = @"PORTRAIT";
-#if Growing_OS_PURE_IOS
-        dispatch_block_t block = ^{
-            UIInterfaceOrientation orientation = [[GrowingULApplication sharedApplication] statusBarOrientation];
-            if (orientation != UIInterfaceOrientationUnknown) {
-                self->_deviceOrientation = UIInterfaceOrientationIsPortrait(orientation) ? @"PORTRAIT" : @"LANDSCAPE";
-            }
-        };
-        if ([NSThread isMainThread]) {
-            block();
-        } else {
-            dispatch_sync(dispatch_get_main_queue(), ^{
-                block();
-            });
-        }
-#endif
-    }
-    return _deviceOrientation;
 }
 
 - (NSString *)idfv {

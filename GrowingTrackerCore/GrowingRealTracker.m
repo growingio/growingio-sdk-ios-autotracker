@@ -59,11 +59,9 @@ const int GrowingTrackerVersionCode = 40200;
         _configuration = [configuration copyWithZone:nil];
         _launchOptions = [launchOptions copy];
         GrowingConfigurationManager.sharedInstance.trackConfiguration = _configuration;
-        if (configuration.urlScheme.length > 0) {
-            [GrowingDeviceInfo configUrlScheme:configuration.urlScheme.copy];
-        }
 
         [self loggerSetting];
+        [GrowingDeviceInfo setup];
         [GrowingNetworkInterfaceManager startMonitor];
         [GrowingULAppLifecycle setup];
         [GrowingSession startSession];

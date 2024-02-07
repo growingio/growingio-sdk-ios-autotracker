@@ -42,6 +42,6 @@
 @property (nonatomic, readonly, assign) NSInteger timezoneOffset;
 
 + (instancetype)currentDeviceInfo;
-+ (void)configUrlScheme:(NSString *)urlScheme;
++ (void)setup;
 
 @end
