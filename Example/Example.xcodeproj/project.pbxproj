@@ -1554,7 +1554,6 @@
 				34DAD9992B6F919E00760A9C /* Example-visionOS */,
 				34DAD9BC2B6F948100760A9C /* Example-tvOS */,
 				6003F58C195388D20070C39A /* Frameworks */,
-				34DAD99A2B6F919E00760A9C /* Packages */,
 				6003F58B195388D20070C39A /* Products */,
 				1172AEB47E26DD658BEEA1BB /* Pods */,
 			);
@@ -1807,7 +1806,6 @@
 			buildConfigurationList = 34DAD9AA2B6F919F00760A9C /* Build configuration list for PBXNativeTarget "Example-visionOS" */;
 			buildPhases = (
 				34DAD9942B6F919E00760A9C /* Sources */,
-				34DAD9952B6F919E00760A9C /* Frameworks */,
 				34DAD9962B6F919E00760A9C /* Resources */,
 			);
 			buildRules = (

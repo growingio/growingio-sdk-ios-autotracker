@@ -5,7 +5,7 @@ PODS:
     - GrowingAnalytics/TrackerCore (= 4.1.0)
   - GrowingAnalytics/APM (4.1.0):
     - GrowingAnalytics/TrackerCore (= 4.1.0)
-    - GrowingAPM/Core (~> 1.0.0)
+    - GrowingAPM/Core (~> 1.0.1)
   - GrowingAnalytics/Autotracker (4.1.0):
     - GrowingAnalytics/AutotrackerCore (= 4.1.0)
     - GrowingAnalytics/DefaultServices (= 4.1.0)
@@ -14,7 +14,7 @@ PODS:
     - GrowingAnalytics/WebCircle (= 4.1.0)
   - GrowingAnalytics/AutotrackerCore (4.1.0):
     - GrowingAnalytics/TrackerCore (= 4.1.0)
-    - GrowingUtils/AutotrackerCore (~> 1.2.0)
+    - GrowingUtils/AutotrackerCore (~> 1.2.2)
   - GrowingAnalytics/Compression (4.1.0):
     - GrowingAnalytics/TrackerCore (= 4.1.0)
   - GrowingAnalytics/Database (4.1.0):
@@ -53,7 +53,7 @@ PODS:
     - GrowingAnalytics/MobileDebugger (= 4.1.0)
     - GrowingAnalytics/TrackerCore (= 4.1.0)
   - GrowingAnalytics/TrackerCore (4.1.0):
-    - GrowingUtils/TrackerCore (~> 1.2.0)
+    - GrowingUtils/TrackerCore (~> 1.2.2)
   - GrowingAnalytics/WebCircle (4.1.0):
     - GrowingAnalytics/AutotrackerCore (= 4.1.0)
     - GrowingAnalytics/Hybrid (= 4.1.0)
@@ -105,9 +105,9 @@ PODS:
     - GrowingToolsKit/Core
   - GrowingToolsKit/XPathTrack (2.0.0):
     - GrowingToolsKit/Core
-  - GrowingUtils/AutotrackerCore (1.2.1):
+  - GrowingUtils/AutotrackerCore (1.2.2):
     - GrowingUtils/TrackerCore
-  - GrowingUtils/TrackerCore (1.2.1)
+  - GrowingUtils/TrackerCore (1.2.2)
   - KIF (3.8.9):
     - KIF/Core (= 3.8.9)
   - KIF/Core (3.8.9)
@@ -160,10 +160,10 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  GrowingAnalytics: 183d75b3221b5becdeaca8954280a5d034febb66
+  GrowingAnalytics: 8a9dd09ac6688ca2e6e73265b1075387a682327d
   GrowingAPM: 3c4de0384935b654e6798b95606f47883a99418b
   GrowingToolsKit: edc93c96e47bd6ad1ff3deffe72fe276ae0a1fa8
-  GrowingUtils: 0247e21b431d295f1ea67e04a18f662c1af6aefc
+  GrowingUtils: 6071dc1206f5e62398d90dec78c7eaa07b1b9892
   KIF: 7660c626b0f2d4562533590960db70a36d640558
   OHHTTPStubs: 90eac6d8f2c18317baeca36698523dc67c513831
   Protobuf: 34db13339da0d02d64fa8a2ac6a124cfcc603703
