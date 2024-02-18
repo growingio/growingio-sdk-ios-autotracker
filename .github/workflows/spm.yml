@@ -56,9 +56,6 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
-      - uses: mikehardy/buildcache-action@a50b89d53bb0a8da7b8d4c69f0bc0f0527b7b5c6
-        with:
-          cache_key: spm-build-${{ matrix.os }}-${{ matrix.xcode }}-${{ matrix.target }}-${{ matrix.scheme }}
       - name: Xcode
         run: sudo xcode-select -switch /Applications/${{ matrix.xcode }}.app
       - name: Build

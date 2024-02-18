@@ -21,7 +21,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
 
   s.subspec 'Autotracker' do |autotracker|
     autotracker.ios.deployment_target = '10.0'
-    autotracker.tvos.deployment_target = '10.0'
+    autotracker.tvos.deployment_target = '12.0'
     autotracker.source_files = 'GrowingAutotracker/**/*{.h,.m,.c,.cpp,.mm}'
     autotracker.public_header_files = 'GrowingAutotracker/*.h'
     autotracker.dependency 'GrowingAnalytics/AutotrackerCore', s.version.to_s
@@ -54,7 +54,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   
   s.subspec 'AutotrackerCore' do |autotrackerCore|
     autotrackerCore.ios.deployment_target = '10.0'
-    autotrackerCore.tvos.deployment_target = '10.0'
+    autotrackerCore.tvos.deployment_target = '12.0'
     autotrackerCore.dependency 'GrowingUtils/AutotrackerCore', '~> 1.2.2'
     autotrackerCore.source_files = 'GrowingAutotrackerCore/**/*{.h,.m,.c,.cpp,.mm}'
     autotrackerCore.public_header_files = 'GrowingAutotrackerCore/Public/*.h'
