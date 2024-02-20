@@ -20,13 +20,13 @@
 #import <UIKit/UIKit.h>
 #import <objc/runtime.h>
 #import "GrowingDeepLinkHandler+XCTest.h"
-#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
+#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler+Private.h"
 
 @implementation GrowingDeepLinkHandler (XCTest)
 
 + (void)load {
-    SEL originSelector = @selector(handlerUrl:);
-    SEL swizzleSelector = @selector(XCTest_handlerUrl:);
+    SEL originSelector = @selector(handleURL:);
+    SEL swizzleSelector = @selector(XCTest_handleURL:);
 
     id handler = object_getClass(self);
 
@@ -51,10 +51,10 @@
                                    class_getInstanceMethod(handler, swizzleSelector));
 }
 
-+ (BOOL)XCTest_handlerUrl:(NSURL *)url {
++ (BOOL)XCTest_handleURL:(NSURL *)url {
     if ([url.absoluteString containsString:@"xctest=DeepLinkTest"]) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            UIAlertController *controller = [UIAlertController alertControllerWithTitle:@"XCTest_handlerUrl"
+            UIAlertController *controller = [UIAlertController alertControllerWithTitle:@"XCTest_handleURL"
                                                                                 message:@""
                                                                          preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"XCTest"
@@ -65,7 +65,7 @@
         });
     }
 
-    return [self XCTest_handlerUrl:url];
+    return [self XCTest_handleURL:url];
 }
 
 + (UIWindow *)XCTest_keywindow {

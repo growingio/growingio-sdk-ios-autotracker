@@ -18,6 +18,7 @@
 //  limitations under the License.
 
 import SwiftUI
+import GrowingAnalytics
 
 @main
 struct Example_watchOS_Watch_AppApp: App {
@@ -26,6 +27,13 @@ struct Example_watchOS_Watch_AppApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+// MobileDebugger、WebCircle、DeepLink目前仅在iOS下使用
+//                .onOpenURL(perform: { url in
+//                    DeepLink.handle(url)
+//                })
+//                .onContinueUserActivity(NSUserActivityTypeBrowsingWeb, perform: { userActivity in
+//                    DeepLink.handle(userActivity.webpageURL!)
+//                })
         }
     }
 }

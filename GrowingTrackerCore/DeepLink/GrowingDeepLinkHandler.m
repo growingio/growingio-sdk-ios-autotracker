@@ -17,7 +17,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
+#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler+Private.h"
 #import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 
 @interface GrowingDeepLinkHandler ()
@@ -67,11 +67,11 @@
     GROWING_UNLOCK(lock);
 }
 
-- (BOOL)dispatchHandlerUrl:(NSURL *)url {
+- (BOOL)dispatchHandleURL:(NSURL *)url {
     GROWING_LOCK(lock);
     for (id object in self.handlers) {
-        if ([object respondsToSelector:@selector(growingHandlerUrl:)]) {
-            if ([object growingHandlerUrl:url]) {
+        if ([object respondsToSelector:@selector(growingHandleURL:)]) {
+            if ([object growingHandleURL:url]) {
                 // 如果有一个handler处理，则break，不再继续执行后续handler
                 break;
             }
@@ -81,8 +81,8 @@
     return YES;
 }
 
-+ (BOOL)handlerUrl:(NSURL *)url {
-    return [[GrowingDeepLinkHandler sharedInstance] dispatchHandlerUrl:url];
++ (BOOL)handleURL:(NSURL *)url {
+    return [[GrowingDeepLinkHandler sharedInstance] dispatchHandleURL:url];
 }
 
 @end

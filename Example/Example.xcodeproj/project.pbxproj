@@ -75,6 +75,7 @@
 		04F675662628293800077374 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04F675652628293800077374 /* AdSupport.framework */; };
 		33A0F692F1D1738D6854E19A /* Pods_HostApplicationTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42F5EA0EFE2552358C35A0F5 /* Pods_HostApplicationTests.framework */; };
 		3406842B2A668EB700E25216 /* A3PageEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3406842A2A668EB700E25216 /* A3PageEventsTest.m */; };
+		3412DDDF2B844D3000F2EA48 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3412DDDE2B844D3000F2EA48 /* AppDelegate.swift */; };
 		341A579A2ABAA23E0052840A /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 341A57992ABAA2380052840A /* libc++.tbd */; };
 		3432CF372AEA58A800E555A9 /* AdvertisingTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3432CF362AEA58A800E555A9 /* AdvertisingTest.m */; };
 		34486D3D27B1049000FA8223 /* UITapGestureRecognizerAutotrackTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34486D3B27B102B000FA8223 /* UITapGestureRecognizerAutotrackTest.m */; };
@@ -373,6 +374,7 @@
 		3406842A2A668EB700E25216 /* A3PageEventsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = A3PageEventsTest.m; sourceTree = "<group>"; };
 		34106BB228FECB0D00E7DB01 /* Crasher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Crasher.h; sourceTree = "<group>"; };
 		34106BB328FECB0E00E7DB01 /* Crasher.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Crasher.mm; sourceTree = "<group>"; };
+		3412DDDE2B844D3000F2EA48 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		341A57992ABAA2380052840A /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.3.sdk/usr/lib/libc++.tbd"; sourceTree = DEVELOPER_DIR; };
 		3432CF362AEA58A800E555A9 /* AdvertisingTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdvertisingTest.m; sourceTree = "<group>"; };
 		34486D3B27B102B000FA8223 /* UITapGestureRecognizerAutotrackTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UITapGestureRecognizerAutotrackTest.m; sourceTree = "<group>"; };
@@ -1469,6 +1471,7 @@
 			isa = PBXGroup;
 			children = (
 				34DAD99E2B6F919E00760A9C /* Example_visionOSApp.swift */,
+				3412DDDE2B844D3000F2EA48 /* AppDelegate.swift */,
 				34DAD9A02B6F919E00760A9C /* ContentView.swift */,
 				34DAD9A22B6F919F00760A9C /* Assets.xcassets */,
 				34DAD9A72B6F919F00760A9C /* Info.plist */,
@@ -2866,6 +2869,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3412DDDF2B844D3000F2EA48 /* AppDelegate.swift in Sources */,
 				34DAD9A12B6F919E00760A9C /* ContentView.swift in Sources */,
 				34DAD99F2B6F919E00760A9C /* Example_visionOSApp.swift in Sources */,
 			);

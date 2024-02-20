@@ -1,9 +1,9 @@
 //
-// GrowingDeepLinkHandler.h
-// GrowingAnalytics
+//  GrowingDeepLinkHandler+Private.h
+//  GrowingAnalytics
 //
-//  Created by sheng on 2020/11/30.
-//  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2024/02/20.
+//  Copyright (C) 2024 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <Foundation/Foundation.h>
+#import "GrowingDeepLinkHandler.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -25,20 +25,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 处理url，如果能够处理则返回YES,否则返回NO
 /// @param url 链接Url
-- (BOOL)growingHandlerUrl:(NSURL *)url;
+- (BOOL)growingHandleURL:(NSURL *)url;
 
 @end
 
-@interface GrowingDeepLinkHandler : NSObject
+@interface GrowingDeepLinkHandler (Private)
 
 + (instancetype)sharedInstance;
 
-/// 添加一个处理者
-/// @param object 处理者
 - (void)addHandlersObject:(id)object;
 - (void)removeHandlersObject:(id)object;
-
-+ (BOOL)handlerUrl:(NSURL *)url;
 
 @end
 

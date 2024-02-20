@@ -25,7 +25,7 @@
 #import "Modules/Advertising/Utils/GrowingAdUtils.h"
 
 #import "GrowingTrackerCore/Core/GrowingContext.h"
-#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
+#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler+Private.h"
 #import "GrowingTrackerCore/Event/GrowingEventChannel.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
@@ -96,7 +96,7 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
     if (dataCollectionEnabled) {
         [self loadClipboard];
         if (self.deeplinkUrl) {
-            [self growingHandlerUrl:self.deeplinkUrl.copy isManual:NO callback:nil];
+            [self growingHandleURL:self.deeplinkUrl.copy isManual:NO callback:nil];
             self.deeplinkUrl = nil;  // 避免多线程环境下有可能多发 AppReengage
         }
     }
@@ -104,8 +104,8 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
 
 #pragma mark - GrowingDeepLinkHandlerProtocol
 
-- (BOOL)growingHandlerUrl:(NSURL *)url {
-    return [self growingHandlerUrl:url isManual:NO callback:nil];
+- (BOOL)growingHandleURL:(NSURL *)url {
+    return [self growingHandleURL:url isManual:NO callback:nil];
 }
 
 #pragma mark - GrowingULAppLifecycleDelegate
@@ -142,7 +142,7 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
 }
 
 - (BOOL)doDeeplinkByUrl:(NSURL *)url callback:(GrowingAdDeepLinkCallback)callback {
-    return [self growingHandlerUrl:url isManual:YES callback:callback];
+    return [self growingHandleURL:url isManual:YES callback:callback];
 }
 
 #pragma mark - Private Method
@@ -155,7 +155,7 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
     return NO;
 }
 
-- (BOOL)growingHandlerUrl:(NSURL *)url isManual:(BOOL)isManual callback:(GrowingAdDeepLinkCallback)callback {
+- (BOOL)growingHandleURL:(NSURL *)url isManual:(BOOL)isManual callback:(GrowingAdDeepLinkCallback)callback {
     if (![GrowingAdUtils isGrowingIOUrl:url]) {
         if (isManual) {
             // 若手动触发 callback 则报错
@@ -197,7 +197,7 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
                     [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingEventNetworkService)];
                 if (!service) {
                     GIOLogError(
-                        @"[GrowingAdvertising] -growingHandlerUrl:isManual:callback: error : no network service "
+                        @"[GrowingAdvertising] -growingHandleURL:isManual:callback: error : no network service "
                         @"support");
                     return;
                 }

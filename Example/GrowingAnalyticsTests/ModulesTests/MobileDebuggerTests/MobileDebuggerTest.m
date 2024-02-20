@@ -21,7 +21,7 @@
 
 #import "ManualTrackHelper.h"
 #import "WebSocketTestHelper.h"
-#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
+#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler+Private.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "Modules/MobileDebugger/GrowingMobileDebugger.h"
 
@@ -69,7 +69,7 @@ static __weak GrowingMobileDebugger *mobileDebugger;
     NSURL *url = [NSURL URLWithString:
                   @"growing.3612b67ce562c755://growingio/webservice?serviceType=debugger&wsUrl=wss://"
                   @"gta0.growingio.com/app/0wDaZmQ1/circle/ec7f5925458f458b8ae6f3901cacaa92"];
-    [GrowingDeepLinkHandler handlerUrl:url];
+    [GrowingDeepLinkHandler handleURL:url];
     [mobileDebugger webSocketDidOpen:nil];
 
     [MockWebSocket.sharedInstance cleanMessages];
@@ -121,7 +121,7 @@ static __weak GrowingMobileDebugger *mobileDebugger;
     NSURL *url = [NSURL URLWithString:
                   @"growing.3612b67ce562c755://growingio/webservice?serviceType=debugger&wsUrl=wss://"
                   @"gta0.growingio.com/app/0wDaZmQ1/circle/ec7f5925458f458b8ae6f3901cacaa92"];
-    [GrowingDeepLinkHandler handlerUrl:url];
+    [GrowingDeepLinkHandler handleURL:url];
     [mobileDebugger webSocketDidOpen:nil];
     [mobileDebugger webSocket:nil didReceiveMessage:@"{\"msgType\":\"ready\"}"];
 }

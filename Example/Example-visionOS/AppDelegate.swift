@@ -1,8 +1,8 @@
 //
-//  Example_visionOSApp.swift
+//  AppDelegate.swift
 //  GrowingAnalytics
 //
-//  Created by YoloMao on 2024/2/4.
+//  Created by YoloMao on 2024/02/20.
 //  Copyright (C) 2024 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,23 +17,16 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-import SwiftUI
+import Foundation
+import UIKit
 import GrowingAnalytics
 
-@main
-struct Example_visionOSApp: App {
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-// MobileDebugger、WebCircle、DeepLink目前仅在iOS下使用
-//                .onOpenURL(perform: { url in
-//                    DeepLink.handle(url)
-//                })
-//                .onContinueUserActivity(NSUserActivityTypeBrowsingWeb, perform: { userActivity in
-//                    DeepLink.handle(userActivity.webpageURL!)
-//                })
-        }
+class AppDelegate: NSObject, UIApplicationDelegate {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        let config = GrowingTrackConfiguration(accountId: "0a1b4118dd954ec3bcc69da5138bdb96")
+        config?.dataSourceId = "ab555003531e0fd1"
+        config?.urlScheme = "growing.bf30ad277eaae1aa"
+        config?.debugEnabled = true
+        GrowingTracker.start(with: config!)
     }
 }
