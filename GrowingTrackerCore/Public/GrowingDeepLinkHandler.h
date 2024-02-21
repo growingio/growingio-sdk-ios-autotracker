@@ -22,6 +22,6 @@
 NS_SWIFT_NAME(DeepLink)
 @interface GrowingDeepLinkHandler : NSObject
 
-+ (BOOL)handleURL:(NSURL * _Nullable)url;
++ (BOOL)handleURL:(NSURL *_Nullable)url;
 
 @end

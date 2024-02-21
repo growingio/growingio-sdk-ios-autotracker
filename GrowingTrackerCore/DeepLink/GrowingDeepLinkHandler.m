@@ -83,7 +83,7 @@
     return isHandled;
 }
 
-+ (BOOL)handleURL:(NSURL * _Nullable)url {
++ (BOOL)handleURL:(NSURL *_Nullable)url {
     if (url) {
         return [[GrowingDeepLinkHandler sharedInstance] dispatchHandleURL:url];
     }
