@@ -1,8 +1,8 @@
 //
-//  Example_watchOSApp.swift
+//  ContentView.swift
 //  GrowingAnalytics
 //
-//  Created by YoloMao on 2024/1/31.
+//  Created by YoloMao on 2024/2/21.
 //  Copyright (C) 2024 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,20 +20,22 @@
 import SwiftUI
 import GrowingAnalytics
 
-@main
-struct Example_watchOS_Watch_AppApp: App {
-    @WKApplicationDelegateAdaptor(AppDelegate.self) var delegate
-
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-// MobileDebugger、WebCircle、DeepLink目前仅在iOS下使用
-//                .onOpenURL(perform: { url in
-//                    DeepLink.handle(url)
-//                })
-//                .onContinueUserActivity(NSUserActivityTypeBrowsingWeb, perform: { userActivity in
-//                    DeepLink.handle(userActivity.webpageURL)
-//                })
+struct ContentView: View {
+    var body: some View {
+        VStack {
+            Image(systemName: "globe")
+                .imageScale(.large)
+                .foregroundStyle(.tint)
+            Text("Hello, world!")
+            Button("TrackCustomEvent") {
+                GrowingAutotracker.sharedInstance().trackCustomEvent("SwiftUI_custom_event",
+                                                                     withAttributes: ["key": "value"])
+            }
         }
+        .padding()
     }
+}
+
+#Preview {
+    ContentView()
 }

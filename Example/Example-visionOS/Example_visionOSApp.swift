@@ -32,7 +32,7 @@ struct Example_visionOSApp: App {
 //                    DeepLink.handle(url)
 //                })
 //                .onContinueUserActivity(NSUserActivityTypeBrowsingWeb, perform: { userActivity in
-//                    DeepLink.handle(userActivity.webpageURL!)
+//                    DeepLink.handle(userActivity.webpageURL)
 //                })
         }
     }

@@ -102,6 +102,13 @@ end
 #   pod 'GrowingAnalytics/Tracker', :path => '../'
 # end
 
+target 'Example-SwiftUI' do
+  pod 'GrowingAnalytics/Autotracker', :path => '../'
+  pod 'GrowingAnalytics/Ads', :path => '../'
+  pod 'GrowingAnalytics/ABTesting', :path => '../'
+  pod 'GrowingAnalytics/APM', :path => '../'
+end
+
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|

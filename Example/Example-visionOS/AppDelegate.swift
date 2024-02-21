@@ -28,5 +28,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         config?.urlScheme = "growing.bf30ad277eaae1aa"
         config?.debugEnabled = true
         GrowingTracker.start(with: config!)
+        
+        return true
     }
 }
