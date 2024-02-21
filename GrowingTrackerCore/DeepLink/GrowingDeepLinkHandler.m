@@ -68,21 +68,26 @@
 }
 
 - (BOOL)dispatchHandleURL:(NSURL *)url {
+    BOOL isHandled = NO;
     GROWING_LOCK(lock);
     for (id object in self.handlers) {
         if ([object respondsToSelector:@selector(growingHandleURL:)]) {
             if ([object growingHandleURL:url]) {
                 // 如果有一个handler处理，则break，不再继续执行后续handler
+                isHandled = YES;
                 break;
             }
         }
     }
     GROWING_UNLOCK(lock);
-    return YES;
+    return isHandled;
 }
 
-+ (BOOL)handleURL:(NSURL *)url {
-    return [[GrowingDeepLinkHandler sharedInstance] dispatchHandleURL:url];
++ (BOOL)handleURL:(NSURL * _Nullable)url {
+    if (url) {
+        return [[GrowingDeepLinkHandler sharedInstance] dispatchHandleURL:url];
+    }
+    return NO;
 }
 
 @end
