@@ -18,17 +18,17 @@
 //  limitations under the License.
 
 #import "Modules/ImpressionTrack/GrowingImpressionTrack.h"
+#import "GrowingAutotrackConfiguration.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
-#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingULAppLifecycle.h"
 #import "GrowingULApplication.h"
 #import "GrowingULSwizzle.h"
 #import "GrowingULViewControllerLifecycle.h"
 #import "Modules/ImpressionTrack/UIView+GrowingImpressionInternal.h"
-#import "GrowingAutotrackConfiguration.h"
 
 GrowingMod(GrowingImpressionTrack)
 

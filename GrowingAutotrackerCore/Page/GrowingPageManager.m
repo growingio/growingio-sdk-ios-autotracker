@@ -18,17 +18,17 @@
 //  limitations under the License.
 
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
+#import "GrowingAutotrackConfiguration.h"
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIViewController+GrowingNode.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
 #import "GrowingULAppLifecycle.h"
 #import "GrowingULViewControllerLifecycle.h"
-#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
-#import "GrowingAutotrackConfiguration.h"
 
 @interface GrowingPageManager () <GrowingULViewControllerLifecycleDelegate>
 
@@ -89,7 +89,7 @@
     GrowingPage *page = [controller growingPageObject];
     if (!page) {
         page = [self createdPage:controller];
-        
+
         // 首次进入该controller，获取初始化autotrackPage配置
         GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
         if ([configuration isKindOfClass:[GrowingAutotrackConfiguration class]]) {
