@@ -32,6 +32,8 @@ typedef NS_ENUM(NSUInteger, GrowingIgnorePolicy) {
 
 @property (nonatomic, assign) BOOL autotrackEnabled;
 @property (nonatomic, assign) float impressionScale;
+@property (nonatomic, assign) BOOL autotrackAllPages;
+@property (nonatomic, copy) NSDictionary<NSString *, NSString *> *autotrackPagesWhiteList;
 
 @end
 

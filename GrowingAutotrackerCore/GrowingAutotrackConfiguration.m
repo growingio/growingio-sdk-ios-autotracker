@@ -34,6 +34,8 @@
     if (self = [super initWithAccountId:accountId]) {
         _autotrackEnabled = YES;
         _impressionScale = 0.0f;
+        _autotrackAllPages = NO;
+        _autotrackPagesWhiteList = nil;
         GROWING_LOCK_INIT(lock);
         _ignoreViewClasses = [NSMutableSet set];
     }
@@ -45,6 +47,8 @@
     GrowingAutotrackConfiguration *configuration = (GrowingAutotrackConfiguration *)[super copyWithZone:zone];
     configuration->_autotrackEnabled = _autotrackEnabled;
     configuration->_impressionScale = _impressionScale;
+    configuration->_autotrackAllPages = _autotrackAllPages;
+    configuration->_autotrackPagesWhiteList = [_autotrackPagesWhiteList copy];
     configuration->_ignoreViewClasses = _ignoreViewClasses;
     return configuration;
 }
