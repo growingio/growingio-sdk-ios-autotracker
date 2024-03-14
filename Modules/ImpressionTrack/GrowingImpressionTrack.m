@@ -18,8 +18,10 @@
 //  limitations under the License.
 
 #import "Modules/ImpressionTrack/GrowingImpressionTrack.h"
+#import "GrowingAutotrackConfiguration.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingULAppLifecycle.h"
@@ -46,6 +48,13 @@ static BOOL isInResignSate;
 }
 
 - (void)growingModInit:(GrowingContext *)context {
+    GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    if ([configuration isKindOfClass:[GrowingAutotrackConfiguration class]]) {
+        GrowingAutotrackConfiguration *autotrackConfiguration = (GrowingAutotrackConfiguration *)configuration;
+        if (!autotrackConfiguration.autotrackEnabled) {
+            return;
+        }
+    }
     if ([GrowingULApplication isAppExtension]) {
         return;
     }
