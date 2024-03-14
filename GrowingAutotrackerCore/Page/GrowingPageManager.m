@@ -90,15 +90,17 @@
     if (!page) {
         page = [self createdPage:controller];
 
-        // 首次进入该controller，获取初始化autotrackPage配置
-        GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
-        if ([configuration isKindOfClass:[GrowingAutotrackConfiguration class]]) {
-            GrowingAutotrackConfiguration *autotrackConfiguration = (GrowingAutotrackConfiguration *)configuration;
-            NSString *controllerClass = NSStringFromClass([controller class]);
-            if (autotrackConfiguration.autotrackAllPages) {
-                controller.growingPageAlias = controllerClass;
-            } else if (autotrackConfiguration.autotrackPagesWhiteList != nil) {
-                controller.growingPageAlias = autotrackConfiguration.autotrackPagesWhiteList[controllerClass];
+        if (!page.isAutotrack) {
+            // 首次进入该controller，获取初始化autotrackPage配置
+            GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+            if ([configuration isKindOfClass:[GrowingAutotrackConfiguration class]]) {
+                GrowingAutotrackConfiguration *autotrackConfiguration = (GrowingAutotrackConfiguration *)configuration;
+                NSString *controllerClass = NSStringFromClass([controller class]);
+                if (autotrackConfiguration.autotrackAllPages) {
+                    controller.growingPageAlias = controllerClass;
+                } else if (autotrackConfiguration.autotrackPagesWhiteList != nil) {
+                    controller.growingPageAlias = autotrackConfiguration.autotrackPagesWhiteList[controllerClass];
+                }
             }
         }
     } else {
