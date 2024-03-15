@@ -19,7 +19,7 @@ GrowingIO 专注于零售、电商、保险、酒旅航司、教育、内容社�
 
 ## License
 ```
-Copyright (C) 2023 Beijing Yishu Technology Co., Ltd.
+Copyright (C) 2024 Beijing Yishu Technology Co., Ltd.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
