@@ -87,7 +87,7 @@
     if (self.domain.length > 0) {
         [dic setObject:self.domain forKey:@"domain"];
     }
-    if (self.path.length > 0) {
+    if (self.path.length >= 0) {
         [dic setObject:self.path forKey:@"path"];
     }
     if (self.query.length > 0) {
