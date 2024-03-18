@@ -88,8 +88,7 @@
         [dic setObject:self.domain forKey:@"domain"];
     }
     if (self.path.length >= 0 &&
-        (self.eventType == GrowingPBEventType_Page ||
-         self.eventType == GrowingPBEventType_ViewClick ||
+        (self.eventType == GrowingPBEventType_Page || self.eventType == GrowingPBEventType_ViewClick ||
          self.eventType == GrowingPBEventType_ViewChange)) {
         [dic setObject:self.path forKey:@"path"];
     }
