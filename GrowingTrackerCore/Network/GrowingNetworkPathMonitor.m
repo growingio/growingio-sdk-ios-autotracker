@@ -105,6 +105,7 @@
         return GrowingNetworkReachabilityReachableViaWWAN;
     }
 
+    // Eg. close all network connections (WiFi/WWAN/...) but still opening VPN
     return GrowingNetworkReachabilityUndetermined;
 }
 
