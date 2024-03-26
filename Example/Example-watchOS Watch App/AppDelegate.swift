@@ -1,9 +1,9 @@
 //
-//  UIWindow+GrowingHelper.h
+//  AppDelegate.swift
 //  GrowingAnalytics
 //
-//  Created by GrowingIO on 2/17/16.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2024/1/31.
+//  Copyright (C) 2024 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,12 +17,16 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#if __has_include(<UIKit/UIKit.h>)
-#import <UIKit/UIKit.h>
+import Foundation
+import WatchKit
+import GrowingAnalytics
 
-@interface UIWindow (GrowingHelper)
-
-+ (UIImage *)growingHelper_screenshotWithWindows:(NSArray<UIWindow *> *)windows andMaxScale:(CGFloat)maxScale;
-
-@end
-#endif
+class AppDelegate: NSObject, WKApplicationDelegate {
+    func applicationDidFinishLaunching() {
+        let config = GrowingTrackConfiguration(accountId: "0a1b4118dd954ec3bcc69da5138bdb96")
+        config?.dataSourceId = "ab555003531e0fd1"
+        config?.urlScheme = "growing.bf30ad277eaae1aa"
+        config?.debugEnabled = true
+        GrowingTracker.start(with: config!)
+    }
+}

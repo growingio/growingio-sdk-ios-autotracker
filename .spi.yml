@@ -2,8 +2,14 @@ version: 1
 builder:
   configs:
   - platform: ios
-    scheme: GrowingAutotracker
+    scheme: GrowingAnalytics-Package
   - platform: macos-xcodebuild
     scheme: GrowingTracker
   - platform: macos-spm
     target: GrowingTracker
+  - platform: tvos
+    scheme: GrowingAutotracker
+  - platform: watchos
+    scheme: GrowingTracker
+  - platform: visionos
+    scheme: GrowingTracker

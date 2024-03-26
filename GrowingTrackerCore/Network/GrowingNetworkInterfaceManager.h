@@ -19,15 +19,19 @@
 
 #import <Foundation/Foundation.h>
 
+typedef NS_ENUM(NSUInteger, GrowingNetworkReachabilityStatus) {
+    GrowingNetworkReachabilityUndetermined = 0,
+    GrowingNetworkReachabilityNotReachable,
+    GrowingNetworkReachabilityReachableViaEthernet,
+    GrowingNetworkReachabilityReachableViaWiFi,
+    GrowingNetworkReachabilityReachableViaWWAN,
+};
+
 @interface GrowingNetworkInterfaceManager : NSObject
 
-@property (nonatomic, assign, readonly) BOOL WWANValid;
-@property (nonatomic, assign, readonly) BOOL WiFiValid;
-@property (nonatomic, assign, readonly) BOOL isReachable;
-
 + (instancetype)sharedInstance;
-
-- (void)updateInterfaceInfo;
++ (void)startMonitor;
+- (GrowingNetworkReachabilityStatus)currentStatus;
 - (NSString *)networkType;
 
 @end

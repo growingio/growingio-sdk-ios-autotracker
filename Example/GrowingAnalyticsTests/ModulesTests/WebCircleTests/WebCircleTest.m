@@ -20,7 +20,7 @@
 #import <KIF/KIF.h>
 
 #import "WebSocketTestHelper.h"
-#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
+#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler+Private.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "Modules/WebCircle/GrowingWebCircle.h"
 
@@ -68,7 +68,7 @@ static __weak GrowingWebCircle *webCircle;
     NSURL *url = [NSURL URLWithString:
                             @"growing.bf30ad277eaae1aa://growingio/webservice?serviceType=circle&wsUrl"
                             @"=wss://portal.growingio.com/app/r85jV5gv/circle/faeb773a1d004663a86c227a159cc687"];
-    [GrowingDeepLinkHandler handlerUrl:url];
+    [GrowingDeepLinkHandler handleURL:url];
     [webCircle webSocketDidOpen:nil];
 
     [MockWebSocket.sharedInstance cleanMessages];
@@ -112,7 +112,7 @@ static __weak GrowingWebCircle *webCircle;
     NSURL *url = [NSURL URLWithString:
                             @"growing.bf30ad277eaae1aa://growingio/webservice?serviceType=circle&wsUrl=wss://"
                             @"portal.growingio.com/app/r85jV5gv/circle/faeb773a1d004663a86c227a159cc687"];
-    [GrowingDeepLinkHandler handlerUrl:url];
+    [GrowingDeepLinkHandler handleURL:url];
     [webCircle webSocketDidOpen:nil];
     [webCircle webSocket:nil didReceiveMessage:@"{\"msgType\":\"ready\"}"];
 }

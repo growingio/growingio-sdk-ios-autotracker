@@ -254,19 +254,24 @@ static GrowingEventManager *sharedInstance = nil;
         return;
     }
 
-    [[GrowingNetworkInterfaceManager sharedInstance] updateInterfaceInfo];
+    GrowingNetworkReachabilityStatus reachabilityStatus =
+        [[GrowingNetworkInterfaceManager sharedInstance] currentStatus];
     BOOL isViaCellular = NO;
     // 没网络 直接返回
-    if (![GrowingNetworkInterfaceManager sharedInstance].isReachable) {
-        // 没网络 直接返回
+    if (reachabilityStatus == GrowingNetworkReachabilityNotReachable) {
+#if !Growing_OS_WATCH
+        // https://forums.developer.apple.com/forums/thread/729568
         GIOLogDebug(@"No available Internet connection, delay upload (channel = %@).", channel.name);
         return;
+#endif
     }
-    NSUInteger policyMask = GrowingEventSendPolicyInstant;
-    if ([GrowingNetworkInterfaceManager sharedInstance].WiFiValid) {
+    NSUInteger policyMask =
+        GrowingEventSendPolicyInstant | GrowingEventSendPolicyMobileData | GrowingEventSendPolicyWiFi;
+    if (reachabilityStatus == GrowingNetworkReachabilityReachableViaWiFi ||
+        reachabilityStatus == GrowingNetworkReachabilityReachableViaEthernet) {
         policyMask = GrowingEventSendPolicyInstant | GrowingEventSendPolicyMobileData | GrowingEventSendPolicyWiFi;
 
-    } else if ([GrowingNetworkInterfaceManager sharedInstance].WWANValid) {
+    } else if (reachabilityStatus == GrowingNetworkReachabilityReachableViaWWAN) {
         if (self.uploadEventSize < self.uploadLimitOfCellular) {
             GIOLogDebug(@"Upload key data with mobile network (channel = %@).", channel.name);
             policyMask = GrowingEventSendPolicyInstant | GrowingEventSendPolicyMobileData;

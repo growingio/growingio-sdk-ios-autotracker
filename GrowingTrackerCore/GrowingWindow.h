@@ -17,9 +17,9 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#if __has_include(<UIKit/UIKit.h>)
-#import <UIKit/UIKit.h>
+#import "GrowingTargetConditionals.h"
 
+#if Growing_OS_IOS
 @interface GrowingWindowView : UIView
 
 @property (nonatomic, assign) CGFloat growingViewLevel;

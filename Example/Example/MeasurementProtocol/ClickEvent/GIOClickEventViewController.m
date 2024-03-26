@@ -8,7 +8,11 @@
 
 #import "GIOClickEventViewController.h"
 #import "AppDelegate.h"
+#if defined(AUTOTRACKER)
+#if defined(SDK3rd)
 #import "UIView+GrowingImpression.h"
+#endif
+#endif
 
 @interface GIOClickEventViewController ()
 

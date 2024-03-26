@@ -17,9 +17,11 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#if __has_include(<UIKit/UIKit.h>)
-#import "GrowingTrackerCore/Menu/GrowingStatusBar.h"
+#import "GrowingTargetConditionals.h"
+
+#if Growing_OS_IOS
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
+#import "GrowingTrackerCore/Menu/GrowingStatusBar.h"
 #import "GrowingULApplication.h"
 
 @interface GrowingStatusBar ()

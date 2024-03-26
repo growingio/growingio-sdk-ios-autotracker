@@ -24,7 +24,13 @@ import PackageDescription
 
 let package = Package(
     name: "GrowingAnalytics",
-    platforms: [.iOS(.v10), .macCatalyst(.v13), .macOS(.v10_12)],
+    platforms: [
+        .iOS(.v10),
+        .macCatalyst(.v13),
+        .macOS(.v10_12),
+        .tvOS(.v12),
+        .watchOS(.v7),
+    ],
     products: [
         .autotracker,
         .tracker,
@@ -37,11 +43,11 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/growingio/growingio-sdk-ios-utilities.git",
-            "1.1.0" ..< "1.2.0"
+            "1.2.3" ..< "1.3.0"
         ),
         .package(
             url: "https://github.com/growingio/growingio-sdk-ios-performance-ext.git",
-            "1.0.0" ..< "1.1.0"
+            "1.0.1" ..< "1.1.0"
         ),
         .package(
             url: "https://github.com/apple/swift-protobuf.git",
@@ -295,12 +301,12 @@ extension Target {
 }
 
 extension Target.Dependency {
-    static let autotracker_objc = byName(name: .autotracker_objc, condition: .when(platforms: [.iOS, .macCatalyst]))
+    static let autotracker_objc = byName(name: .autotracker_objc, condition: .when(platforms: [.iOS, .macCatalyst, .tvOS]))
     static let tracker_objc = byName(name: .tracker_objc)
 
     static let autotrackerUtils = product(name: "GrowingUtilsAutotrackerCore", package: "growingio-sdk-ios-utilities")
     static let trackerUtils = product(name: "GrowingUtilsTrackerCore", package: "growingio-sdk-ios-utilities")
-    static let apm = product(name: "GrowingAPM", package: "growingio-sdk-ios-performance-ext")
+    static let apm = product(name: "GrowingAPM", package: "growingio-sdk-ios-performance-ext", condition: .when(platforms: [.iOS]))
     static let protobuf = product(name: "SwiftProtobuf", package: "swift-protobuf")
 
     enum Resources {
@@ -309,7 +315,7 @@ extension Target.Dependency {
     }
 
     enum Core {
-        static let autotrackerCore = byName(name: .autotrackerCore, condition: .when(platforms: [.iOS, .macCatalyst]))
+        static let autotrackerCore = byName(name: .autotrackerCore, condition: .when(platforms: [.iOS, .macCatalyst, .tvOS]))
         static let trackerCore = byName(name: .trackerCore)
     }
 
@@ -326,7 +332,7 @@ extension Target.Dependency {
         static let protobuf = byName(name: .protobuf)
         static let swiftProtobuf = byName(name: .swiftProtobuf)
         static let network = byName(name: .network)
-        static let webSocket = byName(name: .webSocket)
+        static let webSocket = byName(name: .webSocket, condition: .when(platforms: [.iOS]))
         static let compress = byName(name: .compress)
         static let encrypt = byName(name: .encrypt)
         static let screenshot = byName(name: .screenshot, condition: .when(platforms: [.iOS]))

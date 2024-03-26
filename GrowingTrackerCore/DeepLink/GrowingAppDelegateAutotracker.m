@@ -17,12 +17,13 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#if __has_include(<UIKit/UIKit.h>)
-#import "GrowingTrackerCore/DeepLink/GrowingAppDelegateAutotracker.h"
-#import <UIKit/UIKit.h>
+#import "GrowingTargetConditionals.h"
+
+#if Growing_USE_UIKIT
 #import <objc/message.h>
 #import <objc/runtime.h>
-#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
+#import "GrowingTrackerCore/DeepLink/GrowingAppDelegateAutotracker.h"
+#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler+Private.h"
 #import "GrowingTrackerCore/DeepLink/GrowingSceneDelegateAutotracker.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingULApplication.h"
@@ -62,6 +63,11 @@
             if (!delegate) {
                 return;
             }
+            if ([delegate isKindOfClass:NSClassFromString(@"SwiftUI.AppDelegate")]) {
+                // SwiftUI下无法完成以下Method Swizzling，请手动调用handleURL
+                // 见：https://github.com/firebase/firebase-ios-sdk/issues/10417
+                return;
+            }
             if ([delegate respondsToSelector:@selector(application:openURL:options:)]) {
                 SEL sel = @selector(application:openURL:options:);
                 Method method = class_getInstanceMethod(delegate.class, sel);
@@ -75,7 +81,7 @@
                                                   UIApplication *application,
                                                   NSURL *url,
                                                   NSDictionary<UIApplicationOpenURLOptionsKey, id> *options) {
-                        [GrowingDeepLinkHandler handlerUrl:url];
+                        [GrowingDeepLinkHandler handleURL:url];
                         BOOL(*tempImp)
                         (id obj,
                          SEL sel,
@@ -98,7 +104,7 @@
                                                   NSURL *url,
                                                   NSString *sourceApplication,
                                                   id annotation) {
-                        [GrowingDeepLinkHandler handlerUrl:url];
+                        [GrowingDeepLinkHandler handleURL:url];
                         BOOL(*tempImp)
                         (id obj,
                          SEL sel,
@@ -118,7 +124,7 @@
                 method_setImplementation(
                     method,
                     imp_implementationWithBlock(^(id target, UIApplication *application, NSURL *url) {
-                        [GrowingDeepLinkHandler handlerUrl:url];
+                        [GrowingDeepLinkHandler handleURL:url];
                         BOOL (*tempImp)(id obj, SEL sel, UIApplication *application, NSURL *url) = (void *)originImp;
                         return tempImp(target, sel, application, url);
                     }));
@@ -148,7 +154,7 @@
                                                   UIApplication *application,
                                                   NSUserActivity *userActivity,
                                                   void (^restorationHandler)(NSArray<id<UIUserActivityRestoring>> *)) {
-                        [GrowingDeepLinkHandler handlerUrl:userActivity.webpageURL];
+                        [GrowingDeepLinkHandler handleURL:userActivity.webpageURL];
                         BOOL(*tempImp)
                         (id obj,
                          SEL sel,

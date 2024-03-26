@@ -19,7 +19,7 @@
 #import "GrowingTrackerCore/Thirdparty/Reachability/GrowingReachability.h"
 #import <netinet/in.h>
 
-#if !TARGET_OS_WATCH
+#if !Growing_OS_WATCH
 static void ReachabilityCallback(SCNetworkReachabilityRef target,
                                  SCNetworkReachabilityFlags flags,
                                  void *info);
@@ -27,8 +27,8 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target,
 
 @interface GrowingReachability ()
 
-@property (nonatomic, assign, readwrite) GrowingNetworkStatus networkStatus;
-#if !TARGET_OS_WATCH
+@property (nonatomic, assign, readwrite) GrowingNetworkReachabilityStatus reachabilityStatus;
+#if !Growing_OS_WATCH
 @property (nonatomic, assign) SCNetworkReachabilityRef reachabilityRef;
 #endif
 
@@ -38,15 +38,15 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target,
 
 - (instancetype)initWithAddress:(const struct sockaddr *)hostAddress {
     if (self = [super init]) {
-        _networkStatus = GrowingReachabilityUnknown;
-#if !TARGET_OS_WATCH
+        _reachabilityStatus = GrowingNetworkReachabilityUndetermined;
+#if !Growing_OS_WATCH
         SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault,
                                                                                        hostAddress);
         if (reachability) {
             _reachabilityRef = reachability;
             SCNetworkReachabilityFlags flags = 0;
             if (SCNetworkReachabilityGetFlags(reachability, &flags)) {
-                _networkStatus = [self networkStatusForFlags:flags];
+                _reachabilityStatus = [self reachabilityStatusForFlags:flags];
             }
         }
 #endif
@@ -66,7 +66,7 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target,
 #pragma mark - Start and stop notifier
 
 - (BOOL)startNotifier {
-#if TARGET_OS_WATCH
+#if Growing_OS_WATCH
     return NO;
 #else
     if (!_reachabilityRef) {
@@ -93,38 +93,40 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target,
 }
 
 - (void)stopNotifier {
-#if !TARGET_OS_WATCH
+#if !Growing_OS_WATCH
     if (!_reachabilityRef) {
         return;
     }
     SCNetworkReachabilityUnscheduleFromRunLoop(_reachabilityRef,
                                                CFRunLoopGetCurrent(),
                                                kCFRunLoopDefaultMode);
-    _networkStatus = GrowingReachabilityUnknown;
+    _reachabilityStatus = GrowingNetworkReachabilityUndetermined;
 #endif
 }
 
 - (void)dealloc {
+#if !Growing_OS_WATCH
 	[self stopNotifier];
 	if (_reachabilityRef) {
 		CFRelease(_reachabilityRef);
         _reachabilityRef = nil;
 	}
+#endif
 }
 
 #pragma mark - Network Flag Handling
 
-#if !TARGET_OS_WATCH
-- (GrowingNetworkStatus)networkStatusForFlags:(SCNetworkReachabilityFlags)flags {
+#if !Growing_OS_WATCH
+- (GrowingNetworkReachabilityStatus)reachabilityStatusForFlags:(SCNetworkReachabilityFlags)flags {
 	if ((flags & kSCNetworkReachabilityFlagsReachable) == 0) {
 		// The target host is not reachable.
-        return GrowingReachabilityNotReachable;
+        return GrowingNetworkReachabilityNotReachable;
 	}
 
-    GrowingNetworkStatus returnValue = GrowingReachabilityNotReachable;
+    GrowingNetworkReachabilityStatus returnValue = GrowingNetworkReachabilityNotReachable;
 	if ((flags & kSCNetworkReachabilityFlagsConnectionRequired) == 0) {
 		// If the target host is reachable and no connection is required then we'll assume (for now) that you're on Wi-Fi...
-		returnValue = GrowingReachabilityViaWiFi;
+		returnValue = GrowingNetworkReachabilityReachableViaWiFi;
 	}
 
 	if ((((flags & kSCNetworkReachabilityFlagsConnectionOnDemand ) != 0) ||
@@ -132,16 +134,16 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target,
         //and the connection is on-demand (or on-traffic) if the calling application is using the CFSocketStream or higher APIs...
         if ((flags & kSCNetworkReachabilityFlagsInterventionRequired) == 0) {
             // and no [user] intervention is needed...
-            returnValue = GrowingReachabilityViaWiFi;
+            returnValue = GrowingNetworkReachabilityReachableViaWiFi;
         }
     }
 
-#if TARGET_OS_IOS || TARGET_OS_TV || (defined(TARGET_OS_VISION) && TARGET_OS_VISION)
-    if (returnValue == GrowingReachabilityViaWiFi) {
+#if Growing_OS_IOS || Growing_OS_TV
+    if (returnValue == GrowingNetworkReachabilityReachableViaWiFi) {
         // is reachable...
         if ((flags & kSCNetworkReachabilityFlagsIsWWAN) != 0) {
             // but WWAN connections are OK if the calling application is using the CFNetwork APIs.
-            returnValue = GrowingReachabilityViaWWAN;
+            returnValue = GrowingNetworkReachabilityReachableViaWWAN;
         }
     }
 #endif
@@ -150,16 +152,16 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target,
 }
 
 - (void)reachabilityFlagsChanged:(SCNetworkReachabilityFlags)flags {
-    GrowingNetworkStatus status = [self networkStatusForFlags:flags];
-    if (_networkStatus != status) {
-        _networkStatus = status;
+    GrowingNetworkReachabilityStatus status = [self reachabilityStatusForFlags:flags];
+    if (_reachabilityStatus != status) {
+        _reachabilityStatus = status;
     }
 }
 #endif
 
 @end
 
-#if !TARGET_OS_WATCH
+#if !Growing_OS_WATCH
 static void ReachabilityCallback(SCNetworkReachabilityRef target,
                                  SCNetworkReachabilityFlags flags,
                                  void *info) {

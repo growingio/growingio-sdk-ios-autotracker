@@ -17,10 +17,11 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#if __has_include(<UIKit/UIKit.h>)
+#import "GrowingTargetConditionals.h"
+
+#if Growing_OS_IOS
 #import "GrowingTrackerCore/GrowingWindow.h"
 #import "GrowingTrackerCore/Helpers/UIKit/UIApplication+GrowingHelper.h"
-#import "GrowingTrackerCore/Helpers/UIKit/UIWindow+GrowingHelper.h"
 
 @implementation UIApplication (GrowingHelper)
 

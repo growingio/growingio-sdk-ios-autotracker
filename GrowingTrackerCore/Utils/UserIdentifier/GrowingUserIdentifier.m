@@ -18,42 +18,42 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Utils/UserIdentifier/GrowingUserIdentifier.h"
+#import "GrowingTargetConditionals.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
-
-#if __has_include(<UIKit/UIKit.h>)
-#import <UIKit/UIKit.h>
-#endif
 
 @implementation GrowingUserIdentifier
 
 + (NSString *)getUserIdentifier {
     NSString *uuid = nil;
-#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
-    NSString *idfaString = [self idfa];
-    if (!idfaString.growingHelper_isValidU) {
-        idfaString = [self idfv];
-    }
-    uuid = idfaString;
-#else
+#if Growing_OS_OSX || Growing_OS_MACCATALYST
     uuid = [self platformUUID];
+#elif Growing_USE_UIKIT || Growing_USE_WATCHKIT
+    uuid = [self idfa];
+    if (!uuid.growingHelper_isValidU) {
+        uuid = [self idfv];
+    }
 #endif
+
     // 失败了随机生成 UUID
-    if (!uuid.length || !uuid.growingHelper_isValidU) {
+    if (!uuid.growingHelper_isValidU) {
         uuid = [[NSUUID UUID] UUIDString];
     }
     return uuid;
 }
 
 + (nullable NSString *)idfv {
-#if TARGET_OS_IOS
+#if Growing_USE_UIKIT
     return [[UIDevice currentDevice].identifierForVendor UUIDString];
-#endif
+#elif Growing_USE_WATCHKIT
+    return [[WKInterfaceDevice currentDevice].identifierForVendor UUIDString];
+#else
     return @"";
+#endif
 }
 
 + (NSString *)idfa {
     NSString *idfa = @"";
-#if TARGET_OS_IOS
+#if Growing_OS_PURE_IOS
 #ifndef GROWING_ANALYSIS_DISABLE_IDFA
     Class class = NSClassFromString([@"ASIden" stringByAppendingString:@"tifierManager"]);
     if (!class) {
@@ -77,8 +77,8 @@
     return idfa;
 }
 
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
 + (nullable NSString *)platformUUID {
+#if Growing_OS_OSX || Growing_OS_MACCATALYST
     io_service_t service =
         IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("IOPlatformExpertDevice"));
     if (service) {
@@ -90,8 +90,8 @@
             return string;
         }
     }
+#endif
     return nil;
 }
-#endif
 
 @end

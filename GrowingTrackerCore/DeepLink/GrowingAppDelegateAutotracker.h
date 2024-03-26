@@ -17,9 +17,9 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#if __has_include(<UIKit/UIKit.h>)
-#import <Foundation/Foundation.h>
+#import "GrowingTargetConditionals.h"
 
+#if Growing_USE_UIKIT
 NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingAppDelegateAutotracker : NSObject

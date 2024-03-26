@@ -27,6 +27,42 @@
 
 GrowingService(GrowingScreenshotService, GrowingScreenshotProvider)
 
+@implementation UIWindow (GrowingScreenshot)
+
++ (UIImage *)growing_screenshotWithWindows:(NSArray<UIWindow *> *)windows maxScale:(CGFloat)maxScale {
+    CGFloat scale = [UIScreen mainScreen].scale;
+    if (maxScale != 0 && maxScale < scale) {
+        scale = maxScale;
+    }
+
+    CGSize imageSize = [UIScreen mainScreen].bounds.size;
+    UIGraphicsBeginImageContextWithOptions(imageSize, NO, scale);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+
+    for (UIWindow *window in windows) {
+        CGContextSaveGState(context);
+        CGContextTranslateCTM(context, window.center.x, window.center.y);
+        CGContextConcatCTM(context, window.transform);
+        CGContextTranslateCTM(context,
+                              -window.bounds.size.width * window.layer.anchorPoint.x,
+                              -window.bounds.size.height * window.layer.anchorPoint.y);
+        if ([window respondsToSelector:@selector(drawViewHierarchyInRect:afterScreenUpdates:)]) {
+            [window drawViewHierarchyInRect:window.bounds afterScreenUpdates:NO];
+        } else {
+            if (context) {
+                [window.layer renderInContext:context];
+            }
+        }
+        CGContextRestoreGState(context);
+    }
+
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+
+@end
+
 @interface GrowingScreenshotProvider ()
 
 @property (strong, nonatomic, readonly) NSPointerArray *observers;
@@ -112,7 +148,7 @@ GrowingService(GrowingScreenshotService, GrowingScreenshotProvider)
         }
     }];
 
-    UIImage *image = [UIWindow growingHelper_screenshotWithWindows:windows andMaxScale:scale];
+    UIImage *image = [UIWindow growing_screenshotWithWindows:windows maxScale:scale];
     return image;
 }
 

@@ -17,12 +17,13 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#if __has_include(<UIKit/UIKit.h>)
-#import "GrowingTrackerCore/DeepLink/GrowingSceneDelegateAutotracker.h"
-#import <UIKit/UIKit.h>
+#import "GrowingTargetConditionals.h"
+
+#if Growing_USE_UIKIT
 #import <objc/message.h>
 #import <objc/runtime.h>
-#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
+#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler+Private.h"
+#import "GrowingTrackerCore/DeepLink/GrowingSceneDelegateAutotracker.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 
 @implementation GrowingSceneDelegateAutotracker
@@ -33,7 +34,6 @@
         if (@available(iOS 13.0, *)) {
             // URL Scheme
             SEL sel = @selector(scene:openURLContexts:);
-            class_getInstanceMethod(delegateClass, sel);
             Method method = class_getInstanceMethod(delegateClass, sel);
             if (method) {
                 IMP originImp = method_getImplementation(method);
@@ -42,7 +42,7 @@
                     imp_implementationWithBlock(^(id target, UIScene *scene, NSSet<UIOpenURLContext *> *URLContexts) {
                         NSURL *url = URLContexts.allObjects.firstObject.URL;
                         if (url) {
-                            [GrowingDeepLinkHandler handlerUrl:url];
+                            [GrowingDeepLinkHandler handleURL:url];
                         }
 
                         void (*tempImp)(id, SEL, UIScene *, NSSet<UIOpenURLContext *> *) = (void *)originImp;
@@ -59,7 +59,6 @@
             }
             // DeepLink
             sel = @selector(scene:continueUserActivity:);
-            class_getInstanceMethod(delegateClass, sel);
             method = class_getInstanceMethod(delegateClass, sel);
             if (method) {
                 IMP originImp = method_getImplementation(method);
@@ -69,7 +68,7 @@
                         if ([userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb]) {
                             NSURL *url = userActivity.webpageURL;
                             if (url) {
-                                [GrowingDeepLinkHandler handlerUrl:url];
+                                [GrowingDeepLinkHandler handleURL:url];
                             }
                         }
                         void (*tempImp)(id, SEL, UIScene *, NSUserActivity *) = (void *)originImp;
@@ -86,7 +85,6 @@
             }
             // 冷启动
             sel = @selector(scene:willConnectToSession:options:);
-            class_getInstanceMethod(delegateClass, sel);
             method = class_getInstanceMethod(delegateClass, sel);
             if (method) {
                 IMP originImp = method_getImplementation(method);
@@ -121,7 +119,7 @@
                         }
 
                         if (url) {
-                            [GrowingDeepLinkHandler handlerUrl:url];
+                            [GrowingDeepLinkHandler handleURL:url];
                         }
 
                         void (*tempImp)(id, SEL, UIScene *, UISceneSession *, UISceneConnectionOptions *) =

@@ -18,20 +18,21 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
+#import "GrowingTargetConditionals.h"
+#import "GrowingTrackerCore/Network/GrowingNetworkPathMonitor.h"
 #import "GrowingTrackerCore/Thirdparty/Reachability/GrowingReachability.h"
 
-#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
+#if Growing_OS_PURE_IOS
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #endif
 
 @interface GrowingNetworkInterfaceManager ()
 
 @property (nonatomic, strong) GrowingReachability *internetReachability;
-@property (nonatomic, assign, readwrite) BOOL WWANValid;
-@property (nonatomic, assign, readwrite) BOOL WiFiValid;
-@property (nonatomic, assign, readwrite) BOOL isReachable;
+@property (nonatomic, strong) GrowingNetworkPathMonitor *monitor;
+@property (nonatomic, strong) dispatch_queue_t monitorQueue;
 
-#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
+#if Growing_OS_PURE_IOS
 @property (nonatomic, strong) CTTelephonyNetworkInfo *teleInfo;
 #endif
 
@@ -40,9 +41,9 @@
 @implementation GrowingNetworkInterfaceManager
 
 + (instancetype)sharedInstance {
-    static dispatch_once_t pred;
-    __strong static id sharedInstance = nil;
-    dispatch_once(&pred, ^{
+    static dispatch_once_t onceToken;
+    static id sharedInstance = nil;
+    dispatch_once(&onceToken, ^{
         sharedInstance = [[self alloc] init];
     });
     return sharedInstance;
@@ -51,29 +52,29 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _internetReachability = [GrowingReachability reachabilityForInternetConnection];
-        [_internetReachability startNotifier];
+        _monitorQueue = dispatch_queue_create("com.growingio.network.monitorQueue", DISPATCH_QUEUE_SERIAL);
 
-#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
+#if Growing_OS_PURE_IOS
         _teleInfo = [[CTTelephonyNetworkInfo alloc] init];
 #endif
+        [self monitorInitialize];
     }
     return self;
 }
 
-- (void)updateInterfaceInfo {
-    GrowingNetworkStatus netStatus = self.internetReachability.networkStatus;
-    self.WiFiValid = netStatus == GrowingReachabilityViaWiFi;
-    self.WWANValid = netStatus == GrowingReachabilityViaWWAN;
-    self.isReachable = netStatus != GrowingReachabilityNotReachable;  // contain GrowingReachabilityUnknown
++ (void)startMonitor {
+    [[self sharedInstance] startMonitor];
 }
 
 - (NSString *)networkType {
-    GrowingNetworkStatus netStatus = self.internetReachability.networkStatus;
-    if (netStatus == GrowingReachabilityViaWiFi) {
+    GrowingNetworkReachabilityStatus reachabilityStatus = [self currentStatus];
+    if (reachabilityStatus == GrowingNetworkReachabilityReachableViaWiFi) {
         return @"WIFI";
-#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
-    } else if (netStatus == GrowingReachabilityViaWWAN) {
+    } else if (reachabilityStatus == GrowingNetworkReachabilityReachableViaWWAN) {
+#if Growing_OS_WATCH
+        // https://www.apple.com/watch/cellular/
+        return @"4G";
+#elif Growing_OS_PURE_IOS
         NSArray *typeStrings4G = @[CTRadioAccessTechnologyLTE];
         NSString *accessString = CTRadioAccessTechnologyLTE;  // default 4G
         if (@available(iOS 12.0, *)) {
@@ -98,10 +99,51 @@
 #endif
         }
 #endif
+    } else if (reachabilityStatus == GrowingNetworkReachabilityReachableViaEthernet) {
+        return @"WIFI";  // @"Ethernet"
     }
 
-    // GrowingReachabilityUnknown or GrowingReachabilityNotReachable
+    // GrowingNetworkReachabilityUndetermined or GrowingNetworkReachabilityNotReachable
     return @"UNKNOWN";
+}
+
+- (GrowingNetworkReachabilityStatus)currentStatus {
+    GrowingNetworkReachabilityStatus reachabilityStatus = GrowingNetworkReachabilityUndetermined;
+#if Growing_OS_VISION
+    if (1) {  // if (@available(visionOS 1.0, *)) {
+#else
+    if (@available(iOS 12.0, macCatalyst 13.0, macOS 10.14, tvOS 12.0, watchOS 6.0, *)) {
+#endif
+        reachabilityStatus = self.monitor.reachabilityStatus;
+    } else {
+        reachabilityStatus = self.internetReachability.reachabilityStatus;
+    }
+
+    return reachabilityStatus;
+}
+
+- (void)monitorInitialize {
+#if Growing_OS_VISION
+    if (1) {  // if (@available(visionOS 1.0, *)) {
+#else
+    if (@available(iOS 12.0, macCatalyst 13.0, macOS 10.14, tvOS 12.0, watchOS 6.0, *)) {
+#endif
+        _monitor = [GrowingNetworkPathMonitor monitorWithQueue:_monitorQueue];
+    } else {
+        _internetReachability = [GrowingReachability reachabilityForInternetConnection];
+    }
+}
+
+- (void)startMonitor {
+#if Growing_OS_VISION
+    if (1) {  // if (@available(visionOS 1.0, *)) {
+#else
+    if (@available(iOS 12.0, macCatalyst 13.0, macOS 10.14, tvOS 12.0, watchOS 6.0, *)) {
+#endif
+        [_monitor startMonitor];
+    } else {
+        [_internetReachability startNotifier];
+    }
 }
 
 @end

@@ -11,6 +11,9 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   s.source           = { :git => 'https://github.com/growingio/growingio-sdk-ios-autotracker.git', :tag => s.version.to_s }
   s.ios.deployment_target = '10.0'
   s.osx.deployment_target = '10.12'
+  s.watchos.deployment_target = '7.0'
+  s.tvos.deployment_target = '12.0'
+  # s.visionos.deployment_target = '1.0'
   s.ios.framework = 'WebKit'
   s.requires_arc = true
   s.default_subspec = "Autotracker"
@@ -18,6 +21,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
 
   s.subspec 'Autotracker' do |autotracker|
     autotracker.ios.deployment_target = '10.0'
+    autotracker.tvos.deployment_target = '12.0'
     autotracker.source_files = 'GrowingAutotracker/**/*{.h,.m,.c,.cpp,.mm}'
     autotracker.public_header_files = 'GrowingAutotracker/*.h'
     autotracker.dependency 'GrowingAnalytics/AutotrackerCore', s.version.to_s
@@ -40,7 +44,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   end
 
   s.subspec 'TrackerCore' do |trackerCore|
-    trackerCore.dependency 'GrowingUtils/TrackerCore', '~> 1.1.0'
+    trackerCore.dependency 'GrowingUtils/TrackerCore', '~> 1.2.3'
     trackerCore.source_files = 'GrowingTrackerCore/**/*{.h,.m,.c,.cpp,.mm}'
     trackerCore.public_header_files = 'GrowingTrackerCore/Public/*.h'
     trackerCore.ios.resource_bundles = {'GrowingAnalytics' => ['Resources/iOS/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy']}
@@ -50,7 +54,8 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   
   s.subspec 'AutotrackerCore' do |autotrackerCore|
     autotrackerCore.ios.deployment_target = '10.0'
-    autotrackerCore.dependency 'GrowingUtils/AutotrackerCore', '~> 1.1.0'
+    autotrackerCore.tvos.deployment_target = '12.0'
+    autotrackerCore.dependency 'GrowingUtils/AutotrackerCore', '~> 1.2.3'
     autotrackerCore.source_files = 'GrowingAutotrackerCore/**/*{.h,.m,.c,.cpp,.mm}'
     autotrackerCore.public_header_files = 'GrowingAutotrackerCore/Public/*.h'
     autotrackerCore.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
@@ -89,6 +94,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   end
   
   s.subspec 'WebSocket' do |service|
+    service.ios.deployment_target = '10.0'
     service.source_files = 'Services/WebSocket/**/*{.h,.m,.c,.cpp,.mm}'
     service.public_header_files = 'Services/WebSocket/include/*.h'
     service.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
@@ -171,7 +177,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     apm.source_files = 'Modules/APM/**/*{.h,.m,.c,.cpp,.mm}'
     apm.public_header_files = 'Modules/APM/Public/*.h'
     apm.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
-    apm.dependency 'GrowingAPM/Core', '~> 1.0.0'
+    apm.dependency 'GrowingAPM/Core', '~> 1.0.1'
   end
 
   s.subspec 'V2Adapter' do |adapter|

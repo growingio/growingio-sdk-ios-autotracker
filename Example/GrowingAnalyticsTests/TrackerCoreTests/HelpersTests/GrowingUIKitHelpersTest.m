@@ -46,10 +46,6 @@
     [image growingHelper_JPEG:0.8];
 }
 
-- (void)testUIWindowHelper {
-    [UIWindow growingHelper_screenshotWithWindows:nil andMaxScale:0.8];
-}
-
 - (void)testUIViewHelper {
     UIView *view = [[UIView alloc] init];
     [view growingHelper_viewController];

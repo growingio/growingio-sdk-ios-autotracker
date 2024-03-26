@@ -18,8 +18,8 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/GrowingRealTracker.h"
+#import "GrowingTargetConditionals.h"
 #import "GrowingTrackerCore/DeepLink/GrowingAppDelegateAutotracker.h"
-#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
 #import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
@@ -27,6 +27,7 @@
 #import "GrowingTrackerCore/LogFormat/GrowingWSLoggerFormat.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
+#import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
 #import "GrowingTrackerCore/Public/GrowingAttributesBuilder.h"
 #import "GrowingTrackerCore/Public/GrowingModuleManager.h"
 #import "GrowingTrackerCore/Public/GrowingServiceManager.h"
@@ -57,14 +58,13 @@ const int GrowingTrackerVersionCode = 40200;
         _configuration = [configuration copyWithZone:nil];
         _launchOptions = [launchOptions copy];
         GrowingConfigurationManager.sharedInstance.trackConfiguration = _configuration;
-        if (configuration.urlScheme.length > 0) {
-            [GrowingDeviceInfo configUrlScheme:configuration.urlScheme.copy];
-        }
 
         [self loggerSetting];
+        [GrowingDeviceInfo setup];
+        [GrowingNetworkInterfaceManager startMonitor];
         [GrowingULAppLifecycle setup];
         [GrowingSession startSession];
-#if TARGET_OS_IOS
+#if Growing_OS_IOS
         [GrowingAppDelegateAutotracker track];
 #endif
         [[GrowingModuleManager sharedInstance] registerAllModules];
