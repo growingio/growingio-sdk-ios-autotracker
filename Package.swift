@@ -310,7 +310,7 @@ extension Target.Dependency {
     static let protobuf = product(name: "SwiftProtobuf", package: "swift-protobuf")
 
     enum Resources {
-        static let privacy = byName(name: .privacy, condition: .when(platforms: [.iOS, .macCatalyst]))
+        static let privacy = byName(name: .privacy, condition: .when(platforms: [.iOS, .macCatalyst, .tvOS, .watchOS]))
         static let privacy_macos = byName(name: .privacy_macos, condition: .when(platforms: [.macOS]))
     }
 
