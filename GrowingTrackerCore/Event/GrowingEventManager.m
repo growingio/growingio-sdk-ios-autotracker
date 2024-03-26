@@ -259,9 +259,11 @@ static GrowingEventManager *sharedInstance = nil;
     BOOL isViaCellular = NO;
     // 没网络 直接返回
     if (reachabilityStatus == GrowingNetworkReachabilityNotReachable) {
-        // 没网络 直接返回
+#if !Growing_OS_WATCH
+        // https://forums.developer.apple.com/forums/thread/729568
         GIOLogDebug(@"No available Internet connection, delay upload (channel = %@).", channel.name);
         return;
+#endif
     }
     NSUInteger policyMask =
         GrowingEventSendPolicyInstant | GrowingEventSendPolicyMobileData | GrowingEventSendPolicyWiFi;
