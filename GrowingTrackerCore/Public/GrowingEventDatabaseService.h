@@ -70,7 +70,9 @@ extern NSString *const GrowingEventDatabaseErrorDomain;
 /// @param limitSize 大小限制
 /// @param mask 允许的发送协议（数组）
 /// @return 事件对象数组，可为空；若返回值为nil，表示读取错误
-- (nullable NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsByCount:(NSUInteger)count limitSize:(NSUInteger)limitSize policy:(NSUInteger)mask;
+- (nullable NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsByCount:(NSUInteger)count
+                                                                  limitSize:(NSUInteger)limitSize
+                                                                     policy:(NSUInteger)mask;
 
 /// 写入事件数据
 /// @param event 事件数据
