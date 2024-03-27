@@ -431,7 +431,7 @@ static GrowingEventManager *sharedInstance = nil;
 
 - (NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsToBeUploadUnsafe:(GrowingEventChannel *)channel
                                                                      policy:(NSUInteger)mask {
-    return [channel.db getEventsByCount:kGrowingMaxBatchSize policy:mask];
+    return [channel.db getEventsByCount:kGrowingMaxBatchSize limitSize:2 * kGrowingUnit_MB policy:mask];
 }
 
 #pragma mark Event Log
