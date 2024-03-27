@@ -34,7 +34,9 @@
 
 - (void)setEvent:(id<GrowingEventPersistenceProtocol>)event forKey:(NSString *)key;
 
-- (NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsByCount:(NSUInteger)count limitSize:(NSUInteger)limitSize policy:(NSUInteger)mask;
+- (NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsByCount:(NSUInteger)count
+                                                         limitSize:(NSUInteger)limitSize
+                                                            policy:(NSUInteger)mask;
 
 - (NSData *)buildRawEventsFromEvents:(NSArray<id<GrowingEventPersistenceProtocol>> *)events;
 

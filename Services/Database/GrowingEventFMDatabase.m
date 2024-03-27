@@ -106,7 +106,9 @@
     return count;
 }
 
-- (nullable NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsByCount:(NSUInteger)count limitSize:(NSUInteger)limitSize policy:(NSUInteger)mask {
+- (nullable NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsByCount:(NSUInteger)count
+                                                                  limitSize:(NSUInteger)limitSize
+                                                                     policy:(NSUInteger)mask {
     if (self.countOfEvents == 0) {
         return [[NSArray alloc] init];
     }
