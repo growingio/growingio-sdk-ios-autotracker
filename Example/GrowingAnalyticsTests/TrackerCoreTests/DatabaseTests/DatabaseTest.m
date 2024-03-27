@@ -82,7 +82,7 @@
     {
         XCTAssertTrue([self.database clearAllItems]);
         XCTAssertEqual(self.database.countOfEvents, 0);
-        NSArray *events2 = [self.database getEventsByCount:1 policy:GrowingEventSendPolicyInstant];
+        NSArray *events2 = [self.database getEventsByCount:1 limitSize:1000000 policy:GrowingEventSendPolicyInstant];
         XCTAssertEqual(events2.count, 0);
     }
 
@@ -96,7 +96,7 @@
                                                    sdkVersion:self.event.sdkVersion];
         XCTAssertNoThrow([self.database setEvent:event forKey:uuid]);
         XCTAssertEqual(self.database.countOfEvents, 1);
-        NSArray *events = [self.database getEventsByCount:1 policy:GrowingEventSendPolicyInstant];
+        NSArray *events = [self.database getEventsByCount:1 limitSize:1000000 policy:GrowingEventSendPolicyInstant];
         XCTAssertEqual(events.count, 1);
     }
 
