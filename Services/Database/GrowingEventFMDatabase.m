@@ -132,7 +132,7 @@
                 **stop = YES;
             } else {
                 [events addObject:event];
-                
+
                 if (events.count >= count) {
                     **stop = YES;
                 }
