@@ -127,12 +127,15 @@
                                                                                                      data:value
                                                                                                    policy:policy
                                                                                                sdkVersion:sdkVersion];
-            [events addObject:event];
             eventsLength += [value length];
             if (eventsLength >= limitSize) {
                 **stop = YES;
-            } else if (events.count >= count) {
-                **stop = YES;
+            } else {
+                [events addObject:event];
+                
+                if (events.count >= count) {
+                    **stop = YES;
+                }
             }
         }
     }];
