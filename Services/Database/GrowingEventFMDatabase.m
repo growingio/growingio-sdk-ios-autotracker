@@ -106,12 +106,15 @@
     return count;
 }
 
-- (nullable NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsByCount:(NSUInteger)count policy:(NSUInteger)mask {
+- (nullable NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsByCount:(NSUInteger)count
+                                                                  limitSize:(NSUInteger)limitSize
+                                                                     policy:(NSUInteger)mask {
     if (self.countOfEvents == 0) {
         return [[NSArray alloc] init];
     }
 
     NSMutableArray<id<GrowingEventPersistenceProtocol>> *events = [[NSMutableArray alloc] init];
+    __block NSUInteger eventsLength = 0;
     [self enumerateKeysAndValuesUsingBlock:^(NSString *key,
                                              id value,
                                              NSString *type,
@@ -124,9 +127,15 @@
                                                                                                      data:value
                                                                                                    policy:policy
                                                                                                sdkVersion:sdkVersion];
-            [events addObject:event];
-            if (events.count >= count) {
+            eventsLength += [value length];
+            if (eventsLength >= limitSize) {
                 **stop = YES;
+            } else {
+                [events addObject:event];
+
+                if (events.count >= count) {
+                    **stop = YES;
+                }
             }
         }
     }];
