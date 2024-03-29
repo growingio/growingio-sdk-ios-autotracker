@@ -304,7 +304,7 @@ static GrowingEventManager *sharedInstance = nil;
             events = [obj growingEventManagerEventsWillSend:events channel:channel];
         }
     }
-    
+
     if (events.count == 0) {
         return;
     }
