@@ -299,14 +299,14 @@ static GrowingEventManager *sharedInstance = nil;
     }
     events = removeV3AutotrackEvents.copy;
 
-    if (events.count == 0) {
-        return;
-    }
-
     for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
         if ([obj respondsToSelector:@selector(growingEventManagerEventsWillSend:channel:)]) {
             events = [obj growingEventManagerEventsWillSend:events channel:channel];
         }
+    }
+    
+    if (events.count == 0) {
+        return;
     }
 
     channel.isUploading = YES;
