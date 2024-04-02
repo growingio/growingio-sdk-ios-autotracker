@@ -348,14 +348,14 @@ static GrowingEventManager *sharedInstance = nil;
         GIOLogError(@"-sendEventsOfChannel_unsafe: error : fail to build raw events");
         return;
     }
-    
+
     id<GrowingEventNetworkService> service =
         [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingEventNetworkService)];
     if (!service) {
         GIOLogError(@"-sendEventsOfChannel_unsafe: error : no network service support");
         return;
     }
-    
+
     channel.isUploading = YES;
     NSObject<GrowingRequestProtocol> *eventRequest = [[GrowingEventRequest alloc] initWithEvents:rawEvents];
     [service sendRequest:eventRequest
