@@ -86,13 +86,11 @@
     [self performDatabaseBlock:^(GrowingFMDatabase *db, NSError *error) {
         if (error) {
             self.databaseError = error;
-            count = -1;
             return;
         }
         GrowingFMResultSet *set = [db executeQuery:@"SELECT COUNT(*) FROM namedcachetable"];
         if (!set) {
             self.databaseError = [self readErrorInDatabase:db];
-            count = -1;
             return;
         }
 
@@ -109,7 +107,7 @@
 - (nullable NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsByCount:(NSUInteger)count
                                                                   limitSize:(NSUInteger)limitSize
                                                                      policy:(NSUInteger)mask {
-    if (self.countOfEvents == 0) {
+    if (self.countOfEvents <= 0) {
         return [[NSArray alloc] init];
     }
 
