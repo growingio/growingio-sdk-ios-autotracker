@@ -309,8 +309,6 @@ static GrowingEventManager *sharedInstance = nil;
         return;
     }
 
-    channel.isUploading = YES;
-
 #ifdef DEBUG
     [self prettyLogForEvents:events withChannel:channel];
 #endif
@@ -341,20 +339,25 @@ static GrowingEventManager *sharedInstance = nil;
         }
 
         rawEvents = [dbClass buildRawEventsFromJsonObjects:jsonObjects];
-    }
-
-    if (!rawEvents) {
+    } else {
         // 该channel的持久化数据格式与配置相同
         rawEvents = [channel.db buildRawEventsFromEvents:events];
     }
 
-    NSObject<GrowingRequestProtocol> *eventRequest = [[GrowingEventRequest alloc] initWithEvents:rawEvents];
+    if (!rawEvents) {
+        GIOLogError(@"-sendEventsOfChannel_unsafe: error : fail to build raw events");
+        return;
+    }
+    
     id<GrowingEventNetworkService> service =
         [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingEventNetworkService)];
     if (!service) {
         GIOLogError(@"-sendEventsOfChannel_unsafe: error : no network service support");
         return;
     }
+    
+    channel.isUploading = YES;
+    NSObject<GrowingRequestProtocol> *eventRequest = [[GrowingEventRequest alloc] initWithEvents:rawEvents];
     [service sendRequest:eventRequest
               completion:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data, NSError *_Nonnull error) {
                   if (error) {
