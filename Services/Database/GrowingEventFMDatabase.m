@@ -125,7 +125,11 @@
                                                                                                      data:value
                                                                                                    policy:policy
                                                                                                sdkVersion:sdkVersion];
-            eventsLength += [value length];
+            if ([value isKindOfClass:[NSString class]]) {
+                eventsLength += [(NSString *)value dataUsingEncoding:NSUTF8StringEncoding].length;
+            } else if ([value isKindOfClass:[NSData class]]) {
+                eventsLength += [(NSData *)value length];
+            }
             if (eventsLength >= limitSize) {
                 **stop = YES;
             } else {
