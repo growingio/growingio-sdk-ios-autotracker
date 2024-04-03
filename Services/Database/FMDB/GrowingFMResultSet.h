@@ -37,7 +37,8 @@
 //  limitations under the License.
 
 #import <Foundation/Foundation.h>
-#import <sqlite3.h>
+
+NS_ASSUME_NONNULL_BEGIN
 
 #ifndef __has_feature      // Optional.
 #define __has_feature(x) 0 // Compatibility with non-clang compilers.
@@ -54,20 +55,26 @@
 @class GrowingFMDatabase;
 @class GrowingFMStatement;
 
-/** Represents the results of executing a query on an `<FMG3Database>`.
+/** Types for columns in a result set.
+ */
+typedef NS_ENUM(int, SqliteValueType) {
+    SqliteValueTypeInteger = 1,
+    SqliteValueTypeFloat   = 2,
+    SqliteValueTypeText    = 3,
+    SqliteValueTypeBlob    = 4,
+    SqliteValueTypeNull    = 5
+};
+
+/** Represents the results of executing a query on an @c FMDatabase .
  
- ### See also
+ See also
  
- - `<FMG3Database>`
+ - @c FMDatabase
  */
 
-@interface GrowingFMResultSet : NSObject {
-    GrowingFMDatabase          *_parentDB;
-    GrowingFMStatement         *_statement;
-    
-    NSString            *_query;
-    NSMutableDictionary *_columnNameToIndexMap;
-}
+@interface GrowingFMResultSet : NSObject
+
+@property (nonatomic, retain, nullable) GrowingFMDatabase *parentDB;
 
 ///-----------------
 /// @name Properties
@@ -75,36 +82,23 @@
 
 /** Executed query */
 
-@property (atomic, retain) NSString *query;
+@property (atomic, retain, nullable) NSString *query;
 
 /** `NSMutableDictionary` mapping column names to numeric index */
 
 @property (readonly) NSMutableDictionary *columnNameToIndexMap;
 
-/** `GrowingFMStatement` used by result set. */
+/** `FMStatement` used by result set. */
 
-@property (atomic, retain) GrowingFMStatement *statement;
+@property (atomic, retain, nullable) GrowingFMStatement *statement;
 
 ///------------------------------------
-/// @name Creating and closing database
+/// @name Creating and closing a result set
 ///------------------------------------
-
-/** Create result set from `<GrowingFMStatement>`
- 
- @param statement A `<GrowingFMStatement>` to be performed
- 
- @param aDB A `<FMG3Database>` to be used
- 
- @return A `GrowingFMResultSet` on success; `nil` on failure
- */
-
-+ (instancetype)resultSetWithStatement:(GrowingFMStatement *)statement usingParentDatabase:(GrowingFMDatabase*)aDB;
 
 /** Close result set */
 
 - (void)close;
-
-- (void)setParentDB:(GrowingFMDatabase *)newDb;
 
 ///---------------------------------------
 /// @name Iterating through the result set
@@ -114,7 +108,7 @@
  
  You must always invoke `next` or `nextWithError` before attempting to access the values returned in a query, even if you're only expecting one.
 
- @return `YES` if row successfully retrieved; `NO` if end of result set reached
+ @return @c YES if row successfully retrieved; @c NO if end of result set reached
  
  @see hasAnotherRow
  */
@@ -132,15 +126,35 @@
  @see hasAnotherRow
  */
 
-- (BOOL)nextWithError:(NSError **)outErr;
+- (BOOL)nextWithError:(NSError * _Nullable __autoreleasing *)outErr;
+
+/** Perform SQL statement.
+
+ @return 'YES' if successful; 'NO' if not.
+
+ @see hasAnotherRow
+*/
+
+- (BOOL)step;
+
+/** Perform SQL statement.
+
+ @param outErr A 'NSError' object to receive any error object (if any).
+
+ @return 'YES' if successful; 'NO' if not.
+
+ @see hasAnotherRow
+*/
+
+- (BOOL)stepWithError:(NSError * _Nullable __autoreleasing *)outErr;
 
 /** Did the last call to `<next>` succeed in retrieving another row?
 
- @return `YES` if the last call to `<next>` succeeded in retrieving another record; `NO` if not.
- 
+ @return 'YES' if there is another row; 'NO' if not.
+
  @see next
  
- @warning The `hasAnotherRow` method must follow a call to `<next>`. If the previous database interaction was something other than a call to `next`, then this method may return `NO`, whether there is another row of data or not.
+ @warning The `hasAnotherRow` method must follow a call to `<next>`. If the previous database interaction was something other than a call to `next`, then this method may return @c NO, whether there is another row of data or not.
  */
 
 - (BOOL)hasAnotherRow;
@@ -154,11 +168,11 @@
  @return Integer value of the number of columns.
  */
 
-- (int)columnCount;
+@property (nonatomic, readonly) int columnCount;
 
 /** Column index for column name
 
- @param columnName `NSString` value of the name of the column.
+ @param columnName @c NSString  value of the name of the column.
 
  @return Zero-based index for column.
  */
@@ -169,16 +183,16 @@
 
  @param columnIdx Zero-based index for column.
 
- @return columnName `NSString` value of the name of the column.
+ @return columnName @c NSString  value of the name of the column.
  */
 
-- (NSString*)columnNameForIndex:(int)columnIdx;
+- (NSString * _Nullable)columnNameForIndex:(int)columnIdx;
 
 /** Result set integer value for column.
 
- @param columnName `NSString` value of the name of the column.
+ @param columnName @c NSString  value of the name of the column.
 
- @return `int` value of the result set's column.
+ @return @c int  value of the result set's column.
  */
 
 - (int)intForColumn:(NSString*)columnName;
@@ -187,16 +201,16 @@
 
  @param columnIdx Zero-based index for column.
 
- @return `int` value of the result set's column.
+ @return @c int  value of the result set's column.
  */
 
 - (int)intForColumnIndex:(int)columnIdx;
 
-/** Result set `long` value for column.
+/** Result set @c long  value for column.
 
- @param columnName `NSString` value of the name of the column.
+ @param columnName @c NSString  value of the name of the column.
 
- @return `long` value of the result set's column.
+ @return @c long  value of the result set's column.
  */
 
 - (long)longForColumn:(NSString*)columnName;
@@ -205,14 +219,14 @@
 
  @param columnIdx Zero-based index for column.
 
- @return `long` value of the result set's column.
+ @return @c long  value of the result set's column.
  */
 
 - (long)longForColumnIndex:(int)columnIdx;
 
 /** Result set `long long int` value for column.
 
- @param columnName `NSString` value of the name of the column.
+ @param columnName @c NSString  value of the name of the column.
 
  @return `long long int` value of the result set's column.
  */
@@ -230,7 +244,7 @@
 
 /** Result set `unsigned long long int` value for column.
 
- @param columnName `NSString` value of the name of the column.
+ @param columnName @c NSString  value of the name of the column.
 
  @return `unsigned long long int` value of the result set's column.
  */
@@ -248,7 +262,7 @@
 
 /** Result set `BOOL` value for column.
 
- @param columnName `NSString` value of the name of the column.
+ @param columnName @c NSString  value of the name of the column.
 
  @return `BOOL` value of the result set's column.
  */
@@ -266,7 +280,7 @@
 
 /** Result set `double` value for column.
 
- @param columnName `NSString` value of the name of the column.
+ @param columnName @c NSString  value of the name of the column.
 
  @return `double` value of the result set's column.
  
@@ -284,73 +298,81 @@
 
 - (double)doubleForColumnIndex:(int)columnIdx;
 
-/** Result set `NSString` value for column.
+/** Result set @c NSString  value for column.
 
- @param columnName `NSString` value of the name of the column.
+ @param columnName @c NSString  value of the name of the column.
 
- @return `NSString` value of the result set's column.
+ @return String value of the result set's column.
  
  */
 
-- (NSString*)stringForColumn:(NSString*)columnName;
+- (NSString * _Nullable)stringForColumn:(NSString*)columnName;
 
-/** Result set `NSString` value for column.
-
- @param columnIdx Zero-based index for column.
-
- @return `NSString` value of the result set's column.
- */
-
-- (NSString*)stringForColumnIndex:(int)columnIdx;
-
-/** Result set `NSDate` value for column.
-
- @param columnName `NSString` value of the name of the column.
-
- @return `NSDate` value of the result set's column.
- */
-
-- (NSDate*)dateForColumn:(NSString*)columnName;
-
-/** Result set `NSDate` value for column.
+/** Result set @c NSString  value for column.
 
  @param columnIdx Zero-based index for column.
 
- @return `NSDate` value of the result set's column.
+ @return String value of the result set's column.
+ */
+
+- (NSString * _Nullable)stringForColumnIndex:(int)columnIdx;
+
+/** Result set @c NSDate  value for column.
+
+ @param columnName @c NSString  value of the name of the column.
+
+ @return Date value of the result set's column.
+ */
+
+- (NSDate * _Nullable)dateForColumn:(NSString*)columnName;
+
+/** Result set @c NSDate  value for column.
+
+ @param columnIdx Zero-based index for column.
+
+ @return Date value of the result set's column.
  
  */
 
-- (NSDate*)dateForColumnIndex:(int)columnIdx;
+- (NSDate * _Nullable)dateForColumnIndex:(int)columnIdx;
 
-/** Result set `NSData` value for column.
+/** Result set @c NSData  value for column.
  
  This is useful when storing binary data in table (such as image or the like).
 
- @param columnName `NSString` value of the name of the column.
+ @param columnName @c NSString  value of the name of the column.
 
- @return `NSData` value of the result set's column.
+ @return Data value of the result set's column.
  
  */
 
-- (NSData*)dataForColumn:(NSString*)columnName;
+- (NSData * _Nullable)dataForColumn:(NSString*)columnName;
 
-/** Result set `NSData` value for column.
+/** Result set @c NSData  value for column.
 
  @param columnIdx Zero-based index for column.
 
- @return `NSData` value of the result set's column.
+ @warning For zero length BLOBs, this will return `nil`. Use `typeForColumn` to determine whether this was really a zero
+    length BLOB or `NULL`.
+
+ @return Data value of the result set's column.
  */
 
-- (NSData*)dataForColumnIndex:(int)columnIdx;
+- (NSData * _Nullable)dataForColumnIndex:(int)columnIdx;
 
 /** Result set `(const unsigned char *)` value for column.
 
- @param columnName `NSString` value of the name of the column.
+ @param columnName @c NSString  value of the name of the column.
+
+ @warning For zero length BLOBs, this will return `nil`. Use `typeForColumnIndex` to determine whether this was really a zero
+ length BLOB or `NULL`.
 
  @return `(const unsigned char *)` value of the result set's column.
  */
 
-- (const unsigned char *)UTF8StringForColumnName:(NSString*)columnName;
+- (const unsigned char * _Nullable)UTF8StringForColumn:(NSString*)columnName;
+
+- (const unsigned char * _Nullable)UTF8StringForColumnName:(NSString*)columnName __deprecated_msg("Use UTF8StringForColumn instead");
 
 /** Result set `(const unsigned char *)` value for column.
 
@@ -359,77 +381,110 @@
  @return `(const unsigned char *)` value of the result set's column.
  */
 
-- (const unsigned char *)UTF8StringForColumnIndex:(int)columnIdx;
+- (const unsigned char * _Nullable)UTF8StringForColumnIndex:(int)columnIdx;
 
 /** Result set object for column.
 
- @param columnName `NSString` value of the name of the column.
+ @param columnName Name of the column.
 
- @return Either `NSNumber`, `NSString`, `NSData`, or `NSNull`. If the column was `NULL`, this returns `[NSNull null]` object.
+ @return Either @c NSNumber , @c NSString , @c NSData , or @c NSNull . If the column was @c NULL , this returns `[NSNull null]` object.
 
  @see objectForKeyedSubscript:
  */
 
-- (id)objectForColumnName:(NSString*)columnName;
+- (id _Nullable)objectForColumn:(NSString*)columnName;
+
+- (id _Nullable)objectForColumnName:(NSString*)columnName __deprecated_msg("Use objectForColumn instead");
+
+/** Column type by column name.
+
+ @param columnName Name of the column.
+
+ @return The `SqliteValueType` of the value in this column.
+ */
+
+- (SqliteValueType)typeForColumn:(NSString*)columnName;
+
+/** Column type by column index.
+
+ @param columnIdx Index of the column.
+
+ @return The `SqliteValueType` of the value in this column.
+ */
+
+- (SqliteValueType)typeForColumnIndex:(int)columnIdx;
+
 
 /** Result set object for column.
 
  @param columnIdx Zero-based index for column.
 
- @return Either `NSNumber`, `NSString`, `NSData`, or `NSNull`. If the column was `NULL`, this returns `[NSNull null]` object.
+ @return Either @c NSNumber , @c NSString , @c NSData , or @c NSNull . If the column was @c NULL , this returns `[NSNull null]` object.
 
  @see objectAtIndexedSubscript:
  */
 
-- (id)objectForColumnIndex:(int)columnIdx;
+- (id _Nullable)objectForColumnIndex:(int)columnIdx;
 
 /** Result set object for column.
  
  This method allows the use of the "boxed" syntax supported in Modern Objective-C. For example, by defining this method, the following syntax is now supported:
- 
-    id result = rs[@"employee_name"];
- 
+
+@code
+id result = rs[@"employee_name"];
+@endcode
+
  This simplified syntax is equivalent to calling:
  
-    id result = [rs objectForKeyedSubscript:@"employee_name"];
- 
+@code
+id result = [rs objectForKeyedSubscript:@"employee_name"];
+@endcode
+
  which is, it turns out, equivalent to calling:
  
-    id result = [rs objectForColumnName:@"employee_name"];
+@code
+id result = [rs objectForColumnName:@"employee_name"];
+@endcode
 
- @param columnName `NSString` value of the name of the column.
+ @param columnName @c NSString  value of the name of the column.
 
- @return Either `NSNumber`, `NSString`, `NSData`, or `NSNull`. If the column was `NULL`, this returns `[NSNull null]` object.
+ @return Either @c NSNumber , @c NSString , @c NSData , or @c NSNull . If the column was @c NULL , this returns `[NSNull null]` object.
  */
 
-- (id)objectForKeyedSubscript:(NSString *)columnName;
+- (id _Nullable)objectForKeyedSubscript:(NSString *)columnName;
 
 /** Result set object for column.
 
  This method allows the use of the "boxed" syntax supported in Modern Objective-C. For example, by defining this method, the following syntax is now supported:
 
-    id result = rs[0];
+@code
+id result = rs[0];
+@endcode
 
  This simplified syntax is equivalent to calling:
 
-    id result = [rs objectForKeyedSubscript:0];
+@code
+id result = [rs objectForKeyedSubscript:0];
+@endcode
 
  which is, it turns out, equivalent to calling:
 
-    id result = [rs objectForColumnName:0];
+@code
+id result = [rs objectForColumnName:0];
+@endcode
 
  @param columnIdx Zero-based index for column.
 
- @return Either `NSNumber`, `NSString`, `NSData`, or `NSNull`. If the column was `NULL`, this returns `[NSNull null]` object.
+ @return Either @c NSNumber , @c NSString , @c NSData , or @c NSNull . If the column was @c NULL , this returns `[NSNull null]` object.
  */
 
-- (id)objectAtIndexedSubscript:(int)columnIdx;
+- (id _Nullable)objectAtIndexedSubscript:(int)columnIdx;
 
-/** Result set `NSData` value for column.
+/** Result set @c NSData  value for column.
 
- @param columnName `NSString` value of the name of the column.
+ @param columnName @c NSString  value of the name of the column.
 
- @return `NSData` value of the result set's column.
+ @return Data value of the result set's column.
 
  @warning If you are going to use this data after you iterate over the next row, or after you close the
 result set, make sure to make a copy of the data first (or just use `<dataForColumn:>`/`<dataForColumnIndex:>`)
@@ -437,13 +492,13 @@ If you don't, you're going to be in a world of hurt when you try and use the dat
  
  */
 
-- (NSData*)dataNoCopyForColumn:(NSString*)columnName NS_RETURNS_NOT_RETAINED;
+- (NSData * _Nullable)dataNoCopyForColumn:(NSString *)columnName NS_RETURNS_NOT_RETAINED;
 
-/** Result set `NSData` value for column.
+/** Result set @c NSData  value for column.
 
  @param columnIdx Zero-based index for column.
 
- @return `NSData` value of the result set's column.
+ @return Data value of the result set's column.
 
  @warning If you are going to use this data after you iterate over the next row, or after you close the
  result set, make sure to make a copy of the data first (or just use `<dataForColumn:>`/`<dataForColumnIndex:>`)
@@ -451,44 +506,42 @@ If you don't, you're going to be in a world of hurt when you try and use the dat
 
  */
 
-- (NSData*)dataNoCopyForColumnIndex:(int)columnIdx NS_RETURNS_NOT_RETAINED;
+- (NSData * _Nullable)dataNoCopyForColumnIndex:(int)columnIdx NS_RETURNS_NOT_RETAINED;
 
-/** Is the column `NULL`?
+/** Is the column @c NULL ?
  
  @param columnIdx Zero-based index for column.
 
- @return `YES` if column is `NULL`; `NO` if not `NULL`.
+ @return @c YES if column is @c NULL ; @c NO if not @c NULL .
  */
 
 - (BOOL)columnIndexIsNull:(int)columnIdx;
 
-/** Is the column `NULL`?
+/** Is the column @c NULL ?
 
- @param columnName `NSString` value of the name of the column.
+ @param columnName @c NSString  value of the name of the column.
 
- @return `YES` if column is `NULL`; `NO` if not `NULL`.
+ @return @c YES if column is @c NULL ; @c NO if not @c NULL .
  */
 
 - (BOOL)columnIsNull:(NSString*)columnName;
 
 
-/** Returns a dictionary of the row results mapped to case sensitive keys of the column names. 
- 
- @returns `NSDictionary` of the row results.
+/** Returns a dictionary of the row results mapped to case sensitive keys of the column names.
  
  @warning The keys to the dictionary are case sensitive of the column names.
  */
 
-- (NSDictionary*)resultDictionary;
+@property (nonatomic, readonly, nullable) NSDictionary *resultDictionary;
  
 /** Returns a dictionary of the row results
  
  @see resultDictionary
  
- @warning **Deprecated**: Please use `<resultDictionary>` instead.  Also, beware that `<resultDictionary>` is case sensitive! 
+ @warning **Deprecated**: Please use `<resultDictionary>` instead.  Also, beware that `<resultDictionary>` is case sensitive!
  */
 
-- (NSDictionary*)resultDict  __attribute__ ((deprecated));
+- (NSDictionary * _Nullable)resultDict __deprecated_msg("Use resultDictionary instead");
 
 ///-----------------------------
 /// @name Key value coding magic
@@ -502,6 +555,22 @@ If you don't, you're going to be in a world of hurt when you try and use the dat
 
 - (void)kvcMagic:(id)object;
 
- 
+///-----------------------------
+/// @name Binding values
+///-----------------------------
+
+/// Bind array of values to prepared statement.
+///
+/// @param array Array of values to bind to SQL statement.
+
+- (BOOL)bindWithArray:(NSArray*)array;
+
+/// Bind dictionary of values to prepared statement.
+///
+/// @param dictionary Dictionary of values to bind to SQL statement.
+
+- (BOOL)bindWithDictionary:(NSDictionary *)dictionary;
+
 @end
 
+NS_ASSUME_NONNULL_END

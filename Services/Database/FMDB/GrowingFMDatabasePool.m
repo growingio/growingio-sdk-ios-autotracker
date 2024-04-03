@@ -37,9 +37,19 @@
 //  limitations under the License.
 
 #import "Services/Database/FMDB/GrowingFMDatabasePool.h"
-#import "Services/Database/FMDB/GrowingFMDatabase.h"
 
-@interface GrowingFMDatabasePool()
+typedef NS_ENUM(NSInteger, FMDBTransaction) {
+    FMDBTransactionExclusive,
+    FMDBTransactionDeferred,
+    FMDBTransactionImmediate,
+};
+
+@interface GrowingFMDatabasePool () {
+    dispatch_queue_t    _lockQueue;
+    
+    NSMutableArray      *_databaseInPool;
+    NSMutableArray      *_databaseOutPool;
+}
 
 - (void)pushDatabaseBackInPool:(GrowingFMDatabase*)db;
 - (GrowingFMDatabase*)db;
@@ -54,39 +64,66 @@
 @synthesize openFlags=_openFlags;
 
 
-+ (instancetype)databasePoolWithPath:(NSString*)aPath {
++ (instancetype)databasePoolWithPath:(NSString *)aPath {
     return FMG3DBReturnAutoreleased([[self alloc] initWithPath:aPath]);
 }
 
-+ (instancetype)databasePoolWithPath:(NSString*)aPath flags:(int)openFlags {
++ (instancetype)databasePoolWithURL:(NSURL *)url {
+    return FMG3DBReturnAutoreleased([[self alloc] initWithPath:url.path]);
+}
+
++ (instancetype)databasePoolWithPath:(NSString *)aPath flags:(int)openFlags {
     return FMG3DBReturnAutoreleased([[self alloc] initWithPath:aPath flags:openFlags]);
 }
 
-- (instancetype)initWithPath:(NSString*)aPath flags:(int)openFlags {
++ (instancetype)databasePoolWithURL:(NSURL *)url flags:(int)openFlags {
+    return FMG3DBReturnAutoreleased([[self alloc] initWithPath:url.path flags:openFlags]);
+}
+
+- (instancetype)initWithURL:(NSURL *)url flags:(int)openFlags vfs:(NSString *)vfsName {
+    return [self initWithPath:url.path flags:openFlags vfs:vfsName];
+}
+
+- (instancetype)initWithPath:(NSString*)aPath flags:(int)openFlags vfs:(NSString *)vfsName {
     
     self = [super init];
     
     if (self != nil) {
         _path               = [aPath copy];
-        _lockQueue          = dispatch_queue_create([[NSString stringWithFormat:@"FMG3DB.%@", self] UTF8String], NULL);
+        _lockQueue          = dispatch_queue_create([[NSString stringWithFormat:@"FMDB.%@", self] UTF8String], NULL);
         _databaseInPool     = FMG3DBReturnRetained([NSMutableArray array]);
         _databaseOutPool    = FMG3DBReturnRetained([NSMutableArray array]);
         _openFlags          = openFlags;
+        _vfsName            = [vfsName copy];
     }
     
     return self;
 }
 
-- (instancetype)initWithPath:(NSString*)aPath
-{
+- (instancetype)initWithPath:(NSString *)aPath flags:(int)openFlags {
+    return [self initWithPath:aPath flags:openFlags vfs:nil];
+}
+
+- (instancetype)initWithURL:(NSURL *)url flags:(int)openFlags {
+    return [self initWithPath:url.path flags:openFlags vfs:nil];
+}
+
+- (instancetype)initWithPath:(NSString*)aPath {
     // default flags for sqlite3_open
     return [self initWithPath:aPath flags:SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE];
+}
+
+- (instancetype)initWithURL:(NSURL *)url {
+    return [self initWithPath:url.path];
 }
 
 - (instancetype)init {
     return [self initWithPath:nil];
 }
 
++ (Class)databaseClass {
+    return [GrowingFMDatabase class];
+}
 
 - (void)dealloc {
     
@@ -94,6 +131,7 @@
     FMG3DBRelease(_path);
     FMG3DBRelease(_databaseInPool);
     FMG3DBRelease(_databaseOutPool);
+    FMG3DBRelease(_vfsName);
     
     if (_lockQueue) {
         FMG3DBDispatchQueueRelease(_lockQueue);
@@ -118,7 +156,7 @@
     [self executeLocked:^() {
         
         if ([self->_databaseInPool containsObject:db]) {
-            [[NSException exceptionWithName:@"Database already in pool" reason:@"The FMG3Database being put back into the pool is already present in the pool" userInfo:nil] raise];
+            [[NSException exceptionWithName:@"Database already in pool" reason:@"The FMDatabase being put back into the pool is already present in the pool" userInfo:nil] raise];
         }
         
         [self->_databaseInPool addObject:db];
@@ -152,16 +190,12 @@
                 }
             }
             
-            db = [GrowingFMDatabase databaseWithPath:self->_path];
+            db = [[[self class] databaseClass] databaseWithPath:self->_path];
             shouldNotifyDelegate = YES;
         }
         
         //This ensures that the db is opened before returning
-#if SQLITE_VERSION_NUMBER >= 3005000
-        BOOL success = [db openWithFlags:self->_openFlags];
-#else
-        BOOL success = [db open];
-#endif
+        BOOL success = [db openWithFlags:self->_openFlags vfs:self->_vfsName];
         if (success) {
             if ([self->_delegate respondsToSelector:@selector(databasePool:shouldAddDatabaseToPool:)] && ![self->_delegate databasePool:self shouldAddDatabaseToPool:db]) {
                 [db close];
@@ -226,7 +260,7 @@
     }];
 }
 
-- (void)inDatabase:(void (^)(GrowingFMDatabase *db))block {
+- (void)inDatabase:(__attribute__((noescape)) void (^)(GrowingFMDatabase *db))block {
     
     GrowingFMDatabase *db = [self db];
     
@@ -235,17 +269,22 @@
     [self pushDatabaseBackInPool:db];
 }
 
-- (void)beginTransaction:(BOOL)useDeferred withBlock:(void (^)(GrowingFMDatabase *db, BOOL *rollback))block {
+- (void)beginTransaction:(FMDBTransaction)transaction withBlock:(void (^)(GrowingFMDatabase *db, BOOL *rollback))block {
     
     BOOL shouldRollback = NO;
     
     GrowingFMDatabase *db = [self db];
     
-    if (useDeferred) {
-        [db beginDeferredTransaction];
-    }
-    else {
-        [db beginTransaction];
+    switch (transaction) {
+        case FMDBTransactionExclusive:
+            [db beginTransaction];
+            break;
+        case FMDBTransactionDeferred:
+            [db beginDeferredTransaction];
+            break;
+        case FMDBTransactionImmediate:
+            [db beginImmediateTransaction];
+            break;
     }
     
     
@@ -261,16 +300,23 @@
     [self pushDatabaseBackInPool:db];
 }
 
-- (void)inDeferredTransaction:(void (^)(GrowingFMDatabase *db, BOOL *rollback))block {
-    [self beginTransaction:YES withBlock:block];
+- (void)inTransaction:(__attribute__((noescape)) void (^)(GrowingFMDatabase *db, BOOL *rollback))block {
+    [self beginTransaction:FMDBTransactionExclusive withBlock:block];
 }
 
-- (void)inTransaction:(void (^)(GrowingFMDatabase *db, BOOL *rollback))block {
-    [self beginTransaction:NO withBlock:block];
+- (void)inDeferredTransaction:(__attribute__((noescape)) void (^)(GrowingFMDatabase *db, BOOL *rollback))block {
+    [self beginTransaction:FMDBTransactionDeferred withBlock:block];
 }
-#if SQLITE_VERSION_NUMBER >= 3007000
-- (NSError*)inSavePoint:(void (^)(GrowingFMDatabase *db, BOOL *rollback))block {
-    
+
+- (void)inExclusiveTransaction:(__attribute__((noescape)) void (^)(GrowingFMDatabase *db, BOOL *rollback))block {
+    [self beginTransaction:FMDBTransactionExclusive withBlock:block];
+}
+
+- (void)inImmediateTransaction:(__attribute__((noescape)) void (^)(GrowingFMDatabase *db, BOOL *rollback))block {
+    [self beginTransaction:FMDBTransactionImmediate withBlock:block];
+}
+
+- (NSError*)inSavePoint:(__attribute__((noescape)) void (^)(GrowingFMDatabase *db, BOOL *rollback))block {
     static unsigned long savePointIdx = 0;
     
     NSString *name = [NSString stringWithFormat:@"savePoint%ld", savePointIdx++];
@@ -298,6 +344,5 @@
     
     return err;
 }
-#endif
 
 @end
