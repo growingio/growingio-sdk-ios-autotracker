@@ -66,6 +66,8 @@
 /// 配置事件管理者
 - (void)configManager;
 
+- (void)sendFakePage:(NSDictionary *)attributes withError:(nullable NSError *)error;
+
 /// 开启事件发送定时器
 - (void)startTimerSend;
 

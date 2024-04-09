@@ -21,6 +21,7 @@
 #import "GrowingTrackerCore/Public/GrowingServiceManager.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
+#import "GrowingTrackerCore/Event/GrowingEventManager.h"
 
 long long const GrowingEventDatabaseExpirationTime = 86400000 * 7;
 NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.error";
@@ -209,10 +210,29 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
 
 #pragma mark - Error
 
+static int growingDBErrorLogCount = 0;
 - (void)handleDatabaseError:(NSError *)error {
     if (!error) {
         return;
     }
+    
+    @try {
+        if (growingDBErrorLogCount < 5) {
+            growingDBErrorLogCount++;
+            
+            NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+            if ([self.db respondsToSelector:NSSelectorFromString(@"lastPathComponent")]) {
+                NSString *path = [self.db performSelector:NSSelectorFromString(@"lastPathComponent")];
+                [dic setObject:[NSString stringWithFormat:@"%@", @(self.db.countOfEvents)] forKey:[NSString stringWithFormat:@"%@_events_count", path]];
+            }
+            [[GrowingEventManager sharedInstance] sendFakePage:dic withError:error];
+        }
+    } @catch (NSException *exception) {
+        
+    } @finally {
+        
+    }
+        
     GIOLogError(@"DB Error: %@, code: %ld, detail: %@", error.domain, (long)error.code, error.localizedDescription);
 }
 

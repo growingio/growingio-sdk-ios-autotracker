@@ -35,6 +35,7 @@
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
+#import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
 
 static const NSUInteger kGrowingMaxDBCacheSize = 100;  // default: write to DB as soon as there are 100 events
 static const NSUInteger kGrowingMaxBatchSize = 500;    // default: send no more than 500 events in every batch
@@ -139,6 +140,19 @@ static GrowingEventManager *sharedInstance = nil;
     });
 }
 
+- (void)sendFakePage:(NSDictionary *)attributes withError:(nullable NSError *)error {
+    NSMutableDictionary *dic = attributes.mutableCopy;
+    if (error) {
+        [dic setObject:[NSString stringWithFormat:@"%@", @(error.code)] forKey:@"err_code"];
+        [dic setObject:error.localizedDescription forKey:@"err_description"];
+        [dic setObject:[[NSThread callStackSymbols] description] forKey:@"call_stack_symbols"];
+    }
+    GrowingBaseBuilder *builder = GrowingPageEvent.builder.setTitle(@"GrowingIOFakePage")
+                                      .setPath([NSString stringWithFormat:@"/GrowingIOFakePage"])
+                                      .setAttributes(dic);
+    [self postEventBuilder:builder];
+}
+
 #pragma mark - Start Timer
 
 - (void)startTimerSend {
@@ -232,11 +246,45 @@ static GrowingEventManager *sharedInstance = nil;
     [GrowingDispatchManager dispatchInGrowingThread:block];
 }
 
+static NSUInteger growingTimerDispatchCount = 0;
 - (void)sendAllChannelEvents {
     [GrowingDispatchManager dispatchInGrowingThread:^{
         [self flushDB];
-        for (GrowingEventChannel *channel in self.allEventChannels) {
-            [self sendEventsOfChannel_unsafe:channel];
+        
+        @try {
+            if (growingTimerDispatchCount >= 4) {
+                growingTimerDispatchCount = 0;
+            }
+            BOOL shouldSendFakePagePerMin = growingTimerDispatchCount == 0;
+            growingTimerDispatchCount++;
+            NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+            
+            for (GrowingEventChannel *channel in self.allEventChannels) {
+                
+                if (shouldSendFakePagePerMin) {
+                    if (channel.db) {
+                        SEL selector = NSSelectorFromString(@"db");
+                        if ([channel.db respondsToSelector:selector]) {
+                            id db = [channel.db performSelector:selector];
+                            if ([db respondsToSelector:NSSelectorFromString(@"lastPathComponent")]) {
+                                NSString *path = [db performSelector:NSSelectorFromString(@"lastPathComponent")];
+                                [dic setObject:[NSString stringWithFormat:@"%@", @(channel.db.countOfEvents)] forKey:[NSString stringWithFormat:@"%@_events_count", path]];
+                            }
+                        }
+                    }
+                }
+                
+                [self sendEventsOfChannel_unsafe:channel];
+            }
+            
+            if (shouldSendFakePagePerMin && dic.count > 0) {
+                [self sendFakePage:dic withError:nil];
+            }
+            
+        } @catch (NSException *exception) {
+            
+        } @finally {
+            
         }
     }];
 }
