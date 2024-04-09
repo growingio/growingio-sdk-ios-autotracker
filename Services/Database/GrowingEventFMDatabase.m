@@ -109,8 +109,11 @@
 - (nullable NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsByCount:(NSUInteger)count
                                                                   limitSize:(NSUInteger)limitSize
                                                                      policy:(NSUInteger)mask {
-    if (self.countOfEvents == 0) {
+    NSInteger countOfEvents = [self countOfEvents];
+    if (countOfEvents == 0) {
         return [[NSArray alloc] init];
+    } else if (countOfEvents == -1) {
+        return nil;
     }
 
     NSMutableArray<id<GrowingEventPersistenceProtocol>> *events = [[NSMutableArray alloc] init];
