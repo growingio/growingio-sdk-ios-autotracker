@@ -365,7 +365,7 @@ static BOOL isExecuteVacuum(NSString *name) {
     if (name.length == 0) {
         return NO;
     }
-    NSString *vacuumDate = [NSString stringWithFormat:@"GIO_VACUUM_DATE_E7B96C4E-6EE2-49CD-87F0-B2E62D4EE96A-%@", name];
+    NSString *vacuumDate = [NSString stringWithFormat:@"GROWINGIO_VACUUM_DATE_%@", name];
     NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
     NSDate *beforeDate = [userDefault objectForKey:vacuumDate];
     NSDate *nowDate = [NSDate date];
@@ -375,7 +375,7 @@ static BOOL isExecuteVacuum(NSString *name) {
                                                                   fromDate:beforeDate
                                                                     toDate:nowDate
                                                                    options:0];
-        BOOL flag = delta.day > 7 || delta.day < 0;
+        BOOL flag = delta.day > 3 || delta.day < 0;
         if (flag) {
             [userDefault setObject:nowDate forKey:vacuumDate];
             [userDefault synchronize];
