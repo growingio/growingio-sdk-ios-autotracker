@@ -106,6 +106,18 @@
     return count;
 }
 
+- (NSNumber *)goodConnection {
+    __block NSNumber *isGood = @(0);
+    [self performDatabaseBlock:^(GrowingFMDatabase *db, NSError *error) {
+        if (error) {
+            self.databaseError = error;
+            return;
+        }
+        isGood = @([db goodConnection]);
+    }];
+    return isGood;
+}
+
 - (nullable NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsByCount:(NSUInteger)count policy:(NSUInteger)mask {
     if (self.countOfEvents == 0) {
         return [[NSArray alloc] init];

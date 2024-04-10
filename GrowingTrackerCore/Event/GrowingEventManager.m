@@ -269,6 +269,11 @@ static NSUInteger growingTimerDispatchCount = 0;
                             if ([db respondsToSelector:NSSelectorFromString(@"lastPathComponent")]) {
                                 NSString *path = [db performSelector:NSSelectorFromString(@"lastPathComponent")];
                                 [dic setObject:[NSString stringWithFormat:@"%@", @(channel.db.countOfEvents)] forKey:[NSString stringWithFormat:@"%@_events_count", path]];
+                                
+                                if ([db respondsToSelector:NSSelectorFromString(@"goodConnection")]) {
+                                    NSNumber *goodConnection = [db performSelector:NSSelectorFromString(@"goodConnection")];
+                                    [dic setObject:[NSString stringWithFormat:@"%@", goodConnection] forKey:[NSString stringWithFormat:@"%@_good_connection", path]];
+                                }
                             }
                         }
                     }
