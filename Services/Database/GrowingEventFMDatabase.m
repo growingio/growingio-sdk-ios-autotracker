@@ -118,6 +118,42 @@
     return isGood;
 }
 
+- (NSNumber *)isSQLiteThreadSafe {
+    __block NSNumber *isSQLiteThreadSafe = @(0);
+    [self performDatabaseBlock:^(GrowingFMDatabase *db, NSError *error) {
+        if (error) {
+            self.databaseError = error;
+            return;
+        }
+        isSQLiteThreadSafe = @([db.class isSQLiteThreadSafe]);
+    }];
+    return isSQLiteThreadSafe;
+}
+
+- (NSString *)sqliteLibVersion {
+    __block NSString *sqliteLibVersion = @"";
+    [self performDatabaseBlock:^(GrowingFMDatabase *db, NSError *error) {
+        if (error) {
+            self.databaseError = error;
+            return;
+        }
+        sqliteLibVersion = [db.class sqliteLibVersion];
+    }];
+    return sqliteLibVersion;
+}
+
+- (NSNumber *)lastInsertRowId {
+    __block NSNumber *lastInsertRowId = @(0);
+    [self performDatabaseBlock:^(GrowingFMDatabase *db, NSError *error) {
+        if (error) {
+            self.databaseError = error;
+            return;
+        }
+        lastInsertRowId = @([db lastInsertRowId]);
+    }];
+    return lastInsertRowId;
+}
+
 - (nullable NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsByCount:(NSUInteger)count policy:(NSUInteger)mask {
     if (self.countOfEvents == 0) {
         return [[NSArray alloc] init];

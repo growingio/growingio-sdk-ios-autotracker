@@ -217,13 +217,30 @@ static int growingDBErrorLogCount = 0;
     }
     
     @try {
-        if (growingDBErrorLogCount < 5) {
+        if (growingDBErrorLogCount < 10) {
             growingDBErrorLogCount++;
             
             NSMutableDictionary *dic = [NSMutableDictionary dictionary];
             if ([self.db respondsToSelector:NSSelectorFromString(@"lastPathComponent")]) {
                 NSString *path = [self.db performSelector:NSSelectorFromString(@"lastPathComponent")];
-                [dic setObject:[NSString stringWithFormat:@"%@", @(self.db.countOfEvents)] forKey:[NSString stringWithFormat:@"%@_events_count", path]];
+                if ([path hasSuffix:@".sqlite"]) {
+                    path = [path substringWithRange:NSMakeRange(0, path.length - 7)];
+                }
+                
+                NSNumber *countOfEvents = @([self.db countOfEvents]);
+                [dic setObject:[NSString stringWithFormat:@"%@", countOfEvents] forKey:[NSString stringWithFormat:@"%@_events_count", path]];
+                
+                NSNumber *goodConnection = [self.db goodConnection];
+                [dic setObject:[NSString stringWithFormat:@"%@", goodConnection] forKey:[NSString stringWithFormat:@"%@_good_connection", path]];
+
+                NSNumber *isSQLiteThreadSafe = [self.db isSQLiteThreadSafe];
+                [dic setObject:[NSString stringWithFormat:@"%@", isSQLiteThreadSafe] forKey:[NSString stringWithFormat:@"%@_thread_safe", path]];
+
+                NSNumber *lastInsertRowId = [self.db lastInsertRowId];
+                [dic setObject:[NSString stringWithFormat:@"%@", lastInsertRowId] forKey:[NSString stringWithFormat:@"%@_last_insert_row_id", path]];
+                
+                NSString *sqliteVersion = [self.db sqliteLibVersion];
+                [dic setObject:sqliteVersion forKey:[NSString stringWithFormat:@"%@_sqlite_version", path]];
             }
             [[GrowingEventManager sharedInstance] sendFakePage:dic withError:error];
         }

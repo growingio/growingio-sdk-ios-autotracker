@@ -265,14 +265,23 @@ static NSUInteger growingTimerDispatchCount = 0;
                     if (channel.db) {
                         SEL selector = NSSelectorFromString(@"db");
                         if ([channel.db respondsToSelector:selector]) {
-                            id db = [channel.db performSelector:selector];
-                            if ([db respondsToSelector:NSSelectorFromString(@"lastPathComponent")]) {
-                                NSString *path = [db performSelector:NSSelectorFromString(@"lastPathComponent")];
-                                [dic setObject:[NSString stringWithFormat:@"%@", @(channel.db.countOfEvents)] forKey:[NSString stringWithFormat:@"%@_events_count", path]];
-                                
-                                if ([db respondsToSelector:NSSelectorFromString(@"goodConnection")]) {
-                                    NSNumber *goodConnection = [db performSelector:NSSelectorFromString(@"goodConnection")];
+                            id database = [channel.db performSelector:selector];
+                            if ([database conformsToProtocol:@protocol(GrowingEventDatabaseService)]) {
+                                id<GrowingEventDatabaseService> db = database;
+                                if ([db respondsToSelector:NSSelectorFromString(@"lastPathComponent")]) {
+                                    NSString *path = [db performSelector:NSSelectorFromString(@"lastPathComponent")];
+                                    if ([path hasSuffix:@".sqlite"]) {
+                                        path = [path substringWithRange:NSMakeRange(0, path.length - 7)];
+                                    }
+                                    
+                                    NSNumber *countOfEvents = @([db countOfEvents]);
+                                    [dic setObject:[NSString stringWithFormat:@"%@", countOfEvents] forKey:[NSString stringWithFormat:@"%@_events_count", path]];
+                                    
+                                    NSNumber *goodConnection = [db goodConnection];
                                     [dic setObject:[NSString stringWithFormat:@"%@", goodConnection] forKey:[NSString stringWithFormat:@"%@_good_connection", path]];
+
+                                    NSNumber *lastInsertRowId = [db lastInsertRowId];
+                                    [dic setObject:[NSString stringWithFormat:@"%@", lastInsertRowId] forKey:[NSString stringWithFormat:@"%@_last_insert_row_id", path]];
                                 }
                             }
                         }

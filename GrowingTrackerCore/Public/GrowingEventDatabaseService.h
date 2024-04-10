@@ -106,6 +106,12 @@ extern NSString *const GrowingEventDatabaseErrorDomain;
 ///                 userInfo:@{NSLocalizedDescriptionKey : @"some message"}]
 - (NSError *)lastError;
 
+@optional
+- (NSNumber *)goodConnection;
+- (NSNumber *)isSQLiteThreadSafe;
+- (NSString *)sqliteLibVersion;
+- (NSNumber *)lastInsertRowId;
+
 @end
 
 @protocol GrowingPBEventDatabaseService <GrowingEventDatabaseService>
