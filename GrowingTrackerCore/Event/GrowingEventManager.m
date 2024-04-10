@@ -18,6 +18,7 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
+#import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
 #import "GrowingTrackerCore/Event/GrowingDataTraffic.h"
 #import "GrowingTrackerCore/Event/GrowingEventChannel.h"
 #import "GrowingTrackerCore/Event/GrowingGeneralProps.h"
@@ -35,7 +36,6 @@
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
-#import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
 
 static const NSUInteger kGrowingMaxDBCacheSize = 100;  // default: write to DB as soon as there are 100 events
 static const NSUInteger kGrowingMaxBatchSize = 500;    // default: send no more than 500 events in every batch
@@ -250,7 +250,7 @@ static NSUInteger growingTimerDispatchCount = 0;
 - (void)sendAllChannelEvents {
     [GrowingDispatchManager dispatchInGrowingThread:^{
         [self flushDB];
-        
+
         @try {
             if (growingTimerDispatchCount >= 4) {
                 growingTimerDispatchCount = 0;
@@ -258,9 +258,8 @@ static NSUInteger growingTimerDispatchCount = 0;
             BOOL shouldSendFakePagePerMin = growingTimerDispatchCount == 0;
             growingTimerDispatchCount++;
             NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-            
+
             for (GrowingEventChannel *channel in self.allEventChannels) {
-                
                 if (shouldSendFakePagePerMin) {
                     if (channel.db) {
                         SEL selector = NSSelectorFromString(@"db");
@@ -273,32 +272,33 @@ static NSUInteger growingTimerDispatchCount = 0;
                                     if ([path hasSuffix:@".sqlite"]) {
                                         path = [path substringWithRange:NSMakeRange(0, path.length - 7)];
                                     }
-                                    
+
                                     NSNumber *countOfEvents = @([db countOfEvents]);
-                                    [dic setObject:[NSString stringWithFormat:@"%@", countOfEvents] forKey:[NSString stringWithFormat:@"%@_events_count", path]];
-                                    
+                                    [dic setObject:[NSString stringWithFormat:@"%@", countOfEvents]
+                                            forKey:[NSString stringWithFormat:@"%@_events_count", path]];
+
                                     NSNumber *goodConnection = [db goodConnection];
-                                    [dic setObject:[NSString stringWithFormat:@"%@", goodConnection] forKey:[NSString stringWithFormat:@"%@_good_connection", path]];
+                                    [dic setObject:[NSString stringWithFormat:@"%@", goodConnection]
+                                            forKey:[NSString stringWithFormat:@"%@_good_connection", path]];
 
                                     NSNumber *lastInsertRowId = [db lastInsertRowId];
-                                    [dic setObject:[NSString stringWithFormat:@"%@", lastInsertRowId] forKey:[NSString stringWithFormat:@"%@_last_insert_row_id", path]];
+                                    [dic setObject:[NSString stringWithFormat:@"%@", lastInsertRowId]
+                                            forKey:[NSString stringWithFormat:@"%@_last_insert_row_id", path]];
                                 }
                             }
                         }
                     }
                 }
-                
+
                 [self sendEventsOfChannel_unsafe:channel];
             }
-            
+
             if (shouldSendFakePagePerMin && dic.count > 0) {
                 [self sendFakePage:dic withError:nil];
             }
-            
+
         } @catch (NSException *exception) {
-            
         } @finally {
-            
         }
     }];
 }

@@ -18,10 +18,10 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Database/GrowingEventDatabase.h"
+#import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Public/GrowingServiceManager.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
-#import "GrowingTrackerCore/Event/GrowingEventManager.h"
 
 long long const GrowingEventDatabaseExpirationTime = 86400000 * 7;
 NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.error";
@@ -215,41 +215,43 @@ static int growingDBErrorLogCount = 0;
     if (!error) {
         return;
     }
-    
+
     @try {
         if (growingDBErrorLogCount < 10) {
             growingDBErrorLogCount++;
-            
+
             NSMutableDictionary *dic = [NSMutableDictionary dictionary];
             if ([self.db respondsToSelector:NSSelectorFromString(@"lastPathComponent")]) {
                 NSString *path = [self.db performSelector:NSSelectorFromString(@"lastPathComponent")];
                 if ([path hasSuffix:@".sqlite"]) {
                     path = [path substringWithRange:NSMakeRange(0, path.length - 7)];
                 }
-                
+
                 NSNumber *countOfEvents = @([self.db countOfEvents]);
-                [dic setObject:[NSString stringWithFormat:@"%@", countOfEvents] forKey:[NSString stringWithFormat:@"%@_events_count", path]];
-                
+                [dic setObject:[NSString stringWithFormat:@"%@", countOfEvents]
+                        forKey:[NSString stringWithFormat:@"%@_events_count", path]];
+
                 NSNumber *goodConnection = [self.db goodConnection];
-                [dic setObject:[NSString stringWithFormat:@"%@", goodConnection] forKey:[NSString stringWithFormat:@"%@_good_connection", path]];
+                [dic setObject:[NSString stringWithFormat:@"%@", goodConnection]
+                        forKey:[NSString stringWithFormat:@"%@_good_connection", path]];
 
                 NSNumber *isSQLiteThreadSafe = [self.db isSQLiteThreadSafe];
-                [dic setObject:[NSString stringWithFormat:@"%@", isSQLiteThreadSafe] forKey:[NSString stringWithFormat:@"%@_thread_safe", path]];
+                [dic setObject:[NSString stringWithFormat:@"%@", isSQLiteThreadSafe]
+                        forKey:[NSString stringWithFormat:@"%@_thread_safe", path]];
 
                 NSNumber *lastInsertRowId = [self.db lastInsertRowId];
-                [dic setObject:[NSString stringWithFormat:@"%@", lastInsertRowId] forKey:[NSString stringWithFormat:@"%@_last_insert_row_id", path]];
-                
+                [dic setObject:[NSString stringWithFormat:@"%@", lastInsertRowId]
+                        forKey:[NSString stringWithFormat:@"%@_last_insert_row_id", path]];
+
                 NSString *sqliteVersion = [self.db sqliteLibVersion];
                 [dic setObject:sqliteVersion forKey:[NSString stringWithFormat:@"%@_sqlite_version", path]];
             }
             [[GrowingEventManager sharedInstance] sendFakePage:dic withError:error];
         }
     } @catch (NSException *exception) {
-        
     } @finally {
-        
     }
-        
+
     GIOLogError(@"DB Error: %@, code: %ld, detail: %@", error.domain, (long)error.code, error.localizedDescription);
 }
 
