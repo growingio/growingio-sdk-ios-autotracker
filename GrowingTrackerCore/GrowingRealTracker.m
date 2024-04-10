@@ -39,7 +39,7 @@
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "GrowingULAppLifecycle.h"
 
-NSString *const GrowingTrackerVersionName = @"4.2.0";
+NSString *const GrowingTrackerVersionName = @"4.2.0-hotfix.1";
 const int GrowingTrackerVersionCode = 40200;
 
 @interface GrowingRealTracker ()
