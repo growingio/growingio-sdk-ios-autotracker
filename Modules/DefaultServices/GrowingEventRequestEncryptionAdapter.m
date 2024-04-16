@@ -36,15 +36,14 @@
 }
 
 - (NSMutableURLRequest *)adaptedURLRequest:(NSMutableURLRequest *)request {
-    if (![self.request respondsToSelector:@selector(stm)] || 
-        request.HTTPBody.length == 0) {
+    if (![self.request respondsToSelector:@selector(stm)] || request.HTTPBody.length == 0) {
         return request;
     }
     NSMutableURLRequest *needAdaptReq = request;
     BOOL encryptEnabled = GrowingConfigurationManager.sharedInstance.trackConfiguration.encryptEnabled;
     if (encryptEnabled) {
         [needAdaptReq setValue:@"1" forHTTPHeaderField:@"X-Crypt-Codec"];
-        
+
         NSData *JSONData = needAdaptReq.HTTPBody.copy;
         @autoreleasepool {
             // jsonString malloc to much

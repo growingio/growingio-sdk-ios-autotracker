@@ -36,8 +36,7 @@
 }
 
 - (NSMutableURLRequest *)adaptedURLRequest:(NSMutableURLRequest *)request {
-    if (![self.request respondsToSelector:@selector(events)] || 
-        self.request.events.length == 0) {
+    if (![self.request respondsToSelector:@selector(events)] || self.request.events.length == 0) {
         return request;
     }
     NSMutableURLRequest *needAdaptReq = request;
