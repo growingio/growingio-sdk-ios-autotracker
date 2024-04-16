@@ -36,20 +36,17 @@
 }
 
 - (NSMutableURLRequest *)adaptedURLRequest:(NSMutableURLRequest *)request {
+    if (![self.request respondsToSelector:@selector(events)] || 
+        self.request.events.length == 0) {
+        return request;
+    }
     NSMutableURLRequest *needAdaptReq = request;
-    BOOL encryptEnabled = GrowingConfigurationManager.sharedInstance.trackConfiguration.encryptEnabled;
-    if (encryptEnabled) {
-        [needAdaptReq setValue:@"3" forHTTPHeaderField:@"X-Compress-Codec"];
-    }
-
-    if (![self.request respondsToSelector:@selector(events)] || self.request.events.length == 0) {
-        return nil;
-    }
     NSData *JSONData = self.request.events.copy;
-    @autoreleasepool {
-        // jsonString malloc to much
-        BOOL encryptEnabled = GrowingConfigurationManager.sharedInstance.trackConfiguration.encryptEnabled;
-        if (encryptEnabled) {
+    BOOL compressEnabled = GrowingConfigurationManager.sharedInstance.trackConfiguration.compressEnabled;
+    if (compressEnabled) {
+        [needAdaptReq setValue:@"3" forHTTPHeaderField:@"X-Compress-Codec"];
+
+        @autoreleasepool {
             JSONData = [JSONData growingHelper_LZ4String];
         }
     }
