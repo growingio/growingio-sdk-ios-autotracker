@@ -101,7 +101,7 @@ static id growing_getTracker(void) {
 }
 
 + (void)track:(NSString *)eventId withVariable:(NSDictionary<NSString *, NSObject *> *)variable {
-    variable = [GrowingV2Adapter fit3xDictionary:variable];
+    variable = [GrowingV2Adapter fitAttributes:variable];
     id tracker = growing_getTracker();
     if (!tracker) {
         return;
@@ -145,7 +145,7 @@ static id growing_getTracker(void) {
 }
 
 + (void)setPeopleVariable:(NSDictionary<NSString *, NSObject *> *)variable {
-    variable = [GrowingV2Adapter fit3xDictionary:variable];
+    variable = [GrowingV2Adapter fitAttributes:variable];
     id tracker = growing_getTracker();
     if (!tracker) {
         return;

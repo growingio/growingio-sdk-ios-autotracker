@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 需要在初始化前调用, 将userId以及deviceId从v2版本迁移到v3版本中
 + (void)upgrade;
 
-+ (NSDictionary *)fit3xDictionary:(NSDictionary *)variable;
++ (NSDictionary *)fitAttributes:(NSDictionary *)variable;
 
 @end
 
