@@ -22,6 +22,7 @@
 @interface GrowingGeneralProps ()
 
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *internalProps;
+@property (nonatomic, copy) NSDictionary<NSString *, NSString *> *(^dynamicPropsBlock)(void);
 
 @end
 
@@ -29,6 +30,10 @@
 
 - (void)setGeneralProps:(NSDictionary<NSString *, NSString *> *)props {
     [self.internalProps addEntriesFromDictionary:props];
+}
+
+- (void)registerDynamicGeneralPropsBlock:(NSDictionary<NSString *, NSString *> *(^_Nullable)(void))dynamicGeneralPropsBlock {
+    self.dynamicPropsBlock = dynamicGeneralPropsBlock;
 }
 
 - (void)removeGeneralProps:(NSArray<NSString *> *)keys {
@@ -39,10 +44,35 @@
     [self.internalProps removeAllObjects];
 }
 
+- (NSDictionary<NSString *, NSString *> *)validProperties:(NSDictionary *)properties {
+    if (![properties isKindOfClass:[NSDictionary class]]) {
+        return nil;
+    }
+    
+    NSMutableDictionary *result = [NSMutableDictionary dictionary];
+    for (NSString *key in properties.allKeys) {
+        id value = properties[key];
+        if ([value isKindOfClass:[NSString class]]) {
+            result[key] = value;
+        } else if ([value isKindOfClass:[NSNumber class]]) {
+            result[key] = ((NSNumber *)value).stringValue;
+        }
+    }
+    return [result copy];
+}
+
 #pragma mark - Setter && Getter
 
 - (NSDictionary<NSString *, NSString *> *)props {
-    return self.internalProps.copy;
+    // dynamic general properties > general properties
+    NSMutableDictionary *finalProps = self.internalProps.mutableCopy;
+    if (self.dynamicPropsBlock) {
+        NSDictionary *dynamicProps = self.dynamicPropsBlock();
+        if (dynamicProps && [dynamicProps isKindOfClass:[NSDictionary class]]) {
+            [finalProps addEntriesFromDictionary:dynamicProps];
+        }
+    }
+    return [self validProperties:finalProps];
 }
 
 - (NSMutableDictionary<NSString *, NSString *> *)internalProps {

@@ -86,6 +86,7 @@
 
 - (NSDictionary<NSString *, NSString *> *_Nonnull)generalProps;
 - (void)setGeneralProps:(NSDictionary<NSString *, NSString *> *_Nonnull)props;
+- (void)registerDynamicGeneralPropsBlock:(NSDictionary<NSString *, NSString *> *_Nonnull(^_Nullable)(void))dynamicGeneralPropsBlock;
 - (void)removeGeneralProps:(NSArray<NSString *> *_Nonnull)keys;
 - (void)clearGeneralProps;
 

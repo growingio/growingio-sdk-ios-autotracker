@@ -1011,6 +1011,25 @@ static NSString *const kGrowingEventDuration = @"event_duration";
         XCTAssertEqualObjects(event.eventName, @"eventName");
         XCTAssertEqual(event.attributes.count, 0);
     }
+    
+    {
+        // set dynamic generalProps
+        [MockEventQueue.sharedQueue cleanQueue];
+        
+        [[GrowingAutotracker sharedInstance] setGeneralProps:@{@"key" : @"value", @"key2" : @"value2"}];
+        [[GrowingAutotracker sharedInstance] registerDynamicGeneralPropsBlock:^NSDictionary<NSString *,NSString *> * _Nonnull{
+            return @{@"key": @"valueChange", @"key3": @(1)};
+        }];
+        [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"];
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+        XCTAssertEqual(events.count, 1);
+
+        GrowingCustomEvent *event = (GrowingCustomEvent *)events.lastObject;
+        XCTAssertEqualObjects(event.eventName, @"eventName");
+        XCTAssertEqualObjects(event.attributes[@"key"], @"valueChange");
+        XCTAssertEqualObjects(event.attributes[@"key2"], @"value2");
+        XCTAssertEqualObjects(event.attributes[@"key3"], @"1");
+    }
 }
 
 @end

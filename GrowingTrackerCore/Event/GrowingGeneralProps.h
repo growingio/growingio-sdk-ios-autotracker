@@ -27,6 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setGeneralProps:(NSDictionary<NSString *, NSString *> *)props;
 
+- (void)registerDynamicGeneralPropsBlock:(NSDictionary<NSString *, NSString *> *(^_Nullable)(void))dynamicGeneralPropsBlock;
+
 - (void)removeGeneralProps:(NSArray<NSString *> *)keys;
 
 - (void)clearGeneralProps;

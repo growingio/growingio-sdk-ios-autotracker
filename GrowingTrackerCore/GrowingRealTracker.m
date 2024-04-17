@@ -222,6 +222,12 @@ const int GrowingTrackerVersionCode = 40200;
     }];
 }
 
+- (void)registerDynamicGeneralPropsBlock:(NSDictionary<NSString *, NSString *> *(^_Nullable)(void))dynamicGeneralPropsBlock {
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        [[GrowingEventManager sharedInstance] registerDynamicGeneralPropsBlock:dynamicGeneralPropsBlock];
+    }];
+}
+
 - (void)removeGeneralProps:(NSArray<NSString *> *)keys {
     if ([GrowingArgumentChecker isIllegalKeys:keys]) {
         return;

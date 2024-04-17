@@ -121,6 +121,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param props 事件通用属性，相同字段的新值将覆盖旧值
 - (void)setGeneralProps:(NSDictionary<NSString *, NSString *> *)props;
 
+/// 设置埋点动态通用属性
+/// @param dynamicGeneralPropsBlock 动态通用属性，其优先级大于通用属性
+- (void)registerDynamicGeneralPropsBlock:(NSDictionary<NSString *, NSString *> *(^_Nullable)(void))dynamicGeneralPropsBlock;
+
 /// 清除指定字段的埋点通用属性
 /// @param keys 通用属性指定字段
 - (void)removeGeneralProps:(NSArray<NSString *> *)keys;
