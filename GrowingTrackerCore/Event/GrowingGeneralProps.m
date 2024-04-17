@@ -22,7 +22,7 @@
 @interface GrowingGeneralProps ()
 
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *internalProps;
-@property (nonatomic, copy) NSDictionary<NSString *, NSString *> *(^dynamicPropsBlock)(void);
+@property (nonatomic, copy) NSDictionary<NSString *, NSString *> * (^dynamicPropsBlock)(void);
 
 @end
 
@@ -32,7 +32,8 @@
     [self.internalProps addEntriesFromDictionary:props];
 }
 
-- (void)registerDynamicGeneralPropsBlock:(NSDictionary<NSString *, NSString *> *(^_Nullable)(void))dynamicGeneralPropsBlock {
+- (void)registerDynamicGeneralPropsBlock:
+    (NSDictionary<NSString *, NSString *> * (^_Nullable)(void))dynamicGeneralPropsBlock {
     self.dynamicPropsBlock = dynamicGeneralPropsBlock;
 }
 
@@ -48,7 +49,7 @@
     if (![properties isKindOfClass:[NSDictionary class]]) {
         return nil;
     }
-    
+
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
     for (NSString *key in properties.allKeys) {
         id value = properties[key];

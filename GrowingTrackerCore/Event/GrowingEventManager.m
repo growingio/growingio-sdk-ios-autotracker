@@ -173,7 +173,8 @@ static GrowingEventManager *sharedInstance = nil;
     [self.gProps setGeneralProps:props];
 }
 
-- (void)registerDynamicGeneralPropsBlock:(NSDictionary<NSString *, NSString *> *(^_Nullable)(void))dynamicGeneralPropsBlock {
+- (void)registerDynamicGeneralPropsBlock:
+    (NSDictionary<NSString *, NSString *> * (^_Nullable)(void))dynamicGeneralPropsBlock {
     [self.gProps registerDynamicGeneralPropsBlock:dynamicGeneralPropsBlock];
 }
 
