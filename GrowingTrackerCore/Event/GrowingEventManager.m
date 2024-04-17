@@ -413,10 +413,16 @@ static GrowingEventManager *sharedInstance = nil;
     id<GrowingEventPersistenceProtocol> waitForPersist = [eventChannel.db persistenceEventWithEvent:event
                                                                                                uuid:uuidString];
     [eventChannel.db setEvent:waitForPersist forKey:uuidString];
-
-    BOOL debugEnabled = GrowingConfigurationManager.sharedInstance.trackConfiguration.debugEnabled;
-    if (GrowingEventSendPolicyInstant & event.sendPolicy || debugEnabled) {  // send event instantly
+    
+    if (GrowingEventSendPolicyInstant & event.sendPolicy) {
         [self sendEventsInstantWithChannel:eventChannel];
+#if defined(DEBUG) && DEBUG
+    } else {
+        BOOL debugEnabled = GrowingConfigurationManager.sharedInstance.trackConfiguration.debugEnabled;
+        if (debugEnabled) {
+            [self sendEventsInstantWithChannel:eventChannel];
+        }
+#endif
     }
 }
 
