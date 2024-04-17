@@ -61,7 +61,7 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
         _idMappingEnabled = NO;
         _urlScheme = nil;
         _encryptEnabled = NO;
-        _compressEnabled = YES;
+        _compressEnabled = NO;
         _networkConfig = nil;
         _useProtobuf = YES;
 

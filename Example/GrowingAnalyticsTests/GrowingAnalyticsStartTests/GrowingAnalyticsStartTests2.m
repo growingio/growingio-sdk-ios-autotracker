@@ -61,7 +61,7 @@
     XCTAssertEqual(configuration.idMappingEnabled, NO);
     XCTAssertEqualObjects(configuration.urlScheme, nil);
     XCTAssertEqual(configuration.encryptEnabled, NO);
-    XCTAssertEqual(configuration.compressEnabled, YES);
+    XCTAssertEqual(configuration.compressEnabled, NO);
     XCTAssertEqual(configuration.impressionScale, 0);
     XCTAssertEqualObjects(configuration.dataSourceId, nil);
 }
@@ -80,7 +80,7 @@
     config.idMappingEnabled = YES;
     config.urlScheme = @"growing.autotracker";
     config.encryptEnabled = YES;
-    config.compressEnabled = NO;
+    config.compressEnabled = YES;
     config.impressionScale = 0.5;
     config.dataSourceId = @"12345";
     [GrowingRealAutotracker trackerWithConfiguration:config launchOptions:nil];
@@ -99,7 +99,7 @@
     XCTAssertEqual(configuration.idMappingEnabled, YES);
     XCTAssertEqualObjects(configuration.urlScheme, @"growing.autotracker");
     XCTAssertEqual(configuration.encryptEnabled, YES);
-    XCTAssertEqual(configuration.compressEnabled, NO);
+    XCTAssertEqual(configuration.compressEnabled, YES);
     XCTAssertEqual(configuration.impressionScale, 0.5);
     XCTAssertEqualObjects(configuration.dataSourceId, @"12345");
 }
@@ -121,7 +121,7 @@
     XCTAssertEqual(configuration.idMappingEnabled, NO);
     XCTAssertEqualObjects(configuration.urlScheme, nil);
     XCTAssertEqual(configuration.encryptEnabled, NO);
-    XCTAssertEqual(configuration.compressEnabled, YES);
+    XCTAssertEqual(configuration.compressEnabled, NO);
     XCTAssertEqualObjects(configuration.dataSourceId, nil);
 }
 
@@ -139,7 +139,7 @@
     config.idMappingEnabled = YES;
     config.urlScheme = @"growing.tracker";
     config.encryptEnabled = YES;
-    config.compressEnabled = NO;
+    config.compressEnabled = YES;
     config.dataSourceId = @"12345";
     [GrowingRealTracker trackerWithConfiguration:config launchOptions:nil];
 
@@ -156,7 +156,7 @@
     XCTAssertEqual(configuration.idMappingEnabled, YES);
     XCTAssertEqualObjects(configuration.urlScheme, @"growing.tracker");
     XCTAssertEqual(configuration.encryptEnabled, YES);
-    XCTAssertEqual(configuration.compressEnabled, NO);
+    XCTAssertEqual(configuration.compressEnabled, YES);
     XCTAssertEqualObjects(configuration.dataSourceId, @"12345");
 }
 
