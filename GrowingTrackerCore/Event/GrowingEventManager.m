@@ -413,7 +413,7 @@ static GrowingEventManager *sharedInstance = nil;
     id<GrowingEventPersistenceProtocol> waitForPersist = [eventChannel.db persistenceEventWithEvent:event
                                                                                                uuid:uuidString];
     [eventChannel.db setEvent:waitForPersist forKey:uuidString];
-    
+
     if (GrowingEventSendPolicyInstant & event.sendPolicy) {
         [self sendEventsInstantWithChannel:eventChannel];
 #if defined(DEBUG) && DEBUG
