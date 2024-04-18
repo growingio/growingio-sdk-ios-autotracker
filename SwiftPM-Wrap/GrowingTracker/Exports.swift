@@ -107,14 +107,18 @@ public struct Tracker {
     }
     
     public static func setGeneralProps(_ props: [String: String]) {
-        tracker.setGeneralProps(props)
+        GrowingTracker.setGeneralProps(props)
     }
     
     public static func removeGeneralProps(_ keys: [String]) {
-        tracker.removeGeneralProps(keys)
+        GrowingTracker.removeGeneralProps(keys)
     }
     
     public static func clearGeneralProps() {
-        tracker.clearGeneralProps()
+        GrowingTracker.clearGeneralProps()
+    }
+    
+    public static func registerDynamicGeneralProps(_ closure: (() -> [String: String])?) {
+        GrowingTracker.registerDynamicGeneralPropsBlock(closure)
     }
 }

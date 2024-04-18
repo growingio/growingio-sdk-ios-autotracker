@@ -20,6 +20,7 @@
 #import "GrowingAutotracker/GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingRealAutotracker.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
+#import "GrowingTrackerCore/Event/GrowingGeneralProps.h"
 
 static GrowingAutotracker *sharedInstance = nil;
 
@@ -41,7 +42,7 @@ static GrowingAutotracker *sharedInstance = nil;
     }
 
     if (!configuration.accountId.length) {
-        @throw [NSException exceptionWithName:@"初始化异常" reason:@"AccountId不能为空" userInfo:nil];
+        @throw [NSException exceptionWithName:@"初始化异常" reason:@"accountId不能为空" userInfo:nil];
     }
 
     if (!configuration.dataSourceId.length) {
@@ -69,6 +70,23 @@ static GrowingAutotracker *sharedInstance = nil;
                      userInfo:nil];
     }
     return sharedInstance;
+}
+
++ (void)setGeneralProps:(NSDictionary<NSString *, NSString *> *)props {
+    [[GrowingGeneralProps sharedInstance] setGeneralProps:props];
+}
+
++ (void)removeGeneralProps:(NSArray<NSString *> *)keys {
+    [[GrowingGeneralProps sharedInstance] removeGeneralProps:keys];
+}
+
++ (void)clearGeneralProps {
+    [[GrowingGeneralProps sharedInstance] clearGeneralProps];
+}
+
++ (void)registerDynamicGeneralPropsBlock:
+(NSDictionary<NSString *, NSString *> * (^_Nullable)(void))dynamicGeneralPropsBlock {
+    [[GrowingGeneralProps sharedInstance] registerDynamicGeneralPropsBlock:dynamicGeneralPropsBlock];
 }
 
 @end

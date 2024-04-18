@@ -115,15 +115,19 @@ public struct Autotracker {
     }
     
     public static func setGeneralProps(_ props: [String: String]) {
-        autotracker.setGeneralProps(props)
+        GrowingAutotracker.setGeneralProps(props)
     }
     
     public static func removeGeneralProps(_ keys: [String]) {
-        autotracker.removeGeneralProps(keys)
+        GrowingAutotracker.removeGeneralProps(keys)
     }
     
     public static func clearGeneralProps() {
-        autotracker.clearGeneralProps()
+        GrowingAutotracker.clearGeneralProps()
+    }
+    
+    public static func registerDynamicGeneralProps(_ closure: (() -> [String: String])?) {
+        GrowingAutotracker.registerDynamicGeneralPropsBlock(closure)
     }
 
     public static func autotrackPage(_ viewController: UIViewController,

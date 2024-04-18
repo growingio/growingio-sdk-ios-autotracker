@@ -20,7 +20,6 @@
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Event/GrowingDataTraffic.h"
 #import "GrowingTrackerCore/Event/GrowingEventChannel.h"
-#import "GrowingTrackerCore/Event/GrowingGeneralProps.h"
 #import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
@@ -43,7 +42,6 @@ static const NSUInteger kGrowingUnit_MB = 1024 * 1024;
 @interface GrowingEventManager ()
 
 @property (nonatomic, strong) NSHashTable *allInterceptor;
-@property (nonatomic, strong) GrowingGeneralProps *gProps;
 
 @property (nonatomic, strong, readonly) NSArray<GrowingEventChannel *> *allEventChannels;
 @property (nonatomic, strong, readonly) NSDictionary<NSString *, GrowingEventChannel *> *currentEventChannelMap;
@@ -76,7 +74,6 @@ static GrowingEventManager *sharedInstance = nil;
 - (instancetype)init {
     if (self = [super init]) {
         _allInterceptor = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
-        _gProps = [[GrowingGeneralProps alloc] init];
     }
     return self;
 }
@@ -162,30 +159,6 @@ static GrowingEventManager *sharedInstance = nil;
 }
 
 #pragma mark - Event
-
-#pragma mark General Props
-
-- (NSDictionary<NSString *, NSString *> *)generalProps {
-    return self.gProps.props;
-}
-
-- (void)setGeneralProps:(NSDictionary<NSString *, NSString *> *)props {
-    [self.gProps setGeneralProps:props];
-}
-
-- (void)registerDynamicGeneralPropsBlock:
-    (NSDictionary<NSString *, NSString *> * (^_Nullable)(void))dynamicGeneralPropsBlock {
-    [self.gProps registerDynamicGeneralPropsBlock:dynamicGeneralPropsBlock];
-}
-
-- (void)removeGeneralProps:(NSArray<NSString *> *)keys {
-    [self.gProps removeGeneralProps:keys];
-}
-
-- (void)clearGeneralProps {
-    [self.gProps clearGeneralProps];
-}
-
 #pragma mark Event Send
 
 - (void)postEventBuilder:(GrowingBaseBuilder *_Nullable)builder {

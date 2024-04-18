@@ -18,31 +18,89 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Event/GrowingGeneralProps.h"
+#import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
+#import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
 
 @interface GrowingGeneralProps ()
 
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *internalProps;
+@property (nonatomic, strong) NSDictionary<NSString *, NSString *> *dynamicProps;
 @property (nonatomic, copy) NSDictionary<NSString *, NSString *> * (^dynamicPropsBlock)(void);
 
 @end
 
-@implementation GrowingGeneralProps
+@implementation GrowingGeneralProps {
+    GROWING_RW_LOCK_DECLARE(lock);
+}
+
+- (instancetype)init {
+    if (self = [super init]) {
+        GROWING_RW_LOCK_INIT(lock);
+    }
+    return self;
+}
+
++ (instancetype)sharedInstance {
+    static GrowingGeneralProps *instance;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [[self alloc] init];
+    });
+    return instance;
+}
+
+- (NSDictionary<NSString *, NSString *> *)getGeneralProps {
+    __block NSDictionary *props = nil;
+    GROWING_RW_LOCK_READ(lock, props, ^{
+        // dynamic general properties > general properties
+        NSMutableDictionary *properties = self.internalProps.mutableCopy;
+        [properties addEntriesFromDictionary:self.dynamicProps];
+        return [self validProperties:properties];
+    });
+    return [props copy];
+}
 
 - (void)setGeneralProps:(NSDictionary<NSString *, NSString *> *)props {
-    [self.internalProps addEntriesFromDictionary:props];
+    if ([GrowingArgumentChecker isIllegalAttributes:props]) {
+        return;
+    }
+    GROWING_RW_LOCK_WRITE(lock, ^{
+        [self.internalProps addEntriesFromDictionary:props];
+    });
+}
+
+- (void)removeGeneralProps:(NSArray<NSString *> *)keys {
+    if ([GrowingArgumentChecker isIllegalKeys:keys]) {
+        return;
+    }
+    GROWING_RW_LOCK_WRITE(lock, ^{
+        [self.internalProps removeObjectsForKeys:keys];
+    });
+}
+
+- (void)clearGeneralProps {
+    GROWING_RW_LOCK_WRITE(lock, ^{
+        [self.internalProps removeAllObjects];
+    });
 }
 
 - (void)registerDynamicGeneralPropsBlock:
     (NSDictionary<NSString *, NSString *> * (^_Nullable)(void))dynamicGeneralPropsBlock {
-    self.dynamicPropsBlock = dynamicGeneralPropsBlock;
+    GROWING_RW_LOCK_WRITE(lock, ^{
+        self.dynamicPropsBlock = dynamicGeneralPropsBlock;
+    });
 }
 
-- (void)removeGeneralProps:(NSArray<NSString *> *)keys {
-    [self.internalProps removeObjectsForKeys:keys];
-}
-
-- (void)clearGeneralProps {
-    [self.internalProps removeAllObjects];
+- (void)buildDynamicGeneralProps {
+    GROWING_RW_LOCK_READ(lock, self.dynamicProps, ^{
+        if (self.dynamicPropsBlock) {
+            NSDictionary *dynamicProps = self.dynamicPropsBlock();
+            if (dynamicProps && [dynamicProps isKindOfClass:[NSDictionary class]]) {
+                return (NSDictionary *)[dynamicProps copy];
+            }
+        }
+        return @{};
+    });
 }
 
 - (NSDictionary<NSString *, NSString *> *)validProperties:(NSDictionary *)properties {
@@ -63,18 +121,6 @@
 }
 
 #pragma mark - Setter && Getter
-
-- (NSDictionary<NSString *, NSString *> *)props {
-    // dynamic general properties > general properties
-    NSMutableDictionary *finalProps = self.internalProps.mutableCopy;
-    if (self.dynamicPropsBlock) {
-        NSDictionary *dynamicProps = self.dynamicPropsBlock();
-        if (dynamicProps && [dynamicProps isKindOfClass:[NSDictionary class]]) {
-            [finalProps addEntriesFromDictionary:dynamicProps];
-        }
-    }
-    return [self validProperties:finalProps];
-}
 
 - (NSMutableDictionary<NSString *, NSString *> *)internalProps {
     if (!_internalProps) {

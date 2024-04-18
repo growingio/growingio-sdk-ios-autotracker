@@ -22,6 +22,7 @@
 #import "GrowingTrackerCore/DeepLink/GrowingAppDelegateAutotracker.h"
 #import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
+#import "GrowingTrackerCore/Event/GrowingGeneralProps.h"
 #import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/LogFormat/GrowingWSLoggerFormat.h"
@@ -133,7 +134,7 @@ const int GrowingTrackerVersionCode = 40200;
         return;
     }
     [GrowingDispatchManager dispatchInGrowingThread:^{
-        NSDictionary *generalProps = [GrowingEventManager sharedInstance].generalProps;
+        NSDictionary *generalProps = [[GrowingGeneralProps sharedInstance] getGeneralProps];
         NSDictionary *dic = nil;
         if (generalProps.count > 0) {
             dic = generalProps;
@@ -148,7 +149,7 @@ const int GrowingTrackerVersionCode = 40200;
         return;
     }
     [GrowingDispatchManager dispatchInGrowingThread:^{
-        NSDictionary *generalProps = [GrowingEventManager sharedInstance].generalProps;
+        NSDictionary *generalProps = [[GrowingGeneralProps sharedInstance] getGeneralProps];
         NSDictionary *dic = attributes.copy;
         if (generalProps.count > 0) {
             NSMutableDictionary *dicM = [NSMutableDictionary dictionaryWithDictionary:generalProps];
@@ -214,34 +215,15 @@ const int GrowingTrackerVersionCode = 40200;
 }
 
 - (void)setGeneralProps:(NSDictionary<NSString *, NSString *> *)props {
-    if ([GrowingArgumentChecker isIllegalAttributes:props]) {
-        return;
-    }
-    [GrowingDispatchManager dispatchInGrowingThread:^{
-        [[GrowingEventManager sharedInstance] setGeneralProps:props];
-    }];
-}
-
-- (void)registerDynamicGeneralPropsBlock:
-    (NSDictionary<NSString *, NSString *> * (^_Nullable)(void))dynamicGeneralPropsBlock {
-    [GrowingDispatchManager dispatchInGrowingThread:^{
-        [[GrowingEventManager sharedInstance] registerDynamicGeneralPropsBlock:dynamicGeneralPropsBlock];
-    }];
+    [[GrowingGeneralProps sharedInstance] setGeneralProps:props];
 }
 
 - (void)removeGeneralProps:(NSArray<NSString *> *)keys {
-    if ([GrowingArgumentChecker isIllegalKeys:keys]) {
-        return;
-    }
-    [GrowingDispatchManager dispatchInGrowingThread:^{
-        [[GrowingEventManager sharedInstance] removeGeneralProps:keys];
-    }];
+    [[GrowingGeneralProps sharedInstance] removeGeneralProps:keys];
 }
 
 - (void)clearGeneralProps {
-    [GrowingDispatchManager dispatchInGrowingThread:^{
-        [[GrowingEventManager sharedInstance] clearGeneralProps];
-    }];
+    [[GrowingGeneralProps sharedInstance] clearGeneralProps];
 }
 
 - (void)setLoginUserId:(NSString *)userId {
