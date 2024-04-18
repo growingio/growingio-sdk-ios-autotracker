@@ -28,11 +28,7 @@
 + (void)generateCustomEvent:(NSString *_Nonnull)name
                  attributes:(NSDictionary<NSString *, NSObject *> *_Nullable)attributes;
 
-+ (void)generateConversionAttributesEvent:(NSDictionary<NSString *, NSObject *> *_Nonnull)attributes;
-
 + (void)generateLoginUserAttributesEvent:(NSDictionary<NSString *, NSObject *> *_Nonnull)attributes;
-
-+ (void)generateVisitorAttributesEvent:(NSDictionary<NSString *, NSObject *> *_Nonnull)attributes;
 
 + (void)generateAppCloseEvent;
 

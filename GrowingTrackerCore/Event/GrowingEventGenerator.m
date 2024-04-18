@@ -19,11 +19,9 @@
 
 #import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
 #import "GrowingTrackerCore/Event/GrowingAppCloseEvent.h"
-#import "GrowingTrackerCore/Event/GrowingConversionVariableEvent.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Event/GrowingLoginUserAttributesEvent.h"
 #import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
-#import "GrowingTrackerCore/Event/GrowingVisitorAttributesEvent.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogMacros.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
@@ -45,23 +43,9 @@
     }];
 }
 
-+ (void)generateConversionAttributesEvent:(NSDictionary<NSString *, NSObject *> *_Nonnull)variables {
-    [GrowingDispatchManager dispatchInGrowingThread:^{
-        GrowingBaseBuilder *builder = GrowingConversionVariableEvent.builder.setAttributes(variables);
-        [[GrowingEventManager sharedInstance] postEventBuilder:builder];
-    }];
-}
-
 + (void)generateLoginUserAttributesEvent:(NSDictionary<NSString *, NSObject *> *_Nonnull)attributes {
     [GrowingDispatchManager dispatchInGrowingThread:^{
         GrowingBaseBuilder *builder = GrowingLoginUserAttributesEvent.builder.setAttributes(attributes);
-        [[GrowingEventManager sharedInstance] postEventBuilder:builder];
-    }];
-}
-
-+ (void)generateVisitorAttributesEvent:(NSDictionary<NSString *, NSObject *> *_Nonnull)attributes {
-    [GrowingDispatchManager dispatchInGrowingThread:^{
-        GrowingBaseBuilder *builder = GrowingVisitorAttributesEvent.builder.setAttributes(attributes);
         [[GrowingEventManager sharedInstance] postEventBuilder:builder];
     }];
 }

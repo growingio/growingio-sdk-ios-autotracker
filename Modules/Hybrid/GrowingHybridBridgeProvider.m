@@ -20,10 +20,8 @@
 #import "Modules/Hybrid/GrowingHybridBridgeProvider.h"
 #import <WebKit/WebKit.h>
 #import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
-#import "GrowingTrackerCore/Event/GrowingConversionVariableEvent.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Event/GrowingLoginUserAttributesEvent.h"
-#import "GrowingTrackerCore/Event/GrowingVisitorAttributesEvent.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Public/GrowingAnnotationCore.h"

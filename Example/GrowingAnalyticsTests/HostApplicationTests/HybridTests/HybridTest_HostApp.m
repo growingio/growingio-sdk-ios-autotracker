@@ -20,7 +20,6 @@
 #import <KIF/KIF.h>
 #import <WebKit/WebKit.h>
 #import "GrowingAutotracker.h"
-#import "GrowingTrackerCore/Event/GrowingConversionVariableEvent.h"
 #import "GrowingTrackerCore/Event/GrowingLoginUserAttributesEvent.h"
 #import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
 #import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
