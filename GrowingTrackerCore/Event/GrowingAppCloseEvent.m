@@ -30,12 +30,12 @@
 
 @implementation GrowingAppCloseBuilder
 
-- (GrowingBaseEvent *)build {
-    return [[GrowingAppCloseEvent alloc] initWithBuilder:self];
-}
-
 - (NSString *)eventType {
     return GrowingEventTypeAppClosed;
+}
+
+- (GrowingBaseEvent *)build {
+    return [[GrowingAppCloseEvent alloc] initWithBuilder:self];
 }
 
 @end

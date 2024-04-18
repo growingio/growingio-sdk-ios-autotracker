@@ -18,13 +18,13 @@
 //  limitations under the License.
 
 #import <Foundation/Foundation.h>
-#import "GrowingTrackerCore/Event/GrowingBaseAttributesEvent.h"
+#import "GrowingBaseEvent.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class GrowingCustomBuilder;
 
-@interface GrowingCustomEvent : GrowingBaseAttributesEvent
+@interface GrowingCustomEvent : GrowingBaseEvent
 
 @property (nonatomic, copy) NSString *eventName;
 
@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface GrowingCustomBuilder : GrowingBaseAttributesBuilder
+@interface GrowingCustomBuilder : GrowingBaseBuilder
 
 @property (nonatomic, copy, readonly) NSString *eventName;
 

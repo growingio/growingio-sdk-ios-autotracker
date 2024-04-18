@@ -22,34 +22,12 @@
 
 @implementation GrowingConversionVariableEvent
 
-- (instancetype)initWithBuilder:(GrowingBaseBuilder *)builder {
-    if (self = [super initWithBuilder:builder]) {
-        GrowingConversionVariableBuilder *subBuilder = (GrowingConversionVariableBuilder *)builder;
-        _attributes = subBuilder.attributes;
-    }
-    return self;
-}
-
 + (GrowingConversionVariableBuilder *)builder {
     return [[GrowingConversionVariableBuilder alloc] init];
 }
-
-- (NSDictionary *)toDictionary {
-    NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
-    dataDictM[@"attributes"] = self.attributes;
-    return dataDictM;
-}
-
 @end
 
 @implementation GrowingConversionVariableBuilder
-
-- (GrowingConversionVariableBuilder * (^)(NSDictionary<NSString *, NSObject *> *value))setAttributes {
-    return ^(NSDictionary<NSString *, NSObject *> *value) {
-        self->_attributes = value;
-        return self;
-    };
-}
 
 - (NSString *)eventType {
     return GrowingEventTypeConversionVariables;

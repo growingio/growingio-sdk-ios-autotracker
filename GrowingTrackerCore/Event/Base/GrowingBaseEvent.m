@@ -60,6 +60,7 @@
         _userKey = builder.userKey;
         _timezoneOffset = builder.timezoneOffset;
         _scene = builder.scene;
+        _attributes = builder.attributes;
     }
     return self;
 }
@@ -103,6 +104,7 @@
     dataDict[@"sdkVersion"] = self.sdkVersion;
     dataDict[@"userKey"] = self.userKey.length > 0 ? self.userKey : nil;
     dataDict[@"timezoneOffset"] = self.timezoneOffset;
+    dataDict[@"attributes"] = self.attributes;
     return [dataDict copy];
 }
 
@@ -114,7 +116,6 @@
 
 @implementation GrowingBaseBuilder
 
-// 赋值属性，eg:deviceId,userId,sessionId,eventSequenceId
 - (void)readPropertyInTrackThread {
     GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
     _dataSourceId = config.dataSourceId;
@@ -347,6 +348,13 @@
 - (GrowingBaseBuilder * (^)(GrowingEventScene value))setScene {
     return ^(GrowingEventScene value) {
         self->_scene = value;
+        return self;
+    };
+}
+
+- (GrowingBaseBuilder * (^)(NSDictionary<NSString *, NSObject *> *value))setAttributes {
+    return ^(NSDictionary<NSString *, NSObject *> *value) {
+        self->_attributes = value;
         return self;
     };
 }

@@ -17,19 +17,19 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Event/GrowingBaseAttributesEvent.h"
+#import "GrowingBaseEvent.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class GrowingVisitorAttributesBuilder;
 
-@interface GrowingVisitorAttributesEvent : GrowingBaseAttributesEvent
+@interface GrowingVisitorAttributesEvent : GrowingBaseEvent
 
 + (GrowingVisitorAttributesBuilder *)builder;
 
 @end
 
-@interface GrowingVisitorAttributesBuilder : GrowingBaseAttributesBuilder
+@interface GrowingVisitorAttributesBuilder : GrowingBaseBuilder
 
 @end
 

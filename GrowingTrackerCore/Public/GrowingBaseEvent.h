@@ -69,6 +69,7 @@ typedef NS_ENUM(NSUInteger, GrowingEventScene) {
 @property (nonatomic, copy, readonly) NSString *timezoneOffset;
 @property (nonatomic, assign, readonly) GrowingEventScene scene;
 @property (nonatomic, assign) GrowingEventSendPolicy sendPolicy;
+@property (nonatomic, copy, readonly) NSDictionary<NSString *, NSObject *> *attributes;
 
 - (NSDictionary *_Nonnull)toDictionary;
 
@@ -112,8 +113,8 @@ typedef NS_ENUM(NSUInteger, GrowingEventScene) {
 @property (nonatomic, copy, readonly, nullable) NSString *userKey;
 @property (nonatomic, copy, readonly) NSString *timezoneOffset;
 @property (nonatomic, assign, readonly) GrowingEventScene scene;
+@property (nonatomic, copy, readonly) NSDictionary<NSString *, NSObject *> *attributes;
 
-// 赋值属性，eg:deviceId,userId,sessionId,eventSequenceId
 - (void)readPropertyInTrackThread;
 
 - (GrowingBaseBuilder * (^)(NSString *value))setDataSourceId;
@@ -144,6 +145,7 @@ typedef NS_ENUM(NSUInteger, GrowingEventScene) {
 - (GrowingBaseBuilder * (^)(NSString *value))setEventType;
 - (GrowingBaseBuilder * (^)(NSString *value))setTimezoneOffset;
 - (GrowingBaseBuilder * (^)(GrowingEventScene value))setScene;
+- (GrowingBaseBuilder * (^)(NSDictionary<NSString *, NSObject *> *value))setAttributes;
 - (GrowingBaseEvent *)build;
 
 @end

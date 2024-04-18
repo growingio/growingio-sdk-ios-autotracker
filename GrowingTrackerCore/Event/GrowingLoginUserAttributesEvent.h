@@ -17,19 +17,19 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Event/GrowingBaseAttributesEvent.h"
+#import "GrowingBaseEvent.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class GrowingLoginUserAttributesBuilder;
 
-@interface GrowingLoginUserAttributesEvent : GrowingBaseAttributesEvent
+@interface GrowingLoginUserAttributesEvent : GrowingBaseEvent
 
 + (GrowingLoginUserAttributesBuilder *)builder;
 
 @end
 
-@interface GrowingLoginUserAttributesBuilder : GrowingBaseAttributesBuilder
+@interface GrowingLoginUserAttributesBuilder : GrowingBaseBuilder
 
 @end
 
