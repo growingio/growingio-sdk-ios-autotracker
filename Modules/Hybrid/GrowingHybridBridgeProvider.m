@@ -21,7 +21,6 @@
 #import <WebKit/WebKit.h>
 #import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
-#import "GrowingTrackerCore/Event/GrowingGeneralProps.h"
 #import "GrowingTrackerCore/Event/GrowingLoginUserAttributesEvent.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
@@ -232,15 +231,6 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
                 customEventType = ((NSNumber *)dict[@CUSTOM_EVENT_TYPE]).stringValue;
             }
             NSDictionary *mergedDic = [self safeAttributesFromDict:dict].copy;
-            if (customEventType == nil || [customEventType isEqualToString:@"1"]) {
-                // hybrid通过track接口调用
-                NSDictionary *generalProps = [[GrowingGeneralProps sharedInstance] getGeneralProps];
-                if (generalProps.count > 0) {
-                    NSMutableDictionary *dicM = [NSMutableDictionary dictionaryWithDictionary:generalProps];
-                    [dicM addEntriesFromDictionary:mergedDic];
-                    mergedDic = dicM.copy;
-                }
-            }
             builder = GrowingHybridCustomEvent.builder.setQuery(dict[@KEY_QUERY])
                           .setPath(dict[@KEY_PATH])
                           .setAttributes(mergedDic)

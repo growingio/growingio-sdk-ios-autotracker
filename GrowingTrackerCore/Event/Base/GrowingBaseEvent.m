@@ -18,6 +18,7 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Public/GrowingBaseEvent.h"
+#import "GrowingTrackerCore/Event/GrowingGeneralProps.h"
 #import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
 #import "GrowingTrackerCore/GrowingRealTracker.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
@@ -154,6 +155,12 @@
     _language = deviceInfo.language;
     _timezoneOffset = [NSString stringWithFormat:@"%@", @(deviceInfo.timezoneOffset)];
     _scene = _scene >= GrowingEventSceneNative ? _scene : GrowingEventSceneNative;
+    
+    NSMutableDictionary *finalAttributes = [[GrowingGeneralProps sharedInstance] getGeneralProps].mutableCopy;
+    if (_attributes.count > 0) {
+        [finalAttributes addEntriesFromDictionary:_attributes];
+    }
+    _attributes = finalAttributes.copy;
 }
 
 - (GrowingBaseBuilder * (^)(NSString *value))setDataSourceId {

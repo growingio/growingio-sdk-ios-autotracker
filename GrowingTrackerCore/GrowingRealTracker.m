@@ -134,12 +134,7 @@ const int GrowingTrackerVersionCode = 40200;
         return;
     }
     [GrowingDispatchManager dispatchInGrowingThread:^{
-        NSDictionary *generalProps = [[GrowingGeneralProps sharedInstance] getGeneralProps];
-        NSDictionary *dic = nil;
-        if (generalProps.count > 0) {
-            dic = generalProps;
-        }
-        [GrowingEventGenerator generateCustomEvent:eventName attributes:dic];
+        [GrowingEventGenerator generateCustomEvent:eventName attributes:nil];
     }];
 }
 
@@ -149,14 +144,7 @@ const int GrowingTrackerVersionCode = 40200;
         return;
     }
     [GrowingDispatchManager dispatchInGrowingThread:^{
-        NSDictionary *generalProps = [[GrowingGeneralProps sharedInstance] getGeneralProps];
-        NSDictionary *dic = attributes.copy;
-        if (generalProps.count > 0) {
-            NSMutableDictionary *dicM = [NSMutableDictionary dictionaryWithDictionary:generalProps];
-            [dicM addEntriesFromDictionary:dic];
-            dic = dicM.copy;
-        }
-        [GrowingEventGenerator generateCustomEvent:eventName attributes:dic];
+        [GrowingEventGenerator generateCustomEvent:eventName attributes:[attributes copy]];
     }];
 }
 

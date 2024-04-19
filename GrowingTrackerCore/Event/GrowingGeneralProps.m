@@ -104,10 +104,6 @@
 }
 
 - (NSDictionary<NSString *, NSString *> *)validProperties:(NSDictionary *)properties {
-    if (![properties isKindOfClass:[NSDictionary class]]) {
-        return nil;
-    }
-
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
     for (NSString *key in properties.allKeys) {
         id value = properties[key];
