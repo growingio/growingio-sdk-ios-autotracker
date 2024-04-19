@@ -127,7 +127,7 @@ public struct Autotracker {
     }
     
     public static func registerDynamicGeneralProps(_ closure: (() -> [String: Any])?) {
-        GrowingAutotracker.registerDynamicGeneralPropsBlock(closure)
+        GrowingAutotracker.registerDynamicGeneralProps(closure)
     }
 
     public static func autotrackPage(_ viewController: UIViewController,
