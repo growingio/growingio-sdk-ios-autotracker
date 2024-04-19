@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedInstance;
 
-- (NSDictionary<NSString *, NSString *> *)getGeneralProps;
+- (NSDictionary<NSString *, id> *)getGeneralProps;
 
 - (void)setGeneralProps:(NSDictionary<NSString *, id> *)props;
 

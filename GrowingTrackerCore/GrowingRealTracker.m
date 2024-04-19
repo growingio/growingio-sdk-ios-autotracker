@@ -74,6 +74,8 @@ const int GrowingTrackerVersionCode = 40200;
         // 各个Module初始化init之后再进行事件定时发送
         [[GrowingEventManager sharedInstance] configManager];
         [[GrowingEventManager sharedInstance] startTimerSend];
+        // 初始化SDK时获取一次动态通用属性
+        [[GrowingGeneralProps sharedInstance] buildDynamicGeneralProps];
         [self versionPrint];
         [self filterLogPrint];
     }
@@ -215,27 +217,28 @@ const int GrowingTrackerVersionCode = 40200;
 }
 
 - (void)setLoginUserId:(NSString *)userId {
+    [[GrowingGeneralProps sharedInstance] buildDynamicGeneralProps];
     [GrowingDispatchManager dispatchInGrowingThread:^{
         [[GrowingSession currentSession] setLoginUserId:userId];
     }];
 }
 
-/// 支持设置userId的类型, 存储方式与userId保持一致, userKey默认为null
-/// @param userId 用户ID
-/// @param userKey 用户ID对应的key值
 - (void)setLoginUserId:(NSString *)userId userKey:(NSString *)userKey {
+    [[GrowingGeneralProps sharedInstance] buildDynamicGeneralProps];
     [GrowingDispatchManager dispatchInGrowingThread:^{
         [[GrowingSession currentSession] setLoginUserId:userId userKey:userKey];
     }];
 }
 
 - (void)cleanLoginUserId {
+    [[GrowingGeneralProps sharedInstance] buildDynamicGeneralProps];
     [GrowingDispatchManager dispatchInGrowingThread:^{
         [[GrowingSession currentSession] setLoginUserId:nil];
     }];
 }
 
 - (void)setDataCollectionEnabled:(BOOL)enabled {
+    [[GrowingGeneralProps sharedInstance] buildDynamicGeneralProps];
     [GrowingDispatchManager dispatchInGrowingThread:^{
         GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
         if (enabled == trackConfiguration.dataCollectionEnabled) {

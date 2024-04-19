@@ -23,9 +23,9 @@
 
 @interface GrowingGeneralProps ()
 
-@property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *internalProps;
-@property (nonatomic, strong) NSDictionary<NSString *, NSString *> *dynamicProps;
-@property (nonatomic, copy) NSDictionary<NSString *, NSString *> * (^dynamicPropsBlock)(void);
+@property (nonatomic, strong) NSMutableDictionary<NSString *, id> *internalProps;
+@property (atomic, copy) NSDictionary<NSString *, id> *dynamicProps;
+@property (nonatomic, copy) NSDictionary<NSString *, id> * (^dynamicPropsBlock)(void);
 
 @end
 
@@ -49,15 +49,26 @@
     return instance;
 }
 
-- (NSDictionary<NSString *, NSString *> *)getGeneralProps {
-    __block NSDictionary *props = nil;
-    GROWING_RW_LOCK_READ(lock, props, ^{
-        // dynamic general properties > general properties
-        NSMutableDictionary *properties = self.internalProps.mutableCopy;
-        [properties addEntriesFromDictionary:self.dynamicProps];
-        return properties;
+- (NSDictionary<NSString *, id> *)getGeneralProps {
+    if (!self.dynamicProps && self.dynamicPropsBlock) {
+        // 动态属性未build
+        [self buildDynamicGeneralProps];
+    }
+
+    __block NSMutableDictionary *properties = nil;
+    GROWING_RW_LOCK_READ(lock, properties, ^{
+        return self.internalProps.mutableCopy;
     });
-    return [props copy];
+    
+    // dynamic general properties > general properties
+    if (self.dynamicProps) {
+        [properties addEntriesFromDictionary:self.dynamicProps];
+    }
+    
+    // 置为nil，保证下一次事件能够获取最新值
+    self.dynamicProps = nil;
+    
+    return [properties copy];
 }
 
 - (void)setGeneralProps:(NSDictionary<NSString *, id> *)props {
@@ -92,6 +103,9 @@
 }
 
 - (void)buildDynamicGeneralProps {
+    // 一般情况下，buildDynamicGeneralProps应该在用户线程中调用，以获取实际值
+    // 目前有：首次初始化SDK、setLoginUserId、setDataCollectionEnabled（皆对应VISIT事件）
+    // 其他非必要的场景则在事件创建过程中调用，也就是在GrowingThread
     GROWING_RW_LOCK_READ(lock, self.dynamicProps, ^{
         if (self.dynamicPropsBlock) {
             NSDictionary *dynamicProps = self.dynamicPropsBlock();
@@ -99,13 +113,14 @@
                 return (NSDictionary *)[dynamicProps copy];
             }
         }
+        // always return not nil value
         return @{};
     });
 }
 
 #pragma mark - Setter && Getter
 
-- (NSMutableDictionary<NSString *, NSString *> *)internalProps {
+- (NSMutableDictionary<NSString *, id> *)internalProps {
     if (!_internalProps) {
         _internalProps = [NSMutableDictionary dictionary];
     }
