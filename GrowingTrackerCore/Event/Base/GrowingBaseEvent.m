@@ -25,8 +25,8 @@
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
 #import "GrowingTrackerCore/Public/GrowingFieldsIgnore.h"
-#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
+#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "GrowingULTimeUtil.h"
 
 @implementation GrowingBaseEvent
@@ -156,7 +156,7 @@
     _language = deviceInfo.language;
     _timezoneOffset = [NSString stringWithFormat:@"%@", @(deviceInfo.timezoneOffset)];
     _scene = _scene >= GrowingEventSceneNative ? _scene : GrowingEventSceneNative;
-    
+
     NSMutableDictionary *finalAttributes = [[GrowingGeneralProps sharedInstance] getGeneralProps].mutableCopy;
     if (_attributes.count > 0) {
         [finalAttributes addEntriesFromDictionary:_attributes];

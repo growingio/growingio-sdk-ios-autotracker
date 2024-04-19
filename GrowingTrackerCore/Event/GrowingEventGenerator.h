@@ -27,8 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)generateVisitEvent;
 
-+ (void)generateCustomEvent:(NSString *)name
-                 attributes:(NSDictionary<NSString *, id> *_Nullable)attributes;
++ (void)generateCustomEvent:(NSString *)name attributes:(NSDictionary<NSString *, id> *_Nullable)attributes;
 
 + (void)generateLoginUserAttributesEvent:(NSDictionary<NSString *, id> *)attributes;
 

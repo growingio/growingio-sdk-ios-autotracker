@@ -35,8 +35,7 @@
     }];
 }
 
-+ (void)generateCustomEvent:(NSString *)name
-                 attributes:(NSDictionary<NSString *, id> *_Nullable)attributes {
++ (void)generateCustomEvent:(NSString *)name attributes:(NSDictionary<NSString *, id> *_Nullable)attributes {
     [GrowingDispatchManager dispatchInGrowingThread:^{
         GrowingBaseBuilder *builder = GrowingCustomEvent.builder.setEventName(name).setAttributes(attributes);
         [[GrowingEventManager sharedInstance] postEventBuilder:builder];

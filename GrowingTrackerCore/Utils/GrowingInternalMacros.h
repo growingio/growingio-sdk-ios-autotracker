@@ -107,16 +107,16 @@
 #endif
 
 #ifndef GROWING_RW_LOCK_INIT
-#define GROWING_RW_LOCK_INIT(lock)                                               \
-NSString *label = [NSString stringWithFormat:@"com.growingio.rw.lock.%p", self]; \
-lock = dispatch_queue_create([label UTF8String], DISPATCH_QUEUE_CONCURRENT)
+#define GROWING_RW_LOCK_INIT(lock)                                                   \
+    NSString *label = [NSString stringWithFormat:@"com.growingio.rw.lock.%p", self]; \
+    lock = dispatch_queue_create([label UTF8String], DISPATCH_QUEUE_CONCURRENT)
 #endif
 
 #ifndef GROWING_RW_LOCK_READ
-#define GROWING_RW_LOCK_READ(lock, result, block)               \
-dispatch_sync(lock, ^{                                          \
-    result = block();                                           \
-});
+#define GROWING_RW_LOCK_READ(lock, result, block) \
+    dispatch_sync(lock, ^{                        \
+        result = block();                         \
+    });
 #endif
 
 #ifndef GROWING_RW_LOCK_WRITE

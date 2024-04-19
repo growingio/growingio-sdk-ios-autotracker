@@ -19,8 +19,8 @@
 
 #import "GrowingAutotracker/GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingRealAutotracker.h"
-#import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Event/GrowingGeneralProps.h"
+#import "GrowingTrackerCore/Manager/GrowingSession.h"
 
 static GrowingAutotracker *sharedInstance = nil;
 
@@ -84,8 +84,7 @@ static GrowingAutotracker *sharedInstance = nil;
     [[GrowingGeneralProps sharedInstance] clearGeneralProps];
 }
 
-+ (void)registerDynamicGeneralPropsBlock:
-(NSDictionary<NSString *, id> * (^_Nullable)(void))dynamicGeneralPropsBlock {
++ (void)registerDynamicGeneralPropsBlock:(NSDictionary<NSString *, id> * (^_Nullable)(void))dynamicGeneralPropsBlock {
     [[GrowingGeneralProps sharedInstance] registerDynamicGeneralPropsBlock:dynamicGeneralPropsBlock];
 }
 

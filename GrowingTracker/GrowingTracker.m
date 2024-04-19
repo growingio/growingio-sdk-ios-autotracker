@@ -18,9 +18,9 @@
 //  limitations under the License.
 
 #import "GrowingTracker/GrowingTracker.h"
+#import "GrowingTrackerCore/Event/GrowingGeneralProps.h"
 #import "GrowingTrackerCore/GrowingRealTracker.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
-#import "GrowingTrackerCore/Event/GrowingGeneralProps.h"
 
 static GrowingTracker *sharedInstance = nil;
 
@@ -84,8 +84,7 @@ static GrowingTracker *sharedInstance = nil;
     [[GrowingGeneralProps sharedInstance] clearGeneralProps];
 }
 
-+ (void)registerDynamicGeneralPropsBlock:
-(NSDictionary<NSString *, id> * (^_Nullable)(void))dynamicGeneralPropsBlock {
++ (void)registerDynamicGeneralPropsBlock:(NSDictionary<NSString *, id> * (^_Nullable)(void))dynamicGeneralPropsBlock {
     [[GrowingGeneralProps sharedInstance] registerDynamicGeneralPropsBlock:dynamicGeneralPropsBlock];
 }
 

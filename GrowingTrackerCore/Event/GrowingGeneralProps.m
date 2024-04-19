@@ -18,8 +18,8 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Event/GrowingGeneralProps.h"
-#import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 #import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
+#import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 
 @interface GrowingGeneralProps ()
 
@@ -59,15 +59,15 @@
     GROWING_RW_LOCK_READ(lock, properties, ^{
         return self.internalProps.mutableCopy;
     });
-    
+
     // dynamic general properties > general properties
     if (self.dynamicProps) {
         [properties addEntriesFromDictionary:self.dynamicProps];
     }
-    
+
     // 置为nil，保证下一次事件能够获取最新值
     self.dynamicProps = nil;
-    
+
     return [properties copy];
 }
 
@@ -95,8 +95,7 @@
     });
 }
 
-- (void)registerDynamicGeneralPropsBlock:
-    (NSDictionary<NSString *, id> * (^_Nullable)(void))dynamicGeneralPropsBlock {
+- (void)registerDynamicGeneralPropsBlock:(NSDictionary<NSString *, id> * (^_Nullable)(void))dynamicGeneralPropsBlock {
     GROWING_RW_LOCK_WRITE(lock, ^{
         self.dynamicPropsBlock = dynamicGeneralPropsBlock;
     });
