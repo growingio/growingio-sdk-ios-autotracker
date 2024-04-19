@@ -26,6 +26,7 @@
 #import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
 #import "GrowingTrackerCore/Public/GrowingFieldsIgnore.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
+#import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
 #import "GrowingULTimeUtil.h"
 
 @implementation GrowingBaseEvent
@@ -160,7 +161,7 @@
     if (_attributes.count > 0) {
         [finalAttributes addEntriesFromDictionary:_attributes];
     }
-    _attributes = finalAttributes.copy;
+    _attributes = [GrowingArgumentChecker serializableAttributes:finalAttributes];
 }
 
 - (GrowingBaseBuilder * (^)(NSString *value))setDataSourceId {
@@ -359,8 +360,8 @@
     };
 }
 
-- (GrowingBaseBuilder * (^)(NSDictionary<NSString *, NSObject *> *value))setAttributes {
-    return ^(NSDictionary<NSString *, NSObject *> *value) {
+- (GrowingBaseBuilder * (^)(NSDictionary<NSString *, id> *value))setAttributes {
+    return ^(NSDictionary<NSString *, id> *value) {
         self->_attributes = value;
         return self;
     };

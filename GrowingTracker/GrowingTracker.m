@@ -72,7 +72,7 @@ static GrowingTracker *sharedInstance = nil;
     return sharedInstance;
 }
 
-+ (void)setGeneralProps:(NSDictionary<NSString *, NSString *> *)props {
++ (void)setGeneralProps:(NSDictionary<NSString *, id> *)props {
     [[GrowingGeneralProps sharedInstance] setGeneralProps:props];
 }
 
@@ -85,7 +85,7 @@ static GrowingTracker *sharedInstance = nil;
 }
 
 + (void)registerDynamicGeneralPropsBlock:
-(NSDictionary<NSString *, NSString *> * (^_Nullable)(void))dynamicGeneralPropsBlock {
+(NSDictionary<NSString *, id> * (^_Nullable)(void))dynamicGeneralPropsBlock {
     [[GrowingGeneralProps sharedInstance] registerDynamicGeneralPropsBlock:dynamicGeneralPropsBlock];
 }
 

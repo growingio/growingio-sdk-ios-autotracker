@@ -21,15 +21,19 @@
 #import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
 #import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface GrowingEventGenerator : NSObject
 
 + (void)generateVisitEvent;
 
-+ (void)generateCustomEvent:(NSString *_Nonnull)name
-                 attributes:(NSDictionary<NSString *, NSObject *> *_Nullable)attributes;
++ (void)generateCustomEvent:(NSString *)name
+                 attributes:(NSDictionary<NSString *, id> *_Nullable)attributes;
 
-+ (void)generateLoginUserAttributesEvent:(NSDictionary<NSString *, NSObject *> *_Nonnull)attributes;
++ (void)generateLoginUserAttributesEvent:(NSDictionary<NSString *, id> *)attributes;
 
 + (void)generateAppCloseEvent;
 
 @end
+
+NS_ASSUME_NONNULL_END

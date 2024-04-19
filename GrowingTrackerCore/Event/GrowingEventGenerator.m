@@ -35,15 +35,15 @@
     }];
 }
 
-+ (void)generateCustomEvent:(NSString *_Nonnull)name
-                 attributes:(NSDictionary<NSString *, NSObject *> *_Nullable)attributes {
++ (void)generateCustomEvent:(NSString *)name
+                 attributes:(NSDictionary<NSString *, id> *_Nullable)attributes {
     [GrowingDispatchManager dispatchInGrowingThread:^{
         GrowingBaseBuilder *builder = GrowingCustomEvent.builder.setEventName(name).setAttributes(attributes);
         [[GrowingEventManager sharedInstance] postEventBuilder:builder];
     }];
 }
 
-+ (void)generateLoginUserAttributesEvent:(NSDictionary<NSString *, NSObject *> *_Nonnull)attributes {
++ (void)generateLoginUserAttributesEvent:(NSDictionary<NSString *, id> *)attributes {
     [GrowingDispatchManager dispatchInGrowingThread:^{
         GrowingBaseBuilder *builder = GrowingLoginUserAttributesEvent.builder.setAttributes(attributes);
         [[GrowingEventManager sharedInstance] postEventBuilder:builder];

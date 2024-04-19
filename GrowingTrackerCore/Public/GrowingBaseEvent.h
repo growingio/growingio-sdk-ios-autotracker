@@ -69,7 +69,7 @@ typedef NS_ENUM(NSUInteger, GrowingEventScene) {
 @property (nonatomic, copy, readonly) NSString *timezoneOffset;
 @property (nonatomic, assign, readonly) GrowingEventScene scene;
 @property (nonatomic, assign) GrowingEventSendPolicy sendPolicy;
-@property (nonatomic, copy, readonly) NSDictionary<NSString *, NSObject *> *attributes;
+@property (nonatomic, copy, readonly) NSDictionary<NSString *, id> *attributes;
 
 - (NSDictionary *_Nonnull)toDictionary;
 
@@ -113,7 +113,7 @@ typedef NS_ENUM(NSUInteger, GrowingEventScene) {
 @property (nonatomic, copy, readonly, nullable) NSString *userKey;
 @property (nonatomic, copy, readonly) NSString *timezoneOffset;
 @property (nonatomic, assign, readonly) GrowingEventScene scene;
-@property (nonatomic, copy, readonly) NSDictionary<NSString *, NSObject *> *attributes;
+@property (nonatomic, copy, readonly) NSDictionary<NSString *, id> *attributes;
 
 - (void)readPropertyInTrackThread;
 
@@ -145,7 +145,7 @@ typedef NS_ENUM(NSUInteger, GrowingEventScene) {
 - (GrowingBaseBuilder * (^)(NSString *value))setEventType;
 - (GrowingBaseBuilder * (^)(NSString *value))setTimezoneOffset;
 - (GrowingBaseBuilder * (^)(GrowingEventScene value))setScene;
-- (GrowingBaseBuilder * (^)(NSDictionary<NSString *, NSObject *> *value))setAttributes;
+- (GrowingBaseBuilder * (^)(NSDictionary<NSString *, id> *value))setAttributes;
 - (GrowingBaseEvent *)build;
 
 @end

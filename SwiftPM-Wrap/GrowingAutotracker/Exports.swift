@@ -60,7 +60,7 @@ public struct Autotracker {
         autotracker.cleanLocation()
     }
 
-    public static func setLoginUserAttributes(_ attributes: [String: String]) {
+    public static func setLoginUserAttributes(_ attributes: [String: Any]) {
         autotracker.setLoginUserAttributes(attributes)
     }
 
@@ -76,7 +76,7 @@ public struct Autotracker {
         autotracker.ignoreViewClasses(classes)
     }
 
-    public static func track(_ eventName: String, attributes: [String: String]? = nil) {
+    public static func track(_ eventName: String, attributes: [String: Any]? = nil) {
         guard let attributes = attributes else {
             autotracker.trackCustomEvent(eventName)
             return
@@ -97,7 +97,7 @@ public struct Autotracker {
         autotracker.trackTimerResume(timerId)
     }
 
-    public static func endTimer(_ timerId: String, attributes: [String: String]? = nil) {
+    public static func endTimer(_ timerId: String, attributes: [String: Any]? = nil) {
         guard let attributes = attributes else {
             autotracker.trackTimerEnd(timerId)
             return
@@ -114,7 +114,7 @@ public struct Autotracker {
         autotracker.clearTrackTimer()
     }
     
-    public static func setGeneralProps(_ props: [String: String]) {
+    public static func setGeneralProps(_ props: [String: Any]) {
         GrowingAutotracker.setGeneralProps(props)
     }
     
@@ -126,13 +126,13 @@ public struct Autotracker {
         GrowingAutotracker.clearGeneralProps()
     }
     
-    public static func registerDynamicGeneralProps(_ closure: (() -> [String: String])?) {
+    public static func registerDynamicGeneralProps(_ closure: (() -> [String: Any])?) {
         GrowingAutotracker.registerDynamicGeneralPropsBlock(closure)
     }
 
     public static func autotrackPage(_ viewController: UIViewController,
                                      alias: String,
-                                     attributes: [String: String]? = nil) {
+                                     attributes: [String: Any]? = nil) {
         guard let attributes = attributes else {
             autotracker.autotrackPage(viewController, alias: alias)
             return

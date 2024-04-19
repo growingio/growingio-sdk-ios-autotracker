@@ -55,12 +55,12 @@
         // dynamic general properties > general properties
         NSMutableDictionary *properties = self.internalProps.mutableCopy;
         [properties addEntriesFromDictionary:self.dynamicProps];
-        return [self validProperties:properties];
+        return properties;
     });
     return [props copy];
 }
 
-- (void)setGeneralProps:(NSDictionary<NSString *, NSString *> *)props {
+- (void)setGeneralProps:(NSDictionary<NSString *, id> *)props {
     if ([GrowingArgumentChecker isIllegalAttributes:props]) {
         return;
     }
@@ -85,7 +85,7 @@
 }
 
 - (void)registerDynamicGeneralPropsBlock:
-    (NSDictionary<NSString *, NSString *> * (^_Nullable)(void))dynamicGeneralPropsBlock {
+    (NSDictionary<NSString *, id> * (^_Nullable)(void))dynamicGeneralPropsBlock {
     GROWING_RW_LOCK_WRITE(lock, ^{
         self.dynamicPropsBlock = dynamicGeneralPropsBlock;
     });
@@ -101,19 +101,6 @@
         }
         return @{};
     });
-}
-
-- (NSDictionary<NSString *, NSString *> *)validProperties:(NSDictionary *)properties {
-    NSMutableDictionary *result = [NSMutableDictionary dictionary];
-    for (NSString *key in properties.allKeys) {
-        id value = properties[key];
-        if ([value isKindOfClass:[NSString class]]) {
-            result[key] = value;
-        } else if ([value isKindOfClass:[NSNumber class]]) {
-            result[key] = ((NSNumber *)value).stringValue;
-        }
-    }
-    return [result copy];
 }
 
 #pragma mark - Setter && Getter

@@ -138,7 +138,7 @@ const int GrowingTrackerVersionCode = 40200;
     }];
 }
 
-- (void)trackCustomEvent:(NSString *)eventName withAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
+- (void)trackCustomEvent:(NSString *)eventName withAttributes:(NSDictionary<NSString *, id> *)attributes {
     if ([GrowingArgumentChecker isIllegalEventName:eventName] ||
         [GrowingArgumentChecker isIllegalAttributes:attributes]) {
         return;
@@ -148,7 +148,7 @@ const int GrowingTrackerVersionCode = 40200;
     }];
 }
 
-- (void)setLoginUserAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
+- (void)setLoginUserAttributes:(NSDictionary<NSString *, id> *)attributes {
     if ([GrowingArgumentChecker isIllegalAttributes:attributes]) {
         return;
     }
@@ -183,7 +183,7 @@ const int GrowingTrackerVersionCode = 40200;
     [GrowingEventTimer trackTimerEnd:timerId withAttributes:nil];
 }
 
-- (void)trackTimerEnd:(NSString *)timerId withAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
+- (void)trackTimerEnd:(NSString *)timerId withAttributes:(NSDictionary<NSString *, id> *)attributes {
     if ([GrowingArgumentChecker isIllegalEventName:timerId] ||
         [GrowingArgumentChecker isIllegalAttributes:attributes]) {
         return;
@@ -202,7 +202,7 @@ const int GrowingTrackerVersionCode = 40200;
     [GrowingEventTimer clearAllTimers];
 }
 
-- (void)setGeneralProps:(NSDictionary<NSString *, NSString *> *)props {
+- (void)setGeneralProps:(NSDictionary<NSString *, id> *)props {
     [[GrowingGeneralProps sharedInstance] setGeneralProps:props];
 }
 
