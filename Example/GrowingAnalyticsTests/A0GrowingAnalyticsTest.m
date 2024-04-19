@@ -33,6 +33,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
 #pragma clang diagnostic ignored "-Wobjc-literal-conversion"
 #pragma clang diagnostic ignored "-Wundeclared-selector"
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
 @implementation A0GrowingAnalyticsTest
 
@@ -122,13 +123,29 @@ static NSString *const kGrowingEventDuration = @"event_duration";
 
 - (void)test05SetLoginUserAttributes {
     {
-        [[GrowingAutotracker sharedInstance] setLoginUserAttributes:@{@"key": @"value"}];
+        [[GrowingAutotracker sharedInstance] setLoginUserAttributes:@{
+            @"key": @"value",
+            @"key2": @1,
+            @"key3": @[@"1", @"2", @"3"],
+            @"key4": @[@10, @20, @30],
+            @"key5": self,
+            @"key6": [NSNull null],
+            @"key7": [NSSet setWithObjects:@"1", @"2", nil],
+            @"key8": [NSDate dateWithTimeIntervalSince1970:1713518722]
+        }];
         NSArray<GrowingBaseEvent *> *events =
             [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeLoginUserAttributes];
         XCTAssertEqual(events.count, 1);
 
         GrowingLoginUserAttributesEvent *event = (GrowingLoginUserAttributesEvent *)events.firstObject;
         XCTAssertEqualObjects(event.attributes[@"key"], @"value");
+        XCTAssertEqualObjects(event.attributes[@"key2"], @"1");
+        XCTAssertEqualObjects(event.attributes[@"key3"], @"1||2||3");
+        XCTAssertEqualObjects(event.attributes[@"key4"], @"10||20||30");
+        XCTAssertEqualObjects(event.attributes[@"key5"], @"-[A0GrowingAnalyticsTest test05SetLoginUserAttributes]");
+        XCTAssertEqualObjects(event.attributes[@"key6"], @"<null>");
+        XCTAssertEqualObjects(event.attributes[@"key7"], @"1||2");
+        XCTAssertEqualObjects(event.attributes[@"key8"], @"2024-04-19 17:25:22.000");
     }
 
     {
@@ -136,7 +153,6 @@ static NSString *const kGrowingEventDuration = @"event_duration";
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setLoginUserAttributes:nil]);
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setLoginUserAttributes:@"value"]);
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setLoginUserAttributes:@{@1: @"value"}]);
-        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setLoginUserAttributes:@{@"key": @1}]);
         NSArray<GrowingBaseEvent *> *events =
             [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeLoginUserAttributes];
         XCTAssertEqual(events.count, 0);
@@ -166,13 +182,30 @@ static NSString *const kGrowingEventDuration = @"event_duration";
 
 - (void)test07TrackCustomEventWithAttributes {
     {
-        [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName" withAttributes:@{@"key": @"value"}];
+        [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName" withAttributes:@{
+            @"key": @"value",
+            @"key2": @1,
+            @"key3": @[@"1", @"2", @"3"],
+            @"key4": @[@10, @20, @30],
+            @"key5": self,
+            @"key6": [NSNull null],
+            @"key7": [NSSet setWithObjects:@"1", @"2", nil],
+            @"key8": [NSDate dateWithTimeIntervalSince1970:1713518722]
+        }];
+        
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
         XCTAssertEqual(events.count, 1);
 
         GrowingCustomEvent *event = (GrowingCustomEvent *)events.firstObject;
         XCTAssertEqualObjects(event.eventName, @"eventName");
         XCTAssertEqualObjects(event.attributes[@"key"], @"value");
+        XCTAssertEqualObjects(event.attributes[@"key2"], @"1");
+        XCTAssertEqualObjects(event.attributes[@"key3"], @"1||2||3");
+        XCTAssertEqualObjects(event.attributes[@"key4"], @"10||20||30");
+        XCTAssertEqualObjects(event.attributes[@"key5"], @"-[A0GrowingAnalyticsTest test07TrackCustomEventWithAttributes]");
+        XCTAssertEqualObjects(event.attributes[@"key6"], @"<null>");
+        XCTAssertEqualObjects(event.attributes[@"key7"], @"1||2");
+        XCTAssertEqualObjects(event.attributes[@"key8"], @"2024-04-19 17:25:22.000");
     }
 
     {
@@ -185,10 +218,6 @@ static NSString *const kGrowingEventDuration = @"event_duration";
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
                                                                 withAttributes:@{
                                                                     @1: @"value"
-                                                                }]);
-        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"
-                                                                withAttributes:@{
-                                                                    @"key": @1
                                                                 }]);
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
         XCTAssertEqual(events.count, 0);
@@ -353,7 +382,16 @@ static NSString *const kGrowingEventDuration = @"event_duration";
     {
         NSString *timerId = [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
         usleep(100);
-        [[GrowingAutotracker sharedInstance] trackTimerEnd:timerId withAttributes:@{@"key": @"value"}];
+        [[GrowingAutotracker sharedInstance] trackTimerEnd:timerId withAttributes:@{
+            @"key": @"value",
+            @"key2": @1,
+            @"key3": @[@"1", @"2", @"3"],
+            @"key4": @[@10, @20, @30],
+            @"key5": self,
+            @"key6": [NSNull null],
+            @"key7": [NSSet setWithObjects:@"1", @"2", nil],
+            @"key8": [NSDate dateWithTimeIntervalSince1970:1713518722]
+        }];
 
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
         XCTAssertEqual(events.count, 1);
@@ -361,6 +399,13 @@ static NSString *const kGrowingEventDuration = @"event_duration";
         GrowingCustomEvent *event = (GrowingCustomEvent *)events.firstObject;
         XCTAssertEqualObjects(event.eventName, @"eventName");
         XCTAssertEqualObjects(event.attributes[@"key"], @"value");
+        XCTAssertEqualObjects(event.attributes[@"key2"], @"1");
+        XCTAssertEqualObjects(event.attributes[@"key3"], @"1||2||3");
+        XCTAssertEqualObjects(event.attributes[@"key4"], @"10||20||30");
+        XCTAssertEqualObjects(event.attributes[@"key5"], @"-[A0GrowingAnalyticsTest test09TrackTimerWithAttributes]");
+        XCTAssertEqualObjects(event.attributes[@"key6"], @"<null>");
+        XCTAssertEqualObjects(event.attributes[@"key7"], @"1||2");
+        XCTAssertEqualObjects(event.attributes[@"key8"], @"2024-04-19 17:25:22.000");
         XCTAssertNotNil(event.attributes[kGrowingEventDuration]);
     }
 
@@ -725,7 +770,6 @@ static NSString *const kGrowingEventDuration = @"event_duration";
     [[GrowingAutotracker sharedInstance] autotrackPage:controller alias:@"XCTest" attributes:nil];
     [[GrowingAutotracker sharedInstance] autotrackPage:controller alias:@"XCTest" attributes:@"value"];
     [[GrowingAutotracker sharedInstance] autotrackPage:controller alias:@"XCTest" attributes:@{@1: @"value"}];
-    [[GrowingAutotracker sharedInstance] autotrackPage:controller alias:@"XCTest" attributes:@{@"key": @1}];
     [controller viewDidAppear:NO];
 
     XCTestExpectation *expectation =
@@ -755,6 +799,224 @@ static NSString *const kGrowingEventDuration = @"event_duration";
 #pragma mark - GeneralProps Test
 
 - (void)test22SetGeneralProps {
+    {
+        // set generalProps
+        {
+            // set generalProps
+            [MockEventQueue.sharedQueue cleanQueue];
+            
+            [GrowingAutotracker setGeneralProps:@{@"key" : @"value"}];
+            
+            [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"];
+            NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+            XCTAssertEqual(events.count, 1);
+
+            GrowingCustomEvent *event = (GrowingCustomEvent *)events.lastObject;
+            XCTAssertEqualObjects(event.eventName, @"eventName");
+            XCTAssertEqualObjects(event.attributes[@"key"], @"value");
+        }
+        
+        {
+            // merge generalProps
+            [MockEventQueue.sharedQueue cleanQueue];
+            
+            [GrowingAutotracker setGeneralProps:@{@"key2" : @"value2"}];
+            
+            [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"];
+            NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+            XCTAssertEqual(events.count, 1);
+
+            GrowingCustomEvent *event = (GrowingCustomEvent *)events.lastObject;
+            XCTAssertEqualObjects(event.eventName, @"eventName");
+            XCTAssertEqualObjects(event.attributes[@"key2"], @"value2");
+        }
+        
+        {
+            // merge generalProps 2
+            [MockEventQueue.sharedQueue cleanQueue];
+                        
+            [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName" withAttributes:@{@"key" : @"value_merged"}];
+            NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+            XCTAssertEqual(events.count, 1);
+
+            GrowingCustomEvent *event = (GrowingCustomEvent *)events.lastObject;
+            XCTAssertEqualObjects(event.eventName, @"eventName");
+            XCTAssertEqualObjects(event.attributes[@"key"], @"value_merged");
+        }
+        
+        {
+            // merge generalProps 3 (hybrid)
+            [MockEventQueue.sharedQueue cleanQueue];
+
+            Class class = NSClassFromString(@"GrowingHybridBridgeProvider");
+            SEL selector = NSSelectorFromString(@"sharedInstance");
+            if (class && [class respondsToSelector:selector]) {
+                id sharedInstance = [class performSelector:selector];
+                SEL selector2 = NSSelectorFromString(@"parseEventJsonString:");
+                if (sharedInstance && [sharedInstance respondsToSelector:selector2]) {
+                    NSString *jsonString = @"{\"deviceId\":\"7196f014-d7bc-4bd8-b920-757cb2375ff6\",\"sessionId\":\"d5cbcf77-b38b-4223-954f-c6a2fdc0c098\","
+                    @"\"eventType\":\"CUSTOM\",\"platform\":\"Web\",\"timestamp\":1602485628504,\"domain\":\"test-browser.growingio.com\",\"path\":\"/push/"
+                    @"web.html\",\"query\":\"a=1&b=2\",\"title\":\"Hybrid测试页面\",\"referralPage\":\"http://test-browser.growingio.com/push\",\"globalSeque"
+                    @"nceId\":99,\"eventSequenceId\":3,\"eventName\":\"eventName\",\"attributes\":{\"key\":\"value_hybrid\",\"key3\":\"\",\"key4\":null}}";
+                    [sharedInstance performSelector:selector2 withObject:jsonString];
+                    
+                    NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+                    XCTAssertEqual(events.count, 1);
+
+                    GrowingCustomEvent *event = (GrowingCustomEvent *)events.lastObject;
+                    XCTAssertEqualObjects(event.eventName, @"eventName");
+                    XCTAssertEqual(event.attributes.count, 3);
+                    XCTAssertEqualObjects(event.attributes[@"key"], @"value_hybrid"); //hybrid优先
+                    XCTAssertEqualObjects(event.attributes[@"key2"], @"value2"); //合并generalProps
+                    XCTAssertEqualObjects(event.attributes[@"key3"], @"");
+                }
+            }
+        }
+        
+        {
+            // replace generalProps
+            [MockEventQueue.sharedQueue cleanQueue];
+            
+            [GrowingAutotracker setGeneralProps:@{@"key" : @"value_modif"}];
+            
+            [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"];
+            NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+            XCTAssertEqual(events.count, 1);
+
+            GrowingCustomEvent *event = (GrowingCustomEvent *)events.lastObject;
+            XCTAssertEqualObjects(event.eventName, @"eventName");
+            XCTAssertEqualObjects(event.attributes[@"key"], @"value_modif");
+        }
+    }
+    
+    {
+        // clear generalProps
+        {
+            // clear generalProps
+            [MockEventQueue.sharedQueue cleanQueue];
+            
+            [GrowingAutotracker clearGeneralProps];
+            
+            [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"];
+            NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+            XCTAssertEqual(events.count, 1);
+
+            GrowingCustomEvent *event = (GrowingCustomEvent *)events.lastObject;
+            XCTAssertEqualObjects(event.eventName, @"eventName");
+            XCTAssertEqual(event.attributes.count, 0);
+        }
+        
+        {
+            // re-clear generalProps
+            [MockEventQueue.sharedQueue cleanQueue];
+            
+            [GrowingAutotracker setGeneralProps:@{@"key" : @"value"}];
+            [GrowingAutotracker setGeneralProps:@{@"key2" : @"value2"}];
+            [GrowingAutotracker clearGeneralProps];
+            
+            [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"];
+            NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+            XCTAssertEqual(events.count, 1);
+
+            GrowingCustomEvent *event = (GrowingCustomEvent *)events.lastObject;
+            XCTAssertEqualObjects(event.eventName, @"eventName");
+            XCTAssertEqual(event.attributes.count, 0);
+        }
+    }
+    
+    {
+        // remove generalProps
+        {
+            // remove key
+            [MockEventQueue.sharedQueue cleanQueue];
+
+            [GrowingAutotracker setGeneralProps:@{@"key" : @"value"}];
+            [GrowingAutotracker setGeneralProps:@{@"key2" : @"value2"}];
+            [GrowingAutotracker removeGeneralProps:@[@"key"]];
+            
+            [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"];
+            NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+            XCTAssertEqual(events.count, 1);
+
+            GrowingCustomEvent *event = (GrowingCustomEvent *)events.lastObject;
+            XCTAssertEqualObjects(event.eventName, @"eventName");
+            XCTAssertEqual(event.attributes.count, 1);
+            XCTAssertEqualObjects(event.attributes[@"key2"], @"value2");
+        }
+        
+        {
+            // remove key2
+            [MockEventQueue.sharedQueue cleanQueue];
+
+            [GrowingAutotracker removeGeneralProps:@[@"key2"]];
+            
+            [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"];
+            NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+            XCTAssertEqual(events.count, 1);
+
+            GrowingCustomEvent *event = (GrowingCustomEvent *)events.lastObject;
+            XCTAssertEqualObjects(event.eventName, @"eventName");
+            XCTAssertEqual(event.attributes.count, 0);
+        }
+    }
+
+    {
+        // set wrong generalProps
+        [MockEventQueue.sharedQueue cleanQueue];
+        XCTAssertNoThrow([GrowingAutotracker setGeneralProps:nil]);
+        XCTAssertNoThrow([GrowingAutotracker setGeneralProps:@"value"]);
+        XCTAssertNoThrow([GrowingAutotracker setGeneralProps:@{ @1: @"value" }]);
+        [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName" withAttributes:@{@"key2": @"value"}];
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+        XCTAssertEqual(events.count, 1);
+
+        GrowingCustomEvent *event = (GrowingCustomEvent *)events.lastObject;
+        XCTAssertEqualObjects(event.eventName, @"eventName");
+        XCTAssertEqual(event.attributes.count, 1);
+        XCTAssertEqualObjects(event.attributes[@"key2"], @"value");
+    }
+    
+    {
+        // remove generalProps with wrong keys
+        [MockEventQueue.sharedQueue cleanQueue];
+        XCTAssertNoThrow([GrowingAutotracker removeGeneralProps:nil]);
+        XCTAssertNoThrow([GrowingAutotracker removeGeneralProps:@"value"]);
+        XCTAssertNoThrow([GrowingAutotracker removeGeneralProps:@{@"key": @"value"}]);
+        NSArray *array = @[@"key", @(1)];
+        XCTAssertNoThrow([GrowingAutotracker removeGeneralProps:array]);
+        [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"];
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+        XCTAssertEqual(events.count, 1);
+
+        GrowingCustomEvent *event = (GrowingCustomEvent *)events.lastObject;
+        XCTAssertEqualObjects(event.eventName, @"eventName");
+        XCTAssertEqual(event.attributes.count, 0);
+    }
+    
+    {
+        // set dynamic generalProps
+        [MockEventQueue.sharedQueue cleanQueue];
+        
+        [GrowingAutotracker setGeneralProps:@{@"key" : @"value", @"key2" : @"value2"}];
+        [GrowingAutotracker registerDynamicGeneralPropsBlock:^NSDictionary<NSString *,NSString *> * _Nonnull{
+            return @{@"key": @"valueChange", @"key3": @(1)};
+        }];
+        [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"];
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+        XCTAssertEqual(events.count, 1);
+
+        GrowingCustomEvent *event = (GrowingCustomEvent *)events.lastObject;
+        XCTAssertEqualObjects(event.eventName, @"eventName");
+        XCTAssertEqualObjects(event.attributes[@"key"], @"valueChange");
+        XCTAssertEqualObjects(event.attributes[@"key2"], @"value2");
+        XCTAssertEqualObjects(event.attributes[@"key3"], @"1");
+    }
+    
+    [GrowingAutotracker clearGeneralProps];
+    [GrowingAutotracker registerDynamicGeneralPropsBlock:nil];
+}
+
+- (void)test23SetGeneralPropsDeprecatedAPIs {
     {
         // set generalProps
         {
@@ -802,66 +1064,6 @@ static NSString *const kGrowingEventDuration = @"event_duration";
         
         {
             // merge generalProps 3 (hybrid)
-            // customEventType = 1，track调用
-            [MockEventQueue.sharedQueue cleanQueue];
-
-            Class class = NSClassFromString(@"GrowingHybridBridgeProvider");
-            SEL selector = NSSelectorFromString(@"sharedInstance");
-            if (class && [class respondsToSelector:selector]) {
-                id sharedInstance = [class performSelector:selector];
-                SEL selector2 = NSSelectorFromString(@"parseEventJsonString:");
-                if (sharedInstance && [sharedInstance respondsToSelector:selector2]) {
-                    NSString *jsonString = @"{\"deviceId\":\"7196f014-d7bc-4bd8-b920-757cb2375ff6\",\"sessionId\":\"d5cbcf77-b38b-4223-954f-c6a2fdc0c098\","
-                    @"\"eventType\":\"CUSTOM\",\"platform\":\"Web\",\"timestamp\":1602485628504,\"domain\":\"test-browser.growingio.com\",\"path\":\"/push/"
-                    @"web.html\",\"query\":\"a=1&b=2\",\"title\":\"Hybrid测试页面\",\"referralPage\":\"http://test-browser.growingio.com/push\",\"globalSeque"
-                    @"nceId\":99,\"eventSequenceId\":3,\"eventName\":\"eventName\",\"customEventType\":1,\"attributes\":{\"key\":\"value_hybrid\",\"key3\":\"\",\"key4\":null}}";
-                    [sharedInstance performSelector:selector2 withObject:jsonString];
-                    
-                    NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
-                    XCTAssertEqual(events.count, 1);
-
-                    GrowingCustomEvent *event = (GrowingCustomEvent *)events.lastObject;
-                    XCTAssertEqualObjects(event.eventName, @"eventName");
-                    XCTAssertEqual(event.attributes.count, 3);
-                    XCTAssertEqualObjects(event.attributes[@"key"], @"value_hybrid"); //hybrid优先
-                    XCTAssertEqualObjects(event.attributes[@"key2"], @"value2"); //合并generalProps
-                    XCTAssertEqualObjects(event.attributes[@"key3"], @"");
-                }
-            }
-        }
-        
-        {
-            // merge generalProps 4 (hybrid)
-            // customEventType = 0，不是track调用，不加generalProps
-            [MockEventQueue.sharedQueue cleanQueue];
-
-            Class class = NSClassFromString(@"GrowingHybridBridgeProvider");
-            SEL selector = NSSelectorFromString(@"sharedInstance");
-            if (class && [class respondsToSelector:selector]) {
-                id sharedInstance = [class performSelector:selector];
-                SEL selector2 = NSSelectorFromString(@"parseEventJsonString:");
-                if (sharedInstance && [sharedInstance respondsToSelector:selector2]) {
-                    NSString *jsonString = @"{\"deviceId\":\"7196f014-d7bc-4bd8-b920-757cb2375ff6\",\"sessionId\":\"d5cbcf77-b38b-4223-954f-c6a2fdc0c098\","
-                    @"\"eventType\":\"CUSTOM\",\"platform\":\"Web\",\"timestamp\":1602485628504,\"domain\":\"test-browser.growingio.com\",\"path\":\"/push/"
-                    @"web.html\",\"query\":\"a=1&b=2\",\"title\":\"Hybrid测试页面\",\"referralPage\":\"http://test-browser.growingio.com/push\",\"globalSeque"
-                    @"nceId\":99,\"eventSequenceId\":3,\"eventName\":\"eventName\",\"customEventType\":0,\"attributes\":{\"key\":\"value_hybrid\",\"key3\":\"\",\"key4\":null}}";
-                    [sharedInstance performSelector:selector2 withObject:jsonString];
-                    
-                    NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
-                    XCTAssertEqual(events.count, 1);
-
-                    GrowingCustomEvent *event = (GrowingCustomEvent *)events.lastObject;
-                    XCTAssertEqualObjects(event.eventName, @"eventName");
-                    XCTAssertEqual(event.attributes.count, 2);
-                    XCTAssertEqualObjects(event.attributes[@"key"], @"value_hybrid");
-                    XCTAssertEqualObjects(event.attributes[@"key3"], @"");
-                }
-            }
-        }
-        
-        {
-            // merge generalProps 5 (hybrid)
-            // customEventType = nil，无法判断是否track调用，统一加generalProps
             [MockEventQueue.sharedQueue cleanQueue];
 
             Class class = NSClassFromString(@"GrowingHybridBridgeProvider");
@@ -882,8 +1084,8 @@ static NSString *const kGrowingEventDuration = @"event_duration";
                     GrowingCustomEvent *event = (GrowingCustomEvent *)events.lastObject;
                     XCTAssertEqualObjects(event.eventName, @"eventName");
                     XCTAssertEqual(event.attributes.count, 3);
-                    XCTAssertEqualObjects(event.attributes[@"key"], @"value_hybrid");
-                    XCTAssertEqualObjects(event.attributes[@"key2"], @"value2");
+                    XCTAssertEqualObjects(event.attributes[@"key"], @"value_hybrid"); //hybrid优先
+                    XCTAssertEqualObjects(event.attributes[@"key2"], @"value2"); //合并generalProps
                     XCTAssertEqualObjects(event.attributes[@"key3"], @"");
                 }
             }
@@ -982,7 +1184,6 @@ static NSString *const kGrowingEventDuration = @"event_duration";
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setGeneralProps:nil]);
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setGeneralProps:@"value"]);
         XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setGeneralProps:@{ @1: @"value" }]);
-        XCTAssertNoThrow([[GrowingAutotracker sharedInstance] setGeneralProps:@{@"key": @1}]);
         [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName" withAttributes:@{@"key2": @"value"}];
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
         XCTAssertEqual(events.count, 1);
@@ -1010,24 +1211,8 @@ static NSString *const kGrowingEventDuration = @"event_duration";
         XCTAssertEqual(event.attributes.count, 0);
     }
     
-    {
-        // set dynamic generalProps
-        [MockEventQueue.sharedQueue cleanQueue];
-        
-        [[GrowingAutotracker sharedInstance] setGeneralProps:@{@"key" : @"value", @"key2" : @"value2"}];
-        [[GrowingAutotracker sharedInstance] registerDynamicGeneralPropsBlock:^NSDictionary<NSString *,NSString *> * _Nonnull{
-            return @{@"key": @"valueChange", @"key3": @(1)};
-        }];
-        [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"];
-        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
-        XCTAssertEqual(events.count, 1);
-
-        GrowingCustomEvent *event = (GrowingCustomEvent *)events.lastObject;
-        XCTAssertEqualObjects(event.eventName, @"eventName");
-        XCTAssertEqualObjects(event.attributes[@"key"], @"valueChange");
-        XCTAssertEqualObjects(event.attributes[@"key2"], @"value2");
-        XCTAssertEqualObjects(event.attributes[@"key3"], @"1");
-    }
+    [GrowingAutotracker clearGeneralProps];
+    [GrowingAutotracker registerDynamicGeneralPropsBlock:nil];
 }
 
 @end
