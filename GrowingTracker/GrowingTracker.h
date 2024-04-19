@@ -130,7 +130,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 设置埋点动态通用属性
 /// @param dynamicGeneralPropsBlock 动态通用属性，其优先级大于通用属性
-+ (void)registerDynamicGeneralPropsBlock:(NSDictionary<NSString *, id> * (^_Nullable)(void))dynamicGeneralPropsBlock NS_SWIFT_NAME(registerDynamicGeneralProps(_:));
++ (void)registerDynamicGeneralPropsBlock:(NSDictionary<NSString *, id> * (^_Nullable)(void))dynamicGeneralPropsBlock
+    NS_SWIFT_NAME(registerDynamicGeneralProps(_:));
 
 ///-------------------------------
 #pragma mark Unavailable
