@@ -25,7 +25,7 @@
 
 @property (nonatomic, strong) NSMutableDictionary<NSString *, id> *internalProps;
 @property (atomic, copy) NSDictionary<NSString *, id> *dynamicProps;
-@property (nonatomic, copy) NSDictionary<NSString *, id> * (^dynamicPropsBlock)(void);
+@property (nonatomic, copy) NSDictionary<NSString *, id> * (^dynamicPropsGenerator)(void);
 
 @end
 
@@ -50,7 +50,7 @@
 }
 
 - (NSDictionary<NSString *, id> *)getGeneralProps {
-    if (!self.dynamicProps && self.dynamicPropsBlock) {
+    if (!self.dynamicProps && self.dynamicPropsGenerator) {
         // 动态属性未build
         [self buildDynamicGeneralProps];
     }
@@ -95,9 +95,9 @@
     });
 }
 
-- (void)registerDynamicGeneralPropsBlock:(NSDictionary<NSString *, id> * (^_Nullable)(void))dynamicGeneralPropsBlock {
+- (void)setDynamicGeneralPropsGenerator:(NSDictionary<NSString *, id> * (^_Nullable)(void))generator {
     GROWING_RW_LOCK_WRITE(lock, ^{
-        self.dynamicPropsBlock = dynamicGeneralPropsBlock;
+        self.dynamicPropsGenerator = generator;
     });
 }
 
@@ -106,8 +106,8 @@
     // 目前有：首次初始化SDK、setLoginUserId、setDataCollectionEnabled（皆对应VISIT事件）
     // 其他非必要的场景则在事件创建过程中调用，也就是在GrowingThread
     GROWING_RW_LOCK_READ(lock, self.dynamicProps, ^{
-        if (self.dynamicPropsBlock) {
-            NSDictionary *dynamicProps = self.dynamicPropsBlock();
+        if (self.dynamicPropsGenerator) {
+            NSDictionary *dynamicProps = self.dynamicPropsGenerator();
             if (dynamicProps && [dynamicProps isKindOfClass:[NSDictionary class]]) {
                 return (NSDictionary *)[dynamicProps copy];
             }

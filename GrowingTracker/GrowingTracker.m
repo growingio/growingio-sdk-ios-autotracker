@@ -84,8 +84,8 @@ static GrowingTracker *sharedInstance = nil;
     [[GrowingGeneralProps sharedInstance] clearGeneralProps];
 }
 
-+ (void)registerDynamicGeneralPropsBlock:(NSDictionary<NSString *, id> * (^_Nullable)(void))dynamicGeneralPropsBlock {
-    [[GrowingGeneralProps sharedInstance] registerDynamicGeneralPropsBlock:dynamicGeneralPropsBlock];
++ (void)setDynamicGeneralPropsGenerator:(NSDictionary<NSString *, id> * (^_Nullable)(void))generator {
+    [[GrowingGeneralProps sharedInstance] setDynamicGeneralPropsGenerator:generator];
 }
 
 @end

@@ -118,7 +118,7 @@ public struct Tracker {
         GrowingTracker.clearGeneralProps()
     }
     
-    public static func registerDynamicGeneralProps(_ closure: (() -> [String: Any])?) {
-        GrowingTracker.registerDynamicGeneralProps(closure)
+    public static func setDynamicGeneralProps(_ closure: (() -> [String: Any])?) {
+        GrowingTracker.setDynamicGeneralProps(closure)
     }
 }
