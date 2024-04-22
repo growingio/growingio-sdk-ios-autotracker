@@ -145,7 +145,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
         XCTAssertEqualObjects(event.attributes[@"key5"], @"-[A0GrowingAnalyticsTest test05SetLoginUserAttributes]");
         XCTAssertEqualObjects(event.attributes[@"key6"], @"<null>");
         XCTAssertEqualObjects(event.attributes[@"key7"], @"1||2");
-        XCTAssertEqualObjects(event.attributes[@"key8"], @"2024-04-19 17:25:22.000");
+        XCTAssertEqualObjects(event.attributes[@"key8"], @"2024-04-19 09:25:22.000");
     }
 
     {
@@ -205,7 +205,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
         XCTAssertEqualObjects(event.attributes[@"key5"], @"-[A0GrowingAnalyticsTest test07TrackCustomEventWithAttributes]");
         XCTAssertEqualObjects(event.attributes[@"key6"], @"<null>");
         XCTAssertEqualObjects(event.attributes[@"key7"], @"1||2");
-        XCTAssertEqualObjects(event.attributes[@"key8"], @"2024-04-19 17:25:22.000");
+        XCTAssertEqualObjects(event.attributes[@"key8"], @"2024-04-19 09:25:22.000");
     }
 
     {
@@ -405,7 +405,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
         XCTAssertEqualObjects(event.attributes[@"key5"], @"-[A0GrowingAnalyticsTest test09TrackTimerWithAttributes]");
         XCTAssertEqualObjects(event.attributes[@"key6"], @"<null>");
         XCTAssertEqualObjects(event.attributes[@"key7"], @"1||2");
-        XCTAssertEqualObjects(event.attributes[@"key8"], @"2024-04-19 17:25:22.000");
+        XCTAssertEqualObjects(event.attributes[@"key8"], @"2024-04-19 09:25:22.000");
         XCTAssertNotNil(event.attributes[kGrowingEventDuration]);
     }
 
