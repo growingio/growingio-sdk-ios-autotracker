@@ -998,7 +998,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
         [MockEventQueue.sharedQueue cleanQueue];
         
         [GrowingAutotracker setGeneralProps:@{@"key" : @"value", @"key2" : @"value2"}];
-        [GrowingAutotracker registerDynamicGeneralPropsBlock:^NSDictionary<NSString *,NSString *> * _Nonnull{
+        [GrowingAutotracker setDynamicGeneralPropsGenerator:^NSDictionary<NSString *,NSString *> * _Nonnull{
             return @{@"key": @"valueChange", @"key3": @(1)};
         }];
         [[GrowingAutotracker sharedInstance] trackCustomEvent:@"eventName"];
@@ -1013,7 +1013,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
     }
     
     [GrowingAutotracker clearGeneralProps];
-    [GrowingAutotracker registerDynamicGeneralPropsBlock:nil];
+    [GrowingAutotracker setDynamicGeneralPropsGenerator:nil];
 }
 
 - (void)test23SetGeneralPropsDeprecatedAPIs {
@@ -1212,7 +1212,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
     }
     
     [GrowingAutotracker clearGeneralProps];
-    [GrowingAutotracker registerDynamicGeneralPropsBlock:nil];
+    [GrowingAutotracker setDynamicGeneralPropsGenerator:nil];
 }
 
 @end
