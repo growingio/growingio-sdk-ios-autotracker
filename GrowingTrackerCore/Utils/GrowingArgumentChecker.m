@@ -80,7 +80,7 @@
     return NO;
 }
 
-+ (NSDictionary<NSString *, NSString *> *)serializableAttributes:(NSDictionary *)properties {
++ (NSDictionary<NSString *, NSString *> * _Nullable)serializableAttributes:(NSDictionary *)properties {
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
     for (NSString *key in properties.allKeys) {
         id value = properties[key];
@@ -111,7 +111,7 @@
             result[key] = ((NSObject *)value).description;
         }
     }
-    return [result copy];
+    return result.count > 0 ? [result copy] : nil;
 }
 
 + (NSDateFormatter *)dateFormatterWithFormat:(NSString *)dateFormat {
