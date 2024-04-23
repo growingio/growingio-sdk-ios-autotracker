@@ -106,12 +106,18 @@
     return count;
 }
 
-- (nullable NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsByCount:(NSUInteger)count policy:(NSUInteger)mask {
-    if (self.countOfEvents == 0) {
+- (nullable NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsByCount:(NSUInteger)count
+                                                                  limitSize:(NSUInteger)limitSize
+                                                                     policy:(NSUInteger)mask {
+    NSInteger countOfEvents = [self countOfEvents];
+    if (countOfEvents == 0) {
         return [[NSArray alloc] init];
+    } else if (countOfEvents == -1) {
+        return nil;
     }
 
     NSMutableArray<id<GrowingEventPersistenceProtocol>> *events = [[NSMutableArray alloc] init];
+    __block NSUInteger eventsLength = 0;
     [self enumerateKeysAndValuesUsingBlock:^(NSString *key,
                                              id value,
                                              NSString *type,
@@ -124,9 +130,19 @@
                                                                                                      data:value
                                                                                                    policy:policy
                                                                                                sdkVersion:sdkVersion];
-            [events addObject:event];
-            if (events.count >= count) {
+            if ([value isKindOfClass:[NSString class]]) {
+                eventsLength += [(NSString *)value dataUsingEncoding:NSUTF8StringEncoding].length;
+            } else if ([value isKindOfClass:[NSData class]]) {
+                eventsLength += [(NSData *)value length];
+            }
+            if (eventsLength >= limitSize) {
                 **stop = YES;
+            } else {
+                [events addObject:event];
+
+                if (events.count >= count) {
+                    **stop = YES;
+                }
             }
         }
     }];
@@ -349,7 +365,7 @@ static BOOL isExecuteVacuum(NSString *name) {
     if (name.length == 0) {
         return NO;
     }
-    NSString *vacuumDate = [NSString stringWithFormat:@"GIO_VACUUM_DATE_E7B96C4E-6EE2-49CD-87F0-B2E62D4EE96A-%@", name];
+    NSString *vacuumDate = [NSString stringWithFormat:@"GROWINGIO_VACUUM_DATE_%@", name];
     NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
     NSDate *beforeDate = [userDefault objectForKey:vacuumDate];
     NSDate *nowDate = [NSDate date];
@@ -359,7 +375,7 @@ static BOOL isExecuteVacuum(NSString *name) {
                                                                   fromDate:beforeDate
                                                                     toDate:nowDate
                                                                    options:0];
-        BOOL flag = delta.day > 7 || delta.day < 0;
+        BOOL flag = delta.day > 3 || delta.day < 0;
         if (flag) {
             [userDefault setObject:nowDate forKey:vacuumDate];
             [userDefault synchronize];

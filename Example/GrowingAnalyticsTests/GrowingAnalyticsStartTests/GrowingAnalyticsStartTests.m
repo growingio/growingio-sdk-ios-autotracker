@@ -125,6 +125,7 @@
     XCTAssertEqual(configuration.idMappingEnabled, NO);
     XCTAssertEqualObjects(configuration.urlScheme, nil);
     XCTAssertEqual(configuration.encryptEnabled, NO);
+    XCTAssertEqual(configuration.compressEnabled, NO);
     XCTAssertEqual(configuration.impressionScale, 0);
     XCTAssertEqualObjects(configuration.dataSourceId, nil);
     XCTAssertEqualObjects(configuration.networkConfig, nil);
@@ -144,6 +145,7 @@
     config.idMappingEnabled = YES;
     config.urlScheme = @"growing.autotracker";
     config.encryptEnabled = YES;
+    config.compressEnabled = YES;
     config.impressionScale = 0.5;
     config.dataSourceId = @"12345";
     GrowingNetworkConfig *networkConfig = [GrowingNetworkConfig config];
@@ -165,6 +167,7 @@
     XCTAssertEqual(configuration.idMappingEnabled, YES);
     XCTAssertEqualObjects(configuration.urlScheme, @"growing.autotracker");
     XCTAssertEqual(configuration.encryptEnabled, YES);
+    XCTAssertEqual(configuration.compressEnabled, YES);
     XCTAssertEqual(configuration.impressionScale, 0.5);
     XCTAssertEqualObjects(configuration.dataSourceId, @"12345");
     XCTAssertNotNil(configuration.networkConfig);
@@ -188,6 +191,7 @@
     XCTAssertEqual(configuration.idMappingEnabled, NO);
     XCTAssertEqualObjects(configuration.urlScheme, nil);
     XCTAssertEqual(configuration.encryptEnabled, NO);
+    XCTAssertEqual(configuration.compressEnabled, NO);
     XCTAssertEqualObjects(configuration.dataSourceId, nil);
     XCTAssertEqualObjects(configuration.networkConfig, nil);
 }
@@ -206,6 +210,7 @@
     config.idMappingEnabled = YES;
     config.urlScheme = @"growing.tracker";
     config.encryptEnabled = YES;
+    config.compressEnabled = YES;
     config.dataSourceId = @"12345";
     GrowingNetworkConfig *networkConfig = [GrowingNetworkConfig config];
     networkConfig.requestTimeout = 0.3f;
@@ -225,6 +230,7 @@
     XCTAssertEqual(configuration.idMappingEnabled, YES);
     XCTAssertEqualObjects(configuration.urlScheme, @"growing.tracker");
     XCTAssertEqual(configuration.encryptEnabled, YES);
+    XCTAssertEqual(configuration.compressEnabled, YES);
     XCTAssertEqualObjects(configuration.dataSourceId, @"12345");
     XCTAssertNotNil(configuration.networkConfig);
     XCTAssertEqual(configuration.networkConfig.requestTimeout, 0.3f);

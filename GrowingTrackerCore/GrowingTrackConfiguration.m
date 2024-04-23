@@ -61,6 +61,7 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
         _idMappingEnabled = NO;
         _urlScheme = nil;
         _encryptEnabled = NO;
+        _compressEnabled = NO;
         _networkConfig = nil;
         _useProtobuf = YES;
 
@@ -105,6 +106,7 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
     configuration->_idMappingEnabled = _idMappingEnabled;
     configuration->_urlScheme = _urlScheme;
     configuration->_encryptEnabled = _encryptEnabled;
+    configuration->_compressEnabled = _compressEnabled;
     configuration->_networkConfig = [_networkConfig copy];
     configuration->_useProtobuf = _useProtobuf;
 

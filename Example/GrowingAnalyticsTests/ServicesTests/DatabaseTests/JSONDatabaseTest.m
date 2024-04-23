@@ -90,7 +90,7 @@
     // insert events
     XCTAssertEqual([database insertEvents:events], YES);
 
-    NSArray *array2 = [database getEventsByCount:insertCount policy:GrowingEventSendPolicyInstant];
+    NSArray *array2 = [database getEventsByCount:insertCount limitSize:1000000 policy:GrowingEventSendPolicyInstant];
     XCTAssertEqual(array2.count, insertCount);
 
     // delete events
@@ -151,6 +151,7 @@
     NSInteger insertCount = 1;
     NSArray *array = [database
         getEventsByCount:5
+                      limitSize:1000000
                   policy:GrowingEventSendPolicyInstant | GrowingEventSendPolicyMobileData |
                          GrowingEventSendPolicyWiFi];  // 避免多线程情况下，刚好还有其他事件产生入库，这里数值设定大一点
     XCTAssertGreaterThanOrEqual(array.count, insertCount);
