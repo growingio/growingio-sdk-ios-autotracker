@@ -18,8 +18,8 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Event/GrowingGeneralProps.h"
-#import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
+#import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
 
 @interface GrowingGeneralProps ()
 
