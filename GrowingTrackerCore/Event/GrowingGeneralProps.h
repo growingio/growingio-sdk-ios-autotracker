@@ -35,8 +35,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setDynamicGeneralPropsGenerator:(NSDictionary<NSString *, id> * (^_Nullable)(void))generator;
 
-- (void)buildDynamicGeneralProps;
-
 @end
 
 NS_ASSUME_NONNULL_END

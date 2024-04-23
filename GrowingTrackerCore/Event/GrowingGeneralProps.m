@@ -19,26 +19,16 @@
 
 #import "GrowingTrackerCore/Event/GrowingGeneralProps.h"
 #import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
-#import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
+#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 
 @interface GrowingGeneralProps ()
 
 @property (nonatomic, strong) NSMutableDictionary<NSString *, id> *internalProps;
-@property (atomic, copy) NSDictionary<NSString *, id> *dynamicProps;
 @property (nonatomic, copy) NSDictionary<NSString *, id> * (^dynamicPropsGenerator)(void);
 
 @end
 
-@implementation GrowingGeneralProps {
-    GROWING_RW_LOCK_DECLARE(lock);
-}
-
-- (instancetype)init {
-    if (self = [super init]) {
-        GROWING_RW_LOCK_INIT(lock);
-    }
-    return self;
-}
+@implementation GrowingGeneralProps
 
 + (instancetype)sharedInstance {
     static GrowingGeneralProps *instance;
@@ -50,24 +40,20 @@
 }
 
 - (NSDictionary<NSString *, id> *)getGeneralProps {
-    if (!self.dynamicProps && self.dynamicPropsGenerator) {
-        // 动态属性未build
-        [self buildDynamicGeneralProps];
+    // running on GrowingThread
+    NSDictionary<NSString *, id> *dynamicProps = nil;
+    if (self.dynamicPropsGenerator) {
+        NSDictionary *dic = self.dynamicPropsGenerator();
+        if (dic && [dic isKindOfClass:[NSDictionary class]]) {
+            dynamicProps = (NSDictionary *)[dic copy];
+        }
     }
 
-    __block NSMutableDictionary *properties = nil;
-    GROWING_RW_LOCK_READ(lock, properties, ^{
-        return self.internalProps.mutableCopy;
-    });
-
+    NSMutableDictionary *properties = self.internalProps.mutableCopy;
     // dynamic general properties > general properties
-    if (self.dynamicProps) {
-        [properties addEntriesFromDictionary:self.dynamicProps];
+    if (dynamicProps) {
+        [properties addEntriesFromDictionary:dynamicProps];
     }
-
-    // 置为nil，保证下一次事件能够获取最新值
-    self.dynamicProps = nil;
-
     return [properties copy];
 }
 
@@ -75,46 +61,30 @@
     if ([GrowingArgumentChecker isIllegalAttributes:props]) {
         return;
     }
-    GROWING_RW_LOCK_WRITE(lock, ^{
+    [GrowingDispatchManager dispatchInGrowingThread:^{
         [self.internalProps addEntriesFromDictionary:props];
-    });
+    }];
 }
 
 - (void)removeGeneralProps:(NSArray<NSString *> *)keys {
     if ([GrowingArgumentChecker isIllegalKeys:keys]) {
         return;
     }
-    GROWING_RW_LOCK_WRITE(lock, ^{
+    [GrowingDispatchManager dispatchInGrowingThread:^{
         [self.internalProps removeObjectsForKeys:keys];
-    });
+    }];
 }
 
 - (void)clearGeneralProps {
-    GROWING_RW_LOCK_WRITE(lock, ^{
+    [GrowingDispatchManager dispatchInGrowingThread:^{
         [self.internalProps removeAllObjects];
-    });
+    }];
 }
 
 - (void)setDynamicGeneralPropsGenerator:(NSDictionary<NSString *, id> * (^_Nullable)(void))generator {
-    GROWING_RW_LOCK_WRITE(lock, ^{
+    [GrowingDispatchManager dispatchInGrowingThread:^{
         self.dynamicPropsGenerator = generator;
-    });
-}
-
-- (void)buildDynamicGeneralProps {
-    // 一般情况下，buildDynamicGeneralProps应该在用户线程中调用，以获取实际值
-    // 目前有：首次初始化SDK、setLoginUserId、setDataCollectionEnabled（皆对应VISIT事件）
-    // 其他非必要的场景则在事件创建过程中调用，也就是在GrowingThread
-    GROWING_RW_LOCK_READ(lock, self.dynamicProps, ^{
-        if (self.dynamicPropsGenerator) {
-            NSDictionary *dynamicProps = self.dynamicPropsGenerator();
-            if (dynamicProps && [dynamicProps isKindOfClass:[NSDictionary class]]) {
-                return (NSDictionary *)[dynamicProps copy];
-            }
-        }
-        // always return not nil value
-        return @{};
-    });
+    }];
 }
 
 #pragma mark - Setter && Getter
