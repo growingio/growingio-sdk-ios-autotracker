@@ -80,7 +80,7 @@
     return NO;
 }
 
-+ (NSDictionary<NSString *, NSString *> * _Nullable)serializableAttributes:(NSDictionary *)properties {
++ (NSDictionary<NSString *, NSString *> *_Nullable)serializableAttributes:(NSDictionary *)properties {
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
     for (NSString *key in properties.allKeys) {
         id value = properties[key];
