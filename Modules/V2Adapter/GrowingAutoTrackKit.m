@@ -95,7 +95,7 @@
 }
 
 - (void)growingImpTrack:(NSString *)eventId withVariable:(NSDictionary<NSString *, id> *)variable {
-    variable = [GrowingV2Adapter fit3xDictionary:variable];
+    variable = [GrowingV2Adapter fitAttributes:variable];
     [self growingTrackImpression:eventId attributes:variable];
 }
 

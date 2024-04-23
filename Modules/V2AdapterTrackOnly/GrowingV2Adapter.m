@@ -69,16 +69,23 @@ static NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey
     [[GrowingPersistenceDataProvider sharedInstance] setString:@"1" forKey:kGrowingUserdefault_2xto3x];
 }
 
-+ (NSDictionary *)fit3xDictionary:(NSDictionary *)variable {
-    NSMutableDictionary *mutDic = [NSMutableDictionary dictionaryWithDictionary:variable];
++ (NSDictionary *)fitAttributes:(NSDictionary *)variable {
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     for (NSString *key in variable.allKeys) {
         id obj = variable[key];
-        if ([obj isKindOfClass:[NSNumber class]]) {
+        if ([obj isKindOfClass:[NSString class]]) {
+            [dic setObject:obj forKey:key];
+        } else if ([obj isKindOfClass:[NSNumber class]]) {
             NSString *value = ((NSNumber *)obj).stringValue;
-            [mutDic setValue:value forKey:key];
+            [dic setValue:value forKey:key];
+        } else if ([obj isKindOfClass:[NSNull class]]) {
+            [dic setObject:@"" forKey:key];
+        } else {
+            NSString *value = [obj description];
+            [dic setObject:value forKey:key];
         }
     }
-    return mutDic;
+    return [dic copy];
 }
 
 @end
