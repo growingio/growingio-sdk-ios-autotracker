@@ -129,6 +129,7 @@
     XCTAssertEqual(configuration.impressionScale, 0);
     XCTAssertEqualObjects(configuration.dataSourceId, nil);
     XCTAssertEqualObjects(configuration.networkConfig, nil);
+    XCTAssertEqual(configuration.dataValidityPeriod, 7);
 }
 
 - (void)testSetConfiguration_Autotracker {
@@ -151,6 +152,14 @@
     GrowingNetworkConfig *networkConfig = [GrowingNetworkConfig config];
     networkConfig.requestTimeout = 0.3f;
     config.networkConfig = networkConfig;
+    
+    // [3, 30]
+    config.dataValidityPeriod = 2;
+    XCTAssertEqual(config.dataValidityPeriod, 3);
+    config.dataValidityPeriod = 31;
+    XCTAssertEqual(config.dataValidityPeriod, 30);
+    config.dataValidityPeriod = 20;
+    
     [GrowingRealAutotracker trackerWithConfiguration:config launchOptions:nil];
 
     GrowingAutotrackConfiguration *configuration =
@@ -172,6 +181,7 @@
     XCTAssertEqualObjects(configuration.dataSourceId, @"12345");
     XCTAssertNotNil(configuration.networkConfig);
     XCTAssertEqual(configuration.networkConfig.requestTimeout, 0.3f);
+    XCTAssertEqual(configuration.dataValidityPeriod, 20);
 }
 
 - (void)testDefaultConfiguration_Tracker {
@@ -194,6 +204,7 @@
     XCTAssertEqual(configuration.compressEnabled, NO);
     XCTAssertEqualObjects(configuration.dataSourceId, nil);
     XCTAssertEqualObjects(configuration.networkConfig, nil);
+    XCTAssertEqual(configuration.dataValidityPeriod, 7);
 }
 
 - (void)testSetConfiguration_Tracker {
@@ -215,6 +226,14 @@
     GrowingNetworkConfig *networkConfig = [GrowingNetworkConfig config];
     networkConfig.requestTimeout = 0.3f;
     config.networkConfig = networkConfig;
+    
+    // [3, 30]
+    config.dataValidityPeriod = 2;
+    XCTAssertEqual(config.dataValidityPeriod, 3);
+    config.dataValidityPeriod = 31;
+    XCTAssertEqual(config.dataValidityPeriod, 30);
+    config.dataValidityPeriod = 20;
+    
     [GrowingRealTracker trackerWithConfiguration:config launchOptions:nil];
 
     GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
@@ -234,6 +253,7 @@
     XCTAssertEqualObjects(configuration.dataSourceId, @"12345");
     XCTAssertNotNil(configuration.networkConfig);
     XCTAssertEqual(configuration.networkConfig.requestTimeout, 0.3f);
+    XCTAssertEqual(configuration.dataValidityPeriod, 20);
 }
 
 - (void)testVersionNameAndVersionCode {
