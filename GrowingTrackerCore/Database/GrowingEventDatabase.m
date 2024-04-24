@@ -21,8 +21,8 @@
 #import "GrowingTrackerCore/Public/GrowingServiceManager.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 
-long long const GrowingEventDatabaseExpirationTime = 86400000 * 7;
 NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.error";
 
 @interface GrowingEventDatabase ()
@@ -158,7 +158,9 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
 }
 
 - (BOOL)cleanExpiredDataIfNeeded {
-    BOOL result = [self.db cleanExpiredEventIfNeeded];
+    GrowingTrackConfiguration *trackConfiguration =
+        GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    BOOL result = [self.db cleanExpiredEventIfNeeded:trackConfiguration.dataValidityPeriod];
 
     if (!result) {
         [self handleDatabaseError:[self.db lastError]];

@@ -264,9 +264,9 @@
     return result;
 }
 
-- (BOOL)cleanExpiredEventIfNeeded {
+- (BOOL)cleanExpiredEventIfNeeded:(NSUInteger)expirationDays {
     NSNumber *now = [NSNumber numberWithLongLong:([[NSDate date] timeIntervalSince1970] * 1000LL)];
-    NSNumber *sevenDayBefore = [NSNumber numberWithLongLong:(now.longLongValue - GrowingEventDatabaseExpirationTime)];
+    NSNumber *sevenDayBefore = [NSNumber numberWithLongLong:(now.longLongValue - expirationDays * 86400000)];
 
     __block BOOL result = NO;
     [self performDatabaseBlock:^(GrowingFMDatabase *db, NSError *error) {

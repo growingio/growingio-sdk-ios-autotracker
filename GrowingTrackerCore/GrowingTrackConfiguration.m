@@ -64,6 +64,7 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
         _compressEnabled = NO;
         _networkConfig = nil;
         _useProtobuf = YES;
+        _dataValidityPeriod = 7;
 
         // Ads
         _ASAEnabled = NO;
@@ -109,6 +110,7 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
     configuration->_compressEnabled = _compressEnabled;
     configuration->_networkConfig = [_networkConfig copy];
     configuration->_useProtobuf = _useProtobuf;
+    configuration->_dataValidityPeriod = _dataValidityPeriod;
 
     // Ads
     configuration->_ASAEnabled = _ASAEnabled;
@@ -140,6 +142,16 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
         return;
     }
     _sessionInterval = sessionInterval;
+}
+
+- (void)setDataValidityPeriod:(NSUInteger)dataValidityPeriod {
+    // period range is [3, 30]
+    if (dataValidityPeriod < 3) {
+        dataValidityPeriod = 3;
+    } else if (dataValidityPeriod > 30) {
+        dataValidityPeriod = 30;
+    }
+    _dataValidityPeriod = dataValidityPeriod;
 }
 
 @end
