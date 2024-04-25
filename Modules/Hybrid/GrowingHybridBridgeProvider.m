@@ -61,7 +61,6 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
 #define KEY_TEXT_VALUE "textValue"
 #define KEY_XPATH "xpath"
 #define KEY_XCONTENT "xcontent"
-#define CUSTOM_EVENT_TYPE "customEventType"
 
 @interface UIView (GrowingNode) <GrowingNode>
 @end
@@ -226,10 +225,6 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
         } else if ([type isEqualToString:GrowingEventTypeFormSubmit]) {
             builder = [self transformViewElementBuilder:dict].setEventType(type);
         } else if ([type isEqualToString:GrowingEventTypeCustom]) {
-            NSString *customEventType = dict[@CUSTOM_EVENT_TYPE];
-            if ([customEventType isKindOfClass:[NSNumber class]]) {
-                customEventType = ((NSNumber *)dict[@CUSTOM_EVENT_TYPE]).stringValue;
-            }
             NSDictionary *mergedDic = [self safeAttributesFromDict:dict].copy;
             builder = GrowingHybridCustomEvent.builder.setQuery(dict[@KEY_QUERY])
                           .setPath(dict[@KEY_PATH])
