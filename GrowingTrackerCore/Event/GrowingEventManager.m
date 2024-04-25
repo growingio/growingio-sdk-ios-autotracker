@@ -347,7 +347,7 @@ static GrowingEventManager *sharedInstance = nil;
                           channel.isUploading = NO;
                       }];
                   }
-                  if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
+                  if ((httpResponse.statusCode >= 200 && httpResponse.statusCode < 400) || httpResponse.statusCode == 413) {
                       [GrowingDispatchManager dispatchInGrowingThread:^{
                           if (isViaCellular) {
                               if ([eventRequest respondsToSelector:@selector(outsize)]) {
@@ -355,10 +355,12 @@ static GrowingEventManager *sharedInstance = nil;
                               }
                           }
 
-                          for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
-                              if ([obj respondsToSelector:@selector(growingEventManagerEventsDidSend:
-                                                                                             request:channel:)]) {
-                                  [obj growingEventManagerEventsDidSend:events request:eventRequest channel:channel];
+                          if (httpResponse.statusCode != 413) {
+                              for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
+                                  if ([obj respondsToSelector:@selector(growingEventManagerEventsDidSend:
+                                                                                                 request:channel:)]) {
+                                      [obj growingEventManagerEventsDidSend:events request:eventRequest channel:channel];
+                                  }
                               }
                           }
 
