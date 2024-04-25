@@ -50,6 +50,7 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
         _dataSourceId = nil;
 
         _debugEnabled = NO;
+        _requestPreflight = YES;
         _cellularDataLimit = 20;
         _dataUploadInterval = 15;
         _sessionInterval = 30;
@@ -96,6 +97,7 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
     configuration->_accountId = [_accountId copy];
     configuration->_dataSourceId = [_dataSourceId copy];
     configuration->_debugEnabled = _debugEnabled;
+    configuration->_requestPreflight = _requestPreflight;
     configuration->_cellularDataLimit = _cellularDataLimit;
     configuration->_dataUploadInterval = _dataUploadInterval;
     configuration->_sessionInterval = _sessionInterval;

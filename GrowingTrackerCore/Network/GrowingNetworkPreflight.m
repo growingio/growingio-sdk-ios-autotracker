@@ -56,13 +56,23 @@ static NSTimeInterval const kGrowingPreflightMaxTime = 300;
 #pragma mark - Public Methods
 
 + (BOOL)isSucceed {
+    BOOL requestPreflight = GrowingConfigurationManager.sharedInstance.trackConfiguration.requestPreflight;
+    if (!requestPreflight) {
+        return YES;
+    }
     GrowingNetworkPreflight *preflight = [GrowingNetworkPreflight sharedInstance];
     return preflight.status == GrowingNWPreflightStatusAuthorized;
 }
 
 + (void)sendPreflight {
     [GrowingDispatchManager dispatchInGrowingThread:^{
-        NSTimeInterval dataUploadInterval = GrowingConfigurationManager.sharedInstance.trackConfiguration.dataUploadInterval;
+        GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+        BOOL requestPreflight = trackConfiguration.requestPreflight;
+        if (!requestPreflight) {
+            return;
+        }
+        
+        NSTimeInterval dataUploadInterval = trackConfiguration.dataUploadInterval;
         dataUploadInterval = MAX(dataUploadInterval, 5);
         
         GrowingNetworkPreflight *preflight = [GrowingNetworkPreflight sharedInstance];

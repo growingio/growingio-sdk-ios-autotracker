@@ -114,6 +114,7 @@
     GrowingAutotrackConfiguration *configuration =
         (GrowingAutotrackConfiguration *)GrowingConfigurationManager.sharedInstance.trackConfiguration;
     XCTAssertEqual(configuration.debugEnabled, NO);
+    XCTAssertEqual(configuration.requestPreflight, YES);
     XCTAssertEqual(configuration.cellularDataLimit, 20);
     XCTAssertEqual(configuration.dataUploadInterval, 15);
     XCTAssertEqual(configuration.sessionInterval, 30);
@@ -135,6 +136,7 @@
 - (void)testSetConfiguration_Autotracker {
     GrowingAutotrackConfiguration *config = [GrowingAutotrackConfiguration configurationWithAccountId:@"test"];
     config.debugEnabled = YES;
+    config.requestPreflight = NO;
     config.cellularDataLimit = 5;
     config.dataUploadInterval = 10;
     config.sessionInterval = 10;
@@ -165,6 +167,7 @@
     GrowingAutotrackConfiguration *configuration =
         (GrowingAutotrackConfiguration *)GrowingConfigurationManager.sharedInstance.trackConfiguration;
     XCTAssertEqual(configuration.debugEnabled, YES);
+    XCTAssertEqual(configuration.requestPreflight, NO);
     XCTAssertEqual(configuration.cellularDataLimit, 5);
     XCTAssertEqual(configuration.dataUploadInterval, 10);
     XCTAssertEqual(configuration.sessionInterval, 10);
@@ -190,6 +193,7 @@
 
     GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
     XCTAssertEqual(configuration.debugEnabled, NO);
+    XCTAssertEqual(configuration.requestPreflight, YES);
     XCTAssertEqual(configuration.cellularDataLimit, 20);
     XCTAssertEqual(configuration.dataUploadInterval, 15);
     XCTAssertEqual(configuration.sessionInterval, 30);
@@ -210,6 +214,7 @@
 - (void)testSetConfiguration_Tracker {
     GrowingTrackConfiguration *config = [GrowingTrackConfiguration configurationWithAccountId:@"test"];
     config.debugEnabled = YES;
+    config.requestPreflight = NO;
     config.cellularDataLimit = 5;
     config.dataUploadInterval = 10;
     config.sessionInterval = 10;
@@ -238,6 +243,7 @@
 
     GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
     XCTAssertEqual(configuration.debugEnabled, YES);
+    XCTAssertEqual(configuration.requestPreflight, NO);
     XCTAssertEqual(configuration.cellularDataLimit, 5);
     XCTAssertEqual(configuration.dataUploadInterval, 10);
     XCTAssertEqual(configuration.sessionInterval, 10);
