@@ -24,6 +24,7 @@ typedef NS_ENUM(NSUInteger, GrowingHTTPMethod) {
     GrowingHTTPMethodPOST,
     GrowingHTTPMethodPUT,
     GrowingHTTPMethodDELETE,
+    GrowingHTTPMethodOPTIONS,
 };
 
 @protocol GrowingRequestProtocol;
