@@ -23,6 +23,7 @@
 #import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Network/GrowingNetworkPreflight.h"
 #import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogMacros.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
@@ -31,7 +32,6 @@
 #import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 #import "GrowingULAppLifecycle.h"
 #import "GrowingULTimeUtil.h"
-#import "GrowingTrackerCore/Network/GrowingNetworkPreflight.h"
 
 @interface GrowingSession () <GrowingULAppLifecycleDelegate>
 
@@ -86,7 +86,7 @@ static GrowingSession *currentSession = nil;
 
 - (void)generateVisit {
     [GrowingNetworkPreflight sendPreflight];
-    
+
     GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
     if (!trackConfiguration.dataCollectionEnabled) {
         return;

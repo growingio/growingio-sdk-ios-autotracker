@@ -46,7 +46,8 @@
 }
 
 - (NSArray<id<GrowingRequestAdapter>> *)adapters {
-    GrowingPreflightRequestHeaderAdapter *basicHeaderAdapter = [GrowingPreflightRequestHeaderAdapter adapterWithRequest:self];
+    GrowingPreflightRequestHeaderAdapter *basicHeaderAdapter =
+        [GrowingPreflightRequestHeaderAdapter adapterWithRequest:self];
     GrowingRequestMethodAdapter *methodAdapter = [GrowingRequestMethodAdapter adapterWithRequest:self];
     return @[basicHeaderAdapter, methodAdapter];
 }

@@ -25,6 +25,7 @@
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
+#import "GrowingTrackerCore/Network/GrowingNetworkPreflight.h"
 #import "GrowingTrackerCore/Network/Request/GrowingEventRequest.h"
 #import "GrowingTrackerCore/Public/GrowingBaseEvent.h"
 #import "GrowingTrackerCore/Public/GrowingEventFilter.h"
@@ -34,7 +35,6 @@
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
-#import "GrowingTrackerCore/Network/GrowingNetworkPreflight.h"
 
 static const NSUInteger kGrowingMaxDBCacheSize = 100;  // default: write to DB as soon as there are 100 events
 static const NSUInteger kGrowingMaxBatchSize = 500;    // default: send no more than 500 events in every batch
@@ -340,44 +340,45 @@ static GrowingEventManager *sharedInstance = nil;
 
     channel.isUploading = YES;
     NSObject<GrowingRequestProtocol> *eventRequest = [[GrowingEventRequest alloc] initWithEvents:rawEvents];
-    [service sendRequest:eventRequest
-              completion:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data, NSError *_Nonnull error) {
-                  if (error) {
-                      [GrowingDispatchManager dispatchInGrowingThread:^{
-                          channel.isUploading = NO;
-                      }];
-                  }
-                  if ((httpResponse.statusCode >= 200 && httpResponse.statusCode < 400) || httpResponse.statusCode == 413) {
-                      [GrowingDispatchManager dispatchInGrowingThread:^{
-                          if (isViaCellular) {
-                              if ([eventRequest respondsToSelector:@selector(outsize)]) {
-                                  self.uploadEventSize += eventRequest.outsize;
-                              }
-                          }
+    [service
+        sendRequest:eventRequest
+         completion:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data, NSError *_Nonnull error) {
+             if (error) {
+                 [GrowingDispatchManager dispatchInGrowingThread:^{
+                     channel.isUploading = NO;
+                 }];
+             }
+             if ((httpResponse.statusCode >= 200 && httpResponse.statusCode < 400) || httpResponse.statusCode == 413) {
+                 [GrowingDispatchManager dispatchInGrowingThread:^{
+                     if (isViaCellular) {
+                         if ([eventRequest respondsToSelector:@selector(outsize)]) {
+                             self.uploadEventSize += eventRequest.outsize;
+                         }
+                     }
 
-                          if (httpResponse.statusCode != 413) {
-                              for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
-                                  if ([obj respondsToSelector:@selector(growingEventManagerEventsDidSend:
-                                                                                                 request:channel:)]) {
-                                      [obj growingEventManagerEventsDidSend:events request:eventRequest channel:channel];
-                                  }
-                              }
-                          }
+                     if (httpResponse.statusCode != 413) {
+                         for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
+                             if ([obj respondsToSelector:@selector(growingEventManagerEventsDidSend:
+                                                                                            request:channel:)]) {
+                                 [obj growingEventManagerEventsDidSend:events request:eventRequest channel:channel];
+                             }
+                         }
+                     }
 
-                          [self removeEvents_unsafe:events forChannel:channel];
-                          channel.isUploading = NO;
+                     [self removeEvents_unsafe:events forChannel:channel];
+                     channel.isUploading = NO;
 
-                          // 如果剩余数量 大于单包数量  则直接发送
-                          if (channel.db.countOfEvents >= kGrowingMaxBatchSize) {
-                              [self sendEventsInstantWithChannel:channel];
-                          }
-                      }];
-                  } else {
-                      [GrowingDispatchManager dispatchInGrowingThread:^{
-                          channel.isUploading = NO;
-                      }];
-                  }
-              }];
+                     // 如果剩余数量 大于单包数量  则直接发送
+                     if (channel.db.countOfEvents >= kGrowingMaxBatchSize) {
+                         [self sendEventsInstantWithChannel:channel];
+                     }
+                 }];
+             } else {
+                 [GrowingDispatchManager dispatchInGrowingThread:^{
+                     channel.isUploading = NO;
+                 }];
+             }
+         }];
 }
 
 #pragma mark Event Persist

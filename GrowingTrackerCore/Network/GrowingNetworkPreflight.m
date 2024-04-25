@@ -18,11 +18,11 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Network/GrowingNetworkPreflight.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Network/Request/GrowingPreflightRequest.h"
 #import "GrowingTrackerCore/Public/GrowingEventNetworkService.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
-#import "GrowingTrackerCore/Network/Request/GrowingPreflightRequest.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
-#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 
 typedef NS_ENUM(NSUInteger, GrowingNetworkPreflightStatus) {
     GrowingNWPreflightStatusNotDetermined,
@@ -71,10 +71,10 @@ static NSTimeInterval const kGrowingPreflightMaxTime = 300;
         if (!requestPreflight) {
             return;
         }
-        
+
         NSTimeInterval dataUploadInterval = trackConfiguration.dataUploadInterval;
         dataUploadInterval = MAX(dataUploadInterval, 5);
-        
+
         GrowingNetworkPreflight *preflight = [GrowingNetworkPreflight sharedInstance];
         preflight.nextPreflightTime = dataUploadInterval;
         if (preflight.status != GrowingNWPreflightStatusWaitingForResponse) {
@@ -87,32 +87,35 @@ static NSTimeInterval const kGrowingPreflightMaxTime = 300;
 
 - (void)sendPreflight {
     self.status = GrowingNWPreflightStatusWaitingForResponse;
-    
+
     id<GrowingEventNetworkService> service =
         [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingEventNetworkService)];
     if (!service) {
         return;
     }
-    
+
     NSObject<GrowingRequestProtocol> *preflight = [[GrowingPreflightRequest alloc] init];
-    [service sendRequest:preflight
-              completion:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data, NSError *_Nonnull error) {
-        [GrowingDispatchManager dispatchInGrowingThread:^{
-            if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 400) {
-                self.status = GrowingNWPreflightStatusAuthorized;
-            } else {
-                self.status = GrowingNWPreflightStatusDenied;
-                
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.nextPreflightTime * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [GrowingDispatchManager dispatchInGrowingThread:^{
-                        [self sendPreflight];
-                    }];
-                });
-                
-                self.nextPreflightTime = MIN(self.nextPreflightTime * 2, kGrowingPreflightMaxTime);
-            }
-        }];
-    }];
+    [service
+        sendRequest:preflight
+         completion:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data, NSError *_Nonnull error) {
+             [GrowingDispatchManager dispatchInGrowingThread:^{
+                 if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 400) {
+                     self.status = GrowingNWPreflightStatusAuthorized;
+                 } else {
+                     self.status = GrowingNWPreflightStatusDenied;
+
+                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.nextPreflightTime * NSEC_PER_SEC)),
+                                    dispatch_get_main_queue(),
+                                    ^{
+                                        [GrowingDispatchManager dispatchInGrowingThread:^{
+                                            [self sendPreflight];
+                                        }];
+                                    });
+
+                     self.nextPreflightTime = MIN(self.nextPreflightTime * 2, kGrowingPreflightMaxTime);
+                 }
+             }];
+         }];
 }
 
 @end

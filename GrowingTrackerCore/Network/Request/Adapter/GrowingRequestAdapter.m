@@ -78,7 +78,7 @@
         case GrowingHTTPMethodDELETE:
             httpMethod = @"DELETE";
             break;
-            
+
         case GrowingHTTPMethodOPTIONS:
             httpMethod = @"OPTIONS";
             break;
@@ -116,7 +116,8 @@
 - (NSMutableURLRequest *)adaptedURLRequest:(NSMutableURLRequest *)request {
     NSMutableURLRequest *needAdaptReq = request;
     [needAdaptReq setValue:@"POST" forHTTPHeaderField:@"Access-Control-Request-Method"];
-    [needAdaptReq setValue:@"Accept, Content-Type, X-Timestamp, X-Crypt-Codec, X-Compress-Codec" forHTTPHeaderField:@"Access-Control-Request-Headers"];
+    [needAdaptReq setValue:@"Accept, Content-Type, X-Timestamp, X-Crypt-Codec, X-Compress-Codec"
+        forHTTPHeaderField:@"Access-Control-Request-Headers"];
     NSURL *url = [self.request absoluteURL];
     NSString *origin = [NSString stringWithFormat:@"%@://%@", url.scheme, url.host];
     [needAdaptReq setValue:origin forHTTPHeaderField:@"Origin"];
