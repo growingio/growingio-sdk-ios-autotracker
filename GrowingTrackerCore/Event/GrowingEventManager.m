@@ -340,48 +340,41 @@ static GrowingEventManager *sharedInstance = nil;
 
     channel.isUploading = YES;
     NSObject<GrowingRequestProtocol> *eventRequest = [[GrowingEventRequest alloc] initWithEvents:rawEvents];
-    [service
-        sendRequest:eventRequest
-         completion:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data, NSError *_Nonnull error) {
-             if (error) {
-                 [GrowingDispatchManager dispatchInGrowingThread:^{
-                     channel.isUploading = NO;
-                 }];
-             }
-             if ((httpResponse.statusCode >= 200 && httpResponse.statusCode < 400) || httpResponse.statusCode == 413) {
-                 [GrowingDispatchManager dispatchInGrowingThread:^{
-                     if (isViaCellular) {
-                         if ([eventRequest respondsToSelector:@selector(outsize)]) {
-                             self.uploadEventSize += eventRequest.outsize;
-                         }
-                     }
-
-                     if (httpResponse.statusCode != 413) {
-                         for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
-                             if ([obj respondsToSelector:@selector(growingEventManagerEventsDidSend:
-                                                                                            request:channel:)]) {
-                                 [obj growingEventManagerEventsDidSend:events request:eventRequest channel:channel];
-                             }
-                         }
-                     }
-
-                     [self removeEvents_unsafe:events forChannel:channel];
-                     channel.isUploading = NO;
-
-                     // 如果剩余数量 大于单包数量  则直接发送
-                     if (channel.db.countOfEvents >= kGrowingMaxBatchSize) {
-                         [self sendEventsInstantWithChannel:channel];
-                     }
-                 }];
-             } else {
-                 [GrowingDispatchManager dispatchInGrowingThread:^{
-                     if (httpResponse.statusCode == 403) {
-                         [GrowingNetworkPreflight sendPreflight];
-                     }
-                     channel.isUploading = NO;
-                 }];
-             }
-         }];
+    [service sendRequest:eventRequest completion:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data, NSError *_Nonnull error) {
+        [GrowingDispatchManager dispatchInGrowingThread:^{
+            channel.isUploading = NO;
+            
+            if (error) {
+                return;
+            }
+            
+            if ((httpResponse.statusCode >= 200 && httpResponse.statusCode < 400) || httpResponse.statusCode == 413) {
+                if (isViaCellular) {
+                    if ([eventRequest respondsToSelector:@selector(outsize)]) {
+                        self.uploadEventSize += eventRequest.outsize;
+                    }
+                }
+                
+                if (httpResponse.statusCode != 413) {
+                    for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
+                        if ([obj respondsToSelector:@selector(growingEventManagerEventsDidSend:
+                                                              request:channel:)]) {
+                            [obj growingEventManagerEventsDidSend:events request:eventRequest channel:channel];
+                        }
+                    }
+                }
+                
+                [self removeEvents_unsafe:events forChannel:channel];
+                
+                // 如果剩余数量 大于单包数量  则直接发送
+                if (channel.db.countOfEvents >= kGrowingMaxBatchSize) {
+                    [self sendEventsInstantWithChannel:channel];
+                }
+            } else if (httpResponse.statusCode == 403) {
+                [GrowingNetworkPreflight sendPreflight];
+            }
+        }];
+    }];
 }
 
 #pragma mark Event Persist
