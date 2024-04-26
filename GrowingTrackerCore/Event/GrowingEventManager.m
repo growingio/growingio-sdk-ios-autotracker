@@ -377,9 +377,11 @@ static GrowingEventManager *sharedInstance = nil;
 #pragma mark Event Persist
 
 - (void)writeToDatabaseWithEvent:(GrowingBaseEvent *)event {
+#if defined(DEBUG) && DEBUG
     GIOLogDebug(@"save: event, type is %@\n%@",
                 event.eventType,
                 [event.toDictionary growingHelper_beautifulJsonString]);
+#endif
     NSString *eventType = event.eventType;
 
     if (!event) {
