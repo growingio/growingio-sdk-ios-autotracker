@@ -375,6 +375,9 @@ static GrowingEventManager *sharedInstance = nil;
                  }];
              } else {
                  [GrowingDispatchManager dispatchInGrowingThread:^{
+                     if (httpResponse.statusCode == 403) {
+                         [GrowingNetworkPreflight sendPreflight];
+                     }
                      channel.isUploading = NO;
                  }];
              }
