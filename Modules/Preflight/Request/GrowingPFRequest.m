@@ -18,11 +18,11 @@
 //  limitations under the License.
 
 #import "Modules/Preflight/Request/GrowingPFRequest.h"
-#import "Modules/Preflight/Request/GrowingPFRequestHeaderAdapter.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Network/Request/Adapter/GrowingRequestAdapter.h"
 #import "GrowingULTimeUtil.h"
+#import "Modules/Preflight/Request/GrowingPFRequestHeaderAdapter.h"
 
 @implementation GrowingPFRequest
 
@@ -47,8 +47,7 @@
 }
 
 - (NSArray<id<GrowingRequestAdapter>> *)adapters {
-    GrowingPFRequestHeaderAdapter *basicHeaderAdapter =
-        [GrowingPFRequestHeaderAdapter adapterWithRequest:self];
+    GrowingPFRequestHeaderAdapter *basicHeaderAdapter = [GrowingPFRequestHeaderAdapter adapterWithRequest:self];
     GrowingRequestMethodAdapter *methodAdapter = [GrowingRequestMethodAdapter adapterWithRequest:self];
     return @[basicHeaderAdapter, methodAdapter];
 }

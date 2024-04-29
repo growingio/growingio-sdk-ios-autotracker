@@ -83,7 +83,7 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
         // ABTesting
         _abTestingServerHost = kGrowingDefaultABTestingServerHost;
         _abTestingRequestInterval = 5;
-        
+
         // Preflight
         _requestPreflight = NO;
         _minorDataCollectionServerHost = kGrowingDefaultMinorDataCollectionServerHost;
@@ -133,7 +133,7 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
     // ABTesting
     configuration->_abTestingServerHost = [_abTestingServerHost copy];
     configuration->_abTestingRequestInterval = _abTestingRequestInterval;
-    
+
     // Preflight
     configuration->_requestPreflight = _requestPreflight;
     configuration->_minorDataCollectionServerHost = [_minorDataCollectionServerHost copy];

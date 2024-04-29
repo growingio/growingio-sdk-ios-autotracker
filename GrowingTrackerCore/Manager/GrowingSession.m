@@ -23,7 +23,6 @@
 #import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
-#import "Modules/Preflight/Public/GrowingNetworkPreflight.h"
 #import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogMacros.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
@@ -32,6 +31,7 @@
 #import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 #import "GrowingULAppLifecycle.h"
 #import "GrowingULTimeUtil.h"
+#import "Modules/Preflight/Public/GrowingNetworkPreflight.h"
 
 @interface GrowingSession () <GrowingULAppLifecycleDelegate>
 

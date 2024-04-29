@@ -17,23 +17,23 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "Modules/Preflight/GrowingNetworkPreflight+Private.h"
-#import "Modules/Preflight/Request/GrowingPFRequest.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Network/Request/Adapter/GrowingEventRequestAdapters.h"
 #import "GrowingTrackerCore/Public/GrowingEventNetworkService.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
-#import "GrowingTrackerCore/Network/Request/Adapter/GrowingEventRequestAdapters.h"
+#import "Modules/Preflight/GrowingNetworkPreflight+Private.h"
 #import "Modules/Preflight/Request/GrowingPFEventRequestAdapter.h"
+#import "Modules/Preflight/Request/GrowingPFRequest.h"
 
 GrowingMod(GrowingNetworkPreflight)
 
 typedef NS_ENUM(NSUInteger, GrowingNetworkPreflightStatus) {
-    GrowingNWPreflightStatusNotDetermined, // 待预检
-    GrowingNWPreflightStatusWaitingForResponse, // 预检中
-    GrowingNWPreflightStatusAuthorized, // 预检成功
-    GrowingNWPreflightStatusDenied, // 预检失败
-    GrowingNWPreflightStatusClosed, // 预检关闭
+    GrowingNWPreflightStatusNotDetermined,       // 待预检
+    GrowingNWPreflightStatusWaitingForResponse,  // 预检中
+    GrowingNWPreflightStatusAuthorized,          // 预检成功
+    GrowingNWPreflightStatusDenied,              // 预检失败
+    GrowingNWPreflightStatusClosed,              // 预检关闭
 };
 
 static NSTimeInterval const kGrowingPreflightMaxTime = 300;
@@ -79,7 +79,7 @@ static NSTimeInterval const kGrowingPreflightMaxTime = 300;
             self.status = GrowingNWPreflightStatusClosed;
         }
     }
-    
+
     NSTimeInterval dataUploadInterval = trackConfiguration.dataUploadInterval;
     dataUploadInterval = MAX(dataUploadInterval, 5);
     self.minPreflightTime = dataUploadInterval;
@@ -131,7 +131,8 @@ static NSTimeInterval const kGrowingPreflightMaxTime = 300;
                      self.status = GrowingNWPreflightStatusAuthorized;
                  } else if (httpResponse.statusCode == 403) {
                      self.status = GrowingNWPreflightStatusDenied;
-                     GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+                     GrowingTrackConfiguration *trackConfiguration =
+                         GrowingConfigurationManager.sharedInstance.trackConfiguration;
                      self.dataCollectionServerHost = trackConfiguration.minorDataCollectionServerHost;
                  } else {
                      self.status = GrowingNWPreflightStatusWaitingForResponse;

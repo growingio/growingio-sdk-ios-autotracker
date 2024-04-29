@@ -25,7 +25,6 @@
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
-#import "Modules/Preflight/Public/GrowingNetworkPreflight.h"
 #import "GrowingTrackerCore/Network/Request/GrowingEventRequest.h"
 #import "GrowingTrackerCore/Public/GrowingBaseEvent.h"
 #import "GrowingTrackerCore/Public/GrowingEventFilter.h"
@@ -35,6 +34,7 @@
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
+#import "Modules/Preflight/Public/GrowingNetworkPreflight.h"
 
 static const NSUInteger kGrowingMaxDBCacheSize = 100;  // default: write to DB as soon as there are 100 events
 static const NSUInteger kGrowingMaxBatchSize = 500;    // default: send no more than 500 events in every batch
