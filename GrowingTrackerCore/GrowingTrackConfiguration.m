@@ -21,6 +21,7 @@
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 
 NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growingio.com";
+NSString *const kGrowingDefaultMinorDataCollectionServerHost = @"https://minor.napi.growingio.com";
 NSString *const kGrowingDefaultDeepLinkHost = @"https://link.growingio.com";
 NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com";
 
@@ -39,6 +40,10 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
 @property (nonatomic, copy) NSString *abTestingServerHost;
 @property (nonatomic, assign) NSUInteger abTestingRequestInterval;
 
+// Preflight
+@property (nonatomic, assign) BOOL requestPreflight;
+@property (nonatomic, copy) NSString *minorDataCollectionServerHost;
+
 @end
 
 @implementation GrowingTrackConfiguration
@@ -50,7 +55,6 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
         _dataSourceId = nil;
 
         _debugEnabled = NO;
-        _requestPreflight = YES;
         _cellularDataLimit = 20;
         _dataUploadInterval = 15;
         _sessionInterval = 30;
@@ -79,6 +83,10 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
         // ABTesting
         _abTestingServerHost = kGrowingDefaultABTestingServerHost;
         _abTestingRequestInterval = 5;
+        
+        // Preflight
+        _requestPreflight = NO;
+        _minorDataCollectionServerHost = kGrowingDefaultMinorDataCollectionServerHost;
     }
 
     return self;
@@ -97,7 +105,6 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
     configuration->_accountId = [_accountId copy];
     configuration->_dataSourceId = [_dataSourceId copy];
     configuration->_debugEnabled = _debugEnabled;
-    configuration->_requestPreflight = _requestPreflight;
     configuration->_cellularDataLimit = _cellularDataLimit;
     configuration->_dataUploadInterval = _dataUploadInterval;
     configuration->_sessionInterval = _sessionInterval;
@@ -126,6 +133,10 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
     // ABTesting
     configuration->_abTestingServerHost = [_abTestingServerHost copy];
     configuration->_abTestingRequestInterval = _abTestingRequestInterval;
+    
+    // Preflight
+    configuration->_requestPreflight = _requestPreflight;
+    configuration->_minorDataCollectionServerHost = [_minorDataCollectionServerHost copy];
 
     return configuration;
 }

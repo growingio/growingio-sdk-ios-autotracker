@@ -1,9 +1,9 @@
 //
-//  GrowingRequestAdapter.h
+//  GrowingNetworkPreflight.h
 //  GrowingAnalytics
 //
-//  Created by GrowingIO on 2020/6/22.
-//  Copyright (C) 2020 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2024/4/24.
+//  Copyright (C) 2024 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -18,15 +18,19 @@
 //  limitations under the License.
 
 #import <Foundation/Foundation.h>
-#import "GrowingRequestProtocol.h"
+#import "GrowingModuleProtocol.h"
+#import "GrowingTrackConfiguration.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingRequestHeaderAdapter : NSObject <GrowingRequestAdapter>
+@interface GrowingNetworkPreflight : NSObject <GrowingModuleProtocol>
 
 @end
 
-@interface GrowingRequestMethodAdapter : NSObject <GrowingRequestAdapter>
+@interface GrowingTrackConfiguration (Preflight)
+
+@property (nonatomic, assign) BOOL requestPreflight;
+@property (nonatomic, copy) NSString *minorDataCollectionServerHost;
 
 @end
 

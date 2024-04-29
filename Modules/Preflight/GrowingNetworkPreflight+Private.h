@@ -1,8 +1,8 @@
 //
-//  GrowingPreflightRequest.h
+//  GrowingNetworkPreflight+Private.h
 //  GrowingAnalytics
 //
-//  Created by YoloMao on 2024/4/24.
+//  Created by YoloMao on 2024/4/29.
 //  Copyright (C) 2024 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,11 +17,17 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingRequestProtocol.h"
+#import "GrowingNetworkPreflight.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingPreflightRequest : NSObject <GrowingRequestProtocol>
+@interface GrowingNetworkPreflight (Private)
+
++ (BOOL)isSucceed;
+
++ (NSString *)dataCollectionServerHost;
+
++ (void)sendPreflight;
 
 @end
 

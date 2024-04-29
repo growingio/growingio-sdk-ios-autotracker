@@ -2332,7 +2332,7 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Example/Pods-Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/GrowingAPM/GrowingAPM.framework",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-18cf2943/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-232e7e5e/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingToolsKit/GrowingToolsKit.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore-iOS/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf-iOS/Protobuf.framework",
@@ -2361,7 +2361,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-GrowingAnalyticsStartTests/Pods-GrowingAnalyticsStartTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-88384491/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-4f84af90/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore-iOS/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf-iOS/Protobuf.framework",
 			);
@@ -2559,7 +2559,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Example-watchOS Watch App/Pods-Example-watchOS Watch App-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-3edd9a5d/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-403bfd64/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-TrackerCore-watchOS/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf-watchOS/Protobuf.framework",
 			);
@@ -2582,7 +2582,7 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ExampleiOS13/Pods-ExampleiOS13-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/GrowingAPM/GrowingAPM.framework",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-8f52182e/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-0ddd49d8/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingToolsKit/GrowingToolsKit.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore-iOS/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf-iOS/Protobuf.framework",
@@ -2608,7 +2608,7 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Example-SwiftUI/Pods-Example-SwiftUI-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/GrowingAPM-Core/GrowingAPM.framework",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-dd4d243e/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-d1292d27/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore-iOS/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf-iOS/Protobuf.framework",
 			);
@@ -2653,7 +2653,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-GrowingAnalyticsTests/Pods-GrowingAnalyticsTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-b35945a7/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-5371fadd/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore-iOS/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf-iOS/Protobuf.framework",
 			);
@@ -2675,7 +2675,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ABTestingTests/Pods-ABTestingTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-cfbe515d/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-fa1c1980/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore-iOS/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf-iOS/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/OHHTTPStubs/OHHTTPStubs.framework",
@@ -2699,7 +2699,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Example-tvOS/Pods-Example-tvOS-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-67f52605/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-6ab1300e/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore-tvOS/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf-tvOS/Protobuf.framework",
 			);
@@ -2765,7 +2765,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-HostApplicationTests/Pods-HostApplicationTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-d5b2e835/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-a2e10ca9/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore-iOS/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf-iOS/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/KIF/KIF.framework",
@@ -2855,7 +2855,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ProtobufTests/Pods-ProtobufTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-d5b2e835/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-a2e10ca9/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore-iOS/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf-iOS/Protobuf.framework",
 			);
@@ -2877,7 +2877,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Example-macOS/Pods-Example-macOS-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-9b78b9c4/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-8df63dd3/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-TrackerCore-macOS/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf-macOS/Protobuf.framework",
 			);
@@ -2899,7 +2899,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-AdvertisingTests/Pods-AdvertisingTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-8f52182e/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-0ddd49d8/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore-iOS/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf-iOS/Protobuf.framework",
 			);

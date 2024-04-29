@@ -23,7 +23,7 @@
 #import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
-#import "GrowingTrackerCore/Network/GrowingNetworkPreflight.h"
+#import "Modules/Preflight/Public/GrowingNetworkPreflight.h"
 #import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogMacros.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"

@@ -1,5 +1,5 @@
 //
-//  GrowingPreflightRequest.m
+//  GrowingPFRequest.m
 //  GrowingAnalytics
 //
 //  Created by YoloMao on 2024/4/24.
@@ -17,13 +17,14 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Network/Request/GrowingPreflightRequest.h"
+#import "Modules/Preflight/Request/GrowingPFRequest.h"
+#import "Modules/Preflight/Request/GrowingPFRequestHeaderAdapter.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Network/Request/Adapter/GrowingRequestAdapter.h"
 #import "GrowingULTimeUtil.h"
 
-@implementation GrowingPreflightRequest
+@implementation GrowingPFRequest
 
 - (GrowingHTTPMethod)method {
     return GrowingHTTPMethodOPTIONS;
@@ -46,8 +47,8 @@
 }
 
 - (NSArray<id<GrowingRequestAdapter>> *)adapters {
-    GrowingPreflightRequestHeaderAdapter *basicHeaderAdapter =
-        [GrowingPreflightRequestHeaderAdapter adapterWithRequest:self];
+    GrowingPFRequestHeaderAdapter *basicHeaderAdapter =
+        [GrowingPFRequestHeaderAdapter adapterWithRequest:self];
     GrowingRequestMethodAdapter *methodAdapter = [GrowingRequestMethodAdapter adapterWithRequest:self];
     return @[basicHeaderAdapter, methodAdapter];
 }

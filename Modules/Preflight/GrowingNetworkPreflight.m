@@ -17,18 +17,23 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Network/GrowingNetworkPreflight.h"
+#import "Modules/Preflight/GrowingNetworkPreflight+Private.h"
+#import "Modules/Preflight/Request/GrowingPFRequest.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
-#import "GrowingTrackerCore/Network/Request/GrowingPreflightRequest.h"
 #import "GrowingTrackerCore/Public/GrowingEventNetworkService.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
+#import "GrowingTrackerCore/Network/Request/Adapter/GrowingEventRequestAdapters.h"
+#import "Modules/Preflight/Request/GrowingPFEventRequestAdapter.h"
+
+GrowingMod(GrowingNetworkPreflight)
 
 typedef NS_ENUM(NSUInteger, GrowingNetworkPreflightStatus) {
-    GrowingNWPreflightStatusNotDetermined,
-    GrowingNWPreflightStatusAuthorized,
-    GrowingNWPreflightStatusDenied,
-    GrowingNWPreflightStatusWaitingForResponse,
+    GrowingNWPreflightStatusNotDetermined, // 待预检
+    GrowingNWPreflightStatusWaitingForResponse, // 预检中
+    GrowingNWPreflightStatusAuthorized, // 预检成功
+    GrowingNWPreflightStatusDenied, // 预检失败
+    GrowingNWPreflightStatusClosed, // 预检关闭
 };
 
 static NSTimeInterval const kGrowingPreflightMaxTime = 300;
@@ -38,11 +43,18 @@ static NSTimeInterval const kGrowingPreflightMaxTime = 300;
 @property (nonatomic, assign) GrowingNetworkPreflightStatus status;
 @property (nonatomic, assign) NSTimeInterval nextPreflightTime;
 
+@property (nonatomic, assign) NSTimeInterval minPreflightTime;
+@property (nonatomic, copy) NSString *dataCollectionServerHost;
+
 @end
 
 @implementation GrowingNetworkPreflight
 
-#pragma mark - Initialize
+#pragma mark - GrowingModuleProtocol
+
++ (BOOL)singleton {
+    return YES;
+}
 
 + (instancetype)sharedInstance {
     static id instance = nil;
@@ -53,31 +65,47 @@ static NSTimeInterval const kGrowingPreflightMaxTime = 300;
     return instance;
 }
 
+- (void)growingModInit:(GrowingContext *)context {
+    [GrowingEventRequestAdapters.sharedInstance addAdapter:GrowingPFEventRequestAdapter.class];
+
+    GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    NSString *dataCollectionServerHost = trackConfiguration.dataCollectionServerHost;
+    self.dataCollectionServerHost = dataCollectionServerHost;
+    if (![dataCollectionServerHost isEqualToString:kGrowingDefaultDataCollectionServerHost]) {
+        // 私有部署
+        BOOL requestPreflight = trackConfiguration.requestPreflight;
+        if (!requestPreflight) {
+            // 预检功能关闭
+            self.status = GrowingNWPreflightStatusClosed;
+        }
+    }
+    
+    NSTimeInterval dataUploadInterval = trackConfiguration.dataUploadInterval;
+    dataUploadInterval = MAX(dataUploadInterval, 5);
+    self.minPreflightTime = dataUploadInterval;
+}
+
 #pragma mark - Public Methods
 
 + (BOOL)isSucceed {
-    BOOL requestPreflight = GrowingConfigurationManager.sharedInstance.trackConfiguration.requestPreflight;
-    if (!requestPreflight) {
-        return YES;
-    }
     GrowingNetworkPreflight *preflight = [GrowingNetworkPreflight sharedInstance];
-    return preflight.status == GrowingNWPreflightStatusAuthorized;
+    return preflight.status > GrowingNWPreflightStatusWaitingForResponse;
+}
+
++ (NSString *)dataCollectionServerHost {
+    // call when preflight isSucceed
+    GrowingNetworkPreflight *preflight = [GrowingNetworkPreflight sharedInstance];
+    return preflight.dataCollectionServerHost;
 }
 
 + (void)sendPreflight {
     [GrowingDispatchManager dispatchInGrowingThread:^{
         GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
-        BOOL requestPreflight = trackConfiguration.requestPreflight;
-        if (!requestPreflight) {
-            return;
-        }
-
-        NSTimeInterval dataUploadInterval = trackConfiguration.dataUploadInterval;
-        dataUploadInterval = MAX(dataUploadInterval, 5);
-
         GrowingNetworkPreflight *preflight = [GrowingNetworkPreflight sharedInstance];
-        preflight.nextPreflightTime = dataUploadInterval;
-        if (preflight.status != GrowingNWPreflightStatusWaitingForResponse) {
+        preflight.nextPreflightTime = preflight.minPreflightTime;
+        preflight.dataCollectionServerHost = trackConfiguration.dataCollectionServerHost;
+        if (preflight.status != GrowingNWPreflightStatusWaitingForResponse ||
+            preflight.status != GrowingNWPreflightStatusClosed) {
             [preflight sendPreflight];
         }
     }];
@@ -94,16 +122,19 @@ static NSTimeInterval const kGrowingPreflightMaxTime = 300;
         return;
     }
 
-    NSObject<GrowingRequestProtocol> *preflight = [[GrowingPreflightRequest alloc] init];
+    NSObject<GrowingRequestProtocol> *preflight = [[GrowingPFRequest alloc] init];
     [service
         sendRequest:preflight
          completion:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data, NSError *_Nonnull error) {
              [GrowingDispatchManager dispatchInGrowingThread:^{
                  if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 400) {
                      self.status = GrowingNWPreflightStatusAuthorized;
-                 } else {
+                 } else if (httpResponse.statusCode == 403) {
                      self.status = GrowingNWPreflightStatusDenied;
-
+                     GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+                     self.dataCollectionServerHost = trackConfiguration.minorDataCollectionServerHost;
+                 } else {
+                     self.status = GrowingNWPreflightStatusWaitingForResponse;
                      dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.nextPreflightTime * NSEC_PER_SEC)),
                                     dispatch_get_main_queue(),
                                     ^{

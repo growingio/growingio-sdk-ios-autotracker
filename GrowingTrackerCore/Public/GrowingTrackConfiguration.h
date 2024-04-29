@@ -29,7 +29,6 @@ FOUNDATION_EXPORT NSString *const kGrowingDefaultDataCollectionServerHost;
 @property (nonatomic, copy, readonly) NSString *accountId;
 @property (nonatomic, copy) NSString *dataSourceId;
 @property (nonatomic, assign) BOOL debugEnabled;
-@property (nonatomic, assign) BOOL requestPreflight;
 @property (nonatomic, assign) NSUInteger cellularDataLimit;
 @property (nonatomic, assign) NSTimeInterval dataUploadInterval;
 @property (nonatomic, assign) NSTimeInterval sessionInterval;

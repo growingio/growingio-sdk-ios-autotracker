@@ -1,8 +1,8 @@
 //
-//  GrowingNetworkPreflight.h
+//  GrowingPFEventRequestAdapter.h
 //  GrowingAnalytics
 //
-//  Created by YoloMao on 2024/4/24.
+//  Created by YoloMao on 2024/4/29.
 //  Copyright (C) 2024 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,14 +18,11 @@
 //  limitations under the License.
 
 #import <Foundation/Foundation.h>
+#import "GrowingRequestProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingNetworkPreflight : NSObject
-
-+ (BOOL)isSucceed;
-
-+ (void)sendPreflight;
+@interface GrowingPFEventRequestAdapter : NSObject <GrowingRequestAdapter>
 
 @end
 

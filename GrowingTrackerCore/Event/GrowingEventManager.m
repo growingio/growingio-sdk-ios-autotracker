@@ -25,7 +25,7 @@
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
-#import "GrowingTrackerCore/Network/GrowingNetworkPreflight.h"
+#import "Modules/Preflight/Public/GrowingNetworkPreflight.h"
 #import "GrowingTrackerCore/Network/Request/GrowingEventRequest.h"
 #import "GrowingTrackerCore/Public/GrowingBaseEvent.h"
 #import "GrowingTrackerCore/Public/GrowingEventFilter.h"
