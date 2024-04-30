@@ -32,7 +32,6 @@ typedef NS_ENUM(NSInteger, GrowingEventDatabaseError) {
     GrowingEventDatabaseCreateDBError,    /// 创建数据库错误
 };
 
-extern long long const GrowingEventDatabaseExpirationTime;
 extern NSString *const GrowingEventDatabaseErrorDomain;
 
 @protocol GrowingEventDatabaseService <NSObject>
@@ -98,9 +97,10 @@ extern NSString *const GrowingEventDatabaseErrorDomain;
 /// @return 写入成功/失败；若返回值为NO，表示写入错误
 - (BOOL)clearAllEvents;
 
-/// 清除过期事件，过期时间为GrowingEventDatabaseExpirationTime
+/// 清除过期事件
+/// @param expirationDays 过期时间，单位 天
 /// @return 写入成功/失败；若返回值为NO，表示写入错误
-- (BOOL)cleanExpiredEventIfNeeded;
+- (BOOL)cleanExpiredEventIfNeeded:(NSUInteger)expirationDays;
 
 /// 获取数据库错误信息
 /// @return NSError对象，在上方函数出错时，自行按照如下方式拼接

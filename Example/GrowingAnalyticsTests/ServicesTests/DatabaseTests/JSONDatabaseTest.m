@@ -58,7 +58,7 @@
     XCTAssertNotNil(database.db);
 
     // clean expired event if need
-    XCTAssertEqual(database.cleanExpiredEventIfNeeded, YES);
+    XCTAssertEqual([database cleanExpiredEventIfNeeded:1], YES);
 
     // clear all events
     XCTAssertEqual(database.clearAllEvents, YES);

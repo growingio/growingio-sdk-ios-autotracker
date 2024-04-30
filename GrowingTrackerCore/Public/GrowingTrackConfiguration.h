@@ -43,6 +43,7 @@ FOUNDATION_EXPORT NSString *const kGrowingDefaultDataCollectionServerHost;
 @property (nonatomic, assign) BOOL compressEnabled;
 @property (nonatomic, copy) GrowingNetworkConfig *networkConfig;
 @property (nonatomic, assign) BOOL useProtobuf;
+@property (nonatomic, assign) NSUInteger dataValidityPeriod;
 
 - (instancetype)initWithAccountId:(NSString *)accountId;
 

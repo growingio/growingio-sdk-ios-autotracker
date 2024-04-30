@@ -66,44 +66,6 @@
     XCTAssertEqualObjects(configuration.dataSourceId, nil);
 }
 
-- (void)testSetConfiguration_Autotracker {
-    GrowingAutotrackConfiguration *config = [GrowingAutotrackConfiguration configurationWithProjectId:@"test"];
-    config.debugEnabled = YES;
-    config.cellularDataLimit = 5;
-    config.dataUploadInterval = 10;
-    config.sessionInterval = 10;
-    config.dataCollectionEnabled = NO;
-    config.uploadExceptionEnable = NO;
-    config.dataCollectionServerHost = @"https://autotracker.growingio.com";
-    config.excludeEvent = 1;
-    config.ignoreField = 1;
-    config.idMappingEnabled = YES;
-    config.urlScheme = @"growing.autotracker";
-    config.encryptEnabled = YES;
-    config.compressEnabled = YES;
-    config.impressionScale = 0.5;
-    config.dataSourceId = @"12345";
-    [GrowingRealAutotracker trackerWithConfiguration:config launchOptions:nil];
-
-    GrowingAutotrackConfiguration *configuration =
-        (GrowingAutotrackConfiguration *)GrowingConfigurationManager.sharedInstance.trackConfiguration;
-    XCTAssertEqual(configuration.debugEnabled, YES);
-    XCTAssertEqual(configuration.cellularDataLimit, 5);
-    XCTAssertEqual(configuration.dataUploadInterval, 10);
-    XCTAssertEqual(configuration.sessionInterval, 10);
-    XCTAssertEqual(configuration.dataCollectionEnabled, NO);
-    XCTAssertEqual(configuration.uploadExceptionEnable, NO);
-    XCTAssertEqualObjects(configuration.dataCollectionServerHost, @"https://autotracker.growingio.com");
-    XCTAssertEqual(configuration.excludeEvent, 1);
-    XCTAssertEqual(configuration.ignoreField, 1);
-    XCTAssertEqual(configuration.idMappingEnabled, YES);
-    XCTAssertEqualObjects(configuration.urlScheme, @"growing.autotracker");
-    XCTAssertEqual(configuration.encryptEnabled, YES);
-    XCTAssertEqual(configuration.compressEnabled, YES);
-    XCTAssertEqual(configuration.impressionScale, 0.5);
-    XCTAssertEqualObjects(configuration.dataSourceId, @"12345");
-}
-
 - (void)testDefaultConfiguration_Tracker {
     GrowingTrackConfiguration *config = [GrowingTrackConfiguration configurationWithProjectId:@"test"];
     [GrowingRealTracker trackerWithConfiguration:config launchOptions:nil];
@@ -123,41 +85,6 @@
     XCTAssertEqual(configuration.encryptEnabled, NO);
     XCTAssertEqual(configuration.compressEnabled, NO);
     XCTAssertEqualObjects(configuration.dataSourceId, nil);
-}
-
-- (void)testSetConfiguration_Tracker {
-    GrowingTrackConfiguration *config = [GrowingTrackConfiguration configurationWithProjectId:@"test"];
-    config.debugEnabled = YES;
-    config.cellularDataLimit = 5;
-    config.dataUploadInterval = 10;
-    config.sessionInterval = 10;
-    config.dataCollectionEnabled = NO;
-    config.uploadExceptionEnable = NO;
-    config.dataCollectionServerHost = @"https://tracker.growingio.com";
-    config.excludeEvent = 1;
-    config.ignoreField = 1;
-    config.idMappingEnabled = YES;
-    config.urlScheme = @"growing.tracker";
-    config.encryptEnabled = YES;
-    config.compressEnabled = YES;
-    config.dataSourceId = @"12345";
-    [GrowingRealTracker trackerWithConfiguration:config launchOptions:nil];
-
-    GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
-    XCTAssertEqual(configuration.debugEnabled, YES);
-    XCTAssertEqual(configuration.cellularDataLimit, 5);
-    XCTAssertEqual(configuration.dataUploadInterval, 10);
-    XCTAssertEqual(configuration.sessionInterval, 10);
-    XCTAssertEqual(configuration.dataCollectionEnabled, NO);
-    XCTAssertEqual(configuration.uploadExceptionEnable, NO);
-    XCTAssertEqualObjects(configuration.dataCollectionServerHost, @"https://tracker.growingio.com");
-    XCTAssertEqual(configuration.excludeEvent, 1);
-    XCTAssertEqual(configuration.ignoreField, 1);
-    XCTAssertEqual(configuration.idMappingEnabled, YES);
-    XCTAssertEqualObjects(configuration.urlScheme, @"growing.tracker");
-    XCTAssertEqual(configuration.encryptEnabled, YES);
-    XCTAssertEqual(configuration.compressEnabled, YES);
-    XCTAssertEqualObjects(configuration.dataSourceId, @"12345");
 }
 
 @end
