@@ -248,7 +248,7 @@ extension Target {
                                       path: .Path.abTesting,
                                       publicHeadersPath: .Path.publicHeaders,
                                       cSettings: [.hspFor(.Path.abTesting)])
-        
+
         static let preflight = target(name: .preflight,
                                       dependencies: [.Core.trackerCore],
                                       path: .Path.preflight,
