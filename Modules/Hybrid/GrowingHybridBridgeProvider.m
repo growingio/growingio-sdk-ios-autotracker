@@ -20,10 +20,8 @@
 #import "Modules/Hybrid/GrowingHybridBridgeProvider.h"
 #import <WebKit/WebKit.h>
 #import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
-#import "GrowingTrackerCore/Event/GrowingConversionVariableEvent.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Event/GrowingLoginUserAttributesEvent.h"
-#import "GrowingTrackerCore/Event/GrowingVisitorAttributesEvent.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Public/GrowingAnnotationCore.h"
@@ -63,7 +61,6 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
 #define KEY_TEXT_VALUE "textValue"
 #define KEY_XPATH "xpath"
 #define KEY_XCONTENT "xcontent"
-#define CUSTOM_EVENT_TYPE "customEventType"
 
 @interface UIView (GrowingNode) <GrowingNode>
 @end
@@ -228,20 +225,7 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
         } else if ([type isEqualToString:GrowingEventTypeFormSubmit]) {
             builder = [self transformViewElementBuilder:dict].setEventType(type);
         } else if ([type isEqualToString:GrowingEventTypeCustom]) {
-            NSString *customEventType = dict[@CUSTOM_EVENT_TYPE];
-            if ([customEventType isKindOfClass:[NSNumber class]]) {
-                customEventType = ((NSNumber *)dict[@CUSTOM_EVENT_TYPE]).stringValue;
-            }
             NSDictionary *mergedDic = [self safeAttributesFromDict:dict].copy;
-            if (customEventType == nil || [customEventType isEqualToString:@"1"]) {
-                // hybrid通过track接口调用
-                NSDictionary *generalProps = [GrowingEventManager sharedInstance].generalProps;
-                if (generalProps.count > 0) {
-                    NSMutableDictionary *dicM = [NSMutableDictionary dictionaryWithDictionary:generalProps];
-                    [dicM addEntriesFromDictionary:mergedDic];
-                    mergedDic = dicM.copy;
-                }
-            }
             builder = GrowingHybridCustomEvent.builder.setQuery(dict[@KEY_QUERY])
                           .setPath(dict[@KEY_PATH])
                           .setAttributes(mergedDic)

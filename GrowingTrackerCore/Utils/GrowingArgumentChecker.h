@@ -24,5 +24,6 @@
 + (BOOL)isIllegalEventName:(NSString *)eventName;
 + (BOOL)isIllegalAttributes:(NSDictionary *)attributes;
 + (BOOL)isIllegalKeys:(NSArray *)keys;
++ (NSDictionary<NSString *, NSString *> *_Nullable)serializableAttributes:(NSDictionary *)properties;
 
 @end

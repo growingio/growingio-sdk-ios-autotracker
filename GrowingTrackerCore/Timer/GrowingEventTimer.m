@@ -95,7 +95,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
     }];
 }
 
-+ (void)trackTimerEnd:(NSString *)timerId withAttributes:(NSDictionary<NSString *, NSString *> *_Nullable)attributes {
++ (void)trackTimerEnd:(NSString *)timerId withAttributes:(NSDictionary<NSString *, id> *_Nullable)attributes {
     double currentTime = [GrowingULTimeUtil currentSystemTimeMillis];
 
     [GrowingDispatchManager dispatchInGrowingThread:^{

@@ -38,22 +38,6 @@
     return [self protocolCheck:event protocol:protocol] && [self emptyPropertyCheck:event];
 }
 
-+ (BOOL)conversionVariablesEventCheck:(NSDictionary *)event {
-    if (event.count == 0) {
-        return NO;
-    }
-    NSArray *protocol = [self.context arrayByAddingObjectsFromArray:@[@"attributes"]];
-    return [self protocolCheck:event protocol:protocol] && [self emptyPropertyCheck:event];
-}
-
-+ (BOOL)visitorAttributesEventCheck:(NSDictionary *)event {
-    if (event.count == 0) {
-        return NO;
-    }
-    NSArray *protocol = [self.context arrayByAddingObjectsFromArray:@[@"attributes"]];
-    return [self protocolCheck:event protocol:protocol] && [self emptyPropertyCheck:event];
-}
-
 + (BOOL)appCloseEventCheck:(NSDictionary *)event {
     if (event.count == 0) {
         return NO;

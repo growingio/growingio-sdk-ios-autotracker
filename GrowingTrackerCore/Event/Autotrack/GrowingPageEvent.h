@@ -17,14 +17,14 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import "GrowingBaseEvent.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingAutotrackEventType.h"
-#import "GrowingTrackerCore/Event/GrowingBaseAttributesEvent.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class GrowingPageBuilder;
 
-@interface GrowingPageEvent : GrowingBaseAttributesEvent
+@interface GrowingPageEvent : GrowingBaseEvent
 
 @property (nonatomic, copy, readonly) NSString *path;
 @property (nonatomic, copy, readonly) NSString *orientation;
@@ -35,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface GrowingPageBuilder : GrowingBaseAttributesBuilder
+@interface GrowingPageBuilder : GrowingBaseBuilder
 
 @property (nonatomic, copy, readonly) NSString *path;
 @property (nonatomic, copy, readonly) NSString *orientation;

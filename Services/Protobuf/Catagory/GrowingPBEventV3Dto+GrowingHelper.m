@@ -45,14 +45,8 @@
         case GrowingPBEventType_Custom: {
             [dic setObject:@"CUSTOM" forKey:@"eventType"];
         } break;
-        case GrowingPBEventType_VisitorAttributes: {
-            [dic setObject:@"VISITOR_ATTRIBUTES" forKey:@"eventType"];
-        } break;
         case GrowingPBEventType_LoginUserAttributes: {
             [dic setObject:@"LOGIN_USER_ATTRIBUTES" forKey:@"eventType"];
-        } break;
-        case GrowingPBEventType_ConversionVariables: {
-            [dic setObject:@"CONVERSION_VARIABLES" forKey:@"eventType"];
         } break;
         case GrowingPBEventType_AppClosed: {
             [dic setObject:@"APP_CLOSED" forKey:@"eventType"];
@@ -260,12 +254,8 @@
         return GrowingPBEventType_Visit;
     } else if ([eventType isEqualToString:@"CUSTOM"]) {
         return GrowingPBEventType_Custom;
-    } else if ([eventType isEqualToString:@"VISITOR_ATTRIBUTES"]) {
-        return GrowingPBEventType_VisitorAttributes;
     } else if ([eventType isEqualToString:@"LOGIN_USER_ATTRIBUTES"]) {
         return GrowingPBEventType_LoginUserAttributes;
-    } else if ([eventType isEqualToString:@"CONVERSION_VARIABLES"]) {
-        return GrowingPBEventType_ConversionVariables;
     } else if ([eventType isEqualToString:@"APP_CLOSED"]) {
         return GrowingPBEventType_AppClosed;
     } else if ([eventType isEqualToString:@"PAGE"]) {

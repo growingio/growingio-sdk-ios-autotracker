@@ -60,7 +60,7 @@ public struct Tracker {
         tracker.cleanLocation()
     }
 
-    public static func setLoginUserAttributes(_ attributes: [String: String]) {
+    public static func setLoginUserAttributes(_ attributes: [String: Any]) {
         tracker.setLoginUserAttributes(attributes)
     }
 
@@ -68,7 +68,7 @@ public struct Tracker {
         tracker.getDeviceId()
     }
 
-    public static func track(_ eventName: String, attributes: [String: String]? = nil) {
+    public static func track(_ eventName: String, attributes: [String: Any]? = nil) {
         guard let attributes = attributes else {
             tracker.trackCustomEvent(eventName)
             return
@@ -89,7 +89,7 @@ public struct Tracker {
         tracker.trackTimerResume(timerId)
     }
 
-    public static func endTimer(_ timerId: String, attributes: [String: String]? = nil) {
+    public static func endTimer(_ timerId: String, attributes: [String: Any]? = nil) {
         guard let attributes = attributes else {
             tracker.trackTimerEnd(timerId)
             return
@@ -106,15 +106,19 @@ public struct Tracker {
         tracker.clearTrackTimer()
     }
     
-    public static func setGeneralProps(_ props: [String: String]) {
-        tracker.setGeneralProps(props)
+    public static func setGeneralProps(_ props: [String: Any]) {
+        GrowingTracker.setGeneralProps(props)
     }
     
     public static func removeGeneralProps(_ keys: [String]) {
-        tracker.removeGeneralProps(keys)
+        GrowingTracker.removeGeneralProps(keys)
     }
     
     public static func clearGeneralProps() {
-        tracker.clearGeneralProps()
+        GrowingTracker.clearGeneralProps()
+    }
+    
+    public static func setDynamicGeneralProps(_ closure: (() -> [String: Any])?) {
+        GrowingTracker.setDynamicGeneralProps(closure)
     }
 }

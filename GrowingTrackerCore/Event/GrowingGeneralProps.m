@@ -18,34 +18,78 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Event/GrowingGeneralProps.h"
+#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
+#import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
 
 @interface GrowingGeneralProps ()
 
-@property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *internalProps;
+@property (nonatomic, strong) NSMutableDictionary<NSString *, id> *internalProps;
+@property (nonatomic, copy) NSDictionary<NSString *, id> * (^dynamicPropsGenerator)(void);
 
 @end
 
 @implementation GrowingGeneralProps
 
-- (void)setGeneralProps:(NSDictionary<NSString *, NSString *> *)props {
-    [self.internalProps addEntriesFromDictionary:props];
++ (instancetype)sharedInstance {
+    static GrowingGeneralProps *instance;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [[self alloc] init];
+    });
+    return instance;
+}
+
+- (NSDictionary<NSString *, id> *)getGeneralProps {
+    // running on GrowingThread
+    NSDictionary<NSString *, id> *dynamicProps = nil;
+    if (self.dynamicPropsGenerator) {
+        NSDictionary *dic = self.dynamicPropsGenerator();
+        if (dic && [dic isKindOfClass:[NSDictionary class]]) {
+            dynamicProps = (NSDictionary *)[dic copy];
+        }
+    }
+
+    NSMutableDictionary *properties = self.internalProps.mutableCopy;
+    // dynamic general properties > general properties
+    if (dynamicProps) {
+        [properties addEntriesFromDictionary:dynamicProps];
+    }
+    return [properties copy];
+}
+
+- (void)setGeneralProps:(NSDictionary<NSString *, id> *)props {
+    if ([GrowingArgumentChecker isIllegalAttributes:props]) {
+        return;
+    }
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        [self.internalProps addEntriesFromDictionary:props];
+    }];
 }
 
 - (void)removeGeneralProps:(NSArray<NSString *> *)keys {
-    [self.internalProps removeObjectsForKeys:keys];
+    if ([GrowingArgumentChecker isIllegalKeys:keys]) {
+        return;
+    }
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        [self.internalProps removeObjectsForKeys:keys];
+    }];
 }
 
 - (void)clearGeneralProps {
-    [self.internalProps removeAllObjects];
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        [self.internalProps removeAllObjects];
+    }];
+}
+
+- (void)setDynamicGeneralPropsGenerator:(NSDictionary<NSString *, id> * (^_Nullable)(void))generator {
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        self.dynamicPropsGenerator = generator;
+    }];
 }
 
 #pragma mark - Setter && Getter
 
-- (NSDictionary<NSString *, NSString *> *)props {
-    return self.internalProps.copy;
-}
-
-- (NSMutableDictionary<NSString *, NSString *> *)internalProps {
+- (NSMutableDictionary<NSString *, id> *)internalProps {
     if (!_internalProps) {
         _internalProps = [NSMutableDictionary dictionary];
     }

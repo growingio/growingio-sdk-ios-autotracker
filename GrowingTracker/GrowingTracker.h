@@ -70,7 +70,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 以登录用户的身份定义用户属性变量，用于用户信息相关分析。
 /// @param attributes 用户属性信息
-- (void)setLoginUserAttributes:(NSDictionary<NSString *, NSString *> *)attributes;
+- (void)setLoginUserAttributes:(NSDictionary<NSString *, id> *)attributes;
 
 /// 同步获取设备id，又称为匿名用户id，SDK 自动生成用来定义唯一设备。
 - (NSString *)getDeviceId;
@@ -86,7 +86,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 发送一个自定义事件
 /// @param eventName 自定义事件名称
 /// @param attributes 事件发生时所伴随的维度信息
-- (void)trackCustomEvent:(NSString *)eventName withAttributes:(NSDictionary<NSString *, NSString *> *)attributes;
+- (void)trackCustomEvent:(NSString *)eventName withAttributes:(NSDictionary<NSString *, id> *)attributes;
 
 /// 初始化事件计时器
 /// @param eventName 自定义事件名称
@@ -108,7 +108,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 停止事件计时器，并发送一个自定义事件
 /// @param timerId 计时器唯一标识
 /// @param attributes 事件发生时所伴随的维度信息
-- (void)trackTimerEnd:(NSString *)timerId withAttributes:(NSDictionary<NSString *, NSString *> *)attributes;
+- (void)trackTimerEnd:(NSString *)timerId withAttributes:(NSDictionary<NSString *, id> *)attributes;
 
 /// 删除事件计时器
 /// @param timerId 计时器唯一标识
@@ -119,20 +119,42 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 设置埋点通用属性
 /// @param props 事件通用属性，相同字段的新值将覆盖旧值
-- (void)setGeneralProps:(NSDictionary<NSString *, NSString *> *)props;
++ (void)setGeneralProps:(NSDictionary<NSString *, id> *)props;
 
 /// 清除指定字段的埋点通用属性
 /// @param keys 通用属性指定字段
-- (void)removeGeneralProps:(NSArray<NSString *> *)keys;
++ (void)removeGeneralProps:(NSArray<NSString *> *)keys;
 
 /// 清除所有埋点通用属性
-- (void)clearGeneralProps;
++ (void)clearGeneralProps;
+
+/// 设置埋点动态通用属性
+/// @param generator 动态通用属性，其优先级大于通用属性
++ (void)setDynamicGeneralPropsGenerator:(NSDictionary<NSString *, id> * (^_Nullable)(void))generator
+    NS_SWIFT_NAME(setDynamicGeneralProps(_:));
 
 ///-------------------------------
 #pragma mark Unavailable
 ///-------------------------------
 
 - (instancetype)init NS_UNAVAILABLE;
+
+///-------------------------------
+#pragma mark Deprecated
+///-------------------------------
+
+/// 设置埋点通用属性
+/// @param props 事件通用属性，相同字段的新值将覆盖旧值
+- (void)setGeneralProps:(NSDictionary<NSString *, NSString *> *)props
+    DEPRECATED_MSG_ATTRIBUTE("Use +[GrowingTracker setGeneralProps:] instead.");
+
+/// 清除指定字段的埋点通用属性
+/// @param keys 通用属性指定字段
+- (void)removeGeneralProps:(NSArray<NSString *> *)keys
+    DEPRECATED_MSG_ATTRIBUTE("Use +[GrowingTracker removeGeneralProps:] instead.");
+
+/// 清除所有埋点通用属性
+- (void)clearGeneralProps DEPRECATED_MSG_ATTRIBUTE("Use +[GrowingTracker clearGeneralProps] instead.");
 
 @end
 

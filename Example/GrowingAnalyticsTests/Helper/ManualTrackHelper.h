@@ -19,10 +19,6 @@
 
 + (BOOL)loginUserAttributesEventCheck:(NSDictionary *)event;
 
-+ (BOOL)conversionVariablesEventCheck:(NSDictionary *)event;
-
-+ (BOOL)visitorAttributesEventCheck:(NSDictionary *)event;
-
 + (BOOL)appCloseEventCheck:(NSDictionary *)event;
 
 + (BOOL)pageEventCheck:(NSDictionary *)event;

@@ -24,12 +24,10 @@
 #import "GrowingTrackerCore/Event/Autotrack/GrowingAutotrackEventType.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
 #import "GrowingTrackerCore/Event/GrowingAppCloseEvent.h"
-#import "GrowingTrackerCore/Event/GrowingConversionVariableEvent.h"
 #import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Event/GrowingLoginUserAttributesEvent.h"
 #import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
-#import "GrowingTrackerCore/Event/GrowingVisitorAttributesEvent.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
@@ -147,42 +145,6 @@
     XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeLoginUserAttributes);
     XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
     XCTAssertTrue([ManualTrackHelper loginUserAttributesEventCheck:dic]);
-    XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
-}
-
-- (void)testGrowingConversionVariableEvent {
-    GrowingBaseBuilder *builder = GrowingConversionVariableEvent.builder.setAttributes(@{@"key": @"value"});
-    [GrowingEventManager.sharedInstance postEventBuilder:builder];
-
-    NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeConversionVariables];
-    XCTAssertEqual(events.count, 1);
-
-    GrowingConversionVariableEvent *event = (GrowingConversionVariableEvent *)events.firstObject;
-    XCTAssertEqualObjects(event.eventType, GrowingEventTypeConversionVariables);
-    XCTAssertEqualObjects(event.attributes[@"key"], @"value");
-
-    NSDictionary *dic = event.toDictionary;
-    XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeConversionVariables);
-    XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
-    XCTAssertTrue([ManualTrackHelper conversionVariablesEventCheck:dic]);
-    XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
-}
-
-- (void)testGrowingVisitorAttributesEvent {
-    GrowingBaseBuilder *builder = GrowingVisitorAttributesEvent.builder.setAttributes(@{@"key": @"value"});
-    [GrowingEventManager.sharedInstance postEventBuilder:builder];
-
-    NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeVisitorAttributes];
-    XCTAssertEqual(events.count, 1);
-
-    GrowingVisitorAttributesEvent *event = (GrowingVisitorAttributesEvent *)events.firstObject;
-    XCTAssertEqualObjects(event.eventType, GrowingEventTypeVisitorAttributes);
-    XCTAssertEqualObjects(event.attributes[@"key"], @"value");
-
-    NSDictionary *dic = event.toDictionary;
-    XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeVisitorAttributes);
-    XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
-    XCTAssertTrue([ManualTrackHelper visitorAttributesEventCheck:dic]);
     XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
 }
 

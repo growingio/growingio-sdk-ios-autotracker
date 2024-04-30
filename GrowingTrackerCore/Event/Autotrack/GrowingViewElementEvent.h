@@ -17,8 +17,8 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import "GrowingBaseEvent.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingAutotrackEventType.h"
-#import "GrowingTrackerCore/Event/GrowingBaseAttributesEvent.h"
 
 // 泛型类型，可以生成多个类型event，故可以设置eventType
 
@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class GrowingViewElementBuilder;
 
-@interface GrowingViewElementEvent : GrowingBaseAttributesEvent
+@interface GrowingViewElementEvent : GrowingBaseEvent
 
 @property (nonatomic, copy, readonly) NSString *path;
 @property (nonatomic, copy, readonly) NSString *textValue;
@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface GrowingViewElementBuilder : GrowingBaseAttributesBuilder
+@interface GrowingViewElementBuilder : GrowingBaseBuilder
 
 @property (nonatomic, copy, readonly) NSString *path;
 @property (nonatomic, copy, readonly) NSString *textValue;

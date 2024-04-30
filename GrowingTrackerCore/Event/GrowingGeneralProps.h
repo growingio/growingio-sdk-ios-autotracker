@@ -23,13 +23,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingGeneralProps : NSObject
 
-@property (nonatomic, readonly, copy) NSDictionary<NSString *, NSString *> *props;
++ (instancetype)sharedInstance;
 
-- (void)setGeneralProps:(NSDictionary<NSString *, NSString *> *)props;
+- (NSDictionary<NSString *, id> *)getGeneralProps;
+
+- (void)setGeneralProps:(NSDictionary<NSString *, id> *)props;
 
 - (void)removeGeneralProps:(NSArray<NSString *> *)keys;
 
 - (void)clearGeneralProps;
+
+- (void)setDynamicGeneralPropsGenerator:(NSDictionary<NSString *, id> * (^_Nullable)(void))generator;
 
 @end
 

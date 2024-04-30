@@ -22,6 +22,7 @@
 #import "GrowingTrackerCore/DeepLink/GrowingAppDelegateAutotracker.h"
 #import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
+#import "GrowingTrackerCore/Event/GrowingGeneralProps.h"
 #import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/LogFormat/GrowingWSLoggerFormat.h"
@@ -133,33 +134,21 @@ const int GrowingTrackerVersionCode = 40200;
         return;
     }
     [GrowingDispatchManager dispatchInGrowingThread:^{
-        NSDictionary *generalProps = [GrowingEventManager sharedInstance].generalProps;
-        NSDictionary *dic = nil;
-        if (generalProps.count > 0) {
-            dic = generalProps;
-        }
-        [GrowingEventGenerator generateCustomEvent:eventName attributes:dic];
+        [GrowingEventGenerator generateCustomEvent:eventName attributes:nil];
     }];
 }
 
-- (void)trackCustomEvent:(NSString *)eventName withAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
+- (void)trackCustomEvent:(NSString *)eventName withAttributes:(NSDictionary<NSString *, id> *)attributes {
     if ([GrowingArgumentChecker isIllegalEventName:eventName] ||
         [GrowingArgumentChecker isIllegalAttributes:attributes]) {
         return;
     }
     [GrowingDispatchManager dispatchInGrowingThread:^{
-        NSDictionary *generalProps = [GrowingEventManager sharedInstance].generalProps;
-        NSDictionary *dic = attributes.copy;
-        if (generalProps.count > 0) {
-            NSMutableDictionary *dicM = [NSMutableDictionary dictionaryWithDictionary:generalProps];
-            [dicM addEntriesFromDictionary:dic];
-            dic = dicM.copy;
-        }
-        [GrowingEventGenerator generateCustomEvent:eventName attributes:dic];
+        [GrowingEventGenerator generateCustomEvent:eventName attributes:[attributes copy]];
     }];
 }
 
-- (void)setLoginUserAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
+- (void)setLoginUserAttributes:(NSDictionary<NSString *, id> *)attributes {
     if ([GrowingArgumentChecker isIllegalAttributes:attributes]) {
         return;
     }
@@ -194,7 +183,7 @@ const int GrowingTrackerVersionCode = 40200;
     [GrowingEventTimer trackTimerEnd:timerId withAttributes:nil];
 }
 
-- (void)trackTimerEnd:(NSString *)timerId withAttributes:(NSDictionary<NSString *, NSString *> *)attributes {
+- (void)trackTimerEnd:(NSString *)timerId withAttributes:(NSDictionary<NSString *, id> *)attributes {
     if ([GrowingArgumentChecker isIllegalEventName:timerId] ||
         [GrowingArgumentChecker isIllegalAttributes:attributes]) {
         return;
@@ -213,28 +202,16 @@ const int GrowingTrackerVersionCode = 40200;
     [GrowingEventTimer clearAllTimers];
 }
 
-- (void)setGeneralProps:(NSDictionary<NSString *, NSString *> *)props {
-    if ([GrowingArgumentChecker isIllegalAttributes:props]) {
-        return;
-    }
-    [GrowingDispatchManager dispatchInGrowingThread:^{
-        [[GrowingEventManager sharedInstance] setGeneralProps:props];
-    }];
+- (void)setGeneralProps:(NSDictionary<NSString *, id> *)props {
+    [[GrowingGeneralProps sharedInstance] setGeneralProps:props];
 }
 
 - (void)removeGeneralProps:(NSArray<NSString *> *)keys {
-    if ([GrowingArgumentChecker isIllegalKeys:keys]) {
-        return;
-    }
-    [GrowingDispatchManager dispatchInGrowingThread:^{
-        [[GrowingEventManager sharedInstance] removeGeneralProps:keys];
-    }];
+    [[GrowingGeneralProps sharedInstance] removeGeneralProps:keys];
 }
 
 - (void)clearGeneralProps {
-    [GrowingDispatchManager dispatchInGrowingThread:^{
-        [[GrowingEventManager sharedInstance] clearGeneralProps];
-    }];
+    [[GrowingGeneralProps sharedInstance] clearGeneralProps];
 }
 
 - (void)setLoginUserId:(NSString *)userId {
@@ -243,9 +220,6 @@ const int GrowingTrackerVersionCode = 40200;
     }];
 }
 
-/// 支持设置userId的类型, 存储方式与userId保持一致, userKey默认为null
-/// @param userId 用户ID
-/// @param userKey 用户ID对应的key值
 - (void)setLoginUserId:(NSString *)userId userKey:(NSString *)userKey {
     [GrowingDispatchManager dispatchInGrowingThread:^{
         [[GrowingSession currentSession] setLoginUserId:userId userKey:userKey];
