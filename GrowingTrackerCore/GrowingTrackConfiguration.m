@@ -21,7 +21,7 @@
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 
 NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growingio.com";
-NSString *const kGrowingDefaultMinorDataCollectionServerHost = @"https://minor.napi.growingio.com";
+NSString *const kGrowingDefaultAlternateDataCollectionServerHost = @"https://alternate.napi.growingio.com";
 NSString *const kGrowingDefaultDeepLinkHost = @"https://link.growingio.com";
 NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com";
 
@@ -42,7 +42,7 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
 
 // Preflight
 @property (nonatomic, assign) BOOL requestPreflight;
-@property (nonatomic, copy) NSString *minorDataCollectionServerHost;
+@property (nonatomic, copy) NSString *alternateDataCollectionServerHost;
 
 @end
 
@@ -86,7 +86,7 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
 
         // Preflight
         _requestPreflight = NO;
-        _minorDataCollectionServerHost = kGrowingDefaultMinorDataCollectionServerHost;
+        _alternateDataCollectionServerHost = kGrowingDefaultAlternateDataCollectionServerHost;
     }
 
     return self;
@@ -136,7 +136,7 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
 
     // Preflight
     configuration->_requestPreflight = _requestPreflight;
-    configuration->_minorDataCollectionServerHost = [_minorDataCollectionServerHost copy];
+    configuration->_alternateDataCollectionServerHost = [_alternateDataCollectionServerHost copy];
 
     return configuration;
 }

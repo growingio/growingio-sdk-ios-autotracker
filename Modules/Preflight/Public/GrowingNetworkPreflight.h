@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GrowingTrackConfiguration (Preflight)
 
 @property (nonatomic, assign) BOOL requestPreflight;
-@property (nonatomic, copy) NSString *minorDataCollectionServerHost;
+@property (nonatomic, copy) NSString *alternateDataCollectionServerHost;
 
 @end
 

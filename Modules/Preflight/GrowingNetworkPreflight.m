@@ -133,7 +133,7 @@ static NSTimeInterval const kGrowingPreflightMaxTime = 300;
                      self.status = GrowingNWPreflightStatusDenied;
                      GrowingTrackConfiguration *trackConfiguration =
                          GrowingConfigurationManager.sharedInstance.trackConfiguration;
-                     self.dataCollectionServerHost = trackConfiguration.minorDataCollectionServerHost;
+                     self.dataCollectionServerHost = trackConfiguration.alternateDataCollectionServerHost;
                  } else {
                      self.status = GrowingNWPreflightStatusWaitingForResponse;
                      dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.nextPreflightTime * NSEC_PER_SEC)),
