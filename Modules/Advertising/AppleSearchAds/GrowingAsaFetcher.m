@@ -126,9 +126,15 @@ static pthread_rwlock_t _lock = PTHREAD_RWLOCK_INITIALIZER;
     return events;
 }
 
-- (void)growingEventManagerEventsDidSend:(NSArray<id<GrowingEventPersistenceProtocol>> *)events
-                                 request:(id<GrowingRequestProtocol>)request
-                                 channel:(GrowingEventChannel *)channel {
+- (void)growingEventManagerEventsSendingCompletion:(NSArray<id<GrowingEventPersistenceProtocol>> *)events 
+                                           request:(id<GrowingRequestProtocol>)request
+                                           channel:(GrowingEventChannel *)channel
+                                      httpResponse:(NSHTTPURLResponse *)httpResponse
+                                             error:(NSError *)error {
+    if (httpResponse.statusCode < 200 || httpResponse.statusCode >= 400) {
+        return;
+    }
+    
     for (id<GrowingEventPersistenceProtocol> event in events) {
         if ([event.eventType isEqualToString:GrowingEventTypeActivate]) {
             id jsonObject = event.toJSONObject;

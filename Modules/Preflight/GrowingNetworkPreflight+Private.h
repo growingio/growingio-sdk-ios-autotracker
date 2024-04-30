@@ -23,11 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface GrowingNetworkPreflight (Private)
 
-+ (BOOL)isSucceed;
-
 + (NSString *)dataCollectionServerHost;
-
-+ (void)sendPreflight;
 
 @end
 

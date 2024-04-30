@@ -22,6 +22,7 @@
 #import "GrowingTrackerCore/Public/GrowingEventNetworkService.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
+#import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "Modules/Preflight/GrowingNetworkPreflight+Private.h"
 #import "Modules/Preflight/Request/GrowingPFEventRequestAdapter.h"
 #import "Modules/Preflight/Request/GrowingPFRequest.h"
@@ -38,7 +39,7 @@ typedef NS_ENUM(NSUInteger, GrowingNetworkPreflightStatus) {
 
 static NSTimeInterval const kGrowingPreflightMaxTime = 300;
 
-@interface GrowingNetworkPreflight ()
+@interface GrowingNetworkPreflight () <GrowingEventInterceptor>
 
 @property (nonatomic, assign) GrowingNetworkPreflightStatus status;
 @property (nonatomic, assign) NSTimeInterval nextPreflightTime;
@@ -66,6 +67,8 @@ static NSTimeInterval const kGrowingPreflightMaxTime = 300;
 }
 
 - (void)growingModInit:(GrowingContext *)context {
+    [[GrowingEventManager sharedInstance] addInterceptor:self];
+    
     [GrowingEventRequestAdapters.sharedInstance addAdapter:GrowingPFEventRequestAdapter.class];
 
     GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
@@ -83,19 +86,43 @@ static NSTimeInterval const kGrowingPreflightMaxTime = 300;
     NSTimeInterval dataUploadInterval = trackConfiguration.dataUploadInterval;
     dataUploadInterval = MAX(dataUploadInterval, 5);
     self.minPreflightTime = dataUploadInterval;
+    
+    [GrowingNetworkPreflight sendPreflight];
+}
+
+- (void)growingModRefreshSession:(GrowingContext *)context {
+    [GrowingNetworkPreflight sendPreflight];
+}
+
+#pragma mark - GrowingEventInterceptor
+
+- (BOOL)growingEventManagerEventShouldBeginSending:(GrowingEventChannel *)channel {
+    return [GrowingNetworkPreflight isSucceed];
+}
+
+- (void)growingEventManagerEventsSendingCompletion:(NSArray<id<GrowingEventPersistenceProtocol>> *)events
+                                           request:(id<GrowingRequestProtocol>)request
+                                           channel:(GrowingEventChannel *)channel
+                                      httpResponse:(NSHTTPURLResponse *)httpResponse
+                                             error:(NSError *)error {
+    if (httpResponse.statusCode == 403) {
+        [GrowingNetworkPreflight sendPreflight];
+    }
 }
 
 #pragma mark - Public Methods
-
-+ (BOOL)isSucceed {
-    GrowingNetworkPreflight *preflight = [GrowingNetworkPreflight sharedInstance];
-    return preflight.status > GrowingNWPreflightStatusWaitingForResponse;
-}
 
 + (NSString *)dataCollectionServerHost {
     // call when preflight isSucceed
     GrowingNetworkPreflight *preflight = [GrowingNetworkPreflight sharedInstance];
     return preflight.dataCollectionServerHost;
+}
+
+#pragma mark - Private Methods
+
++ (BOOL)isSucceed {
+    GrowingNetworkPreflight *preflight = [GrowingNetworkPreflight sharedInstance];
+    return preflight.status > GrowingNWPreflightStatusWaitingForResponse;
 }
 
 + (void)sendPreflight {
@@ -110,8 +137,6 @@ static NSTimeInterval const kGrowingPreflightMaxTime = 300;
         }
     }];
 }
-
-#pragma mark - Private Methods
 
 - (void)sendPreflight {
     self.status = GrowingNWPreflightStatusWaitingForResponse;

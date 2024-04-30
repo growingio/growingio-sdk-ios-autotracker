@@ -83,9 +83,15 @@ static GrowingDebuggerEventQueue *sharedInstance = nil;
     GROWING_UNLOCK(lock);
 }
 
-- (void)growingEventManagerEventsDidSend:(NSArray<id<GrowingEventPersistenceProtocol>> *)events
-                                 request:(id<GrowingRequestProtocol>)request
-                                 channel:(GrowingEventChannel *)channel {
+- (void)growingEventManagerEventsSendingCompletion:(NSArray<id<GrowingEventPersistenceProtocol>> *)events
+                                           request:(id<GrowingRequestProtocol>)request
+                                           channel:(GrowingEventChannel *)channel
+                                      httpResponse:(NSHTTPURLResponse *)httpResponse
+                                             error:(NSError *)error {
+    if (httpResponse.statusCode < 200 || httpResponse.statusCode >= 400) {
+        return;
+    }
+    
     if (events && request && request.absoluteURL) {
         NSString *url = request.absoluteURL.absoluteString.copy;
         for (id<GrowingEventPersistenceProtocol> event in events) {

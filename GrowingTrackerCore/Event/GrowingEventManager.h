@@ -46,16 +46,27 @@
 /// @param event 当前事件
 - (void)growingEventManagerEventDidWrite:(GrowingBaseEvent *_Nullable)event;
 
+/// 是否开始发送事件
+/// @param channel 当前发送通道
+- (BOOL)growingEventManagerEventShouldBeginSending:(GrowingEventChannel *_Nonnull)channel;
+
 /// 即将发送事件
 /// @param events 发送的事件
+/// @param channel 当前发送通道
 - (NSArray *_Nonnull)growingEventManagerEventsWillSend:(NSArray<id<GrowingEventPersistenceProtocol>> *_Nonnull)events
                                                channel:(GrowingEventChannel *_Nonnull)channel;
 
-/// 事件发送完毕
+/// 事件发送请求完毕
 /// @param events 发送的事件
-- (void)growingEventManagerEventsDidSend:(NSArray<id<GrowingEventPersistenceProtocol>> *_Nonnull)events
-                                 request:(id<GrowingRequestProtocol> _Nonnull)request
-                                 channel:(GrowingEventChannel *_Nonnull)channel;
+/// @param request 当前请求
+/// @param channel 当前发送通道
+/// @param httpResponse 当前请求响应
+/// @param error 当前请求错误
+- (void)growingEventManagerEventsSendingCompletion:(NSArray<id<GrowingEventPersistenceProtocol>> *_Nonnull)events
+                                           request:(id<GrowingRequestProtocol> _Nonnull)request
+                                           channel:(GrowingEventChannel *_Nonnull)channel
+                                      httpResponse:(NSHTTPURLResponse *_Nonnull)httpResponse
+                                             error:(NSError *_Nonnull)error;
 
 @end
 

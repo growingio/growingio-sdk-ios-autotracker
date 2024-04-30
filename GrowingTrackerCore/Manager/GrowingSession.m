@@ -31,10 +31,11 @@
 #import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 #import "GrowingULAppLifecycle.h"
 #import "GrowingULTimeUtil.h"
-#import "Modules/Preflight/Public/GrowingNetworkPreflight.h"
+#import "GrowingTrackerCore/Public/GrowingModuleManager.h"
 
 @interface GrowingSession () <GrowingULAppLifecycleDelegate>
 
+@property (nonatomic, assign, readwrite, getter=isSentVisitAfterRefreshSessionId) BOOL sentVisitAfterRefreshSessionId;
 @property (nonatomic, copy, readwrite) NSString *sessionId;
 @property (nonatomic, copy, readwrite) NSString *loginUserId;
 @property (nonatomic, copy, readwrite) NSString *loginUserKey;
@@ -85,19 +86,22 @@ static GrowingSession *currentSession = nil;
 }
 
 - (void)generateVisit {
-    [GrowingNetworkPreflight sendPreflight];
-
     GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
     if (!trackConfiguration.dataCollectionEnabled) {
         return;
     }
-    _sentVisitAfterRefreshSessionId = YES;
+    self.sentVisitAfterRefreshSessionId = YES;
     [GrowingEventGenerator generateVisitEvent];
 }
 
 - (void)refreshSessionId {
-    _sessionId = NSUUID.UUID.UUIDString;
-    _sentVisitAfterRefreshSessionId = NO;
+    self.sessionId = NSUUID.UUID.UUIDString;
+    self.sentVisitAfterRefreshSessionId = NO;
+    
+    [[GrowingModuleManager sharedInstance] triggerEvent:GrowingMRefreshSessionEvent
+                                        withCustomParam:@{
+                                            @"sessionId": self.sessionId.copy
+                                        }];
 }
 
 // iOS 11系统上面VC的viewDidAppear生命周期会早于AppDelegate的applicationDidBecomeActive，这样会造成Page事件早于Visit事件
