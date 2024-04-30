@@ -91,7 +91,7 @@ static GrowingDebuggerEventQueue *sharedInstance = nil;
     if (httpResponse.statusCode < 200 || httpResponse.statusCode >= 400) {
         return;
     }
-    
+
     if (events && request && request.absoluteURL) {
         NSString *url = request.absoluteURL.absoluteString.copy;
         for (id<GrowingEventPersistenceProtocol> event in events) {

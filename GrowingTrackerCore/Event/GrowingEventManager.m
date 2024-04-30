@@ -234,11 +234,11 @@ static GrowingEventManager *sharedInstance = nil;
             shouldBeginSending = [obj growingEventManagerEventShouldBeginSending:channel];
         }
     }
-    
+
     if (!shouldBeginSending) {
         return;
     }
-    
+
     if (channel.isUploading) {
         return;
     }
@@ -351,7 +351,8 @@ static GrowingEventManager *sharedInstance = nil;
               completion:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data, NSError *_Nonnull error) {
                   [GrowingDispatchManager dispatchInGrowingThread:^{
                       for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
-                          if ([obj respondsToSelector:@selector(growingEventManagerEventsSendingCompletion:request:channel:httpResponse:error:)]) {
+                          if ([obj respondsToSelector:@selector
+                                   (growingEventManagerEventsSendingCompletion:request:channel:httpResponse:error:)]) {
                               [obj growingEventManagerEventsSendingCompletion:events
                                                                       request:eventRequest
                                                                       channel:channel
@@ -359,9 +360,9 @@ static GrowingEventManager *sharedInstance = nil;
                                                                         error:error];
                           }
                       }
-                      
+
                       channel.isUploading = NO;
-                      
+
                       if (error) {
                           return;
                       }

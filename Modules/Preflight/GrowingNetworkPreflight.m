@@ -17,12 +17,12 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Network/Request/Adapter/GrowingEventRequestAdapters.h"
 #import "GrowingTrackerCore/Public/GrowingEventNetworkService.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
-#import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "Modules/Preflight/GrowingNetworkPreflight+Private.h"
 #import "Modules/Preflight/Request/GrowingPFEventRequestAdapter.h"
 #import "Modules/Preflight/Request/GrowingPFRequest.h"
@@ -68,7 +68,7 @@ static NSTimeInterval const kGrowingPreflightMaxTime = 300;
 
 - (void)growingModInit:(GrowingContext *)context {
     [[GrowingEventManager sharedInstance] addInterceptor:self];
-    
+
     [GrowingEventRequestAdapters.sharedInstance addAdapter:GrowingPFEventRequestAdapter.class];
 
     GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
@@ -86,7 +86,7 @@ static NSTimeInterval const kGrowingPreflightMaxTime = 300;
     NSTimeInterval dataUploadInterval = trackConfiguration.dataUploadInterval;
     dataUploadInterval = MAX(dataUploadInterval, 5);
     self.minPreflightTime = dataUploadInterval;
-    
+
     [GrowingNetworkPreflight sendPreflight];
 }
 
