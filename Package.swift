@@ -85,6 +85,7 @@ let package = Package(
         .Module.ads,
         .Module.apm,
         .Module.abTesting,
+        .Module.preflight,
 
         // MARK: - Services
 
@@ -121,6 +122,7 @@ extension Target {
                                         .Module.hybrid,
                                         .Module.mobileDebugger,
                                         .Module.webCircle,
+                                        .Module.preflight,
                                     ],
                                     path: .Path.autotracker)
 
@@ -129,6 +131,7 @@ extension Target {
                                     .tracker_objc,
                                     .Module.coreServices,
                                     .Module.mobileDebugger,
+                                    .Module.preflight,
                                 ],
                                 path: .Path.tracker)
 
@@ -244,6 +247,12 @@ extension Target {
                                       path: .Path.abTesting,
                                       publicHeadersPath: .Path.publicHeaders,
                                       cSettings: [.hspFor(.Path.abTesting)])
+        
+        static let preflight = target(name: .preflight,
+                                      dependencies: [.Core.trackerCore],
+                                      path: .Path.preflight,
+                                      publicHeadersPath: .Path.publicHeaders,
+                                      cSettings: [.hspFor(.Path.preflight)])
     }
 
     enum Service {
@@ -324,6 +333,7 @@ extension Target.Dependency {
         static let mobileDebugger = byName(name: .mobileDebugger, condition: .when(platforms: [.iOS]))
         static let webCircle = byName(name: .webCircle, condition: .when(platforms: [.iOS]))
         static let hybrid = byName(name: .hybrid, condition: .when(platforms: [.iOS, .macCatalyst]))
+        static let preflight = byName(name: .preflight)
     }
 
     enum Service {
@@ -375,6 +385,7 @@ extension String {
     static let ads = "GrowingModule_Ads"
     static let apm = "GrowingModule_APM"
     static let abTesting = "GrowingModule_ABTesting"
+    static let preflight = "GrowingModule_Preflight"
 
     // Services
     static let database = "GrowingService_Database"
@@ -410,6 +421,7 @@ extension String {
         static let ads = "Modules/Advertising"
         static let apm = "Modules/APM"
         static let abTesting = "Modules/ABTesting"
+        static let preflight = "Modules/Preflight"
         static let coreServices = "Modules/DefaultServices"
 
         // Services
