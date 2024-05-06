@@ -17,12 +17,12 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#if __has_include(<GrowingAnalytics/GrowingTrackConfiguration.h>) // Cocoapods or Manual
+#if __has_include(<GrowingAnalytics/GrowingTrackConfiguration.h>)  // Cocoapods or Manual
 @import GrowingAnalytics;
 #else
 #import "GrowingAttributesBuilder.h"
-#import "GrowingTrackConfiguration.h"
 #import "GrowingDynamicProxy.h"
+#import "GrowingTrackConfiguration.h"
 #endif
 
 NS_ASSUME_NONNULL_BEGIN

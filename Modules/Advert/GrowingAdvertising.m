@@ -104,8 +104,7 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
 #pragma mark - GrowingEventInterceptor
 
 - (void)growingEventManagerChannels:(NSMutableArray<GrowingEventChannel *> *)channels {
-    [channels addObject:[GrowingEventChannel eventChannelWithEventTypes:@[GrowingEventTypeActivate]
-                                                          isCustomEvent:NO]];
+    [channels addObject:[GrowingEventChannel eventChannelWithEventTypes:@[GrowingEventTypeActivate] isCustomEvent:NO]];
 }
 
 #pragma mark - GrowingULAppLifecycleDelegate

@@ -26,7 +26,7 @@ public class SwiftProtobufWrapper: NSObject {
     @objc public let data: Data?
     init(_ unbox: EventV3Dto) {
         self.unbox = unbox
-        self.data = try? unbox.serializedData()
+        data = try? unbox.serializedData()
     }
 
     @objc(parseFromData:)
@@ -70,10 +70,10 @@ public class SwiftProtobufWrapper: NSObject {
     }
 }
 
-extension SwiftProtobufWrapper {
+public extension SwiftProtobufWrapper {
     // For GrowingToolsKit NetFlow
     @objc(convertProtobufDataToJsonArray:)
-    public static func convertProtobufDataToJsonArray(from data: Data) -> [[String: AnyObject]]? {
+    static func convertProtobufDataToJsonArray(from data: Data) -> [[String: AnyObject]]? {
         do {
             let list = try EventV3List(serializedData: data)
             var array = [[String: AnyObject]]()
@@ -91,36 +91,36 @@ extension SwiftProtobufWrapper {
     }
 }
 
-extension GrowingBaseEvent {
-    @objc public func toProtobuf() -> SwiftProtobufWrapper {
+public extension GrowingBaseEvent {
+    @objc func toProtobuf() -> SwiftProtobufWrapper {
         var dto = EventV3Dto()
 
-        dto.dataSourceID = self.dataSourceId ?? ""
-        dto.gioID = self.gioId ?? ""
-        dto.sessionID = self.sessionId ?? ""
-        dto.timestamp = self.timestamp
-        dto.domain = self.domain
-        dto.userID = self.userId ?? ""
-        dto.deviceID = self.deviceId
-        dto.platform = self.platform
-        dto.platformVersion = self.platformVersion
-        dto.globalSequenceID = self.globalSequenceId
-        dto.eventSequenceID = Int32(self.eventSequenceId)
-        dto.appState = self.appState == GrowingAppState.foreground.rawValue ? "FOREGROUND" : "BACKGROUND"
-        dto.urlScheme = self.urlScheme
-        dto.networkState = self.networkState ?? ""
-        dto.screenWidth = Int32(self.screenWidth)
-        dto.screenHeight = Int32(self.screenHeight)
-        dto.deviceBrand = self.deviceBrand
-        dto.deviceModel = self.deviceModel
-        dto.deviceType = self.deviceType
-        dto.appName = self.appName
-        dto.appVersion = self.appVersion
-        dto.language = self.language
-        dto.latitude = self.latitude
-        dto.longitude = self.longitude
-        dto.sdkVersion = self.sdkVersion
-        dto.userKey = self.userKey ?? ""
+        dto.dataSourceID = dataSourceId ?? ""
+        dto.gioID = gioId ?? ""
+        dto.sessionID = sessionId ?? ""
+        dto.timestamp = timestamp
+        dto.domain = domain
+        dto.userID = userId ?? ""
+        dto.deviceID = deviceId
+        dto.platform = platform
+        dto.platformVersion = platformVersion
+        dto.globalSequenceID = globalSequenceId
+        dto.eventSequenceID = Int32(eventSequenceId)
+        dto.appState = appState == GrowingAppState.foreground.rawValue ? "FOREGROUND" : "BACKGROUND"
+        dto.urlScheme = urlScheme
+        dto.networkState = networkState ?? ""
+        dto.screenWidth = Int32(screenWidth)
+        dto.screenHeight = Int32(screenHeight)
+        dto.deviceBrand = deviceBrand
+        dto.deviceModel = deviceModel
+        dto.deviceType = deviceType
+        dto.appName = appName
+        dto.appVersion = appVersion
+        dto.language = language
+        dto.latitude = latitude
+        dto.longitude = longitude
+        dto.sdkVersion = sdkVersion
+        dto.userKey = userKey ?? ""
 
         dto.eventType = eventType()
         dto.idfa = idfa()
@@ -144,184 +144,184 @@ extension GrowingBaseEvent {
     }
 }
 
-extension GrowingBaseEvent {
-    fileprivate func eventType() -> EventType {
-        if self.eventType == "VISIT" {
+private extension GrowingBaseEvent {
+    func eventType() -> EventType {
+        if eventType == "VISIT" {
             return .visit
-        } else if self.eventType == "CUSTOM" {
+        } else if eventType == "CUSTOM" {
             return .custom
-        } else if self.eventType == "VISITOR_ATTRIBUTES" {
+        } else if eventType == "VISITOR_ATTRIBUTES" {
             return .visitorAttributes
-        } else if self.eventType == "LOGIN_USER_ATTRIBUTES" {
+        } else if eventType == "LOGIN_USER_ATTRIBUTES" {
             return .loginUserAttributes
-        } else if self.eventType == "CONVERSION_VARIABLES" {
+        } else if eventType == "CONVERSION_VARIABLES" {
             return .conversionVariables
-        } else if self.eventType == "APP_CLOSED" {
+        } else if eventType == "APP_CLOSED" {
             return .appClosed
-        } else if self.eventType == "PAGE" {
+        } else if eventType == "PAGE" {
             return .page
-        } else if self.eventType == "VIEW_CLICK" {
+        } else if eventType == "VIEW_CLICK" {
             return .viewClick
-        } else if self.eventType == "VIEW_CHANGE" {
+        } else if eventType == "VIEW_CHANGE" {
             return .viewChange
-        } else if self.eventType == "FORM_SUBMIT" {
+        } else if eventType == "FORM_SUBMIT" {
             return .formSubmit
-        } else if self.eventType == "ACTIVATE" {
+        } else if eventType == "ACTIVATE" {
             return .activate
         }
 
         return .UNRECOGNIZED(100)
     }
 
-    fileprivate func idfa() -> String {
+    func idfa() -> String {
         let selector = Selector(("idfa"))
-        if self.responds(to: selector) {
+        if responds(to: selector) {
             let imp: IMP = method_getImplementation(class_getInstanceMethod(type(of: self), selector)!)
-            return unsafeBitCast(imp, to: (@convention(c)(GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
+            return unsafeBitCast(imp, to: (@convention(c) (GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
         }
         return ""
     }
 
-    fileprivate func idfv() -> String {
+    func idfv() -> String {
         let selector = Selector(("idfv"))
-        if self.responds(to: selector) {
+        if responds(to: selector) {
             let imp: IMP = method_getImplementation(class_getInstanceMethod(type(of: self), selector)!)
-            return unsafeBitCast(imp, to: (@convention(c)(GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
+            return unsafeBitCast(imp, to: (@convention(c) (GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
         }
         return ""
     }
 
-    fileprivate func extraSdk() -> [String: String] {
+    func extraSdk() -> [String: String] {
         let selector = Selector(("extraSdk"))
-        if self.responds(to: selector) {
+        if responds(to: selector) {
             let imp: IMP = method_getImplementation(class_getInstanceMethod(type(of: self), selector)!)
-            return unsafeBitCast(imp, to: (@convention(c)(GrowingBaseEvent, Selector) -> [String: String]?).self)(self, selector) ?? [:]
+            return unsafeBitCast(imp, to: (@convention(c) (GrowingBaseEvent, Selector) -> [String: String]?).self)(self, selector) ?? [:]
         }
         return [:]
     }
 
-    fileprivate func path() -> String {
-        if self.responds(to: Selector(("pageName"))) {
+    func path() -> String {
+        if responds(to: Selector(("pageName"))) {
             let selector = Selector(("pageName"))
             let imp: IMP = method_getImplementation(class_getInstanceMethod(type(of: self), selector)!)
-            return unsafeBitCast(imp, to: (@convention(c)(GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
-        } else if self.responds(to: Selector(("path"))) {
+            return unsafeBitCast(imp, to: (@convention(c) (GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
+        } else if responds(to: Selector(("path"))) {
             let selector = Selector(("path"))
             let imp: IMP = method_getImplementation(class_getInstanceMethod(type(of: self), selector)!)
-            return unsafeBitCast(imp, to: (@convention(c)(GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
+            return unsafeBitCast(imp, to: (@convention(c) (GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
         }
         return ""
     }
 
-    fileprivate func pageShowTimestamp() -> Int64 {
+    func pageShowTimestamp() -> Int64 {
         let selector = Selector(("pageShowTimestamp"))
-        if self.responds(to: selector) {
+        if responds(to: selector) {
             let imp: IMP = method_getImplementation(class_getInstanceMethod(type(of: self), selector)!)
-            let result = unsafeBitCast(imp, to: (@convention(c)(GrowingBaseEvent, Selector) -> Int64).self)(self, selector)
+            let result = unsafeBitCast(imp, to: (@convention(c) (GrowingBaseEvent, Selector) -> Int64).self)(self, selector)
             return result > 0 ? result : 0
         }
         return 0
     }
 
-    fileprivate func textValue() -> String {
+    func textValue() -> String {
         let selector = Selector(("textValue"))
-        if self.responds(to: selector) {
+        if responds(to: selector) {
             let imp: IMP = method_getImplementation(class_getInstanceMethod(type(of: self), selector)!)
-            return unsafeBitCast(imp, to: (@convention(c)(GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
+            return unsafeBitCast(imp, to: (@convention(c) (GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
         }
         return ""
     }
 
-    fileprivate func xpath() -> String {
+    func xpath() -> String {
         let selector = Selector(("xpath"))
-        if self.responds(to: selector) {
+        if responds(to: selector) {
             let imp: IMP = method_getImplementation(class_getInstanceMethod(type(of: self), selector)!)
-            return unsafeBitCast(imp, to: (@convention(c)(GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
+            return unsafeBitCast(imp, to: (@convention(c) (GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
         }
         return ""
     }
 
-    fileprivate func index() -> Int32 {
+    func index() -> Int32 {
         let selector = Selector(("index"))
-        if self.responds(to: selector) {
+        if responds(to: selector) {
             let imp: IMP = method_getImplementation(class_getInstanceMethod(type(of: self), selector)!)
-            let result = unsafeBitCast(imp, to: (@convention(c)(GrowingBaseEvent, Selector) -> Int32).self)(self, selector)
+            let result = unsafeBitCast(imp, to: (@convention(c) (GrowingBaseEvent, Selector) -> Int32).self)(self, selector)
             return result > 0 ? result : 0
         }
         return 0
     }
 
-    fileprivate func query() -> String {
+    func query() -> String {
         let selector = Selector(("query"))
-        if self.responds(to: selector) {
+        if responds(to: selector) {
             let imp: IMP = method_getImplementation(class_getInstanceMethod(type(of: self), selector)!)
-            return unsafeBitCast(imp, to: (@convention(c)(GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
+            return unsafeBitCast(imp, to: (@convention(c) (GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
         }
         return ""
     }
 
-    fileprivate func hyperlink() -> String {
+    func hyperlink() -> String {
         let selector = Selector(("hyperlink"))
-        if self.responds(to: selector) {
+        if responds(to: selector) {
             let imp: IMP = method_getImplementation(class_getInstanceMethod(type(of: self), selector)!)
-            return unsafeBitCast(imp, to: (@convention(c)(GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
+            return unsafeBitCast(imp, to: (@convention(c) (GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
         }
         return ""
     }
 
-    fileprivate func attributes() -> [String: String] {
+    func attributes() -> [String: String] {
         let selector = Selector(("attributes"))
-        if self.responds(to: selector) {
+        if responds(to: selector) {
             let imp: IMP = method_getImplementation(class_getInstanceMethod(type(of: self), selector)!)
-            let result = unsafeBitCast(imp, to: (@convention(c)(GrowingBaseEvent, Selector) -> [String: AnyObject]?).self)(self, selector)
+            let result = unsafeBitCast(imp, to: (@convention(c) (GrowingBaseEvent, Selector) -> [String: AnyObject]?).self)(self, selector)
             if let result = result {
-                return result.filter({ $0.value is String }) as? [String: String] ?? [:]
+                return result.filter { $0.value is String } as? [String: String] ?? [:]
             }
         }
         return [:]
     }
 
-    fileprivate func orientation() -> String {
+    func orientation() -> String {
         let selector = Selector(("orientation"))
-        if self.responds(to: selector) {
+        if responds(to: selector) {
             let imp: IMP = method_getImplementation(class_getInstanceMethod(type(of: self), selector)!)
-            return unsafeBitCast(imp, to: (@convention(c)(GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
+            return unsafeBitCast(imp, to: (@convention(c) (GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
         }
         return ""
     }
 
-    fileprivate func title() -> String {
+    func title() -> String {
         let selector = Selector(("title"))
-        if self.responds(to: selector) {
+        if responds(to: selector) {
             let imp: IMP = method_getImplementation(class_getInstanceMethod(type(of: self), selector)!)
-            return unsafeBitCast(imp, to: (@convention(c)(GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
+            return unsafeBitCast(imp, to: (@convention(c) (GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
         }
         return ""
     }
 
-    fileprivate func referralPage() -> String {
+    func referralPage() -> String {
         let selector = Selector(("referralPage"))
-        if self.responds(to: selector) {
+        if responds(to: selector) {
             let imp: IMP = method_getImplementation(class_getInstanceMethod(type(of: self), selector)!)
-            return unsafeBitCast(imp, to: (@convention(c)(GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
+            return unsafeBitCast(imp, to: (@convention(c) (GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
         }
         return ""
     }
 
-    fileprivate func protocolType() -> String {
+    func protocolType() -> String {
         let selector = Selector(("protocolType"))
-        if self.responds(to: selector) {
+        if responds(to: selector) {
             let imp: IMP = method_getImplementation(class_getInstanceMethod(type(of: self), selector)!)
-            return unsafeBitCast(imp, to: (@convention(c)(GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
+            return unsafeBitCast(imp, to: (@convention(c) (GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
         }
         return ""
     }
 
-    fileprivate func eventName() -> String {
+    func eventName() -> String {
         let selector = Selector(("eventName"))
-        if self.responds(to: selector) {
+        if responds(to: selector) {
             let imp: IMP = method_getImplementation(class_getInstanceMethod(type(of: self), selector)!)
-            return unsafeBitCast(imp, to: (@convention(c)(GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
+            return unsafeBitCast(imp, to: (@convention(c) (GrowingBaseEvent, Selector) -> String?).self)(self, selector) ?? ""
         }
         return ""
     }

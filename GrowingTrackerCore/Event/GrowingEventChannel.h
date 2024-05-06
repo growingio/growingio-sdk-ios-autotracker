@@ -31,8 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
                 isCustomEvent:(BOOL)isCustomEvent
                   isUploading:(BOOL)isUploading;
 
-+ (instancetype)eventChannelWithEventTypes:(NSArray<NSString *> *_Nullable)eventTypes
-                             isCustomEvent:(BOOL)isCustomEvent;
++ (instancetype)eventChannelWithEventTypes:(NSArray<NSString *> *_Nullable)eventTypes isCustomEvent:(BOOL)isCustomEvent;
 /// 所有的channels集合
 + (NSMutableArray<GrowingEventChannel *> *)eventChannels;
 /// 深拷贝Channels集合，并自动添加一个EventType为nil的Channels

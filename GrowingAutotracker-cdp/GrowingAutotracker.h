@@ -18,7 +18,7 @@
 //  limitations under the License.
 
 @import UIKit;
-#if __has_include(<GrowingAnalytics/GrowingTrackConfiguration.h>) // Cocoapods or Manual
+#if __has_include(<GrowingAnalytics/GrowingTrackConfiguration.h>)  // Cocoapods or Manual
 @import GrowingAnalytics;
 #else
 #import "GrowingAttributesBuilder.h"

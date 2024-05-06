@@ -33,11 +33,8 @@
     return self;
 }
 
-+ (instancetype)eventChannelWithEventTypes:(NSArray<NSString *> *)eventTypes
-                             isCustomEvent:(BOOL)isCustomEvent {
-    return [[GrowingEventChannel alloc] initWithTypes:eventTypes
-                                        isCustomEvent:isCustomEvent
-                                          isUploading:NO];
++ (instancetype)eventChannelWithEventTypes:(NSArray<NSString *> *)eventTypes isCustomEvent:(BOOL)isCustomEvent {
+    return [[GrowingEventChannel alloc] initWithTypes:eventTypes isCustomEvent:isCustomEvent isUploading:NO];
 }
 
 static NSMutableArray *eventChannels = nil;
@@ -65,8 +62,7 @@ static NSMutableArray *eventChannels = nil;
 + (NSArray<GrowingEventChannel *> *)buildAllEventChannels {
     NSMutableArray *channels = [[self eventChannels] mutableCopy];
     eventChannels = nil;
-    [channels addObject:[GrowingEventChannel eventChannelWithEventTypes:nil
-                                                          isCustomEvent:NO]];
+    [channels addObject:[GrowingEventChannel eventChannelWithEventTypes:nil isCustomEvent:NO]];
     return channels;
 }
 
