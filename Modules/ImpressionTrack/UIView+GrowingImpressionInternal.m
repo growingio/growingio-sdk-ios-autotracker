@@ -111,8 +111,7 @@
     [self growingTrackImpression:eventName attributes:nil];
 }
 
-- (void)growingTrackImpression:(NSString *)eventName
-                    attributes:(NSDictionary<NSString *, id> *_Nullable)attributes {
+- (void)growingTrackImpression:(NSString *)eventName attributes:(NSDictionary<NSString *, id> *_Nullable)attributes {
     if (eventName.length == 0) {
         return;
     }
