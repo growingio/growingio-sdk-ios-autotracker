@@ -45,7 +45,7 @@
         [keychainQuery setObject:data forKey:(id)kSecValueData];
 #pragma clang diagnostic pop
     }
-        
+
     // Configure accessible attribute
     [keychainQuery setObject:(id)kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly forKey:(id)kSecAttrAccessible];
 
