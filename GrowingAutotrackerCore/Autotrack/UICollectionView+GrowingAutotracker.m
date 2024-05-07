@@ -34,7 +34,6 @@
                                        GUSWReturnType(void),
                                        GUSWArguments(UICollectionView * collectionView, NSIndexPath * indexPath),
                                        GUSWReplacement({
-                                           GUSWCallOriginal(collectionView, indexPath);
                                            if (collectionView && indexPath) {
                                                UICollectionViewCell *cell =
                                                    [collectionView cellForItemAtIndexPath:indexPath];
@@ -42,6 +41,7 @@
                                                    [GrowingViewClickProvider viewOnClick:cell];
                                                }
                                            }
+                                           GUSWCallOriginal(collectionView, indexPath);
                                        }),
                                        GrowingULSwizzleModeOncePerClassAndSuperclasses,
                                        key);

@@ -32,7 +32,7 @@
     GrowingAutotrackConfiguration *configuration = [GrowingAutotrackConfiguration configurationWithAccountId:@"0a1b4118dd954ec3bcc69da5138bdb96"];
     configuration.dataSourceId = @"ab555003531e0fd1";
     configuration.debugEnabled = YES;
-    [GrowingAutotracker startWithConfiguration:configuration launchOptions:nil];
+    [GrowingAutotracker startWithConfiguration:configuration launchOptions:@{}];
 }
 
 - (BOOL)isContentValid {

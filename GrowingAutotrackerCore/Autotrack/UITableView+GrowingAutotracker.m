@@ -34,13 +34,13 @@
                                        GUSWReturnType(void),
                                        GUSWArguments(UITableView * tableView, NSIndexPath * indexPath),
                                        GUSWReplacement({
-                                           GUSWCallOriginal(tableView, indexPath);
                                            if (tableView && indexPath) {
                                                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
                                                if (cell) {
                                                    [GrowingViewClickProvider viewOnClick:cell];
                                                }
                                            }
+                                           GUSWCallOriginal(tableView, indexPath);
                                        }),
                                        GrowingULSwizzleModeOncePerClassAndSuperclasses,
                                        key);

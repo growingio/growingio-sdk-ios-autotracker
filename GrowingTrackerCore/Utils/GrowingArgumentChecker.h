@@ -19,6 +19,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface GrowingArgumentChecker : NSObject
 
 + (BOOL)isIllegalEventName:(NSString *)eventName;
@@ -27,3 +29,5 @@
 + (NSDictionary<NSString *, NSString *> *_Nullable)serializableAttributes:(NSDictionary *)properties;
 
 @end
+
+NS_ASSUME_NONNULL_END

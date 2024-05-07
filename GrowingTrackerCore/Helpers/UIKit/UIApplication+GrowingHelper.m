@@ -22,6 +22,7 @@
 #if Growing_OS_IOS
 #import "GrowingTrackerCore/GrowingWindow.h"
 #import "GrowingTrackerCore/Helpers/UIKit/UIApplication+GrowingHelper.h"
+#import "GrowingULApplication.h"
 
 @implementation UIApplication (GrowingHelper)
 
@@ -30,7 +31,7 @@
 /// 我们需要将其加入数组中
 - (NSArray<UIWindow *> *)growingHelper_allWindows {
     NSArray *array = [self windows];
-    UIWindow *keyWindow = [self keyWindow];
+    UIWindow *keyWindow = [self growingul_keyWindow];
 
     if (!keyWindow) {
         return array;

@@ -14,24 +14,12 @@
 //   prior written permission of Deusty, LLC.
 
 #import <Foundation/Foundation.h>
-
-// The Swift Package integration has no support for the legacy macros.
-#if __has_include(<CocoaLumberjack/GrowingLegacyMacros.h>)
-    // Enable 1.9.x legacy macros if imported directly and it's not a swift package build.
-    #ifndef Growing_LEGACY_MACROS
-        #define Growing_LEGACY_MACROS 1
-    #endif
-    // Growing_LEGACY_MACROS is checked in the file itself
-    #import "GrowingLegacyMacros.h"
-#endif
-
-// Names of loggers.
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLoggerNames.h"
 
 #if OS_OBJECT_USE_OBJC
-    #define DISPATCH_QUEUE_REFERENCE_TYPE strong
+    #define GIO_DISPATCH_QUEUE_REFERENCE_TYPE strong
 #else
-    #define DISPATCH_QUEUE_REFERENCE_TYPE assign
+    #define GIO_DISPATCH_QUEUE_REFERENCE_TYPE assign
 #endif
 
 @class GrowingLogMessage;
@@ -224,7 +212,7 @@ FOUNDATION_EXTERN NSString * __nullable GrowingExtractFileNameWithoutExtension(c
  * Provides access to the underlying logging queue.
  * This may be helpful to Logger classes for things like thread synchronization.
  **/
-@property (class, nonatomic, DISPATCH_QUEUE_REFERENCE_TYPE, readonly) dispatch_queue_t loggingQueue;
+@property (class, nonatomic, GIO_DISPATCH_QUEUE_REFERENCE_TYPE, readonly) dispatch_queue_t loggingQueue;
 
 /**
  * Logging Primitive.
@@ -304,7 +292,7 @@ FOUNDATION_EXTERN NSString * __nullable GrowingExtractFileNameWithoutExtension(c
        line:(NSUInteger)line
         tag:(nullable id)tag
      format:(NSString *)format
-       args:(va_list)argList NS_SWIFT_NAME(log(asynchronous:level:flag:context:file:function:line:tag:format:arguments:));
+       args:(va_list)argList;
 
 /**
  * Logging Primitive.
@@ -332,7 +320,7 @@ FOUNDATION_EXTERN NSString * __nullable GrowingExtractFileNameWithoutExtension(c
        line:(NSUInteger)line
         tag:(nullable id)tag
      format:(NSString *)format
-       args:(va_list)argList NS_SWIFT_NAME(log(asynchronous:level:flag:context:file:function:line:tag:format:arguments:));
+       args:(va_list)argList;
 
 /**
  * Logging Primitive.
@@ -343,7 +331,7 @@ FOUNDATION_EXTERN NSString * __nullable GrowingExtractFileNameWithoutExtension(c
  *  @param logMessage   the log message stored in a `GrowingLogMessage` model object
  */
 + (void)log:(BOOL)asynchronous
-    message:(GrowingLogMessage *)logMessage NS_SWIFT_NAME(log(asynchronous:message:));
+    message:(GrowingLogMessage *)logMessage;
 
 /**
  * Logging Primitive.
@@ -354,7 +342,7 @@ FOUNDATION_EXTERN NSString * __nullable GrowingExtractFileNameWithoutExtension(c
  *  @param logMessage   the log message stored in a `GrowingLogMessage` model object
  */
 - (void)log:(BOOL)asynchronous
-    message:(GrowingLogMessage *)logMessage NS_SWIFT_NAME(log(asynchronous:message:));
+    message:(GrowingLogMessage *)logMessage;
 
 /**
  * Since logging can be asynchronous, there may be times when you want to flush the logs.
@@ -573,7 +561,7 @@ FOUNDATION_EXTERN NSString * __nullable GrowingExtractFileNameWithoutExtension(c
  *
  *  @param logMessage the message (model)
  */
-- (void)logMessage:(GrowingLogMessage *)logMessage NS_SWIFT_NAME(log(message:));
+- (void)logMessage:(GrowingLogMessage *)logMessage;
 
 /**
  * Formatters may optionally be added to any logger.
@@ -633,7 +621,7 @@ FOUNDATION_EXTERN NSString * __nullable GrowingExtractFileNameWithoutExtension(c
  * Thus, a dedicated dispatch queue is used for each logger.
  * Logger implementations may optionally choose to provide their own dispatch queue.
  **/
-@property (nonatomic, DISPATCH_QUEUE_REFERENCE_TYPE, readonly) dispatch_queue_t loggerQueue;
+@property (nonatomic, GIO_DISPATCH_QUEUE_REFERENCE_TYPE, readonly) dispatch_queue_t loggerQueue;
 
 /**
  * If the logger implementation does not choose to provide its own queue,
@@ -666,7 +654,7 @@ FOUNDATION_EXTERN NSString * __nullable GrowingExtractFileNameWithoutExtension(c
  * The formatter may also optionally filter the log message by returning nil,
  * in which case the logger will not log the message.
  **/
-- (nullable NSString *)formatLogMessage:(GrowingLogMessage *)logMessage NS_SWIFT_NAME(format(message:));
+- (nullable NSString *)formatLogMessage:(GrowingLogMessage *)logMessage;
 
 @optional
 
@@ -884,7 +872,7 @@ typedef NS_OPTIONS(NSInteger, GrowingLogMessageOptions){
 }
 
 @property (nonatomic, strong, nullable) id <GrowingLogFormatter> logFormatter;
-@property (nonatomic, DISPATCH_QUEUE_REFERENCE_TYPE) dispatch_queue_t loggerQueue;
+@property (nonatomic, GIO_DISPATCH_QUEUE_REFERENCE_TYPE) dispatch_queue_t loggerQueue;
 
 // For thread-safety assertions
 
