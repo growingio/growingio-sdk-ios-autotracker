@@ -14,7 +14,7 @@ jobs:
   build:
     runs-on: macos-12
     env:
-      DERIVED_DATA: $HOME/.DerivedData
+      DERIVED_DATA: ${{ github.workspace }}/.DerivedData
 
     steps:
       - name: Checkout Repo
@@ -62,14 +62,16 @@ jobs:
         run: |
           xcresultparser -o cobertura ${{ env.DERIVED_DATA }}/Logs/Test/*.xcresult/ \
           > ${{ env.DERIVED_DATA }}/cobertura-coverage.xml
-          pwd
 
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with: 
-          files: /Users/runner/.DerivedData/cobertura-coverage.xml
+          fail_ci_if_error: true
+          files: ./.DerivedData/cobertura-coverage.xml
+          directory: ${{ github.workspace }}
+          verbose: true
 
       - name: Parse xcresult to Sonarqube xml
         run: |
