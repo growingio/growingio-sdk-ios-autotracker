@@ -31,7 +31,7 @@
 + (void)track:(Class)delegateClass {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        if (@available(iOS 13.0, *)) {
+        if (@available(iOS 13.0, tvOS 13.0, *)) {
             // URL Scheme
             SEL sel = @selector(scene:openURLContexts:);
             Method method = class_getInstanceMethod(delegateClass, sel);

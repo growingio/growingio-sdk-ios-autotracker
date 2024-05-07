@@ -2241,7 +2241,6 @@
 				0465315F24DD4272002D254C /* GIOListTableViewCell.xib in Resources */,
 				0465315D24DD4272002D254C /* GIOFoodTableViewCell.xib in Resources */,
 				34B932352767661600025C94 /* MeasurementProtocol.storyboard in Resources */,
-				0465314B24DD4272002D254C /* GrowingIO-Info.plist in Resources */,
 				0465315924DD4272002D254C /* GIOPageStructure.storyboard in Resources */,
 				34BDC35A277088D40030B3CE /* UICatalogTests.storyboard in Resources */,
 				0465313B24DD4272002D254C /* LaunchScreen.storyboard in Resources */,

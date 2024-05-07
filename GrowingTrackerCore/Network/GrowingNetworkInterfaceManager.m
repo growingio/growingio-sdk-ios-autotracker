@@ -85,7 +85,10 @@
                 }
             }
         } else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
             accessString = self.teleInfo.currentRadioAccessTechnology;
+#pragma clang diagnostic pop
         }
 
         if ([typeStrings4G containsObject:accessString]) {
