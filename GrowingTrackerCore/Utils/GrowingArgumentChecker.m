@@ -83,6 +83,9 @@
 + (NSDictionary<NSString *, NSString *> *_Nullable)serializableAttributes:(NSDictionary *)properties {
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
     for (NSString *key in properties.allKeys) {
+        if (![key isKindOfClass:[NSString class]]) {
+            continue;
+        }
         id value = properties[key];
         if ([value isKindOfClass:[NSString class]]) {
             result[key] = value;
