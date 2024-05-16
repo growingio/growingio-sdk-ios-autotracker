@@ -112,11 +112,7 @@
 
 - (GrowingNetworkReachabilityStatus)currentStatus {
     GrowingNetworkReachabilityStatus reachabilityStatus = GrowingNetworkReachabilityUndetermined;
-#if Growing_OS_VISION
-    if (1) {  // if (@available(visionOS 1.0, *)) {
-#else
     if (@available(iOS 12.0, macCatalyst 13.0, macOS 10.14, tvOS 12.0, watchOS 6.0, *)) {
-#endif
         reachabilityStatus = self.monitor.reachabilityStatus;
     } else {
         reachabilityStatus = self.internetReachability.reachabilityStatus;
@@ -126,11 +122,7 @@
 }
 
 - (void)monitorInitialize {
-#if Growing_OS_VISION
-    if (1) {  // if (@available(visionOS 1.0, *)) {
-#else
     if (@available(iOS 12.0, macCatalyst 13.0, macOS 10.14, tvOS 12.0, watchOS 6.0, *)) {
-#endif
         _monitor = [GrowingNetworkPathMonitor monitorWithQueue:_monitorQueue];
     } else {
         _internetReachability = [GrowingReachability reachabilityForInternetConnection];
@@ -138,11 +130,7 @@
 }
 
 - (void)startMonitor {
-#if Growing_OS_VISION
-    if (1) {  // if (@available(visionOS 1.0, *)) {
-#else
     if (@available(iOS 12.0, macCatalyst 13.0, macOS 10.14, tvOS 12.0, watchOS 6.0, *)) {
-#endif
         [_monitor startMonitor];
     } else {
         [_internetReachability startNotifier];

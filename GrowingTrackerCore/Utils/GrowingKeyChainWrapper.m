@@ -31,11 +31,7 @@
     SecItemDelete((CFDictionaryRef)keychainQuery);
 
     // Add new object to search dictionary(Attention:the data format)
-#if Growing_OS_VISION
-    if (1) {  // if (@available(visionOS 1.0, *)) {
-#else
     if (@available(iOS 11.0, macCatalyst 13.1, macOS 10.13, tvOS 11.0, watchOS 4.0, *)) {
-#endif
         NSData *data = [NSKeyedArchiver archivedDataWithRootObject:value requiringSecureCoding:YES error:nil];
         [keychainQuery setObject:data forKey:(id)kSecValueData];
     } else {
@@ -65,11 +61,7 @@
     CFDataRef keyData = NULL;
     if (SecItemCopyMatching((CFDictionaryRef)keychainQuery, (CFTypeRef *)&keyData) == noErr) {
         @try {
-#if Growing_OS_VISION
-            if (1) {  // if (@available(visionOS 1.0, *)) {
-#else
             if (@available(iOS 11.0, macCatalyst 13.1, macOS 10.13, tvOS 11.0, watchOS 4.0, *)) {
-#endif
                 ret = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSString class]
                                                         fromData:(__bridge NSData *)keyData
                                                            error:nil];
