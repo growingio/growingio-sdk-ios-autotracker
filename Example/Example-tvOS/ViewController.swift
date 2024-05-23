@@ -33,5 +33,31 @@ class ViewController: UIViewController {
         GrowingAutotracker.sharedInstance().trackCustomEvent("tvOS_custom_event", withAttributes: ["key2": "value"])
     }
     
+    @IBAction func showAlert(_ sender: UIButton) {
+        let title = "title"
+        let message = "message"
+        let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        controller.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
+            
+        }))
+        controller.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+            
+        }))
+        self.present(controller, animated: true)
+    }
+    
+    @IBAction func showActionSheet(_ sender: UIButton) {
+        let title = "title"
+        let message = "message"
+        let controller = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
+        controller.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
+            
+        }))
+        controller.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+            
+        }))
+        self.present(controller, animated: true)
+    }
+    
 }
 

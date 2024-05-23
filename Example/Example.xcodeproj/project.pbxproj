@@ -194,7 +194,7 @@
 		34FBF18D2B6A2C1C008C7587 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34FBF18C2B6A2C1C008C7587 /* ContentView.swift */; };
 		34FBF18F2B6A2C1C008C7587 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 34FBF18E2B6A2C1C008C7587 /* Assets.xcassets */; };
 		34FBF1922B6A2C1C008C7587 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 34FBF1912B6A2C1C008C7587 /* Preview Assets.xcassets */; };
-		34FBF1952B6A2C1C008C7587 /* Example-watchOS Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 34FBF1882B6A2C1C008C7587 /* Example-watchOS Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		34FBF1952B6A2C1C008C7587 /* Example-watchOS Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 34FBF1882B6A2C1C008C7587 /* Example-watchOS Watch App.app */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		34FBF19B2B6A3A15008C7587 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34FBF19A2B6A3A15008C7587 /* AppDelegate.swift */; };
 		34FCF7E12A937ECA009611B3 /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34FCF7E02A937ECA009611B3 /* SwiftUIView.swift */; };
 		34FCF7E42A937F4F009611B3 /* GIOSwiftUIContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34FCF7E32A937F4F009611B3 /* GIOSwiftUIContentViewController.m */; };
@@ -3124,6 +3124,7 @@
 		};
 		34FBF1942B6A2C1C008C7587 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
+			platformFilter = ios;
 			target = 34FBF1872B6A2C1C008C7587 /* Example-watchOS Watch App */;
 			targetProxy = 34FBF1932B6A2C1C008C7587 /* PBXContainerItemProxy */;
 		};
