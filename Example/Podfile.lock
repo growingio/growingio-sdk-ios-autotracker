@@ -1,71 +1,71 @@
 PODS:
-  - GrowingAnalytics-cdp/Autotracker (3.8.1):
-    - GrowingAnalytics/AutotrackerCore (= 3.8.1)
-    - GrowingAnalytics/DefaultServices (= 3.8.1)
-    - GrowingAnalytics/Hybrid (= 3.8.1)
-    - GrowingAnalytics/MobileDebugger (= 3.8.1)
-    - GrowingAnalytics/WebCircle (= 3.8.1)
-  - GrowingAnalytics-cdp/Tracker (3.8.1):
-    - GrowingAnalytics/DefaultServices (= 3.8.1)
-    - GrowingAnalytics/MobileDebugger (= 3.8.1)
-    - GrowingAnalytics/TrackerCore (= 3.8.1)
-  - GrowingAnalytics/Advert (3.8.1):
-    - GrowingAnalytics/TrackerCore (= 3.8.1)
-  - GrowingAnalytics/APM (3.8.1):
-    - GrowingAnalytics/TrackerCore (= 3.8.1)
+  - GrowingAnalytics-cdp/Autotracker (3.8.2):
+    - GrowingAnalytics/AutotrackerCore (= 3.8.2)
+    - GrowingAnalytics/DefaultServices (= 3.8.2)
+    - GrowingAnalytics/Hybrid (= 3.8.2)
+    - GrowingAnalytics/MobileDebugger (= 3.8.2)
+    - GrowingAnalytics/WebCircle (= 3.8.2)
+  - GrowingAnalytics-cdp/Tracker (3.8.2):
+    - GrowingAnalytics/DefaultServices (= 3.8.2)
+    - GrowingAnalytics/MobileDebugger (= 3.8.2)
+    - GrowingAnalytics/TrackerCore (= 3.8.2)
+  - GrowingAnalytics/Advert (3.8.2):
+    - GrowingAnalytics/TrackerCore (= 3.8.2)
+  - GrowingAnalytics/APM (3.8.2):
+    - GrowingAnalytics/TrackerCore (= 3.8.2)
     - GrowingAPM/Core
-  - GrowingAnalytics/Autotracker (3.8.1):
-    - GrowingAnalytics/AutotrackerCore (= 3.8.1)
-    - GrowingAnalytics/DefaultServices (= 3.8.1)
-    - GrowingAnalytics/Hybrid (= 3.8.1)
-    - GrowingAnalytics/MobileDebugger (= 3.8.1)
-    - GrowingAnalytics/WebCircle (= 3.8.1)
-  - GrowingAnalytics/AutotrackerCore (3.8.1):
-    - GrowingAnalytics/TrackerCore (= 3.8.1)
+  - GrowingAnalytics/Autotracker (3.8.2):
+    - GrowingAnalytics/AutotrackerCore (= 3.8.2)
+    - GrowingAnalytics/DefaultServices (= 3.8.2)
+    - GrowingAnalytics/Hybrid (= 3.8.2)
+    - GrowingAnalytics/MobileDebugger (= 3.8.2)
+    - GrowingAnalytics/WebCircle (= 3.8.2)
+  - GrowingAnalytics/AutotrackerCore (3.8.2):
+    - GrowingAnalytics/TrackerCore (= 3.8.2)
     - GrowingUtils/AutotrackerCore (~> 1.2.3)
-  - GrowingAnalytics/Compression (3.8.1):
-    - GrowingAnalytics/TrackerCore (= 3.8.1)
-  - GrowingAnalytics/Database (3.8.1):
-    - GrowingAnalytics/TrackerCore (= 3.8.1)
-  - GrowingAnalytics/DefaultServices (3.8.1):
-    - GrowingAnalytics/Compression (= 3.8.1)
-    - GrowingAnalytics/Database (= 3.8.1)
-    - GrowingAnalytics/Encryption (= 3.8.1)
-    - GrowingAnalytics/Network (= 3.8.1)
-    - GrowingAnalytics/TrackerCore (= 3.8.1)
-  - GrowingAnalytics/Encryption (3.8.1):
-    - GrowingAnalytics/TrackerCore (= 3.8.1)
-  - GrowingAnalytics/Hybrid (3.8.1):
-    - GrowingAnalytics/TrackerCore (= 3.8.1)
-  - GrowingAnalytics/MobileDebugger (3.8.1):
-    - GrowingAnalytics/Screenshot (= 3.8.1)
-    - GrowingAnalytics/TrackerCore (= 3.8.1)
-    - GrowingAnalytics/WebSocket (= 3.8.1)
-  - GrowingAnalytics/Network (3.8.1):
-    - GrowingAnalytics/TrackerCore (= 3.8.1)
-  - GrowingAnalytics/Protobuf (3.8.1):
-    - GrowingAnalytics/Database (= 3.8.1)
-    - GrowingAnalytics/Protobuf/Proto (= 3.8.1)
-    - GrowingAnalytics/TrackerCore (= 3.8.1)
-  - GrowingAnalytics/Protobuf/Proto (3.8.1):
-    - GrowingAnalytics/Database (= 3.8.1)
-    - GrowingAnalytics/TrackerCore (= 3.8.1)
+  - GrowingAnalytics/Compression (3.8.2):
+    - GrowingAnalytics/TrackerCore (= 3.8.2)
+  - GrowingAnalytics/Database (3.8.2):
+    - GrowingAnalytics/TrackerCore (= 3.8.2)
+  - GrowingAnalytics/DefaultServices (3.8.2):
+    - GrowingAnalytics/Compression (= 3.8.2)
+    - GrowingAnalytics/Database (= 3.8.2)
+    - GrowingAnalytics/Encryption (= 3.8.2)
+    - GrowingAnalytics/Network (= 3.8.2)
+    - GrowingAnalytics/TrackerCore (= 3.8.2)
+  - GrowingAnalytics/Encryption (3.8.2):
+    - GrowingAnalytics/TrackerCore (= 3.8.2)
+  - GrowingAnalytics/Hybrid (3.8.2):
+    - GrowingAnalytics/TrackerCore (= 3.8.2)
+  - GrowingAnalytics/MobileDebugger (3.8.2):
+    - GrowingAnalytics/Screenshot (= 3.8.2)
+    - GrowingAnalytics/TrackerCore (= 3.8.2)
+    - GrowingAnalytics/WebSocket (= 3.8.2)
+  - GrowingAnalytics/Network (3.8.2):
+    - GrowingAnalytics/TrackerCore (= 3.8.2)
+  - GrowingAnalytics/Protobuf (3.8.2):
+    - GrowingAnalytics/Database (= 3.8.2)
+    - GrowingAnalytics/Protobuf/Proto (= 3.8.2)
+    - GrowingAnalytics/TrackerCore (= 3.8.2)
+  - GrowingAnalytics/Protobuf/Proto (3.8.2):
+    - GrowingAnalytics/Database (= 3.8.2)
+    - GrowingAnalytics/TrackerCore (= 3.8.2)
     - Protobuf
-  - GrowingAnalytics/Screenshot (3.8.1):
+  - GrowingAnalytics/Screenshot (3.8.2):
     - GrowingAnalytics/TrackerCore
-  - GrowingAnalytics/Tracker (3.8.1):
-    - GrowingAnalytics/DefaultServices (= 3.8.1)
-    - GrowingAnalytics/MobileDebugger (= 3.8.1)
-    - GrowingAnalytics/TrackerCore (= 3.8.1)
-  - GrowingAnalytics/TrackerCore (3.8.1):
+  - GrowingAnalytics/Tracker (3.8.2):
+    - GrowingAnalytics/DefaultServices (= 3.8.2)
+    - GrowingAnalytics/MobileDebugger (= 3.8.2)
+    - GrowingAnalytics/TrackerCore (= 3.8.2)
+  - GrowingAnalytics/TrackerCore (3.8.2):
     - GrowingUtils/TrackerCore (~> 1.2.3)
-  - GrowingAnalytics/WebCircle (3.8.1):
-    - GrowingAnalytics/AutotrackerCore (= 3.8.1)
-    - GrowingAnalytics/Hybrid (= 3.8.1)
-    - GrowingAnalytics/Screenshot (= 3.8.1)
-    - GrowingAnalytics/WebSocket (= 3.8.1)
-  - GrowingAnalytics/WebSocket (3.8.1):
-    - GrowingAnalytics/TrackerCore (= 3.8.1)
+  - GrowingAnalytics/WebCircle (3.8.2):
+    - GrowingAnalytics/AutotrackerCore (= 3.8.2)
+    - GrowingAnalytics/Hybrid (= 3.8.2)
+    - GrowingAnalytics/Screenshot (= 3.8.2)
+    - GrowingAnalytics/WebSocket (= 3.8.2)
+  - GrowingAnalytics/WebSocket (3.8.2):
+    - GrowingAnalytics/TrackerCore (= 3.8.2)
   - GrowingAPM (1.0.1):
     - GrowingAPM/Core (= 1.0.1)
     - GrowingAPM/CrashMonitor (= 1.0.1)
@@ -161,8 +161,8 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  GrowingAnalytics: 28f1b5015dcf6d9dd1964e9f653924defbad6868
-  GrowingAnalytics-cdp: 5e72936a1db9979fcd650ec712c5ffa4f0e5693e
+  GrowingAnalytics: c2daa317f8a02b77d86e35a585f61e2ba2b4c956
+  GrowingAnalytics-cdp: 3db1e791764106d08b62d9071b764877c37e65c5
   GrowingAPM: 3c4de0384935b654e6798b95606f47883a99418b
   GrowingToolsKit: 53160d19690da0b78e04a9242abde7af86442922
   GrowingUtils: 68aee2c96849bf9b674740503da30c2da468e79d
