@@ -34,13 +34,15 @@
 
 - (void)growing_dismissAnimated:(BOOL)animated
                  triggeringAction:(UIAlertAction *)action
-    triggeredByPopoverDimmingView:(UIView *)view
+    triggeredByPopoverDimmingView:(BOOL)isTriggeredByPopoverDimmingView
                 dismissCompletion:(id)completion {
-    [self growing_sendClickEventForAction:action];
+    if (completion) {
+        [self growing_sendClickEventForAction:action];
+    }
 
     [self growing_dismissAnimated:animated
                      triggeringAction:action
-        triggeredByPopoverDimmingView:view
+        triggeredByPopoverDimmingView:isTriggeredByPopoverDimmingView
                     dismissCompletion:completion];
 }
 
