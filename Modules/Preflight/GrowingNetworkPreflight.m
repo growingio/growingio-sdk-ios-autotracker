@@ -68,9 +68,9 @@ static NSTimeInterval const kGrowingPreflightMaxTime = 300;
 
 - (void)growingModInit:(GrowingContext *)context {
     [[GrowingEventManager sharedInstance] addInterceptor:self];
-
+    
     [GrowingEventRequestAdapters.sharedInstance addAdapter:GrowingPFEventRequestAdapter.class];
-
+    
     GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
     NSString *dataCollectionServerHost = trackConfiguration.dataCollectionServerHost;
     self.dataCollectionServerHost = dataCollectionServerHost;
@@ -82,16 +82,21 @@ static NSTimeInterval const kGrowingPreflightMaxTime = 300;
             self.status = GrowingNWPreflightStatusClosed;
         }
     }
-
+    
     NSTimeInterval dataUploadInterval = trackConfiguration.dataUploadInterval;
     dataUploadInterval = MAX(dataUploadInterval, 5);
     self.minPreflightTime = dataUploadInterval;
-
+    self.nextPreflightTime = dataUploadInterval;
+    
     [GrowingNetworkPreflight sendPreflight];
 }
 
 - (void)growingModRefreshSession:(GrowingContext *)context {
     [GrowingNetworkPreflight sendPreflight];
+}
+
+- (void)growingModSetDataCollectionEnabled:(GrowingContext *)context {
+    [GrowingNetworkPreflight sendPreflightIfNeeded];
 }
 
 #pragma mark - GrowingEventInterceptor
@@ -131,11 +136,21 @@ static NSTimeInterval const kGrowingPreflightMaxTime = 300;
         GrowingNetworkPreflight *preflight = [GrowingNetworkPreflight sharedInstance];
         preflight.nextPreflightTime = preflight.minPreflightTime;
         preflight.dataCollectionServerHost = trackConfiguration.dataCollectionServerHost;
-        if (preflight.status != GrowingNWPreflightStatusWaitingForResponse ||
-            preflight.status != GrowingNWPreflightStatusClosed) {
+        if (preflight.status == GrowingNWPreflightStatusNotDetermined ||
+            preflight.status == GrowingNWPreflightStatusAuthorized ||
+            preflight.status == GrowingNWPreflightStatusDenied) {
+            if (!trackConfiguration.dataCollectionEnabled) {
+                preflight.status = GrowingNWPreflightStatusNotDetermined;
+                return;
+            }
             [preflight sendPreflight];
         }
     }];
+}
+
++ (void)sendPreflightIfNeeded {
+    GrowingNetworkPreflight *preflight = [GrowingNetworkPreflight sharedInstance];
+    [preflight sendPreflightIfNeeded];
 }
 
 - (void)sendPreflight {
@@ -160,12 +175,12 @@ static NSTimeInterval const kGrowingPreflightMaxTime = 300;
                          GrowingConfigurationManager.sharedInstance.trackConfiguration;
                      self.dataCollectionServerHost = trackConfiguration.alternateDataCollectionServerHost;
                  } else {
-                     self.status = GrowingNWPreflightStatusWaitingForResponse;
+                     self.status = GrowingNWPreflightStatusNotDetermined;
                      dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.nextPreflightTime * NSEC_PER_SEC)),
                                     dispatch_get_main_queue(),
                                     ^{
                                         [GrowingDispatchManager dispatchInGrowingThread:^{
-                                            [self sendPreflight];
+                                            [self sendPreflightIfNeeded];
                                         }];
                                     });
 
@@ -173,6 +188,12 @@ static NSTimeInterval const kGrowingPreflightMaxTime = 300;
                  }
              }];
          }];
+}
+
+- (void)sendPreflightIfNeeded {
+    if (self.status == GrowingNWPreflightStatusNotDetermined) {
+        [self sendPreflight];
+    }
 }
 
 @end
