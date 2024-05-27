@@ -68,9 +68,9 @@ static NSTimeInterval const kGrowingPreflightMaxTime = 300;
 
 - (void)growingModInit:(GrowingContext *)context {
     [[GrowingEventManager sharedInstance] addInterceptor:self];
-    
+
     [GrowingEventRequestAdapters.sharedInstance addAdapter:GrowingPFEventRequestAdapter.class];
-    
+
     GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
     NSString *dataCollectionServerHost = trackConfiguration.dataCollectionServerHost;
     self.dataCollectionServerHost = dataCollectionServerHost;
@@ -82,12 +82,12 @@ static NSTimeInterval const kGrowingPreflightMaxTime = 300;
             self.status = GrowingNWPreflightStatusClosed;
         }
     }
-    
+
     NSTimeInterval dataUploadInterval = trackConfiguration.dataUploadInterval;
     dataUploadInterval = MAX(dataUploadInterval, 5);
     self.minPreflightTime = dataUploadInterval;
     self.nextPreflightTime = dataUploadInterval;
-    
+
     [GrowingNetworkPreflight sendPreflight];
 }
 
