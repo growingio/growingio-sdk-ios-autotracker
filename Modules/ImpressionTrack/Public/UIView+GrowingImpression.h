@@ -40,7 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param attributes 自定义属性
  */
 - (void)growingTrackImpression:(NSString *)eventName
-                    attributes:(NSDictionary<NSString *, NSString *> *_Nullable)attributes
+                    attributes:(NSDictionary<NSString *, id> *_Nullable)attributes
     NS_SWIFT_NAME(trackImp(_:attributes:))
         NS_EXTENSION_UNAVAILABLE("ImpressionTrack is not supported for iOS extensions.");
 

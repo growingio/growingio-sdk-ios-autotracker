@@ -97,10 +97,10 @@ target 'Example-tvOS' do
   pod 'GrowingAnalytics/Autotracker', :path => '../'
 end
 
-# target 'Example-visionOS' do
-#   platform :visionos, '1.0'
-#   pod 'GrowingAnalytics/Tracker', :path => '../'
-# end
+target 'Example-visionOS' do
+  platform :visionos, '1.0'
+  pod 'GrowingAnalytics/Tracker', :path => '../'
+end
 
 target 'Example-SwiftUI' do
   pod 'GrowingAnalytics/Autotracker', :path => '../'

@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)growing_dismissAnimated:(BOOL)animated
                  triggeringAction:(UIAlertAction *)action
-    triggeredByPopoverDimmingView:(UIView *)view
+    triggeredByPopoverDimmingView:(BOOL)isTriggeredByPopoverDimmingView
                 dismissCompletion:(id)completion;
 
 + (nullable UIAlertAction *)growing_actionForActionView:(UIView *)actionView;
