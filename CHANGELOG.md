@@ -1,3 +1,12 @@
+## [4.3.1](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/4.3.0...4.3.1) (2024-05-30)
+
+
+### Bug Fixes
+
+* visionOS support via Cocoapods ([#317](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/317)) ([9ab87ec](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/9ab87ec8fc3710e2d7574afd84aa8ccd214a1116))
+
+
+
 # [4.3.0](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/4.2.0...4.3.0) (2024-05-07)
 
 
@@ -15,6 +24,7 @@
 
 * add set dynamic generalProps generator ([#308](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/308)) ([bec7290](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/bec729034d12467fa97fa101e5bb3e32cb133021))
 * data validity period ([#310](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/310)) ([a52fefa](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/a52fefa7a7bf7a3590c49c501f193449aa94f631))
+* release 4.3.0 ([da7c57c](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/da7c57cc69c6c6d89ab5e9eda1cd6bf88b8e63e1))
 * watchOS/tvOS/visionOS/SwiftUI support ([#300](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/300)) ([0ef1b26](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/0ef1b260915febb12b080edac0f5b13e08b1e592))
 
 
@@ -65,15 +75,6 @@
 * release 4.0.0 ([#294](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/294)) ([a2dbf1c](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/a2dbf1ca5bc12ad368eb015bea1da497a26808fe))
 * release 4.0.0-beta.3 ([f73a58b](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/f73a58ba26b7bb7022d13bca6f8ac020ea410058))
 * request timeout config (merge [#293](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/293)) ([2e599ec](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/2e599ec62dfa099733c5fb97f0a4f4e262d9eb40))
-
-
-
-# [4.0.0-beta.2](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/4.0.0-beta.1...4.0.0-beta.2) (2023-10-26)
-
-
-### Bug Fixes
-
-* rename advert to ads ([#289](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/289)) ([0627a3a](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/0627a3a0b19a24c774c3a5153facf16bdc11fe6c))
 
 
 
