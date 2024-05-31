@@ -228,6 +228,17 @@ static GrowingEventManager *sharedInstance = nil;
 
 // 非安全 发送日志
 - (void)sendEventsOfChannel_unsafe:(GrowingEventChannel *)channel {
+    BOOL shouldBeginSending = YES;
+    for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
+        if ([obj respondsToSelector:@selector(growingEventManagerEventShouldBeginSending:)]) {
+            shouldBeginSending = [obj growingEventManagerEventShouldBeginSending:channel];
+        }
+    }
+
+    if (!shouldBeginSending) {
+        return;
+    }
+
     if (channel.isUploading) {
         return;
     }
@@ -338,39 +349,40 @@ static GrowingEventManager *sharedInstance = nil;
     NSObject<GrowingRequestProtocol> *eventRequest = [[GrowingEventRequest alloc] initWithEvents:rawEvents];
     [service sendRequest:eventRequest
               completion:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data, NSError *_Nonnull error) {
-                  if (error) {
-                      [GrowingDispatchManager dispatchInGrowingThread:^{
-                          channel.isUploading = NO;
-                      }];
-                  }
-                  if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
-                      [GrowingDispatchManager dispatchInGrowingThread:^{
+                  [GrowingDispatchManager dispatchInGrowingThread:^{
+                      for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
+                          if ([obj respondsToSelector:@selector
+                                   (growingEventManagerEventsSendingCompletion:request:channel:httpResponse:error:)]) {
+                              [obj growingEventManagerEventsSendingCompletion:events
+                                                                      request:eventRequest
+                                                                      channel:channel
+                                                                 httpResponse:httpResponse
+                                                                        error:error];
+                          }
+                      }
+
+                      channel.isUploading = NO;
+
+                      if (error) {
+                          return;
+                      }
+
+                      if ((httpResponse.statusCode >= 200 && httpResponse.statusCode < 400) ||
+                          httpResponse.statusCode == 413) {
                           if (isViaCellular) {
                               if ([eventRequest respondsToSelector:@selector(outsize)]) {
                                   self.uploadEventSize += eventRequest.outsize;
                               }
                           }
 
-                          for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
-                              if ([obj respondsToSelector:@selector(growingEventManagerEventsDidSend:
-                                                                                             request:channel:)]) {
-                                  [obj growingEventManagerEventsDidSend:events request:eventRequest channel:channel];
-                              }
-                          }
-
                           [self removeEvents_unsafe:events forChannel:channel];
-                          channel.isUploading = NO;
 
                           // 如果剩余数量 大于单包数量  则直接发送
                           if (channel.db.countOfEvents >= kGrowingMaxBatchSize) {
                               [self sendEventsInstantWithChannel:channel];
                           }
-                      }];
-                  } else {
-                      [GrowingDispatchManager dispatchInGrowingThread:^{
-                          channel.isUploading = NO;
-                      }];
-                  }
+                      }
+                  }];
               }];
 }
 

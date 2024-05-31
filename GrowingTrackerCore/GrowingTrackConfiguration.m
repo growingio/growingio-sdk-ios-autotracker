@@ -21,6 +21,7 @@
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 
 NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growingio.com";
+NSString *const kGrowingDefaultAlternateDataCollectionServerHost = @"https://alternate.napi.growingio.com";
 NSString *const kGrowingDefaultDeepLinkHost = @"https://link.growingio.com";
 NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com";
 
@@ -39,6 +40,10 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
 @property (nonatomic, copy) NSString *abTestingServerHost;
 @property (nonatomic, assign) NSUInteger abTestingRequestInterval;
 
+// Preflight
+@property (nonatomic, assign) BOOL requestPreflight;
+@property (nonatomic, copy) NSString *alternateDataCollectionServerHost;
+
 @end
 
 @implementation GrowingTrackConfiguration
@@ -50,7 +55,7 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
         _dataSourceId = nil;
 
         _debugEnabled = NO;
-        _cellularDataLimit = 10;
+        _cellularDataLimit = 20;
         _dataUploadInterval = 15;
         _sessionInterval = 30;
         _dataCollectionEnabled = YES;
@@ -78,6 +83,10 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
         // ABTesting
         _abTestingServerHost = kGrowingDefaultABTestingServerHost;
         _abTestingRequestInterval = 5;
+
+        // Preflight
+        _requestPreflight = NO;
+        _alternateDataCollectionServerHost = kGrowingDefaultAlternateDataCollectionServerHost;
     }
 
     return self;
@@ -124,6 +133,10 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
     // ABTesting
     configuration->_abTestingServerHost = [_abTestingServerHost copy];
     configuration->_abTestingRequestInterval = _abTestingRequestInterval;
+
+    // Preflight
+    configuration->_requestPreflight = _requestPreflight;
+    configuration->_alternateDataCollectionServerHost = [_alternateDataCollectionServerHost copy];
 
     return configuration;
 }

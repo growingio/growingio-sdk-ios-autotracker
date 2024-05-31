@@ -79,6 +79,10 @@
             httpMethod = @"DELETE";
             break;
 
+        case GrowingHTTPMethodOPTIONS:
+            httpMethod = @"OPTIONS";
+            break;
+
         default:
             break;
     }

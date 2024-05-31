@@ -27,6 +27,7 @@
 
 static NSString *kInitSelector = @"growingModInit:";
 static NSString *kSetDataCollectionEnabledSelector = @"growingModSetDataCollectionEnabled:";
+static NSString *kRefreshSessionSelector = @"growingModRefreshSession:";
 
 @interface GrowingModuleManager ()
 
@@ -191,6 +192,7 @@ static NSString *kSetDataCollectionEnabledSelector = @"growingModSetDataCollecti
         _selectorByEvent = @{
             @(GrowingMInitEvent): kInitSelector,
             @(GrowingMSetDataCollectionEnabledEvent): kSetDataCollectionEnabledSelector,
+            @(GrowingMRefreshSessionEvent): kRefreshSessionSelector,
         };
     }
     return _selectorByEvent;
