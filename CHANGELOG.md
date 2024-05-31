@@ -1,15 +1,9 @@
-# [4.4.0](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/4.3.0...4.4.0) (2024-05-30)
+# [4.3.1](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/4.3.0...4.3.1) (2024-05-31)
 
 
 ### Bug Fixes
 
 * visionOS support via Cocoapods ([#317](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/317)) ([9ab87ec](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/9ab87ec8fc3710e2d7574afd84aa8ccd214a1116))
-
-
-### Features
-
-* release 4.3.1 ([8841a35](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/8841a3535af21570885f7f203b85cac87e7ab5e7))
-
 
 
 # [4.3.0](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/4.2.0...4.3.0) (2024-05-07)
