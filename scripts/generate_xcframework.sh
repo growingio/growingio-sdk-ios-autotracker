@@ -146,7 +146,7 @@ generateProject() {
 	bundle exec pod gen ${MAIN_FRAMEWORK_NAME}.podspec $args || exit 1
 
 	logger -v "step: modify build settings using CocoaPods/Xcodeproj"
-	targets=$(ruby ./scripts/modifyPodsXcodeproj.ruby "./${PROJECT_FOR_IOS_PATH}/${MAIN_FRAMEWORK_NAME}/Pods/Pods.xcodeproj")
+	targets=$(bundle exec ruby ./scripts/modifyPodsXcodeproj.ruby "./${PROJECT_FOR_IOS_PATH}/${MAIN_FRAMEWORK_NAME}/Pods/Pods.xcodeproj")
 	schemes=$1
 	for target in ${targets[@]}; do
 		if [ $target == "GrowingAnalytics" ]; then
