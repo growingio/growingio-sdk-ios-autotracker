@@ -198,14 +198,14 @@ generateProject() {
 		#	- "GrowingAnalytics":
      	#	 - git: "https://github.com/growingio/growingio-sdk-ios-autotracker.git"
      	# 这样在生成xcodeproj时将使用git url对应最新的GrowingAnalytics.podspec，无需先执行pod repo push REPO_NAME PODSPEC_NAME更新podspec
-		ruby ./scripts/modifyPodfileYAML.ruby "${PROJECT_FOR_IOS_PATH}/${MAIN_FRAMEWORK_NAME}/CocoaPods.podfile.yaml"
+		bundle exec ruby ./scripts/modifyPodfileYAML.ruby "${PROJECT_FOR_IOS_PATH}/${MAIN_FRAMEWORK_NAME}/CocoaPods.podfile.yaml"
 		pushd ${PROJECT_FOR_IOS_PATH}/${MAIN_FRAMEWORK_NAME}
 		bundle exec pod update --no-repo-update
 		popd
 	fi
 
 	logger -v "step: modify build settings using CocoaPods/Xcodeproj"
-	targets=$(ruby ./scripts/modifyPodsXcodeproj.ruby "./${PROJECT_FOR_IOS_PATH}/${MAIN_FRAMEWORK_NAME}/Pods/Pods.xcodeproj")
+	targets=$(bundle exec ruby ./scripts/modifyPodsXcodeproj.ruby "./${PROJECT_FOR_IOS_PATH}/${MAIN_FRAMEWORK_NAME}/Pods/Pods.xcodeproj")
 	schemes=$1
 	for target in ${targets[@]}; do
 		if [ $target == "GrowingAnalytics" ]; then
@@ -229,7 +229,7 @@ generateProject() {
 		logger -v "step: generate xcodeproj for macos(Only Tracker)"
 		args_for_macos=$(echo "$args" | sed 's/ios/macos/g')
 		bundle exec pod gen ${MAIN_FRAMEWORK_NAME}.podspec $args_for_macos || exit 1
-		targets=$(ruby ./scripts/modifyPodsXcodeproj.ruby "./${PROJECT_FOR_MACOS_PATH}/${MAIN_FRAMEWORK_NAME}/Pods/Pods.xcodeproj")
+		targets=$(bundle exec ruby ./scripts/modifyPodsXcodeproj.ruby "./${PROJECT_FOR_MACOS_PATH}/${MAIN_FRAMEWORK_NAME}/Pods/Pods.xcodeproj")
 	fi
 
 	logger -v "step: reset podspec"
