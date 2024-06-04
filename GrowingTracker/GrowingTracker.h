@@ -20,6 +20,7 @@
 #import "GrowingAttributesBuilder.h"
 #import "GrowingDynamicProxy.h"
 #import "GrowingTrackConfiguration.h"
+#import "GrowingPropertyPlugin.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -132,6 +133,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param generator 动态通用属性，其优先级大于通用属性
 + (void)setDynamicGeneralPropsGenerator:(NSDictionary<NSString *, id> * (^_Nullable)(void))generator
     NS_SWIFT_NAME(setDynamicGeneralProps(_:));
+
+/// 设置属性插件
+/// @param plugin 插件需实现GrowingPropertyPlugin接口
++ (void)setPropertyPlugins:(id <GrowingPropertyPlugin>)plugin;
 
 ///-------------------------------
 #pragma mark Unavailable

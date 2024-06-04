@@ -19,6 +19,7 @@
 
 #import "GrowingTracker/GrowingTracker.h"
 #import "GrowingTrackerCore/Event/GrowingGeneralProps.h"
+#import "GrowingTrackerCore/Event/GrowingPropertyPluginManager.h"
 #import "GrowingTrackerCore/GrowingRealTracker.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 
@@ -86,6 +87,10 @@ static GrowingTracker *sharedInstance = nil;
 
 + (void)setDynamicGeneralPropsGenerator:(NSDictionary<NSString *, id> * (^_Nullable)(void))generator {
     [[GrowingGeneralProps sharedInstance] setDynamicGeneralPropsGenerator:generator];
+}
+
++ (void)setPropertyPlugins:(id <GrowingPropertyPlugin>)plugin {
+    [[GrowingPropertyPluginManager sharedInstance] setPropertyPlugins:plugin];
 }
 
 @end

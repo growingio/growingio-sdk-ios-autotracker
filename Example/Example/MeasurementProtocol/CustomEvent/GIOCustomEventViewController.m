@@ -12,6 +12,73 @@
 #import "GIOKeyValueCell.h"
 #import "GIODataProcessOperation.h"
 
+@interface CustomPropertyPlugin1 : NSObject <GrowingPropertyPlugin>
+
+@end
+
+@implementation CustomPropertyPlugin1
+
+- (NSDictionary<NSString *,id> *)attributes:(NSDictionary<NSString *,id> *)attributes { 
+    NSMutableDictionary *attributesM = [NSMutableDictionary dictionaryWithDictionary:attributes];
+    [attributesM setObject:@"1111" forKey:@"pluginKey"];
+    return attributesM.copy;
+}
+
+- (BOOL)isMatchedWithFilter:(id<GrowingPropertyPluginEventFilter>)filter { 
+    // 不处理eventName为impossible的CUSTOM事件
+    if ([filter.name isEqualToString:@"impossible"]) {
+        return NO;
+    }
+    // 不处理VISIT事件
+    if ([filter.type isEqualToString:@"VISIT"]) {
+        return NO;
+    }
+    // 不处理2月29日触发的事件
+    if ([self isLeapDay:filter.time]) {
+        return NO;
+    }
+    // 不处理来自hybrid的事件
+    if (filter.isFromHybrid) {
+        return NO;
+    }
+    return YES;
+}
+
+- (NSUInteger)priority { 
+    return 1;
+}
+
+- (BOOL)isLeapDay:(NSTimeInterval)timestamp {
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:timestamp];
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDateComponents *components = [calendar components:NSCalendarUnitDay | NSCalendarUnitMonth fromDate:date];
+    return (components.month == 2 && components.day == 29);
+}
+
+@end
+
+@interface CustomPropertyPlugin2 : NSObject <GrowingPropertyPlugin>
+
+@end
+
+@implementation CustomPropertyPlugin2
+
+- (NSDictionary<NSString *,id> *)attributes:(NSDictionary<NSString *,id> *)attributes {
+    NSMutableDictionary *attributesM = [NSMutableDictionary dictionaryWithDictionary:attributes];
+    [attributesM setObject:@"2222" forKey:@"pluginKey"];
+    return attributesM.copy;
+}
+
+- (BOOL)isMatchedWithFilter:(id<GrowingPropertyPluginEventFilter>)filter {
+    return YES;
+}
+
+- (NSUInteger)priority {
+    return 2;
+}
+
+@end
+
 #define DEFAULT_ATTRIBUTES_COUNT 0
 
 @interface GIOCustomEventViewController () <UITableViewDelegate, UITableViewDataSource>
@@ -32,6 +99,9 @@
     self.eventNameTextField.text = [self randomEventName];
         
     [self setupTableView];
+    
+    [GrowingAutotracker setPropertyPlugins:[CustomPropertyPlugin1 new]];
+    [GrowingAutotracker setPropertyPlugins:[CustomPropertyPlugin2 new]];
 }
 
 - (void)setupTableView {

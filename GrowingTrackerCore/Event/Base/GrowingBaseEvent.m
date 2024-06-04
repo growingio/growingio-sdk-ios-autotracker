@@ -27,6 +27,7 @@
 #import "GrowingTrackerCore/Public/GrowingFieldsIgnore.h"
 #import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
+#import "GrowingTrackerCore/Event/GrowingPropertyPluginManager.h"
 #import "GrowingULTimeUtil.h"
 
 @implementation GrowingBaseEvent
@@ -161,6 +162,8 @@
     if (_attributes.count > 0) {
         [finalAttributes addEntriesFromDictionary:_attributes];
     }
+    
+    finalAttributes = [[GrowingPropertyPluginManager sharedInstance] execute:self].mutableCopy;
     _attributes = [GrowingArgumentChecker serializableAttributes:finalAttributes];
 }
 
