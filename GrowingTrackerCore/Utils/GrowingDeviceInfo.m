@@ -37,12 +37,12 @@
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
-#import "GrowingTrackerCore/Utils/GrowingKeyChainWrapper.h"
 #import "GrowingTrackerCore/Utils/UserIdentifier/GrowingUserIdentifier.h"
+#import "GrowingULKeyChainWrapper.h"
 #import "GrowingULAppLifecycle.h"
 
 static NSString *kGrowingUrlScheme = nil;
-NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
+static NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 
 @interface GrowingDeviceInfo () <GrowingULAppLifecycleDelegate>
 
@@ -124,7 +124,7 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 
 - (NSString *)getDeviceIdString {
 #if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
-    NSString *deviceIdString = [GrowingKeyChainWrapper keyChainObjectForKey:kGrowingKeychainUserIdKey];
+    NSString *deviceIdString = [GrowingULKeyChainWrapper keyChainObjectForKey:kGrowingKeychainUserIdKey];
     if ([deviceIdString growingHelper_isValidU]) {
         return deviceIdString;
     }
@@ -132,7 +132,7 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 
     NSString *uuid = [GrowingUserIdentifier getUserIdentifier];
 #if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
-    [GrowingKeyChainWrapper setKeychainObject:uuid forKey:kGrowingKeychainUserIdKey];
+    [GrowingULKeyChainWrapper setKeychainObject:uuid forKey:kGrowingKeychainUserIdKey];
 #endif
     return uuid;
 }
