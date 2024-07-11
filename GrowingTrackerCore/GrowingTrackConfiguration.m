@@ -56,6 +56,7 @@ NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growing
         _urlScheme = nil;
         _encryptEnabled = NO;
         _requestTimeout = 30;
+        _localEventEncryptEnabled = NO;
 
         // Advert
         _ASAEnabled = NO;
@@ -91,6 +92,7 @@ NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growing
     configuration->_urlScheme = _urlScheme;
     configuration->_encryptEnabled = _encryptEnabled;
     configuration->_requestTimeout = _requestTimeout;
+    configuration->_localEventEncryptEnabled = _localEventEncryptEnabled;
 
     // Advert
     configuration->_ASAEnabled = _ASAEnabled;

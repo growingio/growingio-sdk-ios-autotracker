@@ -18,7 +18,9 @@
 //  limitations under the License.
 
 #import "Modules/Protobuf/GrowingEventProtobufDatabase.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingULTimeUtil.h"
+#import "GrowingULEncryptor.h"
 #import "Modules/Protobuf/GrowingEventProtobufPersistence.h"
 #import "Services/Database/FMDB/GrowingFMDB.h"
 
@@ -156,9 +158,18 @@
             self.databaseError = error;
             return;
         }
-        result = [db executeUpdate:@"INSERT INTO namedcachetable(key,value,createAt,type,policy) VALUES(?,?,?,?,?)",
+        BOOL encryptEnabled = GrowingConfigurationManager.sharedInstance.trackConfiguration.localEventEncryptEnabled;
+        NSData *value = [NSData data];
+        NSData *enc_value = [NSData data];
+        if (encryptEnabled) {
+            enc_value = [[GrowingULEncryptor encryptor] aesEncrypt:event.data];
+        } else {
+            value = event.data;
+        }
+        result = [db executeUpdate:@"INSERT INTO namedcachetable(key,value,enc_value,createAt,type,policy) VALUES(?,?,?,?,?,?)",
                                    event.eventUUID,
-                                   ((GrowingEventProtobufPersistence *)event).data,
+                  value,
+                  enc_value,
                                    @([GrowingULTimeUtil currentTimeMillis]),
                                    event.eventType,
                                    @(event.policy)];
@@ -184,9 +195,18 @@
         }
         for (int i = 0; i < events.count; i++) {
             GrowingEventProtobufPersistence *event = (GrowingEventProtobufPersistence *)events[i];
-            result = [db executeUpdate:@"INSERT INTO namedcachetable(key,value,createAt,type,policy) VALUES(?,?,?,?,?)",
+            BOOL encryptEnabled = GrowingConfigurationManager.sharedInstance.trackConfiguration.localEventEncryptEnabled;
+            NSData *value = [NSData data];
+            NSData *enc_value = [NSData data];
+            if (encryptEnabled) {
+                enc_value = [[GrowingULEncryptor encryptor] aesEncrypt:event.data];
+            } else {
+                value = event.data;
+            }
+            result = [db executeUpdate:@"INSERT INTO namedcachetable(key,value,enc_value,createAt,type,policy) VALUES(?,?,?,?,?,?)",
                                        event.eventUUID,
-                                       event.data,
+                                       value,
+                      enc_value,
                                        @([GrowingULTimeUtil currentTimeMillis]),
                                        event.eventType,
                                        @(event.policy)];
@@ -308,6 +328,13 @@
             self.databaseError = [self createDBErrorInDatabase:db];
             return;
         }
+        NSString *sqlCreateEncValue = @"ALTER TABLE namedcachetable ADD enc_value BLOB";
+        if (![db columnExists:@"enc_value" inTableWithName:@"namedcachetable"]) {
+            if (![db executeUpdate:sqlCreateEncValue]) {
+                self.databaseError = [self createDBErrorInDatabase:db];
+                return;
+            }
+        }
         result = YES;
     }];
 
@@ -394,6 +421,10 @@ static BOOL isExecuteVacuum(NSString *name) {
         while (!stop && [set next]) {
             NSString *key = [set stringForColumn:@"key"];
             NSData *value = [set dataForColumn:@"value"];
+            NSData *enc_value = [set dataForColumn:@"enc_value"];
+            if (enc_value && enc_value.length > 0) {
+                value = [[GrowingULEncryptor encryptor] aesDecrypt:enc_value];
+            }
             NSString *type = [set stringForColumn:@"type"];
             NSUInteger policy = [set intForColumn:@"policy"];
             block(key, value, type, policy, &stop);
