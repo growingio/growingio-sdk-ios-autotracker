@@ -38,8 +38,8 @@
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 #import "GrowingTrackerCore/Utils/UserIdentifier/GrowingUserIdentifier.h"
-#import "GrowingULKeyChainWrapper.h"
 #import "GrowingULAppLifecycle.h"
+#import "GrowingULKeyChainWrapper.h"
 
 static NSString *kGrowingUrlScheme = nil;
 static NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";

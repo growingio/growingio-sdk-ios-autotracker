@@ -19,8 +19,8 @@
 
 #import "Modules/Protobuf/GrowingEventProtobufDatabase.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
-#import "GrowingULTimeUtil.h"
 #import "GrowingULEncryptor.h"
+#import "GrowingULTimeUtil.h"
 #import "Modules/Protobuf/GrowingEventProtobufPersistence.h"
 #import "Services/Database/FMDB/GrowingFMDB.h"
 
@@ -166,13 +166,14 @@
         } else {
             value = event.data;
         }
-        result = [db executeUpdate:@"INSERT INTO namedcachetable(key,value,enc_value,createAt,type,policy) VALUES(?,?,?,?,?,?)",
-                                   event.eventUUID,
-                  value,
-                  enc_value,
-                                   @([GrowingULTimeUtil currentTimeMillis]),
-                                   event.eventType,
-                                   @(event.policy)];
+        result = [db
+            executeUpdate:@"INSERT INTO namedcachetable(key,value,enc_value,createAt,type,policy) VALUES(?,?,?,?,?,?)",
+                          event.eventUUID,
+                          value,
+                          enc_value,
+                          @([GrowingULTimeUtil currentTimeMillis]),
+                          event.eventType,
+                          @(event.policy)];
 
         if (!result) {
             self.databaseError = [self writeErrorInDatabase:db];
@@ -195,7 +196,8 @@
         }
         for (int i = 0; i < events.count; i++) {
             GrowingEventProtobufPersistence *event = (GrowingEventProtobufPersistence *)events[i];
-            BOOL encryptEnabled = GrowingConfigurationManager.sharedInstance.trackConfiguration.localEventEncryptEnabled;
+            BOOL encryptEnabled =
+                GrowingConfigurationManager.sharedInstance.trackConfiguration.localEventEncryptEnabled;
             NSData *value = [NSData data];
             NSData *enc_value = [NSData data];
             if (encryptEnabled) {
@@ -203,13 +205,15 @@
             } else {
                 value = event.data;
             }
-            result = [db executeUpdate:@"INSERT INTO namedcachetable(key,value,enc_value,createAt,type,policy) VALUES(?,?,?,?,?,?)",
-                                       event.eventUUID,
-                                       value,
-                      enc_value,
-                                       @([GrowingULTimeUtil currentTimeMillis]),
-                                       event.eventType,
-                                       @(event.policy)];
+            result =
+                [db executeUpdate:
+                        @"INSERT INTO namedcachetable(key,value,enc_value,createAt,type,policy) VALUES(?,?,?,?,?,?)",
+                        event.eventUUID,
+                        value,
+                        enc_value,
+                        @([GrowingULTimeUtil currentTimeMillis]),
+                        event.eventType,
+                        @(event.policy)];
 
             if (!result) {
                 self.databaseError = [self writeErrorInDatabase:db];
