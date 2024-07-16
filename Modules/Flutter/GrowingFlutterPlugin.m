@@ -21,13 +21,13 @@
 #import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
+#import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Public/GrowingAttributesBuilder.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
-#import "GrowingULAppLifecycle.h"
 
 GrowingMod(GrowingFlutterPlugin)
 
-@interface GrowingFlutterPlugin () <GrowingULAppLifecycleDelegate>
+@interface GrowingFlutterPlugin ()
 
 @end
 
@@ -36,7 +36,6 @@ GrowingMod(GrowingFlutterPlugin)
 #pragma mark - GrowingModuleProtocol
 
 - (void)growingModInit:(GrowingContext *)context {
-    [GrowingULAppLifecycle.sharedInstance addAppLifecycleDelegate:self];
 }
 
 + (BOOL)singleton {
@@ -73,7 +72,7 @@ GrowingMod(GrowingFlutterPlugin)
     if (attributes) {
         builder = builder.setAttributes(attributes);
     }
-    [[GrowingEventManager sharedInstance] postEventBuilder:builder];
+    [self trackAutotrackEventWithBuilder:builder];
 }
 
 - (void)trackViewElementEvent:(NSDictionary *)arguments {
@@ -105,24 +104,17 @@ GrowingMod(GrowingFlutterPlugin)
     if (index && [index isKindOfClass:[NSNumber class]]) {
         builder = builder.setIndex(index.intValue);
     }
-    [[GrowingEventManager sharedInstance] postEventBuilder:builder];
+    [self trackAutotrackEventWithBuilder:builder];
 }
 
-#pragma mark - GrowingULAppLifecycleDelegate
-
-- (void)applicationDidBecomeActive {
+- (void)trackAutotrackEventWithBuilder:(GrowingBaseBuilder *)builder {
     [GrowingDispatchManager dispatchInGrowingThread:^{
-        if (self.onAppDidBecomeActive) {
-            self.onAppDidBecomeActive();
+        if ([GrowingSession currentSession].state != GrowingSessionStateActive) {
+            //避免在session正在切换的时机之前，flutter侧因用户业务逻辑在后台状态下触发PAGE，回到前台后生成，造成上一个session的访问时长过长
+            //另外，flutter sdk的逻辑中，会在返回前台时补发一个当前页面的PAGE，可覆盖上述场景的PAGE生成
+            return;
         }
-    }];
-}
-
-- (void)applicationDidEnterBackground {
-    [GrowingDispatchManager dispatchInGrowingThread:^{
-        if (self.onAppDidEnterBackground) {
-            self.onAppDidEnterBackground();
-        }
+        [[GrowingEventManager sharedInstance] postEventBuilder:builder];
     }];
 }
 
