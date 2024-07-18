@@ -56,7 +56,7 @@ jobs:
         run: |
           cd ./generate
           tar -czvf GrowingAnalytics.xcframework.tar.gz ./Release
-          zip -r GrowingAnalytics.xcframework.zip ./Release
+          zip -r -y GrowingAnalytics.xcframework.zip ./Release
       
       - name: Release
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
