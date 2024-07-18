@@ -190,7 +190,7 @@ return ret;
 - (void)setApplicationIDString:(NSString*)s {
     
     if ([s length] != 4) {
-        NSLog(@"setApplicationIDString: string passed is not exactly 4 chars long. (was %ld)", [s length]);
+//        NSLog(@"setApplicationIDString: string passed is not exactly 4 chars long. (was %ld)", [s length]);
     }
     
     [self setApplicationID:NSHFSTypeCodeFromFileType([NSString stringWithFormat:@"'%@'", s])];

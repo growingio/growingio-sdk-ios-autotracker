@@ -96,7 +96,7 @@ static const void * const kDispatchQueueSpecificKey = &kDispatchQueueSpecificKey
         BOOL success = [_db open];
 #endif
         if (!success) {
-            NSLog(@"Could not create database queue for path %@", aPath);
+//            NSLog(@"Could not create database queue for path %@", aPath);
             FMG3DBRelease(self);
             return 0x00;
         }
@@ -160,7 +160,7 @@ static const void * const kDispatchQueueSpecificKey = &kDispatchQueueSpecificKey
         BOOL success = [_db open];
 #endif
         if (!success) {
-            NSLog(@"GrowingFMDatabaseQueue could not reopen database for path %@", _path);
+//            NSLog(@"GrowingFMDatabaseQueue could not reopen database for path %@", _path);
             FMG3DBRelease(_db);
             _db  = 0x00;
             return 0x00;
@@ -184,13 +184,13 @@ static const void * const kDispatchQueueSpecificKey = &kDispatchQueueSpecificKey
         block(db);
         
         if ([db hasOpenResultSets]) {
-            NSLog(@"Warning: there is at least one open result set around after performing [GrowingFMDatabaseQueue inDatabase:]");
+//            NSLog(@"Warning: there is at least one open result set around after performing [GrowingFMDatabaseQueue inDatabase:]");
             
 #if defined(DEBUG) && DEBUG
             NSSet *openSetCopy = FMG3DBReturnAutoreleased([[db valueForKey:@"_openResultSets"] copy]);
             for (NSValue *rsInWrappedInATastyValueMeal in openSetCopy) {
                 GrowingFMResultSet *rs = (GrowingFMResultSet *)[rsInWrappedInATastyValueMeal pointerValue];
-                NSLog(@"query: '%@'", [rs query]);
+//                NSLog(@"query: '%@'", [rs query]);
             }
 #endif
         }
