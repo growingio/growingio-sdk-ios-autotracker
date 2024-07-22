@@ -115,8 +115,8 @@ GrowingMod(GrowingFlutterPlugin)
             // 另外，flutter sdk的逻辑中，会在返回前台时补发一个当前页面的PAGE，可覆盖上述场景的PAGE生成
             return;
         }
-        builder = builder.setScene(GrowingEventSceneFlutter);
-        [[GrowingEventManager sharedInstance] postEventBuilder:builder];
+        GrowingBaseBuilder *b = builder.setScene(GrowingEventSceneFlutter);
+        [[GrowingEventManager sharedInstance] postEventBuilder:b];
     }];
 }
 
