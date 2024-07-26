@@ -21,6 +21,7 @@
 #import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
+#import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Public/GrowingAttributesBuilder.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 
@@ -108,8 +109,15 @@ GrowingMod(GrowingFlutterPlugin)
 }
 
 - (void)trackAutotrackEventWithBuilder:(GrowingBaseBuilder *)builder {
-    builder = builder.setScene(GrowingEventSceneFlutter);
-    [[GrowingEventManager sharedInstance] postEventBuilder:builder];
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        if ([GrowingSession currentSession].state != GrowingSessionStateActive) {
+            // 避免在session正在切换的时机之前，flutter侧因用户业务逻辑在后台状态下触发PAGE，回到前台后生成，造成上一个session的访问时长过长
+            // 另外，flutter sdk的逻辑中，会在返回前台时补发一个当前页面的PAGE，可覆盖上述场景的PAGE生成
+            return;
+        }
+        GrowingBaseBuilder *b = builder.setScene(GrowingEventSceneFlutter);
+        [[GrowingEventManager sharedInstance] postEventBuilder:b];
+    }];
 }
 
 @end

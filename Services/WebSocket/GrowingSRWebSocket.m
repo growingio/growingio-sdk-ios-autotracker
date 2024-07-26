@@ -281,7 +281,7 @@ static __strong NSData *CRLFCRLF;
     self = [super init];
     if (self) {
         if (!request.URL) {
-            NSLog(@"请刷新二维码,重新扫码,出错链接：%@", request.URL.absoluteString);
+//            NSLog(@"请刷新二维码,重新扫码,出错链接：%@", request.URL.absoluteString);
         }
         assert(request.URL);
         _url = request.URL;

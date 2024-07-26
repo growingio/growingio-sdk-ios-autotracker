@@ -221,7 +221,6 @@ GrowingMod(GrowingMobileDebugger)
 }
 
 - (void)sendJson:(id)json {
-    NSLog(@"sendJson : %@", json);
     if (self.webSocket.readyState == Growing_WS_OPEN &&
         ([json isKindOfClass:[NSDictionary class]] || [json isKindOfClass:[NSArray class]])) {
         NSString *jsonString = [json growingHelper_jsonString];
