@@ -20,7 +20,7 @@
 #import "Modules/V2AdapterTrackOnly/Public/GrowingV2Adapter.h"
 #import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
-#import "GrowingTrackerCore/Utils/GrowingKeyChainWrapper.h"
+#import "GrowingULKeyChainWrapper.h"
 
 static NSString *kGrowingUserdefault_2xto3x = @"growingio.userdefault.2xto3x";
 static NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
@@ -55,13 +55,13 @@ static NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey
 
     // deviceId
 #if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
-    NSString *deviceId = [GrowingKeyChainWrapper keyChainObjectForKey:@"GROWINGIO_CUSTOM_U_KEY"];
+    NSString *deviceId = [GrowingULKeyChainWrapper keyChainObjectForKey:@"GROWINGIO_CUSTOM_U_KEY"];
     if ([deviceId growingHelper_isValidU]) {
-        [GrowingKeyChainWrapper setKeychainObject:deviceId forKey:kGrowingKeychainUserIdKey];
+        [GrowingULKeyChainWrapper setKeychainObject:deviceId forKey:kGrowingKeychainUserIdKey];
     } else {
-        deviceId = [GrowingKeyChainWrapper keyChainObjectForKey:@"GROWINGIO_KEYCHAIN_KEY"];
+        deviceId = [GrowingULKeyChainWrapper keyChainObjectForKey:@"GROWINGIO_KEYCHAIN_KEY"];
         if ([deviceId growingHelper_isValidU]) {
-            [GrowingKeyChainWrapper setKeychainObject:deviceId forKey:kGrowingKeychainUserIdKey];
+            [GrowingULKeyChainWrapper setKeychainObject:deviceId forKey:kGrowingKeychainUserIdKey];
         }
     }
 #endif

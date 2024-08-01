@@ -40,6 +40,7 @@ FOUNDATION_EXPORT NSString *const kGrowingDefaultDataCollectionServerHost;
 @property (nonatomic, copy) NSString *urlScheme;
 @property (nonatomic, assign) BOOL encryptEnabled;
 @property (nonatomic, assign) NSTimeInterval requestTimeout;
+@property (nonatomic, assign) BOOL localEventEncryptEnabled;
 
 - (instancetype)initWithProjectId:(NSString *)projectId;
 

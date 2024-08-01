@@ -19,7 +19,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GrowingTrackerCore/Utils/GrowingKeyChainWrapper.h"
+#import "GrowingULKeyChainWrapper.h"
 
 @interface GrowingKeyChainTest : XCTestCase
 
@@ -36,17 +36,13 @@
 }
 
 - (void)testGrowingKeyChainWrapper {
-    [GrowingKeyChainWrapper setKeychainObject:@"KeyChainTest" forKey:@"KeyChainTestKey"];
+    [GrowingULKeyChainWrapper setKeychainObject:@"KeyChainTest" forKey:@"KeyChainTestKey"];
 
-    NSString *obj = [GrowingKeyChainWrapper keyChainObjectForKey:@"KeyChainTestKey"];
+    NSString *obj = [GrowingULKeyChainWrapper keyChainObjectForKey:@"KeyChainTestKey"];
     XCTAssertTrue([obj isEqualToString:@"KeyChainTest"]);
-    
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wundeclared-selector"
-    [GrowingKeyChainWrapper performSelector:@selector(removeKeyChainObjectForKey:) withObject:@"KeyChainTestKey"];
-#pragma clang diagnostic pop
 
-    NSString *obj2 = [GrowingKeyChainWrapper keyChainObjectForKey:@"KeyChainTestKey"];
+    [GrowingULKeyChainWrapper removeKeyChainObjectForKey:@"KeyChainTestKey"];
+    NSString *obj2 = [GrowingULKeyChainWrapper keyChainObjectForKey:@"KeyChainTestKey"];
     XCTAssertTrue(obj2 == nil);
 }
 
