@@ -30,6 +30,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     autotracker.ios.dependency 'GrowingAnalytics/Hybrid', s.version.to_s
     autotracker.ios.dependency 'GrowingAnalytics/MobileDebugger', s.version.to_s
     autotracker.ios.dependency 'GrowingAnalytics/WebCircle', s.version.to_s
+    autotracker.dependency 'GrowingAnalytics/Preflight', s.version.to_s
     autotracker.dependency 'GrowingAnalytics/DefaultServices', s.version.to_s
   end
   
@@ -40,6 +41,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
 
     # Modules
     tracker.ios.dependency 'GrowingAnalytics/MobileDebugger', s.version.to_s
+    tracker.dependency 'GrowingAnalytics/Preflight', s.version.to_s
     tracker.dependency 'GrowingAnalytics/DefaultServices', s.version.to_s
   end
 
@@ -203,6 +205,12 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     ab.source_files = 'Modules/ABTesting/**/*{.h,.m,.c,.cpp,.mm}'
     ab.public_header_files = 'Modules/ABTesting/Public/*.h'
     ab.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
+  end
+
+  s.subspec 'Preflight' do |preflight|
+    preflight.source_files = 'Modules/Preflight/**/*{.h,.m,.c,.cpp,.mm}'
+    preflight.public_header_files = 'Modules/Preflight/Public/*.h'
+    preflight.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
   end
 
   # 使用flutter无埋点插件时，将自动导入该库，正常情况下请勿手动导入

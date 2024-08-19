@@ -1,9 +1,9 @@
 //
-// GrowingModuleManager.h
-// GrowingAnalytics
+//  GrowingPFRequestHeaderAdapter.h
+//  GrowingAnalytics
 //
-//  Created by sheng on 2021/6/17.
-//  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
+//  Created by YoloMao on 2024/4/29.
+//  Copyright (C) 2024 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -18,24 +18,11 @@
 //  limitations under the License.
 
 #import <Foundation/Foundation.h>
-
-typedef NS_ENUM(NSInteger, GrowingModuleEventType) {
-    GrowingMInitEvent,
-    GrowingMSetDataCollectionEnabledEvent,
-    GrowingMRefreshSessionEvent,
-};
+#import "GrowingRequestProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingModuleManager : NSObject
-
-+ (instancetype)sharedInstance;
-
-- (void)registerAllModules;
-
-- (void)triggerEvent:(NSInteger)eventType;
-
-- (void)triggerEvent:(NSInteger)eventType withCustomParam:(NSDictionary *_Nullable)customParam;
+@interface GrowingPFRequestHeaderAdapter : NSObject <GrowingRequestAdapter>
 
 @end
 
