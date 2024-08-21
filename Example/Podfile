@@ -38,6 +38,15 @@ target 'ShareExtension' do
   pod 'GrowingAnalytics/APM', :path => '../'
 end
 
+target 'ExampleWidgetExtension' do
+  pod 'GrowingAnalytics/Autotracker', :path => '../'
+  pod 'GrowingAnalytics/Ads', :path => '../'
+  pod 'GrowingAnalytics/ABTesting', :path => '../'
+  pod 'GrowingAnalytics/ImpressionTrack', :path => '../'
+  pod 'GrowingAnalytics/APM', :path => '../'
+end
+
+
 target 'GrowingAnalyticsTests' do
   pod 'GrowingAnalytics/Autotracker', :path => '../'
   pod 'GrowingAnalytics/Tracker', :path => '../'
