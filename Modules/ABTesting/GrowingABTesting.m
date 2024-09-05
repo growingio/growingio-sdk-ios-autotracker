@@ -32,8 +32,11 @@ GrowingMod(GrowingABTesting)
 
 static NSString *const kABTExpHit = @"$exp_hit";
 static NSString *const kABTExpLayerId = @"$exp_layer_id";
+static NSString *const kABTExpLayerName = @"$exp_layer_name";
 static NSString *const kABTExpId = @"$exp_id";
+static NSString *const kABTExpName = @"$exp_name";
 static NSString *const kABTExpStrategyId = @"$exp_strategy_id";
+static NSString *const kABTExpStrategyName = @"$exp_strategy_name";
 
 @implementation GrowingABTesting
 
@@ -86,8 +89,11 @@ static NSString *const kABTExpStrategyId = @"$exp_strategy_id";
     [GrowingEventGenerator generateCustomEvent:kABTExpHit
                                     attributes:@{
                                         kABTExpLayerId: experiment.layerId.copy,
+                                        kABTExpLayerName: experiment.layerName.copy,
                                         kABTExpId: experiment.experimentId.copy,
-                                        kABTExpStrategyId: experiment.strategyId.copy
+                                        kABTExpName: experiment.experimentName.copy,
+                                        kABTExpStrategyId: experiment.strategyId.copy,
+                                        kABTExpStrategyName: experiment.strategyName.copy
                                     }];
 }
 
@@ -151,17 +157,29 @@ static NSString *const kABTExpStrategyId = @"$exp_strategy_id";
                       return;
                   }
                   NSInteger code = -1;
+                  NSString *layerName = nil;
                   NSString *strategyId = nil;
+                  NSString *strategyName = nil;
                   NSString *experimentId = nil;
+                  NSString *experimentName = nil;
                   NSDictionary *variables = nil;
                   @try {
                       NSDictionary *dic = [data growingHelper_dictionaryObject];
                       code = ((NSNumber *)dic[@"code"]).integerValue;
+                      if ([dic[@"layerName"] isKindOfClass:[NSString class]]) {
+                          layerName = (NSString *)dic[@"layerName"];
+                      }
                       if ([dic[@"strategyId"] isKindOfClass:[NSNumber class]]) {
                           strategyId = ((NSNumber *)dic[@"strategyId"]).stringValue;
                       }
+                      if ([dic[@"strategyName"] isKindOfClass:[NSString class]]) {
+                          strategyName = (NSString *)dic[@"strategyName"];
+                      }
                       if ([dic[@"experimentId"] isKindOfClass:[NSNumber class]]) {
                           experimentId = ((NSNumber *)dic[@"experimentId"]).stringValue;
+                      }
+                      if ([dic[@"experimentName"] isKindOfClass:[NSString class]]) {
+                          experimentName = (NSString *)dic[@"experimentName"];
                       }
                       if ([dic[@"variables"] isKindOfClass:[NSDictionary class]]) {
                           variables = dic[@"variables"];
@@ -184,8 +202,11 @@ static NSString *const kABTExpStrategyId = @"$exp_strategy_id";
 
                   GrowingABTExperiment *exp =
                       [[GrowingABTExperiment alloc] initWithLayerId:layerId
+                                                          layerName:layerName
                                                        experimentId:experimentId
+                                                     experimentName:experimentName
                                                          strategyId:strategyId
+                                                       strategyName:strategyName
                                                           variables:variables
                                                           fetchTime:GrowingULTimeUtil.currentTimeMillis];
 

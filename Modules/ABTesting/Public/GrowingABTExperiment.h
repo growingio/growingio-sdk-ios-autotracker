@@ -25,8 +25,11 @@ NS_SWIFT_NAME(ABTExperiment)
 @interface GrowingABTExperiment : NSObject
 
 @property (nonatomic, copy, readonly) NSString *layerId;
+@property (nonatomic, copy, nullable, readonly) NSString *layerName;
 @property (nonatomic, copy, nullable, readonly) NSString *experimentId;
+@property (nonatomic, copy, nullable, readonly) NSString *experimentName;
 @property (nonatomic, copy, nullable, readonly) NSString *strategyId;
+@property (nonatomic, copy, nullable, readonly) NSString *strategyName;
 @property (nonatomic, copy, nullable, readonly) NSDictionary *variables;
 
 @end

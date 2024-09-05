@@ -23,8 +23,11 @@
 @interface GrowingABTExperiment ()
 
 @property (nonatomic, copy, readwrite) NSString *layerId;
+@property (nonatomic, copy, nullable, readwrite) NSString *layerName;
 @property (nonatomic, copy, nullable, readwrite) NSString *experimentId;
+@property (nonatomic, copy, nullable, readwrite) NSString *experimentName;
 @property (nonatomic, copy, nullable, readwrite) NSString *strategyId;
+@property (nonatomic, copy, nullable, readwrite) NSString *strategyName;
 @property (nonatomic, copy, nullable, readwrite) NSDictionary *variables;
 @property (nonatomic, assign) long long fetchTime;
 
@@ -33,14 +36,20 @@
 @implementation GrowingABTExperiment
 
 - (instancetype)initWithLayerId:(NSString *)layerId
+                      layerName:(NSString *_Nullable)layerName
                    experimentId:(NSString *_Nullable)experimentId
+                 experimentName:(NSString *_Nullable)experimentName
                      strategyId:(NSString *_Nullable)strategyId
+                   strategyName:(NSString *_Nullable)strategyName
                       variables:(NSDictionary *_Nullable)variables
                       fetchTime:(long long)fetchTime {
     if (self = [super init]) {
         _layerId = layerId.copy;
+        _layerName = layerName.copy;
         _experimentId = experimentId.copy;
+        _experimentName = experimentName.copy;
         _strategyId = strategyId.copy;
+        _strategyName = strategyName.copy;
         _variables = variables.copy;
         _fetchTime = fetchTime;
     }
@@ -75,6 +84,14 @@
     if (![self.layerId isEqualToString:experiment.layerId]) {
         return NO;
     }
+    
+    if (experiment.layerName != nil && ![self.layerName isEqualToString:experiment.layerName]) {
+        return NO;
+    }
+
+    if (experiment.layerName == nil && self.layerName != nil) {
+        return NO;
+    }
 
     if (experiment.experimentId != nil && ![self.experimentId isEqualToString:experiment.experimentId]) {
         return NO;
@@ -83,12 +100,28 @@
     if (experiment.experimentId == nil && self.experimentId != nil) {
         return NO;
     }
+    
+    if (experiment.experimentName != nil && ![self.experimentName isEqualToString:experiment.experimentName]) {
+        return NO;
+    }
+
+    if (experiment.experimentName == nil && self.experimentName != nil) {
+        return NO;
+    }
 
     if (experiment.strategyId != nil && ![self.strategyId isEqualToString:experiment.strategyId]) {
         return NO;
     }
 
     if (experiment.strategyId == nil && self.strategyId != nil) {
+        return NO;
+    }
+    
+    if (experiment.strategyName != nil && ![self.strategyName isEqualToString:experiment.strategyName]) {
+        return NO;
+    }
+
+    if (experiment.strategyName == nil && self.strategyName != nil) {
         return NO;
     }
 
@@ -104,18 +137,27 @@
 }
 
 - (NSUInteger)hash {
-    return self.layerId.hash ^ self.experimentId.hash ^ self.strategyId.hash ^ self.variables.hash;
+    return self.layerId.hash ^ self.layerName.hash ^ self.experimentId.hash ^ self.experimentName.hash ^ self.strategyId.hash ^ self.strategyName.hash ^ self.variables.hash;
 }
 
 - (id)toJSONObject {
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     dic[@"layerId"] = self.layerId.copy;
     dic[@"fetchTime"] = @(self.fetchTime);
+    if (self.layerName) {
+        dic[@"layerName"] = self.layerName.copy;
+    }
     if (self.experimentId) {
         dic[@"experimentId"] = self.experimentId.copy;
     }
+    if (self.experimentName) {
+        dic[@"experimentName"] = self.experimentName.copy;
+    }
     if (self.strategyId) {
         dic[@"strategyId"] = self.strategyId.copy;
+    }
+    if (self.strategyName) {
+        dic[@"strategyName"] = self.strategyName.copy;
     }
     if (self.variables) {
         dic[@"variables"] = self.variables.copy;

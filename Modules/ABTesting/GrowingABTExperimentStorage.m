@@ -46,13 +46,19 @@ static NSString *const kGrowingABTestingExperimentKey = @"GrowingABTestingExperi
         if ([array isKindOfClass:[NSArray class]]) {
             for (NSDictionary *dic in array) {
                 NSString *layerId = dic[@"layerId"];
+                NSString *layerName = dic[@"layerName"];
                 NSString *experimentId = dic[@"experimentId"];
+                NSString *experimentName = dic[@"experimentName"];
                 NSString *strategyId = dic[@"strategyId"];
+                NSString *strategyName = dic[@"strategyName"];
                 NSDictionary *variables = dic[@"variables"];
                 long long fetchTime = ((NSNumber *)dic[@"fetchTime"]).longLongValue;
                 GrowingABTExperiment *e = [[GrowingABTExperiment alloc] initWithLayerId:layerId
+                                                                              layerName:layerName
                                                                            experimentId:experimentId
+                                                                         experimentName:experimentName
                                                                              strategyId:strategyId
+                                                                           strategyName:strategyName
                                                                               variables:variables
                                                                               fetchTime:fetchTime];
                 [_experiments addObject:e];
