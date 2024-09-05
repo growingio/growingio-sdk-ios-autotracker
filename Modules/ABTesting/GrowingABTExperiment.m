@@ -84,7 +84,7 @@
     if (![self.layerId isEqualToString:experiment.layerId]) {
         return NO;
     }
-    
+
     if (experiment.layerName != nil && ![self.layerName isEqualToString:experiment.layerName]) {
         return NO;
     }
@@ -100,7 +100,7 @@
     if (experiment.experimentId == nil && self.experimentId != nil) {
         return NO;
     }
-    
+
     if (experiment.experimentName != nil && ![self.experimentName isEqualToString:experiment.experimentName]) {
         return NO;
     }
@@ -116,7 +116,7 @@
     if (experiment.strategyId == nil && self.strategyId != nil) {
         return NO;
     }
-    
+
     if (experiment.strategyName != nil && ![self.strategyName isEqualToString:experiment.strategyName]) {
         return NO;
     }
@@ -137,7 +137,8 @@
 }
 
 - (NSUInteger)hash {
-    return self.layerId.hash ^ self.layerName.hash ^ self.experimentId.hash ^ self.experimentName.hash ^ self.strategyId.hash ^ self.strategyName.hash ^ self.variables.hash;
+    return self.layerId.hash ^ self.layerName.hash ^ self.experimentId.hash ^ self.experimentName.hash ^
+           self.strategyId.hash ^ self.strategyName.hash ^ self.variables.hash;
 }
 
 - (id)toJSONObject {
