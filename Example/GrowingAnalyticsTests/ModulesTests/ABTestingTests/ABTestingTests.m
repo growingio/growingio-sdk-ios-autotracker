@@ -79,8 +79,11 @@
 - (void)test00ExperimentStorage {
     NSString *layerId = @"123456";
     GrowingABTExperiment *exp = [[GrowingABTExperiment alloc] initWithLayerId:layerId
+                                                                    layerName:@"layer123456"
                                                                  experimentId:@"123"
+                                                               experimentName:@"exp_123"
                                                                    strategyId:@"456"
+                                                                 strategyName:@"strategy_456"
                                                                     variables:@{}
                                                                     fetchTime:1602485628504];
     
@@ -144,8 +147,11 @@
     __block GrowingABTExperiment *lastExp = nil;
     [GrowingABTesting fetchExperiment:layerId completedBlock:^(GrowingABTExperiment * _Nullable exp) {
         XCTAssertEqualObjects(exp.layerId, layerId);
+        XCTAssertNil(exp.layerName);
         XCTAssertEqualObjects(exp.experimentId, @"123");
+        XCTAssertNil(exp.experimentName);
         XCTAssertEqualObjects(exp.strategyId, @"456");
+        XCTAssertNil(exp.strategyName);
         XCTAssertEqualObjects(exp.variables[@"key"], @"value");
         lastExp = exp;
     }];
@@ -162,8 +168,76 @@
         XCTAssertEqualObjects(event.eventType, GrowingEventTypeCustom);
         XCTAssertEqualObjects(event.eventName, @"$exp_hit");
         XCTAssertEqualObjects(event.attributes[@"$exp_layer_id"], layerId);
+        XCTAssertNil(event.attributes[@"$exp_layer_name"]);
         XCTAssertEqualObjects(event.attributes[@"$exp_id"], @"123");
+        XCTAssertNil(event.attributes[@"$exp_name"]);
         XCTAssertEqualObjects(event.attributes[@"$exp_strategy_id"], @"456");
+        XCTAssertNil(event.attributes[@"$exp_strategy_name"]);
+        [expectation fulfill];
+        
+        // 多次调用，由于在TTL内，所以不会再请求
+        [GrowingABTesting fetchExperiment:layerId completedBlock:^(GrowingABTExperiment * _Nullable exp) {
+            // 2次获取的实验对象相同
+            XCTAssert([lastExp isEqual:exp]);
+        }];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            XCTAssertEqual(requestCount, 1);
+            [expectation fulfill];
+        });
+    });
+    [self waitForExpectationsWithTimeout:10.0f handler:nil];
+}
+
+- (void)test01FetchSuccess_v2 {
+    __block NSInteger requestCount = 0;
+    [HTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest * _Nonnull request) {
+        return [request.URL.host isEqualToString:@"www.example.com"];
+    } withStubResponse:^HTTPStubsResponse * _Nonnull(NSURLRequest * _Nonnull request) {
+        requestCount++;
+        NSDictionary *obj = @{
+            @"code": @(0),
+            @"layerName": @"layer_123456",
+            @"experimentId": @(123),
+            @"experimentName": @"exp_123",
+            @"strategyId": @(456),
+            @"strategyName": @"strategy_456",
+            @"variables": @{
+                @"key": @"value"
+            }
+        };
+        return [HTTPStubsResponse responseWithJSONObject:obj statusCode:200 headers:nil];
+    }];
+    
+    NSString *layerId = [NSUUID UUID].UUIDString; //避免缓存影响
+    __block GrowingABTExperiment *lastExp = nil;
+    [GrowingABTesting fetchExperiment:layerId completedBlock:^(GrowingABTExperiment * _Nullable exp) {
+        XCTAssertEqualObjects(exp.layerId, layerId);
+        XCTAssertEqualObjects(exp.layerName, @"layer_123456");
+        XCTAssertEqualObjects(exp.experimentId, @"123");
+        XCTAssertEqualObjects(exp.experimentName, @"exp_123");
+        XCTAssertEqualObjects(exp.strategyId, @"456");
+        XCTAssertEqualObjects(exp.strategyName, @"strategy_456");
+        XCTAssertEqualObjects(exp.variables[@"key"], @"value");
+        lastExp = exp;
+    }];
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"testFetchSuccess Test failed : timeout"];
+    expectation.expectedFulfillmentCount = 2;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        XCTAssertEqual(requestCount, 1);
+        
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+        XCTAssertEqual(events.count, 1);
+        
+        GrowingCustomEvent *event = (GrowingCustomEvent *)events.firstObject;
+        XCTAssertEqualObjects(event.eventType, GrowingEventTypeCustom);
+        XCTAssertEqualObjects(event.eventName, @"$exp_hit");
+        XCTAssertEqualObjects(event.attributes[@"$exp_layer_id"], layerId);
+        XCTAssertEqualObjects(event.attributes[@"$exp_layer_name"], @"layer_123456");
+        XCTAssertEqualObjects(event.attributes[@"$exp_id"], @"123");
+        XCTAssertEqualObjects(event.attributes[@"$exp_name"], @"exp_123");
+        XCTAssertEqualObjects(event.attributes[@"$exp_strategy_id"], @"456");
+        XCTAssertEqualObjects(event.attributes[@"$exp_strategy_name"], @"strategy_456");
 
         [expectation fulfill];
         
@@ -206,8 +280,11 @@
     // 向本地存入一个超出自然日的实验
     NSString *layerId = @"outDated";
     GrowingABTExperiment *exp = [[GrowingABTExperiment alloc] initWithLayerId:layerId
+                                                                    layerName:@"layer123456"
                                                                  experimentId:@"123"
+                                                               experimentName:@"exp_123"
                                                                    strategyId:@"456"
+                                                                 strategyName:@"strategy_456"
                                                                     variables:@{}
                                                                     fetchTime:1602485628504];
     [exp saveToDisk];
@@ -289,20 +366,29 @@
 
 - (void)test06ExperimentEqual {
     NSString *layerId = @"123456";
+    NSString *layerName = @"layer_123456";
     NSString *experimentId = @"123";
+    NSString *experimentName = @"exp_123";
     NSString *strategyId = @"456";
+    NSString *strategyName = @"strategy_456";
     NSDictionary *variables = @{@"key": @"value"};
     {
         // 跟fetchTime没关系，只验证layerId/experimentId/strategyId/variables
         GrowingABTExperiment *exp = [[GrowingABTExperiment alloc] initWithLayerId:layerId.copy
+                                                                        layerName:layerName.copy
                                                                      experimentId:experimentId.copy
+                                                                   experimentName:experimentName.copy
                                                                        strategyId:strategyId.copy
+                                                                     strategyName:strategyName.copy
                                                                         variables:variables.copy
                                                                         fetchTime:1602485628504];
         
         GrowingABTExperiment *exp2 = [[GrowingABTExperiment alloc] initWithLayerId:layerId.copy
+                                                                         layerName:layerName.copy
                                                                       experimentId:experimentId.copy
+                                                                    experimentName:experimentName.copy
                                                                         strategyId:strategyId.copy
+                                                                      strategyName:strategyName.copy
                                                                          variables:variables.copy
                                                                          fetchTime:1602485628505];
         XCTAssertTrue([exp isEqual:exp2]);
@@ -310,14 +396,20 @@
     {
         // layerId不同
         GrowingABTExperiment *exp = [[GrowingABTExperiment alloc] initWithLayerId:layerId.copy
+                                                                        layerName:layerName.copy
                                                                      experimentId:experimentId.copy
+                                                                   experimentName:experimentName.copy
                                                                        strategyId:strategyId.copy
+                                                                     strategyName:strategyName.copy
                                                                         variables:variables.copy
                                                                         fetchTime:1602485628504];
         
         GrowingABTExperiment *exp2 = [[GrowingABTExperiment alloc] initWithLayerId:@"654321"
+                                                                         layerName:layerName.copy
                                                                       experimentId:experimentId.copy
+                                                                    experimentName:experimentName.copy
                                                                         strategyId:strategyId.copy
+                                                                      strategyName:strategyName.copy
                                                                          variables:variables.copy
                                                                          fetchTime:1602485628505];
         XCTAssertFalse([exp isEqual:exp2]); // 值不同
@@ -325,26 +417,38 @@
     {
         // experimentId不同
         GrowingABTExperiment *exp = [[GrowingABTExperiment alloc] initWithLayerId:layerId.copy
+                                                                        layerName:layerName.copy
                                                                      experimentId:experimentId.copy
+                                                                   experimentName:experimentName.copy
                                                                        strategyId:strategyId.copy
+                                                                     strategyName:strategyName.copy
                                                                         variables:variables.copy
                                                                         fetchTime:1602485628504];
         
         GrowingABTExperiment *exp2 = [[GrowingABTExperiment alloc] initWithLayerId:layerId.copy
+                                                                         layerName:layerName.copy
                                                                       experimentId:@"321"
+                                                                    experimentName:experimentName.copy
                                                                         strategyId:strategyId.copy
+                                                                      strategyName:strategyName.copy
                                                                          variables:variables.copy
                                                                          fetchTime:1602485628505];
         
         GrowingABTExperiment *exp3 = [[GrowingABTExperiment alloc] initWithLayerId:layerId.copy
+                                                                         layerName:layerName.copy
                                                                       experimentId:nil
+                                                                    experimentName:experimentName.copy
                                                                         strategyId:strategyId.copy
+                                                                      strategyName:strategyName.copy
                                                                          variables:variables.copy
                                                                          fetchTime:1602485628506];
         
         GrowingABTExperiment *exp4 = [[GrowingABTExperiment alloc] initWithLayerId:layerId.copy
+                                                                         layerName:layerName.copy
                                                                       experimentId:nil
+                                                                    experimentName:experimentName.copy
                                                                         strategyId:strategyId.copy
+                                                                      strategyName:strategyName.copy
                                                                          variables:variables.copy
                                                                          fetchTime:1602485628507];
         XCTAssertFalse([exp isEqual:exp2]); // 值不同
@@ -354,26 +458,38 @@
     {
         // strategyId不同
         GrowingABTExperiment *exp = [[GrowingABTExperiment alloc] initWithLayerId:layerId.copy
+                                                                        layerName:layerName.copy
                                                                      experimentId:experimentId.copy
+                                                                   experimentName:experimentName.copy
                                                                        strategyId:strategyId.copy
+                                                                     strategyName:strategyName.copy
                                                                         variables:variables.copy
                                                                         fetchTime:1602485628504];
         
         GrowingABTExperiment *exp2 = [[GrowingABTExperiment alloc] initWithLayerId:layerId.copy
+                                                                         layerName:layerName.copy
                                                                       experimentId:experimentId.copy
+                                                                    experimentName:experimentName.copy
                                                                         strategyId:@"654"
+                                                                      strategyName:strategyName.copy
                                                                          variables:variables.copy
                                                                          fetchTime:1602485628505];
         
         GrowingABTExperiment *exp3 = [[GrowingABTExperiment alloc] initWithLayerId:layerId.copy
+                                                                         layerName:layerName.copy
                                                                       experimentId:experimentId.copy
+                                                                    experimentName:experimentName.copy
                                                                         strategyId:nil
+                                                                      strategyName:strategyName.copy
                                                                          variables:variables.copy
                                                                          fetchTime:1602485628506];
         
         GrowingABTExperiment *exp4 = [[GrowingABTExperiment alloc] initWithLayerId:layerId.copy
+                                                                         layerName:layerName.copy
                                                                       experimentId:experimentId.copy
+                                                                    experimentName:experimentName.copy
                                                                         strategyId:nil
+                                                                      strategyName:strategyName.copy
                                                                          variables:variables.copy
                                                                          fetchTime:1602485628507];
         XCTAssertFalse([exp isEqual:exp2]); // 值不同
@@ -383,26 +499,38 @@
     {
         // variables不同
         GrowingABTExperiment *exp = [[GrowingABTExperiment alloc] initWithLayerId:layerId.copy
+                                                                        layerName:layerName.copy
                                                                      experimentId:experimentId.copy
+                                                                   experimentName:experimentName.copy
                                                                        strategyId:strategyId.copy
+                                                                     strategyName:strategyName.copy
                                                                         variables:variables.copy
                                                                         fetchTime:1602485628504];
         
         GrowingABTExperiment *exp2 = [[GrowingABTExperiment alloc] initWithLayerId:layerId.copy
+                                                                         layerName:layerName.copy
                                                                       experimentId:experimentId.copy
+                                                                    experimentName:experimentName.copy
                                                                         strategyId:strategyId.copy
+                                                                      strategyName:strategyName.copy
                                                                          variables:@{@"key": @"value2"}
                                                                          fetchTime:1602485628505];
         
         GrowingABTExperiment *exp3 = [[GrowingABTExperiment alloc] initWithLayerId:layerId.copy
+                                                                         layerName:layerName.copy
                                                                       experimentId:experimentId.copy
+                                                                    experimentName:experimentName.copy
                                                                         strategyId:strategyId.copy
+                                                                      strategyName:strategyName.copy
                                                                          variables:nil
                                                                          fetchTime:1602485628506];
         
         GrowingABTExperiment *exp4 = [[GrowingABTExperiment alloc] initWithLayerId:layerId.copy
+                                                                         layerName:layerName.copy
                                                                       experimentId:experimentId.copy
+                                                                    experimentName:experimentName.copy
                                                                         strategyId:strategyId.copy
+                                                                      strategyName:strategyName.copy
                                                                          variables:nil
                                                                          fetchTime:1602485628507];
         XCTAssertFalse([exp isEqual:exp2]); // 值不同
@@ -414,18 +542,27 @@
 - (void)test07ExperimentHash {
     NSMutableSet *set = [NSMutableSet set];
     NSString *layerId = @"123456";
+    NSString *layerName = @"layer_123456";
     NSString *experimentId = @"123";
+    NSString *experimentName = @"exp_123";
     NSString *strategyId = @"456";
+    NSString *strategyName = @"strategy_456";
     NSDictionary *variables = @{@"key": @"value"};
     GrowingABTExperiment *exp = [[GrowingABTExperiment alloc] initWithLayerId:layerId.copy
+                                                                    layerName:layerName.copy
                                                                  experimentId:experimentId.copy
+                                                               experimentName:experimentName.copy
                                                                    strategyId:strategyId.copy
+                                                                 strategyName:strategyName.copy
                                                                     variables:variables.copy
                                                                     fetchTime:1602485628504];
     
     GrowingABTExperiment *exp2 = [[GrowingABTExperiment alloc] initWithLayerId:layerId.copy
+                                                                     layerName:layerName.copy
                                                                   experimentId:experimentId.copy
+                                                                experimentName:experimentName.copy
                                                                     strategyId:strategyId.copy
+                                                                  strategyName:strategyName.copy
                                                                      variables:variables.copy
                                                                      fetchTime:1602485628505];
     XCTAssertTrue([exp isEqual:exp2]);
