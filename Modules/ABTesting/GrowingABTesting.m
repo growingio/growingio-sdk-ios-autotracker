@@ -90,7 +90,8 @@ static NSString *const kABTExpStrategyName = @"$exp_strategy_name";
         kABTExpLayerId: experiment.layerId.copy,
         kABTExpId: experiment.experimentId.copy,
         kABTExpStrategyId: experiment.strategyId.copy,
-    }.mutableCopy;
+    }
+                                          .mutableCopy;
     if (experiment.layerName && experiment.layerName.length > 0) {
         attributes[kABTExpLayerName] = experiment.layerName.copy;
     }
@@ -100,9 +101,8 @@ static NSString *const kABTExpStrategyName = @"$exp_strategy_name";
     if (experiment.strategyName && experiment.strategyName.length > 0) {
         attributes[kABTExpStrategyName] = experiment.strategyName.copy;
     }
-    
-    [GrowingEventGenerator generateCustomEvent:kABTExpHit
-                                    attributes:attributes.copy];
+
+    [GrowingEventGenerator generateCustomEvent:kABTExpHit attributes:attributes.copy];
 }
 
 + (void)fetchExperiment:(NSString *)layerId
