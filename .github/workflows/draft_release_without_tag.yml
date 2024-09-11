@@ -35,11 +35,16 @@ jobs:
           tag-prefix: ''
 
       - name: Generate xcframework
+        env:
+          BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+          P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+          CODESIGN_IDENTIFY_NAME: ${{ secrets.CODESIGN_IDENTIFY_NAME }}
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: 
           git config user.name GIOSDK
           git config user.email sdk-integration@growingio.com
-          sh ./scripts/generate_xcframework.sh releaseDefaultAutotracker --verbose
+          sh ./scripts/generate_xcframework.sh releaseDefaultAutotracker --codesign --verbose
 
       - name: Archive
         if: ${{ steps.changelog.outputs.skipped == 'false' }}

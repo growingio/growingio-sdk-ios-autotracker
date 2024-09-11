@@ -146,7 +146,7 @@ generateProject() {
 	bundle exec pod gen ${MAIN_FRAMEWORK_NAME}.podspec $args || exit 1
 
 	logger -v "step: modify build settings using CocoaPods/Xcodeproj"
-	targets=$(ruby ./scripts/modifyPodsXcodeproj.ruby "./${PROJECT_FOR_IOS_PATH}/${MAIN_FRAMEWORK_NAME}/Pods/Pods.xcodeproj")
+	targets=$(bundle exec ruby ./scripts/modifyPodsXcodeproj.ruby "./${PROJECT_FOR_IOS_PATH}/${MAIN_FRAMEWORK_NAME}/Pods/Pods.xcodeproj")
 	schemes=$1
 	for target in ${targets[@]}; do
 		if [ $target == "GrowingAnalytics" ]; then
@@ -176,6 +176,7 @@ generateProject() {
 	# open ./${PROJECT_FOR_IOS_PATH}/${MAIN_FRAMEWORK_NAME}/${MAIN_FRAMEWORK_NAME}.xcworkspace
 }
 
+CODESIGN=false
 generate_xcframework() {
 	archive_path="./${FOLDER_NAME}/archive"
 
@@ -237,7 +238,43 @@ generate_xcframework() {
 				-framework ${mac_catalyst_archive_path}${framework_path_suffix} \
 				-output ${output_path} || exit 1
 		fi
+
+		if [[ "$CODESIGN" == "true" ]]; then
+			codesign --force --timestamp -s ${CODESIGN_IDENTIFY_NAME} ${output_path}
+		fi
 	done
+}
+
+CERTIFICATE_TEMP="certificate"
+CERTIFICATE_PATH=$CERTIFICATE_TEMP/build_certificate.p12
+KEYCHAIN_PATH=$CERTIFICATE_TEMP/app-signing.keychain-db
+parse_codesign_key() {
+	if [[ "$CODESIGN" == "false" ]]; then
+		return
+	fi
+	# create variables
+	mkdir ${CERTIFICATE_TEMP}
+
+	# import certificate and provisioning profile from secrets
+	echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
+
+	# create temporary keychain
+	security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+	security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+	security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+
+	# import certificate to keychain
+	security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+	security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+	security list-keychain -d user -s $KEYCHAIN_PATH
+}
+
+clean_codesign_key() {
+	if [[ "$CODESIGN" == "false" ]]; then
+		return
+	fi
+    security delete-keychain ${KEYCHAIN_PATH}
+    rm -rf ${CERTIFICATE_TEMP}
 }
 
 copy_apm_modules_xcframework() {
@@ -260,8 +297,12 @@ beginGenerate() {
 	schemes=()
 	logger -i "job: generate xcodeproj from podspec"
 	generateProject $schemes
+	logger -i "job: parse codesign key to keychain if necessary"
+	parse_codesign_key
 	logger -i "job: generate xcframework"
 	generate_xcframework ${schemes[*]}
+	logger -i "job: clean-up codesign temp folder if necessary"
+	clean_codesign_key
 	logger -i "job: copy apm xcframework if necessary"
 	copy_apm_modules_xcframework
 	copy_privacy_manifest
@@ -304,6 +345,7 @@ else
 		sh ./scripts/generate_xcframework.sh --verbose
 		sh ./scripts/generate_xcframework.sh --silent
 		sh ./scripts/generate_xcframework.sh releaseDefaultAutotracker --verbose
+		sh ./scripts/generate_xcframework.sh releaseDefaultAutotracker --codesign --verbose
 		sh ./scripts/generate_xcframework.sh releaseDefaultTracker --verbose
 		sh ./scripts/generate_xcframework.sh --help
 		
@@ -313,7 +355,9 @@ else
 	        LOGGER_MODE=0
 	    elif [[ $arg == '-v' || $arg == '--verbose' ]]; then
 			LOGGER_MODE=2
-		else
+		elif [[ $arg == '-c' || $arg == '--codesign' ]]; then
+			CODESIGN=true
+		elif [[ $arg == 'releaseDefaultAutotracker' || $arg == 'releaseDefaultTracker' ]]; then
 			execFunc="$arg"
 		fi
 	done
