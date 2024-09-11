@@ -41,9 +41,7 @@ jobs:
           KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
           CODESIGN_IDENTIFY_NAME: ${{ secrets.CODESIGN_IDENTIFY_NAME }}
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
-        run: |
-          git config user.name GIOSDK
-          git config user.email sdk-integration@growingio.com
+        run:
           sh ./scripts/generate_xcframework.sh releaseDefaultAutotracker --codesign --verbose
 
       - name: Archive

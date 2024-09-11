@@ -256,7 +256,7 @@ parse_codesign_key() {
 	mkdir ${CERTIFICATE_TEMP}
 
 	# import certificate and provisioning profile from secrets
-	echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
+	echo "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
 
 	# create temporary keychain
 	security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
