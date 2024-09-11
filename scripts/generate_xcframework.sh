@@ -240,8 +240,10 @@ generate_xcframework() {
 		fi
 
 		if [[ "$CODESIGN" == "true" ]]; then
-			codesign --force --timestamp -s ${CODESIGN_IDENTIFY_NAME} ${output_path}
+			codesign --force --timestamp -s "${CODESIGN_IDENTIFY_NAME}" ${output_path}
 		fi
+
+		break
 	done
 }
 
