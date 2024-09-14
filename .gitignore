@@ -23,6 +23,7 @@ DerivedData
 .swiftpm/
 Package.resolved
 
+Gemfile.lock
 Pods/
 Example/Pods/
 Example/Example.xcodeproj/xcshareddata/

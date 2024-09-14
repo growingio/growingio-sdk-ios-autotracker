@@ -42,10 +42,10 @@ MODULES=()
 APMMODULES=()
 chooseModules() {
 	if [ $MAIN_BUNDLE == 'GrowingAutotracker' ]; then
-		modules=("Ads" "APMUIMonitor" "APMCrashMonitor" "Done" "Quit")
+		modules=("Ads" "ImpressionTrack" "ABTesting" "APMUIMonitor" "APMCrashMonitor" "Done" "Quit")
 		chooseModulesWith ${modules[*]}
 	elif [ $MAIN_BUNDLE == 'GrowingTracker' ]; then
-		modules=("Hybrid" "Ads" "APMUIMonitor" "APMCrashMonitor" "Done" "Quit")
+		modules=("Hybrid" "Ads" "ABTesting" "APMUIMonitor" "APMCrashMonitor" "Done" "Quit")
 		chooseModulesWith ${modules[*]}
 	fi
 }
@@ -61,6 +61,16 @@ chooseModulesWith() {
 		"Ads")
 			if [[ ! ${MODULES[*]} =~ "Ads" ]]; then
 				MODULES+=("Ads")
+			fi
+			;;
+		"ImpressionTrack")
+			if [[ ! ${MODULES[*]} =~ "ImpressionTrack" ]]; then
+				MODULES+=("ImpressionTrack")
+			fi
+			;;
+		"ABTesting")
+			if [[ ! ${MODULES[*]} =~ "ABTesting" ]]; then
+				MODULES+=("ABTesting")
 			fi
 			;;
 		"APMUIMonitor")
@@ -167,7 +177,7 @@ generateProject() {
 		logger -v "step: generate xcodeproj for macos(Only Tracker)"
 		args_for_macos=$(echo "$args" | sed 's/ios/macos/g')
 		bundle exec pod gen ${MAIN_FRAMEWORK_NAME}.podspec $args_for_macos || exit 1
-		targets=$(ruby ./scripts/modifyPodsXcodeproj.ruby "./${PROJECT_FOR_MACOS_PATH}/${MAIN_FRAMEWORK_NAME}/Pods/Pods.xcodeproj")
+		targets=$(bundle exec ruby ./scripts/modifyPodsXcodeproj.ruby "./${PROJECT_FOR_MACOS_PATH}/${MAIN_FRAMEWORK_NAME}/Pods/Pods.xcodeproj")
 	fi
 
 	logger -v "step: reset podspec"
@@ -177,6 +187,8 @@ generateProject() {
 }
 
 CODESIGN=false
+CODESIGN_ID_NAME=${CODESIGN_IDENTIFY_NAME}
+CODESIGN_LOCAL=false
 generate_xcframework() {
 	archive_path="./${FOLDER_NAME}/archive"
 
@@ -239,9 +251,9 @@ generate_xcframework() {
 				-output ${output_path} || exit 1
 		fi
 
-		if [[ "$CODESIGN" == "true" ]]; then
+		if [[ "$CODESIGN" == "true" && "$framework_name" == Growing* ]]; then
 			logger -v "step: codesign ${framework_name} xcframework"
-			codesign --force --timestamp -s "${CODESIGN_IDENTIFY_NAME}" ${output_path}
+			codesign --force --timestamp -s "${CODESIGN_ID_NAME}" ${output_path}
 		fi
 	done
 }
@@ -250,7 +262,7 @@ CERTIFICATE_TEMP="certificate"
 CERTIFICATE_PATH=$CERTIFICATE_TEMP/build_certificate.p12
 KEYCHAIN_PATH=$CERTIFICATE_TEMP/app-signing.keychain-db
 parse_codesign_key() {
-	if [[ "$CODESIGN" == "false" ]]; then
+	if [[ "$CODESIGN" == "false" || "$CODESIGN_LOCAL" == "true" ]]; then
 		return
 	fi
 	# create variables
@@ -271,7 +283,7 @@ parse_codesign_key() {
 }
 
 clean_codesign_key() {
-	if [[ "$CODESIGN" == "false" ]]; then
+	if [[ "$CODESIGN" == "false" || "$CODESIGN_LOCAL" == "true" ]]; then
 		return
 	fi
     security delete-keychain ${KEYCHAIN_PATH}
@@ -331,7 +343,8 @@ if [ $# -eq 0 ]; then
 	main
 else
 	execFunc="main"
-	for arg in "$@"; do
+	while [[ $# -gt 0 ]]; do
+		arg="$1"
 		if [[ $arg == '-h' || $arg == '--help' ]]; then
 			echo "\033[32m
 		usage: 
@@ -340,6 +353,10 @@ else
 		3. drag all xcframeworks in ./generate/Release/ into your project, select [Copy items if needed]
 		4. add -ObjC to [Other Linker Flags] in order to load OC Catagory
 		5. add libc++.tbd to your project if chose CrashMonitor apm modules
+		6. if you need codesign the xcframework bundle generated, you should add variables BUILD_CERTIFICATE_BASE64/
+		P12_PASSWORD/CODESIGN_IDENTIFY_NAME/KEYCHAIN_PASSWORD to environment before running script, or you can use
+		certificate in local by enter argument --codesign-id-name <Your Certificate Name>
+
 
 		example:
 		sh ./scripts/generate_xcframework.sh -v
@@ -348,6 +365,7 @@ else
 		sh ./scripts/generate_xcframework.sh releaseDefaultAutotracker --verbose
 		sh ./scripts/generate_xcframework.sh releaseDefaultAutotracker --codesign --verbose
 		sh ./scripts/generate_xcframework.sh releaseDefaultTracker --verbose
+		sh ./scripts/generate_xcframework.sh --codesign --codesign-id-name <Your Certificate Name> --verbose
 		sh ./scripts/generate_xcframework.sh --help
 		
 			\033[0m"
@@ -358,9 +376,14 @@ else
 			LOGGER_MODE=2
 		elif [[ $arg == '-c' || $arg == '--codesign' ]]; then
 			CODESIGN=true
+		elif [[ $arg == '--codesign-id-name' ]]; then
+			CODESIGN_ID_NAME="$2"
+			CODESIGN_LOCAL=true
+			shift
 		elif [[ $arg == 'releaseDefaultAutotracker' || $arg == 'releaseDefaultTracker' ]]; then
 			execFunc="$arg"
 		fi
+		shift
 	done
 	"$execFunc"
 fi
