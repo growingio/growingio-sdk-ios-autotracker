@@ -156,15 +156,15 @@ extension Target {
         static let privacy_macOS = target(name: .privacy_macOS,
                                           path: .Path.privacy_macOS,
                                           resources: [.copy("Resources/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy")])
-        
+
         static let privacy_tvOS = target(name: .privacy_tvOS,
                                          path: .Path.privacy_tvOS,
                                          resources: [.copy("Resources/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy")])
-        
+
         static let privacy_visionOS = target(name: .privacy_visionOS,
                                              path: .Path.privacy_visionOS,
                                              resources: [.copy("Resources/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy")])
-        
+
         static let privacy_watchOS = target(name: .privacy_watchOS,
                                             path: .Path.privacy_watchOS,
                                             resources: [.copy("Resources/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy")])
