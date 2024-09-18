@@ -49,6 +49,7 @@ jobs:
             target: watchOS
           - target: visionOS
             os: macos-14
+            xcode: Xcode_15.4
             platform: visionOS Simulator,name=Apple Vision Pro
             scheme: GrowingTracker
     runs-on: ${{ matrix.os }}
