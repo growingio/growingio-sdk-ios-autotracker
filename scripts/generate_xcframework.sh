@@ -32,7 +32,7 @@ chooseMainBundle() {
 			break
 			;;
 		*)
-			logger -e invalid option
+			logger -e "Invalid option"
 			;;
 		esac
 	done
@@ -97,7 +97,7 @@ chooseModulesWith() {
 			break
 			;;
 		*)
-			logger -e invalid option
+			logger -e "Invalid option"
 			;;
 		esac
 	done
@@ -138,15 +138,34 @@ modifyPodspec() {
 }
 
 FOLDER_NAME='generate'
-PROJECT_FOR_IOS_PATH=${FOLDER_NAME}/Project/ios
-PROJECT_FOR_MACOS_PATH=${FOLDER_NAME}/Project/macos
-generateProject() {
+PROJECT_PATH_PREFIX=${FOLDER_NAME}/Project
+prepareGenerateProjects() {
 	logger -v "step: gem bundle install"
 	sudo -E bundle install || exit 1
+	logger -v "step: prepare generate projects"
 	rm -rf $FOLDER_NAME
 	mkdir $FOLDER_NAME
-	logger -v "step: generate xcodeproj from podspec using square/cocoapods-generate"
-	args="--local-sources=./ --platforms=ios --gen-directory=${PROJECT_FOR_IOS_PATH} --clean"
+	mkdir $PROJECT_PATH_PREFIX
+}
+prepareGenerateOnlyTrackerProjects() {
+	logger -v "step: prepare generate projects(Only Tracker)"
+	if [ $MAIN_BUNDLE == 'GrowingAutotracker' ]; then
+		default_subspec='Tracker'
+		logger -v "step: change default subspec to GrowingTracker"
+		sed -i '' 's/s.default_subspec = "Autotracker"/s.default_subspec = "Tracker"/g' "${MAIN_FRAMEWORK_NAME}.podspec"
+	fi
+}
+generateProjectByPlatform() {
+	platform=$1
+	platform_folder="./${PROJECT_PATH_PREFIX}/${platform}"
+	mkdir $platform_folder
+	downcasePlatform=$(echo "$platform" | tr '[:upper:]' '[:lower:]')
+	cp "${MAIN_FRAMEWORK_NAME}.podspec" "${platform_folder}/${MAIN_FRAMEWORK_NAME}.podspec"
+	cp ./LICENSE ${platform_folder}/LICENSE
+
+
+	logger -v "step: generate xcodeproj for ${platform} by using square/cocoapods-generate"
+	args="--local-sources=./ --platforms=${downcasePlatform} --gen-directory=${platform_folder} --clean"
 	if [[ $LOGGER_MODE -eq 0 ]]; then
 		args+=" --silent"
 	elif [[ $LOGGER_MODE -eq 2 ]]; then
@@ -155,35 +174,41 @@ generateProject() {
 
 	bundle exec pod gen ${MAIN_FRAMEWORK_NAME}.podspec $args || exit 1
 
-	logger -v "step: modify build settings using CocoaPods/Xcodeproj"
-	targets=$(bundle exec ruby ./scripts/modifyPodsXcodeproj.ruby "./${PROJECT_FOR_IOS_PATH}/${MAIN_FRAMEWORK_NAME}/Pods/Pods.xcodeproj")
-	schemes=$1
-	for target in ${targets[@]}; do
-		if [ $target == "GrowingAnalytics" ]; then
-			schemes+=("GrowingAnalytics")
-		fi
-		if [ $target == "GrowingUtils" ]; then
-			schemes+=("GrowingUtils")
-		fi
-		if [ $target == "GrowingAPM" ]; then
-			schemes+=("GrowingAPM")
-		fi
-		if [ $target == "Protobuf" ]; then
-			schemes+=("Protobuf")
-		fi
-	done
+	logger -v "step: modify build settings for ${platform} by using CocoaPods/Xcodeproj"
+	targets=$(bundle exec ruby ./scripts/modifyPodsXcodeproj.ruby "${platform_folder}/${MAIN_FRAMEWORK_NAME}/Pods/Pods.xcodeproj")
 
-	if [ $MAIN_BUNDLE == 'GrowingTracker' ]; then
-		logger -v "step: generate xcodeproj for macos(Only Tracker)"
-		args_for_macos=$(echo "$args" | sed 's/ios/macos/g')
-		bundle exec pod gen ${MAIN_FRAMEWORK_NAME}.podspec $args_for_macos || exit 1
-		targets=$(bundle exec ruby ./scripts/modifyPodsXcodeproj.ruby "./${PROJECT_FOR_MACOS_PATH}/${MAIN_FRAMEWORK_NAME}/Pods/Pods.xcodeproj")
+	if [ $platform == "iOS" ]; then
+		schemes=$2
+		for target in ${targets[@]}; do
+			if [ $target == "GrowingAnalytics" ]; then
+				schemes+=("GrowingAnalytics")
+			fi
+			if [ $target == "GrowingUtils" ]; then
+				schemes+=("GrowingUtils")
+			fi
+			if [ $target == "GrowingAPM" ]; then
+				schemes+=("GrowingAPM")
+			fi
+			if [ $target == "Protobuf" ]; then
+				schemes+=("Protobuf")
+			fi
+		done
 	fi
+}
+generateProjects() {
+	prepareGenerateProjects
+	generateProjectByPlatform "iOS" $1
+	generateProjectByPlatform "tvOS"
+
+	# macOS/watchOS/visionOS
+	prepareGenerateOnlyTrackerProjects
+	generateProjectByPlatform "macOS"
+	generateProjectByPlatform "watchOS"
+	generateProjectByPlatform "visionOS"
 
 	logger -v "step: reset podspec"
-	mv "${MAIN_FRAMEWORK_NAME}.podspec" "./${FOLDER_NAME}/${MAIN_FRAMEWORK_NAME}.podspec"
 	mv "${MAIN_FRAMEWORK_NAME}-backup.podspec" "${MAIN_FRAMEWORK_NAME}.podspec"
-	# open ./${PROJECT_FOR_IOS_PATH}/${MAIN_FRAMEWORK_NAME}/${MAIN_FRAMEWORK_NAME}.xcworkspace
+	# open ./${PROJECT_PATH_PREFIX}/iOS/${MAIN_FRAMEWORK_NAME}/${MAIN_FRAMEWORK_NAME}.xcworkspace
 }
 
 CODESIGN=false
@@ -199,8 +224,14 @@ generate_xcframework() {
 		iphone_simulator_archive_path="${archive_path}/iphonesimulator"
 		mac_catalyst_archive_path="${archive_path}/maccatalyst"
 		mac_os_archive_path="${archive_path}/macos"
+		tv_os_archive_path="${archive_path}/tvos"
+		tv_simulator_archive_path="${archive_path}/tvsimulator"
+		watch_os_archive_path="${archive_path}/watchos"
+		watch_simulator_archive_path="${archive_path}/watchsimulator"
+		vision_os_archive_path="${archive_path}/visionos"
+		vision_simulator_archive_path="${archive_path}/visionsimulator"
 		output_path="./${FOLDER_NAME}/Release/${framework_name//-/_}.xcframework"
-		common_args="archive -workspace ./${PROJECT_FOR_IOS_PATH}/${MAIN_FRAMEWORK_NAME}/${MAIN_FRAMEWORK_NAME}.xcworkspace \
+		common_args="archive -workspace ./${PROJECT_PATH_PREFIX}/iOS/${MAIN_FRAMEWORK_NAME}/${MAIN_FRAMEWORK_NAME}.xcworkspace \
 		-scheme ${framework_name} -configuration 'Release' -derivedDataPath ./${FOLDER_NAME}/derivedData"
 		if [[ $LOGGER_MODE -eq 0 ]]; then
 			common_args+=' -quiet'
@@ -220,29 +251,76 @@ generate_xcframework() {
 			-destination "generic/platform=iOS Simulator" \
 			-archivePath ${iphone_simulator_archive_path} || exit 1
 
-		logger -v "step: delete _CodeSignature folder in iphonesimulator framework which is unnecessary"
-		rm -rf ${iphone_simulator_archive_path}${framework_path_suffix}/_CodeSignature
-
 		logger -v "step: generate ${framework_name} ios-arm64_x86_64-maccatalyst framework"
 		xcodebuild ${common_args} \
 			-destination "generic/platform=macOS,variant=Mac Catalyst" \
 			-archivePath ${mac_catalyst_archive_path} || exit 1
 
-		if [[ $MAIN_BUNDLE == 'GrowingTracker' && $framework_name != 'GrowingAPM' ]]; then
+		if [[ $framework_name != 'GrowingAPM' ]]; then
 			logger -v "step: generate ${framework_name} macos-arm64_x86_64 framework(Only Tracker)"
-			common_args_for_macos=$(echo "$common_args" | sed 's/ios/macos/g')
-			xcodebuild ${common_args_for_macos} \
+			common_args_for_mac_os=$(echo "$common_args" | sed 's/iOS/macOS/g')
+			xcodebuild ${common_args_for_mac_os} \
 				-destination "generic/platform=macOS" \
 				-archivePath ${mac_os_archive_path} || exit 1
 
-			logger -v "step: generate ${framework_name} xcframework"
+			logger -v "step: generate ${framework_name} tvos-arm64 framework"
+			common_args_for_tv_os=$(echo "$common_args" | sed 's/iOS/tvOS/g')
+			xcodebuild ${common_args_for_tv_os} \
+				-destination "generic/platform=tvOS" \
+				-archivePath ${tv_os_archive_path} || exit 1
+
+			logger -v "step: generate ${framework_name} tvos-arm64_x86_64-simulator framework"
+			common_args_for_tv_simulator=$(echo "$common_args" | sed 's/iOS/tvOS/g')
+			xcodebuild ${common_args_for_tv_simulator} \
+				-destination "generic/platform=tvOS Simulator" \
+				-archivePath ${tv_simulator_archive_path} || exit 1
+
+			logger -v "step: generate ${framework_name} watchos-arm64_arm64_32_armv7k framework(Only Tracker)"
+			common_args_for_watch_os=$(echo "$common_args" | sed 's/iOS/watchOS/g')
+			xcodebuild ${common_args_for_watch_os} \
+				-destination "generic/platform=watchOS" \
+				-archivePath ${watch_os_archive_path} || exit 1
+
+			logger -v "step: generate ${framework_name} watchos-arm64_x86_64-simulator framework(Only Tracker)"
+			common_args_for_watch_simulator=$(echo "$common_args" | sed 's/iOS/watchOS/g')
+			xcodebuild ${common_args_for_watch_simulator} \
+				-destination "generic/platform=watchOS Simulator" \
+				-archivePath ${watch_simulator_archive_path} || exit 1
+
+			logger -v "step: generate ${framework_name} xros-arm64 framework(Only Tracker)"
+			common_args_for_vision_os=$(echo "$common_args" | sed 's/iOS/visionOS/g')
+			xcodebuild ${common_args_for_vision_os} \
+				-destination "generic/platform=visionOS" \
+				-archivePath ${vision_os_archive_path} || exit 1
+
+			logger -v "step: generate ${framework_name} xros-arm64_x86_64-simulator framework(Only Tracker)"
+			common_args_for_vision_simulator=$(echo "$common_args" | sed 's/iOS/visionOS/g')
+			xcodebuild ${common_args_for_vision_simulator} \
+				-destination "generic/platform=visionOS Simulator" \
+				-archivePath ${vision_simulator_archive_path} || exit 1
+
+			logger -v "step: delete _CodeSignature folder in simulator framework which is unnecessary"
+			rm -rf ${iphone_simulator_archive_path}${framework_path_suffix}/_CodeSignature
+			rm -rf ${tv_simulator_archive_path}${framework_path_suffix}/_CodeSignature
+			rm -rf ${watch_simulator_archive_path}${framework_path_suffix}/_CodeSignature
+			rm -rf ${vision_simulator_archive_path}${framework_path_suffix}/_CodeSignature
+
 			xcodebuild -create-xcframework \
 				-framework ${iphone_os_archive_path}${framework_path_suffix} \
 				-framework ${iphone_simulator_archive_path}${framework_path_suffix} \
 				-framework ${mac_catalyst_archive_path}${framework_path_suffix} \
 				-framework ${mac_os_archive_path}${framework_path_suffix} \
+				-framework ${tv_os_archive_path}${framework_path_suffix} \
+				-framework ${tv_simulator_archive_path}${framework_path_suffix} \
+				-framework ${watch_os_archive_path}${framework_path_suffix} \
+				-framework ${watch_simulator_archive_path}${framework_path_suffix} \
+				-framework ${vision_os_archive_path}${framework_path_suffix} \
+				-framework ${vision_simulator_archive_path}${framework_path_suffix} \
 				-output ${output_path} || exit 1
 		else
+			logger -v "step: delete _CodeSignature folder in simulator framework which is unnecessary"
+			rm -rf ${iphone_simulator_archive_path}${framework_path_suffix}/_CodeSignature
+
 			logger -v "step: generate ${framework_name} xcframework"
 			xcodebuild -create-xcframework \
 				-framework ${iphone_os_archive_path}${framework_path_suffix} \
@@ -267,6 +345,26 @@ parse_codesign_key() {
 	fi
 	# create variables
 	mkdir ${CERTIFICATE_TEMP}
+
+	if [ -z "${BUILD_CERTIFICATE_BASE64}" ]; then
+		logger -e "Environment variable BUILD_CERTIFICATE_BASE64 is not set or is empty"
+		exit 1
+	fi
+
+	if [ -z "${P12_PASSWORD}" ]; then
+		logger -e "Environment variable P12_PASSWORD is not set or is empty"
+		exit 1
+	fi
+
+	if [ -z "${KEYCHAIN_PASSWORD}" ]; then
+		logger -e "Environment variable KEYCHAIN_PASSWORD is not set or is empty"
+		exit 1
+	fi
+
+	if [ -z "${CODESIGN_IDENTIFY_NAME}" ]; then
+		logger -e "Environment variable CODESIGN_IDENTIFY_NAME is not set or is empty"
+		exit 1
+	fi
 
 	# import certificate and provisioning profile from secrets
 	echo "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
@@ -293,7 +391,7 @@ clean_codesign_key() {
 copy_apm_modules_xcframework() {
 	for module in ${APMMODULES[@]}; do
 		logger -v "step: copy ${module} xcframework"
-		path="./${PROJECT_FOR_IOS_PATH}/${MAIN_FRAMEWORK_NAME}/Pods/GrowingAPM/${module}/GrowingAPM${module}.xcframework"
+		path="./${PROJECT_PATH_PREFIX}/iOS/${MAIN_FRAMEWORK_NAME}/Pods/GrowingAPM/${module}/GrowingAPM${module}.xcframework"
 		output_path="./${FOLDER_NAME}/Release/GrowingAPM${module}.xcframework"
 		cp -r $path $output_path
 	done
@@ -309,7 +407,7 @@ beginGenerate() {
 	copyAndModifyPodspec
 	schemes=()
 	logger -i "job: generate xcodeproj from podspec"
-	generateProject $schemes
+	generateProjects $schemes
 	logger -i "job: parse codesign key to keychain if necessary"
 	parse_codesign_key
 	logger -i "job: generate xcframework"

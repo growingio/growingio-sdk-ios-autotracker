@@ -51,7 +51,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     trackerCore.osx.resource_bundles = {'GrowingAnalytics' => ['Resources/macOS/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy']}
     trackerCore.watchos.resource_bundles = {'GrowingAnalytics' => ['Resources/iOS/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy']}
     trackerCore.tvos.resource_bundles = {'GrowingAnalytics' => ['Resources/iOS/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy']}
-    # trackerCore.visionos.resource_bundles = {'GrowingAnalytics' => ['Resources/iOS/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy']}
+    trackerCore.visionos.resource_bundles = {'GrowingAnalytics' => ['Resources/iOS/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy']}
     trackerCore.libraries = 'c++'
   end
   
