@@ -21,12 +21,12 @@ jobs:
           tvOS,
           watchOS
         ]
-        os: [macos-12, macos-13]
+        os: [macos-13, macos-14]
         include:
-          - os: macos-12
-            xcode: Xcode_14.2
           - os: macos-13
             xcode: Xcode_15.2
+          - os: macos-14
+            xcode: Xcode_15.4
           - target: iOS
             platform: iOS Simulator,name=iPhone 14 Pro Max
           - target: macOS
@@ -49,7 +49,6 @@ jobs:
             target: watchOS
           - target: visionOS
             os: macos-14
-            xcode: Xcode_15.2
             platform: visionOS Simulator,name=Apple Vision Pro
             scheme: GrowingTracker
     runs-on: ${{ matrix.os }}
