@@ -14,7 +14,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   s.ios.framework = 'WebKit'
   s.requires_arc = true
   s.default_subspec = "Autotracker"
-  s.pod_target_xcconfig = { 'HEADER_SEARCH_PATHS' => '"${PODS_TARGET_SRCROOT}"' }
+  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'HEADER_SEARCH_PATHS' => '"${PODS_TARGET_SRCROOT}"' }
 
   s.subspec 'Autotracker' do |autotracker|
     autotracker.ios.deployment_target = '10.0'
