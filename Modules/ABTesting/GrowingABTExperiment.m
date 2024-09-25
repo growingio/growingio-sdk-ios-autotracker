@@ -85,14 +85,6 @@
         return NO;
     }
 
-    if (experiment.layerName != nil && ![self.layerName isEqualToString:experiment.layerName]) {
-        return NO;
-    }
-
-    if (experiment.layerName == nil && self.layerName != nil) {
-        return NO;
-    }
-
     if (experiment.experimentId != nil && ![self.experimentId isEqualToString:experiment.experimentId]) {
         return NO;
     }
@@ -101,27 +93,11 @@
         return NO;
     }
 
-    if (experiment.experimentName != nil && ![self.experimentName isEqualToString:experiment.experimentName]) {
-        return NO;
-    }
-
-    if (experiment.experimentName == nil && self.experimentName != nil) {
-        return NO;
-    }
-
     if (experiment.strategyId != nil && ![self.strategyId isEqualToString:experiment.strategyId]) {
         return NO;
     }
 
     if (experiment.strategyId == nil && self.strategyId != nil) {
-        return NO;
-    }
-
-    if (experiment.strategyName != nil && ![self.strategyName isEqualToString:experiment.strategyName]) {
-        return NO;
-    }
-
-    if (experiment.strategyName == nil && self.strategyName != nil) {
         return NO;
     }
 
@@ -137,8 +113,7 @@
 }
 
 - (NSUInteger)hash {
-    return self.layerId.hash ^ self.layerName.hash ^ self.experimentId.hash ^ self.experimentName.hash ^
-           self.strategyId.hash ^ self.strategyName.hash ^ self.variables.hash;
+    return self.layerId.hash ^ self.experimentId.hash ^ self.strategyId.hash ^ self.variables.hash;
 }
 
 - (id)toJSONObject {
