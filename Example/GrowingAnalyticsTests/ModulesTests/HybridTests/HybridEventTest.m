@@ -63,18 +63,6 @@
     XCTAssertEqualObjects(event.attributes[@"test"], @"value");
 }
 
-- (void)testGrowingPageCustomEvent {
-    GrowingPageCustomEvent *event = (GrowingPageCustomEvent *)GrowingPageCustomEvent.builder.setPath(@"path")
-                                        .setEventName(@"testEventName")
-                                        .setAttributes(@{@"test": @"value"})
-                                        .build;
-
-    XCTAssertEqualObjects(event.path, @"path");
-    XCTAssertEqualObjects(event.eventName, @"testEventName");
-    NSString *value = (NSString *)event.attributes[@"test"];
-    XCTAssertTrue([value isEqualToString:@"value"]);
-}
-
 - (void)testGrowingHybridViewElementEvent {
     GrowingHybridViewElementEvent *event =
         (GrowingHybridViewElementEvent *)GrowingHybridViewElementEvent.builder.setHyperlink(@"testHyperlink")

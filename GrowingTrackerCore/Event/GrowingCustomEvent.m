@@ -26,6 +26,7 @@
     if (self = [super initWithBuilder:builder]) {
         GrowingCustomBuilder *subBuilder = (GrowingCustomBuilder *)builder;
         _eventName = subBuilder.eventName;
+        _path = subBuilder.path;
     }
     return self;
 }
@@ -37,6 +38,7 @@
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
     dataDictM[@"eventName"] = self.eventName;
+    dataDictM[@"path"] = self.path;
     return [dataDictM copy];
 }
 
@@ -52,6 +54,13 @@
 - (GrowingBaseBuilder * (^)(NSString *value))setEventName {
     return ^(NSString *value) {
         self->_eventName = value;
+        return self;
+    };
+}
+
+- (GrowingBaseBuilder * (^)(NSString *value))setPath {
+    return ^(NSString *value) {
+        self->_path = value;
         return self;
     };
 }

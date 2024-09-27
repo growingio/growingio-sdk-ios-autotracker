@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GrowingCustomEvent : GrowingBaseEvent
 
 @property (nonatomic, copy) NSString *eventName;
+@property (nonatomic, copy) NSString *path;
 
 + (GrowingCustomBuilder *)builder;
 
@@ -35,9 +36,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GrowingCustomBuilder : GrowingBaseBuilder
 
 @property (nonatomic, copy, readonly) NSString *eventName;
+@property (nonatomic, copy, readonly) NSString *path;
 
 - (GrowingCustomBuilder * (^)(NSString *value))setEventName;
-
+- (GrowingCustomBuilder * (^)(NSString *value))setPath;
 - (GrowingCustomBuilder * (^)(NSDictionary<NSString *, NSObject *> *value))setAttributes;
 
 @end

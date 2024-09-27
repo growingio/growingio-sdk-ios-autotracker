@@ -23,6 +23,7 @@
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIViewController+GrowingNode.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
+#import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
@@ -30,8 +31,9 @@
 #import "GrowingULAppLifecycle.h"
 #import "GrowingULViewControllerLifecycle.h"
 
-@interface GrowingPageManager () <GrowingULViewControllerLifecycleDelegate>
+@interface GrowingPageManager () <GrowingULViewControllerLifecycleDelegate, GrowingEventInterceptor>
 
+@property (nonatomic, strong) GrowingPage *lastPage;
 @property (nonatomic, strong) NSPointerArray *visiblePages;
 @property (nonatomic, strong) NSMutableArray<NSString *> *ignoredPrivateControllers;
 
@@ -52,9 +54,24 @@
 - (void)start {
     static dispatch_once_t startOnceToken;
     dispatch_once(&startOnceToken, ^{
+        [[GrowingEventManager sharedInstance] addInterceptor:self];
         [GrowingULViewControllerLifecycle.sharedInstance addViewControllerLifecycleDelegate:self];
     });
 }
+
+#pragma mark - GrowingEventInterceptor
+
+- (void)growingEventManagerEventWillBuild:(GrowingBaseBuilder *_Nullable)builder {
+    if (builder && [builder isMemberOfClass:[GrowingCustomBuilder class]]) {
+        GrowingPage *page = self.lastPage;
+        if (page) {
+            NSString *path = [NSString stringWithFormat:@"/%@", page.alias];
+            ((GrowingCustomBuilder *)builder).setPath(path);
+        }
+    }
+}
+
+#pragma mark - GrowingULViewControllerLifecycleDelegate
 
 - (void)viewControllerDidLoad:(UIViewController *)controller {
     if (controller.growingPageAlias == nil /* !page.isAutotrack */) {
@@ -122,6 +139,7 @@
                                       .setTimestamp(page.showTimestamp)
                                       .setAttributes(page.attributes);
     [[GrowingEventManager sharedInstance] postEventBuilder:builder];
+    self.lastPage = page;
 }
 
 - (GrowingPage *)createdPage:(UIViewController *)viewController {
