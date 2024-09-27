@@ -33,7 +33,8 @@
 
 @interface GrowingPageManager () <GrowingULViewControllerLifecycleDelegate, GrowingEventInterceptor>
 
-@property (nonatomic, strong) GrowingPage *lastPage;
+@property (nonatomic, copy) NSString *lastPagePath;
+@property (nonatomic, assign) long long lastPageTimestamp;
 @property (nonatomic, strong) NSPointerArray *visiblePages;
 @property (nonatomic, strong) NSMutableArray<NSString *> *ignoredPrivateControllers;
 
@@ -62,11 +63,15 @@
 #pragma mark - GrowingEventInterceptor
 
 - (void)growingEventManagerEventWillBuild:(GrowingBaseBuilder *_Nullable)builder {
-    if (builder && [builder isMemberOfClass:[GrowingCustomBuilder class]]) {
-        GrowingPage *page = self.lastPage;
-        if (page) {
-            NSString *path = [NSString stringWithFormat:@"/%@", page.alias];
-            ((GrowingCustomBuilder *)builder).setPath(path);
+    if (builder) {
+        if ([builder isMemberOfClass:[GrowingCustomBuilder class]]) {
+            if (self.lastPagePath && self.lastPagePath.length > 0) {
+                ((GrowingCustomBuilder *)builder).setPath(self.lastPagePath);
+            }
+        } else if ([builder isMemberOfClass:[GrowingPageBuilder class]]) {
+            GrowingPageBuilder *pageBuilder = (GrowingPageBuilder *)builder;
+            self.lastPagePath = pageBuilder.path;
+            self.lastPageTimestamp = pageBuilder.timestamp;
         }
     }
 }
@@ -139,7 +144,6 @@
                                       .setTimestamp(page.showTimestamp)
                                       .setAttributes(page.attributes);
     [[GrowingEventManager sharedInstance] postEventBuilder:builder];
-    self.lastPage = page;
 }
 
 - (GrowingPage *)createdPage:(UIViewController *)viewController {
