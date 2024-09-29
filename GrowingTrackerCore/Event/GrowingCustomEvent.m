@@ -19,6 +19,7 @@
 
 #import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
 #import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 
 @implementation GrowingCustomEvent
 
@@ -50,7 +51,12 @@
 
 - (void)readPropertyInTrackThread {
     [super readPropertyInTrackThread];
-    _path = _path && _path.length > 0 ? _path : @"/";
+    GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    if (configuration.customEventWithPage) {
+        _path = _path && _path.length > 0 ? _path : @"/";
+    } else {
+        _path = nil;
+    }
 }
 
 #pragma clang diagnostic push

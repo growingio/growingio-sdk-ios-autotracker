@@ -55,7 +55,10 @@
 - (void)start {
     static dispatch_once_t startOnceToken;
     dispatch_once(&startOnceToken, ^{
-        [[GrowingEventManager sharedInstance] addInterceptor:self];
+        GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+        if (configuration.customEventWithPage) {
+            [[GrowingEventManager sharedInstance] addInterceptor:self];
+        }
         [GrowingULViewControllerLifecycle.sharedInstance addViewControllerLifecycleDelegate:self];
     });
 }
@@ -65,9 +68,13 @@
 - (void)growingEventManagerEventWillBuild:(GrowingBaseBuilder *_Nullable)builder {
     if (builder) {
         if ([builder isMemberOfClass:[GrowingCustomBuilder class]]) {
-            NSString *path = self.lastPagePath && self.lastPagePath.length > 0 ? self.lastPagePath.copy : @"/";
-            ((GrowingCustomBuilder *)builder).setPath(path);
+            // Hybrid触发的HybridCustomEvent将在生成时携带path，不走此处的逻辑
+            // Flutter触发的CustomEvent与原生相同，在此处判断后携带path
+            if (self.lastPagePath && self.lastPagePath.length > 0) {
+                ((GrowingCustomBuilder *)builder).setPath(self.lastPagePath.copy);
+            }
         } else if ([builder isMemberOfClass:[GrowingPageBuilder class]]) {
+            // 原生或Flutter生成PAGE事件
             GrowingPageBuilder *pageBuilder = (GrowingPageBuilder *)builder;
             self.lastPagePath = pageBuilder.path;
             self.lastPageTimestamp = pageBuilder.timestamp;
