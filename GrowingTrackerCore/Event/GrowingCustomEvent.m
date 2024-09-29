@@ -48,6 +48,11 @@
 #pragma clang diagnostic ignored "-Wincomplete-implementation"
 @implementation GrowingCustomBuilder
 
+- (void)readPropertyInTrackThread {
+    [super readPropertyInTrackThread];
+    _path = _path && _path.length > 0 ? _path : @"/";
+}
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wmethod-signatures"
 #pragma clang diagnostic ignored "-Wmismatched-return-types"
