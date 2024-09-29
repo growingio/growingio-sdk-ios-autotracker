@@ -5,6 +5,7 @@
 
 * **ABTesting:** add more parameters to experiment ([#326](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/326)) ([1fbfb4c](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/1fbfb4ca0aeeab2920d8a3688b878f4677dafe05))
 * add path property to custom event ([#329](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/329)) ([05a01a8](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/05a01a8872117612a4f8a8ae85f2f1d7ec5f4813))
+* release 4.4.0 ([1588825](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/1588825295c52cf128c6b0a037f6de8c052a52b0))
 
 
 
