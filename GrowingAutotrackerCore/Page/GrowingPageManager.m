@@ -56,7 +56,7 @@
     static dispatch_once_t startOnceToken;
     dispatch_once(&startOnceToken, ^{
         GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
-        if (configuration.customEventWithPage) {
+        if (configuration.customEventWithPath) {
             [[GrowingEventManager sharedInstance] addInterceptor:self];
         }
         [GrowingULViewControllerLifecycle.sharedInstance addViewControllerLifecycleDelegate:self];
