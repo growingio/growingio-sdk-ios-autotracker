@@ -44,7 +44,7 @@ FOUNDATION_EXPORT NSString *const kGrowingDefaultDataCollectionServerHost;
 @property (nonatomic, copy) GrowingNetworkConfig *networkConfig;
 @property (nonatomic, assign) BOOL useProtobuf;
 @property (nonatomic, assign) NSUInteger dataValidityPeriod;
-@property (nonatomic, assign) BOOL customEventWithPage;
+@property (nonatomic, assign) BOOL referCustomEventWithPage;
 
 - (instancetype)initWithAccountId:(NSString *)accountId;
 

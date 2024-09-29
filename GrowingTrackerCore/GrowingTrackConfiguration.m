@@ -65,7 +65,7 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
         _networkConfig = nil;
         _useProtobuf = YES;
         _dataValidityPeriod = 7;
-        _customEventWithPage = NO;
+        _referCustomEventWithPage = NO;
 
         // Ads
         _ASAEnabled = NO;
@@ -112,7 +112,7 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
     configuration->_networkConfig = [_networkConfig copy];
     configuration->_useProtobuf = _useProtobuf;
     configuration->_dataValidityPeriod = _dataValidityPeriod;
-    configuration->_customEventWithPage = _customEventWithPage;
+    configuration->_referCustomEventWithPage = _referCustomEventWithPage;
 
     // Ads
     configuration->_ASAEnabled = _ASAEnabled;

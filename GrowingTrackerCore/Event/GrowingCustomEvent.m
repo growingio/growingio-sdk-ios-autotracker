@@ -52,7 +52,7 @@
 - (void)readPropertyInTrackThread {
     [super readPropertyInTrackThread];
     GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
-    if (configuration.customEventWithPage) {
+    if (configuration._referCustomEventWithPage) {
         _path = _path && _path.length > 0 ? _path : @"/";
     } else {
         _path = nil;
