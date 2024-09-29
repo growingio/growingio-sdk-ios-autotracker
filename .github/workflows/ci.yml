@@ -56,7 +56,7 @@ jobs:
       - name: Brew Install Xcresultparser
         run: |
           brew tap a7ex/homebrew-formulae
-          brew install xcresultparser
+          brew install xcresultparser@1.6.5
 
       - name: Parse xcresult to Cobertura xml
         run: |

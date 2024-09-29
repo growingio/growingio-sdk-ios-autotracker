@@ -26,8 +26,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) long long fetchTime;
 
 - (instancetype)initWithLayerId:(NSString *)layerId
+                      layerName:(NSString *_Nullable)layerName
                    experimentId:(NSString *_Nullable)experimentId
+                 experimentName:(NSString *_Nullable)experimentName
                      strategyId:(NSString *_Nullable)strategyId
+                   strategyName:(NSString *_Nullable)strategyName
                       variables:(NSDictionary *_Nullable)variables
                       fetchTime:(long long)fetchTime;
 - (void)saveToDisk;

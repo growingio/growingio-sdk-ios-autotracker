@@ -23,8 +23,11 @@
 @interface GrowingABTExperiment ()
 
 @property (nonatomic, copy, readwrite) NSString *layerId;
+@property (nonatomic, copy, nullable, readwrite) NSString *layerName;
 @property (nonatomic, copy, nullable, readwrite) NSString *experimentId;
+@property (nonatomic, copy, nullable, readwrite) NSString *experimentName;
 @property (nonatomic, copy, nullable, readwrite) NSString *strategyId;
+@property (nonatomic, copy, nullable, readwrite) NSString *strategyName;
 @property (nonatomic, copy, nullable, readwrite) NSDictionary *variables;
 @property (nonatomic, assign) long long fetchTime;
 
@@ -33,14 +36,20 @@
 @implementation GrowingABTExperiment
 
 - (instancetype)initWithLayerId:(NSString *)layerId
+                      layerName:(NSString *_Nullable)layerName
                    experimentId:(NSString *_Nullable)experimentId
+                 experimentName:(NSString *_Nullable)experimentName
                      strategyId:(NSString *_Nullable)strategyId
+                   strategyName:(NSString *_Nullable)strategyName
                       variables:(NSDictionary *_Nullable)variables
                       fetchTime:(long long)fetchTime {
     if (self = [super init]) {
         _layerId = layerId.copy;
+        _layerName = layerName.copy;
         _experimentId = experimentId.copy;
+        _experimentName = experimentName.copy;
         _strategyId = strategyId.copy;
+        _strategyName = strategyName.copy;
         _variables = variables.copy;
         _fetchTime = fetchTime;
     }
@@ -111,11 +120,20 @@
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     dic[@"layerId"] = self.layerId.copy;
     dic[@"fetchTime"] = @(self.fetchTime);
+    if (self.layerName) {
+        dic[@"layerName"] = self.layerName.copy;
+    }
     if (self.experimentId) {
         dic[@"experimentId"] = self.experimentId.copy;
     }
+    if (self.experimentName) {
+        dic[@"experimentName"] = self.experimentName.copy;
+    }
     if (self.strategyId) {
         dic[@"strategyId"] = self.strategyId.copy;
+    }
+    if (self.strategyName) {
+        dic[@"strategyName"] = self.strategyName.copy;
     }
     if (self.variables) {
         dic[@"variables"] = self.variables.copy;
