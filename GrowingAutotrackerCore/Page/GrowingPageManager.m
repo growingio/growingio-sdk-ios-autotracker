@@ -65,9 +65,8 @@
 - (void)growingEventManagerEventWillBuild:(GrowingBaseBuilder *_Nullable)builder {
     if (builder) {
         if ([builder isMemberOfClass:[GrowingCustomBuilder class]]) {
-            if (self.lastPagePath && self.lastPagePath.length > 0) {
-                ((GrowingCustomBuilder *)builder).setPath(self.lastPagePath);
-            }
+            NSString *path = self.lastPagePath && self.lastPagePath.length > 0 ? self.lastPagePath.copy : @"/";
+            ((GrowingCustomBuilder *)builder).setPath(path);
         } else if ([builder isMemberOfClass:[GrowingPageBuilder class]]) {
             GrowingPageBuilder *pageBuilder = (GrowingPageBuilder *)builder;
             self.lastPagePath = pageBuilder.path;
