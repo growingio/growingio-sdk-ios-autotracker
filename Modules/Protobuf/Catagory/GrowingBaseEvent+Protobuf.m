@@ -68,7 +68,7 @@
         __strong typeof(weakSelf) self = weakSelf;
         SEL selector = NSSelectorFromString(selectorString);
         if ([self respondsToSelector:selector]) {
-            int32_t result = ((int32_t(*)(id, SEL))objc_msgSend)(self, selector);
+            int32_t result = ((int32_t (*)(id, SEL))objc_msgSend)(self, selector);
             return result > 0 ? result : 0;
         }
         return 0;
@@ -78,7 +78,7 @@
         __strong typeof(weakSelf) self = weakSelf;
         SEL selector = NSSelectorFromString(selectorString);
         if ([self respondsToSelector:selector]) {
-            int64_t result = ((int64_t(*)(id, SEL))objc_msgSend)(self, selector);
+            int64_t result = ((int64_t (*)(id, SEL))objc_msgSend)(self, selector);
             return result > 0 ? result : (int64_t)0;
         }
         return (int64_t)0;
