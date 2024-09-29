@@ -17,11 +17,11 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/Event/Autotrack/GrowingPageCustomEvent.h"
+#import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
 
 NS_ASSUME_NONNULL_BEGIN
 @class GrowingHybridCustomBuilder;
-@interface GrowingHybridCustomEvent : GrowingPageCustomEvent
+@interface GrowingHybridCustomEvent : GrowingCustomEvent
 
 @property (nonatomic, strong, readonly) NSString *query;
 
@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface GrowingHybridCustomBuilder : GrowingPageCustomBuilder
+@interface GrowingHybridCustomBuilder : GrowingCustomBuilder
 
 @property (nonatomic, strong, readonly) NSString *query;
 

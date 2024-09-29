@@ -19,7 +19,12 @@
 
 import Foundation
 import WatchKit
+#if canImport(GrowingAnalytics)
 import GrowingAnalytics
+#endif
+#if canImport(GrowingTracker)
+import GrowingTracker
+#endif
 
 class AppDelegate: NSObject, WKApplicationDelegate {
     func applicationDidFinishLaunching() {

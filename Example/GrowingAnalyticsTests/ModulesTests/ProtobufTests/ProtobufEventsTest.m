@@ -18,7 +18,6 @@
 //  limitations under the License.
 
 #import <XCTest/XCTest.h>
-#import "GrowingTrackerCore/Event/Autotrack/GrowingPageCustomEvent.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
 #import "GrowingTrackerCore/Event/GrowingAppCloseEvent.h"
@@ -97,35 +96,10 @@
     // GrowingCustomEvent
     {
         GrowingBaseBuilder *builder = GrowingCustomEvent.builder.setEventName(@"custom")
-            .setAttributes(@{@"key": @"value"});
-        [builder readPropertyInTrackThread];
-        GrowingCustomEvent *event = (GrowingCustomEvent *)(builder.build);
-        GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
-        [self contrastOfDefaultParamter:event protobuf:protobuf];
-        XCTAssertEqualObjects(GrowingEventTypeCustom, event.eventType);
-        XCTAssertEqual(GrowingPBEventType_Custom, protobuf.eventType);
-        XCTAssertEqualObjects(event.eventName ?: @"", protobuf.eventName);
-        XCTAssertEqualObjects(event.attributes ?: @{}, protobuf.attributes);
-    }
-    {
-        GrowingBaseBuilder *builder = GrowingCustomEvent.builder;
-        [builder readPropertyInTrackThread];
-        GrowingCustomEvent *event = (GrowingCustomEvent *)(builder.build);
-        GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
-        [self contrastOfDefaultParamter:event protobuf:protobuf];
-        XCTAssertEqualObjects(GrowingEventTypeCustom, event.eventType);
-        XCTAssertEqual(GrowingPBEventType_Custom, protobuf.eventType);
-        XCTAssertEqualObjects(event.eventName ?: @"", protobuf.eventName);
-        XCTAssertEqualObjects(event.attributes ?: @{}, protobuf.attributes);
-    }
-
-    // GrowingPageCustomEvent
-    {
-        GrowingBaseBuilder *builder = GrowingPageCustomEvent.builder.setEventName(@"custom")
             .setPath(@"path")
             .setAttributes(@{@"key": @"value"});
         [builder readPropertyInTrackThread];
-        GrowingPageCustomEvent *event = (GrowingPageCustomEvent *)(builder.build);
+        GrowingCustomEvent *event = (GrowingCustomEvent *)(builder.build);
         GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
         [self contrastOfDefaultParamter:event protobuf:protobuf];
         XCTAssertEqualObjects(GrowingEventTypeCustom, event.eventType);
@@ -135,9 +109,9 @@
         XCTAssertEqualObjects(event.attributes ?: @{}, protobuf.attributes);
     }
     {
-        GrowingBaseBuilder *builder = GrowingPageCustomEvent.builder;
+        GrowingBaseBuilder *builder = GrowingCustomEvent.builder;
         [builder readPropertyInTrackThread];
-        GrowingPageCustomEvent *event = (GrowingPageCustomEvent *)(builder.build);
+        GrowingCustomEvent *event = (GrowingCustomEvent *)(builder.build);
         GrowingPBEventV3Dto *protobuf = [self protobufFromEvent:event];
         [self contrastOfDefaultParamter:event protobuf:protobuf];
         XCTAssertEqualObjects(GrowingEventTypeCustom, event.eventType);

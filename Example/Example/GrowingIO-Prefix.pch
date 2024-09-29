@@ -50,6 +50,12 @@
 #define SDKABTESTINGMODULE
 #endif
 
+#if __has_include("UIView+GrowingImpression.h")
+// ImpressionTrack Module
+#import "UIView+GrowingImpression.h"
+#define SDKIMPMODULE
+#endif
+
 #ifdef __OBJC__
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>

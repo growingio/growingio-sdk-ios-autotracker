@@ -19,6 +19,7 @@
 
 #import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
 #import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 
 @implementation GrowingCustomEvent
 
@@ -26,6 +27,7 @@
     if (self = [super initWithBuilder:builder]) {
         GrowingCustomBuilder *subBuilder = (GrowingCustomBuilder *)builder;
         _eventName = subBuilder.eventName;
+        _path = subBuilder.path;
     }
     return self;
 }
@@ -37,6 +39,7 @@
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
     dataDictM[@"eventName"] = self.eventName;
+    dataDictM[@"path"] = self.path;
     return [dataDictM copy];
 }
 
@@ -46,12 +49,27 @@
 #pragma clang diagnostic ignored "-Wincomplete-implementation"
 @implementation GrowingCustomBuilder
 
+- (void)readPropertyInTrackThread {
+    [super readPropertyInTrackThread];
+    GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    if (configuration.customEventWithPath) {
+        _path = _path && _path.length > 0 ? _path : @"/";
+    }
+}
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wmethod-signatures"
 #pragma clang diagnostic ignored "-Wmismatched-return-types"
 - (GrowingBaseBuilder * (^)(NSString *value))setEventName {
     return ^(NSString *value) {
         self->_eventName = value;
+        return self;
+    };
+}
+
+- (GrowingBaseBuilder * (^)(NSString *value))setPath {
+    return ^(NSString *value) {
+        self->_path = value;
         return self;
     };
 }

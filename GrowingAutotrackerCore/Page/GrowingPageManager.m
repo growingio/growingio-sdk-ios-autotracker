@@ -22,6 +22,7 @@
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIViewController+GrowingNode.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
+#import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
@@ -30,8 +31,10 @@
 #import "GrowingULAppLifecycle.h"
 #import "GrowingULViewControllerLifecycle.h"
 
-@interface GrowingPageManager () <GrowingULViewControllerLifecycleDelegate>
+@interface GrowingPageManager () <GrowingULViewControllerLifecycleDelegate, GrowingEventInterceptor>
 
+@property (nonatomic, copy) NSString *lastPagePath;
+@property (nonatomic, assign) long long lastPageTimestamp;
 @property (nonatomic, strong) NSPointerArray *visiblePages;
 @property (nonatomic, strong) NSMutableArray<NSString *> *ignoredPrivateControllers;
 
@@ -52,9 +55,34 @@
 - (void)start {
     static dispatch_once_t startOnceToken;
     dispatch_once(&startOnceToken, ^{
+        GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+        if (configuration.customEventWithPath) {
+            [[GrowingEventManager sharedInstance] addInterceptor:self];
+        }
         [GrowingULViewControllerLifecycle.sharedInstance addViewControllerLifecycleDelegate:self];
     });
 }
+
+#pragma mark - GrowingEventInterceptor
+
+- (void)growingEventManagerEventWillBuild:(GrowingBaseBuilder *_Nullable)builder {
+    if (builder) {
+        if ([builder isMemberOfClass:[GrowingCustomBuilder class]]) {
+            // Hybrid触发的HybridCustomEvent将在生成时携带path，不走此处的逻辑
+            // Flutter触发的CustomEvent与原生相同，在此处判断后携带path
+            if (self.lastPagePath && self.lastPagePath.length > 0) {
+                ((GrowingCustomBuilder *)builder).setPath(self.lastPagePath.copy);
+            }
+        } else if ([builder isMemberOfClass:[GrowingPageBuilder class]]) {
+            // 原生或Flutter生成PAGE事件
+            GrowingPageBuilder *pageBuilder = (GrowingPageBuilder *)builder;
+            self.lastPagePath = pageBuilder.path;
+            self.lastPageTimestamp = pageBuilder.timestamp;
+        }
+    }
+}
+
+#pragma mark - GrowingULViewControllerLifecycleDelegate
 
 - (void)viewControllerDidLoad:(UIViewController *)controller {
     if (controller.growingPageAlias == nil /* !page.isAutotrack */) {
