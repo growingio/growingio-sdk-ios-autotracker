@@ -18,7 +18,12 @@
 //  limitations under the License.
 
 import SwiftUI
+#if canImport(GrowingAnalytics)
 import GrowingAnalytics
+#endif
+#if canImport(GrowingTracker)
+import GrowingTracker
+#endif
 
 struct ContentView: View {
     var body: some View {

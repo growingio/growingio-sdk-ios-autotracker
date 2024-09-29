@@ -18,7 +18,12 @@
 //  limitations under the License.
 
 import SwiftUI
+#if canImport(GrowingAnalytics)
 import GrowingAnalytics
+#endif
+#if canImport(GrowingTracker)
+import GrowingTracker
+#endif
 
 @main
 struct Example_watchOS_Watch_AppApp: App {
