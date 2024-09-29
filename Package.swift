@@ -1,4 +1,4 @@
-// swift-tools-version:5.6
+// swift-tools-version:5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 //
@@ -25,11 +25,12 @@ import PackageDescription
 let package = Package(
     name: "GrowingAnalytics",
     platforms: [
-        .iOS(.v10),
+        .iOS(.v12),
         .macCatalyst(.v13),
-        .macOS(.v10_12),
+        .macOS(.v10_14),
         .tvOS(.v12),
         .watchOS(.v7),
+        .visionOS(.v1),
     ],
     products: [
         .autotracker,
@@ -68,7 +69,10 @@ let package = Package(
         // MARK: - Resources
 
         .Resources.privacy,
-        .Resources.privacy_macos,
+        .Resources.privacy_macOS,
+        .Resources.privacy_tvOS,
+        .Resources.privacy_visionOS,
+        .Resources.privacy_watchOS,
 
         // MARK: - Core
 
@@ -149,9 +153,21 @@ extension Target {
                                     path: .Path.privacy,
                                     resources: [.copy("Resources/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy")])
 
-        static let privacy_macos = target(name: .privacy_macos,
-                                          path: .Path.privacy_macos,
+        static let privacy_macOS = target(name: .privacy_macOS,
+                                          path: .Path.privacy_macOS,
                                           resources: [.copy("Resources/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy")])
+
+        static let privacy_tvOS = target(name: .privacy_tvOS,
+                                         path: .Path.privacy_tvOS,
+                                         resources: [.copy("Resources/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy")])
+
+        static let privacy_visionOS = target(name: .privacy_visionOS,
+                                             path: .Path.privacy_visionOS,
+                                             resources: [.copy("Resources/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy")])
+
+        static let privacy_watchOS = target(name: .privacy_watchOS,
+                                            path: .Path.privacy_watchOS,
+                                            resources: [.copy("Resources/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy")])
     }
 
     enum Core {
@@ -168,7 +184,10 @@ extension Target {
                                         dependencies: [
                                             .trackerUtils,
                                             .Resources.privacy,
-                                            .Resources.privacy_macos,
+                                            .Resources.privacy_macOS,
+                                            .Resources.privacy_tvOS,
+                                            .Resources.privacy_visionOS,
+                                            .Resources.privacy_watchOS,
                                         ],
                                         path: .Path.trackerCore,
                                         publicHeadersPath: .Path.publicHeaders,
@@ -310,8 +329,11 @@ extension Target.Dependency {
     static let protobuf = product(name: "SwiftProtobuf", package: "swift-protobuf")
 
     enum Resources {
-        static let privacy = byName(name: .privacy, condition: .when(platforms: [.iOS, .macCatalyst, .tvOS, .watchOS]))
-        static let privacy_macos = byName(name: .privacy_macos, condition: .when(platforms: [.macOS]))
+        static let privacy = byName(name: .privacy, condition: .when(platforms: [.iOS, .macCatalyst]))
+        static let privacy_macOS = byName(name: .privacy_macOS, condition: .when(platforms: [.macOS]))
+        static let privacy_tvOS = byName(name: .privacy_tvOS, condition: .when(platforms: [.tvOS]))
+        static let privacy_visionOS = byName(name: .privacy_visionOS, condition: .when(platforms: [.visionOS]))
+        static let privacy_watchOS = byName(name: .privacy_watchOS, condition: .when(platforms: [.watchOS]))
     }
 
     enum Core {
@@ -360,7 +382,10 @@ extension String {
 
     // Resources
     static let privacy = "GrowingPrivacy"
-    static let privacy_macos = "GrowingPrivacy_macOS"
+    static let privacy_macOS = "GrowingPrivacy_macOS"
+    static let privacy_tvOS = "GrowingPrivacy_tvOS"
+    static let privacy_visionOS = "GrowingPrivacy_visionOS"
+    static let privacy_watchOS = "GrowingPrivacy_watchOS"
 
     // Core
     static let autotrackerCore = "GrowingAutotrackerCore"
@@ -396,7 +421,10 @@ extension String {
 
         // Resources
         static let privacy = "SwiftPM-Wrap/GrowingPrivacy-Wrapper"
-        static let privacy_macos = "SwiftPM-Wrap/GrowingPrivacy-macOS-Wrapper"
+        static let privacy_macOS = "SwiftPM-Wrap/GrowingPrivacy-macOS-Wrapper"
+        static let privacy_tvOS = "SwiftPM-Wrap/GrowingPrivacy-tvOS-Wrapper"
+        static let privacy_visionOS = "SwiftPM-Wrap/GrowingPrivacy-visionOS-Wrapper"
+        static let privacy_watchOS = "SwiftPM-Wrap/GrowingPrivacy-watchOS-Wrapper"
 
         // Core
         static let autotrackerCore = "GrowingAutotrackerCore"
