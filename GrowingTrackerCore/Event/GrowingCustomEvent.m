@@ -54,8 +54,6 @@
     GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
     if (configuration.customEventWithPath) {
         _path = _path && _path.length > 0 ? _path : @"/";
-    } else {
-        _path = nil;
     }
 }
 
