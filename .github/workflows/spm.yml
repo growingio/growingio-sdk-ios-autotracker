@@ -56,7 +56,7 @@ jobs:
     steps:
       # https://github.com/actions/runner-images/issues/10559
       - name: Download visionOS SDK
-        if: ${{ matrix.os == 'macos-14' }}
+        if: ${{ matrix.target == 'visionOS' }}
         run: |
             sudo xcodebuild -runFirstLaunch
             sudo xcrun simctl list
