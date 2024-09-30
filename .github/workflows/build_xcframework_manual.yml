@@ -1,0 +1,48 @@
+name: Build XCFramework
+
+on: workflow_dispatch
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: macos-latest
+
+    steps:
+      # https://github.com/actions/runner-images/issues/10559
+      - name: Download visionOS SDK
+        run: |
+            sudo xcodebuild -runFirstLaunch
+            sudo xcrun simctl list
+            sudo xcodebuild -downloadPlatform visionOS
+            sudo xcodebuild -runFirstLaunch
+          
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GIOSDK_PAT }}
+
+      - name: Generate xcframework
+        env:
+          BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+          P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+          CODESIGN_IDENTIFY_NAME: ${{ secrets.CODESIGN_IDENTIFY_NAME }}
+        run: 
+          sh ./scripts/generate_xcframework.sh releaseDefaultAutotracker --codesign --verbose
+
+      - name: Archive
+        run: |
+          cd ./generate
+          tar -czvf GrowingAnalytics.xcframework.tar.gz ./Release
+          zip -r -y GrowingAnalytics.xcframework.zip ./Release
+      
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: archive
+          path: |
+           ./generate/GrowingAnalytics.xcframework.tar.gz
+           ./generate/GrowingAnalytics.xcframework.zip
