@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: macos-12
+    runs-on: macos-15
     env:
       DERIVED_DATA: ${{ github.workspace }}/.DerivedData
 
@@ -44,7 +44,7 @@ jobs:
           xcodebuild test -workspace Example/GrowingAnalytics.xcworkspace \
           -scheme GrowingAnalyticsTests \
           -testPlan GrowingAnalyticsTests \
-          -destination 'platform=iOS Simulator,name=iPhone 14' \
+          -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
           -enableCodeCoverage YES \
           -derivedDataPath ${{ env.DERIVED_DATA }} \
           OTHER_CFLAGS="\$(inherited) -gen-cdb-fragment-path ${{ env.DERIVED_DATA }}/compilation-database" \
@@ -56,7 +56,7 @@ jobs:
       - name: Brew Install Xcresultparser
         run: |
           brew tap a7ex/homebrew-formulae
-          brew install xcresultparser@1.6.5
+          brew install xcresultparser
 
       - name: Parse xcresult to Cobertura xml
         run: |
