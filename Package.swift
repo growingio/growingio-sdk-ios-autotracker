@@ -52,7 +52,7 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/apple/swift-protobuf.git",
-            from: "1.21.0"
+            from: "1.27.0"
         ),
     ],
     targets: [
