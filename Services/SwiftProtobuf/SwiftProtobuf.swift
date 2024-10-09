@@ -36,7 +36,7 @@ public class SwiftProtobufWrapper: NSObject {
     @objc(parseFromData:)
     public static func parse(from data: Data) -> SwiftProtobufWrapper? {
         do {
-            let dto = try EventDto(serializedData: data)
+            let dto = try EventDto(serializedBytes: data)
             return SwiftProtobufWrapper(dto)
         } catch {
             return nil
@@ -171,7 +171,7 @@ public extension SwiftProtobufWrapper {
     @objc(convertProtobufDataToJsonArray:)
     static func convertProtobufDataToJsonArray(from data: Data) -> [[String: AnyObject]]? {
         do {
-            let list = try EventList(serializedData: data)
+            let list = try EventList(serializedBytes: data)
             var array = [[String: AnyObject]]()
             for dto in list.values {
                 let jsonData = try dto.jsonUTF8Data()
