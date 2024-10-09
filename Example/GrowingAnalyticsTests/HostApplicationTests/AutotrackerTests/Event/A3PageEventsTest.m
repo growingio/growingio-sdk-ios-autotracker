@@ -56,7 +56,7 @@
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
         XCTAssertGreaterThanOrEqual(events.count, 1);
 
-        GrowingPageEvent *event = (GrowingPageEvent *)events.firstObject;
+        GrowingPageEvent *event = (GrowingPageEvent *)events.lastObject;
         XCTAssertEqualObjects(event.eventType, GrowingEventTypePage);
         XCTAssertEqualObjects(event.path, @"/页面测试");
         XCTAssertEqualObjects(event.attributes[@"key"], @"value");
@@ -225,7 +225,7 @@
             NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
             XCTAssertGreaterThanOrEqual(events.count, 1);
 
-            GrowingPageEvent *event = (GrowingPageEvent *)events.firstObject;
+            GrowingPageEvent *event = (GrowingPageEvent *)events.lastObject;
             XCTAssertEqualObjects(event.eventType, GrowingEventTypePage);
             XCTAssertEqualObjects(event.path, @"/页面测试");
             XCTAssertEqualObjects(event.attributes[@"key"], @"value");
@@ -278,7 +278,7 @@
             NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
             XCTAssertGreaterThanOrEqual(events.count, 1);
 
-            GrowingPageEvent *event = (GrowingPageEvent *)events.firstObject;
+            GrowingPageEvent *event = (GrowingPageEvent *)events.lastObject;
             XCTAssertEqualObjects(event.eventType, GrowingEventTypePage);
             XCTAssertEqualObjects(event.path, @"/页面测试");
             XCTAssertEqualObjects(event.attributes[@"key"], @"value");
