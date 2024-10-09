@@ -204,7 +204,7 @@ generateProjects() {
 	prepareGenerateOnlyTrackerProjects
 	generateProjectByPlatform "macOS"
 	generateProjectByPlatform "watchOS"
-	# generateProjectByPlatform "visionOS"
+	generateProjectByPlatform "visionOS"
 
 	logger -v "step: reset podspec"
 	mv "${MAIN_FRAMEWORK_NAME}-backup.podspec" "${MAIN_FRAMEWORK_NAME}.podspec"
@@ -228,8 +228,8 @@ generate_xcframework() {
 		tv_simulator_archive_path="${archive_path}/tvsimulator"
 		watch_os_archive_path="${archive_path}/watchos"
 		watch_simulator_archive_path="${archive_path}/watchsimulator"
-		# vision_os_archive_path="${archive_path}/visionos"
-		# vision_simulator_archive_path="${archive_path}/visionsimulator"
+		vision_os_archive_path="${archive_path}/visionos"
+		vision_simulator_archive_path="${archive_path}/visionsimulator"
 		output_path="./${FOLDER_NAME}/Release/${framework_name//-/_}.xcframework"
 		common_args="archive -workspace ./${PROJECT_PATH_PREFIX}/iOS/${MAIN_FRAMEWORK_NAME}/${MAIN_FRAMEWORK_NAME}.xcworkspace \
 		-scheme ${framework_name} -configuration 'Release' -derivedDataPath ./${FOLDER_NAME}/derivedData"
@@ -287,23 +287,23 @@ generate_xcframework() {
 				-destination "generic/platform=watchOS Simulator" \
 				-archivePath ${watch_simulator_archive_path} || exit 1
 
-			# logger -v "step: generate ${framework_name} xros-arm64 framework(Only Tracker)"
-			# common_args_for_vision_os=$(echo "$common_args" | sed 's/iOS/visionOS/g')
-			# xcodebuild ${common_args_for_vision_os} \
-			# 	-destination "generic/platform=visionOS" \
-			# 	-archivePath ${vision_os_archive_path} || exit 1
+			logger -v "step: generate ${framework_name} xros-arm64 framework(Only Tracker)"
+			common_args_for_vision_os=$(echo "$common_args" | sed 's/iOS/visionOS/g')
+			xcodebuild ${common_args_for_vision_os} \
+				-destination "generic/platform=visionOS" \
+				-archivePath ${vision_os_archive_path} || exit 1
 
-			# logger -v "step: generate ${framework_name} xros-arm64_x86_64-simulator framework(Only Tracker)"
-			# common_args_for_vision_simulator=$(echo "$common_args" | sed 's/iOS/visionOS/g')
-			# xcodebuild ${common_args_for_vision_simulator} \
-			# 	-destination "generic/platform=visionOS Simulator" \
-			# 	-archivePath ${vision_simulator_archive_path} || exit 1
+			logger -v "step: generate ${framework_name} xros-arm64_x86_64-simulator framework(Only Tracker)"
+			common_args_for_vision_simulator=$(echo "$common_args" | sed 's/iOS/visionOS/g')
+			xcodebuild ${common_args_for_vision_simulator} \
+				-destination "generic/platform=visionOS Simulator" \
+				-archivePath ${vision_simulator_archive_path} || exit 1
 
 			logger -v "step: delete _CodeSignature folder in simulator framework which is unnecessary"
 			rm -rf ${iphone_simulator_archive_path}${framework_path_suffix}/_CodeSignature
 			rm -rf ${tv_simulator_archive_path}${framework_path_suffix}/_CodeSignature
 			rm -rf ${watch_simulator_archive_path}${framework_path_suffix}/_CodeSignature
-			# rm -rf ${vision_simulator_archive_path}${framework_path_suffix}/_CodeSignature
+			rm -rf ${vision_simulator_archive_path}${framework_path_suffix}/_CodeSignature
 
 			xcodebuild -create-xcframework \
 				-framework ${iphone_os_archive_path}${framework_path_suffix} \
@@ -314,6 +314,8 @@ generate_xcframework() {
 				-framework ${tv_simulator_archive_path}${framework_path_suffix} \
 				-framework ${watch_os_archive_path}${framework_path_suffix} \
 				-framework ${watch_simulator_archive_path}${framework_path_suffix} \
+				-framework ${vision_os_archive_path}${framework_path_suffix} \
+				-framework ${vision_simulator_archive_path}${framework_path_suffix} \
 				-output ${output_path} || exit 1
 		else
 			logger -v "step: delete _CodeSignature folder in simulator framework which is unnecessary"

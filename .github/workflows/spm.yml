@@ -54,6 +54,15 @@ jobs:
             scheme: GrowingTracker
     runs-on: ${{ matrix.os }}
     steps:
+      # https://github.com/actions/runner-images/issues/10559
+      - name: Download visionOS SDK
+        if: ${{ matrix.target == 'visionOS' }}
+        run: |
+            sudo xcodebuild -runFirstLaunch
+            sudo xcrun simctl list
+            sudo xcodebuild -downloadPlatform visionOS
+            sudo xcodebuild -runFirstLaunch
+
       - name: Checkout Repo
         uses: actions/checkout@v4
       - name: Xcode
