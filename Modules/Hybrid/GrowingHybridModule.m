@@ -48,7 +48,7 @@ GrowingMod(GrowingHybridModule)
 - (instancetype)init {
     if (self = [super init]) {
         _autoBridgeEnabled = YES;
-        _autoJavaScriptBridgeEnabled = NO;
+        _autoJsSdkInject = NO;
         _enableBridgeWebViews = [NSHashTable weakObjectsHashTable];
         _disableBridgeWebViews = [NSHashTable weakObjectsHashTable];
     }

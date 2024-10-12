@@ -94,43 +94,56 @@ static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJav
                 *stop = YES;
             }
         }];
-
-        if (!isContainUserScripts) {
-            NSString *accountId = GrowingConfigurationManager.sharedInstance.trackConfiguration.accountId;
-            NSString *dataSourceId = GrowingConfigurationManager.sharedInstance.trackConfiguration.dataSourceId;
-            NSString *bundleId = [GrowingDeviceInfo currentDeviceInfo].bundleID;
-            NSString *urlScheme = [GrowingDeviceInfo currentDeviceInfo].urlScheme;
-            GrowingWebViewJavascriptBridgeConfiguration *config =
-                [GrowingWebViewJavascriptBridgeConfiguration configurationWithAccountId:accountId
-                                                                           dataSourceId:dataSourceId
-                                                                                  appId:urlScheme
-                                                                             appPackage:bundleId
-                                                                       nativeSdkVersion:GrowingTrackerVersionName
-                                                                   nativeSdkVersionCode:GrowingTrackerVersionCode];
-
-            WKUserScript *userScript =
-                [[WKUserScript alloc] initWithSource:[GrowingWKWebViewJavascriptBridge_JS
-                                                         createJavascriptBridgeJsWithNativeConfiguration:config]
-                                       injectionTime:WKUserScriptInjectionTimeAtDocumentStart
-                                    forMainFrameOnly:NO];
-            [contentController addUserScript:userScript];
-
-            if (GrowingHybridModule.sharedInstance.autoJavaScriptBridgeEnabled) {
-                NSBundle *bundle = [self resourcesBundle];
-                NSString *filePath = [bundle pathForResource:@"gdp-full" ofType:@"js"];
-                NSString *webJSContent = [NSString stringWithContentsOfFile:filePath
-                                                                   encoding:NSUTF8StringEncoding
-                                                                      error:nil];
-                webJSContent =
-                    [webJSContent stringByAppendingFormat:@"gdp('init', '%@', '%@');", accountId, dataSourceId];
-                WKUserScript *userScript2 = [[WKUserScript alloc] initWithSource:webJSContent
-                                                                   injectionTime:WKUserScriptInjectionTimeAtDocumentEnd
-                                                                forMainFrameOnly:NO];
-                [contentController addUserScript:userScript2];
-            }
+        
+        if (isContainUserScripts) {
+            return;
+        }
+        
+        NSString *accountId = GrowingConfigurationManager.sharedInstance.trackConfiguration.accountId;
+        NSString *dataSourceId = GrowingConfigurationManager.sharedInstance.trackConfiguration.dataSourceId;
+        NSString *bundleId = [GrowingDeviceInfo currentDeviceInfo].bundleID;
+        NSString *urlScheme = [GrowingDeviceInfo currentDeviceInfo].urlScheme;
+        GrowingWebViewJavascriptBridgeConfiguration *config =
+            [GrowingWebViewJavascriptBridgeConfiguration configurationWithAccountId:accountId
+                                                                       dataSourceId:dataSourceId
+                                                                              appId:urlScheme
+                                                                         appPackage:bundleId
+                                                                   nativeSdkVersion:GrowingTrackerVersionName
+                                                               nativeSdkVersionCode:GrowingTrackerVersionCode];
+        
+        [contentController addUserScript:[self bridgeJsUserScriptWithConfig:config]];
+        if (GrowingHybridModule.sharedInstance.autoJsSdkInject) {
+            [contentController addUserScript:[self javaScriptSdkInjectJsUserScriptWithConfig:config]];
         }
     } @catch (NSException *exception) {
     }
+}
+
++ (WKUserScript *)bridgeJsUserScriptWithConfig:(GrowingWebViewJavascriptBridgeConfiguration *)config {
+    WKUserScript *userScript =
+    [[WKUserScript alloc] initWithSource:[GrowingWKWebViewJavascriptBridge_JS
+                                          createJavascriptBridgeJsWithNativeConfiguration:config]
+                           injectionTime:WKUserScriptInjectionTimeAtDocumentStart
+                        forMainFrameOnly:NO];
+    return userScript;
+}
+
++ (WKUserScript *)javaScriptSdkInjectJsUserScriptWithConfig:(GrowingWebViewJavascriptBridgeConfiguration *)config {
+//    NSBundle *bundle = [self resourcesBundle];
+//    NSString *filePath = [bundle pathForResource:@"gdp-full" ofType:@"js"];
+//    NSString *webJSContent = [NSString stringWithContentsOfFile:filePath
+//                                                       encoding:NSUTF8StringEncoding
+//                                                          error:nil];
+//    webJSContent =
+//        [webJSContent stringByAppendingFormat:@"gdp('init', '%@', '%@');", config.accountId, config.dataSourceId];
+//    WKUserScript *userScript = [[WKUserScript alloc] initWithSource:webJSContent
+//                                                       injectionTime:WKUserScriptInjectionTimeAtDocumentEnd
+//                                                    forMainFrameOnly:NO];
+    WKUserScript *userScript = [[WKUserScript alloc] initWithSource:[GrowingWKWebViewJavascriptBridge_JS
+                                                                      createJavascriptSdkInjectJsWithNativeConfiguration:config]
+                                                       injectionTime:WKUserScriptInjectionTimeAtDocumentEnd
+                                                    forMainFrameOnly:NO];
+    return userScript;
 }
 
 + (NSBundle *)resourcesBundle {

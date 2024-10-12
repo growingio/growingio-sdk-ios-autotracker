@@ -71,7 +71,7 @@
 #endif
     
 #if defined(SDKHybridMODULE)
-    GrowingHybridModule.sharedInstance.autoJavaScriptBridgeEnabled = YES;
+    GrowingHybridModule.sharedInstance.autoJsSdkInject = YES;
 #endif
     
 #pragma clang diagnostic push

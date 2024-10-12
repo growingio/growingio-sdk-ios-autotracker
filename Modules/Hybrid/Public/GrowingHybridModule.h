@@ -36,7 +36,7 @@ NS_SWIFT_NAME(Hybrid)
 @property (nonatomic, assign) BOOL autoBridgeEnabled;
 
 // 是否对所有webView自动注入Web JS SDK，默认为NO
-@property (nonatomic, assign) BOOL autoJavaScriptBridgeEnabled;
+@property (nonatomic, assign) BOOL autoJsSdkInject;
 
 // 在autoBridgeEnabled为NO时，对单个webView启用Hybrid注入，请在主线程调用
 - (void)enableBridgeForWebView:(WKWebView *)webView NS_SWIFT_NAME(enableBridge(_:));
