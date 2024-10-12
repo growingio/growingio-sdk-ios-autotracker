@@ -33,6 +33,10 @@
 #import "Modules/Hybrid/GrowingWebViewJavascriptBridgeConfiguration.h"
 #import "Modules/Hybrid/Public/GrowingHybridModule.h"
 
+#if SWIFT_PACKAGE
+@import GrowingBundle;
+#endif
+
 static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJavascriptBridge";
 
 @interface GrowingWKWebViewJavascriptBridge () <WKScriptMessageHandler>
@@ -110,9 +114,31 @@ static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJav
                                        injectionTime:WKUserScriptInjectionTimeAtDocumentStart
                                     forMainFrameOnly:NO];
             [contentController addUserScript:userScript];
+            
+            if (GrowingHybridModule.sharedInstance.autoJavaScriptBridgeEnabled) {
+                NSBundle *bundle = [self resourcesBundle];
+                NSString *filePath = [bundle pathForResource:@"gdp-full" ofType:@"js"];
+                NSString *webJSContent = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+                webJSContent = [webJSContent stringByAppendingFormat:@"gdp('init', '%@', '%@');", accountId, dataSourceId];
+                WKUserScript *userScript2 = [[WKUserScript alloc] initWithSource:webJSContent
+                                                                  injectionTime:WKUserScriptInjectionTimeAtDocumentEnd
+                                                               forMainFrameOnly:NO];
+                [contentController addUserScript:userScript2];
+            }
         }
     } @catch (NSException *exception) {
     }
+}
+
++ (NSBundle *)resourcesBundle {
+#if SWIFT_PACKAGE
+    return GrowingBundleWrapper_SWIFTPM_MODULE_BUNDLE();
+#else
+    NSBundle *bundle = [NSBundle bundleForClass:self.class];
+    NSString *bundleName = @"GrowingAnalytics.bundle";
+    NSString *path = [bundle.resourcePath stringByAppendingPathComponent:bundleName];
+    return [NSBundle bundleWithPath:path];
+#endif
 }
 
 - (void)userContentController:(WKUserContentController *)userContentController

@@ -70,6 +70,10 @@
     configuration.abTestingRequestInterval = 5;
 #endif
     
+#if defined(SDKHybridMODULE)
+    GrowingHybridModule.sharedInstance.autoJavaScriptBridgeEnabled = YES;
+#endif
+    
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wnonnull"
     [GrowingSDK startWithConfiguration:configuration launchOptions:nil];

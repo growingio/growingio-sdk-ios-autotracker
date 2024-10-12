@@ -17,4 +17,8 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-// Prevent a missing umbrella header warning.
+#import <Foundation/Foundation.h>
+
+NSBundle* GrowingBundleWrapper_SWIFTPM_MODULE_BUNDLE() {
+    return SWIFTPM_MODULE_BUNDLE;
+}
