@@ -95,19 +95,23 @@ static NSString *kWKWebViewJavascriptSdkInject_js(void) {
 
     // BEGIN preprocessorJSCode
     static NSString *kGrowingPreprocessorJSCode =
-        @__WKWebViewJavascriptSdkInject_js_func__(!(function(e, n, t, s, c) {
+        @__WKWebViewJavascriptSdkInject_js_func__(!(function (e, n, t, s, c) {
             var o;
-            e[s] = e[s] || function() {
+            e[s] =
+              e[s] ||
+              function () {
                 (e[s].q = e[s].q || []).push(arguments);
-            };
-            (c = c || 'vds'), (e._gio_local_vds = c), (e[c] = null != = (o = e[c]) &&void 0 != = o ? o : {}),
-                (e[c].namespace = s);
+              };
+            (c = c || 'vds'),
+              (e._gio_local_vds = c),
+              (e[c] = null !== (o = e[c]) && void 0 !== o ? o : {}),
+              (e[c].namespace = s);
             var d = n.createElement('script');
             var i = n.getElementsByTagName('script')[0];
             (d.async = !0), (d.src = t), i.parentNode.insertBefore(d, i);
-        })(window, document, 'https://assets.giocdn.com/sdk/webjs/gdp-full.js', 'gdp');
+          })(window, document, 'https://assets.giocdn.com/sdk/webjs/gdp-full.js', 'gdp');
 
-                                                  gdp('init', '$accountId_replacement', '$dataSourceId_replacement'););
+          gdp('init', '$accountId_replacement', '$dataSourceId_replacement'););
 #undef __WKWebViewJavascriptSdkInject_js_func__
     return kGrowingPreprocessorJSCode;
 };
