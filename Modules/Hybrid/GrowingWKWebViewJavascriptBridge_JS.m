@@ -94,34 +94,28 @@ static NSString *kWKWebViewJavascriptSdkInject_js(void) {
 #define __WKWebViewJavascriptSdkInject_js_func__(x) #x
 
     // BEGIN preprocessorJSCode
-    static NSString *kGrowingPreprocessorJSCode = @__WKWebViewJavascriptSdkInject_js_func__(
-        !(function (e, n, t, s, c) {
-        var o;
-        e[s] =
-          e[s] ||
-          function () {
-            (e[s].q = e[s].q || []).push(arguments);
-          };
-        (c = c || 'vds'),
-          (e._gio_local_vds = c),
-          (e[c] = null !== (o = e[c]) && void 0 !== o ? o : {}),
-          (e[c].namespace = s);
-        var d = n.createElement('script');
-        var i = n.getElementsByTagName('script')[0];
-        (d.async = !0), (d.src = t), i.parentNode.insertBefore(d, i);
+    static NSString *kGrowingPreprocessorJSCode =
+        @__WKWebViewJavascriptSdkInject_js_func__(!(function(e, n, t, s, c) {
+            var o;
+            e[s] = e[s] || function() {
+                (e[s].q = e[s].q || []).push(arguments);
+            };
+            (c = c || 'vds'), (e._gio_local_vds = c), (e[c] = null != = (o = e[c]) &&void 0 != = o ? o : {}),
+                (e[c].namespace = s);
+            var d = n.createElement('script');
+            var i = n.getElementsByTagName('script')[0];
+            (d.async = !0), (d.src = t), i.parentNode.insertBefore(d, i);
         })(window, document, 'https://assets.giocdn.com/sdk/webjs/gdp-full.js', 'gdp');
 
-        gdp('init', '$accountId_replacement', '$dataSourceId_replacement');
-    );
+                                                  gdp('init', '$accountId_replacement', '$dataSourceId_replacement'););
 #undef __WKWebViewJavascriptSdkInject_js_func__
     return kGrowingPreprocessorJSCode;
 };
 
 + (NSString *)createJavascriptSdkInjectJsWithNativeConfiguration:
-(GrowingWebViewJavascriptBridgeConfiguration *)configuration {
+    (GrowingWebViewJavascriptBridgeConfiguration *)configuration {
     NSString *bridge = kWKWebViewJavascriptSdkInject_js();
-    bridge = [bridge stringByReplacingOccurrencesOfString:@"$accountId_replacement"
-                                               withString:configuration.accountId];
+    bridge = [bridge stringByReplacingOccurrencesOfString:@"$accountId_replacement" withString:configuration.accountId];
     bridge = [bridge stringByReplacingOccurrencesOfString:@"$dataSourceId_replacement"
                                                withString:configuration.dataSourceId];
     return bridge;

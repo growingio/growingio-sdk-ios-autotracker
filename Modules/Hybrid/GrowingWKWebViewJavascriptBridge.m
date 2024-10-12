@@ -94,11 +94,11 @@ static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJav
                 *stop = YES;
             }
         }];
-        
+
         if (isContainUserScripts) {
             return;
         }
-        
+
         NSString *accountId = GrowingConfigurationManager.sharedInstance.trackConfiguration.accountId;
         NSString *dataSourceId = GrowingConfigurationManager.sharedInstance.trackConfiguration.dataSourceId;
         NSString *bundleId = [GrowingDeviceInfo currentDeviceInfo].bundleID;
@@ -110,7 +110,7 @@ static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJav
                                                                          appPackage:bundleId
                                                                    nativeSdkVersion:GrowingTrackerVersionName
                                                                nativeSdkVersionCode:GrowingTrackerVersionCode];
-        
+
         [contentController addUserScript:[self bridgeJsUserScriptWithConfig:config]];
         if (GrowingHybridModule.sharedInstance.autoJsSdkInject) {
             [contentController addUserScript:[self javaScriptSdkInjectJsUserScriptWithConfig:config]];
@@ -120,29 +120,28 @@ static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJav
 }
 
 + (WKUserScript *)bridgeJsUserScriptWithConfig:(GrowingWebViewJavascriptBridgeConfiguration *)config {
-    WKUserScript *userScript =
-    [[WKUserScript alloc] initWithSource:[GrowingWKWebViewJavascriptBridge_JS
-                                          createJavascriptBridgeJsWithNativeConfiguration:config]
-                           injectionTime:WKUserScriptInjectionTimeAtDocumentStart
-                        forMainFrameOnly:NO];
+    WKUserScript *userScript = [[WKUserScript alloc]
+          initWithSource:[GrowingWKWebViewJavascriptBridge_JS createJavascriptBridgeJsWithNativeConfiguration:config]
+           injectionTime:WKUserScriptInjectionTimeAtDocumentStart
+        forMainFrameOnly:NO];
     return userScript;
 }
 
 + (WKUserScript *)javaScriptSdkInjectJsUserScriptWithConfig:(GrowingWebViewJavascriptBridgeConfiguration *)config {
-//    NSBundle *bundle = [self resourcesBundle];
-//    NSString *filePath = [bundle pathForResource:@"gdp-full" ofType:@"js"];
-//    NSString *webJSContent = [NSString stringWithContentsOfFile:filePath
-//                                                       encoding:NSUTF8StringEncoding
-//                                                          error:nil];
-//    webJSContent =
-//        [webJSContent stringByAppendingFormat:@"gdp('init', '%@', '%@');", config.accountId, config.dataSourceId];
-//    WKUserScript *userScript = [[WKUserScript alloc] initWithSource:webJSContent
-//                                                       injectionTime:WKUserScriptInjectionTimeAtDocumentEnd
-//                                                    forMainFrameOnly:NO];
-    WKUserScript *userScript = [[WKUserScript alloc] initWithSource:[GrowingWKWebViewJavascriptBridge_JS
-                                                                      createJavascriptSdkInjectJsWithNativeConfiguration:config]
-                                                       injectionTime:WKUserScriptInjectionTimeAtDocumentEnd
-                                                    forMainFrameOnly:NO];
+    //    NSBundle *bundle = [self resourcesBundle];
+    //    NSString *filePath = [bundle pathForResource:@"gdp-full" ofType:@"js"];
+    //    NSString *webJSContent = [NSString stringWithContentsOfFile:filePath
+    //                                                       encoding:NSUTF8StringEncoding
+    //                                                          error:nil];
+    //    webJSContent =
+    //        [webJSContent stringByAppendingFormat:@"gdp('init', '%@', '%@');", config.accountId, config.dataSourceId];
+    //    WKUserScript *userScript = [[WKUserScript alloc] initWithSource:webJSContent
+    //                                                       injectionTime:WKUserScriptInjectionTimeAtDocumentEnd
+    //                                                    forMainFrameOnly:NO];
+    WKUserScript *userScript = [[WKUserScript alloc]
+          initWithSource:[GrowingWKWebViewJavascriptBridge_JS createJavascriptSdkInjectJsWithNativeConfiguration:config]
+           injectionTime:WKUserScriptInjectionTimeAtDocumentEnd
+        forMainFrameOnly:NO];
     return userScript;
 }
 
