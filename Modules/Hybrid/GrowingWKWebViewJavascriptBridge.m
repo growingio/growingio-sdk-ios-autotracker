@@ -114,15 +114,18 @@ static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJav
                                        injectionTime:WKUserScriptInjectionTimeAtDocumentStart
                                     forMainFrameOnly:NO];
             [contentController addUserScript:userScript];
-            
+
             if (GrowingHybridModule.sharedInstance.autoJavaScriptBridgeEnabled) {
                 NSBundle *bundle = [self resourcesBundle];
                 NSString *filePath = [bundle pathForResource:@"gdp-full" ofType:@"js"];
-                NSString *webJSContent = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-                webJSContent = [webJSContent stringByAppendingFormat:@"gdp('init', '%@', '%@');", accountId, dataSourceId];
+                NSString *webJSContent = [NSString stringWithContentsOfFile:filePath
+                                                                   encoding:NSUTF8StringEncoding
+                                                                      error:nil];
+                webJSContent =
+                    [webJSContent stringByAppendingFormat:@"gdp('init', '%@', '%@');", accountId, dataSourceId];
                 WKUserScript *userScript2 = [[WKUserScript alloc] initWithSource:webJSContent
-                                                                  injectionTime:WKUserScriptInjectionTimeAtDocumentEnd
-                                                               forMainFrameOnly:NO];
+                                                                   injectionTime:WKUserScriptInjectionTimeAtDocumentEnd
+                                                                forMainFrameOnly:NO];
                 [contentController addUserScript:userScript2];
             }
         }

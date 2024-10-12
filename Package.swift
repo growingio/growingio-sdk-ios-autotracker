@@ -68,7 +68,7 @@ let package = Package(
 
         // MARK: - Resources
 
-            .Resources.bundle,
+        .Resources.bundle,
         .Resources.bundle_macOS,
         .Resources.bundle_tvOS,
         .Resources.bundle_visionOS,
@@ -150,27 +150,27 @@ extension Target {
 
     enum Resources {
         static let bundle = target(name: .bundle,
-                                    path: .Path.bundle,
-                                    resources: [
-                                        .copy("Resources/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy"),
-                                        .copy("Resources/GrowingAnalytics.bundle/gdp-full.js")
-                                    ])
+                                   path: .Path.bundle,
+                                   resources: [
+                                       .copy("Resources/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy"),
+                                       .copy("Resources/GrowingAnalytics.bundle/gdp-full.js"),
+                                   ])
 
         static let bundle_macOS = target(name: .bundle_macOS,
-                                          path: .Path.bundle_macOS,
-                                          resources: [.copy("Resources/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy")])
-
-        static let bundle_tvOS = target(name: .bundle_tvOS,
-                                         path: .Path.bundle_tvOS,
+                                         path: .Path.bundle_macOS,
                                          resources: [.copy("Resources/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy")])
 
+        static let bundle_tvOS = target(name: .bundle_tvOS,
+                                        path: .Path.bundle_tvOS,
+                                        resources: [.copy("Resources/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy")])
+
         static let bundle_visionOS = target(name: .bundle_visionOS,
-                                             path: .Path.bundle_visionOS,
-                                             resources: [.copy("Resources/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy")])
+                                            path: .Path.bundle_visionOS,
+                                            resources: [.copy("Resources/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy")])
 
         static let bundle_watchOS = target(name: .bundle_watchOS,
-                                            path: .Path.bundle_watchOS,
-                                            resources: [.copy("Resources/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy")])
+                                           path: .Path.bundle_watchOS,
+                                           resources: [.copy("Resources/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy")])
     }
 
     enum Core {
