@@ -151,10 +151,7 @@ extension Target {
     enum Resources {
         static let bundle = target(name: .bundle,
                                    path: .Path.bundle,
-                                   resources: [
-                                       .copy("Resources/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy"),
-                                       .copy("Resources/GrowingAnalytics.bundle/gdp-full.js"),
-                                   ])
+                                   resources: [.copy("Resources/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy")])
 
         static let bundle_macOS = target(name: .bundle_macOS,
                                          path: .Path.bundle_macOS,

@@ -33,10 +33,6 @@
 #import "Modules/Hybrid/GrowingWebViewJavascriptBridgeConfiguration.h"
 #import "Modules/Hybrid/Public/GrowingHybridModule.h"
 
-#if SWIFT_PACKAGE
-@import GrowingBundle;
-#endif
-
 static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJavascriptBridge";
 
 @interface GrowingWKWebViewJavascriptBridge () <WKScriptMessageHandler>
@@ -128,32 +124,11 @@ static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJav
 }
 
 + (WKUserScript *)javaScriptSdkInjectJsUserScriptWithConfig:(GrowingWebViewJavascriptBridgeConfiguration *)config {
-    //    NSBundle *bundle = [self resourcesBundle];
-    //    NSString *filePath = [bundle pathForResource:@"gdp-full" ofType:@"js"];
-    //    NSString *webJSContent = [NSString stringWithContentsOfFile:filePath
-    //                                                       encoding:NSUTF8StringEncoding
-    //                                                          error:nil];
-    //    webJSContent =
-    //        [webJSContent stringByAppendingFormat:@"gdp('init', '%@', '%@');", config.accountId, config.dataSourceId];
-    //    WKUserScript *userScript = [[WKUserScript alloc] initWithSource:webJSContent
-    //                                                       injectionTime:WKUserScriptInjectionTimeAtDocumentEnd
-    //                                                    forMainFrameOnly:NO];
     WKUserScript *userScript = [[WKUserScript alloc]
           initWithSource:[GrowingWKWebViewJavascriptBridge_JS createJavascriptSdkInjectJsWithNativeConfiguration:config]
            injectionTime:WKUserScriptInjectionTimeAtDocumentEnd
         forMainFrameOnly:NO];
     return userScript;
-}
-
-+ (NSBundle *)resourcesBundle {
-#if SWIFT_PACKAGE
-    return GrowingBundleWrapper_SWIFTPM_MODULE_BUNDLE();
-#else
-    NSBundle *bundle = [NSBundle bundleForClass:self.class];
-    NSString *bundleName = @"GrowingAnalytics.bundle";
-    NSString *path = [bundle.resourcePath stringByAppendingPathComponent:bundleName];
-    return [NSBundle bundleWithPath:path];
-#endif
 }
 
 - (void)userContentController:(WKUserContentController *)userContentController
