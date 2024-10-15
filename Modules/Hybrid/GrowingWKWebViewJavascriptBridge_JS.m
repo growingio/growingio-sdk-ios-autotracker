@@ -94,24 +94,26 @@ static NSString *kWKWebViewJavascriptSdkInject_js(void) {
 #define __WKWebViewJavascriptSdkInject_js_func__(x) #x
 
     // BEGIN preprocessorJSCode
-    static NSString *kGrowingPreprocessorJSCode =
-        @__WKWebViewJavascriptSdkInject_js_func__(!(function (e, n, t, s, c) {
-            var o;
-            e[s] =
-              e[s] ||
-              function () {
-                (e[s].q = e[s].q || []).push(arguments);
-              };
-            (c = c || 'vds'),
-              (e._gio_local_vds = c),
-              (e[c] = null !== (o = e[c]) && void 0 !== o ? o : {}),
-              (e[c].namespace = s);
-            var d = n.createElement('script');
-            var i = n.getElementsByTagName('script')[0];
-            (d.async = !0), (d.src = t), i.parentNode.insertBefore(d, i);
-          })(window, document, 'https://assets.giocdn.com/sdk/webjs/gdp-full.js', 'gdp');
-
-          gdp('init', '$accountId_replacement', '$dataSourceId_replacement'););
+    static NSString *kGrowingPreprocessorJSCode = @__WKWebViewJavascriptSdkInject_js_func__(
+        try{
+            !(function (e, n, t, s, c) {
+                e[s] =
+                e[s] ||
+                function () {
+                    (e[s].q = e[s].q || []).push(arguments);
+                };
+                (e._gio_local_vds = c = c || 'vds'),
+                (e[c] = e[c] || {}),
+                (e[c].namespace = s);
+                var d = n.createElement('script');
+                var i = n.getElementsByTagName('script')[0];
+                (d.async = !0), (d.src = t);
+                i ? i.parentNode.insertBefore(d, i) : n.head.appendChild(d);
+            })(window, document, 'https://assets.giocdn.com/sdk/webjs/gdp-full.js', 'gdp');
+            
+            window._gr_ignore_local_rule = true;
+            gdp('init', '$accountId_replacement', '$dataSourceId_replacement');
+        } catch(e){});
 #undef __WKWebViewJavascriptSdkInject_js_func__
     return kGrowingPreprocessorJSCode;
 };
