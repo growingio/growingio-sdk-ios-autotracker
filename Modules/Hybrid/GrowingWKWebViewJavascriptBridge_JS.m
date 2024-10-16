@@ -107,8 +107,7 @@ static NSString *kWKWebViewJavascriptSdkInject_js(void) {
                 (e[c].namespace = s);
                 var d = n.createElement('script');
                 var i = n.getElementsByTagName('script')[0];
-                (d.async = !0), (d.src = t);
-                i ? i.parentNode.insertBefore(d, i) : n.head.appendChild(d);
+                (d.async = !0), (d.src = t), i.parentNode.insertBefore(d, i);
             })(window, document, 'https://assets.giocdn.com/sdk/webjs/gdp-full.js', 'gdp');
             
             window._gr_ignore_local_rule = true;
