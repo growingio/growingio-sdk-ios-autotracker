@@ -189,7 +189,7 @@ static const void * const kDispatchQueueSpecificKey = &kDispatchQueueSpecificKey
 #if defined(DEBUG) && DEBUG
             NSSet *openSetCopy = FMG3DBReturnAutoreleased([[db valueForKey:@"_openResultSets"] copy]);
             for (NSValue *rsInWrappedInATastyValueMeal in openSetCopy) {
-                GrowingFMResultSet *rs = (GrowingFMResultSet *)[rsInWrappedInATastyValueMeal pointerValue];
+//                GrowingFMResultSet *rs = (GrowingFMResultSet *)[rsInWrappedInATastyValueMeal pointerValue];
 //                NSLog(@"query: '%@'", [rs query]);
             }
 #endif
