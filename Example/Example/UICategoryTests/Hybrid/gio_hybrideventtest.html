@@ -9,23 +9,31 @@
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover">
     <title>GrowingIO Hybrid In App</title>
     
+    <script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"></script>
+    <script>
+      // VConsole 会自动挂载到 `window.VConsole`
+      var vConsole = new window.VConsole();
+    </script>
+    
     <script type='text/javascript'>
-      (function(window, document, script, src, namespace) {
-        window[namespace] = window[namespace] || function() {
-          (window[namespace].q = window[namespace].q || []).push(arguments)
-        };
-        script = document.createElement('script');
-        let tag = document.getElementsByTagName('script')[0];
-        script.async = true;
-        script.src = src;
-        tag.parentNode.insertBefore(script, tag);
-      })(window, document, 'script', 'https://assets.giocdn.com/sdk/cdp/gio.js', 'gdp');
+        !(function (e, n, t, s, c) {
+            var o;
+            e[s] =
+              e[s] ||
+              function () {
+                (e[s].q = e[s].q || []).push(arguments);
+              };
+            (c = c || 'vds'),
+              (e._gio_local_vds = c),
+              (e[c] = null !== (o = e[c]) && void 0 !== o ? o : {}),
+              (e[c].namespace = s);
+            var d = n.createElement('script');
+            var i = n.getElementsByTagName('script')[0];
+            (d.async = !0), (d.src = t), i.parentNode.insertBefore(d, i);
+          })(window, document, 'https://assets.giocdn.com/sdk/webjs/gdp-full.js', 'gdp');
 
-      gdp('init', 'bc675c65b3b0290e', 'your dataSourceId', {
-        host: 'api.growingio.com',
-        version: '1.0.0'
-      });
-      gdp('send');
+          gdp('init', '0a1b4118dd954ec3bcc69da5138bdb96', 'your dataSourceId');
+          gdp('send');
     </script>
     
     <script>
