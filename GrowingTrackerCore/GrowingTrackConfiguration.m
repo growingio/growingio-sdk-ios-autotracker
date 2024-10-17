@@ -31,6 +31,7 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
 @property (nonatomic, copy) NSString *deepLinkHost;
 @property (nonatomic, copy) id deepLinkCallback;
 @property (nonatomic, assign) BOOL readClipboardEnabled;
+@property (nonatomic, copy) id CAIDFetchBlock;
 
 // APM
 @property (nonatomic, copy) NSObject *APMConfig;
@@ -72,6 +73,7 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
         _deepLinkHost = kGrowingDefaultDeepLinkHost;
         _deepLinkCallback = nil;
         _readClipboardEnabled = YES;
+        _CAIDFetchBlock = nil;
 
         // APM
         _APMConfig = nil;
@@ -119,6 +121,7 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
     configuration->_deepLinkHost = [_deepLinkHost copy];
     configuration->_deepLinkCallback = [_deepLinkCallback copy];
     configuration->_readClipboardEnabled = _readClipboardEnabled;
+    configuration->_CAIDFetchBlock = [_CAIDFetchBlock copy];
 
     // APM
     configuration->_APMConfig = [_APMConfig copy];

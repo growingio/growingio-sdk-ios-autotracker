@@ -35,6 +35,8 @@ typedef void (^_Nullable GrowingAdDeepLinkCallback)(NSDictionary *_Nullable para
                                                     NSTimeInterval processTime,
                                                     NSError *_Nullable error);
 
+typedef void (^_Nullable GrowingAdCAIDFetchBlock)(void(^didCompleteBlock)(NSString *CAID));
+
 NS_EXTENSION_UNAVAILABLE("Advertising is not supported for iOS extensions.")
 NS_SWIFT_NAME(Advertising)
 @interface GrowingAdvertising : NSObject <GrowingModuleProtocol>
@@ -60,6 +62,7 @@ NS_SWIFT_NAME(Advertising)
 @property (nonatomic, copy) NSString *deepLinkHost;
 @property (nonatomic, copy) GrowingAdDeepLinkCallback deepLinkCallback;
 @property (nonatomic, assign) BOOL readClipboardEnabled;
+@property (nonatomic, copy) GrowingAdCAIDFetchBlock CAIDFetchBlock;
 
 @end
 

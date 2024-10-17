@@ -19,6 +19,7 @@
 
 #import "Modules/Advertising/Public/GrowingAdvertising.h"
 #import "Modules/Advertising/AppleSearchAds/GrowingAsaFetcher.h"
+#import "Modules/Advertising/CAID/GrowingCAIDFetcher.h"
 #import "Modules/Advertising/Event/GrowingActivateEvent.h"
 #import "Modules/Advertising/Event/GrowingAdEventType.h"
 #import "Modules/Advertising/Request/GrowingAdPreRequest.h"
@@ -172,6 +173,8 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
     if ([self SDKDoNotTrack]) {
         return NO;
     }
+    
+    [GrowingCAIDFetcher startFetch];
 
     // Universal Link 短链
     if ([GrowingAdUtils isShortChainUlink:url]) {
@@ -299,6 +302,8 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
         if ([self SDKDoNotTrack]) {
             return;
         }
+        
+        [GrowingCAIDFetcher startFetch];
 
         GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
         if ([GrowingAdUtils isActivateWrote]) {
