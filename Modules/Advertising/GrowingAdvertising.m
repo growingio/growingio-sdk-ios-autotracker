@@ -173,7 +173,7 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
     if ([self SDKDoNotTrack]) {
         return NO;
     }
-    
+
     [GrowingCAIDFetcher startFetch];
 
     // Universal Link 短链
@@ -302,7 +302,7 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
         if ([self SDKDoNotTrack]) {
             return;
         }
-        
+
         [GrowingCAIDFetcher startFetch];
 
         GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;

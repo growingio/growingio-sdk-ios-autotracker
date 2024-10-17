@@ -66,7 +66,7 @@ static pthread_rwlock_t _lock = PTHREAD_RWLOCK_INITIALIZER;
         return events;
     }
 
-    NSMutableArray<id <GrowingEventPersistenceProtocol>> *activates = @[].mutableCopy;
+    NSMutableArray<id<GrowingEventPersistenceProtocol>> *activates = @[].mutableCopy;
     for (id<GrowingEventPersistenceProtocol> event in events) {
         if ([event.eventType isEqualToString:GrowingEventTypeActivate]) {
             [activates addObject:event];
@@ -106,7 +106,7 @@ static pthread_rwlock_t _lock = PTHREAD_RWLOCK_INITIALIZER;
         self.status = GrowingCAIDFetcherStatusDenied;
         return;
     }
-    
+
     if (!trackConfiguration.CAIDFetchBlock) {
         GIOLogDebug(@"[GrowingAdvertising] CAIDFetcher - CAIDFetchBlock is nil");
         self.status = GrowingCAIDFetcherStatusDenied;
@@ -118,7 +118,7 @@ static pthread_rwlock_t _lock = PTHREAD_RWLOCK_INITIALIZER;
     GIOLogDebug(@"[GrowingAdvertising] CAIDFetcher start fetch with time out %.2f sec", timeOut);
     self.status = GrowingCAIDFetcherStatusFetching;
     [[GrowingCAIDFetcher sharedInstance] fetchCAID];
-    
+
     dispatch_time_t delayTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(timeOut * NSEC_PER_SEC));
     dispatch_after(delayTime, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         if (self.status != GrowingCAIDFetcherStatusFetching) {
@@ -133,7 +133,7 @@ static pthread_rwlock_t _lock = PTHREAD_RWLOCK_INITIALIZER;
 
 - (void)fetchCAID {
     GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
-    trackConfiguration.CAIDFetchBlock(^(NSString * _Nonnull CAID) {
+    trackConfiguration.CAIDFetchBlock(^(NSString *_Nonnull CAID) {
         if (CAID.length > 0) {
             GrowingCAIDFetcher.caid = CAID;
             GrowingCAIDFetcher.status = GrowingCAIDFetcherStatusSuccess;

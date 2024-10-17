@@ -35,7 +35,7 @@ typedef void (^_Nullable GrowingAdDeepLinkCallback)(NSDictionary *_Nullable para
                                                     NSTimeInterval processTime,
                                                     NSError *_Nullable error);
 
-typedef void (^_Nullable GrowingAdCAIDFetchBlock)(void(^didCompleteBlock)(NSString *CAID));
+typedef void (^_Nullable GrowingAdCAIDFetchBlock)(void (^didCompleteBlock)(NSString *CAID));
 
 NS_EXTENSION_UNAVAILABLE("Advertising is not supported for iOS extensions.")
 NS_SWIFT_NAME(Advertising)
