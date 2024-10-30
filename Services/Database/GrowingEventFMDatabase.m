@@ -19,6 +19,8 @@
 
 #import "Services/Database/GrowingEventFMDatabase.h"
 #import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingULEncryptor.h"
 #import "GrowingULTimeUtil.h"
 #import "Services/Database/FMDB/GrowingFMDB.h"
 #import "Services/Database/GrowingEventJSONPersistence.h"
@@ -163,14 +165,25 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
             self.databaseError = error;
             return;
         }
+        BOOL encryptEnabled = GrowingConfigurationManager.sharedInstance.trackConfiguration.localEventEncryptEnabled;
+        NSString *value = @"";
+        NSData *enc_value = [NSData data];
+        if (encryptEnabled) {
+            NSData *rawData = [event.rawJsonString dataUsingEncoding:NSUTF8StringEncoding];
+            enc_value = [[GrowingULEncryptor encryptor] aesEncrypt:rawData];
+        } else {
+            value = event.rawJsonString;
+        }
         result =
-            [db executeUpdate:@"insert into namedcachetable(name,key,value,createAt,type,policy) values(?,?,?,?,?,?)",
-                              self.name,
-                              event.eventUUID,
-                              ((GrowingEventJSONPersistence *)event).rawJsonString,
-                              @([GrowingULTimeUtil currentTimeMillis]),
-                              event.eventType,
-                              @(event.policy)];
+            [db executeUpdate:
+                    @"insert into namedcachetable(name,key,value,enc_value,createAt,type,policy) values(?,?,?,?,?,?,?)",
+                    self.name,
+                    event.eventUUID,
+                    value,
+                    enc_value,
+                    @([GrowingULTimeUtil currentTimeMillis]),
+                    event.eventType,
+                    @(event.policy)];
 
         if (!result) {
             self.databaseError = [self writeErrorInDatabase:db];
@@ -193,14 +206,26 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
         }
         for (int i = 0; i < events.count; i++) {
             GrowingEventJSONPersistence *event = (GrowingEventJSONPersistence *)events[i];
+            BOOL encryptEnabled =
+                GrowingConfigurationManager.sharedInstance.trackConfiguration.localEventEncryptEnabled;
+            NSString *value = @"";
+            NSData *enc_value = [NSData data];
+            if (encryptEnabled) {
+                NSData *rawData = [event.rawJsonString dataUsingEncoding:NSUTF8StringEncoding];
+                enc_value = [[GrowingULEncryptor encryptor] aesEncrypt:rawData];
+            } else {
+                value = event.rawJsonString;
+            }
             result = [db
-                executeUpdate:@"insert into namedcachetable(name,key,value,createAt,type,policy) values(?,?,?,?,?,?)",
-                              self.name,
-                              event.eventUUID,
-                              event.rawJsonString,
-                              @([GrowingULTimeUtil currentTimeMillis]),
-                              event.eventType,
-                              @(event.policy)];
+                executeUpdate:
+                    @"insert into namedcachetable(name,key,value,enc_value,createAt,type,policy) values(?,?,?,?,?,?,?)",
+                    self.name,
+                    event.eventUUID,
+                    value,
+                    enc_value,
+                    @([GrowingULTimeUtil currentTimeMillis]),
+                    event.eventType,
+                    @(event.policy)];
 
             if (!result) {
                 self.databaseError = [self writeErrorInDatabase:db];
@@ -335,6 +360,13 @@ GrowingService(GrowingEventDatabaseService, GrowingEventFMDatabase)
                 return;
             }
         }
+        NSString *sqlCreateEncValue = @"ALTER TABLE namedcachetable ADD enc_value BLOB";
+        if (![db columnExists:@"enc_value" inTableWithName:@"namedcachetable"]) {
+            if (![db executeUpdate:sqlCreateEncValue]) {
+                self.databaseError = [self createDBErrorInDatabase:db];
+                return;
+            }
+        }
         result = YES;
     }];
 
@@ -420,7 +452,14 @@ static BOOL isExecuteVacuum(NSString *name) {
         BOOL stop = NO;
         while (!stop && [set next]) {
             NSString *key = [set stringForColumn:@"key"];
-            NSString *value = [set stringForColumn:@"value"];
+            NSData *enc_value = [set dataForColumn:@"enc_value"];
+            NSString *value = @"";
+            if (enc_value && enc_value.length > 0) {
+                NSData *dec_value = [[GrowingULEncryptor encryptor] aesDecrypt:enc_value];
+                value = [[NSString alloc] initWithData:dec_value encoding:NSUTF8StringEncoding];
+            } else {
+                value = [set stringForColumn:@"value"];
+            }
             NSString *type = [set stringForColumn:@"type"];
             NSUInteger policy = [set intForColumn:@"policy"];
             block(key, value, type, policy, &stop);

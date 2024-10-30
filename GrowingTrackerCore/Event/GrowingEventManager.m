@@ -457,7 +457,10 @@ static GrowingEventManager *sharedInstance = nil;
                withChannel:(GrowingEventChannel *)channel {
     NSMutableArray *arrayM = [NSMutableArray array];
     for (id<GrowingEventPersistenceProtocol> event in events) {
-        [arrayM addObject:event.toJSONObject];
+        id jsonObject = event.toJSONObject;
+        if (jsonObject) {
+            [arrayM addObject:jsonObject];
+        }
     }
     GIOLogVerbose(@"Send events = %@\n", arrayM);
 }
