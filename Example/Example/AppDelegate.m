@@ -57,6 +57,16 @@
         }
         NSLog(@"deepLinkCallback params = %@, processTime = %f", params, processTime);
     };
+    configuration.CAIDFetchBlock = ^(void (^ _Nonnull didCompleteBlock)(NSString * _Nonnull)) {
+        // 模拟异步请求
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            NSString *caid =  @"["
+            @"{\"caid\":\"507b36cb169864220bc22a8c522532fa\",\"version\":\"20220111\"},"
+            @"{\"caid\":\"e18a100398425c5026591525e844f7a7\",\"version\":\"20230330\"}"
+            @"]";
+            didCompleteBlock(caid);
+        });
+    };
 #endif
     
 #if defined(SDKAPMMODULE)
