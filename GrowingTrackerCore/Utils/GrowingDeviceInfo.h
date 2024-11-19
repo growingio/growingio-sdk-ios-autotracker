@@ -40,8 +40,9 @@
 @property (nonatomic, readonly, assign) CGFloat screenWidth;
 @property (nonatomic, readonly, assign) CGFloat screenHeight;
 @property (nonatomic, copy) NSString * (^encryptStringBlock)(NSString *string);
+@property (nonatomic, readonly, assign) NSInteger timezoneOffset;
 
 + (instancetype)currentDeviceInfo;
-+ (void)configUrlScheme:(NSString *)urlScheme;
++ (void)setup;
 
 @end

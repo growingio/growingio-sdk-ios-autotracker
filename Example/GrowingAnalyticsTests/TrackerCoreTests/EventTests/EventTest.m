@@ -212,51 +212,33 @@
         .setAttributes(@{@"key" : @"value"});
     [GrowingEventManager.sharedInstance postEventBuilder:builder];
 
-    // !!! 注意：这里有个隐藏的死锁问题 !!!
-    // 首次发送 GrowingPageEvent 时，-[GrowingDeviceInfo deviceOrientation] 中，有个子线程同步等待主线程的操作
-    // 如果此时主线程也在同步等待子线程，则会造成死锁，比如在主线程调用以下代码:
-    // [GrowingDispatchManager dispatchInGrowingThread:^{} waitUntilDone:YES];
-    // 因此，这里在子线程验证PageEvent
-    XCTestExpectation *expectation = [self expectationWithDescription:@"testGrowingPageEvent Test failed : timeout"];
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
-        XCTAssertEqual(events.count, 1);
-
-        GrowingPageEvent *event = (GrowingPageEvent *)events.firstObject;
-        XCTAssertEqualObjects(event.eventType, GrowingEventTypePage);
-        XCTAssertEqualObjects(event.pageName, @"path");
-        XCTAssertEqualObjects(event.orientation, orientation);
-        XCTAssertEqualObjects(event.title, @"title");
-        XCTAssertEqualObjects(event.referralPage, @"referralPage");
-        XCTAssertEqualObjects(event.attributes[@"key"], @"value");
-
-        NSDictionary *dic = event.toDictionary;
-        XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypePage);
-        XCTAssertEqualObjects(dic[@"path"], @"path");
-        XCTAssertEqualObjects(dic[@"orientation"], orientation);
-        XCTAssertEqualObjects(dic[@"title"], @"title");
-        XCTAssertEqualObjects(dic[@"referralPage"], @"referralPage");
-        XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
-        
-        NSMutableDictionary *mDic = dic.mutableCopy;
-        if (dic[@"orientation"] == nil && orientation == nil) {
-            // 在无HostApplication的Logic Test时，orientation将为nil，这里手动赋值为PORTRAIT
-            mDic[@"orientation"] = @"PORTRAIT";
-        }
-        XCTAssertTrue([ManualTrackHelper pageEventCheck:mDic]);
-        XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:mDic]);
-        
-        [expectation fulfill];
-    });
+    NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
+    XCTAssertEqual(events.count, 1);
     
-    [self waitForExpectationsWithTimeout:3.0f handler:nil];
+    GrowingPageEvent *event = (GrowingPageEvent *)events.firstObject;
+    XCTAssertEqualObjects(event.eventType, GrowingEventTypePage);
+    XCTAssertEqualObjects(event.pageName, @"path");
+    XCTAssertEqualObjects(event.orientation, orientation);
+    XCTAssertEqualObjects(event.title, @"title");
+    XCTAssertEqualObjects(event.referralPage, @"referralPage");
+    XCTAssertEqualObjects(event.attributes[@"key"], @"value");
+    
+    NSDictionary *dic = event.toDictionary;
+    XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypePage);
+    XCTAssertEqualObjects(dic[@"path"], @"path");
+    XCTAssertEqualObjects(dic[@"orientation"], orientation);
+    XCTAssertEqualObjects(dic[@"title"], @"title");
+    XCTAssertEqualObjects(dic[@"referralPage"], @"referralPage");
+    XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
+    XCTAssertTrue([ManualTrackHelper pageEventCheck:dic]);
+    XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
 }
 
 #pragma mark - Private Methods
 
 - (NSString *)deviceOrientation {
     // SDK配置pageEvent.orientation的逻辑
-    __block NSString *deviceOrientation = nil;
+    __block NSString *deviceOrientation = @"PORTRAIT";
     dispatch_block_t block = ^{
         UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
         if (orientation != UIInterfaceOrientationUnknown) {
