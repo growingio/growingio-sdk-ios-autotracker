@@ -52,8 +52,7 @@ GrowingMod(GrowingUniAppPlugin)
 
 #pragma mark - Autotrack Event
 
-- (void)trackPageEvent:(NSString *)pageName
-            attributes:(NSDictionary<NSString *, NSString *> *_Nullable)attributes {
+- (void)trackPageEvent:(NSString *)pageName attributes:(NSDictionary<NSString *, NSString *> *_Nullable)attributes {
     if (!pageName || ![pageName isKindOfClass:[NSString class]] || pageName.length == 0) {
         return;
     }
