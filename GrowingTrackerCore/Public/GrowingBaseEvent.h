@@ -34,7 +34,8 @@ typedef NS_OPTIONS(NSUInteger, GrowingEventSendPolicy) {
 typedef NS_ENUM(NSUInteger, GrowingEventScene) {
     GrowingEventSceneNative = 0,
     GrowingEventSceneHybrid,
-    GrowingEventSceneFlutter
+    GrowingEventSceneFlutter,
+    GrowingEventSceneUniApp
 };
 
 @interface GrowingBaseEvent : NSObject

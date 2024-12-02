@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'GrowingAnalytics'
-  s.version          = '4.5.0'
+  s.version          = '4.6.0-beta.1'
   s.summary          = 'iOS SDK of GrowingIO.'
   s.description      = <<-DESC
 GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和行为数据等。目前支持代码埋点、无埋点、可视化圈选、热图等功能。
@@ -210,6 +210,12 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     flutter.source_files = 'Modules/Flutter/**/*{.h,.m,.c,.cpp,.mm}'
     flutter.public_header_files = 'Modules/Flutter/include/*.h'
     flutter.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
+  end
+
+  s.subspec 'UniApp' do |uniapp|
+    uniapp.source_files = 'Modules/UniApp/**/*{.h,.m,.c,.cpp,.mm}'
+    uniapp.public_header_files = 'Modules/UniApp/Public/*.h'
+    uniapp.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
   end
 
   s.subspec 'DISABLE_IDFA' do |config|
