@@ -362,13 +362,23 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
     dictM[@"deep_link_id"] = originDic[@"deep_link_id"];
     dictM[@"deep_click_id"] = originDic[@"deep_click_id"];
     dictM[@"deep_click_time"] = originDic[@"deep_click_time"];
+    NSString *encode = originDic[@"deep_params"];
+
+    BOOL completed = dictM.count == 3;
+    if (!completed) {
+        //maybe SaaS deepLink
+        GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+        if (trackConfiguration.SaaSLinkSupport) {
+            dictM[@"deep_link_id"] = originDic[@"link_id"];
+            dictM[@"deep_click_id"] = originDic[@"click_id"];
+            dictM[@"deep_click_time"] = originDic[@"tm_click"];
+            encode = originDic[@"custom_params"];
+        }
+    }
     if ([dictM[@"deep_click_time"] isKindOfClass:[NSNumber class]]) {
         dictM[@"deep_click_time"] = [NSString stringWithFormat:@"%@", dictM[@"deep_click_time"]];
     }
 
-    BOOL completed = dictM.count == 3;
-
-    NSString *encode = originDic[@"deep_params"];
     NSDictionary *customParams = nil;
     if ([encode isKindOfClass:[NSString class]]) {
         if (encode.length > 0) {

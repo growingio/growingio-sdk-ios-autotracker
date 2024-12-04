@@ -74,11 +74,24 @@ static NSString *const kGrowingAdIsActivateSentKey = @"GrowingAdvertisingActivat
     if (!url) {
         return NO;
     }
+    
+    BOOL isUniversalLink = NO;
 
     GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
     NSString *deepLinkHost = trackConfiguration.deepLinkHost;
     NSString *host = [NSURL URLWithString:deepLinkHost].host;
-    return ([url.host isEqualToString:host] || [url.host hasSuffix:host]);
+    isUniversalLink = [url.host isEqualToString:host] || [url.host hasSuffix:host];
+    
+    if (!isUniversalLink && trackConfiguration.SaaSLinkSupport) {
+        NSString *saasHost = @"https://datayi.cn";
+        NSString *saasHost2 = @"https://gio.ren";
+        isUniversalLink = [url.host isEqualToString:saasHost] ||
+                          [url.host hasSuffix:saasHost] ||
+                          [url.host isEqualToString:saasHost2] ||
+                          [url.host hasSuffix:saasHost2];
+    }
+    
+    return isUniversalLink;
 }
 
 + (BOOL)isURLScheme:(NSURL *)url {

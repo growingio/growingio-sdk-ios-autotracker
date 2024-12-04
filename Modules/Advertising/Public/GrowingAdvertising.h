@@ -63,6 +63,7 @@ NS_SWIFT_NAME(Advertising)
 @property (nonatomic, copy) GrowingAdDeepLinkCallback deepLinkCallback;
 @property (nonatomic, assign) BOOL readClipboardEnabled;
 @property (nonatomic, copy) GrowingAdCAIDFetchBlock CAIDFetchBlock;
+@property (nonatomic, assign) BOOL SaaSLinkSupport;
 
 @end
 
