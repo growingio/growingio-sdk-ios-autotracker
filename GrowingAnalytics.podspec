@@ -13,11 +13,11 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
   s.osx.deployment_target = '10.12'
   s.watchos.deployment_target = '7.0'
   s.tvos.deployment_target = '12.0'
-  s.visionos.deployment_target = '1.0'
+  # s.visionos.deployment_target = '1.0'
   s.ios.framework = 'WebKit'
   s.requires_arc = true
   s.default_subspec = "Autotracker"
-  s.pod_target_xcconfig = { 'HEADER_SEARCH_PATHS' => '"${PODS_TARGET_SRCROOT}"' }
+  s.pod_target_xcconfig = { 'HEADER_SEARCH_PATHS' => '"${PODS_TARGET_SRCROOT}"', 'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) GPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1' }
 
   s.subspec 'Autotracker' do |autotracker|
     autotracker.ios.deployment_target = '10.0'
@@ -51,7 +51,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     trackerCore.osx.resource_bundles = {'GrowingAnalytics' => ['Resources/macOS/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy']}
     trackerCore.watchos.resource_bundles = {'GrowingAnalytics' => ['Resources/watchOS/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy']}
     trackerCore.tvos.resource_bundles = {'GrowingAnalytics' => ['Resources/tvOS/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy']}
-    trackerCore.visionos.resource_bundles = {'GrowingAnalytics' => ['Resources/visionOS/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy']}
+    # trackerCore.visionos.resource_bundles = {'GrowingAnalytics' => ['Resources/visionOS/GrowingAnalytics.bundle/PrivacyInfo.xcprivacy']}
     trackerCore.libraries = 'c++'
   end
   
@@ -86,7 +86,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
       proto.source_files = 'Services/Protobuf/Proto/**/*{.h,.m,.c,.cpp,.mm}'
       proto.public_header_files = 'Services/Protobuf/Proto/include/*.h'
       proto.requires_arc = false
-      proto.dependency 'Protobuf', '~> 3.27'
+      proto.dependency 'Protobuf', '3.8.0'
     end
   end
   
