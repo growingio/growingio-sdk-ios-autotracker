@@ -229,7 +229,7 @@ generate_xcframework() {
 		watch_simulator_archive_path="${archive_path}/watchsimulator"
 		output_path="./${FOLDER_NAME}/Release/${framework_name//-/_}.xcframework"
 		common_args="archive -workspace ./${PROJECT_PATH_PREFIX}/iOS/${MAIN_FRAMEWORK_NAME}/${MAIN_FRAMEWORK_NAME}.xcworkspace \
-		-scheme ${framework_name} -configuration 'Release' -derivedDataPath ./${FOLDER_NAME}/derivedData"
+		-scheme ${framework_name} -configuration 'Release' -derivedDataPath ./${FOLDER_NAME}/derivedData OTHER_CFLAGS='-fno-objc-msgsend-selector-stubs'"
 		if [[ $LOGGER_MODE -eq 0 ]]; then
 			common_args+=' -quiet'
 		elif [[ $LOGGER_MODE -eq 2 ]]; then
