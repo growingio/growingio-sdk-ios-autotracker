@@ -229,7 +229,10 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 - (NSString *)deviceIDString {
     if (!_deviceIDString) {
         GROWING_LOCK(lock);
-        _deviceIDString = [self getDeviceIdString];
+        // double checked locking
+        if (!_deviceIDString) {
+            _deviceIDString = [self getDeviceIdString];
+        }
         GROWING_UNLOCK(lock);
     }
     return _deviceIDString;
