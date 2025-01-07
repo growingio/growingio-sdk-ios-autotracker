@@ -21,6 +21,7 @@
 #import "Modules/ABTesting/Public/GrowingABTesting.h"
 #import "Modules/ABTesting/Request/GrowingABTRequestAdapter.h"
 
+#import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Network/Request/Adapter/GrowingRequestAdapter.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
@@ -47,13 +48,20 @@
     NSString *accountId = config.accountId;
     NSString *datasourceId = config.dataSourceId;
     NSString *distinctId = [GrowingDeviceInfo currentDeviceInfo].deviceIDString;
-    bodyAdapter.parameters = @{
+    
+    NSMutableDictionary *parameters = @{
         @"accountId": accountId,
         @"datasourceId": datasourceId,
         @"distinctId": distinctId,
         @"layerId": self.layerId.copy
-    };
-
+    }.mutableCopy;
+    
+    BOOL newDevice = [GrowingDeviceInfo currentDeviceInfo].isNewDevice && [[GrowingSession currentSession] firstSession];
+    if (newDevice) {
+        parameters[@"newDevice"] = @(newDevice);
+    }
+    
+    bodyAdapter.parameters = parameters.copy;
     GrowingRequestMethodAdapter *methodAdapter = [GrowingRequestMethodAdapter adapterWithRequest:self];
     NSMutableArray *adapters = [NSMutableArray arrayWithObjects:bodyAdapter, methodAdapter, nil];
     return adapters;
