@@ -20,12 +20,11 @@ jobs:
           macCatalyst,
           tvOS,
           watchOS,
-          visionOS
         ]
-        os: [macos-13, macos-15]
+        os: [macos-14, macos-15]
         include:
-          - os: macos-13
-            xcode: Xcode_15.2
+          - os: macos-14
+            xcode: Xcode_16.0
           - os: macos-15
             xcode: Xcode_16.2
           - target: iOS
@@ -38,8 +37,6 @@ jobs:
             platform: tvOS Simulator,name=Apple TV
           - target: watchOS
             platform: watchOS Simulator,name=Apple Watch Ultra 2 (49mm)
-          - target: visionOS
-            platform: visionOS Simulator,name=Apple Vision Pro
           - scheme: GrowingAnalytics-Package
             target: iOS
           - scheme: GrowingAutotracker
@@ -50,8 +47,11 @@ jobs:
             target: macOS
           - scheme: GrowingTracker
             target: watchOS
-          - scheme: GrowingTracker
-            target: visionOS
+          - target: visionOS
+            os: macos-15
+            xcode: Xcode_16.2
+            platform: visionOS Simulator,name=Apple Vision Pro
+            scheme: GrowingTracker
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Repo
