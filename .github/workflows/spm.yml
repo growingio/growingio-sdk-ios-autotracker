@@ -26,6 +26,8 @@ jobs:
         include:
           - os: macos-13
             xcode: Xcode_15.2
+          - os: macos-15
+            xcode: Xcode_16.2
           - target: iOS
             platform: iOS Simulator,name=iPhone 16 Pro Max
           - target: macOS
