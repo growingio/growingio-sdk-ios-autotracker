@@ -42,6 +42,7 @@
 @property (nonatomic, assign) long long latestDidEnterBackgroundTime;
 @property (nonatomic, strong, readonly) NSHashTable *userIdChangedDelegates;
 @property (nonatomic, assign, readwrite) GrowingSessionState state;
+@property (nonatomic, assign, readwrite) BOOL firstSession;
 
 @end
 
@@ -93,6 +94,7 @@ static GrowingSession *currentSession = nil;
 }
 
 - (void)refreshSessionId {
+    _firstSession = !(_sessionId && _sessionId.length > 0);
     _sessionId = NSUUID.UUID.UUIDString;
     _sentVisitAfterRefreshSessionId = NO;
 }

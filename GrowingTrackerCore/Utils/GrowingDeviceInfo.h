@@ -40,6 +40,7 @@
 @property (nonatomic, readonly, assign) CGFloat screenWidth;
 @property (nonatomic, readonly, assign) CGFloat screenHeight;
 @property (nonatomic, readonly, assign) NSInteger timezoneOffset;
+@property (nonatomic, readonly, assign) BOOL isNewDevice;
 
 + (instancetype)currentDeviceInfo;
 + (void)setup;

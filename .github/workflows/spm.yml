@@ -19,16 +19,16 @@ jobs:
           macOS,
           macCatalyst,
           tvOS,
-          watchOS
+          watchOS,
         ]
-        os: [macos-13, macos-14]
+        os: [macos-14, macos-15]
         include:
-          - os: macos-13
-            xcode: Xcode_15.2
           - os: macos-14
-            xcode: Xcode_15.4
+            xcode: Xcode_16.0
+          - os: macos-15
+            xcode: Xcode_16.2
           - target: iOS
-            platform: iOS Simulator,name=iPhone 14 Pro Max
+            platform: iOS Simulator,name=iPhone 16 Pro Max
           - target: macOS
             platform: macOS
           - target: macCatalyst
@@ -36,7 +36,7 @@ jobs:
           - target: tvOS
             platform: tvOS Simulator,name=Apple TV
           - target: watchOS
-            platform: watchOS Simulator,name=Apple Watch Ultra (49mm)
+            platform: watchOS Simulator,name=Apple Watch Ultra 2 (49mm)
           - scheme: GrowingAnalytics-Package
             target: iOS
           - scheme: GrowingAutotracker
@@ -48,21 +48,12 @@ jobs:
           - scheme: GrowingTracker
             target: watchOS
           - target: visionOS
-            os: macos-14
-            xcode: Xcode_15.4
+            os: macos-15
+            xcode: Xcode_16.2
             platform: visionOS Simulator,name=Apple Vision Pro
             scheme: GrowingTracker
     runs-on: ${{ matrix.os }}
     steps:
-      # https://github.com/actions/runner-images/issues/10559
-      - name: Download visionOS SDK
-        if: ${{ matrix.target == 'visionOS' }}
-        run: |
-            sudo xcodebuild -runFirstLaunch
-            sudo xcrun simctl list
-            sudo xcodebuild -downloadPlatform visionOS
-            sudo xcodebuild -runFirstLaunch
-
       - name: Checkout Repo
         uses: actions/checkout@v4
       - name: Xcode

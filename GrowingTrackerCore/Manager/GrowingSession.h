@@ -42,6 +42,7 @@ typedef NS_ENUM(NSInteger, GrowingSessionState) {
 @property (nonatomic, assign, readonly) double latitude;
 @property (nonatomic, assign, readonly) double longitude;
 @property (nonatomic, assign, readonly) GrowingSessionState state;
+@property (nonatomic, assign, readonly) BOOL firstSession;
 
 + (void)startSession;
 

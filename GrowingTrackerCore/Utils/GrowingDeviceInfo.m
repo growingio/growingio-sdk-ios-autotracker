@@ -58,6 +58,7 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 @property (nonatomic, readwrite, assign) CGFloat screenWidth;
 @property (nonatomic, readwrite, assign) CGFloat screenHeight;
 @property (nonatomic, readwrite, assign) NSInteger timezoneOffset;
+@property (nonatomic, readwrite, assign) BOOL isNewDevice;
 
 @end
 
@@ -74,6 +75,7 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
         _deviceBrand = @"Apple";
         _appState = 0;
         _timezoneOffset = -([[NSTimeZone defaultTimeZone] secondsFromGMT] / 60);
+        _isNewDevice = NO;
 
 #if Growing_USE_APPKIT
         _screenWidth = NSScreen.mainScreen.frame.size.width;
@@ -155,6 +157,7 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 #if Growing_OS_PURE_IOS || Growing_OS_WATCH || Growing_OS_VISION || Growing_OS_TV
     [GrowingKeyChainWrapper setKeychainObject:uuid forKey:kGrowingKeychainUserIdKey];
 #endif
+    _isNewDevice = YES;
     return uuid;
 }
 
@@ -229,7 +232,10 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
 - (NSString *)deviceIDString {
     if (!_deviceIDString) {
         GROWING_LOCK(lock);
-        _deviceIDString = [self getDeviceIdString];
+        // double checked locking
+        if (!_deviceIDString) {
+            _deviceIDString = [self getDeviceIdString];
+        }
         GROWING_UNLOCK(lock);
     }
     return _deviceIDString;
