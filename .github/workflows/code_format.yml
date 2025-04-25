@@ -18,7 +18,7 @@ concurrency:
 jobs:
   code-format:
     name: Code Format
-    runs-on: macos-latest
+    runs-on: macos-15
     if: ${{ github.actor != 'GIOSDK' }} # 禁止套娃
     steps:
       - name: Checkout

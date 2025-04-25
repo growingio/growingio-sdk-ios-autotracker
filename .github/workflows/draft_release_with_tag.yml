@@ -7,7 +7,7 @@ permissions:
 
 jobs:
   publish:
-    runs-on: macos-latest
+    runs-on: macos-15
 
     steps:
       - name: Check if on master branch
@@ -18,14 +18,6 @@ jobs:
             echo "Not running on master branch"
             exit 1
           fi
-
-      # https://github.com/actions/runner-images/issues/10559
-      - name: Download visionOS SDK
-        run: |
-            sudo xcodebuild -runFirstLaunch
-            sudo xcrun simctl list
-            sudo xcodebuild -downloadPlatform visionOS
-            sudo xcodebuild -runFirstLaunch
           
       - name: Checkout
         uses: actions/checkout@v4
