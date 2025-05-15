@@ -86,7 +86,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
       proto.source_files = 'Services/Protobuf/Proto/**/*{.h,.m,.c,.cpp,.mm}'
       proto.public_header_files = 'Services/Protobuf/Proto/include/*.h'
       proto.requires_arc = false
-      proto.dependency 'Protobuf', '~> 3.27'
+      proto.dependency 'Protobuf', '3.29.4'
     end
   end
   
