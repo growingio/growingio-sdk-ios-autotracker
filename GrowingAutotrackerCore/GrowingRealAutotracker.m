@@ -27,9 +27,9 @@
 #import "GrowingAutotrackerCore/Autotrack/UITapGestureRecognizer+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingAutotrackConfiguration+Private.h"
-#import "GrowingAutotrackerCore/GrowingNode/GrowingViewChangeProvider.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIAlertController+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UISegmentedControl+GrowingNode.h"
+#import "GrowingAutotrackerCore/GrowingNode/GrowingViewChangeProvider.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
@@ -57,7 +57,7 @@ GrowingPropertyDefine(UITextView, NSString *, growingHookOldText, setGrowingHook
             [self addAutoTrackSwizzles];
             [GrowingULViewControllerLifecycle setup];
             [GrowingPageManager.sharedInstance start];
-            
+
             // VIEW_CHANGE Event Notification
             [[NSNotificationCenter defaultCenter] addObserver:self
                                                      selector:@selector(handleInputViewDidEndEditing:)
