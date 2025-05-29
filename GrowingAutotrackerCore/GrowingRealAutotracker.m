@@ -63,6 +63,10 @@ GrowingPropertyDefine(UITextView, NSString *, growingHookOldText, setGrowingHook
                                                      selector:@selector(handleInputViewDidEndEditing:)
                                                          name:UITextFieldTextDidEndEditingNotification
                                                        object:nil];
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(handleInputViewDidEndEditing:)
+                                                         name:UITextViewTextDidEndEditingNotification
+                                                       object:nil];
         }
     }
 
@@ -205,7 +209,7 @@ GrowingPropertyDefine(UITextView, NSString *, growingHookOldText, setGrowingHook
         }
 
         NSString *text = inputView.text;
-        if (![inputView.growingHookOldText isEqualToString:text]) {
+        if (text && ![inputView.growingHookOldText isEqualToString:text]) {
             inputView.growingHookOldText = text;
             [GrowingViewChangeProvider viewOnChange:inputView];
         }
