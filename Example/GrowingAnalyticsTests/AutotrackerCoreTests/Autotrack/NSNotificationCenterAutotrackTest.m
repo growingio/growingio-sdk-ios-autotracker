@@ -19,7 +19,6 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GrowingAutotrackerCore/Autotrack/NSNotificationCenter+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingRealAutotracker.h"
 #import "GrowingEventDatabaseService.h"
 #import "GrowingServiceManager.h"
