@@ -79,6 +79,12 @@
 
 - (nullable id)createService:(Protocol *)service {
     NSString *serviceString = NSStringFromProtocol(service);
+    if (!self.allServiceInstanceDict) {
+        return nil;
+    }
+    if (!serviceString) {
+        return nil;
+    }
     id instance = [self.allServiceInstanceDict objectForKey:serviceString];
     if (instance) {
         return instance;
@@ -103,7 +109,9 @@
         instance = [[implClass alloc] init];
     }
 
-    [self.allServiceInstanceDict setObject:instance forKey:serviceString];  // cache
+    if (self.allServiceInstanceDict && instance && serviceString) {
+        [self.allServiceInstanceDict setObject:instance forKey:serviceString];  // cache
+    }
     return instance;
 }
 
