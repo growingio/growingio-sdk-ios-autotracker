@@ -25,8 +25,7 @@
 
 - (void)growing_setDelegate:(id<UICollectionViewDelegate>)delegate {
     SEL selector = @selector(collectionView:didSelectItemAtIndexPath:);
-    id<UICollectionViewDelegate> realDelegate = [GrowingULSwizzle realDelegate:delegate toSelector:selector];
-    Class class = realDelegate.class;
+    Class class = delegate.class;
     if ([GrowingULSwizzle realDelegateClass:class respondsToSelector:selector]) {
         static const void *key = &key;
         GrowingULSwizzleInstanceMethod(class,
