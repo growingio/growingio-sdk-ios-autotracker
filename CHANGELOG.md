@@ -1,9 +1,26 @@
+# [4.7.0](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/4.6.0...4.7.0) (2025-06-05)
+
+
+### Bug Fixes
+
+* ANLSPI-26449 move to Xcode 16 ([#342](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/342)) ([00a3755](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/00a3755b31aaa172ffdb34c54370af33eded2399))
+* ANLSPI-27446 ignore private view of TextInputUI framework ([#346](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/346)) ([128520f](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/128520f693a48bc194924459188495bfcb153a32))
+* ANLSPI-27507 remove using of deprecated api ([#347](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/347)) ([2394f11](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/2394f11104cb1bc05a7a545decc465e62555dfd9))
+
+
+### Features
+
+* ANLSPI-27402 use notification for VIEW_CHANGE observing ([#344](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/344)) ([81283c0](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/81283c0e7ec7d921227f5712a29b64cc60df80d5))
+
+
+
 # [4.6.0](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/4.5.0...4.6.0) (2025-02-13)
 
 
 ### Features
 
 * **ABTesting:** ANLSPI-23827 new device ([#340](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/340)) ([2518804](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/2518804dde8fb34ae9d1a6fa256b80fc6a9b093c))
+* release 4.6.0 ([158bbf1](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/158bbf1c37bb3b0dd96862acd64b4fee2dfb3feb))
 
 
 
@@ -46,22 +63,6 @@
 ### Features
 
 * release 4.3.2 ([2c03519](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/2c0351982856db3e98de58c1ca46ada1b0ea5e6d))
-
-
-
-## [4.3.1](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/4.3.0...4.3.1) (2024-05-31)
-
-
-### Bug Fixes
-
-* visionOS support via Cocoapods ([#317](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/317)) ([9ab87ec](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/9ab87ec8fc3710e2d7574afd84aa8ccd214a1116))
-
-
-### Features
-
-* release 4.3.1 ([76da54a](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/76da54af9bd22db15d7110e4355a8c5beaf87fc2))
-* release 4.3.1 ([8841a35](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/8841a3535af21570885f7f203b85cac87e7ab5e7))
-* release 4.4.0 ([a0832b9](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/a0832b928fc1a2fc3b879945e7fa4a448512b747))
 
 
 
