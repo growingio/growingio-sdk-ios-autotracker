@@ -18,7 +18,7 @@
 //  limitations under the License.
 
 #import "GrowingAutotrackerCore/GrowingRealAutotracker.h"
-#import "GrowingAutotrackerCore/Autotrack/NSNotificationCenter+GrowingAutotracker.h"
+#import "GrowingAutotrackerCore/Autotrack/GrowingPropertyDefine.h"
 #import "GrowingAutotrackerCore/Autotrack/UIAlertController+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/Autotrack/UIApplication+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/Autotrack/UICollectionView+GrowingAutotracker.h"
@@ -29,6 +29,7 @@
 #import "GrowingAutotrackerCore/GrowingAutotrackConfiguration+Private.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIAlertController+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UISegmentedControl+GrowingNode.h"
+#import "GrowingAutotrackerCore/GrowingNode/GrowingViewChangeProvider.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
@@ -36,6 +37,9 @@
 #import "GrowingULApplication.h"
 #import "GrowingULSwizzle.h"
 #import "GrowingULViewControllerLifecycle.h"
+
+GrowingPropertyDefine(UITextField, NSString *, growingHookOldText, setGrowingHookOldText)
+GrowingPropertyDefine(UITextView, NSString *, growingHookOldText, setGrowingHookOldText)
 
 @interface GrowingRealAutotracker (Private)
 
@@ -53,6 +57,16 @@
             [self addAutoTrackSwizzles];
             [GrowingULViewControllerLifecycle setup];
             [GrowingPageManager.sharedInstance start];
+
+            // VIEW_CHANGE Event Notification
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(handleInputViewDidEndEditing:)
+                                                         name:UITextFieldTextDidEndEditingNotification
+                                                       object:nil];
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(handleInputViewDidEndEditing:)
+                                                         name:UITextViewTextDidEndEditingNotification
+                                                       object:nil];
         }
     }
 
@@ -118,15 +132,6 @@
             GIOLogError(@"Failed to swizzle UISegmentControl. Details: %@", segmentControlError);
         }
 
-        // NSNotificationCenter
-        NSError *notiError = NULL;
-        [NSNotificationCenter growingul_swizzleMethod:@selector(postNotificationName:object:userInfo:)
-                                           withMethod:@selector(growing_postNotificationName:object:userInfo:)
-                                                error:&notiError];
-        if (notiError) {
-            GIOLogError(@"Failed to swizzle NSNotificationCenter. Details: %@", notiError);
-        }
-
         // ListView
         NSError *listViewError = NULL;
         [UITableView growingul_swizzleMethod:@selector(setDelegate:)
@@ -179,6 +184,36 @@
             GIOLogError(@"Failed to swizzle UIAlertController. Details: %@", alertError);
         }
     });
+}
+
+- (void)handleInputViewDidEndEditing:(NSNotification *)notification {
+    id anObject = notification.object;
+    if ([anObject isKindOfClass:UITextField.class]) {
+        UITextField *inputView = (UITextField *)anObject;
+
+        if (inputView.isSecureTextEntry) {
+            return;
+        }
+
+        NSString *text = inputView.text;
+        if (text && ![inputView.growingHookOldText isEqualToString:text]) {
+            inputView.growingHookOldText = text;
+            [GrowingViewChangeProvider viewOnChange:inputView];
+        }
+
+    } else if ([anObject isKindOfClass:UITextView.class]) {
+        UITextView *inputView = (UITextView *)anObject;
+
+        if (inputView.isSecureTextEntry) {
+            return;
+        }
+
+        NSString *text = inputView.text;
+        if (text && ![inputView.growingHookOldText isEqualToString:text]) {
+            inputView.growingHookOldText = text;
+            [GrowingViewChangeProvider viewOnChange:inputView];
+        }
+    }
 }
 
 @end
