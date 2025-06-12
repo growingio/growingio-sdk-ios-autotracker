@@ -19,7 +19,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
+#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler+Private.h"
 
 @interface DeepLinkTest : XCTestCase <GrowingDeepLinkHandlerProtocol>
 
@@ -38,13 +38,13 @@
 - (void)testDeepLinkhandlerUrl {
     [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:self];
     NSURL *url = [NSURL URLWithString:@"https://www.baidu.com"];
-    [GrowingDeepLinkHandler handlerUrl:url];
+    [GrowingDeepLinkHandler handleURL:url];
     [[GrowingDeepLinkHandler sharedInstance] removeHandlersObject:self];
 }
 
 #pragma mark - GrowingDeepLinkHandlerProtocol
 
-- (BOOL)growingHandlerUrl:(NSURL *)url {
+- (BOOL)growingHandleURL:(NSURL *)url {
     XCTAssertEqualObjects(url.absoluteString, @"https://www.baidu.com");
     return YES;
 }

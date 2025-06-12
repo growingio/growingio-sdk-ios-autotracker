@@ -27,7 +27,7 @@
 #import "GrowingAutotrackerCore/GrowingNode/GrowingNodeHelper.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
-#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
+#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler+Private.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingAutotrackEventType.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/GrowingRealTracker.h"
@@ -98,7 +98,7 @@ GrowingMod(GrowingWebCircle)
 
 #pragma mark - GrowingDeepLinkHandlerProtocol
 
-- (BOOL)growingHandlerUrl:(NSURL *)url {
+- (BOOL)growingHandleURL:(NSURL *)url {
     NSDictionary *params = url.growingHelper_queryDict;
     NSString *serviceType = params[@"serviceType"];
     NSString *wsurl = params[@"wsUrl"];

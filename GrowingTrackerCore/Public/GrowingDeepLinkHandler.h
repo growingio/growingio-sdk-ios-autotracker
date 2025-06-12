@@ -1,9 +1,9 @@
 //
-//  GrowingDeepLinkHandler+XCTest.h
-//  GrowingAnalytics
+// GrowingDeepLinkHandler.h
+// GrowingAnalytics
 //
-//  Created by YoloMao on 2022/6/15.
-//  Copyright (C) 2022 Beijing Yishu Technology Co., Ltd.
+//  Created by sheng on 2020/11/30.
+//  Copyright (C) 2017 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,12 +17,14 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler+Private.h"
-
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface GrowingDeepLinkHandler (XCTest)
+NS_SWIFT_NAME(DeepLink)
+@interface GrowingDeepLinkHandler : NSObject
+
++ (BOOL)handleURL:(NSURL *)url;
 
 @end
 

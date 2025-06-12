@@ -19,7 +19,6 @@
 
 #import "GrowingTrackerCore/GrowingRealTracker.h"
 #import "GrowingTrackerCore/DeepLink/GrowingAppDelegateAutotracker.h"
-#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
 #import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Event/GrowingVisitEvent.h"

@@ -24,7 +24,7 @@
 #import "GrowingAutotrackConfiguration.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
-#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
+#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler+Private.h"
 #import "GrowingTrackerCore/Event/GrowingNodeProtocol.h"
 #import "Modules/WebCircle/GrowingWebCircle.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageGroup.h"
@@ -91,7 +91,7 @@
                    @"qrcode.html?URLScheme=growing.test&productId=test&circleRoomNumber=test0f4cfa51ff3f&serviceType="
                    @"circle&appName=GrowingIO&wsUrl=ws://cdp.growingio.com/app/test/circle/test0f4cfa51ff3f"];
 
-    [GrowingDeepLinkHandler handlerUrl:url1];
+    [GrowingDeepLinkHandler handleURL:url1];
 }
 
 - (void)testWebCircle {

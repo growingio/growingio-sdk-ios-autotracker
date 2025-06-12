@@ -20,7 +20,7 @@
 #import "Modules/MobileDebugger/GrowingMobileDebugger.h"
 #import <arpa/inet.h>
 #import <ifaddrs.h>
-#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler.h"
+#import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler+Private.h"
 #import "GrowingTrackerCore/GrowingRealTracker.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
@@ -108,7 +108,7 @@ GrowingMod(GrowingMobileDebugger)
 
 #pragma mark - GrowingDeepLinkHandlerProtocol
 
-- (BOOL)growingHandlerUrl:(NSURL *)url {
+- (BOOL)growingHandleURL:(NSURL *)url {
     NSDictionary *params = url.growingHelper_queryDict;
     NSString *serviceType = params[@"serviceType"];
     NSString *wsurl = params[@"wsUrl"];
