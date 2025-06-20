@@ -38,7 +38,7 @@
         if (sceneDelegateClass) {
             return sceneDelegateClass;
         }
-        
+
         NSDictionary *sceneManifest =
             [[[NSBundle mainBundle] infoDictionary] objectForKey:@"UIApplicationSceneManifest"];
         NSArray *rols =
@@ -87,12 +87,11 @@
                                                   NSURL *url,
                                                   NSDictionary<UIApplicationOpenURLOptionsKey, id> *options) {
                         [GrowingDeepLinkHandler handleURL:url];
-                        BOOL(*tempImp)
-                        (id obj,
-                         SEL sel,
-                         UIApplication * application,
-                         NSURL * url,
-                         NSDictionary<UIApplicationOpenURLOptionsKey, id> * options) = (void *)originImp;
+                        BOOL (*tempImp)(id obj,
+                                        SEL sel,
+                                        UIApplication *application,
+                                        NSURL *url,
+                                        NSDictionary<UIApplicationOpenURLOptionsKey, id> *options) = (void *)originImp;
                         return tempImp(target, sel, application, url, options);
                     }));
             } else if ([delegate respondsToSelector:@selector(application:openURL:sourceApplication:annotation:)]) {
@@ -110,13 +109,12 @@
                                                   NSString *sourceApplication,
                                                   id annotation) {
                         [GrowingDeepLinkHandler handleURL:url];
-                        BOOL(*tempImp)
-                        (id obj,
-                         SEL sel,
-                         UIApplication * application,
-                         NSURL * url,
-                         NSString * sourceApplication,
-                         id annotation) = (void *)originImp;
+                        BOOL (*tempImp)(id obj,
+                                        SEL sel,
+                                        UIApplication *application,
+                                        NSURL *url,
+                                        NSString *sourceApplication,
+                                        id annotation) = (void *)originImp;
                         return tempImp(target, sel, application, url, sourceApplication, annotation);
                     }));
             } else if ([delegate respondsToSelector:@selector(application:handleOpenURL:)]) {
@@ -157,12 +155,12 @@
                                                   NSUserActivity *userActivity,
                                                   void (^restorationHandler)(NSArray<id<UIUserActivityRestoring>> *)) {
                         [GrowingDeepLinkHandler handleURL:userActivity.webpageURL];
-                        BOOL(*tempImp)
-                        (id obj,
-                         SEL sel,
-                         UIApplication * application,
-                         NSUserActivity * userActivity,
-                         void (^restorationHandler)(NSArray<id<UIUserActivityRestoring>> *)) = (void *)originImp;
+                        BOOL (*tempImp)(id obj,
+                                        SEL sel,
+                                        UIApplication *application,
+                                        NSUserActivity *userActivity,
+                                        void (^restorationHandler)(NSArray<id<UIUserActivityRestoring>> *)) =
+                            (void *)originImp;
                         return tempImp(target, sel, application, userActivity, restorationHandler);
                     }));
             } else {
