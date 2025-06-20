@@ -45,6 +45,7 @@ FOUNDATION_EXPORT NSString *const kGrowingDefaultDataCollectionServerHost;
 @property (nonatomic, assign) BOOL useProtobuf;
 @property (nonatomic, assign) NSUInteger dataValidityPeriod;
 @property (nonatomic, assign) BOOL customEventWithPath;
+@property (nonatomic, strong) Class sceneDelegateClass;
 
 - (instancetype)initWithAccountId:(NSString *)accountId;
 
