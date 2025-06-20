@@ -25,6 +25,7 @@
 #import "GrowingTrackerCore/DeepLink/GrowingAppDelegateAutotracker.h"
 #import "GrowingTrackerCore/DeepLink/GrowingDeepLinkHandler+Private.h"
 #import "GrowingTrackerCore/DeepLink/GrowingSceneDelegateAutotracker.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingULApplication.h"
 #import "GrowingULSwizzle.h"
@@ -33,6 +34,11 @@
 
 + (nullable Class)sceneDelegateClass {
     if (@available(iOS 13.0, *)) {
+        Class sceneDelegateClass = GrowingConfigurationManager.sharedInstance.trackConfiguration.sceneDelegateClass;
+        if (sceneDelegateClass) {
+            return sceneDelegateClass;
+        }
+        
         NSDictionary *sceneManifest =
             [[[NSBundle mainBundle] infoDictionary] objectForKey:@"UIApplicationSceneManifest"];
         NSArray *rols =
@@ -64,8 +70,7 @@
                 return;
             }
             if ([delegate isKindOfClass:NSClassFromString(@"SwiftUI.AppDelegate")]) {
-                // SwiftUI下无法完成以下Method Swizzling，请手动调用handleURL
-                // 见：https://github.com/firebase/firebase-ios-sdk/issues/10417
+                // SwiftUI下，urlScheme跳转/DeepLink不会走AppDelegate回调，需要手动调用
                 return;
             }
             if ([delegate respondsToSelector:@selector(application:openURL:options:)]) {
@@ -135,9 +140,6 @@
                                                     @"请在%@实例中实现application:openURL:options:以适配UrlScheme跳转",
                                                     NSStringFromClass(delegate.class)]
                              userInfo:nil];
-                // no more anyone imp exist
-                //  TODO:add method: application:openURL:options:
-                //  时序在UIApplicationMain之后，无法干预urlscheme跳转问题
             }
 
             // deeplink
