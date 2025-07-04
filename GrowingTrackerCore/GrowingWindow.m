@@ -113,6 +113,12 @@
 
     UIWindow *window = [[GrowingWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.showWindow = window;
+    if (@available(iOS 13.0, *)) {
+        UIScene *scene = [[[GrowingULApplication sharedApplication] connectedScenes] anyObject];
+        if (scene) {
+            window.windowScene = (UIWindowScene *)scene;
+        }
+    }
     window.windowLevel = UIWindowLevelAlert + 100;
     self.frame = window.bounds;
     [window.rootViewController.view addSubview:self];
