@@ -1,3 +1,21 @@
+# [4.8.0](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/4.8.0-beta.2...4.8.0) (2025-07-10)
+
+
+### Features
+
+* release 4.8.0 ([#349](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/349)) ([d318964](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/d31896448e88a645100ee0d39f973064da1f903f))
+
+
+
+# [4.8.0-beta.2](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/4.7.0...4.8.0-beta.2) (2025-07-10)
+
+
+### Features
+
+* ANLSPI-28053 add sceneDelegateClass option ([#348](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/348)) ([7affb64](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/7affb64fdb27384875a4e7999ed9d69ce2cc1dab))
+
+
+
 # [4.7.0](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/4.6.0...4.7.0) (2025-06-05)
 
 
@@ -11,6 +29,7 @@
 ### Features
 
 * ANLSPI-27402 use notification for VIEW_CHANGE observing ([#344](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/344)) ([81283c0](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/81283c0e7ec7d921227f5712a29b64cc60df80d5))
+* release 4.7.0 ([cbbdd78](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/cbbdd78d01a8e07832e03dce4538ff97de6c66de))
 
 
 
@@ -36,33 +55,6 @@
 
 * **ads:** ANLSPI-22249 CAID support ([#336](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/336)) ([4c5bbba](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/4c5bbba765794b26636f2f30a610f00b974fc4f1))
 * release 4.5.0 ([e70a30a](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/e70a30abd4ab0757f1aea7f13523195570089064))
-
-
-
-# [4.4.0](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/4.3.2...4.4.0) (2024-09-29)
-
-
-### Features
-
-* **ABTesting:** add more parameters to experiment ([#326](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/326)) ([1fbfb4c](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/1fbfb4ca0aeeab2920d8a3688b878f4677dafe05))
-* add path property to custom event ([#329](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/329)) ([05a01a8](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/05a01a8872117612a4f8a8ae85f2f1d7ec5f4813))
-* release 4.4.0 ([5ae45bc](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/5ae45bc12db142bdf246d97baf509a685c6fa96f))
-* release 4.4.0 ([bd2487c](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/bd2487c6ce6f469b03c73f1551fe44cffd96023b))
-* release 4.4.0 ([1588825](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/1588825295c52cf128c6b0a037f6de8c052a52b0))
-
-
-
-## [4.3.2](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/4.3.1...4.3.2) (2024-07-26)
-
-
-### Bug Fixes
-
-* 同步 v3.8.3 上的修改内容 ([#324](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/324)) ([c82c206](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/c82c206a840685e230dd355baa667daa17c904ca))
-
-
-### Features
-
-* release 4.3.2 ([2c03519](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/2c0351982856db3e98de58c1ca46ada1b0ea5e6d))
 
 
 
