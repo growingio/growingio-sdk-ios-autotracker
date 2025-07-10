@@ -1,5 +1,5 @@
 #source 'https://github.com/growingio/giospec.git'
-#source 'https://github.com/CocoaPods/Specs.git'
+source 'https://github.com/CocoaPods/Specs.git'
 
 platform :ios, '12.0'
 use_frameworks!
@@ -24,7 +24,7 @@ target 'Example' do
 #  pod 'GrowingAPM/CrashMonitor'
   pod 'GrowingAnalytics/APM', :path => '../'
   
-  pod 'GrowingToolsKit', '~> 2.0.1'
+  pod 'GrowingToolsKit', '~> 2.2.0'
 
   pod 'SDCycleScrollView', '~> 1.75'
 #  pod 'Bugly'
@@ -79,7 +79,7 @@ target 'ExampleiOS13' do
   # 而不是再去集成一个新的 GrowingAPM，其将导致生成 2 个 GrowingAPM Pod Target，编译会出现 Multiple commands produce 报错
   pod 'GrowingAPM'
 
-  pod 'GrowingToolsKit', '~> 2.0.1'
+  pod 'GrowingToolsKit', '~> 2.2.0'
 end
 
 target 'Example-macOS' do
