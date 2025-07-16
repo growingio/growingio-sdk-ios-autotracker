@@ -43,6 +43,7 @@ jobs:
           \%^Services/Compression/LZ4/% d
           \%^Services/Database/FMDB/% d
           \%^Services/WebSocket/% d
+          \%^Modules/Hybrid/GrowingWKWebViewJavascriptBridge_JS\.m% d
           \%^(Growing|Modules/|Services/).*\.(h|hpp|c|cpp|m|mm)% p
           ' \
           | xargs clang-format -i -style=file

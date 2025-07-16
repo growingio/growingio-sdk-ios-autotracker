@@ -27,6 +27,12 @@
 #define GrowingSDKConfiguration GrowingTrackConfiguration
 #endif
 
+#if __has_include("GrowingHybridModule.h")
+// Hybrid Module
+#import "GrowingHybridModule.h"
+#define SDKHybridMODULE
+#endif
+
 #if __has_include("GrowingAdvertising.h")
 // Ads Module
 #import "GrowingAdvertising.h"
