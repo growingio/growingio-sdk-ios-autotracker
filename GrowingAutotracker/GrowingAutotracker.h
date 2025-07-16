@@ -159,6 +159,12 @@ NS_ASSUME_NONNULL_BEGIN
            attributes:(NSDictionary<NSString *, id> *)attributes
     NS_EXTENSION_UNAVAILABLE("AutotrackPage is not supported for iOS extensions.");
 
+/// 手动标识页面标题
+/// @param title 页面标题
+/// @param controller 被追踪页面
+- (void)setPageTitle:(nullable NSString *)title
+             forPage:(UIViewController *)controller NS_EXTENSION_UNAVAILABLE("SetPageTitle is not supported for iOS extensions.");
+
 ///-------------------------------
 #pragma mark Unavailable
 ///-------------------------------
