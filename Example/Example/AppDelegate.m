@@ -79,6 +79,10 @@
     configuration.abTestingServerHost = @"https://ab.growingio.com";
     configuration.abTestingRequestInterval = 5;
 #endif
+
+#if defined(SDKHybridMODULE)
+    GrowingHybridModule.sharedInstance.autoJsSdkInject = YES;
+#endif
     
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wnonnull"

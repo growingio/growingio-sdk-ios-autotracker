@@ -91,28 +91,44 @@ static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJav
             }
         }];
 
-        if (!isContainUserScripts) {
-            NSString *accountId = GrowingConfigurationManager.sharedInstance.trackConfiguration.accountId;
-            NSString *dataSourceId = GrowingConfigurationManager.sharedInstance.trackConfiguration.dataSourceId;
-            NSString *bundleId = [GrowingDeviceInfo currentDeviceInfo].bundleID;
-            NSString *urlScheme = [GrowingDeviceInfo currentDeviceInfo].urlScheme;
-            GrowingWebViewJavascriptBridgeConfiguration *config =
-                [GrowingWebViewJavascriptBridgeConfiguration configurationWithAccountId:accountId
-                                                                           dataSourceId:dataSourceId
-                                                                                  appId:urlScheme
-                                                                             appPackage:bundleId
-                                                                       nativeSdkVersion:GrowingTrackerVersionName
-                                                                   nativeSdkVersionCode:GrowingTrackerVersionCode];
+        if (isContainUserScripts) {
+            return;
+        }
 
-            WKUserScript *userScript =
-                [[WKUserScript alloc] initWithSource:[GrowingWKWebViewJavascriptBridge_JS
-                                                         createJavascriptBridgeJsWithNativeConfiguration:config]
-                                       injectionTime:WKUserScriptInjectionTimeAtDocumentStart
-                                    forMainFrameOnly:NO];
-            [contentController addUserScript:userScript];
+        NSString *accountId = GrowingConfigurationManager.sharedInstance.trackConfiguration.accountId;
+        NSString *dataSourceId = GrowingConfigurationManager.sharedInstance.trackConfiguration.dataSourceId;
+        NSString *bundleId = [GrowingDeviceInfo currentDeviceInfo].bundleID;
+        NSString *urlScheme = [GrowingDeviceInfo currentDeviceInfo].urlScheme;
+        GrowingWebViewJavascriptBridgeConfiguration *config =
+            [GrowingWebViewJavascriptBridgeConfiguration configurationWithAccountId:accountId
+                                                                       dataSourceId:dataSourceId
+                                                                              appId:urlScheme
+                                                                         appPackage:bundleId
+                                                                   nativeSdkVersion:GrowingTrackerVersionName
+                                                               nativeSdkVersionCode:GrowingTrackerVersionCode];
+
+        [contentController addUserScript:[self bridgeJsUserScriptWithConfig:config]];
+        if (GrowingHybridModule.sharedInstance.autoJsSdkInject) {
+            [contentController addUserScript:[self javaScriptSdkInjectJsUserScriptWithConfig:config]];
         }
     } @catch (NSException *exception) {
     }
+}
+
++ (WKUserScript *)bridgeJsUserScriptWithConfig:(GrowingWebViewJavascriptBridgeConfiguration *)config {
+    WKUserScript *userScript = [[WKUserScript alloc]
+          initWithSource:[GrowingWKWebViewJavascriptBridge_JS createJavascriptBridgeJsWithNativeConfiguration:config]
+           injectionTime:WKUserScriptInjectionTimeAtDocumentStart
+        forMainFrameOnly:NO];
+    return userScript;
+}
+
++ (WKUserScript *)javaScriptSdkInjectJsUserScriptWithConfig:(GrowingWebViewJavascriptBridgeConfiguration *)config {
+    WKUserScript *userScript = [[WKUserScript alloc]
+          initWithSource:[GrowingWKWebViewJavascriptBridge_JS createJavascriptSdkInjectJsWithNativeConfiguration:config]
+           injectionTime:WKUserScriptInjectionTimeAtDocumentEnd
+        forMainFrameOnly:NO];
+    return userScript;
 }
 
 - (void)userContentController:(WKUserContentController *)userContentController
