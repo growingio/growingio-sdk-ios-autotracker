@@ -104,6 +104,16 @@ GrowingPropertyDefine(UITextView, NSString *, growingHookOldText, setGrowingHook
                    }];
 }
 
+- (void)setPageTitle:(nullable NSString *)title forPage:(UIViewController *)controller {
+    [GrowingDispatchManager trackApiSel:_cmd
+                   dispatchInMainThread:^{
+                       if (title && ![title isKindOfClass:[NSString class]]) {
+                           return;
+                       }
+                       controller.growingPageTitle = title;
+                   }];
+}
+
 - (void)addAutoTrackSwizzles {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{

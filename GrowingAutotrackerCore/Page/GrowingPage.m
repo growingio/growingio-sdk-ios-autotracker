@@ -79,7 +79,18 @@
 }
 
 - (NSString *)title {
-    return self.carrier.growingPageTitle;
+    if (self.carrier.growingPageTitle) {
+        return self.carrier.growingPageTitle;
+    }
+
+    NSString *title = self.carrier.title;
+    if (!title.length) {
+        title = self.carrier.navigationItem.title;
+    }
+    if (!title.length) {
+        title = self.carrier.tabBarItem.title;
+    }
+    return title;
 }
 
 - (NSDictionary<NSString *, NSString *> *)attributes {
