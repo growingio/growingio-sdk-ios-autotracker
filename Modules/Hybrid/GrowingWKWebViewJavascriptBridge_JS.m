@@ -90,4 +90,41 @@ static NSString *kWKWebViewJavascriptBridge_js(void) {
                                              withString:[configuration toJsonString]];
 }
 
+static NSString *kWKWebViewJavascriptSdkInject_js(void) {
+#define __WKWebViewJavascriptSdkInject_js_func__(x) #x
+
+    // BEGIN preprocessorJSCode
+    static NSString *kGrowingPreprocessorJSCode = @__WKWebViewJavascriptSdkInject_js_func__(
+        try{
+            !(function (e, n, t, s, c) {
+                e[s] =
+                e[s] ||
+                function () {
+                    (e[s].q = e[s].q || []).push(arguments);
+                };
+                (e._gio_local_vds = c = c || 'vds'),
+                (e[c] = e[c] || {}),
+                (e[c].namespace = s);
+                var d = n.createElement('script');
+                var i = n.getElementsByTagName('script')[0];
+                (d.async = !0), (d.src = t);
+                i ? i.parentNode.insertBefore(d, i) : n.head.appendChild(d);
+            })(window, document, 'https://assets.giocdn.com/sdk/webjs/gdp-full.js', 'gdp');
+
+            window._gr_ignore_local_rule = true;
+            gdp('init', '$accountId_replacement', '$dataSourceId_replacement');
+        } catch(e){});
+#undef __WKWebViewJavascriptSdkInject_js_func__
+    return kGrowingPreprocessorJSCode;
+};
+
++ (NSString *)createJavascriptSdkInjectJsWithNativeConfiguration:
+    (GrowingWebViewJavascriptBridgeConfiguration *)configuration {
+    NSString *bridge = kWKWebViewJavascriptSdkInject_js();
+    bridge = [bridge stringByReplacingOccurrencesOfString:@"$accountId_replacement" withString:configuration.accountId];
+    bridge = [bridge stringByReplacingOccurrencesOfString:@"$dataSourceId_replacement"
+                                               withString:configuration.dataSourceId];
+    return bridge;
+}
+
 @end

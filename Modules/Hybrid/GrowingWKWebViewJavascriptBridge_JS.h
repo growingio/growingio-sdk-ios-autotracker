@@ -26,4 +26,7 @@
 + (NSString *)createJavascriptBridgeJsWithNativeConfiguration:
     (GrowingWebViewJavascriptBridgeConfiguration *)configuration;
 
++ (NSString *)createJavascriptSdkInjectJsWithNativeConfiguration:
+    (GrowingWebViewJavascriptBridgeConfiguration *)configuration;
+
 @end
