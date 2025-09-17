@@ -140,6 +140,10 @@ public struct Autotracker {
 
         autotracker.autotrackPage(viewController, alias: alias, attributes: attributes)
     }
+    
+    public static func setPageTitle(_ title: String?, for page: UIViewController) {
+        autotracker.setPageTitle(title, forPage: page)
+    }
 }
 
 extension UIView {
