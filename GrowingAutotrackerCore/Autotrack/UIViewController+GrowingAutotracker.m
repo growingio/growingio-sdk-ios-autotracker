@@ -21,20 +21,18 @@
 #import "GrowingAutotrackerCore/Autotrack/GrowingPropertyDefine.h"
 #import "GrowingAutotrackerCore/Page/GrowingPage.h"
 
+static char kGrowingPageTitleKey;
 static char kGrowingPageObjectKey;
 static char kGrowingPageAttributesKey;
 
 @implementation UIViewController (GrowingAutotracker)
 
+- (void)setGrowingPageTitle:(nullable NSString *)title {
+    objc_setAssociatedObject(self, &kGrowingPageTitleKey, title, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
 - (nullable NSString *)growingPageTitle {
-    NSString *title = self.title;
-    if (!title.length) {
-        title = self.navigationItem.title;
-    }
-    if (!title.length) {
-        title = self.tabBarItem.title;
-    }
-    return title;
+    return [objc_getAssociatedObject(self, &kGrowingPageTitleKey) copy];
 }
 
 - (void)setGrowingPageObject:(GrowingPage *)page {

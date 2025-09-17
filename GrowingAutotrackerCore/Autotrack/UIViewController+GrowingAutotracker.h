@@ -27,9 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) GrowingPage *growingPageObject;
 @property (nonatomic, copy) NSString *growingPageAlias;
+@property (nonatomic, copy, nullable) NSString *growingPageTitle;
 @property (nonatomic, copy) NSDictionary<NSString *, NSString *> *growingPageAttributes;
-
-- (nullable NSString *)growingPageTitle;
 
 @end
 
