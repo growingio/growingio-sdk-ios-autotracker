@@ -24,7 +24,7 @@ jobs:
         os: [macos-15]
         include:
           - os: macos-15
-            xcode: Xcode_16.2
+            xcode: Xcode_16.4
           - target: iOS
             platform: iOS Simulator,name=iPhone 16 Pro Max
           - target: macOS
@@ -47,7 +47,7 @@ jobs:
             target: watchOS
           - target: visionOS
             os: macos-15
-            xcode: Xcode_16.2
+            xcode: Xcode_16.4
             platform: visionOS Simulator,name=Apple Vision Pro
             scheme: GrowingTracker
     runs-on: ${{ matrix.os }}
