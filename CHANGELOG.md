@@ -1,3 +1,12 @@
+## [4.9.1](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/4.9.0...4.9.1) (2025-09-18)
+
+
+### Bug Fixes
+
+* add setPageTitle API to SwiftPM Autotracker exports ([#353](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/353)) ([ae05ad6](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/ae05ad6496a97364660bc91caed6c878c86f14a1))
+
+
+
 # [4.9.0](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/4.8.0...4.9.0) (2025-09-17)
 
 
@@ -5,6 +14,7 @@
 
 * add setPageTitle api in autotracker ([#350](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/350)) ([3260d24](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/3260d2488d132c222f2244896829a851a56c3229))
 * auto web js sdk bridge [#335](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/335) ([#352](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/352)) ([cec837d](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/cec837d0e0ef6257272e74e6fed81c68ad03ca94))
+* release 4.9.0 ([3cef8a6](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/3cef8a6b9002d784395a6ad7ebdc91dd959e662f))
 * uniapp track page event support [#338](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/338) ([#351](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/351)) ([d434d57](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/d434d576a90affa2e7a8a69f0637389ce1bc97fe))
 
 
@@ -44,21 +54,6 @@
 
 * **ABTesting:** ANLSPI-23827 new device ([#340](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/340)) ([2518804](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/2518804dde8fb34ae9d1a6fa256b80fc6a9b093c))
 * release 4.6.0 ([158bbf1](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/158bbf1c37bb3b0dd96862acd64b4fee2dfb3feb))
-
-
-
-# [4.5.0](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/4.4.0...4.5.0) (2024-11-18)
-
-
-### Bug Fixes
-
-* replace deprecated api from swift-protobuf ([#332](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/332)) ([2311e91](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/2311e9190eceb38693a695b29c166b80f393a4dd))
-
-
-### Features
-
-* **ads:** ANLSPI-22249 CAID support ([#336](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/336)) ([4c5bbba](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/4c5bbba765794b26636f2f30a610f00b974fc4f1))
-* release 4.5.0 ([e70a30a](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/e70a30abd4ab0757f1aea7f13523195570089064))
 
 
 
