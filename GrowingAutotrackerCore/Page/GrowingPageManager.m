@@ -178,9 +178,9 @@
     [self.visiblePages compact];
     NSArray<GrowingPage *> *visiblePages = [[[self.visiblePages allObjects]
         filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(GrowingPage *obj, NSDictionary *_) {
-            return obj != nil && obj != page;
+        return obj != nil && obj != page && ![NSStringFromClass(obj.carrier.class) hasPrefix:@"GrowingTK"];
         }]] sortedArrayUsingComparator:^NSComparisonResult(GrowingPage *a, GrowingPage *b) {
-        return a.showTimestamp >= b.showTimestamp ? NSOrderedDescending : NSOrderedAscending;
+        return a.showTimestamp > b.showTimestamp ? NSOrderedDescending : NSOrderedAscending;
     }];
     if (visiblePages.count == 0) {
         return nil;
