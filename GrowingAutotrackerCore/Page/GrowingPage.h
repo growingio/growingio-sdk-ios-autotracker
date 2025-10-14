@@ -39,6 +39,5 @@
 - (void)refreshShowTimestamp;
 
 - (void)addChildrenPage:(GrowingPage *)page;
-- (void)removeChildrenPage:(GrowingPage *)page;
 
 @end

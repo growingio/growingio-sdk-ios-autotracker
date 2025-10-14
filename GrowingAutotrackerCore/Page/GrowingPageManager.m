@@ -114,21 +114,6 @@
     }
 }
 
-- (void)viewControllerDidDisappear:(UIViewController *)controller {
-    if (![self isPrivateViewController:controller]) {
-        [self.visiblePages.allObjects
-            enumerateObjectsWithOptions:NSEnumerationReverse
-                             usingBlock:^(GrowingPage *page, NSUInteger idx, BOOL *_Nonnull stop) {
-                                 if (page.carrier == controller) {
-                                     if (page.parent != nil) {
-                                         [page.parent removeChildrenPage:page];
-                                     }
-                                     [self.visiblePages removePointerAtIndex:idx];
-                                 }
-                             }];
-    }
-}
-
 - (GrowingPage *)createdViewControllerPage:(UIViewController *)controller {
     GrowingPage *page = [controller growingPageObject];
     if (!page) {
@@ -149,6 +134,17 @@
                                       .setPath([NSString stringWithFormat:@"/%@", page.alias])
                                       .setTimestamp(page.showTimestamp)
                                       .setAttributes(page.attributes);
+    
+    // 发送事件前才去获取页面来源，避免造成额外耗时
+    GrowingPage *referralPage = [self findProbableReferralPage:page];
+    if (referralPage) {
+        NSString *referralPagePath = referralPage.alias;
+        if (!referralPagePath) {
+            referralPagePath = NSStringFromClass([referralPage.carrier class]);
+        }
+        ((GrowingPageBuilder *)builder).setReferralPage(referralPagePath);
+    }
+
     [[GrowingEventManager sharedInstance] postEventBuilder:builder];
 }
 
@@ -178,9 +174,45 @@
     return page;
 }
 
+- (GrowingPage *)findProbableReferralPage:(GrowingPage *)page {
+    [self.visiblePages compact];
+    NSArray<GrowingPage *> *visiblePages = [[[self.visiblePages allObjects]
+            filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(GrowingPage *obj, NSDictionary *_) {
+                return obj != nil && obj != page;
+            }]]
+            sortedArrayUsingComparator:^NSComparisonResult(GrowingPage *a, GrowingPage *b) {
+                return a.showTimestamp >= b.showTimestamp ? NSOrderedDescending : NSOrderedAscending;
+            }];
+    if (visiblePages.count == 0) {
+        return nil;
+    }
+    
+    // 从最近的几个可见页面开始倒序遍历（最多向前追溯3个）
+    NSInteger start = MAX(0, (NSInteger)visiblePages.count - 3);
+    for (NSInteger i = visiblePages.count - 1; i >= start; i--) {
+        GrowingPage *lastPage = visiblePages[i];
+        GrowingPage *lastPageParent = lastPage.parent;
+        if (!lastPageParent) {
+            continue;
+        }
+        
+        // 逐级向上比较父节点，判断两者是否有共同父页面
+        GrowingPage *pageParent = page.parent;
+        while (lastPageParent) {
+            if (lastPageParent == pageParent) {
+                return lastPage;
+            }
+            lastPageParent = lastPageParent.parent;
+        }
+    }
+    
+    return [visiblePages lastObject];
+}
+
 #pragma mark Visible ViewController
 
 - (NSArray<GrowingPage *> *)allDidAppearPages {
+    [self.visiblePages compact];
     return self.visiblePages.allObjects;
 }
 
@@ -249,6 +281,7 @@
 }
 
 - (GrowingPage *)currentPage {
+    [self.visiblePages compact];
     return self.visiblePages.allObjects.lastObject;
 }
 

@@ -34,7 +34,7 @@
     if (self) {
         _carrier = carrier;
         _showTimestamp = GrowingULTimeUtil.currentTimeMillis;
-        _childPages = [NSPointerArray pointerArrayWithOptions:NSPointerFunctionsWeakMemory];
+        _childPages = [NSPointerArray weakObjectsPointerArray];
         GROWING_LOCK_INIT(lock);
     }
 
@@ -56,18 +56,6 @@
     if (![self.childPages.allObjects containsObject:page]) {
         [self.childPages addPointer:(__bridge void *)page];
     }
-    GROWING_UNLOCK(lock);
-}
-
-- (void)removeChildrenPage:(GrowingPage *)page {
-    GROWING_LOCK(lock);
-    [self.childPages.allObjects enumerateObjectsWithOptions:NSEnumerationReverse
-                                                 usingBlock:^(NSObject *obj, NSUInteger idx, BOOL *_Nonnull stop) {
-                                                     if (page == obj) {
-                                                         [self.childPages removePointerAtIndex:idx];
-                                                         *stop = YES;
-                                                     }
-                                                 }];
     GROWING_UNLOCK(lock);
 }
 
