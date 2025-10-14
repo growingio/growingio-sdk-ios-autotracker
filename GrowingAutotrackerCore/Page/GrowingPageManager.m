@@ -134,7 +134,7 @@
                                       .setPath([NSString stringWithFormat:@"/%@", page.alias])
                                       .setTimestamp(page.showTimestamp)
                                       .setAttributes(page.attributes);
-    
+
     // 发送事件前才去获取页面来源，避免造成额外耗时
     GrowingPage *referralPage = [self findProbableReferralPage:page];
     if (referralPage) {
@@ -177,16 +177,15 @@
 - (GrowingPage *)findProbableReferralPage:(GrowingPage *)page {
     [self.visiblePages compact];
     NSArray<GrowingPage *> *visiblePages = [[[self.visiblePages allObjects]
-            filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(GrowingPage *obj, NSDictionary *_) {
-                return obj != nil && obj != page;
-            }]]
-            sortedArrayUsingComparator:^NSComparisonResult(GrowingPage *a, GrowingPage *b) {
-                return a.showTimestamp >= b.showTimestamp ? NSOrderedDescending : NSOrderedAscending;
-            }];
+        filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(GrowingPage *obj, NSDictionary *_) {
+            return obj != nil && obj != page;
+        }]] sortedArrayUsingComparator:^NSComparisonResult(GrowingPage *a, GrowingPage *b) {
+        return a.showTimestamp >= b.showTimestamp ? NSOrderedDescending : NSOrderedAscending;
+    }];
     if (visiblePages.count == 0) {
         return nil;
     }
-    
+
     // 从最近的几个可见页面开始倒序遍历（最多向前追溯3个）
     NSInteger start = MAX(0, (NSInteger)visiblePages.count - 3);
     for (NSInteger i = visiblePages.count - 1; i >= start; i--) {
@@ -195,7 +194,7 @@
         if (!lastPageParent) {
             continue;
         }
-        
+
         // 逐级向上比较父节点，判断两者是否有共同父页面
         GrowingPage *pageParent = page.parent;
         while (lastPageParent) {
@@ -205,7 +204,7 @@
             lastPageParent = lastPageParent.parent;
         }
     }
-    
+
     return [visiblePages lastObject];
 }
 
