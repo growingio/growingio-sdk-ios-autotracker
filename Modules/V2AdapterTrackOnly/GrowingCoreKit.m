@@ -34,7 +34,7 @@ static id growing_getTracker(void) {
         return nil;
     }
 
-    return ((id(*)(id, SEL))objc_msgSend)(class, selector);
+    return ((id (*)(id, SEL))objc_msgSend)(class, selector);
 }
 
 @implementation Growing
