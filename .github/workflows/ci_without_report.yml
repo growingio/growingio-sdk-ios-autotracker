@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-12
+    runs-on: macos-15
 
     steps:
       - name: Checkout Repo
@@ -28,4 +28,4 @@ jobs:
           xcodebuild test -workspace Example/GrowingAnalytics.xcworkspace \
           -scheme GrowingAnalyticsTests \
           -testPlan GrowingAnalyticsTests \
-          -destination 'platform=iOS Simulator,name=iPhone 14'
+          -destination 'platform=iOS Simulator,name=iPhone 16 Pro Max'
