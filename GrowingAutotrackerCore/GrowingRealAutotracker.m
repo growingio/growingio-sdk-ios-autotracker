@@ -18,7 +18,7 @@
 //  limitations under the License.
 
 #import "GrowingAutotrackerCore/GrowingRealAutotracker.h"
-#import "GrowingAutotrackerCore/Autotrack/NSNotificationCenter+GrowingAutotracker.h"
+#import "GrowingAutotrackerCore/Autotrack/GrowingPropertyDefine.h"
 #import "GrowingAutotrackerCore/Autotrack/UIAlertController+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/Autotrack/UIApplication+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/Autotrack/UICollectionView+GrowingAutotracker.h"
@@ -28,11 +28,15 @@
 #import "GrowingAutotrackerCore/Autotrack/UIView+GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UIAlertController+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/Category/UISegmentedControl+GrowingNode.h"
+#import "GrowingAutotrackerCore/GrowingNode/GrowingViewChangeProvider.h"
 #import "GrowingAutotrackerCore/Impression/GrowingImpressionTrack.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingULSwizzle.h"
 #import "GrowingULViewControllerLifecycle.h"
+
+GrowingPropertyDefine(UITextField, NSString *, growingHookOldText, setGrowingHookOldText)
+GrowingPropertyDefine(UITextView, NSString *, growingHookOldText, setGrowingHookOldText)
 
 @implementation GrowingRealAutotracker
 
@@ -44,6 +48,16 @@
         [GrowingULViewControllerLifecycle setup];
         [GrowingPageManager.sharedInstance start];
         [GrowingImpressionTrack.sharedInstance start];
+        
+        // VIEW_CHANGE Event Notification
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(handleInputViewDidEndEditing:)
+                                                     name:UITextFieldTextDidEndEditingNotification
+                                                   object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(handleInputViewDidEndEditing:)
+                                                     name:UITextViewTextDidEndEditingNotification
+                                                   object:nil];
     }
 
     return self;
@@ -84,15 +98,6 @@
                                   error:&viewError];
         if (viewError) {
             GIOLogError(@"Failed to swizzle UIView. Details: %@", viewError);
-        }
-
-        // NSNotificationCenter
-        NSError *notiError = NULL;
-        [NSNotificationCenter growingul_swizzleMethod:@selector(postNotificationName:object:userInfo:)
-                                           withMethod:@selector(growing_postNotificationName:object:userInfo:)
-                                                error:&notiError];
-        if (notiError) {
-            GIOLogError(@"Failed to swizzle NSNotificationCenter. Details: %@", notiError);
         }
 
         // ListView
@@ -147,6 +152,36 @@
             GIOLogError(@"Failed to swizzle UIAlertController. Details: %@", alertError);
         }
     });
+}
+
+- (void)handleInputViewDidEndEditing:(NSNotification *)notification {
+    id anObject = notification.object;
+    if ([anObject isKindOfClass:UITextField.class]) {
+        UITextField *inputView = (UITextField *)anObject;
+
+        if (inputView.isSecureTextEntry) {
+            return;
+        }
+
+        NSString *text = inputView.text;
+        if (text && ![inputView.growingHookOldText isEqualToString:text]) {
+            inputView.growingHookOldText = text;
+            [GrowingViewChangeProvider viewOnChange:inputView];
+        }
+
+    } else if ([anObject isKindOfClass:UITextView.class]) {
+        UITextView *inputView = (UITextView *)anObject;
+
+        if (inputView.isSecureTextEntry) {
+            return;
+        }
+
+        NSString *text = inputView.text;
+        if (text && ![inputView.growingHookOldText isEqualToString:text]) {
+            inputView.growingHookOldText = text;
+            [GrowingViewChangeProvider viewOnChange:inputView];
+        }
+    }
 }
 
 @end
