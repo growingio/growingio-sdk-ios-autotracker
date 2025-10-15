@@ -48,7 +48,7 @@ GrowingPropertyDefine(UITextView, NSString *, growingHookOldText, setGrowingHook
         [GrowingULViewControllerLifecycle setup];
         [GrowingPageManager.sharedInstance start];
         [GrowingImpressionTrack.sharedInstance start];
-        
+
         // VIEW_CHANGE Event Notification
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(handleInputViewDidEndEditing:)

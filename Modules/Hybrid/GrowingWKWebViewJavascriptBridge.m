@@ -53,7 +53,7 @@ static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJav
 + (BOOL)webViewDontTrackCheck:(WKWebView *)webView {
     SEL selector = NSSelectorFromString(@"growingViewDontTrack");
     if ([webView respondsToSelector:selector]) {
-        return ((BOOL(*)(id, SEL))objc_msgSend)(webView, selector);
+        return ((BOOL (*)(id, SEL))objc_msgSend)(webView, selector);
     }
     return NO;
 }
