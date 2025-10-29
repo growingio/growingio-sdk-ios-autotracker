@@ -137,7 +137,7 @@
 
     // 发送事件前才去获取页面来源，避免造成额外耗时
     GrowingPage *referralPage = [self findProbableReferralPage:page];
-    if (referralPage) {
+    if (referralPage && referralPage.alias && referralPage.alias.length > 0) {
         ((GrowingPageBuilder *)builder).setReferralPage([NSString stringWithFormat:@"/%@", referralPage.alias]);
     }
 
