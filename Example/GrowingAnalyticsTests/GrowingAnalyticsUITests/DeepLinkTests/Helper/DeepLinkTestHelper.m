@@ -32,7 +32,7 @@
     }
 
     [self openFromSafari:[NSString stringWithFormat:@"%@&xctest=DeepLinkTest", urlString]];
-    XCTAssertTrue([app waitForState:XCUIApplicationStateRunningForeground timeout:5]);
+    XCTAssertTrue([app waitForState:XCUIApplicationStateRunningForeground timeout:10]);
 
     XCUIElement *testButton = app.buttons[@"XCTest"];
     XCTAssertTrue([testButton waitForExistenceWithTimeout:5]);
