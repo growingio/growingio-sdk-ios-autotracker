@@ -100,9 +100,9 @@ PODS:
   - GrowingUtils/AutotrackerCore (1.2.4):
     - GrowingUtils/TrackerCore
   - GrowingUtils/TrackerCore (1.2.4)
-  - KIF (3.11.1):
-    - KIF/Core (= 3.11.1)
-  - KIF/Core (3.11.1)
+  - KIF (3.12.3):
+    - KIF/Core (= 3.12.3)
+  - KIF/Core (3.12.3)
   - OHHTTPStubs (9.1.0):
     - OHHTTPStubs/Default (= 9.1.0)
   - OHHTTPStubs/Core (9.1.0)
@@ -119,9 +119,9 @@ PODS:
   - Protobuf (3.29.5)
   - SDCycleScrollView (1.82):
     - SDWebImage (>= 5.0.0)
-  - SDWebImage (5.21.1):
-    - SDWebImage/Core (= 5.21.1)
-  - SDWebImage/Core (5.21.1)
+  - SDWebImage (5.21.3):
+    - SDWebImage/Core (= 5.21.3)
+  - SDWebImage/Core (5.21.3)
 
 DEPENDENCIES:
   - GrowingAnalytics/ABTesting (from `../`)
@@ -156,12 +156,12 @@ SPEC CHECKSUMS:
   GrowingAPM: 4a3628e708cd1b2e4e1fc0925593781ed8acadd2
   GrowingToolsKit: 548d35d9b5964af3a73f80b30c6948dc10d247b4
   GrowingUtils: 5d323e54798595015ff11e97fe981ae167dc270e
-  KIF: a48390ad8abb1ea373a3b7465213a02ade1724f6
+  KIF: d7b36ad3b0ea6b48e0164e4a6b2cd1f0ec8272d2
   OHHTTPStubs: 90eac6d8f2c18317baeca36698523dc67c513831
   Protobuf: 164aea2ae380c3951abdc3e195220c01d17400e0
   SDCycleScrollView: a0d74c3384caa72bdfc81470bdbc8c14b3e1fbcf
-  SDWebImage: f29024626962457f3470184232766516dee8dfea
+  SDWebImage: 16309af6d214ba3f77a7c6f6fdda888cb313a50a
 
-PODFILE CHECKSUM: 42c945253e2b0e437a68370d51a2fa05276bcddf
+PODFILE CHECKSUM: 725a07175846e5e330967c25e26e8509556cf786
 
 COCOAPODS: 1.16.2

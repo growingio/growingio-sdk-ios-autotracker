@@ -108,22 +108,22 @@
         [actor setSliderValue:75.0f];
 
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewChange];
-        XCTAssertEqual(events.count, 0);
+        XCTAssertEqual(events.count, 0); // iOS 26 起，无法监听 UISlider
     }
 
-    {
-        actor.view.growingViewIgnorePolicy = GrowingIgnoreNone;
-        [actor setSliderValue:50.0f];
-
-        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewChange];
-        XCTAssertEqual(events.count, 1);
-
-        GrowingViewElementEvent *event = (GrowingViewElementEvent *)events.firstObject;
-        NSDictionary *dic = event.toDictionary;
-        XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeViewChange);
-        XCTAssertTrue([ManualTrackHelper viewChangeEventCheck:dic]);
-        XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
-    }
+//    {
+//        actor.view.growingViewIgnorePolicy = GrowingIgnoreNone;
+//        [actor setSliderValue:50.0f];
+//
+//        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewChange];
+//        XCTAssertEqual(events.count, 1);
+//
+//        GrowingViewElementEvent *event = (GrowingViewElementEvent *)events.firstObject;
+//        NSDictionary *dic = event.toDictionary;
+//        XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeViewChange);
+//        XCTAssertTrue([ManualTrackHelper viewChangeEventCheck:dic]);
+//        XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
+//    }
 
     [[viewTester usingLabel:@"UI界面"] tap];
 }

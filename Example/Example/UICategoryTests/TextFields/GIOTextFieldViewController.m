@@ -32,6 +32,7 @@
     [self configureSecureTextField];
     [self configureSpecificKeyboardTextField];
     [self configureCustomTextField];
+    self.edgesForExtendedLayout = UIRectEdgeNone;
 }
 
 - (void)didReceiveMemoryWarning {

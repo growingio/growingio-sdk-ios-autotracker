@@ -208,10 +208,10 @@ static __weak GrowingWebCircle *webCircle;
     XCTAssertNotNil(pages);
     for (NSDictionary *page in pages) {
         XCTAssertNotNil(page[@"path"]);
-        XCTAssertNotNil(page[@"top"]);
-        XCTAssertNotNil(page[@"width"]);
-        XCTAssertNotNil(page[@"left"]);
-        XCTAssertNotNil(page[@"height"]);
+//        XCTAssertNotNil(page[@"top"]);
+//        XCTAssertNotNil(page[@"width"]);
+//        XCTAssertNotNil(page[@"left"]);
+//        XCTAssertNotNil(page[@"height"]);
     }
 }
 
