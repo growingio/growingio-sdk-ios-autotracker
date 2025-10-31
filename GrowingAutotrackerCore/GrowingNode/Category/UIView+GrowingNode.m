@@ -161,6 +161,9 @@
 
 // 关系
 - (BOOL)growingNodeDonotTrack {
+    if ([self isKindOfClass:NSClassFromString(@"TUICandidateCell")]) {
+        return YES;
+    }
     if ([self isKindOfClass:NSClassFromString(@"_UINavigationItemButtonView")]) {
         return NO;
     }
