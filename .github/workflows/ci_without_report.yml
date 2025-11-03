@@ -12,6 +12,9 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
+      - name: Xcode Select
+        run: sudo xcode-select -switch /Applications/Xcode_26.0.1.app
+
       - name: Cache cocoapods
         uses: actions/cache@v4
         with:
@@ -28,4 +31,4 @@ jobs:
           xcodebuild test -workspace Example/GrowingAnalytics.xcworkspace \
           -scheme GrowingAnalyticsTests \
           -testPlan GrowingAnalyticsTests \
-          -destination 'platform=iOS Simulator,name=iPhone 16 Pro Max'
+          -destination 'platform=iOS Simulator,name=iPhone 17 Pro Max'

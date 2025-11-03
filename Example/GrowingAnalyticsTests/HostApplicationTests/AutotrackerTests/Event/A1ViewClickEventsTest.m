@@ -180,8 +180,8 @@
         XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
         
         XCTAssertEqualObjects(dic[@"textValue"], @"Third");
-        XCTAssertEqualObjects(dic[@"xpath"], @"/Page/UISegmentedControl[0]/UISegment[-]");
-        XCTAssertEqualObjects(dic[@"index"], @(2));
+        XCTAssertEqualObjects(dic[@"xpath"], @"/Page/UISegmentedControl[0]/UIView/UIView[0]/UISegment[-]");
+        XCTAssertEqualObjects(dic[@"index"], @(1));
     }
 }
 
