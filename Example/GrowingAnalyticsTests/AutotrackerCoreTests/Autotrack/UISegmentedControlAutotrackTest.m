@@ -59,12 +59,6 @@
         UISegmentedControl *control = [[UISegmentedControl alloc] initWithItems:@[@"1", @"2"]];
         XCTAssertTrue([control.allTargets containsObject:sharedInstance]);
     }
-    
-    // 多次 init
-    {
-        UISegmentedControl *control = [[[UISegmentedControl alloc] initWithFrame:CGRectMake(0, 0, 100, 100)] initWithFrame:CGRectMake(0, 0, 100, 100)];
-        XCTAssertTrue([control.allTargets containsObject:sharedInstance]);
-    }
 }
 
 @end

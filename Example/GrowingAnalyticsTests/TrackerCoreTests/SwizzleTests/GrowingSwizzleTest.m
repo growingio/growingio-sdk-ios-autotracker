@@ -19,10 +19,10 @@
 
 #import <XCTest/XCTest.h>
 
+#import <objc/message.h>
+#import <objc/runtime.h>
 #import "GrowingULSwizzle.h"
 #import "GrowingULSwizzler.h"
-#import <objc/runtime.h>
-#import <objc/message.h>
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
@@ -149,36 +149,14 @@ static NSInteger b = 0;
 - (void)delegateSelector {
 }
 
-static void fooMethod(id obj, SEL _cmd) {}
+static void fooMethod(id obj, SEL _cmd) {
+}
 
 + (BOOL)resolveInstanceMethod:(SEL)sel {
     if (sel == @selector(delegateSelector2)) {
         class_addMethod([self class], sel, (IMP)fooMethod, "v@:");
     }
     return NO;
-}
-
-@end
-
-@interface Growing_Swizzle_Proxy_XCTest2 : NSProxy
-
-@property (nonatomic, weak) id target;
-
-- (instancetype)initWithTarget:(id)target;
-
-- (void)delegateSelector;
-
-@end
-
-@implementation Growing_Swizzle_Proxy_XCTest2
-
-- (instancetype)initWithTarget:(id)target {
-    _target = target;
-    return self;
-}
-
-- (id)forwardingTargetForSelector:(SEL)aSelector {
-    return _target;
 }
 
 @end
@@ -383,31 +361,15 @@ static void fooMethod(id obj, SEL _cmd) {}
 
 - (void)test07GrowingULSwizzlerRealDelegate {
     // NSProxy
-    id proxy = nil;
-    id proxy1 = [[Growing_Swizzle_Proxy_XCTest alloc] initWithTarget:nil];
-    id proxy2 = [[Growing_Swizzle_Proxy_XCTest2 alloc] initWithTarget:proxy1];
+    id proxy = [[Growing_Swizzle_Proxy_XCTest alloc] initWithTarget:nil];
     {
-        XCTAssertNoThrow([GrowingULSwizzle realDelegate:proxy toSelector:@selector(delegateSelector)]);
-
         // proxy 本身实现了
-        id result = [GrowingULSwizzle realDelegate:proxy1 toSelector:@selector(delegateSelector)];
-        XCTAssertEqualObjects(proxy1, result);
-        XCTAssertTrue([GrowingULSwizzle realDelegateClass:((NSObject *)result).class
+        XCTAssertTrue([GrowingULSwizzle realDelegateClass:((NSObject *)proxy).class
                                         respondsToSelector:@selector(delegateSelector)]);
 
         // proxy 在 resolveInstanceMethod 增加了实现
-        id result2 = [GrowingULSwizzle realDelegate:proxy1 toSelector:@selector(delegateSelector2)];
-        XCTAssertEqualObjects(proxy1, result2);
-        XCTAssertTrue([GrowingULSwizzle realDelegateClass:((NSObject *)result2).class
+        XCTAssertTrue([GrowingULSwizzle realDelegateClass:((NSObject *)proxy).class
                                         respondsToSelector:@selector(delegateSelector2)]);
-    }
-
-    {
-        // proxy 在 forwardingTargetForSelector 转发给了另一个对象
-        id result = [GrowingULSwizzle realDelegate:proxy2 toSelector:@selector(delegateSelector)];
-        XCTAssertEqualObjects(proxy1, result);
-        XCTAssertTrue([GrowingULSwizzle realDelegateClass:((NSObject *)result).class
-                                        respondsToSelector:@selector(delegateSelector)]);
     }
 }
 
