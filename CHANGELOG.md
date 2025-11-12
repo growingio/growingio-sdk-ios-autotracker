@@ -1,9 +1,23 @@
+# [4.10.0](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/4.9.1...4.10.0) (2025-11-12)
+
+
+### Features
+
+* ANLSPI-30189 add referralPage for page event ([#354](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/354)) ([b3cac0a](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/b3cac0a822af8205b1fb252cf5cfdd673141906c))
+
+
+
 ## [4.9.1](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/4.9.0...4.9.1) (2025-09-18)
 
 
 ### Bug Fixes
 
 * add setPageTitle API to SwiftPM Autotracker exports ([#353](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/353)) ([ae05ad6](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/ae05ad6496a97364660bc91caed6c878c86f14a1))
+
+
+### Features
+
+* release 4.9.1 ([ed6a43f](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/ed6a43fcb2b1234f3019778adf05c7453041dd99))
 
 
 
@@ -44,16 +58,6 @@
 
 * ANLSPI-27402 use notification for VIEW_CHANGE observing ([#344](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/344)) ([81283c0](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/81283c0e7ec7d921227f5712a29b64cc60df80d5))
 * release 4.7.0 ([cbbdd78](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/cbbdd78d01a8e07832e03dce4538ff97de6c66de))
-
-
-
-# [4.6.0](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/4.5.0...4.6.0) (2025-02-13)
-
-
-### Features
-
-* **ABTesting:** ANLSPI-23827 new device ([#340](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/340)) ([2518804](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/2518804dde8fb34ae9d1a6fa256b80fc6a9b093c))
-* release 4.6.0 ([158bbf1](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/158bbf1c37bb3b0dd96862acd64b4fee2dfb3feb))
 
 
 
