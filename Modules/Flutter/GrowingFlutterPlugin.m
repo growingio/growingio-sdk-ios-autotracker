@@ -61,6 +61,12 @@ GrowingMod(GrowingFlutterPlugin)
     }
 
     GrowingPageBuilder *builder = GrowingPageEvent.builder.setPath(alias);
+
+    NSString *referralPage = arguments[@"referralPage"];
+    if (referralPage && [referralPage isKindOfClass:[NSString class]] && referralPage.length > 0) {
+        builder = builder.setReferralPage(referralPage);
+    }
+
     NSString *title = arguments[@"title"];
     if (title && [title isKindOfClass:[NSString class]] && title.length > 0) {
         builder = builder.setTitle(title);

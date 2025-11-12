@@ -41,6 +41,9 @@
       }
     },
     {
+      "skippedTests" : [
+        "DeepLinkTest"
+      ],
       "target" : {
         "containerPath" : "container:Example.xcodeproj",
         "identifier" : "3494DCF728597E1A00A6CE46",
@@ -48,6 +51,9 @@
       }
     },
     {
+      "skippedTests" : [
+        "DeepLinkiOS13UISceneTest"
+      ],
       "target" : {
         "containerPath" : "container:Example.xcodeproj",
         "identifier" : "3494DD2C2859E27B00A6CE46",

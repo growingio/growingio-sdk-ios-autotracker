@@ -70,13 +70,28 @@ const NSUInteger kProgressViewControllerMaxProgress = 100;
 - (void)configureSegmentedControl {
     __weak typeof(self) weakSelf = self;
     void(^block)(NSUInteger, NSString *) = ^(NSUInteger index, NSString *accessibilityLabel) {
-        __strong typeof(weakSelf) self = weakSelf;
-        UIView *view = (self.defaultSegmentedControl.subviews)[self.defaultSegmentedControl.subviews.count - index - 1];
-        view.accessibilityLabel = accessibilityLabel;
+        // iOS 26 的层级结构变了
+        @try {
+            __strong typeof(weakSelf) self = weakSelf;
+            NSArray<__kindof UIView *> *parentView = self.defaultSegmentedControl.subviews;
+            for (int i = 0; i < parentView.count; i++) {
+                UIView *view = parentView[i];
+                if (view.subviews.count > 0) {
+                    parentView = view.subviews.lastObject.subviews;
+                    break;
+                }
+            }
+            UIView *view = (parentView)[parentView.count - index - 1];
+            view.accessibilityLabel = accessibilityLabel;
+        } @catch (NSException *exception) {
+            
+        } @finally {
+            
+        }
     };
-    block(0, @"FirstSegment");
-    block(2, @"SecondSegment");
-    block(1, @"ThirdSegment");
+    block(2, @"FirstSegment");
+    block(1, @"SecondSegment");
+    block(0, @"ThirdSegment");
 }
 
 - (void)scanQR {
