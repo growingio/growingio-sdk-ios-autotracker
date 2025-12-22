@@ -20,8 +20,8 @@
 #import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
 #import "GrowingTargetConditionals.h"
 #import "GrowingTrackerCore/Network/GrowingNetworkPathMonitor.h"
-#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Thirdparty/Reachability/GrowingReachability.h"
+#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 
 #if Growing_OS_PURE_IOS
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
@@ -92,10 +92,10 @@
                     }
                 }
             } else {
-    #pragma clang diagnostic push
-    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
                 accessString = self.teleInfo.currentRadioAccessTechnology;
-    #pragma clang diagnostic pop
+#pragma clang diagnostic pop
             }
         }
 
