@@ -269,4 +269,8 @@ const int GrowingTrackerVersionCode = 41000;
     }];
 }
 
+- (void)flushEvents {
+    [[GrowingEventManager sharedInstance] sendAllChannelEvents];
+}
+
 @end

@@ -130,6 +130,10 @@ public struct Autotracker {
         GrowingAutotracker.setDynamicGeneralProps(closure)
     }
 
+    public static func flushEvents() {
+        autotracker.flushEvents()
+    }
+
     public static func autotrackPage(_ viewController: UIViewController,
                                      alias: String,
                                      attributes: [String: Any]? = nil) {

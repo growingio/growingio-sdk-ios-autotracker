@@ -121,4 +121,8 @@ public struct Tracker {
     public static func setDynamicGeneralProps(_ closure: (() -> [String: Any])?) {
         GrowingTracker.setDynamicGeneralProps(closure)
     }
+
+    public static func flushEvents() {
+        tracker.flushEvents()
+    }
 }

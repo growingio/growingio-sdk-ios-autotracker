@@ -134,6 +134,14 @@ NS_ASSUME_NONNULL_BEGIN
     NS_SWIFT_NAME(setDynamicGeneralProps(_:));
 
 ///-------------------------------
+#pragma mark Event Management
+///-------------------------------
+
+/// 强制发送所有本地存储的事件到服务器
+/// 立即触发事件上传，无需等待定时器触发
+- (void)flushEvents;
+
+///-------------------------------
 #pragma mark Unavailable
 ///-------------------------------
 
