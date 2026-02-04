@@ -1,9 +1,24 @@
+# [4.11.0](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/4.10.0...4.11.0) (2026-02-04)
+
+
+### Bug Fixes
+
+* CTTelephonyNetworkInfo block main thread ([#358](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/358)) ([57b24d8](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/57b24d8d55e7178c11a56155b016eb3752c41daf))
+
+
+### Features
+
+* ANLSPI-31460 manual flush events api ([#360](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/360)) ([0164137](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/016413784a1745ecea6449a2b2f7bfc816860dec))
+
+
+
 # [4.10.0](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/4.9.1...4.10.0) (2025-11-12)
 
 
 ### Features
 
 * ANLSPI-30189 add referralPage for page event ([#354](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/354)) ([b3cac0a](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/b3cac0a822af8205b1fb252cf5cfdd673141906c))
+* release 4.10.0 ([bdbc886](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/bdbc88632947bfbdaeaaef02d008ed3d48732c72))
 
 
 
@@ -41,23 +56,6 @@
 * ANLSPI-28053 add sceneDelegateClass option ([#348](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/348)) ([7affb64](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/7affb64fdb27384875a4e7999ed9d69ce2cc1dab))
 * release 4.8.0 ([d507805](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/d507805531e4a0420066b2dfd03c91c3088c2c90))
 * release 4.8.0 ([#349](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/349)) ([d318964](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/d31896448e88a645100ee0d39f973064da1f903f))
-
-
-
-# [4.7.0](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/4.6.0...4.7.0) (2025-06-05)
-
-
-### Bug Fixes
-
-* ANLSPI-26449 move to Xcode 16 ([#342](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/342)) ([00a3755](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/00a3755b31aaa172ffdb34c54370af33eded2399))
-* ANLSPI-27446 ignore private view of TextInputUI framework ([#346](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/346)) ([128520f](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/128520f693a48bc194924459188495bfcb153a32))
-* ANLSPI-27507 remove using of deprecated api ([#347](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/347)) ([2394f11](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/2394f11104cb1bc05a7a545decc465e62555dfd9))
-
-
-### Features
-
-* ANLSPI-27402 use notification for VIEW_CHANGE observing ([#344](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/344)) ([81283c0](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/81283c0e7ec7d921227f5712a29b64cc60df80d5))
-* release 4.7.0 ([cbbdd78](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/cbbdd78d01a8e07832e03dce4538ff97de6c66de))
 
 
 
