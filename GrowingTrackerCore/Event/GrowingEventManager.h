@@ -72,6 +72,9 @@
 /// 事件入库
 - (void)flushDB;
 
+/// 发送事件
+- (void)sendAllChannelEvents;
+
 /// 发送event，必须在主线程调用
 /// @param builder event构造器
 - (void)postEventBuilder:(GrowingBaseBuilder *_Nullable)builder;

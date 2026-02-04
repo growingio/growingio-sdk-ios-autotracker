@@ -79,4 +79,7 @@ FOUNDATION_EXPORT const int GrowingTrackerVersionCode;
 /// 清除地理位置
 - (void)cleanLocation;
 
+/// 强制发送所有本地存储的事件到服务器
+- (void)flushEvents;
+
 @end
