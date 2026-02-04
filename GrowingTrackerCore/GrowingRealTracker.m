@@ -270,7 +270,13 @@ const int GrowingTrackerVersionCode = 41000;
 }
 
 - (void)flushEvents {
-    [[GrowingEventManager sharedInstance] sendAllChannelEvents];
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+        if (!trackConfiguration.dataCollectionEnabled) {
+            return;
+        }
+        [[GrowingEventManager sharedInstance] sendAllChannelEvents];
+    }];
 }
 
 @end

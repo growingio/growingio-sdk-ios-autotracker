@@ -21,6 +21,7 @@
 #import "GrowingTargetConditionals.h"
 #import "GrowingTrackerCore/Network/GrowingNetworkPathMonitor.h"
 #import "GrowingTrackerCore/Thirdparty/Reachability/GrowingReachability.h"
+#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 
 #if Growing_OS_PURE_IOS
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
@@ -55,7 +56,12 @@
         _monitorQueue = dispatch_queue_create("com.growingio.network.monitorQueue", DISPATCH_QUEUE_SERIAL);
 
 #if Growing_OS_PURE_IOS
-        _teleInfo = [[CTTelephonyNetworkInfo alloc] init];
+        dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
+            CTTelephonyNetworkInfo *info = [[CTTelephonyNetworkInfo alloc] init];
+            [GrowingDispatchManager dispatchInGrowingThread:^{
+                self.teleInfo = info;
+            }];
+        });
 #endif
         [self monitorInitialize];
     }
@@ -77,18 +83,20 @@
 #elif Growing_OS_PURE_IOS
         NSArray *typeStrings4G = @[CTRadioAccessTechnologyLTE];
         NSString *accessString = CTRadioAccessTechnologyLTE;  // default 4G
-        if (@available(iOS 12.0, *)) {
-            if ([self.teleInfo respondsToSelector:@selector(serviceCurrentRadioAccessTechnology)]) {
-                NSDictionary *radioDic = self.teleInfo.serviceCurrentRadioAccessTechnology;
-                if (radioDic.count) {
-                    accessString = radioDic[radioDic.allKeys.firstObject];
+        if (self.teleInfo) {
+            if (@available(iOS 12.0, *)) {
+                if ([self.teleInfo respondsToSelector:@selector(serviceCurrentRadioAccessTechnology)]) {
+                    NSDictionary *radioDic = self.teleInfo.serviceCurrentRadioAccessTechnology;
+                    if (radioDic.count) {
+                        accessString = radioDic[radioDic.allKeys.firstObject];
+                    }
                 }
-            }
-        } else {
+            } else {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            accessString = self.teleInfo.currentRadioAccessTechnology;
+                accessString = self.teleInfo.currentRadioAccessTechnology;
 #pragma clang diagnostic pop
+            }
         }
 
         if ([typeStrings4G containsObject:accessString]) {
