@@ -40,6 +40,7 @@ let package = Package(
         .Module.ads,
         .Module.apm,
         .Module.abTesting,
+        .Module.flutter,
     ],
     dependencies: [
         .package(
@@ -89,6 +90,7 @@ let package = Package(
         .Module.ads,
         .Module.apm,
         .Module.abTesting,
+        .Module.flutter,
 
         // MARK: - Services
 
@@ -114,6 +116,7 @@ extension Product {
         static let ads = library(name: .ads, targets: [.ads])
         static let apm = library(name: .apm, targets: [.apm])
         static let abTesting = library(name: .abTesting, targets: [.abTesting])
+        static let flutter = library(name: .flutter, targets: [.flutter])
     }
 }
 
@@ -263,6 +266,12 @@ extension Target {
                                       path: .Path.abTesting,
                                       publicHeadersPath: .Path.publicHeaders,
                                       cSettings: [.hspFor(.Path.abTesting)])
+
+        static let flutter = target(name: .flutter,
+                                    dependencies: [.Core.trackerCore],
+                                    path: .Path.flutter,
+                                    publicHeadersPath: ".",
+                                    cSettings: [.hspFor(.Path.flutter)])
     }
 
     enum Service {
@@ -400,6 +409,7 @@ extension String {
     static let ads = "GrowingModule_Ads"
     static let apm = "GrowingModule_APM"
     static let abTesting = "GrowingModule_ABTesting"
+    static let flutter = "GrowingModule_Flutter"
 
     // Services
     static let database = "GrowingService_Database"
@@ -439,6 +449,7 @@ extension String {
         static let apm = "Modules/APM"
         static let abTesting = "Modules/ABTesting"
         static let coreServices = "Modules/DefaultServices"
+        static let flutter = "Modules/Flutter"
 
         // Services
         static let database = "Services/Database"
