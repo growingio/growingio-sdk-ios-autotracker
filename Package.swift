@@ -74,6 +74,10 @@ let package = Package(
             name: "GrowingModule_APM",
             targets: ["GrowingModule_APM"]
         ),
+        .library(
+            name: "GrowingModule_Flutter",
+            targets: ["GrowingModule_Flutter"]
+        ),
     ],
     dependencies: [
         .package(
@@ -386,6 +390,15 @@ let package = Package(
             ],
             path: "Modules/APM",
             publicHeadersPath: "Public",
+            cSettings: [
+                .headerSearchPath("../.."),
+            ]
+        ),
+        .target(
+            name: "GrowingModule_Flutter",
+            dependencies: ["GrowingTrackerCore"],
+            path: "Modules/Flutter",
+            publicHeadersPath: ".",
             cSettings: [
                 .headerSearchPath("../.."),
             ]
