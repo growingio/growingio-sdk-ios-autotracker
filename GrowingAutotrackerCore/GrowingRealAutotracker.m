@@ -142,11 +142,10 @@ GrowingPropertyDefine(UITextView, NSString *, growingHookOldText, setGrowingHook
                                         withMethod:@selector(growing_dismissAnimated:triggeringAction:)
                                              error:&alertError];
 
-        [UIAlertController
-            growingul_swizzleMethod:dismissActionSELFromIOS11
-                         withMethod:@selector(growing_dismissAnimated:
-                                                     triggeringAction:triggeredByPopoverDimmingView:dismissCompletion:)
-                              error:&alertError];
+        [UIAlertController growingul_swizzleMethod:dismissActionSELFromIOS11
+                                        withMethod:@selector(growing_dismissAnimated:triggeringAction:
+                                                             triggeredByPopoverDimmingView:dismissCompletion:)
+                                             error:&alertError];
 
         if (alertError) {
             GIOLogError(@"Failed to swizzle UIAlertController. Details: %@", alertError);
