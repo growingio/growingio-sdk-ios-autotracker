@@ -43,8 +43,7 @@ public class SwiftProtobufWrapper: NSObject {
     public func toJsonObject() -> [String: AnyObject]? {
         do {
             let data = try unbox.jsonUTF8Data()
-            let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String: AnyObject]
-            return json
+            return try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String: AnyObject]
         } catch {
             return nil
         }
@@ -71,7 +70,7 @@ public class SwiftProtobufWrapper: NSObject {
 }
 
 public extension SwiftProtobufWrapper {
-    // For GrowingToolsKit NetFlow
+    /// For GrowingToolsKit NetFlow
     @objc(convertProtobufDataToJsonArray:)
     static func convertProtobufDataToJsonArray(from data: Data) -> [[String: AnyObject]]? {
         do {
