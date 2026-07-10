@@ -17,11 +17,10 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #import <XCTest/XCTest.h>
 
-#import "GrowingAutotracker.h"
 #import "GrowingAdvertising.h"
+#import "GrowingAutotracker.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 
@@ -41,9 +40,10 @@
 // activate 事件生成链路含异步步骤（如 WKWebView UA 获取），耗时不定，
 // 不能用固定延时后断言（CI 慢机器上曾导致 flaky），改用谓词轮询等待
 - (void)waitForActivateEventWithTimeout:(NSTimeInterval)timeout {
-    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id _Nullable object, NSDictionary *_Nullable bindings) {
-        return [MockEventQueue.sharedQueue eventCountFor:GrowingEventTypeActivate] >= 1;
-    }];
+    NSPredicate *predicate =
+        [NSPredicate predicateWithBlock:^BOOL(id _Nullable object, NSDictionary *_Nullable bindings) {
+            return [MockEventQueue.sharedQueue eventCountFor:GrowingEventTypeActivate] >= 1;
+        }];
     [self expectationForPredicate:predicate evaluatedWithObject:MockEventQueue.sharedQueue handler:nil];
     [self waitForExpectationsWithTimeout:timeout handler:nil];
 }
@@ -53,7 +53,6 @@
 }
 
 - (void)tearDown {
-
 }
 
 - (void)test00SendActivateEvent {
@@ -66,7 +65,7 @@
     configuration.dataSourceId = @"test";
     configuration.urlScheme = @"growing.530c8231345c492d";
     [GrowingAutotracker startWithConfiguration:configuration launchOptions:nil];
-    
+
     [self waitForActivateEventWithTimeout:30.0f];
     // 断言保持 == 1（而非 >= 1）：用于检测 activate 事件重复发送的回归
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeActivate];
@@ -77,10 +76,10 @@
     // 恢复为未发送激活事件
     [GrowingAdUtils setActivateWrote:NO];
     [GrowingAdUtils setActivateSent:NO];
-    
+
     [[GrowingAutotracker sharedInstance] setDataCollectionEnabled:NO];
     [[GrowingAutotracker sharedInstance] setDataCollectionEnabled:YES];
-    
+
     [self waitForActivateEventWithTimeout:30.0f];
     // 断言保持 == 1（而非 >= 1）：用于检测 activate 事件重复发送的回归
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeActivate];
