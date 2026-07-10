@@ -30,11 +30,23 @@
 
 #import "MockEventQueue.h"
 
+// 注意：test01 依赖 test00 先执行完毕（XCTest 默认按类内方法名字母序执行，
+// 当前 testplan 未开启 test randomization）；若日后开启随机化，需重审这两个用例的隔离性
 @interface AdvertTest : XCTestCase
 
 @end
 
 @implementation AdvertTest
+
+// activate 事件生成链路含异步步骤（如 WKWebView UA 获取），耗时不定，
+// 不能用固定延时后断言（CI 慢机器上曾导致 flaky），改用谓词轮询等待
+- (void)waitForActivateEventWithTimeout:(NSTimeInterval)timeout {
+    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id _Nullable object, NSDictionary *_Nullable bindings) {
+        return [MockEventQueue.sharedQueue eventCountFor:GrowingEventTypeActivate] >= 1;
+    }];
+    [self expectationForPredicate:predicate evaluatedWithObject:MockEventQueue.sharedQueue handler:nil];
+    [self waitForExpectationsWithTimeout:timeout handler:nil];
+}
 
 - (void)setUp {
     [MockEventQueue.sharedQueue cleanQueue];
@@ -45,20 +57,20 @@
 }
 
 - (void)test00SendActivateEvent {
+    // 重置激活标记（GrowingAdUtils 持久化于文件存储）：
+    // 避免隐式依赖"干净模拟器"，否则本地复跑或复用模拟器的环境下 activate 事件不会再次发送
+    [GrowingAdUtils setActivateWrote:NO];
+    [GrowingAdUtils setActivateSent:NO];
+
     GrowingAutotrackConfiguration *configuration = [GrowingAutotrackConfiguration configurationWithProjectId:@"test"];
     configuration.dataSourceId = @"test";
     configuration.urlScheme = @"growing.530c8231345c492d";
     [GrowingAutotracker startWithConfiguration:configuration launchOptions:nil];
     
-    XCTestExpectation *expectation = [self expectationWithDescription:@"SendActivateEvent Test failed : timeout"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        // 给 webView 一点时间
-        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeActivate];
-        XCTAssertEqual(events.count, 1);
-
-        [expectation fulfill];
-    });
-    [self waitForExpectationsWithTimeout:10.0f handler:nil];
+    [self waitForActivateEventWithTimeout:30.0f];
+    // 断言保持 == 1（而非 >= 1）：用于检测 activate 事件重复发送的回归
+    NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeActivate];
+    XCTAssertEqual(events.count, 1);
 }
 
 - (void)test01SetDataCollectionEnabled {
@@ -69,15 +81,10 @@
     [[GrowingAutotracker sharedInstance] setDataCollectionEnabled:NO];
     [[GrowingAutotracker sharedInstance] setDataCollectionEnabled:YES];
     
-    XCTestExpectation *expectation = [self expectationWithDescription:@"SetDataCollectionEnabled Test failed : timeout"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        // 给 webView 一点时间
-        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeActivate];
-        XCTAssertEqual(events.count, 1);
-
-        [expectation fulfill];
-    });
-    [self waitForExpectationsWithTimeout:10.0f handler:nil];
+    [self waitForActivateEventWithTimeout:30.0f];
+    // 断言保持 == 1（而非 >= 1）：用于检测 activate 事件重复发送的回归
+    NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeActivate];
+    XCTAssertEqual(events.count, 1);
 }
 
 @end
