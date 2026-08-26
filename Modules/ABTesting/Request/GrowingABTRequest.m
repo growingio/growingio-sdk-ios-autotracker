@@ -48,19 +48,27 @@
         GrowingSession *session = [GrowingSession currentSession];
         _loginUserId = session.loginUserId.copy;
         _loginUserKey = session.loginUserKey.copy;
-        _userIdentity = [GrowingABTRequest identityWithUserId:_loginUserId userKey:_loginUserKey];
+        _userIdentity = [GrowingABTRequest identityWithDeviceId:[GrowingDeviceInfo currentDeviceInfo].deviceIDString
+                                                         userId:_loginUserId
+                                                        userKey:_loginUserKey];
     }
     return self;
 }
 
 + (NSString *)currentIdentity {
     GrowingSession *session = [GrowingSession currentSession];
-    return [self identityWithUserId:session.loginUserId userKey:session.loginUserKey];
+    return [self identityWithDeviceId:[GrowingDeviceInfo currentDeviceInfo].deviceIDString
+                               userId:session.loginUserId
+                              userKey:session.loginUserKey];
 }
 
-+ (NSString *)identityWithUserId:(NSString *_Nullable)userId userKey:(NSString *_Nullable)userKey {
-    NSString *raw =
-        [NSString stringWithFormat:@"%@\n%@", (userId ?: @"").growingHelper_sha1, (userKey ?: @"").growingHelper_sha1];
++ (NSString *)identityWithDeviceId:(NSString *_Nullable)deviceId
+                            userId:(NSString *_Nullable)userId
+                           userKey:(NSString *_Nullable)userKey {
+    NSString *raw = [NSString stringWithFormat:@"%@\n%@\n%@",
+                                               (deviceId ?: @"").growingHelper_sha1,
+                                               (userId ?: @"").growingHelper_sha1,
+                                               (userKey ?: @"").growingHelper_sha1];
     return raw.growingHelper_sha1;
 }
 

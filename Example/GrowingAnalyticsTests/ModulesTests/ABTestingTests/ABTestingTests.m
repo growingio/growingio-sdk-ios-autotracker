@@ -30,11 +30,20 @@
 #import "Modules/ABTesting/Request/GrowingABTRequest.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
+#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "GrowingULTimeUtil.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingEncryptionService.h"
 #import "GrowingServiceManager.h"
 #import "MockEventQueue.h"
+
+@interface GrowingABTRequest (XCTest)
+
++ (NSString *)identityWithDeviceId:(NSString *_Nullable)deviceId
+                            userId:(NSString *_Nullable)userId
+                           userKey:(NSString *_Nullable)userKey;
+
+@end
 
 @interface GrowingABTesting (XCTest)
 
@@ -744,6 +753,13 @@ static NSString *GrowingABTDecodeValue(NSString *value, unsigned long long stm) 
     [[GrowingSession currentSession] setLoginUserId:@"a" userKey:@"b\nc"];
     NSString *identity6 = [GrowingABTRequest currentIdentity];
     XCTAssertNotEqualObjects(identity5, identity6);
+
+    NSString *deviceId = [GrowingDeviceInfo currentDeviceInfo].deviceIDString;
+    XCTAssertEqualObjects([GrowingABTRequest identityWithDeviceId:deviceId userId:@"a" userKey:@"b\nc"], identity6);
+    XCTAssertNotEqualObjects([GrowingABTRequest identityWithDeviceId:@"another-device"
+                                                             userId:@"a"
+                                                            userKey:@"b\nc"],
+                             identity6);
 
     GrowingABTRequest *request = [[GrowingABTRequest alloc] init];
     XCTAssertEqualObjects(request.userIdentity, identity6);
