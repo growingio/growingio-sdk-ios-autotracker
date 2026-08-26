@@ -1,66 +1,67 @@
 PODS:
-  - GrowingAnalytics/ABTesting (4.10.0):
-    - GrowingAnalytics/TrackerCore (= 4.10.0)
-  - GrowingAnalytics/Ads (4.10.0):
-    - GrowingAnalytics/TrackerCore (= 4.10.0)
-  - GrowingAnalytics/APM (4.10.0):
-    - GrowingAnalytics/TrackerCore (= 4.10.0)
+  - GrowingAnalytics/ABTesting (4.12.0):
+    - GrowingAnalytics/Encryption (= 4.12.0)
+    - GrowingAnalytics/TrackerCore (= 4.12.0)
+  - GrowingAnalytics/Ads (4.12.0):
+    - GrowingAnalytics/TrackerCore (= 4.12.0)
+  - GrowingAnalytics/APM (4.12.0):
+    - GrowingAnalytics/TrackerCore (= 4.12.0)
     - GrowingAPM/Core (~> 1.0.1)
-  - GrowingAnalytics/Autotracker (4.10.0):
-    - GrowingAnalytics/AutotrackerCore (= 4.10.0)
-    - GrowingAnalytics/DefaultServices (= 4.10.0)
-    - GrowingAnalytics/Hybrid (= 4.10.0)
-    - GrowingAnalytics/MobileDebugger (= 4.10.0)
-    - GrowingAnalytics/WebCircle (= 4.10.0)
-  - GrowingAnalytics/AutotrackerCore (4.10.0):
-    - GrowingAnalytics/TrackerCore (= 4.10.0)
+  - GrowingAnalytics/Autotracker (4.12.0):
+    - GrowingAnalytics/AutotrackerCore (= 4.12.0)
+    - GrowingAnalytics/DefaultServices (= 4.12.0)
+    - GrowingAnalytics/Hybrid (= 4.12.0)
+    - GrowingAnalytics/MobileDebugger (= 4.12.0)
+    - GrowingAnalytics/WebCircle (= 4.12.0)
+  - GrowingAnalytics/AutotrackerCore (4.12.0):
+    - GrowingAnalytics/TrackerCore (= 4.12.0)
     - GrowingUtils/AutotrackerCore (~> 1.2.4)
-  - GrowingAnalytics/Compression (4.10.0):
-    - GrowingAnalytics/TrackerCore (= 4.10.0)
-  - GrowingAnalytics/Database (4.10.0):
-    - GrowingAnalytics/TrackerCore (= 4.10.0)
-  - GrowingAnalytics/DefaultServices (4.10.0):
-    - GrowingAnalytics/Compression (= 4.10.0)
-    - GrowingAnalytics/Encryption (= 4.10.0)
-    - GrowingAnalytics/JSON (= 4.10.0)
-    - GrowingAnalytics/Network (= 4.10.0)
-    - GrowingAnalytics/Protobuf (= 4.10.0)
-    - GrowingAnalytics/TrackerCore (= 4.10.0)
-  - GrowingAnalytics/Encryption (4.10.0):
-    - GrowingAnalytics/TrackerCore (= 4.10.0)
-  - GrowingAnalytics/Hybrid (4.10.0):
-    - GrowingAnalytics/TrackerCore (= 4.10.0)
-  - GrowingAnalytics/ImpressionTrack (4.10.0):
-    - GrowingAnalytics/AutotrackerCore (= 4.10.0)
-  - GrowingAnalytics/JSON (4.10.0):
-    - GrowingAnalytics/Database (= 4.10.0)
-  - GrowingAnalytics/MobileDebugger (4.10.0):
-    - GrowingAnalytics/Screenshot (= 4.10.0)
-    - GrowingAnalytics/TrackerCore (= 4.10.0)
-    - GrowingAnalytics/WebSocket (= 4.10.0)
-  - GrowingAnalytics/Network (4.10.0):
-    - GrowingAnalytics/TrackerCore (= 4.10.0)
-  - GrowingAnalytics/Protobuf (4.10.0):
-    - GrowingAnalytics/Database (= 4.10.0)
-    - GrowingAnalytics/Protobuf/Proto (= 4.10.0)
-  - GrowingAnalytics/Protobuf/Proto (4.10.0):
-    - GrowingAnalytics/Database (= 4.10.0)
+  - GrowingAnalytics/Compression (4.12.0):
+    - GrowingAnalytics/TrackerCore (= 4.12.0)
+  - GrowingAnalytics/Database (4.12.0):
+    - GrowingAnalytics/TrackerCore (= 4.12.0)
+  - GrowingAnalytics/DefaultServices (4.12.0):
+    - GrowingAnalytics/Compression (= 4.12.0)
+    - GrowingAnalytics/Encryption (= 4.12.0)
+    - GrowingAnalytics/JSON (= 4.12.0)
+    - GrowingAnalytics/Network (= 4.12.0)
+    - GrowingAnalytics/Protobuf (= 4.12.0)
+    - GrowingAnalytics/TrackerCore (= 4.12.0)
+  - GrowingAnalytics/Encryption (4.12.0):
+    - GrowingAnalytics/TrackerCore (= 4.12.0)
+  - GrowingAnalytics/Hybrid (4.12.0):
+    - GrowingAnalytics/TrackerCore (= 4.12.0)
+  - GrowingAnalytics/ImpressionTrack (4.12.0):
+    - GrowingAnalytics/AutotrackerCore (= 4.12.0)
+  - GrowingAnalytics/JSON (4.12.0):
+    - GrowingAnalytics/Database (= 4.12.0)
+  - GrowingAnalytics/MobileDebugger (4.12.0):
+    - GrowingAnalytics/Screenshot (= 4.12.0)
+    - GrowingAnalytics/TrackerCore (= 4.12.0)
+    - GrowingAnalytics/WebSocket (= 4.12.0)
+  - GrowingAnalytics/Network (4.12.0):
+    - GrowingAnalytics/TrackerCore (= 4.12.0)
+  - GrowingAnalytics/Protobuf (4.12.0):
+    - GrowingAnalytics/Database (= 4.12.0)
+    - GrowingAnalytics/Protobuf/Proto (= 4.12.0)
+  - GrowingAnalytics/Protobuf/Proto (4.12.0):
+    - GrowingAnalytics/Database (= 4.12.0)
     - Protobuf (~> 3.27)
-  - GrowingAnalytics/Screenshot (4.10.0):
-    - GrowingAnalytics/TrackerCore (= 4.10.0)
-  - GrowingAnalytics/Tracker (4.10.0):
-    - GrowingAnalytics/DefaultServices (= 4.10.0)
-    - GrowingAnalytics/MobileDebugger (= 4.10.0)
-    - GrowingAnalytics/TrackerCore (= 4.10.0)
-  - GrowingAnalytics/TrackerCore (4.10.0):
+  - GrowingAnalytics/Screenshot (4.12.0):
+    - GrowingAnalytics/TrackerCore (= 4.12.0)
+  - GrowingAnalytics/Tracker (4.12.0):
+    - GrowingAnalytics/DefaultServices (= 4.12.0)
+    - GrowingAnalytics/MobileDebugger (= 4.12.0)
+    - GrowingAnalytics/TrackerCore (= 4.12.0)
+  - GrowingAnalytics/TrackerCore (4.12.0):
     - GrowingUtils/TrackerCore (~> 1.2.4)
-  - GrowingAnalytics/WebCircle (4.10.0):
-    - GrowingAnalytics/AutotrackerCore (= 4.10.0)
-    - GrowingAnalytics/Hybrid (= 4.10.0)
-    - GrowingAnalytics/Screenshot (= 4.10.0)
-    - GrowingAnalytics/WebSocket (= 4.10.0)
-  - GrowingAnalytics/WebSocket (4.10.0):
-    - GrowingAnalytics/TrackerCore (= 4.10.0)
+  - GrowingAnalytics/WebCircle (4.12.0):
+    - GrowingAnalytics/AutotrackerCore (= 4.12.0)
+    - GrowingAnalytics/Hybrid (= 4.12.0)
+    - GrowingAnalytics/Screenshot (= 4.12.0)
+    - GrowingAnalytics/WebSocket (= 4.12.0)
+  - GrowingAnalytics/WebSocket (4.12.0):
+    - GrowingAnalytics/TrackerCore (= 4.12.0)
   - GrowingAPM (1.0.2):
     - GrowingAPM/Core (= 1.0.2)
     - GrowingAPM/CrashMonitor (= 1.0.2)
@@ -152,7 +153,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  GrowingAnalytics: e77ff4ce3bc8e2888792a79ff5e14f860a093f3d
+  GrowingAnalytics: c66301f9fa7d96039cc7de647ef71f52524c8a3b
   GrowingAPM: 4a3628e708cd1b2e4e1fc0925593781ed8acadd2
   GrowingToolsKit: 548d35d9b5964af3a73f80b30c6948dc10d247b4
   GrowingUtils: 5d323e54798595015ff11e97fe981ae167dc270e

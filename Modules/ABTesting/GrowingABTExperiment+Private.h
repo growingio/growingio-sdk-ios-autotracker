@@ -25,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) long long fetchTime;
 
+@property (nonatomic, copy, nullable) NSString *identity;
+
 - (instancetype)initWithLayerId:(NSString *)layerId
                       layerName:(NSString *_Nullable)layerName
                    experimentId:(NSString *_Nullable)experimentId
@@ -35,7 +37,12 @@ NS_ASSUME_NONNULL_BEGIN
                       fetchTime:(long long)fetchTime;
 - (void)saveToDisk;
 - (void)removeFromDisk;
-+ (nullable GrowingABTExperiment *)findExperiment:(NSString *)layerId;
+
++ (nullable GrowingABTExperiment *)findExperiment:(NSString *)layerId identity:(NSString *)identity;
+
++ (BOOL)isToday:(long long)timestamp;
+- (BOOL)isOutdated;
+
 - (id)toJSONObject;
 
 - (instancetype)init NS_UNAVAILABLE;

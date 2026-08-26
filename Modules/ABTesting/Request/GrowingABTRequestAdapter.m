@@ -21,6 +21,20 @@
 
 @implementation GrowingABTRequestAdapter
 
++ (NSCharacterSet *)formAllowedCharacterSet {
+    static NSCharacterSet *characterSet = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        characterSet = [NSCharacterSet
+            characterSetWithCharactersInString:@"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~"];
+    });
+    return characterSet;
+}
+
++ (NSString *)formEncodedString:(NSString *)string {
+    return [string stringByAddingPercentEncodingWithAllowedCharacters:[self formAllowedCharacterSet]] ?: @"";
+}
+
 + (instancetype)adapterWithRequest:(id<GrowingRequestProtocol>)request {
     GrowingABTRequestAdapter *adapter = [[self alloc] init];
     return adapter;
@@ -34,7 +48,9 @@
     }
     NSMutableArray *paramStrings = [NSMutableArray array];
     [self.parameters enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        NSString *paramString = [NSString stringWithFormat:@"%@=%@", key, obj];
+        NSString *encodedKey = [GrowingABTRequestAdapter formEncodedString:[NSString stringWithFormat:@"%@", key]];
+        NSString *encodedValue = [GrowingABTRequestAdapter formEncodedString:[NSString stringWithFormat:@"%@", obj]];
+        NSString *paramString = [NSString stringWithFormat:@"%@=%@", encodedKey, encodedValue];
         [paramStrings addObject:paramString];
     }];
     NSString *bodyString = [paramStrings componentsJoinedByString:@"&"];
