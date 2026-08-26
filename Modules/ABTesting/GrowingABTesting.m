@@ -70,10 +70,9 @@ static NSString *const kABTExpStrategyName = @"$exp_strategy_name";
     }
 
     if (![[GrowingServiceManager sharedInstance] createService:@protocol(GrowingEncryptionService)]) {
-        GIOLogError(
-            @"[GrowingABTesting] -growingModInit: error: no encrypt service support, "
-            @"userId/userKey would be sent in plaintext and diversion result would be random. "
-            @"Please make sure Services/Encryption is included in your integration");
+        @throw [NSException exceptionWithName:@"初始化异常"
+                                       reason:@"AB实验依赖加密服务，请在集成时引入Services/Encryption"
+                                     userInfo:nil];
     }
 }
 

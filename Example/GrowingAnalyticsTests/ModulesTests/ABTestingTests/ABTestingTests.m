@@ -34,7 +34,6 @@
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingEncryptionService.h"
 #import "GrowingServiceManager.h"
-#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLog.h"
 #import "MockEventQueue.h"
 
 @interface GrowingABTesting (XCTest)
@@ -55,50 +54,6 @@
 
 @property (nonatomic, strong) NSMutableDictionary *allServiceDict;
 @property (nonatomic, strong) NSMutableDictionary *allServiceInstanceDict;
-
-@end
-
-@interface GrowingABTLogCollector : GrowingAbstractLogger
-
-- (BOOL)containsMessage:(NSString *)substring;
-- (void)reset;
-
-@end
-
-@implementation GrowingABTLogCollector {
-    NSMutableArray<NSString *> *_messages;
-}
-
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        _messages = [NSMutableArray array];
-    }
-    return self;
-}
-
-- (void)logMessage:(GrowingLogMessage *)logMessage {
-    @synchronized(self) {
-        [_messages addObject:logMessage.message ?: @""];
-    }
-}
-
-- (BOOL)containsMessage:(NSString *)substring {
-    @synchronized(self) {
-        for (NSString *message in _messages) {
-            if ([message rangeOfString:substring].location != NSNotFound) {
-                return YES;
-            }
-        }
-        return NO;
-    }
-}
-
-- (void)reset {
-    @synchronized(self) {
-        [_messages removeAllObjects];
-    }
-}
 
 @end
 
@@ -1134,25 +1089,20 @@ static NSString *GrowingABTDecodeValue(NSString *value, unsigned long long stm) 
     XCTAssertNotNil([GrowingABTExperimentStorage findExperiment:layerId identity:@"identity_B"]);
 }
 
-- (void)test12EncryptServiceMissingLogsError {
+- (void)test12EncryptServiceMissingThrowsException {
     GrowingServiceManager *manager = GrowingServiceManager.sharedInstance;
     NSString *serviceKey = NSStringFromProtocol(@protocol(GrowingEncryptionService));
     NSString *implClassName = manager.allServiceDict[serviceKey];
     id cachedInstance = manager.allServiceInstanceDict[serviceKey];
     XCTAssertNotNil(implClassName, @"正规集成下加密服务应已注册，前置条件不成立则本用例无意义");
 
-    GrowingABTLogCollector *collector = [[GrowingABTLogCollector alloc] init];
-    [GrowingLog addLogger:collector withLevel:GrowingLogLevelAll];
-
     @try {
         [manager.allServiceDict removeObjectForKey:serviceKey];
         [manager.allServiceInstanceDict removeObjectForKey:serviceKey];
         XCTAssertNil([manager createService:@protocol(GrowingEncryptionService)]);
 
-        [[GrowingABTesting sharedInstance] growingModInit:nil];
-        [GrowingLog flushLog];
-        XCTAssertTrue([collector containsMessage:@"no encrypt service support"],
-                      @"加密服务缺失时应报错，否则 userId 会以明文上报并导致随机分流");
+        XCTAssertThrowsSpecificNamed([[GrowingABTesting sharedInstance] growingModInit:nil], NSException, @"初始化异常",
+                                     @"加密服务缺失时应抛出初始化异常，否则 userId 会以明文上报并导致随机分流");
     } @finally {
         manager.allServiceDict[serviceKey] = implClassName;
         if (cachedInstance) {
@@ -1160,13 +1110,8 @@ static NSString *GrowingABTDecodeValue(NSString *value, unsigned long long stm) 
         }
     }
 
-    [collector reset];
     XCTAssertNotNil([manager createService:@protocol(GrowingEncryptionService)]);
-    [[GrowingABTesting sharedInstance] growingModInit:nil];
-    [GrowingLog flushLog];
-    XCTAssertFalse([collector containsMessage:@"no encrypt service support"]);
-
-    [GrowingLog removeLogger:collector];
+    XCTAssertNoThrow([[GrowingABTesting sharedInstance] growingModInit:nil]);
 }
 
 @end
