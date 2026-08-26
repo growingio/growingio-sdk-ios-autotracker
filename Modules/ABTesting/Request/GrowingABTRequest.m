@@ -59,9 +59,8 @@
 }
 
 + (NSString *)identityWithUserId:(NSString *_Nullable)userId userKey:(NSString *_Nullable)userKey {
-    NSString *raw = [NSString stringWithFormat:@"%@\n%@",
-                                               (userId ?: @"").growingHelper_sha1,
-                                               (userKey ?: @"").growingHelper_sha1];
+    NSString *raw =
+        [NSString stringWithFormat:@"%@\n%@", (userId ?: @"").growingHelper_sha1, (userKey ?: @"").growingHelper_sha1];
     return raw.growingHelper_sha1;
 }
 
@@ -123,12 +122,12 @@
 
     unsigned char factor = (unsigned char)(self.stm & 0xFF);
     if (self.loginUserId.length > 0) {
-        parameters[@"userId"] =
-            [[self.loginUserId.growingHelper_uft8Data growingHelper_xorEncryptWithHint:factor] growingHelper_base64String];
+        parameters[@"userId"] = [[self.loginUserId.growingHelper_uft8Data growingHelper_xorEncryptWithHint:factor]
+            growingHelper_base64String];
     }
     if (self.loginUserKey.length > 0) {
-        parameters[@"userKey"] =
-            [[self.loginUserKey.growingHelper_uft8Data growingHelper_xorEncryptWithHint:factor] growingHelper_base64String];
+        parameters[@"userKey"] = [[self.loginUserKey.growingHelper_uft8Data growingHelper_xorEncryptWithHint:factor]
+            growingHelper_base64String];
     }
 
     bodyAdapter.parameters = parameters.copy;
