@@ -70,9 +70,10 @@ static NSString *const kABTExpStrategyName = @"$exp_strategy_name";
     }
 
     if (![[GrowingServiceManager sharedInstance] createService:@protocol(GrowingEncryptionService)]) {
-        GIOLogError(@"[GrowingABTesting] -growingModInit: error: no encrypt service support, "
-                    @"userId/userKey would be sent in plaintext and diversion result would be random. "
-                    @"Please make sure Services/Encryption is included in your integration");
+        GIOLogError(
+            @"[GrowingABTesting] -growingModInit: error: no encrypt service support, "
+            @"userId/userKey would be sent in plaintext and diversion result would be random. "
+            @"Please make sure Services/Encryption is included in your integration");
     }
 }
 
@@ -217,8 +218,8 @@ static NSString *const kABTExpStrategyName = @"$exp_strategy_name";
                   exp.identity = request.userIdentity;
 
                   if (experimentId && experimentId.length > 0 && strategyId && strategyId.length > 0) {
-                      GrowingABTExperiment *lastExp =
-                          [GrowingABTExperiment findExperiment:layerId identity:request.userIdentity];
+                      GrowingABTExperiment *lastExp = [GrowingABTExperiment findExperiment:layerId
+                                                                                  identity:request.userIdentity];
                       if (![exp isEqual:lastExp]) {
                           // 和缓存实验数据不同，上报入组埋点
                           [self trackExperiment:exp];
