@@ -21,6 +21,7 @@
 #import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Public/GrowingEncryptionService.h"
 #import "GrowingTrackerCore/Public/GrowingEventNetworkService.h"
 #import "GrowingTrackerCore/Public/GrowingServiceManager.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
@@ -67,22 +68,18 @@ static NSString *const kABTExpStrategyName = @"$exp_strategy_name";
     } else {
         @throw [NSException exceptionWithName:@"初始化异常" reason:@"请在SDK初始化时，配置ABTestingHost" userInfo:nil];
     }
+
+    if (![[GrowingServiceManager sharedInstance] createService:@protocol(GrowingEncryptionService)]) {
+        GIOLogError(@"[GrowingABTesting] -growingModInit: error: no encrypt service support, "
+                    @"userId/userKey would be sent in plaintext and diversion result would be random. "
+                    @"Please make sure Services/Encryption is included in your integration");
+    }
 }
 
 #pragma mark - Private Method
 
 + (BOOL)isToday:(double)timestamp {
-    NSCalendar *calendar = [NSCalendar currentCalendar];
-    NSCalendarUnit unit = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay;
-
-    NSDateComponents *components = [calendar components:unit fromDate:[NSDate date]];
-    NSDate *today = [calendar dateFromComponents:components];
-
-    NSDate *date = [NSDate dateWithTimeIntervalSince1970:timestamp / 1000LL];
-    components = [calendar components:unit fromDate:date];
-    NSDate *otherDay = [calendar dateFromComponents:components];
-
-    return today && otherDay && [today isEqualToDate:otherDay];
+    return [GrowingABTExperiment isToday:(long long)timestamp];
 }
 
 + (void)trackExperiment:(GrowingABTExperiment *)experiment {
@@ -108,10 +105,10 @@ static NSString *const kABTExpStrategyName = @"$exp_strategy_name";
 + (void)fetchExperiment:(NSString *)layerId
          completedBlock:(void (^)(GrowingABTExperiment *_Nullable))completedBlock
              retryCount:(NSInteger)retryCount {
-    GrowingABTExperiment *exp = [GrowingABTExperiment findExperiment:layerId];
+    GrowingABTExperiment *exp = [GrowingABTExperiment findExperiment:layerId
+                                                            identity:[GrowingABTRequest currentIdentity]];
     if (exp) {
-        BOOL outdated = ![self isToday:exp.fetchTime];
-        if (outdated) {
+        if (exp.isOutdated) {
             // 超过自然日，清除本地缓存
             [exp removeFromDisk];
         } else {
@@ -217,10 +214,11 @@ static NSString *const kABTExpStrategyName = @"$exp_strategy_name";
                                                        strategyName:strategyName
                                                           variables:variables
                                                           fetchTime:GrowingULTimeUtil.currentTimeMillis];
+                  exp.identity = request.userIdentity;
 
                   if (experimentId && experimentId.length > 0 && strategyId && strategyId.length > 0) {
-                      // 命中实验
-                      GrowingABTExperiment *lastExp = [GrowingABTExperiment findExperiment:layerId];
+                      GrowingABTExperiment *lastExp =
+                          [GrowingABTExperiment findExperiment:layerId identity:request.userIdentity];
                       if (![exp isEqual:lastExp]) {
                           // 和缓存实验数据不同，上报入组埋点
                           [self trackExperiment:exp];
