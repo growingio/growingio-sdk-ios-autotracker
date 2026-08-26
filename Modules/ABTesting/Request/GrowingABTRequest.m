@@ -21,12 +21,49 @@
 #import "Modules/ABTesting/Public/GrowingABTesting.h"
 #import "Modules/ABTesting/Request/GrowingABTRequestAdapter.h"
 
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Network/Request/Adapter/GrowingRequestAdapter.h"
+#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
+#import "GrowingULTimeUtil.h"
+
+@interface GrowingABTRequest ()
+
+@property (nonatomic, copy, nullable) NSString *loginUserId;
+@property (nonatomic, copy, nullable) NSString *loginUserKey;
+@property (nonatomic, copy, readwrite) NSString *userIdentity;
+
+@end
 
 @implementation GrowingABTRequest
+
+@synthesize stm;
+
+- (instancetype)init {
+    if (self = [super init]) {
+        self.stm = [GrowingULTimeUtil currentTimeMillis];
+
+        GrowingSession *session = [GrowingSession currentSession];
+        _loginUserId = session.loginUserId.copy;
+        _loginUserKey = session.loginUserKey.copy;
+        _userIdentity = [GrowingABTRequest identityWithUserId:_loginUserId userKey:_loginUserKey];
+    }
+    return self;
+}
+
++ (NSString *)currentIdentity {
+    GrowingSession *session = [GrowingSession currentSession];
+    return [self identityWithUserId:session.loginUserId userKey:session.loginUserKey];
+}
+
++ (NSString *)identityWithUserId:(NSString *_Nullable)userId userKey:(NSString *_Nullable)userKey {
+    NSString *raw = [NSString stringWithFormat:@"%@\n%@",
+                                               (userId ?: @"").growingHelper_sha1,
+                                               (userKey ?: @"").growingHelper_sha1];
+    return raw.growingHelper_sha1;
+}
 
 - (GrowingHTTPMethod)method {
     return GrowingHTTPMethodPOST;
@@ -35,7 +72,28 @@
 - (NSURL *)absoluteURL {
     GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
     NSURL *baseURL = [NSURL URLWithString:config.abTestingServerHost];
-    return [NSURL URLWithString:self.path relativeToURL:baseURL];
+    NSURL *url = [NSURL URLWithString:self.path relativeToURL:baseURL];
+
+    NSDictionary *query = self.query;
+    if (!url || query.count == 0) {
+        return url;
+    }
+
+    NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:YES];
+    if (!components) {
+        GIOLogWarn(@"[GrowingABTRequest] failed to build NSURLComponents, stm is missing from query: %@", url);
+        return url;
+    }
+    NSMutableArray<NSURLQueryItem *> *queryItems = components.queryItems.mutableCopy ?: [NSMutableArray array];
+    [query enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
+        [queryItems addObject:[NSURLQueryItem queryItemWithName:key value:[NSString stringWithFormat:@"%@", obj]]];
+    }];
+    components.queryItems = queryItems;
+    return components.URL ?: url;
+}
+
+- (NSDictionary *)query {
+    return @{@"stm": [NSString stringWithFormat:@"%llu", self.stm]};
 }
 
 - (NSString *)path {
@@ -61,6 +119,16 @@
         [GrowingDeviceInfo currentDeviceInfo].isNewDevice && [[GrowingSession currentSession] firstSession];
     if (newDevice) {
         parameters[@"newDevice"] = @(newDevice);
+    }
+
+    unsigned char factor = (unsigned char)(self.stm & 0xFF);
+    if (self.loginUserId.length > 0) {
+        parameters[@"userId"] =
+            [[self.loginUserId.growingHelper_uft8Data growingHelper_xorEncryptWithHint:factor] growingHelper_base64String];
+    }
+    if (self.loginUserKey.length > 0) {
+        parameters[@"userKey"] =
+            [[self.loginUserKey.growingHelper_uft8Data growingHelper_xorEncryptWithHint:factor] growingHelper_base64String];
     }
 
     bodyAdapter.parameters = parameters.copy;
