@@ -26,6 +26,7 @@
 
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
@@ -358,6 +359,11 @@ NSString *const kGrowingKeychainUserIdKey = @"kGrowingIOKeychainUserIdKey";
         _idfa = [GrowingUserIdentifier idfa];
     }
     return _idfa;
+}
+
+- (BOOL)isNewDeviceInFirstSession {
+    // GrowingSession 未启动时 currentSession 为 nil，firstSession 取到 NO，整体为 NO
+    return self.isNewDevice && [GrowingSession currentSession].firstSession;
 }
 
 @end

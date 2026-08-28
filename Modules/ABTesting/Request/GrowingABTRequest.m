@@ -122,8 +122,7 @@
     }
                                           .mutableCopy;
 
-    BOOL newDevice =
-        [GrowingDeviceInfo currentDeviceInfo].isNewDevice && [[GrowingSession currentSession] firstSession];
+    BOOL newDevice = [GrowingDeviceInfo currentDeviceInfo].isNewDeviceInFirstSession;
     if (newDevice) {
         parameters[@"newDevice"] = @(newDevice);
     }
