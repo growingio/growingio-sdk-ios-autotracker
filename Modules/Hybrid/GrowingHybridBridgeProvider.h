@@ -21,6 +21,7 @@
 
 @protocol GrowingWebViewDomChangedDelegate;
 @class WKWebView;
+@class WKFrameInfo;
 
 @interface GrowingHybridBridgeProvider : NSObject
 
@@ -29,6 +30,10 @@
 + (instancetype _Nonnull)sharedInstance;
 
 - (void)handleJavascriptBridgeMessage:(NSString *_Nullable)message;
+
+- (void)handleJavascriptBridgeMessage:(NSString *_Nullable)message
+                          fromWebView:(WKWebView *_Nullable)webView
+                            frameInfo:(WKFrameInfo *_Nullable)frameInfo;
 
 - (void)getDomTreeForWebView:(WKWebView *_Nonnull)webView
            completionHandler:
