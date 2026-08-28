@@ -28,6 +28,7 @@
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
+#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "Modules/Hybrid/Events/GrowingHybridPageEvent.h"
 #import "Modules/Hybrid/GrowingHybridBridgeProvider.h"
 #import "Services/Protobuf/GrowingEventProtobufDatabase.h"
@@ -39,6 +40,31 @@
 - (GrowingBaseBuilder *)transformViewElementBuilder:(NSDictionary *)dict;
 
 - (void)parseEventJsonString:(NSString *)jsonString;
+
+@end
+
+/// 拦截 evaluateJavaScript，取到原生实际下发给页面的回调代码
+@interface GrowingHybridMockWebView : WKWebView
+
+@property (nonatomic, copy) NSString *lastJavaScript;
+@property (nonatomic, assign) NSUInteger evaluateCount;
+
+@end
+
+@implementation GrowingHybridMockWebView
+
+- (void)evaluateJavaScript:(NSString *)javaScriptString completionHandler:(void (^)(id, NSError *))completionHandler {
+    self.lastJavaScript = javaScriptString;
+    self.evaluateCount++;
+}
+
+- (void)evaluateJavaScript:(NSString *)javaScriptString
+                   inFrame:(WKFrameInfo *)frame
+            inContentWorld:(WKContentWorld *)contentWorld
+         completionHandler:(void (^)(id, NSError *))completionHandler API_AVAILABLE(ios(14.0)) {
+    self.lastJavaScript = javaScriptString;
+    self.evaluateCount++;
+}
 
 @end
 
@@ -123,6 +149,117 @@
             XCTAssertEqualObjects([[GrowingPersistenceDataProvider sharedInstance] loginUserKey], @"");
         }
                   waitUntilDone:YES];
+}
+
+#pragma mark - getNativeIdentity
+
+- (void)testGetNativeIdentityWithoutLoginUser {
+    [[GrowingSession currentSession] setLoginUserId:nil];
+    GrowingHybridMockWebView *webView = [self mockWebView];
+
+    [self sendGetNativeIdentityWithCallbackId:@"gio_1_1628650812710" webView:webView];
+
+    XCTAssertEqual(webView.evaluateCount, 1);
+    NSDictionary *identity = [self identityFromWebView:webView callbackId:@"gio_1_1628650812710"];
+    XCTAssertEqualObjects(identity[@"deviceId"], [GrowingDeviceInfo currentDeviceInfo].deviceIDString);
+    XCTAssertNil(identity[@"userId"]);
+    XCTAssertNil(identity[@"userKey"]);
+    // isNewDevice 恒返回，不因取值为 NO 而缺省
+    XCTAssertTrue([identity[@"isNewDevice"] isKindOfClass:NSNumber.class]);
+    XCTAssertEqualObjects(identity[@"isNewDevice"], @([GrowingDeviceInfo currentDeviceInfo].isNewDeviceInFirstSession));
+}
+
+- (void)testGetNativeIdentityWithLoginUser {
+    [[GrowingSession currentSession] setLoginUserId:@"zhangsan" userKey:@"邮箱"];
+    GrowingHybridMockWebView *webView = [self mockWebView];
+
+    [self sendGetNativeIdentityWithCallbackId:@"gio_2_1628650812710" webView:webView];
+
+    NSDictionary *identity = [self identityFromWebView:webView callbackId:@"gio_2_1628650812710"];
+    XCTAssertEqualObjects(identity[@"userId"], @"zhangsan");
+    XCTAssertEqualObjects(identity[@"userKey"], @"邮箱");
+}
+
+- (void)testGetNativeIdentityWithoutIdMapping {
+    GrowingTrackConfiguration *config = [GrowingTrackConfiguration configurationWithAccountId:@"test"];
+    config.idMappingEnabled = NO;
+    GrowingConfigurationManager.sharedInstance.trackConfiguration = config;
+    [[GrowingSession currentSession] setLoginUserId:nil];
+    [[GrowingSession currentSession] setLoginUserId:@"zhangsan" userKey:@"邮箱"];
+    GrowingHybridMockWebView *webView = [self mockWebView];
+
+    [self sendGetNativeIdentityWithCallbackId:@"gio_3_1628650812710" webView:webView];
+
+    NSDictionary *identity = [self identityFromWebView:webView callbackId:@"gio_3_1628650812710"];
+    XCTAssertEqualObjects(identity[@"userId"], @"zhangsan");
+    XCTAssertNil(identity[@"userKey"]);
+}
+
+- (void)testGetNativeIdentityWithInvalidCallbackId {
+    NSArray<NSString *> *invalidCallbackIds = @[
+        @"a'); alert(1); ('",
+        @"gio_1'",
+        @"gio 1",
+        @"",
+        [@"" stringByPaddingToLength:65 withString:@"a" startingAtIndex:0]
+    ];
+
+    for (NSString *callbackId in invalidCallbackIds) {
+        GrowingHybridMockWebView *webView = [self mockWebView];
+        [self sendGetNativeIdentityWithCallbackId:callbackId webView:webView];
+        XCTAssertEqual(webView.evaluateCount, 0, @"callbackId 应被拦截: %@", callbackId);
+    }
+}
+
+- (void)testGetNativeIdentityWithMalformedMessage {
+    GrowingHybridMockWebView *webView = [self mockWebView];
+    NSString *message = [@{@"messageType": @"getNativeIdentity", @"data": @"not a json"} growingHelper_jsonString];
+    [self.provider handleJavascriptBridgeMessage:message fromWebView:webView frameInfo:nil];
+    XCTAssertEqual(webView.evaluateCount, 0);
+
+    // 缺少 callbackId
+    NSString *emptyData = [@{} growingHelper_jsonString];
+    message = [@{@"messageType": @"getNativeIdentity", @"data": emptyData} growingHelper_jsonString];
+    [self.provider handleJavascriptBridgeMessage:message fromWebView:webView frameInfo:nil];
+    XCTAssertEqual(webView.evaluateCount, 0);
+}
+
+- (void)testGetNativeIdentityWithoutWebView {
+    // WKScriptMessage.webView 为 weak，页面销毁后为 nil，不应崩溃
+    NSString *data = [@{@"callbackId": @"gio_4_1628650812710"} growingHelper_jsonString];
+    NSString *message = [@{@"messageType": @"getNativeIdentity", @"data": data} growingHelper_jsonString];
+    XCTAssertNoThrow([self.provider handleJavascriptBridgeMessage:message]);
+}
+
+- (void)testIsNewDeviceInFirstSession {
+    GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
+    BOOL expected = deviceInfo.isNewDevice && [GrowingSession currentSession].firstSession;
+    XCTAssertEqual(deviceInfo.isNewDeviceInFirstSession, expected);
+}
+
+#pragma mark - Helper
+
+- (GrowingHybridMockWebView *)mockWebView {
+    return [[GrowingHybridMockWebView alloc] initWithFrame:CGRectZero];
+}
+
+- (void)sendGetNativeIdentityWithCallbackId:(NSString *)callbackId webView:(WKWebView *)webView {
+    NSString *data = [@{@"callbackId": callbackId} growingHelper_jsonString];
+    NSString *message = [@{@"messageType": @"getNativeIdentity", @"data": data} growingHelper_jsonString];
+    [self.provider handleJavascriptBridgeMessage:message fromWebView:webView frameInfo:nil];
+}
+
+- (NSDictionary *)identityFromWebView:(GrowingHybridMockWebView *)webView callbackId:(NSString *)callbackId {
+    NSString *javaScript = webView.lastJavaScript;
+    NSString *prefix =
+        [NSString stringWithFormat:@"window.GrowingWebViewJavascriptBridge._onNativeCallback('%@', ", callbackId];
+    XCTAssertTrue([javaScript hasPrefix:prefix], @"实际下发: %@", javaScript);
+    XCTAssertTrue([javaScript hasSuffix:@");"], @"实际下发: %@", javaScript);
+
+    NSRange range = NSMakeRange(prefix.length, javaScript.length - prefix.length - 2);
+    id identity = [[javaScript substringWithRange:range] growingHelper_jsonObject];
+    XCTAssertTrue([identity isKindOfClass:NSDictionary.class]);
+    return (NSDictionary *)identity;
 }
 
 @end
