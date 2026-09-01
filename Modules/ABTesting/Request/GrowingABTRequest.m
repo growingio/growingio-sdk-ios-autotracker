@@ -25,7 +25,6 @@
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Network/Request/Adapter/GrowingRequestAdapter.h"
-#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "GrowingULTimeUtil.h"
 
@@ -46,11 +45,11 @@
         self.stm = [GrowingULTimeUtil currentTimeMillis];
 
         GrowingSession *session = [GrowingSession currentSession];
-        _loginUserId = session.loginUserId.copy;
-        _loginUserKey = session.loginUserKey.copy;
-        _userIdentity = [GrowingABTRequest identityWithDeviceId:[GrowingDeviceInfo currentDeviceInfo].deviceIDString
-                                                         userId:_loginUserId
-                                                        userKey:_loginUserKey];
+        self.loginUserId = session.loginUserId;
+        self.loginUserKey = session.loginUserKey;
+        self.userIdentity = [GrowingABTRequest identityWithDeviceId:[GrowingDeviceInfo currentDeviceInfo].deviceIDString
+                                                             userId:self.loginUserId
+                                                            userKey:self.loginUserKey];
     }
     return self;
 }
@@ -77,26 +76,13 @@
 }
 
 - (NSURL *)absoluteURL {
-    GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
-    NSURL *baseURL = [NSURL URLWithString:config.abTestingServerHost];
-    NSURL *url = [NSURL URLWithString:self.path relativeToURL:baseURL];
-
-    NSDictionary *query = self.query;
-    if (!url || query.count == 0) {
-        return url;
+    NSString *baseUrl = GrowingConfigurationManager.sharedInstance.trackConfiguration.abTestingServerHost;
+    if (!baseUrl.length) {
+        return nil;
     }
 
-    NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:YES];
-    if (!components) {
-        GIOLogWarn(@"[GrowingABTRequest] failed to build NSURLComponents, stm is missing from query: %@", url);
-        return url;
-    }
-    NSMutableArray<NSURLQueryItem *> *queryItems = components.queryItems.mutableCopy ?: [NSMutableArray array];
-    [query enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
-        [queryItems addObject:[NSURLQueryItem queryItemWithName:key value:[NSString stringWithFormat:@"%@", obj]]];
-    }];
-    components.queryItems = queryItems;
-    return components.URL ?: url;
+    NSString *absoluteURLString = [baseUrl growingHelper_absoluteURLStringWithPath:self.path andQuery:self.query];
+    return [NSURL URLWithString:absoluteURLString];
 }
 
 - (NSDictionary *)query {
