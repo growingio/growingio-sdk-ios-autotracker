@@ -45,12 +45,6 @@
 
 @end
 
-@interface GrowingABTesting (XCTest)
-
-+ (BOOL)isToday:(double)timestamp;
-
-@end
-
 @interface GrowingABTExperimentStorage (XCTest)
 
 - (nullable GrowingABTExperiment *)findExperiment:(NSString *)layerId identity:(NSString *)identity;
@@ -317,7 +311,7 @@
     
     // 重新获取的实验，其fetchTime应该是今天
     [GrowingABTesting fetchExperiment:layerId completedBlock:^(GrowingABTExperiment * _Nullable exp) {
-        XCTAssertTrue([GrowingABTesting isToday:exp.fetchTime]);
+        XCTAssertTrue([GrowingABTExperiment isToday:exp.fetchTime]);
     }];
     
     // 超出自然日，会清除本地缓存，再次请求
@@ -896,7 +890,7 @@ static NSString *GrowingABTDecodeValue(NSString *value, unsigned long long stm) 
                                                                       fetchTime:1602485628504];
     cached.identity = [GrowingABTRequest currentIdentity];
     [cached saveToDisk];
-    XCTAssertFalse([GrowingABTesting isToday:cached.fetchTime]);
+    XCTAssertFalse([GrowingABTExperiment isToday:cached.fetchTime]);
 
     XCTestExpectation *expectation =
         [self expectationWithDescription:@"test09ExpHitReportedAcrossNaturalDay Test failed : timeout"];
