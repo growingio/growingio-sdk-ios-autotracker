@@ -44,6 +44,7 @@ NSString *const kGrowingJavascriptMessageType_clearNativeUserId = @"clearNativeU
 NSString *const kGrowingJavascriptMessageType_setNativeUserIdAndUserKey = @"setNativeUserIdAndUserKey";
 NSString *const kGrowingJavascriptMessageType_clearNativeUserIdAndUserKey = @"clearNativeUserIdAndUserKey";
 NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
+NSString *const kGrowingJavascriptMessageType_getNativeIdentity = @"getNativeIdentity";
 
 #define KEY_EVENT_TYPE "eventType"
 #define KEY_DOMAIN "domain"
@@ -77,6 +78,12 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
 }
 
 - (void)handleJavascriptBridgeMessage:(NSString *)message {
+    [self handleJavascriptBridgeMessage:message fromWebView:nil frameInfo:nil];
+}
+
+- (void)handleJavascriptBridgeMessage:(NSString *)message
+                          fromWebView:(WKWebView *)webView
+                            frameInfo:(WKFrameInfo *)frameInfo {
     GIOLogDebug(@"handleJavascriptBridgeMessage: %@", message);
     if (message == nil || message.length == 0) {
         return;
@@ -113,7 +120,97 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
         [[GrowingSession currentSession] setLoginUserId:nil];
     } else if ([kGrowingJavascriptMessageType_onDomChanged isEqualToString:messageType]) {
         [self dispatchWebViewDomChanged];
+    } else if ([kGrowingJavascriptMessageType_getNativeIdentity isEqualToString:messageType]) {
+        [self handleGetNativeIdentity:messageData webView:webView frameInfo:frameInfo];
     }
+}
+
+#pragma mark - Native Identity
+
+- (void)handleGetNativeIdentity:(NSString *)messageData
+                        webView:(WKWebView *)webView
+                      frameInfo:(WKFrameInfo *)frameInfo {
+    if (!webView) {
+        // WKScriptMessage.webView 为 weak 属性，页面已销毁时为 nil，由 JS 侧超时兜底
+        return;
+    }
+    if (!messageData) {
+        return;
+    }
+
+    id dict = [messageData growingHelper_jsonObject];
+    if (![dict isKindOfClass:NSDictionary.class]) {
+        return;
+    }
+    NSString *callbackId = [self safeConvertToString:((NSDictionary *)dict)[@"callbackId"]];
+    if (![self isValidCallbackId:callbackId]) {
+        GIOLogWarn(@"getNativeIdentity: invalid callbackId");
+        return;
+    }
+
+    GrowingSession *session = [GrowingSession currentSession];
+    GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
+
+    NSMutableDictionary *identity = [NSMutableDictionary dictionary];
+    identity[@"deviceId"] = deviceInfo.deviceIDString ?: @"";
+    if (session.loginUserId.length > 0) {
+        identity[@"userId"] = session.loginUserId;
+    }
+    // idMappingEnabled 关闭时 GrowingSession 已将 loginUserKey 置空，此处无需再判断开关
+    if (session.loginUserKey.length > 0) {
+        identity[@"userKey"] = session.loginUserKey;
+    }
+    identity[@"isNewDevice"] = @(deviceInfo.isNewDeviceInFirstSession);
+
+    NSString *json = [identity growingHelper_jsonString];
+    if (json.length == 0) {
+        return;
+    }
+
+    NSString *javaScript = [NSString
+        stringWithFormat:@"window.GrowingWebViewJavascriptBridge._onNativeCallback('%@', %@);", callbackId, json];
+    [self evaluateJavaScript:javaScript webView:webView frameInfo:frameInfo];
+}
+
+// callbackId 由页面 JS 传入并拼接进 evaluateJavaScript，做白名单校验避免注入
+- (BOOL)isValidCallbackId:(NSString *)callbackId {
+    if (callbackId.length == 0 || callbackId.length > 64) {
+        return NO;
+    }
+    static NSCharacterSet *invalidSet = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSCharacterSet *validSet = [NSCharacterSet characterSetWithCharactersInString:
+                                                       @"abcdefghijklmnopqrstuvwxyz"
+                                                       @"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                                                       @"0123456789_-"];
+        invalidSet = validSet.invertedSet;
+    });
+    return [callbackId rangeOfCharacterFromSet:invalidSet].location == NSNotFound;
+}
+
+- (void)evaluateJavaScript:(NSString *)javaScript webView:(WKWebView *)webView frameInfo:(WKFrameInfo *)frameInfo {
+    [GrowingDispatchManager dispatchInMainThread:^{
+#if defined(__IPHONE_14_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_14_0
+        if (@available(iOS 14.0, *)) {
+            // 将回调定向回消息来源的 frame，iframe 内发起的调用同样可以收到；
+            // contentWorld 必须显式指定 pageWorld，否则脚本运行在 defaultClientWorld，
+            // 其中不存在注入的 shim
+            [webView evaluateJavaScript:javaScript
+                                inFrame:frameInfo
+                         inContentWorld:WKContentWorld.pageWorld
+                      completionHandler:nil];
+            return;
+        }
+#endif
+        // iOS 14.0 以下 evaluateJavaScript: 只能作用于主 frame，
+        // iframe 内发起的调用无法回调，由 JS 侧超时兜底
+        if (frameInfo && !frameInfo.isMainFrame) {
+            GIOLogWarn(@"getNativeIdentity from iframe requires iOS 14.0+");
+            return;
+        }
+        [webView evaluateJavaScript:javaScript completionHandler:nil];
+    }];
 }
 
 - (void)dispatchWebViewDomChanged {

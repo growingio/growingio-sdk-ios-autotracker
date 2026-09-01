@@ -139,7 +139,9 @@ static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJav
     }
 
     if ([message.name isEqualToString:kGrowingWKWebViewJavascriptBridge]) {
-        [GrowingHybridBridgeProvider.sharedInstance handleJavascriptBridgeMessage:message.body];
+        [GrowingHybridBridgeProvider.sharedInstance handleJavascriptBridgeMessage:message.body
+                                                                      fromWebView:message.webView
+                                                                        frameInfo:message.frameInfo];
     }
 }
 

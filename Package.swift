@@ -262,7 +262,10 @@ extension Target {
                                 cSettings: [.hspFor(.Path.apm)])
 
         static let abTesting = target(name: .abTesting,
-                                      dependencies: [.Core.trackerCore],
+                                      dependencies: [
+                                          .Core.trackerCore,
+                                          .Service.encrypt,
+                                      ],
                                       path: .Path.abTesting,
                                       publicHeadersPath: .Path.publicHeaders,
                                       cSettings: [.hspFor(.Path.abTesting)])

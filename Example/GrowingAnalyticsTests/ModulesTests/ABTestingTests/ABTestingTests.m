@@ -27,20 +27,36 @@
 #import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
 #import "Modules/ABTesting/GrowingABTExperiment+Private.h"
 #import "Modules/ABTesting/GrowingABTExperimentStorage.h"
+#import "Modules/ABTesting/Request/GrowingABTRequest.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Manager/GrowingSession.h"
+#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
+#import "GrowingULTimeUtil.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
+#import "GrowingEncryptionService.h"
+#import "GrowingServiceManager.h"
 #import "MockEventQueue.h"
 
-@interface GrowingABTesting (XCTest)
+@interface GrowingABTRequest (XCTest)
 
-+ (BOOL)isToday:(double)timestamp;
++ (NSString *)identityWithDeviceId:(NSString *_Nullable)deviceId
+                            userId:(NSString *_Nullable)userId
+                           userKey:(NSString *_Nullable)userKey;
 
 @end
 
 @interface GrowingABTExperimentStorage (XCTest)
 
-- (nullable GrowingABTExperiment *)findExperiment:(NSString *)layerId;
+- (nullable GrowingABTExperiment *)findExperiment:(NSString *)layerId identity:(NSString *)identity;
 - (void)addExperiment:(GrowingABTExperiment *)experiment;
 - (void)removeExperiment:(GrowingABTExperiment *)experiment;
+
+@end
+
+@interface GrowingServiceManager (XCTest)
+
+@property (nonatomic, strong) NSMutableDictionary *allServiceDict;
+@property (nonatomic, strong) NSMutableDictionary *allServiceInstanceDict;
 
 @end
 
@@ -73,11 +89,13 @@
 }
 
 - (void)tearDown {
-    
+    [[GrowingSession currentSession] setLoginUserId:nil userKey:nil];
+    GrowingConfigurationManager.sharedInstance.trackConfiguration.idMappingEnabled = NO;
 }
 
 - (void)test00ExperimentStorage {
     NSString *layerId = @"123456";
+    NSString *identity = [GrowingABTRequest currentIdentity];
     GrowingABTExperiment *exp = [[GrowingABTExperiment alloc] initWithLayerId:layerId
                                                                     layerName:@"layer123456"
                                                                  experimentId:@"123"
@@ -85,7 +103,8 @@
                                                                    strategyId:@"456"
                                                                  strategyName:@"strategy_456"
                                                                     variables:@{}
-                                                                    fetchTime:1602485628504];
+                                                                    fetchTime:GrowingULTimeUtil.currentTimeMillis];
+    exp.identity = identity;
     
     {
         // 测试在初始化storage时，会从本地获取experiment缓存
@@ -94,12 +113,12 @@
         [storage1 addExperiment:exp];
         
         GrowingABTExperimentStorage *storage2 = [[GrowingABTExperimentStorage alloc] init];
-        GrowingABTExperiment *exp2 = [storage2 findExperiment:layerId];
+        GrowingABTExperiment *exp2 = [storage2 findExperiment:layerId identity:identity];
         XCTAssertEqualObjects(exp, exp2);
         
         [storage2 removeExperiment:exp2];
         GrowingABTExperimentStorage *storage3 = [[GrowingABTExperimentStorage alloc] init];
-        GrowingABTExperiment *exp3 = [storage3 findExperiment:layerId];
+        GrowingABTExperiment *exp3 = [storage3 findExperiment:layerId identity:identity];
         XCTAssertNil(exp3);
     }
     
@@ -111,7 +130,7 @@
                 dispatch_async(dispatch_get_global_queue(0, 0), ^{
                     [GrowingABTExperimentStorage removeExperiment:exp];
                     [GrowingABTExperimentStorage addExperiment:exp];
-                    GrowingABTExperiment *exp2 = [GrowingABTExperimentStorage findExperiment:layerId];
+                    GrowingABTExperiment *exp2 = [GrowingABTExperimentStorage findExperiment:layerId identity:identity];
                     if (exp2) {
                         // 读异步写同步，因此需要判断非nil情况
                         XCTAssertEqualObjects(exp, exp2);
@@ -287,11 +306,12 @@
                                                                  strategyName:@"strategy_456"
                                                                     variables:@{}
                                                                     fetchTime:1602485628504];
+    exp.identity = [GrowingABTRequest currentIdentity];
     [exp saveToDisk];
     
     // 重新获取的实验，其fetchTime应该是今天
     [GrowingABTesting fetchExperiment:layerId completedBlock:^(GrowingABTExperiment * _Nullable exp) {
-        XCTAssertTrue([GrowingABTesting isToday:exp.fetchTime]);
+        XCTAssertTrue([GrowingABTExperiment isToday:exp.fetchTime]);
     }];
     
     // 超出自然日，会清除本地缓存，再次请求
@@ -569,6 +589,539 @@
     [set addObject:exp];
     [set addObject:exp2];
     XCTAssertEqual(set.count, 1); // 相同的experiment对象hash也相同，只会在Set/Dictionary中一次存储
+}
+
+- (NSInteger)expHitCount {
+    NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+    NSInteger count = 0;
+    for (GrowingBaseEvent *event in events) {
+        if ([((GrowingCustomEvent *)event).eventName isEqualToString:@"$exp_hit"]) {
+            count++;
+        }
+    }
+    return count;
+}
+
+static NSDictionary<NSString *, NSString *> *GrowingABTBodyParameters(GrowingABTRequest *request) {
+    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:request.absoluteURL];
+    for (id<GrowingRequestAdapter> adapter in request.adapters) {
+        urlRequest = [adapter adaptedURLRequest:urlRequest];
+    }
+    NSString *bodyString = [[NSString alloc] initWithData:urlRequest.HTTPBody encoding:NSUTF8StringEncoding];
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    for (NSString *pair in [bodyString componentsSeparatedByString:@"&"]) {
+        NSArray *kv = [pair componentsSeparatedByString:@"="];
+        if (kv.count == 2) {
+            parameters[kv[0]] = [kv[1] stringByRemovingPercentEncoding];
+        }
+    }
+    return parameters;
+}
+
+static NSString *GrowingABTDecodeValue(NSString *value, unsigned long long stm) {
+    NSData *data = [[NSData alloc] initWithBase64EncodedString:value options:0];
+    NSMutableData *result = [NSMutableData dataWithData:data];
+    unsigned char *bytes = result.mutableBytes;
+    unsigned char factor = (unsigned char)(stm & 0xFF);
+    for (NSUInteger i = 0; i < result.length; i++) {
+        bytes[i] = bytes[i] ^ factor;
+    }
+    return [[NSString alloc] initWithData:result encoding:NSUTF8StringEncoding];
+}
+
+- (void)test08RequestStmQuery {
+    GrowingABTRequest *request = [[GrowingABTRequest alloc] init];
+    request.layerId = @"123456";
+
+    XCTAssertTrue(request.stm > 0);
+
+    NSURLComponents *components = [NSURLComponents componentsWithURL:request.absoluteURL resolvingAgainstBaseURL:YES];
+    XCTAssertEqualObjects(components.host, @"www.example.com");
+    XCTAssertEqualObjects(components.path, @"/diversion/specified-layer-variables");
+
+    NSMutableArray<NSURLQueryItem *> *stmItems = [NSMutableArray array];
+    for (NSURLQueryItem *item in components.queryItems) {
+        if ([item.name isEqualToString:@"stm"]) {
+            [stmItems addObject:item];
+        }
+    }
+    XCTAssertEqual(stmItems.count, 1);
+    XCTAssertEqualObjects(stmItems.firstObject.value, ([NSString stringWithFormat:@"%llu", request.stm]));
+
+    XCTAssertEqualObjects(request.absoluteURL.absoluteString, request.absoluteURL.absoluteString);
+}
+
+- (void)test08RequestWithoutLoginUser {
+    [[GrowingSession currentSession] setLoginUserId:nil userKey:nil];
+
+    GrowingABTRequest *request = [[GrowingABTRequest alloc] init];
+    request.layerId = @"123456";
+    NSDictionary *parameters = GrowingABTBodyParameters(request);
+
+    XCTAssertNil(parameters[@"userId"]);
+    XCTAssertNil(parameters[@"userKey"]);
+    XCTAssertEqualObjects(parameters[@"accountId"], @"test");
+    XCTAssertEqualObjects(parameters[@"datasourceId"], @"test");
+    XCTAssertEqualObjects(parameters[@"layerId"], @"123456");
+    XCTAssertNotNil(parameters[@"distinctId"]);
+}
+
+- (void)test08RequestWithLoginUserId {
+    GrowingConfigurationManager.sharedInstance.trackConfiguration.idMappingEnabled = NO;
+    NSString *loginUserId = @"user+id/测试=001";
+    [[GrowingSession currentSession] setLoginUserId:loginUserId userKey:@"userKeyShouldBeIgnored"];
+
+    GrowingABTRequest *request = [[GrowingABTRequest alloc] init];
+    request.layerId = @"123456";
+    NSDictionary *parameters = GrowingABTBodyParameters(request);
+
+    XCTAssertNotNil(parameters[@"userId"]);
+    XCTAssertNotEqualObjects(parameters[@"userId"], loginUserId);
+    XCTAssertEqualObjects(GrowingABTDecodeValue(parameters[@"userId"], request.stm), loginUserId);
+    XCTAssertNil(parameters[@"userKey"]);
+
+    [[GrowingSession currentSession] setLoginUserId:nil userKey:nil];
+}
+
+- (void)test08RequestWithLoginUserIdAndKey {
+    GrowingConfigurationManager.sharedInstance.trackConfiguration.idMappingEnabled = YES;
+    NSString *loginUserId = @"user+id/测试=001";
+    NSString *loginUserKey = @"phone+number/测试=002";
+    [[GrowingSession currentSession] setLoginUserId:loginUserId userKey:loginUserKey];
+
+    GrowingABTRequest *request = [[GrowingABTRequest alloc] init];
+    request.layerId = @"123456";
+
+    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:request.absoluteURL];
+    for (id<GrowingRequestAdapter> adapter in request.adapters) {
+        urlRequest = [adapter adaptedURLRequest:urlRequest];
+    }
+    NSString *bodyString = [[NSString alloc] initWithData:urlRequest.HTTPBody encoding:NSUTF8StringEncoding];
+    XCTAssertFalse([bodyString containsString:@"+"]);
+    XCTAssertFalse([bodyString containsString:@"/"]);
+
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    for (NSString *pair in [bodyString componentsSeparatedByString:@"&"]) {
+        NSArray *kv = [pair componentsSeparatedByString:@"="];
+        if (kv.count == 2) {
+            parameters[kv[0]] = [kv[1] stringByRemovingPercentEncoding];
+        }
+    }
+
+    XCTAssertEqualObjects(GrowingABTDecodeValue(parameters[@"userId"], request.stm), loginUserId);
+    XCTAssertEqualObjects(GrowingABTDecodeValue(parameters[@"userKey"], request.stm), loginUserKey);
+
+    [[GrowingSession currentSession] setLoginUserId:nil userKey:nil];
+    GrowingABTRequest *request2 = [[GrowingABTRequest alloc] init];
+    request2.layerId = @"123456";
+    NSDictionary *parameters2 = GrowingABTBodyParameters(request2);
+    XCTAssertNil(parameters2[@"userId"]);
+    XCTAssertNil(parameters2[@"userKey"]);
+
+    GrowingConfigurationManager.sharedInstance.trackConfiguration.idMappingEnabled = NO;
+}
+
+- (void)test09IdentityFingerprint {
+    GrowingConfigurationManager.sharedInstance.trackConfiguration.idMappingEnabled = YES;
+
+    [[GrowingSession currentSession] setLoginUserId:nil userKey:nil];
+    NSString *anonymous = [GrowingABTRequest currentIdentity];
+    XCTAssertTrue(anonymous.length > 0);
+
+    [[GrowingSession currentSession] setLoginUserId:@"u1" userKey:@"k1"];
+    NSString *identity1 = [GrowingABTRequest currentIdentity];
+    XCTAssertNotEqualObjects(identity1, anonymous);
+
+    [[GrowingSession currentSession] setLoginUserId:@"u1" userKey:@"k2"];
+    NSString *identity2 = [GrowingABTRequest currentIdentity];
+    XCTAssertNotEqualObjects(identity2, identity1);
+
+    [[GrowingSession currentSession] setLoginUserId:@"ab" userKey:@"c"];
+    NSString *identity3 = [GrowingABTRequest currentIdentity];
+    [[GrowingSession currentSession] setLoginUserId:@"a" userKey:@"bc"];
+    NSString *identity4 = [GrowingABTRequest currentIdentity];
+    XCTAssertNotEqualObjects(identity3, identity4);
+
+    [[GrowingSession currentSession] setLoginUserId:@"a\nb" userKey:@"c"];
+    NSString *identity5 = [GrowingABTRequest currentIdentity];
+    [[GrowingSession currentSession] setLoginUserId:@"a" userKey:@"b\nc"];
+    NSString *identity6 = [GrowingABTRequest currentIdentity];
+    XCTAssertNotEqualObjects(identity5, identity6);
+
+    NSString *deviceId = [GrowingDeviceInfo currentDeviceInfo].deviceIDString;
+    XCTAssertEqualObjects([GrowingABTRequest identityWithDeviceId:deviceId userId:@"a" userKey:@"b\nc"], identity6);
+    XCTAssertNotEqualObjects([GrowingABTRequest identityWithDeviceId:@"another-device"
+                                                             userId:@"a"
+                                                            userKey:@"b\nc"],
+                             identity6);
+
+    GrowingABTRequest *request = [[GrowingABTRequest alloc] init];
+    XCTAssertEqualObjects(request.userIdentity, identity6);
+    [[GrowingSession currentSession] setLoginUserId:@"another" userKey:nil];
+    XCTAssertEqualObjects(request.userIdentity, identity6);
+    XCTAssertNotEqualObjects(request.userIdentity, [GrowingABTRequest currentIdentity]);
+
+    [[GrowingSession currentSession] setLoginUserId:nil userKey:nil];
+    GrowingConfigurationManager.sharedInstance.trackConfiguration.idMappingEnabled = NO;
+}
+
+- (void)test09CacheInvalidatedOnUserSwitch {
+    __block NSInteger requestCount = 0;
+    [HTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest * _Nonnull request) {
+        return [request.URL.host isEqualToString:@"www.example.com"];
+    } withStubResponse:^HTTPStubsResponse * _Nonnull(NSURLRequest * _Nonnull request) {
+        requestCount++;
+        NSDictionary *obj = @{
+            @"code": @(0),
+            @"experimentId": @(123),
+            @"strategyId": @(456),
+            @"variables": @{@"key": @"value"}
+        };
+        return [HTTPStubsResponse responseWithJSONObject:obj statusCode:200 headers:nil];
+    }];
+
+    NSString *layerId = [NSUUID UUID].UUIDString; // 避免缓存影响
+    [[GrowingSession currentSession] setLoginUserId:@"userA"];
+
+    XCTestExpectation *expectation =
+        [self expectationWithDescription:@"test09CacheInvalidatedOnUserSwitch Test failed : timeout"];
+    [GrowingABTesting fetchExperiment:layerId completedBlock:^(GrowingABTExperiment * _Nullable exp) {
+        XCTAssertEqualObjects(exp.experimentId, @"123");
+        XCTAssertEqual(requestCount, 1);
+
+        [GrowingABTesting fetchExperiment:layerId completedBlock:^(GrowingABTExperiment * _Nullable exp2) {
+            XCTAssertEqual(requestCount, 1);
+
+            [[GrowingSession currentSession] setLoginUserId:@"userB"];
+            [GrowingABTesting fetchExperiment:layerId completedBlock:^(GrowingABTExperiment * _Nullable exp3) {
+                XCTAssertEqual(requestCount, 2);
+
+                [[GrowingSession currentSession] setLoginUserId:nil];
+                [GrowingABTesting fetchExperiment:layerId completedBlock:^(GrowingABTExperiment * _Nullable exp4) {
+                    XCTAssertEqual(requestCount, 3);
+
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
+                                   dispatch_get_main_queue(), ^{
+                        NSArray<GrowingBaseEvent *> *events =
+                            [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+                        NSInteger hitCount = 0;
+                        for (GrowingBaseEvent *event in events) {
+                            if ([((GrowingCustomEvent *)event).eventName isEqualToString:@"$exp_hit"]) {
+                                hitCount++;
+                            }
+                        }
+                        XCTAssertEqual(hitCount, 3);
+                        [expectation fulfill];
+                    });
+                }];
+            }];
+        }];
+    }];
+    [self waitForExpectationsWithTimeout:15.0f handler:nil];
+}
+
+- (void)test09LegacyCacheWithoutIdentity {
+    __block NSInteger requestCount = 0;
+    [HTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest * _Nonnull request) {
+        return [request.URL.host isEqualToString:@"www.example.com"];
+    } withStubResponse:^HTTPStubsResponse * _Nonnull(NSURLRequest * _Nonnull request) {
+        requestCount++;
+        NSDictionary *obj = @{
+            @"code": @(0),
+            @"experimentId": @(123),
+            @"strategyId": @(456),
+            @"variables": @{@"key": @"value"}
+        };
+        return [HTTPStubsResponse responseWithJSONObject:obj statusCode:200 headers:nil];
+    }];
+
+    [[GrowingSession currentSession] setLoginUserId:nil userKey:nil];
+
+    NSString *layerId = [NSUUID UUID].UUIDString;
+    long long now = (long long)([[NSDate date] timeIntervalSince1970] * 1000);
+    GrowingABTExperiment *legacy = [[GrowingABTExperiment alloc] initWithLayerId:layerId
+                                                                      layerName:nil
+                                                                   experimentId:@"999"
+                                                                 experimentName:nil
+                                                                     strategyId:@"888"
+                                                                   strategyName:nil
+                                                                      variables:@{@"legacy": @"yes"}
+                                                                      fetchTime:now];
+    XCTAssertNil(legacy.identity);
+    [legacy saveToDisk];
+
+    XCTestExpectation *expectation =
+        [self expectationWithDescription:@"test09LegacyCacheWithoutIdentity Test failed : timeout"];
+    [GrowingABTesting fetchExperiment:layerId completedBlock:^(GrowingABTExperiment * _Nullable exp) {
+        XCTAssertEqual(requestCount, 1);
+        XCTAssertEqualObjects(exp.experimentId, @"123");
+        XCTAssertNotEqualObjects(exp.experimentId, @"999");
+        XCTAssertEqualObjects(exp.identity, [GrowingABTRequest currentIdentity]);
+        [expectation fulfill];
+    }];
+    [self waitForExpectationsWithTimeout:10.0f handler:nil];
+}
+
+- (void)test09ExpHitReportedAcrossNaturalDay {
+    __block NSInteger requestCount = 0;
+    [HTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest * _Nonnull request) {
+        return [request.URL.host isEqualToString:@"www.example.com"];
+    } withStubResponse:^HTTPStubsResponse * _Nonnull(NSURLRequest * _Nonnull request) {
+        requestCount++;
+        NSDictionary *obj = @{
+            @"code": @(0),
+            @"experimentId": @(123),
+            @"strategyId": @(456),
+            @"variables": @{@"key": @"value"}
+        };
+        return [HTTPStubsResponse responseWithJSONObject:obj statusCode:200 headers:nil];
+    }];
+
+    [[GrowingSession currentSession] setLoginUserId:nil userKey:nil];
+
+    NSString *layerId = [NSUUID UUID].UUIDString;
+    GrowingABTExperiment *cached = [[GrowingABTExperiment alloc] initWithLayerId:layerId
+                                                                      layerName:nil
+                                                                   experimentId:@"123"
+                                                                 experimentName:nil
+                                                                     strategyId:@"456"
+                                                                   strategyName:nil
+                                                                      variables:@{@"key": @"value"}
+                                                                      fetchTime:1602485628504];
+    cached.identity = [GrowingABTRequest currentIdentity];
+    [cached saveToDisk];
+    XCTAssertFalse([GrowingABTExperiment isToday:cached.fetchTime]);
+
+    XCTestExpectation *expectation =
+        [self expectationWithDescription:@"test09ExpHitReportedAcrossNaturalDay Test failed : timeout"];
+    [GrowingABTesting fetchExperiment:layerId completedBlock:^(GrowingABTExperiment * _Nullable exp) {
+        XCTAssertEqual(requestCount, 1);
+        XCTAssertTrue([exp isEqual:cached]);
+
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
+                       dispatch_get_main_queue(), ^{
+            NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
+            NSInteger hitCount = 0;
+            for (GrowingBaseEvent *event in events) {
+                if ([((GrowingCustomEvent *)event).eventName isEqualToString:@"$exp_hit"]) {
+                    hitCount++;
+                }
+            }
+            XCTAssertEqual(hitCount, 1);
+            [expectation fulfill];
+        });
+    }];
+    [self waitForExpectationsWithTimeout:10.0f handler:nil];
+}
+
+- (void)test09ResultOwnershipWhenIdentityChangedDuringRequest {
+    __block NSInteger requestCount = 0;
+    [HTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest * _Nonnull request) {
+        return [request.URL.host isEqualToString:@"www.example.com"];
+    } withStubResponse:^HTTPStubsResponse * _Nonnull(NSURLRequest * _Nonnull request) {
+        requestCount++;
+        [[GrowingSession currentSession] setLoginUserId:@"user_B"];
+        NSDictionary *obj = @{
+            @"code": @(0),
+            @"experimentId": @(123),
+            @"strategyId": @(456),
+            @"variables": @{@"key": @"value"}
+        };
+        return [HTTPStubsResponse responseWithJSONObject:obj statusCode:200 headers:nil];
+    }];
+
+    [[GrowingSession currentSession] setLoginUserId:nil userKey:nil];
+    NSString *anonymousIdentity = [GrowingABTRequest currentIdentity];
+    NSString *layerId = [NSUUID UUID].UUIDString;
+
+    XCTestExpectation *expectation =
+        [self expectationWithDescription:@"test09ResultOwnershipWhenIdentityChangedDuringRequest failed : timeout"];
+    [GrowingABTesting fetchExperiment:layerId completedBlock:^(GrowingABTExperiment * _Nullable exp) {
+        XCTAssertEqual(requestCount, 1);
+        XCTAssertEqualObjects(exp.experimentId, @"123");
+
+        XCTAssertEqualObjects(exp.identity, anonymousIdentity);
+        XCTAssertNotEqualObjects(exp.identity, [GrowingABTRequest currentIdentity]);
+
+        XCTAssertNotNil([GrowingABTExperiment findExperiment:layerId identity:anonymousIdentity]);
+        XCTAssertNil([GrowingABTExperiment findExperiment:layerId
+                                                 identity:[GrowingABTRequest currentIdentity]]);
+
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
+                       dispatch_get_main_queue(), ^{
+            XCTAssertEqual([self expHitCount], 1);
+            [[GrowingSession currentSession] setLoginUserId:nil userKey:nil];
+            [expectation fulfill];
+        });
+    }];
+    [self waitForExpectationsWithTimeout:10.0f handler:nil];
+}
+
+- (void)test10SwitchBackHitsOwnCache {
+    __block NSInteger requestCount = 0;
+    [HTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest * _Nonnull request) {
+        return [request.URL.host isEqualToString:@"www.example.com"];
+    } withStubResponse:^HTTPStubsResponse * _Nonnull(NSURLRequest * _Nonnull request) {
+        requestCount++;
+        NSDictionary *obj = @{
+            @"code": @(0),
+            @"experimentId": @(123),
+            @"strategyId": @(456),
+            @"variables": @{@"key": @"value"}
+        };
+        return [HTTPStubsResponse responseWithJSONObject:obj statusCode:200 headers:nil];
+    }];
+
+    NSString *layerId = [NSUUID UUID].UUIDString;
+    XCTestExpectation *expectation =
+        [self expectationWithDescription:@"test10SwitchBackHitsOwnCache failed : timeout"];
+
+    [[GrowingSession currentSession] setLoginUserId:@"user_A"];
+    [GrowingABTesting fetchExperiment:layerId completedBlock:^(GrowingABTExperiment * _Nullable expA) {
+        XCTAssertEqual(requestCount, 1);
+
+        [[GrowingSession currentSession] setLoginUserId:@"user_B"];
+        [GrowingABTesting fetchExperiment:layerId completedBlock:^(GrowingABTExperiment * _Nullable expB) {
+            XCTAssertEqual(requestCount, 2);
+
+            [[GrowingSession currentSession] setLoginUserId:@"user_A"];
+            [GrowingABTesting fetchExperiment:layerId completedBlock:^(GrowingABTExperiment * _Nullable expA2) {
+                XCTAssertEqual(requestCount, 2);
+                XCTAssertEqualObjects(expA2.identity, [GrowingABTRequest currentIdentity]);
+
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
+                               dispatch_get_main_queue(), ^{
+                    XCTAssertEqual([self expHitCount], 2);
+                    [[GrowingSession currentSession] setLoginUserId:nil userKey:nil];
+                    [expectation fulfill];
+                });
+            }];
+        }];
+    }];
+    [self waitForExpectationsWithTimeout:15.0f handler:nil];
+}
+
+- (void)test10CleanupOnStorageInit {
+    NSString *staleLayerId = [NSUUID UUID].UUIDString;
+    NSString *legacyLayerId = [NSUUID UUID].UUIDString;
+    NSString *freshLayerId = [NSUUID UUID].UUIDString;
+    NSString *identity = [GrowingABTRequest currentIdentity];
+
+    GrowingABTExperiment *(^makeExp)(NSString *, long long) = ^(NSString *layerId, long long fetchTime) {
+        return [[GrowingABTExperiment alloc] initWithLayerId:layerId
+                                                   layerName:nil
+                                                experimentId:@"123"
+                                              experimentName:nil
+                                                  strategyId:@"456"
+                                                strategyName:nil
+                                                   variables:@{@"key": @"value"}
+                                                   fetchTime:fetchTime];
+    };
+
+    GrowingABTExperiment *stale = makeExp(staleLayerId, 1602485628504);
+    stale.identity = identity;
+    [stale saveToDisk];
+
+    GrowingABTExperiment *legacy = makeExp(legacyLayerId, GrowingULTimeUtil.currentTimeMillis);
+    XCTAssertNil(legacy.identity);
+    [legacy saveToDisk];
+
+    GrowingABTExperiment *fresh = makeExp(freshLayerId, GrowingULTimeUtil.currentTimeMillis);
+    fresh.identity = identity;
+    [fresh saveToDisk];
+
+    GrowingABTExperimentStorage *reloaded = [[GrowingABTExperimentStorage alloc] init];
+    XCTAssertNil([reloaded findExperiment:staleLayerId identity:identity]);
+    XCTAssertNil([reloaded findExperiment:legacyLayerId identity:identity]);
+    XCTAssertNotNil([reloaded findExperiment:freshLayerId identity:identity]);
+
+    XCTestExpectation *expectation =
+        [self expectationWithDescription:@"test10CleanupOnStorageInit failed : timeout"];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        GrowingABTExperimentStorage *reloadedAgain = [[GrowingABTExperimentStorage alloc] init];
+        XCTAssertNil([reloadedAgain findExperiment:staleLayerId identity:identity]);
+        XCTAssertNil([reloadedAgain findExperiment:legacyLayerId identity:identity]);
+        XCTAssertNotNil([reloadedAgain findExperiment:freshLayerId identity:identity]);
+        [expectation fulfill];
+    });
+    [self waitForExpectationsWithTimeout:10.0f handler:nil];
+}
+
+- (void)test11RemoveDoesNotAffectOtherIdentity {
+    NSString *layerId = [NSUUID UUID].UUIDString;
+    GrowingABTExperiment *(^make)(NSString *) = ^(NSString *identity) {
+        GrowingABTExperiment *e = [[GrowingABTExperiment alloc] initWithLayerId:layerId
+                                                                      layerName:nil
+                                                                   experimentId:nil
+                                                                 experimentName:nil
+                                                                     strategyId:nil
+                                                                   strategyName:nil
+                                                                      variables:@{}
+                                                                      fetchTime:GrowingULTimeUtil.currentTimeMillis];
+        e.identity = identity;
+        return e;
+    };
+
+    GrowingABTExperiment *expA = make(@"identity_A");
+    GrowingABTExperiment *expB = make(@"identity_B");
+    XCTAssertTrue([expA isEqual:expB]);
+
+    [expA saveToDisk];
+    [expB saveToDisk];
+    XCTAssertNotNil([GrowingABTExperimentStorage findExperiment:layerId identity:@"identity_A"]);
+    XCTAssertNotNil([GrowingABTExperimentStorage findExperiment:layerId identity:@"identity_B"]);
+
+    [expA removeFromDisk];
+    XCTAssertNil([GrowingABTExperimentStorage findExperiment:layerId identity:@"identity_A"]);
+    XCTAssertNotNil([GrowingABTExperimentStorage findExperiment:layerId identity:@"identity_B"]);
+}
+
+- (void)test11AddDoesNotAffectOtherIdentity {
+    NSString *layerId = [NSUUID UUID].UUIDString;
+    GrowingABTExperiment *(^make)(NSString *) = ^(NSString *identity) {
+        GrowingABTExperiment *e = [[GrowingABTExperiment alloc] initWithLayerId:layerId
+                                                                      layerName:nil
+                                                                   experimentId:nil
+                                                                 experimentName:nil
+                                                                     strategyId:nil
+                                                                   strategyName:nil
+                                                                      variables:@{}
+                                                                      fetchTime:GrowingULTimeUtil.currentTimeMillis];
+        e.identity = identity;
+        return e;
+    };
+
+    [make(@"identity_A") saveToDisk];
+    [make(@"identity_B") saveToDisk];
+
+    [make(@"identity_A") saveToDisk];
+    XCTAssertNotNil([GrowingABTExperimentStorage findExperiment:layerId identity:@"identity_A"]);
+    XCTAssertNotNil([GrowingABTExperimentStorage findExperiment:layerId identity:@"identity_B"]);
+}
+
+- (void)test12EncryptServiceMissingThrowsException {
+    GrowingServiceManager *manager = GrowingServiceManager.sharedInstance;
+    NSString *serviceKey = NSStringFromProtocol(@protocol(GrowingEncryptionService));
+    NSString *implClassName = manager.allServiceDict[serviceKey];
+    id cachedInstance = manager.allServiceInstanceDict[serviceKey];
+    XCTAssertNotNil(implClassName, @"正规集成下加密服务应已注册，前置条件不成立则本用例无意义");
+
+    @try {
+        [manager.allServiceDict removeObjectForKey:serviceKey];
+        [manager.allServiceInstanceDict removeObjectForKey:serviceKey];
+        XCTAssertNil([manager createService:@protocol(GrowingEncryptionService)]);
+
+        XCTAssertThrowsSpecificNamed([[GrowingABTesting sharedInstance] growingModInit:nil], NSException, @"初始化异常",
+                                     @"加密服务缺失时应抛出初始化异常，否则 userId 会以明文上报并导致随机分流");
+    } @finally {
+        manager.allServiceDict[serviceKey] = implClassName;
+        if (cachedInstance) {
+            manager.allServiceInstanceDict[serviceKey] = cachedInstance;
+        }
+    }
+
+    XCTAssertNotNil([manager createService:@protocol(GrowingEncryptionService)]);
+    XCTAssertNoThrow([[GrowingABTesting sharedInstance] growingModInit:nil]);
 }
 
 @end
