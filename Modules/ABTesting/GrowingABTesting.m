@@ -78,10 +78,6 @@ static NSString *const kABTExpStrategyName = @"$exp_strategy_name";
 
 #pragma mark - Private Method
 
-+ (BOOL)isToday:(double)timestamp {
-    return [GrowingABTExperiment isToday:(long long)timestamp];
-}
-
 + (void)trackExperiment:(GrowingABTExperiment *)experiment {
     NSMutableDictionary *attributes = @{
         kABTExpLayerId: experiment.layerId.copy,

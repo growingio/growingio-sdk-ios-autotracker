@@ -190,7 +190,7 @@ NSString *const kGrowingJavascriptMessageType_getNativeIdentity = @"getNativeIde
 }
 
 - (void)evaluateJavaScript:(NSString *)javaScript webView:(WKWebView *)webView frameInfo:(WKFrameInfo *)frameInfo {
-    void (^evaluate)(void) = ^{
+    [GrowingDispatchManager dispatchInMainThread:^{
 #if defined(__IPHONE_14_0) && __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_14_0
         if (@available(iOS 14.0, *)) {
             // 将回调定向回消息来源的 frame，iframe 内发起的调用同样可以收到；
@@ -210,13 +210,7 @@ NSString *const kGrowingJavascriptMessageType_getNativeIdentity = @"getNativeIde
             return;
         }
         [webView evaluateJavaScript:javaScript completionHandler:nil];
-    };
-
-    if (NSThread.isMainThread) {
-        evaluate();
-    } else {
-        [GrowingDispatchManager dispatchInMainThread:evaluate];
-    }
+    }];
 }
 
 - (void)dispatchWebViewDomChanged {

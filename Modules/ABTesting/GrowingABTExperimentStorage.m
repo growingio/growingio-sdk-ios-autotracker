@@ -80,7 +80,7 @@ static dispatch_queue_t GrowingABTStorageIOQueue(void) {
                 [_experiments addObject:e];
             }
             if (_experiments.count != array.count) {
-                [self synchronizeWaitUntilDone:NO];
+                [self synchronizeExperiments:_experiments.copy waitUntilDone:NO];
             }
         }
     }
@@ -98,8 +98,7 @@ static dispatch_queue_t GrowingABTStorageIOQueue(void) {
 
 #pragma mark - Private Method
 
-- (void)synchronizeWaitUntilDone:(BOOL)wait {
-    NSArray<GrowingABTExperiment *> *snapshot = self.experiments.copy;
+- (void)synchronizeExperiments:(NSArray<GrowingABTExperiment *> *)snapshot waitUntilDone:(BOOL)wait {
     GrowingFileStorage *storage = self.storage;
     dispatch_block_t write = ^{
         NSMutableArray *array = [NSMutableArray arrayWithCapacity:snapshot.count];
@@ -140,24 +139,33 @@ static dispatch_queue_t GrowingABTStorageIOQueue(void) {
 }
 
 - (void)addExperiment:(GrowingABTExperiment *)experiment {
+    NSArray<GrowingABTExperiment *> *snapshot;
     GROWING_LOCK(lock);
     NSUInteger index = [self indexOfExperimentWithLayerId:experiment.layerId identity:experiment.identity];
     if (index != NSNotFound) {
         [self.experiments removeObjectAtIndex:index];
     }
     [self.experiments addObject:experiment];
-    [self synchronizeWaitUntilDone:YES];
+    snapshot = self.experiments.copy;
     GROWING_UNLOCK(lock);
+
+    // 落盘放在锁外：os_unfair_lock 持有期间不应阻塞在其他队列上
+    [self synchronizeExperiments:snapshot waitUntilDone:YES];
 }
 
 - (void)removeExperiment:(GrowingABTExperiment *)experiment {
+    NSArray<GrowingABTExperiment *> *snapshot = nil;
     GROWING_LOCK(lock);
     NSUInteger index = [self indexOfExperimentWithLayerId:experiment.layerId identity:experiment.identity];
     if (index != NSNotFound) {
         [self.experiments removeObjectAtIndex:index];
-        [self synchronizeWaitUntilDone:YES];
+        snapshot = self.experiments.copy;
     }
     GROWING_UNLOCK(lock);
+
+    if (snapshot) {
+        [self synchronizeExperiments:snapshot waitUntilDone:YES];
+    }
 }
 
 #pragma mark - Public Method
