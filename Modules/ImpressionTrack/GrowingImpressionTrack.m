@@ -219,14 +219,6 @@ static BOOL impTrackIsRegistered = NO;
 - (void)sendCstm:(UIView<GrowingNode> *)node {
     node.growingIMPTracked = YES;
 
-    NSMutableDictionary *impTrackVariable;
-    if (node.growingIMPTrackVariable.count > 0) {
-        impTrackVariable = node.growingIMPTrackVariable.mutableCopy;
-    } else {
-        impTrackVariable = [[NSMutableDictionary alloc] init];
-    }
-    node.growingIMPTrackVariable = impTrackVariable;
-
     if (node.growingIMPTrackEventName.length > 0 && node.growingIMPTrackVariable.count > 0) {
         [GrowingEventGenerator generateCustomEvent:node.growingIMPTrackEventName
                                         attributes:node.growingIMPTrackVariable];

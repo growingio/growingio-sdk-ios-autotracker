@@ -207,6 +207,7 @@
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
+		34A1B0022C9E0A0100IMP002 /* ImpressionTrackTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A1B0012C9E0A0100IMP001 /* ImpressionTrackTest.m */; };
 		6F7A64B402BF8E5ED466E56A /* Pods_GrowingAnalyticsTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0257123D870B44A9FDA90A22 /* Pods_GrowingAnalyticsTests.framework */; };
 		7E20527CFF34511EE464C33F /* Pods_GrowingAnalyticsStartTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1769255A062869A5D219F683 /* Pods_GrowingAnalyticsStartTests.framework */; };
 		997DAC68973F1F4FAF34EA2E /* Pods_Example_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B524BD63EF3439946134E74 /* Pods_Example_macOS.framework */; };
@@ -470,6 +471,7 @@
 		34B7D649279FA5980003CE04 /* UITableViewAutotrackTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UITableViewAutotrackTest.m; sourceTree = "<group>"; };
 		34B7EB7C27B366B10026B2AF /* gio_hybrideventtest.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = gio_hybrideventtest.html; sourceTree = "<group>"; };
 		34B932342767661600025C94 /* MeasurementProtocol.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MeasurementProtocol.storyboard; sourceTree = "<group>"; };
+		34A1B0012C9E0A0100IMP001 /* ImpressionTrackTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImpressionTrackTest.m; sourceTree = "<group>"; };
 		34BA7B17277C61250030AC21 /* GrowingAnalyticsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrowingAnalyticsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BA7B2F277C63D00030AC21 /* ProtobufTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProtobufTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BA7B41277D8EC30030AC21 /* DeepLinkTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DeepLinkTest.m; sourceTree = "<group>"; };
@@ -936,6 +938,14 @@
 			path = AdvertisingTests;
 			sourceTree = "<group>";
 		};
+		34A1B0032C9E0A0100IMP003 /* ImpressionTrackTests */ = {
+			isa = PBXGroup;
+			children = (
+				34A1B0012C9E0A0100IMP001 /* ImpressionTrackTest.m */,
+			);
+			path = ImpressionTrackTests;
+			sourceTree = "<group>";
+		};
 		346521E02ADD0E540091E815 /* ABTestingTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -1197,6 +1207,7 @@
 				3432CF352AEA58A800E555A9 /* AdvertisingTests */,
 				346521E02ADD0E540091E815 /* ABTestingTests */,
 				04A4C058276C4DF40056C8C4 /* HybridTests */,
+				34A1B0032C9E0A0100IMP003 /* ImpressionTrackTests */,
 				34C0BF3B277EA95A0047ADC4 /* MobileDebuggerTests */,
 				34BA7B30277C63D00030AC21 /* ProtobufTests */,
 				34BA7B43277D91720030AC21 /* WebCircleTests */,
@@ -2987,6 +2998,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				34A1B0022C9E0A0100IMP002 /* ImpressionTrackTest.m in Sources */,
 				34664587278EEEA6009C351C /* A0GrowingAnalyticsTest.m in Sources */,
 				34BF77B227951D6700CA18BA /* InvocationHelper.m in Sources */,
 				34BA7B25277C62ED0030AC21 /* CompressionTest.m in Sources */,

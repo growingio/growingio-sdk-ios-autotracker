@@ -61,19 +61,45 @@
     objc_setAssociatedObject(self, @selector(growingIMPTrackVariable), variable, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
+// 沿视图层级向上逐层收窄可见区域,返回 keyWindow 坐标系下的矩形
+// 存在隐藏/透明的祖先,或已被祖先完全裁剪掉时,返回 CGRectNull
+- (CGRect)growingImpVisibleRectInWindow {
+    CGRect rect = [self growingNodeFrame];
+
+    UIResponder *curNode = self.nextResponder;
+    while (curNode) {
+        if (!curNode.isProxy && [curNode isKindOfClass:[UIView class]]) {
+            UIView *ancestor = (UIView *)curNode;
+            if (ancestor.hidden == YES || ancestor.alpha < 0.001) {
+                return CGRectNull;
+            }
+            if (ancestor.clipsToBounds) {
+                rect = CGRectIntersection(rect, [ancestor growingNodeFrame]);
+                if (CGRectIsEmpty(rect) || CGRectIsNull(rect)) {
+                    return CGRectNull;
+                }
+            }
+        }
+        curNode = curNode.nextResponder;
+    }
+
+    return rect;
+}
+
 - (BOOL)growingImpNodeIsVisible {
     if (!self.window || self.hidden || self.alpha < 0.001 || !self.superview) {
         return NO;
     }
 
-    CGRect rect = [self growingNodeFrame];
+    // 只与屏幕求交不足以判定可见:被 UIScrollView 等容器裁掉的子视图,
+    // 其 frame 仍可能落在屏幕内,需先由祖先的裁剪区域收窄
+    CGRect rect = [self growingImpVisibleRectInWindow];
     CGRect intersectionRect = CGRectIntersection([UIScreen mainScreen].bounds, rect);
 
     if (CGRectIsEmpty(intersectionRect) || CGRectIsNull(intersectionRect)) {
         return NO;
     }
 
-    BOOL isInScreen;
     double impScale = 0.0;
     GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
     if ([configuration isKindOfClass:[GrowingAutotrackConfiguration class]]) {
@@ -81,30 +107,11 @@
     }
 
     if (impScale == 0.0) {
-        isInScreen = YES;
-    } else {
-        if (intersectionRect.size.width * intersectionRect.size.height >=
-            self.bounds.size.width * self.bounds.size.height * impScale) {
-            isInScreen = YES;
-        } else {
-            isInScreen = NO;
-        }
-    }
-
-    if (isInScreen) {
-        UIResponder *curNode = self.nextResponder;
-        while (curNode) {
-            if (!curNode.isProxy && [curNode isKindOfClass:[UIView class]]) {
-                if (((UIView *)curNode).hidden == YES || ((UIView *)curNode).alpha < 0.001) {
-                    return NO;
-                }
-            }
-            curNode = curNode.nextResponder;
-        }
         return YES;
     }
 
-    return NO;
+    return intersectionRect.size.width * intersectionRect.size.height >=
+           self.bounds.size.width * self.bounds.size.height * impScale;
 }
 
 - (void)growingTrackImpression:(NSString *)eventName {
