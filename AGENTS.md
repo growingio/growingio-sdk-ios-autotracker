@@ -17,15 +17,6 @@
 - 构建工具：Xcode / xcodebuild
 - 测试框架：XCTest
 
-## 工程指南
-
-> **注意**：以下文档为 lazy-load（不自动注入），按需读取：
->
-> - `docs/agents-skills-flow.md` — agents/skills 流转结构图与主控制器工作流
-> - `docs/specs/` — brainstorming 产出的功能规格文档
->
-> 对 SDK 领域知识（设计约束、场景路由）以"模块快速索引 + 源码 + 近期 commit"为准，不再维护独立手册。
-
 ## 模块快速索引
 
 | 模块 | 路径 | 职责 |
