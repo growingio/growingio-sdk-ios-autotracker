@@ -13,6 +13,8 @@ concurrency:
 jobs:
   spm-build:
     strategy:
+      # 一个平台失败时不连带取消其余平台，否则看不到它们的真实状态
+      fail-fast: false
       matrix:
         target: [
           iOS,
@@ -20,42 +22,38 @@ jobs:
           macCatalyst,
           tvOS,
           watchOS,
+          visionOS,
         ]
-        os: [macos-15]
+        # 支持下限与当前版本各验一遍。macOS 26 镜像上没有任何 Xcode 16.x，
+        # 因此两条腿必须配两个镜像；待 macos-15 弃用时需同步抬高下限
+        toolchain:
+          - { os: macos-15, xcode: Xcode_16.4 }
+          - { os: macos-26, xcode: Xcode_26.6 }
         include:
-          - os: macos-15
-            xcode: Xcode_16.4
           - target: iOS
             destination: generic/platform=iOS Simulator
+            scheme: GrowingAnalytics-Package
           - target: macOS
             destination: platform=macOS
+            scheme: GrowingTracker
           - target: macCatalyst
             destination: platform=macOS,variant=Mac Catalyst
+            scheme: GrowingAutotracker
           - target: tvOS
             destination: generic/platform=tvOS Simulator
+            scheme: GrowingAutotracker
           - target: watchOS
             destination: generic/platform=watchOS Simulator
-          - scheme: GrowingAnalytics-Package
-            target: iOS
-          - scheme: GrowingAutotracker
-            target: macCatalyst
-          - scheme: GrowingAutotracker
-            target: tvOS
-          - scheme: GrowingTracker
-            target: macOS
-          - scheme: GrowingTracker
-            target: watchOS
+            scheme: GrowingTracker
           - target: visionOS
-            os: macos-15
-            xcode: Xcode_16.4
             destination: generic/platform=visionOS Simulator
             scheme: GrowingTracker
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.toolchain.os }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
       - name: Xcode
-        run: sudo xcode-select -switch /Applications/${{ matrix.xcode }}.app
+        run: sudo xcode-select -switch /Applications/${{ matrix.toolchain.xcode }}.app
       - name: Build
         run: |
           set -euo pipefail
