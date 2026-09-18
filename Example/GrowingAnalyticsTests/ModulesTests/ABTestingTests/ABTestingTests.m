@@ -1124,6 +1124,68 @@ static NSString *GrowingABTDecodeValue(NSString *value, unsigned long long stm) 
     XCTAssertNoThrow([[GrowingABTesting sharedInstance] growingModInit:nil]);
 }
 
+- (void)test13DataCollectionDisabled {
+    __block NSInteger requestCount = 0;
+    [HTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest * _Nonnull request) {
+        return [request.URL.host isEqualToString:@"www.example.com"];
+    } withStubResponse:^HTTPStubsResponse * _Nonnull(NSURLRequest * _Nonnull request) {
+        requestCount++;
+        NSDictionary *obj = @{
+            @"code": @(0),
+            @"experimentId": @(123),
+            @"strategyId": @(456),
+            @"variables": @{
+                @"key": @"value"
+            }
+        };
+        return [HTTPStubsResponse responseWithJSONObject:obj statusCode:200 headers:nil];
+    }];
+
+    // 本地已有一个TTL内的实验，用于验证关闭采集时仍可读取本地缓存
+    NSString *cachedLayerId = @"dataCollectionDisabledCached";
+    GrowingABTExperiment *cachedExp = [[GrowingABTExperiment alloc] initWithLayerId:cachedLayerId
+                                                                          layerName:@"layer123456"
+                                                                       experimentId:@"123"
+                                                                     experimentName:@"exp_123"
+                                                                         strategyId:@"456"
+                                                                       strategyName:@"strategy_456"
+                                                                          variables:@{}
+                                                                          fetchTime:GrowingULTimeUtil.currentTimeMillis];
+    cachedExp.identity = [GrowingABTRequest currentIdentity];
+    [cachedExp saveToDisk];
+
+    GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionEnabled = NO;
+
+    NSString *layerId = @"dataCollectionDisabled";
+    XCTestExpectation *expectation =
+        [self expectationWithDescription:@"testDataCollectionDisabled Test failed : timeout"];
+    expectation.expectedFulfillmentCount = 3;
+
+    // 无缓存时，关闭采集则不发起分流请求，直接回调nil
+    [GrowingABTesting fetchExperiment:layerId completedBlock:^(GrowingABTExperiment * _Nullable exp) {
+        XCTAssertNil(exp);
+        [expectation fulfill];
+    }];
+
+    // 有TTL内缓存时，不发起请求，仍返回本地实验
+    [GrowingABTesting fetchExperiment:cachedLayerId completedBlock:^(GrowingABTExperiment * _Nullable exp) {
+        XCTAssertEqualObjects(exp, cachedExp);
+        [expectation fulfill];
+    }];
+
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        // 关闭采集期间不重试，因此请求数为0
+        XCTAssertEqual(requestCount, 0);
+        XCTAssertNil([GrowingABTExperiment findExperiment:layerId identity:[GrowingABTRequest currentIdentity]]);
+        [expectation fulfill];
+    });
+
+    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+
+    GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionEnabled = YES;
+    [cachedExp removeFromDisk];
+}
+
 @end
 
 #pragma clang diagnostic pop
