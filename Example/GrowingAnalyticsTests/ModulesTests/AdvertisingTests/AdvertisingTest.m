@@ -53,31 +53,22 @@
     configuration.readClipboardEnabled = NO;
     [GrowingAutotracker startWithConfiguration:configuration launchOptions:nil];
 
-    XCTestExpectation *expectation = [self expectationWithDescription:@"SendActivateEvent Test failed : timeout"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        // 给 webView 一点时间
-        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeActivate];
-        XCTAssertEqual(events.count, 1);
-
-        [expectation fulfill];
-    });
-    [self waitForExpectationsWithTimeout:10.0f handler:nil];
+    // 等待 activate 事件到达，而非固定等待 5 秒：快时立即继续，慢时等满超时才判失败
+    XCTAssertTrue([MockEventQueue.sharedQueue waitForEventsFor:GrowingEventTypeActivate count:1 timeout:10.0f],
+                  @"等待 activate 事件超时");
+    NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeActivate];
+    XCTAssertEqual(events.count, 1);
 }
 
 - (void)test01SetDataCollectionEnabled {
     [[GrowingAutotracker sharedInstance] setDataCollectionEnabled:NO];
     [[GrowingAutotracker sharedInstance] setDataCollectionEnabled:YES];
 
-    XCTestExpectation *expectation =
-        [self expectationWithDescription:@"SetDataCollectionEnabled Test failed : timeout"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        // 给 webView 一点时间
-        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeActivate];
-        XCTAssertEqual(events.count, 1);
-
-        [expectation fulfill];
-    });
-    [self waitForExpectationsWithTimeout:10.0f handler:nil];
+    // 等待 activate 事件到达，而非固定等待 5 秒：快时立即继续，慢时等满超时才判失败
+    XCTAssertTrue([MockEventQueue.sharedQueue waitForEventsFor:GrowingEventTypeActivate count:1 timeout:10.0f],
+                  @"等待 activate 事件超时");
+    NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeActivate];
+    XCTAssertEqual(events.count, 1);
 }
 
 - (void)test02SetReadClipboardEnabled {

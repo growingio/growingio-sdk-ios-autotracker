@@ -31,6 +31,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)cleanMessages;
 - (NSString *)lastMessage;
+
+/// messages 的快照。messages 由 growing 线程写入，直接在主线程遍历会触发
+/// "Collection was mutated while being enumerated"，故取快照须与写入同线程
+- (NSArray<NSString *> *)allMessages;
 - (void)addMessage:(NSString *)message;
 
 @end
