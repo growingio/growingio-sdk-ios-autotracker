@@ -143,11 +143,28 @@ static MockEventQueue *queue = nil;
     return eventForType;
 }
 
+- (BOOL)waitForEventsFor:(NSString *)eventType count:(NSUInteger)count timeout:(NSTimeInterval)timeout {
+    NSDate *deadline = [NSDate dateWithTimeIntervalSinceNow:timeout];
+    while ([self eventCountFor:eventType] < count) {
+        if (deadline.timeIntervalSinceNow <= 0) {
+            return NO;
+        }
+        // 事件入队时会向主队列投递唤醒块，runloop 被唤醒后立即重新检查；
+        // 0.05s 的分片只是兜底，避免当前 runloop 没有输入源时空转
+        NSDate *slice = [NSDate dateWithTimeIntervalSinceNow:0.05];
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[deadline earlierDate:slice]];
+    }
+    return YES;
+}
+
 #pragma mark GrowingEventManagerObserver
 
 - (void)growingEventManagerEventDidBuild:(GrowingBaseEvent *_Nullable)event {
     [GrowingDispatchManager dispatchInGrowingThread:^{
         [self.eventQueue addObject:event];
+        // 唤醒正在 -waitForEventsFor:count:timeout: 中等待的用例
+        dispatch_async(dispatch_get_main_queue(), ^{
+        });
     }];
 }
 

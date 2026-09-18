@@ -115,49 +115,46 @@
     }
 
     // demo中在3.0秒后调用autotrackPage，发送PAGE事件，再次点击按钮，path有值
-    XCTestExpectation *expectation = [self expectationWithDescription:@"test02AutotrackPageDelay failed : timeout"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        {
-            NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
-            XCTAssertGreaterThanOrEqual(events.count, 1);
+    // 等待 PAGE 事件到达，而非固定等待 5 秒：快时立即继续，慢时等满超时才判失败
+    XCTAssertTrue([MockEventQueue.sharedQueue waitForEventsFor:GrowingEventTypePage count:1 timeout:10.0f],
+                  @"等待 PAGE 事件超时");
+    {
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
+        XCTAssertGreaterThanOrEqual(events.count, 1);
 
-            GrowingPageEvent *event = (GrowingPageEvent *)events.firstObject;
-            XCTAssertEqualObjects(event.eventType, GrowingEventTypePage);
-            XCTAssertEqualObjects(event.path, @"/页面测试");
-            XCTAssertEqualObjects(event.attributes[@"key"], @"value");
+        GrowingPageEvent *event = (GrowingPageEvent *)events.firstObject;
+        XCTAssertEqualObjects(event.eventType, GrowingEventTypePage);
+        XCTAssertEqualObjects(event.path, @"/页面测试");
+        XCTAssertEqualObjects(event.attributes[@"key"], @"value");
 
-            NSDictionary *dic = event.toDictionary;
-            XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypePage);
-            XCTAssertTrue([ManualTrackHelper pageEventCheck:dic]);
-            XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
-            XCTAssertEqualObjects(dic[@"path"], @"/页面测试");
-            XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
-        }
+        NSDictionary *dic = event.toDictionary;
+        XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypePage);
+        XCTAssertTrue([ManualTrackHelper pageEventCheck:dic]);
+        XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
+        XCTAssertEqualObjects(dic[@"path"], @"/页面测试");
+        XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
+    }
 
-        [[viewTester usingLabel:@"Button"] tap];
+    [[viewTester usingLabel:@"Button"] tap];
 
-        {
-            NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
-            XCTAssertGreaterThanOrEqual(events.count, 3);
+    {
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
+        XCTAssertGreaterThanOrEqual(events.count, 3);
 
-            GrowingViewElementEvent *event = (GrowingViewElementEvent *)events.lastObject;
-            NSDictionary *dic = event.toDictionary;
-            XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeViewClick);
-            XCTAssertTrue([ManualTrackHelper viewClickEventCheck:dic]);
-            XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
+        GrowingViewElementEvent *event = (GrowingViewElementEvent *)events.lastObject;
+        NSDictionary *dic = event.toDictionary;
+        XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeViewClick);
+        XCTAssertTrue([ManualTrackHelper viewClickEventCheck:dic]);
+        XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
 
-            XCTAssertEqualObjects(dic[@"path"], @"/页面测试");
-            XCTAssertEqualObjects(dic[@"textValue"], @"Button");
-            XCTAssertEqualObjects(
-                dic[@"xpath"],
-                @"/UITabBarController/UINavigationController/GrowingAutotrackPageViewController/UIView/UIButton");
-            XCTAssertEqualObjects(dic[@"xcontent"], @"/0/0/0/0/0");
-            XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
-        }
-
-        [expectation fulfill];
-    });
-    [self waitForExpectationsWithTimeout:10.0f handler:nil];
+        XCTAssertEqualObjects(dic[@"path"], @"/页面测试");
+        XCTAssertEqualObjects(dic[@"textValue"], @"Button");
+        XCTAssertEqualObjects(
+            dic[@"xpath"],
+            @"/UITabBarController/UINavigationController/GrowingAutotrackPageViewController/UIView/UIButton");
+        XCTAssertEqualObjects(dic[@"xcontent"], @"/0/0/0/0/0");
+        XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
+    }
 }
 
 - (void)test03AutotrackPageWithoutCallSuperViewDidAppear {
@@ -219,49 +216,46 @@
     }
 
     // demo中在3.0秒后调用autotrackPage，由于实际上已经过了viewDidAppear生命周期，所以sdk内部可判断发送PAGE事件，再次点击按钮，path有值
-    XCTestExpectation *expectation = [self expectationWithDescription:@"test02AutotrackPageDelay failed : timeout"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        {
-            NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
-            XCTAssertGreaterThanOrEqual(events.count, 1);
+    // 等待 PAGE 事件到达，而非固定等待 5 秒：快时立即继续，慢时等满超时才判失败
+    XCTAssertTrue([MockEventQueue.sharedQueue waitForEventsFor:GrowingEventTypePage count:1 timeout:10.0f],
+                  @"等待 PAGE 事件超时");
+    {
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
+        XCTAssertGreaterThanOrEqual(events.count, 1);
 
-            GrowingPageEvent *event = (GrowingPageEvent *)events.lastObject;
-            XCTAssertEqualObjects(event.eventType, GrowingEventTypePage);
-            XCTAssertEqualObjects(event.path, @"/页面测试");
-            XCTAssertEqualObjects(event.attributes[@"key"], @"value");
+        GrowingPageEvent *event = (GrowingPageEvent *)events.lastObject;
+        XCTAssertEqualObjects(event.eventType, GrowingEventTypePage);
+        XCTAssertEqualObjects(event.path, @"/页面测试");
+        XCTAssertEqualObjects(event.attributes[@"key"], @"value");
 
-            NSDictionary *dic = event.toDictionary;
-            XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypePage);
-            XCTAssertTrue([ManualTrackHelper pageEventCheck:dic]);
-            XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
-            XCTAssertEqualObjects(dic[@"path"], @"/页面测试");
-            XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
-        }
+        NSDictionary *dic = event.toDictionary;
+        XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypePage);
+        XCTAssertTrue([ManualTrackHelper pageEventCheck:dic]);
+        XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
+        XCTAssertEqualObjects(dic[@"path"], @"/页面测试");
+        XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
+    }
 
-        [[viewTester usingLabel:@"Button"] tap];
+    [[viewTester usingLabel:@"Button"] tap];
 
-        {
-            NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
-            XCTAssertGreaterThanOrEqual(events.count, 3);
+    {
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
+        XCTAssertGreaterThanOrEqual(events.count, 3);
 
-            GrowingViewElementEvent *event = (GrowingViewElementEvent *)events.lastObject;
-            NSDictionary *dic = event.toDictionary;
-            XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeViewClick);
-            XCTAssertTrue([ManualTrackHelper viewClickEventCheck:dic]);
-            XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
+        GrowingViewElementEvent *event = (GrowingViewElementEvent *)events.lastObject;
+        NSDictionary *dic = event.toDictionary;
+        XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeViewClick);
+        XCTAssertTrue([ManualTrackHelper viewClickEventCheck:dic]);
+        XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
 
-            XCTAssertEqualObjects(dic[@"path"], @"/页面测试");
-            XCTAssertEqualObjects(dic[@"textValue"], @"Button");
-            XCTAssertEqualObjects(
-                dic[@"xpath"],
-                @"/UITabBarController/UINavigationController/GrowingAutotrackPageViewController/UIView/UIButton");
-            XCTAssertEqualObjects(dic[@"xcontent"], @"/0/0/0/0/0");
-            XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
-        }
-
-        [expectation fulfill];
-    });
-    [self waitForExpectationsWithTimeout:10.0f handler:nil];
+        XCTAssertEqualObjects(dic[@"path"], @"/页面测试");
+        XCTAssertEqualObjects(dic[@"textValue"], @"Button");
+        XCTAssertEqualObjects(
+            dic[@"xpath"],
+            @"/UITabBarController/UINavigationController/GrowingAutotrackPageViewController/UIView/UIButton");
+        XCTAssertEqualObjects(dic[@"xcontent"], @"/0/0/0/0/0");
+        XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
+    }
 }
 
 - (void)test05AutotrackPageDelayWithoutCallSuperViewDidAppear {
@@ -272,49 +266,46 @@
     // 不点击按钮，走autotrackPage内部的补page逻辑
 
     // demo中在3.0秒后调用autotrackPage，由于实际上已经过了viewDidAppear生命周期，所以sdk内部可判断发送PAGE事件，再次点击按钮，path有值
-    XCTestExpectation *expectation = [self expectationWithDescription:@"test02AutotrackPageDelay failed : timeout"];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        {
-            NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
-            XCTAssertGreaterThanOrEqual(events.count, 1);
+    // 等待 PAGE 事件到达，而非固定等待 5 秒：快时立即继续，慢时等满超时才判失败
+    XCTAssertTrue([MockEventQueue.sharedQueue waitForEventsFor:GrowingEventTypePage count:1 timeout:10.0f],
+                  @"等待 PAGE 事件超时");
+    {
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
+        XCTAssertGreaterThanOrEqual(events.count, 1);
 
-            GrowingPageEvent *event = (GrowingPageEvent *)events.lastObject;
-            XCTAssertEqualObjects(event.eventType, GrowingEventTypePage);
-            XCTAssertEqualObjects(event.path, @"/页面测试");
-            XCTAssertEqualObjects(event.attributes[@"key"], @"value");
+        GrowingPageEvent *event = (GrowingPageEvent *)events.lastObject;
+        XCTAssertEqualObjects(event.eventType, GrowingEventTypePage);
+        XCTAssertEqualObjects(event.path, @"/页面测试");
+        XCTAssertEqualObjects(event.attributes[@"key"], @"value");
 
-            NSDictionary *dic = event.toDictionary;
-            XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypePage);
-            XCTAssertTrue([ManualTrackHelper pageEventCheck:dic]);
-            XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
-            XCTAssertEqualObjects(dic[@"path"], @"/页面测试");
-            XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
-        }
+        NSDictionary *dic = event.toDictionary;
+        XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypePage);
+        XCTAssertTrue([ManualTrackHelper pageEventCheck:dic]);
+        XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
+        XCTAssertEqualObjects(dic[@"path"], @"/页面测试");
+        XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
+    }
 
-        [[viewTester usingLabel:@"Button"] tap];
+    [[viewTester usingLabel:@"Button"] tap];
 
-        {
-            NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
-            XCTAssertGreaterThanOrEqual(events.count, 3);
+    {
+        NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeViewClick];
+        XCTAssertGreaterThanOrEqual(events.count, 3);
 
-            GrowingViewElementEvent *event = (GrowingViewElementEvent *)events.lastObject;
-            NSDictionary *dic = event.toDictionary;
-            XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeViewClick);
-            XCTAssertTrue([ManualTrackHelper viewClickEventCheck:dic]);
-            XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
+        GrowingViewElementEvent *event = (GrowingViewElementEvent *)events.lastObject;
+        NSDictionary *dic = event.toDictionary;
+        XCTAssertEqualObjects(dic[@"eventType"], GrowingEventTypeViewClick);
+        XCTAssertTrue([ManualTrackHelper viewClickEventCheck:dic]);
+        XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
 
-            XCTAssertEqualObjects(dic[@"path"], @"/页面测试");
-            XCTAssertEqualObjects(dic[@"textValue"], @"Button");
-            XCTAssertEqualObjects(
-                dic[@"xpath"],
-                @"/UITabBarController/UINavigationController/GrowingAutotrackPageViewController/UIView/UIButton");
-            XCTAssertEqualObjects(dic[@"xcontent"], @"/0/0/0/0/0");
-            XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
-        }
-
-        [expectation fulfill];
-    });
-    [self waitForExpectationsWithTimeout:10.0f handler:nil];
+        XCTAssertEqualObjects(dic[@"path"], @"/页面测试");
+        XCTAssertEqualObjects(dic[@"textValue"], @"Button");
+        XCTAssertEqualObjects(
+            dic[@"xpath"],
+            @"/UITabBarController/UINavigationController/GrowingAutotrackPageViewController/UIView/UIButton");
+        XCTAssertEqualObjects(dic[@"xcontent"], @"/0/0/0/0/0");
+        XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
+    }
 }
 
 @end
