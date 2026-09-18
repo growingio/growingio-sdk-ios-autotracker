@@ -23,6 +23,7 @@
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Event/GrowingLoginUserAttributesEvent.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Public/GrowingAnnotationCore.h"
 #import "GrowingTrackerCore/Public/GrowingBaseEvent.h"
@@ -161,6 +162,10 @@ NSString *const kGrowingJavascriptMessageType_getNativeIdentity = @"getNativeIde
         identity[@"userKey"] = session.loginUserKey;
     }
     identity[@"isNewDevice"] = @(deviceInfo.isNewDeviceInFirstSession);
+    // 打通场景下内嵌页的分流请求由Web SDK自己发起，原生拦不住，因此把采集开关状态一并下发，
+    // 由Web SDK在关闭时跳过分流请求；身份字段仍照常返回，避免未适配该字段的Web SDK拿不到身份而回落自身身份
+    GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    identity[@"dataCollectionEnabled"] = @(config.dataCollectionEnabled);
 
     NSString *json = [identity growingHelper_jsonString];
     if (json.length == 0) {
