@@ -140,6 +140,16 @@ static NSString *const kABTExpStrategyName = @"$exp_strategy_name";
 + (void)requestExperiment:(NSString *)layerId
            completedBlock:(void (^)(BOOL, GrowingABTExperiment *, NSInteger))completedBlock
                retryCount:(NSInteger)retryCount {
+    GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    if (!config.dataCollectionEnabled) {
+        GIOLogDebug(@"[GrowingABTesting] -fetchExperiment: dataCollectionEnabled is NO");
+        // 采集开关关闭期间不发起分流请求，也不重试
+        if (completedBlock) {
+            completedBlock(NO, nil, 0);
+        }
+        return;
+    }
+
     GrowingABTRequest *request = [[GrowingABTRequest alloc] init];
     request.layerId = layerId;
     id<GrowingEventNetworkService> service =
