@@ -45,17 +45,28 @@ target 'GrowingAnalyticsTests' do
 end
 
 target 'GrowingAnalyticsStartTests' do
+  # 下列测试 target 与 GrowingAnalyticsTests 保持同一组 subspec：
+  # CocoaPods 会为每种 subspec 组合各生成一个 pod target，组合不同则整套 SDK 源码被重复编译一遍
   pod 'GrowingAnalytics/Autotracker', :path => '../'
   pod 'GrowingAnalytics/Tracker', :path => '../'
+  pod 'GrowingAnalytics/ImpressionTrack', :path => '../'
 end
 
 target 'HostApplicationTests' do
+  # 下列测试 target 与 GrowingAnalyticsTests 保持同一组 subspec：
+  # CocoaPods 会为每种 subspec 组合各生成一个 pod target，组合不同则整套 SDK 源码被重复编译一遍
   pod 'GrowingAnalytics/Autotracker', :path => '../'
+  pod 'GrowingAnalytics/Tracker', :path => '../'
+  pod 'GrowingAnalytics/ImpressionTrack', :path => '../'
   pod 'KIF', :configurations => ['Debug']
 end
 
 target 'ProtobufTests' do
+  # 下列测试 target 与 GrowingAnalyticsTests 保持同一组 subspec：
+  # CocoaPods 会为每种 subspec 组合各生成一个 pod target，组合不同则整套 SDK 源码被重复编译一遍
   pod 'GrowingAnalytics/Autotracker', :path => '../'
+  pod 'GrowingAnalytics/Tracker', :path => '../'
+  pod 'GrowingAnalytics/ImpressionTrack', :path => '../'
 end
 
 target 'AdvertisingTests' do
