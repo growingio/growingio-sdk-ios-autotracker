@@ -54,6 +54,16 @@
     return message;
 }
 
+- (NSArray<NSString *> *)allMessages {
+    __block NSArray<NSString *> *messages = nil;
+    [GrowingDispatchManager
+        dispatchInGrowingThread:^{
+            messages = self.messages.copy;
+        }
+                  waitUntilDone:YES];
+    return messages;
+}
+
 - (void)addMessage:(NSString *)message {
     [GrowingDispatchManager dispatchInGrowingThread:^{
         [self.messages addObject:message];
