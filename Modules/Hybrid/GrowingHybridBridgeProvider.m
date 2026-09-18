@@ -45,10 +45,11 @@ NSString *const kGrowingJavascriptMessageType_setNativeUserIdAndUserKey = @"setN
 NSString *const kGrowingJavascriptMessageType_clearNativeUserIdAndUserKey = @"clearNativeUserIdAndUserKey";
 NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
 
-static NSErrorDomain const kGrowingHybridBridgeProviderErrorDomain = @"GrowingHybridBridgeProviderErrorDomain";
-typedef NS_ERROR_ENUM(kGrowingHybridBridgeProviderErrorDomain, GrowingHybridBridgeProviderError){
-    GrowingHybridBridgeProviderErrorGetDomTreeTimedOut = 1,
+typedef NS_ENUM(NSInteger, GrowingHybridBridgeError) {
+    GrowingHybridBridgeGetDomTreeTimedOutError = 500,  /// 获取 DOM 树超时
 };
+
+static NSString *const kGrowingHybridBridgeErrorDomain = @"com.growingio.hybrid";
 static CGFloat const kGrowingGetDomTreeTimeOut = 3.0f;
 
 #define KEY_EVENT_TYPE "eventType"
@@ -170,9 +171,9 @@ static CGFloat const kGrowingGetDomTreeTimeOut = 3.0f;
 
     if (!finished) {
         // 迟到的回调只会写 resultDic/resultError，此时已无人读取，无需额外处理
-        resultError = [NSError errorWithDomain:kGrowingHybridBridgeProviderErrorDomain
-                                          code:GrowingHybridBridgeProviderErrorGetDomTreeTimedOut
-                                      userInfo:@{NSLocalizedDescriptionKey: @"getDomTree time is out"}];
+        resultError = [NSError errorWithDomain:kGrowingHybridBridgeErrorDomain
+                                          code:GrowingHybridBridgeGetDomTreeTimedOutError
+                                      userInfo:@{NSLocalizedDescriptionKey: @"get dom tree time out"}];
     }
 
     completionHandler(resultDic, resultError);
