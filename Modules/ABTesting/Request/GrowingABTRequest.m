@@ -21,21 +21,72 @@
 #import "Modules/ABTesting/Public/GrowingABTesting.h"
 #import "Modules/ABTesting/Request/GrowingABTRequestAdapter.h"
 
+#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Network/Request/Adapter/GrowingRequestAdapter.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
+#import "GrowingULTimeUtil.h"
+
+@interface GrowingABTRequest ()
+
+@property (nonatomic, copy, nullable) NSString *loginUserId;
+@property (nonatomic, copy, nullable) NSString *loginUserKey;
+@property (nonatomic, copy, readwrite) NSString *userIdentity;
+
+@end
 
 @implementation GrowingABTRequest
+
+@synthesize stm;
+
+- (instancetype)init {
+    if (self = [super init]) {
+        self.stm = [GrowingULTimeUtil currentTimeMillis];
+
+        GrowingSession *session = [GrowingSession currentSession];
+        self.loginUserId = session.loginUserId;
+        self.loginUserKey = session.loginUserKey;
+        self.userIdentity = [GrowingABTRequest identityWithDeviceId:[GrowingDeviceInfo currentDeviceInfo].deviceIDString
+                                                             userId:self.loginUserId
+                                                            userKey:self.loginUserKey];
+    }
+    return self;
+}
+
++ (NSString *)currentIdentity {
+    GrowingSession *session = [GrowingSession currentSession];
+    return [self identityWithDeviceId:[GrowingDeviceInfo currentDeviceInfo].deviceIDString
+                               userId:session.loginUserId
+                              userKey:session.loginUserKey];
+}
+
++ (NSString *)identityWithDeviceId:(NSString *_Nullable)deviceId
+                            userId:(NSString *_Nullable)userId
+                           userKey:(NSString *_Nullable)userKey {
+    NSString *raw = [NSString stringWithFormat:@"%@\n%@\n%@",
+                                               (deviceId ?: @"").growingHelper_sha1,
+                                               (userId ?: @"").growingHelper_sha1,
+                                               (userKey ?: @"").growingHelper_sha1];
+    return raw.growingHelper_sha1;
+}
 
 - (GrowingHTTPMethod)method {
     return GrowingHTTPMethodPOST;
 }
 
 - (NSURL *)absoluteURL {
-    GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
-    NSURL *baseURL = [NSURL URLWithString:config.abTestingServerHost];
-    return [NSURL URLWithString:self.path relativeToURL:baseURL];
+    NSString *baseUrl = GrowingConfigurationManager.sharedInstance.trackConfiguration.abTestingServerHost;
+    if (!baseUrl.length) {
+        return nil;
+    }
+
+    NSString *absoluteURLString = [baseUrl growingHelper_absoluteURLStringWithPath:self.path andQuery:self.query];
+    return [NSURL URLWithString:absoluteURLString];
+}
+
+- (NSDictionary *)query {
+    return @{@"stm": [NSString stringWithFormat:@"%llu", self.stm]};
 }
 
 - (NSString *)path {
@@ -57,10 +108,19 @@
     }
                                           .mutableCopy;
 
-    BOOL newDevice =
-        [GrowingDeviceInfo currentDeviceInfo].isNewDevice && [[GrowingSession currentSession] firstSession];
+    BOOL newDevice = [GrowingDeviceInfo currentDeviceInfo].isNewDeviceInFirstSession;
     if (newDevice) {
         parameters[@"newDevice"] = @(newDevice);
+    }
+
+    unsigned char factor = (unsigned char)(self.stm & 0xFF);
+    if (self.loginUserId.length > 0) {
+        parameters[@"userId"] = [[self.loginUserId.growingHelper_uft8Data growingHelper_xorEncryptWithHint:factor]
+            growingHelper_base64String];
+    }
+    if (self.loginUserKey.length > 0) {
+        parameters[@"userKey"] = [[self.loginUserKey.growingHelper_uft8Data growingHelper_xorEncryptWithHint:factor]
+            growingHelper_base64String];
     }
 
     bodyAdapter.parameters = parameters.copy;

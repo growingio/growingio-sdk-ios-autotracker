@@ -40,8 +40,14 @@ static NSString *kWKWebViewJavascriptBridge_js(void) {
                 setNativeUserIdAndUserKey: setNativeUserIdAndUserKey,
                 clearNativeUserIdAndUserKey: clearNativeUserIdAndUserKey,
                 onDomChanged: onDomChanged,
-                getDomTree: getDomTreeTemp
+                getDomTree: getDomTreeTemp,
+                getNativeIdentity: getNativeIdentity,
+                _onNativeCallback: _onNativeCallback
             };
+
+            var _callbacks = {};
+            var _callbackSeed = 0;
+            var _CALLBACK_TIMEOUT = 500;
 
             function getDomTreeTemp() {
                 console.log("%c [GrowingIO]：圈选获取节点信息失败！请集成 gioHybridCircle 插件后重试！",
@@ -71,6 +77,39 @@ static NSString *kWKWebViewJavascriptBridge_js(void) {
 
             function onDomChanged() {
                 _doSend("onDomChanged", null);
+            }
+
+            /* 注意: 该段 JS 经 C 预处理器 # 字符串化后会被压成单行,
+               只能使用块注释, 出现行注释会导致其后所有代码失效;
+               另外 iOS 10.0 ~ 10.2 不支持 async/await, 这里只用 Promise */
+            function getNativeIdentity() {
+                return new Promise(function(resolve) {
+                    var callbackId = "gio_" + (++_callbackSeed) + "_" + Date.now();
+
+                    var timer = setTimeout(function() {
+                        delete _callbacks[callbackId];
+                        /* 超时, 交由 Web 侧回落至使用自身身份 */
+                        resolve(null);
+                    }, _CALLBACK_TIMEOUT);
+
+                    _callbacks[callbackId] = function(identity) {
+                        clearTimeout(timer);
+                        resolve(identity);
+                    };
+
+                    _doSend("getNativeIdentity", JSON.stringify({callbackId: callbackId}));
+                });
+            }
+
+            /* 由原生通过 evaluateJavaScript 调用 */
+            function _onNativeCallback(callbackId, identity) {
+                var callback = _callbacks[callbackId];
+                if (!callback) {
+                    /* 超时之后才到达, 丢弃 */
+                    return;
+                }
+                delete _callbacks[callbackId];
+                callback(identity);
             }
 
             function _doSend(messageType, data) {
