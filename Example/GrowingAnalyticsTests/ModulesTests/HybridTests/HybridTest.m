@@ -99,6 +99,26 @@
     XCTAssertNotNil(builder);
 }
 
+- (void)testGetDomTreeTimeout {
+    // 未加载内容、未注入 bridge 的 webView 可能迟迟不回调，必须由超时兜底而非无限自旋
+    WKWebView *webView = [[WKWebView alloc] initWithFrame:CGRectZero];
+    __block BOOL called = NO;
+    __block NSError *resultError = nil;
+    NSDate *start = [NSDate date];
+
+    [self.provider getDomTreeForWebView:webView
+                      completionHandler:^(NSDictionary *_Nullable domTree, NSError *_Nullable error) {
+                          called = YES;
+                          resultError = error;
+                      }];
+
+    NSTimeInterval cost = -start.timeIntervalSinceNow;
+    // 调用方 GrowingWebCircle 依赖同步语义，completionHandler 必须在方法返回前调用
+    XCTAssertTrue(called);
+    XCTAssertNotNil(resultError);
+    XCTAssertLessThan(cost, 10.0, @"应由超时兜底返回，实际耗时 %.1fs", cost);
+}
+
 - (void)testSetNativeUserIdAndUserKey {
     NSString *dict =
         @"{\"messageType\":\"setNativeUserIdAndUserKey\",\"data\":\"{\\\"userId\\\":\\\"zhangsan2\\\",\\\"userKey\\\":"
