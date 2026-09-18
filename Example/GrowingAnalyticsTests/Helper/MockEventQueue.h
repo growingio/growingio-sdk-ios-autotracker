@@ -29,4 +29,9 @@
 - (GrowingBaseEvent *)eventAt:(NSUInteger)index;
 - (GrowingBaseEvent *)eventAt:(NSUInteger)index forType:(NSString *)eventType;
 
+/// 等待指定类型的事件累积到 count 个，事件入队时唤醒，满足即返回 YES，超时返回 NO。
+/// 用于替代 dispatch_after 固定时长等待：事件到达即继续，慢环境下也会等满 timeout 而非提前断言失败。
+/// 须在主线程调用。
+- (BOOL)waitForEventsFor:(NSString *)eventType count:(NSUInteger)count timeout:(NSTimeInterval)timeout;
+
 @end
