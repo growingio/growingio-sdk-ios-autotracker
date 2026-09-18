@@ -45,6 +45,12 @@ NSString *const kGrowingJavascriptMessageType_setNativeUserIdAndUserKey = @"setN
 NSString *const kGrowingJavascriptMessageType_clearNativeUserIdAndUserKey = @"clearNativeUserIdAndUserKey";
 NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
 
+static NSErrorDomain const kGrowingHybridBridgeProviderErrorDomain = @"GrowingHybridBridgeProviderErrorDomain";
+typedef NS_ERROR_ENUM(kGrowingHybridBridgeProviderErrorDomain, GrowingHybridBridgeProviderError){
+    GrowingHybridBridgeProviderErrorGetDomTreeTimedOut = 1,
+};
+static CGFloat const kGrowingGetDomTreeTimeOut = 3.0f;
+
 #define KEY_EVENT_TYPE "eventType"
 #define KEY_DOMAIN "domain"
 #define KEY_PATH "path"
@@ -152,8 +158,21 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
                   }
                   finished = YES;
               }];
-    while (!finished) {
-        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    // 必须有超时兜底：WebContent 进程崩溃、页面未注入 bridge 或 JS 执行卡死时，
+    // completionHandler 可能迟迟不回调，无限等待会导致主线程永久卡死
+    NSDate *deadline = [NSDate dateWithTimeIntervalSinceNow:kGrowingGetDomTreeTimeOut];
+    while (!finished && deadline.timeIntervalSinceNow > 0) {
+        if (![[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:deadline]) {
+            // runloop 没有输入源，继续自旋只会空转
+            break;
+        }
+    }
+
+    if (!finished) {
+        // 迟到的回调只会写 resultDic/resultError，此时已无人读取，无需额外处理
+        resultError = [NSError errorWithDomain:kGrowingHybridBridgeProviderErrorDomain
+                                          code:GrowingHybridBridgeProviderErrorGetDomTreeTimedOut
+                                      userInfo:@{NSLocalizedDescriptionKey: @"getDomTree time is out"}];
     }
 
     completionHandler(resultDic, resultError);
