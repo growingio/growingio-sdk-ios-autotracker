@@ -100,7 +100,10 @@
 }
 
 - (void)testGetDomTreeTimeout {
-    // 未加载内容、未注入 bridge 的 webView 可能迟迟不回调，必须由超时兜底而非无限自旋
+    // 未加载内容、未注入 bridge 的 webView 可能迟迟不回调，必须由超时兜底而非无限自旋。
+    // 这里调小超时，避免用例跑满默认的 10s
+    CGFloat defaultTimeOut = self.provider.getDomTreeTimeOut;
+    self.provider.getDomTreeTimeOut = 0.5f;
     WKWebView *webView = [[WKWebView alloc] initWithFrame:CGRectZero];
     __block BOOL called = NO;
     __block NSError *resultError = nil;
@@ -113,10 +116,12 @@
                       }];
 
     NSTimeInterval cost = -start.timeIntervalSinceNow;
+    self.provider.getDomTreeTimeOut = defaultTimeOut;
+
     // 调用方 GrowingWebCircle 依赖同步语义，completionHandler 必须在方法返回前调用
     XCTAssertTrue(called);
     XCTAssertNotNil(resultError);
-    XCTAssertLessThan(cost, 10.0, @"应由超时兜底返回，实际耗时 %.1fs", cost);
+    XCTAssertLessThan(cost, 5.0, @"应由超时兜底返回，实际耗时 %.1fs", cost);
 }
 
 - (void)testSetNativeUserIdAndUserKey {

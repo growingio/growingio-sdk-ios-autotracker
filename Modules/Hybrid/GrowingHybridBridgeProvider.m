@@ -50,7 +50,7 @@ typedef NS_ENUM(NSInteger, GrowingHybridBridgeError) {
 };
 
 static NSString *const kGrowingHybridBridgeErrorDomain = @"com.growingio.hybrid";
-static CGFloat const kGrowingGetDomTreeTimeOut = 3.0f;
+static CGFloat const kGrowingGetDomTreeDefaultTimeOut = 10.0f;
 
 #define KEY_EVENT_TYPE "eventType"
 #define KEY_DOMAIN "domain"
@@ -81,6 +81,13 @@ static CGFloat const kGrowingGetDomTreeTimeOut = 3.0f;
     });
 
     return _sharedInstance;
+}
+
+- (instancetype)init {
+    if (self = [super init]) {
+        _getDomTreeTimeOut = kGrowingGetDomTreeDefaultTimeOut;
+    }
+    return self;
 }
 
 - (void)handleJavascriptBridgeMessage:(NSString *)message {
@@ -161,7 +168,7 @@ static CGFloat const kGrowingGetDomTreeTimeOut = 3.0f;
               }];
     // 必须有超时兜底：WebContent 进程崩溃、页面未注入 bridge 或 JS 执行卡死时，
     // completionHandler 可能迟迟不回调，无限等待会导致主线程永久卡死
-    NSDate *deadline = [NSDate dateWithTimeIntervalSinceNow:kGrowingGetDomTreeTimeOut];
+    NSDate *deadline = [NSDate dateWithTimeIntervalSinceNow:self.getDomTreeTimeOut];
     while (!finished && deadline.timeIntervalSinceNow > 0) {
         if (![[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:deadline]) {
             // runloop 没有输入源，继续自旋只会空转

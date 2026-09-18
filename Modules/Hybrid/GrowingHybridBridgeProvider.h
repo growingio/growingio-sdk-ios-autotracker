@@ -26,6 +26,11 @@
 
 @property (nullable, nonatomic, weak) id<GrowingWebViewDomChangedDelegate> domChangedDelegate;
 
+/// 获取 H5 DOM 树的超时时间，默认 10s
+/// @discussion 仅用于兜底：WebContent 进程崩溃或挂起、页面未注入 bridge、JS 卡死时回调不会到达，
+/// 无超时会导致主线程被永久占住。正常圈选路径远低于该值，不应按性能预算来调小
+@property (nonatomic, assign) CGFloat getDomTreeTimeOut;
+
 + (instancetype _Nonnull)sharedInstance;
 
 - (void)handleJavascriptBridgeMessage:(NSString *_Nullable)message;
