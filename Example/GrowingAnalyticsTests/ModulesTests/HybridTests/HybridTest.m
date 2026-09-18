@@ -220,6 +220,35 @@
     XCTAssertNil(identity[@"userKey"]);
 }
 
+- (void)testGetNativeIdentityWithDataCollectionEnabled {
+    GrowingHybridMockWebView *webView = [self mockWebView];
+
+    [self sendGetNativeIdentityWithCallbackId:@"gio_5_1628650812710" webView:webView];
+
+    NSDictionary *identity = [self identityFromWebView:webView callbackId:@"gio_5_1628650812710"];
+    // dataCollectionEnabled 恒返回，Web SDK 据此决定是否跳过自己的分流请求
+    XCTAssertTrue([identity[@"dataCollectionEnabled"] isKindOfClass:NSNumber.class]);
+    XCTAssertEqualObjects(identity[@"dataCollectionEnabled"], @(YES));
+}
+
+- (void)testGetNativeIdentityWithDataCollectionDisabled {
+    GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionEnabled = NO;
+    [[GrowingSession currentSession] setLoginUserId:@"zhangsan" userKey:@"邮箱"];
+    GrowingHybridMockWebView *webView = [self mockWebView];
+
+    [self sendGetNativeIdentityWithCallbackId:@"gio_6_1628650812710" webView:webView];
+
+    XCTAssertEqual(webView.evaluateCount, 1, @"采集开关关闭时仍需回调，否则 Web 侧会超时回落至自身身份");
+    NSDictionary *identity = [self identityFromWebView:webView callbackId:@"gio_6_1628650812710"];
+    XCTAssertEqualObjects(identity[@"dataCollectionEnabled"], @(NO));
+    // 身份字段照常下发，未适配该字段的 Web SDK 行为不变，不会退化成按 Web 身份分流
+    XCTAssertEqualObjects(identity[@"deviceId"], [GrowingDeviceInfo currentDeviceInfo].deviceIDString);
+    XCTAssertEqualObjects(identity[@"userId"], @"zhangsan");
+    XCTAssertEqualObjects(identity[@"userKey"], @"邮箱");
+
+    GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionEnabled = YES;
+}
+
 - (void)testGetNativeIdentityWithInvalidCallbackId {
     NSArray<NSString *> *invalidCallbackIds = @[
         @"a'); alert(1); ('",
