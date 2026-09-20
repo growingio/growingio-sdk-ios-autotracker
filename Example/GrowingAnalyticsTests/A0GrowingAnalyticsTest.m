@@ -373,6 +373,11 @@ static NSTimeInterval GrowingTestSleepAndMeasure(unsigned int seconds) {
         sleep((int)(sessionInterval.longLongValue / 1000LL) + 1);
 
         [GrowingSession.currentSession performSelector:@selector(applicationDidBecomeActive)];
+        // applicationDidBecomeActive 异步派发到 growing 线程，计时器的 resume 时刻在那里读取，
+        // 且排在 generateVisit 之后。先等队列排空，再开始计时，否则测量区间会比计时器的长
+        [GrowingDispatchManager dispatchInGrowingThread:^{
+        }
+                                          waitUntilDone:YES];
 
         NSTimeInterval elapsed = GrowingTestSleepAndMeasure(1);  // 2 > duration > 1
         [[GrowingAutotracker sharedInstance] trackTimerEnd:timerId];
