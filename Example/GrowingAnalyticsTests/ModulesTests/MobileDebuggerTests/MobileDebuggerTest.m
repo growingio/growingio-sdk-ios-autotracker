@@ -95,7 +95,7 @@ static __weak GrowingMobileDebugger *mobileDebugger;
 
     XCTestExpectation *expectation = [self expectationWithDescription:@"MobileDebugger Test failed : timeout"];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        for (NSString *message in MockWebSocket.sharedInstance.messages) {
+        for (NSString *message in MockWebSocket.sharedInstance.allMessages) {
             NSMutableDictionary *dic = [[message growingHelper_jsonObject] mutableCopy];
             [self mobileDebuggerSocketParamsCheck:dic];
         }
@@ -153,7 +153,7 @@ static __weak GrowingMobileDebugger *mobileDebugger;
 
     XCTestExpectation *expectation = [self expectationWithDescription:@"MobileDebugger Test failed : timeout"];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        NSArray *messages = MockWebSocket.sharedInstance.messages.copy;
+        NSArray *messages = MockWebSocket.sharedInstance.allMessages;
         for (NSString *message in messages) {
             NSMutableDictionary *dic = [[message growingHelper_jsonObject] mutableCopy];
             [self mobileDebuggerSocketParamsCheck:dic];

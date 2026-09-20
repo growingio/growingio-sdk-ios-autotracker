@@ -45,6 +45,13 @@ NSString *const kGrowingJavascriptMessageType_setNativeUserIdAndUserKey = @"setN
 NSString *const kGrowingJavascriptMessageType_clearNativeUserIdAndUserKey = @"clearNativeUserIdAndUserKey";
 NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
 
+typedef NS_ENUM(NSInteger, GrowingHybridBridgeError) {
+    GrowingHybridBridgeGetDomTreeTimedOutError = 500,  /// 获取 DOM 树超时
+};
+
+static NSString *const kGrowingHybridBridgeErrorDomain = @"com.growingio.hybrid";
+static CGFloat const kGrowingGetDomTreeDefaultTimeOut = 10.0f;
+
 #define KEY_EVENT_TYPE "eventType"
 #define KEY_DOMAIN "domain"
 #define KEY_PATH "path"
@@ -74,6 +81,13 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
     });
 
     return _sharedInstance;
+}
+
+- (instancetype)init {
+    if (self = [super init]) {
+        _getDomTreeTimeOut = kGrowingGetDomTreeDefaultTimeOut;
+    }
+    return self;
 }
 
 - (void)handleJavascriptBridgeMessage:(NSString *)message {
@@ -152,8 +166,21 @@ NSString *const kGrowingJavascriptMessageType_onDomChanged = @"onDomChanged";
                   }
                   finished = YES;
               }];
-    while (!finished) {
-        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    // 必须有超时兜底：WebContent 进程崩溃、页面未注入 bridge 或 JS 执行卡死时，
+    // completionHandler 可能迟迟不回调，无限等待会导致主线程永久卡死
+    NSDate *deadline = [NSDate dateWithTimeIntervalSinceNow:self.getDomTreeTimeOut];
+    while (!finished && deadline.timeIntervalSinceNow > 0) {
+        if (![[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:deadline]) {
+            // runloop 没有输入源，继续自旋只会空转
+            break;
+        }
+    }
+
+    if (!finished) {
+        // 迟到的回调只会写 resultDic/resultError，此时已无人读取，无需额外处理
+        resultError = [NSError errorWithDomain:kGrowingHybridBridgeErrorDomain
+                                          code:GrowingHybridBridgeGetDomTreeTimedOutError
+                                      userInfo:@{NSLocalizedDescriptionKey: @"get dom tree time out"}];
     }
 
     completionHandler(resultDic, resultError);

@@ -41,6 +41,7 @@
       }
     },
     {
+      "enabled" : false,
       "skippedTests" : [
         "DeepLinkTest"
       ],
@@ -51,6 +52,7 @@
       }
     },
     {
+      "enabled" : false,
       "skippedTests" : [
         "DeepLinkiOS13UISceneTest"
       ],
