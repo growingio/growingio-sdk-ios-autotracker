@@ -23,6 +23,15 @@
 
 static NSString *const kGrowingEventDuration = @"event_duration";
 
+/// 休眠 seconds 秒，并返回 SDK 计时器所用时钟（NSProcessInfo.systemUptime）实际走过的时长。
+/// sleep 按墙钟计时，而 event_duration 由 systemUptime 算出，两者在宿主机被挂起时会脱节
+/// （CI 上曾出现 sleep(1) 只对应 0.588s），因此断言须以同一把时钟量出的时长为基准。
+static NSTimeInterval GrowingTestSleepAndMeasure(unsigned int seconds) {
+    NSTimeInterval begin = NSProcessInfo.processInfo.systemUptime;
+    sleep(seconds);
+    return NSProcessInfo.processInfo.systemUptime - begin;
+}
+
 @interface A0GrowingAnalyticsTest : XCTestCase <GrowingEventInterceptor>
 
 @end
@@ -328,15 +337,16 @@ static NSString *const kGrowingEventDuration = @"event_duration";
         NSString *timerId = [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
         [[GrowingAutotracker sharedInstance] trackTimerPause:timerId];
         [[GrowingAutotracker sharedInstance] trackTimerResume:timerId];
-        sleep(1);
+        NSTimeInterval elapsed = GrowingTestSleepAndMeasure(1);
         [[GrowingAutotracker sharedInstance] trackTimerEnd:timerId];
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
         XCTAssertEqual(events.count, 1);
 
         GrowingCustomEvent *event = (GrowingCustomEvent *)events.firstObject;
         XCTAssertEqualObjects(event.eventName, @"eventName");
+        // event_duration 的统计区间完整包住上面这次休眠，扣掉 %.3f 格式化的舍入误差即可
         XCTAssertGreaterThanOrEqual(((NSString *)event.attributes[kGrowingEventDuration]).floatValue,
-                                    0.6);  // sleep 不准
+                                    elapsed - 0.01);
     }
 
     {
@@ -364,15 +374,16 @@ static NSString *const kGrowingEventDuration = @"event_duration";
 
         [GrowingSession.currentSession performSelector:@selector(applicationDidBecomeActive)];
 
-        sleep(1);  // 2 > duration > 1
+        NSTimeInterval elapsed = GrowingTestSleepAndMeasure(1);  // 2 > duration > 1
         [[GrowingAutotracker sharedInstance] trackTimerEnd:timerId];
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
         XCTAssertEqual(events.count, 1);
 
         GrowingCustomEvent *event = (GrowingCustomEvent *)events.firstObject;
         XCTAssertEqualObjects(event.eventName, @"eventName");
+        // event_duration 的统计区间完整包住上面这次休眠，扣掉 %.3f 格式化的舍入误差即可
         XCTAssertGreaterThanOrEqual(((NSString *)event.attributes[kGrowingEventDuration]).floatValue,
-                                    0.6);  // sleep 不准
+                                    elapsed - 0.01);
         // 不会算上前后台切换的时间
         XCTAssertLessThan(((NSString *)event.attributes[kGrowingEventDuration]).floatValue, 2.0);
     }
@@ -465,7 +476,7 @@ static NSString *const kGrowingEventDuration = @"event_duration";
         NSString *timerId = [[GrowingAutotracker sharedInstance] trackTimerStart:@"eventName"];
         [[GrowingAutotracker sharedInstance] trackTimerPause:timerId];
         [[GrowingAutotracker sharedInstance] trackTimerResume:timerId];
-        sleep(1);
+        NSTimeInterval elapsed = GrowingTestSleepAndMeasure(1);
         [[GrowingAutotracker sharedInstance] trackTimerEnd:timerId withAttributes:@{@"key": @"value"}];
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
         XCTAssertEqual(events.count, 1);
@@ -473,8 +484,9 @@ static NSString *const kGrowingEventDuration = @"event_duration";
         GrowingCustomEvent *event = (GrowingCustomEvent *)events.firstObject;
         XCTAssertEqualObjects(event.eventName, @"eventName");
         XCTAssertEqualObjects(event.attributes[@"key"], @"value");
+        // event_duration 的统计区间完整包住上面这次休眠，扣掉 %.3f 格式化的舍入误差即可
         XCTAssertGreaterThanOrEqual(((NSString *)event.attributes[kGrowingEventDuration]).floatValue,
-                                    0.6);  // sleep 不准
+                                    elapsed - 0.01);
     }
 
     {
