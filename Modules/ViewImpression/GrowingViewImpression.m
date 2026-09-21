@@ -38,6 +38,7 @@ GrowingMod(GrowingViewImpression)
 @property (nonatomic, assign) BOOL inactive;
 @property (nonatomic, strong) NSMutableOrderedSet<NSString *> *trackedIdentifiers;
 @property (nonatomic, assign) BOOL trackedIdentifiersOverflowWarned;
+@property (nonatomic, strong) NSHashTable<id<GrowingViewImpressionDelegate>> *delegates;
 
 @end
 
@@ -88,8 +89,29 @@ static const NSUInteger kTrackedIdentifiersCapacity = 10000;
             initWithOptions:NSPointerFunctionsWeakMemory | NSPointerFunctionsObjectPointerPersonality
                    capacity:100];
         _trackedIdentifiers = [NSMutableOrderedSet orderedSet];
+        _delegates = [NSHashTable weakObjectsHashTable];
     }
     return self;
+}
+
+#pragma mark - Public Method
+
+- (void)addImpressionDelegate:(id<GrowingViewImpressionDelegate>)delegate {
+    if (!delegate) {
+        return;
+    }
+    [GrowingDispatchManager dispatchInMainThread:^{
+        [self.delegates addObject:delegate];
+    }];
+}
+
+- (void)removeImpressionDelegate:(id<GrowingViewImpressionDelegate>)delegate {
+    if (!delegate) {
+        return;
+    }
+    [GrowingDispatchManager dispatchInMainThread:^{
+        [self.delegates removeObject:delegate];
+    }];
 }
 
 #pragma mark - Private Method
@@ -193,7 +215,7 @@ static const NSUInteger kTrackedIdentifiersCapacity = 10000;
     }
 
     if (CACurrentMediaTime() - node.visibleSince >= stayDuration) {
-        [self trackNode:node];
+        [self trackNode:node inView:view];
     }
 }
 
@@ -214,19 +236,65 @@ static const NSUInteger kTrackedIdentifiersCapacity = 10000;
                    });
 }
 
-- (void)trackNode:(GrowingViewImpressionNode *)node {
+- (void)trackNode:(GrowingViewImpressionNode *)node inView:(UIView *)view {
     node.tracked = YES;
 
     // 不可重复曝光以 identifier 为准记在全局：cell 复用后视图相同而元素不同，
     // 同一元素滚回来又可能落在另一个 cell 实例上，挂在视图上判不准
+    if (!node.config.repeatable && [self.trackedIdentifiers containsObject:node.identifier]) {
+        return;
+    }
+
+    if (![self shouldTrackNode:node inView:view]) {
+        return;
+    }
+
     if (!node.config.repeatable) {
-        if ([self.trackedIdentifiers containsObject:node.identifier]) {
-            return;
-        }
         [self rememberTrackedIdentifier:node.identifier];
     }
 
-    [GrowingEventGenerator generateCustomEvent:node.eventName attributes:node.attributes];
+    [GrowingEventGenerator generateCustomEvent:node.eventName attributes:[self attributesForNode:node inView:view]];
+    [self notifyDidTrackNode:node inView:view];
+}
+
+- (BOOL)shouldTrackNode:(GrowingViewImpressionNode *)node inView:(UIView *)view {
+    for (id<GrowingViewImpressionDelegate> delegate in self.delegates.allObjects) {
+        if (![delegate respondsToSelector:@selector(growingImpressionShouldTrack:eventName:identifier:)]) {
+            continue;
+        }
+        if (![delegate growingImpressionShouldTrack:view eventName:node.eventName identifier:node.identifier]) {
+            return NO;
+        }
+    }
+    return YES;
+}
+
+- (NSDictionary<NSString *, id> *)attributesForNode:(GrowingViewImpressionNode *)node inView:(UIView *)view {
+    NSMutableDictionary<NSString *, id> *merged = nil;
+    for (id<GrowingViewImpressionDelegate> delegate in self.delegates.allObjects) {
+        if (![delegate respondsToSelector:@selector(growingImpressionDynamicAttributes:eventName:identifier:)]) {
+            continue;
+        }
+        NSDictionary<NSString *, id> *dynamic = [delegate growingImpressionDynamicAttributes:view
+                                                                                   eventName:node.eventName
+                                                                                  identifier:node.identifier];
+        if (dynamic.count == 0) {
+            continue;
+        }
+        if (!merged) {
+            merged = node.attributes ? node.attributes.mutableCopy : [NSMutableDictionary dictionary];
+        }
+        [merged addEntriesFromDictionary:dynamic];
+    }
+    return merged ?: node.attributes;
+}
+
+- (void)notifyDidTrackNode:(GrowingViewImpressionNode *)node inView:(UIView *)view {
+    for (id<GrowingViewImpressionDelegate> delegate in self.delegates.allObjects) {
+        if ([delegate respondsToSelector:@selector(growingImpressionDidTrack:eventName:identifier:)]) {
+            [delegate growingImpressionDidTrack:view eventName:node.eventName identifier:node.identifier];
+        }
+    }
 }
 
 - (void)rememberTrackedIdentifier:(NSString *)identifier {
