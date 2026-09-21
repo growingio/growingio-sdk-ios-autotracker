@@ -53,7 +53,9 @@
         node.config = [GrowingViewImpression effectiveConfig:config];
 
         NSString *slot = identifier.length > 0 ? identifier : kGrowingViewImpDefaultSlot;
-        [self growingViewImpNodesCreateIfNeeded][slot] = node;
+        NSMutableDictionary<NSString *, GrowingViewImpressionNode *> *nodes = [self growingViewImpNodesCreateIfNeeded];
+        nodes[slot].recheckToken += 1;
+        nodes[slot] = node;
         [[GrowingViewImpression sharedInstance] addImpressionView:self];
     }];
 }
@@ -67,6 +69,9 @@
 
 - (void)growingViewImpUnmarkAll {
     [GrowingDispatchManager dispatchInMainThread:^{
+        for (GrowingViewImpressionNode *node in self.growingViewImpNodes.allValues) {
+            node.recheckToken += 1;
+        }
         objc_setAssociatedObject(self, @selector(growingViewImpNodes), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         [[GrowingViewImpression sharedInstance] removeImpressionView:self];
     }];
@@ -78,7 +83,8 @@
     }
 
     [GrowingDispatchManager dispatchInMainThread:^{
-        NSMutableDictionary *nodes = self.growingViewImpNodes;
+        NSMutableDictionary<NSString *, GrowingViewImpressionNode *> *nodes = self.growingViewImpNodes;
+        nodes[identifier].recheckToken += 1;
         [nodes removeObjectForKey:identifier];
         if (nodes.count == 0) {
             [self growingViewImpUnmarkAll];

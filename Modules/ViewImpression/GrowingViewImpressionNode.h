@@ -17,7 +17,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <Foundation/Foundation.h>
+#import <QuartzCore/QuartzCore.h>
 #import "Modules/ViewImpression/Public/GrowingViewImpressionConfig.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -32,6 +32,12 @@ FOUNDATION_EXPORT NSString *const kGrowingViewImpDefaultSlot;
 @property (nonatomic, copy, nullable) NSString *identifier;
 @property (nonatomic, copy) GrowingViewImpressionConfig *config;
 @property (nonatomic, assign) BOOL tracked;
+
+/// 连续可见的计时起点，0 表示当前不可见
+@property (nonatomic, assign) CFTimeInterval visibleSince;
+
+/// 停留时长复检的配对令牌：令牌变化即代表此前调度的复检已失效
+@property (nonatomic, assign) NSUInteger recheckToken;
 
 @end
 
