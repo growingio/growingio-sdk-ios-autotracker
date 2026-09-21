@@ -372,14 +372,30 @@ static const NSUInteger kTrackedIdentifiersCapacity = 10000;
     }
 
     [GrowingDispatchManager dispatchInMainThread:^{
-        [[self sharedInstance].trackedIdentifiers removeObject:identifier];
+        GrowingViewImpression *impression = [self sharedInstance];
+        [impression.trackedIdentifiers removeObject:identifier];
+        [impression resetTrackedFlagMatching:identifier];
     }];
 }
 
 + (void)resetAllImpressionState {
     [GrowingDispatchManager dispatchInMainThread:^{
-        [[self sharedInstance].trackedIdentifiers removeAllObjects];
+        GrowingViewImpression *impression = [self sharedInstance];
+        [impression.trackedIdentifiers removeAllObjects];
+        [impression resetTrackedFlagMatching:nil];
     }];
+}
+
+/// 仅清全局记录不够：当前就停在可视区内的元素 tracked 仍为 YES，
+/// 不离开再进入就等不到下一次曝光，与"重置后可再次曝光"的语义对不上
+- (void)resetTrackedFlagMatching:(NSString *)identifier {
+    for (UIView *view in self.sourceTable.allObjects) {
+        for (GrowingViewImpressionNode *node in view.growingViewImpNodes.allValues) {
+            if (!identifier || [node.identifier isEqualToString:identifier]) {
+                node.tracked = NO;
+            }
+        }
+    }
 }
 
 @end
