@@ -18,6 +18,8 @@
 //  limitations under the License.
 
 #import "ViewImpressionTestCase.h"
+#import "GrowingAutotracker.h"
+#import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
 #import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
 #import "MockEventQueue.h"
 
@@ -32,6 +34,20 @@ static const CGFloat kWindowHeight = 667.0f;
 @end
 
 @implementation ViewImpressionTestCase
+
++ (void)setUp {
+    [super setUp];
+
+    // 整套用例跑时 SDK 已由 A0GrowingAnalyticsTest 启动，单独跑本组用例时在此补启动，
+    // 否则模块的 growingModInit 不会执行，检测循环不存在
+    if (![GrowingAutotracker isInitializedSuccessfully]) {
+        GrowingAutotrackConfiguration *configuration =
+            [GrowingAutotrackConfiguration configurationWithAccountId:@"test"];
+        configuration.dataSourceId = @"test";
+        configuration.urlScheme = @"growing.xctest";
+        [GrowingAutotracker startWithConfiguration:configuration launchOptions:nil];
+    }
+}
 
 - (void)setUp {
     [super setUp];
@@ -88,6 +104,10 @@ static const CGFloat kWindowHeight = 667.0f;
 
 - (NSUInteger)customEventCount {
     return [MockEventQueue.sharedQueue eventCountFor:GrowingEventTypeCustom];
+}
+
+- (nullable GrowingCustomEvent *)lastCustomEvent {
+    return (GrowingCustomEvent *)[MockEventQueue.sharedQueue lastEventFor:GrowingEventTypeCustom];
 }
 
 - (void)assertNoMoreCustomEventsWithin:(NSTimeInterval)seconds {

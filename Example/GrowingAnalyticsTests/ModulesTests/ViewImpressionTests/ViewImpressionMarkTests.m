@@ -1,0 +1,128 @@
+//
+//  ViewImpressionMarkTests.m
+//  GrowingAnalytics
+//
+//  Created by YoloMao on 2026/9/21.
+//  Copyright (C) 2026 Beijing Yishu Technology Co., Ltd.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+
+#import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
+#import "Modules/ViewImpression/Public/UIView+GrowingViewImpression.h"
+#import "ViewImpressionTestCase.h"
+
+@interface ViewImpressionMarkTests : ViewImpressionTestCase
+
+@end
+
+@implementation ViewImpressionMarkTests
+
+- (void)testVisibleViewSendsImpression {
+    UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
+    [view growingMarkImpression:@"imp_visible"];
+
+    XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
+    XCTAssertEqualObjects(self.lastCustomEvent.eventName, @"imp_visible");
+}
+
+- (void)testAttributesAreCarriedIntoEvent {
+    UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
+    [view growingMarkImpression:@"imp_attributes" attributes:@{@"key": @"value"}];
+
+    XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
+    XCTAssertEqualObjects(self.lastCustomEvent.attributes[@"key"], @"value");
+}
+
+- (void)testOffscreenViewSendsNothing {
+    UIView *view = [self addViewWithFrame:CGRectMake(0, 700, 375, 100)];
+    [view growingMarkImpression:@"imp_offscreen"];
+
+    [self assertNoMoreCustomEventsWithin:0.5];
+}
+
+- (void)testViewSendsAfterMovingOnscreen {
+    UIView *view = [self addViewWithFrame:CGRectMake(0, 700, 375, 100)];
+    [view growingMarkImpression:@"imp_move"];
+    [self assertNoMoreCustomEventsWithin:0.3];
+
+    view.frame = CGRectMake(0, 0, 375, 100);
+    XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
+}
+
+- (void)testStillVisibleViewSendsOnlyOnce {
+    UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
+    [view growingMarkImpression:@"imp_once"];
+
+    XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
+    [self assertNoMoreCustomEventsWithin:0.5];
+}
+
+- (void)testViewSendsAgainAfterLeavingAndReentering {
+    UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
+    [view growingMarkImpression:@"imp_reenter"];
+    XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
+
+    view.frame = CGRectMake(0, 700, 375, 100);
+    [self pumpRunLoopFor:0.3];
+    view.frame = CGRectMake(0, 0, 375, 100);
+
+    XCTAssertTrue([self waitForCustomEventCount:2 timeout:2.0]);
+}
+
+- (void)testUnmarkStopsImpression {
+    UIView *view = [self addViewWithFrame:CGRectMake(0, 700, 375, 100)];
+    [view growingMarkImpression:@"imp_unmark"];
+    [view growingUnmarkImpression];
+
+    view.frame = CGRectMake(0, 0, 375, 100);
+    [self assertNoMoreCustomEventsWithin:0.5];
+}
+
+- (void)testEmptyEventNameIsIgnored {
+    UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
+    [view growingMarkImpression:@""];
+
+    [self assertNoMoreCustomEventsWithin:0.5];
+}
+
+- (void)testMarkOnNonKeyWindowView {
+    UIWindow *another = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 375, 667)];
+    another.rootViewController = [[UIViewController alloc] init];
+    another.hidden = NO;
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 375, 100)];
+    [another.rootViewController.view addSubview:view];
+
+    [view growingMarkImpression:@"imp_other_window"];
+
+    XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
+    XCTAssertEqualObjects(self.lastCustomEvent.eventName, @"imp_other_window");
+
+    [view growingUnmarkImpression];
+    another.hidden = YES;
+}
+
+- (void)testDeallocatedViewLeavesDetectionSet {
+    __weak UIView *weakView = nil;
+    @autoreleasepool {
+        UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
+        [view growingMarkImpression:@"imp_dealloc"];
+        XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
+        weakView = view;
+        [view removeFromSuperview];
+    }
+
+    [self pumpRunLoopFor:0.3];
+    XCTAssertNil(weakView);
+}
+
+@end

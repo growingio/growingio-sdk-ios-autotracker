@@ -20,6 +20,8 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
+@class GrowingCustomEvent;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /// 曝光用例的公共夹具：每个用例独占一个 375x667 的 window 与一个铺满的根视图，
@@ -43,6 +45,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 当前已捕获的自定义事件个数
 - (NSUInteger)customEventCount;
+
+/// 最近一个自定义事件
+- (nullable GrowingCustomEvent *)lastCustomEvent;
 
 /// 断言在 seconds 内不再产生新的自定义事件
 - (void)assertNoMoreCustomEventsWithin:(NSTimeInterval)seconds;
