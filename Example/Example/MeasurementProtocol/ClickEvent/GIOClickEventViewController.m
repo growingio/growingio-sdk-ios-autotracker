@@ -10,7 +10,10 @@
 #import "AppDelegate.h"
 #if defined(AUTOTRACKER)
 #if defined(SDK3rd)
-#if defined(SDKIMPMODULE)
+#if defined(SDKVIEWIMPMODULE)
+#import "GrowingViewImpressionConfig.h"
+#import "UIView+GrowingViewImpression.h"
+#elif defined(SDKIMPMODULE)
 #import "UIView+GrowingImpression.h"
 #endif
 #endif
@@ -39,7 +42,16 @@
 #if defined(SDK3rd)
     [[GrowingAutotracker sharedInstance] autotrackPage:self alias:@"点击事件测试" attributes:@{@"greet": @"hello"}];
     self.sendEventButton.growingUniqueTag = @"UniqueTag-SendButton";
-#if defined(SDKIMPMODULE)
+#if defined(SDKVIEWIMPMODULE)
+    [self.sendEventButton growingMarkImpression:@"hello_track_impression"];
+    [self.view growingMarkImpression:@"self_view_imp_track" attributes:@{@"self_view_key": @"self_view_value"}];
+    [self.CView growingMarkImpression:@"view_imp_with_config"
+                           attributes:@{@"position": @"C"}
+                           identifier:@"view_imp_c"
+                               config:[GrowingViewImpressionConfig configWithViewImpressionScale:0.5f
+                                                                                    stayDuration:1.0
+                                                                                      repeatable:NO]];
+#elif defined(SDKIMPMODULE)
     [self.sendEventButton growingTrackImpression:@"hello_track_impression"];
     [self.view growingTrackImpression:@"self_view_imp_track" attributes:@{@"self_view_key": @"self_view_value"}];
 #endif
@@ -68,12 +80,12 @@
 }
 
 - (IBAction)trackSwitchValueChange:(UISwitch *)sender {
-//    [Growing setDataTrackEnabled:sender.isOn];
+    //    [Growing setDataTrackEnabled:sender.isOn];
     NSLog(@"setDataTrackEnabled: %@", (sender.isOn ? @"YES" : @"NO"));
 }
 
 - (IBAction)uploadSwitchValueChange:(UISwitch *)sender {
-//    [Growing setDataUploadEnabled:sender.isOn];
+    //    [Growing setDataUploadEnabled:sender.isOn];
     NSLog(@"setDataUploadEnabled: %@", (sender.isOn ? @"YES" : @"NO"));
 }
 
