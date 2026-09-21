@@ -18,6 +18,7 @@
 //  limitations under the License.
 
 #import <objc/runtime.h>
+#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "Modules/ViewImpression/GrowingViewImpression+Private.h"
 #import "Modules/ViewImpression/UIView+GrowingViewImpressionInternal.h"
@@ -46,11 +47,20 @@
     }
 
     [GrowingDispatchManager dispatchInMainThread:^{
+        GrowingViewImpressionConfig *nodeConfig = [GrowingViewImpression effectiveConfig:config];
+        if (!nodeConfig.isRepeatable && identifier.length == 0) {
+            nodeConfig.repeatable = YES;
+            GIOLogWarn(
+                @"[GrowingViewImpression] 事件 %@ 配置了不可重复曝光但未指定 identifier，"
+                @"已按可重复曝光处理",
+                eventName);
+        }
+
         GrowingViewImpressionNode *node = [[GrowingViewImpressionNode alloc] init];
         node.eventName = eventName;
         node.attributes = attributes;
         node.identifier = identifier;
-        node.config = [GrowingViewImpression effectiveConfig:config];
+        node.config = nodeConfig;
 
         NSString *slot = identifier.length > 0 ? identifier : kGrowingViewImpDefaultSlot;
         NSMutableDictionary<NSString *, GrowingViewImpressionNode *> *nodes = [self growingViewImpNodesCreateIfNeeded];
