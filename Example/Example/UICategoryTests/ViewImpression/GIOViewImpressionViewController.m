@@ -14,6 +14,8 @@ static const CGFloat kCardHeight = 80.0;
 static const CGFloat kLogPanelHeight = 150.0;
 static const NSUInteger kLogCapacity = 10;
 static const NSInteger kReuseRowCount = 30;
+static const NSInteger kSubviewRowCount = 30;
+static const NSInteger kBadgeTag = 9001;
 
 static NSString *const kSlotA = @"slot_a";
 static NSString *const kSlotB = @"slot_b";
@@ -55,6 +57,7 @@ static NSString *const kUpdateIdentifier = @"update_element";
     [self addUpdateAttributesSection];
     [self addClippedContainerSection];
     [self addReuseListSection];
+    [self addReuseSubviewSection];
     [self addTailSpacer];
 
     [[GrowingViewImpression sharedInstance] addImpressionDelegate:self];
@@ -283,6 +286,28 @@ static NSString *const kUpdateIdentifier = @"update_element";
     [tableView.heightAnchor constraintEqualToConstant:280].active = YES;
 }
 
+- (void)addReuseSubviewSection {
+    [self addSectionTitle:@"9. 复用 cell 的子视图"
+                   detail:
+                       @"标记的是 cell 里的角标而非 cell 本身，identifier 随行内容变化；"
+                        "复用后角标只发当前行的曝光，不会带着上一行的属性重复发"];
+
+    UITableView *tableView = [[UITableView alloc] init];
+    tableView.dataSource = self;
+    tableView.delegate = self;
+    tableView.tag = 1;
+    tableView.rowHeight = 56;
+    tableView.layer.cornerRadius = 8;
+    tableView.layer.borderWidth = 1;
+    tableView.layer.borderColor = UIColor.separatorColor.CGColor;
+    tableView.clipsToBounds = YES;
+    tableView.translatesAutoresizingMaskIntoConstraints = NO;
+    [tableView registerClass:UITableViewCell.class forCellReuseIdentifier:@"SubviewCell"];
+
+    [self.contentStack addArrangedSubview:tableView];
+    [tableView.heightAnchor constraintEqualToConstant:280].active = YES;
+}
+
 - (void)addTailSpacer {
     UILabel *hint = [[UILabel alloc] init];
     hint.text = @"↓ 下方留白用于把上面的元素滚出可视区，再滚回来观察重新曝光";
@@ -350,10 +375,14 @@ static NSString *const kUpdateIdentifier = @"update_element";
 #pragma mark - UITableViewDataSource / Delegate
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return kReuseRowCount;
+    return tableView.tag == 1 ? kSubviewRowCount : kReuseRowCount;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (tableView.tag == 1) {
+        return [self subviewCellForTableView:tableView indexPath:indexPath];
+    }
+
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ReuseCell" forIndexPath:indexPath];
     cell.textLabel.text = [NSString stringWithFormat:@"列表第 %ld 行", (long)indexPath.row];
     cell.textLabel.font = [UIFont systemFontOfSize:14];
@@ -364,6 +393,40 @@ static NSString *const kUpdateIdentifier = @"update_element";
                          config:[GrowingViewImpressionConfig configWithViewImpressionScale:0.8f
                                                                               stayDuration:0.0
                                                                                 repeatable:NO]];
+    return cell;
+}
+
+- (UITableViewCell *)subviewCellForTableView:(UITableView *)tableView indexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SubviewCell" forIndexPath:indexPath];
+    cell.textLabel.text = [NSString stringWithFormat:@"商品 %ld", (long)indexPath.row];
+    cell.textLabel.font = [UIFont systemFontOfSize:14];
+
+    UILabel *badge = [cell.contentView viewWithTag:kBadgeTag];
+    if (!badge) {
+        badge = [[UILabel alloc] init];
+        badge.tag = kBadgeTag;
+        badge.textAlignment = NSTextAlignmentCenter;
+        badge.textColor = UIColor.whiteColor;
+        badge.font = [UIFont systemFontOfSize:11 weight:UIFontWeightMedium];
+        badge.backgroundColor = UIColor.systemRedColor;
+        badge.layer.cornerRadius = 4;
+        badge.clipsToBounds = YES;
+        badge.translatesAutoresizingMaskIntoConstraints = NO;
+        [cell.contentView addSubview:badge];
+        [NSLayoutConstraint activateConstraints:@[
+            [badge.trailingAnchor constraintEqualToAnchor:cell.contentView.trailingAnchor constant:-16],
+            [badge.centerYAnchor constraintEqualToAnchor:cell.contentView.centerYAnchor],
+            [badge.widthAnchor constraintEqualToConstant:64],
+            [badge.heightAnchor constraintEqualToConstant:22],
+        ]];
+    }
+    badge.text = [NSString stringWithFormat:@"角标 %ld", (long)indexPath.row];
+
+    // 标记的是被复用的角标视图本身，identifier 随行内容变化
+    [badge growingMarkImpression:@"imp_badge"
+                      attributes:@{@"goods_id": [NSString stringWithFormat:@"goods_%ld", (long)indexPath.row]}
+                      identifier:[NSString stringWithFormat:@"badge_%ld", (long)indexPath.row]
+                          config:nil];
     return cell;
 }
 

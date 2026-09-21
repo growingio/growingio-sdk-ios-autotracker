@@ -167,10 +167,10 @@
 
     [view growingMarkImpression:@"imp_row" attributes:@{@"row": @(2)} identifier:@"row_2" config:nil];
     view.frame = CGRectMake(0, 0, 375, 100);
+    [self pumpRunLoopFor:0.6];
 
-    XCTAssertTrue([self waitForCustomEventCount:2 timeout:2.0]);
+    XCTAssertEqual([self customEventCount], 2);
     XCTAssertEqualObjects(self.lastCustomEvent.attributes[@"row"], @"2");
-    [self assertNoMoreCustomEventsWithin:0.5];
 }
 
 - (void)testReusedCellSubviewWithNewIdentifierDropsPreviousSlot {
@@ -184,10 +184,10 @@
 
     [badge growingMarkImpression:@"imp_badge" attributes:@{@"goods": @"b"} identifier:@"goods_b" config:nil];
     cell.frame = CGRectMake(0, 0, 375, 100);
+    [self pumpRunLoopFor:0.6];
 
-    XCTAssertTrue([self waitForCustomEventCount:2 timeout:2.0]);
+    XCTAssertEqual([self customEventCount], 2);
     XCTAssertEqualObjects(self.lastCustomEvent.attributes[@"goods"], @"b");
-    [self assertNoMoreCustomEventsWithin:0.5];
 }
 
 - (void)testDifferentEventNamesOnOneViewSurviveRemarking {
@@ -197,9 +197,9 @@
     [view growingMarkImpression:@"imp_card" attributes:nil identifier:@"card_2" config:nil];
 
     view.frame = CGRectMake(0, 0, 375, 100);
+    [self pumpRunLoopFor:0.6];
 
-    XCTAssertTrue([self waitForCustomEventCount:2 timeout:2.0]);
-    [self assertNoMoreCustomEventsWithin:0.5];
+    XCTAssertEqual([self customEventCount], 2);
 }
 
 - (void)testDeallocatedViewLeavesDetectionSet {

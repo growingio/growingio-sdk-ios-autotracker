@@ -18,7 +18,7 @@ Swift Package Manager：添加 `GrowingModule_ViewImpression` product。
 
 ## 快速开始
 
-在 cell 绑定数据的地方标记即可，不需要在 `prepareForReuse` 里做任何清理。
+在 cell 绑定数据的地方标记即可，不需要在 `prepareForReuse` 里做任何清理。标记 cell 里的某个子视图（角标、价格标签等）同样如此。
 
 ```objc
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -65,7 +65,7 @@ func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> U
 
 所有方法内部都会切到主线程执行，在子线程调用是安全的。
 
-一个视图可以挂多个 `identifier` 不同的标记，各自独立判定、独立发送；`identifier` 传 nil 时写入默认槽位。
+一个视图可以挂多个标记，槽位以 `identifier` 区分，各自独立判定、独立发送；`identifier` 传 nil 时写入默认槽位。
 
 ```objc
 [cell growingMarkImpression:@"card_impression" attributes:nil identifier:@"card" config:nil];
@@ -73,6 +73,8 @@ func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> U
 
 [cell growingUnmarkImpressionWithIdentifier:@"badge"];  // card 不受影响
 ```
+
+**同一个事件名在一个视图上只保留一个槽位。** 再次标记时 `identifier` 变了，意味着这个视图承载的元素换了——cell 及其子视图被复用就是这种情况——旧槽位随即丢弃。所以在 `cellForRowAt` 里直接标记就行，既不需要在 `prepareForReuse` 里清理，也不会残留上一行的属性。
 
 ## 曝光条件
 
