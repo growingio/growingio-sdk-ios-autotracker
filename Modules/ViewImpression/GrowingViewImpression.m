@@ -18,17 +18,27 @@
 //  limitations under the License.
 
 #import "Modules/ViewImpression/Public/GrowingViewImpression.h"
+#import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
+#import "GrowingULAppLifecycle.h"
 #import "GrowingULApplication.h"
 #import "Modules/ViewImpression/GrowingViewImpression+Private.h"
+#import "Modules/ViewImpression/UIView+GrowingViewImpressionInternal.h"
 
 GrowingMod(GrowingViewImpression)
 
-@interface GrowingViewImpression ()
+@interface GrowingViewImpression () <GrowingULAppLifecycleDelegate>
 
 @property (nonatomic, strong) NSHashTable<UIView *> *sourceTable;
+@property (nonatomic, assign) NSTimeInterval checkInterval;
+@property (nonatomic, assign) CFTimeInterval lastCheckTime;
+@property (nonatomic, assign) BOOL trailingCheckScheduled;
+@property (nonatomic, assign) BOOL inactive;
 
 @end
+
+static BOOL viewImpressionDisabled = NO;
 
 @implementation GrowingViewImpression
 
@@ -51,6 +61,17 @@ GrowingMod(GrowingViewImpression)
     if ([GrowingULApplication isAppExtension]) {
         return;
     }
+
+    GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    if (!configuration.viewImpressionEnabled) {
+        viewImpressionDisabled = YES;
+        [self.sourceTable removeAllObjects];
+        return;
+    }
+
+    self.checkInterval = configuration.viewImpressionCheckInterval;
+    [GrowingULAppLifecycle.sharedInstance addAppLifecycleDelegate:self];
+    [self registerMainRunloopObserver];
 }
 
 - (instancetype)init {
@@ -65,11 +86,90 @@ GrowingMod(GrowingViewImpression)
 #pragma mark - Private Method
 
 - (void)addImpressionView:(UIView *)view {
+    if (viewImpressionDisabled) {
+        return;
+    }
     [self.sourceTable addObject:view];
 }
 
 - (void)removeImpressionView:(UIView *)view {
     [self.sourceTable removeObject:view];
+}
+
+- (void)registerMainRunloopObserver {
+    [GrowingDispatchManager dispatchInMainThread:^{
+        static CFRunLoopObserverRef observer;
+        if (observer) {
+            return;
+        }
+
+        CFOptionFlags activities = (kCFRunLoopBeforeWaiting | kCFRunLoopExit);
+        observer =
+            CFRunLoopObserverCreateWithHandler(NULL,
+                                               activities,
+                                               YES,
+                                               INT_MAX - 1,  // 排在 CA transaction 提交之后、autoreleasepool 之前
+                                               ^(CFRunLoopObserverRef obs, CFRunLoopActivity activity) {
+                                                   [self scheduleImpressionCheck];
+                                               });
+
+        CFRunLoopAddObserver(CFRunLoopGetCurrent(), observer, kCFRunLoopCommonModes);
+        CFRelease(observer);
+    }];
+}
+
+- (void)scheduleImpressionCheck {
+    if (self.checkInterval <= 0.0) {
+        [self checkImpression];
+        return;
+    }
+
+    CFTimeInterval remaining = self.checkInterval - (CACurrentMediaTime() - self.lastCheckTime);
+    if (remaining <= 0.0) {
+        [self checkImpression];
+        return;
+    }
+
+    // 界面静止后 runloop 不再产生 tick，补一次尾随检测，
+    // 否则滚动停下瞬间进入可视区的元素会一直等不到下一次判定
+    if (self.trailingCheckScheduled) {
+        return;
+    }
+    self.trailingCheckScheduled = YES;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(remaining * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        self.trailingCheckScheduled = NO;
+        [self checkImpression];
+    });
+}
+
+- (void)checkImpression {
+    self.lastCheckTime = CACurrentMediaTime();
+
+    if (self.inactive || self.sourceTable.count == 0) {
+        return;
+    }
+
+    for (UIView *view in self.sourceTable.allObjects) {
+        [self checkImpressionForView:view];
+    }
+}
+
+- (void)checkImpressionForView:(UIView *)view {
+    NSDictionary<NSString *, GrowingViewImpressionNode *> *nodes = view.growingViewImpNodes;
+    for (GrowingViewImpressionNode *node in nodes.allValues) {
+        if ([view growingViewImpNodeIsVisibleWithScale:node.config.viewImpressionScale]) {
+            if (!node.tracked) {
+                [self trackNode:node];
+            }
+        } else {
+            node.tracked = NO;
+        }
+    }
+}
+
+- (void)trackNode:(GrowingViewImpressionNode *)node {
+    node.tracked = YES;
+    [GrowingEventGenerator generateCustomEvent:node.eventName attributes:node.attributes];
 }
 
 + (GrowingViewImpressionConfig *)effectiveConfig:(GrowingViewImpressionConfig *)config {
@@ -80,6 +180,16 @@ GrowingMod(GrowingViewImpression)
     GrowingViewImpressionConfig *global =
         GrowingConfigurationManager.sharedInstance.trackConfiguration.viewImpressionConfig;
     return global ? [global copy] : [[GrowingViewImpressionConfig alloc] init];
+}
+
+#pragma mark - GrowingULAppLifecycleDelegate
+
+- (void)applicationDidBecomeActive {
+    self.inactive = NO;
+}
+
+- (void)applicationWillResignActive {
+    self.inactive = YES;
 }
 
 @end
