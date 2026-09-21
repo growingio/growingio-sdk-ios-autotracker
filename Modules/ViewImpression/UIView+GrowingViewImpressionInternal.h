@@ -18,10 +18,24 @@
 //  limitations under the License.
 
 #import <UIKit/UIKit.h>
+#import "Modules/ViewImpression/GrowingViewImpressionNode.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface UIView (GrowingViewImpressionInternal)
+
+/// 该视图上的曝光槽位，key 为 identifier，identifier 缺省时为 kGrowingViewImpDefaultSlot
+@property (nonatomic, strong, readonly, nullable)
+    NSMutableDictionary<NSString *, GrowingViewImpressionNode *> *growingViewImpNodes;
+
+- (void)growingViewImpMark:(NSString *)eventName
+                attributes:(nullable NSDictionary<NSString *, id> *)attributes
+                identifier:(nullable NSString *)identifier
+                    config:(nullable GrowingViewImpressionConfig *)config;
+
+- (void)growingViewImpUnmarkAll;
+
+- (void)growingViewImpUnmarkSlot:(NSString *)identifier;
 
 /// 判定该视图当前是否达到曝光可见条件：逐级祖先裁剪后与 window 求交，
 /// 交集面积占自身 bounds 面积达到 viewImpressionScale 即为可见
