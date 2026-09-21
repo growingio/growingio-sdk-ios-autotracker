@@ -63,10 +63,6 @@ static NSString *const kUpdateIdentifier = @"update_element";
     [[GrowingViewImpression sharedInstance] addImpressionDelegate:self];
 }
 
-- (void)dealloc {
-    [[GrowingViewImpression sharedInstance] removeImpressionDelegate:self];
-}
-
 #pragma mark - 固定面板
 
 - (void)setupLogPanel {

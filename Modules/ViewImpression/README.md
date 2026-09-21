@@ -103,6 +103,8 @@ configuration.viewImpressionConfig = [GrowingViewImpressionConfig configWithView
                                                                                      repeatable:YES];
 ```
 
+这三项在 SDK 启动时读取，启动之后再改不会生效。
+
 全局默认值不要配 `repeatable = NO`：它依赖 `identifier`，而未指定 `identifier` 的元素会被降级处理（见下文）。
 
 可见性这样判定：从元素自身出发逐级向上，遇到会裁剪的祖先（`clipsToBounds` 为 YES，或 `UIScrollView`）就与它的 bounds 求交，最后与所在 window 求交，用剩下的面积比对阈值。

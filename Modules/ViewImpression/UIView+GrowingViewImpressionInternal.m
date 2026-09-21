@@ -96,7 +96,12 @@
 - (void)growingViewImpUpdateAttributes:(NSDictionary<NSString *, id> *)attributes identifier:(NSString *)identifier {
     [GrowingDispatchManager dispatchInMainThread:^{
         NSString *slot = identifier.length > 0 ? identifier : kGrowingViewImpDefaultSlot;
-        self.growingViewImpNodes[slot].attributes = attributes;
+        GrowingViewImpressionNode *node = self.growingViewImpNodes[slot];
+        if (!node) {
+            GIOLogWarn(@"[GrowingViewImpression] 槽位 %@ 尚未标记，属性更新被忽略", slot);
+            return;
+        }
+        node.attributes = attributes;
     }];
 }
 
