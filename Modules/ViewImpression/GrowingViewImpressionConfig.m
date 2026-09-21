@@ -56,6 +56,8 @@
         return NO;
     }
 
+    // 这里要回答的是"调用方传进来的还是不是同一份配置"，不是"两个数值是否足够接近"，
+    // 因此是精确比较：留容差反而会把 0.5 与 0.500001 当成同一份配置，静默沿用旧的
     GrowingViewImpressionConfig *other = (GrowingViewImpressionConfig *)object;
     return _viewImpressionScale == other->_viewImpressionScale && _stayDuration == other->_stayDuration &&
            _repeatable == other->_repeatable;
