@@ -20,6 +20,7 @@
 #import "Modules/ViewImpression/Public/GrowingViewImpression.h"
 #import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingULAppLifecycle.h"
 #import "GrowingULApplication.h"
@@ -35,6 +36,8 @@ GrowingMod(GrowingViewImpression)
 @property (nonatomic, assign) CFTimeInterval lastCheckTime;
 @property (nonatomic, assign) BOOL trailingCheckScheduled;
 @property (nonatomic, assign) BOOL inactive;
+@property (nonatomic, strong) NSMutableOrderedSet<NSString *> *trackedIdentifiers;
+@property (nonatomic, assign) BOOL trackedIdentifiersOverflowWarned;
 
 @end
 
@@ -42,6 +45,8 @@ static BOOL viewImpressionDisabled = NO;
 
 /// 复检时点比停留时长多留一点余量，避免浮点误差导致刚好差一丁点而空跑一轮
 static const NSTimeInterval kRecheckSlack = 0.01;
+
+static const NSUInteger kTrackedIdentifiersCapacity = 10000;
 
 @implementation GrowingViewImpression
 
@@ -82,6 +87,7 @@ static const NSTimeInterval kRecheckSlack = 0.01;
         _sourceTable = [[NSHashTable alloc]
             initWithOptions:NSPointerFunctionsWeakMemory | NSPointerFunctionsObjectPointerPersonality
                    capacity:100];
+        _trackedIdentifiers = [NSMutableOrderedSet orderedSet];
     }
     return self;
 }
@@ -210,7 +216,33 @@ static const NSTimeInterval kRecheckSlack = 0.01;
 
 - (void)trackNode:(GrowingViewImpressionNode *)node {
     node.tracked = YES;
+
+    // 不可重复曝光以 identifier 为准记在全局：cell 复用后视图相同而元素不同，
+    // 同一元素滚回来又可能落在另一个 cell 实例上，挂在视图上判不准
+    if (!node.config.repeatable) {
+        if ([self.trackedIdentifiers containsObject:node.identifier]) {
+            return;
+        }
+        [self rememberTrackedIdentifier:node.identifier];
+    }
+
     [GrowingEventGenerator generateCustomEvent:node.eventName attributes:node.attributes];
+}
+
+- (void)rememberTrackedIdentifier:(NSString *)identifier {
+    [self.trackedIdentifiers addObject:identifier];
+    if (self.trackedIdentifiers.count <= kTrackedIdentifiersCapacity) {
+        return;
+    }
+
+    if (!self.trackedIdentifiersOverflowWarned) {
+        self.trackedIdentifiersOverflowWarned = YES;
+        GIOLogWarn(
+            @"[GrowingViewImpression] 不可重复曝光的元素标识已超过 %lu 个，最早的记录将被淘汰，"
+            @"请在合适的时机调用 resetAllImpressionState 主动清理",
+            (unsigned long)kTrackedIdentifiersCapacity);
+    }
+    [self.trackedIdentifiers removeObjectAtIndex:0];
 }
 
 + (GrowingViewImpressionConfig *)effectiveConfig:(GrowingViewImpressionConfig *)config {
