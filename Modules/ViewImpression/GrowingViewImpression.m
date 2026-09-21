@@ -40,6 +40,9 @@ GrowingMod(GrowingViewImpression)
 
 static BOOL viewImpressionDisabled = NO;
 
+/// 复检时点比停留时长多留一点余量，避免浮点误差导致刚好差一丁点而空跑一轮
+static const NSTimeInterval kRecheckSlack = 0.01;
+
 @implementation GrowingViewImpression
 
 #pragma mark - GrowingModuleProtocol
@@ -157,14 +160,52 @@ static BOOL viewImpressionDisabled = NO;
 - (void)checkImpressionForView:(UIView *)view {
     NSDictionary<NSString *, GrowingViewImpressionNode *> *nodes = view.growingViewImpNodes;
     for (GrowingViewImpressionNode *node in nodes.allValues) {
-        if ([view growingViewImpNodeIsVisibleWithScale:node.config.viewImpressionScale]) {
-            if (!node.tracked) {
-                [self trackNode:node];
-            }
-        } else {
-            node.tracked = NO;
+        [self checkNode:node inView:view];
+    }
+}
+
+- (void)checkNode:(GrowingViewImpressionNode *)node inView:(UIView *)view {
+    if (![view growingViewImpNodeIsVisibleWithScale:node.config.viewImpressionScale]) {
+        if (node.visibleSince != 0) {
+            node.visibleSince = 0;
+            node.recheckToken += 1;
+        }
+        node.tracked = NO;
+        return;
+    }
+
+    if (node.tracked) {
+        return;
+    }
+
+    NSTimeInterval stayDuration = node.config.stayDuration;
+    if (node.visibleSince == 0) {
+        node.visibleSince = CACurrentMediaTime();
+        if (stayDuration > 0) {
+            [self scheduleRecheckForNode:node inView:view after:stayDuration];
         }
     }
+
+    if (CACurrentMediaTime() - node.visibleSince >= stayDuration) {
+        [self trackNode:node];
+    }
+}
+
+- (void)scheduleRecheckForNode:(GrowingViewImpressionNode *)node inView:(UIView *)view after:(NSTimeInterval)delay {
+    node.recheckToken += 1;
+    NSUInteger token = node.recheckToken;
+    __weak UIView *weakView = view;
+
+    // 界面静止时 runloop 会休眠、不再产生 tick，停留时长只能靠这一次定时复检收口
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((delay + kRecheckSlack) * NSEC_PER_SEC)),
+                   dispatch_get_main_queue(),
+                   ^{
+                       UIView *strongView = weakView;
+                       if (!strongView || self.inactive || node.recheckToken != token) {
+                           return;
+                       }
+                       [self checkNode:node inView:strongView];
+                   });
 }
 
 - (void)trackNode:(GrowingViewImpressionNode *)node {
@@ -190,6 +231,13 @@ static BOOL viewImpressionDisabled = NO;
 
 - (void)applicationWillResignActive {
     self.inactive = YES;
+
+    for (UIView *view in self.sourceTable.allObjects) {
+        for (GrowingViewImpressionNode *node in view.growingViewImpNodes.allValues) {
+            node.visibleSince = 0;
+            node.recheckToken += 1;
+        }
+    }
 }
 
 @end
