@@ -1,152 +1,181 @@
-#ViewImpression 元素曝光
+# ViewImpression
 
-元素进入可视区域时发送自定义事件（cstm）。只依赖 `TrackerCore`，纯埋点 SDK 也可使用。
+元素曝光采集：为视图标记一个事件，元素进入可视区域并满足曝光条件时，自动发送对应的自定义事件（`cstm`）。
 
-    ##集成
+只依赖 `TrackerCore`，纯埋点 SDK 也可使用。不支持 App Extension。
 
-        CocoaPods：
+## 集成
 
-```ruby pod 'GrowingAnalytics/ViewImpression'
+CocoaPods：
+
+```ruby
+pod 'GrowingAnalytics/ViewImpression'
 ```
 
-    Swift Package Manager：添加 `GrowingModule_ViewImpression` product。
+Swift Package Manager：添加 `GrowingModule_ViewImpression` product。
 
-    > 本模块与 `ImpressionTrack` 互斥。两者同时集成时 ViewImpression 接管，ImpressionTrack 自动禁用并输出日志。
+本模块与 `ImpressionTrack` 互斥。两者同时集成时 ViewImpression 接管，ImpressionTrack 自动禁用并输出错误日志。
 
-    ##标记元素
+## 快速开始
 
-```objc [cell.titleLabel growingMarkImpression:@"goods_impression"];
+在 cell 绑定数据的地方标记即可，不需要在 `prepareForReuse` 里做任何清理。
 
-[cell growingMarkImpression:@"goods_impression" attributes:@{@"goods_id": goods.identifier}];
+```objc
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    GoodsCell *cell = [tableView dequeueReusableCellWithIdentifier:@"GoodsCell" forIndexPath:indexPath];
+    Goods *goods = self.goodsList[indexPath.row];
+    [cell bindGoods:goods];
 
-[cell growingMarkImpression:@"goods_impression"
-                 attributes:@{@"goods_id": goods.identifier}
-                 identifier:goods.identifier
-                     config:[GrowingViewImpressionConfig configWithViewImpressionScale:0.5f
-                                                                          stayDuration:1.0
-                                                                            repeatable:NO]];
+    [cell growingMarkImpression:@"goods_impression"
+                     attributes:@{@"goods_id": goods.goodsId, @"position": @(indexPath.row)}
+                     identifier:goods.goodsId
+                         config:nil];
+    return cell;
+}
 ```
 
-    Swift：
+```swift
+func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    let cell = tableView.dequeueReusableCell(withIdentifier: "GoodsCell", for: indexPath) as! GoodsCell
+    let goods = goodsList[indexPath.row]
+    cell.bind(goods)
 
-```swift cell.markImp("goods_impression", attributes : ["goods_id":goods.identifier])
+    cell.markImp("goods_impression",
+                 attributes: ["goods_id": goods.goodsId, "position": indexPath.row],
+                 identifier: goods.goodsId,
+                 config: nil)
+    return cell
+}
 ```
 
-    同一视图可以挂载多个 `identifier` 不同的曝光标记；`identifier` 传 nil 时写入默认槽位。
+`identifier` 填**业务上能唯一标识这个元素的值**（商品 ID、内容 ID 等），不是视图的标识。它决定了"只曝光一次"的判定口径，也是多槽位和精确移除的 key。
 
-    重复标记同一个槽位时：事件名、属性、配置三者都没变化则保留原有曝光状态，不会重复发送——列表刷新对可见元素原样重标一次是安全的；任一项发生变化则视为新的标记，元素满足曝光条件时会再发送一次。只想改属性请用下面的更新方法。
+## API
 
-    只更新属性、不触发重新曝光：
+标记与移除都是 `UIView` 分类方法：
 
-```objc [cell growingUpdateImpressionAttributes:@{@"price": price} identifier:goods.identifier];
+| 方法 | Swift | 说明 |
+|---|---|---|
+| `growingMarkImpression:` | `markImp(_:)` | 标记，使用全局配置，写入默认槽位 |
+| `growingMarkImpression:attributes:` | `markImp(_:attributes:)` | 同上，附带静态属性 |
+| `growingMarkImpression:attributes:identifier:config:` | `markImp(_:attributes:identifier:config:)` | 完整形式，`identifier` 与 `config` 均可传 nil |
+| `growingUpdateImpressionAttributes:identifier:` | `updateImpAttributes(_:identifier:)` | 只替换属性，不影响曝光状态 |
+| `growingUnmarkImpression` | `unmarkImp()` | 移除该视图上的全部标记 |
+| `growingUnmarkImpressionWithIdentifier:` | `unmarkImp(identifier:)` | 只移除一个标记 |
+
+所有方法内部都会切到主线程执行，在子线程调用是安全的。
+
+一个视图可以挂多个 `identifier` 不同的标记，各自独立判定、独立发送；`identifier` 传 nil 时写入默认槽位。
+
+```objc
+[cell growingMarkImpression:@"card_impression" attributes:nil identifier:@"card" config:nil];
+[cell growingMarkImpression:@"badge_impression" attributes:nil identifier:@"badge" config:nil];
+
+[cell growingUnmarkImpressionWithIdentifier:@"badge"];  // card 不受影响
 ```
 
-    移除标记：
+## 曝光条件
 
-```objc[cell growingUnmarkImpression];                         // 移除该视图上全部标记
-[cell growingUnmarkImpressionWithIdentifier:goods.identifier];  // 只移除一个
+| 配置项 | 含义 | 默认值 |
+|---|---|---|
+| `viewImpressionScale` | 可见面积占元素自身面积的比例阈值，有效范围 0~1 | 0，露出即算 |
+| `stayDuration` | 连续可见需要满足的最小时长，单位秒 | 0，无需停留 |
+| `repeatable` | 是否允许同一元素多次曝光 | YES |
+
+三项都可以按元素单独配置，也可以配全局默认值。优先级：**单元素 `config` > 全局 `viewImpressionConfig` > 默认值**。
+
+```objc
+GrowingViewImpressionConfig *config = [GrowingViewImpressionConfig configWithViewImpressionScale:0.5f
+                                                                                    stayDuration:1.0
+                                                                                      repeatable:NO];
+[cell growingMarkImpression:@"goods_impression" attributes:nil identifier:goods.goodsId config:config];
 ```
 
-    ##曝光条件
+全局配置挂在 `GrowingTrackConfiguration` 上，`GrowingAutotrackConfiguration` 同样适用：
 
-    | 配置 | 含义 | 默认值 | | -- -| -- -| -- -| | `viewImpressionScale` | 可见面积占自身面积的比例阈值，有效范围 0 ~1 |
-    0（露出即算曝光） | | `stayDuration` | 连续可见需满足的最小时长，单位秒 | 0（无需停留） | | `repeatable` |
-    是否允许同一元素多次曝光 | YES |
-
-    配置优先级：**单元素 config > 全局 `viewImpressionConfig` > 默认值 **。
-
-        全局配置：
-
-```objc GrowingAutotrackConfiguration *configuration =
-    [GrowingAutotrackConfiguration configurationWithAccountId:@"..."];
+```objc
 configuration.viewImpressionEnabled = YES;        // 采集总开关，默认 YES
-configuration.viewImpressionCheckInterval = 0.1;  // 检测节流间隔，默认 0.1 秒
-configuration.viewImpressionConfig =
-    [GrowingViewImpressionConfig configWithViewImpressionScale:0.5f stayDuration:1.0 repeatable:YES];
+configuration.viewImpressionCheckInterval = 0.1;  // 检测节流间隔，单位秒，默认 0.1
+configuration.viewImpressionConfig = [GrowingViewImpressionConfig configWithViewImpressionScale:0.5f
+                                                                                   stayDuration:1.0
+                                                                                     repeatable:YES];
 ```
 
-    ## #repeatable = NO 必须指定 identifier
+全局默认值不要配 `repeatable = NO`：它依赖 `identifier`，而未指定 `identifier` 的元素会被降级处理（见下文）。
 
-    "只曝光一次"的对象是 **元素 **而不是视图：cell 复用后视图相同而元素不同，同一元素滚回来又可能落在另一个 cell
-        实例上。因此已曝光记录按 `identifier` 记在全局，缺少 identifier 时无法区分元素，此时会降级为 `repeatable =
-            YES` 并输出告警。
+可见性这样判定：从元素自身出发逐级向上，遇到会裁剪的祖先（`clipsToBounds` 为 YES，或 `UIScrollView`）就与它的 bounds 求交，最后与所在 window 求交，用剩下的面积比对阈值。
 
-    已曝光记录上限 10000 条，超限按插入顺序淘汰。下拉刷新、切换账号、切换数据源等场景请主动清理：
+因此，滚出了滚动容器、但屏幕坐标仍落在屏内的元素，会被判定为不可见。
 
-```objc [GrowingViewImpression resetImpressionStateWithIdentifier:goods.identifier];
-[GrowingViewImpression resetAllImpressionState];
+## 曝光时机
+
+元素满足曝光条件时发送一次事件，此后**离开可视区再次进入**才会再发。以下情况不会重复发送：
+
+- 元素一直停留在可视区内，无论停留多久
+- App 退到后台再回到前台，期间元素没有离开过可视区
+- 重复标记，但事件名、属性、配置三者都没有变化
+
+最后一条使得列表刷新时对可见元素原样重标一次是安全的。三者中任一项发生变化则视为一次新的标记，曝光状态重置，元素满足条件时会再发送一次——所以**只想改属性时请用 `growingUpdateImpressionAttributes:identifier:`**，它不会触发重新曝光。
+
+```objc
+[cell growingUpdateImpressionAttributes:@{@"price": goods.currentPrice} identifier:goods.goodsId];
 ```
 
-    重置会同时清掉当前仍停在可视区内的元素的曝光状态，这些元素无需移出再移入即可再次曝光。记录不随 session 自动重置。
+## 只曝光一次
 
-    ##什么时候会再次曝光
+`repeatable = NO` 表示同一元素全程只曝光一次。
 
-    元素 **离开可视区后再次进入 **时重新曝光。以下情况不会重新曝光：
+**此时必须指定 `identifier`。** "只曝光一次"的对象是元素而不是视图：cell 复用后视图相同而元素不同，同一元素滚回来又可能落在另一个 cell 实例上。已曝光记录因此按 `identifier` 记在模块的全局集合里，缺少 `identifier` 就无法区分元素——此时配置会被降级为 `repeatable = YES` 并输出告警日志。
 
-    - 元素一直停留在可视区内，无论停留多久 - App 退到后台再回到前台，期间元素没有离开可视区 -
-    重复标记但内容未变化（见上）
+下拉刷新、切换账号、切换数据源等场景需要主动清理记录：
 
-    配置了 `repeatable =
-    NO` 时，同一 `identifier` 全程只曝光一次，直到调用状态重置方法——重置后即便元素一直停在可视区内，也会立刻再曝光一次。
-
-    ##曝光回调
-
-```objc [[GrowingViewImpression sharedInstance] addImpressionDelegate:self];
+```objc
+[GrowingViewImpression resetImpressionStateWithIdentifier:goods.goodsId];  // 清一个
+[GrowingViewImpression resetAllImpressionState];                          // 全清
 ```
 
-    | 方法 | 用途 | | -- -| -- -| | `growingImpressionShouldTrack : eventName : identifier :` |
-    返回 NO 则本次不发送；元素离开可视区再次进入时重新询问 |
-    | `growingImpressionDynamicAttributes : eventName : identifier :` |
-    曝光时刻才能确定的属性（当时的排序位置、实时价格等），与静态属性合并，同名键以动态属性为准 |
-    | `growingImpressionDidTrack : eventName : identifier :` |
-    事件已生成 |
+重置会连同元素当前的曝光状态一起清掉，因此仍停在可视区内的元素无需移出再移入，下一个检测周期就会再曝光一次。
 
-    delegate 为弱引用，无需手动移除。三个回调均在主线程同步执行，实现中不要做耗时操作。
+记录不随 session 自动重置。全局集合上限 10000 条，超限按插入顺序淘汰最早的记录并告警一次。
 
-    ##从 ImpressionTrack 迁移
+## 曝光回调
 
-    |
-    ImpressionTrack |
-    ViewImpression |
-    |
-    -- -|
-    -- -|
-    | `growingTrackImpression :` | `growingMarkImpression :` |
-    | `growingTrackImpression : attributes :` | `growingMarkImpression : attributes :` |
-    | `growingStopTrackImpression` | `growingUnmarkImpression` |
-    | — | `growingMarkImpression : attributes : identifier : config :` |
-    | — | `growingUpdateImpressionAttributes : identifier :` |
-    | — | `growingUnmarkImpressionWithIdentifier :` |
+```objc
+[[GrowingViewImpression sharedInstance] addImpressionDelegate:self];
+```
 
-    前三行一一对应，替换方法名即可。此外需要注意：
+| 方法 | 用途 |
+|---|---|
+| `growingImpressionShouldTrack:eventName:identifier:` | 返回 NO 则本次不发送。元素离开可视区再次进入时会重新询问；注册了多个 delegate 时任一返回 NO 即不发送 |
+| `growingImpressionDynamicAttributes:eventName:identifier:` | 补充曝光时刻才能确定的属性（当时的排序位置、实时价格等），与标记时的静态属性合并，同名键以动态属性为准 |
+| `growingImpressionDidTrack:eventName:identifier:` | 事件已生成 |
 
-    |
-    变化 |
-    影响 |
-    |
-    -- -|
-    -- -|
-    |
-    可见性判定更严格 |
-    按祖先逐级裁剪后与所在 window 求交，不再使用未裁剪的屏幕坐标。原先被误判为可见的元素不再曝光，* *
-        迁移后曝光量会下降 * *|
-    |
-    检测节流默认 0.1 秒 |
-    原模块默认每次 runloop 休眠前都检测。极快速滑过的元素可能不再触发 |
-    |
-    不再受无埋点忽略规则约束 |
-    被 `ignoreViewClasses` / `ignorePolicy` 命中的视图，其手动标记的曝光将正常发送——主动调用标记 API
-            本身即表达了采集意图 |
-    |
-    配置不互通 |
-    不读取 `GrowingAutotrackConfiguration.impressionScale`，需改用 `viewImpressionConfig` |
-    |
-    前后台切换不再重发 |
-    元素未离开可视区时，App 退到后台再回到前台不会重新曝光。ImpressionTrack 会重发 |
-    |
-    不做 swizzle |
-    不再交换 `UIView` 的任何系统方法 |
+三个方法都是可选的。delegate 以弱引用持有，无需手动移除。
 
-    ##已知限制
+回调均在主线程同步执行，处在曝光检测的链路上，实现中不要做耗时操作。
 
-        - 不做遮挡检测。被上层视图盖住的元素仍按可见处理。 - 元素或其祖先设置了 `transform` 时，面积占比的判定不准确。
+## 从 ImpressionTrack 迁移
+
+方法名替换：
+
+| ImpressionTrack | ViewImpression |
+|---|---|
+| `growingTrackImpression:` | `growingMarkImpression:` |
+| `growingTrackImpression:attributes:` | `growingMarkImpression:attributes:` |
+| `growingStopTrackImpression` | `growingUnmarkImpression` |
+
+三者语义一一对应。此外需要留意这些行为差异：
+
+| 差异 | 影响 |
+|---|---|
+| 可见性判定更严格 | 按祖先逐级裁剪后与所在 window 求交，不再使用未裁剪的屏幕坐标。原先被误判为可见的元素不再曝光，**迁移后曝光量会下降** |
+| 检测节流默认 0.1 秒 | ImpressionTrack 默认每次 runloop 休眠前都检测。极快速滑过的元素可能不再触发 |
+| 前后台切换不再重发 | 元素未离开可视区时，App 退到后台再回到前台不会重新曝光。ImpressionTrack 会重发 |
+| 不再受无埋点忽略规则约束 | 被 `ignoreViewClasses` / `ignorePolicy` 命中的视图，其手动标记的曝光将正常发送——主动调用标记 API 本身即表达了采集意图 |
+| 配置不互通 | 不读取 `GrowingAutotrackConfiguration.impressionScale`，需改用 `viewImpressionConfig` |
+| 不做方法交换 | 不再交换 `UIView` 的任何系统方法 |
+
+## 限制
+
+- **不做遮挡检测。** 被上层视图完全盖住的元素仍按可见处理。
+- 元素或其祖先设置了 `transform` 时，面积占比的判定不准确。
