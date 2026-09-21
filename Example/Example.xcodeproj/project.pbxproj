@@ -218,6 +218,7 @@
 		9FA660A104463603E4710774 /* Pods_Example_SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4740916E28995032051C9BE /* Pods_Example_SwiftUI.framework */; };
 		A61E1E81175885070AAD10A9 /* Pods_ExampleiOS13.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7CCC2E00F858DC5B58D4FA6 /* Pods_ExampleiOS13.framework */; };
 		A9D21D06460258FAC4736A26 /* Pods_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90476D1583D0EE778FCBED5E /* Pods_Example.framework */; };
+		AB790BEC034B879D8B0A062F /* ViewImpressionCoexistenceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 482878CC1589CF51157FD175 /* ViewImpressionCoexistenceTests.m */; };
 		B6E5EE37C83774A528C6AD8F /* Pods_Example_visionOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75836C865E564A00DA49A94D /* Pods_Example_visionOS.framework */; };
 		BF2503F9CFE3E4AE92AD89DE /* ViewImpressionConditionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 54CDA3A463BFBA7222BF4F32 /* ViewImpressionConditionTests.m */; };
 		C45DD2F2FAA137530BE8C334 /* ViewImpressionTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D8DFE7D5488F2E995CB9353 /* ViewImpressionTestCase.m */; };
@@ -538,6 +539,7 @@
 		3D63F725A31AE372B485C361 /* Pods-HostApplicationTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HostApplicationTests.debug.xcconfig"; path = "../Example/Pods/Target Support Files/Pods-HostApplicationTests/Pods-HostApplicationTests.debug.xcconfig"; sourceTree = "<group>"; };
 		42ADE26B250B292900CA7268 /* HybridTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HybridTest.m; sourceTree = "<group>"; };
 		42F5EA0EFE2552358C35A0F5 /* Pods_HostApplicationTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HostApplicationTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		482878CC1589CF51157FD175 /* ViewImpressionCoexistenceTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ViewImpressionCoexistenceTests.m; sourceTree = "<group>"; };
 		4916270D24E157BB00444AF2 /* GIOPresentViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIOPresentViewController.h; sourceTree = "<group>"; };
 		4916270E24E157BB00444AF2 /* GIOPresentViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOPresentViewController.m; sourceTree = "<group>"; };
 		4916271024E157CF00444AF2 /* GIOPagingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIOPagingViewController.h; sourceTree = "<group>"; };
@@ -740,6 +742,7 @@
 				B369083A864FFDAAF03C2131 /* ViewImpressionMarkTests.m */,
 				54CDA3A463BFBA7222BF4F32 /* ViewImpressionConditionTests.m */,
 				537404031876FEE54CAA0766 /* ViewImpressionDelegateTests.m */,
+				482878CC1589CF51157FD175 /* ViewImpressionCoexistenceTests.m */,
 			);
 			name = ViewImpressionTests;
 			path = ViewImpressionTests;
@@ -3060,6 +3063,7 @@
 				160E060637FC5E1B10A2B058 /* ViewImpressionMarkTests.m in Sources */,
 				BF2503F9CFE3E4AE92AD89DE /* ViewImpressionConditionTests.m in Sources */,
 				55180A220E0D31C038F9DF87 /* ViewImpressionDelegateTests.m in Sources */,
+				AB790BEC034B879D8B0A062F /* ViewImpressionCoexistenceTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
