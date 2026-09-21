@@ -17,9 +17,67 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import <objc/runtime.h>
+#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
+#import "Modules/ViewImpression/GrowingViewImpression+Private.h"
 #import "Modules/ViewImpression/UIView+GrowingViewImpressionInternal.h"
 
 @implementation UIView (GrowingViewImpressionInternal)
+
+- (NSMutableDictionary<NSString *, GrowingViewImpressionNode *> *)growingViewImpNodes {
+    return objc_getAssociatedObject(self, @selector(growingViewImpNodes));
+}
+
+- (NSMutableDictionary<NSString *, GrowingViewImpressionNode *> *)growingViewImpNodesCreateIfNeeded {
+    NSMutableDictionary *nodes = self.growingViewImpNodes;
+    if (!nodes) {
+        nodes = [NSMutableDictionary dictionary];
+        objc_setAssociatedObject(self, @selector(growingViewImpNodes), nodes, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return nodes;
+}
+
+- (void)growingViewImpMark:(NSString *)eventName
+                attributes:(NSDictionary<NSString *, id> *)attributes
+                identifier:(NSString *)identifier
+                    config:(GrowingViewImpressionConfig *)config {
+    if (eventName.length == 0) {
+        return;
+    }
+
+    [GrowingDispatchManager dispatchInMainThread:^{
+        GrowingViewImpressionNode *node = [[GrowingViewImpressionNode alloc] init];
+        node.eventName = eventName;
+        node.attributes = attributes;
+        node.identifier = identifier;
+        node.config = [GrowingViewImpression effectiveConfig:config];
+
+        NSString *slot = identifier.length > 0 ? identifier : kGrowingViewImpDefaultSlot;
+        [self growingViewImpNodesCreateIfNeeded][slot] = node;
+        [[GrowingViewImpression sharedInstance] addImpressionView:self];
+    }];
+}
+
+- (void)growingViewImpUnmarkAll {
+    [GrowingDispatchManager dispatchInMainThread:^{
+        objc_setAssociatedObject(self, @selector(growingViewImpNodes), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        [[GrowingViewImpression sharedInstance] removeImpressionView:self];
+    }];
+}
+
+- (void)growingViewImpUnmarkSlot:(NSString *)identifier {
+    if (identifier.length == 0) {
+        return;
+    }
+
+    [GrowingDispatchManager dispatchInMainThread:^{
+        NSMutableDictionary *nodes = self.growingViewImpNodes;
+        [nodes removeObjectForKey:identifier];
+        if (nodes.count == 0) {
+            [self growingViewImpUnmarkAll];
+        }
+    }];
+}
 
 - (BOOL)growingViewImpNodeIsVisibleWithScale:(float)viewImpressionScale {
     if (!self.window || self.hidden || self.alpha < 0.001 || !self.superview) {

@@ -18,9 +18,17 @@
 //  limitations under the License.
 
 #import "Modules/ViewImpression/Public/GrowingViewImpression.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingULApplication.h"
+#import "Modules/ViewImpression/GrowingViewImpression+Private.h"
 
 GrowingMod(GrowingViewImpression)
+
+@interface GrowingViewImpression ()
+
+@property (nonatomic, strong) NSHashTable<UIView *> *sourceTable;
+
+@end
 
 @implementation GrowingViewImpression
 
@@ -43,6 +51,35 @@ GrowingMod(GrowingViewImpression)
     if ([GrowingULApplication isAppExtension]) {
         return;
     }
+}
+
+- (instancetype)init {
+    if (self = [super init]) {
+        _sourceTable = [[NSHashTable alloc]
+            initWithOptions:NSPointerFunctionsWeakMemory | NSPointerFunctionsObjectPointerPersonality
+                   capacity:100];
+    }
+    return self;
+}
+
+#pragma mark - Private Method
+
+- (void)addImpressionView:(UIView *)view {
+    [self.sourceTable addObject:view];
+}
+
+- (void)removeImpressionView:(UIView *)view {
+    [self.sourceTable removeObject:view];
+}
+
++ (GrowingViewImpressionConfig *)effectiveConfig:(GrowingViewImpressionConfig *)config {
+    if (config) {
+        return [config copy];
+    }
+
+    GrowingViewImpressionConfig *global =
+        GrowingConfigurationManager.sharedInstance.trackConfiguration.viewImpressionConfig;
+    return global ? [global copy] : [[GrowingViewImpressionConfig alloc] init];
 }
 
 @end
