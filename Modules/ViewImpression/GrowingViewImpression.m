@@ -78,6 +78,8 @@ static const NSUInteger kTrackedIdentifiersCapacity = 10000;
         return;
     }
 
+    [self disableImpressionTrackIfNeeded];
+
     self.checkInterval = configuration.viewImpressionCheckInterval;
     [GrowingULAppLifecycle.sharedInstance addAppLifecycleDelegate:self];
     [self registerMainRunloopObserver];
@@ -92,6 +94,22 @@ static const NSUInteger kTrackedIdentifiersCapacity = 10000;
         _delegates = [NSHashTable weakObjectsHashTable];
     }
     return self;
+}
+
+- (void)disableImpressionTrackIfNeeded {
+    // 本模块不依赖 ImpressionTrack，编译期拿不到符号，只能运行期查类
+    Class impressionTrack = NSClassFromString(@"GrowingImpressionTrack");
+    if (![impressionTrack respondsToSelector:@selector(disable)]) {
+        return;
+    }
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    [impressionTrack performSelector:@selector(disable)];
+#pragma clang diagnostic pop
+    GIOLogError(
+        @"[GrowingViewImpression] 检测到同时集成 ImpressionTrack 与 ViewImpression，"
+        @"前者已自动禁用，请移除 ImpressionTrack 依赖");
 }
 
 #pragma mark - Public Method
