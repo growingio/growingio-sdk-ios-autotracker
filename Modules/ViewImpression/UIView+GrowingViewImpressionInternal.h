@@ -33,6 +33,10 @@ NS_ASSUME_NONNULL_BEGIN
                 identifier:(nullable NSString *)identifier
                     config:(nullable GrowingViewImpressionConfig *)config;
 
+/// 只替换槽位上的属性，不重置曝光状态，因此不会触发重新曝光
+- (void)growingViewImpUpdateAttributes:(NSDictionary<NSString *, id> *)attributes
+                            identifier:(nullable NSString *)identifier;
+
 - (void)growingViewImpUnmarkAll;
 
 - (void)growingViewImpUnmarkSlot:(NSString *)identifier;

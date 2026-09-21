@@ -58,6 +58,13 @@
     }];
 }
 
+- (void)growingViewImpUpdateAttributes:(NSDictionary<NSString *, id> *)attributes identifier:(NSString *)identifier {
+    [GrowingDispatchManager dispatchInMainThread:^{
+        NSString *slot = identifier.length > 0 ? identifier : kGrowingViewImpDefaultSlot;
+        self.growingViewImpNodes[slot].attributes = attributes;
+    }];
+}
+
 - (void)growingViewImpUnmarkAll {
     [GrowingDispatchManager dispatchInMainThread:^{
         objc_setAssociatedObject(self, @selector(growingViewImpNodes), nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
