@@ -40,6 +40,11 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
 @property (nonatomic, copy) NSString *abTestingServerHost;
 @property (nonatomic, assign) NSUInteger abTestingRequestInterval;
 
+// ViewImpression
+@property (nonatomic, copy) NSObject *viewImpressionConfig;
+@property (nonatomic, assign) BOOL viewImpressionEnabled;
+@property (nonatomic, assign) NSTimeInterval viewImpressionCheckInterval;
+
 @end
 
 @implementation GrowingTrackConfiguration
@@ -82,6 +87,11 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
         // ABTesting
         _abTestingServerHost = kGrowingDefaultABTestingServerHost;
         _abTestingRequestInterval = 5;
+
+        // ViewImpression
+        _viewImpressionConfig = nil;
+        _viewImpressionEnabled = YES;
+        _viewImpressionCheckInterval = 0.1;
     }
 
     return self;
@@ -132,6 +142,11 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
     configuration->_abTestingServerHost = [_abTestingServerHost copy];
     configuration->_abTestingRequestInterval = _abTestingRequestInterval;
 
+    // ViewImpression
+    configuration->_viewImpressionConfig = [_viewImpressionConfig copy];
+    configuration->_viewImpressionEnabled = _viewImpressionEnabled;
+    configuration->_viewImpressionCheckInterval = _viewImpressionCheckInterval;
+
     return configuration;
 }
 
@@ -149,6 +164,13 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
         return;
     }
     _sessionInterval = sessionInterval;
+}
+
+- (void)setViewImpressionCheckInterval:(NSTimeInterval)viewImpressionCheckInterval {
+    if (viewImpressionCheckInterval < 0) {
+        return;
+    }
+    _viewImpressionCheckInterval = viewImpressionCheckInterval;
 }
 
 - (void)setDataValidityPeriod:(NSUInteger)dataValidityPeriod {

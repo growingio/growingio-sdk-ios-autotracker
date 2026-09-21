@@ -19,11 +19,26 @@
 
 #import <Foundation/Foundation.h>
 #import "GrowingModuleProtocol.h"
+#import "GrowingTrackConfiguration.h"
+#import "GrowingViewImpressionConfig.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(ViewImpression)
 @interface GrowingViewImpression : NSObject <GrowingModuleProtocol>
+
+@end
+
+@interface GrowingTrackConfiguration (ViewImpression)
+
+/// 全局默认曝光配置，元素未单独指定 config 时使用
+@property (nonatomic, copy) GrowingViewImpressionConfig *viewImpressionConfig;
+
+/// 曝光采集总开关，默认 YES
+@property (nonatomic, assign) BOOL viewImpressionEnabled;
+
+/// 曝光检测节流间隔，单位秒，默认 0.1。置为 0 表示每次 runloop 休眠前都检测
+@property (nonatomic, assign) NSTimeInterval viewImpressionCheckInterval;
 
 @end
 
