@@ -29,6 +29,17 @@ NS_SWIFT_NAME(ViewImpression)
 
 @end
 
+@interface GrowingViewImpression (State)
+
+/// 清除某个标识的"已曝光"记录，之后该标识的元素可再次曝光。
+/// 仅对配置了不可重复曝光的元素有意义，适用于下拉刷新、切换数据源等场景
++ (void)resetImpressionStateWithIdentifier:(NSString *)identifier;
+
+/// 清除全部"已曝光"记录
++ (void)resetAllImpressionState;
+
+@end
+
 @interface GrowingTrackConfiguration (ViewImpression)
 
 /// 全局默认曝光配置，元素未单独指定 config 时使用

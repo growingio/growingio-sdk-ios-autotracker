@@ -30,8 +30,23 @@
     [self growingViewImpMark:eventName attributes:attributes identifier:nil config:nil];
 }
 
+- (void)growingMarkImpression:(NSString *)eventName
+                   attributes:(NSDictionary<NSString *, id> *)attributes
+                   identifier:(NSString *)identifier
+                       config:(GrowingViewImpressionConfig *)config {
+    [self growingViewImpMark:eventName attributes:attributes identifier:identifier config:config];
+}
+
+- (void)growingUpdateImpressionAttributes:(NSDictionary<NSString *, id> *)attributes identifier:(NSString *)identifier {
+    [self growingViewImpUpdateAttributes:attributes identifier:identifier];
+}
+
 - (void)growingUnmarkImpression {
     [self growingViewImpUnmarkAll];
+}
+
+- (void)growingUnmarkImpressionWithIdentifier:(NSString *)identifier {
+    [self growingViewImpUnmarkSlot:identifier];
 }
 
 @end
