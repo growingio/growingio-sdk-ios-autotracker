@@ -54,6 +54,8 @@ PODS:
     - GrowingAnalytics/TrackerCore (= 4.12.0)
   - GrowingAnalytics/TrackerCore (4.12.0):
     - GrowingUtils/TrackerCore (~> 1.2.4)
+  - GrowingAnalytics/ViewImpression (4.12.0):
+    - GrowingAnalytics/TrackerCore (= 4.12.0)
   - GrowingAnalytics/WebCircle (4.12.0):
     - GrowingAnalytics/AutotrackerCore (= 4.12.0)
     - GrowingAnalytics/Hybrid (= 4.12.0)
@@ -130,6 +132,7 @@ DEPENDENCIES:
   - GrowingAnalytics/Autotracker (from `../`)
   - GrowingAnalytics/ImpressionTrack (from `../`)
   - GrowingAnalytics/Tracker (from `../`)
+  - GrowingAnalytics/ViewImpression (from `../`)
   - GrowingAPM
   - GrowingToolsKit (~> 2.2.0)
   - KIF
@@ -152,7 +155,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  GrowingAnalytics: 3268a7887cfb9907947c1e800687f0b211a9e74d
+  GrowingAnalytics: 6e9400e0537d3cbbd7bf9878ddc8e000db00d5a6
   GrowingAPM: 4a3628e708cd1b2e4e1fc0925593781ed8acadd2
   GrowingToolsKit: 548d35d9b5964af3a73f80b30c6948dc10d247b4
   GrowingUtils: 5d323e54798595015ff11e97fe981ae167dc270e
@@ -162,6 +165,6 @@ SPEC CHECKSUMS:
   SDCycleScrollView: a0d74c3384caa72bdfc81470bdbc8c14b3e1fbcf
   SDWebImage: 16309af6d214ba3f77a7c6f6fdda888cb313a50a
 
-PODFILE CHECKSUM: 2eb5ad00819e5450182c13511c7cc7734f36b3bd
+PODFILE CHECKSUM: 83480528bb484dc38ba242c5a4bc041bcaa00a9d
 
 COCOAPODS: 1.16.2

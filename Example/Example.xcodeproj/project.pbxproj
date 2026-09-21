@@ -80,7 +80,6 @@
 		34486D3D27B1049000FA8223 /* UITapGestureRecognizerAutotrackTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34486D3B27B102B000FA8223 /* UITapGestureRecognizerAutotrackTest.m */; };
 		346521E22ADD0E540091E815 /* ABTestingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 346521E12ADD0E540091E815 /* ABTestingTests.m */; };
 		346521E62ADD15AB0091E815 /* MockEventQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 4962653324DA66B600032551 /* MockEventQueue.m */; };
-		34AA01022ADD0E540091E901 /* GrowingKIFTestConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AA01012ADD0E540091E900 /* GrowingKIFTestConfiguration.m */; };
 		34664587278EEEA6009C351C /* A0GrowingAnalyticsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 047BF3A224F638BB0028FE94 /* A0GrowingAnalyticsTest.m */; };
 		346D6C7A2ABC355C00676A32 /* GIOWebViewWarmuper.m in Sources */ = {isa = PBXBuildFile; fileRef = 346D6C792ABC355C00676A32 /* GIOWebViewWarmuper.m */; };
 		346E0B3B29F2724400A12E4E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346E0B3A29F2724400A12E4E /* AppDelegate.swift */; };
@@ -128,6 +127,7 @@
 		349F1489285B503B00437F53 /* GIOH5BrowserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 349F1487285B503A00437F53 /* GIOH5BrowserViewController.m */; };
 		349F148C285B52B700437F53 /* GIOScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 349F148B285B52B700437F53 /* GIOScanViewController.m */; };
 		349F1492285B560200437F53 /* UIColor+Hex.m in Sources */ = {isa = PBXBuildFile; fileRef = 349F1490285B560100437F53 /* UIColor+Hex.m */; };
+		34AA01022ADD0E540091E901 /* GrowingKIFTestConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AA01012ADD0E540091E900 /* GrowingKIFTestConfiguration.m */; };
 		34AB4E4A279000F5002549FF /* GrowingAnalyticsStartTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AB4E49279000F5002549FF /* GrowingAnalyticsStartTests.m */; };
 		34AC208C279E80AF00F90E10 /* UIApplicationAutotrackTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AC208A279E7A2700F90E10 /* UIApplicationAutotrackTest.m */; };
 		34AC7AC92798270500C0DFA5 /* GrowingUIKitHelpersTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AC7AC82798270500C0DFA5 /* GrowingUIKitHelpersTest.m */; };
@@ -201,6 +201,7 @@
 		34FCF7E42A937F4F009611B3 /* GIOSwiftUIContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34FCF7E32A937F4F009611B3 /* GIOSwiftUIContentViewController.m */; };
 		3B84E71F6A358D2D6AE629D7 /* Pods_ABTestingTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36E93290071EF480453E2196 /* Pods_ABTestingTests.framework */; };
 		3BD9FAEC4E8525E8216E2BD5 /* Pods_ShareExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BDF26A896226E51F6DD6DA0E /* Pods_ShareExtension.framework */; };
+		3D850D00F14CC02D5CE81EAF /* ViewImpressionFixtureTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3063C057834261CCF75CC989 /* ViewImpressionFixtureTests.m */; };
 		46B566A91FF28564AA03491F /* Pods_ProtobufTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E2C01C3AC89773BC3F4BE1 /* Pods_ProtobufTests.framework */; };
 		4916270F24E157BB00444AF2 /* GIOPresentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916270E24E157BB00444AF2 /* GIOPresentViewController.m */; };
 		4916271224E157CF00444AF2 /* GIOPagingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916271124E157CF00444AF2 /* GIOPagingViewController.m */; };
@@ -216,6 +217,7 @@
 		A61E1E81175885070AAD10A9 /* Pods_ExampleiOS13.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7CCC2E00F858DC5B58D4FA6 /* Pods_ExampleiOS13.framework */; };
 		A9D21D06460258FAC4736A26 /* Pods_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90476D1583D0EE778FCBED5E /* Pods_Example.framework */; };
 		B6E5EE37C83774A528C6AD8F /* Pods_Example_visionOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75836C865E564A00DA49A94D /* Pods_Example_visionOS.framework */; };
+		C45DD2F2FAA137530BE8C334 /* ViewImpressionTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D8DFE7D5488F2E995CB9353 /* ViewImpressionTestCase.m */; };
 		DC414ADEC8E1A738BA63089E /* Pods_AdvertisingTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5655CC09B9A2CE16091DB52F /* Pods_AdvertisingTests.framework */; };
 		FA78740F8B45E99B90F73157 /* Pods_Example_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24881A4A149E400F80B69E2A /* Pods_Example_tvOS.framework */; };
 /* End PBXBuildFile section */
@@ -378,6 +380,8 @@
 		1769255A062869A5D219F683 /* Pods_GrowingAnalyticsStartTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GrowingAnalyticsStartTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2396F869C811CB392EA9F501 /* Pods-Example-watchOS Watch App.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-watchOS Watch App.release.xcconfig"; path = "../Example/Pods/Target Support Files/Pods-Example-watchOS Watch App/Pods-Example-watchOS Watch App.release.xcconfig"; sourceTree = "<group>"; };
 		24881A4A149E400F80B69E2A /* Pods_Example_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2FE4A0A035B9D92011B710AB /* ViewImpressionTestCase.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = ViewImpressionTestCase.h; sourceTree = "<group>"; };
+		3063C057834261CCF75CC989 /* ViewImpressionFixtureTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ViewImpressionFixtureTests.m; sourceTree = "<group>"; };
 		3406842A2A668EB700E25216 /* A3PageEventsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = A3PageEventsTest.m; sourceTree = "<group>"; };
 		34106BB228FECB0D00E7DB01 /* Crasher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Crasher.h; sourceTree = "<group>"; };
 		34106BB328FECB0E00E7DB01 /* Crasher.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Crasher.mm; sourceTree = "<group>"; };
@@ -454,6 +458,7 @@
 		349F148B285B52B700437F53 /* GIOScanViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIOScanViewController.m; sourceTree = "<group>"; };
 		349F1490285B560100437F53 /* UIColor+Hex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Hex.m"; sourceTree = "<group>"; };
 		349F1491285B560100437F53 /* UIColor+Hex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Hex.h"; sourceTree = "<group>"; };
+		34AA01012ADD0E540091E900 /* GrowingKIFTestConfiguration.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GrowingKIFTestConfiguration.m; sourceTree = "<group>"; };
 		34AB4E47279000F5002549FF /* GrowingAnalyticsStartTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrowingAnalyticsStartTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		34AB4E49279000F5002549FF /* GrowingAnalyticsStartTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GrowingAnalyticsStartTests.m; sourceTree = "<group>"; };
 		34AC208A279E7A2700F90E10 /* UIApplicationAutotrackTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UIApplicationAutotrackTest.m; sourceTree = "<group>"; };
@@ -475,7 +480,6 @@
 		34BA7B2F277C63D00030AC21 /* ProtobufTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProtobufTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BA7B41277D8EC30030AC21 /* DeepLinkTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DeepLinkTest.m; sourceTree = "<group>"; };
 		34BA7B44277D91900030AC21 /* WebCircleTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WebCircleTest.m; sourceTree = "<group>"; };
-		34AA01012ADD0E540091E900 /* GrowingKIFTestConfiguration.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GrowingKIFTestConfiguration.m; sourceTree = "<group>"; };
 		34BA7B47277D92840030AC21 /* FileStorageTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileStorageTest.m; sourceTree = "<group>"; };
 		34BDC359277088D40030B3CE /* UICatalogTests.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = UICatalogTests.storyboard; sourceTree = "<group>"; };
 		34BF77AD2795095100CA18BA /* GrowingSessionTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GrowingSessionTest.m; sourceTree = "<group>"; };
@@ -551,6 +555,7 @@
 		7B524BD63EF3439946134E74 /* Pods_Example_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		835401C6A4C9E2141838BE84 /* Pods-Example-watchOS Watch App.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-watchOS Watch App.debug.xcconfig"; path = "../Example/Pods/Target Support Files/Pods-Example-watchOS Watch App/Pods-Example-watchOS Watch App.debug.xcconfig"; sourceTree = "<group>"; };
 		8899A83F721CB9CFF4C9D7F9 /* Pods-ShareExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShareExtension.release.xcconfig"; path = "../Example/Pods/Target Support Files/Pods-ShareExtension/Pods-ShareExtension.release.xcconfig"; sourceTree = "<group>"; };
+		8D8DFE7D5488F2E995CB9353 /* ViewImpressionTestCase.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ViewImpressionTestCase.m; sourceTree = "<group>"; };
 		90476D1583D0EE778FCBED5E /* Pods_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		91EEE76F9E0E94DB389A9D21 /* Pods-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.debug.xcconfig"; path = "../Example/Pods/Target Support Files/Pods-Example/Pods-Example.debug.xcconfig"; sourceTree = "<group>"; };
 		9FF2837F9C59D83A1A3F5D76 /* Pods-ABTestingTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ABTestingTests.release.xcconfig"; path = "../Example/Pods/Target Support Files/Pods-ABTestingTests/Pods-ABTestingTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -717,6 +722,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		012BE8B25B9109E45683BE37 /* ViewImpressionTests */ = {
+			isa = PBXGroup;
+			children = (
+				2FE4A0A035B9D92011B710AB /* ViewImpressionTestCase.h */,
+				8D8DFE7D5488F2E995CB9353 /* ViewImpressionTestCase.m */,
+				3063C057834261CCF75CC989 /* ViewImpressionFixtureTests.m */,
+			);
+			name = ViewImpressionTests;
+			path = ViewImpressionTests;
+			sourceTree = "<group>";
+		};
 		046530BA24DD4271002D254C /* Example */ = {
 			isa = PBXGroup;
 			children = (
@@ -1202,6 +1218,7 @@
 				34C0BF3B277EA95A0047ADC4 /* MobileDebuggerTests */,
 				34BA7B30277C63D00030AC21 /* ProtobufTests */,
 				34BA7B43277D91720030AC21 /* WebCircleTests */,
+				012BE8B25B9109E45683BE37 /* ViewImpressionTests */,
 			);
 			path = ModulesTests;
 			sourceTree = "<group>";
@@ -2364,7 +2381,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-GrowingAnalyticsStartTests/Pods-GrowingAnalyticsStartTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-b35945a7/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-f8d7f77e/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore-iOS/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf-iOS/Protobuf.framework",
 			);
@@ -2656,7 +2673,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-GrowingAnalyticsTests/Pods-GrowingAnalyticsTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-b35945a7/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-f8d7f77e/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore-iOS/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf-iOS/Protobuf.framework",
 			);
@@ -2768,7 +2785,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-HostApplicationTests/Pods-HostApplicationTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-b35945a7/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-f8d7f77e/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore-iOS/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf-iOS/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/KIF/KIF.framework",
@@ -2858,7 +2875,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ProtobufTests/Pods-ProtobufTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-b35945a7/GrowingAnalytics.framework",
+				"${BUILT_PRODUCTS_DIR}/GrowingAnalytics-f8d7f77e/GrowingAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/GrowingUtils-AutotrackerCore-TrackerCore-iOS/GrowingUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf-iOS/Protobuf.framework",
 			);
@@ -3025,6 +3042,8 @@
 				34B2148A2796A234004E2CE3 /* GrowingAlertTest.m in Sources */,
 				34BA7B27277C63070030AC21 /* EncryptionTest.m in Sources */,
 				34BA7B26277C62FF0030AC21 /* JSONDatabaseTest.m in Sources */,
+				C45DD2F2FAA137530BE8C334 /* ViewImpressionTestCase.m in Sources */,
+				3D850D00F14CC02D5CE81EAF /* ViewImpressionFixtureTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
