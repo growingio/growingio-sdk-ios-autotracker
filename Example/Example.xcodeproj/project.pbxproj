@@ -215,6 +215,7 @@
 		6F7A64B402BF8E5ED466E56A /* Pods_GrowingAnalyticsTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0257123D870B44A9FDA90A22 /* Pods_GrowingAnalyticsTests.framework */; };
 		7C497FC3CEDCABC6775A106B /* GIOViewImpressionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CE6553BE0C7239D394FD52A /* GIOViewImpressionViewController.m */; };
 		7E20527CFF34511EE464C33F /* Pods_GrowingAnalyticsStartTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1769255A062869A5D219F683 /* Pods_GrowingAnalyticsStartTests.framework */; };
+		8D06B2507E954DBD380D6497 /* ViewImpressionConfigTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 443B0F9847E049C881BF0F9E /* ViewImpressionConfigTests.m */; };
 		997DAC68973F1F4FAF34EA2E /* Pods_Example_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B524BD63EF3439946134E74 /* Pods_Example_macOS.framework */; };
 		9D43D2496D486AEB7DCFD460 /* Pods_Example_watchOS_Watch_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358137F6293DF184E03C3572 /* Pods_Example_watchOS_Watch_App.framework */; };
 		9FA660A104463603E4710774 /* Pods_Example_SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4740916E28995032051C9BE /* Pods_Example_SwiftUI.framework */; };
@@ -543,6 +544,7 @@
 		3D63F725A31AE372B485C361 /* Pods-HostApplicationTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HostApplicationTests.debug.xcconfig"; path = "../Example/Pods/Target Support Files/Pods-HostApplicationTests/Pods-HostApplicationTests.debug.xcconfig"; sourceTree = "<group>"; };
 		42ADE26B250B292900CA7268 /* HybridTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HybridTest.m; sourceTree = "<group>"; };
 		42F5EA0EFE2552358C35A0F5 /* Pods_HostApplicationTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HostApplicationTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		443B0F9847E049C881BF0F9E /* ViewImpressionConfigTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ViewImpressionConfigTests.m; sourceTree = "<group>"; };
 		482878CC1589CF51157FD175 /* ViewImpressionCoexistenceTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ViewImpressionCoexistenceTests.m; sourceTree = "<group>"; };
 		4916270D24E157BB00444AF2 /* GIOPresentViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIOPresentViewController.h; sourceTree = "<group>"; };
 		4916270E24E157BB00444AF2 /* GIOPresentViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOPresentViewController.m; sourceTree = "<group>"; };
@@ -748,6 +750,7 @@
 				54CDA3A463BFBA7222BF4F32 /* ViewImpressionConditionTests.m */,
 				537404031876FEE54CAA0766 /* ViewImpressionDelegateTests.m */,
 				482878CC1589CF51157FD175 /* ViewImpressionCoexistenceTests.m */,
+				443B0F9847E049C881BF0F9E /* ViewImpressionConfigTests.m */,
 			);
 			name = ViewImpressionTests;
 			path = ViewImpressionTests;
@@ -3090,6 +3093,7 @@
 				BF2503F9CFE3E4AE92AD89DE /* ViewImpressionConditionTests.m in Sources */,
 				55180A220E0D31C038F9DF87 /* ViewImpressionDelegateTests.m in Sources */,
 				AB790BEC034B879D8B0A062F /* ViewImpressionCoexistenceTests.m in Sources */,
+				8D06B2507E954DBD380D6497 /* ViewImpressionConfigTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
