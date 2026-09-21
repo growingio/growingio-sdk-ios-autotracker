@@ -273,3 +273,23 @@ static const NSUInteger kTrackedIdentifiersCapacity = 10000;
 }
 
 @end
+
+@implementation GrowingViewImpression (State)
+
++ (void)resetImpressionStateWithIdentifier:(NSString *)identifier {
+    if (identifier.length == 0) {
+        return;
+    }
+
+    [GrowingDispatchManager dispatchInMainThread:^{
+        [[self sharedInstance].trackedIdentifiers removeObject:identifier];
+    }];
+}
+
++ (void)resetAllImpressionState {
+    [GrowingDispatchManager dispatchInMainThread:^{
+        [[self sharedInstance].trackedIdentifiers removeAllObjects];
+    }];
+}
+
+@end
