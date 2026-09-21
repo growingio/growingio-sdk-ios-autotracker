@@ -59,6 +59,21 @@
         NSString *slot = identifier.length > 0 ? identifier : kGrowingViewImpDefaultSlot;
         NSMutableDictionary<NSString *, GrowingViewImpressionNode *> *nodes = [self growingViewImpNodesCreateIfNeeded];
 
+        // 复用场景：同一视图先后承载不同元素，事件名不变而 identifier 变了。
+        // 旧槽位若留着，视图下次进入可视区时会带着上一个元素的属性再发一次
+        NSMutableArray<NSString *> *staleSlots = nil;
+        for (NSString *key in nodes) {
+            if ([key isEqualToString:slot] || ![nodes[key].eventName isEqualToString:eventName]) {
+                continue;
+            }
+            staleSlots = staleSlots ?: [NSMutableArray array];
+            [staleSlots addObject:key];
+        }
+        for (NSString *key in staleSlots) {
+            nodes[key].recheckToken += 1;
+            [nodes removeObjectForKey:key];
+        }
+
         // 列表刷新会对可见元素原样重标一次，内容没变就保留原节点，
         // 否则曝光状态被重置，下一个检测周期必然多发一次
         if ([nodes[slot] matchesEventName:eventName attributes:attributes config:nodeConfig]) {
