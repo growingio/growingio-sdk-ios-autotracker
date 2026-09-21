@@ -39,6 +39,11 @@ FOUNDATION_EXPORT NSString *const kGrowingViewImpDefaultSlot;
 /// 停留时长复检的配对令牌：令牌变化即代表此前调度的复检已失效
 @property (nonatomic, assign) NSUInteger recheckToken;
 
+/// 事件名、属性、配置是否与传入的完全一致
+- (BOOL)matchesEventName:(NSString *)eventName
+              attributes:(nullable NSDictionary<NSString *, id> *)attributes
+                  config:(GrowingViewImpressionConfig *)config;
+
 @end
 
 NS_ASSUME_NONNULL_END
