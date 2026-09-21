@@ -207,6 +207,7 @@
 		4916270F24E157BB00444AF2 /* GIOPresentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916270E24E157BB00444AF2 /* GIOPresentViewController.m */; };
 		4916271224E157CF00444AF2 /* GIOPagingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916271124E157CF00444AF2 /* GIOPagingViewController.m */; };
 		491D2D8D2500E2D9001CB289 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 491D2D8C2500E2D9001CB289 /* MapKit.framework */; };
+		55180A220E0D31C038F9DF87 /* ViewImpressionDelegateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 537404031876FEE54CAA0766 /* ViewImpressionDelegateTests.m */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
@@ -546,6 +547,7 @@
 		4962653224DA66B600032551 /* ManualTrackHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManualTrackHelper.m; sourceTree = "<group>"; };
 		4962653324DA66B600032551 /* MockEventQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockEventQueue.m; sourceTree = "<group>"; };
 		4962653824DA66B600032551 /* ManualTrackHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManualTrackHelper.h; sourceTree = "<group>"; };
+		537404031876FEE54CAA0766 /* ViewImpressionDelegateTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ViewImpressionDelegateTests.m; sourceTree = "<group>"; };
 		54CDA3A463BFBA7222BF4F32 /* ViewImpressionConditionTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ViewImpressionConditionTests.m; sourceTree = "<group>"; };
 		5655CC09B9A2CE16091DB52F /* Pods_AdvertisingTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AdvertisingTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58A195388D20070C39A /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -737,6 +739,7 @@
 				66AAE9FA4AC4C506280DE204 /* ViewImpressionVisibilityTests.m */,
 				B369083A864FFDAAF03C2131 /* ViewImpressionMarkTests.m */,
 				54CDA3A463BFBA7222BF4F32 /* ViewImpressionConditionTests.m */,
+				537404031876FEE54CAA0766 /* ViewImpressionDelegateTests.m */,
 			);
 			name = ViewImpressionTests;
 			path = ViewImpressionTests;
@@ -3056,6 +3059,7 @@
 				D80F70B4DBD2BCB474654716 /* ViewImpressionVisibilityTests.m in Sources */,
 				160E060637FC5E1B10A2B058 /* ViewImpressionMarkTests.m in Sources */,
 				BF2503F9CFE3E4AE92AD89DE /* ViewImpressionConditionTests.m in Sources */,
+				55180A220E0D31C038F9DF87 /* ViewImpressionDelegateTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

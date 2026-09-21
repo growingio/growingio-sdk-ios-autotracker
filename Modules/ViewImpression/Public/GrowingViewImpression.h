@@ -21,11 +21,19 @@
 #import "GrowingModuleProtocol.h"
 #import "GrowingTrackConfiguration.h"
 #import "GrowingViewImpressionConfig.h"
+#import "GrowingViewImpressionDelegate.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(ViewImpression)
 @interface GrowingViewImpression : NSObject <GrowingModuleProtocol>
+
++ (instancetype)sharedInstance;
+
+/// delegate 为弱引用，无需手动移除；重复添加同一个对象只生效一次
+- (void)addImpressionDelegate:(id<GrowingViewImpressionDelegate>)delegate;
+
+- (void)removeImpressionDelegate:(id<GrowingViewImpressionDelegate>)delegate;
 
 @end
 
