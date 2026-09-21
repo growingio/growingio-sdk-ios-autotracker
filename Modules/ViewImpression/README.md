@@ -84,7 +84,7 @@ configuration.viewImpressionConfig = [GrowingViewImpressionConfig configWithView
 [GrowingViewImpression resetAllImpressionState];
 ```
 
-记录不随 session 自动重置。
+重置会同时清掉当前仍停在可视区内的元素的曝光状态，这些元素无需移出再移入即可再次曝光。记录不随 session 自动重置。
 
 ## 什么时候会再次曝光
 
@@ -94,7 +94,7 @@ configuration.viewImpressionConfig = [GrowingViewImpressionConfig configWithView
 - App 退到后台再回到前台，期间元素没有离开可视区
 - 重复标记但内容未变化（见上）
 
-配置了 `repeatable = NO` 时，同一 `identifier` 全程只曝光一次，直到调用状态重置方法。
+配置了 `repeatable = NO` 时，同一 `identifier` 全程只曝光一次，直到调用状态重置方法——重置后即便元素一直停在可视区内，也会立刻再曝光一次。
 
 ## 曝光回调
 

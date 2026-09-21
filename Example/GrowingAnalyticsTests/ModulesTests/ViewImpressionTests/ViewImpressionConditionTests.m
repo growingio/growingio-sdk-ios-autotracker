@@ -133,6 +133,20 @@ static const CGRect kOffscreen = {{0, 700}, {375, 100}};
     XCTAssertTrue([self waitForCustomEventCount:2 timeout:2.0]);
 }
 
+- (void)testResetStateOnlyAffectsMatchingIdentifier {
+    UIView *first = [self addViewWithFrame:kOnscreen];
+    UIView *second = [self addViewWithFrame:kOnscreen];
+    [first growingMarkImpression:@"imp_reset_a" attributes:nil identifier:@"sku_a" config:[self nonRepeatableConfig]];
+    [second growingMarkImpression:@"imp_reset_b" attributes:nil identifier:@"sku_b" config:[self nonRepeatableConfig]];
+    XCTAssertTrue([self waitForCustomEventCount:2 timeout:2.0]);
+
+    [GrowingViewImpression resetImpressionStateWithIdentifier:@"sku_a"];
+
+    XCTAssertTrue([self waitForCustomEventCount:3 timeout:2.0]);
+    XCTAssertEqualObjects(self.lastCustomEvent.eventName, @"imp_reset_a");
+    [self assertNoMoreCustomEventsWithin:0.5];
+}
+
 - (void)testResetStateWithIdentifierAllowsRefire {
     UIView *view = [self addViewWithFrame:kOnscreen];
     [view growingMarkImpression:@"imp_reset" attributes:nil identifier:@"sku_reset" config:[self nonRepeatableConfig]];
@@ -153,10 +167,6 @@ static const CGRect kOffscreen = {{0, 700}, {375, 100}};
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
 
     [GrowingViewImpression resetAllImpressionState];
-    [view growingMarkImpression:@"imp_reset_all"
-                     attributes:nil
-                     identifier:@"sku_reset_all"
-                         config:[self nonRepeatableConfig]];
 
     XCTAssertTrue([self waitForCustomEventCount:2 timeout:2.0]);
 }
