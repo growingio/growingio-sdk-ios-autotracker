@@ -22,6 +22,16 @@
 #import "MockEventQueue.h"
 
 static NSString *const kGrowingEventDuration = @"event_duration";
+static const NSTimeInterval kGrowingAttributeDate = 1713518722;
+
+/// 属性里的 NSDate 按设备本地时区格式化，断言不能钉死某个时区下的字符串，
+/// 改为用同一个 format 解回时间戳比对
+static NSTimeInterval GrowingTimestampFromDateAttribute(NSString *value) {
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
+    formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss.SSS";
+    return [formatter dateFromString:value].timeIntervalSince1970;
+}
 
 /// 休眠 seconds 秒，并返回 SDK 计时器所用时钟（NSProcessInfo.systemUptime）实际走过的时长。
 /// sleep 按墙钟计时，而 event_duration 由 systemUptime 算出，两者在宿主机被挂起时会脱节
@@ -140,7 +150,7 @@ static NSTimeInterval GrowingTestSleepAndMeasure(unsigned int seconds) {
             @"key5": self,
             @"key6": [NSNull null],
             @"key7": [NSSet setWithObjects:@"1", @"2", nil],
-            @"key8": [NSDate dateWithTimeIntervalSince1970:1713518722]
+            @"key8": [NSDate dateWithTimeIntervalSince1970:kGrowingAttributeDate]
         }];
         NSArray<GrowingBaseEvent *> *events =
             [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeLoginUserAttributes];
@@ -154,7 +164,9 @@ static NSTimeInterval GrowingTestSleepAndMeasure(unsigned int seconds) {
         XCTAssertEqualObjects(event.attributes[@"key5"], @"-[A0GrowingAnalyticsTest test05SetLoginUserAttributes]");
         XCTAssertEqualObjects(event.attributes[@"key6"], @"<null>");
         XCTAssertEqualObjects(event.attributes[@"key7"], @"1||2");
-        XCTAssertEqualObjects(event.attributes[@"key8"], @"2024-04-19 09:25:22.000");
+        XCTAssertEqualWithAccuracy(GrowingTimestampFromDateAttribute(event.attributes[@"key8"]),
+                                   kGrowingAttributeDate,
+                                   0.001);
     }
 
     {
@@ -199,7 +211,7 @@ static NSTimeInterval GrowingTestSleepAndMeasure(unsigned int seconds) {
             @"key5": self,
             @"key6": [NSNull null],
             @"key7": [NSSet setWithObjects:@"1", @"2", nil],
-            @"key8": [NSDate dateWithTimeIntervalSince1970:1713518722]
+            @"key8": [NSDate dateWithTimeIntervalSince1970:kGrowingAttributeDate]
         }];
         
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
@@ -214,7 +226,9 @@ static NSTimeInterval GrowingTestSleepAndMeasure(unsigned int seconds) {
         XCTAssertEqualObjects(event.attributes[@"key5"], @"-[A0GrowingAnalyticsTest test07TrackCustomEventWithAttributes]");
         XCTAssertEqualObjects(event.attributes[@"key6"], @"<null>");
         XCTAssertEqualObjects(event.attributes[@"key7"], @"1||2");
-        XCTAssertEqualObjects(event.attributes[@"key8"], @"2024-04-19 09:25:22.000");
+        XCTAssertEqualWithAccuracy(GrowingTimestampFromDateAttribute(event.attributes[@"key8"]),
+                                   kGrowingAttributeDate,
+                                   0.001);
     }
 
     {
@@ -406,7 +420,7 @@ static NSTimeInterval GrowingTestSleepAndMeasure(unsigned int seconds) {
             @"key5": self,
             @"key6": [NSNull null],
             @"key7": [NSSet setWithObjects:@"1", @"2", nil],
-            @"key8": [NSDate dateWithTimeIntervalSince1970:1713518722]
+            @"key8": [NSDate dateWithTimeIntervalSince1970:kGrowingAttributeDate]
         }];
 
         NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
@@ -421,7 +435,9 @@ static NSTimeInterval GrowingTestSleepAndMeasure(unsigned int seconds) {
         XCTAssertEqualObjects(event.attributes[@"key5"], @"-[A0GrowingAnalyticsTest test09TrackTimerWithAttributes]");
         XCTAssertEqualObjects(event.attributes[@"key6"], @"<null>");
         XCTAssertEqualObjects(event.attributes[@"key7"], @"1||2");
-        XCTAssertEqualObjects(event.attributes[@"key8"], @"2024-04-19 09:25:22.000");
+        XCTAssertEqualWithAccuracy(GrowingTimestampFromDateAttribute(event.attributes[@"key8"]),
+                                   kGrowingAttributeDate,
+                                   0.001);
         XCTAssertNotNil(event.attributes[kGrowingEventDuration]);
     }
 
