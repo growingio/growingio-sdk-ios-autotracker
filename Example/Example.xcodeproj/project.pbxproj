@@ -218,6 +218,7 @@
 		A61E1E81175885070AAD10A9 /* Pods_ExampleiOS13.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7CCC2E00F858DC5B58D4FA6 /* Pods_ExampleiOS13.framework */; };
 		A9D21D06460258FAC4736A26 /* Pods_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90476D1583D0EE778FCBED5E /* Pods_Example.framework */; };
 		B6E5EE37C83774A528C6AD8F /* Pods_Example_visionOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75836C865E564A00DA49A94D /* Pods_Example_visionOS.framework */; };
+		BF2503F9CFE3E4AE92AD89DE /* ViewImpressionConditionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 54CDA3A463BFBA7222BF4F32 /* ViewImpressionConditionTests.m */; };
 		C45DD2F2FAA137530BE8C334 /* ViewImpressionTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D8DFE7D5488F2E995CB9353 /* ViewImpressionTestCase.m */; };
 		D80F70B4DBD2BCB474654716 /* ViewImpressionVisibilityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AAE9FA4AC4C506280DE204 /* ViewImpressionVisibilityTests.m */; };
 		DC414ADEC8E1A738BA63089E /* Pods_AdvertisingTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5655CC09B9A2CE16091DB52F /* Pods_AdvertisingTests.framework */; };
@@ -545,6 +546,7 @@
 		4962653224DA66B600032551 /* ManualTrackHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManualTrackHelper.m; sourceTree = "<group>"; };
 		4962653324DA66B600032551 /* MockEventQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockEventQueue.m; sourceTree = "<group>"; };
 		4962653824DA66B600032551 /* ManualTrackHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManualTrackHelper.h; sourceTree = "<group>"; };
+		54CDA3A463BFBA7222BF4F32 /* ViewImpressionConditionTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ViewImpressionConditionTests.m; sourceTree = "<group>"; };
 		5655CC09B9A2CE16091DB52F /* Pods_AdvertisingTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AdvertisingTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58A195388D20070C39A /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -734,6 +736,7 @@
 				3063C057834261CCF75CC989 /* ViewImpressionFixtureTests.m */,
 				66AAE9FA4AC4C506280DE204 /* ViewImpressionVisibilityTests.m */,
 				B369083A864FFDAAF03C2131 /* ViewImpressionMarkTests.m */,
+				54CDA3A463BFBA7222BF4F32 /* ViewImpressionConditionTests.m */,
 			);
 			name = ViewImpressionTests;
 			path = ViewImpressionTests;
@@ -3052,6 +3055,7 @@
 				3D850D00F14CC02D5CE81EAF /* ViewImpressionFixtureTests.m in Sources */,
 				D80F70B4DBD2BCB474654716 /* ViewImpressionVisibilityTests.m in Sources */,
 				160E060637FC5E1B10A2B058 /* ViewImpressionMarkTests.m in Sources */,
+				BF2503F9CFE3E4AE92AD89DE /* ViewImpressionConditionTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

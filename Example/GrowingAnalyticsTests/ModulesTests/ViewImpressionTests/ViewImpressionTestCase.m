@@ -22,6 +22,7 @@
 #import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
 #import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
 #import "MockEventQueue.h"
+#import "Modules/ViewImpression/Public/GrowingViewImpression.h"
 
 static const CGFloat kWindowWidth = 375.0f;
 static const CGFloat kWindowHeight = 667.0f;
@@ -59,6 +60,7 @@ static const CGFloat kWindowHeight = 667.0f;
     self.rootView.frame = self.window.bounds;
 
     [MockEventQueue.sharedQueue cleanQueue];
+    [GrowingViewImpression resetAllImpressionState];
 }
 
 - (void)tearDown {
