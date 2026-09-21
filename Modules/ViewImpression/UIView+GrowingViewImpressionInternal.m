@@ -23,6 +23,9 @@
 #import "Modules/ViewImpression/GrowingViewImpression+Private.h"
 #import "Modules/ViewImpression/UIView+GrowingViewImpressionInternal.h"
 
+/// 可见面积占比的比较容差，只用于吸收浮点误差，远小于任何有意义的面积变化
+static const CGFloat kScaleTolerance = 1e-6;
+
 @implementation UIView (GrowingViewImpressionInternal)
 
 - (NSMutableDictionary<NSString *, GrowingViewImpressionNode *> *)growingViewImpNodes {
@@ -165,8 +168,16 @@
     if (viewImpressionScale <= 0.0f) {
         return YES;
     }
+
     CGFloat total = CGRectGetWidth(self.bounds) * CGRectGetHeight(self.bounds);
-    return total > 0 && (visible.size.width * visible.size.height) >= total * viewImpressionScale;
+    if (total <= 0) {
+        return NO;
+    }
+
+    // 坐标换算会带进 1e-16 量级的相对误差（滚动容器的 contentOffset 往往不是二进制可表示的值），
+    // 直接比较等号时 scale = 1 的元素会在完整可见的状态下反复翻转，每翻一次就多发一次曝光
+    CGFloat visibleRatio = (visible.size.width * visible.size.height) / total;
+    return visibleRatio >= viewImpressionScale - kScaleTolerance;
 }
 
 @end

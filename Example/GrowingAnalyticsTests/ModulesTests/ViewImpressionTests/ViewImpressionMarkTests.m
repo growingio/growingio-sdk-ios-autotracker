@@ -202,6 +202,26 @@
     XCTAssertEqual([self customEventCount], 2);
 }
 
+/// scale = 1 的元素在滚动中始终完整可见时，只应曝光一次
+- (void)testFullyVisibleCardSendsOnceDuringScroll {
+    UIScrollView *scrollView = [self addScrollViewWithFrame:self.window.bounds contentSize:CGSizeMake(375, 3000)];
+    UIView *card = [self addViewWithFrame:CGRectMake(0, 300, 375, 80) toView:scrollView];
+    [card growingMarkImpression:@"imp_full"
+                     attributes:nil
+                     identifier:@"full"
+                         config:[GrowingViewImpressionConfig configWithViewImpressionScale:1.0f
+                                                                              stayDuration:0.0
+                                                                                repeatable:YES]];
+    XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
+
+    for (CGFloat offset = 0; offset < 200; offset += 3.7) {
+        scrollView.contentOffset = CGPointMake(0, offset);
+        [self pumpRunLoopFor:0.12];
+    }
+
+    XCTAssertEqual([self customEventCount], 1);
+}
+
 - (void)testDeallocatedViewLeavesDetectionSet {
     __weak UIView *weakView = nil;
     @autoreleasepool {

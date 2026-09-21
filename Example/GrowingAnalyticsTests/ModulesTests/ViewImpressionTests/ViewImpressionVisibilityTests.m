@@ -17,6 +17,8 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import "Modules/ViewImpression/Public/GrowingViewImpressionConfig.h"
+#import "Modules/ViewImpression/Public/UIView+GrowingViewImpression.h"
 #import "Modules/ViewImpression/UIView+GrowingViewImpressionInternal.h"
 #import "ViewImpressionTestCase.h"
 
@@ -103,6 +105,21 @@
     scrollView.contentOffset = CGPointMake(0, 400);
 
     XCTAssertTrue([view growingViewImpNodeIsVisibleWithScale:1.0f]);
+}
+
+/// 滚动容器的 contentOffset 常常不是二进制可表示的值，坐标换算后完整可见的元素
+/// 面积会差出 1e-11 量级。scale = 1 时若按等号比较，判定会在滚动中反复翻转
+- (void)testFullyVisibleStaysVisibleDuringSubpixelScroll {
+    UIScrollView *scrollView = [self addScrollViewWithFrame:self.window.bounds contentSize:CGSizeMake(375, 3000)];
+    UIView *view = [self addViewWithFrame:CGRectMake(0, 300, 375, 80) toView:scrollView];
+
+    for (CGFloat offset = 0; offset < 200; offset += 0.7) {
+        scrollView.contentOffset = CGPointMake(0, offset);
+        [scrollView layoutIfNeeded];
+        XCTAssertTrue([view growingViewImpNodeIsVisibleWithScale:1.0f],
+                      @"contentOffset = %.1f 时完整可见的元素被判为不可见",
+                      offset);
+    }
 }
 
 - (void)testAncestorWithoutClippingDoesNotCut {
