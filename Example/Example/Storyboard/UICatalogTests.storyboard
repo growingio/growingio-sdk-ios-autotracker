@@ -240,6 +240,26 @@
                                             <segue destination="kCs-Lg-hVc" kind="show" id="cD1-FU-hT5"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="vI1-La-bl1" style="IBUITableViewCellStyleDefault" id="vI1-Ce-ll1">
+                                        <rect key="frame" x="0.0" y="606.5" width="414" height="43.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="vI1-Ce-ll1" id="vI1-Cv-iw1">
+                                            <rect key="frame" x="0.0" y="0.0" width="383.5" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="ViewImpression" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="vI1-La-bl1">
+                                                    <rect key="frame" x="20" y="0.0" width="355.5" height="43.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="vI1-Vc-001" kind="show" id="vI1-Sg-001"/>
+                                        </connections>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                         </sections>
@@ -1458,6 +1478,21 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0uT-TJ-4me" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="5761" y="2121"/>
+        </scene>
+        <!--ViewImpression-->
+        <scene sceneID="vI1-Sc-001">
+            <objects>
+                <viewController storyboardIdentifier="ViewImpressionDemo" id="vI1-Vc-001" customClass="GIOViewImpressionViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="vI1-Vw-001">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="ViewImpression" id="vI1-Ni-001"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vI1-Fr-001" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2560" y="982"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>

@@ -72,6 +72,7 @@
 		04A6FAF224E662E9006C72F0 /* GIOChildsAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A6FAF124E662E9006C72F0 /* GIOChildsAddViewController.m */; };
 		04A6FAF524E67215006C72F0 /* GIOBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A6FAF424E67215006C72F0 /* GIOBaseViewController.m */; };
 		04F675662628293800077374 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04F675652628293800077374 /* AdSupport.framework */; };
+		120FB2B6A8F0E9061D272600 /* ViewImpressionDemoTest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE84ECA6881B839986819FB /* ViewImpressionDemoTest.m */; };
 		160E060637FC5E1B10A2B058 /* ViewImpressionMarkTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B369083A864FFDAAF03C2131 /* ViewImpressionMarkTests.m */; };
 		33A0F692F1D1738D6854E19A /* Pods_HostApplicationTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42F5EA0EFE2552358C35A0F5 /* Pods_HostApplicationTests.framework */; };
 		3406842B2A668EB700E25216 /* A3PageEventsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3406842A2A668EB700E25216 /* A3PageEventsTest.m */; };
@@ -212,6 +213,7 @@
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
 		6F7A64B402BF8E5ED466E56A /* Pods_GrowingAnalyticsTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0257123D870B44A9FDA90A22 /* Pods_GrowingAnalyticsTests.framework */; };
+		7C497FC3CEDCABC6775A106B /* GIOViewImpressionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CE6553BE0C7239D394FD52A /* GIOViewImpressionViewController.m */; };
 		7E20527CFF34511EE464C33F /* Pods_GrowingAnalyticsStartTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1769255A062869A5D219F683 /* Pods_GrowingAnalyticsStartTests.framework */; };
 		997DAC68973F1F4FAF34EA2E /* Pods_Example_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B524BD63EF3439946134E74 /* Pods_Example_macOS.framework */; };
 		9D43D2496D486AEB7DCFD460 /* Pods_Example_watchOS_Watch_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358137F6293DF184E03C3572 /* Pods_Example_watchOS_Watch_App.framework */; };
@@ -385,6 +387,7 @@
 		1769255A062869A5D219F683 /* Pods_GrowingAnalyticsStartTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GrowingAnalyticsStartTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2396F869C811CB392EA9F501 /* Pods-Example-watchOS Watch App.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-watchOS Watch App.release.xcconfig"; path = "../Example/Pods/Target Support Files/Pods-Example-watchOS Watch App/Pods-Example-watchOS Watch App.release.xcconfig"; sourceTree = "<group>"; };
 		24881A4A149E400F80B69E2A /* Pods_Example_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2BDAF42AE41849603A95B9AE /* GIOViewImpressionViewController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = GIOViewImpressionViewController.h; sourceTree = "<group>"; };
 		2FE4A0A035B9D92011B710AB /* ViewImpressionTestCase.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = ViewImpressionTestCase.h; sourceTree = "<group>"; };
 		3063C057834261CCF75CC989 /* ViewImpressionFixtureTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ViewImpressionFixtureTests.m; sourceTree = "<group>"; };
 		3406842A2A668EB700E25216 /* A3PageEventsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = A3PageEventsTest.m; sourceTree = "<group>"; };
@@ -536,6 +539,7 @@
 		34FCF7E32A937F4F009611B3 /* GIOSwiftUIContentViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIOSwiftUIContentViewController.m; sourceTree = "<group>"; };
 		358137F6293DF184E03C3572 /* Pods_Example_watchOS_Watch_App.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example_watchOS_Watch_App.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		36E93290071EF480453E2196 /* Pods_ABTestingTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ABTestingTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3CE6553BE0C7239D394FD52A /* GIOViewImpressionViewController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = GIOViewImpressionViewController.m; sourceTree = "<group>"; };
 		3D63F725A31AE372B485C361 /* Pods-HostApplicationTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HostApplicationTests.debug.xcconfig"; path = "../Example/Pods/Target Support Files/Pods-HostApplicationTests/Pods-HostApplicationTests.debug.xcconfig"; sourceTree = "<group>"; };
 		42ADE26B250B292900CA7268 /* HybridTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HybridTest.m; sourceTree = "<group>"; };
 		42F5EA0EFE2552358C35A0F5 /* Pods_HostApplicationTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HostApplicationTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -589,6 +593,7 @@
 		E3A2065A7EA394ECBE6D2F68 /* Pods-Example-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-tvOS.release.xcconfig"; path = "../Example/Pods/Target Support Files/Pods-Example-tvOS/Pods-Example-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		F625366B1611DA7E27D0E32C /* Pods-ExampleiOS13.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExampleiOS13.debug.xcconfig"; path = "../Example/Pods/Target Support Files/Pods-ExampleiOS13/Pods-ExampleiOS13.debug.xcconfig"; sourceTree = "<group>"; };
 		FAB05E3514907518EF7B9514 /* Pods-HostApplicationTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HostApplicationTests.release.xcconfig"; path = "../Example/Pods/Target Support Files/Pods-HostApplicationTests/Pods-HostApplicationTests.release.xcconfig"; sourceTree = "<group>"; };
+		FAE84ECA6881B839986819FB /* ViewImpressionDemoTest.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ViewImpressionDemoTest.m; sourceTree = "<group>"; };
 		FC90C36FE728085C7DEC3EBF /* Pods-Example-visionOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-visionOS.release.xcconfig"; path = "../Example/Pods/Target Support Files/Pods-Example-visionOS/Pods-Example-visionOS.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -837,6 +842,7 @@
 				34BDC35527707BD00030B3CE /* ActionSheets */,
 				34BDC35627707C550030B3CE /* Hybrid */,
 				349F1483285B503A00437F53 /* H5Browser */,
+				A927237CF712CD1682969AAA /* ViewImpression */,
 			);
 			path = UICategoryTests;
 			sourceTree = "<group>";
@@ -1503,6 +1509,7 @@
 				34BF77C12795568B00CA18BA /* AutotrackerTests */,
 				34BF77C42795568B00CA18BA /* OtherTests */,
 				34AA01012ADD0E540091E900 /* GrowingKIFTestConfiguration.m */,
+				909D3CF78FD027FE1702D7E3 /* ViewImpressionTests */,
 			);
 			path = HostApplicationTests;
 			sourceTree = "<group>";
@@ -1709,6 +1716,25 @@
 				75836C865E564A00DA49A94D /* Pods_Example_visionOS.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		909D3CF78FD027FE1702D7E3 /* ViewImpressionTests */ = {
+			isa = PBXGroup;
+			children = (
+				FAE84ECA6881B839986819FB /* ViewImpressionDemoTest.m */,
+			);
+			name = ViewImpressionTests;
+			path = ViewImpressionTests;
+			sourceTree = "<group>";
+		};
+		A927237CF712CD1682969AAA /* ViewImpression */ = {
+			isa = PBXGroup;
+			children = (
+				2BDAF42AE41849603A95B9AE /* GIOViewImpressionViewController.h */,
+				3CE6553BE0C7239D394FD52A /* GIOViewImpressionViewController.m */,
+			);
+			name = ViewImpression;
+			path = ViewImpression;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -3097,6 +3123,7 @@
 				34BF77C82795568C00CA18BA /* GrowingKeyChainTest.m in Sources */,
 				34AC208C279E80AF00F90E10 /* UIApplicationAutotrackTest.m in Sources */,
 				347723422A9F1B2F004FE07F /* WebSocketTestHelper.m in Sources */,
+				120FB2B6A8F0E9061D272600 /* ViewImpressionDemoTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3201,6 +3228,7 @@
 				349F148C285B52B700437F53 /* GIOScanViewController.m in Sources */,
 				3494DD092859CCF300A6CE46 /* GrowingDeepLinkHandler+XCTest.m in Sources */,
 				4916270F24E157BB00444AF2 /* GIOPresentViewController.m in Sources */,
+				7C497FC3CEDCABC6775A106B /* GIOViewImpressionViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
