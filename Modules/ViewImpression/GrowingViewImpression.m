@@ -347,6 +347,10 @@ static const NSUInteger kTrackedIdentifiersCapacity = 10000;
     self.inactive = NO;
 }
 
+- (void)applicationWillEnterForeground {
+    self.inactive = NO;
+}
+
 - (void)applicationWillResignActive {
     self.inactive = YES;
 

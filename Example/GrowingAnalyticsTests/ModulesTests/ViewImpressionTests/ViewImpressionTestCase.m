@@ -24,6 +24,12 @@
 #import "MockEventQueue.h"
 #import "Modules/ViewImpression/Public/GrowingViewImpression.h"
 
+@interface GrowingViewImpression (XCTest)
+
+- (void)applicationDidBecomeActive;
+
+@end
+
 static const CGFloat kWindowWidth = 375.0f;
 static const CGFloat kWindowHeight = 667.0f;
 
@@ -58,6 +64,10 @@ static const CGFloat kWindowHeight = 667.0f;
     [self.window makeKeyAndVisible];
     self.rootView = self.window.rootViewController.view;
     self.rootView.frame = self.window.bounds;
+
+    // 其他用例可能广播过 WillResignActive 且没有再广播 DidBecomeActive，
+    // 检测循环会一直停在暂停状态，这里显式恢复
+    [[GrowingViewImpression sharedInstance] applicationDidBecomeActive];
 
     [MockEventQueue.sharedQueue cleanQueue];
     [GrowingViewImpression resetAllImpressionState];
