@@ -56,14 +56,22 @@
                 eventName);
         }
 
+        NSString *slot = identifier.length > 0 ? identifier : kGrowingViewImpDefaultSlot;
+        NSMutableDictionary<NSString *, GrowingViewImpressionNode *> *nodes = [self growingViewImpNodesCreateIfNeeded];
+
+        // 列表刷新会对可见元素原样重标一次，内容没变就保留原节点，
+        // 否则曝光状态被重置，下一个检测周期必然多发一次
+        if ([nodes[slot] matchesEventName:eventName attributes:attributes config:nodeConfig]) {
+            [[GrowingViewImpression sharedInstance] addImpressionView:self];
+            return;
+        }
+
         GrowingViewImpressionNode *node = [[GrowingViewImpressionNode alloc] init];
         node.eventName = eventName;
         node.attributes = attributes;
         node.identifier = identifier;
         node.config = nodeConfig;
 
-        NSString *slot = identifier.length > 0 ? identifier : kGrowingViewImpDefaultSlot;
-        NSMutableDictionary<NSString *, GrowingViewImpressionNode *> *nodes = [self growingViewImpNodesCreateIfNeeded];
         nodes[slot].recheckToken += 1;
         nodes[slot] = node;
         [[GrowingViewImpression sharedInstance] addImpressionView:self];

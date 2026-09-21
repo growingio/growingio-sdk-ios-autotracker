@@ -18,6 +18,7 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
+#import "Modules/ViewImpression/Public/GrowingViewImpressionConfig.h"
 #import "Modules/ViewImpression/Public/UIView+GrowingViewImpression.h"
 #import "ViewImpressionTestCase.h"
 
@@ -109,6 +110,51 @@
 
     [view growingUnmarkImpression];
     another.hidden = YES;
+}
+
+- (void)testRemarkingWithSameContentDoesNotRefire {
+    UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
+    [view growingMarkImpression:@"imp_remark" attributes:@{@"key": @"value"}];
+    XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
+
+    [view growingMarkImpression:@"imp_remark" attributes:@{@"key": @"value"}];
+
+    [self assertNoMoreCustomEventsWithin:0.5];
+}
+
+- (void)testRemarkingWithDifferentAttributesRefires {
+    UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
+    [view growingMarkImpression:@"imp_remark_attributes" attributes:@{@"key": @"old"}];
+    XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
+
+    [view growingMarkImpression:@"imp_remark_attributes" attributes:@{@"key": @"new"}];
+
+    XCTAssertTrue([self waitForCustomEventCount:2 timeout:2.0]);
+    XCTAssertEqualObjects(self.lastCustomEvent.attributes[@"key"], @"new");
+}
+
+- (void)testRemarkingWithDifferentEventNameRefires {
+    UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
+    [view growingMarkImpression:@"imp_remark_name_a"];
+    XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
+
+    [view growingMarkImpression:@"imp_remark_name_b"];
+
+    XCTAssertTrue([self waitForCustomEventCount:2 timeout:2.0]);
+    XCTAssertEqualObjects(self.lastCustomEvent.eventName, @"imp_remark_name_b");
+}
+
+- (void)testRemarkingWithDifferentConfigRefires {
+    UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
+    [view growingMarkImpression:@"imp_remark_config" attributes:nil identifier:nil config:nil];
+    XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
+
+    GrowingViewImpressionConfig *config = [GrowingViewImpressionConfig configWithViewImpressionScale:0.5f
+                                                                                        stayDuration:0.0
+                                                                                          repeatable:YES];
+    [view growingMarkImpression:@"imp_remark_config" attributes:nil identifier:nil config:config];
+
+    XCTAssertTrue([self waitForCustomEventCount:2 timeout:2.0]);
 }
 
 - (void)testDeallocatedViewLeavesDetectionSet {

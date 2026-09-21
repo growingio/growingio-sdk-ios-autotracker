@@ -48,6 +48,23 @@
     return config;
 }
 
+- (BOOL)isEqual:(id)object {
+    if (self == object) {
+        return YES;
+    }
+    if (![object isKindOfClass:[GrowingViewImpressionConfig class]]) {
+        return NO;
+    }
+
+    GrowingViewImpressionConfig *other = (GrowingViewImpressionConfig *)object;
+    return _viewImpressionScale == other->_viewImpressionScale && _stayDuration == other->_stayDuration &&
+           _repeatable == other->_repeatable;
+}
+
+- (NSUInteger)hash {
+    return @(_viewImpressionScale).hash ^ @(_stayDuration).hash ^ @(_repeatable).hash;
+}
+
 #pragma mark - Setter
 
 - (void)setViewImpressionScale:(float)viewImpressionScale {

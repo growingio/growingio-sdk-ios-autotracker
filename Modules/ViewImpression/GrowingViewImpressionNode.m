@@ -23,4 +23,19 @@ NSString *const kGrowingViewImpDefaultSlot = @"$default";
 
 @implementation GrowingViewImpressionNode
 
+- (BOOL)matchesEventName:(NSString *)eventName
+              attributes:(NSDictionary<NSString *, id> *)attributes
+                  config:(GrowingViewImpressionConfig *)config {
+    if (![self.eventName isEqualToString:eventName]) {
+        return NO;
+    }
+    if (self.attributes.count != attributes.count) {
+        return NO;
+    }
+    if (attributes.count > 0 && ![self.attributes isEqualToDictionary:attributes]) {
+        return NO;
+    }
+    return [self.config isEqual:config];
+}
+
 @end
