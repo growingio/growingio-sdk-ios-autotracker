@@ -91,7 +91,10 @@ static const NSUInteger kTrackedIdentifiersCapacity = 10000;
             initWithOptions:NSPointerFunctionsWeakMemory | NSPointerFunctionsObjectPointerPersonality
                    capacity:100];
         _trackedIdentifiers = [NSMutableOrderedSet orderedSet];
-        _delegates = [NSHashTable weakObjectsHashTable];
+        // 指针身份而非 isEqual:：注册的是具体对象，且 removeObject: 不会去消息一个正在析构的 delegate
+        _delegates = [[NSHashTable alloc]
+            initWithOptions:NSPointerFunctionsWeakMemory | NSPointerFunctionsObjectPointerPersonality
+                   capacity:4];
     }
     return self;
 }
@@ -127,8 +130,11 @@ static const NSUInteger kTrackedIdentifiersCapacity = 10000;
     if (!delegate) {
         return;
     }
+
+    // 允许在 delegate 自身的 dealloc 中调用，此处不能强持有它
+    __unsafe_unretained id unretained = delegate;
     [GrowingDispatchManager dispatchInMainThread:^{
-        [self.delegates removeObject:delegate];
+        [self.delegates removeObject:unretained];
     }];
 }
 
@@ -204,10 +210,11 @@ static const NSUInteger kTrackedIdentifiersCapacity = 10000;
 }
 
 - (void)checkImpressionForView:(UIView *)view {
-    NSDictionary<NSString *, GrowingViewImpressionNode *> *nodes = view.growingViewImpNodes;
-    for (GrowingViewImpressionNode *node in nodes.allValues) {
-        [self checkNode:node inView:view];
-    }
+    // 检测循环每个周期都会走到这里，用 enumerate 省掉 allValues 的数组分配
+    [view.growingViewImpNodes
+        enumerateKeysAndObjectsUsingBlock:^(NSString *key, GrowingViewImpressionNode *node, BOOL *stop) {
+            [self checkNode:node inView:view];
+        }];
 }
 
 - (void)checkNode:(GrowingViewImpressionNode *)node inView:(UIView *)view {
@@ -258,7 +265,8 @@ static const NSUInteger kTrackedIdentifiersCapacity = 10000;
     node.tracked = YES;
 
     // 不可重复曝光以 identifier 为准记在全局：cell 复用后视图相同而元素不同，
-    // 同一元素滚回来又可能落在另一个 cell 实例上，挂在视图上判不准
+    // 同一元素滚回来又可能落在另一个 cell 实例上，挂在视图上判不准。
+    // identifier 缺失时配置已在标记阶段降级为可重复曝光，故此处 identifier 必非空
     if (!node.config.repeatable && [self.trackedIdentifiers containsObject:node.identifier]) {
         return;
     }
