@@ -157,6 +157,51 @@
     XCTAssertTrue([self waitForCustomEventCount:2 timeout:2.0]);
 }
 
+- (void)testReusedViewWithNewIdentifierDropsPreviousSlot {
+    UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
+    [view growingMarkImpression:@"imp_row" attributes:@{@"row": @(1)} identifier:@"row_1" config:nil];
+    XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
+
+    view.frame = CGRectMake(0, 700, 375, 100);
+    [self pumpRunLoopFor:0.3];
+
+    [view growingMarkImpression:@"imp_row" attributes:@{@"row": @(2)} identifier:@"row_2" config:nil];
+    view.frame = CGRectMake(0, 0, 375, 100);
+
+    XCTAssertTrue([self waitForCustomEventCount:2 timeout:2.0]);
+    XCTAssertEqualObjects(self.lastCustomEvent.attributes[@"row"], @"2");
+    [self assertNoMoreCustomEventsWithin:0.5];
+}
+
+- (void)testReusedCellSubviewWithNewIdentifierDropsPreviousSlot {
+    UIView *cell = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
+    UIView *badge = [self addViewWithFrame:CGRectMake(0, 0, 60, 20) toView:cell];
+    [badge growingMarkImpression:@"imp_badge" attributes:@{@"goods": @"a"} identifier:@"goods_a" config:nil];
+    XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
+
+    cell.frame = CGRectMake(0, 700, 375, 100);
+    [self pumpRunLoopFor:0.3];
+
+    [badge growingMarkImpression:@"imp_badge" attributes:@{@"goods": @"b"} identifier:@"goods_b" config:nil];
+    cell.frame = CGRectMake(0, 0, 375, 100);
+
+    XCTAssertTrue([self waitForCustomEventCount:2 timeout:2.0]);
+    XCTAssertEqualObjects(self.lastCustomEvent.attributes[@"goods"], @"b");
+    [self assertNoMoreCustomEventsWithin:0.5];
+}
+
+- (void)testDifferentEventNamesOnOneViewSurviveRemarking {
+    UIView *view = [self addViewWithFrame:CGRectMake(0, 700, 375, 100)];
+    [view growingMarkImpression:@"imp_card" attributes:nil identifier:@"card_1" config:nil];
+    [view growingMarkImpression:@"imp_badge" attributes:nil identifier:@"badge_1" config:nil];
+    [view growingMarkImpression:@"imp_card" attributes:nil identifier:@"card_2" config:nil];
+
+    view.frame = CGRectMake(0, 0, 375, 100);
+
+    XCTAssertTrue([self waitForCustomEventCount:2 timeout:2.0]);
+    [self assertNoMoreCustomEventsWithin:0.5];
+}
+
 - (void)testDeallocatedViewLeavesDetectionSet {
     __weak UIView *weakView = nil;
     @autoreleasepool {
