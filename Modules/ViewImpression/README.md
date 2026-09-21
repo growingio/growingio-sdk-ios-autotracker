@@ -35,7 +35,9 @@ Swift：
 cell.markImp("goods_impression", attributes: ["goods_id": goods.identifier])
 ```
 
-同一视图可以挂载多个 `identifier` 不同的曝光标记；`identifier` 传 nil 时写入默认槽位，重复标记即覆盖。
+同一视图可以挂载多个 `identifier` 不同的曝光标记；`identifier` 传 nil 时写入默认槽位。
+
+重复标记同一个槽位时：事件名、属性、配置三者都没变化则保留原有曝光状态，不会重复发送——列表刷新对可见元素原样重标一次是安全的；任一项发生变化则视为新的标记，元素满足曝光条件时会再发送一次。只想改属性请用下面的更新方法。
 
 只更新属性、不触发重新曝光：
 
@@ -84,6 +86,16 @@ configuration.viewImpressionConfig = [GrowingViewImpressionConfig configWithView
 
 记录不随 session 自动重置。
 
+## 什么时候会再次曝光
+
+元素**离开可视区后再次进入**时重新曝光。以下情况不会重新曝光：
+
+- 元素一直停留在可视区内，无论停留多久
+- App 退到后台再回到前台，期间元素没有离开可视区
+- 重复标记但内容未变化（见上）
+
+配置了 `repeatable = NO` 时，同一 `identifier` 全程只曝光一次，直到调用状态重置方法。
+
 ## 曝光回调
 
 ```objc
@@ -117,6 +129,7 @@ delegate 为弱引用，无需手动移除。三个回调均在主线程同步�
 | 检测节流默认 0.1 秒 | 原模块默认每次 runloop 休眠前都检测。极快速滑过的元素可能不再触发 |
 | 不再受无埋点忽略规则约束 | 被 `ignoreViewClasses` / `ignorePolicy` 命中的视图，其手动标记的曝光将正常发送——主动调用标记 API 本身即表达了采集意图 |
 | 配置不互通 | 不读取 `GrowingAutotrackConfiguration.impressionScale`，需改用 `viewImpressionConfig` |
+| 前后台切换不再重发 | 元素未离开可视区时，App 退到后台再回到前台不会重新曝光。ImpressionTrack 会重发 |
 | 不做 swizzle | 不再交换 `UIView` 的任何系统方法 |
 
 ## 已知限制
