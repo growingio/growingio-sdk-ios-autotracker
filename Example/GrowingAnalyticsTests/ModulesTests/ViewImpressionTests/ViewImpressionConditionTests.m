@@ -18,12 +18,15 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "Modules/ViewImpression/Public/GrowingViewImpression.h"
 #import "Modules/ViewImpression/Public/UIView+GrowingViewImpression.h"
 #import "ViewImpressionTestCase.h"
 
 static const CGRect kOnscreen = {{0, 0}, {375, 100}};
 static const CGRect kOffscreen = {{0, 700}, {375, 100}};
+/// 一半落在 window 内，可见面积占比 0.5
+static const CGRect kHalfOnscreen = {{0, 617}, {375, 100}};
 
 @interface GrowingViewImpression (XCTest)
 
@@ -35,9 +38,21 @@ static const CGRect kOffscreen = {{0, 700}, {375, 100}};
 
 @interface ViewImpressionConditionTests : ViewImpressionTestCase
 
+@property (nonatomic, copy) GrowingViewImpressionConfig *savedGlobalConfig;
+
 @end
 
 @implementation ViewImpressionConditionTests
+
+- (void)setUp {
+    [super setUp];
+    self.savedGlobalConfig = GrowingConfigurationManager.sharedInstance.trackConfiguration.viewImpressionConfig;
+}
+
+- (void)tearDown {
+    GrowingConfigurationManager.sharedInstance.trackConfiguration.viewImpressionConfig = self.savedGlobalConfig;
+    [super tearDown];
+}
 
 - (GrowingViewImpressionConfig *)configWithStayDuration:(NSTimeInterval)stayDuration {
     return [GrowingViewImpressionConfig configWithViewImpressionScale:0.0f stayDuration:stayDuration repeatable:YES];
@@ -131,6 +146,20 @@ static const CGRect kOffscreen = {{0, 700}, {375, 100}};
     view.frame = kOnscreen;
 
     XCTAssertTrue([self waitForCustomEventCount:2 timeout:2.0]);
+}
+
+- (void)testNonRepeatableRecordIgnoresEventName {
+    UIView *first = [self addViewWithFrame:kOnscreen];
+    [first growingMarkImpression:@"imp_name_a" attributes:nil identifier:@"sku_1" config:[self nonRepeatableConfig]];
+    XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
+
+    [first growingUnmarkImpression];
+    [first removeFromSuperview];
+
+    UIView *second = [self addViewWithFrame:kOnscreen];
+    [second growingMarkImpression:@"imp_name_b" attributes:nil identifier:@"sku_1" config:[self nonRepeatableConfig]];
+
+    [self assertNoMoreCustomEventsWithin:0.5];
 }
 
 - (void)testResetStateOnlyAffectsMatchingIdentifier {
@@ -235,10 +264,22 @@ static const CGRect kOffscreen = {{0, 700}, {375, 100}};
     XCTAssertEqualObjects(self.lastCustomEvent.attributes[@"key"], @"new");
 }
 
+- (void)testRemarkingWithPreUpdateAttributesRefires {
+    UIView *view = [self addViewWithFrame:kOnscreen];
+    [view growingMarkImpression:@"imp_update_remark" attributes:@{@"key": @"old"} identifier:nil config:nil];
+    XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
+
+    [view growingUpdateImpressionAttributes:@{@"key": @"new"} identifier:nil];
+    [view growingMarkImpression:@"imp_update_remark" attributes:@{@"key": @"old"} identifier:nil config:nil];
+
+    XCTAssertTrue([self waitForCustomEventCount:2 timeout:2.0]);
+    XCTAssertEqualObjects(self.lastCustomEvent.attributes[@"key"], @"old");
+}
+
 #pragma mark - config priority
 
-- (void)testElementConfigOverridesGlobalConfig {
-    UIView *view = [self addViewWithFrame:CGRectMake(0, 617, 375, 100)];
+- (void)testElementConfigAppliesWhenGlobalConfigIsAbsent {
+    UIView *view = [self addViewWithFrame:kHalfOnscreen];
     GrowingViewImpressionConfig *config = [GrowingViewImpressionConfig configWithViewImpressionScale:0.9f
                                                                                         stayDuration:0.0
                                                                                           repeatable:YES];
@@ -246,7 +287,33 @@ static const CGRect kOffscreen = {{0, 700}, {375, 100}};
 
     [self assertNoMoreCustomEventsWithin:0.5];
 
-    view.frame = CGRectMake(0, 0, 375, 100);
+    view.frame = kOnscreen;
+    XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
+}
+
+- (void)testGlobalConfigAppliesWhenElementConfigIsNil {
+    GrowingConfigurationManager.sharedInstance.trackConfiguration.viewImpressionConfig =
+        [GrowingViewImpressionConfig configWithViewImpressionScale:0.9f stayDuration:0.0 repeatable:YES];
+
+    UIView *view = [self addViewWithFrame:kHalfOnscreen];
+    [view growingMarkImpression:@"imp_global_scale" attributes:nil identifier:nil config:nil];
+
+    [self assertNoMoreCustomEventsWithin:0.5];
+
+    view.frame = kOnscreen;
+    XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
+}
+
+- (void)testElementConfigOverridesGlobalConfig {
+    GrowingConfigurationManager.sharedInstance.trackConfiguration.viewImpressionConfig =
+        [GrowingViewImpressionConfig configWithViewImpressionScale:0.9f stayDuration:0.0 repeatable:YES];
+
+    UIView *view = [self addViewWithFrame:kHalfOnscreen];
+    GrowingViewImpressionConfig *config = [GrowingViewImpressionConfig configWithViewImpressionScale:0.0f
+                                                                                        stayDuration:0.0
+                                                                                          repeatable:YES];
+    [view growingMarkImpression:@"imp_scale_override" attributes:nil identifier:nil config:config];
+
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
 }
 
