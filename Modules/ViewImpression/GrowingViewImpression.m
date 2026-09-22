@@ -210,11 +210,9 @@ static const NSUInteger kTrackedIdentifiersCapacity = 10000;
 }
 
 - (void)checkImpressionForView:(UIView *)view {
-    // 检测循环每个周期都会走到这里，用 enumerate 省掉 allValues 的数组分配
-    [view.growingViewImpNodes
-        enumerateKeysAndObjectsUsingBlock:^(NSString *key, GrowingViewImpressionNode *node, BOOL *stop) {
-            [self checkNode:node inView:view];
-        }];
+    for (GrowingViewImpressionNode *node in view.growingViewImpNodes.allValues) {
+        [self checkNode:node inView:view];
+    }
 }
 
 - (void)checkNode:(GrowingViewImpressionNode *)node inView:(UIView *)view {
