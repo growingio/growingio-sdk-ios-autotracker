@@ -125,11 +125,15 @@ configuration.viewImpressionConfig = [GrowingViewImpressionConfig configWithView
 [cell growingUpdateImpressionAttributes:@{@"price": goods.currentPrice} identifier:goods.goodsId];
 ```
 
+更新属性后，元素上保留的是更新后的属性。此后列表刷新若仍按原属性重新标记，将被视为属性发生变化，曝光状态随之重置，元素未离开可视区也会再次曝光。
+
 ## 只曝光一次
 
 `repeatable = NO` 表示同一元素全程只曝光一次。
 
 **此时必须指定 `identifier`。** "只曝光一次"的对象是元素而不是视图：cell 复用后视图相同而元素不同，同一元素滚回来又可能落在另一个 cell 实例上。已曝光记录因此按 `identifier` 记在模块的全局集合里，缺少 `identifier` 就无法区分元素——此时配置会被降级为 `repeatable = YES` 并输出告警日志。
+
+该记录不区分事件名：同一 `identifier` 曝光一次后，以其标记的其他事件名均不再发送。需要各自独立判定时，应使用不同的 `identifier`。
 
 下拉刷新、切换账号、切换数据源等场景需要主动清理记录：
 
