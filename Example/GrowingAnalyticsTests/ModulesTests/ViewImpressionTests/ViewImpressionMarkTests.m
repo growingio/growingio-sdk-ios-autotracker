@@ -222,6 +222,30 @@
     XCTAssertEqual([self customEventCount], 1);
 }
 
+- (void)testMarkFromBackgroundThread {
+    UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
+        [view growingMarkImpression:@"imp_background_mark" attributes:@{@"key": @"value"} identifier:@"bg" config:nil];
+    });
+
+    XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
+    XCTAssertEqualObjects(self.lastCustomEvent.eventName, @"imp_background_mark");
+    XCTAssertEqualObjects(self.lastCustomEvent.attributes[@"key"], @"value");
+}
+
+- (void)testUnmarkFromBackgroundThread {
+    UIView *view = [self addViewWithFrame:CGRectMake(0, 700, 375, 100)];
+    [view growingMarkImpression:@"imp_background_unmark"];
+
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
+        [view growingUnmarkImpression];
+    });
+    [self pumpRunLoopFor:0.3];
+
+    view.frame = CGRectMake(0, 0, 375, 100);
+    [self assertNoMoreCustomEventsWithin:0.5];
+}
+
 - (void)testDeallocatedViewLeavesDetectionSet {
     __weak UIView *weakView = nil;
     @autoreleasepool {

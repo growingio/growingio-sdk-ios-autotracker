@@ -209,6 +209,7 @@
 		4916271224E157CF00444AF2 /* GIOPagingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4916271124E157CF00444AF2 /* GIOPagingViewController.m */; };
 		491D2D8D2500E2D9001CB289 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 491D2D8C2500E2D9001CB289 /* MapKit.framework */; };
 		55180A220E0D31C038F9DF87 /* ViewImpressionDelegateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 537404031876FEE54CAA0766 /* ViewImpressionDelegateTests.m */; };
+		55180A230E0D31C038F9DF88 /* ViewImpressionLifecycleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 537404041876FEE54CAA0767 /* ViewImpressionLifecycleTests.m */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
@@ -556,6 +557,7 @@
 		4962653324DA66B600032551 /* MockEventQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockEventQueue.m; sourceTree = "<group>"; };
 		4962653824DA66B600032551 /* ManualTrackHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManualTrackHelper.h; sourceTree = "<group>"; };
 		537404031876FEE54CAA0766 /* ViewImpressionDelegateTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ViewImpressionDelegateTests.m; sourceTree = "<group>"; };
+		537404041876FEE54CAA0767 /* ViewImpressionLifecycleTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ViewImpressionLifecycleTests.m; sourceTree = "<group>"; };
 		54CDA3A463BFBA7222BF4F32 /* ViewImpressionConditionTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ViewImpressionConditionTests.m; sourceTree = "<group>"; };
 		5655CC09B9A2CE16091DB52F /* Pods_AdvertisingTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AdvertisingTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58A195388D20070C39A /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -749,6 +751,7 @@
 				B369083A864FFDAAF03C2131 /* ViewImpressionMarkTests.m */,
 				54CDA3A463BFBA7222BF4F32 /* ViewImpressionConditionTests.m */,
 				537404031876FEE54CAA0766 /* ViewImpressionDelegateTests.m */,
+				537404041876FEE54CAA0767 /* ViewImpressionLifecycleTests.m */,
 				482878CC1589CF51157FD175 /* ViewImpressionCoexistenceTests.m */,
 				443B0F9847E049C881BF0F9E /* ViewImpressionConfigTests.m */,
 			);
@@ -3092,6 +3095,7 @@
 				160E060637FC5E1B10A2B058 /* ViewImpressionMarkTests.m in Sources */,
 				BF2503F9CFE3E4AE92AD89DE /* ViewImpressionConditionTests.m in Sources */,
 				55180A220E0D31C038F9DF87 /* ViewImpressionDelegateTests.m in Sources */,
+				55180A230E0D31C038F9DF88 /* ViewImpressionLifecycleTests.m in Sources */,
 				AB790BEC034B879D8B0A062F /* ViewImpressionCoexistenceTests.m in Sources */,
 				8D06B2507E954DBD380D6497 /* ViewImpressionConfigTests.m in Sources */,
 			);
