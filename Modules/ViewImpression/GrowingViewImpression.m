@@ -18,6 +18,7 @@
 //  limitations under the License.
 
 #import "Modules/ViewImpression/Public/GrowingViewImpression.h"
+#import "GrowingAutotrackConfiguration.h"
 #import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
@@ -72,6 +73,14 @@ static const NSUInteger kTrackedIdentifiersCapacity = 10000;
     }
 
     GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    // 曝光事件携带 path，page 体系本身属于无埋点能力，曝光采集随无埋点开关一起关闭
+    if ([configuration isKindOfClass:[GrowingAutotrackConfiguration class]] &&
+        !((GrowingAutotrackConfiguration *)configuration).autotrackEnabled) {
+        viewImpressionDisabled = YES;
+        [self.sourceTable removeAllObjects];
+        return;
+    }
+
     if (!configuration.viewImpressionEnabled) {
         viewImpressionDisabled = YES;
         [self.sourceTable removeAllObjects];

@@ -55,7 +55,7 @@ PODS:
   - GrowingAnalytics/TrackerCore (4.12.0):
     - GrowingUtils/TrackerCore (~> 1.2.4)
   - GrowingAnalytics/ViewImpression (4.12.0):
-    - GrowingAnalytics/TrackerCore (= 4.12.0)
+    - GrowingAnalytics/AutotrackerCore (= 4.12.0)
   - GrowingAnalytics/WebCircle (4.12.0):
     - GrowingAnalytics/AutotrackerCore (= 4.12.0)
     - GrowingAnalytics/Hybrid (= 4.12.0)
@@ -155,7 +155,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  GrowingAnalytics: 6e9400e0537d3cbbd7bf9878ddc8e000db00d5a6
+  GrowingAnalytics: 4c45bc9a244fc8475d1ecea2e1917428bc9e351c
   GrowingAPM: 4a3628e708cd1b2e4e1fc0925593781ed8acadd2
   GrowingToolsKit: 548d35d9b5964af3a73f80b30c6948dc10d247b4
   GrowingUtils: 5d323e54798595015ff11e97fe981ae167dc270e

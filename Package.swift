@@ -243,7 +243,7 @@ extension Target {
                                 cSettings: [.hspFor(.Path.imp)])
 
         static let viewImp = target(name: .viewImp,
-                                    dependencies: [.Core.trackerCore],
+                                    dependencies: [.Core.autotrackerCore],
                                     path: .Path.viewImp,
                                     exclude: ["README.md"],
                                     publicHeadersPath: .Path.publicHeaders,
