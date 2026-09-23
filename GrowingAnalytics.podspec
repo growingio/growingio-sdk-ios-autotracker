@@ -165,7 +165,7 @@ GrowingAnalytics具备自动采集基本的用户行为事件，比如访问和�
     viewimp.ios.deployment_target = '10.0'
     viewimp.source_files = 'Modules/ViewImpression/**/*{.h,.m,.c,.cpp,.mm}'
     viewimp.public_header_files = 'Modules/ViewImpression/Public/*.h'
-    viewimp.dependency 'GrowingAnalytics/TrackerCore', s.version.to_s
+    viewimp.dependency 'GrowingAnalytics/AutotrackerCore', s.version.to_s
   end
 
   s.subspec 'Hybrid' do |hybrid|

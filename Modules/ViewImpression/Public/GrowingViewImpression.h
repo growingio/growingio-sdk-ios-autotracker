@@ -53,7 +53,9 @@ NS_SWIFT_NAME(ViewImpression)
 /// 全局默认曝光配置，元素未单独指定 config 时使用
 @property (nonatomic, copy) GrowingViewImpressionConfig *viewImpressionConfig;
 
-/// 曝光采集总开关，默认 YES
+/// 曝光采集开关，默认 YES。
+/// 曝光采集属于无埋点能力的一部分，autotrackEnabled 为 NO 时曝光同样不采集，
+/// 此开关仅用于在无埋点开启的前提下单独关掉曝光
 @property (nonatomic, assign) BOOL viewImpressionEnabled;
 
 /// 曝光检测节流间隔，单位秒，默认 0.1。置为 0 表示每次 runloop 休眠前都检测

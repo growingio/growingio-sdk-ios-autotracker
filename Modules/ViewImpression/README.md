@@ -2,7 +2,7 @@
 
 元素曝光采集：为视图标记一个事件，元素进入可视区域并满足曝光条件时，自动发送对应的自定义事件（`cstm`）。
 
-只依赖 `TrackerCore`，纯埋点 SDK 也可使用。不支持 App Extension。
+曝光事件携带 `path`，page 体系本身属于无埋点能力，因此本模块依赖 `AutotrackerCore`，并随无埋点开关 `autotrackEnabled` 一起关闭。不支持 App Extension。
 
 ## 集成
 
@@ -96,7 +96,7 @@ GrowingViewImpressionConfig *config = [GrowingViewImpressionConfig configWithVie
 全局配置挂在 `GrowingTrackConfiguration` 上，`GrowingAutotrackConfiguration` 同样适用：
 
 ```objc
-configuration.viewImpressionEnabled = YES;        // 采集总开关，默认 YES
+configuration.viewImpressionEnabled = YES;        // 曝光开关，默认 YES；autotrackEnabled 为 NO 时无论如何都不采集
 configuration.viewImpressionCheckInterval = 0.1;  // 检测节流间隔，单位秒，默认 0.1
 configuration.viewImpressionConfig = [GrowingViewImpressionConfig configWithViewImpressionScale:0.5f
                                                                                    stayDuration:1.0

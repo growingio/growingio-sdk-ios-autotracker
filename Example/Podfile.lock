@@ -56,7 +56,7 @@ PODS:
   - GrowingAnalytics/TrackerCore (4.12.0):
     - GrowingUtils/TrackerCore (~> 1.2.4)
   - GrowingAnalytics/ViewImpression (4.12.0):
-    - GrowingAnalytics/TrackerCore (= 4.12.0)
+    - GrowingAnalytics/AutotrackerCore (= 4.12.0)
   - GrowingAnalytics/WebCircle (4.12.0):
     - GrowingAnalytics/AutotrackerCore (= 4.12.0)
     - GrowingAnalytics/Hybrid (= 4.12.0)
