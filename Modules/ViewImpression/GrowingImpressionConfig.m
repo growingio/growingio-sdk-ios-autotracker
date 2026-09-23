@@ -31,8 +31,8 @@
 }
 
 + (instancetype)configWithImpressionScale:(float)impressionScale
-                                 stayDuration:(NSTimeInterval)stayDuration
-                                   repeatable:(BOOL)repeatable {
+                             stayDuration:(NSTimeInterval)stayDuration
+                               repeatable:(BOOL)repeatable {
     GrowingImpressionConfig *config = [[self alloc] init];
     config.impressionScale = impressionScale;
     config.stayDuration = stayDuration;

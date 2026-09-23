@@ -35,8 +35,8 @@ NS_SWIFT_NAME(ImpressionConfig)
 @property (nonatomic, assign, getter=isRepeatable) BOOL repeatable;
 
 + (instancetype)configWithImpressionScale:(float)impressionScale
-                                 stayDuration:(NSTimeInterval)stayDuration
-                                   repeatable:(BOOL)repeatable;
+                             stayDuration:(NSTimeInterval)stayDuration
+                               repeatable:(BOOL)repeatable;
 
 @end
 
