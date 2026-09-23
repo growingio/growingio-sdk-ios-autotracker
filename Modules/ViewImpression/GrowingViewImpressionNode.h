@@ -18,7 +18,7 @@
 //  limitations under the License.
 
 #import <QuartzCore/QuartzCore.h>
-#import "Modules/ViewImpression/Public/GrowingViewImpressionConfig.h"
+#import "Modules/ViewImpression/Public/GrowingImpressionConfig.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -30,7 +30,7 @@ FOUNDATION_EXPORT NSString *const kGrowingViewImpDefaultSlot;
 @property (nonatomic, copy) NSString *eventName;
 @property (nonatomic, copy, nullable) NSDictionary<NSString *, id> *attributes;
 @property (nonatomic, copy, nullable) NSString *identifier;
-@property (nonatomic, copy) GrowingViewImpressionConfig *config;
+@property (nonatomic, copy) GrowingImpressionConfig *config;
 @property (nonatomic, assign) BOOL tracked;
 
 /// 连续可见的计时起点，0 表示当前不可见
@@ -42,7 +42,7 @@ FOUNDATION_EXPORT NSString *const kGrowingViewImpDefaultSlot;
 /// 事件名、属性、配置是否与传入的完全一致
 - (BOOL)matchesEventName:(NSString *)eventName
               attributes:(nullable NSDictionary<NSString *, id> *)attributes
-                  config:(GrowingViewImpressionConfig *)config;
+                  config:(GrowingImpressionConfig *)config;
 
 @end
 

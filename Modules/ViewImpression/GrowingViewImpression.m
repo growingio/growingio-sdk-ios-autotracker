@@ -39,7 +39,7 @@ GrowingMod(GrowingViewImpression)
 @property (nonatomic, assign) BOOL inactive;
 @property (nonatomic, strong) NSMutableOrderedSet<NSString *> *trackedIdentifiers;
 @property (nonatomic, assign) BOOL trackedIdentifiersOverflowWarned;
-@property (nonatomic, strong) NSHashTable<id<GrowingViewImpressionDelegate>> *delegates;
+@property (nonatomic, strong) NSHashTable<id<GrowingImpressionDelegate>> *delegates;
 
 @end
 
@@ -126,7 +126,7 @@ static const NSUInteger kTrackedIdentifiersCapacity = 10000;
 
 #pragma mark - Public Method
 
-- (void)addImpressionDelegate:(id<GrowingViewImpressionDelegate>)delegate {
+- (void)addViewImpressionDelegate:(id<GrowingImpressionDelegate>)delegate {
     if (!delegate) {
         return;
     }
@@ -135,7 +135,7 @@ static const NSUInteger kTrackedIdentifiersCapacity = 10000;
     }];
 }
 
-- (void)removeImpressionDelegate:(id<GrowingViewImpressionDelegate>)delegate {
+- (void)removeViewImpressionDelegate:(id<GrowingImpressionDelegate>)delegate {
     if (!delegate) {
         return;
     }
@@ -225,7 +225,7 @@ static const NSUInteger kTrackedIdentifiersCapacity = 10000;
 }
 
 - (void)checkNode:(GrowingViewImpressionNode *)node inView:(UIView *)view {
-    if (![view growingViewImpNodeIsVisibleWithScale:node.config.viewImpressionScale]) {
+    if (![view growingViewImpNodeIsVisibleWithScale:node.config.impressionScale]) {
         if (node.visibleSince != 0) {
             node.visibleSince = 0;
             node.recheckToken += 1;
@@ -291,11 +291,11 @@ static const NSUInteger kTrackedIdentifiersCapacity = 10000;
 }
 
 - (BOOL)shouldTrackNode:(GrowingViewImpressionNode *)node inView:(UIView *)view {
-    for (id<GrowingViewImpressionDelegate> delegate in self.delegates.allObjects) {
-        if (![delegate respondsToSelector:@selector(growingImpressionShouldTrack:eventName:identifier:)]) {
+    for (id<GrowingImpressionDelegate> delegate in self.delegates.allObjects) {
+        if (![delegate respondsToSelector:@selector(growingViewImpressionShouldTrack:eventName:identifier:)]) {
             continue;
         }
-        if (![delegate growingImpressionShouldTrack:view eventName:node.eventName identifier:node.identifier]) {
+        if (![delegate growingViewImpressionShouldTrack:view eventName:node.eventName identifier:node.identifier]) {
             return NO;
         }
     }
@@ -304,11 +304,11 @@ static const NSUInteger kTrackedIdentifiersCapacity = 10000;
 
 - (NSDictionary<NSString *, id> *)attributesForNode:(GrowingViewImpressionNode *)node inView:(UIView *)view {
     NSMutableDictionary<NSString *, id> *merged = nil;
-    for (id<GrowingViewImpressionDelegate> delegate in self.delegates.allObjects) {
-        if (![delegate respondsToSelector:@selector(growingImpressionDynamicAttributes:eventName:identifier:)]) {
+    for (id<GrowingImpressionDelegate> delegate in self.delegates.allObjects) {
+        if (![delegate respondsToSelector:@selector(growingViewImpressionDynamicAttributes:eventName:identifier:)]) {
             continue;
         }
-        NSDictionary<NSString *, id> *dynamic = [delegate growingImpressionDynamicAttributes:view
+        NSDictionary<NSString *, id> *dynamic = [delegate growingViewImpressionDynamicAttributes:view
                                                                                    eventName:node.eventName
                                                                                   identifier:node.identifier];
         if (dynamic.count == 0) {
@@ -323,9 +323,9 @@ static const NSUInteger kTrackedIdentifiersCapacity = 10000;
 }
 
 - (void)notifyDidTrackNode:(GrowingViewImpressionNode *)node inView:(UIView *)view {
-    for (id<GrowingViewImpressionDelegate> delegate in self.delegates.allObjects) {
-        if ([delegate respondsToSelector:@selector(growingImpressionDidTrack:eventName:identifier:)]) {
-            [delegate growingImpressionDidTrack:view eventName:node.eventName identifier:node.identifier];
+    for (id<GrowingImpressionDelegate> delegate in self.delegates.allObjects) {
+        if ([delegate respondsToSelector:@selector(growingViewImpressionDidTrack:eventName:identifier:)]) {
+            [delegate growingViewImpressionDidTrack:view eventName:node.eventName identifier:node.identifier];
         }
     }
 }
@@ -340,20 +340,20 @@ static const NSUInteger kTrackedIdentifiersCapacity = 10000;
         self.trackedIdentifiersOverflowWarned = YES;
         GIOLogWarn(
             @"[GrowingViewImpression] 不可重复曝光的元素标识已超过 %lu 个，最早的记录将被淘汰，"
-            @"请在合适的时机调用 resetAllImpressionState 主动清理",
+            @"请在合适的时机调用 resetAllViewImpressionState 主动清理",
             (unsigned long)kTrackedIdentifiersCapacity);
     }
     [self.trackedIdentifiers removeObjectAtIndex:0];
 }
 
-+ (GrowingViewImpressionConfig *)effectiveConfig:(GrowingViewImpressionConfig *)config {
++ (GrowingImpressionConfig *)effectiveConfig:(GrowingImpressionConfig *)config {
     if (config) {
         return [config copy];
     }
 
-    GrowingViewImpressionConfig *global =
+    GrowingImpressionConfig *global =
         GrowingConfigurationManager.sharedInstance.trackConfiguration.viewImpressionConfig;
-    return global ? [global copy] : [[GrowingViewImpressionConfig alloc] init];
+    return global ? [global copy] : [[GrowingImpressionConfig alloc] init];
 }
 
 #pragma mark - GrowingULAppLifecycleDelegate
@@ -381,7 +381,7 @@ static const NSUInteger kTrackedIdentifiersCapacity = 10000;
 
 @implementation GrowingViewImpression (State)
 
-+ (void)resetImpressionStateWithIdentifier:(NSString *)identifier {
++ (void)resetViewImpressionStateWithIdentifier:(NSString *)identifier {
     if (identifier.length == 0) {
         return;
     }
@@ -393,7 +393,7 @@ static const NSUInteger kTrackedIdentifiersCapacity = 10000;
     }];
 }
 
-+ (void)resetAllImpressionState {
++ (void)resetAllViewImpressionState {
     [GrowingDispatchManager dispatchInMainThread:^{
         GrowingViewImpression *impression = [self sharedInstance];
         [impression.trackedIdentifiers removeAllObjects];

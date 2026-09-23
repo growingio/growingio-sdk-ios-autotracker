@@ -11,7 +11,7 @@
 #if defined(AUTOTRACKER)
 #if defined(SDK3rd)
 #if defined(SDKVIEWIMPMODULE)
-#import "GrowingViewImpressionConfig.h"
+#import "GrowingImpressionConfig.h"
 #import "UIView+GrowingViewImpression.h"
 #elif defined(SDKIMPMODULE)
 #import "UIView+GrowingImpression.h"
@@ -43,12 +43,12 @@
     [[GrowingAutotracker sharedInstance] autotrackPage:self alias:@"点击事件测试" attributes:@{@"greet": @"hello"}];
     self.sendEventButton.growingUniqueTag = @"UniqueTag-SendButton";
 #if defined(SDKVIEWIMPMODULE)
-    [self.sendEventButton growingMarkImpression:@"hello_track_impression"];
-    [self.view growingMarkImpression:@"self_view_imp_track" attributes:@{@"self_view_key": @"self_view_value"}];
-    [self.CView growingMarkImpression:@"view_imp_with_config"
+    [self.sendEventButton growingTrackViewImpression:@"hello_track_impression"];
+    [self.view growingTrackViewImpression:@"self_view_imp_track" attributes:@{@"self_view_key": @"self_view_value"}];
+    [self.CView growingTrackViewImpression:@"view_imp_with_config"
                            attributes:@{@"position": @"C"}
                            identifier:@"view_imp_c"
-                               config:[GrowingViewImpressionConfig configWithViewImpressionScale:0.5f
+                               config:[GrowingImpressionConfig configWithImpressionScale:0.5f
                                                                                     stayDuration:1.0
                                                                                       repeatable:NO]];
 #elif defined(SDKIMPMODULE)

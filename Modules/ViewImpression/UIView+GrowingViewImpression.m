@@ -22,30 +22,30 @@
 
 @implementation UIView (GrowingViewImpression)
 
-- (void)growingMarkImpression:(NSString *)eventName {
-    [self growingMarkImpression:eventName attributes:nil];
+- (void)growingTrackViewImpression:(NSString *)eventName {
+    [self growingTrackViewImpression:eventName attributes:nil];
 }
 
-- (void)growingMarkImpression:(NSString *)eventName attributes:(NSDictionary<NSString *, id> *)attributes {
+- (void)growingTrackViewImpression:(NSString *)eventName attributes:(NSDictionary<NSString *, id> *)attributes {
     [self growingViewImpMark:eventName attributes:attributes identifier:nil config:nil];
 }
 
-- (void)growingMarkImpression:(NSString *)eventName
+- (void)growingTrackViewImpression:(NSString *)eventName
                    attributes:(NSDictionary<NSString *, id> *)attributes
                    identifier:(NSString *)identifier
-                       config:(GrowingViewImpressionConfig *)config {
+                       config:(GrowingImpressionConfig *)config {
     [self growingViewImpMark:eventName attributes:attributes identifier:identifier config:config];
 }
 
-- (void)growingUpdateImpressionAttributes:(NSDictionary<NSString *, id> *)attributes identifier:(NSString *)identifier {
+- (void)growingUpdateViewImpressionAttributes:(NSDictionary<NSString *, id> *)attributes identifier:(NSString *)identifier {
     [self growingViewImpUpdateAttributes:attributes identifier:identifier];
 }
 
-- (void)growingUnmarkImpression {
+- (void)growingStopTrackViewImpression {
     [self growingViewImpUnmarkAll];
 }
 
-- (void)growingUnmarkImpressionWithIdentifier:(NSString *)identifier {
+- (void)growingStopTrackViewImpressionWithIdentifier:(NSString *)identifier {
     [self growingViewImpUnmarkSlot:identifier];
 }
 

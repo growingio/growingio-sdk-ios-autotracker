@@ -21,7 +21,7 @@
 #import "GrowingAutotrackerCore/GrowingAutotrackConfiguration+Private.h"
 #import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
-#import "Modules/ViewImpression/Public/GrowingViewImpressionConfig.h"
+#import "Modules/ViewImpression/Public/GrowingImpressionConfig.h"
 #import "Modules/ViewImpression/Public/UIView+GrowingViewImpression.h"
 #import "Modules/ViewImpression/UIView+GrowingViewImpressionInternal.h"
 #import "ViewImpressionTestCase.h"
@@ -43,7 +43,7 @@
 
 - (void)testVisibleViewSendsImpression {
     UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
-    [view growingMarkImpression:@"imp_visible"];
+    [view growingTrackViewImpression:@"imp_visible"];
 
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
     XCTAssertEqualObjects(self.lastCustomEvent.eventName, @"imp_visible");
@@ -51,7 +51,7 @@
 
 - (void)testAttributesAreCarriedIntoEvent {
     UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
-    [view growingMarkImpression:@"imp_attributes" attributes:@{@"key": @"value"}];
+    [view growingTrackViewImpression:@"imp_attributes" attributes:@{@"key": @"value"}];
 
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
     XCTAssertEqualObjects(self.lastCustomEvent.attributes[@"key"], @"value");
@@ -59,14 +59,14 @@
 
 - (void)testOffscreenViewSendsNothing {
     UIView *view = [self addViewWithFrame:CGRectMake(0, 700, 375, 100)];
-    [view growingMarkImpression:@"imp_offscreen"];
+    [view growingTrackViewImpression:@"imp_offscreen"];
 
     [self assertNoMoreCustomEventsWithin:0.5];
 }
 
 - (void)testViewSendsAfterMovingOnscreen {
     UIView *view = [self addViewWithFrame:CGRectMake(0, 700, 375, 100)];
-    [view growingMarkImpression:@"imp_move"];
+    [view growingTrackViewImpression:@"imp_move"];
     [self assertNoMoreCustomEventsWithin:0.3];
 
     view.frame = CGRectMake(0, 0, 375, 100);
@@ -75,7 +75,7 @@
 
 - (void)testStillVisibleViewSendsOnlyOnce {
     UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
-    [view growingMarkImpression:@"imp_once"];
+    [view growingTrackViewImpression:@"imp_once"];
 
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
     [self assertNoMoreCustomEventsWithin:0.5];
@@ -83,11 +83,12 @@
 
 - (void)testViewSendsAgainAfterLeavingAndReentering {
     UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
-    [view growingMarkImpression:@"imp_reenter"];
+    [view growingTrackViewImpression:@"imp_reenter"];
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
 
     view.frame = CGRectMake(0, 700, 375, 100);
-    [self pumpRunLoopFor:0.3];
+    // 默认检测节流 0.5 秒，离开窗口要泵过整个节流间隔，检测循环才会观测到"离开"
+    [self pumpRunLoopFor:0.6];
     view.frame = CGRectMake(0, 0, 375, 100);
 
     XCTAssertTrue([self waitForCustomEventCount:2 timeout:2.0]);
@@ -95,8 +96,8 @@
 
 - (void)testUnmarkStopsImpression {
     UIView *view = [self addViewWithFrame:CGRectMake(0, 700, 375, 100)];
-    [view growingMarkImpression:@"imp_unmark"];
-    [view growingUnmarkImpression];
+    [view growingTrackViewImpression:@"imp_unmark"];
+    [view growingStopTrackViewImpression];
 
     view.frame = CGRectMake(0, 0, 375, 100);
     [self assertNoMoreCustomEventsWithin:0.5];
@@ -104,7 +105,7 @@
 
 - (void)testEmptyEventNameIsIgnored {
     UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
-    [view growingMarkImpression:@""];
+    [view growingTrackViewImpression:@""];
 
     [self assertNoMoreCustomEventsWithin:0.5];
 }
@@ -116,31 +117,31 @@
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 375, 100)];
     [another.rootViewController.view addSubview:view];
 
-    [view growingMarkImpression:@"imp_other_window"];
+    [view growingTrackViewImpression:@"imp_other_window"];
 
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
     XCTAssertEqualObjects(self.lastCustomEvent.eventName, @"imp_other_window");
 
-    [view growingUnmarkImpression];
+    [view growingStopTrackViewImpression];
     another.hidden = YES;
 }
 
 - (void)testRemarkingWithSameContentDoesNotRefire {
     UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
-    [view growingMarkImpression:@"imp_remark" attributes:@{@"key": @"value"}];
+    [view growingTrackViewImpression:@"imp_remark" attributes:@{@"key": @"value"}];
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
 
-    [view growingMarkImpression:@"imp_remark" attributes:@{@"key": @"value"}];
+    [view growingTrackViewImpression:@"imp_remark" attributes:@{@"key": @"value"}];
 
     [self assertNoMoreCustomEventsWithin:0.5];
 }
 
 - (void)testRemarkingWithDifferentAttributesRefires {
     UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
-    [view growingMarkImpression:@"imp_remark_attributes" attributes:@{@"key": @"old"}];
+    [view growingTrackViewImpression:@"imp_remark_attributes" attributes:@{@"key": @"old"}];
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
 
-    [view growingMarkImpression:@"imp_remark_attributes" attributes:@{@"key": @"new"}];
+    [view growingTrackViewImpression:@"imp_remark_attributes" attributes:@{@"key": @"new"}];
 
     XCTAssertTrue([self waitForCustomEventCount:2 timeout:2.0]);
     XCTAssertEqualObjects(self.lastCustomEvent.attributes[@"key"], @"new");
@@ -148,10 +149,10 @@
 
 - (void)testRemarkingWithDifferentEventNameRefires {
     UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
-    [view growingMarkImpression:@"imp_remark_name_a"];
+    [view growingTrackViewImpression:@"imp_remark_name_a"];
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
 
-    [view growingMarkImpression:@"imp_remark_name_b"];
+    [view growingTrackViewImpression:@"imp_remark_name_b"];
 
     XCTAssertTrue([self waitForCustomEventCount:2 timeout:2.0]);
     XCTAssertEqualObjects(self.lastCustomEvent.eventName, @"imp_remark_name_b");
@@ -159,26 +160,26 @@
 
 - (void)testRemarkingWithDifferentConfigRefires {
     UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
-    [view growingMarkImpression:@"imp_remark_config" attributes:nil identifier:nil config:nil];
+    [view growingTrackViewImpression:@"imp_remark_config" attributes:nil identifier:nil config:nil];
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
 
-    GrowingViewImpressionConfig *config = [GrowingViewImpressionConfig configWithViewImpressionScale:0.5f
+    GrowingImpressionConfig *config = [GrowingImpressionConfig configWithImpressionScale:0.5f
                                                                                         stayDuration:0.0
                                                                                           repeatable:YES];
-    [view growingMarkImpression:@"imp_remark_config" attributes:nil identifier:nil config:config];
+    [view growingTrackViewImpression:@"imp_remark_config" attributes:nil identifier:nil config:config];
 
     XCTAssertTrue([self waitForCustomEventCount:2 timeout:2.0]);
 }
 
 - (void)testReusedViewWithNewIdentifierDropsPreviousSlot {
     UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
-    [view growingMarkImpression:@"imp_row" attributes:@{@"row": @(1)} identifier:@"row_1" config:nil];
+    [view growingTrackViewImpression:@"imp_row" attributes:@{@"row": @(1)} identifier:@"row_1" config:nil];
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
 
     view.frame = CGRectMake(0, 700, 375, 100);
     [self pumpRunLoopFor:0.3];
 
-    [view growingMarkImpression:@"imp_row" attributes:@{@"row": @(2)} identifier:@"row_2" config:nil];
+    [view growingTrackViewImpression:@"imp_row" attributes:@{@"row": @(2)} identifier:@"row_2" config:nil];
     view.frame = CGRectMake(0, 0, 375, 100);
     [self pumpRunLoopFor:0.6];
 
@@ -189,13 +190,13 @@
 - (void)testReusedCellSubviewWithNewIdentifierDropsPreviousSlot {
     UIView *cell = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
     UIView *badge = [self addViewWithFrame:CGRectMake(0, 0, 60, 20) toView:cell];
-    [badge growingMarkImpression:@"imp_badge" attributes:@{@"goods": @"a"} identifier:@"goods_a" config:nil];
+    [badge growingTrackViewImpression:@"imp_badge" attributes:@{@"goods": @"a"} identifier:@"goods_a" config:nil];
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
 
     cell.frame = CGRectMake(0, 700, 375, 100);
     [self pumpRunLoopFor:0.3];
 
-    [badge growingMarkImpression:@"imp_badge" attributes:@{@"goods": @"b"} identifier:@"goods_b" config:nil];
+    [badge growingTrackViewImpression:@"imp_badge" attributes:@{@"goods": @"b"} identifier:@"goods_b" config:nil];
     cell.frame = CGRectMake(0, 0, 375, 100);
     [self pumpRunLoopFor:0.6];
 
@@ -205,9 +206,9 @@
 
 - (void)testDifferentEventNamesOnOneViewSurviveRemarking {
     UIView *view = [self addViewWithFrame:CGRectMake(0, 700, 375, 100)];
-    [view growingMarkImpression:@"imp_card" attributes:nil identifier:@"card_1" config:nil];
-    [view growingMarkImpression:@"imp_badge" attributes:nil identifier:@"badge_1" config:nil];
-    [view growingMarkImpression:@"imp_card" attributes:nil identifier:@"card_2" config:nil];
+    [view growingTrackViewImpression:@"imp_card" attributes:nil identifier:@"card_1" config:nil];
+    [view growingTrackViewImpression:@"imp_badge" attributes:nil identifier:@"badge_1" config:nil];
+    [view growingTrackViewImpression:@"imp_card" attributes:nil identifier:@"card_2" config:nil];
 
     view.frame = CGRectMake(0, 0, 375, 100);
     [self pumpRunLoopFor:0.6];
@@ -219,10 +220,10 @@
 - (void)testFullyVisibleCardSendsOnceDuringScroll {
     UIScrollView *scrollView = [self addScrollViewWithFrame:self.window.bounds contentSize:CGSizeMake(375, 3000)];
     UIView *card = [self addViewWithFrame:CGRectMake(0, 300, 375, 80) toView:scrollView];
-    [card growingMarkImpression:@"imp_full"
+    [card growingTrackViewImpression:@"imp_full"
                      attributes:nil
                      identifier:@"full"
-                         config:[GrowingViewImpressionConfig configWithViewImpressionScale:1.0f
+                         config:[GrowingImpressionConfig configWithImpressionScale:1.0f
                                                                               stayDuration:0.0
                                                                                 repeatable:YES]];
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
@@ -238,7 +239,7 @@
 - (void)testMarkFromBackgroundThread {
     UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
     dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
-        [view growingMarkImpression:@"imp_background_mark" attributes:@{@"key": @"value"} identifier:@"bg" config:nil];
+        [view growingTrackViewImpression:@"imp_background_mark" attributes:@{@"key": @"value"} identifier:@"bg" config:nil];
     });
 
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
@@ -248,10 +249,10 @@
 
 - (void)testUnmarkFromBackgroundThread {
     UIView *view = [self addViewWithFrame:CGRectMake(0, 700, 375, 100)];
-    [view growingMarkImpression:@"imp_background_unmark"];
+    [view growingTrackViewImpression:@"imp_background_unmark"];
 
     dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
-        [view growingUnmarkImpression];
+        [view growingStopTrackViewImpression];
     });
     [self pumpRunLoopFor:0.3];
 
@@ -263,7 +264,7 @@
     __weak UIView *weakView = nil;
     @autoreleasepool {
         UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
-        [view growingMarkImpression:@"imp_dealloc"];
+        [view growingTrackViewImpression:@"imp_dealloc"];
         XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
         weakView = view;
         [view removeFromSuperview];
@@ -278,7 +279,7 @@
 - (void)testIgnoreSelfSuppressesMark {
     UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
     view.growingViewIgnorePolicy = GrowingIgnoreSelf;
-    [view growingMarkImpression:@"imp_ignore_self"];
+    [view growingTrackViewImpression:@"imp_ignore_self"];
 
     XCTAssertNil(view.growingViewImpNodes[kGrowingViewImpDefaultSlot]);
     [self assertNoMoreCustomEventsWithin:0.5];
@@ -287,7 +288,7 @@
 - (void)testIgnoreAllOnSelfSuppressesMark {
     UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
     view.growingViewIgnorePolicy = GrowingIgnoreAll;
-    [view growingMarkImpression:@"imp_ignore_all_self"];
+    [view growingTrackViewImpression:@"imp_ignore_all_self"];
 
     [self assertNoMoreCustomEventsWithin:0.5];
 }
@@ -296,7 +297,7 @@
     UIView *container = [self addViewWithFrame:CGRectMake(0, 0, 375, 200)];
     container.growingViewIgnorePolicy = GrowingIgnoreChildren;
     UIView *child = [self addViewWithFrame:CGRectMake(0, 0, 375, 100) toView:container];
-    [child growingMarkImpression:@"imp_ignore_children"];
+    [child growingTrackViewImpression:@"imp_ignore_children"];
 
     [self assertNoMoreCustomEventsWithin:0.5];
 }
@@ -305,7 +306,7 @@
     UIView *container = [self addViewWithFrame:CGRectMake(0, 0, 375, 200)];
     container.growingViewIgnorePolicy = GrowingIgnoreAll;
     UIView *child = [self addViewWithFrame:CGRectMake(0, 0, 375, 100) toView:container];
-    [child growingMarkImpression:@"imp_ignore_all_ancestor"];
+    [child growingTrackViewImpression:@"imp_ignore_all_ancestor"];
 
     XCTAssertNil(child.growingViewImpNodes[kGrowingViewImpDefaultSlot]);
     [self assertNoMoreCustomEventsWithin:0.5];
@@ -315,7 +316,7 @@
     UIView *container = [self addViewWithFrame:CGRectMake(0, 0, 375, 200)];
     container.growingViewIgnorePolicy = GrowingIgnoreSelf;
     UIView *child = [self addViewWithFrame:CGRectMake(0, 0, 375, 100) toView:container];
-    [child growingMarkImpression:@"imp_ignore_self_ancestor"];
+    [child growingTrackViewImpression:@"imp_ignore_self_ancestor"];
 
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
     XCTAssertEqualObjects(self.lastCustomEvent.eventName, @"imp_ignore_self_ancestor");
@@ -324,7 +325,7 @@
 - (void)testIgnoreChildrenOnAncestorDoesNotSuppressItself {
     UIView *container = [self addViewWithFrame:CGRectMake(0, 0, 375, 200)];
     container.growingViewIgnorePolicy = GrowingIgnoreChildren;
-    [container growingMarkImpression:@"imp_ignore_children_self"];
+    [container growingTrackViewImpression:@"imp_ignore_children_self"];
 
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
     XCTAssertEqualObjects(self.lastCustomEvent.eventName, @"imp_ignore_children_self");
@@ -341,7 +342,7 @@
 
     GrowingIgnoredTestView *view = [[GrowingIgnoredTestView alloc] initWithFrame:CGRectMake(0, 0, 375, 100)];
     [self.rootView addSubview:view];
-    [view growingMarkImpression:@"imp_ignore_class"];
+    [view growingTrackViewImpression:@"imp_ignore_class"];
 
     XCTAssertNil(view.growingViewImpNodes[kGrowingViewImpDefaultSlot]);
     [self assertNoMoreCustomEventsWithin:0.5];
@@ -352,7 +353,7 @@
 - (void)testIgnorePolicyNoneStillMarks {
     UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
     view.growingViewIgnorePolicy = GrowingIgnoreNone;
-    [view growingMarkImpression:@"imp_ignore_none"];
+    [view growingTrackViewImpression:@"imp_ignore_none"];
 
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
 }

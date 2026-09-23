@@ -36,7 +36,7 @@
 - (void)setUp {
     [super setUp];
     // 不可重复曝光的记录是模块的全局状态，不清会被同进程里先跑的用例耗掉
-    [GrowingViewImpression resetAllImpressionState];
+    [GrowingViewImpression resetAllViewImpressionState];
     [MockEventQueue.sharedQueue cleanQueue];
 }
 
@@ -44,7 +44,7 @@
     self.window.hidden = YES;
     self.window = nil;
     self.controller = nil;
-    [GrowingViewImpression resetAllImpressionState];
+    [GrowingViewImpression resetAllViewImpressionState];
     [MockEventQueue.sharedQueue cleanQueue];
     [super tearDown];
 }

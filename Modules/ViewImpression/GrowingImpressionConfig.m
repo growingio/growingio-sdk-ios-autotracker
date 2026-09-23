@@ -1,5 +1,5 @@
 //
-//  GrowingViewImpressionConfig.m
+//  GrowingImpressionConfig.m
 //  GrowingAnalytics
 //
 //  Created by YoloMao on 2026/9/21.
@@ -17,32 +17,32 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "Modules/ViewImpression/Public/GrowingViewImpressionConfig.h"
+#import "Modules/ViewImpression/Public/GrowingImpressionConfig.h"
 
-@implementation GrowingViewImpressionConfig
+@implementation GrowingImpressionConfig
 
 - (instancetype)init {
     if (self = [super init]) {
-        _viewImpressionScale = 0.0f;
+        _impressionScale = 0.0f;
         _stayDuration = 0.0;
         _repeatable = YES;
     }
     return self;
 }
 
-+ (instancetype)configWithViewImpressionScale:(float)viewImpressionScale
++ (instancetype)configWithImpressionScale:(float)impressionScale
                                  stayDuration:(NSTimeInterval)stayDuration
                                    repeatable:(BOOL)repeatable {
-    GrowingViewImpressionConfig *config = [[self alloc] init];
-    config.viewImpressionScale = viewImpressionScale;
+    GrowingImpressionConfig *config = [[self alloc] init];
+    config.impressionScale = impressionScale;
     config.stayDuration = stayDuration;
     config.repeatable = repeatable;
     return config;
 }
 
 - (id)copyWithZone:(NSZone *)zone {
-    GrowingViewImpressionConfig *config = [[[self class] allocWithZone:zone] init];
-    config->_viewImpressionScale = _viewImpressionScale;
+    GrowingImpressionConfig *config = [[[self class] allocWithZone:zone] init];
+    config->_impressionScale = _impressionScale;
     config->_stayDuration = _stayDuration;
     config->_repeatable = _repeatable;
     return config;
@@ -52,30 +52,30 @@
     if (self == object) {
         return YES;
     }
-    if (![object isKindOfClass:[GrowingViewImpressionConfig class]]) {
+    if (![object isKindOfClass:[GrowingImpressionConfig class]]) {
         return NO;
     }
 
     // 这里要回答的是"调用方传进来的还是不是同一份配置"，不是"两个数值是否足够接近"，
     // 因此是精确比较：留容差反而会把 0.5 与 0.500001 当成同一份配置，静默沿用旧的
-    GrowingViewImpressionConfig *other = (GrowingViewImpressionConfig *)object;
-    return _viewImpressionScale == other->_viewImpressionScale && _stayDuration == other->_stayDuration &&
+    GrowingImpressionConfig *other = (GrowingImpressionConfig *)object;
+    return _impressionScale == other->_impressionScale && _stayDuration == other->_stayDuration &&
            _repeatable == other->_repeatable;
 }
 
 - (NSUInteger)hash {
-    return @(_viewImpressionScale).hash ^ @(_stayDuration).hash ^ @(_repeatable).hash;
+    return @(_impressionScale).hash ^ @(_stayDuration).hash ^ @(_repeatable).hash;
 }
 
 #pragma mark - Setter
 
-- (void)setViewImpressionScale:(float)viewImpressionScale {
-    if (viewImpressionScale < 0.0f) {
-        viewImpressionScale = 0.0f;
-    } else if (viewImpressionScale > 1.0f) {
-        viewImpressionScale = 1.0f;
+- (void)setImpressionScale:(float)impressionScale {
+    if (impressionScale < 0.0f) {
+        impressionScale = 0.0f;
+    } else if (impressionScale > 1.0f) {
+        impressionScale = 1.0f;
     }
-    _viewImpressionScale = viewImpressionScale;
+    _impressionScale = impressionScale;
 }
 
 - (void)setStayDuration:(NSTimeInterval)stayDuration {
