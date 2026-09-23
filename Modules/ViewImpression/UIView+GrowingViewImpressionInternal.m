@@ -18,6 +18,7 @@
 //  limitations under the License.
 
 #import <objc/runtime.h>
+#import "GrowingAutotrackerCore/GrowingNode/Category/UIView+GrowingNode.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "Modules/ViewImpression/GrowingViewImpression+Private.h"
@@ -50,6 +51,16 @@ static const CGFloat kScaleTolerance = 1e-6;
     }
 
     [GrowingDispatchManager dispatchInMainThread:^{
+        // 与 ImpressionTrack 一致地遵循无埋点忽略规则（ignoreViewClasses 与自身/祖先的 ignorePolicy）。
+        // 但不判 growingViewNodeIsInvisible：本模块不做 swizzle，标记时尚未上屏的视图没有补标时机，
+        // 可见性交给每轮检测判定
+        if ([self growingViewDontTrack]) {
+            GIOLogWarn(@"[GrowingViewImpression] 视图 %@ 命中无埋点忽略规则，事件 %@ 的曝光标记被忽略",
+                       self,
+                       eventName);
+            return;
+        }
+
         GrowingViewImpressionConfig *nodeConfig = [GrowingViewImpression effectiveConfig:config];
         if (!nodeConfig.isRepeatable && identifier.length == 0) {
             nodeConfig.repeatable = YES;

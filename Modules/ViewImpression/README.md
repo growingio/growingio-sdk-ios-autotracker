@@ -65,6 +65,8 @@ func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> U
 
 所有方法内部都会切到主线程执行，在子线程调用是安全的。
 
+标记遵循无埋点的忽略规则：视图被 `GrowingAutotrackConfiguration.ignoreViewClasses` 命中，或自身/任一祖先设置了 `GrowingIgnoreAll`、`GrowingIgnoreSelf`、`GrowingIgnoreChildren`，标记会被忽略并输出一条警告日志。
+
 一个视图可以挂多个标记，槽位以 `identifier` 区分，各自独立判定、独立发送；`identifier` 传 nil 时写入默认槽位。
 
 ```objc
@@ -179,7 +181,7 @@ configuration.viewImpressionConfig = [GrowingViewImpressionConfig configWithView
 | 可见性判定更严格 | 按祖先逐级裁剪后与所在 window 求交，不再使用未裁剪的屏幕坐标。原先被误判为可见的元素不再曝光，**迁移后曝光量会下降** |
 | 检测节流默认 0.1 秒 | ImpressionTrack 默认每次 runloop 休眠前都检测。极快速滑过的元素可能不再触发 |
 | 前后台切换不再重发 | 元素未离开可视区时，App 退到后台再回到前台不会重新曝光。ImpressionTrack 会重发 |
-| 不再受无埋点忽略规则约束 | 被 `ignoreViewClasses` / `ignorePolicy` 命中的视图，其手动标记的曝光将正常发送——主动调用标记 API 本身即表达了采集意图 |
+| 标记时不判可见性 | ImpressionTrack 在 `addNode:` 里连 `hidden` / `alpha` / `window` 一起判，标记尚未上屏的视图会被丢弃，靠 swizzle `didMoveToSuperview` 补标。本模块不做 swizzle，标记只判忽略规则，可见性交给每轮检测——先标记后上屏同样会曝光 |
 | 配置不互通 | 不读取 `GrowingAutotrackConfiguration.impressionScale`，需改用 `viewImpressionConfig` |
 | 不做方法交换 | 不再交换 `UIView` 的任何系统方法 |
 

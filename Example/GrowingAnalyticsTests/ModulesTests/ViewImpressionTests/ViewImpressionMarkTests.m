@@ -17,10 +17,23 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import "GrowingAutotracker.h"
+#import "GrowingAutotrackerCore/GrowingAutotrackConfiguration+Private.h"
 #import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "Modules/ViewImpression/Public/GrowingViewImpressionConfig.h"
 #import "Modules/ViewImpression/Public/UIView+GrowingViewImpression.h"
+#import "Modules/ViewImpression/UIView+GrowingViewImpressionInternal.h"
 #import "ViewImpressionTestCase.h"
+
+/// 仅用于验证 ignoreViewClasses 命中，不复用其他用例里的 UIView
+@interface GrowingIgnoredTestView : UIView
+
+@end
+
+@implementation GrowingIgnoredTestView
+
+@end
 
 @interface ViewImpressionMarkTests : ViewImpressionTestCase
 
@@ -258,6 +271,65 @@
 
     [self pumpRunLoopFor:0.3];
     XCTAssertNil(weakView);
+}
+
+#pragma mark - 无埋点忽略规则
+
+- (void)testIgnoreSelfSuppressesMark {
+    UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
+    view.growingViewIgnorePolicy = GrowingIgnoreSelf;
+    [view growingMarkImpression:@"imp_ignore_self"];
+
+    XCTAssertNil(view.growingViewImpNodes[kGrowingViewImpDefaultSlot]);
+    [self assertNoMoreCustomEventsWithin:0.5];
+}
+
+- (void)testIgnoreAllOnSelfSuppressesMark {
+    UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
+    view.growingViewIgnorePolicy = GrowingIgnoreAll;
+    [view growingMarkImpression:@"imp_ignore_all_self"];
+
+    [self assertNoMoreCustomEventsWithin:0.5];
+}
+
+- (void)testIgnoreChildrenOnAncestorSuppressesMark {
+    UIView *container = [self addViewWithFrame:CGRectMake(0, 0, 375, 200)];
+    container.growingViewIgnorePolicy = GrowingIgnoreChildren;
+    UIView *child = [self addViewWithFrame:CGRectMake(0, 0, 375, 100) toView:container];
+    [child growingMarkImpression:@"imp_ignore_children"];
+
+    [self assertNoMoreCustomEventsWithin:0.5];
+}
+
+- (void)testIgnoreChildrenOnAncestorDoesNotSuppressItself {
+    UIView *container = [self addViewWithFrame:CGRectMake(0, 0, 375, 200)];
+    container.growingViewIgnorePolicy = GrowingIgnoreChildren;
+    [container growingMarkImpression:@"imp_ignore_children_self"];
+
+    XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
+    XCTAssertEqualObjects(self.lastCustomEvent.eventName, @"imp_ignore_children_self");
+}
+
+- (void)testIgnoreViewClassSuppressesMark {
+    GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    XCTAssertTrue([configuration isKindOfClass:[GrowingAutotrackConfiguration class]]);
+    GrowingAutotrackConfiguration *autotrackConfiguration = (GrowingAutotrackConfiguration *)configuration;
+    [autotrackConfiguration ignoreViewClass:[GrowingIgnoredTestView class]];
+
+    GrowingIgnoredTestView *view = [[GrowingIgnoredTestView alloc] initWithFrame:CGRectMake(0, 0, 375, 100)];
+    [self.rootView addSubview:view];
+    [view growingMarkImpression:@"imp_ignore_class"];
+    [self assertNoMoreCustomEventsWithin:0.5];
+
+    [autotrackConfiguration.ignoreViewClasses removeObject:[GrowingIgnoredTestView class]];
+}
+
+- (void)testIgnorePolicyNoneStillMarks {
+    UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
+    view.growingViewIgnorePolicy = GrowingIgnoreNone;
+    [view growingMarkImpression:@"imp_ignore_none"];
+
+    XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
 }
 
 @end
