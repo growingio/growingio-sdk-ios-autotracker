@@ -31,13 +31,14 @@
 }
 
 - (void)growingTrackViewImpression:(NSString *)eventName
-                   attributes:(NSDictionary<NSString *, id> *)attributes
-                   identifier:(NSString *)identifier
-                       config:(GrowingImpressionConfig *)config {
+                        attributes:(NSDictionary<NSString *, id> *)attributes
+                        identifier:(NSString *)identifier
+                            config:(GrowingImpressionConfig *)config {
     [self growingViewImpMark:eventName attributes:attributes identifier:identifier config:config];
 }
 
-- (void)growingUpdateViewImpressionAttributes:(NSDictionary<NSString *, id> *)attributes identifier:(NSString *)identifier {
+- (void)growingUpdateViewImpressionAttributes:(NSDictionary<NSString *, id> *)attributes
+                                   identifier:(NSString *)identifier {
     [self growingViewImpUpdateAttributes:attributes identifier:identifier];
 }
 

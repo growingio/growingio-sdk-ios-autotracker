@@ -18,8 +18,8 @@
 //  limitations under the License.
 
 #import <UIKit/UIKit.h>
-#import "Modules/ViewImpression/Public/GrowingViewImpression.h"
 #import "Modules/ViewImpression/Public/GrowingImpressionConfig.h"
+#import "Modules/ViewImpression/Public/GrowingViewImpression.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

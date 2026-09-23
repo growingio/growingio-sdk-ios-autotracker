@@ -309,8 +309,8 @@ static const NSUInteger kTrackedIdentifiersCapacity = 10000;
             continue;
         }
         NSDictionary<NSString *, id> *dynamic = [delegate growingViewImpressionDynamicAttributes:view
-                                                                                   eventName:node.eventName
-                                                                                  identifier:node.identifier];
+                                                                                       eventName:node.eventName
+                                                                                      identifier:node.identifier];
         if (dynamic.count == 0) {
             continue;
         }

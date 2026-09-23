@@ -18,10 +18,10 @@
 //  limitations under the License.
 
 #import <Foundation/Foundation.h>
-#import "GrowingModuleProtocol.h"
-#import "GrowingTrackConfiguration.h"
 #import "GrowingImpressionConfig.h"
 #import "GrowingImpressionDelegate.h"
+#import "GrowingModuleProtocol.h"
+#import "GrowingTrackConfiguration.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
