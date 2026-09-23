@@ -301,6 +301,26 @@
     [self assertNoMoreCustomEventsWithin:0.5];
 }
 
+- (void)testIgnoreAllOnAncestorSuppressesMark {
+    UIView *container = [self addViewWithFrame:CGRectMake(0, 0, 375, 200)];
+    container.growingViewIgnorePolicy = GrowingIgnoreAll;
+    UIView *child = [self addViewWithFrame:CGRectMake(0, 0, 375, 100) toView:container];
+    [child growingMarkImpression:@"imp_ignore_all_ancestor"];
+
+    XCTAssertNil(child.growingViewImpNodes[kGrowingViewImpDefaultSlot]);
+    [self assertNoMoreCustomEventsWithin:0.5];
+}
+
+- (void)testIgnoreSelfOnAncestorDoesNotSuppressDescendant {
+    UIView *container = [self addViewWithFrame:CGRectMake(0, 0, 375, 200)];
+    container.growingViewIgnorePolicy = GrowingIgnoreSelf;
+    UIView *child = [self addViewWithFrame:CGRectMake(0, 0, 375, 100) toView:container];
+    [child growingMarkImpression:@"imp_ignore_self_ancestor"];
+
+    XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
+    XCTAssertEqualObjects(self.lastCustomEvent.eventName, @"imp_ignore_self_ancestor");
+}
+
 - (void)testIgnoreChildrenOnAncestorDoesNotSuppressItself {
     UIView *container = [self addViewWithFrame:CGRectMake(0, 0, 375, 200)];
     container.growingViewIgnorePolicy = GrowingIgnoreChildren;
@@ -311,17 +331,22 @@
 }
 
 - (void)testIgnoreViewClassSuppressesMark {
-    GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
-    XCTAssertTrue([configuration isKindOfClass:[GrowingAutotrackConfiguration class]]);
-    GrowingAutotrackConfiguration *autotrackConfiguration = (GrowingAutotrackConfiguration *)configuration;
-    [autotrackConfiguration ignoreViewClass:[GrowingIgnoredTestView class]];
+    // 忽略类名单只存在于无埋点配置上，而同进程里先跑的用例可能把共享配置换成了纯埋点配置，
+    // 因此这里装一份自己的配置，用完还原
+    GrowingTrackConfiguration *savedConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    GrowingAutotrackConfiguration *configuration = [GrowingAutotrackConfiguration configurationWithAccountId:@"test"];
+    configuration.dataSourceId = @"test";
+    [configuration ignoreViewClass:[GrowingIgnoredTestView class]];
+    GrowingConfigurationManager.sharedInstance.trackConfiguration = configuration;
 
     GrowingIgnoredTestView *view = [[GrowingIgnoredTestView alloc] initWithFrame:CGRectMake(0, 0, 375, 100)];
     [self.rootView addSubview:view];
     [view growingMarkImpression:@"imp_ignore_class"];
+
+    XCTAssertNil(view.growingViewImpNodes[kGrowingViewImpDefaultSlot]);
     [self assertNoMoreCustomEventsWithin:0.5];
 
-    [autotrackConfiguration.ignoreViewClasses removeObject:[GrowingIgnoredTestView class]];
+    GrowingConfigurationManager.sharedInstance.trackConfiguration = savedConfiguration;
 }
 
 - (void)testIgnorePolicyNoneStillMarks {
