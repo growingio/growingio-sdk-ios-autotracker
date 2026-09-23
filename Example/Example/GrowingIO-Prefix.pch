@@ -62,6 +62,13 @@
 #define SDKIMPMODULE
 #endif
 
+#if __has_include("UIView+GrowingViewImpression.h")
+// ViewImpression Module
+#import "GrowingViewImpression.h"
+#import "UIView+GrowingViewImpression.h"
+#define SDKVIEWIMPMODULE
+#endif
+
 #ifdef __OBJC__
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>

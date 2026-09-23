@@ -36,6 +36,7 @@ let package = Package(
         .autotracker,
         .tracker,
         .Module.imp,
+        .Module.viewImp,
         .Module.hybrid,
         .Module.ads,
         .Module.apm,
@@ -86,6 +87,7 @@ let package = Package(
         .Module.mobileDebugger,
         .Module.webCircle,
         .Module.imp,
+        .Module.viewImp,
         .Module.hybrid,
         .Module.ads,
         .Module.apm,
@@ -112,6 +114,7 @@ extension Product {
 
     enum Module {
         static let imp = library(name: .imp, targets: [.imp])
+        static let viewImp = library(name: .viewImp, targets: [.viewImp])
         static let hybrid = library(name: .hybrid, targets: [.hybrid])
         static let ads = library(name: .ads, targets: [.ads])
         static let apm = library(name: .apm, targets: [.apm])
@@ -238,6 +241,13 @@ extension Target {
                                 path: .Path.imp,
                                 publicHeadersPath: .Path.publicHeaders,
                                 cSettings: [.hspFor(.Path.imp)])
+
+        static let viewImp = target(name: .viewImp,
+                                    dependencies: [.Core.autotrackerCore],
+                                    path: .Path.viewImp,
+                                    exclude: ["README.md"],
+                                    publicHeadersPath: .Path.publicHeaders,
+                                    cSettings: [.hspFor(.Path.viewImp)])
 
         static let hybrid = target(name: .hybrid,
                                    dependencies: [.Core.trackerCore],
@@ -405,6 +415,7 @@ extension String {
     static let mobileDebugger = "GrowingModule_MobileDebugger"
     static let webCircle = "GrowingModule_WebCircle"
     static let imp = "GrowingModule_ImpressionTrack"
+    static let viewImp = "GrowingModule_ViewImpression"
     static let hybrid = "GrowingModule_Hybrid"
     static let ads = "GrowingModule_Ads"
     static let apm = "GrowingModule_APM"
@@ -444,6 +455,7 @@ extension String {
         static let mobileDebugger = "Modules/MobileDebugger"
         static let webCircle = "Modules/WebCircle"
         static let imp = "Modules/ImpressionTrack"
+        static let viewImp = "Modules/ViewImpression"
         static let hybrid = "Modules/Hybrid"
         static let ads = "Modules/Advertising"
         static let apm = "Modules/APM"
