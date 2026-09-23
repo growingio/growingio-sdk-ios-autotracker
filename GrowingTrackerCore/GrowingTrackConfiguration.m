@@ -91,7 +91,7 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
         // ViewImpression
         _viewImpressionConfig = nil;
         _viewImpressionEnabled = YES;
-        _viewImpressionCheckInterval = 0.1;
+        _viewImpressionCheckInterval = 0.5;
     }
 
     return self;

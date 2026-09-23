@@ -18,7 +18,7 @@
 //  limitations under the License.
 
 #import "Modules/ViewImpression/Public/GrowingViewImpression.h"
-#import "Modules/ViewImpression/Public/GrowingViewImpressionConfig.h"
+#import "Modules/ViewImpression/Public/GrowingImpressionConfig.h"
 #import "Modules/ViewImpression/Public/UIView+GrowingViewImpression.h"
 #import "ViewImpressionTestCase.h"
 
@@ -54,7 +54,7 @@ static const CGRect kOnscreen = {{0, 0}, {375, 100}};
 
 - (void)testStillVisibleViewDoesNotRefireAfterReturningToForeground {
     UIView *view = [self addViewWithFrame:kOnscreen];
-    [view growingMarkImpression:@"imp_foreground"];
+    [view growingTrackViewImpression:@"imp_foreground"];
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
 
     [self resignActive];
@@ -68,7 +68,7 @@ static const CGRect kOnscreen = {{0, 0}, {375, 100}};
     [self resignActive];
 
     UIView *view = [self addViewWithFrame:kOnscreen];
-    [view growingMarkImpression:@"imp_inactive"];
+    [view growingTrackViewImpression:@"imp_inactive"];
     [self assertNoMoreCustomEventsWithin:0.5];
 
     [self becomeActive];
@@ -78,10 +78,10 @@ static const CGRect kOnscreen = {{0, 0}, {375, 100}};
 
 - (void)testStayDurationRestartsAfterReturningToForeground {
     UIView *view = [self addViewWithFrame:kOnscreen];
-    [view growingMarkImpression:@"imp_stay_foreground"
+    [view growingTrackViewImpression:@"imp_stay_foreground"
                      attributes:nil
                      identifier:nil
-                         config:[GrowingViewImpressionConfig configWithViewImpressionScale:0.0f
+                         config:[GrowingImpressionConfig configWithImpressionScale:0.0f
                                                                               stayDuration:0.5
                                                                                 repeatable:YES]];
     [self pumpRunLoopFor:0.3];

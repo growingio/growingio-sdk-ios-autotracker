@@ -45,7 +45,7 @@ static const CGFloat kScaleTolerance = 1e-6;
 - (void)growingViewImpMark:(NSString *)eventName
                 attributes:(NSDictionary<NSString *, id> *)attributes
                 identifier:(NSString *)identifier
-                    config:(GrowingViewImpressionConfig *)config {
+                    config:(GrowingImpressionConfig *)config {
     if (eventName.length == 0) {
         return;
     }
@@ -61,7 +61,7 @@ static const CGFloat kScaleTolerance = 1e-6;
             return;
         }
 
-        GrowingViewImpressionConfig *nodeConfig = [GrowingViewImpression effectiveConfig:config];
+        GrowingImpressionConfig *nodeConfig = [GrowingViewImpression effectiveConfig:config];
         if (!nodeConfig.isRepeatable && identifier.length == 0) {
             nodeConfig.repeatable = YES;
             GIOLogWarn(
@@ -144,7 +144,7 @@ static const CGFloat kScaleTolerance = 1e-6;
     }];
 }
 
-- (BOOL)growingViewImpNodeIsVisibleWithScale:(float)viewImpressionScale {
+- (BOOL)growingViewImpNodeIsVisibleWithScale:(float)impressionScale {
     if (!self.window || self.hidden || self.alpha < 0.001 || !self.superview) {
         return NO;
     }
@@ -176,7 +176,7 @@ static const CGFloat kScaleTolerance = 1e-6;
         return NO;
     }
 
-    if (viewImpressionScale <= 0.0f) {
+    if (impressionScale <= 0.0f) {
         return YES;
     }
 
@@ -188,7 +188,7 @@ static const CGFloat kScaleTolerance = 1e-6;
     // 坐标换算会带进 1e-16 量级的相对误差（滚动容器的 contentOffset 往往不是二进制可表示的值），
     // 直接比较等号时 scale = 1 的元素会在完整可见的状态下反复翻转，每翻一次就多发一次曝光
     CGFloat visibleRatio = (visible.size.width * visible.size.height) / total;
-    return visibleRatio >= viewImpressionScale - kScaleTolerance;
+    return visibleRatio >= impressionScale - kScaleTolerance;
 }
 
 @end

@@ -22,7 +22,7 @@ static NSString *const kSlotB = @"slot_b";
 static NSString *const kOnceIdentifier = @"once_element";
 static NSString *const kUpdateIdentifier = @"update_element";
 
-@interface GIOViewImpressionViewController () <GrowingViewImpressionDelegate,
+@interface GIOViewImpressionViewController () <GrowingImpressionDelegate,
                                                UITableViewDataSource,
                                                UITableViewDelegate>
 
@@ -60,7 +60,7 @@ static NSString *const kUpdateIdentifier = @"update_element";
     [self addReuseSubviewSection];
     [self addTailSpacer];
 
-    [[GrowingViewImpression sharedInstance] addImpressionDelegate:self];
+    [[GrowingViewImpression sharedInstance] addViewImpressionDelegate:self];
 }
 
 #pragma mark - 固定面板
@@ -146,25 +146,25 @@ static NSString *const kUpdateIdentifier = @"update_element";
     [self addSectionTitle:@"1. 基础标记" detail:@"默认配置，露出即曝光；滚出去再滚回来会再次曝光"];
 
     UIView *card = [self cardWithText:@"imp_basic" color:UIColor.systemBlueColor];
-    [card growingMarkImpression:@"imp_basic" attributes:@{@"section": @"basic"}];
+    [card growingTrackViewImpression:@"imp_basic" attributes:@{@"section": @"basic"}];
 }
 
 - (void)addScaleSection {
     [self addSectionTitle:@"2. 可见面积阈值" detail:@"scale=0.5 露一半即曝光；scale=1.0 需完整露出"];
 
     UIView *half = [self cardWithText:@"imp_scale_50  (scale = 0.5)" color:UIColor.systemTealColor];
-    [half growingMarkImpression:@"imp_scale_50"
+    [half growingTrackViewImpression:@"imp_scale_50"
                      attributes:nil
                      identifier:@"scale_50"
-                         config:[GrowingViewImpressionConfig configWithViewImpressionScale:0.5f
+                         config:[GrowingImpressionConfig configWithImpressionScale:0.5f
                                                                               stayDuration:0.0
                                                                                 repeatable:YES]];
 
     UIView *full = [self cardWithText:@"imp_scale_100  (scale = 1.0)" color:UIColor.systemTealColor];
-    [full growingMarkImpression:@"imp_scale_100"
+    [full growingTrackViewImpression:@"imp_scale_100"
                      attributes:nil
                      identifier:@"scale_100"
-                         config:[GrowingViewImpressionConfig configWithViewImpressionScale:1.0f
+                         config:[GrowingImpressionConfig configWithImpressionScale:1.0f
                                                                               stayDuration:0.0
                                                                                 repeatable:YES]];
 }
@@ -173,10 +173,10 @@ static NSString *const kUpdateIdentifier = @"update_element";
     [self addSectionTitle:@"3. 停留时长" detail:@"连续可见满 2 秒才曝光，快速划过不计"];
 
     UIView *card = [self cardWithText:@"imp_stay_2s  (stayDuration = 2)" color:UIColor.systemIndigoColor];
-    [card growingMarkImpression:@"imp_stay_2s"
+    [card growingTrackViewImpression:@"imp_stay_2s"
                      attributes:nil
                      identifier:@"stay_2s"
-                         config:[GrowingViewImpressionConfig configWithViewImpressionScale:0.0f
+                         config:[GrowingImpressionConfig configWithImpressionScale:0.0f
                                                                               stayDuration:2.0
                                                                                 repeatable:YES]];
 }
@@ -185,10 +185,10 @@ static NSString *const kUpdateIdentifier = @"update_element";
     [self addSectionTitle:@"4. 只曝光一次" detail:@"repeatable = NO，反复滚动也只发一次，点「重置状态」后可再发"];
 
     UIView *card = [self cardWithText:@"imp_once  (repeatable = NO)" color:UIColor.systemPurpleColor];
-    [card growingMarkImpression:@"imp_once"
+    [card growingTrackViewImpression:@"imp_once"
                      attributes:nil
                      identifier:kOnceIdentifier
-                         config:[GrowingViewImpressionConfig configWithViewImpressionScale:0.0f
+                         config:[GrowingImpressionConfig configWithImpressionScale:0.0f
                                                                               stayDuration:0.0
                                                                                 repeatable:NO]];
 }
@@ -197,8 +197,8 @@ static NSString *const kUpdateIdentifier = @"update_element";
     [self addSectionTitle:@"5. 单视图多槽位" detail:@"同一个视图挂两个 identifier，各自独立发送，可单独移除"];
 
     self.multiSlotCard = [self cardWithText:@"imp_slot_a + imp_slot_b" color:UIColor.systemOrangeColor];
-    [self.multiSlotCard growingMarkImpression:@"imp_slot_a" attributes:nil identifier:kSlotA config:nil];
-    [self.multiSlotCard growingMarkImpression:@"imp_slot_b" attributes:nil identifier:kSlotB config:nil];
+    [self.multiSlotCard growingTrackViewImpression:@"imp_slot_a" attributes:nil identifier:kSlotA config:nil];
+    [self.multiSlotCard growingTrackViewImpression:@"imp_slot_b" attributes:nil identifier:kSlotB config:nil];
 
     [self.contentStack addArrangedSubview:[self wideButton:@"移除 slot_a（slot_b 不受影响）"
                                                     action:@selector(removeSlotA)]];
@@ -208,7 +208,7 @@ static NSString *const kUpdateIdentifier = @"update_element";
     [self addSectionTitle:@"6. 更新属性" detail:@"更新属性不会触发重新曝光；下次曝光时带上新属性"];
 
     self.updateCard = [self cardWithText:@"imp_update  (count = 0)" color:UIColor.systemGreenColor];
-    [self.updateCard growingMarkImpression:@"imp_update"
+    [self.updateCard growingTrackViewImpression:@"imp_update"
                                 attributes:@{@"count": @(0)}
                                 identifier:kUpdateIdentifier
                                     config:nil];
@@ -245,10 +245,10 @@ static NSString *const kUpdateIdentifier = @"update_element";
             [label.centerYAnchor constraintEqualToAnchor:card.centerYAnchor],
         ]];
 
-        [card growingMarkImpression:@"imp_horizontal"
+        [card growingTrackViewImpression:@"imp_horizontal"
                          attributes:@{@"index": @(i)}
                          identifier:[NSString stringWithFormat:@"horizontal_%ld", (long)i]
-                             config:[GrowingViewImpressionConfig configWithViewImpressionScale:0.9f
+                             config:[GrowingImpressionConfig configWithImpressionScale:0.9f
                                                                                   stayDuration:0.0
                                                                                     repeatable:YES]];
     }
@@ -321,13 +321,13 @@ static NSString *const kUpdateIdentifier = @"update_element";
 #pragma mark - 交互
 
 - (void)removeSlotA {
-    [self.multiSlotCard growingUnmarkImpressionWithIdentifier:kSlotA];
+    [self.multiSlotCard growingStopTrackViewImpressionWithIdentifier:kSlotA];
     [self appendLog:@"已移除 slot_a"];
 }
 
 - (void)updateAttributes {
     self.updateCount += 1;
-    [self.updateCard growingUpdateImpressionAttributes:@{@"count": @(self.updateCount)} identifier:kUpdateIdentifier];
+    [self.updateCard growingUpdateViewImpressionAttributes:@{@"count": @(self.updateCount)} identifier:kUpdateIdentifier];
 
     UILabel *label = self.updateCard.subviews.firstObject;
     label.text = [NSString stringWithFormat:@"imp_update  (count = %lu)", (unsigned long)self.updateCount];
@@ -335,7 +335,7 @@ static NSString *const kUpdateIdentifier = @"update_element";
 }
 
 - (void)resetAllState {
-    [GrowingViewImpression resetAllImpressionState];
+    [GrowingViewImpression resetAllViewImpressionState];
     [self appendLog:@"已重置全部曝光状态"];
 }
 
@@ -344,9 +344,9 @@ static NSString *const kUpdateIdentifier = @"update_element";
     self.logLabel.text = @"曝光事件会显示在这里";
 }
 
-#pragma mark - GrowingViewImpressionDelegate
+#pragma mark - GrowingImpressionDelegate
 
-- (BOOL)growingImpressionShouldTrack:(UIView *)view eventName:(NSString *)eventName identifier:(NSString *)identifier {
+- (BOOL)growingViewImpressionShouldTrack:(UIView *)view eventName:(NSString *)eventName identifier:(NSString *)identifier {
     if (self.vetoSwitch.isOn) {
         [self appendLog:[NSString stringWithFormat:@"✕ 否决 %@", eventName]];
         return NO;
@@ -354,7 +354,7 @@ static NSString *const kUpdateIdentifier = @"update_element";
     return YES;
 }
 
-- (NSDictionary<NSString *, id> *)growingImpressionDynamicAttributes:(UIView *)view
+- (NSDictionary<NSString *, id> *)growingViewImpressionDynamicAttributes:(UIView *)view
                                                            eventName:(NSString *)eventName
                                                           identifier:(NSString *)identifier {
     if (!self.dynamicSwitch.isOn) {
@@ -363,7 +363,7 @@ static NSString *const kUpdateIdentifier = @"update_element";
     return @{@"dynamic_timestamp": @((long long)([NSDate date].timeIntervalSince1970 * 1000))};
 }
 
-- (void)growingImpressionDidTrack:(UIView *)view eventName:(NSString *)eventName identifier:(NSString *)identifier {
+- (void)growingViewImpressionDidTrack:(UIView *)view eventName:(NSString *)eventName identifier:(NSString *)identifier {
     NSString *suffix = identifier.length > 0 ? [NSString stringWithFormat:@" [%@]", identifier] : @"";
     [self appendLog:[NSString stringWithFormat:@"✓ %@%@", eventName, suffix]];
 }
@@ -383,10 +383,10 @@ static NSString *const kUpdateIdentifier = @"update_element";
     cell.textLabel.text = [NSString stringWithFormat:@"列表第 %ld 行", (long)indexPath.row];
     cell.textLabel.font = [UIFont systemFontOfSize:14];
 
-    [cell growingMarkImpression:@"imp_list_row"
+    [cell growingTrackViewImpression:@"imp_list_row"
                      attributes:@{@"row": @(indexPath.row)}
                      identifier:[NSString stringWithFormat:@"list_row_%ld", (long)indexPath.row]
-                         config:[GrowingViewImpressionConfig configWithViewImpressionScale:0.8f
+                         config:[GrowingImpressionConfig configWithImpressionScale:0.8f
                                                                               stayDuration:0.0
                                                                                 repeatable:NO]];
     return cell;
@@ -419,7 +419,7 @@ static NSString *const kUpdateIdentifier = @"update_element";
     badge.text = [NSString stringWithFormat:@"角标 %ld", (long)indexPath.row];
 
     // 标记的是被复用的角标视图本身，identifier 随行内容变化
-    [badge growingMarkImpression:@"imp_badge"
+    [badge growingTrackViewImpression:@"imp_badge"
                       attributes:@{@"goods_id": [NSString stringWithFormat:@"goods_%ld", (long)indexPath.row]}
                       identifier:[NSString stringWithFormat:@"badge_%ld", (long)indexPath.row]
                           config:nil];

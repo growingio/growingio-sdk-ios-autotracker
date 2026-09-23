@@ -1,5 +1,5 @@
 //
-//  GrowingViewImpressionConfig.h
+//  GrowingImpressionConfig.h
 //  GrowingAnalytics
 //
 //  Created by YoloMao on 2026/9/21.
@@ -21,11 +21,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(ViewImpressionConfig)
-@interface GrowingViewImpressionConfig : NSObject <NSCopying>
+NS_SWIFT_NAME(ImpressionConfig)
+@interface GrowingImpressionConfig : NSObject <NSCopying>
 
 /// 可见面积占比阈值，有效范围 0~1，超出范围将被截断，默认 0（露出即算曝光）
-@property (nonatomic, assign) float viewImpressionScale;
+@property (nonatomic, assign) float impressionScale;
 
 /// 最小可见时长，单位秒，负值按 0 处理，默认 0（无需停留）
 @property (nonatomic, assign) NSTimeInterval stayDuration;
@@ -34,7 +34,7 @@ NS_SWIFT_NAME(ViewImpressionConfig)
 /// 置为 NO 时必须为元素指定 identifier，否则将被降级为 YES 处理
 @property (nonatomic, assign, getter=isRepeatable) BOOL repeatable;
 
-+ (instancetype)configWithViewImpressionScale:(float)viewImpressionScale
++ (instancetype)configWithImpressionScale:(float)impressionScale
                                  stayDuration:(NSTimeInterval)stayDuration
                                    repeatable:(BOOL)repeatable;
 

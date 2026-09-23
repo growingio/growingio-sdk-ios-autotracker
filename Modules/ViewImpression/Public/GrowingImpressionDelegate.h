@@ -1,5 +1,5 @@
 //
-//  GrowingViewImpressionDelegate.h
+//  GrowingImpressionDelegate.h
 //  GrowingAnalytics
 //
 //  Created by YoloMao on 2026/9/21.
@@ -22,24 +22,24 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /// 三个回调均在主线程同步执行，实现中不要做耗时操作
-NS_SWIFT_NAME(ViewImpressionDelegate)
-@protocol GrowingViewImpressionDelegate <NSObject>
+NS_SWIFT_NAME(ImpressionDelegate)
+@protocol GrowingImpressionDelegate <NSObject>
 
 @optional
 
 /// 返回 NO 则本次不发送曝光事件。元素离开可视区再次进入时会重新询问。
 /// 注册了多个 delegate 时，任一返回 NO 即不发送
-- (BOOL)growingImpressionShouldTrack:(UIView *)view
+- (BOOL)growingViewImpressionShouldTrack:(UIView *)view
                            eventName:(NSString *)eventName
                           identifier:(nullable NSString *)identifier;
 
 /// 曝光时刻求值的动态属性，与标记时的静态属性合并后作为事件属性，同名键以动态属性为准
-- (nullable NSDictionary<NSString *, id> *)growingImpressionDynamicAttributes:(UIView *)view
+- (nullable NSDictionary<NSString *, id> *)growingViewImpressionDynamicAttributes:(UIView *)view
                                                                     eventName:(NSString *)eventName
                                                                    identifier:(nullable NSString *)identifier;
 
 /// 曝光事件已生成
-- (void)growingImpressionDidTrack:(UIView *)view
+- (void)growingViewImpressionDidTrack:(UIView *)view
                         eventName:(NSString *)eventName
                        identifier:(nullable NSString *)identifier;
 

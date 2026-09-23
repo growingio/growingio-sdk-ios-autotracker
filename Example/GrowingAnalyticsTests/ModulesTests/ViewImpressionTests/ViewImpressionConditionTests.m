@@ -38,7 +38,7 @@ static const CGRect kHalfOnscreen = {{0, 617}, {375, 100}};
 
 @interface ViewImpressionConditionTests : ViewImpressionTestCase
 
-@property (nonatomic, copy) GrowingViewImpressionConfig *savedGlobalConfig;
+@property (nonatomic, copy) GrowingImpressionConfig *savedGlobalConfig;
 
 @end
 
@@ -54,19 +54,19 @@ static const CGRect kHalfOnscreen = {{0, 617}, {375, 100}};
     [super tearDown];
 }
 
-- (GrowingViewImpressionConfig *)configWithStayDuration:(NSTimeInterval)stayDuration {
-    return [GrowingViewImpressionConfig configWithViewImpressionScale:0.0f stayDuration:stayDuration repeatable:YES];
+- (GrowingImpressionConfig *)configWithStayDuration:(NSTimeInterval)stayDuration {
+    return [GrowingImpressionConfig configWithImpressionScale:0.0f stayDuration:stayDuration repeatable:YES];
 }
 
-- (GrowingViewImpressionConfig *)nonRepeatableConfig {
-    return [GrowingViewImpressionConfig configWithViewImpressionScale:0.0f stayDuration:0.0 repeatable:NO];
+- (GrowingImpressionConfig *)nonRepeatableConfig {
+    return [GrowingImpressionConfig configWithImpressionScale:0.0f stayDuration:0.0 repeatable:NO];
 }
 
 #pragma mark - stayDuration
 
 - (void)testStayDurationNotReachedBeforeLeaving {
     UIView *view = [self addViewWithFrame:kOnscreen];
-    [view growingMarkImpression:@"imp_stay_leave"
+    [view growingTrackViewImpression:@"imp_stay_leave"
                      attributes:nil
                      identifier:nil
                          config:[self configWithStayDuration:0.5]];
@@ -81,7 +81,7 @@ static const CGRect kHalfOnscreen = {{0, 617}, {375, 100}};
     // 界面全程静止，没有任何布局变化，只能靠定时复检收口。
     // 真机上 runloop 的休眠行为与此处不完全一致，静止场景仍需 UI 测试复核
     UIView *view = [self addViewWithFrame:kOnscreen];
-    [view growingMarkImpression:@"imp_stay_reached"
+    [view growingTrackViewImpression:@"imp_stay_reached"
                      attributes:nil
                      identifier:nil
                          config:[self configWithStayDuration:0.3]];
@@ -93,7 +93,7 @@ static const CGRect kHalfOnscreen = {{0, 617}, {375, 100}};
 
 - (void)testRepeatedReentryDoesNotAccumulateRechecks {
     UIView *view = [self addViewWithFrame:kOnscreen];
-    [view growingMarkImpression:@"imp_stay_reentry"
+    [view growingTrackViewImpression:@"imp_stay_reentry"
                      attributes:nil
                      identifier:nil
                          config:[self configWithStayDuration:0.3]];
@@ -113,36 +113,37 @@ static const CGRect kHalfOnscreen = {{0, 617}, {375, 100}};
 
 - (void)testNonRepeatableSuppressesSecondViewWithSameIdentifier {
     UIView *first = [self addViewWithFrame:kOnscreen];
-    [first growingMarkImpression:@"imp_sku" attributes:nil identifier:@"sku_1" config:[self nonRepeatableConfig]];
+    [first growingTrackViewImpression:@"imp_sku" attributes:nil identifier:@"sku_1" config:[self nonRepeatableConfig]];
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
 
-    [first growingUnmarkImpression];
+    [first growingStopTrackViewImpression];
     [first removeFromSuperview];
 
     UIView *second = [self addViewWithFrame:kOnscreen];
-    [second growingMarkImpression:@"imp_sku" attributes:nil identifier:@"sku_1" config:[self nonRepeatableConfig]];
+    [second growingTrackViewImpression:@"imp_sku" attributes:nil identifier:@"sku_1" config:[self nonRepeatableConfig]];
 
     [self assertNoMoreCustomEventsWithin:0.5];
 }
 
 - (void)testNonRepeatableAllowsDifferentIdentifierOnReusedView {
     UIView *view = [self addViewWithFrame:kOnscreen];
-    [view growingMarkImpression:@"imp_sku" attributes:nil identifier:@"sku_1" config:[self nonRepeatableConfig]];
+    [view growingTrackViewImpression:@"imp_sku" attributes:nil identifier:@"sku_1" config:[self nonRepeatableConfig]];
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
 
-    [view growingUnmarkImpression];
-    [view growingMarkImpression:@"imp_sku" attributes:nil identifier:@"sku_2" config:[self nonRepeatableConfig]];
+    [view growingStopTrackViewImpression];
+    [view growingTrackViewImpression:@"imp_sku" attributes:nil identifier:@"sku_2" config:[self nonRepeatableConfig]];
 
     XCTAssertTrue([self waitForCustomEventCount:2 timeout:2.0]);
 }
 
 - (void)testNonRepeatableWithoutIdentifierIsDowngraded {
     UIView *view = [self addViewWithFrame:kOnscreen];
-    [view growingMarkImpression:@"imp_no_identifier" attributes:nil identifier:nil config:[self nonRepeatableConfig]];
+    [view growingTrackViewImpression:@"imp_no_identifier" attributes:nil identifier:nil config:[self nonRepeatableConfig]];
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
 
     view.frame = kOffscreen;
-    [self pumpRunLoopFor:0.3];
+    // 默认检测节流 0.5 秒，离开窗口要泵过整个节流间隔，检测循环才会观测到"离开"
+    [self pumpRunLoopFor:0.6];
     view.frame = kOnscreen;
 
     XCTAssertTrue([self waitForCustomEventCount:2 timeout:2.0]);
@@ -150,14 +151,14 @@ static const CGRect kHalfOnscreen = {{0, 617}, {375, 100}};
 
 - (void)testNonRepeatableRecordIgnoresEventName {
     UIView *first = [self addViewWithFrame:kOnscreen];
-    [first growingMarkImpression:@"imp_name_a" attributes:nil identifier:@"sku_1" config:[self nonRepeatableConfig]];
+    [first growingTrackViewImpression:@"imp_name_a" attributes:nil identifier:@"sku_1" config:[self nonRepeatableConfig]];
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
 
-    [first growingUnmarkImpression];
+    [first growingStopTrackViewImpression];
     [first removeFromSuperview];
 
     UIView *second = [self addViewWithFrame:kOnscreen];
-    [second growingMarkImpression:@"imp_name_b" attributes:nil identifier:@"sku_1" config:[self nonRepeatableConfig]];
+    [second growingTrackViewImpression:@"imp_name_b" attributes:nil identifier:@"sku_1" config:[self nonRepeatableConfig]];
 
     [self assertNoMoreCustomEventsWithin:0.5];
 }
@@ -165,11 +166,11 @@ static const CGRect kHalfOnscreen = {{0, 617}, {375, 100}};
 - (void)testResetStateOnlyAffectsMatchingIdentifier {
     UIView *first = [self addViewWithFrame:kOnscreen];
     UIView *second = [self addViewWithFrame:kOnscreen];
-    [first growingMarkImpression:@"imp_reset_a" attributes:nil identifier:@"sku_a" config:[self nonRepeatableConfig]];
-    [second growingMarkImpression:@"imp_reset_b" attributes:nil identifier:@"sku_b" config:[self nonRepeatableConfig]];
+    [first growingTrackViewImpression:@"imp_reset_a" attributes:nil identifier:@"sku_a" config:[self nonRepeatableConfig]];
+    [second growingTrackViewImpression:@"imp_reset_b" attributes:nil identifier:@"sku_b" config:[self nonRepeatableConfig]];
     XCTAssertTrue([self waitForCustomEventCount:2 timeout:2.0]);
 
-    [GrowingViewImpression resetImpressionStateWithIdentifier:@"sku_a"];
+    [GrowingViewImpression resetViewImpressionStateWithIdentifier:@"sku_a"];
 
     XCTAssertTrue([self waitForCustomEventCount:3 timeout:2.0]);
     XCTAssertEqualObjects(self.lastCustomEvent.eventName, @"imp_reset_a");
@@ -178,24 +179,24 @@ static const CGRect kHalfOnscreen = {{0, 617}, {375, 100}};
 
 - (void)testResetStateWithIdentifierAllowsRefire {
     UIView *view = [self addViewWithFrame:kOnscreen];
-    [view growingMarkImpression:@"imp_reset" attributes:nil identifier:@"sku_reset" config:[self nonRepeatableConfig]];
+    [view growingTrackViewImpression:@"imp_reset" attributes:nil identifier:@"sku_reset" config:[self nonRepeatableConfig]];
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
 
-    [GrowingViewImpression resetImpressionStateWithIdentifier:@"sku_reset"];
-    [view growingMarkImpression:@"imp_reset" attributes:nil identifier:@"sku_reset" config:[self nonRepeatableConfig]];
+    [GrowingViewImpression resetViewImpressionStateWithIdentifier:@"sku_reset"];
+    [view growingTrackViewImpression:@"imp_reset" attributes:nil identifier:@"sku_reset" config:[self nonRepeatableConfig]];
 
     XCTAssertTrue([self waitForCustomEventCount:2 timeout:2.0]);
 }
 
 - (void)testResetAllStateAllowsRefire {
     UIView *view = [self addViewWithFrame:kOnscreen];
-    [view growingMarkImpression:@"imp_reset_all"
+    [view growingTrackViewImpression:@"imp_reset_all"
                      attributes:nil
                      identifier:@"sku_reset_all"
                          config:[self nonRepeatableConfig]];
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
 
-    [GrowingViewImpression resetAllImpressionState];
+    [GrowingViewImpression resetAllViewImpressionState];
 
     XCTAssertTrue([self waitForCustomEventCount:2 timeout:2.0]);
 }
@@ -219,17 +220,17 @@ static const CGRect kHalfOnscreen = {{0, 617}, {375, 100}};
 
 - (void)testMultipleSlotsOnOneView {
     UIView *view = [self addViewWithFrame:kOnscreen];
-    [view growingMarkImpression:@"imp_slot_a" attributes:nil identifier:@"a" config:nil];
-    [view growingMarkImpression:@"imp_slot_b" attributes:nil identifier:@"b" config:nil];
+    [view growingTrackViewImpression:@"imp_slot_a" attributes:nil identifier:@"a" config:nil];
+    [view growingTrackViewImpression:@"imp_slot_b" attributes:nil identifier:@"b" config:nil];
 
     XCTAssertTrue([self waitForCustomEventCount:2 timeout:2.0]);
 }
 
 - (void)testUnmarkWithIdentifierOnlyRemovesThatSlot {
     UIView *view = [self addViewWithFrame:kOffscreen];
-    [view growingMarkImpression:@"imp_slot_a" attributes:nil identifier:@"a" config:nil];
-    [view growingMarkImpression:@"imp_slot_b" attributes:nil identifier:@"b" config:nil];
-    [view growingUnmarkImpressionWithIdentifier:@"a"];
+    [view growingTrackViewImpression:@"imp_slot_a" attributes:nil identifier:@"a" config:nil];
+    [view growingTrackViewImpression:@"imp_slot_b" attributes:nil identifier:@"b" config:nil];
+    [view growingStopTrackViewImpressionWithIdentifier:@"a"];
 
     view.frame = kOnscreen;
 
@@ -242,22 +243,23 @@ static const CGRect kHalfOnscreen = {{0, 617}, {375, 100}};
 
 - (void)testUpdateAttributesDoesNotRefire {
     UIView *view = [self addViewWithFrame:kOnscreen];
-    [view growingMarkImpression:@"imp_update" attributes:@{@"key": @"old"} identifier:nil config:nil];
+    [view growingTrackViewImpression:@"imp_update" attributes:@{@"key": @"old"} identifier:nil config:nil];
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
     XCTAssertEqualObjects(self.lastCustomEvent.attributes[@"key"], @"old");
 
-    [view growingUpdateImpressionAttributes:@{@"key": @"new"} identifier:nil];
+    [view growingUpdateViewImpressionAttributes:@{@"key": @"new"} identifier:nil];
     [self assertNoMoreCustomEventsWithin:0.5];
 }
 
 - (void)testUpdatedAttributesTakeEffectOnNextImpression {
     UIView *view = [self addViewWithFrame:kOnscreen];
-    [view growingMarkImpression:@"imp_update_next" attributes:@{@"key": @"old"} identifier:nil config:nil];
+    [view growingTrackViewImpression:@"imp_update_next" attributes:@{@"key": @"old"} identifier:nil config:nil];
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
 
-    [view growingUpdateImpressionAttributes:@{@"key": @"new"} identifier:nil];
+    [view growingUpdateViewImpressionAttributes:@{@"key": @"new"} identifier:nil];
     view.frame = kOffscreen;
-    [self pumpRunLoopFor:0.3];
+    // 默认检测节流 0.5 秒，离开窗口要泵过整个节流间隔，检测循环才会观测到"离开"
+    [self pumpRunLoopFor:0.6];
     view.frame = kOnscreen;
 
     XCTAssertTrue([self waitForCustomEventCount:2 timeout:2.0]);
@@ -266,11 +268,11 @@ static const CGRect kHalfOnscreen = {{0, 617}, {375, 100}};
 
 - (void)testRemarkingWithPreUpdateAttributesRefires {
     UIView *view = [self addViewWithFrame:kOnscreen];
-    [view growingMarkImpression:@"imp_update_remark" attributes:@{@"key": @"old"} identifier:nil config:nil];
+    [view growingTrackViewImpression:@"imp_update_remark" attributes:@{@"key": @"old"} identifier:nil config:nil];
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
 
-    [view growingUpdateImpressionAttributes:@{@"key": @"new"} identifier:nil];
-    [view growingMarkImpression:@"imp_update_remark" attributes:@{@"key": @"old"} identifier:nil config:nil];
+    [view growingUpdateViewImpressionAttributes:@{@"key": @"new"} identifier:nil];
+    [view growingTrackViewImpression:@"imp_update_remark" attributes:@{@"key": @"old"} identifier:nil config:nil];
 
     XCTAssertTrue([self waitForCustomEventCount:2 timeout:2.0]);
     XCTAssertEqualObjects(self.lastCustomEvent.attributes[@"key"], @"old");
@@ -280,10 +282,10 @@ static const CGRect kHalfOnscreen = {{0, 617}, {375, 100}};
 
 - (void)testElementConfigAppliesWhenGlobalConfigIsAbsent {
     UIView *view = [self addViewWithFrame:kHalfOnscreen];
-    GrowingViewImpressionConfig *config = [GrowingViewImpressionConfig configWithViewImpressionScale:0.9f
+    GrowingImpressionConfig *config = [GrowingImpressionConfig configWithImpressionScale:0.9f
                                                                                         stayDuration:0.0
                                                                                           repeatable:YES];
-    [view growingMarkImpression:@"imp_scale" attributes:nil identifier:nil config:config];
+    [view growingTrackViewImpression:@"imp_scale" attributes:nil identifier:nil config:config];
 
     [self assertNoMoreCustomEventsWithin:0.5];
 
@@ -293,10 +295,10 @@ static const CGRect kHalfOnscreen = {{0, 617}, {375, 100}};
 
 - (void)testGlobalConfigAppliesWhenElementConfigIsNil {
     GrowingConfigurationManager.sharedInstance.trackConfiguration.viewImpressionConfig =
-        [GrowingViewImpressionConfig configWithViewImpressionScale:0.9f stayDuration:0.0 repeatable:YES];
+        [GrowingImpressionConfig configWithImpressionScale:0.9f stayDuration:0.0 repeatable:YES];
 
     UIView *view = [self addViewWithFrame:kHalfOnscreen];
-    [view growingMarkImpression:@"imp_global_scale" attributes:nil identifier:nil config:nil];
+    [view growingTrackViewImpression:@"imp_global_scale" attributes:nil identifier:nil config:nil];
 
     [self assertNoMoreCustomEventsWithin:0.5];
 
@@ -306,13 +308,13 @@ static const CGRect kHalfOnscreen = {{0, 617}, {375, 100}};
 
 - (void)testElementConfigOverridesGlobalConfig {
     GrowingConfigurationManager.sharedInstance.trackConfiguration.viewImpressionConfig =
-        [GrowingViewImpressionConfig configWithViewImpressionScale:0.9f stayDuration:0.0 repeatable:YES];
+        [GrowingImpressionConfig configWithImpressionScale:0.9f stayDuration:0.0 repeatable:YES];
 
     UIView *view = [self addViewWithFrame:kHalfOnscreen];
-    GrowingViewImpressionConfig *config = [GrowingViewImpressionConfig configWithViewImpressionScale:0.0f
+    GrowingImpressionConfig *config = [GrowingImpressionConfig configWithImpressionScale:0.0f
                                                                                         stayDuration:0.0
                                                                                           repeatable:YES];
-    [view growingMarkImpression:@"imp_scale_override" attributes:nil identifier:nil config:config];
+    [view growingTrackViewImpression:@"imp_scale_override" attributes:nil identifier:nil config:config];
 
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
 }

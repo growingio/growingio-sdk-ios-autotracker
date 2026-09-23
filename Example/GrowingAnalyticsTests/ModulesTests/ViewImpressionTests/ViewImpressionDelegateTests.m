@@ -22,7 +22,7 @@
 #import "Modules/ViewImpression/Public/UIView+GrowingViewImpression.h"
 #import "ViewImpressionTestCase.h"
 
-@interface ViewImpressionTestDelegate : NSObject <GrowingViewImpressionDelegate>
+@interface ViewImpressionTestDelegate : NSObject <GrowingImpressionDelegate>
 
 @property (nonatomic, assign) BOOL shouldTrack;
 @property (nonatomic, copy, nullable) NSDictionary<NSString *, id> *dynamicAttributes;
@@ -42,17 +42,17 @@
     return self;
 }
 
-- (BOOL)growingImpressionShouldTrack:(UIView *)view eventName:(NSString *)eventName identifier:(NSString *)identifier {
+- (BOOL)growingViewImpressionShouldTrack:(UIView *)view eventName:(NSString *)eventName identifier:(NSString *)identifier {
     return self.shouldTrack;
 }
 
-- (NSDictionary<NSString *, id> *)growingImpressionDynamicAttributes:(UIView *)view
+- (NSDictionary<NSString *, id> *)growingViewImpressionDynamicAttributes:(UIView *)view
                                                            eventName:(NSString *)eventName
                                                           identifier:(NSString *)identifier {
     return self.dynamicAttributes;
 }
 
-- (void)growingImpressionDidTrack:(UIView *)view eventName:(NSString *)eventName identifier:(NSString *)identifier {
+- (void)growingViewImpressionDidTrack:(UIView *)view eventName:(NSString *)eventName identifier:(NSString *)identifier {
     self.didTrackCount += 1;
     self.didTrackEventName = eventName;
     self.didTrackIdentifier = identifier;
@@ -72,11 +72,11 @@
 - (void)setUp {
     [super setUp];
     self.delegate = [[ViewImpressionTestDelegate alloc] init];
-    [[GrowingViewImpression sharedInstance] addImpressionDelegate:self.delegate];
+    [[GrowingViewImpression sharedInstance] addViewImpressionDelegate:self.delegate];
 }
 
 - (void)tearDown {
-    [[GrowingViewImpression sharedInstance] removeImpressionDelegate:self.delegate];
+    [[GrowingViewImpression sharedInstance] removeViewImpressionDelegate:self.delegate];
     self.delegate = nil;
     [super tearDown];
 }
@@ -84,7 +84,7 @@
 - (void)testShouldTrackReturningNoSuppressesEvent {
     self.delegate.shouldTrack = NO;
     UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
-    [view growingMarkImpression:@"imp_veto"];
+    [view growingTrackViewImpression:@"imp_veto"];
 
     [self assertNoMoreCustomEventsWithin:0.5];
     XCTAssertEqual(self.delegate.didTrackCount, 0);
@@ -93,7 +93,7 @@
 - (void)testVetoIsReevaluatedAfterReentry {
     self.delegate.shouldTrack = NO;
     UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
-    [view growingMarkImpression:@"imp_veto_reentry"];
+    [view growingTrackViewImpression:@"imp_veto_reentry"];
     [self assertNoMoreCustomEventsWithin:0.3];
 
     self.delegate.shouldTrack = YES;
@@ -107,7 +107,7 @@
 - (void)testDynamicAttributesAreMergedOverStaticOnes {
     self.delegate.dynamicAttributes = @{@"shared": @"dynamic", @"only_dynamic": @"1"};
     UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
-    [view growingMarkImpression:@"imp_dynamic" attributes:@{@"shared": @"static", @"only_static": @"1"}];
+    [view growingTrackViewImpression:@"imp_dynamic" attributes:@{@"shared": @"static", @"only_static": @"1"}];
 
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
     NSDictionary *attributes = self.lastCustomEvent.attributes;
@@ -118,7 +118,7 @@
 
 - (void)testDidTrackCarriesViewAndIdentifier {
     UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
-    [view growingMarkImpression:@"imp_did_track" attributes:nil identifier:@"slot_1" config:nil];
+    [view growingTrackViewImpression:@"imp_did_track" attributes:nil identifier:@"slot_1" config:nil];
 
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
     XCTAssertEqual(self.delegate.didTrackCount, 1);
@@ -128,10 +128,10 @@
 }
 
 - (void)testRemovedDelegateIsNotCalled {
-    [[GrowingViewImpression sharedInstance] removeImpressionDelegate:self.delegate];
+    [[GrowingViewImpression sharedInstance] removeViewImpressionDelegate:self.delegate];
 
     UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
-    [view growingMarkImpression:@"imp_removed_delegate"];
+    [view growingTrackViewImpression:@"imp_removed_delegate"];
 
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
     XCTAssertEqual(self.delegate.didTrackCount, 0);
@@ -140,14 +140,14 @@
 - (void)testAnyDelegateVetoSuppressesEvent {
     ViewImpressionTestDelegate *another = [[ViewImpressionTestDelegate alloc] init];
     another.shouldTrack = NO;
-    [[GrowingViewImpression sharedInstance] addImpressionDelegate:another];
+    [[GrowingViewImpression sharedInstance] addViewImpressionDelegate:another];
 
     UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
-    [view growingMarkImpression:@"imp_multi_veto"];
+    [view growingTrackViewImpression:@"imp_multi_veto"];
 
     [self assertNoMoreCustomEventsWithin:0.5];
 
-    [[GrowingViewImpression sharedInstance] removeImpressionDelegate:another];
+    [[GrowingViewImpression sharedInstance] removeViewImpressionDelegate:another];
 }
 
 @end

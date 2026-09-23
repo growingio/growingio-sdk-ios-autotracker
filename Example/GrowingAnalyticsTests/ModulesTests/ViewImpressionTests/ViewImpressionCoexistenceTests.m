@@ -40,7 +40,7 @@
 - (void)testViewImpressionStillWorksWhileImpressionTrackIsPresent {
     UIView *view = [self addViewWithFrame:CGRectMake(0, 0, 375, 100)];
     [view growingTrackImpression:@"imp_v1_coexist"];
-    [view growingMarkImpression:@"imp_v2_coexist"];
+    [view growingTrackViewImpression:@"imp_v2_coexist"];
 
     XCTAssertTrue([self waitForCustomEventCount:1 timeout:2.0]);
     XCTAssertEqualObjects(self.lastCustomEvent.eventName, @"imp_v2_coexist");

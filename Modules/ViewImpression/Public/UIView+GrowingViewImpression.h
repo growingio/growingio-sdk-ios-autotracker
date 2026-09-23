@@ -18,7 +18,7 @@
 //  limitations under the License.
 
 #import <UIKit/UIKit.h>
-#import "GrowingViewImpressionConfig.h"
+#import "GrowingImpressionConfig.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -26,14 +26,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 标记曝光元素，元素满足曝光条件时发送对应的自定义事件（cstm）
 /// @param eventName 自定义事件名
-- (void)growingMarkImpression:(NSString *)eventName NS_SWIFT_NAME(markImp(_:))
+- (void)growingTrackViewImpression:(NSString *)eventName NS_SWIFT_NAME(trackViewImpression(_:))
                                   NS_EXTENSION_UNAVAILABLE("ViewImpression is not supported for iOS extensions.");
 
 /// 标记曝光元素
 /// @param eventName 自定义事件名
 /// @param attributes 事件属性，可为 nil
-- (void)growingMarkImpression:(NSString *)eventName
-                   attributes:(nullable NSDictionary<NSString *, id> *)attributes NS_SWIFT_NAME(markImp(_:attributes:))
+- (void)growingTrackViewImpression:(NSString *)eventName
+                   attributes:(nullable NSDictionary<NSString *, id> *)attributes NS_SWIFT_NAME(trackViewImpression(_:attributes:))
                                   NS_EXTENSION_UNAVAILABLE("ViewImpression is not supported for iOS extensions.");
 
 /// 标记曝光元素（完整形式）
@@ -42,29 +42,29 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param identifier 曝光标识。同一视图可挂载多个 identifier 不同的曝光标记；
 ///                   传 nil 时写入默认槽位。config 指定不可重复曝光时必须传入
 /// @param config 单元素曝光配置，传 nil 则使用全局配置
-- (void)growingMarkImpression:(NSString *)eventName
+- (void)growingTrackViewImpression:(NSString *)eventName
                    attributes:(nullable NSDictionary<NSString *, id> *)attributes
                    identifier:(nullable NSString *)identifier
-                       config:(nullable GrowingViewImpressionConfig *)config
-    NS_SWIFT_NAME(markImp(_:attributes:identifier:config:))
+                       config:(nullable GrowingImpressionConfig *)config
+    NS_SWIFT_NAME(trackViewImpression(_:attributes:identifier:config:))
         NS_EXTENSION_UNAVAILABLE("ViewImpression is not supported for iOS extensions.");
 
 /// 仅更新已标记元素的属性，不重置曝光状态、不触发重新曝光
 /// @param attributes 新的事件属性
 /// @param identifier 曝光标识，传 nil 时更新默认槽位
-- (void)growingUpdateImpressionAttributes:(NSDictionary<NSString *, id> *)attributes
+- (void)growingUpdateViewImpressionAttributes:(NSDictionary<NSString *, id> *)attributes
                                identifier:(nullable NSString *)identifier
-    NS_SWIFT_NAME(updateImpAttributes(_:identifier:))
+    NS_SWIFT_NAME(updateViewImpressionAttributes(_:identifier:))
         NS_EXTENSION_UNAVAILABLE("ViewImpression is not supported for iOS extensions.");
 
 /// 移除该视图上的全部曝光标记
-- (void)growingUnmarkImpression NS_SWIFT_NAME(unmarkImp())
+- (void)growingStopTrackViewImpression NS_SWIFT_NAME(stopTrackViewImpression())
     NS_EXTENSION_UNAVAILABLE("ViewImpression is not supported for iOS extensions.");
 
 /// 只移除某一个曝光标记
 /// @param identifier 曝光标识
-- (void)growingUnmarkImpressionWithIdentifier:(NSString *)identifier
-    NS_SWIFT_NAME(unmarkImp(identifier:))
+- (void)growingStopTrackViewImpressionWithIdentifier:(NSString *)identifier
+    NS_SWIFT_NAME(stopTrackViewImpression(identifier:))
         NS_EXTENSION_UNAVAILABLE("ViewImpression is not supported for iOS extensions.");
 
 @end

@@ -19,7 +19,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Modules/ViewImpression/Public/GrowingViewImpression.h"
-#import "Modules/ViewImpression/Public/GrowingViewImpressionConfig.h"
+#import "Modules/ViewImpression/Public/GrowingImpressionConfig.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)removeImpressionView:(UIView *)view;
 
 /// 单元素 config > 全局 viewImpressionConfig > 默认值
-+ (GrowingViewImpressionConfig *)effectiveConfig:(nullable GrowingViewImpressionConfig *)config;
++ (GrowingImpressionConfig *)effectiveConfig:(nullable GrowingImpressionConfig *)config;
 
 @end
 

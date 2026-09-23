@@ -70,7 +70,7 @@ static const CGFloat kWindowHeight = 667.0f;
     [[GrowingViewImpression sharedInstance] applicationDidBecomeActive];
 
     [MockEventQueue.sharedQueue cleanQueue];
-    [GrowingViewImpression resetAllImpressionState];
+    [GrowingViewImpression resetAllViewImpressionState];
 }
 
 - (void)tearDown {

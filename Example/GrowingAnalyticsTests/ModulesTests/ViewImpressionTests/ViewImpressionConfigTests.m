@@ -21,7 +21,7 @@
 
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "Modules/ViewImpression/Public/GrowingViewImpression.h"
-#import "Modules/ViewImpression/Public/GrowingViewImpressionConfig.h"
+#import "Modules/ViewImpression/Public/GrowingImpressionConfig.h"
 
 @interface ViewImpressionConfigTests : XCTestCase
 
@@ -30,38 +30,38 @@
 @implementation ViewImpressionConfigTests
 
 - (void)testDefaults {
-    GrowingViewImpressionConfig *config = [[GrowingViewImpressionConfig alloc] init];
+    GrowingImpressionConfig *config = [[GrowingImpressionConfig alloc] init];
 
-    XCTAssertEqual(config.viewImpressionScale, 0.0f);
+    XCTAssertEqual(config.impressionScale, 0.0f);
     XCTAssertEqual(config.stayDuration, 0.0);
     XCTAssertTrue(config.isRepeatable);
 }
 
 - (void)testFactoryMethod {
-    GrowingViewImpressionConfig *config = [GrowingViewImpressionConfig configWithViewImpressionScale:0.5f
+    GrowingImpressionConfig *config = [GrowingImpressionConfig configWithImpressionScale:0.5f
                                                                                         stayDuration:1.5
                                                                                           repeatable:NO];
 
-    XCTAssertEqual(config.viewImpressionScale, 0.5f);
+    XCTAssertEqual(config.impressionScale, 0.5f);
     XCTAssertEqual(config.stayDuration, 1.5);
     XCTAssertFalse(config.isRepeatable);
 }
 
 - (void)testScaleIsClampedToValidRange {
-    GrowingViewImpressionConfig *config = [[GrowingViewImpressionConfig alloc] init];
+    GrowingImpressionConfig *config = [[GrowingImpressionConfig alloc] init];
 
-    config.viewImpressionScale = -1.0f;
-    XCTAssertEqual(config.viewImpressionScale, 0.0f);
+    config.impressionScale = -1.0f;
+    XCTAssertEqual(config.impressionScale, 0.0f);
 
-    config.viewImpressionScale = 2.0f;
-    XCTAssertEqual(config.viewImpressionScale, 1.0f);
+    config.impressionScale = 2.0f;
+    XCTAssertEqual(config.impressionScale, 1.0f);
 
-    config.viewImpressionScale = 0.75f;
-    XCTAssertEqual(config.viewImpressionScale, 0.75f);
+    config.impressionScale = 0.75f;
+    XCTAssertEqual(config.impressionScale, 0.75f);
 }
 
 - (void)testNegativeStayDurationIsClampedToZero {
-    GrowingViewImpressionConfig *config = [[GrowingViewImpressionConfig alloc] init];
+    GrowingImpressionConfig *config = [[GrowingImpressionConfig alloc] init];
 
     config.stayDuration = -3.0;
     XCTAssertEqual(config.stayDuration, 0.0);
@@ -71,39 +71,39 @@
 }
 
 - (void)testCopyIsEqualAndIndependent {
-    GrowingViewImpressionConfig *config = [GrowingViewImpressionConfig configWithViewImpressionScale:0.5f
+    GrowingImpressionConfig *config = [GrowingImpressionConfig configWithImpressionScale:0.5f
                                                                                         stayDuration:1.0
                                                                                           repeatable:NO];
-    GrowingViewImpressionConfig *copy = [config copy];
+    GrowingImpressionConfig *copy = [config copy];
 
     XCTAssertNotIdentical(copy, config);
     XCTAssertEqualObjects(copy, config);
     XCTAssertEqual(copy.hash, config.hash);
 
-    copy.viewImpressionScale = 0.2f;
-    XCTAssertEqual(config.viewImpressionScale, 0.5f);
+    copy.impressionScale = 0.2f;
+    XCTAssertEqual(config.impressionScale, 0.5f);
     XCTAssertNotEqualObjects(copy, config);
 }
 
 - (void)testEqualityComparesEveryField {
-    GrowingViewImpressionConfig *base = [GrowingViewImpressionConfig configWithViewImpressionScale:0.5f
+    GrowingImpressionConfig *base = [GrowingImpressionConfig configWithImpressionScale:0.5f
                                                                                       stayDuration:1.0
                                                                                         repeatable:YES];
 
     XCTAssertEqualObjects(base,
-                          [GrowingViewImpressionConfig configWithViewImpressionScale:0.5f
+                          [GrowingImpressionConfig configWithImpressionScale:0.5f
                                                                         stayDuration:1.0
                                                                           repeatable:YES]);
     XCTAssertNotEqualObjects(base,
-                             [GrowingViewImpressionConfig configWithViewImpressionScale:0.6f
+                             [GrowingImpressionConfig configWithImpressionScale:0.6f
                                                                            stayDuration:1.0
                                                                              repeatable:YES]);
     XCTAssertNotEqualObjects(base,
-                             [GrowingViewImpressionConfig configWithViewImpressionScale:0.5f
+                             [GrowingImpressionConfig configWithImpressionScale:0.5f
                                                                            stayDuration:2.0
                                                                              repeatable:YES]);
     XCTAssertNotEqualObjects(base,
-                             [GrowingViewImpressionConfig configWithViewImpressionScale:0.5f
+                             [GrowingImpressionConfig configWithImpressionScale:0.5f
                                                                            stayDuration:1.0
                                                                              repeatable:NO]);
     XCTAssertNotEqualObjects(base, @"not a config");
@@ -114,7 +114,7 @@
     GrowingTrackConfiguration *configuration = [GrowingTrackConfiguration configurationWithAccountId:@"test"];
 
     XCTAssertTrue(configuration.viewImpressionEnabled);
-    XCTAssertEqual(configuration.viewImpressionCheckInterval, 0.1);
+    XCTAssertEqual(configuration.viewImpressionCheckInterval, 0.5);
     XCTAssertNil(configuration.viewImpressionConfig);
 }
 
@@ -122,7 +122,7 @@
     GrowingTrackConfiguration *configuration = [GrowingTrackConfiguration configurationWithAccountId:@"test"];
 
     configuration.viewImpressionCheckInterval = -1.0;
-    XCTAssertEqual(configuration.viewImpressionCheckInterval, 0.1);
+    XCTAssertEqual(configuration.viewImpressionCheckInterval, 0.5);
 
     configuration.viewImpressionCheckInterval = 0.0;
     XCTAssertEqual(configuration.viewImpressionCheckInterval, 0.0);
@@ -132,7 +132,7 @@
     GrowingTrackConfiguration *configuration = [GrowingTrackConfiguration configurationWithAccountId:@"test"];
     configuration.viewImpressionEnabled = NO;
     configuration.viewImpressionCheckInterval = 0.5;
-    configuration.viewImpressionConfig = [GrowingViewImpressionConfig configWithViewImpressionScale:0.5f
+    configuration.viewImpressionConfig = [GrowingImpressionConfig configWithImpressionScale:0.5f
                                                                                        stayDuration:1.0
                                                                                          repeatable:NO];
 

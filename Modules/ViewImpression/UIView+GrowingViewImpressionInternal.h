@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)growingViewImpMark:(NSString *)eventName
                 attributes:(nullable NSDictionary<NSString *, id> *)attributes
                 identifier:(nullable NSString *)identifier
-                    config:(nullable GrowingViewImpressionConfig *)config;
+                    config:(nullable GrowingImpressionConfig *)config;
 
 /// 只替换槽位上的属性，不重置曝光状态，因此不会触发重新曝光
 - (void)growingViewImpUpdateAttributes:(NSDictionary<NSString *, id> *)attributes
@@ -42,8 +42,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)growingViewImpUnmarkSlot:(NSString *)identifier;
 
 /// 判定该视图当前是否达到曝光可见条件：逐级祖先裁剪后与 window 求交，
-/// 交集面积占自身 bounds 面积达到 viewImpressionScale 即为可见
-- (BOOL)growingViewImpNodeIsVisibleWithScale:(float)viewImpressionScale;
+/// 交集面积占自身 bounds 面积达到 impressionScale 即为可见
+- (BOOL)growingViewImpNodeIsVisibleWithScale:(float)impressionScale;
 
 @end
 
