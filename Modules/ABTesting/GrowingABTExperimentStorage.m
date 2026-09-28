@@ -80,7 +80,7 @@ static dispatch_queue_t GrowingABTStorageIOQueue(void) {
                 [_experiments addObject:e];
             }
             if (_experiments.count != array.count) {
-                [self synchronizeExperiments:_experiments.copy waitUntilDone:NO];
+                [self submitSynchronizeTask:_experiments.copy];
             }
         }
     }
@@ -98,20 +98,21 @@ static dispatch_queue_t GrowingABTStorageIOQueue(void) {
 
 #pragma mark - Private Method
 
-- (void)synchronizeExperiments:(NSArray<GrowingABTExperiment *> *)snapshot waitUntilDone:(BOOL)wait {
+// 提交写盘任务。必须持锁调用（或 init 中尚无并发时），保证串行队列的写入顺序与内存更新顺序一致
+- (void)submitSynchronizeTask:(NSArray<GrowingABTExperiment *> *)snapshot {
     GrowingFileStorage *storage = self.storage;
-    dispatch_block_t write = ^{
+    dispatch_async(GrowingABTStorageIOQueue(), ^{
         NSMutableArray *array = [NSMutableArray arrayWithCapacity:snapshot.count];
         for (GrowingABTExperiment *exp in snapshot) {
             [array addObject:exp.toJSONObject];
         }
         [storage setArray:array forKey:kGrowingABTestingExperimentKey];
-    };
-    if (wait) {
-        dispatch_sync(GrowingABTStorageIOQueue(), write);
-    } else {
-        dispatch_async(GrowingABTStorageIOQueue(), write);
-    }
+    });
+}
+
+// 等待已提交的写盘任务完成。必须在锁外调用，且不能在 GrowingABTStorageIOQueue 上调用
+- (void)waitUntilSynchronized {
+    dispatch_sync(GrowingABTStorageIOQueue(), ^{});
 }
 
 - (nullable GrowingABTExperiment *)findExperiment:(NSString *)layerId identity:(NSString *)identity {
@@ -139,32 +140,32 @@ static dispatch_queue_t GrowingABTStorageIOQueue(void) {
 }
 
 - (void)addExperiment:(GrowingABTExperiment *)experiment {
-    NSArray<GrowingABTExperiment *> *snapshot;
     GROWING_LOCK(lock);
     NSUInteger index = [self indexOfExperimentWithLayerId:experiment.layerId identity:experiment.identity];
     if (index != NSNotFound) {
         [self.experiments removeObjectAtIndex:index];
     }
     [self.experiments addObject:experiment];
-    snapshot = self.experiments.copy;
+    // dispatch_async 非阻塞，可在持锁期间提交；等待放到锁外
+    [self submitSynchronizeTask:self.experiments.copy];
     GROWING_UNLOCK(lock);
 
-    // 落盘放在锁外：os_unfair_lock 持有期间不应阻塞在其他队列上
-    [self synchronizeExperiments:snapshot waitUntilDone:YES];
+    [self waitUntilSynchronized];
 }
 
 - (void)removeExperiment:(GrowingABTExperiment *)experiment {
-    NSArray<GrowingABTExperiment *> *snapshot = nil;
+    BOOL submitted = NO;
     GROWING_LOCK(lock);
     NSUInteger index = [self indexOfExperimentWithLayerId:experiment.layerId identity:experiment.identity];
     if (index != NSNotFound) {
         [self.experiments removeObjectAtIndex:index];
-        snapshot = self.experiments.copy;
+        [self submitSynchronizeTask:self.experiments.copy];
+        submitted = YES;
     }
     GROWING_UNLOCK(lock);
 
-    if (snapshot) {
-        [self synchronizeExperiments:snapshot waitUntilDone:YES];
+    if (submitted) {
+        [self waitUntilSynchronized];
     }
 }
 
