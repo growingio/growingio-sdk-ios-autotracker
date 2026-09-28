@@ -112,7 +112,9 @@ static dispatch_queue_t GrowingABTStorageIOQueue(void) {
 
 // 等待已提交的写盘任务完成。必须在锁外调用，且不能在 GrowingABTStorageIOQueue 上调用
 - (void)waitUntilSynchronized {
-    dispatch_sync(GrowingABTStorageIOQueue(), ^{});
+    dispatch_sync(GrowingABTStorageIOQueue(),
+                  ^{
+                  });
 }
 
 - (nullable GrowingABTExperiment *)findExperiment:(NSString *)layerId identity:(NSString *)identity {
