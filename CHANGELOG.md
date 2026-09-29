@@ -3,7 +3,8 @@
 
 ### Features
 
-* **abtesting:** 按登录用户身份分流并加密上传 userId/userKey ([#366](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/366)) ([ddeb641](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/ddeb641e1544da6976c9952d339b9d0ab78061dd))
+* **abtesting:** 按登录用户身份分流并加密上传 userId/userKey ([#366](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/366)) ([ddeb641](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/ddeb641e1544da6976c9952d339b9d0ab78061dd)), closes [#369](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/369)
+* release 4.13.0 ([#373](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/373)) ([4901888](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/49018880eff450d9e08f58a52cbaf578016d4bfb))
 
 
 
@@ -53,5 +54,6 @@
 ### Features
 
 * release 4.9.1 ([ed6a43f](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/ed6a43fcb2b1234f3019778adf05c7453041dd99))
+
 
 
