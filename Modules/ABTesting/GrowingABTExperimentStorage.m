@@ -24,6 +24,15 @@
 
 static NSString *const kGrowingABTestingExperimentKey = @"GrowingABTestingExperimentKey";
 
+static dispatch_queue_t GrowingABTStorageIOQueue(void) {
+    static dispatch_queue_t queue = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        queue = dispatch_queue_create("com.growingio.abtesting.storage", DISPATCH_QUEUE_SERIAL);
+    });
+    return queue;
+}
+
 @interface GrowingABTExperimentStorage ()
 
 @property (nonatomic, strong) GrowingFileStorage *storage;
@@ -61,7 +70,17 @@ static NSString *const kGrowingABTestingExperimentKey = @"GrowingABTestingExperi
                                                                            strategyName:strategyName
                                                                               variables:variables
                                                                               fetchTime:fetchTime];
+                if ([dic[@"identity"] isKindOfClass:[NSString class]]) {
+                    e.identity = (NSString *)dic[@"identity"];
+                }
+
+                if (e.identity.length == 0 || e.isOutdated) {
+                    continue;
+                }
                 [_experiments addObject:e];
+            }
+            if (_experiments.count != array.count) {
+                [self submitSynchronizeTask:_experiments.copy];
             }
         }
     }
@@ -79,52 +98,83 @@ static NSString *const kGrowingABTestingExperimentKey = @"GrowingABTestingExperi
 
 #pragma mark - Private Method
 
-- (void)synchronize {
-    NSMutableArray *array = [NSMutableArray array];
-    for (GrowingABTExperiment *exp in self.experiments) {
-        [array addObject:exp.toJSONObject];
-    }
-    [self.storage setArray:array forKey:kGrowingABTestingExperimentKey];
+// 提交写盘任务。必须持锁调用（或 init 中尚无并发时），保证串行队列的写入顺序与内存更新顺序一致
+- (void)submitSynchronizeTask:(NSArray<GrowingABTExperiment *> *)snapshot {
+    GrowingFileStorage *storage = self.storage;
+    dispatch_async(GrowingABTStorageIOQueue(), ^{
+        NSMutableArray *array = [NSMutableArray arrayWithCapacity:snapshot.count];
+        for (GrowingABTExperiment *exp in snapshot) {
+            [array addObject:exp.toJSONObject];
+        }
+        [storage setArray:array forKey:kGrowingABTestingExperimentKey];
+    });
 }
 
-- (nullable GrowingABTExperiment *)findExperiment:(NSString *)layerId {
+// 等待已提交的写盘任务完成。必须在锁外调用，且不能在 GrowingABTStorageIOQueue 上调用
+- (void)waitUntilSynchronized {
+    dispatch_sync(GrowingABTStorageIOQueue(),
+                  ^{
+                  });
+}
+
+- (nullable GrowingABTExperiment *)findExperiment:(NSString *)layerId identity:(NSString *)identity {
     NSArray<GrowingABTExperiment *> *experiments;
     GROWING_LOCK(lock);
     experiments = self.experiments.copy;
     GROWING_UNLOCK(lock);
 
     for (GrowingABTExperiment *exp in experiments) {
-        if ([exp.layerId isEqualToString:layerId]) {
+        if ([exp.layerId isEqualToString:layerId] && [exp.identity isEqualToString:identity]) {
             return exp;
         }
     }
     return nil;
 }
 
-- (void)addExperiment:(GrowingABTExperiment *)experiment {
-    GROWING_LOCK(lock);
-    for (GrowingABTExperiment *exp in self.experiments) {
-        if ([exp.layerId isEqualToString:experiment.layerId]) {
-            [self.experiments removeObject:exp];
-            break;
+- (NSUInteger)indexOfExperimentWithLayerId:(NSString *)layerId identity:(NSString *)identity {
+    for (NSUInteger i = 0; i < self.experiments.count; i++) {
+        GrowingABTExperiment *exp = self.experiments[i];
+        if ([exp.layerId isEqualToString:layerId] && [exp.identity isEqualToString:identity]) {
+            return i;
         }
     }
+    return NSNotFound;
+}
+
+- (void)addExperiment:(GrowingABTExperiment *)experiment {
+    GROWING_LOCK(lock);
+    NSUInteger index = [self indexOfExperimentWithLayerId:experiment.layerId identity:experiment.identity];
+    if (index != NSNotFound) {
+        [self.experiments removeObjectAtIndex:index];
+    }
     [self.experiments addObject:experiment];
-    [self synchronize];
+    // dispatch_async 非阻塞，可在持锁期间提交；等待放到锁外
+    [self submitSynchronizeTask:self.experiments.copy];
     GROWING_UNLOCK(lock);
+
+    [self waitUntilSynchronized];
 }
 
 - (void)removeExperiment:(GrowingABTExperiment *)experiment {
+    BOOL submitted = NO;
     GROWING_LOCK(lock);
-    [self.experiments removeObject:experiment];
-    [self synchronize];
+    NSUInteger index = [self indexOfExperimentWithLayerId:experiment.layerId identity:experiment.identity];
+    if (index != NSNotFound) {
+        [self.experiments removeObjectAtIndex:index];
+        [self submitSynchronizeTask:self.experiments.copy];
+        submitted = YES;
+    }
     GROWING_UNLOCK(lock);
+
+    if (submitted) {
+        [self waitUntilSynchronized];
+    }
 }
 
 #pragma mark - Public Method
 
-+ (nullable GrowingABTExperiment *)findExperiment:(NSString *)layerId {
-    return [GrowingABTExperimentStorage.sharedInstance findExperiment:layerId];
++ (nullable GrowingABTExperiment *)findExperiment:(NSString *)layerId identity:(NSString *)identity {
+    return [GrowingABTExperimentStorage.sharedInstance findExperiment:layerId identity:identity];
 }
 
 + (void)addExperiment:(GrowingABTExperiment *)experiment {

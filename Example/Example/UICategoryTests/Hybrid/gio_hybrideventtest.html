@@ -1,4 +1,4 @@
-<!DO<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -274,8 +274,303 @@
             GrowingWebViewJavascriptBridge.clearNativeUserIdAndUserKey();
         }
 
+
         function mockDomChanged() {
             GrowingWebViewJavascriptBridge.onDomChanged();
+        }
+
+        /* ==================== AB 打通测试（getNativeIdentity）==================== */
+
+        function abtBridge() {
+            return window.GrowingWebViewJavascriptBridge;
+        }
+
+        /* Web 侧模式判定：与 gioABTest 的 typeof 探测一致 */
+        function abtSupported() {
+            var b = abtBridge();
+            return !!b && typeof b.getNativeIdentity === 'function';
+        }
+
+        function abtLog(title, payload) {
+            var out = document.getElementById('abtOutput');
+            var time = new Date().toTimeString().slice(0, 8);
+            var body = typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2);
+            out.textContent = '[' + time + '] ' + title + '\n' + body + '\n\n' + out.textContent;
+            console.log('[GIO-ABT] ' + title, payload);
+        }
+
+        function abtClear() {
+            document.getElementById('abtOutput').textContent = '';
+        }
+
+        function abtDelay(ms) {
+            return new Promise(function (resolve) { setTimeout(resolve, ms); });
+        }
+
+        function abtConfiguration() {
+            try {
+                return JSON.parse(abtBridge().getConfiguration());
+            } catch (e) {
+                return {};
+            }
+        }
+
+        /* 场景 1：能力探测，决定走模式一还是模式二 */
+        function abtDetect() {
+            var b = abtBridge();
+            if (!b) {
+                abtLog('能力探测', '未注入 GrowingWebViewJavascriptBridge —— 桥接没开，或不是打通场景');
+                return;
+            }
+            var conf = abtConfiguration();
+            abtLog('能力探测', {
+                'typeof getNativeIdentity': typeof b.getNativeIdentity,
+                'typeof dispatchEvent': typeof b.dispatchEvent,
+                nativeSdkVersion: conf.nativeSdkVersion,
+                nativeSdkVersionCode: conf.nativeSdkVersionCode,
+                accountId: conf.accountId,
+                dataSourceId: conf.dataSourceId,
+                '判定结果': abtSupported() ? '模式一：用原生身份' : '模式二：用 Web 身份（老原生，回落）'
+            });
+        }
+
+        /* 场景 2：拉取原生身份。返回 null 表示超时或失败，Web 侧应回落模式二 */
+        function abtFetchIdentity(silent) {
+            if (!abtSupported()) {
+                abtLog('拉取原生身份', '探测失败 → 按模式二执行，不发起桥接调用');
+                return Promise.resolve(null);
+            }
+            var start = Date.now();
+            return abtBridge().getNativeIdentity().then(function (identity) {
+                if (!silent) {
+                    abtLog('拉取原生身份（' + (Date.now() - start) + 'ms）',
+                        identity === null ? '返回 null —— 超时或失败，应回落模式二' : identity);
+                }
+                return identity;
+            });
+        }
+
+        /* 场景 3：并发拉取，验证 callbackId 不串号、回调表不泄漏 */
+        function abtConcurrent() {
+            if (!abtSupported()) { abtDetect(); return; }
+            var start = Date.now();
+            var tasks = [];
+            for (var i = 0; i < 10; i++) {
+                tasks.push(abtBridge().getNativeIdentity());
+            }
+            Promise.all(tasks).then(function (list) {
+                var first = JSON.stringify(list[0]);
+                var consistent = list.every(function (item) { return JSON.stringify(item) === first; });
+                var timeoutCount = list.filter(function (item) { return item === null; }).length;
+                abtLog('并发 10 次（' + (Date.now() - start) + 'ms）', {
+                    '返回数量': list.length,
+                    '内容是否一致': consistent,
+                    'null（超时）数量': timeoutCount,
+                    '样本': list[0]
+                });
+            });
+        }
+
+        /* 场景 4：原生侧身份变化后必须能立刻读到新值（验证"每次现拉，不用注入快照"） */
+        function abtIdentitySwitchFlow() {
+            if (!abtSupported()) { abtDetect(); return; }
+            abtLog('身份切换连测', '开始：未登录 → 登录 u_flow/k_flow → 清除，三次拉取结果应依次变化');
+            abtFetchIdentity()
+                .then(function () {
+                    abtBridge().setNativeUserIdAndUserKey('u_flow', 'k_flow');
+                    return abtDelay(300);
+                })
+                .then(function () { return abtFetchIdentity(); })
+                .then(function () {
+                    abtBridge().clearNativeUserIdAndUserKey();
+                    return abtDelay(300);
+                })
+                .then(function () { return abtFetchIdentity(); })
+                .then(function () { abtLog('身份切换连测', '结束'); });
+        }
+
+        /* 场景 5：用原生身份组装分流请求体，与原生 AB 请求逐字段对照 */
+        function abtUtf8Bytes(str) {
+            if (typeof TextEncoder !== 'undefined') {
+                return Array.prototype.slice.call(new TextEncoder().encode(str));
+            }
+            var binary = unescape(encodeURIComponent(str));
+            var bytes = [];
+            for (var i = 0; i < binary.length; i++) { bytes.push(binary.charCodeAt(i)); }
+            return bytes;
+        }
+
+        function abtUtf8String(bytes) {
+            if (typeof TextDecoder !== 'undefined') {
+                return new TextDecoder().decode(new Uint8Array(bytes));
+            }
+            var binary = '';
+            for (var i = 0; i < bytes.length; i++) { binary += String.fromCharCode(bytes[i]); }
+            return decodeURIComponent(escape(binary));
+        }
+
+        /* Base64(XOR(utf8, stm & 0xFF))，与原生 GrowingDataEncoder 同算法 */
+        function abtObfuscate(value, factor) {
+            var bytes = abtUtf8Bytes(value);
+            var binary = '';
+            for (var i = 0; i < bytes.length; i++) { binary += String.fromCharCode(bytes[i] ^ factor); }
+            return btoa(binary);
+        }
+
+        function abtDeobfuscate(value, factor) {
+            var binary = atob(value);
+            var bytes = [];
+            for (var i = 0; i < binary.length; i++) { bytes.push(binary.charCodeAt(i) ^ factor); }
+            return abtUtf8String(bytes);
+        }
+
+        function abtBuildRequest() {
+            abtFetchIdentity(true).then(function (identity) {
+                var conf = abtConfiguration();
+                var stm = Date.now();
+                var factor = stm & 0xFF;
+                var layerId = document.getElementById('abtLayerId').value || 'demo_layer';
+                var host = document.getElementById('abtHost').value || 'https://ab.growingio.com';
+
+                var body = {
+                    accountId: conf.accountId || '(未继承)',
+                    datasourceId: conf.dataSourceId || '(未继承)',
+                    distinctId: identity ? identity.deviceId : '(模式二：Web 自己的 uid)',
+                    layerId: layerId
+                };
+                /* newDevice 为 false 时原生也不带该字段，这里保持一致 */
+                if (identity && identity.isNewDevice) { body.newDevice = true; }
+                var restored = {};
+                if (identity && identity.userId) {
+                    body.userId = abtObfuscate(identity.userId, factor);
+                    restored.userId = abtDeobfuscate(body.userId, factor);
+                }
+                if (identity && identity.userKey) {
+                    body.userKey = abtObfuscate(identity.userKey, factor);
+                    restored.userKey = abtDeobfuscate(body.userKey, factor);
+                }
+
+                abtLog('模拟分流请求', {
+                    模式: identity ? '模式一（原生身份）' : '模式二（Web 身份）',
+                    url: host + '/diversion/specified-layer-variables?stm=' + stm,
+                    'stm & 0xFF': factor,
+                    body: body,
+                    '按 stm 还原校验': restored
+                });
+            });
+        }
+
+        /* 场景 6：缓存 hash。身份一变 hash 就变，sign 与 abtd 一起 miss */
+        function abtHashCode(str) {
+            var hash = 0;
+            for (var i = 0; i < str.length; i++) {
+                hash = ((hash << 5) - hash) + str.charCodeAt(i);
+                hash |= 0;
+            }
+            return hash;
+        }
+
+        function abtCacheKey() {
+            abtFetchIdentity(true).then(function (identity) {
+                var conf = abtConfiguration();
+                var layerId = document.getElementById('abtLayerId').value || 'demo_layer';
+                var parts = [
+                    conf.accountId || 'trackingId',
+                    conf.dataSourceId || 'projectId',
+                    identity ? identity.deviceId : '(Web uid)',
+                    identity && identity.userId ? identity.userId : '',
+                    identity && identity.userKey ? identity.userKey : '',
+                    layerId
+                ];
+                var raw = parts.join('#');
+                var hash = abtHashCode(raw);
+                abtLog('缓存 key', {
+                    'hash 入参': raw,
+                    hash: hash,
+                    sign: hash + '_gdp_abt_sign',
+                    abtd: hash + '_gdp_abtd',
+                    说明: '切换原生登录态后再点一次，hash 应当变化（即整体 miss）'
+                });
+            });
+        }
+
+        /* 场景 7：绕过 shim 直接 postMessage，用注入型 callbackId 探原生的白名单校验 */
+        function abtInjectionTest() {
+            if (!window.webkit || !window.webkit.messageHandlers ||
+                !window.webkit.messageHandlers.GrowingWKWebViewJavascriptBridge) {
+                abtLog('注入防护', '当前环境没有 messageHandlers，跳过');
+                return;
+            }
+            window.__gioInjected = false;
+            var evil = "x', {}); window.__gioInjected = true; ('";
+            window.webkit.messageHandlers.GrowingWKWebViewJavascriptBridge.postMessage(JSON.stringify({
+                messageType: 'getNativeIdentity',
+                data: JSON.stringify({ callbackId: evil })
+            }));
+            setTimeout(function () {
+                abtLog('注入防护', {
+                    '注入的 callbackId': evil,
+                    '注入是否生效（应为 false）': window.__gioInjected === true,
+                    '预期': '原生按字符白名单拦截，不产生任何 evaluateJavaScript'
+                });
+            }, 1000);
+        }
+
+        /* 场景 8：迟到或伪造的回调应被丢弃 */
+        function abtUnknownCallback() {
+            try {
+                abtBridge()._onNativeCallback('not_exist_' + Date.now(), { deviceId: 'fake' });
+                abtLog('未知 callbackId 回调', '已安静丢弃，无异常（符合预期）');
+            } catch (e) {
+                abtLog('未知 callbackId 回调', '抛出异常：' + e);
+            }
+        }
+
+        /* 场景 9：iframe 内拉取。iOS 14+ 应正常返回；iOS 13 及以下收不到回调，500ms 后 null */
+        function abtLoadIframe() {
+            var frame = document.getElementById('abtIframe');
+            frame.style.display = 'block';
+            frame.srcdoc = [
+                '<html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>',
+                '<body style="font-family:-apple-system;margin:8px">',
+                '<button style="padding:8px" onclick="run()">iframe 内拉取原生身份</button>',
+                '<pre id="out" style="white-space:pre-wrap;font-size:12px"></pre>',
+                '<script>',
+                'function run() {',
+                '  var b = window.GrowingWebViewJavascriptBridge;',
+                '  if (!b || typeof b.getNativeIdentity !== "function") {',
+                '    report({ error: "iframe 内没有注入 shim" }); return;',
+                '  }',
+                '  var start = Date.now();',
+                '  b.getNativeIdentity().then(function (identity) {',
+                '    report({ elapsed: Date.now() - start, identity: identity });',
+                '  });',
+                '}',
+                'function report(result) {',
+                '  document.getElementById("out").textContent = JSON.stringify(result, null, 2);',
+                '  parent.postMessage({ gioIframe: result }, "*");',
+                '}',
+                '<\/script></body></html>'
+            ].join('\n');
+            abtLog('iframe', '已加载。iOS 14+ 应能拿到身份；iOS 13 及以下预期 500ms 后返回 null');
+        }
+
+        window.addEventListener('message', function (event) {
+            if (event.data && event.data.gioIframe) {
+                abtLog('iframe 内拉取结果', event.data.gioIframe);
+            }
+        });
+
+        /* 一键跑完所有非破坏性场景 */
+        function abtRunAll() {
+            abtClear();
+            abtDetect();
+            abtFetchIdentity()
+                .then(function () { return abtDelay(200); })
+                .then(function () { abtBuildRequest(); return abtDelay(400); })
+                .then(function () { abtCacheKey(); return abtDelay(400); })
+                .then(function () { abtConcurrent(); return abtDelay(600); })
+                .then(function () { abtUnknownCallback(); abtInjectionTest(); });
         }
     </script>
 </head>
@@ -329,13 +624,57 @@
                     <button class="button" onclick="javascript:mockSetUserIdAndUserKey('name', 'key')" type="button">
                         mockSetUserIdAndUserKey('name', 'key')
                     </button>
-                    <button class="button" onclick="javascript:mockclearUserIdAndUserKey()" type="button">
+                    <button class="button" onclick="javascript:mockClearUserIdAndUserKey()" type="button">
                         mockclearUserIdAndUserKey
                     </button>
                     <button class="button" onclick="javascript:mockDomChanged()" type="button">
                         mockDomChanged
                     </button>
                 </div>
+            </div>
+
+            <div class='title'>
+                <h3>AB 打通测试（getNativeIdentity）</h3>
+                <div>
+                    layerId <input id="abtLayerId" value="demo_layer" style="width:140px">
+                    abServerUrl <input id="abtHost" value="https://ab.growingio.com" style="width:200px">
+                </div>
+                <button class="button" onclick="javascript:abtRunAll()" type="button">
+                    ① 一键跑全部场景
+                </button>
+                <button class="button" onclick="javascript:abtDetect()" type="button">
+                    ② 能力探测（决定模式一/模式二）
+                </button>
+                <button class="button" onclick="javascript:abtFetchIdentity()" type="button">
+                    ③ 拉取原生身份
+                </button>
+                <button class="button" onclick="javascript:abtIdentitySwitchFlow()" type="button">
+                    ④ 身份切换连测（未登录→登录→清除）
+                </button>
+                <button class="button" onclick="javascript:abtBuildRequest()" type="button">
+                    ⑤ 模拟分流请求体（含混淆与还原）
+                </button>
+                <button class="button" onclick="javascript:abtCacheKey()" type="button">
+                    ⑥ 模拟缓存 key（看身份变 hash 变）
+                </button>
+                <button class="button" onclick="javascript:abtConcurrent()" type="button">
+                    ⑦ 并发 10 次（验证不串号）
+                </button>
+                <button class="button" onclick="javascript:abtInjectionTest()" type="button">
+                    ⑧ 注入型 callbackId（应被拦截）
+                </button>
+                <button class="button" onclick="javascript:abtUnknownCallback()" type="button">
+                    ⑨ 未知 callbackId 回调（应丢弃）
+                </button>
+                <button class="button" onclick="javascript:abtLoadIframe()" type="button">
+                    ⑩ iframe 内拉取（iOS 14 分水岭）
+                </button>
+                <button class="button" onclick="javascript:abtClear()" type="button">
+                    清空输出
+                </button>
+                <iframe id="abtIframe" style="display:none;width:100%;height:200px;border:1px solid #ccc"></iframe>
+                <pre id="abtOutput"
+                    style="white-space:pre-wrap;word-break:break-all;font-size:12px;background:#f5f5f5;padding:8px;min-height:120px"></pre>
             </div>
 </body>
 <footer>

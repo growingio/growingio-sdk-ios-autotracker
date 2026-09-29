@@ -41,6 +41,9 @@
 @property (nonatomic, readonly, assign) CGFloat screenHeight;
 @property (nonatomic, readonly, assign) NSInteger timezoneOffset;
 @property (nonatomic, readonly, assign) BOOL isNewDevice;
+/// 新设备，且当前仍处于生成 deviceId 的那个 session
+/// 语义对齐 Android PersistentDataProvider#isNewDevice
+@property (nonatomic, readonly, assign) BOOL isNewDeviceInFirstSession;
 
 + (instancetype)currentDeviceInfo;
 + (void)setup;

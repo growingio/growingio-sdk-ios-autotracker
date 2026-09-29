@@ -1,5 +1,6 @@
 PODS:
   - GrowingAnalytics/ABTesting (4.12.0):
+    - GrowingAnalytics/Encryption (= 4.12.0)
     - GrowingAnalytics/TrackerCore (= 4.12.0)
   - GrowingAnalytics/Ads (4.12.0):
     - GrowingAnalytics/TrackerCore (= 4.12.0)
@@ -152,7 +153,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  GrowingAnalytics: 3268a7887cfb9907947c1e800687f0b211a9e74d
+  GrowingAnalytics: c66301f9fa7d96039cc7de647ef71f52524c8a3b
   GrowingAPM: 4a3628e708cd1b2e4e1fc0925593781ed8acadd2
   GrowingToolsKit: 548d35d9b5964af3a73f80b30c6948dc10d247b4
   GrowingUtils: 5d323e54798595015ff11e97fe981ae167dc270e

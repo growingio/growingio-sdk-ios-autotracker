@@ -30,6 +30,7 @@
 @property (nonatomic, copy, nullable, readwrite) NSString *strategyName;
 @property (nonatomic, copy, nullable, readwrite) NSDictionary *variables;
 @property (nonatomic, assign) long long fetchTime;
+@property (nonatomic, copy, nullable) NSString *identity;
 
 @end
 
@@ -64,8 +65,26 @@
     [GrowingABTExperimentStorage removeExperiment:self];
 }
 
-+ (nullable GrowingABTExperiment *)findExperiment:(NSString *)layerId {
-    return [GrowingABTExperimentStorage findExperiment:layerId];
++ (nullable GrowingABTExperiment *)findExperiment:(NSString *)layerId identity:(NSString *)identity {
+    return [GrowingABTExperimentStorage findExperiment:layerId identity:identity];
+}
+
++ (BOOL)isToday:(long long)timestamp {
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSCalendarUnit unit = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay;
+
+    NSDateComponents *components = [calendar components:unit fromDate:[NSDate date]];
+    NSDate *today = [calendar dateFromComponents:components];
+
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:timestamp / 1000LL];
+    components = [calendar components:unit fromDate:date];
+    NSDate *otherDay = [calendar dateFromComponents:components];
+
+    return today && otherDay && [today isEqualToDate:otherDay];
+}
+
+- (BOOL)isOutdated {
+    return ![GrowingABTExperiment isToday:self.fetchTime];
 }
 
 - (BOOL)isEqual:(id)object {
@@ -137,6 +156,9 @@
     }
     if (self.variables) {
         dic[@"variables"] = self.variables.copy;
+    }
+    if (self.identity) {
+        dic[@"identity"] = self.identity.copy;
     }
     return dic;
 }

@@ -25,7 +25,68 @@
     self.view.backgroundColor = [UIColor whiteColor];
     [self configureWebView];
     [self loadAddressURL];
+#if defined(SDKABTESTINGMODULE)
+    [self setupABTestingBarButton];
+#endif
 }
+
+#if defined(SDKABTESTINGMODULE)
+
+#pragma mark - ABTesting
+
+- (void)setupABTestingBarButton {
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"原生AB"
+                                                             style:UIBarButtonItemStylePlain
+                                                            target:self
+                                                            action:@selector(fetchNativeExperiment:)];
+    NSMutableArray *items = self.navigationItem.rightBarButtonItems.mutableCopy ?: [NSMutableArray array];
+    [items addObject:item];
+    self.navigationItem.rightBarButtonItems = items;
+}
+
+/// 用 H5 页面上填的 layerId 发一次原生分流，便于对照同一实验位下两端各自的请求与缓存
+- (void)fetchNativeExperiment:(id)sender {
+    NSString *readLayerId = @"document.getElementById('abtLayerId') ? "
+                            @"document.getElementById('abtLayerId').value : ''";
+    [self.webView evaluateJavaScript:readLayerId
+                   completionHandler:^(id _Nullable result, NSError *_Nullable error) {
+                       NSString *layerId = @"demo_layer";
+                       if ([result isKindOfClass:NSString.class] && [(NSString *)result length] > 0) {
+                           layerId = (NSString *)result;
+                       }
+                       [self fetchExperimentWithLayerId:layerId];
+                   }];
+}
+
+- (void)fetchExperimentWithLayerId:(NSString *)layerId {
+    [GrowingABTesting fetchExperiment:layerId
+                       completedBlock:^(GrowingABTExperiment *_Nullable experiment) {
+                           NSString *message;
+                           if (!experiment) {
+                               message = @"请求失败";
+                           } else {
+                               message = [NSString stringWithFormat:@"layerId: %@\nexperimentId: %@\nstrategyId: "
+                                                                    @"%@\nvariables: %@",
+                                                                    experiment.layerId,
+                                                                    experiment.experimentId ?: @"(未命中)",
+                                                                    experiment.strategyId ?: @"(未命中)",
+                                                                    experiment.variables ?: @{}];
+                           }
+                           NSLog(@"[GIO-ABT] 原生 fetchExperiment: %@", message);
+                           dispatch_async(dispatch_get_main_queue(), ^{
+                               UIAlertController *alert =
+                                   [UIAlertController alertControllerWithTitle:@"原生分流结果"
+                                                                       message:message
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+                               [alert addAction:[UIAlertAction actionWithTitle:@"好"
+                                                                         style:UIAlertActionStyleDefault
+                                                                       handler:nil]];
+                               [self presentViewController:alert animated:YES completion:nil];
+                           });
+                       }];
+}
+
+#endif
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
