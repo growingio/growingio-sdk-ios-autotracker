@@ -1,9 +1,19 @@
+# [4.13.0](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/4.12.0...4.13.0) (2026-09-29)
+
+
+### Features
+
+* **abtesting:** 按登录用户身份分流并加密上传 userId/userKey ([#366](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/366)) ([ddeb641](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/ddeb641e1544da6976c9952d339b9d0ab78061dd))
+
+
+
 # [4.12.0](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/4.11.0...4.12.0) (2026-07-10)
 
 
 ### Features
 
 * add GrowingModule_Flutter product to Swift Package ([#362](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/362)) ([8978379](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/897837946df567aea3e93fef3542bb4d41af5d61))
+* release 4.12.0 ([2b70b30](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/2b70b30054bb4745e57db9f35d0e001e424282ca))
 
 
 
@@ -43,18 +53,5 @@
 ### Features
 
 * release 4.9.1 ([ed6a43f](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/ed6a43fcb2b1234f3019778adf05c7453041dd99))
-
-
-
-# [4.9.0](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/4.8.0...4.9.0) (2025-09-17)
-
-
-### Features
-
-* add setPageTitle api in autotracker ([#350](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/350)) ([3260d24](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/3260d2488d132c222f2244896829a851a56c3229))
-* auto web js sdk bridge [#335](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/335) ([#352](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/352)) ([cec837d](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/cec837d0e0ef6257272e74e6fed81c68ad03ca94))
-* release 4.9.0 ([3cef8a6](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/3cef8a6b9002d784395a6ad7ebdc91dd959e662f))
-* uniapp track page event support [#338](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/338) ([#351](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/351)) ([d434d57](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/d434d576a90affa2e7a8a69f0637389ce1bc97fe))
-
 
 
