@@ -12,7 +12,9 @@ concurrency:
 
 jobs:
   build:
-    runs-on: macos-15
+    # 与 spm.yml 的新工具链腿保持一致：macos-15 镜像上 Xcode 26.0.1 已不带
+    # iOS 模拟器 runtime，跑测试时一台具体设备都挑不出来
+    runs-on: macos-26
     env:
       DERIVED_DATA: ${{ github.workspace }}/.DerivedData
 
@@ -23,7 +25,31 @@ jobs:
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
 
       - name: Xcode Select
-        run: sudo xcode-select -switch /Applications/Xcode_26.0.1.app
+        run: sudo xcode-select -switch /Applications/Xcode_26.6.app
+
+      # 挑一台真实存在的 iPhone 模拟器，不写死机型：镜像换代时机型阵容会变。
+      # 取版本最低的 iOS runtime——HostApplicationTests 里的 KIF 用例依赖
+      # 具体的控件布局，iOS 26.5 上 tab 按钮已判定为不可点击。
+      # 顺带把工具链与 runtime 打进日志，日后再缺东西一眼可见
+      - name: Resolve Simulator
+        run: |
+          set -euo pipefail
+          xcodebuild -version
+          xcrun simctl list runtimes
+          UDID=$(xcrun simctl list devices available -j | python3 -c "
+          import json, re, sys
+          devices = json.load(sys.stdin)['devices']
+          def version(runtime):
+              return [int(n) for n in re.findall(r'\d+', runtime.rsplit('.', 1)[-1])[:3]]
+          for runtime in sorted((r for r in devices if 'iOS' in r), key=version):
+              for device in devices[runtime]:
+                  if device['name'].startswith('iPhone'):
+                      print(device['udid'])
+                      sys.exit(0)
+          sys.exit('没有可用的 iPhone 模拟器')
+          ")
+          echo "模拟器 UDID: $UDID"
+          echo "SIMULATOR_UDID=$UDID" >> $GITHUB_ENV
 
       - name: Cache cocoapods
         uses: actions/cache@v4
@@ -44,7 +70,7 @@ jobs:
           xcodebuild test -workspace Example/GrowingAnalytics.xcworkspace \
           -scheme GrowingAnalyticsTests \
           -testPlan GrowingAnalyticsTests \
-          -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
+          -destination "id=$SIMULATOR_UDID" \
           -enableCodeCoverage YES \
           -derivedDataPath ${{ env.DERIVED_DATA }} \
           | xcbeautify --renderer github-actions

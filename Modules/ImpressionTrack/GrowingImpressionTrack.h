@@ -27,6 +27,10 @@
 @property (nonatomic, assign) BOOL impTrackActive;
 
 + (instancetype)sharedInstance;
+
+/// 停止本模块的曝光采集，不可恢复。由 ViewImpression 模块在同时集成时调用
++ (void)disable;
+
 - (void)addNode:(UIView *)node inSubView:(BOOL)flag;
 - (void)clearNode:(UIView *)node;
 

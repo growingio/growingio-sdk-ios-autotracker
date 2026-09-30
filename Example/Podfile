@@ -13,7 +13,7 @@ target 'Example' do
   pod 'GrowingAnalytics/Autotracker', :path => '../'
   pod 'GrowingAnalytics/Ads', :path => '../'
   pod 'GrowingAnalytics/ABTesting', :path => '../'
-  pod 'GrowingAnalytics/ImpressionTrack', :path => '../'
+  pod 'GrowingAnalytics/ViewImpression', :path => '../'
 
 #  pod 'GrowingAnalytics/Tracker', :path => '../'
 #  pod 'GrowingAnalytics/Hybrid', :path => '../'
@@ -34,7 +34,7 @@ target 'ShareExtension' do
   pod 'GrowingAnalytics/Autotracker', :path => '../'
   pod 'GrowingAnalytics/Ads', :path => '../'
   pod 'GrowingAnalytics/ABTesting', :path => '../'
-  pod 'GrowingAnalytics/ImpressionTrack', :path => '../'
+  pod 'GrowingAnalytics/ViewImpression', :path => '../'
   pod 'GrowingAnalytics/APM', :path => '../'
 end
 
@@ -42,6 +42,7 @@ target 'GrowingAnalyticsTests' do
   pod 'GrowingAnalytics/Autotracker', :path => '../'
   pod 'GrowingAnalytics/Tracker', :path => '../'
   pod 'GrowingAnalytics/ImpressionTrack', :path => '../'
+  pod 'GrowingAnalytics/ViewImpression', :path => '../'
 end
 
 target 'GrowingAnalyticsStartTests' do
@@ -50,6 +51,7 @@ target 'GrowingAnalyticsStartTests' do
   pod 'GrowingAnalytics/Autotracker', :path => '../'
   pod 'GrowingAnalytics/Tracker', :path => '../'
   pod 'GrowingAnalytics/ImpressionTrack', :path => '../'
+  pod 'GrowingAnalytics/ViewImpression', :path => '../'
 end
 
 target 'HostApplicationTests' do
@@ -58,6 +60,7 @@ target 'HostApplicationTests' do
   pod 'GrowingAnalytics/Autotracker', :path => '../'
   pod 'GrowingAnalytics/Tracker', :path => '../'
   pod 'GrowingAnalytics/ImpressionTrack', :path => '../'
+  pod 'GrowingAnalytics/ViewImpression', :path => '../'
   pod 'KIF', :configurations => ['Debug']
 end
 
@@ -67,6 +70,7 @@ target 'ProtobufTests' do
   pod 'GrowingAnalytics/Autotracker', :path => '../'
   pod 'GrowingAnalytics/Tracker', :path => '../'
   pod 'GrowingAnalytics/ImpressionTrack', :path => '../'
+  pod 'GrowingAnalytics/ViewImpression', :path => '../'
 end
 
 target 'AdvertisingTests' do

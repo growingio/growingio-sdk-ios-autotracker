@@ -40,6 +40,7 @@ GrowingMod(GrowingImpressionTrack)
 @end
 
 static BOOL isInResignSate;
+static BOOL impTrackDisabled = NO;
 
 @implementation GrowingImpressionTrack
 
@@ -59,6 +60,11 @@ static BOOL isInResignSate;
         return;
     }
     [self track];
+}
+
++ (void)disable {
+    impTrackDisabled = YES;
+    [[self sharedInstance].sourceTable removeAllObjects];
 }
 
 + (instancetype)sharedInstance {
@@ -150,6 +156,9 @@ static BOOL isInResignSate;
 static BOOL impTrackIsRegistered = NO;
 
 - (void)setImpTrackActive:(BOOL)impTrackActive {
+    if (impTrackDisabled) {
+        return;
+    }
     _impTrackActive = impTrackActive;
     if (impTrackActive && !impTrackIsRegistered) {
         impTrackIsRegistered = YES;
@@ -194,6 +203,10 @@ static BOOL impTrackIsRegistered = NO;
 }
 
 - (void)impTrack {
+    if (impTrackDisabled) {
+        return;
+    }
+
     if (isInResignSate) {
         return;
     }
