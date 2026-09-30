@@ -57,11 +57,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface GrowingTrackConfiguration (ViewImpressionPrivate)
-
-/// 曝光检测节流间隔，单位秒，默认 0.5。置为 0 表示每次 runloop 休眠前都检测
-@property (nonatomic, assign) NSTimeInterval viewImpressionCheckInterval;
-
-@end
-
 NS_ASSUME_NONNULL_END
