@@ -30,8 +30,7 @@ NS_SWIFT_NAME(ImpressionConfig)
 /// 最小可见时长，单位秒，负值按 0 处理，默认 0（无需停留）
 @property (nonatomic, assign) NSTimeInterval stayDuration;
 
-+ (instancetype)configWithImpressionScale:(float)impressionScale
-                             stayDuration:(NSTimeInterval)stayDuration;
++ (instancetype)configWithImpressionScale:(float)impressionScale stayDuration:(NSTimeInterval)stayDuration;
 
 @end
 
