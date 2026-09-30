@@ -1,8 +1,8 @@
 //
-//  GrowingImpressionConfig.h
+//  GrowingImpressionConfig+Private.h
 //  GrowingAnalytics
 //
-//  Created by YoloMao on 2026/9/21.
+//  Created by YoloMao on 2026/9/30.
 //  Copyright (C) 2026 Beijing Yishu Technology Co., Ltd.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,21 +17,20 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import <Foundation/Foundation.h>
+#import "Modules/ViewImpression/Public/GrowingImpressionConfig.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(ImpressionConfig)
-@interface GrowingImpressionConfig : NSObject <NSCopying>
+/// 以下能力为内部预留，待后续迭代再公开
+@interface GrowingImpressionConfig (Private)
 
-/// 可见面积占比阈值，有效范围 0~1，超出范围将被截断，默认 0（露出即算曝光）
-@property (nonatomic, assign) float impressionScale;
-
-/// 最小可见时长，单位秒，负值按 0 处理，默认 0（无需停留）
-@property (nonatomic, assign) NSTimeInterval stayDuration;
+/// 是否允许同一元素多次曝光，默认 YES。
+/// 置为 NO 时必须为元素指定 identifier，否则将被降级为 YES 处理
+@property (nonatomic, assign, getter=isRepeatable) BOOL repeatable;
 
 + (instancetype)configWithImpressionScale:(float)impressionScale
-                             stayDuration:(NSTimeInterval)stayDuration;
+                             stayDuration:(NSTimeInterval)stayDuration
+                               repeatable:(BOOL)repeatable;
 
 @end
 

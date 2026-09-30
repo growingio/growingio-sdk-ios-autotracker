@@ -18,6 +18,7 @@
 //  limitations under the License.
 
 #import "Modules/ViewImpression/Public/UIView+GrowingViewImpression.h"
+#import "Modules/ViewImpression/UIView+GrowingViewImpression+Private.h"
 #import "Modules/ViewImpression/UIView+GrowingViewImpressionInternal.h"
 
 @implementation UIView (GrowingViewImpression)

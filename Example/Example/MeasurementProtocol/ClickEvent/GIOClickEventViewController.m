@@ -11,8 +11,9 @@
 #if defined(AUTOTRACKER)
 #if defined(SDK3rd)
 #if defined(SDKVIEWIMPMODULE)
-#import "GrowingImpressionConfig.h"
-#import "UIView+GrowingViewImpression.h"
+#import "Modules/ViewImpression/Public/GrowingImpressionConfig.h"
+#import "Modules/ViewImpression/Public/UIView+GrowingViewImpression.h"
+#import "Modules/ViewImpression/UIView+GrowingViewImpression+Private.h"
 #elif defined(SDKIMPMODULE)
 #import "UIView+GrowingImpression.h"
 #endif
