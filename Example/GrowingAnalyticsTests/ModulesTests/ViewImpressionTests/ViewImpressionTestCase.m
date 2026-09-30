@@ -23,6 +23,7 @@
 #import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
 #import "MockEventQueue.h"
 #import "Modules/ViewImpression/Public/GrowingViewImpression.h"
+#import "Modules/ViewImpression/GrowingViewImpression+Private.h"
 
 @interface GrowingViewImpression (XCTest)
 

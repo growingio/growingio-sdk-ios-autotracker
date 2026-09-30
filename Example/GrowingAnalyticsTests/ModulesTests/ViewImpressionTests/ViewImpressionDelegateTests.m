@@ -20,6 +20,8 @@
 #import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
 #import "Modules/ViewImpression/Public/GrowingViewImpression.h"
 #import "Modules/ViewImpression/Public/UIView+GrowingViewImpression.h"
+#import "Modules/ViewImpression/GrowingViewImpression+Private.h"
+#import "Modules/ViewImpression/UIView+GrowingViewImpression+Private.h"
 #import "ViewImpressionTestCase.h"
 
 @interface ViewImpressionTestDelegate : NSObject <GrowingImpressionDelegate>

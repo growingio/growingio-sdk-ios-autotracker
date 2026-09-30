@@ -64,8 +64,12 @@
 
 #if __has_include("UIView+GrowingViewImpression.h")
 // ViewImpression Module
-#import "GrowingViewImpression.h"
-#import "UIView+GrowingViewImpression.h"
+// 经源码路径引入，使演示页能覆盖尚未公开的能力（identifier/config/repeatable/delegate 等），
+// 同时避免与 framework 内的公开头文件重复定义
+#import "Modules/ViewImpression/Public/GrowingViewImpression.h"
+#import "Modules/ViewImpression/Public/UIView+GrowingViewImpression.h"
+#import "Modules/ViewImpression/GrowingViewImpression+Private.h"
+#import "Modules/ViewImpression/UIView+GrowingViewImpression+Private.h"
 #define SDKVIEWIMPMODULE
 #endif
 
