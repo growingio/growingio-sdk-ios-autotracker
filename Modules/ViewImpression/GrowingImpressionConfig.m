@@ -38,8 +38,7 @@
     return self;
 }
 
-+ (instancetype)configWithImpressionScale:(float)impressionScale
-                             stayDuration:(NSTimeInterval)stayDuration {
++ (instancetype)configWithImpressionScale:(float)impressionScale stayDuration:(NSTimeInterval)stayDuration {
     return [self configWithImpressionScale:impressionScale stayDuration:stayDuration repeatable:YES];
 }
 
