@@ -72,7 +72,8 @@ func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> U
 ```objc
 configuration.viewImpressionConfig = [GrowingImpressionConfig configWithImpressionScale:0.5f
                                                                            stayDuration:1.0];
-configuration.viewImpressionEnabled = YES;  // 曝光开关，默认 YES；autotrackEnabled 为 NO 时无论如何都不采集
+configuration.viewImpressionEnabled = YES;        // 曝光开关，默认 YES；autotrackEnabled 为 NO 时无论如何都不采集
+configuration.viewImpressionCheckInterval = 0.5;  // 检测节流间隔，单位秒，默认 0.5
 ```
 
 配置在 SDK 启动时读取，启动之后再改不会生效。
