@@ -98,25 +98,26 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     NSLog(@"Application - applicationDidBecomeActive");
+}
 
-#if DELAY_INITIALIZED
-    // 如若您需要使用IDFA作为访问用户ID，参考如下代码
-    // 调用AppTrackingTransparency相关实现请在ApplicationDidBecomeActive之后，适配iOS 15
-    // 参考: https:developer.apple.com/forums/thread/690607?answerId=688798022#688798022
-    if (@available(iOS 14, *)) {
-        [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
+- (void)requestTrackingAuthorizationAndStartSDK {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        // 如需在授权后初始化 SDK，请在 sceneDidBecomeActive: 中调用本方法。
+        if (@available(iOS 14, *)) {
+            [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
+                // 初始化SDK
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self SDK3rdStart];
+                });
+            }];
+        } else {
             // 初始化SDK
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self SDK3rdStart];
             });
-        }];
-    } else {
-        // 初始化SDK
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self SDK3rdStart];
-        });
-    }
-#endif
+        }
+    });
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
