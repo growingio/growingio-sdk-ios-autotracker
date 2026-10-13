@@ -6,6 +6,7 @@
 //
 
 #import "SceneDelegate.h"
+#import "AppDelegate.h"
 
 @interface SceneDelegate ()
 
@@ -25,6 +26,9 @@
     // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
     // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
     // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
+    // 保留单窗口示例中通过 AppDelegate.window 读取安全区域的兼容性。
+    AppDelegate *appDelegate = (AppDelegate *)UIApplication.sharedApplication.delegate;
+    appDelegate.window = self.window;
 }
 
 
@@ -39,6 +43,10 @@
 - (void)sceneDidBecomeActive:(UIScene *)scene {
     // Called when the scene has moved from an inactive state to an active state.
     // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
+#if DELAY_INITIALIZED
+    AppDelegate *appDelegate = (AppDelegate *)UIApplication.sharedApplication.delegate;
+    [appDelegate requestTrackingAuthorizationAndStartSDK];
+#endif
 }
 
 
