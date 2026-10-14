@@ -29,6 +29,7 @@
 #import "InvocationHelper.h"
 #import "Services/JSON/GrowingEventJSONDatabase.h"
 #import "Services/JSON/GrowingEventJSONPersistence.h"
+#import "Services/Protobuf/GrowingEventProtobufDatabase.h"
 
 #import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
 #import "Services/Database/FMDB/GrowingFMDB.h"
@@ -82,13 +83,24 @@
     XCTAssertEqual([db getEventsByCount:1 limitSize:100000 policy:~0UL dataSourceId:@"outside"].count, 0);
     XCTAssertEqualObjects([NSSet setWithArray:db.dataSourceIds], ([NSSet setWithArray:@[@"A", @"B"]]));
 }
-- (void)testLegacyRowsRecoverTheirOwnSource {
+- (void)checkLegacyRowsRecoverTheirOwnSource:(BOOL)isProtobuf {
     [[NSFileManager defaultManager] createDirectoryAtPath:self.path.stringByDeletingLastPathComponent
                               withIntermediateDirectories:YES
                                                attributes:nil
                                                     error:nil];
-    GrowingFMDatabaseQueue *legacy = [GrowingFMDatabaseQueue databaseQueueWithPath:self.path];
-    id<GrowingEventPersistenceProtocol> event = [self eventForSource:@"old-source" uuid:@"legacy-event"];
+    NSString *legacyPath =
+        isProtobuf ? [self.path.stringByDeletingLastPathComponent
+                         stringByAppendingPathComponent:[@"enc_" stringByAppendingString:self.path.lastPathComponent]]
+                   : self.path;
+    GrowingFMDatabaseQueue *legacy = [GrowingFMDatabaseQueue databaseQueueWithPath:legacyPath];
+    Class<GrowingEventDatabaseService> databaseClass =
+        isProtobuf ? GrowingEventProtobufDatabase.class : GrowingEventJSONDatabase.class;
+    GrowingBaseEvent *built = GrowingCustomEvent.builder.setEventName(@"legacy")
+                                  .setDataSourceId(@"old-source")
+                                  .setSessionId(@"old-session")
+                                  .setSdkVersion(@"4.13.0")
+                                  .build;
+    id<GrowingEventPersistenceProtocol> event = [databaseClass persistenceEventWithEvent:built uuid:@"legacy-event"];
     [legacy inDatabase:^(GrowingFMDatabase *db) {
         XCTAssertTrue([db executeUpdate:@"CREATE TABLE namedcachetable(id INTEGER PRIMARY KEY,key TEXT,value "
                                         @"TEXT,createAt INTEGER NOT NULL,type TEXT,sdkVersion TEXT,policy INTEGER)"]);
@@ -102,11 +114,18 @@
                           @(event.policy)]));
     }];
     [legacy close];
-    GrowingEventJSONDatabase *db = [GrowingEventJSONDatabase databaseWithPath:self.path error:nil];
+    id<GrowingEventDatabaseService> db = [databaseClass databaseWithPath:self.path error:nil];
     NSArray *batch = [db getEventsByCount:10 limitSize:100000 policy:~0UL dataSourceId:@"old-source"];
     XCTAssertEqual(batch.count, 1);
     XCTAssertEqualObjects([batch[0] eventUUID], @"legacy-event");
+    XCTAssertEqualObjects([batch[0] toJSONObject][@"sessionId"], @"old-session");
     XCTAssertEqual([db getEventsByCount:10 limitSize:100000 policy:~0UL dataSourceId:@"new-source"].count, 0);
+}
+- (void)testLegacyJSONRowsRecoverTheirOwnSource {
+    [self checkLegacyRowsRecoverTheirOwnSource:NO];
+}
+- (void)testLegacyProtobufRowsRecoverTheirOwnSource {
+    [self checkLegacyRowsRecoverTheirOwnSource:YES];
 }
 - (void)testFailedFlushPreservesNewerWritesAndDeletes {
     GrowingEventDatabase *wrapper = [GrowingEventDatabase databaseWithPath:self.path isProtobuf:NO];

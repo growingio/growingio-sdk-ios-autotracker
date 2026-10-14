@@ -79,8 +79,7 @@
 
 - (void)growingEventManagerEventWillBuild:(GrowingBaseBuilder *_Nullable)builder {
     if (builder) {
-        if ([builder isMemberOfClass:[GrowingCustomBuilder class]] &&
-            GrowingConfigurationManager.sharedInstance.trackConfiguration.customEventWithPath) {
+        if ([builder isMemberOfClass:[GrowingCustomBuilder class]]) {
             // Hybrid触发的HybridCustomEvent将在生成时携带path，不走此处的逻辑
             // Flutter触发的CustomEvent与原生相同，在此处判断后携带path
             if (self.lastPagePath && self.lastPagePath.length > 0) {
@@ -121,9 +120,13 @@
             self.visiblePages = [NSPointerArray weakObjectsPointerArray];
         }
 
-        if (![self.visiblePages.allObjects containsObject:page]) {
-            [self.visiblePages addPointer:(__bridge void *)page];
+        [self.visiblePages compact];
+        // Reappearing pages become current without retaining a second copy.
+        NSUInteger index = [self.visiblePages.allObjects indexOfObject:page];
+        if (index != NSNotFound) {
+            [self.visiblePages removePointerAtIndex:index];
         }
+        [self.visiblePages addPointer:(__bridge void *)page];
     }
 }
 

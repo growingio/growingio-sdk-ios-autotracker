@@ -58,7 +58,9 @@ const int GrowingTrackerVersionCode = 41300;
     if (self) {
         _configuration = [configuration copyWithZone:nil];
         _configuration.serverHostMapping = [GrowingConfigurationManager validatedMapping:configuration error:nil];
-        _configuration.dataCollectionServerHost = _configuration.serverHostMapping[_configuration.dataSourceId];
+        if (_configuration.serverHostMapping) {
+            _configuration.dataCollectionServerHost = _configuration.serverHostMapping[_configuration.dataSourceId];
+        }
         _launchOptions = [launchOptions copy];
         GrowingConfigurationManager.sharedInstance.trackConfiguration = _configuration;
 

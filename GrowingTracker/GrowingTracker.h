@@ -48,8 +48,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param enabled 打开或者关闭
 - (void)setDataCollectionEnabled:(BOOL)enabled;
 
-/// Switch locally without restarting collection. Completion is ordered on the main thread;
-/// success does not acknowledge disk persistence, upload, or cross-platform synchronization.
+/// 切换数据源；serverHost 为 nil 时使用已注册地址。
+/// completion 在主线程调用；成功表示本地切换完成，不表示已落盘或上传。
+/// 后台线程调用后，请在成功回调中发送依赖新数据源的事件。
 - (void)updateDataSourceId:(NSString *)dataSourceId
     dataCollectionServerHost:(NSString *_Nullable)serverHost
                   completion:(void (^_Nullable)(NSError *_Nullable error))completion;

@@ -31,7 +31,6 @@
 - (BOOL)flush;
 - (BOOL)supportsDataSourceRouting;
 - (NSArray<NSString *> *)dataSourceIds;
-- (BOOL)cleanExpiredDataIfNeeded;
 - (NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsByCount:(NSUInteger)count
                                                          limitSize:(NSUInteger)limitSize
                                                             policy:(NSUInteger)mask

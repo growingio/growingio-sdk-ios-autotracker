@@ -20,7 +20,6 @@
 #import "Services/Database/GrowingEventFMDatabase.h"
 #import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
 #import "GrowingTrackerCore/Public/GrowingEventPersistenceProtocol.h"
-#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingULTimeUtil.h"
 #import "Services/Database/FMDB/GrowingFMDB.h"
 
@@ -281,16 +280,6 @@
             self.databaseError = error;
             return;
         }
-        GrowingFMResultSet *expired = [db executeQuery:
-                                              @"SELECT dataSourceId, COUNT(*) AS eventCount FROM namedcachetable WHERE "
-                                              @"createAt<=? GROUP BY dataSourceId",
-                                              sevenDayBefore];
-        while ([expired next]) {
-            GIOLogDebug(@"Expired cache source=%@ count=%lld reason=dataValidityPeriod",
-                        [expired stringForColumn:@"dataSourceId"],
-                        [expired longLongIntForColumn:@"eventCount"]);
-        }
-        [expired close];
         result = [db executeUpdate:@"DELETE FROM namedcachetable WHERE createAt<=?;", sevenDayBefore];
         if (!result) {
             self.databaseError = [self writeErrorInDatabase:db];

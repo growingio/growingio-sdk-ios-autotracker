@@ -457,6 +457,39 @@
     XCTAssertEqualObjects([RoutingNetworkStub.sharedInstance.requests.lastObject absoluteURL].host, @"a.example.com");
     XCTAssertEqual(db.countOfEvents, 0);
 }
+- (void)testSizeLimitedBatchesContinueUploading {
+    GrowingEventDatabase *db = [self databaseWithSources:@[]];
+    NSString *payload = [@"x" stringByPaddingToLength:700000 withString:@"x" startingAtIndex:0];
+    for (NSUInteger i = 0; i < 3; i++) {
+        GrowingBaseEvent *event = GrowingCustomEvent.builder.setEventName(@"large")
+                                      .setDataSourceId(@"A")
+                                      .setSdkVersion(@"4.13.0")
+                                      .setAttributes(@{@"payload": payload})
+                                      .build;
+        NSString *uuid = NSUUID.UUID.UUIDString;
+        [db setEvent:[db persistenceEventWithEvent:event uuid:uuid] forKey:uuid];
+    }
+    XCTAssertTrue([db flush]);
+    GrowingEventChannel *channel = [GrowingEventChannel eventChannelWithName:@"Track"
+                                                                  eventTypes:nil
+                                                             isRealtimeEvent:YES];
+    channel.db = db;
+    GrowingEventManager *manager = [GrowingEventManager new];
+    [manager setValue:@[channel] forKey:@"allEventChannels"];
+    RoutingNetworkStub.sharedInstance.holdResponses = YES;
+    [manager sendAllChannelEvents];
+    [GrowingDispatchManager
+        dispatchInGrowingThread:^{
+        }
+                  waitUntilDone:YES];
+    [self completePendingUploads];
+    XCTAssertEqual(RoutingNetworkStub.sharedInstance.requests.count, 2);
+    XCTAssertEqual(db.countOfEvents, 0);
+    for (id<GrowingRequestProtocol> request in RoutingNetworkStub.sharedInstance.requests) {
+        XCTAssertLessThanOrEqual(request.events.length, 2 * 1024 * 1024);
+        XCTAssertEqualObjects(request.absoluteURL.host, @"a.example.com");
+    }
+}
 - (void)testProtobufHistoryRoutesBySourceWithCurrentJSONEncoding {
     GrowingEventDatabase *db = [self databaseWithSources:@[@"A", @"B"] isProtobuf:YES];
     GrowingEventChannel *channel = [GrowingEventChannel eventChannelWithName:@"Track-Protobuf"
@@ -620,6 +653,9 @@
                                                     completion:^(NSError *error) {
                                                         XCTAssertNil(error);
                                                         XCTAssertTrue(NSThread.isMainThread);
+                                                        [GrowingEventManager.sharedInstance
+                                                            postEventBuilder:GrowingCustomEvent.builder.setEventName(
+                                                                                 @"workerAfterSwitch")];
                                                         [done fulfill];
                                                     }];
     });
@@ -628,6 +664,33 @@
     XCTAssertEqual(events.count, 1);
     XCTAssertEqualObjects(events.firstObject.dataSourceId, @"B");
     XCTAssertEqualObjects(events.firstObject.sessionId, GrowingSession.currentSession.sessionId);
+    GrowingBaseEvent *custom = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom].firstObject;
+    XCTAssertEqualObjects(custom.dataSourceId, @"B");
+    XCTAssertEqualObjects(custom.sessionId, events.firstObject.sessionId);
+}
+- (void)testPageReplayAfterReturningToRetainedPage {
+    GrowingPage *page = [self prepareCurrentPage];
+    UIViewController *first = page.carrier;
+    UIViewController *second = [UIViewController new];
+    second.growingPageAlias = @"second-page";
+    self.pageWindow.rootViewController = second;
+    [GrowingPageManager.sharedInstance viewControllerDidAppear:second];
+    self.pageWindow.rootViewController = first;
+    [GrowingPageManager.sharedInstance viewControllerDidAppear:first];
+    [MockEventQueue.sharedQueue cleanQueue];
+
+    XCTestExpectation *done = [self expectationWithDescription:@"returning page replay"];
+    [GrowingEventManager.sharedInstance updateDataSourceId:@"B"
+                                  dataCollectionServerHost:nil
+                                                completion:^(NSError *error) {
+                                                    XCTAssertNil(error);
+                                                    [done fulfill];
+                                                }];
+    [self waitForExpectationsWithTimeout:5 handler:nil];
+    NSArray<GrowingPageEvent *> *events = (id)[MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
+    XCTAssertEqual(events.count, 1);
+    XCTAssertEqualObjects(events.firstObject.path, @"/same-page");
+    XCTAssertEqualObjects(events.firstObject.dataSourceId, @"B");
 }
 
 @end

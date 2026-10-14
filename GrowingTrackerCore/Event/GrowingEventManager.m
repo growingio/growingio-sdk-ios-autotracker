@@ -53,7 +53,6 @@ static const NSUInteger kGrowingUnit_MB = 1024 * 1024;
 @property (nonatomic, strong) GrowingEventDatabase *timingEventDB_PB;
 @property (nonatomic, strong) GrowingEventDatabase *realtimeEventDB_PB;
 
-@property (nonatomic, assign) BOOL configured;
 @property (nonatomic, assign) unsigned long long uploadEventSize;
 @property (nonatomic, assign) unsigned long long uploadLimitOfCellular;
 
@@ -134,7 +133,6 @@ static GrowingEventManager *sharedInstance = nil;
                 }
             }
             self->_currentEventChannelMap = dictM;
-            self.configured = YES;
         }];
     });
 }
@@ -157,7 +155,7 @@ static GrowingEventManager *sharedInstance = nil;
         NSString *normalized = host ? [GrowingConfigurationManager normalizedServerHost:host] : nil;
         NSString *registered = source.length ? [manager serverHostForDataSourceId:source] : nil;
         NSString *reason = nil;
-        if (!self.configured || !config) {
+        if (!self.allEventChannels.count || !config) {
             reason = @"SDK is not initialized";
         } else if (!source.length || (host && !normalized) || (!registered && !normalized)) {
             reason = @"Invalid data source or collection URL";
@@ -459,11 +457,11 @@ static GrowingEventManager *sharedInstance = nil;
                                  (long)httpResponse.statusCode);
                  }
                  channel.isUploading = NO;
-                 // Drain full successful batches; failed batches wait for the next upload trigger.
+                 // Keep draining this source after success, including batches limited by byte size.
+                 // Failed batches wait for the next upload trigger.
                  NSArray *nextSources =
-                     success && events.count >= kGrowingMaxBatchSize
-                         ? [sources subarrayWithRange:NSMakeRange(sourceIndex, sources.count - sourceIndex)]
-                         : remainingSources;
+                     success ? [sources subarrayWithRange:NSMakeRange(sourceIndex, sources.count - sourceIndex)]
+                             : remainingSources;
                  [self sendEventsOfChannel_unsafe:channel dataSourceIds:nextSources];
              }];
          }];
