@@ -25,8 +25,6 @@
 
 + (void)dispatchInGrowingThread:(void (^_Nullable)(void))block waitUntilDone:(BOOL)waitUntilDone;
 
-+ (void)enqueueInGrowingThread:(void (^_Nonnull)(void))block;
-
 + (void)dispatchInMainThread:(void (^_Nullable)(void))block;
 
 + (void)trackApiSel:(SEL _Nonnull)selector dispatchInMainThread:(void (^_Nullable)(void))block;

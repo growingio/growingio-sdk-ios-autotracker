@@ -38,13 +38,6 @@
     }
 }
 
-+ (void)enqueueInGrowingThread:(void (^)(void))block {
-    [self performSelector:@selector(dispatchBlock:)
-                 onThread:[GrowingThread sharedThread]
-               withObject:[block copy]
-            waitUntilDone:NO];
-}
-
 + (void)dispatchBlock:(void (^_Nullable)(void))block {
     if (block) {
         block();

@@ -151,7 +151,7 @@ static GrowingEventManager *sharedInstance = nil;
         return;
     }
     GrowingBaseBuilder *pageBuilder = self.dataSourcePageBuilder ? self.dataSourcePageBuilder() : nil;
-    [GrowingDispatchManager enqueueInGrowingThread:^{
+    [GrowingDispatchManager dispatchInGrowingThread:^{
         GrowingConfigurationManager *manager = GrowingConfigurationManager.sharedInstance;
         GrowingTrackConfiguration *config = manager.trackConfiguration;
         NSString *normalized = host ? [GrowingConfigurationManager normalizedServerHost:host] : nil;
@@ -437,7 +437,7 @@ static GrowingEventManager *sharedInstance = nil;
     [service
         sendRequest:eventRequest
          completion:^(NSHTTPURLResponse *httpResponse, NSData *data, NSError *error) {
-             [GrowingDispatchManager enqueueInGrowingThread:^{
+             [GrowingDispatchManager dispatchInGrowingThread:^{
                  if (completed) return;
                  completed = YES;
                  BOOL success = !error && httpResponse.statusCode >= 200 && httpResponse.statusCode < 300;
