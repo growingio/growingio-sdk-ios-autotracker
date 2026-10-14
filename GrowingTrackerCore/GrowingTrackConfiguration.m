@@ -116,6 +116,7 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
     configuration->_dataCollectionEnabled = _dataCollectionEnabled;
     configuration->_uploadExceptionEnable = _uploadExceptionEnable;
     configuration->_dataCollectionServerHost = [_dataCollectionServerHost copy];
+    configuration->_serverHostMapping = [_serverHostMapping copy];
     configuration->_excludeEvent = _excludeEvent;
     configuration->_ignoreField = _ignoreField;
     configuration->_idMappingEnabled = _idMappingEnabled;

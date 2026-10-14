@@ -109,6 +109,15 @@ extern NSString *const GrowingEventDatabaseErrorDomain;
 ///                 userInfo:@{NSLocalizedDescriptionKey : @"some message"}]
 - (NSError *)lastError;
 
+@optional
+/// Multi-source queries must filter before applying the batch size limit.
+- (nullable NSArray<NSString *> *)dataSourceIds;
+- (nullable NSDictionary<NSString *, NSNumber *> *)eventCountsByDataSourceId;
+- (nullable NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsByCount:(NSUInteger)count
+                                                                  limitSize:(NSUInteger)limitSize
+                                                                     policy:(NSUInteger)mask
+                                                               dataSourceId:(NSString *)dataSourceId;
+
 @end
 
 @protocol GrowingPBEventDatabaseService <GrowingEventDatabaseService>

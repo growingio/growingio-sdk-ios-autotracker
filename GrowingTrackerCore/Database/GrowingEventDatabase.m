@@ -28,6 +28,8 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
 @interface GrowingEventDatabase ()
 
 @property (nonatomic, strong) id<GrowingEventDatabaseService> db;
+@property (nonatomic, copy) NSString *filePath;
+@property (nonatomic, assign) Class databaseClass;
 @property (nonatomic, strong) NSMutableArray *updateKeys;
 @property (nonatomic, strong) NSMutableArray *updateValues;
 
@@ -62,10 +64,13 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
             return nil;
         }
 
-        NSError *error;
+        _filePath = [filePath copy];
+        _databaseClass = serviceClass;
+        NSError *error = nil;
         _db = [(Class)serviceClass databaseWithPath:filePath error:&error];
-        if (error) {
+        if (error || !_db) {
             [self handleDatabaseError:error];
+            return nil;
         }
         [self cleanExpiredDataIfNeeded];
     }
@@ -73,10 +78,36 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
     return self;
 }
 
+- (id<GrowingEventDatabaseService>)db {
+    @synchronized(self) {
+        if (!_db && self.databaseClass) {
+            NSError *error = nil;
+            _db = [self.databaseClass databaseWithPath:self.filePath error:&error];
+            if (error) {
+                [self handleDatabaseError:error];
+                _db = nil;
+            }
+        }
+        return _db;
+    }
+}
+
+- (void)releaseIdleDatabase {
+    @synchronized(self) {
+        __block BOOL pending;
+        [self performModifyArrayBlock:^{
+            pending = self.updateKeys.count > 0;
+        }];
+        if (!pending) _db = nil;
+    }
+}
+
 #pragma mark - Public Methods
 
 - (NSUInteger)countOfEvents {
-    [self flush];
+    if (![self flush]) {
+        return 0;
+    }
 
     NSInteger count = [self.db countOfEvents];
     if (count < 0) {
@@ -87,62 +118,76 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
 }
 
 - (BOOL)flush {
-    NSMutableArray *removeArray = [[NSMutableArray alloc] init];
-    NSMutableArray *insertArray = [[NSMutableArray alloc] init];
-
-    [self performModifyArrayBlock:^{
-        if (!self.updateKeys.count) {
-            return;
+    // Serialize flushes, while allowing producers to append under the short array lock.
+    @synchronized(self) {
+        __block NSArray *keys;
+        __block NSArray *values;
+        [self performModifyArrayBlock:^{
+            keys = self.updateKeys.copy;
+            values = self.updateValues.copy;
+        }];
+        if (!keys.count) {
+            return YES;
         }
-
-        // 如果一个key被更改多次 则以最后一次为准 从后向前遍历一个key只用一次 该table用来记录使用过的key
-        NSHashTable *checkTable =
-            [[NSHashTable alloc] initWithOptions:NSPointerFunctionsObjectPersonality | NSPointerFunctionsStrongMemory
-                                        capacity:self.updateKeys.count];
-        NSString *key = nil;
-        id value = nil;
-
-        // 从后往前遍历
-        for (NSInteger i = self.updateKeys.count - 1; i >= 0; i--) {
-            key = self.updateKeys[i];
-            value = self.updateValues[i];
-            // 如果已经使用过 则继续 否则添加到使用过的key里
-            if ([checkTable containsObject:key]) {
+        NSMutableSet *seen = [NSMutableSet set];
+        NSMutableArray *inserts = [NSMutableArray array];
+        NSMutableArray *removes = [NSMutableArray array];
+        for (NSInteger i = keys.count - 1; i >= 0; i--) {
+            if ([seen containsObject:keys[i]]) {
                 continue;
-            } else {
-                [checkTable addObject:key];
             }
-
-            if (value != nil && ![value isKindOfClass:[NSNull class]]) {
-                // 保持顺序
-                [insertArray insertObject:value atIndex:0];
+            [seen addObject:keys[i]];
+            if (values[i] == NSNull.null) {
+                [removes addObject:keys[i]];
             } else {
-                [removeArray addObject:key];
+                [inserts insertObject:values[i] atIndex:0];
             }
         }
-
-        [self.updateValues removeAllObjects];
-        [self.updateKeys removeAllObjects];
-    }];
-
-    // 缓存中无数据，无需flush
-    if (removeArray.count == 0 && insertArray.count == 0) {
+        if (![self.db deleteEvents:removes] || ![self.db insertEvents:inserts]) {
+            [self handleDatabaseError:self.db.lastError];
+            return NO;
+        }
+        [self performModifyArrayBlock:^{
+            // Appends made during IO remain queued, including newer deletes for the same UUID.
+            [self.updateKeys removeObjectsInRange:NSMakeRange(0, keys.count)];
+            [self.updateValues removeObjectsInRange:NSMakeRange(0, values.count)];
+        }];
         return YES;
     }
+}
 
-    // 数据库操作
-    BOOL result = [self.db deleteEvents:removeArray];
-    if (!result) {
-        [self handleDatabaseError:[self.db lastError]];
-        return NO;
-    }
-    result = [self.db insertEvents:insertArray];
-    if (!result) {
-        [self handleDatabaseError:[self.db lastError]];
-        return NO;
-    }
+- (BOOL)supportsDataSourceRouting {
+    return [self.db respondsToSelector:@selector(dataSourceIds)] &&
+           [self.db respondsToSelector:@selector(getEventsByCount:limitSize:policy:dataSourceId:)];
+}
 
-    return YES;
+- (NSDictionary<NSString *, NSNumber *> *)eventCountsByDataSourceId {
+    if ([self.db respondsToSelector:@selector(eventCountsByDataSourceId)]) return [self.db eventCountsByDataSourceId];
+    return @{};
+}
+
+- (NSArray<NSString *> *)dataSourceIds {
+    return self.supportsDataSourceRouting ? [self.db dataSourceIds] : @[];
+}
+
+- (NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsByCount:(NSUInteger)count
+                                                         limitSize:(NSUInteger)limitSize
+                                                            policy:(NSUInteger)mask
+                                                      dataSourceId:(NSString *)dataSourceId {
+    if (![self flush]) {
+        return @[];
+    }
+    if (self.supportsDataSourceRouting) {
+        return [self.db getEventsByCount:count limitSize:limitSize policy:mask dataSourceId:dataSourceId] ?: @[];
+    }
+    // Legacy services remain usable for single-source collection, without ever misrouting a batch.
+    NSMutableArray *events = [NSMutableArray array];
+    for (id<GrowingEventPersistenceProtocol> event in [self getEventsByCount:count limitSize:limitSize policy:mask]) {
+        if ([[event toJSONObject][@"dataSourceId"] isEqual:dataSourceId]) {
+            [events addObject:event];
+        }
+    }
+    return events;
 }
 
 - (BOOL)clearAllItems {

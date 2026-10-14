@@ -28,5 +28,7 @@
 + (BOOL)singleton;
 + (instancetype)sharedInstance;
 - (void)growingModInit:(GrowingContext *)context;
+/// Called on the event thread after local commit. customParam contains oldContext/newContext.
+- (void)growingModDataSourceChanged:(GrowingContext *)context;
 
 @end

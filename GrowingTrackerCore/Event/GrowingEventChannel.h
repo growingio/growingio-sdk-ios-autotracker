@@ -35,6 +35,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) GrowingEventPersistenceType persistenceType;
 @property (nonatomic, assign) BOOL isRealtimeEvent;
 @property (nonatomic, assign) BOOL isUploading;
+@property (nonatomic, copy) NSString *dataSourceId;
+@property (nonatomic, assign) NSTimeInterval nextRetryTime;
+@property (nonatomic, assign) NSUInteger failureCount;
 @property (nonatomic, weak) GrowingEventDatabase *db;
 
 + (instancetype)eventChannelWithName:(NSString *)name

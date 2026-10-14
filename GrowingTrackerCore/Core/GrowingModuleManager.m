@@ -190,6 +190,7 @@ static NSString *kSetDataCollectionEnabledSelector = @"growingModSetDataCollecti
     if (!_selectorByEvent) {
         _selectorByEvent = @{
             @(GrowingMInitEvent): kInitSelector,
+            @(GrowingMDataSourceChangedEvent): @"growingModDataSourceChanged:",
             @(GrowingMSetDataCollectionEnabledEvent): kSetDataCollectionEnabledSelector,
         };
     }

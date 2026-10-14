@@ -89,6 +89,7 @@
 		346E0B3F29F2724400A12E4E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 346E0B3E29F2724400A12E4E /* Assets.xcassets */; };
 		346E0B4229F2724400A12E4E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 346E0B4029F2724400A12E4E /* Main.storyboard */; };
 		346EABE1277EDF8A00A32B03 /* EventTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 346EABE0277EDF8A00A32B03 /* EventTest.m */; };
+		B3008C9837AB4500B7693876 /* DynamicRoutingTest.m in Sources */ = {isa = PBXBuildFile; fileRef = FD73F19C2116447297C02BFD /* DynamicRoutingTest.m */; };
 		346EABE5277EE1FD00A32B03 /* HybridTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 42ADE26B250B292900CA7268 /* HybridTest.m */; };
 		346EABEB277EE53200A32B03 /* DeviceInfoTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 346EABEA277EE53200A32B03 /* DeviceInfoTest.m */; };
 		346EABF2277EE63F00A32B03 /* NodeTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 346EABF1277EE63F00A32B03 /* NodeTest.m */; };
@@ -127,6 +128,7 @@
 		34AC7AD127982BEE00C0DFA5 /* GrowingSwizzleTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AC7AD027982BEE00C0DFA5 /* GrowingSwizzleTest.m */; };
 		34AE0FE8279AADA7009C8166 /* NSNotificationCenterAutotrackTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AE0FE7279AADA7009C8166 /* NSNotificationCenterAutotrackTest.m */; };
 		34B2147C27966142004E2CE3 /* DatabaseTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B2147B27966142004E2CE3 /* DatabaseTest.m */; };
+		CA5C6A087DE64EA69F899041 /* RoutingStorageTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 527AD834A91B4C9E9B7CBCA8 /* RoutingStorageTest.m */; };
 		34B2147E2796664E004E2CE3 /* JSONPersistenceTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B2147D2796664E004E2CE3 /* JSONPersistenceTest.m */; };
 		34B2148727969562004E2CE3 /* DynamicProxyTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B2148627969562004E2CE3 /* DynamicProxyTest.m */; };
 		34B2148A2796A234004E2CE3 /* GrowingAlertTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B214892796A234004E2CE3 /* GrowingAlertTest.m */; };
@@ -391,6 +393,7 @@
 		346E0B4129F2724400A12E4E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		346E0B4329F2724400A12E4E /* Example_macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Example_macOS.entitlements; sourceTree = "<group>"; };
 		346EABE0277EDF8A00A32B03 /* EventTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EventTest.m; sourceTree = "<group>"; };
+		FD73F19C2116447297C02BFD /* DynamicRoutingTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DynamicRoutingTest.m; sourceTree = "<group>"; };
 		346EABEA277EE53200A32B03 /* DeviceInfoTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DeviceInfoTest.m; sourceTree = "<group>"; };
 		346EABF1277EE63F00A32B03 /* NodeTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NodeTest.m; sourceTree = "<group>"; };
 		347723402A9F1B2E004FE07F /* WebSocketTestHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebSocketTestHelper.h; sourceTree = "<group>"; };
@@ -443,6 +446,7 @@
 		34AC7AD027982BEE00C0DFA5 /* GrowingSwizzleTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GrowingSwizzleTest.m; sourceTree = "<group>"; };
 		34AE0FE7279AADA7009C8166 /* NSNotificationCenterAutotrackTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSNotificationCenterAutotrackTest.m; sourceTree = "<group>"; };
 		34B2147B27966142004E2CE3 /* DatabaseTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DatabaseTest.m; sourceTree = "<group>"; };
+		527AD834A91B4C9E9B7CBCA8 /* RoutingStorageTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RoutingStorageTest.m; sourceTree = "<group>"; };
 		34B2147D2796664E004E2CE3 /* JSONPersistenceTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSONPersistenceTest.m; sourceTree = "<group>"; };
 		34B2148627969562004E2CE3 /* DynamicProxyTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DynamicProxyTest.m; sourceTree = "<group>"; };
 		34B214892796A234004E2CE3 /* GrowingAlertTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GrowingAlertTest.m; sourceTree = "<group>"; };
@@ -1218,6 +1222,7 @@
 			isa = PBXGroup;
 			children = (
 				34B2147B27966142004E2CE3 /* DatabaseTest.m */,
+				527AD834A91B4C9E9B7CBCA8 /* RoutingStorageTest.m */,
 			);
 			path = DatabaseTests;
 			sourceTree = "<group>";
@@ -1469,6 +1474,7 @@
 			children = (
 				34C0BF39277EA7C90047ADC4 /* DataTrafficTest.m */,
 				346EABE0277EDF8A00A32B03 /* EventTest.m */,
+				FD73F19C2116447297C02BFD /* DynamicRoutingTest.m */,
 			);
 			path = EventTests;
 			sourceTree = "<group>";
@@ -2845,6 +2851,7 @@
 				34AC7AC92798270500C0DFA5 /* GrowingUIKitHelpersTest.m in Sources */,
 				34BA7B24277C62E70030AC21 /* HybridEventTest.m in Sources */,
 				34B2147C27966142004E2CE3 /* DatabaseTest.m in Sources */,
+				CA5C6A087DE64EA69F899041 /* RoutingStorageTest.m in Sources */,
 				34BA7B2A277C63660030AC21 /* MockEventQueue.m in Sources */,
 				34AC7ACB2798271E00C0DFA5 /* GrowingFoundationHelpersTest.m in Sources */,
 				34B2148727969562004E2CE3 /* DynamicProxyTest.m in Sources */,
@@ -2860,6 +2867,7 @@
 				347B8F432A0A46DD00B8A114 /* ScreenshotTest.m in Sources */,
 				34BA7B21277C61770030AC21 /* GrowingModuleTest.m in Sources */,
 				346EABE1277EDF8A00A32B03 /* EventTest.m in Sources */,
+				B3008C9837AB4500B7693876 /* DynamicRoutingTest.m in Sources */,
 				34BA7B20277C61740030AC21 /* GrowingServiceTest.m in Sources */,
 				346EABF2277EE63F00A32B03 /* NodeTest.m in Sources */,
 				3494DD482859F43600A6CE46 /* DeepLinkTest.m in Sources */,

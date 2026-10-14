@@ -17,6 +17,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "Modules/ABTesting/GrowingABTExperiment+Private.h"
 #import "Modules/ABTesting/GrowingABTExperimentStorage.h"
 
@@ -31,6 +32,7 @@
 @property (nonatomic, copy, nullable, readwrite) NSDictionary *variables;
 @property (nonatomic, assign) long long fetchTime;
 @property (nonatomic, copy, nullable) NSString *identity;
+@property (nonatomic, copy) NSString *dataSourceId;
 
 @end
 
@@ -45,6 +47,7 @@
                       variables:(NSDictionary *_Nullable)variables
                       fetchTime:(long long)fetchTime {
     if (self = [super init]) {
+        _dataSourceId = [GrowingConfigurationManager.sharedInstance.trackConfiguration.dataSourceId copy];
         _layerId = layerId.copy;
         _layerName = layerName.copy;
         _experimentId = experimentId.copy;
@@ -157,6 +160,7 @@
     if (self.variables) {
         dic[@"variables"] = self.variables.copy;
     }
+    dic[@"dataSourceId"] = self.dataSourceId;
     if (self.identity) {
         dic[@"identity"] = self.identity.copy;
     }

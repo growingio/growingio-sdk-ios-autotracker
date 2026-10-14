@@ -68,6 +68,12 @@ FOUNDATION_EXPORT const int GrowingTrackerVersionCode;
 /// @param enabled 打开或者关闭
 - (void)setDataCollectionEnabled:(BOOL)enabled;
 
+/// Switch locally without restarting collection. Completion is ordered on the main thread;
+/// success does not acknowledge disk persistence, upload, or cross-platform synchronization.
+- (void)updateDataSourceId:(NSString *)dataSourceId
+    dataCollectionServerHost:(NSString *_Nullable)serverHost
+                  completion:(void (^_Nullable)(NSError *_Nullable error))completion;
+
 /// 同步获取设备id，又称为匿名用户id，SDK 自动生成用来定义唯一设备。
 - (NSString *)getDeviceId;
 

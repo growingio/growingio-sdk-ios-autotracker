@@ -29,6 +29,15 @@
 - (NSUInteger)countOfEvents;
 
 - (BOOL)flush;
+- (BOOL)supportsDataSourceRouting;
+- (void)releaseIdleDatabase;
+- (NSArray<NSString *> *)dataSourceIds;
+- (NSDictionary<NSString *, NSNumber *> *)eventCountsByDataSourceId;
+- (BOOL)cleanExpiredDataIfNeeded;
+- (NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsByCount:(NSUInteger)count
+                                                         limitSize:(NSUInteger)limitSize
+                                                            policy:(NSUInteger)mask
+                                                      dataSourceId:(NSString *)dataSourceId;
 
 - (BOOL)clearAllItems;
 

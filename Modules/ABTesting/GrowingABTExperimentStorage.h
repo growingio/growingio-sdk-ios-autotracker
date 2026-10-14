@@ -26,6 +26,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GrowingABTExperimentStorage : NSObject
 
 + (nullable GrowingABTExperiment *)findExperiment:(NSString *)layerId identity:(NSString *)identity;
++ (nullable GrowingABTExperiment *)findExperiment:(NSString *)layerId
+                                         identity:(NSString *)identity
+                                     dataSourceId:(NSString *)dataSourceId;
 + (void)addExperiment:(GrowingABTExperiment *)experiment;
 + (void)removeExperiment:(GrowingABTExperiment *)experiment;
 

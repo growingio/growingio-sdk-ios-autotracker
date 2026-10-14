@@ -1186,6 +1186,65 @@ static NSString *GrowingABTDecodeValue(NSString *value, unsigned long long stm) 
     [cachedExp removeFromDisk];
 }
 
+- (void)testDataSourceScopedCache {
+    NSString *layer = NSUUID.UUID.UUIDString;
+    NSString *originalSource = GrowingConfigurationManager.sharedInstance.trackConfiguration.dataSourceId;
+    NSString *host = GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionServerHost;
+    NSString *otherSource = [@"routing-abt-" stringByAppendingString:NSUUID.UUID.UUIDString];
+    __block NSUInteger calls = 0;
+    [HTTPStubs
+        stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+            return [request.URL.path isEqualToString:@"/diversion/specified-layer-variables"];
+        }
+        withStubResponse:^HTTPStubsResponse *(NSURLRequest *request) {
+            calls++;
+            return [HTTPStubsResponse responseWithJSONObject:@{
+                @"code": @0,
+                @"experimentId": @1,
+                @"strategyId": @1,
+                @"variables": @{}
+            }
+                                                  statusCode:200
+                                                     headers:nil];
+        }];
+    XCTestExpectation *done = [self expectationWithDescription:@"source scoped experiment cache"];
+    [GrowingABTesting
+        fetchExperiment:layer
+         completedBlock:^(GrowingABTExperiment *first) {
+             XCTAssertNotNil(first);
+             [GrowingAutotracker.sharedInstance
+                       updateDataSourceId:otherSource
+                 dataCollectionServerHost:host
+                               completion:^(NSError *error) {
+                                   XCTAssertNil(error);
+                                   [GrowingABTesting
+                                       fetchExperiment:layer
+                                        completedBlock:^(GrowingABTExperiment *second) {
+                                            XCTAssertNotNil(second);
+                                            XCTAssertEqualObjects(first.dataSourceId, originalSource);
+                                            XCTAssertEqualObjects(second.dataSourceId, otherSource);
+                                            [GrowingAutotracker.sharedInstance
+                                                      updateDataSourceId:originalSource
+                                                dataCollectionServerHost:nil
+                                                              completion:^(NSError *error2) {
+                                                                  XCTAssertNil(error2);
+                                                                  [GrowingABTesting
+                                                                      fetchExperiment:layer
+                                                                       completedBlock:^(GrowingABTExperiment *third) {
+                                                                           XCTAssertEqualObjects(third.dataSourceId,
+                                                                                                 originalSource);
+                                                                           XCTAssertEqual(calls, 2);
+                                                                           [first removeFromDisk];
+                                                                           [second removeFromDisk];
+                                                                           [done fulfill];
+                                                                       }];
+                                                              }];
+                                        }];
+                               }];
+         }];
+    [self waitForExpectationsWithTimeout:10 handler:nil];
+}
+
 @end
 
 #pragma clang diagnostic pop

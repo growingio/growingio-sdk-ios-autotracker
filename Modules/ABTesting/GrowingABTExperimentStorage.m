@@ -19,6 +19,7 @@
 
 #import "Modules/ABTesting/GrowingABTExperimentStorage.h"
 #import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 #import "Modules/ABTesting/GrowingABTExperiment+Private.h"
 
@@ -74,7 +75,8 @@ static dispatch_queue_t GrowingABTStorageIOQueue(void) {
                     e.identity = (NSString *)dic[@"identity"];
                 }
 
-                if (e.identity.length == 0 || e.isOutdated) {
+                e.dataSourceId = [dic[@"dataSourceId"] isKindOfClass:NSString.class] ? dic[@"dataSourceId"] : nil;
+                if (!e.dataSourceId.length || e.identity.length == 0 || e.isOutdated) {
                     continue;
                 }
                 [_experiments addObject:e];
@@ -118,23 +120,35 @@ static dispatch_queue_t GrowingABTStorageIOQueue(void) {
 }
 
 - (nullable GrowingABTExperiment *)findExperiment:(NSString *)layerId identity:(NSString *)identity {
+    return [self findExperiment:layerId
+                       identity:identity
+                   dataSourceId:GrowingConfigurationManager.sharedInstance.trackConfiguration.dataSourceId];
+}
+
+- (nullable GrowingABTExperiment *)findExperiment:(NSString *)layerId
+                                         identity:(NSString *)identity
+                                     dataSourceId:(NSString *)dataSourceId {
     NSArray<GrowingABTExperiment *> *experiments;
     GROWING_LOCK(lock);
     experiments = self.experiments.copy;
     GROWING_UNLOCK(lock);
 
     for (GrowingABTExperiment *exp in experiments) {
-        if ([exp.layerId isEqualToString:layerId] && [exp.identity isEqualToString:identity]) {
+        if ([exp.layerId isEqualToString:layerId] && [exp.identity isEqualToString:identity] &&
+            [exp.dataSourceId isEqualToString:dataSourceId]) {
             return exp;
         }
     }
     return nil;
 }
 
-- (NSUInteger)indexOfExperimentWithLayerId:(NSString *)layerId identity:(NSString *)identity {
+- (NSUInteger)indexOfExperimentWithLayerId:(NSString *)layerId
+                                  identity:(NSString *)identity
+                              dataSourceId:(NSString *)dataSourceId {
     for (NSUInteger i = 0; i < self.experiments.count; i++) {
         GrowingABTExperiment *exp = self.experiments[i];
-        if ([exp.layerId isEqualToString:layerId] && [exp.identity isEqualToString:identity]) {
+        if ([exp.layerId isEqualToString:layerId] && [exp.identity isEqualToString:identity] &&
+            [exp.dataSourceId isEqualToString:dataSourceId]) {
             return i;
         }
     }
@@ -143,7 +157,9 @@ static dispatch_queue_t GrowingABTStorageIOQueue(void) {
 
 - (void)addExperiment:(GrowingABTExperiment *)experiment {
     GROWING_LOCK(lock);
-    NSUInteger index = [self indexOfExperimentWithLayerId:experiment.layerId identity:experiment.identity];
+    NSUInteger index = [self indexOfExperimentWithLayerId:experiment.layerId
+                                                 identity:experiment.identity
+                                             dataSourceId:experiment.dataSourceId];
     if (index != NSNotFound) {
         [self.experiments removeObjectAtIndex:index];
     }
@@ -158,7 +174,9 @@ static dispatch_queue_t GrowingABTStorageIOQueue(void) {
 - (void)removeExperiment:(GrowingABTExperiment *)experiment {
     BOOL submitted = NO;
     GROWING_LOCK(lock);
-    NSUInteger index = [self indexOfExperimentWithLayerId:experiment.layerId identity:experiment.identity];
+    NSUInteger index = [self indexOfExperimentWithLayerId:experiment.layerId
+                                                 identity:experiment.identity
+                                             dataSourceId:experiment.dataSourceId];
     if (index != NSNotFound) {
         [self.experiments removeObjectAtIndex:index];
         [self submitSynchronizeTask:self.experiments.copy];
@@ -175,6 +193,14 @@ static dispatch_queue_t GrowingABTStorageIOQueue(void) {
 
 + (nullable GrowingABTExperiment *)findExperiment:(NSString *)layerId identity:(NSString *)identity {
     return [GrowingABTExperimentStorage.sharedInstance findExperiment:layerId identity:identity];
+}
+
++ (nullable GrowingABTExperiment *)findExperiment:(NSString *)layerId
+                                         identity:(NSString *)identity
+                                     dataSourceId:(NSString *)dataSourceId {
+    return [GrowingABTExperimentStorage.sharedInstance findExperiment:layerId
+                                                             identity:identity
+                                                         dataSourceId:dataSourceId];
 }
 
 + (void)addExperiment:(GrowingABTExperiment *)experiment {

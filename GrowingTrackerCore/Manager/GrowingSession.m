@@ -48,6 +48,8 @@
 
 static GrowingSession *currentSession = nil;
 
+NSString *const GrowingSessionDidRefreshNotification = @"GrowingSessionDidRefreshNotification";
+
 @implementation GrowingSession {
     GROWING_LOCK_DECLARE(lock);
 }
@@ -94,9 +96,19 @@ static GrowingSession *currentSession = nil;
 }
 
 - (void)refreshSessionId {
+    NSDictionary *previous = GrowingConfigurationManager.sharedInstance.committedContext;
     _firstSession = !(_sessionId && _sessionId.length > 0);
     _sessionId = NSUUID.UUID.UUIDString;
     _sentVisitAfterRefreshSessionId = NO;
+    GrowingConfigurationManager.sharedInstance.committedContext =
+        GrowingConfigurationManager.sharedInstance.eventContext;
+    NSDictionary *current = GrowingConfigurationManager.sharedInstance.committedContext;
+    if ([previous[@"sequence"] isEqual:current[@"sequence"]] &&
+        [previous[@"dataSourceId"] isEqual:current[@"dataSourceId"]]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:GrowingSessionDidRefreshNotification
+                                                            object:self
+                                                          userInfo:@{@"context": current}];
+    }
 }
 
 // iOS 11系统上面VC的viewDidAppear生命周期会早于AppDelegate的applicationDidBecomeActive，这样会造成Page事件早于Visit事件

@@ -65,6 +65,12 @@
 
 /// 配置事件管理者
 - (void)configManager;
+- (void)updateDataSourceId:(NSString *_Nonnull)dataSourceId
+    dataCollectionServerHost:(NSString *_Nullable)serverHost
+                  completion:(void (^_Nullable)(NSError *_Nullable))completion;
+
+/// Called on the event thread before the switch completion; UI state must already be snapshotted.
+@property (nonatomic, copy, nullable) void (^dataSourcePageHandler)(void);
 
 /// 开启事件发送定时器
 - (void)startTimerSend;

@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) long long fetchTime;
 
 @property (nonatomic, copy, nullable) NSString *identity;
+@property (nonatomic, copy) NSString *dataSourceId;
 
 - (instancetype)initWithLayerId:(NSString *)layerId
                       layerName:(NSString *_Nullable)layerName

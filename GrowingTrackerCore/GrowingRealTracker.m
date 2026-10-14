@@ -57,6 +57,8 @@ const int GrowingTrackerVersionCode = 41300;
     self = [super init];
     if (self) {
         _configuration = [configuration copyWithZone:nil];
+        _configuration.serverHostMapping = [GrowingConfigurationManager validatedMapping:configuration error:nil];
+        _configuration.dataCollectionServerHost = _configuration.serverHostMapping[_configuration.dataSourceId];
         _launchOptions = [launchOptions copy];
         GrowingConfigurationManager.sharedInstance.trackConfiguration = _configuration;
 
@@ -84,6 +86,14 @@ const int GrowingTrackerVersionCode = 41300;
 + (instancetype)trackerWithConfiguration:(GrowingTrackConfiguration *)configuration
                            launchOptions:(NSDictionary *)launchOptions {
     return [[self alloc] initWithConfiguration:configuration launchOptions:launchOptions];
+}
+
+- (void)updateDataSourceId:(NSString *)dataSourceId
+    dataCollectionServerHost:(NSString *)serverHost
+                  completion:(void (^)(NSError *))completion {
+    [[GrowingEventManager sharedInstance] updateDataSourceId:dataSourceId
+                                    dataCollectionServerHost:serverHost
+                                                  completion:completion];
 }
 
 - (void)loggerSetting {

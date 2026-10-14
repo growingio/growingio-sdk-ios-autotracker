@@ -364,6 +364,18 @@ static CGFloat const kGrowingGetDomTreeDefaultTimeOut = 10.0f;
             builder = GrowingLoginUserAttributesEvent.builder.setAttributes([self safeAttributesFromDict:dict]);
         }
         if (builder) {
+            NSDictionary *routing =
+                [dict[@"routingContext"] isKindOfClass:NSDictionary.class] ? dict[@"routingContext"] : nil;
+            if ([routing[@"dataSourceId"] isKindOfClass:NSString.class] &&
+                [routing[@"sessionId"] isKindOfClass:NSString.class]) {
+                if (![dict[@"routingContextFromBridge"] boolValue] ||
+                    GrowingConfigurationManager.sharedInstance.routingSequence > 0) {
+                    builder.eventContext = routing;
+                }
+            } else if (GrowingConfigurationManager.sharedInstance.routingSequence > 0) {
+                GIOLogError(@"Hybrid message has no routing context after a switch; Web SDK protocol upgrade required");
+                return;
+            }
             builder = builder.setScene(GrowingEventSceneHybrid);
             [[GrowingEventManager sharedInstance] postEventBuilder:builder];
         }

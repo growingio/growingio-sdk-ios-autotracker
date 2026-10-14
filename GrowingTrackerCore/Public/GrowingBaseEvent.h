@@ -85,6 +85,9 @@ typedef NS_ENUM(NSUInteger, GrowingEventScene) {
 /// builder
 @interface GrowingBaseBuilder : NSObject
 
+/// Internal task snapshot. Nil means select the current context on the event thread.
+@property (nonatomic, copy, nullable) NSDictionary *eventContext;
+
 @property (nonatomic, copy, readonly, nullable) NSString *dataSourceId;
 @property (nonatomic, copy, readonly) NSString *deviceId;
 @property (nonatomic, copy, readonly, nullable) NSString *userId;

@@ -48,6 +48,12 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param enabled 打开或者关闭
 - (void)setDataCollectionEnabled:(BOOL)enabled;
 
+/// Switch locally without restarting collection. Completion is ordered on the main thread;
+/// success does not acknowledge disk persistence, upload, or cross-platform synchronization.
+- (void)updateDataSourceId:(NSString *)dataSourceId
+    dataCollectionServerHost:(NSString *_Nullable)serverHost
+                  completion:(void (^_Nullable)(NSError *_Nullable error))completion;
+
 /// 当用户登录之后调用setLoginUserId API，设置登录用户ID。
 /// @param userId 用户ID
 - (void)setLoginUserId:(NSString *)userId;

@@ -25,8 +25,15 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GrowingUniAppPlugin : NSObject <GrowingModuleProtocol>
 
 + (instancetype)sharedInstance;
+/// The plugin must apply source/session, emit its PAGE once, then use this context for new events.
+@property (nonatomic, copy, nullable) void (^onDataSourceChanged)(NSDictionary *context);
+@property (atomic, copy, readonly) NSDictionary *routingContext;
+- (void)confirmRoutingContext:(NSDictionary *)context;
 
 - (void)trackPageEvent:(NSString *)pageName attributes:(NSDictionary<NSString *, NSString *> *_Nullable)attributes;
+- (void)trackPageEvent:(NSString *)pageName
+            attributes:(NSDictionary<NSString *, NSString *> *_Nullable)attributes
+        routingContext:(NSDictionary *)routingContext;
 
 @end
 

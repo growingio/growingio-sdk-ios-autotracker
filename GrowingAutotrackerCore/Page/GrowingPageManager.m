@@ -26,13 +26,24 @@
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
+#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
 #import "GrowingULAppLifecycle.h"
+#import "GrowingULTimeUtil.h"
 #import "GrowingULViewControllerLifecycle.h"
 
-@interface GrowingPageManager () <GrowingULViewControllerLifecycleDelegate, GrowingEventInterceptor>
+@interface GrowingPageManager () <GrowingULViewControllerLifecycleDelegate,
+                                  GrowingULAppLifecycleDelegate,
+                                  GrowingEventInterceptor>
 
+// Only accessed on the event thread; snapshots contain no UIKit objects.
+@property (nonatomic, strong) NSMutableDictionary<NSString *, NSDictionary *> *pageSnapshots;
+@property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *pageSessions;
+// Main-thread presentation identities survive duplicate didAppear callbacks.
+@property (nonatomic, strong) NSMapTable<UIViewController *, NSString *> *presentations;
+@property (nonatomic, assign) BOOL pagesInBackground;
 @property (nonatomic, copy) NSString *lastPagePath;
 @property (nonatomic, assign) long long lastPageTimestamp;
 @property (nonatomic, strong) NSPointerArray *visiblePages;
@@ -55,10 +66,23 @@
 - (void)start {
     static dispatch_once_t startOnceToken;
     dispatch_once(&startOnceToken, ^{
-        GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
-        if (configuration.customEventWithPath) {
-            [[GrowingEventManager sharedInstance] addInterceptor:self];
-        }
+        self.pageSnapshots = [NSMutableDictionary dictionary];
+        self.pageSessions = [NSMutableDictionary dictionary];
+        self.presentations = [NSMapTable weakToStrongObjectsMapTable];
+        [[GrowingEventManager sharedInstance] addInterceptor:self];
+        __weak typeof(self) weakSelf = self;
+        [GrowingEventManager sharedInstance].dataSourcePageHandler = ^{
+            GrowingPageManager *manager = weakSelf;
+            manager.lastPagePath = nil;
+            manager.lastPageTimestamp = 0;
+            if (manager.pagesInBackground) return;
+            NSArray *snapshots = [manager.pageSnapshots.allValues
+                sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:YES]]];
+            for (NSDictionary *snapshot in snapshots) {
+                [manager sendSnapshot:snapshot isSwitch:YES];
+            }
+        };
+        [GrowingULAppLifecycle.sharedInstance addAppLifecycleDelegate:self];
         [GrowingULViewControllerLifecycle.sharedInstance addViewControllerLifecycleDelegate:self];
     });
 }
@@ -67,7 +91,12 @@
 
 - (void)growingEventManagerEventWillBuild:(GrowingBaseBuilder *_Nullable)builder {
     if (builder) {
-        if ([builder isMemberOfClass:[GrowingCustomBuilder class]]) {
+        if (builder.eventContext &&
+            ![builder.eventContext[@"sessionId"] isEqual:GrowingSession.currentSession.sessionId]) {
+            return;
+        }
+        if ([builder isMemberOfClass:[GrowingCustomBuilder class]] &&
+            GrowingConfigurationManager.sharedInstance.trackConfiguration.customEventWithPath) {
             // Hybrid触发的HybridCustomEvent将在生成时携带path，不走此处的逻辑
             // Flutter触发的CustomEvent与原生相同，在此处判断后携带path
             if (self.lastPagePath && self.lastPagePath.length > 0) {
@@ -130,18 +159,71 @@
 }
 
 - (void)sendPageEventWithPage:(GrowingPage *)page {
-    GrowingBaseBuilder *builder = GrowingPageEvent.builder.setTitle(page.title)
-                                      .setPath([NSString stringWithFormat:@"/%@", page.alias])
-                                      .setTimestamp(page.showTimestamp)
-                                      .setAttributes(page.attributes);
-
-    // 发送事件前才去获取页面来源，避免造成额外耗时
-    GrowingPage *referralPage = [self findProbableReferralPage:page];
-    if (referralPage && referralPage.alias && referralPage.alias.length > 0) {
-        ((GrowingPageBuilder *)builder).setReferralPage([NSString stringWithFormat:@"/%@", referralPage.alias]);
+    GrowingPage *referral = [self findProbableReferralPage:page];
+    NSString *identity = [NSString stringWithFormat:@"%p", page.carrier];
+    NSString *presentation = [self.presentations objectForKey:page.carrier];
+    if (!presentation) {
+        presentation = NSUUID.UUID.UUIDString;
+        [self.presentations setObject:presentation forKey:page.carrier];
     }
+    NSDictionary *snapshot = @{
+        @"identity": identity,
+        @"presentation": presentation,
+        @"timestamp": @(page.showTimestamp),
+        @"title": page.title ?: @"",
+        @"path": [@"/" stringByAppendingString:page.alias ?: @""],
+        @"attributes": page.attributes.copy ?: @{},
+        @"referral": referral.alias.length ? [@"/" stringByAppendingString:referral.alias] : @""
+    };
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        self.pageSnapshots[identity] = snapshot;
+        [self sendSnapshot:snapshot isSwitch:NO];
+    }];
+}
 
+- (void)sendSnapshot:(NSDictionary *)snapshot isSwitch:(BOOL)isSwitch {
+    GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    if (!config.dataCollectionEnabled || self.pagesInBackground) return;
+    NSString *identity = snapshot[@"identity"];
+    NSString *key =
+        [NSString stringWithFormat:@"%@:%@", GrowingSession.currentSession.sessionId, snapshot[@"presentation"]];
+    if ([self.pageSessions[identity] isEqualToString:key]) return;
+    self.pageSessions[identity] = key;
+    GrowingBaseBuilder *builder =
+        GrowingPageEvent.builder.setTitle(snapshot[@"title"])
+            .setPath(snapshot[@"path"])
+            .setAttributes(snapshot[@"attributes"])
+            .setReferralPage(snapshot[@"referral"])
+            .setTimestamp(isSwitch ? GrowingULTimeUtil.currentTimeMillis : [snapshot[@"timestamp"] longLongValue]);
     [[GrowingEventManager sharedInstance] postEventBuilder:builder];
+}
+
+- (void)viewControllerDidDisappear:(UIViewController *)controller {
+    [self.presentations removeObjectForKey:controller];
+    NSString *identity = [NSString stringWithFormat:@"%p", controller];
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        [self.pageSnapshots removeObjectForKey:identity];
+        [self.pageSessions removeObjectForKey:identity];
+    }];
+}
+
+- (void)applicationDidEnterBackground {
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        self.pagesInBackground = YES;
+        self.lastPagePath = nil;
+    }];
+}
+
+- (void)applicationDidBecomeActive {
+    // Refresh UI snapshots on the main thread; switch processing never waits for UIKit.
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        self.pagesInBackground = NO;
+    }];
+    for (GrowingPage *page in self.visiblePages.allObjects) {
+        if (page.isAutotrack && page.carrier.isViewLoaded && page.carrier.view.window) {
+            [self sendPageEventWithPage:page];
+        }
+    }
 }
 
 - (GrowingPage *)createdPage:(UIViewController *)viewController {
