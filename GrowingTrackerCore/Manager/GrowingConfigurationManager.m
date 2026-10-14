@@ -95,5 +95,4 @@
     return dataSourceId.length ? self.trackConfiguration.serverHostMapping[dataSourceId] : nil;
 }
 
-
 @end
