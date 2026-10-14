@@ -28,8 +28,6 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
 @interface GrowingEventDatabase ()
 
 @property (nonatomic, strong) id<GrowingEventDatabaseService> db;
-@property (nonatomic, copy) NSString *filePath;
-@property (nonatomic, assign) Class databaseClass;
 @property (nonatomic, strong) NSMutableArray *updateKeys;
 @property (nonatomic, strong) NSMutableArray *updateValues;
 
@@ -64,8 +62,6 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
             return nil;
         }
 
-        _filePath = [filePath copy];
-        _databaseClass = serviceClass;
         NSError *error = nil;
         _db = [(Class)serviceClass databaseWithPath:filePath error:&error];
         if (error || !_db) {
@@ -76,30 +72,6 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
     }
 
     return self;
-}
-
-- (id<GrowingEventDatabaseService>)db {
-    @synchronized(self) {
-        if (!_db && self.databaseClass) {
-            NSError *error = nil;
-            _db = [self.databaseClass databaseWithPath:self.filePath error:&error];
-            if (error) {
-                [self handleDatabaseError:error];
-                _db = nil;
-            }
-        }
-        return _db;
-    }
-}
-
-- (void)releaseIdleDatabase {
-    @synchronized(self) {
-        __block BOOL pending;
-        [self performModifyArrayBlock:^{
-            pending = self.updateKeys.count > 0;
-        }];
-        if (!pending) _db = nil;
-    }
 }
 
 #pragma mark - Public Methods
@@ -159,11 +131,6 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
 - (BOOL)supportsDataSourceRouting {
     return [self.db respondsToSelector:@selector(dataSourceIds)] &&
            [self.db respondsToSelector:@selector(getEventsByCount:limitSize:policy:dataSourceId:)];
-}
-
-- (NSDictionary<NSString *, NSNumber *> *)eventCountsByDataSourceId {
-    if ([self.db respondsToSelector:@selector(eventCountsByDataSourceId)]) return [self.db eventCountsByDataSourceId];
-    return @{};
 }
 
 - (NSArray<NSString *> *)dataSourceIds {

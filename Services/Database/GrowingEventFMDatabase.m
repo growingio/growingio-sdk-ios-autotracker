@@ -350,27 +350,6 @@
     return result;
 }
 
-- (NSDictionary<NSString *, NSNumber *> *)eventCountsByDataSourceId {
-    __block NSMutableDictionary *counts = [NSMutableDictionary dictionary];
-    [self performDatabaseBlock:^(GrowingFMDatabase *db, NSError *error) {
-        GrowingFMResultSet *rows =
-            error ? nil
-                  : [db executeQuery:
-                            @"SELECT dataSourceId, COUNT(*) AS eventCount FROM namedcachetable GROUP BY dataSourceId"];
-        if (!rows) {
-            self.databaseError = error ?: [self readErrorInDatabase:db];
-            counts = nil;
-            return;
-        }
-        while ([rows next]) {
-            NSString *source = [rows stringForColumn:@"dataSourceId"];
-            if (source) counts[source] = @([rows longLongIntForColumn:@"eventCount"]);
-        }
-        [rows close];
-    }];
-    return counts;
-}
-
 - (NSArray<NSString *> *)dataSourceIds {
     __block NSMutableArray *sources = [NSMutableArray array];
     [self performDatabaseBlock:^(GrowingFMDatabase *db, NSError *error) {

@@ -112,7 +112,6 @@ extern NSString *const GrowingEventDatabaseErrorDomain;
 @optional
 /// Multi-source queries must filter before applying the batch size limit.
 - (nullable NSArray<NSString *> *)dataSourceIds;
-- (nullable NSDictionary<NSString *, NSNumber *> *)eventCountsByDataSourceId;
 - (nullable NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsByCount:(NSUInteger)count
                                                                   limitSize:(NSUInteger)limitSize
                                                                      policy:(NSUInteger)mask

@@ -18,6 +18,8 @@
 
 存储采用现有 JSON/PB 共库增加 `dataSourceId` 索引。旧缓存从事件内容恢复归属，表外缓存暂停上传至过期；跨启动改指后，旧缓存使用本次配置的地址。
 
+上传沿用原有通道和定时器，即时发送只触发指定通道。同一通道依次查询各数据源的批次，通过映射表固定请求地址；失败事件保留，继续尝试其他数据源。每通道同一时间一个请求，慢请求会延迟该通道后续数据源；不维护额外调度状态，不反复释放数据库连接。
+
 原生 PAGE 补发复用现有 `currentPage` 和 PAGE builder，在主线程读取页面信息，在切换后的事件线程填入新 Session 和当前时间；不维护额外的页面快照、Session 去重表或展示标识。正常页面生命周期沿用原逻辑。
 
 ## 模块协议
@@ -40,7 +42,7 @@
 
 ### 自定义存储
 
-`GrowingEventDatabaseService` 新增可选的 `dataSourceIds` 和 `getEventsByCount:limitSize:policy:dataSourceId:`。动态切换要求实现这两个方法，过滤须先于批次数量限制；不支持时切换返回错误。`eventCountsByDataSourceId` 用于诊断。
+`GrowingEventDatabaseService` 新增可选的 `dataSourceIds` 和 `getEventsByCount:limitSize:policy:dataSourceId:`。动态切换要求实现这两个方法，过滤须先于批次数量限制；不支持时切换返回错误。
 
 插入须按 UUID 幂等，重试不能刷新原创建时间；写盘失败时 SDK 保留待写操作。默认数据库已实现这些约束。
 
