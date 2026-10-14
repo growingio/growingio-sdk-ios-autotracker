@@ -18,20 +18,16 @@
 //  limitations under the License.
 
 #import "Modules/Flutter/GrowingFlutterPlugin.h"
-#import "GrowingTrackerCore/Core/GrowingContext.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingPageEvent.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingViewElementEvent.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
-#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Public/GrowingAttributesBuilder.h"
-#import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 
 GrowingMod(GrowingFlutterPlugin)
 
 @interface GrowingFlutterPlugin ()
-@property (atomic, copy, readwrite) NSDictionary *routingContext;
 
 @end
 
@@ -40,43 +36,6 @@ GrowingMod(GrowingFlutterPlugin)
 #pragma mark - GrowingModuleProtocol
 
 - (void)growingModInit:(GrowingContext *)context {
-    self.routingContext = GrowingConfigurationManager.sharedInstance.committedContext;
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(sessionDidRefresh:)
-                                                 name:GrowingSessionDidRefreshNotification
-                                               object:nil];
-}
-
-- (void)sessionDidRefresh:(NSNotification *)notification {
-    if (!self.onDataSourceChanged && [notification.userInfo[@"context"][@"sequence"] unsignedIntegerValue] == 0) return;
-    [self publishRoutingContext:notification.userInfo[@"context"]];
-}
-
-- (void)growingModDataSourceChanged:(GrowingContext *)context {
-    [self publishRoutingContext:context.customParam[@"newContext"]];
-}
-
-- (void)publishRoutingContext:(NSDictionary *)context {
-    NSDictionary *snapshot = [context dictionaryWithValuesForKeys:@[@"dataSourceId", @"sessionId", @"sequence"]];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if (self.onDataSourceChanged) {
-            self.onDataSourceChanged(snapshot);
-        } else {
-            GIOLogError(@"Cross-platform plugin has no routing synchronization handler");
-        }
-    });
-}
-
-- (void)confirmRoutingContext:(NSDictionary *)context {
-    NSDictionary *snapshot = context.copy;
-    [GrowingDispatchManager enqueueInGrowingThread:^{
-        NSDictionary *current = GrowingConfigurationManager.sharedInstance.eventContext;
-        if ([snapshot[@"sequence"] isEqual:current[@"sequence"]] &&
-            [snapshot[@"sessionId"] isEqual:current[@"sessionId"]] &&
-            [snapshot[@"dataSourceId"] isEqual:current[@"dataSourceId"]]) {
-            self.routingContext = snapshot;
-        }
-    }];
 }
 
 + (BOOL)singleton {
@@ -115,12 +74,6 @@ GrowingMod(GrowingFlutterPlugin)
     if (attributes) {
         builder = builder.setAttributes(attributes);
     }
-    NSDictionary *routing =
-        [arguments[@"routingContext"] isKindOfClass:NSDictionary.class] ? arguments[@"routingContext"] : nil;
-    if ([routing[@"dataSourceId"] isKindOfClass:NSString.class] &&
-        [routing[@"sessionId"] isKindOfClass:NSString.class]) {
-        builder.eventContext = routing;
-    }
     [self trackAutotrackEventWithBuilder:builder];
 }
 
@@ -158,26 +111,12 @@ GrowingMod(GrowingFlutterPlugin)
             builder = builder.setAttributes(attributes);
         }
     }
-    NSDictionary *routing =
-        [arguments[@"routingContext"] isKindOfClass:NSDictionary.class] ? arguments[@"routingContext"] : nil;
-    if ([routing[@"dataSourceId"] isKindOfClass:NSString.class] &&
-        [routing[@"sessionId"] isKindOfClass:NSString.class]) {
-        builder.eventContext = routing;
-    }
     [self trackAutotrackEventWithBuilder:builder];
 }
 
 - (void)trackAutotrackEventWithBuilder:(GrowingBaseBuilder *)builder {
     [GrowingDispatchManager dispatchInGrowingThread:^{
-        if (!builder.eventContext) {
-            NSDictionary *current = GrowingConfigurationManager.sharedInstance.eventContext;
-            NSDictionary *applied = self.routingContext;
-            if ([current[@"sequence"] unsignedIntegerValue] > 0 && applied &&
-                (![applied[@"sequence"] isEqual:current[@"sequence"]] ||
-                 ![applied[@"sessionId"] isEqual:current[@"sessionId"]]))
-                builder.eventContext = applied;
-        }
-        if (!builder.eventContext && [GrowingSession currentSession].state != GrowingSessionStateActive) {
+        if ([GrowingSession currentSession].state != GrowingSessionStateActive) {
             // 避免在session正在切换的时机之前，flutter侧因用户业务逻辑在后台状态下触发PAGE，回到前台后生成，造成上一个session的访问时长过长
             // 另外，flutter sdk的逻辑中，会在返回前台时补发一个当前页面的PAGE，可覆盖上述场景的PAGE生成
             return;

@@ -183,9 +183,6 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
             if ([self SDKDoNotTrack]) {
                 return;
             }
-            NSDictionary *eventContext = GrowingConfigurationManager.sharedInstance.eventContext;
-            // Construct the request before asynchronous UA loading so its source and target are fixed.
-            GrowingAdPreRequest *eventRequest = [GrowingAdPreRequest new];
             [self accessUserAgent:^(NSString *_Nullable userAgent) {
                 if ([self SDKDoNotTrack]) {
                     return;
@@ -194,7 +191,8 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
                 if (!userAgent) {
                     return;
                 }
-
+                GrowingAdPreRequest *eventRequest = nil;
+                eventRequest = [[GrowingAdPreRequest alloc] init];
                 eventRequest.trackId = [url.path componentsSeparatedByString:@"/"].lastObject;
                 eventRequest.isManual = isManual;
                 eventRequest.userAgent = userAgent;
@@ -218,7 +216,7 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
                                                             NSDictionary *params,
                                                             NSDictionary *_Nullable customParams) {
                                                         if (completed) {
-                                                            [self generateAppReengage:params eventContext:eventContext];
+                                                            [self generateAppReengage:params];
                                                             [self handleDeepLinkCallback:callback
                                                                             customParams:customParams
                                                                                startDate:startDate
@@ -241,20 +239,17 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
     NSDictionary *dic = url.growingHelper_queryDict;
     if (dic[@"deep_link_id"]) {
         self.deeplinkUrl = nil;
-        [GrowingDispatchManager dispatchInGrowingThread:^{
-            NSDictionary *eventContext = GrowingConfigurationManager.sharedInstance.eventContext;
-            [self getDeeplinkParams:dic
-                           isManual:isManual
-                              block:^(BOOL completed, NSDictionary *params, NSDictionary *_Nullable customParams) {
-                                  if (completed) {
-                                      [self generateAppReengage:params eventContext:eventContext];
-                                      [self handleDeepLinkCallback:callback
-                                                      customParams:customParams
-                                                         startDate:nil
-                                                             error:nil];
-                                  }
-                              }];
-        }];
+        [self getDeeplinkParams:dic
+                       isManual:isManual
+                          block:^(BOOL completed, NSDictionary *params, NSDictionary *_Nullable customParams) {
+                              if (completed) {
+                                  [self generateAppReengage:params];
+                                  [self handleDeepLinkCallback:callback
+                                                  customParams:customParams
+                                                     startDate:nil
+                                                         error:nil];
+                              }
+                          }];
         return YES;
     }
 
@@ -329,7 +324,6 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
         }
 
         // 不直接在 GrowingThread 执行是因为 UIPasteboard 调用**可能**会卡死线程，实测在主线程调用有卡死案例
-        NSDictionary *eventContext = GrowingConfigurationManager.sharedInstance.eventContext;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             NSString *content = [UIPasteboard generalPasteboard].string;
             NSDictionary *dic = [GrowingAdUtils dictFromPasteboard:content];
@@ -337,7 +331,7 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
             [GrowingDispatchManager dispatchInGrowingThread:^{
                 if (dic.count == 0 || ![dic[@"type"] isEqualToString:@"gads"] ||
                     ![dic[@"scheme"] isEqualToString:[GrowingDeviceInfo currentDeviceInfo].urlScheme]) {
-                    [self generateAppActivationWithContext:eventContext];
+                    [self generateAppActivation];
                     return;
                 }
 
@@ -345,7 +339,7 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
                                isManual:NO
                                   block:^(BOOL completed, NSDictionary *params, NSDictionary *_Nullable customParams) {
                                       if (completed) {
-                                          [self generateAppDefer:params eventContext:eventContext];
+                                          [self generateAppDefer:params];
                                           [self handleDeepLinkCallback:nil
                                                           customParams:customParams
                                                              startDate:nil
@@ -402,10 +396,6 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
 #pragma mark - Event handler
 
 - (void)generateAppActivation {
-    [self generateAppActivationWithContext:GrowingConfigurationManager.sharedInstance.eventContext];
-}
-
-- (void)generateAppActivationWithContext:(NSDictionary *)eventContext {
     GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
     if (trackConfiguration.ASAEnabled) {
         [GrowingAsaFetcher startFetchWithTimeOut:GrowingAsaFetcherDefaultTimeOut];
@@ -417,7 +407,6 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
         }
 
         GrowingActivateBuilder *builder = GrowingActivateEvent.builder.setEventName(GrowingAdEventNameActivate);
-        builder.eventContext = eventContext;
         if (userAgent.length > 0) {
             builder.setAttributes(@{@"userAgent": userAgent.copy});
         }
@@ -428,19 +417,12 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
 
 - (void)generateAppDefer:(NSDictionary *)dic {
     [GrowingDispatchManager dispatchInGrowingThread:^{
-        [self generateAppDefer:dic eventContext:GrowingConfigurationManager.sharedInstance.eventContext];
-    }];
-}
-
-- (void)generateAppDefer:(NSDictionary *)dic eventContext:(NSDictionary *)eventContext {
-    [GrowingDispatchManager dispatchInGrowingThread:^{
         if ([self SDKDoNotTrack]) {
             return;
         }
 
         GrowingActivateBuilder *builder =
             GrowingActivateEvent.builder.setEventName(GrowingAdEventNameDefer).setAttributes(dic);
-        builder.eventContext = eventContext;
         [[GrowingEventManager sharedInstance] postEventBuilder:builder];
         [GrowingAdUtils setActivateWrote:YES];
         [GrowingAdUtils setActivateDefer:YES];
@@ -449,19 +431,12 @@ NSString *const GrowingAdvertisingErrorDomain = @"com.growingio.advertising";
 
 - (void)generateAppReengage:(NSDictionary *)dic {
     [GrowingDispatchManager dispatchInGrowingThread:^{
-        [self generateAppReengage:dic eventContext:GrowingConfigurationManager.sharedInstance.eventContext];
-    }];
-}
-
-- (void)generateAppReengage:(NSDictionary *)dic eventContext:(NSDictionary *)eventContext {
-    [GrowingDispatchManager dispatchInGrowingThread:^{
         if ([self SDKDoNotTrack]) {
             return;
         }
 
         GrowingActivateBuilder *builder =
             GrowingActivateEvent.builder.setEventName(GrowingAdEventNameReengage).setAttributes(dic);
-        builder.eventContext = eventContext;
         if ([GrowingSession currentSession].state == GrowingSessionStateActive) {
             [[GrowingEventManager sharedInstance] postEventBuilder:builder];
         } else {

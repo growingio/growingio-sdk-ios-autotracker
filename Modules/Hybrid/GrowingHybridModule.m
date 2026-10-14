@@ -18,12 +18,9 @@
 //  limitations under the License.
 
 #import "Modules/Hybrid/Public/GrowingHybridModule.h"
-#import "GrowingTrackerCore/Core/GrowingContext.h"
-#import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingULApplication.h"
 #import "GrowingULSwizzle.h"
-#import "Modules/Hybrid/GrowingWKWebViewJavascriptBridge.h"
 #import "Modules/Hybrid/WKWebView+GrowingAutotracker.h"
 
 GrowingMod(GrowingHybridModule)
@@ -68,19 +65,7 @@ GrowingMod(GrowingHybridModule)
     if ([GrowingULApplication isAppExtension]) {
         return;
     }
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(sessionDidRefresh:)
-                                                 name:GrowingSessionDidRefreshNotification
-                                               object:nil];
     [self track];
-}
-
-- (void)sessionDidRefresh:(NSNotification *)notification {
-    [GrowingWKWebViewJavascriptBridge synchronizeRoutingContext:notification.userInfo[@"context"]];
-}
-
-- (void)growingModDataSourceChanged:(GrowingContext *)context {
-    [GrowingWKWebViewJavascriptBridge synchronizeRoutingContext:context.customParam[@"newContext"]];
 }
 
 #pragma mark - Public Methods

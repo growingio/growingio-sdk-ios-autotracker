@@ -120,7 +120,7 @@
 
 - (void)readPropertyInTrackThread {
     GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
-    _dataSourceId = self.eventContext ? self.eventContext[@"dataSourceId"] : config.dataSourceId;
+    _dataSourceId = config.dataSourceId;
 
     GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
     _domain = _domain.length > 0 ? _domain : deviceInfo.bundleID;
@@ -136,16 +136,10 @@
     }
     GrowingSession *session = [GrowingSession currentSession];
     _userId = session.loginUserId;
-    _sessionId = self.eventContext ? self.eventContext[@"sessionId"] : session.sessionId;
+    _sessionId = session.sessionId;
     _latitude = session.latitude;
     _longitude = session.longitude;
     _userKey = session.loginUserKey;
-    if (self.eventContext) {
-        id userId = self.eventContext[@"userId"];
-        id userKey = self.eventContext[@"userKey"];
-        if (userId) _userId = [userId isKindOfClass:NSString.class] ? userId : nil;
-        if (userKey) _userKey = [userKey isKindOfClass:NSString.class] ? userKey : nil;
-    }
 
     _timestamp = _timestamp > 0 ? _timestamp : [GrowingULTimeUtil currentTimeMillis];
     _screenWidth = [GrowingFieldsIgnore isIgnoreFields:@"screenWidth"] ? 0 : deviceInfo.screenWidth;

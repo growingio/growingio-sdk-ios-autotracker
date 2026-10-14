@@ -28,13 +28,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedInstance;
 
-// Accessed on the event thread after initialization.
-@property (nonatomic, assign) NSUInteger routingSequence;
-@property (atomic, copy, nullable) NSDictionary *committedContext;
 + (NSString *_Nullable)normalizedServerHost:(NSString *)host;
 + (NSDictionary<NSString *, NSString *> *_Nullable)validatedMapping:(GrowingTrackConfiguration *)configuration
                                                               error:(NSError *_Nullable *_Nullable)error;
-- (NSDictionary *)eventContext;
 - (NSString *_Nullable)serverHostForDataSourceId:(NSString *)dataSourceId;
 
 @end

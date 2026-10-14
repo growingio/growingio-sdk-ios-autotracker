@@ -26,7 +26,6 @@
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
-#import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
 #import "GrowingULApplication.h"
@@ -80,10 +79,6 @@
 
 - (void)growingEventManagerEventWillBuild:(GrowingBaseBuilder *_Nullable)builder {
     if (builder) {
-        if (builder.eventContext &&
-            ![builder.eventContext[@"sessionId"] isEqual:GrowingSession.currentSession.sessionId]) {
-            return;
-        }
         if ([builder isMemberOfClass:[GrowingCustomBuilder class]] &&
             GrowingConfigurationManager.sharedInstance.trackConfiguration.customEventWithPath) {
             // Hybrid触发的HybridCustomEvent将在生成时携带path，不走此处的逻辑

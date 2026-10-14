@@ -45,8 +45,7 @@ GrowingMod(GrowingMobileDebugger)
                                      GrowingDeepLinkHandlerProtocol>
 
 // 表示web和app是否同时准备好数据发送，此时表示可以发送数据
-@property (atomic, assign) BOOL isReady;
-@property (atomic, copy) NSNumber *connectionSequence;
+@property (nonatomic, assign) BOOL isReady;
 @property (nonatomic, strong) NSMutableArray *cacheLogs;
 @property (nonatomic, strong) NSMutableArray *cacheEvent;
 @property (nonatomic, strong) NSTimer *timer;
@@ -72,25 +71,6 @@ GrowingMod(GrowingMobileDebugger)
     [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:self];
 }
 
-- (void)growingModDataSourceChanged:(GrowingContext *)context {
-    self.isReady = NO;
-    [GrowingDebuggerEventQueue currentQueue].debuggerBlock = nil;
-    GROWING_LOCK(lock);
-    [self.cacheEvent removeAllObjects];
-    [self.cacheLogs removeAllObjects];
-    GROWING_UNLOCK(lock);
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if ([self.connectionSequence
-                isEqual:GrowingConfigurationManager.sharedInstance.committedContext[@"sequence"]]) {
-            return;
-        }
-        self.webSocket.delegate = nil;
-        [self.webSocket close];
-        self.webSocket = nil;
-        [self _stopWithError:nil];
-    });
-}
-
 - (instancetype)init {
     if (self = [super init]) {
         GROWING_LOCK_INIT(lock);
@@ -101,7 +81,6 @@ GrowingMod(GrowingMobileDebugger)
 }
 
 - (void)runWithMobileDebugger:(NSURL *)url {
-    self.connectionSequence = GrowingConfigurationManager.sharedInstance.committedContext[@"sequence"];
     Class<GrowingWebSocketService> serviceClass =
         [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingWebSocketService)];
     if (!serviceClass) {
@@ -242,9 +221,6 @@ GrowingMod(GrowingMobileDebugger)
 }
 
 - (void)sendJson:(id)json {
-    if (self.connectionSequence &&
-        ![self.connectionSequence isEqual:GrowingConfigurationManager.sharedInstance.committedContext[@"sequence"]])
-        return;
     if (self.webSocket.readyState == Growing_WS_OPEN &&
         ([json isKindOfClass:[NSDictionary class]] || [json isKindOfClass:[NSArray class]])) {
         NSString *jsonString = [json growingHelper_jsonString];
@@ -302,10 +278,6 @@ GrowingMod(GrowingMobileDebugger)
 }
 
 - (void)webSocket:(id<GrowingWebSocketService>)webSocket didReceiveMessage:(id)message {
-    if (webSocket != self.webSocket ||
-        (self.connectionSequence &&
-         ![self.connectionSequence isEqual:GrowingConfigurationManager.sharedInstance.committedContext[@"sequence"]]))
-        return;
     if ([message isKindOfClass:[NSString class]] && ((NSString *)message).length > 0) {
         GIOLogDebug(@"didReceiveMessage: %@", message);
         NSMutableDictionary *dict = [message growingHelper_jsonObject];
@@ -316,14 +288,9 @@ GrowingMod(GrowingMobileDebugger)
             __weak typeof(self) weakSelf = self;
             [GrowingDebuggerEventQueue currentQueue].debuggerBlock = ^(NSArray *_Nonnull events) {
                 __strong typeof(weakSelf) self = weakSelf;
-                if (self && self.isReady && events.count > 0) {
-                    NSMutableArray *matching = [NSMutableArray array];
-                    NSString *source = GrowingConfigurationManager.sharedInstance.committedContext[@"dataSourceId"];
-                    for (NSDictionary *event in events) {
-                        if ([event[@"dataSourceId"] isEqual:source]) [matching addObject:event];
-                    }
+                if (events.count > 0) {
                     GROWING_LOCK(self->lock);
-                    [self.cacheEvent addObjectsFromArray:matching];
+                    [self.cacheEvent addObjectsFromArray:events];
                     GROWING_UNLOCK(self->lock);
                 }
             };
@@ -333,7 +300,7 @@ GrowingMod(GrowingMobileDebugger)
             __weak typeof(self) weakSelf = self;
             [GrowingWSLogger sharedInstance].loggerBlock = ^(NSArray *logMessageArray) {
                 __strong typeof(weakSelf) self = weakSelf;
-                if (self && self.isReady && logMessageArray.count > 0) {
+                if (logMessageArray.count > 0) {
                     GROWING_LOCK(self->lock);
                     [self.cacheLogs addObjectsFromArray:logMessageArray];
                     GROWING_UNLOCK(self->lock);
@@ -382,7 +349,6 @@ GrowingMod(GrowingMobileDebugger)
 #pragma mark - websocket delegate
 
 - (void)webSocketDidOpen:(id<GrowingWebSocketService>)webSocket {
-    if (webSocket != self.webSocket) return;
     GIOLogDebug(@"websocket已连接");
     NSString *accountId = GrowingConfigurationManager.sharedInstance.trackConfiguration.accountId;
     NSDictionary *dict = @{

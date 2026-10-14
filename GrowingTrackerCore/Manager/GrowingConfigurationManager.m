@@ -18,7 +18,6 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
-#import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
 
 @implementation GrowingConfigurationManager
@@ -96,15 +95,5 @@
     return dataSourceId.length ? self.trackConfiguration.serverHostMapping[dataSourceId] : nil;
 }
 
-- (NSDictionary *)eventContext {
-    GrowingSession *session = GrowingSession.currentSession;
-    return @{
-        @"dataSourceId": self.trackConfiguration.dataSourceId ?: @"",
-        @"sessionId": session.sessionId ?: @"",
-        @"userId": session.loginUserId ?: NSNull.null,
-        @"userKey": session.loginUserKey ?: NSNull.null,
-        @"sequence": @(self.routingSequence)
-    };
-}
 
 @end

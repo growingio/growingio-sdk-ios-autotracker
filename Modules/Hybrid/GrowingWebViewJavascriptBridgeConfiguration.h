@@ -22,7 +22,6 @@
 @interface GrowingWebViewJavascriptBridgeConfiguration : NSObject
 
 @property (nonatomic, readonly, copy) NSString *accountId;
-@property (nonatomic, copy) NSDictionary *routingContext;
 @property (nonatomic, readonly, copy) NSString *dataSourceId;
 @property (nonatomic, readonly, copy) NSString *appId;
 @property (nonatomic, readonly, copy) NSString *appPackage;

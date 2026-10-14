@@ -18,19 +18,15 @@
 //  limitations under the License.
 
 #import "Modules/ABTesting/Public/GrowingABTesting.h"
-#import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
 #import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
-#import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Public/GrowingEncryptionService.h"
 #import "GrowingTrackerCore/Public/GrowingEventNetworkService.h"
 #import "GrowingTrackerCore/Public/GrowingServiceManager.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
-#import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingULTimeUtil.h"
 #import "Modules/ABTesting/GrowingABTExperiment+Private.h"
-#import "Modules/ABTesting/GrowingABTExperimentStorage.h"
 #import "Modules/ABTesting/Request/GrowingABTRequest.h"
 
 GrowingMod(GrowingABTesting)
@@ -82,7 +78,7 @@ static NSString *const kABTExpStrategyName = @"$exp_strategy_name";
 
 #pragma mark - Private Method
 
-+ (void)trackExperiment:(GrowingABTExperiment *)experiment eventContext:(NSDictionary *)eventContext {
++ (void)trackExperiment:(GrowingABTExperiment *)experiment {
     NSMutableDictionary *attributes = @{
         kABTExpLayerId: experiment.layerId.copy,
         kABTExpId: experiment.experimentId.copy,
@@ -99,26 +95,14 @@ static NSString *const kABTExpStrategyName = @"$exp_strategy_name";
         attributes[kABTExpStrategyName] = experiment.strategyName.copy;
     }
 
-    GrowingBaseBuilder *builder = GrowingCustomEvent.builder.setEventName(kABTExpHit).setAttributes(attributes.copy);
-    builder.eventContext = eventContext;
-    [[GrowingEventManager sharedInstance] postEventBuilder:builder];
+    [GrowingEventGenerator generateCustomEvent:kABTExpHit attributes:attributes.copy];
 }
 
 + (void)fetchExperiment:(NSString *)layerId
          completedBlock:(void (^)(GrowingABTExperiment *_Nullable))completedBlock
              retryCount:(NSInteger)retryCount {
-    GrowingABTRequest *request = [GrowingABTRequest new];
-    request.layerId = layerId;
-    [self fetchExperimentWithRequest:request completedBlock:completedBlock retryCount:retryCount];
-}
-
-+ (void)fetchExperimentWithRequest:(GrowingABTRequest *)request
-                    completedBlock:(void (^)(GrowingABTExperiment *))completedBlock
-                        retryCount:(NSInteger)retryCount {
-    NSString *layerId = request.layerId;
-    GrowingABTExperiment *exp = [GrowingABTExperimentStorage findExperiment:layerId
-                                                                   identity:request.userIdentity
-                                                               dataSourceId:request.dataSourceId];
+    GrowingABTExperiment *exp = [GrowingABTExperiment findExperiment:layerId
+                                                            identity:[GrowingABTRequest currentIdentity]];
     if (exp) {
         if (exp.isOutdated) {
             // 超过自然日，清除本地缓存
@@ -139,25 +123,23 @@ static NSString *const kABTExpStrategyName = @"$exp_strategy_name";
     // 1. 超过自然日
     // 2. 超过TTL
     // 3. 首次调用（无本地缓存）
-    [self requestExperimentWithRequest:request
-                        completedBlock:^(BOOL isSuccess, GrowingABTExperiment *experiment, NSInteger retriesLeft) {
-                            if (isSuccess || retriesLeft <= 0) {
-                                if (completedBlock) {
-                                    completedBlock(experiment);
-                                }
-                            } else {
-                                retriesLeft--;
-                                [self fetchExperimentWithRequest:request
-                                                  completedBlock:completedBlock
-                                                      retryCount:retriesLeft];
-                            }
-                        }
-                            retryCount:retryCount];
+    [self requestExperiment:layerId
+             completedBlock:^(BOOL isSuccess, GrowingABTExperiment *experiment, NSInteger retriesLeft) {
+                 if (isSuccess || retriesLeft <= 0) {
+                     if (completedBlock) {
+                         completedBlock(experiment);
+                     }
+                 } else {
+                     retriesLeft--;
+                     [self fetchExperiment:layerId completedBlock:completedBlock retryCount:retriesLeft];
+                 }
+             }
+                 retryCount:retryCount];
 }
 
-+ (void)requestExperimentWithRequest:(GrowingABTRequest *)request
-                      completedBlock:(void (^)(BOOL, GrowingABTExperiment *, NSInteger))completedBlock
-                          retryCount:(NSInteger)retryCount {
++ (void)requestExperiment:(NSString *)layerId
+           completedBlock:(void (^)(BOOL, GrowingABTExperiment *, NSInteger))completedBlock
+               retryCount:(NSInteger)retryCount {
     GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
     if (!config.dataCollectionEnabled) {
         GIOLogDebug(@"[GrowingABTesting] -fetchExperiment: dataCollectionEnabled is NO");
@@ -168,12 +150,12 @@ static NSString *const kABTExpStrategyName = @"$exp_strategy_name";
         return;
     }
 
-    NSString *layerId = request.layerId;
+    GrowingABTRequest *request = [[GrowingABTRequest alloc] init];
+    request.layerId = layerId;
     id<GrowingEventNetworkService> service =
         [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingEventNetworkService)];
     if (!service) {
         GIOLogError(@"[GrowingABTesting] -fetchExperiment error: no network service support");
-        if (completedBlock) completedBlock(NO, nil, 0);
         return;
     }
     [service sendRequest:request
@@ -239,15 +221,13 @@ static NSString *const kABTExpStrategyName = @"$exp_strategy_name";
                                                           variables:variables
                                                           fetchTime:GrowingULTimeUtil.currentTimeMillis];
                   exp.identity = request.userIdentity;
-                  exp.dataSourceId = request.dataSourceId;
 
                   if (experimentId && experimentId.length > 0 && strategyId && strategyId.length > 0) {
-                      GrowingABTExperiment *lastExp = [GrowingABTExperimentStorage findExperiment:layerId
-                                                                                         identity:request.userIdentity
-                                                                                     dataSourceId:request.dataSourceId];
+                      GrowingABTExperiment *lastExp = [GrowingABTExperiment findExperiment:layerId
+                                                                                  identity:request.userIdentity];
                       if (![exp isEqual:lastExp]) {
                           // 和缓存实验数据不同，上报入组埋点
-                          [self trackExperiment:exp eventContext:request.eventContext];
+                          [self trackExperiment:exp];
                       }
                   }
 
@@ -267,9 +247,7 @@ static NSString *const kABTExpStrategyName = @"$exp_strategy_name";
     if (!layerId || ![layerId isKindOfClass:[NSString class]] || layerId.length == 0) {
         return;
     }
-    [GrowingDispatchManager dispatchInGrowingThread:^{
-        [self fetchExperiment:layerId completedBlock:completedBlock retryCount:1];
-    }];
+    [self fetchExperiment:layerId completedBlock:completedBlock retryCount:1];
 }
 
 @end

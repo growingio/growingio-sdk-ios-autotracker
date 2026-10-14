@@ -64,7 +64,6 @@
                                          ]]
                                              .mutableCopy;
     configuration[@"projectId"] = self.accountId;
-    if (self.routingContext) configuration[@"routingContext"] = self.routingContext;
 
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:configuration

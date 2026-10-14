@@ -25,36 +25,22 @@
 #import "GrowingTrackerCore/Network/Request/Adapter/GrowingRequestAdapter.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 
-@interface GrowingAdPreRequest ()
-@property (nonatomic, copy) NSString *serverHost;
-@property (nonatomic, copy) NSString *accountId;
-@property (nonatomic, copy) NSString *dataSourceId;
-@end
-
 @implementation GrowingAdPreRequest
-
-- (instancetype)init {
-    if (self = [super init]) {
-        GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
-        _serverHost = [config.deepLinkHost copy];
-        _accountId = [config.accountId copy];
-        _dataSourceId = [config.dataSourceId copy];
-    }
-    return self;
-}
 
 - (GrowingHTTPMethod)method {
     return GrowingHTTPMethodGET;
 }
 
 - (NSURL *)absoluteURL {
-    NSURL *baseURL = [NSURL URLWithString:self.serverHost];
+    GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    NSURL *baseURL = [NSURL URLWithString:config.deepLinkHost];
     return [NSURL URLWithString:self.path relativeToURL:baseURL];
 }
 
 - (NSString *)path {
-    NSString *projectKey = self.accountId;
-    NSString *datasourceId = self.dataSourceId;
+    GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    NSString *projectKey = config.accountId;
+    NSString *datasourceId = config.dataSourceId;
     NSString *path = [NSString stringWithFormat:@"deep/v1/%@/ios/%@/%@/%@",
                                                 self.isManual ? @"inapp" : @"defer",
                                                 projectKey,

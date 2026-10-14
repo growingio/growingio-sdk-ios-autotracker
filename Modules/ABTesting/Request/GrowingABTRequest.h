@@ -25,8 +25,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GrowingABTRequest : NSObject <GrowingRequestProtocol>
 
 @property (nonatomic, copy) NSString *layerId;
-@property (nonatomic, copy, readonly) NSDictionary *eventContext;
-@property (nonatomic, copy, readonly) NSString *dataSourceId;
 
 @property (nonatomic, copy, readonly) NSString *userIdentity;
 

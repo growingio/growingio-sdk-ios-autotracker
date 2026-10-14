@@ -129,7 +129,6 @@
 
 @interface DynamicRoutingTest : XCTestCase
 @property (nonatomic, strong) GrowingTrackConfiguration *savedConfiguration;
-@property (nonatomic, assign) NSUInteger savedSequence;
 @property (nonatomic, copy) GrowingBaseBuilder * (^savedPageBuilder)(void);
 @property (nonatomic, assign) Class savedNetworkClass;
 @property (nonatomic, strong) id savedNetworkInstance;
@@ -153,7 +152,6 @@
     [GrowingDispatchManager
         dispatchInGrowingThread:^{
             self.savedConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
-            self.savedSequence = GrowingConfigurationManager.sharedInstance.routingSequence;
             self.savedPageBuilder = GrowingEventManager.sharedInstance.dataSourcePageBuilder;
             GrowingTrackConfiguration *config = [GrowingTrackConfiguration configurationWithAccountId:@"routing-test"];
             config.dataSourceId = @"A";
@@ -161,7 +159,6 @@
             config.useProtobuf = NO;
             config.dataCollectionEnabled = YES;
             GrowingConfigurationManager.sharedInstance.trackConfiguration = config;
-            GrowingConfigurationManager.sharedInstance.routingSequence = 0;
             GrowingEventManager.sharedInstance.dataSourcePageBuilder = nil;
             [GrowingSession startSession];
             [RoutingNetworkStub.sharedInstance.requests removeAllObjects];
@@ -186,14 +183,11 @@
         dispatchInGrowingThread:^{
             [GrowingEventManager.sharedInstance flushDB];
             GrowingConfigurationManager.sharedInstance.trackConfiguration = self.savedConfiguration;
-            GrowingConfigurationManager.sharedInstance.routingSequence = self.savedSequence;
             GrowingEventManager.sharedInstance.dataSourcePageBuilder = self.savedPageBuilder;
             if (self.pageWindow) {
                 [GrowingPageManager.sharedInstance setValue:self.savedPagePath forKey:@"lastPagePath"];
                 [GrowingPageManager.sharedInstance setValue:self.savedPageTimestamp forKey:@"lastPageTimestamp"];
             }
-            GrowingConfigurationManager.sharedInstance.committedContext =
-                GrowingConfigurationManager.sharedInstance.eventContext;
         }
                   waitUntilDone:YES];
     NSMutableDictionary *instances = [GrowingServiceManager.sharedInstance valueForKey:@"allServiceInstanceDict"];
@@ -225,13 +219,10 @@
     config.serverHostMapping = @{@"A": @"https://a.example.com"};
     XCTAssertNil([GrowingConfigurationManager validatedMapping:config error:nil]);
 }
-- (void)testOrderedSwitchAndLateTask {
-    __block NSDictionary *oldContext;
-    [GrowingDispatchManager
-        dispatchInGrowingThread:^{
-            oldContext = GrowingConfigurationManager.sharedInstance.eventContext;
-        }
-                  waitUntilDone:YES];
+- (void)testOrderedSwitchAndDelayedBuilderUseCurrentConfiguration {
+    NSString *oldSession = GrowingSession.currentSession.sessionId;
+    GrowingBaseBuilder *late =
+        GrowingCustomEvent.builder.setEventName(@"delayed").setDataSourceId(@"A").setSessionId(oldSession);
     XCTestExpectation *done = [self expectationWithDescription:@"ordered switches"];
     done.expectedFulfillmentCount = 2;
     NSMutableArray *callbacks = [NSMutableArray array];
@@ -244,6 +235,7 @@
                                                     [done fulfill];
                                                 }];
     [GrowingEventManager.sharedInstance postEventBuilder:GrowingCustomEvent.builder.setEventName(@"afterB")];
+    [GrowingEventManager.sharedInstance postEventBuilder:late];
     [GrowingEventManager.sharedInstance updateDataSourceId:@"A"
                                   dataCollectionServerHost:nil
                                                 completion:^(NSError *error) {
@@ -251,20 +243,21 @@
                                                     [callbacks addObject:@"A"];
                                                     [done fulfill];
                                                 }];
-    GrowingBaseBuilder *late = GrowingCustomEvent.builder.setEventName(@"lateA");
-    late.eventContext = oldContext;
-    [GrowingEventManager.sharedInstance postEventBuilder:late];
+    [GrowingEventManager.sharedInstance postEventBuilder:GrowingCustomEvent.builder.setEventName(@"afterA")];
     [self waitForExpectationsWithTimeout:5 handler:nil];
     XCTAssertEqualObjects(callbacks, (@[@"B", @"A"]));
     NSArray<GrowingBaseEvent *> *visits = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeVisit];
     XCTAssertEqual(visits.count, 2);
     XCTAssertNotEqualObjects(visits[0].sessionId, visits[1].sessionId);
     NSArray<GrowingBaseEvent *> *customs = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
-    XCTAssertEqual(customs.count, 2);
+    XCTAssertEqual(customs.count, 3);
     XCTAssertEqualObjects(customs[0].dataSourceId, @"B");
     XCTAssertEqualObjects(customs[0].sessionId, visits[0].sessionId);
-    XCTAssertEqualObjects(customs[1].dataSourceId, @"A");
-    XCTAssertEqualObjects(customs[1].sessionId, oldContext[@"sessionId"]);
+    XCTAssertEqualObjects(customs[1].dataSourceId, @"B");
+    XCTAssertEqualObjects(customs[1].sessionId, visits[0].sessionId);
+    XCTAssertNotEqualObjects(customs[1].sessionId, oldSession);
+    XCTAssertEqualObjects(customs[2].dataSourceId, @"A");
+    XCTAssertEqualObjects(customs[2].sessionId, visits[1].sessionId);
 }
 - (void)testIdempotenceConflictAndCollectionDisabled {
     NSString *session = GrowingSession.currentSession.sessionId;
@@ -500,18 +493,11 @@
     circle.webSocket = socket;
     socket.delegate = (id<GrowingWebSocketDelegate>)circle;
     [circle setValue:@YES forKey:@"isReady"];
-    GrowingModuleManager *modules = [GrowingModuleManager new];
-    [modules setValue:[@{@(GrowingMDataSourceChangedEvent): @[circle]} mutableCopy] forKey:@"modulesByEvent"];
     XCTestExpectation *done = [self expectationWithDescription:@"circle survives source switch"];
     [GrowingEventManager.sharedInstance updateDataSourceId:@"B"
                                   dataCollectionServerHost:nil
                                                 completion:^(NSError *error) {
                                                     XCTAssertNil(error);
-                                                    [GrowingDispatchManager
-                                                        dispatchInGrowingThread:^{
-                                                            [modules triggerEvent:GrowingMDataSourceChangedEvent];
-                                                        }
-                                                                  waitUntilDone:YES];
                                                     dispatch_async(dispatch_get_main_queue(), ^{
                                                         [done fulfill];
                                                     });

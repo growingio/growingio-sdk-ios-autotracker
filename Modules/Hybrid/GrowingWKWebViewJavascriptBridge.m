@@ -23,7 +23,6 @@
 #import <objc/runtime.h>
 #import "GrowingTrackerCore/Event/GrowingNodeProtocol.h"
 #import "GrowingTrackerCore/GrowingRealTracker.h"
-#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogMacros.h"
@@ -37,8 +36,6 @@
 static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJavascriptBridge";
 
 @interface GrowingWKWebViewJavascriptBridge () <WKScriptMessageHandler>
-@property (nonatomic, strong) NSHashTable<WKWebView *> *webViews;
-@property (nonatomic, strong) NSMapTable<WKWebView *, NSDictionary *> *pendingContexts;
 
 @end
 
@@ -72,9 +69,6 @@ static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJav
         return;
     }
 
-    GrowingWKWebViewJavascriptBridge *bridge = self.sharedInstance;
-    if (!bridge.webViews) bridge.webViews = [NSHashTable weakObjectsHashTable];
-    [bridge.webViews addObject:webView];
     WKUserContentController *contentController = webView.configuration.userContentController;
     [self addScriptMessageHandler:contentController];
     [self addUserScripts:contentController];
@@ -113,9 +107,6 @@ static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJav
                                                                    nativeSdkVersion:GrowingTrackerVersionName
                                                                nativeSdkVersionCode:GrowingTrackerVersionCode];
 
-        NSDictionary *initialContext = GrowingConfigurationManager.sharedInstance.committedContext;
-        config.routingContext =
-            [initialContext dictionaryWithValuesForKeys:@[@"dataSourceId", @"sessionId", @"sequence"]];
         [contentController addUserScript:[self bridgeJsUserScriptWithConfig:config]];
         if (GrowingHybridModule.sharedInstance.autoJsSdkInject) {
             [contentController addUserScript:[self javaScriptSdkInjectJsUserScriptWithConfig:config]];
@@ -140,38 +131,6 @@ static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJav
     return userScript;
 }
 
-// A pending update is retried when the page sends another message or loads again.
-+ (void)synchronizeRoutingContext:(NSDictionary *)context {
-    context = [context dictionaryWithValuesForKeys:@[@"dataSourceId", @"sessionId", @"sequence"]];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        GrowingWKWebViewJavascriptBridge *bridge = self.sharedInstance;
-        if (!bridge.pendingContexts) bridge.pendingContexts = [NSMapTable weakToStrongObjectsMapTable];
-        for (WKWebView *webView in bridge.webViews.allObjects) {
-            if ([self webViewDontTrackCheck:webView] ||
-                ![GrowingHybridModule.sharedInstance isBridgeForWebViewEnabled:webView])
-                continue;
-            [bridge.pendingContexts setObject:context forKey:webView];
-            [bridge sendRoutingContext:context toWebView:webView];
-        }
-    });
-}
-
-- (void)sendRoutingContext:(NSDictionary *)context toWebView:(WKWebView *)webView {
-    NSData *data = [NSJSONSerialization dataWithJSONObject:context options:0 error:nil];
-    NSString *json = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    if (!json) return;
-    NSString *script = [NSString
-        stringWithFormat:
-            @"window.GrowingWebViewJavascriptBridge && window.GrowingWebViewJavascriptBridge._updateRoutingContext(%@)",
-            json];
-    [webView evaluateJavaScript:script
-              completionHandler:^(id result, NSError *error) {
-                  GIOLogDebug(@"Hybrid routing sequence=%@ status=%@",
-                              context[@"sequence"],
-                              error ? @"pending" : @"awaiting confirmation");
-              }];
-}
-
 - (void)userContentController:(WKUserContentController *)userContentController
       didReceiveScriptMessage:(WKScriptMessage *)message {
     if ([GrowingWKWebViewJavascriptBridge webViewDontTrackCheck:message.webView]) {
@@ -180,19 +139,6 @@ static NSString *const kGrowingWKWebViewJavascriptBridge = @"GrowingWKWebViewJav
     }
 
     if ([message.name isEqualToString:kGrowingWKWebViewJavascriptBridge]) {
-        NSDictionary *body =
-            [message.body isKindOfClass:NSString.class] ? [message.body growingHelper_jsonObject] : nil;
-        NSDictionary *pending = [self.pendingContexts objectForKey:message.webView];
-        if ([body[@"messageType"] isEqualToString:@"routingContextApplied"]) {
-            NSDictionary *applied = [body[@"data"] isKindOfClass:NSDictionary.class] ? body[@"data"] : nil;
-            if ([applied[@"sessionId"] isEqual:pending[@"sessionId"]] &&
-                [applied[@"sequence"] isEqual:pending[@"sequence"]]) {
-                [self.pendingContexts removeObjectForKey:message.webView];
-                GIOLogDebug(@"Hybrid routing applied sequence=%@", applied[@"sequence"]);
-            }
-            return;
-        }
-        if (pending) [self sendRoutingContext:pending toWebView:message.webView];
         [GrowingHybridBridgeProvider.sharedInstance handleJavascriptBridgeMessage:message.body
                                                                       fromWebView:message.webView
                                                                         frameInfo:message.frameInfo];

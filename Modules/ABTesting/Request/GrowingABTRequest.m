@@ -30,10 +30,6 @@
 
 @interface GrowingABTRequest ()
 
-@property (nonatomic, copy) NSString *serverHost;
-@property (nonatomic, copy) NSString *accountId;
-@property (nonatomic, copy, readwrite) NSDictionary *eventContext;
-@property (nonatomic, copy, readwrite) NSString *dataSourceId;
 @property (nonatomic, copy, nullable) NSString *loginUserId;
 @property (nonatomic, copy, nullable) NSString *loginUserKey;
 @property (nonatomic, copy, readwrite) NSString *userIdentity;
@@ -47,11 +43,6 @@
 - (instancetype)init {
     if (self = [super init]) {
         self.stm = [GrowingULTimeUtil currentTimeMillis];
-        GrowingConfigurationManager *manager = GrowingConfigurationManager.sharedInstance;
-        self.eventContext = manager.eventContext;
-        self.dataSourceId = manager.trackConfiguration.dataSourceId;
-        self.serverHost = manager.trackConfiguration.abTestingServerHost;
-        self.accountId = manager.trackConfiguration.accountId;
 
         GrowingSession *session = [GrowingSession currentSession];
         self.loginUserId = session.loginUserId;
@@ -85,7 +76,7 @@
 }
 
 - (NSURL *)absoluteURL {
-    NSString *baseUrl = self.serverHost;
+    NSString *baseUrl = GrowingConfigurationManager.sharedInstance.trackConfiguration.abTestingServerHost;
     if (!baseUrl.length) {
         return nil;
     }
@@ -104,8 +95,9 @@
 
 - (NSArray<id<GrowingRequestAdapter>> *)adapters {
     GrowingABTRequestAdapter *bodyAdapter = [GrowingABTRequestAdapter adapterWithRequest:self];
-    NSString *accountId = self.accountId;
-    NSString *datasourceId = self.dataSourceId;
+    GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    NSString *accountId = config.accountId;
+    NSString *datasourceId = config.dataSourceId;
     NSString *distinctId = [GrowingDeviceInfo currentDeviceInfo].deviceIDString;
 
     NSMutableDictionary *parameters = @{

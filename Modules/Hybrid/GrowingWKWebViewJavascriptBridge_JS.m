@@ -25,7 +25,6 @@
 static NSString *kWKWebViewJavascriptBridge_js(void) {
 #define __WKWebViewJavascriptBridge_js_func__(x) #x
 
-    // clang-format off
     // BEGIN preprocessorJSCode
     static NSString *kGrowingPreprocessorJSCode = @__WKWebViewJavascriptBridge_js_func__(
         (function() {
@@ -43,10 +42,7 @@ static NSString *kWKWebViewJavascriptBridge_js(void) {
                 onDomChanged: onDomChanged,
                 getDomTree: getDomTreeTemp,
                 getNativeIdentity: getNativeIdentity,
-                _onNativeCallback: _onNativeCallback,
-                _updateRoutingContext: updateRoutingContext,
-                confirmRoutingContext: confirmRoutingContext,
-                getRoutingContext: getRoutingContext
+                _onNativeCallback: _onNativeCallback
             };
 
             var _callbacks = {};
@@ -58,42 +54,8 @@ static NSString *kWKWebViewJavascriptBridge_js(void) {
                             "color: #F59E0B;");
             }
 
-            var _routingContext = window.GrowingWebViewJavascriptBridge.configuration.routingContext;
-            var _pendingRoutingContext = null;
-
-            function getRoutingContext() {
-                return _routingContext ? JSON.parse(JSON.stringify(_routingContext)) : null;
-            }
-
-            function updateRoutingContext(context) {
-                if (_routingContext && (context.sequence < _routingContext.sequence ||
-                    (context.sequence === _routingContext.sequence && context.sessionId === _routingContext.sessionId))) return;
-                if (_pendingRoutingContext && context.sequence < _pendingRoutingContext.sequence) return;
-                _pendingRoutingContext = context;
-                /* The Web SDK applies its session/source and emits the PAGE, then confirms. */
-                var event = document.createEvent("CustomEvent");
-                event.initCustomEvent("GrowingIORoutingChange", false, false, context);
-                window.dispatchEvent(event);
-            }
-
-            function confirmRoutingContext(context) {
-                if (!_pendingRoutingContext || context.sequence !== _pendingRoutingContext.sequence ||
-                    context.sessionId !== _pendingRoutingContext.sessionId) return false;
-                _routingContext = _pendingRoutingContext;
-                _pendingRoutingContext = null;
-                window.GrowingWebViewJavascriptBridge.configuration.dataSourceId = context.dataSourceId;
-                _doSend("routingContextApplied", _routingContext);
-                return true;
-            }
-
             function dispatchEvent(event) {
-                var data = typeof event === "string" ? JSON.parse(event) : event;
-                /* Updated Web SDKs bind routingContext when producing an event, before buffering. */
-                if (data && !data.routingContext && _routingContext) {
-                    data.routingContext = getRoutingContext();
-                    data.routingContextFromBridge = true;
-                }
-                _doSend("dispatchEvent", JSON.stringify(data));
+                _doSend("dispatchEvent", event);
             }
 
             function setNativeUserId(userId) {
@@ -157,7 +119,6 @@ static NSString *kWKWebViewJavascriptBridge_js(void) {
         })(););  // END preprocessorJSCode
 
 #undef __WKWebViewJavascriptBridge_js_func__
-    // clang-format on
     return kGrowingPreprocessorJSCode;
 };
 

@@ -25,6 +25,5 @@ NS_EXTENSION_UNAVAILABLE("Hybrid is not supported for iOS extensions.")
 @interface GrowingWKWebViewJavascriptBridge : NSObject
 
 + (void)bridgeForWebView:(WKWebView *)webView;
-+ (void)synchronizeRoutingContext:(NSDictionary *)context;
 
 @end

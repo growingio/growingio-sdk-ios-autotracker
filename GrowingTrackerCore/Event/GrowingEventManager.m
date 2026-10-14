@@ -29,7 +29,6 @@
 #import "GrowingTrackerCore/Public/GrowingBaseEvent.h"
 #import "GrowingTrackerCore/Public/GrowingEventFilter.h"
 #import "GrowingTrackerCore/Public/GrowingEventNetworkService.h"
-#import "GrowingTrackerCore/Public/GrowingModuleManager.h"
 #import "GrowingTrackerCore/Public/GrowingServiceManager.h"
 #import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
@@ -54,7 +53,6 @@ static const NSUInteger kGrowingUnit_MB = 1024 * 1024;
 @property (nonatomic, strong) GrowingEventDatabase *timingEventDB_PB;
 @property (nonatomic, strong) GrowingEventDatabase *realtimeEventDB_PB;
 
-@property (nonatomic, assign) BOOL processingEvent;
 @property (nonatomic, assign) BOOL configured;
 @property (nonatomic, assign) unsigned long long uploadEventSize;
 @property (nonatomic, assign) unsigned long long uploadLimitOfCellular;
@@ -186,30 +184,22 @@ static GrowingEventManager *sharedInstance = nil;
             return;
         }
         if (![source isEqualToString:config.dataSourceId]) {
-            NSDictionary *oldContext = manager.eventContext;
+            NSString *oldSource = config.dataSourceId;
             NSMutableDictionary *mapping = config.serverHostMapping.mutableCopy;
             mapping[source] = registered ?: normalized;
             config.serverHostMapping = mapping;
             config.dataSourceId = source;
             config.dataCollectionServerHost = mapping[source];
-            manager.routingSequence++;
             [GrowingSession.currentSession refreshSessionId];
-            NSDictionary *newContext = manager.eventContext;
             [GrowingSession.currentSession generateVisit];
             if (pageBuilder) {
                 pageBuilder.setTimestamp(GrowingULTimeUtil.currentTimeMillis);
                 [self postEventBuilder:pageBuilder];
             }
-            self.processingEvent = YES;
-            [[GrowingModuleManager sharedInstance]
-                   triggerEvent:GrowingMDataSourceChangedEvent
-                withCustomParam:@{@"oldContext": oldContext, @"newContext": newContext}];
-            self.processingEvent = NO;
-            GIOLogInfo(@"Routing switch %@ -> %@ session=%@ sequence=%@",
-                       oldContext[@"dataSourceId"],
+            GIOLogInfo(@"Routing switch %@ -> %@ session=%@",
+                       oldSource,
                        source,
-                       newContext[@"sessionId"],
-                       newContext[@"sequence"]);
+                       GrowingSession.currentSession.sessionId);
         }
         if (completion)
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -245,6 +235,12 @@ static GrowingEventManager *sharedInstance = nil;
 
 - (void)postEventBuilder:(GrowingBaseBuilder *_Nullable)builder {
     dispatch_block_t block = ^{
+        for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
+            if ([obj respondsToSelector:@selector(growingEventManagerEventTriggered:)]) {
+                [obj growingEventManagerEventTriggered:builder.eventType];
+            }
+        }
+
         GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
         if (!trackConfiguration.dataCollectionEnabled) {
             GIOLogDebug(@"Data collection is disabled, event can not build");
@@ -255,16 +251,10 @@ static GrowingEventManager *sharedInstance = nil;
             return;
         }
 
-        if (!builder.eventContext && ![GrowingSession currentSession].isSentVisitAfterRefreshSessionId) {
+        if (![GrowingSession currentSession].isSentVisitAfterRefreshSessionId) {
             [[GrowingSession currentSession] generateVisit];
         }
 
-        self.processingEvent = YES;
-        for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
-            if ([obj respondsToSelector:@selector(growingEventManagerEventTriggered:)]) {
-                [obj growingEventManagerEventTriggered:builder.eventType];
-            }
-        }
         [builder readPropertyInTrackThread];
 
         for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
@@ -288,15 +278,8 @@ static GrowingEventManager *sharedInstance = nil;
                 [obj growingEventManagerEventDidWrite:event];
             }
         }
-        self.processingEvent = NO;
     };
-    [GrowingDispatchManager dispatchInGrowingThread:^{
-        if (self.processingEvent) {
-            [GrowingDispatchManager enqueueInGrowingThread:block];
-        } else {
-            block();
-        }
-    }];
+    [GrowingDispatchManager dispatchInGrowingThread:block];
 }
 
 - (void)sendAllChannelEvents {
