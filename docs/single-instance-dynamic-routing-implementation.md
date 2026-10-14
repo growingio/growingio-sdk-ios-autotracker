@@ -18,6 +18,8 @@
 
 存储采用现有 JSON/PB 共库增加 `dataSourceId` 索引。旧缓存从事件内容恢复归属，表外缓存暂停上传至过期；跨启动改指后，旧缓存使用本次配置的地址。
 
+原生 PAGE 补发复用现有 `currentPage` 和 PAGE builder，在主线程读取页面信息，在切换后的事件线程填入新 Session 和当前时间；不维护额外的页面快照、Session 去重表或展示标识。正常页面生命周期沿用原逻辑。
+
 ## 模块协议
 
 核心模块通知 `growingModDataSourceChanged:` 的 `customParam` 包含 `oldContext`、`newContext`。上下文包含 `dataSourceId`、`sessionId`、`sequence` 和身份快照；只在本地及桥接协议中使用。

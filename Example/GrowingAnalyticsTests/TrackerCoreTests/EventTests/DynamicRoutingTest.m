@@ -19,6 +19,8 @@
 
 #import <XCTest/XCTest.h>
 
+#import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
+#import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
 #import "GrowingEventDatabaseService.h"
 #import "GrowingServiceManager.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingAutotrackEventType.h"
@@ -70,22 +72,25 @@
 }
 @end
 
-#import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
-
 @interface GrowingPageManager (RoutingTest)
-- (void)sendSnapshot:(NSDictionary *)snapshot isSwitch:(BOOL)isSwitch;
+- (void)viewControllerDidAppear:(UIViewController *)controller;
 @end
 
 @interface DynamicRoutingTest : XCTestCase
 @property (nonatomic, strong) GrowingTrackConfiguration *savedConfiguration;
 @property (nonatomic, assign) NSUInteger savedSequence;
-@property (nonatomic, copy) void (^savedPageHandler)(void);
+@property (nonatomic, copy) GrowingBaseBuilder * (^savedPageBuilder)(void);
 @property (nonatomic, assign) Class savedNetworkClass;
 @property (nonatomic, strong) id savedNetworkInstance;
+@property (nonatomic, strong) UIWindow *pageWindow;
+@property (nonatomic, strong) NSPointerArray *savedVisiblePages;
+@property (nonatomic, copy) NSString *savedPagePath;
+@property (nonatomic, strong) NSNumber *savedPageTimestamp;
 @end
 
 @implementation DynamicRoutingTest
 - (void)setUp {
+    [GrowingPageManager.sharedInstance start];
     [GrowingServiceManager.sharedInstance registerAllServices];
     self.savedNetworkClass =
         [GrowingServiceManager.sharedInstance serviceImplClass:@protocol(GrowingEventNetworkService)];
@@ -98,7 +103,7 @@
         dispatchInGrowingThread:^{
             self.savedConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
             self.savedSequence = GrowingConfigurationManager.sharedInstance.routingSequence;
-            self.savedPageHandler = GrowingEventManager.sharedInstance.dataSourcePageHandler;
+            self.savedPageBuilder = GrowingEventManager.sharedInstance.dataSourcePageBuilder;
             GrowingTrackConfiguration *config = [GrowingTrackConfiguration configurationWithAccountId:@"routing-test"];
             config.dataSourceId = @"A";
             config.serverHostMapping = @{@"A": @"https://a.example.com/base", @"B": @"https://b.example.com"};
@@ -106,7 +111,7 @@
             config.dataCollectionEnabled = YES;
             GrowingConfigurationManager.sharedInstance.trackConfiguration = config;
             GrowingConfigurationManager.sharedInstance.routingSequence = 0;
-            GrowingEventManager.sharedInstance.dataSourcePageHandler = nil;
+            GrowingEventManager.sharedInstance.dataSourcePageBuilder = nil;
             [GrowingSession startSession];
             [RoutingNetworkStub.sharedInstance.requests removeAllObjects];
         }
@@ -119,12 +124,20 @@
                   waitUntilDone:YES];
 }
 - (void)tearDown {
+    if (self.pageWindow) {
+        self.pageWindow.hidden = YES;
+        [GrowingPageManager.sharedInstance setValue:self.savedVisiblePages forKey:@"visiblePages"];
+    }
     [GrowingDispatchManager
         dispatchInGrowingThread:^{
             [GrowingEventManager.sharedInstance flushDB];
             GrowingConfigurationManager.sharedInstance.trackConfiguration = self.savedConfiguration;
             GrowingConfigurationManager.sharedInstance.routingSequence = self.savedSequence;
-            GrowingEventManager.sharedInstance.dataSourcePageHandler = self.savedPageHandler;
+            GrowingEventManager.sharedInstance.dataSourcePageBuilder = self.savedPageBuilder;
+            if (self.pageWindow) {
+                [GrowingPageManager.sharedInstance setValue:self.savedPagePath forKey:@"lastPagePath"];
+                [GrowingPageManager.sharedInstance setValue:self.savedPageTimestamp forKey:@"lastPageTimestamp"];
+            }
             GrowingConfigurationManager.sharedInstance.committedContext =
                 GrowingConfigurationManager.sharedInstance.eventContext;
         }
@@ -264,60 +277,118 @@
         }
     }
 }
-- (void)testPageReplayUsesNewSessionAndDeduplicatesNormalCallback {
+- (GrowingPage *)prepareCurrentPage {
     GrowingPageManager *pages = GrowingPageManager.sharedInstance;
     [pages start];
-    if (self.savedPageHandler) GrowingEventManager.sharedInstance.dataSourcePageHandler = self.savedPageHandler;
-    XCTAssertNotNil(GrowingEventManager.sharedInstance.dataSourcePageHandler);
-    __block id savedSnapshots;
-    __block id savedSessions;
-    __block id savedPath;
-    __block BOOL background;
-    NSDictionary *snapshot = @{
-        @"identity": @"test-page",
-        @"presentation": @"presentation-1",
-                               @"timestamp": @123,
-        @"title": @"Routing page",
-        @"path": @"/same-page",
-        @"attributes": @{},
-        @"referral": @""
-    };
+    if (self.savedPageBuilder) GrowingEventManager.sharedInstance.dataSourcePageBuilder = self.savedPageBuilder;
+    XCTAssertNotNil(GrowingEventManager.sharedInstance.dataSourcePageBuilder);
+    self.savedVisiblePages = [pages valueForKey:@"visiblePages"];
     [GrowingDispatchManager
         dispatchInGrowingThread:^{
-            savedSnapshots = [pages valueForKey:@"pageSnapshots"];
-            savedSessions = [pages valueForKey:@"pageSessions"];
-            savedPath = [pages valueForKey:@"lastPagePath"];
-            background = [[pages valueForKey:@"pagesInBackground"] boolValue];
-            [pages setValue:[@{@"test-page": snapshot} mutableCopy] forKey:@"pageSnapshots"];
-            [pages setValue:[NSMutableDictionary dictionary] forKey:@"pageSessions"];
-            [pages setValue:@NO forKey:@"pagesInBackground"];
+            self.savedPagePath = [pages valueForKey:@"lastPagePath"];
+            self.savedPageTimestamp = [pages valueForKey:@"lastPageTimestamp"];
         }
                   waitUntilDone:YES];
+
+    UIViewController *controller = [UIViewController new];
+    controller.growingPageAlias = @"same-page";
+    controller.growingPageTitle = @"Routing page";
+    controller.growingPageAttributes = @{@"key": @"value"};
+    self.pageWindow = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 375, 667)];
+    self.pageWindow.rootViewController = controller;
+    [self.pageWindow makeKeyAndVisible];
+    [pages setValue:[NSPointerArray weakObjectsPointerArray] forKey:@"visiblePages"];
+    [pages viewControllerDidAppear:controller];
+    GrowingPage *page = pages.currentPage;
+    XCTAssertNotNil(page);
+    [page setValue:@123 forKey:@"showTimestamp"];
+    [MockEventQueue.sharedQueue cleanQueue];
+    return page;
+}
+- (void)testPageReplayReusesCurrentPageAcrossSwitches {
+    GrowingPage *page = [self prepareCurrentPage];
     XCTestExpectation *done = [self expectationWithDescription:@"page replay"];
+    done.expectedFulfillmentCount = 3;
     [GrowingEventManager.sharedInstance updateDataSourceId:@"B"
                                   dataCollectionServerHost:nil
                                                 completion:^(NSError *error) {
                                                     XCTAssertNil(error);
                                                     [done fulfill];
                                                 }];
+    [GrowingEventManager.sharedInstance postEventBuilder:GrowingCustomEvent.builder.setEventName(@"afterB")];
+    [GrowingEventManager.sharedInstance updateDataSourceId:@"B"
+                                  dataCollectionServerHost:nil
+                                                completion:^(NSError *error) {
+                                                    XCTAssertNil(error);
+                                                    [done fulfill];
+                                                }];
+    [GrowingEventManager.sharedInstance updateDataSourceId:@"A"
+                                  dataCollectionServerHost:nil
+                                                completion:^(NSError *error) {
+                                                    XCTAssertNil(error);
+                                                    [done fulfill];
+                                                }];
     [self waitForExpectationsWithTimeout:5 handler:nil];
-    [GrowingDispatchManager
-        dispatchInGrowingThread:^{
-            [pages sendSnapshot:snapshot isSwitch:NO];
-        }
-                  waitUntilDone:YES];
+    NSArray<GrowingPageEvent *> *events = (id)[MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
+    NSArray<GrowingBaseEvent *> *visits = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeVisit];
+    XCTAssertEqual(events.count, 2);
+    XCTAssertEqual(visits.count, 2);
+    XCTAssertEqualObjects(events.firstObject.dataSourceId, @"B");
+    XCTAssertEqualObjects(events.lastObject.dataSourceId, @"A");
+    XCTAssertEqualObjects(events.firstObject.sessionId, visits.firstObject.sessionId);
+    XCTAssertEqualObjects(events.lastObject.sessionId, visits.lastObject.sessionId);
+    XCTAssertNotEqualObjects(events.firstObject.sessionId, events.lastObject.sessionId);
+    for (GrowingPageEvent *event in events) {
+        XCTAssertEqualObjects(event.path, @"/same-page");
+        XCTAssertEqualObjects(event.title, @"Routing page");
+        XCTAssertEqualObjects(event.attributes, (@{@"key": @"value"}));
+        XCTAssertGreaterThan(event.timestamp, 123);
+    }
+    XCTAssertEqual(page.showTimestamp, 123);
+    NSArray *all = [MockEventQueue.sharedQueue.allEvent copy];
+    GrowingBaseEvent *custom = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom].firstObject;
+    XCTAssertEqualObjects(custom.sessionId, events.firstObject.sessionId);
+    XCTAssertLessThan([all indexOfObject:visits.firstObject], [all indexOfObject:events.firstObject]);
+    XCTAssertLessThan([all indexOfObject:events.firstObject], [all indexOfObject:custom]);
+
+    // Normal page appearances keep their existing PAGE behavior.
+    [GrowingPageManager.sharedInstance viewControllerDidAppear:page.carrier];
+    XCTAssertEqual([MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage].count, 3);
+
+    // A page that has left the window must not be replayed.
+    self.pageWindow.rootViewController = [UIViewController new];
+    XCTestExpectation *hidden = [self expectationWithDescription:@"no visible page"];
+    [GrowingEventManager.sharedInstance updateDataSourceId:@"B"
+                                  dataCollectionServerHost:nil
+                                                completion:^(NSError *error) {
+                                                    XCTAssertNil(error);
+                                                    [hidden fulfill];
+                                                }];
+    [self waitForExpectationsWithTimeout:5 handler:nil];
+    XCTAssertEqual([MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage].count, 3);
+}
+- (void)testPageReplayFromWorkerReadsPageOnMainThread {
+    [self prepareCurrentPage];
+    GrowingBaseBuilder * (^pageBuilder)(void) = GrowingEventManager.sharedInstance.dataSourcePageBuilder;
+    GrowingEventManager.sharedInstance.dataSourcePageBuilder = ^GrowingBaseBuilder * {
+        XCTAssertTrue(NSThread.isMainThread);
+        return pageBuilder();
+    };
+    XCTestExpectation *done = [self expectationWithDescription:@"worker switch"];
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
+        [GrowingEventManager.sharedInstance updateDataSourceId:@"B"
+                                      dataCollectionServerHost:nil
+                                                    completion:^(NSError *error) {
+                                                        XCTAssertNil(error);
+                                                        XCTAssertTrue(NSThread.isMainThread);
+                                                        [done fulfill];
+                                                    }];
+    });
+    [self waitForExpectationsWithTimeout:5 handler:nil];
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
     XCTAssertEqual(events.count, 1);
     XCTAssertEqualObjects(events.firstObject.dataSourceId, @"B");
     XCTAssertEqualObjects(events.firstObject.sessionId, GrowingSession.currentSession.sessionId);
-    [GrowingDispatchManager
-        dispatchInGrowingThread:^{
-            [pages setValue:savedSnapshots forKey:@"pageSnapshots"];
-            [pages setValue:savedSessions forKey:@"pageSessions"];
-            [pages setValue:savedPath forKey:@"lastPagePath"];
-            [pages setValue:@(background) forKey:@"pagesInBackground"];
-        }
-                  waitUntilDone:YES];
 }
 
 @end

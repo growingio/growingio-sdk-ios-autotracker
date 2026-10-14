@@ -35,6 +35,7 @@
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
+#import "GrowingULTimeUtil.h"
 
 static const NSUInteger kGrowingMaxDBCacheSize = 100;  // default: write to DB as soon as there are 100 events
 static const NSUInteger kGrowingMaxBatchSize = 500;    // default: send no more than 500 events in every batch
@@ -169,6 +170,13 @@ static GrowingEventManager *sharedInstance = nil;
                   completion:(void (^)(NSError *))completion {
     NSString *source = [dataSourceId isKindOfClass:NSString.class] ? [dataSourceId copy] : nil;
     NSString *host = [serverHost copy];
+    if (self.dataSourcePageBuilder && !NSThread.isMainThread) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self updateDataSourceId:source dataCollectionServerHost:host completion:completion];
+        });
+        return;
+    }
+    GrowingBaseBuilder *pageBuilder = self.dataSourcePageBuilder ? self.dataSourcePageBuilder() : nil;
     [GrowingDispatchManager enqueueInGrowingThread:^{
         GrowingConfigurationManager *manager = GrowingConfigurationManager.sharedInstance;
         GrowingTrackConfiguration *config = manager.trackConfiguration;
@@ -212,7 +220,10 @@ static GrowingEventManager *sharedInstance = nil;
             [GrowingSession.currentSession refreshSessionId];
             NSDictionary *newContext = manager.eventContext;
             [GrowingSession.currentSession generateVisit];
-            if (self.dataSourcePageHandler) self.dataSourcePageHandler();
+            if (pageBuilder) {
+                pageBuilder.setTimestamp(GrowingULTimeUtil.currentTimeMillis);
+                [self postEventBuilder:pageBuilder];
+            }
             self.processingEvent = YES;
             [[GrowingModuleManager sharedInstance]
                    triggerEvent:GrowingMDataSourceChangedEvent
