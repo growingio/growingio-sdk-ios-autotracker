@@ -485,39 +485,39 @@ static GrowingEventManager *sharedInstance = nil;
                                           accountId:trackConfiguration.accountId];
     GIOLogDebug(@"Upload source=%@ channel=%@ url=%@", channel.dataSourceId, channel.name, eventRequest.absoluteURL);
     __block BOOL completed = NO;
-    [service sendRequest:eventRequest
-              completion:^(NSHTTPURLResponse *httpResponse, NSData *data, NSError *error) {
-                  [GrowingDispatchManager enqueueInGrowingThread:^{
-                      if (completed) return;
-                      completed = YES;
-                      channel.isUploading = NO;
-                      self.uploadCount--;
-                      if (!error && httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
-                          if (isViaCellular && [eventRequest respondsToSelector:@selector(outsize)]) {
-                              self.uploadEventSize += eventRequest.outsize;
-                          }
-                          for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
-                              if ([obj respondsToSelector:@selector(growingEventManagerEventsDidSend:
-                                                                                             request:channel:)]) {
-                                  [obj growingEventManagerEventsDidSend:events request:eventRequest channel:channel];
-                              }
-                          }
-                          [self removeEvents_unsafe:events forChannel:channel];
-                          channel.failureCount = 0;
-                          channel.nextRetryTime = 0;
-                      } else {
-                          channel.failureCount = MIN(channel.failureCount + 1, 6);
-                          channel.nextRetryTime =
-                              NSDate.date.timeIntervalSince1970 + MIN(300, 5 * (1 << channel.failureCount));
-                          GIOLogDebug(@"Upload failed source=%@ url=%@ error=%@ status=%ld",
-                                      channel.dataSourceId,
-                                      eventRequest.absoluteURL,
-                                      error,
-                                      (long)httpResponse.statusCode);
-                      }
-                      [self scheduleSend];
-                  }];
-              }];
+    [service
+        sendRequest:eventRequest
+         completion:^(NSHTTPURLResponse *httpResponse, NSData *data, NSError *error) {
+             [GrowingDispatchManager enqueueInGrowingThread:^{
+                 if (completed) return;
+                 completed = YES;
+                 channel.isUploading = NO;
+                 self.uploadCount--;
+                 if (!error && httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
+                     if (isViaCellular && [eventRequest respondsToSelector:@selector(outsize)]) {
+                         self.uploadEventSize += eventRequest.outsize;
+                     }
+                     for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
+                         if ([obj respondsToSelector:@selector(growingEventManagerEventsDidSend:request:channel:)]) {
+                             [obj growingEventManagerEventsDidSend:events request:eventRequest channel:channel];
+                         }
+                     }
+                     [self removeEvents_unsafe:events forChannel:channel];
+                     channel.failureCount = 0;
+                     channel.nextRetryTime = 0;
+                 } else {
+                     channel.failureCount = MIN(channel.failureCount + 1, 6);
+                     channel.nextRetryTime =
+                         NSDate.date.timeIntervalSince1970 + MIN(300, 5 * (1 << channel.failureCount));
+                     GIOLogDebug(@"Upload failed source=%@ url=%@ error=%@ status=%ld",
+                                 channel.dataSourceId,
+                                 eventRequest.absoluteURL,
+                                 error,
+                                 (long)httpResponse.statusCode);
+                 }
+                 [self scheduleSend];
+             }];
+         }];
 }
 
 #pragma mark Event Persist

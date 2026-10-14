@@ -91,7 +91,7 @@ static NSString *kSetDataCollectionEnabledSelector = @"growingModSetDataCollecti
 
 - (id<GrowingModuleProtocol>)getModuleInstanceByClass:(Class)moduleClass {
     if ([[moduleClass class] respondsToSelector:@selector(singleton)]) {
-        BOOL (*singletonImp)(id, SEL) = (BOOL(*)(id, SEL))objc_msgSend;
+        BOOL (*singletonImp)(id, SEL) = (BOOL (*)(id, SEL))objc_msgSend;
         BOOL isSingleton = singletonImp([moduleClass class], @selector(singleton));
         if (isSingleton) {
             if ([[moduleClass class] respondsToSelector:@selector(sharedInstance)]) {
