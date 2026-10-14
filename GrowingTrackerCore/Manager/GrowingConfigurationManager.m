@@ -32,34 +32,6 @@
     return _sharedInstance;
 }
 
-+ (NSString *)normalizedServerHost:(NSString *)host {
-    if (![host isKindOfClass:NSString.class] || !host.length ||
-        [host rangeOfCharacterFromSet:NSCharacterSet.whitespaceAndNewlineCharacterSet].location != NSNotFound) {
-        return nil;
-    }
-    NSURLComponents *url = [NSURLComponents componentsWithString:host];
-    NSString *scheme = url.scheme.lowercaseString;
-    if (!([scheme isEqualToString:@"https"] || [scheme isEqualToString:@"http"]) || !url.host.length || url.user ||
-        url.password || url.query || url.fragment) {
-        return nil;
-    }
-    url.scheme = scheme;
-    url.host = url.host.lowercaseString;
-    if (([scheme isEqualToString:@"https"] && url.port.integerValue == 443) ||
-        ([scheme isEqualToString:@"http"] && url.port.integerValue == 80)) {
-        url.port = nil;
-    }
-    if (url.port && (url.port.integerValue < 1 || url.port.integerValue > 65535)) {
-        return nil;
-    }
-    NSString *path = url.percentEncodedPath;
-    while ([path hasSuffix:@"/"]) {
-        path = [path substringToIndex:path.length - 1];
-    }
-    url.percentEncodedPath = path;
-    return url.URL ? url.string : nil;
-}
-
 + (NSDictionary<NSString *, NSString *> *)validatedMapping:(GrowingTrackConfiguration *)configuration
                                                      error:(NSError **)error {
     NSDictionary *input = configuration.serverHostMapping;
@@ -70,12 +42,17 @@
     BOOL valid = [input isKindOfClass:NSDictionary.class] && configuration.dataSourceId.length;
     if (valid) {
         for (id key in input) {
-            NSString *host = [self normalizedServerHost:input[key]];
-            if (![key isKindOfClass:NSString.class] || ![key length] || !host) {
+            NSString *host = input[key];
+            NSURL *url = [host isKindOfClass:NSString.class] ? [NSURL URLWithString:host] : nil;
+            NSString *scheme = url.scheme.lowercaseString;
+            if (![key isKindOfClass:NSString.class] || ![key length] || !url.host.length ||
+                !([scheme isEqualToString:@"http"] || [scheme isEqualToString:@"https"]) || url.user || url.password ||
+                url.query || url.fragment ||
+                (url.port && (url.port.integerValue < 1 || url.port.integerValue > 65535))) {
                 valid = NO;
                 break;
             }
-            mapping[[key copy]] = host;
+            mapping[[key copy]] = [host copy];
         }
         valid = valid && mapping[configuration.dataSourceId] != nil;
     }

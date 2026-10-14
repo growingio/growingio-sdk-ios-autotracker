@@ -18,7 +18,7 @@ configuration.serverHostMapping = @{
 `GrowingTracker` 使用 `GrowingTrackConfiguration`，配置与切换方式相同。
 
 - 提供 `serverHostMapping` 时以表为准，初始 dataSourceId 必须在表内；未提供时，由初始 dataSourceId 和 `dataCollectionServerHost` 生成单条映射。
-- 地址须为绝对 HTTP(S) URL，可带基路径，不接受用户名、密码、查询参数或 fragment。比较地址前统一协议和域名大小写、移除默认端口与末尾斜杠。
+- 地址须为绝对 HTTP(S) URL，可带基路径，不接受用户名、密码、查询参数或 fragment。地址按传入字符串保存和比较。
 - 映射只决定采集上报地址，`accountId` 保持不变。
 
 ## 2 切换接口与时序

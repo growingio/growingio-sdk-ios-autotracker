@@ -152,14 +152,18 @@ static GrowingEventManager *sharedInstance = nil;
     [GrowingDispatchManager dispatchInGrowingThread:^{
         GrowingConfigurationManager *manager = GrowingConfigurationManager.sharedInstance;
         GrowingTrackConfiguration *config = manager.trackConfiguration;
-        NSString *normalized = host ? [GrowingConfigurationManager normalizedServerHost:host] : nil;
+        NSURL *url = [host isKindOfClass:NSString.class] ? [NSURL URLWithString:host] : nil;
+        NSString *scheme = url.scheme.lowercaseString;
+        BOOL validHost = url.host.length && ([scheme isEqualToString:@"http"] || [scheme isEqualToString:@"https"]) &&
+                         !url.user && !url.password && !url.query && !url.fragment &&
+                         (!url.port || (url.port.integerValue >= 1 && url.port.integerValue <= 65535));
         NSString *registered = source.length ? [manager serverHostForDataSourceId:source] : nil;
         NSString *reason = nil;
         if (!self.allEventChannels.count || !config) {
             reason = @"SDK is not initialized";
-        } else if (!source.length || (host && !normalized) || (!registered && !normalized)) {
+        } else if (!source.length || (host && !validHost) || (!registered && !validHost)) {
             reason = @"Invalid data source or collection URL";
-        } else if (registered && normalized && ![registered isEqualToString:normalized]) {
+        } else if (registered && host && ![registered isEqualToString:host]) {
             reason = @"The data source already has a different collection URL";
         } else if (![source isEqualToString:config.dataSourceId]) {
             for (GrowingEventChannel *channel in self.allEventChannels) {
@@ -184,7 +188,7 @@ static GrowingEventManager *sharedInstance = nil;
         if (![source isEqualToString:config.dataSourceId]) {
             NSString *oldSource = config.dataSourceId;
             NSMutableDictionary *mapping = config.serverHostMapping.mutableCopy;
-            mapping[source] = registered ?: normalized;
+            mapping[source] = registered ?: host;
             config.serverHostMapping = mapping;
             config.dataSourceId = source;
             config.dataCollectionServerHost = mapping[source];

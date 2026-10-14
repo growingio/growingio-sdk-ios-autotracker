@@ -28,7 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedInstance;
 
-+ (NSString *_Nullable)normalizedServerHost:(NSString *)host;
 + (NSDictionary<NSString *, NSString *> *_Nullable)validatedMapping:(GrowingTrackConfiguration *)configuration
                                                               error:(NSError *_Nullable *_Nullable)error;
 - (NSString *_Nullable)serverHostForDataSourceId:(NSString *)dataSourceId;

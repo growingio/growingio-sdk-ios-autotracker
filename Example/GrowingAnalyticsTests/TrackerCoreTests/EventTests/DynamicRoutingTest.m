@@ -203,11 +203,14 @@
 }
 - (void)testMappingValidationAndRequestSnapshot {
     GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
-    XCTAssertEqualObjects([GrowingConfigurationManager normalizedServerHost:@"HTTPS://A.EXAMPLE.COM:443/base/"],
-                          @"https://a.example.com/base");
-    XCTAssertNil([GrowingConfigurationManager normalizedServerHost:@"file:///tmp/events"]);
-    XCTAssertNil([GrowingConfigurationManager normalizedServerHost:@"https://example.com/?query=1"]);
-    XCTAssertNil([GrowingConfigurationManager normalizedServerHost:@"https://example.com:99999"]);
+    GrowingTrackConfiguration *input = [config copy];
+    input.serverHostMapping = @{@"A": @"HTTPS://A.EXAMPLE.COM:443/base/"};
+    XCTAssertEqualObjects([GrowingConfigurationManager validatedMapping:input
+                                                                  error:nil][@"A"], @"HTTPS://A.EXAMPLE.COM:443/base/");
+    for (NSString *host in @[@"file:///tmp/events", @"https://example.com/?query=1", @"https://example.com:99999"]) {
+        input.serverHostMapping = @{@"A": host};
+        XCTAssertNil([GrowingConfigurationManager validatedMapping:input error:nil]);
+    }
     GrowingEventRequest *request =
         [[GrowingEventRequest alloc] initWithEvents:[@"[]" dataUsingEncoding:NSUTF8StringEncoding]
                                          serverHost:config.serverHostMapping[@"A"]
@@ -262,7 +265,7 @@
 - (void)testIdempotenceConflictAndCollectionDisabled {
     NSString *session = GrowingSession.currentSession.sessionId;
     XCTestExpectation *done = [self expectationWithDescription:@"validation"];
-    done.expectedFulfillmentCount = 4;
+    done.expectedFulfillmentCount = 5;
     [GrowingEventManager.sharedInstance updateDataSourceId:nil
                                   dataCollectionServerHost:nil
                                                 completion:^(NSError *error) {
@@ -277,6 +280,12 @@
                                                 }];
     [GrowingEventManager.sharedInstance updateDataSourceId:@"A"
                                   dataCollectionServerHost:@"https://different.example.com"
+                                                completion:^(NSError *error) {
+                                                    XCTAssertNotNil(error);
+                                                    [done fulfill];
+                                                }];
+    [GrowingEventManager.sharedInstance updateDataSourceId:@"A"
+                                  dataCollectionServerHost:@"https://a.example.com/base/"
                                                 completion:^(NSError *error) {
                                                     XCTAssertNotNil(error);
                                                     [done fulfill];
@@ -306,7 +315,7 @@
                                                 }];
     [self waitForExpectationsWithTimeout:5 handler:nil];
     XCTAssertEqualObjects(GrowingConfigurationManager.sharedInstance.trackConfiguration.serverHostMapping[@"C"],
-                          @"https://c.example.com/api");
+                          @"https://c.example.com/api/");
     [GrowingEventManager.sharedInstance sendAllChannelEvents];
     [GrowingDispatchManager
         dispatchInGrowingThread:^{
