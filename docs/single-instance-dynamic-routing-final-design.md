@@ -128,8 +128,8 @@ configuration.serverHostMapping = @{
 全部模块按既有平台和配置纳入适配，互斥组合分别验收。
 
 - 核心提交后通知携带旧、新上下文；模块不参与统一的多阶段状态机，不重复初始化。
-- 异步任务冻结上下文，请求、缓存、重试、结果和派生事件均使用同一快照，防止迟到结果污染当前数据源。
-- Hybrid 管理同步确认，调试/圈选管理重连，ABTesting 管理缓存隔离。模块同步不阻塞或回滚核心切换；旧确认不能覆盖新状态。
+- 产生分析事件的异步任务冻结上下文，请求、缓存、重试、结果和派生事件均使用同一快照，防止迟到结果污染当前数据源。
+- Hybrid 管理同步确认，调试管理重连，ABTesting 管理缓存隔离。圈选连接沿用原有生命周期，不受数据源切换影响。模块同步不阻塞或回滚核心切换；旧确认不能覆盖新状态。
 - 需要异步同步的组件自行报告状态。
 
 ### 5.2 Hybrid 与跨端
@@ -141,7 +141,7 @@ configuration.serverHostMapping = @{
 
 ### 5.3 模块服务地址
 
-ABTesting 使用 `abTestingServerHost`，DeepLink 使用 `deepLinkHost`，调试与圈选使用连接参数。模块请求绑定实际地址及任务的数据源、身份和会话快照。
+ABTesting 使用 `abTestingServerHost`，DeepLink 使用 `deepLinkHost`，调试与圈选使用连接参数。圈选 WebSocket 的地址和握手不依赖 dataSourceId，切换上报数据源不关闭连接、不拦截消息或截图。
 
 若模块服务也需分区域，可将对照表值扩展为显式地址集合；不得通过替换采集域名推导模块地址，第三方固定接口保持其协议地址。
 
@@ -199,7 +199,7 @@ ABTesting 使用 `abTestingServerHost`，DeepLink 使用 `deepLinkHost`，调试
 | M06 | Advertising：归因在途与缓存 builder | 原请求和派生事件保持上下文，不伪造激活 |
 | M07 | APM：监控与延迟报告 | 不重复启动，报告归属可恢复，CUSTOM 上下文正确 |
 | M08 | MobileDebugger：活跃连接中切换 | 旧连接不接收新数据源事件，诊断与实际地址一致 |
-| M09 | WebCircle：DOM/截图任务在途 | 旧任务不混入新数据源，采集不中断 |
+| M09 | WebCircle：连接期间切换数据源 | 连接和圈选状态保持，消息与 DOM/截图继续处理 |
 | M10 | V2Adapter/V2AdapterTrackOnly | 旧 API 委托同一实例，Session 查询一致，不重复初始化 |
 | M11 | DefaultServices/Services | 编码、压缩、加密、数据库、网络、截图和 WebSocket 归属正确 |
 | M12 | 模块共享或独立服务地址 | 地址来自显式配置，与任务归属一致，第三方接口不被替换 |

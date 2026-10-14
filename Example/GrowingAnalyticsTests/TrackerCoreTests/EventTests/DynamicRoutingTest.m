@@ -40,9 +40,44 @@
 #import "GrowingEventNetworkService.h"
 #import "GrowingTrackerCore/Network/Request/GrowingEventRequest.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
+#import "GrowingWebSocketService.h"
+#import "Modules/WebCircle/GrowingWebCircle.h"
 #import "Services/Database/FMDB/GrowingFMDB.h"
 #import "Services/JSON/GrowingEventJSONDatabase.h"
 #import "Services/JSON/GrowingEventJSONPersistence.h"
+
+@interface RoutingWebSocketStub : NSObject <GrowingWebSocketService>
+@property (nonatomic, weak) id<GrowingWebSocketDelegate> delegate;
+@property (nonatomic, assign) GrowingWebSocketReadyState readyState;
+@property (nonatomic, strong) NSURL *url;
+@property (nonatomic, assign) NSUInteger closeCount;
+@property (nonatomic, strong) NSMutableArray *messages;
+@end
+@implementation RoutingWebSocketStub
+- (instancetype)initWithURLRequest:(NSURLRequest *)request {
+    if (self = [super init]) {
+        _url = request.URL;
+        _messages = [NSMutableArray array];
+        _readyState = Growing_WS_OPEN;
+    }
+    return self;
+}
+- (void)open {
+    self.readyState = Growing_WS_OPEN;
+}
+- (void)close {
+    self.closeCount++;
+    self.readyState = Growing_WS_CLOSED;
+}
+- (void)send:(id)data {
+    [self.messages addObject:data];
+}
+@end
+
+@interface GrowingWebCircle (RoutingTest)
+- (BOOL)isRunning;
+- (void)sendJson:(id)json;
+@end
 
 @interface RoutingNetworkStub : NSObject <GrowingEventNetworkService>
 + (instancetype)sharedInstance;
@@ -457,6 +492,43 @@
         XCTAssertEqualObjects(request.absoluteURL.host, host);
     }
     XCTAssertEqual(db.countOfEvents, 0);
+}
+- (void)testDataSourceSwitchKeepsWebCircleConnectedAndSending {
+    GrowingWebCircle *circle = [GrowingWebCircle new];
+    RoutingWebSocketStub *socket = [[RoutingWebSocketStub alloc]
+        initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"wss://circle.example.com/session"]]];
+    circle.webSocket = socket;
+    socket.delegate = (id<GrowingWebSocketDelegate>)circle;
+    [circle setValue:@YES forKey:@"isReady"];
+    GrowingModuleManager *modules = [GrowingModuleManager new];
+    [modules setValue:[@{@(GrowingMDataSourceChangedEvent): @[circle]} mutableCopy] forKey:@"modulesByEvent"];
+    XCTestExpectation *done = [self expectationWithDescription:@"circle survives source switch"];
+    [GrowingEventManager.sharedInstance updateDataSourceId:@"B"
+                                  dataCollectionServerHost:nil
+                                                completion:^(NSError *error) {
+                                                    XCTAssertNil(error);
+                                                    [GrowingDispatchManager
+                                                        dispatchInGrowingThread:^{
+                                                            [modules triggerEvent:GrowingMDataSourceChangedEvent];
+                                                        }
+                                                                  waitUntilDone:YES];
+                                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                                        [done fulfill];
+                                                    });
+                                                }];
+    [self waitForExpectationsWithTimeout:5 handler:nil];
+    XCTAssertEqualObjects(GrowingConfigurationManager.sharedInstance.trackConfiguration.dataSourceId, @"B");
+    XCTAssertEqual(circle.webSocket, socket);
+    XCTAssertEqual(socket.delegate, circle);
+    XCTAssertTrue(circle.isRunning);
+    XCTAssertEqual(socket.closeCount, 0);
+    [circle sendJson:@{@"msgType": @"refreshScreenshot", @"screenshot": @"existing-circle-session"}];
+    XCTAssertEqual(socket.messages.count, 1);
+    NSDictionary *message =
+        [NSJSONSerialization JSONObjectWithData:[socket.messages.lastObject dataUsingEncoding:NSUTF8StringEncoding]
+                                        options:0
+                                          error:nil];
+    XCTAssertEqualObjects(message[@"msgType"], @"refreshScreenshot");
 }
 - (GrowingPage *)prepareCurrentPage {
     GrowingPageManager *pages = GrowingPageManager.sharedInstance;

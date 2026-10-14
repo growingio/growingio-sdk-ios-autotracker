@@ -56,8 +56,7 @@ GrowingMod(GrowingWebCircle)
                                 GrowingDeepLinkHandlerProtocol>
 
 // 表示web和app是否同时准备好数据发送，此时表示可以发送数据
-@property (atomic, assign) BOOL isReady;
-@property (atomic, copy) NSNumber *connectionSequence;
+@property (nonatomic, assign) BOOL isReady;
 
 @property (nonatomic, retain) GrowingWebCircleStatusView *statusView;
 
@@ -82,20 +81,6 @@ GrowingMod(GrowingWebCircle)
     self.screenshotProvider =
         [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingScreenshotService)];
     [[GrowingDeepLinkHandler sharedInstance] addHandlersObject:self];
-}
-
-- (void)growingModDataSourceChanged:(GrowingContext *)context {
-    self.isReady = NO;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if ([self.connectionSequence
-                isEqual:GrowingConfigurationManager.sharedInstance.committedContext[@"sequence"]]) {
-            return;
-        }
-        self.webSocket.delegate = nil;
-        [self.webSocket close];
-        self.webSocket = nil;
-        [self _stopWithError:nil];
-    });
 }
 
 - (instancetype)init {
@@ -321,12 +306,11 @@ GrowingMod(GrowingWebCircle)
     }
 
     __weak GrowingWebCircle *wself = self;
-    id socket = self.webSocket;
     [self fillAllViewsInWindow:[self getTopWindow]
                     screenshot:screenshot
                     completion:^(NSMutableDictionary *dict) {
                         GrowingWebCircle *sself = wself;
-                        if (sself != nil && dict && sself.webSocket == socket) {
+                        if (sself != nil && dict) {
                             [sself sendJson:dict];
                         }
                     }];
@@ -364,7 +348,6 @@ GrowingMod(GrowingWebCircle)
 }
 
 - (void)runWithCircle:(NSURL *)url {
-    self.connectionSequence = GrowingConfigurationManager.sharedInstance.committedContext[@"sequence"];
     if (self.webSocket) {
         [self.webSocket close];
         self.webSocket.delegate = nil;
@@ -491,9 +474,6 @@ GrowingMod(GrowingWebCircle)
 }
 
 - (void)sendJson:(id)json {
-    if (self.connectionSequence &&
-        ![self.connectionSequence isEqual:GrowingConfigurationManager.sharedInstance.committedContext[@"sequence"]])
-        return;
     if (self.webSocket.readyState == Growing_WS_OPEN &&
         ([json isKindOfClass:[NSDictionary class]] || [json isKindOfClass:[NSArray class]])) {
         NSString *jsonString = [json growingHelper_jsonString];
@@ -504,10 +484,6 @@ GrowingMod(GrowingWebCircle)
 #pragma mark - WebSocket Delegate
 
 - (void)webSocket:(id<GrowingWebSocketService>)webSocket didReceiveMessage:(id)message {
-    if (webSocket != self.webSocket ||
-        (self.connectionSequence &&
-         ![self.connectionSequence isEqual:GrowingConfigurationManager.sharedInstance.committedContext[@"sequence"]]))
-        return;
     if ([message isKindOfClass:[NSString class]] && ((NSString *)message).length > 0) {
         GIOLogDebug(@"[GrowingWebCircle] didReceiveMessage: %@", message);
         NSMutableDictionary *dict = [[message growingHelper_jsonObject] mutableCopy];
@@ -535,7 +511,6 @@ GrowingMod(GrowingWebCircle)
 }
 
 - (void)webSocketDidOpen:(id<GrowingWebSocketService>)webSocket {
-    if (webSocket != self.webSocket) return;
     GIOLogDebug(@"[GrowingWebCircle] web socket已连接");
     NSString *accountId = GrowingConfigurationManager.sharedInstance.trackConfiguration.accountId;
     NSDictionary *dict = @{

@@ -22,6 +22,8 @@
 
 原生 PAGE 补发复用现有 `currentPage` 和 PAGE builder，在主线程读取页面信息，在切换后的事件线程填入新 Session 和当前时间；不维护额外的页面快照、Session 去重表或展示标识。正常页面生命周期沿用原逻辑。
 
+圈选 WebSocket 沿用原有连接生命周期，切换上报域名和 dataSourceId 不关闭连接，也不拦截圈选消息或截图。
+
 ## 模块协议
 
 核心模块通知 `growingModDataSourceChanged:` 的 `customParam` 包含 `oldContext`、`newContext`。上下文包含 `dataSourceId`、`sessionId`、`sequence` 和身份快照；只在本地及桥接协议中使用。
