@@ -1,201 +1,101 @@
-# GrowingIO iOS SDK 单实例动态切换方案
+# 单实例数据源与上报地址切换
 
-- 版本：2.2
-- 日期：2026 年 10 月 13 日
-- 适用范围：纯埋点 SDK、完整无埋点 SDK 及全部模块的既有支持平台
-- 代码基线：iOS `1667cf2e`
+SDK 维护 `dataSourceId → 上报地址` 映射。切换后，新事件使用新的 dataSourceId 和 Session；旧缓存保留原字段，发送时通过自身的 dataSourceId 查询原地址。
 
-本文定义行为与验收标准，当前实施状态见[实施说明](single-instance-dynamic-routing-implementation.md)。
-
-## 1 方案概述
-
-初始化时配置 dataSourceId → 上报地址对照表，运行时切换 dataSourceId，无需重启 APP 或重新初始化 SDK。事件构建时固定 dataSourceId 与 Session，发送时按所属 dataSourceId 解析地址。
-
-切换创建新 Session，按采集规则生成 VISIT、补发 PAGE；不清队列、不卸 Hook、不重置计时器、不改变采集开关。
-
-进程终止前未落盘的数据、磁盘故障及网络重复发送沿用既有边界，不承诺端到端恰好一次交付。
-
-## 2 API 设计
-
-### 2.1 初始化对照表
+## 1 初始化
 
 ```objc
+GrowingAutotrackConfiguration *configuration =
+    [GrowingAutotrackConfiguration configurationWithAccountId:@"accountId"];
+configuration.dataSourceId = @"A";
 configuration.serverHostMapping = @{
-    @"数据源A": @"https://host-a.example.com",
-    @"数据源B": @"https://host-b.example.com",
+    @"A": @"https://host-a.example.com",
+    @"B": @"https://host-b.example.com",
 };
+[GrowingAutotracker startWithConfiguration:configuration launchOptions:nil];
 ```
 
-- 提供对照表后以表为准，初始 `dataSourceId` 不在表内则初始化失败。
-- 未提供时，以 `dataCollectionServerHost` 与初始 `dataSourceId` 构成单条映射，兼容现有行为。
-- 地址须为有效绝对 URL，规范化时保留有效基路径。
-- 单次运行内只允许追加映射，不能修改已有地址；跨启动可修改，历史缓存使用本次启动的地址。
-- `accountId` 保持不变，不参与映射键。
+`GrowingTracker` 使用 `GrowingTrackConfiguration`，配置与切换方式相同。
 
-### 2.2 运行时切换接口
+- 提供 `serverHostMapping` 时以表为准，初始 dataSourceId 必须在表内；未提供时，由初始 dataSourceId 和 `dataCollectionServerHost` 生成单条映射。
+- 地址须为绝对 HTTP(S) URL，可带基路径，不接受用户名、密码、查询参数或 fragment。比较地址前统一协议和域名大小写、移除默认端口与末尾斜杠。
+- 映射只决定采集上报地址，`accountId` 保持不变。
 
-`GrowingTracker` 与 `GrowingAutotracker` 提供相同接口，委托核心实现：
+## 2 切换接口与时序
 
 ```objc
 - (void)updateDataSourceId:(NSString *)dataSourceId
  dataCollectionServerHost:(nullable NSString *)serverHost
-               completion:(void (^)(NSError * _Nullable error))completion;
+               completion:(void (^ _Nullable)(NSError * _Nullable error))completion;
 ```
 
 | 入参 | 行为 |
 | --- | --- |
-| dataSourceId 已在表中 | `serverHost` 可为 nil；传入时必须与表中地址一致 |
-| dataSourceId 不在表中 | 必须提供有效地址，切换成功时注册，仅本次运行有效 |
-| dataSourceId 与当前相同 | 地址校验通过后幂等成功，不刷新 Session 或生成 VISIT/PAGE |
+| dataSourceId 已在表中 | serverHost 可为 nil；传入时须与已注册地址一致 |
+| dataSourceId 不在表中 | 须提供有效地址，成功时追加映射并切换 |
+| dataSourceId 与当前相同 | 地址校验通过后成功返回，不刷新 Session 或补事件 |
+| 参数无效、地址冲突或有效切换所需存储能力不可用 | 返回错误，保持原状态 |
 
-- 参数无效、地址冲突或存储不支持分源查询：返回错误，保持原状态。
-- 复用现有 GrowingThread 处理切换，完成回调派发到主线程；并发调用以实际处理顺序为准。
-- 成功表示当前配置和 Session 已切换，VISIT/PAGE 按第 3 节处理；不保证事件已落盘，不等待历史缓存清空或网络。
-- 连续切换时，回调对应的数据源可能已被后续切换替代。
+复用 `dispatchInGrowingThread` 更新配置、刷新 Session 并生成事件，完成回调派发到主线程。成功表示本地切换完成，不表示事件已落盘或上传；切换不等待历史缓存清空。
 
-### 2.3 生效边界
+后台调用时，无埋点 SDK 需要先回主线程读取页面。依赖新数据源的埋点应等成功回调后发送：
 
-事件与切换指令进入 GrowingThread 后，按实际处理顺序生效。后台调用切换时，无埋点 SDK 需要先转到主线程读取页面，依赖新数据源的埋点应在成功回调后发送。所有事件在事件线程构建时读取当前 dataSourceId、Session 和登录身份；已构建或入库的事件保持原字段。异步回调与跨端消息也按原生构建时的当前配置处理，SDK 不追溯任务开始时的归属。
+```objc
+[GrowingAutotracker.sharedInstance updateDataSourceId:@"B"
+                          dataCollectionServerHost:nil
+                                        completion:^(NSError *error) {
+    if (error) {
+        NSLog(@"切换失败：%@", error.localizedDescription);
+        return;
+    }
+    [GrowingAutotracker.sharedInstance trackCustomEvent:@"afterSwitch"];
+}];
+```
 
-业务应在实验入组等异步操作回调完成后切换数据源。SDK 不等待这些任务，也不保存旧的数据源、Session 或身份快照。
+事件和切换进入 GrowingThread 后按实际处理顺序生效。事件构建时读取当前 dataSourceId、Session 和登录身份，已构建或入库的事件保持原字段。连续切换时，回调对应的数据源可能已被后续切换替代；业务应等待一次切换完成后再发起依赖它的操作。
 
-### 2.4 本地切换
+## 3 Session 与 PAGE
 
-1. 校验参数、地址映射和存储的分源查询能力；失败则保持原状态。
-2. 在现有事件线程更新映射与当前配置，刷新 Session。
-3. 按第 3 节生成 VISIT/PAGE，派发完成回调；写盘或上传失败沿用缓存重试，不回滚切换。
+- 每次有效切换创建新 Session，包括 A→B→A；按采集开关和现有事件过滤规则生成 VISIT。
+- 无埋点 SDK 复用 `currentPage` 和现有 PAGE 构建逻辑，为符合采集规则的当前页面补发一次 PAGE，使用新 Session 和当前时间。后台、无当前页面、纯埋点模式不补 PAGE；正常页面生命周期照常采集。
+- Device ID、登录身份、采集开关和计时器保持原有行为。计时事件在 A 开始、B 结束时，完整时长归 B 与结束时的 Session。
 
-切换不新增持久化状态，重启规则见 4.4。
+## 4 缓存与上传
 
-## 3 切换行为
+沿用现有 JSON/PB 数据库，为事件表增加 dataSourceId 列及索引；旧行从原事件内容回填归属。所有数据源共用原有数据库，事件正文中的 dataSourceId 和 Session 不改写。
 
-### 3.1 Session 与 VISIT
+发送流程：
 
-- 每次有效切换创建新 Session，包括 A→B→A；采集开启时生成 VISIT。
-- 保留 Device ID 和登录身份，不生成额外 APP_CLOSED 或安装激活事件。
+1. 在原有通道中取得有缓存的数据源，跳过映射表外的数据源。
+2. 先按 dataSourceId 和发送策略筛选，再应用 500 条、2 MB 的批次限制；每批只包含一个数据源。
+3. 通过该 dataSourceId 查表取得地址，并固定本次请求的地址和事件批次。
+4. 成功后按原批次 UUID 删除事件，继续查询该数据源；失败保留事件，尝试本轮其他数据源，等待下次上传触发时重试。
 
-### 3.2 PAGE
+复用原有通道、上传定时器和即时发送入口。每个通道同时一个请求，同一通道的慢请求会延迟后续数据源；不同通道仍可并行，网络到达顺序不保证。
 
-- 当前可见且符合采集规则的页面，在新 Session 中补发一次 PAGE，计入 PV，保持页面别名、属性和 Hook。后台无可见页面、纯埋点模式不补发。
-- 原生复用现有 `currentPage` 和 PAGE 构建逻辑。主线程读取页面信息，事件线程在切换后使用新 Session 和当前时间补发；不另建页面快照或 Session 去重缓存。
-- 无符合规则的当前页面时直接完成切换。正常页面生命周期仍按原逻辑采集。
+待写操作仅在写盘成功后移除，失败时保留，期间新追加的写入和删除继续排队。插入按 UUID 幂等，重试保留原创建时间。过期数据沿用初始化时按 `dataValidityPeriod`（默认 7 天）清理的逻辑；表外缓存暂停上传。
 
-### 3.3 计时器与采集开关
+自定义存储需实现 `GrowingEventDatabaseService` 的可选方法 `dataSourceIds` 与 `getEventsByCount:limitSize:policy:dataSourceId:`，并遵守分源后再限批次、UUID 幂等写入的约束。未实现这些方法时，有效的数据源切换返回错误。
 
-- 计时器保留完整时长及既有暂停/恢复规则；A 开始、B 结束的计时 CUSTOM 归 B，使用结束时的 Session。
-- 采集关闭时，切换不生成 VISIT/PAGE；重新启用和历史缓存上传沿用现有开关语义。
+## 5 重启与模块边界
 
-### 3.4 上传顺序
+SDK 不持久化映射表。业务重启时传入包含旧组合的完整映射，历史缓存才能继续通过原 dataSourceId 找到旧地址；新采集使用启动配置和新 Session。
 
-沿用原有通道并行上传，同一通道内按数据源依次发送。不等待 VISIT/PAGE 上传成功后再发送其他通道的事件。本地先建立事件依赖的上下文，网络到达顺序不保证。
+**旧 dataSourceId 应持续映射旧地址，更换地址使用新的 dataSourceId。** SDK 只校验本次运行内的地址冲突；若业务跨启动将同一 ID 改指新地址，旧缓存也会按新映射发送，无法满足旧缓存发往旧域名的要求。
 
-数据平台须验证乱序、延迟重试及上下文最终缺失时的关联和报表结果；不满足时重新评审方案。
+各模块及跨端协议沿用现有实现。异步回调和跨端消息在原生构建事件时使用当前配置。业务等待 ABTesting 等异步操作回调后再切换；实验缓存、调试与圈选 WebSocket、各模块服务地址保持原有行为。
 
-## 4 存储、上传与恢复
+## 6 验收重点
 
-### 4.1 存储隔离
+| 场景 | 预期结果 |
+| --- | --- |
+| 当前页面 A→B→A | 两次新 Session，按规则生成 VISIT/PAGE；后续事件归属正确 |
+| 返回保留页面后切换、后台或纯埋点模式切换 | 当前页面补发正确，无页面时不补发 |
+| 相同数据源、无效参数、地址冲突、缺少存储能力 | 幂等或返回错误，状态与事件增量符合第 2 节 |
+| A 的缓存和在途请求存在时切 B | A 的请求及重试仍发 A 地址，B 的事件发 B 地址 |
+| 多数据源积压、数量或大小达到批次上限、某源失败 | 批次不混源、请求地址正确；成功续传，失败保留并尝试其他源 |
+| 关闭采集、计时事件跨切换、后台线程发起切换 | 开关和计时规则保持，回调后依赖事件使用新配置 |
+| 旧 JSON/PB 缓存迁移、写入或删除失败、重启后补报 | 已落盘事件保留原归属；失败操作可重试，旧映射仍可恢复旧地址 |
+| Tracker/Autotracker、CocoaPods/SPM 与原有模块回归 | 接口和既有模块行为保持可用 |
 
-- 按 dataSourceId 隔离读写和删除，每批只含同一数据源，覆盖 JSON/PB 及混合历史缓存。事件的 dataSourceId 与 Session 不随全局配置改写。
-- 保留既有上报字段，不新增任务快照或切换序号。
-- 可采用共库归属字段或独立目录；自定义数据库、网络服务须支持多数据源读写、回调与恢复。
-- 待写批次仅在写盘成功后移除，失败保留，并正确处理期间的新写入和删除。需修复现有 `GrowingEventDatabase.flush` 写库前清空待写数组的问题。
-
-### 4.2 请求与调度
-
-- 请求固定批次 dataSourceId 对应的地址、UUID 和编码配置；回调只处理原批次，删除失败可重试。
-- 复用原有通道、上传定时器和即时发送入口；每个通道同一时间只发送一个请求，查询时按 dataSourceId 过滤，保留批次数量和大小限制。
-- 成功后删除原批次，继续查询该数据源，直至无可发送事件；失败保留事件，继续尝试本轮其他数据源，下次上传触发时重试。同一通道中的慢请求会延迟其他数据源。
-- 保留现有数据库连接，所有数据源共享蜂窝流量额度；不新增分源通道、轮询或独立退避状态。
-- 重试保留事件 UUID 和公开字段；本地 UUID 不新增为上报字段，服务端去重由联调验证。
-
-### 4.3 有效期与清理
-
-- 沿用 `dataValidityPeriod`（默认 7 天）及原有过期清理逻辑，重试不延长有效期。
-- 表外数据源缓存暂停上传，保留至过期。
-- 对照表保留至进程结束。
-
-### 4.4 重启恢复
-
-- 业务保存区域选择与完整对照表，包括运行时新增组合，启动时传入；SDK 不持久化运行时注册信息。
-- 新采集使用启动配置和新 Session，历史缓存按自身 dataSourceId 查本次对照表补报，不要求该数据源当前被选中。
-- 同一 dataSourceId 跨启动改指后，旧缓存发往新地址；未并入表的缓存按 4.3 处理。
-- 仅恢复已落盘事件，不恢复上次运行的采集 Session 或切换状态。
-
-## 5 模块适配
-
-### 5.1 事件与模块行为
-
-- 各模块沿用原有事件入口，事件构建时使用当前数据源、Session 和身份；不新增上下文传递、模块切换通知或同步确认。
-- ABTesting 沿用原有入组和缓存逻辑，业务等待入组回调后再切换。
-- Advertising、APM 等异步派生事件沿用原有生成时机，SDK 不替任务保留旧归属。
-
-### 5.2 Hybrid 与跨端
-
-Hybrid、Flutter、UniApp 沿用现有协议。消息进入原生事件管道后使用当前配置，不为积压消息恢复旧 Session，不要求外部插件新增快照或确认接口。
-
-### 5.3 连接与服务地址
-
-ABTesting 使用 `abTestingServerHost`，DeepLink 使用 `deepLinkHost`，调试与圈选使用连接参数。切换上报数据源不关闭调试或圈选 WebSocket，不拦截消息或截图。
-
-不通过替换采集域名推导模块服务地址，第三方固定接口保持原协议地址。
-
-## 6 诊断
-
-记录切换前后的 dataSourceId、Session 和执行结果；上传请求日志显示实际地址。诊断日志不参与恢复。
-
-## 7 验收
-
-### 7.1 对账方法
-
-两个目标 A/B 独立记录请求。SDK 记录 UUID、dataSourceId、Session 和批次；接收端记录 URL、事件字段和到达顺序。
-
-分别核对正常采集、切换新增 VISIT/PAGE 和重试：切换不减少正常事件，补发增量符合第 3 节，重复请求不计为额外页面回调。采集数量、落盘结果与服务端接收分别验证。
-
-### 7.2 核心场景
-
-| 编号 | 场景 | 验收结果 |
-| --- | --- | --- |
-| C01 | 当前页面符合采集规则，同页 A→B 后立即点击 | 先建立新 Session、VISIT/PAGE；PV 增加一次，点击归 B |
-| C02 | 连续页面、点击、变化期间切换 | 正常事件完整，归属符合入口边界 |
-| C03 | 相同数据源，地址为 nil 或一致 | 幂等成功，无新 Session、VISIT/PAGE |
-| C04 | 地址冲突，包括当前数据源 | 返回错误，状态不变，无额外事件 |
-| C05 | 切换至表内数据源 | 新 Session，旧缓存和批次不串归属 |
-| C06 | 注册新数据源并切换 | 本次运行生效，旧归属不变 |
-| C07 | 快速 A→B→A | 顺序提交和回调，产生两个新 Session，无重复 Hook |
-| C08 | 并发事件与延迟构建 | 按事件线程处理顺序使用当前配置，已构建事件保持原字段 |
-| C09 | 断网切换 | 本地成功不等待网络，恢复后各数据源正确上传 |
-| C10 | A 上传失败，B 正常 | A 保留待重试，继续尝试 B，沿用原有过期清理 |
-| C11 | A 上传请求在途时切 B | 回调与重试处理原批次，日志显示 A 地址 |
-| C12 | 计时事件 A 开始、B 结束 | 完整时长，归 B 与结束时 Session |
-| C13 | 关闭采集后切换 | 不启用采集，不生成 VISIT/PAGE |
-| C14 | 补 PAGE、无可见页面、正常页面回调 | 有效切换补发一次；无可见页面不补发，正常页面回调沿用原逻辑 |
-| C15 | 点击/CUSTOM 先到，VISIT/PAGE 延迟或缺失 | 并行上传，平台关联和报表正确 |
-| C16 | 切换或上传期间进程终止 | 已落盘事件按原归属恢复，新采集使用启动配置 |
-| C17 | 写盘或删除失败 | 保留待写操作，正确处理并发更新，重启按实际落盘结果恢复 |
-| C18 | 重启选择不同区域 | 新事件使用启动配置，历史缓存按对照表补报 |
-| C19 | 跨启动改指地址 | 旧缓存发往新地址，平台入库与关联正确 |
-| C20 | 表外缓存 | 暂停上传并保留至过期 |
-| C21 | JSON/PB 及混合缓存 | 编码、归属、重试、删除和恢复一致 |
-| C22 | 过期与待写事件 | 有效期不延长，待写数据不丢，已构建事件保留原归属 |
-| C23 | 多数据源积压及请求失败 | 每通道单请求，批次不混源；失败批次保留，其他数据源继续尝试 |
-| C24 | CocoaPods/SPM、Tracker/Autotracker | 接口一致，页面行为符合包能力 |
-| C25 | 自定义存储与网络服务 | 归属隔离、地址解析和回调正确 |
-
-### 7.3 模块场景
-
-| 编号 | 模块与场景 | 验收结果 |
-| --- | --- | --- |
-| M01 | Hybrid：A→B→A 后收到消息 | 使用原有桥接协议，事件按原生构建时的当前配置归属 |
-| M02 | Flutter：当前页、后台积压与圈选 | 原有协议可用，事件按当前配置归属，圈选继续 |
-| M03 | UniApp：当前页与异步消息 | 原有协议可用，事件使用当前数据源和 Session |
-| M04 | ImpressionTrack/ViewImpression：长时间可见 | 监听不重复、累计状态保持，阈值和去重规则不变，不人为补曝光 |
-| M05 | ABTesting：入组回调完成后切区 | 入组与缓存沿用原有逻辑，不因采集数据源切换而分区或失效 |
-| M06 | Advertising：异步回调与事件构建 | 沿用原有时机，事件构建时读取当前配置，不伪造激活 |
-| M07 | APM：监控与延迟报告 | 不重复启动，事件进入 SDK 后按当前配置构建 |
-| M08 | MobileDebugger：活跃连接中切换 | 连接保持，继续接收包含实际 dataSourceId 的事件和日志 |
-| M09 | WebCircle：连接期间切换数据源 | 连接和圈选状态保持，消息与 DOM/截图继续处理 |
-| M10 | V2Adapter/V2AdapterTrackOnly | 旧 API 委托同一实例，Session 查询一致，不重复初始化 |
-| M11 | DefaultServices/Services | 编码、压缩、加密、数据库、网络、截图和 WebSocket 归属正确 |
-| M12 | 模块服务地址 | 沿用各模块原有配置，采集域名切换不改写模块地址 |
-
-发布前须通过 C15、C19 的数据平台验证及全部适用模块的协议联调。
+单元测试结果、构建结果及尚未完成的验证记录在 PR 说明中。
