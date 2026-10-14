@@ -123,10 +123,10 @@ configuration.serverHostMapping = @{
 
 ## 5 模块适配
 
-### 5.1 事件与实验缓存
+### 5.1 事件与模块行为
 
 - 各模块沿用原有事件入口，事件构建时使用当前数据源、Session 和身份；不新增上下文传递、模块切换通知或同步确认。
-- ABTesting 按 dataSourceId、用户身份和 layer 隔离缓存，避免切换后复用其他数据源的实验结果。业务等待入组回调后再切换。
+- ABTesting 沿用原有入组和缓存逻辑，业务等待入组回调后再切换。
 - Advertising、APM 等异步派生事件沿用原有生成时机，SDK 不替任务保留旧归属。
 
 ### 5.2 Hybrid 与跨端
@@ -189,7 +189,7 @@ ABTesting 使用 `abTestingServerHost`，DeepLink 使用 `deepLinkHost`，调试
 | M02 | Flutter：当前页、后台积压与圈选 | 原有协议可用，事件按当前配置归属，圈选继续 |
 | M03 | UniApp：当前页与异步消息 | 原有协议可用，事件使用当前数据源和 Session |
 | M04 | ImpressionTrack/ViewImpression：长时间可见 | 监听不重复、累计状态保持，阈值和去重规则不变，不人为补曝光 |
-| M05 | ABTesting：入组回调完成后切区 | 按数据源隔离缓存，切回原数据源可复用其有效结果 |
+| M05 | ABTesting：入组回调完成后切区 | 入组与缓存沿用原有逻辑，不因采集数据源切换而分区或失效 |
 | M06 | Advertising：异步回调与事件构建 | 沿用原有时机，事件构建时读取当前配置，不伪造激活 |
 | M07 | APM：监控与延迟报告 | 不重复启动，事件进入 SDK 后按当前配置构建 |
 | M08 | MobileDebugger：活跃连接中切换 | 连接保持，继续接收包含实际 dataSourceId 的事件和日志 |
