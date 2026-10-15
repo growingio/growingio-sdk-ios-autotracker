@@ -340,6 +340,10 @@
     NSString *path = [NSTemporaryDirectory()
         stringByAppendingPathComponent:[NSString stringWithFormat:@"routing-upload-%@/events.sqlite",
                                                                   NSUUID.UUID.UUIDString]];
+    XCTAssertTrue([[NSFileManager defaultManager] createDirectoryAtPath:path.stringByDeletingLastPathComponent
+                                            withIntermediateDirectories:YES
+                                                             attributes:nil
+                                                                  error:nil]);
     GrowingEventDatabase *db = [GrowingEventDatabase databaseWithPath:path isProtobuf:isProtobuf];
     db.autoFlushCount = NSUIntegerMax;
     for (NSString *source in sources) {
@@ -366,10 +370,7 @@
     }
 }
 - (void)testInstantUploadUsesOriginalChannelAndKeepsBatchDestination {
-    NSMutableArray *sources = [NSMutableArray array];
-    for (NSUInteger i = 0; i < 501; i++) [sources addObject:@"A"];
-    [sources addObjectsFromArray:@[@"B", @"outside"]];
-    GrowingEventDatabase *trackDB = [self databaseWithSources:sources];
+    GrowingEventDatabase *trackDB = [self databaseWithSources:@[@"A", @"B", @"A", @"outside"]];
     GrowingEventDatabase *autotrackDB = [self databaseWithSources:@[@"B"]];
     GrowingEventChannel *track = [GrowingEventChannel eventChannelWithName:@"Track" eventTypes:nil isRealtimeEvent:YES];
     GrowingEventChannel *autotrack = [GrowingEventChannel eventChannelWithName:@"Autotrack"
@@ -399,6 +400,22 @@
             GrowingConfigurationManager.sharedInstance.trackConfiguration.dataSourceId = @"B";
         }
                   waitUntilDone:YES];
+    dispatch_block_t firstResponse = RoutingNetworkStub.sharedInstance.pendingResponses.firstObject;
+    [RoutingNetworkStub.sharedInstance.pendingResponses removeObjectAtIndex:0];
+    firstResponse();
+    [GrowingDispatchManager
+        dispatchInGrowingThread:^{
+        }
+                  waitUntilDone:YES];
+    XCTAssertTrue(track.isUploading);
+    XCTAssertEqual(RoutingNetworkStub.sharedInstance.requests.count, 2);
+    XCTAssertEqual(trackDB.countOfEvents, 2);
+    [manager sendEventsInstantWithChannel:track];
+    [GrowingDispatchManager
+        dispatchInGrowingThread:^{
+        }
+                  waitUntilDone:YES];
+    XCTAssertEqual(RoutingNetworkStub.sharedInstance.requests.count, 2);
     [self completePendingUploads];
     XCTAssertFalse(track.isUploading);
     XCTAssertEqual(trackDB.countOfEvents, 1);
@@ -417,8 +434,8 @@
         for (NSDictionary *event in events) XCTAssertEqualObjects(event[@"dataSourceId"], source);
         sent += events.count;
     }
-    XCTAssertEqual(sent, 502);
-    XCTAssertEqual(RoutingNetworkStub.sharedInstance.requests.count, 3);
+    XCTAssertEqual(sent, 3);
+    XCTAssertEqual(RoutingNetworkStub.sharedInstance.requests.count, 2);
     [GrowingDispatchManager
         dispatchInGrowingThread:^{
             [RoutingNetworkStub.sharedInstance.requests removeAllObjects];
@@ -453,8 +470,9 @@
     XCTAssertFalse(channel.isUploading);
     XCTAssertEqual(RoutingNetworkStub.sharedInstance.requests.count, 2);
     XCTAssertEqual(db.countOfEvents, 1);
-    XCTAssertEqual([db getEventsByCount:10 limitSize:100000 policy:~0UL dataSourceId:@"A"].count, 1);
-    XCTAssertEqual([db getEventsByCount:10 limitSize:100000 policy:~0UL dataSourceId:@"B"].count, 0);
+    NSArray *remaining = [db getEventsByCount:10 limitSize:100000 policy:~0UL];
+    XCTAssertEqual(remaining.count, 1);
+    XCTAssertEqualObjects([remaining.firstObject toJSONObject][@"dataSourceId"], @"A");
     RoutingNetworkStub.sharedInstance.failedHost = nil;
     [manager sendAllChannelEvents];
     [GrowingDispatchManager
@@ -466,7 +484,55 @@
     XCTAssertEqualObjects([RoutingNetworkStub.sharedInstance.requests.lastObject absoluteURL].host, @"a.example.com");
     XCTAssertEqual(db.countOfEvents, 0);
 }
-- (void)testSizeLimitedBatchesContinueUploading {
+- (void)testBatchLimitAndFailedSourceUseOriginalUploadTriggers {
+    NSMutableArray *sources = [NSMutableArray array];
+    for (NSUInteger i = 0; i < 1000; i++) [sources addObject:@"A"];
+    [sources addObject:@"B"];
+    GrowingEventDatabase *db = [self databaseWithSources:sources];
+    GrowingEventChannel *channel = [GrowingEventChannel eventChannelWithName:@"Track"
+                                                                  eventTypes:nil
+                                                             isRealtimeEvent:YES];
+    channel.db = db;
+    GrowingEventManager *manager = [GrowingEventManager new];
+    [manager setValue:@[channel] forKey:@"allEventChannels"];
+    RoutingNetworkStub.sharedInstance.holdResponses = YES;
+    RoutingNetworkStub.sharedInstance.failedHost = @"a.example.com";
+    [manager sendAllChannelEvents];
+    [GrowingDispatchManager
+        dispatchInGrowingThread:^{
+        }
+                  waitUntilDone:YES];
+    [self completePendingUploads];
+    XCTAssertFalse(channel.isUploading);
+    XCTAssertEqual(RoutingNetworkStub.sharedInstance.requests.count, 1);
+    XCTAssertEqual(db.countOfEvents, 1001);
+
+    RoutingNetworkStub.sharedInstance.failedHost = nil;
+    [manager sendAllChannelEvents];
+    [GrowingDispatchManager
+        dispatchInGrowingThread:^{
+        }
+                  waitUntilDone:YES];
+    [self completePendingUploads];
+    XCTAssertEqual(RoutingNetworkStub.sharedInstance.requests.count, 3);
+    XCTAssertEqual(db.countOfEvents, 1);
+    for (id<GrowingRequestProtocol> request in RoutingNetworkStub.sharedInstance.requests) {
+        NSArray *events = [NSJSONSerialization JSONObjectWithData:request.events options:0 error:nil];
+        XCTAssertEqual(events.count, 500);
+        XCTAssertEqualObjects(request.absoluteURL.host, @"a.example.com");
+    }
+
+    [manager sendAllChannelEvents];
+    [GrowingDispatchManager
+        dispatchInGrowingThread:^{
+        }
+                  waitUntilDone:YES];
+    [self completePendingUploads];
+    XCTAssertEqual(RoutingNetworkStub.sharedInstance.requests.count, 4);
+    XCTAssertEqualObjects([RoutingNetworkStub.sharedInstance.requests.lastObject absoluteURL].host, @"b.example.com");
+    XCTAssertEqual(db.countOfEvents, 0);
+}
+- (void)testSizeLimitedBatchWaitsForNextUploadTrigger {
     GrowingEventDatabase *db = [self databaseWithSources:@[]];
     NSString *payload = [@"x" stringByPaddingToLength:700000 withString:@"x" startingAtIndex:0];
     for (NSUInteger i = 0; i < 3; i++) {
@@ -486,6 +552,15 @@
     GrowingEventManager *manager = [GrowingEventManager new];
     [manager setValue:@[channel] forKey:@"allEventChannels"];
     RoutingNetworkStub.sharedInstance.holdResponses = YES;
+    [manager sendAllChannelEvents];
+    [GrowingDispatchManager
+        dispatchInGrowingThread:^{
+        }
+                  waitUntilDone:YES];
+    [self completePendingUploads];
+    XCTAssertFalse(channel.isUploading);
+    XCTAssertEqual(RoutingNetworkStub.sharedInstance.requests.count, 1);
+    XCTAssertEqual(db.countOfEvents, 1);
     [manager sendAllChannelEvents];
     [GrowingDispatchManager
         dispatchInGrowingThread:^{

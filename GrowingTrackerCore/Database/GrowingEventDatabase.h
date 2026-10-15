@@ -29,12 +29,6 @@
 - (NSUInteger)countOfEvents;
 
 - (BOOL)flush;
-- (BOOL)supportsDataSourceRouting;
-- (NSArray<NSString *> *)dataSourceIds;
-- (NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsByCount:(NSUInteger)count
-                                                         limitSize:(NSUInteger)limitSize
-                                                            policy:(NSUInteger)mask
-                                                      dataSourceId:(NSString *)dataSourceId;
 
 - (BOOL)clearAllItems;
 

@@ -39,16 +39,17 @@
 
 - (instancetype)initWithFilePath:(NSString *)filePath error:(NSError **)error {
     if (self = [super init]) {
-        [self makeDirByFileName:filePath];
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            [self makeDirByFileName:filePath];
+        });
 
         _lastPathComponent = [NSURL fileURLWithPath:filePath].lastPathComponent;
         _db = [GrowingFMDatabaseQueue databaseQueueWithPath:filePath];
         if (!_db) {
             _databaseError = [self createDBErrorInDatabase:nil];
         } else {
-            if ([self initDB]) {
-                [self migrateDataSources];
-            }
+            [self initDB];
         }
 
         if (error) {
@@ -156,16 +157,14 @@
             self.databaseError = error;
             return;
         }
-        result = [db executeUpdate:
-                         @"INSERT INTO namedcachetable(key,value,createAt,type,sdkVersion,policy,dataSourceId) "
-                         @"values(?,?,?,?,?,?,?)",
-                         event.eventUUID,
-                         event.data,
-                         @([GrowingULTimeUtil currentTimeMillis]),
-                         event.eventType,
-                         event.sdkVersion,
-                         @(event.policy),
-                         [event toJSONObject][@"dataSourceId"] ?: @""];
+        result = [db
+            executeUpdate:@"INSERT INTO namedcachetable(key,value,createAt,type,sdkVersion,policy) values(?,?,?,?,?,?)",
+                          event.eventUUID,
+                          event.data,
+                          @([GrowingULTimeUtil currentTimeMillis]),
+                          event.eventType,
+                          event.sdkVersion,
+                          @(event.policy)];
 
         if (!result) {
             self.databaseError = [self writeErrorInDatabase:db];
@@ -188,16 +187,15 @@
         }
         for (int i = 0; i < events.count; i++) {
             id<GrowingEventPersistenceProtocol> event = events[i];
-            result = [db executeUpdate:
-                             @"INSERT INTO namedcachetable(key,value,createAt,type,sdkVersion,policy,dataSourceId) "
-                             @"values(?,?,?,?,?,?,?)",
-                             event.eventUUID,
-                             event.data,
-                             @([GrowingULTimeUtil currentTimeMillis]),
-                             event.eventType,
-                             event.sdkVersion,
-                             @(event.policy),
-                             [event toJSONObject][@"dataSourceId"] ?: @""];
+            result =
+                [db executeUpdate:
+                        @"INSERT INTO namedcachetable(key,value,createAt,type,sdkVersion,policy) values(?,?,?,?,?,?)",
+                        event.eventUUID,
+                        event.data,
+                        @([GrowingULTimeUtil currentTimeMillis]),
+                        event.eventType,
+                        event.sdkVersion,
+                        @(event.policy)];
 
             if (!result) {
                 self.databaseError = [self writeErrorInDatabase:db];
@@ -289,105 +287,6 @@
     return self.databaseError;
 }
 
-- (id<GrowingEventPersistenceProtocol>)eventFromRow:(GrowingFMResultSet *)row {
-    return [[self.class.persistenceClass alloc] initWithUUID:[row stringForColumn:@"key"]
-                                                   eventType:[row stringForColumn:@"type"]
-                                                        data:[row objectForColumnName:@"value"]
-                                                      policy:[row intForColumn:@"policy"]
-                                                  sdkVersion:[row stringForColumn:@"sdkVersion"]];
-}
-
-- (BOOL)migrateDataSources {
-    __block BOOL result = YES;
-    __block BOOL hasMore = YES;
-    while (result && hasMore) {
-        [self performTransactionBlock:^(GrowingFMDatabase *db, BOOL *rollback, NSError *error) {
-            GrowingFMResultSet *rows =
-                error ? nil
-                      : [db executeQuery:
-                                @"SELECT * FROM namedcachetable WHERE dataSourceId IS NULL ORDER BY id LIMIT 500"];
-            if (!rows) {
-                self.databaseError = error ?: [self readErrorInDatabase:db];
-                result = NO;
-                *rollback = YES;
-                return;
-            }
-            NSMutableArray *updates = [NSMutableArray array];
-            while ([rows next]) {
-                id source = [[self eventFromRow:rows] toJSONObject][@"dataSourceId"];
-                [updates addObject:@[
-                    [rows objectForColumnName:@"id"],
-                    [source isKindOfClass:NSString.class] ? source : @""
-                ]];
-            }
-            [rows close];
-            hasMore = updates.count == 500;
-            for (NSArray *update in updates) {
-                if (![db executeUpdate:@"UPDATE namedcachetable SET dataSourceId=? WHERE id=?", update[1], update[0]]) {
-                    self.databaseError = [self writeErrorInDatabase:db];
-                    result = NO;
-                    *rollback = YES;
-                    break;
-                }
-            }
-        }];
-    }
-    return result;
-}
-
-- (NSArray<NSString *> *)dataSourceIds {
-    __block NSMutableArray *sources = [NSMutableArray array];
-    [self performDatabaseBlock:^(GrowingFMDatabase *db, NSError *error) {
-        GrowingFMResultSet *rows = error ? nil : [db executeQuery:@"SELECT DISTINCT dataSourceId FROM namedcachetable"];
-        if (!rows) {
-            self.databaseError = error ?: [self readErrorInDatabase:db];
-            sources = nil;
-            return;
-        }
-        while ([rows next]) {
-            NSString *source = [rows stringForColumn:@"dataSourceId"];
-            if (source) [sources addObject:source];
-        }
-        [rows close];
-    }];
-    return sources;
-}
-
-- (NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsByCount:(NSUInteger)count
-                                                         limitSize:(NSUInteger)limitSize
-                                                            policy:(NSUInteger)mask
-                                                      dataSourceId:(NSString *)dataSourceId {
-    if (!count || !limitSize) return @[];
-    __block NSMutableArray *events = [NSMutableArray array];
-    [self performDatabaseBlock:^(GrowingFMDatabase *db, NSError *error) {
-        GrowingFMResultSet *rows = error ? nil
-                                         : [db executeQuery:
-                                                   @"SELECT * FROM namedcachetable WHERE dataSourceId=? AND (policy & "
-                                                   @"?) != 0 ORDER BY id LIMIT ?",
-                                                   dataSourceId,
-                                                   @(mask),
-                                                   @(count)];
-        if (!rows) {
-            self.databaseError = error ?: [self readErrorInDatabase:db];
-            events = nil;
-            return;
-        }
-        NSUInteger length = 0;
-        while ([rows next]) {
-            id<GrowingEventPersistenceProtocol> event = [self eventFromRow:rows];
-            id value = event.data;
-            NSUInteger size = [value isKindOfClass:NSString.class]
-                                  ? [value lengthOfBytesUsingEncoding:NSUTF8StringEncoding]
-                                  : [value length];
-            if (length + size > limitSize) break;
-            length += size;
-            [events addObject:event];
-        }
-        [rows close];
-    }];
-    return events;
-}
-
 #pragma mark - Private Methods
 
 - (BOOL)initDB {
@@ -432,18 +331,6 @@
             }
         }
 
-        if (![db columnExists:@"dataSourceId" inTableWithName:@"namedcachetable"] &&
-            ![db executeUpdate:@"ALTER TABLE namedcachetable ADD dataSourceId TEXT"]) {
-            self.databaseError = [self createDBErrorInDatabase:db];
-            *rollback = YES;
-            return;
-        }
-        if (![db executeUpdate:
-                     @"CREATE INDEX IF NOT EXISTS namedcachetable_source ON namedcachetable(dataSourceId,id)"]) {
-            self.databaseError = [self createDBErrorInDatabase:db];
-            *rollback = YES;
-            return;
-        }
         result = YES;
     }];
 

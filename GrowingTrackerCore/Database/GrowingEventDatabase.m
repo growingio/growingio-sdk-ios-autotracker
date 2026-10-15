@@ -62,11 +62,10 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
             return nil;
         }
 
-        NSError *error = nil;
+        NSError *error;
         _db = [(Class)serviceClass databaseWithPath:filePath error:&error];
-        if (error || !_db) {
+        if (error) {
             [self handleDatabaseError:error];
-            return nil;
         }
         [self cleanExpiredDataIfNeeded];
     }
@@ -144,35 +143,6 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
     }
 
     return YES;
-}
-
-- (BOOL)supportsDataSourceRouting {
-    return [self.db respondsToSelector:@selector(dataSourceIds)] &&
-           [self.db respondsToSelector:@selector(getEventsByCount:limitSize:policy:dataSourceId:)];
-}
-
-- (NSArray<NSString *> *)dataSourceIds {
-    return self.supportsDataSourceRouting ? [self.db dataSourceIds] : @[];
-}
-
-- (NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsByCount:(NSUInteger)count
-                                                         limitSize:(NSUInteger)limitSize
-                                                            policy:(NSUInteger)mask
-                                                      dataSourceId:(NSString *)dataSourceId {
-    if (![self flush]) {
-        return @[];
-    }
-    if (self.supportsDataSourceRouting) {
-        return [self.db getEventsByCount:count limitSize:limitSize policy:mask dataSourceId:dataSourceId] ?: @[];
-    }
-    // Legacy services remain usable for single-source collection, without ever misrouting a batch.
-    NSMutableArray *events = [NSMutableArray array];
-    for (id<GrowingEventPersistenceProtocol> event in [self getEventsByCount:count limitSize:limitSize policy:mask]) {
-        if ([[event toJSONObject][@"dataSourceId"] isEqual:dataSourceId]) {
-            [events addObject:event];
-        }
-    }
-    return events;
 }
 
 - (BOOL)clearAllItems {

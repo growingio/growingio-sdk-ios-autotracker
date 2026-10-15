@@ -157,14 +157,6 @@ static GrowingEventManager *sharedInstance = nil;
             reason = @"Invalid data source or collection URL";
         } else if (registered && host && ![registered isEqualToString:host]) {
             reason = @"The data source already has a different collection URL";
-        } else if (![source isEqualToString:config.dataSourceId]) {
-            for (GrowingEventChannel *channel in self.allEventChannels) {
-                BOOL required = config.useProtobuf == (channel.persistenceType == GrowingEventPersistenceTypeProtobuf);
-                if ((required && !channel.db) || (channel.db && !channel.db.supportsDataSourceRouting)) {
-                    reason = @"Database service does not support data source routing";
-                    break;
-                }
-            }
         }
         if (reason) {
             NSError *error = [NSError errorWithDomain:@"com.growing.routing"
@@ -293,14 +285,7 @@ static GrowingEventManager *sharedInstance = nil;
     if (channel.isUploading) {
         return;
     }
-    NSArray<NSString *> *sources = channel.db.supportsDataSourceRouting
-                                       ? channel.db.dataSourceIds
-                                       : @[GrowingConfigurationManager.sharedInstance.trackConfiguration.dataSourceId];
-    [self sendEventsOfChannel_unsafe:channel dataSourceIds:sources];
-}
 
-- (void)sendEventsOfChannel_unsafe:(GrowingEventChannel *)channel dataSourceIds:(NSArray<NSString *> *)sources {
-    if (!sources.count) return;
     GrowingNetworkReachabilityStatus reachabilityStatus =
         [[GrowingNetworkInterfaceManager sharedInstance] currentStatus];
     BOOL isViaCellular = NO;
@@ -330,20 +315,7 @@ static GrowingEventManager *sharedInstance = nil;
         }
     }
 
-    NSUInteger sourceIndex = 0;
-    NSString *source = nil;
-    NSString *serverHost = nil;
-    NSArray<id<GrowingEventPersistenceProtocol>> *events = nil;
-    for (; sourceIndex < sources.count; sourceIndex++) {
-        source = sources[sourceIndex];
-        serverHost = [GrowingConfigurationManager.sharedInstance serverHostForDataSourceId:source];
-        if (!serverHost.length) continue;
-        events = [self getEventsToBeUploadUnsafe:channel policy:policyMask dataSourceId:source];
-        if (events.count) break;
-    }
-    if (!events.count) return;
-    NSArray *remainingSources =
-        [sources subarrayWithRange:NSMakeRange(sourceIndex + 1, sources.count - sourceIndex - 1)];
+    NSArray<id<GrowingEventPersistenceProtocol>> *events = [self getEventsToBeUploadUnsafe:channel policy:policyMask];
 
     // 过滤3.x的无埋点事件
     NSMutableArray *removeV3AutotrackEvents = [NSMutableArray arrayWithArray:events];
@@ -366,9 +338,48 @@ static GrowingEventManager *sharedInstance = nil;
     }
 
     if (events.count == 0) {
-        [self sendEventsOfChannel_unsafe:channel dataSourceIds:remainingSources];
         return;
     }
+
+    NSMutableDictionary<NSString *, NSMutableArray<id<GrowingEventPersistenceProtocol>> *> *eventsBySource =
+        [NSMutableDictionary dictionary];
+    NSMutableArray<NSArray<id<GrowingEventPersistenceProtocol>> *> *groups = [NSMutableArray array];
+    for (id<GrowingEventPersistenceProtocol> event in events) {
+        NSString *source = [event toJSONObject][@"dataSourceId"];
+        if (![source isKindOfClass:NSString.class] ||
+            ![GrowingConfigurationManager.sharedInstance serverHostForDataSourceId:source].length) {
+            continue;
+        }
+        NSMutableArray *group = eventsBySource[source];
+        if (!group) {
+            group = [NSMutableArray array];
+            eventsBySource[source] = group;
+            [groups addObject:group];
+        }
+        [group addObject:event];
+    }
+    if (!groups.count) return;
+
+    channel.isUploading = YES;
+    [self sendEventGroups_unsafe:groups channel:channel isViaCellular:isViaCellular allSucceeded:YES];
+}
+
+- (void)sendEventGroups_unsafe:(NSArray<NSArray<id<GrowingEventPersistenceProtocol>> *> *)groups
+                       channel:(GrowingEventChannel *)channel
+                 isViaCellular:(BOOL)isViaCellular
+                  allSucceeded:(BOOL)allSucceeded {
+    if (!groups.count) {
+        channel.isUploading = NO;
+        // 沿用原来的续传条件；失败批次等待下一次上传触发。
+        if (allSucceeded && channel.db.countOfEvents >= kGrowingMaxBatchSize) {
+            [self sendEventsInstantWithChannel:channel];
+        }
+        return;
+    }
+    NSArray<id<GrowingEventPersistenceProtocol>> *events = groups.firstObject;
+    NSArray *remainingGroups = [groups subarrayWithRange:NSMakeRange(1, groups.count - 1)];
+    NSString *source = [events.firstObject toJSONObject][@"dataSourceId"];
+    NSString *serverHost = [GrowingConfigurationManager.sharedInstance serverHostForDataSourceId:source];
 
 #ifdef DEBUG
     [self prettyLogForEvents:events withChannel:channel];
@@ -389,6 +400,7 @@ static GrowingEventManager *sharedInstance = nil;
         }
         if (!dbClass) {
             GIOLogError(@"-sendEventsOfChannel_unsafe: error : no event database service support");
+            channel.isUploading = NO;
             return;
         }
         NSMutableArray *jsonObjects = [NSMutableArray array];
@@ -407,6 +419,7 @@ static GrowingEventManager *sharedInstance = nil;
 
     if (!rawEvents) {
         GIOLogError(@"-sendEventsOfChannel_unsafe: error : fail to build raw events");
+        channel.isUploading = NO;
         return;
     }
 
@@ -414,49 +427,46 @@ static GrowingEventManager *sharedInstance = nil;
         [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingEventNetworkService)];
     if (!service) {
         GIOLogError(@"-sendEventsOfChannel_unsafe: error : no network service support");
+        channel.isUploading = NO;
         return;
     }
 
-    channel.isUploading = YES;
     NSObject<GrowingRequestProtocol> *eventRequest =
         [[GrowingEventRequest alloc] initWithEvents:rawEvents
                                          serverHost:serverHost
                                           accountId:trackConfiguration.accountId];
     GIOLogDebug(@"Upload source=%@ channel=%@ url=%@", source, channel.name, eventRequest.absoluteURL);
     __block BOOL completed = NO;
-    [service
-        sendRequest:eventRequest
-         completion:^(NSHTTPURLResponse *httpResponse, NSData *data, NSError *error) {
-             [GrowingDispatchManager dispatchInGrowingThread:^{
-                 if (completed) return;
-                 completed = YES;
-                 BOOL success = !error && httpResponse.statusCode >= 200 && httpResponse.statusCode < 300;
-                 if (success) {
-                     if (isViaCellular && [eventRequest respondsToSelector:@selector(outsize)]) {
-                         self.uploadEventSize += eventRequest.outsize;
-                     }
-                     for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
-                         if ([obj respondsToSelector:@selector(growingEventManagerEventsDidSend:request:channel:)]) {
-                             [obj growingEventManagerEventsDidSend:events request:eventRequest channel:channel];
-                         }
-                     }
-                     [self removeEvents_unsafe:events forChannel:channel];
-                 } else {
-                     GIOLogDebug(@"Upload failed source=%@ url=%@ error=%@ status=%ld",
-                                 source,
-                                 eventRequest.absoluteURL,
-                                 error,
-                                 (long)httpResponse.statusCode);
-                 }
-                 channel.isUploading = NO;
-                 // Keep draining this source after success, including batches limited by byte size.
-                 // Failed batches wait for the next upload trigger.
-                 NSArray *nextSources =
-                     success ? [sources subarrayWithRange:NSMakeRange(sourceIndex, sources.count - sourceIndex)]
-                             : remainingSources;
-                 [self sendEventsOfChannel_unsafe:channel dataSourceIds:nextSources];
-             }];
-         }];
+    [service sendRequest:eventRequest
+              completion:^(NSHTTPURLResponse *httpResponse, NSData *data, NSError *error) {
+                  [GrowingDispatchManager dispatchInGrowingThread:^{
+                      if (completed) return;
+                      completed = YES;
+                      BOOL success = !error && httpResponse.statusCode >= 200 && httpResponse.statusCode < 300;
+                      if (success) {
+                          if (isViaCellular && [eventRequest respondsToSelector:@selector(outsize)]) {
+                              self.uploadEventSize += eventRequest.outsize;
+                          }
+                          for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
+                              if ([obj respondsToSelector:@selector(growingEventManagerEventsDidSend:
+                                                                                             request:channel:)]) {
+                                  [obj growingEventManagerEventsDidSend:events request:eventRequest channel:channel];
+                              }
+                          }
+                          [self removeEvents_unsafe:events forChannel:channel];
+                      } else {
+                          GIOLogDebug(@"Upload failed source=%@ url=%@ error=%@ status=%ld",
+                                      source,
+                                      eventRequest.absoluteURL,
+                                      error,
+                                      (long)httpResponse.statusCode);
+                      }
+                      [self sendEventGroups_unsafe:remainingGroups
+                                           channel:channel
+                                     isViaCellular:isViaCellular
+                                      allSucceeded:allSucceeded && success];
+                  }];
+              }];
 }
 
 #pragma mark Event Persist
@@ -504,12 +514,8 @@ static GrowingEventManager *sharedInstance = nil;
 }
 
 - (NSArray<id<GrowingEventPersistenceProtocol>> *)getEventsToBeUploadUnsafe:(GrowingEventChannel *)channel
-                                                                     policy:(NSUInteger)mask
-                                                               dataSourceId:(NSString *)dataSourceId {
-    return [channel.db getEventsByCount:kGrowingMaxBatchSize
-                              limitSize:2 * kGrowingUnit_MB
-                                 policy:mask
-                           dataSourceId:dataSourceId];
+                                                                     policy:(NSUInteger)mask {
+    return [channel.db getEventsByCount:kGrowingMaxBatchSize limitSize:2 * kGrowingUnit_MB policy:mask];
 }
 
 #pragma mark Event Log
