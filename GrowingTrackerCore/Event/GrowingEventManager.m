@@ -492,9 +492,8 @@ static GrowingEventManager *sharedInstance = nil;
 }
 
 - (void)flushDB {
-    for (GrowingEventChannel *channel in self.allEventChannels) {
-        [channel.db flush];
-    }
+    [self.timingEventDB flush];
+    [self.timingEventDB_PB flush];
 }
 
 - (void)removeEvents_unsafe:(NSArray<__kindof id<GrowingEventPersistenceProtocol>> *)events

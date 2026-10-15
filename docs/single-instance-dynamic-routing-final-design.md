@@ -73,9 +73,9 @@ configuration.serverHostMapping = @{
 
 复用原有通道、上传定时器和即时发送入口。每个通道同时一个请求，同一通道的慢请求会延迟后续数据源；不同通道仍可并行，网络到达顺序不保证。
 
-待写操作仅在写盘成功后移除，失败时保留，期间新追加的写入和删除继续排队。插入按 UUID 幂等，重试保留原创建时间。过期数据沿用初始化时按 `dataValidityPeriod`（默认 7 天）清理的逻辑；表外缓存暂停上传。
+写入、删除和过期清理沿用原有逻辑。过期数据在初始化时按 `dataValidityPeriod`（默认 7 天）清理；表外缓存暂停上传。
 
-自定义存储需实现 `GrowingEventDatabaseService` 的可选方法 `dataSourceIds` 与 `getEventsByCount:limitSize:policy:dataSourceId:`，并遵守分源后再限批次、UUID 幂等写入的约束。未实现这些方法时，有效的数据源切换返回错误。
+自定义存储需实现 `GrowingEventDatabaseService` 的可选方法 `dataSourceIds` 与 `getEventsByCount:limitSize:policy:dataSourceId:`，先按数据源筛选再应用批次限制。未实现这些方法时，有效的数据源切换返回错误。
 
 ## 5 重启与模块边界
 
@@ -95,7 +95,7 @@ SDK 不持久化映射表。业务重启时传入包含旧组合的完整映射�
 | A 的缓存和在途请求存在时切 B | A 的请求及重试仍发 A 地址，B 的事件发 B 地址 |
 | 多数据源积压、数量或大小达到批次上限、某源失败 | 批次不混源、请求地址正确；成功续传，失败保留并尝试其他源 |
 | 关闭采集、计时事件跨切换、后台线程发起切换 | 开关和计时规则保持，回调后依赖事件使用新配置 |
-| 旧 JSON/PB 缓存迁移、写入或删除失败、重启后补报 | 已落盘事件保留原归属；失败操作可重试，旧映射仍可恢复旧地址 |
+| 旧 JSON/PB 缓存迁移、重启后补报 | 已落盘事件保留原归属，通过旧映射恢复旧地址 |
 | Tracker/Autotracker、CocoaPods/SPM 与原有模块回归 | 接口和既有模块行为保持可用 |
 
 单元测试结果、构建结果及尚未完成的验证记录在 PR 说明中。

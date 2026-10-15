@@ -157,16 +157,15 @@
             return;
         }
         result = [db executeUpdate:
-                         @"INSERT INTO namedcachetable(key,value,createAt,type,sdkVersion,policy,dataSourceId) SELECT "
-                         @"?,?,?,?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM namedcachetable WHERE key=?)",
+                         @"INSERT INTO namedcachetable(key,value,createAt,type,sdkVersion,policy,dataSourceId) "
+                         @"values(?,?,?,?,?,?,?)",
                          event.eventUUID,
                          event.data,
                          @([GrowingULTimeUtil currentTimeMillis]),
                          event.eventType,
                          event.sdkVersion,
                          @(event.policy),
-                         [event toJSONObject][@"dataSourceId"] ?: @"",
-                         event.eventUUID];
+                         [event toJSONObject][@"dataSourceId"] ?: @""];
 
         if (!result) {
             self.databaseError = [self writeErrorInDatabase:db];
@@ -191,19 +190,17 @@
             id<GrowingEventPersistenceProtocol> event = events[i];
             result = [db executeUpdate:
                              @"INSERT INTO namedcachetable(key,value,createAt,type,sdkVersion,policy,dataSourceId) "
-                             @"SELECT ?,?,?,?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM namedcachetable WHERE key=?)",
+                             @"values(?,?,?,?,?,?,?)",
                              event.eventUUID,
                              event.data,
                              @([GrowingULTimeUtil currentTimeMillis]),
                              event.eventType,
                              event.sdkVersion,
                              @(event.policy),
-                             [event toJSONObject][@"dataSourceId"] ?: @"",
-                             event.eventUUID];
+                             [event toJSONObject][@"dataSourceId"] ?: @""];
 
             if (!result) {
                 self.databaseError = [self writeErrorInDatabase:db];
-                *rollback = YES;
                 break;
             }
         }
@@ -245,7 +242,6 @@
             result = [db executeUpdate:@"DELETE FROM namedcachetable WHERE key=?;", key];
             if (!result) {
                 self.databaseError = [self writeErrorInDatabase:db];
-                *rollback = YES;
                 break;
             }
         }

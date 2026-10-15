@@ -20,37 +20,11 @@
 #import <XCTest/XCTest.h>
 
 #import "GrowingEventDatabaseService.h"
-#import "GrowingServiceManager.h"
-#import "GrowingTrackerCore/Database/GrowingEventDatabase.h"
-#import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
-#import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
-#import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
-#import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
-#import "InvocationHelper.h"
 #import "Services/JSON/GrowingEventJSONDatabase.h"
-#import "Services/JSON/GrowingEventJSONPersistence.h"
 #import "Services/Protobuf/GrowingEventProtobufDatabase.h"
 
 #import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
 #import "Services/Database/FMDB/GrowingFMDB.h"
-
-@interface RoutingFailOnceDatabase : GrowingEventJSONDatabase
-@property (nonatomic, assign) BOOL failOnce;
-@property (nonatomic, copy) void (^onFailedInsert)(void);
-@end
-@implementation RoutingFailOnceDatabase
-- (BOOL)insertEvents:(NSArray *)events {
-    if (self.failOnce && events.count) {
-        self.failOnce = NO;
-        if (self.onFailedInsert) self.onFailedInsert();
-        self.databaseError = [NSError errorWithDomain:GrowingEventDatabaseErrorDomain
-                                                 code:GrowingEventDatabaseWriteError
-                                             userInfo:nil];
-        return NO;
-    }
-    return [super insertEvents:events];
-}
-@end
 
 @interface RoutingStorageTest : XCTestCase
 @property (nonatomic, copy) NSString *path;
@@ -68,13 +42,12 @@
                                   .build;
     return [GrowingEventJSONDatabase persistenceEventWithEvent:event uuid:uuid];
 }
-- (void)testSourceFilterPrecedesBatchLimitAndRetryIsIdempotent {
+- (void)testSourceFilterPrecedesBatchLimit {
     GrowingEventJSONDatabase *db = [GrowingEventJSONDatabase databaseWithPath:self.path error:nil];
     NSMutableArray *events = [NSMutableArray array];
     for (NSUInteger i = 0; i < 6; i++) {
         [events addObject:[self eventForSource:i < 5 ? @"A" : @"B" uuid:NSUUID.UUID.UUIDString]];
     }
-    XCTAssertTrue([db insertEvents:events]);
     XCTAssertTrue([db insertEvents:events]);
     XCTAssertEqual(db.countOfEvents, 6);
     NSArray *batch = [db getEventsByCount:1 limitSize:100000 policy:~0UL dataSourceId:@"B"];
@@ -126,25 +99,5 @@
 }
 - (void)testLegacyProtobufRowsRecoverTheirOwnSource {
     [self checkLegacyRowsRecoverTheirOwnSource:YES];
-}
-- (void)testFailedFlushPreservesNewerWritesAndDeletes {
-    GrowingEventDatabase *wrapper = [GrowingEventDatabase databaseWithPath:self.path isProtobuf:NO];
-    wrapper.autoFlushCount = NSUIntegerMax;
-    RoutingFailOnceDatabase *backend = [RoutingFailOnceDatabase databaseWithPath:self.path error:nil];
-    [wrapper setValue:backend forKey:@"db"];
-    id<GrowingEventPersistenceProtocol> a = [self eventForSource:@"A" uuid:@"A-event"];
-    id<GrowingEventPersistenceProtocol> b = [self eventForSource:@"B" uuid:@"B-event"];
-    [wrapper setEvent:a forKey:a.eventUUID];
-    backend.failOnce = YES;
-    backend.onFailedInsert = ^{
-        [wrapper setEvent:nil forKey:a.eventUUID];
-        [wrapper setEvent:b forKey:b.eventUUID];
-    };
-    XCTAssertFalse([wrapper flush]);
-    XCTAssertTrue([wrapper flush]);
-    XCTAssertEqual(wrapper.countOfEvents, 1);
-    XCTAssertEqual([wrapper getEventsByCount:10 limitSize:100000 policy:~0UL dataSourceId:@"A"].count, 0);
-    XCTAssertEqual([wrapper getEventsByCount:10 limitSize:100000 policy:~0UL dataSourceId:@"B"].count, 1);
-    backend.onFailedInsert = nil;
 }
 @end
