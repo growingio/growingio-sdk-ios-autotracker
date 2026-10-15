@@ -437,36 +437,36 @@ static GrowingEventManager *sharedInstance = nil;
                                           accountId:trackConfiguration.accountId];
     GIOLogDebug(@"Upload source=%@ channel=%@ url=%@", source, channel.name, eventRequest.absoluteURL);
     __block BOOL completed = NO;
-    [service sendRequest:eventRequest
-              completion:^(NSHTTPURLResponse *httpResponse, NSData *data, NSError *error) {
-                  [GrowingDispatchManager dispatchInGrowingThread:^{
-                      if (completed) return;
-                      completed = YES;
-                      BOOL success = !error && httpResponse.statusCode >= 200 && httpResponse.statusCode < 300;
-                      if (success) {
-                          if (isViaCellular && [eventRequest respondsToSelector:@selector(outsize)]) {
-                              self.uploadEventSize += eventRequest.outsize;
-                          }
-                          for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
-                              if ([obj respondsToSelector:@selector(growingEventManagerEventsDidSend:
-                                                                                             request:channel:)]) {
-                                  [obj growingEventManagerEventsDidSend:events request:eventRequest channel:channel];
-                              }
-                          }
-                          [self removeEvents_unsafe:events forChannel:channel];
-                      } else {
-                          GIOLogDebug(@"Upload failed source=%@ url=%@ error=%@ status=%ld",
-                                      source,
-                                      eventRequest.absoluteURL,
-                                      error,
-                                      (long)httpResponse.statusCode);
-                      }
-                      [self sendEventGroups_unsafe:remainingGroups
-                                           channel:channel
-                                     isViaCellular:isViaCellular
-                                      allSucceeded:allSucceeded && success];
-                  }];
-              }];
+    [service
+        sendRequest:eventRequest
+         completion:^(NSHTTPURLResponse *httpResponse, NSData *data, NSError *error) {
+             [GrowingDispatchManager dispatchInGrowingThread:^{
+                 if (completed) return;
+                 completed = YES;
+                 BOOL success = !error && httpResponse.statusCode >= 200 && httpResponse.statusCode < 300;
+                 if (success) {
+                     if (isViaCellular && [eventRequest respondsToSelector:@selector(outsize)]) {
+                         self.uploadEventSize += eventRequest.outsize;
+                     }
+                     for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
+                         if ([obj respondsToSelector:@selector(growingEventManagerEventsDidSend:request:channel:)]) {
+                             [obj growingEventManagerEventsDidSend:events request:eventRequest channel:channel];
+                         }
+                     }
+                     [self removeEvents_unsafe:events forChannel:channel];
+                 } else {
+                     GIOLogDebug(@"Upload failed source=%@ url=%@ error=%@ status=%ld",
+                                 source,
+                                 eventRequest.absoluteURL,
+                                 error,
+                                 (long)httpResponse.statusCode);
+                 }
+                 [self sendEventGroups_unsafe:remainingGroups
+                                      channel:channel
+                                isViaCellular:isViaCellular
+                                 allSucceeded:allSucceeded && success];
+             }];
+         }];
 }
 
 #pragma mark Event Persist
