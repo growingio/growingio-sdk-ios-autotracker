@@ -20,7 +20,9 @@
 #import <XCTest/XCTest.h>
 
 #import "GrowingAutotrackerCore/Autotrack/UIViewController+GrowingAutotracker.h"
+#import "GrowingAutotrackerCore/GrowingRealAutotracker.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
+#import "GrowingAutotrackerCore/Public/GrowingAutotrackConfiguration.h"
 #import "GrowingEventDatabaseService.h"
 #import "GrowingServiceManager.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingAutotrackEventType.h"
@@ -129,7 +131,7 @@
 
 @interface DynamicRoutingTest : XCTestCase
 @property (nonatomic, strong) GrowingTrackConfiguration *savedConfiguration;
-@property (nonatomic, copy) GrowingBaseBuilder * (^savedPageBuilder)(void);
+@property (nonatomic, strong) GrowingRealAutotracker *autotracker;
 @property (nonatomic, assign) Class savedNetworkClass;
 @property (nonatomic, strong) id savedNetworkInstance;
 @property (nonatomic, strong) UIWindow *pageWindow;
@@ -152,14 +154,13 @@
     [GrowingDispatchManager
         dispatchInGrowingThread:^{
             self.savedConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
-            self.savedPageBuilder = GrowingEventManager.sharedInstance.dataSourcePageBuilder;
-            GrowingTrackConfiguration *config = [GrowingTrackConfiguration configurationWithAccountId:@"routing-test"];
+            GrowingTrackConfiguration *config =
+                [GrowingAutotrackConfiguration configurationWithAccountId:@"routing-test"];
             config.dataSourceId = @"A";
             config.serverHostMapping = @{@"A": @"https://a.example.com/base", @"B": @"https://b.example.com"};
             config.useProtobuf = NO;
             config.dataCollectionEnabled = YES;
             GrowingConfigurationManager.sharedInstance.trackConfiguration = config;
-            GrowingEventManager.sharedInstance.dataSourcePageBuilder = nil;
             [GrowingSession startSession];
             [RoutingNetworkStub.sharedInstance.requests removeAllObjects];
             [RoutingNetworkStub.sharedInstance.pendingResponses removeAllObjects];
@@ -183,7 +184,6 @@
         dispatchInGrowingThread:^{
             [GrowingEventManager.sharedInstance flushDB];
             GrowingConfigurationManager.sharedInstance.trackConfiguration = self.savedConfiguration;
-            GrowingEventManager.sharedInstance.dataSourcePageBuilder = self.savedPageBuilder;
             if (self.pageWindow) {
                 [GrowingPageManager.sharedInstance setValue:self.savedPagePath forKey:@"lastPagePath"];
                 [GrowingPageManager.sharedInstance setValue:self.savedPageTimestamp forKey:@"lastPageTimestamp"];
@@ -561,8 +561,8 @@
 - (GrowingPage *)prepareCurrentPage {
     GrowingPageManager *pages = GrowingPageManager.sharedInstance;
     [pages start];
-    if (self.savedPageBuilder) GrowingEventManager.sharedInstance.dataSourcePageBuilder = self.savedPageBuilder;
-    XCTAssertNotNil(GrowingEventManager.sharedInstance.dataSourcePageBuilder);
+    self.autotracker = [GrowingRealAutotracker new];
+    [self.autotracker setValue:GrowingConfigurationManager.sharedInstance.trackConfiguration forKey:@"configuration"];
     self.savedVisiblePages = [pages valueForKey:@"visiblePages"];
     [GrowingDispatchManager
         dispatchInGrowingThread:^{
@@ -590,25 +590,25 @@
     GrowingPage *page = [self prepareCurrentPage];
     XCTestExpectation *done = [self expectationWithDescription:@"page replay"];
     done.expectedFulfillmentCount = 3;
-    [GrowingEventManager.sharedInstance updateDataSourceId:@"B"
-                                  dataCollectionServerHost:nil
-                                                completion:^(NSError *error) {
-                                                    XCTAssertNil(error);
-                                                    [done fulfill];
-                                                }];
+    [self.autotracker updateDataSourceId:@"B"
+                dataCollectionServerHost:nil
+                              completion:^(NSError *error) {
+                                  XCTAssertNil(error);
+                                  [done fulfill];
+                              }];
     [GrowingEventManager.sharedInstance postEventBuilder:GrowingCustomEvent.builder.setEventName(@"afterB")];
-    [GrowingEventManager.sharedInstance updateDataSourceId:@"B"
-                                  dataCollectionServerHost:nil
-                                                completion:^(NSError *error) {
-                                                    XCTAssertNil(error);
-                                                    [done fulfill];
-                                                }];
-    [GrowingEventManager.sharedInstance updateDataSourceId:@"A"
-                                  dataCollectionServerHost:nil
-                                                completion:^(NSError *error) {
-                                                    XCTAssertNil(error);
-                                                    [done fulfill];
-                                                }];
+    [self.autotracker updateDataSourceId:@"B"
+                dataCollectionServerHost:nil
+                              completion:^(NSError *error) {
+                                  XCTAssertNil(error);
+                                  [done fulfill];
+                              }];
+    [self.autotracker updateDataSourceId:@"A"
+                dataCollectionServerHost:nil
+                              completion:^(NSError *error) {
+                                  XCTAssertNil(error);
+                                  [done fulfill];
+                              }];
     [self waitForExpectationsWithTimeout:5 handler:nil];
     NSArray<GrowingPageEvent *> *events = (id)[MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
     NSArray<GrowingBaseEvent *> *visits = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeVisit];
@@ -639,34 +639,29 @@
     // A page that has left the window must not be replayed.
     self.pageWindow.rootViewController = [UIViewController new];
     XCTestExpectation *hidden = [self expectationWithDescription:@"no visible page"];
-    [GrowingEventManager.sharedInstance updateDataSourceId:@"B"
-                                  dataCollectionServerHost:nil
-                                                completion:^(NSError *error) {
-                                                    XCTAssertNil(error);
-                                                    [hidden fulfill];
-                                                }];
+    [self.autotracker updateDataSourceId:@"B"
+                dataCollectionServerHost:nil
+                              completion:^(NSError *error) {
+                                  XCTAssertNil(error);
+                                  [hidden fulfill];
+                              }];
     [self waitForExpectationsWithTimeout:5 handler:nil];
     XCTAssertEqual([MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage].count, 3);
 }
-- (void)testPageReplayFromWorkerReadsPageOnMainThread {
+- (void)testPageReplayFromWorker {
     [self prepareCurrentPage];
-    GrowingBaseBuilder * (^pageBuilder)(void) = GrowingEventManager.sharedInstance.dataSourcePageBuilder;
-    GrowingEventManager.sharedInstance.dataSourcePageBuilder = ^GrowingBaseBuilder * {
-        XCTAssertTrue(NSThread.isMainThread);
-        return pageBuilder();
-    };
     XCTestExpectation *done = [self expectationWithDescription:@"worker switch"];
     dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
-        [GrowingEventManager.sharedInstance updateDataSourceId:@"B"
-                                      dataCollectionServerHost:nil
-                                                    completion:^(NSError *error) {
-                                                        XCTAssertNil(error);
-                                                        XCTAssertTrue(NSThread.isMainThread);
-                                                        [GrowingEventManager.sharedInstance
-                                                            postEventBuilder:GrowingCustomEvent.builder.setEventName(
-                                                                                 @"workerAfterSwitch")];
-                                                        [done fulfill];
-                                                    }];
+        [self.autotracker
+                  updateDataSourceId:@"B"
+            dataCollectionServerHost:nil
+                          completion:^(NSError *error) {
+                              XCTAssertNil(error);
+                              XCTAssertTrue(NSThread.isMainThread);
+                              [GrowingEventManager.sharedInstance
+                                  postEventBuilder:GrowingCustomEvent.builder.setEventName(@"workerAfterSwitch")];
+                              [done fulfill];
+                          }];
     });
     [self waitForExpectationsWithTimeout:5 handler:nil];
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
@@ -689,17 +684,61 @@
     [MockEventQueue.sharedQueue cleanQueue];
 
     XCTestExpectation *done = [self expectationWithDescription:@"returning page replay"];
-    [GrowingEventManager.sharedInstance updateDataSourceId:@"B"
-                                  dataCollectionServerHost:nil
-                                                completion:^(NSError *error) {
-                                                    XCTAssertNil(error);
-                                                    [done fulfill];
-                                                }];
+    [self.autotracker updateDataSourceId:@"B"
+                dataCollectionServerHost:nil
+                              completion:^(NSError *error) {
+                                  XCTAssertNil(error);
+                                  [done fulfill];
+                              }];
     [self waitForExpectationsWithTimeout:5 handler:nil];
     NSArray<GrowingPageEvent *> *events = (id)[MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
     XCTAssertEqual(events.count, 1);
     XCTAssertEqualObjects(events.firstObject.path, @"/same-page");
     XCTAssertEqualObjects(events.firstObject.dataSourceId, @"B");
+}
+- (void)testTrackerSwitchDoesNotReplayPage {
+    [self prepareCurrentPage];
+    GrowingRealTracker *tracker = [GrowingRealTracker new];
+    XCTestExpectation *done = [self expectationWithDescription:@"switch without page replay"];
+    [tracker updateDataSourceId:@"B"
+        dataCollectionServerHost:nil
+                      completion:^(NSError *error) {
+                          XCTAssertNil(error);
+                          ((GrowingAutotrackConfiguration *)
+                               GrowingConfigurationManager.sharedInstance.trackConfiguration)
+                              .autotrackEnabled = NO;
+                          [self.autotracker updateDataSourceId:@"A"
+                                      dataCollectionServerHost:nil
+                                                    completion:^(NSError *error) {
+                                                        XCTAssertNil(error);
+                                                        [done fulfill];
+                                                    }];
+                      }];
+    [self waitForExpectationsWithTimeout:5 handler:nil];
+    XCTAssertEqual([MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage].count, 0);
+    XCTAssertEqual([MockEventQueue.sharedQueue eventsFor:GrowingEventTypeVisit].count, 2);
+}
+- (void)testRejectedAutotrackerSwitchDoesNotReplayPage {
+    [self prepareCurrentPage];
+    NSString *session = GrowingSession.currentSession.sessionId;
+    XCTestExpectation *done = [self expectationWithDescription:@"rejected autotracker switches"];
+    done.expectedFulfillmentCount = 2;
+    [self.autotracker updateDataSourceId:@"A"
+                dataCollectionServerHost:@"https://different.example.com"
+                              completion:^(NSError *error) {
+                                  XCTAssertNotNil(error);
+                                  [done fulfill];
+                              }];
+    [self.autotracker updateDataSourceId:@"B"
+                dataCollectionServerHost:@"file:///tmp/events"
+                              completion:^(NSError *error) {
+                                  XCTAssertNotNil(error);
+                                  [done fulfill];
+                              }];
+    [self waitForExpectationsWithTimeout:5 handler:nil];
+    XCTAssertEqualObjects(GrowingSession.currentSession.sessionId, session);
+    XCTAssertEqual([MockEventQueue.sharedQueue eventsFor:GrowingEventTypeVisit].count, 0);
+    XCTAssertEqual([MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage].count, 0);
 }
 
 @end

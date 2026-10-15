@@ -69,9 +69,6 @@
     dataCollectionServerHost:(NSString *_Nullable)serverHost
                   completion:(void (^_Nullable)(NSError *_Nullable))completion;
 
-/// Called on the main thread to reuse the current page when switching data sources.
-@property (nonatomic, copy, nullable) GrowingBaseBuilder *_Nullable (^dataSourcePageBuilder)(void);
-
 /// 开启事件发送定时器
 - (void)startTimerSend;
 

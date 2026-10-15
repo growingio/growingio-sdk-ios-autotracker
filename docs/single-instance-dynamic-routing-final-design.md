@@ -57,7 +57,7 @@ configuration.serverHostMapping = @{
 ## 3 Session 与 PAGE
 
 - 每次有效切换创建新 Session，包括 A→B→A；按采集开关和现有事件过滤规则生成 VISIT。
-- 无埋点 SDK 复用 `currentPage` 和现有 PAGE 构建逻辑，为符合采集规则的当前页面补发一次 PAGE，使用新 Session 和当前时间。后台、无当前页面、纯埋点模式不补 PAGE；正常页面生命周期照常采集。
+- 无埋点 SDK 由 `GrowingRealAutotracker` 复用 `currentPage` 和现有 PAGE 构建逻辑，为符合采集规则的当前页面补发一次 PAGE，使用新 Session 和当前时间。后台、无当前页面、纯埋点模式不补 PAGE；正常页面生命周期照常采集。
 - Device ID、登录身份、采集开关和计时器保持原有行为。计时事件在 A 开始、B 结束时，完整时长归 B 与结束时的 Session。
 
 ## 4 缓存与上传

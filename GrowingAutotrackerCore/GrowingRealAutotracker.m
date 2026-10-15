@@ -31,11 +31,13 @@
 #import "GrowingAutotrackerCore/GrowingNode/Category/UISegmentedControl+GrowingNode.h"
 #import "GrowingAutotrackerCore/GrowingNode/GrowingViewChangeProvider.h"
 #import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
+#import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
 #import "GrowingULApplication.h"
 #import "GrowingULSwizzle.h"
+#import "GrowingULTimeUtil.h"
 #import "GrowingULViewControllerLifecycle.h"
 
 GrowingPropertyDefine(UITextField, NSString *, growingHookOldText, setGrowingHookOldText)
@@ -71,6 +73,34 @@ GrowingPropertyDefine(UITextView, NSString *, growingHookOldText, setGrowingHook
     }
 
     return self;
+}
+
+- (void)updateDataSourceId:(NSString *)dataSourceId
+    dataCollectionServerHost:(NSString *)serverHost
+                  completion:(void (^)(NSError *))completion {
+    NSString *source = [dataSourceId copy];
+    NSString *host = [serverHost copy];
+    [GrowingDispatchManager dispatchInMainThread:^{
+        GrowingBaseBuilder *pageBuilder = nil;
+        if (self.configuration.autotrackEnabled && ![GrowingULApplication isAppExtension] &&
+            [[GrowingULApplication sharedApplication] applicationState] != UIApplicationStateBackground) {
+            GrowingPageManager *pages = GrowingPageManager.sharedInstance;
+            GrowingPage *page = [pages findAutotrackPageByPage:pages.currentPage];
+            if (page.carrier.isViewLoaded && page.carrier.view.window) {
+                pageBuilder = [pages pageEventBuilderWithPage:page];
+            }
+        }
+        [GrowingDispatchManager dispatchInGrowingThread:^{
+            NSString *previousSource = self.configuration.dataSourceId;
+            // 已在事件线程，super 中的切换会直接执行，随后补发 PAGE。
+            [super updateDataSourceId:source dataCollectionServerHost:host completion:completion];
+            if (pageBuilder && self.configuration.dataSourceId.length &&
+                ![previousSource isEqualToString:self.configuration.dataSourceId]) {
+                pageBuilder.setTimestamp(GrowingULTimeUtil.currentTimeMillis);
+                [GrowingEventManager.sharedInstance postEventBuilder:pageBuilder];
+            }
+        }];
+    }];
 }
 
 - (void)ignoreViewClass:(Class)clazz {

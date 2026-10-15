@@ -22,6 +22,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class GrowingBaseBuilder;
+
 @interface GrowingPageManager : NSObject
 
 + (instancetype)sharedInstance;
@@ -36,6 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
            attributes:(NSDictionary<NSString *, NSString *> *_Nullable)attributes;
 - (GrowingPage *)findPageByView:(UIView *)view;
 - (GrowingPage *_Nullable)findAutotrackPageByPage:(GrowingPage *)page;
+- (GrowingBaseBuilder *)pageEventBuilderWithPage:(GrowingPage *)page;
 
 @end
 

@@ -28,7 +28,6 @@
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
-#import "GrowingULApplication.h"
 #import "GrowingULViewControllerLifecycle.h"
 
 @interface GrowingPageManager () <GrowingULViewControllerLifecycleDelegate, GrowingEventInterceptor>
@@ -59,18 +58,6 @@
         if (configuration.customEventWithPath) {
             [[GrowingEventManager sharedInstance] addInterceptor:self];
         }
-        __weak typeof(self) weakSelf = self;
-        [GrowingEventManager sharedInstance].dataSourcePageBuilder = ^GrowingBaseBuilder * {
-            GrowingPageManager *manager = weakSelf;
-            if ([[GrowingULApplication sharedApplication] applicationState] == UIApplicationStateBackground) {
-                return nil;
-            }
-            GrowingPage *page = [manager findAutotrackPageByPage:manager.currentPage];
-            if (!page || !page.carrier.isViewLoaded || !page.carrier.view.window) {
-                return nil;
-            }
-            return [manager pageEventBuilderWithPage:page];
-        };
         [GrowingULViewControllerLifecycle.sharedInstance addViewControllerLifecycleDelegate:self];
     });
 }
