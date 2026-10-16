@@ -30,13 +30,7 @@ NS_SWIFT_NAME(ImpressionConfig)
 /// 最小可见时长，单位秒，负值按 0 处理，默认 0（无需停留）
 @property (nonatomic, assign) NSTimeInterval stayDuration;
 
-/// 是否允许同一元素多次曝光，默认 YES。
-/// 置为 NO 时必须为元素指定 identifier，否则将被降级为 YES 处理
-@property (nonatomic, assign, getter=isRepeatable) BOOL repeatable;
-
-+ (instancetype)configWithImpressionScale:(float)impressionScale
-                             stayDuration:(NSTimeInterval)stayDuration
-                               repeatable:(BOOL)repeatable;
++ (instancetype)configWithImpressionScale:(float)impressionScale stayDuration:(NSTimeInterval)stayDuration;
 
 @end
 

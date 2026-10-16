@@ -18,7 +18,8 @@
 //  limitations under the License.
 
 #import <UIKit/UIKit.h>
-#import "Modules/ViewImpression/Public/GrowingImpressionConfig.h"
+#import "Modules/ViewImpression/GrowingImpressionConfig+Private.h"
+#import "Modules/ViewImpression/GrowingImpressionDelegate.h"
 #import "Modules/ViewImpression/Public/GrowingViewImpression.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -32,6 +33,27 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 单元素 config > 全局 viewImpressionConfig > 默认值
 + (GrowingImpressionConfig *)effectiveConfig:(nullable GrowingImpressionConfig *)config;
+
+@end
+
+/// 以下能力为内部预留，待后续迭代再公开
+@interface GrowingViewImpression (Delegate)
+
+/// delegate 为弱引用，无需手动移除；重复添加同一个对象只生效一次
+- (void)addViewImpressionDelegate:(id<GrowingImpressionDelegate>)delegate;
+
+- (void)removeViewImpressionDelegate:(id<GrowingImpressionDelegate>)delegate;
+
+@end
+
+@interface GrowingViewImpression (State)
+
+/// 清除某个标识的"已曝光"记录，之后该标识的元素可再次曝光。
+/// 仅对配置了不可重复曝光的元素有意义，适用于下拉刷新、切换数据源等场景
++ (void)resetViewImpressionStateWithIdentifier:(NSString *)identifier;
+
+/// 清除全部"已曝光"记录
++ (void)resetAllViewImpressionState;
 
 @end
 

@@ -22,6 +22,8 @@
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "Modules/ViewImpression/Public/GrowingViewImpression.h"
 #import "Modules/ViewImpression/Public/GrowingImpressionConfig.h"
+#import "Modules/ViewImpression/GrowingImpressionConfig+Private.h"
+#import "Modules/ViewImpression/GrowingViewImpression+Private.h"
 
 @interface ViewImpressionConfigTests : XCTestCase
 
