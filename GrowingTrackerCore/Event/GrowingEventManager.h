@@ -65,6 +65,9 @@
 
 /// 配置事件管理者
 - (void)configManager;
+- (void)updateDataSourceId:(NSString *_Nonnull)dataSourceId
+    dataCollectionServerHost:(NSString *_Nullable)serverHost
+                  completion:(void (^_Nullable)(NSError *_Nullable))completion;
 
 /// 开启事件发送定时器
 - (void)startTimerSend;

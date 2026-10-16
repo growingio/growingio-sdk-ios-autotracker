@@ -20,10 +20,18 @@
 #import <Foundation/Foundation.h>
 #import "GrowingTrackConfiguration.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface GrowingConfigurationManager : NSObject
 
 @property (nonatomic, strong) GrowingTrackConfiguration *trackConfiguration;
 
 + (instancetype)sharedInstance;
 
++ (NSDictionary<NSString *, NSString *> *_Nullable)validatedMapping:(GrowingTrackConfiguration *)configuration
+                                                              error:(NSError *_Nullable *_Nullable)error;
+- (NSString *_Nullable)serverHostForDataSourceId:(NSString *)dataSourceId;
+
 @end
+
+NS_ASSUME_NONNULL_END

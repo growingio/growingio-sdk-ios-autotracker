@@ -32,4 +32,44 @@
     return _sharedInstance;
 }
 
++ (NSDictionary<NSString *, NSString *> *)validatedMapping:(GrowingTrackConfiguration *)configuration
+                                                     error:(NSError **)error {
+    NSDictionary *input = configuration.serverHostMapping;
+    if (!input && configuration.dataSourceId.length && configuration.dataCollectionServerHost.length) {
+        input = @{configuration.dataSourceId: configuration.dataCollectionServerHost};
+    }
+    NSMutableDictionary *mapping = [NSMutableDictionary dictionary];
+    BOOL valid = [input isKindOfClass:NSDictionary.class] && configuration.dataSourceId.length;
+    if (valid) {
+        for (id key in input) {
+            NSString *host = input[key];
+            NSURL *url = [host isKindOfClass:NSString.class] ? [NSURL URLWithString:host] : nil;
+            NSString *scheme = url.scheme.lowercaseString;
+            if (![key isKindOfClass:NSString.class] || ![key length] || !url.host.length ||
+                !([scheme isEqualToString:@"http"] || [scheme isEqualToString:@"https"]) || url.user || url.password ||
+                url.query || url.fragment ||
+                (url.port && (url.port.integerValue < 1 || url.port.integerValue > 65535))) {
+                valid = NO;
+                break;
+            }
+            mapping[[key copy]] = [host copy];
+        }
+        valid = valid && mapping[configuration.dataSourceId] != nil;
+    }
+    if (!valid) {
+        if (error) {
+            *error =
+                [NSError errorWithDomain:@"com.growing.routing"
+                                    code:1
+                                userInfo:@{NSLocalizedDescriptionKey: @"Invalid data source or server host mapping"}];
+        }
+        return nil;
+    }
+    return mapping.copy;
+}
+
+- (NSString *)serverHostForDataSourceId:(NSString *)dataSourceId {
+    return dataSourceId.length ? self.trackConfiguration.serverHostMapping[dataSourceId] : nil;
+}
+
 @end

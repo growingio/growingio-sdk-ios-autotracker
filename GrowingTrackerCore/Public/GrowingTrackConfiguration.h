@@ -35,6 +35,8 @@ FOUNDATION_EXPORT NSString *const kGrowingDefaultDataCollectionServerHost;
 @property (nonatomic, assign) BOOL dataCollectionEnabled;
 @property (nonatomic, assign) BOOL uploadExceptionEnable;
 @property (nonatomic, copy) NSString *dataCollectionServerHost;
+/// Initial data source to collection URL mapping. Existing entries cannot change during a run.
+@property (nonatomic, copy, nullable) NSDictionary<NSString *, NSString *> *serverHostMapping;
 @property (nonatomic, assign) NSUInteger excludeEvent;
 @property (nonatomic, assign) NSUInteger ignoreField;
 @property (nonatomic, assign) BOOL idMappingEnabled;

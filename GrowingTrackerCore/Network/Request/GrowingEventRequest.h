@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GrowingEventRequest : NSObject <GrowingRequestProtocol>
 
 - (instancetype)initWithEvents:(NSData *)events;
+- (instancetype)initWithEvents:(NSData *)events serverHost:(NSString *)serverHost accountId:(NSString *)accountId;
 
 @end
 

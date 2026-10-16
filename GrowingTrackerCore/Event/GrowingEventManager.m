@@ -136,6 +136,60 @@ static GrowingEventManager *sharedInstance = nil;
     });
 }
 
+- (void)updateDataSourceId:(NSString *)dataSourceId
+    dataCollectionServerHost:(NSString *)serverHost
+                  completion:(void (^)(NSError *))completion {
+    NSString *source = [dataSourceId isKindOfClass:NSString.class] ? [dataSourceId copy] : nil;
+    NSString *host = [serverHost copy];
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        GrowingConfigurationManager *manager = GrowingConfigurationManager.sharedInstance;
+        GrowingTrackConfiguration *config = manager.trackConfiguration;
+        NSURL *url = [host isKindOfClass:NSString.class] ? [NSURL URLWithString:host] : nil;
+        NSString *scheme = url.scheme.lowercaseString;
+        BOOL validHost = url.host.length && ([scheme isEqualToString:@"http"] || [scheme isEqualToString:@"https"]) &&
+                         !url.user && !url.password && !url.query && !url.fragment &&
+                         (!url.port || (url.port.integerValue >= 1 && url.port.integerValue <= 65535));
+        NSString *registered = source.length ? [manager serverHostForDataSourceId:source] : nil;
+        NSString *reason = nil;
+        if (!self.allEventChannels.count || !config) {
+            reason = @"SDK is not initialized";
+        } else if (!source.length || (host && !validHost) || (!registered && !validHost)) {
+            reason = @"Invalid data source or collection URL";
+        } else if (registered && host && ![registered isEqualToString:host]) {
+            reason = @"The data source already has a different collection URL";
+        }
+        if (reason) {
+            NSError *error = [NSError errorWithDomain:@"com.growing.routing"
+                                                 code:2
+                                             userInfo:@{NSLocalizedDescriptionKey: reason}];
+            GIOLogError(@"Routing switch rejected source=%@ reason=%@", source, reason);
+            if (completion)
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(error);
+                });
+            return;
+        }
+        if (![source isEqualToString:config.dataSourceId]) {
+            NSString *oldSource = config.dataSourceId;
+            NSMutableDictionary *mapping = config.serverHostMapping.mutableCopy;
+            mapping[source] = registered ?: host;
+            config.serverHostMapping = mapping;
+            config.dataSourceId = source;
+            config.dataCollectionServerHost = mapping[source];
+            [GrowingSession.currentSession refreshSessionId];
+            [GrowingSession.currentSession generateVisit];
+            GIOLogInfo(@"Routing switch %@ -> %@ session=%@",
+                       oldSource,
+                       source,
+                       GrowingSession.currentSession.sessionId);
+        }
+        if (completion)
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(nil);
+            });
+    }];
+}
+
 #pragma mark - Start Timer
 
 - (void)startTimerSend {
@@ -287,6 +341,46 @@ static GrowingEventManager *sharedInstance = nil;
         return;
     }
 
+    NSMutableDictionary<NSString *, NSMutableArray<id<GrowingEventPersistenceProtocol>> *> *eventsBySource =
+        [NSMutableDictionary dictionary];
+    NSMutableArray<NSArray<id<GrowingEventPersistenceProtocol>> *> *groups = [NSMutableArray array];
+    for (id<GrowingEventPersistenceProtocol> event in events) {
+        NSString *source = [event toJSONObject][@"dataSourceId"];
+        if (![source isKindOfClass:NSString.class] ||
+            ![GrowingConfigurationManager.sharedInstance serverHostForDataSourceId:source].length) {
+            continue;
+        }
+        NSMutableArray *group = eventsBySource[source];
+        if (!group) {
+            group = [NSMutableArray array];
+            eventsBySource[source] = group;
+            [groups addObject:group];
+        }
+        [group addObject:event];
+    }
+    if (!groups.count) return;
+
+    channel.isUploading = YES;
+    [self sendEventGroups_unsafe:groups channel:channel isViaCellular:isViaCellular allSucceeded:YES];
+}
+
+- (void)sendEventGroups_unsafe:(NSArray<NSArray<id<GrowingEventPersistenceProtocol>> *> *)groups
+                       channel:(GrowingEventChannel *)channel
+                 isViaCellular:(BOOL)isViaCellular
+                  allSucceeded:(BOOL)allSucceeded {
+    if (!groups.count) {
+        channel.isUploading = NO;
+        // 沿用原来的续传条件；失败批次等待下一次上传触发。
+        if (allSucceeded && channel.db.countOfEvents >= kGrowingMaxBatchSize) {
+            [self sendEventsInstantWithChannel:channel];
+        }
+        return;
+    }
+    NSArray<id<GrowingEventPersistenceProtocol>> *events = groups.firstObject;
+    NSArray *remainingGroups = [groups subarrayWithRange:NSMakeRange(1, groups.count - 1)];
+    NSString *source = [events.firstObject toJSONObject][@"dataSourceId"];
+    NSString *serverHost = [GrowingConfigurationManager.sharedInstance serverHostForDataSourceId:source];
+
 #ifdef DEBUG
     [self prettyLogForEvents:events withChannel:channel];
 #endif
@@ -306,6 +400,7 @@ static GrowingEventManager *sharedInstance = nil;
         }
         if (!dbClass) {
             GIOLogError(@"-sendEventsOfChannel_unsafe: error : no event database service support");
+            channel.isUploading = NO;
             return;
         }
         NSMutableArray *jsonObjects = [NSMutableArray array];
@@ -324,6 +419,7 @@ static GrowingEventManager *sharedInstance = nil;
 
     if (!rawEvents) {
         GIOLogError(@"-sendEventsOfChannel_unsafe: error : fail to build raw events");
+        channel.isUploading = NO;
         return;
     }
 
@@ -331,47 +427,46 @@ static GrowingEventManager *sharedInstance = nil;
         [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingEventNetworkService)];
     if (!service) {
         GIOLogError(@"-sendEventsOfChannel_unsafe: error : no network service support");
+        channel.isUploading = NO;
         return;
     }
 
-    channel.isUploading = YES;
-    NSObject<GrowingRequestProtocol> *eventRequest = [[GrowingEventRequest alloc] initWithEvents:rawEvents];
-    [service sendRequest:eventRequest
-              completion:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data, NSError *_Nonnull error) {
-                  if (error) {
-                      [GrowingDispatchManager dispatchInGrowingThread:^{
-                          channel.isUploading = NO;
-                      }];
-                  }
-                  if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
-                      [GrowingDispatchManager dispatchInGrowingThread:^{
-                          if (isViaCellular) {
-                              if ([eventRequest respondsToSelector:@selector(outsize)]) {
-                                  self.uploadEventSize += eventRequest.outsize;
-                              }
-                          }
-
-                          for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
-                              if ([obj respondsToSelector:@selector(growingEventManagerEventsDidSend:
-                                                                                             request:channel:)]) {
-                                  [obj growingEventManagerEventsDidSend:events request:eventRequest channel:channel];
-                              }
-                          }
-
-                          [self removeEvents_unsafe:events forChannel:channel];
-                          channel.isUploading = NO;
-
-                          // 如果剩余数量 大于单包数量  则直接发送
-                          if (channel.db.countOfEvents >= kGrowingMaxBatchSize) {
-                              [self sendEventsInstantWithChannel:channel];
-                          }
-                      }];
-                  } else {
-                      [GrowingDispatchManager dispatchInGrowingThread:^{
-                          channel.isUploading = NO;
-                      }];
-                  }
-              }];
+    NSObject<GrowingRequestProtocol> *eventRequest =
+        [[GrowingEventRequest alloc] initWithEvents:rawEvents
+                                         serverHost:serverHost
+                                          accountId:trackConfiguration.accountId];
+    GIOLogDebug(@"Upload source=%@ channel=%@ url=%@", source, channel.name, eventRequest.absoluteURL);
+    __block BOOL completed = NO;
+    [service
+        sendRequest:eventRequest
+         completion:^(NSHTTPURLResponse *httpResponse, NSData *data, NSError *error) {
+             [GrowingDispatchManager dispatchInGrowingThread:^{
+                 if (completed) return;
+                 completed = YES;
+                 BOOL success = !error && httpResponse.statusCode >= 200 && httpResponse.statusCode < 300;
+                 if (success) {
+                     if (isViaCellular && [eventRequest respondsToSelector:@selector(outsize)]) {
+                         self.uploadEventSize += eventRequest.outsize;
+                     }
+                     for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
+                         if ([obj respondsToSelector:@selector(growingEventManagerEventsDidSend:request:channel:)]) {
+                             [obj growingEventManagerEventsDidSend:events request:eventRequest channel:channel];
+                         }
+                     }
+                     [self removeEvents_unsafe:events forChannel:channel];
+                 } else {
+                     GIOLogDebug(@"Upload failed source=%@ url=%@ error=%@ status=%ld",
+                                 source,
+                                 eventRequest.absoluteURL,
+                                 error,
+                                 (long)httpResponse.statusCode);
+                 }
+                 [self sendEventGroups_unsafe:remainingGroups
+                                      channel:channel
+                                isViaCellular:isViaCellular
+                                 allSucceeded:allSucceeded && success];
+             }];
+         }];
 }
 
 #pragma mark Event Persist

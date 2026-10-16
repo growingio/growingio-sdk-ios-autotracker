@@ -20,6 +20,7 @@
 #import "GrowingAutotracker/GrowingAutotracker.h"
 #import "GrowingAutotrackerCore/GrowingRealAutotracker.h"
 #import "GrowingTrackerCore/Event/GrowingGeneralProps.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 
 static GrowingAutotracker *sharedInstance = nil;
@@ -49,6 +50,10 @@ static GrowingAutotracker *sharedInstance = nil;
         @throw [NSException exceptionWithName:@"初始化异常" reason:@"dataSourceId不能为空" userInfo:nil];
     }
 
+    NSError *mappingError = nil;
+    if (![GrowingConfigurationManager validatedMapping:configuration error:&mappingError]) {
+        @throw [NSException exceptionWithName:@"初始化异常" reason:mappingError.localizedDescription userInfo:nil];
+    }
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         GrowingRealAutotracker *autotracker = [GrowingRealAutotracker trackerWithConfiguration:configuration
