@@ -65,6 +65,12 @@
 
 /// 配置事件管理者
 - (void)configManager;
+- (void)switchToDataSourceId:(NSString *_Nonnull)dataSourceId;
+- (void)switchToDataSourceId:(NSString *_Nonnull)dataSourceId dataCollectionServerHost:(NSString *_Nullable)serverHost;
+
+/// 仅在事件线程调用，同步返回是否实际切换了数据源并刷新 Session。
+- (BOOL)switchToDataSourceId_unsafe:(NSString *_Nonnull)dataSourceId
+           dataCollectionServerHost:(NSString *_Nullable)serverHost;
 
 /// 开启事件发送定时器
 - (void)startTimerSend;

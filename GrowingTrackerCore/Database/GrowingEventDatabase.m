@@ -194,6 +194,36 @@ NSString *const GrowingEventDatabaseErrorDomain = @"com.growing.event.database.e
     return events ?: [[NSArray alloc] init];
 }
 
+- (BOOL)suspendEventsForKeys:(NSArray<NSString *> *)keys {
+    if (!keys.count) {
+        return YES;
+    }
+    if (![self.db respondsToSelector:@selector(suspendEvents:)]) {
+        GIOLogError(@"-suspendEventsForKeys: event database service does not support suspending events");
+        return NO;
+    }
+    // 先落库缓存中的增删，保证挂起作用在最新的数据上
+    if (![self flush]) {
+        return NO;
+    }
+    BOOL result = [self.db suspendEvents:keys];
+    if (!result) {
+        [self handleDatabaseError:[self.db lastError]];
+    }
+    return result;
+}
+
+- (BOOL)resumeAllSuspendedEvents {
+    if (![self.db respondsToSelector:@selector(resumeAllSuspendedEvents)]) {
+        return NO;
+    }
+    BOOL result = [self.db resumeAllSuspendedEvents];
+    if (!result) {
+        [self handleDatabaseError:[self.db lastError]];
+    }
+    return result;
+}
+
 - (NSData *)buildRawEventsFromEvents:(NSArray<id<GrowingEventPersistenceProtocol>> *)events {
     return [self.db.class buildRawEventsFromEvents:events];
 }

@@ -18,13 +18,20 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
+#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
+#import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 
 NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growingio.com";
 NSString *const kGrowingDefaultDeepLinkHost = @"https://link.growingio.com";
 NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com";
 
-@interface GrowingTrackConfiguration ()
+@interface GrowingTrackConfiguration () {
+    // 保护 dataSourceId、dataCollectionServerHost、serverHostMapping：
+    // 运行时切换数据源会在事件线程修改它们，而 Hybrid、ABTesting、广告等模块可能在其他线程同时读取。
+    // 对象创建时实例变量已置零，与 OS_UNFAIR_LOCK_INIT 相同，copy 出的新对象无需单独初始化。
+    GROWING_LOCK_DECLARE(_routingLock);
+}
 
 // Ads
 @property (nonatomic, assign) BOOL ASAEnabled;
@@ -49,9 +56,15 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
 
 @implementation GrowingTrackConfiguration
 
+// 下面三个属性自定义了 getter 和 setter，需要显式合成实例变量
+@synthesize dataSourceId = _dataSourceId;
+@synthesize dataCollectionServerHost = _dataCollectionServerHost;
+@synthesize serverHostMapping = _serverHostMapping;
+
 - (instancetype)initWithAccountId:(NSString *)accountId {
     self = [super init];
     if (self) {
+        GROWING_LOCK_INIT(_routingLock);
         _accountId = [accountId copy];
         _dataSourceId = nil;
 
@@ -108,14 +121,17 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
 - (id)copyWithZone:(NSZone *)zone {
     GrowingTrackConfiguration *configuration = [[[self class] allocWithZone:zone] init];
     configuration->_accountId = [_accountId copy];
+    GROWING_LOCK(_routingLock);
     configuration->_dataSourceId = [_dataSourceId copy];
+    configuration->_dataCollectionServerHost = [_dataCollectionServerHost copy];
+    configuration->_serverHostMapping = [_serverHostMapping copy];
+    GROWING_UNLOCK(_routingLock);
     configuration->_debugEnabled = _debugEnabled;
     configuration->_cellularDataLimit = _cellularDataLimit;
     configuration->_dataUploadInterval = _dataUploadInterval;
     configuration->_sessionInterval = _sessionInterval;
     configuration->_dataCollectionEnabled = _dataCollectionEnabled;
     configuration->_uploadExceptionEnable = _uploadExceptionEnable;
-    configuration->_dataCollectionServerHost = [_dataCollectionServerHost copy];
     configuration->_excludeEvent = _excludeEvent;
     configuration->_ignoreField = _ignoreField;
     configuration->_idMappingEnabled = _idMappingEnabled;
@@ -152,6 +168,56 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
 
 #pragma mark - Setter & Getter
 
+// 旧值先转存到局部变量，ARC 会在作用域结束（已解锁）时才释放它，避免在锁内触发对象析构
+
+- (NSString *)dataSourceId {
+    GROWING_LOCK(_routingLock);
+    NSString *value = _dataSourceId;
+    GROWING_UNLOCK(_routingLock);
+    return value;
+}
+
+- (void)setDataSourceId:(NSString *)dataSourceId {
+    NSString *value = [dataSourceId copy];
+    GROWING_LOCK(_routingLock);
+    NSString *oldValue = _dataSourceId;
+    _dataSourceId = value;
+    GROWING_UNLOCK(_routingLock);
+    (void)oldValue;
+}
+
+- (NSString *)dataCollectionServerHost {
+    GROWING_LOCK(_routingLock);
+    NSString *value = _dataCollectionServerHost;
+    GROWING_UNLOCK(_routingLock);
+    return value;
+}
+
+- (void)setDataCollectionServerHost:(NSString *)dataCollectionServerHost {
+    NSString *value = [dataCollectionServerHost copy];
+    GROWING_LOCK(_routingLock);
+    NSString *oldValue = _dataCollectionServerHost;
+    _dataCollectionServerHost = value;
+    GROWING_UNLOCK(_routingLock);
+    (void)oldValue;
+}
+
+- (NSDictionary<NSString *, NSString *> *)serverHostMapping {
+    GROWING_LOCK(_routingLock);
+    NSDictionary<NSString *, NSString *> *value = _serverHostMapping;
+    GROWING_UNLOCK(_routingLock);
+    return value;
+}
+
+- (void)setServerHostMapping:(NSDictionary<NSString *, NSString *> *)serverHostMapping {
+    NSDictionary<NSString *, NSString *> *value = [serverHostMapping copy];
+    GROWING_LOCK(_routingLock);
+    NSDictionary<NSString *, NSString *> *oldValue = _serverHostMapping;
+    _serverHostMapping = value;
+    GROWING_UNLOCK(_routingLock);
+    (void)oldValue;
+}
+
 - (void)setDataUploadInterval:(NSTimeInterval)dataUploadInterval {
     if (dataUploadInterval <= 0) {
         return;
@@ -181,6 +247,28 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
         dataValidityPeriod = 30;
     }
     _dataValidityPeriod = dataValidityPeriod;
+}
+
+@end
+
+@implementation GrowingTrackConfiguration (GrowingRouting)
+
+- (void)growing_updateDataSourceId:(NSString *)dataSourceId
+                 serverHostMapping:(NSDictionary<NSString *, NSString *> *)serverHostMapping {
+    NSString *source = [dataSourceId copy];
+    NSDictionary<NSString *, NSString *> *mapping = [serverHostMapping copy];
+    NSString *host = [mapping[source] copy];
+    GROWING_LOCK(_routingLock);
+    NSString *oldSource = _dataSourceId;
+    NSString *oldHost = _dataCollectionServerHost;
+    NSDictionary<NSString *, NSString *> *oldMapping = _serverHostMapping;
+    _serverHostMapping = mapping;
+    _dataSourceId = source;
+    _dataCollectionServerHost = host;
+    GROWING_UNLOCK(_routingLock);
+    (void)oldSource;
+    (void)oldHost;
+    (void)oldMapping;
 }
 
 @end

@@ -73,6 +73,24 @@ GrowingPropertyDefine(UITextView, NSString *, growingHookOldText, setGrowingHook
     return self;
 }
 
+- (BOOL)switchToDataSourceId_unsafe:(NSString *)dataSourceId dataCollectionServerHost:(NSString *)serverHost {
+    if (![super switchToDataSourceId_unsafe:dataSourceId dataCollectionServerHost:serverHost]) {
+        return NO;
+    }
+    [GrowingDispatchManager dispatchInMainThread:^{
+        if (!self.configuration.autotrackEnabled || [GrowingULApplication isAppExtension] ||
+            [[GrowingULApplication sharedApplication] applicationState] == UIApplicationStateBackground) {
+            return;
+        }
+        GrowingPageManager *pages = GrowingPageManager.sharedInstance;
+        GrowingPage *page = [pages findAutotrackPageByPage:pages.currentPage];
+        if (page.carrier.isViewLoaded && page.carrier.view.window) {
+            [pages createdViewControllerPage:page.carrier];
+        }
+    }];
+    return YES;
+}
+
 - (void)ignoreViewClass:(Class)clazz {
     [self.configuration ignoreViewClass:clazz];
 }
@@ -184,11 +202,10 @@ GrowingPropertyDefine(UITextView, NSString *, growingHookOldText, setGrowingHook
                                         withMethod:@selector(growing_dismissAnimated:triggeringAction:)
                                              error:&alertError];
 
-        [UIAlertController
-            growingul_swizzleMethod:dismissActionSELFromIOS11
-                         withMethod:@selector(growing_dismissAnimated:
-                                                     triggeringAction:triggeredByPopoverDimmingView:dismissCompletion:)
-                              error:&alertError];
+        [UIAlertController growingul_swizzleMethod:dismissActionSELFromIOS11
+                                        withMethod:@selector(growing_dismissAnimated:triggeringAction:
+                                                             triggeredByPopoverDimmingView:dismissCompletion:)
+                                             error:&alertError];
 
         if (alertError) {
             GIOLogError(@"Failed to swizzle UIAlertController. Details: %@", alertError);

@@ -57,6 +57,11 @@ const int GrowingTrackerVersionCode = 41300;
     self = [super init];
     if (self) {
         _configuration = [configuration copyWithZone:nil];
+        _configuration.serverHostMapping =
+            [GrowingConfigurationManager validatedServerHostMappingForConfiguration:configuration error:nil];
+        if (_configuration.serverHostMapping) {
+            _configuration.dataCollectionServerHost = _configuration.serverHostMapping[_configuration.dataSourceId];
+        }
         _launchOptions = [launchOptions copy];
         GrowingConfigurationManager.sharedInstance.trackConfiguration = _configuration;
 
@@ -84,6 +89,23 @@ const int GrowingTrackerVersionCode = 41300;
 + (instancetype)trackerWithConfiguration:(GrowingTrackConfiguration *)configuration
                            launchOptions:(NSDictionary *)launchOptions {
     return [[self alloc] initWithConfiguration:configuration launchOptions:launchOptions];
+}
+
+- (void)switchToDataSourceId:(NSString *)dataSourceId {
+    [self switchToDataSourceId:dataSourceId dataCollectionServerHost:nil];
+}
+
+- (void)switchToDataSourceId:(NSString *)dataSourceId dataCollectionServerHost:(NSString *)serverHost {
+    NSString *source = [dataSourceId isKindOfClass:NSString.class] ? [dataSourceId copy] : nil;
+    NSString *host = [serverHost copy];
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        [self switchToDataSourceId_unsafe:source dataCollectionServerHost:host];
+    }];
+}
+
+- (BOOL)switchToDataSourceId_unsafe:(NSString *)dataSourceId dataCollectionServerHost:(NSString *)serverHost {
+    return [[GrowingEventManager sharedInstance] switchToDataSourceId_unsafe:dataSourceId
+                                                    dataCollectionServerHost:serverHost];
 }
 
 - (void)loggerSetting {
