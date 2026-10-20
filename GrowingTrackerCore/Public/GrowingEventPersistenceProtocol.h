@@ -46,6 +46,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)appendExtraParams:(NSDictionary<NSString *, id> *)extraParams;
 
+@optional
+
+/// 事件所属的数据源，上传时用于按数据源分组；没有时返回 nil。
+/// 实现时应直接读取该字段，避免像 toJSONObject 那样转换整条事件；未实现时 SDK 会退回 toJSONObject 读取
+@property (nonatomic, copy, readonly, nullable) NSString *dataSourceId;
+
 @end
 
 NS_ASSUME_NONNULL_END

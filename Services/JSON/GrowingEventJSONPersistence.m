@@ -69,6 +69,13 @@
     return ((NSString *)self.data).growingHelper_jsonObject;
 }
 
+- (NSString *)dataSourceId {
+    // JSON 存储只能解析整条事件才能取到字段
+    NSDictionary *jsonObject = [self toJSONObject];
+    id dataSourceId = [jsonObject isKindOfClass:NSDictionary.class] ? jsonObject[@"dataSourceId"] : nil;
+    return [dataSourceId isKindOfClass:NSString.class] && [dataSourceId length] > 0 ? dataSourceId : nil;
+}
+
 - (void)appendExtraParams:(NSDictionary<NSString *, id> *)extraParams {
     if (!extraParams || extraParams.count == 0) {
         return;

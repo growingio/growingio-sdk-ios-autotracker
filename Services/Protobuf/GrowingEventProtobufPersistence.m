@@ -138,6 +138,15 @@
     return @{};
 }
 
+- (NSString *)dataSourceId {
+#if SWIFT_PACKAGE
+    return self.dtoBox.dataSourceId;
+#else
+    NSString *dataSourceId = self.dto.dataSourceId;
+    return dataSourceId.length > 0 ? dataSourceId : nil;
+#endif
+}
+
 - (void)appendExtraParams:(NSDictionary<NSString *, id> *)extraParams {
     if (!extraParams || extraParams.count == 0) {
         return;

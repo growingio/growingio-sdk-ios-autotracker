@@ -592,6 +592,18 @@
     XCTAssertEqual(db.countOfEvents, 0);
 }
 
+- (void)testPersistenceProvidesDataSourceId {
+    for (NSNumber *isProtobuf in @[@NO, @YES]) {
+        GrowingEventDatabase *db = [self databaseWithSources:@[@"A", @""] isProtobuf:isProtobuf.boolValue];
+        NSArray<id<GrowingEventPersistenceProtocol>> *events = [db getEventsByCount:10 limitSize:100000 policy:~0UL];
+        XCTAssertEqual(events.count, 2);
+        // 内置存储都直接提供该字段，分组时不必转换整条事件
+        XCTAssertTrue([(id)events[0] respondsToSelector:@selector(dataSourceId)]);
+        XCTAssertEqualObjects(events[0].dataSourceId, @"A");
+        XCTAssertEqualObjects(events[0].dataSourceId, [events[0] toJSONObject][@"dataSourceId"]);
+        XCTAssertNil(events[1].dataSourceId);
+    }
+}
 - (void)testUnroutableEventsAreSuspendedAndDoNotBlockUpload {
     for (NSNumber *isProtobuf in @[@NO, @YES]) {
         [GrowingDispatchManager

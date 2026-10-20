@@ -39,6 +39,18 @@ static const NSUInteger kGrowingMaxDBCacheSize = 100;  // default: write to DB a
 static const NSUInteger kGrowingMaxBatchSize = 500;    // default: send no more than 500 events in every batch
 static const NSUInteger kGrowingUnit_MB = 1024 * 1024;
 
+/// 读取事件所属的数据源：优先使用持久化对象直接提供的字段，未实现时才转换整条事件
+static NSString *GrowingDataSourceIdOfEvent(id<GrowingEventPersistenceProtocol> event) {
+    id dataSourceId = nil;
+    if ([(id)event respondsToSelector:@selector(dataSourceId)]) {
+        dataSourceId = event.dataSourceId;
+    } else {
+        NSDictionary *jsonObject = [event toJSONObject];
+        dataSourceId = [jsonObject isKindOfClass:NSDictionary.class] ? jsonObject[@"dataSourceId"] : nil;
+    }
+    return [dataSourceId isKindOfClass:NSString.class] && [dataSourceId length] > 0 ? dataSourceId : nil;
+}
+
 @interface GrowingEventManager ()
 
 @property (nonatomic, strong) NSHashTable *allInterceptor;
@@ -336,13 +348,12 @@ static GrowingEventManager *sharedInstance = nil;
     NSMutableArray<NSString *> *unroutableKeys = [NSMutableArray array];
     NSMutableSet<NSString *> *unroutableSources = [NSMutableSet set];
     for (id<GrowingEventPersistenceProtocol> event in events) {
-        NSString *source = [event toJSONObject][@"dataSourceId"];
-        if (![source isKindOfClass:NSString.class] ||
-            ![GrowingConfigurationManager.sharedInstance serverHostForDataSourceId:source].length) {
+        NSString *source = GrowingDataSourceIdOfEvent(event);
+        if (!source || ![GrowingConfigurationManager.sharedInstance serverHostForDataSourceId:source].length) {
             if (event.eventUUID.length) {
                 [unroutableKeys addObject:event.eventUUID];
             }
-            [unroutableSources addObject:[source isKindOfClass:NSString.class] ? source : @"(none)"];
+            [unroutableSources addObject:source ?: @"(none)"];
             continue;
         }
         NSMutableArray *group = eventsBySource[source];
@@ -417,7 +428,7 @@ static GrowingEventManager *sharedInstance = nil;
     }
     NSArray<id<GrowingEventPersistenceProtocol>> *events = groups.firstObject;
     NSArray *remainingGroups = [groups subarrayWithRange:NSMakeRange(1, groups.count - 1)];
-    NSString *source = [events.firstObject toJSONObject][@"dataSourceId"];
+    NSString *source = GrowingDataSourceIdOfEvent(events.firstObject);
     NSString *serverHost = [GrowingConfigurationManager.sharedInstance serverHostForDataSourceId:source];
 
 #ifdef DEBUG
