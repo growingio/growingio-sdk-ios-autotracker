@@ -172,7 +172,7 @@ public class SwiftProtobufWrapper: NSObject {
 }
 
 public extension SwiftProtobufWrapper {
-    // For GrowingToolsKit NetFlow
+    /// For GrowingToolsKit NetFlow
     @objc(convertProtobufDataToJsonArray:)
     static func convertProtobufDataToJsonArray(from data: Data) -> [[String: AnyObject]]? {
         do {
