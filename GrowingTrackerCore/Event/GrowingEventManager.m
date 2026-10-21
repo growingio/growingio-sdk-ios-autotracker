@@ -174,7 +174,7 @@ static GrowingEventManager *sharedInstance = nil;
         dataCollectionServerHost:(NSString *)serverHost {
     GrowingConfigurationManager *manager = GrowingConfigurationManager.sharedInstance;
     if (!self.allEventChannels.count || !manager.trackConfiguration) {
-        GIOLogError(@"Routing switch rejected account=%@ source=%@ reason=SDK is not initialized",
+        GIOLogError(@"Switch route failed, SDK is not initialized (accountId = %@, dataSourceId = %@).",
                     accountId,
                     dataSourceId);
         return NO;
@@ -189,10 +189,10 @@ static GrowingEventManager *sharedInstance = nil;
                                         error:&error];
     if (!changed) {
         if (error) {
-            GIOLogError(@"Routing switch rejected account=%@ source=%@ reason=%@",
+            GIOLogError(@"Switch route failed, %@ (accountId = %@, dataSourceId = %@).",
+                        error.localizedDescription,
                         accountId,
-                        dataSourceId,
-                        error.localizedDescription);
+                        dataSourceId);
         }
         return NO;
     }
@@ -204,10 +204,10 @@ static GrowingEventManager *sharedInstance = nil;
     }
     [GrowingSession.currentSession refreshSessionId];
     [GrowingSession.currentSession generateVisit];
-    GIOLogInfo(@"Routing switch %@/%@ -> %@/%@ session=%@",
+    GIOLogInfo(@"Switch route succeeded (accountId = %@ -> %@, dataSourceId = %@ -> %@, sessionId = %@).",
                previousAccountId,
-               previousDataSourceId,
                currentAccountId,
+               previousDataSourceId,
                dataSourceId,
                GrowingSession.currentSession.sessionId);
     if (!wasRegistered) {
@@ -392,7 +392,7 @@ static GrowingEventManager *sharedInstance = nil;
     }
     if (unroutableKeys.count) {
         // 查不到路由的事件挂起保留，不再占用发送名额；注册对应路由或下次启动时恢复，过期后照常清理
-        GIOLogWarn(@"Suspend %lu events without collection URL (channel = %@, sources = %@)",
+        GIOLogWarn(@"Suspend %lu events without route (channel = %@, dataSourceIds = %@).",
                    (unsigned long)unroutableKeys.count,
                    channel.name,
                    unroutableSources.allObjects);
@@ -420,7 +420,7 @@ static GrowingEventManager *sharedInstance = nil;
             dbClass = [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingEventDatabaseService)];
         }
         if (!dbClass) {
-            GIOLogError(@"%s error : no event database service support", __func__);
+            GIOLogError(@"-buildRawEventsFromEvents:channel: error : no event database service support");
             return nil;
         }
         NSMutableArray *jsonObjects = [NSMutableArray array];
@@ -464,7 +464,7 @@ static GrowingEventManager *sharedInstance = nil;
 
     NSData *rawEvents = [self buildRawEventsFromEvents:events channel:channel];
     if (!rawEvents) {
-        GIOLogError(@"%s error : fail to build raw events", __func__);
+        GIOLogError(@"-sendEventGroups_unsafe:channel:isViaCellular:allSucceeded: error : fail to build raw events");
         channel.isUploading = NO;
         return;
     }
@@ -472,7 +472,7 @@ static GrowingEventManager *sharedInstance = nil;
     id<GrowingEventNetworkService> service =
         [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingEventNetworkService)];
     if (!service) {
-        GIOLogError(@"%s error : no network service support", __func__);
+        GIOLogError(@"-sendEventGroups_unsafe:channel:isViaCellular:allSucceeded: error : no network service support");
         channel.isUploading = NO;
         return;
     }
@@ -482,7 +482,10 @@ static GrowingEventManager *sharedInstance = nil;
         [[GrowingEventRequest alloc] initWithEvents:rawEvents
                                          serverHost:route.dataCollectionServerHost
                                           accountId:route.accountId];
-    GIOLogDebug(@"Upload source=%@ channel=%@ url=%@", source, channel.name, eventRequest.absoluteURL);
+    GIOLogDebug(@"Upload events (channel = %@, dataSourceId = %@, url = %@).",
+                channel.name,
+                source,
+                eventRequest.absoluteURL);
     __block BOOL completed = NO;
     [service
         sendRequest:eventRequest
@@ -502,11 +505,11 @@ static GrowingEventManager *sharedInstance = nil;
                      }
                      [self removeEvents_unsafe:events forChannel:channel];
                  } else {
-                     GIOLogDebug(@"Upload failed source=%@ url=%@ error=%@ status=%ld",
+                     GIOLogDebug(@"Upload events failed (dataSourceId = %@, url = %@, statusCode = %ld, error = %@).",
                                  source,
                                  eventRequest.absoluteURL,
-                                 error,
-                                 (long)httpResponse.statusCode);
+                                 (long)httpResponse.statusCode,
+                                 error);
                  }
                  [self sendEventGroups_unsafe:remainingGroups
                                       channel:channel

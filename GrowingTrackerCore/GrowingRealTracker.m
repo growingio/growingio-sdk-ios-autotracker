@@ -24,6 +24,7 @@
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Event/GrowingGeneralProps.h"
 #import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
+#import "GrowingTrackerCore/GrowingTrackConfiguration+Private.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/LogFormat/GrowingWSLoggerFormat.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
@@ -60,9 +61,9 @@ const int GrowingTrackerVersionCode = 41300;
         NSArray<GrowingDataSourceRoute *> *routes =
             [GrowingConfigurationManager validatedRoutesForConfiguration:configuration error:nil];
         _configuration.dataSourceRoutes = routes;
-        GrowingDataSourceRoute *route = [_configuration growing_routeForDataSourceId:_configuration.dataSourceId];
+        GrowingDataSourceRoute *route = [_configuration routeForDataSourceId:_configuration.dataSourceId];
         if (route) {
-            [_configuration growing_activateRoute:route withRoutes:routes];
+            [_configuration activateRoute:route withRoutes:routes];
         }
         _launchOptions = [launchOptions copy];
         GrowingConfigurationManager.sharedInstance.trackConfiguration = _configuration;

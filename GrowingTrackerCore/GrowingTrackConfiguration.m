@@ -18,7 +18,7 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
-#import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/GrowingTrackConfiguration+Private.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 
@@ -259,9 +259,9 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
 
 @end
 
-@implementation GrowingTrackConfiguration (GrowingRouting)
+@implementation GrowingTrackConfiguration (Private)
 
-- (GrowingDataSourceRoute *)growing_routeForDataSourceId:(NSString *)dataSourceId {
+- (GrowingDataSourceRoute *)routeForDataSourceId:(NSString *)dataSourceId {
     if (dataSourceId.length == 0) {
         return nil;
     }
@@ -278,7 +278,7 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
     return found;
 }
 
-- (void)growing_activateRoute:(GrowingDataSourceRoute *)route withRoutes:(NSArray<GrowingDataSourceRoute *> *)routes {
+- (void)activateRoute:(GrowingDataSourceRoute *)route withRoutes:(NSArray<GrowingDataSourceRoute *> *)routes {
     NSArray<GrowingDataSourceRoute *> *newRoutes = [routes copy];
     NSString *accountId = [route.accountId copy];
     NSString *dataSourceId = [route.dataSourceId copy];

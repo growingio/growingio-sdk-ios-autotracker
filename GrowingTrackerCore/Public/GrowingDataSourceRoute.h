@@ -34,10 +34,18 @@ NS_SWIFT_NAME(DataSourceRoute)
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
+/// 创建上报路由，校验在配置或注册时进行
+/// @param accountId 项目ID
+/// @param dataSourceId 数据源ID
+/// @param dataCollectionServerHost 采集地址
 - (instancetype)initWithAccountId:(NSString *)accountId
                      dataSourceId:(NSString *)dataSourceId
          dataCollectionServerHost:(NSString *)dataCollectionServerHost NS_DESIGNATED_INITIALIZER;
 
+/// 创建上报路由，校验在配置或注册时进行
+/// @param accountId 项目ID
+/// @param dataSourceId 数据源ID
+/// @param dataCollectionServerHost 采集地址
 + (instancetype)routeWithAccountId:(NSString *)accountId
                       dataSourceId:(NSString *)dataSourceId
           dataCollectionServerHost:(NSString *)dataCollectionServerHost;

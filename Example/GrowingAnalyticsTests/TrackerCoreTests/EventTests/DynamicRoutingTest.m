@@ -33,6 +33,7 @@
 #import "GrowingTrackerCore/Event/GrowingEventChannel.h"
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/GrowingRealTracker.h"
+#import "GrowingTrackerCore/GrowingTrackConfiguration+Private.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Network/Request/GrowingEventRequest.h"
@@ -222,7 +223,7 @@
     GrowingDataSourceRoute *other = [GrowingDataSourceRoute routeWithAccountId:@"other-account"
                                                                   dataSourceId:@"O"
                                                       dataCollectionServerHost:@"https://o.example.com"];
-    [config growing_activateRoute:other withRoutes:[config.dataSourceRoutes arrayByAddingObject:other]];
+    [config activateRoute:other withRoutes:[config.dataSourceRoutes arrayByAddingObject:other]];
     XCTAssertEqualObjects(request.absoluteURL.host, @"a.example.com");
     XCTAssertEqualObjects(request.absoluteURL.path, @"/base/v3/projects/routing-test/collect");
 }
@@ -254,7 +255,7 @@
         input.dataSourceRoutes = routes;
         NSError *error = nil;
         XCTAssertNil([GrowingConfigurationManager validatedRoutesForConfiguration:input error:&error], @"%@", routes);
-        XCTAssertEqual(error.code, GrowingRoutingErrorInvalidRoutes);
+        XCTAssertEqual(error.code, GrowingRoutingInvalidRoutesError);
     }
 }
 
@@ -274,7 +275,7 @@
         ];
         NSError *error = nil;
         XCTAssertNil([GrowingConfigurationManager validatedRoutesForConfiguration:input error:&error], @"%@", host);
-        XCTAssertEqual(error.code, GrowingRoutingErrorInvalidRoutes);
+        XCTAssertEqual(error.code, GrowingRoutingInvalidRoutesError);
     }
 }
 
@@ -295,7 +296,7 @@
                                                       error:&error],
                                @"%@",
                                pair);
-                XCTAssertEqual(error.code, GrowingRoutingErrorInvalidRoute);
+                XCTAssertEqual(error.code, GrowingRoutingInvalidRouteError);
                 XCTAssertEqualObjects(manager.trackConfiguration.dataSourceId, @"A");
                 XCTAssertNil([manager routeForDataSourceId:@"C"]);
             }
@@ -335,12 +336,12 @@
                           dataCollectionServerHost:[NSString stringWithFormat:@"https://s%lu.example.com",
                                                                               (unsigned long)i]]];
     }
-    [config growing_activateRoute:routes[0] withRoutes:routes];
+    [config activateRoute:routes[0] withRoutes:routes];
 
     dispatch_group_t group = dispatch_group_create();
     dispatch_group_async(group, dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
         for (NSUInteger i = 0; i < 20000; i++) {
-            [config growing_activateRoute:routes[i % 8] withRoutes:routes];
+            [config activateRoute:routes[i % 8] withRoutes:routes];
         }
     });
 
@@ -350,7 +351,7 @@
         while (dispatch_group_wait(group, DISPATCH_TIME_NOW) != 0) {
             // copy 在同一把锁内读取所有路由字段，得到的快照必须与其中的路由一致
             GrowingTrackConfiguration *snapshot = [config copy];
-            GrowingDataSourceRoute *route = [snapshot growing_routeForDataSourceId:snapshot.dataSourceId];
+            GrowingDataSourceRoute *route = [snapshot routeForDataSourceId:snapshot.dataSourceId];
             if (![route.accountId isEqualToString:snapshot.accountId] ||
                 ![route.dataCollectionServerHost isEqualToString:snapshot.dataCollectionServerHost]) {
                 @synchronized(self) {
@@ -381,7 +382,7 @@
                                          dataSourceId:@"B"
                              dataCollectionServerHost:nil
                                                 error:&error]);
-            XCTAssertEqual(error.code, GrowingRoutingErrorConflictingRoute);
+            XCTAssertEqual(error.code, GrowingRoutingConflictingRouteError);
 
             // 未注册且没有提供采集地址
             error = nil;
@@ -389,7 +390,7 @@
                                          dataSourceId:@"unknown"
                              dataCollectionServerHost:nil
                                                 error:&error]);
-            XCTAssertEqual(error.code, GrowingRoutingErrorUnregisteredRoute);
+            XCTAssertEqual(error.code, GrowingRoutingUnregisteredRouteError);
 
             // 项目或数据源为空
             for (NSArray<NSString *> *pair in @[@[@"", @"B"], @[@"routing-test", @""]]) {
@@ -398,7 +399,7 @@
                                              dataSourceId:pair[1]
                                  dataCollectionServerHost:nil
                                                     error:&error]);
-                XCTAssertEqual(error.code, GrowingRoutingErrorInvalidRoute);
+                XCTAssertEqual(error.code, GrowingRoutingInvalidRouteError);
             }
             XCTAssertEqualObjects(manager.trackConfiguration.accountId, @"routing-test");
             XCTAssertEqualObjects(manager.trackConfiguration.dataSourceId, @"A");
@@ -506,7 +507,7 @@
         dispatchInGrowingThread:^{
             GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
             XCTAssertEqualObjects(config.dataSourceId, @"A");
-            XCTAssertNil([config growing_routeForDataSourceId:@"C"]);
+            XCTAssertNil([config routeForDataSourceId:@"C"]);
         }
                   waitUntilDone:YES];
     [tracker switchToAccountId:@"routing-test"
@@ -617,7 +618,7 @@
     [GrowingDispatchManager
         dispatchInGrowingThread:^{
             GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
-            [config growing_activateRoute:other withRoutes:[config.dataSourceRoutes arrayByAddingObject:other]];
+            [config activateRoute:other withRoutes:[config.dataSourceRoutes arrayByAddingObject:other]];
         }
                   waitUntilDone:YES];
     RoutingNetworkStub.sharedInstance.holdResponses = YES;

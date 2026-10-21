@@ -18,8 +18,9 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/GrowingTrackConfiguration+Private.h"
 
-NSString *const GrowingRoutingErrorDomain = @"com.growing.routing";
+NSString *const GrowingRoutingErrorDomain = @"com.growing.routing.error";
 
 static BOOL GrowingIsNonEmptyString(id value) {
     return [value isKindOfClass:NSString.class] && [(NSString *)value length] > 0;
@@ -88,7 +89,7 @@ static void GrowingSetRoutingError(NSError **error, GrowingRoutingError code, NS
     NSString *accountId = configuration.accountId;
     NSString *dataSourceId = configuration.dataSourceId;
     if (!GrowingIsNonEmptyString(accountId) || !GrowingIsNonEmptyString(dataSourceId)) {
-        GrowingSetRoutingError(error, GrowingRoutingErrorInvalidRoutes, @"accountId and dataSourceId are required");
+        GrowingSetRoutingError(error, GrowingRoutingInvalidRoutesError, @"accountId and dataSourceId are required");
         return nil;
     }
 
@@ -97,7 +98,7 @@ static void GrowingSetRoutingError(NSError **error, GrowingRoutingError code, NS
         // 只配置了 dataCollectionServerHost 时沿用旧行为、不校验地址格式，避免老用户升级后初始化抛异常
         NSString *serverHost = configuration.dataCollectionServerHost;
         if (!GrowingIsNonEmptyString(serverHost)) {
-            GrowingSetRoutingError(error, GrowingRoutingErrorInvalidRoutes, @"dataCollectionServerHost is required");
+            GrowingSetRoutingError(error, GrowingRoutingInvalidRoutesError, @"dataCollectionServerHost is required");
             return nil;
         }
         return @[[GrowingDataSourceRoute routeWithAccountId:accountId
@@ -105,7 +106,7 @@ static void GrowingSetRoutingError(NSError **error, GrowingRoutingError code, NS
                                    dataCollectionServerHost:serverHost]];
     }
     if (![input isKindOfClass:NSArray.class]) {
-        GrowingSetRoutingError(error, GrowingRoutingErrorInvalidRoutes, @"dataSourceRoutes must be an array");
+        GrowingSetRoutingError(error, GrowingRoutingInvalidRoutesError, @"dataSourceRoutes must be an array");
         return nil;
     }
 
@@ -115,7 +116,7 @@ static void GrowingSetRoutingError(NSError **error, GrowingRoutingError code, NS
     for (id item in input) {
         if (!GrowingIsValidRoute(item)) {
             GrowingSetRoutingError(error,
-                                   GrowingRoutingErrorInvalidRoutes,
+                                   GrowingRoutingInvalidRoutesError,
                                    [NSString stringWithFormat:@"Invalid data source route: %@", item]);
             return nil;
         }
@@ -125,7 +126,7 @@ static void GrowingSetRoutingError(NSError **error, GrowingRoutingError code, NS
             if (![existing isEqual:route]) {
                 GrowingSetRoutingError(
                     error,
-                    GrowingRoutingErrorInvalidRoutes,
+                    GrowingRoutingInvalidRoutesError,
                     [NSString stringWithFormat:@"Conflicting routes for data source %@", route.dataSourceId]);
                 return nil;
             }
@@ -137,7 +138,7 @@ static void GrowingSetRoutingError(NSError **error, GrowingRoutingError code, NS
 
     if (![routesByDataSourceId[dataSourceId].accountId isEqualToString:accountId]) {
         GrowingSetRoutingError(error,
-                               GrowingRoutingErrorInvalidRoutes,
+                               GrowingRoutingInvalidRoutesError,
                                @"dataSourceRoutes must contain the configured accountId and dataSourceId");
         return nil;
     }
@@ -146,7 +147,7 @@ static void GrowingSetRoutingError(NSError **error, GrowingRoutingError code, NS
 }
 
 - (GrowingDataSourceRoute *)routeForDataSourceId:(NSString *)dataSourceId {
-    return [self.trackConfiguration growing_routeForDataSourceId:dataSourceId];
+    return [self.trackConfiguration routeForDataSourceId:dataSourceId];
 }
 
 - (BOOL)switchToAccountId:(NSString *)accountId
@@ -154,12 +155,12 @@ static void GrowingSetRoutingError(NSError **error, GrowingRoutingError code, NS
     dataCollectionServerHost:(NSString *)serverHost
                        error:(NSError **)error {
     if (!GrowingIsNonEmptyString(accountId) || !GrowingIsNonEmptyString(dataSourceId)) {
-        GrowingSetRoutingError(error, GrowingRoutingErrorInvalidRoute, @"accountId and dataSourceId are required");
+        GrowingSetRoutingError(error, GrowingRoutingInvalidRouteError, @"accountId and dataSourceId are required");
         return NO;
     }
 
     GrowingTrackConfiguration *configuration = self.trackConfiguration;
-    GrowingDataSourceRoute *route = [configuration growing_routeForDataSourceId:dataSourceId];
+    GrowingDataSourceRoute *route = [configuration routeForDataSourceId:dataSourceId];
     if (serverHost) {
         GrowingDataSourceRoute *candidate = [GrowingDataSourceRoute routeWithAccountId:accountId
                                                                           dataSourceId:dataSourceId
@@ -168,13 +169,13 @@ static void GrowingSetRoutingError(NSError **error, GrowingRoutingError code, NS
             if (![route isEqual:candidate]) {
                 GrowingSetRoutingError(
                     error,
-                    GrowingRoutingErrorConflictingRoute,
+                    GrowingRoutingConflictingRouteError,
                     [NSString stringWithFormat:@"The data source is already registered as %@", route]);
                 return NO;
             }
         } else if (!GrowingIsValidRoute(candidate)) {
             GrowingSetRoutingError(error,
-                                   GrowingRoutingErrorInvalidRoute,
+                                   GrowingRoutingInvalidRouteError,
                                    [NSString stringWithFormat:@"Invalid data source route: %@", candidate]);
             return NO;
         } else {
@@ -182,12 +183,12 @@ static void GrowingSetRoutingError(NSError **error, GrowingRoutingError code, NS
         }
     } else if (!route) {
         GrowingSetRoutingError(error,
-                               GrowingRoutingErrorUnregisteredRoute,
+                               GrowingRoutingUnregisteredRouteError,
                                @"The route is not registered and no collection URL is provided");
         return NO;
     } else if (![route.accountId isEqualToString:accountId]) {
         GrowingSetRoutingError(error,
-                               GrowingRoutingErrorConflictingRoute,
+                               GrowingRoutingConflictingRouteError,
                                [NSString stringWithFormat:@"The data source is registered as %@", route]);
         return NO;
     }
@@ -200,7 +201,7 @@ static void GrowingSetRoutingError(NSError **error, GrowingRoutingError code, NS
     if (![routes containsObject:route]) {
         routes = [routes arrayByAddingObject:route];
     }
-    [configuration growing_activateRoute:route withRoutes:routes];
+    [configuration activateRoute:route withRoutes:routes];
     return YES;
 }
 

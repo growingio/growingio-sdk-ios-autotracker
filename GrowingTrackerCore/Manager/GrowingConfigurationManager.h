@@ -24,27 +24,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 FOUNDATION_EXPORT NSString *const GrowingRoutingErrorDomain;
 
+/// 路由错误码
 typedef NS_ENUM(NSInteger, GrowingRoutingError) {
-    /// 初始路由缺失、类型错误、互相冲突、不包含配置的项目和数据源，或其中有不合法的路由
-    GrowingRoutingErrorInvalidRoutes = 1,
-    /// 切换到未注册的路由时没有提供采集地址
-    GrowingRoutingErrorUnregisteredRoute,
-    /// 数据源已注册在其他项目下，或已注册了不同的采集地址
-    GrowingRoutingErrorConflictingRoute,
-    /// 路由不合法：accountId 或 dataSourceId 为空，或采集地址格式不合法
-    GrowingRoutingErrorInvalidRoute,
+    GrowingRoutingInvalidRoutesError = 500,  /// 初始路由不合法
+    GrowingRoutingUnregisteredRouteError,    /// 路由未注册，且未提供采集地址
+    GrowingRoutingConflictingRouteError,     /// 与已注册的路由冲突
+    GrowingRoutingInvalidRouteError,         /// 路由不合法
 };
-
-@interface GrowingTrackConfiguration (GrowingRouting)
-
-/// 按数据源查找已注册的路由
-- (nullable GrowingDataSourceRoute *)growing_routeForDataSourceId:(NSString *)dataSourceId;
-
-/// 在同一把锁内更新路由表，并把 accountId、dataSourceId、dataCollectionServerHost 切换为 route 中的值，
-/// 保证其他线程读取时不会看到只更新了一部分的状态
-- (void)growing_activateRoute:(GrowingDataSourceRoute *)route withRoutes:(NSArray<GrowingDataSourceRoute *> *)routes;
-
-@end
 
 @interface GrowingConfigurationManager : NSObject
 
