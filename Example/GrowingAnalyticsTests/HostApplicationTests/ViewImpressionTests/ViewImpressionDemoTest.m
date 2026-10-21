@@ -34,6 +34,8 @@ static NSTimeInterval const kImpressionEventTimeout = 3.0;
 
 @property (nonatomic, strong) UIWindow *window;
 @property (nonatomic, strong) UIViewController *controller;
+/// 测试窗口会成为 key window，结束后要还给宿主 App，后续 KIF 用例依赖它
+@property (nonatomic, weak) UIWindow *previousKeyWindow;
 
 @end
 
@@ -49,6 +51,7 @@ static NSTimeInterval const kImpressionEventTimeout = 3.0;
 - (void)tearDown {
     self.window.hidden = YES;
     self.window = nil;
+    [self.previousKeyWindow makeKeyWindow];
     self.controller = nil;
     [GrowingViewImpression resetAllViewImpressionState];
     [MockEventQueue.sharedQueue cleanQueue];
@@ -344,12 +347,27 @@ static NSTimeInterval const kImpressionEventTimeout = 3.0;
     [self pumpRunLoop:seconds];
 }
 
+- (UIWindowScene *)activeWindowScene {
+    for (UIScene *scene in UIApplication.sharedApplication.connectedScenes) {
+        if ([scene isKindOfClass:UIWindowScene.class]) {
+            return (UIWindowScene *)scene;
+        }
+    }
+    return nil;
+}
+
 - (void)loadDemoPage {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"UICatalogTests" bundle:nil];
     self.controller = [storyboard instantiateViewControllerWithIdentifier:@"ViewImpressionDemo"];
     XCTAssertEqualObjects(NSStringFromClass(self.controller.class), @"GIOViewImpressionViewController");
 
-    self.window = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 390, 844)];
+    // Example 使用 UIScene 生命周期，不属于任何 scene 的窗口不会显示，UIKit 也不会自动为它布局，
+    // 列表滚动后就不会生成新的 cell。因此把测试窗口挂到当前的 window scene 上
+    UIWindowScene *scene = [self activeWindowScene];
+    XCTAssertNotNil(scene, @"宿主 App 没有可用的 window scene");
+    self.previousKeyWindow = scene.keyWindow;
+    self.window = scene ? [[UIWindow alloc] initWithWindowScene:scene] : [[UIWindow alloc] init];
+    self.window.frame = CGRectMake(0, 0, 390, 844);
     self.window.rootViewController = self.controller;
     [self.window makeKeyAndVisible];
     [self.controller.view layoutIfNeeded];
