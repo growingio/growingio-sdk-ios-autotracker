@@ -24,6 +24,12 @@
 #import "MockEventQueue.h"
 #import "Modules/ViewImpression/Public/GrowingViewImpression.h"
 
+/// 曝光检测按 viewImpressionCheckInterval（默认 0.5 秒）节流。等元素离开可视区或确认没有曝光时，
+/// 至少要覆盖一个检测周期并留出余量，才能保证期间发生过检测
+static NSTimeInterval const kImpressionCheckSettleTime = 0.8;
+/// 等待曝光事件的最长时间
+static NSTimeInterval const kImpressionEventTimeout = 3.0;
+
 @interface ViewImpressionDemoTest : XCTestCase
 
 @property (nonatomic, strong) UIWindow *window;
@@ -53,14 +59,8 @@
 - (void)testDemoPageProducesImpressions {
     [self loadDemoPage];
 
-    XCTAssertTrue([MockEventQueue.sharedQueue waitForEventsFor:GrowingEventTypeCustom count:1 timeout:5.0]);
-
-    NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
-    NSMutableSet<NSString *> *eventNames = [NSMutableSet set];
-    for (GrowingCustomEvent *event in events) {
-        [eventNames addObject:event.eventName];
-    }
-    XCTAssertTrue([eventNames containsObject:@"imp_basic"], @"实际捕获：%@", eventNames);
+    // 宿主 App 自身也会发自定义事件，只等本页的曝光，不能以收到任意自定义事件为准
+    XCTAssertNotNil([self waitForEventNamed:@"imp_basic"], @"实际捕获：%@", [self capturedEventNames]);
 }
 
 /// 复用 cell 的子视图：滚动列表让角标视图被反复复用，
@@ -74,12 +74,13 @@
 
     CGRect listFrame = [badgeList convertRect:badgeList.bounds toView:page];
     page.contentOffset = CGPointMake(0, listFrame.origin.y - 20);
-    [self pumpRunLoop:0.4];
+    [self pumpRunLoop:kImpressionCheckSettleTime];
 
     [self resetCapturedEvents];
+    // 每滚一步都停留一个检测周期以上，保证新出现的角标都经过了检测
     for (NSInteger offset = 0; offset <= 900; offset += 150) {
         badgeList.contentOffset = CGPointMake(0, offset);
-        [self pumpRunLoop:0.3];
+        [self pumpRunLoop:kImpressionCheckSettleTime];
     }
 
     NSArray<GrowingBaseEvent *> *events = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeCustom];
@@ -178,11 +179,10 @@
 
     UIScrollView *page = [self pageScrollView];
     page.contentOffset = CGPointMake(0, 400);
-    [self pumpRunLoop:0.5];
+    [self pumpRunLoop:kImpressionCheckSettleTime];
     page.contentOffset = CGPointZero;
-    [self pumpRunLoop:0.5];
 
-    GrowingCustomEvent *event = [self lastEventNamed:@"imp_basic"];
+    GrowingCustomEvent *event = [self waitForEventNamed:@"imp_basic"];
     XCTAssertNotNil(event);
     XCTAssertNotNil(event.attributes[@"dynamic_timestamp"]);
 }
@@ -193,23 +193,21 @@
 
     UIView *card = [self cardLabeled:@"imp_slot_a + imp_slot_b"];
     XCTAssertNotNil(card);
-    [self scrollPageToView:card dwell:0.5];
-
-    NSSet<NSString *> *before = [self capturedEventNames];
-    XCTAssertTrue([before containsObject:@"imp_slot_a"]);
-    XCTAssertTrue([before containsObject:@"imp_slot_b"]);
+    [self scrollPageToView:card dwell:0];
+    XCTAssertNotNil([self waitForEventNamed:@"imp_slot_a"]);
+    XCTAssertNotNil([self waitForEventNamed:@"imp_slot_b"]);
 
     [[self buttonWithTitlePrefix:@"移除 slot_a"] sendActionsForControlEvents:UIControlEventTouchUpInside];
     [self resetCapturedEvents];
 
     UIScrollView *page = [self pageScrollView];
     page.contentOffset = CGPointZero;
-    [self pumpRunLoop:0.4];
-    [self scrollPageToView:card dwell:0.5];
+    [self pumpRunLoop:kImpressionCheckSettleTime];
+    [self scrollPageToView:card dwell:0];
 
-    NSSet<NSString *> *after = [self capturedEventNames];
-    XCTAssertTrue([after containsObject:@"imp_slot_b"]);
-    XCTAssertFalse([after containsObject:@"imp_slot_a"], @"slot_a 已移除却仍在发送");
+    // slot_b 已经重新曝光，说明这次进入可视区的检测已完成，此时再确认 slot_a 没有发送
+    XCTAssertNotNil([self waitForEventNamed:@"imp_slot_b"]);
+    XCTAssertFalse([[self capturedEventNames] containsObject:@"imp_slot_a"], @"slot_a 已移除却仍在发送");
 }
 
 /// 更新属性按钮：不产生新曝光，但下一次曝光带上新值
@@ -218,20 +216,21 @@
 
     UIView *card = [self cardLabeled:@"imp_update"];
     XCTAssertNotNil(card);
-    [self scrollPageToView:card dwell:0.5];
-    XCTAssertNotNil([self lastEventNamed:@"imp_update"]);
+    [self scrollPageToView:card dwell:0];
+    XCTAssertNotNil([self waitForEventNamed:@"imp_update"]);
 
     [self resetCapturedEvents];
     [[self buttonWithTitlePrefix:@"更新属性"] sendActionsForControlEvents:UIControlEventTouchUpInside];
-    [self pumpRunLoop:0.5];
+    [self pumpRunLoop:kImpressionCheckSettleTime];
     XCTAssertNil([self lastEventNamed:@"imp_update"], @"更新属性不应触发重新曝光");
 
+    // 先停留一个检测周期以上让卡片被判定为离开，回到可视区时才会重新曝光
     UIScrollView *page = [self pageScrollView];
     page.contentOffset = CGPointZero;
-    [self pumpRunLoop:0.4];
-    [self scrollPageToView:card dwell:0.5];
+    [self pumpRunLoop:kImpressionCheckSettleTime];
+    [self scrollPageToView:card dwell:0];
 
-    XCTAssertEqualObjects([self lastEventNamed:@"imp_update"].attributes[@"count"], @"1");
+    XCTAssertEqualObjects([self waitForEventNamed:@"imp_update"].attributes[@"count"], @"1");
 }
 
 /// 重置状态按钮：只曝光一次的元素可以再次曝光
@@ -240,14 +239,13 @@
 
     UIView *card = [self cardLabeled:@"imp_once"];
     XCTAssertNotNil(card);
-    [self scrollPageToView:card dwell:0.5];
-    XCTAssertNotNil([self lastEventNamed:@"imp_once"]);
+    [self scrollPageToView:card dwell:0];
+    XCTAssertNotNil([self waitForEventNamed:@"imp_once"]);
 
     [self resetCapturedEvents];
     [[self buttonWithTitlePrefix:@"重置状态"] sendActionsForControlEvents:UIControlEventTouchUpInside];
-    [self pumpRunLoop:0.5];
 
-    XCTAssertNotNil([self lastEventNamed:@"imp_once"], @"重置后应当可以再次曝光");
+    XCTAssertNotNil([self waitForEventNamed:@"imp_once"], @"重置后应当可以再次曝光");
 }
 
 #pragma mark - Helper
@@ -264,6 +262,17 @@
         [names addObject:event.eventName];
     }
     return names;
+}
+
+/// 驱动 runloop 直到收到指定名称的曝光事件，超时返回 nil
+- (GrowingCustomEvent *)waitForEventNamed:(NSString *)eventName {
+    NSDate *deadline = [NSDate dateWithTimeIntervalSinceNow:kImpressionEventTimeout];
+    GrowingCustomEvent *event = [self lastEventNamed:eventName];
+    while (!event && deadline.timeIntervalSinceNow > 0) {
+        [self pumpRunLoop:0.05];
+        event = [self lastEventNamed:eventName];
+    }
+    return event;
 }
 
 - (GrowingCustomEvent *)lastEventNamed:(NSString *)eventName {
