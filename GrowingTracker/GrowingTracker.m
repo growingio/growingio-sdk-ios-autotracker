@@ -50,9 +50,9 @@ static GrowingTracker *sharedInstance = nil;
         @throw [NSException exceptionWithName:@"初始化异常" reason:@"dataSourceId不能为空" userInfo:nil];
     }
 
-    NSError *mappingError = nil;
-    if (![GrowingConfigurationManager validatedServerHostMappingForConfiguration:configuration error:&mappingError]) {
-        @throw [NSException exceptionWithName:@"初始化异常" reason:mappingError.localizedDescription userInfo:nil];
+    NSError *routesError = nil;
+    if (![GrowingConfigurationManager validatedRoutesForConfiguration:configuration error:&routesError]) {
+        @throw [NSException exceptionWithName:@"初始化异常" reason:routesError.localizedDescription userInfo:nil];
     }
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{

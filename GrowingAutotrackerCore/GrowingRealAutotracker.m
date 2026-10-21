@@ -73,8 +73,10 @@ GrowingPropertyDefine(UITextView, NSString *, growingHookOldText, setGrowingHook
     return self;
 }
 
-- (BOOL)switchToDataSourceId_unsafe:(NSString *)dataSourceId dataCollectionServerHost:(NSString *)serverHost {
-    if (![super switchToDataSourceId_unsafe:dataSourceId dataCollectionServerHost:serverHost]) {
+- (BOOL)switchToAccountId_unsafe:(NSString *)accountId
+                    dataSourceId:(NSString *)dataSourceId
+        dataCollectionServerHost:(NSString *)serverHost {
+    if (![super switchToAccountId_unsafe:accountId dataSourceId:dataSourceId dataCollectionServerHost:serverHost]) {
         return NO;
     }
     [GrowingDispatchManager dispatchInMainThread:^{

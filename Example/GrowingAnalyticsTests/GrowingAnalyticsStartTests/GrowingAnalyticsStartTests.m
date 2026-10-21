@@ -54,11 +54,13 @@
                                  @"初始化异常");
 
     config.dataSourceId = @"xctest";
-    config.serverHostMapping = @{@"other-source": @"https://other.example.com"};
+    config.dataSourceRoutes = @[[GrowingDataSourceRoute routeWithAccountId:@"xctest"
+                                                              dataSourceId:@"other-source"
+                                                  dataCollectionServerHost:@"https://other.example.com"]];
     XCTAssertThrowsSpecificNamed([GrowingTracker startWithConfiguration:config launchOptions:nil],
                                  NSException,
                                  @"初始化异常");
-    config.serverHostMapping = nil;
+    config.dataSourceRoutes = nil;
     [GrowingTracker startWithConfiguration:config launchOptions:nil];
 
     [GrowingDispatchManager
@@ -89,11 +91,13 @@
                                  @"初始化异常");
 
     config.dataSourceId = @"xctest";
-    config.serverHostMapping = @{@"other-source": @"https://other.example.com"};
+    config.dataSourceRoutes = @[[GrowingDataSourceRoute routeWithAccountId:@"xctest"
+                                                              dataSourceId:@"other-source"
+                                                  dataCollectionServerHost:@"https://other.example.com"]];
     XCTAssertThrowsSpecificNamed([GrowingAutotracker startWithConfiguration:config launchOptions:nil],
                                  NSException,
                                  @"初始化异常");
-    config.serverHostMapping = nil;
+    config.dataSourceRoutes = nil;
     [GrowingAutotracker startWithConfiguration:config launchOptions:nil];
 
     [GrowingDispatchManager

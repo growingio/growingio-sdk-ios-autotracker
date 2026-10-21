@@ -54,6 +54,15 @@ static BOOL GrowingIsValidServerHost(id serverHost) {
     return !components.user && !components.password && !components.query && !components.fragment;
 }
 
+static BOOL GrowingIsValidRoute(id route) {
+    if (![route isKindOfClass:GrowingDataSourceRoute.class]) {
+        return NO;
+    }
+    GrowingDataSourceRoute *candidate = (GrowingDataSourceRoute *)route;
+    return GrowingIsNonEmptyString(candidate.accountId) && GrowingIsNonEmptyString(candidate.dataSourceId) &&
+           GrowingIsValidServerHost(candidate.dataCollectionServerHost);
+}
+
 static void GrowingSetRoutingError(NSError **error, GrowingRoutingError code, NSString *description) {
     if (error) {
         *error = [NSError errorWithDomain:GrowingRoutingErrorDomain
@@ -74,87 +83,116 @@ static void GrowingSetRoutingError(NSError **error, GrowingRoutingError code, NS
     return _sharedInstance;
 }
 
-+ (NSDictionary<NSString *, NSString *> *)validatedServerHostMappingForConfiguration:
-                                              (GrowingTrackConfiguration *)configuration
-                                                                               error:(NSError **)error {
++ (NSArray<GrowingDataSourceRoute *> *)validatedRoutesForConfiguration:(GrowingTrackConfiguration *)configuration
+                                                                 error:(NSError **)error {
+    NSString *accountId = configuration.accountId;
     NSString *dataSourceId = configuration.dataSourceId;
-    NSDictionary *input = configuration.serverHostMapping;
-    // 只配置了 dataCollectionServerHost 时沿用旧行为、不校验地址格式，避免老用户升级后初始化抛异常
-    BOOL isLegacyServerHost = input == nil;
-    if (isLegacyServerHost && dataSourceId.length > 0 && configuration.dataCollectionServerHost.length > 0) {
-        input = @{dataSourceId: configuration.dataCollectionServerHost};
-    }
-    if (![input isKindOfClass:NSDictionary.class] || dataSourceId.length == 0) {
-        GrowingSetRoutingError(error,
-                               GrowingRoutingErrorInvalidServerHostMapping,
-                               @"Invalid data source or server host mapping");
+    if (!GrowingIsNonEmptyString(accountId) || !GrowingIsNonEmptyString(dataSourceId)) {
+        GrowingSetRoutingError(error, GrowingRoutingErrorInvalidRoutes, @"accountId and dataSourceId are required");
         return nil;
     }
 
-    NSMutableDictionary<NSString *, NSString *> *mapping = [NSMutableDictionary dictionaryWithCapacity:input.count];
-    for (id key in input) {
-        id serverHost = input[key];
-        BOOL validServerHost =
-            isLegacyServerHost ? GrowingIsNonEmptyString(serverHost) : GrowingIsValidServerHost(serverHost);
-        if (!GrowingIsNonEmptyString(key) || !validServerHost) {
-            GrowingSetRoutingError(
-                error,
-                GrowingRoutingErrorInvalidServerHostMapping,
-                [NSString stringWithFormat:@"Invalid collection URL for data source %@: %@", key, serverHost]);
+    NSArray *input = configuration.dataSourceRoutes;
+    if (!input) {
+        // 只配置了 dataCollectionServerHost 时沿用旧行为、不校验地址格式，避免老用户升级后初始化抛异常
+        NSString *serverHost = configuration.dataCollectionServerHost;
+        if (!GrowingIsNonEmptyString(serverHost)) {
+            GrowingSetRoutingError(error, GrowingRoutingErrorInvalidRoutes, @"dataCollectionServerHost is required");
             return nil;
         }
-        mapping[[key copy]] = [serverHost copy];
+        return @[[GrowingDataSourceRoute routeWithAccountId:accountId
+                                               dataSourceId:dataSourceId
+                                   dataCollectionServerHost:serverHost]];
     }
-    if (!mapping[dataSourceId]) {
-        GrowingSetRoutingError(error,
-                               GrowingRoutingErrorInvalidServerHostMapping,
-                               @"The server host mapping does not contain the current data source");
+    if (![input isKindOfClass:NSArray.class]) {
+        GrowingSetRoutingError(error, GrowingRoutingErrorInvalidRoutes, @"dataSourceRoutes must be an array");
         return nil;
     }
 
-    return mapping.copy;
-}
-
-- (NSString *)serverHostForDataSourceId:(NSString *)dataSourceId {
-    return dataSourceId.length ? self.trackConfiguration.serverHostMapping[dataSourceId] : nil;
-}
-
-- (BOOL)switchToDataSourceId:(NSString *)dataSourceId
-    dataCollectionServerHost:(NSString *)serverHost
-                       error:(NSError **)error {
-    if (!GrowingIsNonEmptyString(dataSourceId) || (serverHost && !GrowingIsNonEmptyString(serverHost))) {
-        GrowingSetRoutingError(error, GrowingRoutingErrorInvalidDataSource, @"Invalid data source or collection URL");
-        return NO;
+    NSMutableArray<GrowingDataSourceRoute *> *routes = [NSMutableArray arrayWithCapacity:input.count];
+    NSMutableDictionary<NSString *, GrowingDataSourceRoute *> *routesByDataSourceId =
+        [NSMutableDictionary dictionaryWithCapacity:input.count];
+    for (id item in input) {
+        if (!GrowingIsValidRoute(item)) {
+            GrowingSetRoutingError(error,
+                                   GrowingRoutingErrorInvalidRoutes,
+                                   [NSString stringWithFormat:@"Invalid data source route: %@", item]);
+            return nil;
+        }
+        GrowingDataSourceRoute *route = (GrowingDataSourceRoute *)item;
+        GrowingDataSourceRoute *existing = routesByDataSourceId[route.dataSourceId];
+        if (existing) {
+            if (![existing isEqual:route]) {
+                GrowingSetRoutingError(
+                    error,
+                    GrowingRoutingErrorInvalidRoutes,
+                    [NSString stringWithFormat:@"Conflicting routes for data source %@", route.dataSourceId]);
+                return nil;
+            }
+            continue;
+        }
+        routesByDataSourceId[route.dataSourceId] = route;
+        [routes addObject:route];
     }
 
-    NSString *registeredServerHost = [self serverHostForDataSourceId:dataSourceId];
-    if (registeredServerHost) {
-        if (serverHost && ![serverHost isEqualToString:registeredServerHost]) {
-            GrowingSetRoutingError(error,
-                                   GrowingRoutingErrorConflictingServerHost,
-                                   @"The data source already has a different collection URL");
-            return NO;
-        }
-    } else if (!serverHost) {
+    if (![routesByDataSourceId[dataSourceId].accountId isEqualToString:accountId]) {
         GrowingSetRoutingError(error,
-                               GrowingRoutingErrorInvalidDataSource,
-                               @"The data source is not registered and no collection URL is provided");
-        return NO;
-    } else if (!GrowingIsValidServerHost(serverHost)) {
-        GrowingSetRoutingError(error,
-                               GrowingRoutingErrorInvalidServerHost,
-                               [NSString stringWithFormat:@"Invalid collection URL: %@", serverHost]);
+                               GrowingRoutingErrorInvalidRoutes,
+                               @"dataSourceRoutes must contain the configured accountId and dataSourceId");
+        return nil;
+    }
+
+    return routes.copy;
+}
+
+- (GrowingDataSourceRoute *)routeForDataSourceId:(NSString *)dataSourceId {
+    return [self.trackConfiguration growing_routeForDataSourceId:dataSourceId];
+}
+
+- (BOOL)switchToAccountId:(NSString *)accountId
+                dataSourceId:(NSString *)dataSourceId
+    dataCollectionServerHost:(NSString *)serverHost
+                       error:(NSError **)error {
+    if (!GrowingIsNonEmptyString(dataSourceId)) {
+        GrowingSetRoutingError(error, GrowingRoutingErrorInvalidDataSource, @"Invalid data source");
         return NO;
     }
 
     GrowingTrackConfiguration *configuration = self.trackConfiguration;
+    GrowingDataSourceRoute *route = [configuration growing_routeForDataSourceId:dataSourceId];
+    BOOL isRegistering = accountId != nil || serverHost != nil;
+    if (isRegistering) {
+        GrowingDataSourceRoute *candidate = [GrowingDataSourceRoute routeWithAccountId:accountId
+                                                                          dataSourceId:dataSourceId
+                                                              dataCollectionServerHost:serverHost];
+        if (route) {
+            if (![route isEqual:candidate]) {
+                GrowingSetRoutingError(error,
+                                       GrowingRoutingErrorConflictingRoute,
+                                       @"The data source is already registered with a different route");
+                return NO;
+            }
+        } else if (!GrowingIsValidRoute(candidate)) {
+            GrowingSetRoutingError(error,
+                                   GrowingRoutingErrorInvalidRoute,
+                                   [NSString stringWithFormat:@"Invalid data source route: %@", candidate]);
+            return NO;
+        } else {
+            route = candidate;
+        }
+    } else if (!route) {
+        GrowingSetRoutingError(error, GrowingRoutingErrorInvalidDataSource, @"The data source is not registered");
+        return NO;
+    }
+
     if ([dataSourceId isEqualToString:configuration.dataSourceId]) {
         return NO;
     }
-    NSMutableDictionary<NSString *, NSString *> *mapping =
-        configuration.serverHostMapping.mutableCopy ?: [NSMutableDictionary dictionary];
-    mapping[dataSourceId] = registeredServerHost ?: serverHost;
-    [configuration growing_updateDataSourceId:dataSourceId serverHostMapping:mapping];
+    NSArray<GrowingDataSourceRoute *> *routes = configuration.dataSourceRoutes ?: @[];
+    if (![routes containsObject:route]) {
+        routes = [routes arrayByAddingObject:route];
+    }
+    [configuration growing_activateRoute:route withRoutes:routes];
     return YES;
 }
 

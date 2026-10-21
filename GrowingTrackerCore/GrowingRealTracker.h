@@ -71,12 +71,17 @@ FOUNDATION_EXPORT const int GrowingTrackerVersionCode;
 /// 切换到已注册的数据源。
 - (void)switchToDataSourceId:(NSString *)dataSourceId;
 
-/// 注册并切换数据源；内部传 nil 时使用已注册地址。
+/// 注册数据源路由并切换到该数据源。
 /// 切换在事件线程处理；校验失败记录日志并保持原状态。
-- (void)switchToDataSourceId:(NSString *)dataSourceId dataCollectionServerHost:(NSString *_Nullable)serverHost;
+- (void)switchToAccountId:(NSString *)accountId
+                dataSourceId:(NSString *)dataSourceId
+    dataCollectionServerHost:(NSString *)serverHost;
 
 /// 仅在事件线程调用；子类可根据返回值补充切换成功后的处理。
-- (BOOL)switchToDataSourceId_unsafe:(NSString *)dataSourceId dataCollectionServerHost:(NSString *_Nullable)serverHost;
+/// accountId 和 serverHost 都为 nil 时切换到已注册的数据源。
+- (BOOL)switchToAccountId_unsafe:(NSString *_Nullable)accountId
+                    dataSourceId:(NSString *)dataSourceId
+        dataCollectionServerHost:(NSString *_Nullable)serverHost;
 
 /// 同步获取设备id，又称为匿名用户id，SDK 自动生成用来定义唯一设备。
 - (NSString *)getDeviceId;

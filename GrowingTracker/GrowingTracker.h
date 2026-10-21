@@ -52,10 +52,13 @@ NS_ASSUME_NONNULL_BEGIN
 /// 切换在事件线程处理。
 - (void)switchToDataSourceId:(NSString *)dataSourceId;
 
-/// 注册数据源及采集地址，并切换到该数据源；已注册地址不能覆盖。
+/// 注册数据源路由并切换到该数据源；dataSourceId 已注册时，accountId 和采集地址必须与已注册的一致。
 /// 采集地址须为带 host 的 http(s) 地址，不能包含用户信息、query 或 fragment。
+/// 切换到不同的 accountId 时会清除登录用户 ID 和 userKey。
 /// 切换在事件线程处理；校验失败记录日志并保持原状态。
-- (void)switchToDataSourceId:(NSString *)dataSourceId dataCollectionServerHost:(NSString *)serverHost;
+- (void)switchToAccountId:(NSString *)accountId
+                dataSourceId:(NSString *)dataSourceId
+    dataCollectionServerHost:(NSString *)serverHost;
 
 /// 当用户登录之后调用setLoginUserId API，设置登录用户ID。
 /// @param userId 用户ID

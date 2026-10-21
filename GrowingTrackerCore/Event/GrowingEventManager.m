@@ -151,37 +151,57 @@ static GrowingEventManager *sharedInstance = nil;
 }
 
 - (void)switchToDataSourceId:(NSString *)dataSourceId {
-    [self switchToDataSourceId:dataSourceId dataCollectionServerHost:nil];
-}
-
-- (void)switchToDataSourceId:(NSString *)dataSourceId dataCollectionServerHost:(NSString *)serverHost {
-    NSString *source = [dataSourceId isKindOfClass:NSString.class] ? [dataSourceId copy] : nil;
-    NSString *host = [serverHost copy];
+    NSString *source = [dataSourceId copy];
     [GrowingDispatchManager dispatchInGrowingThread:^{
-        [self switchToDataSourceId_unsafe:source dataCollectionServerHost:host];
+        [self switchToAccountId_unsafe:nil dataSourceId:source dataCollectionServerHost:nil];
     }];
 }
 
-- (BOOL)switchToDataSourceId_unsafe:(NSString *)dataSourceId dataCollectionServerHost:(NSString *)serverHost {
+- (void)switchToAccountId:(NSString *)accountId
+                dataSourceId:(NSString *)dataSourceId
+    dataCollectionServerHost:(NSString *)serverHost {
+    NSString *account = [accountId copy];
+    NSString *source = [dataSourceId copy];
+    NSString *host = [serverHost copy];
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        [self switchToAccountId_unsafe:account dataSourceId:source dataCollectionServerHost:host];
+    }];
+}
+
+- (BOOL)switchToAccountId_unsafe:(NSString *)accountId
+                    dataSourceId:(NSString *)dataSourceId
+        dataCollectionServerHost:(NSString *)serverHost {
     GrowingConfigurationManager *manager = GrowingConfigurationManager.sharedInstance;
     if (!self.allEventChannels.count || !manager.trackConfiguration) {
         GIOLogError(@"Routing switch rejected source=%@ reason=SDK is not initialized", dataSourceId);
         return NO;
     }
+    NSString *previousAccountId = manager.trackConfiguration.accountId;
     NSString *previousDataSourceId = manager.trackConfiguration.dataSourceId;
-    BOOL wasRegistered = [manager serverHostForDataSourceId:dataSourceId].length > 0;
+    BOOL wasRegistered = [manager routeForDataSourceId:dataSourceId] != nil;
     NSError *error = nil;
-    BOOL changed = [manager switchToDataSourceId:dataSourceId dataCollectionServerHost:serverHost error:&error];
+    BOOL changed = [manager switchToAccountId:accountId
+                                 dataSourceId:dataSourceId
+                     dataCollectionServerHost:serverHost
+                                        error:&error];
     if (!changed) {
         if (error) {
             GIOLogError(@"Routing switch rejected source=%@ reason=%@", dataSourceId, error.localizedDescription);
         }
         return NO;
     }
+
+    NSString *currentAccountId = manager.trackConfiguration.accountId;
+    if (![currentAccountId isEqualToString:previousAccountId]) {
+        // 登录用户属于原项目，切换项目时清除；须在生成 VISIT 之前，避免新会话带上原项目的用户
+        [GrowingSession.currentSession setLoginUserId:nil];
+    }
     [GrowingSession.currentSession refreshSessionId];
     [GrowingSession.currentSession generateVisit];
-    GIOLogInfo(@"Routing switch %@ -> %@ session=%@",
+    GIOLogInfo(@"Routing switch %@/%@ -> %@/%@ session=%@",
+               previousAccountId,
                previousDataSourceId,
+               currentAccountId,
                dataSourceId,
                GrowingSession.currentSession.sessionId);
     if (!wasRegistered) {
@@ -349,7 +369,7 @@ static GrowingEventManager *sharedInstance = nil;
     NSMutableSet<NSString *> *unroutableSources = [NSMutableSet set];
     for (id<GrowingEventPersistenceProtocol> event in events) {
         NSString *source = GrowingDataSourceIdOfEvent(event);
-        if (!source || ![GrowingConfigurationManager.sharedInstance serverHostForDataSourceId:source].length) {
+        if (!source || ![GrowingConfigurationManager.sharedInstance routeForDataSourceId:source]) {
             if (event.eventUUID.length) {
                 [unroutableKeys addObject:event.eventUUID];
             }
@@ -429,7 +449,8 @@ static GrowingEventManager *sharedInstance = nil;
     NSArray<id<GrowingEventPersistenceProtocol>> *events = groups.firstObject;
     NSArray *remainingGroups = [groups subarrayWithRange:NSMakeRange(1, groups.count - 1)];
     NSString *source = GrowingDataSourceIdOfEvent(events.firstObject);
-    NSString *serverHost = [GrowingConfigurationManager.sharedInstance serverHostForDataSourceId:source];
+    // 路由只增不减，分组时能查到的路由在发送时仍然存在
+    GrowingDataSourceRoute *route = [GrowingConfigurationManager.sharedInstance routeForDataSourceId:source];
 
 #ifdef DEBUG
     [self prettyLogForEvents:events withChannel:channel];
@@ -450,11 +471,11 @@ static GrowingEventManager *sharedInstance = nil;
         return;
     }
 
-    GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    // 按事件所属的数据源确定项目和采集地址，而不是当前数据源
     NSObject<GrowingRequestProtocol> *eventRequest =
         [[GrowingEventRequest alloc] initWithEvents:rawEvents
-                                         serverHost:serverHost
-                                          accountId:trackConfiguration.accountId];
+                                         serverHost:route.dataCollectionServerHost
+                                          accountId:route.accountId];
     GIOLogDebug(@"Upload source=%@ channel=%@ url=%@", source, channel.name, eventRequest.absoluteURL);
     __block BOOL completed = NO;
     [service

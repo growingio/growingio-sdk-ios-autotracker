@@ -153,7 +153,10 @@
             GrowingTrackConfiguration *config =
                 [GrowingAutotrackConfiguration configurationWithAccountId:@"routing-test"];
             config.dataSourceId = @"A";
-            config.serverHostMapping = @{@"A": @"https://a.example.com/base", @"B": @"https://b.example.com"};
+            config.dataSourceRoutes = @[
+                [self routeWithDataSourceId:@"A" host:@"https://a.example.com/base"],
+                [self routeWithDataSourceId:@"B" host:@"https://b.example.com"],
+            ];
             config.useProtobuf = NO;
             config.dataCollectionEnabled = YES;
             GrowingConfigurationManager.sharedInstance.trackConfiguration = config;
@@ -189,63 +192,119 @@
 
 #pragma mark - Configuration and Switching
 
-- (void)testMappingValidationAndRequestSnapshot {
+- (void)testRouteValidationAndRequestSnapshot {
     GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
     GrowingTrackConfiguration *input = [config copy];
-    input.serverHostMapping = @{@"A": @"HTTPS://A.EXAMPLE.COM:443/base/"};
-    XCTAssertEqualObjects([GrowingConfigurationManager validatedServerHostMappingForConfiguration:input
-                                                                                            error:nil][@"A"],
-                          @"HTTPS://A.EXAMPLE.COM:443/base/");
-    for (id host in @[@"", @42, NSNull.null]) {
-        input.serverHostMapping = @{@"A": host};
-        XCTAssertNil([GrowingConfigurationManager validatedServerHostMappingForConfiguration:input error:nil]);
+    input.dataSourceRoutes = @[[self routeWithDataSourceId:@"A" host:@"HTTPS://A.EXAMPLE.COM:443/base/"]];
+    XCTAssertEqualObjects([GrowingConfigurationManager validatedRoutesForConfiguration:input error:nil],
+                          input.dataSourceRoutes);
+    id nonStringHost = @42;
+    NSArray *invalidRoutes = @[
+        @"A",
+        NSNull.null,
+        [self routeWithDataSourceId:@"A" host:nonStringHost],
+        [GrowingDataSourceRoute routeWithAccountId:@"" dataSourceId:@"A" dataCollectionServerHost:@"https://a.com"],
+        [GrowingDataSourceRoute routeWithAccountId:@"routing-test"
+                                      dataSourceId:@""
+                          dataCollectionServerHost:@"https://a.com"],
+    ];
+    for (id route in invalidRoutes) {
+        input.dataSourceRoutes = @[[self routeWithDataSourceId:@"A" host:@"https://a.example.com"], route];
+        XCTAssertNil([GrowingConfigurationManager validatedRoutesForConfiguration:input error:nil], @"%@", route);
     }
+
+    // 请求创建时确定项目和采集地址，之后切换不影响已创建的请求
+    GrowingDataSourceRoute *routeA = [GrowingConfigurationManager.sharedInstance routeForDataSourceId:@"A"];
     GrowingEventRequest *request =
         [[GrowingEventRequest alloc] initWithEvents:[@"[]" dataUsingEncoding:NSUTF8StringEncoding]
-                                         serverHost:config.serverHostMapping[@"A"]
-                                          accountId:config.accountId];
-    config.dataCollectionServerHost = @"https://b.example.com";
-    config.dataSourceId = @"B";
+                                         serverHost:routeA.dataCollectionServerHost
+                                          accountId:routeA.accountId];
+    GrowingDataSourceRoute *other = [GrowingDataSourceRoute routeWithAccountId:@"other-account"
+                                                                  dataSourceId:@"O"
+                                                      dataCollectionServerHost:@"https://o.example.com"];
+    [config growing_activateRoute:other withRoutes:[config.dataSourceRoutes arrayByAddingObject:other]];
     XCTAssertEqualObjects(request.absoluteURL.host, @"a.example.com");
     XCTAssertEqualObjects(request.absoluteURL.path, @"/base/v3/projects/routing-test/collect");
-    config.serverHostMapping = @{@"A": @"https://a.example.com"};
-    XCTAssertNil([GrowingConfigurationManager validatedServerHostMappingForConfiguration:config error:nil]);
 }
 
-- (void)testServerHostMappingValidatesCollectionURLs {
+- (void)testRoutesRejectConflictsAndRequireCurrentRoute {
     GrowingTrackConfiguration *input = [GrowingConfigurationManager.sharedInstance.trackConfiguration copy];
-    input.dataSourceId = @"A";
+    GrowingDataSourceRoute *routeA = [self routeWithDataSourceId:@"A" host:@"https://a.example.com"];
+
+    // 完全相同的路由视为重复配置，合并为一条
+    input.dataSourceRoutes = @[routeA, [self routeWithDataSourceId:@"A" host:@"https://a.example.com"]];
+    XCTAssertEqualObjects([GrowingConfigurationManager validatedRoutesForConfiguration:input error:nil], @[routeA]);
+
+    NSArray<NSArray<GrowingDataSourceRoute *> *> *invalidInputs = @[
+        // 同一数据源对应不同的采集地址或项目
+        @[routeA, [self routeWithDataSourceId:@"A" host:@"https://other.example.com"]],
+        @[
+            routeA,
+            [GrowingDataSourceRoute routeWithAccountId:@"other-account"
+                                          dataSourceId:@"A"
+                              dataCollectionServerHost:@"https://a.example.com"]
+        ],
+        // 不包含当前数据源，或当前数据源属于其他项目
+        @[[self routeWithDataSourceId:@"B" host:@"https://b.example.com"]],
+        @[[GrowingDataSourceRoute routeWithAccountId:@"other-account"
+                                        dataSourceId:@"A"
+                            dataCollectionServerHost:@"https://a.example.com"]],
+    ];
+    for (NSArray<GrowingDataSourceRoute *> *routes in invalidInputs) {
+        input.dataSourceRoutes = routes;
+        NSError *error = nil;
+        XCTAssertNil([GrowingConfigurationManager validatedRoutesForConfiguration:input error:&error], @"%@", routes);
+        XCTAssertEqual(error.code, GrowingRoutingErrorInvalidRoutes);
+    }
+}
+
+- (void)testRoutesValidateCollectionURLs {
+    GrowingTrackConfiguration *input = [GrowingConfigurationManager.sharedInstance.trackConfiguration copy];
     for (NSString *host in [self validCollectionURLs]) {
-        input.serverHostMapping = @{@"A": host};
-        XCTAssertEqualObjects([GrowingConfigurationManager validatedServerHostMappingForConfiguration:input
-                                                                                                error:nil][@"A"], host);
+        input.dataSourceRoutes = @[[self routeWithDataSourceId:@"A" host:host]];
+        XCTAssertEqualObjects([GrowingConfigurationManager validatedRoutesForConfiguration:input error:nil]
+                                  .firstObject.dataCollectionServerHost,
+                              host);
     }
     for (NSString *host in [self invalidCollectionURLs]) {
         // 非当前数据源的地址同样要校验
-        input.serverHostMapping = @{@"A": @"https://a.example.com", @"B": host};
+        input.dataSourceRoutes = @[
+            [self routeWithDataSourceId:@"A" host:@"https://a.example.com"],
+            [self routeWithDataSourceId:@"B" host:host],
+        ];
         NSError *error = nil;
-        XCTAssertNil([GrowingConfigurationManager validatedServerHostMappingForConfiguration:input error:&error],
-                     @"%@",
-                     host);
-        XCTAssertEqual(error.code, GrowingRoutingErrorInvalidServerHostMapping);
+        XCTAssertNil([GrowingConfigurationManager validatedRoutesForConfiguration:input error:&error], @"%@", host);
+        XCTAssertEqual(error.code, GrowingRoutingErrorInvalidRoutes);
     }
 }
-- (void)testRuntimeRegistrationValidatesCollectionURLs {
+
+- (void)testRuntimeRegistrationValidatesRoutes {
     [GrowingDispatchManager
         dispatchInGrowingThread:^{
             GrowingConfigurationManager *manager = GrowingConfigurationManager.sharedInstance;
+            NSMutableArray<NSArray<NSString *> *> *invalid = [NSMutableArray array];
             for (NSString *host in [self invalidCollectionURLs]) {
+                [invalid addObject:@[@"routing-test", host]];
+            }
+            [invalid addObject:@[@"", @"https://c.example.com"]];
+            for (NSArray<NSString *> *pair in invalid) {
                 NSError *error = nil;
-                XCTAssertFalse([manager switchToDataSourceId:@"C" dataCollectionServerHost:host error:&error],
+                XCTAssertFalse([manager switchToAccountId:pair[0]
+                                               dataSourceId:@"C"
+                                   dataCollectionServerHost:pair[1]
+                                                      error:&error],
                                @"%@",
-                               host);
-                XCTAssertEqual(error.code, GrowingRoutingErrorInvalidServerHost);
+                               pair);
+                XCTAssertEqual(error.code, GrowingRoutingErrorInvalidRoute);
                 XCTAssertEqualObjects(manager.trackConfiguration.dataSourceId, @"A");
-                XCTAssertNil([manager serverHostForDataSourceId:@"C"]);
+                XCTAssertNil([manager routeForDataSourceId:@"C"]);
             }
             for (NSString *host in [self validCollectionURLs]) {
                 NSString *source = NSUUID.UUID.UUIDString;
-                XCTAssertTrue([manager switchToDataSourceId:source dataCollectionServerHost:host error:nil],
+                XCTAssertTrue([manager switchToAccountId:@"routing-test"
+                                              dataSourceId:source
+                                  dataCollectionServerHost:host
+                                                     error:nil],
                               @"%@",
                               host);
                 XCTAssertEqualObjects(manager.trackConfiguration.dataSourceId, source);
@@ -254,31 +313,34 @@
         }
                   waitUntilDone:YES];
 }
+
 - (void)testLegacyServerHostKeepsExistingURLHandling {
     GrowingTrackConfiguration *input = [GrowingConfigurationManager.sharedInstance.trackConfiguration copy];
-    input.serverHostMapping = nil;
+    input.dataSourceRoutes = nil;
     input.dataSourceId = @"A";
     input.dataCollectionServerHost = @"example.com/base";
     // 只配置 dataCollectionServerHost 的老用户不校验地址格式，避免升级后初始化抛异常
-    XCTAssertEqualObjects([GrowingConfigurationManager validatedServerHostMappingForConfiguration:input
-                                                                                            error:nil][@"A"],
-                          @"example.com/base");
+    XCTAssertEqualObjects([GrowingConfigurationManager validatedRoutesForConfiguration:input error:nil],
+                          @[[self routeWithDataSourceId:@"A" host:@"example.com/base"]]);
 }
 
 - (void)testRoutingFieldsAreReadConsistentlyDuringConcurrentSwitches {
     GrowingTrackConfiguration *config = [GrowingTrackConfiguration configurationWithAccountId:@"routing-test"];
-    NSMutableDictionary<NSString *, NSString *> *mapping = [NSMutableDictionary dictionary];
+    NSMutableArray<GrowingDataSourceRoute *> *routes = [NSMutableArray array];
     for (NSUInteger i = 0; i < 8; i++) {
-        mapping[[NSString stringWithFormat:@"S%lu", (unsigned long)i]] =
-            [NSString stringWithFormat:@"https://s%lu.example.com", (unsigned long)i];
+        [routes
+            addObject:[GrowingDataSourceRoute
+                                routeWithAccountId:[NSString stringWithFormat:@"account-%lu", (unsigned long)(i % 2)]
+                                      dataSourceId:[NSString stringWithFormat:@"S%lu", (unsigned long)i]
+                          dataCollectionServerHost:[NSString stringWithFormat:@"https://s%lu.example.com",
+                                                                              (unsigned long)i]]];
     }
-    [config growing_updateDataSourceId:@"S0" serverHostMapping:mapping];
+    [config growing_activateRoute:routes[0] withRoutes:routes];
 
     dispatch_group_t group = dispatch_group_create();
     dispatch_group_async(group, dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
         for (NSUInteger i = 0; i < 20000; i++) {
-            NSString *source = [NSString stringWithFormat:@"S%lu", (unsigned long)(i % 8)];
-            [config growing_updateDataSourceId:source serverHostMapping:mapping];
+            [config growing_activateRoute:routes[i % 8] withRoutes:routes];
         }
     });
 
@@ -286,25 +348,61 @@
     dispatch_apply(4, dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^(size_t index) {
         // 写线程结束前持续并发读取
         while (dispatch_group_wait(group, DISPATCH_TIME_NOW) != 0) {
-            // copy 在同一把锁内读取三个字段，得到的快照必须一致
+            // copy 在同一把锁内读取所有路由字段，得到的快照必须与其中的路由一致
             GrowingTrackConfiguration *snapshot = [config copy];
-            if (![snapshot.dataCollectionServerHost
-                    isEqualToString:snapshot.serverHostMapping[snapshot.dataSourceId]]) {
+            GrowingDataSourceRoute *route = [snapshot growing_routeForDataSourceId:snapshot.dataSourceId];
+            if (![route.accountId isEqualToString:snapshot.accountId] ||
+                ![route.dataCollectionServerHost isEqualToString:snapshot.dataCollectionServerHost]) {
                 @synchronized(self) {
                     inconsistent++;
                 }
             }
             // 单独读取各字段也不能崩溃
+            XCTAssertNotNil(config.accountId);
             XCTAssertNotNil(config.dataSourceId);
             XCTAssertNotNil(config.dataCollectionServerHost);
-            XCTAssertEqual(config.serverHostMapping.count, 8);
+            XCTAssertEqual(config.dataSourceRoutes.count, 8);
         }
     });
     dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
     XCTAssertEqual(inconsistent, 0);
+    XCTAssertEqualObjects(config.accountId, @"account-1");
     XCTAssertEqualObjects(config.dataSourceId, @"S7");
     XCTAssertEqualObjects(config.dataCollectionServerHost, @"https://s7.example.com");
 }
+
+- (void)testSwitchingAccountClearsLoginUser {
+    [GrowingDispatchManager
+        dispatchInGrowingThread:^{
+            GrowingConfigurationManager.sharedInstance.trackConfiguration.idMappingEnabled = YES;
+            [GrowingSession.currentSession setLoginUserId:@"user" userKey:@"key"];
+        }
+                  waitUntilDone:YES];
+
+    // 同一项目内切换数据源，保留登录用户
+    [GrowingEventManager.sharedInstance switchToDataSourceId:@"B"];
+    [self waitForEventThread];
+    XCTAssertEqualObjects(GrowingSession.currentSession.loginUserId, @"user");
+    XCTAssertEqualObjects(GrowingSession.currentSession.loginUserKey, @"key");
+
+    // 切换到其他项目时清除登录用户，新会话的 VISIT 也不带原项目的用户
+    [MockEventQueue.sharedQueue cleanQueue];
+    [GrowingEventManager.sharedInstance switchToAccountId:@"other-account"
+                                             dataSourceId:@"O"
+                                 dataCollectionServerHost:@"https://o.example.com"];
+    [self waitForEventThread];
+    GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    XCTAssertEqualObjects(config.accountId, @"other-account");
+    XCTAssertEqualObjects(config.dataSourceId, @"O");
+    XCTAssertEqualObjects(config.dataCollectionServerHost, @"https://o.example.com");
+    XCTAssertNil(GrowingSession.currentSession.loginUserId);
+    XCTAssertNil(GrowingSession.currentSession.loginUserKey);
+    GrowingBaseEvent *visit = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeVisit].lastObject;
+    XCTAssertEqualObjects(visit.dataSourceId, @"O");
+    XCTAssertNil(visit.userId);
+    XCTAssertNil(visit.userKey);
+}
+
 - (void)testOrderedSwitchAndDelayedBuilderUseCurrentConfiguration {
     NSString *oldSession = GrowingSession.currentSession.sessionId;
     GrowingBaseBuilder *late =
@@ -334,16 +432,22 @@
     NSString *host = GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionServerHost;
     [GrowingEventManager.sharedInstance switchToDataSourceId:nil];
     [GrowingEventManager.sharedInstance switchToDataSourceId:@"A"];
-    [GrowingEventManager.sharedInstance switchToDataSourceId:@"B"
-                                    dataCollectionServerHost:@"https://different.example.com"];
-    [GrowingEventManager.sharedInstance switchToDataSourceId:@"B" dataCollectionServerHost:@"https://b.example.com/"];
+    [GrowingEventManager.sharedInstance switchToAccountId:@"routing-test"
+                                             dataSourceId:@"B"
+                                 dataCollectionServerHost:@"https://different.example.com"];
+    [GrowingEventManager.sharedInstance switchToAccountId:@"routing-test"
+                                             dataSourceId:@"B"
+                                 dataCollectionServerHost:@"https://b.example.com/"];
+    [GrowingEventManager.sharedInstance switchToAccountId:@"other-account"
+                                             dataSourceId:@"B"
+                                 dataCollectionServerHost:@"https://b.example.com"];
     [GrowingDispatchManager dispatchInGrowingThread:^{
         XCTAssertEqualObjects(session, GrowingSession.currentSession.sessionId);
         XCTAssertEqualObjects(GrowingConfigurationManager.sharedInstance.trackConfiguration.dataSourceId, @"A");
         XCTAssertEqualObjects(GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionServerHost,
                               host);
-        XCTAssertEqualObjects(GrowingConfigurationManager.sharedInstance.trackConfiguration.serverHostMapping[@"B"],
-                              @"https://b.example.com");
+        XCTAssertEqualObjects([GrowingConfigurationManager.sharedInstance routeForDataSourceId:@"B"],
+                              [self routeWithDataSourceId:@"B" host:@"https://b.example.com"]);
         GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionEnabled = NO;
     }];
     [GrowingEventManager.sharedInstance switchToDataSourceId:@"B"];
@@ -361,15 +465,16 @@
         dispatchInGrowingThread:^{
             GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
             XCTAssertEqualObjects(config.dataSourceId, @"A");
-            XCTAssertNil(config.serverHostMapping[@"C"]);
+            XCTAssertNil([config growing_routeForDataSourceId:@"C"]);
         }
                   waitUntilDone:YES];
-    [tracker switchToDataSourceId:@"C" dataCollectionServerHost:@"https://c.example.com/api/"];
+    [tracker switchToAccountId:@"routing-test"
+                    dataSourceId:@"C"
+        dataCollectionServerHost:@"https://c.example.com/api/"];
     [tracker switchToDataSourceId:@"A"];
     [tracker switchToDataSourceId:@"C"];
     [self waitForEventThread];
-    XCTAssertEqualObjects(GrowingConfigurationManager.sharedInstance.trackConfiguration.serverHostMapping[@"C"],
-                          @"https://c.example.com/api/");
+    XCTAssertEqualObjects([self hostForDataSourceId:@"C"], @"https://c.example.com/api/");
     XCTAssertEqualObjects(GrowingConfigurationManager.sharedInstance.trackConfiguration.dataSourceId, @"C");
     [GrowingEventManager.sharedInstance sendAllChannelEvents];
     [self waitForEventThread];
@@ -378,9 +483,7 @@
         NSArray *events = [NSJSONSerialization JSONObjectWithData:request.events options:0 error:nil];
         for (NSDictionary *event in events) {
             NSString *source = event[@"dataSourceId"];
-            NSString *host = [NSURL URLWithString:GrowingConfigurationManager.sharedInstance.trackConfiguration
-                                                      .serverHostMapping[source]]
-                                 .host;
+            NSString *host = [NSURL URLWithString:[self hostForDataSourceId:source]].host;
             XCTAssertEqualObjects(request.absoluteURL.host, host);
         }
     }
@@ -434,10 +537,7 @@
         XCTAssertGreaterThan(events.count, 0);
         XCTAssertLessThanOrEqual(events.count, 500);
         NSString *source = events.firstObject[@"dataSourceId"];
-        NSString *host =
-            [NSURL
-                URLWithString:GrowingConfigurationManager.sharedInstance.trackConfiguration.serverHostMapping[source]]
-                .host;
+        NSString *host = [NSURL URLWithString:[self hostForDataSourceId:source]].host;
         XCTAssertEqualObjects(request.absoluteURL.host, host);
         for (NSDictionary *event in events) XCTAssertEqualObjects(event[@"dataSourceId"], source);
         sent += events.count;
@@ -458,6 +558,40 @@
     // 挂起的事件仍保留在数据库中
     XCTAssertTrue([trackDB resumeAllSuspendedEvents]);
     XCTAssertEqual(trackDB.countOfEvents, 1);
+}
+
+- (void)testCachedEventsUploadWithTheirOwnAccountId {
+    GrowingDataSourceRoute *other = [GrowingDataSourceRoute routeWithAccountId:@"other-account"
+                                                                  dataSourceId:@"O"
+                                                      dataCollectionServerHost:@"https://o.example.com"];
+    GrowingEventDatabase *db = [self databaseWithSources:@[@"A", @"O"]];
+    GrowingEventChannel *channel = [GrowingEventChannel eventChannelWithName:@"Track"
+                                                                  eventTypes:nil
+                                                             isRealtimeEvent:YES];
+    channel.db = db;
+    GrowingEventManager *manager = [GrowingEventManager new];
+    [manager setValue:@[channel] forKey:@"allEventChannels"];
+
+    // 当前已切到其他项目，A 的缓存事件仍应以 A 所属的项目上报
+    [GrowingDispatchManager
+        dispatchInGrowingThread:^{
+            GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+            [config growing_activateRoute:other withRoutes:[config.dataSourceRoutes arrayByAddingObject:other]];
+        }
+                  waitUntilDone:YES];
+    RoutingNetworkStub.sharedInstance.holdResponses = YES;
+    [manager sendAllChannelEvents];
+    [self waitForEventThread];
+    [self completePendingUploads];
+
+    XCTAssertEqual(RoutingNetworkStub.sharedInstance.requests.count, 2);
+    NSMutableDictionary<NSString *, NSString *> *pathsByHost = [NSMutableDictionary dictionary];
+    for (id<GrowingRequestProtocol> request in RoutingNetworkStub.sharedInstance.requests) {
+        pathsByHost[request.absoluteURL.host] = request.absoluteURL.path;
+    }
+    XCTAssertEqualObjects(pathsByHost[@"a.example.com"], @"/base/v3/projects/routing-test/collect");
+    XCTAssertEqualObjects(pathsByHost[@"o.example.com"], @"/v3/projects/other-account/collect");
+    XCTAssertEqual(db.countOfEvents, 0);
 }
 
 - (void)testFailedSourceRemainsCachedWhileOtherSourceUploads {
@@ -583,10 +717,7 @@
         NSArray *events = [NSJSONSerialization JSONObjectWithData:request.events options:0 error:nil];
         XCTAssertEqual(events.count, 1);
         NSString *source = events.firstObject[@"dataSourceId"];
-        NSString *host =
-            [NSURL
-                URLWithString:GrowingConfigurationManager.sharedInstance.trackConfiguration.serverHostMapping[source]]
-                .host;
+        NSString *host = [NSURL URLWithString:[self hostForDataSourceId:source]].host;
         XCTAssertEqualObjects(request.absoluteURL.host, host);
     }
     XCTAssertEqual(db.countOfEvents, 0);
@@ -688,7 +819,7 @@
     XCTAssertEqual(db.countOfEvents, 0);
 
     // 注册新数据源后恢复，并发送到新注册的地址
-    [manager switchToDataSourceId:@"D" dataCollectionServerHost:@"https://d.example.com"];
+    [manager switchToAccountId:@"routing-test" dataSourceId:@"D" dataCollectionServerHost:@"https://d.example.com"];
     [self waitForEventThread];
     XCTAssertEqual(db.countOfEvents, 1);
     // 切换产生的 VISIT 由全局通道上传，先完成这些请求，再单独统计测试通道的缓存上传。
@@ -746,7 +877,9 @@
     [self waitForRoutingWork];
     long long firstShowTimestamp = page.showTimestamp;
     XCTAssertGreaterThan(firstShowTimestamp, 123);
-    [self.autotracker switchToDataSourceId:@"B" dataCollectionServerHost:@"https://b.example.com"];
+    [self.autotracker switchToAccountId:@"routing-test"
+                           dataSourceId:@"B"
+               dataCollectionServerHost:@"https://b.example.com"];
     [self waitForRoutingWork];
     XCTAssertEqual(page.showTimestamp, firstShowTimestamp);
     [self.autotracker switchToDataSourceId:@"A"];
@@ -787,7 +920,7 @@
     GrowingAutotracker *tracker = [[GrowingAutotracker alloc] initWithTarget:self.autotracker];
     XCTestExpectation *done = [self expectationWithDescription:@"worker switch"];
     dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
-        [tracker switchToDataSourceId:@"C" dataCollectionServerHost:@"https://c.example.com"];
+        [tracker switchToAccountId:@"routing-test" dataSourceId:@"C" dataCollectionServerHost:@"https://c.example.com"];
         [tracker trackCustomEvent:@"workerAfterSwitch"];
         [done fulfill];
     });
@@ -836,8 +969,10 @@
 - (void)testRejectedAutotrackerSwitchDoesNotReplayPage {
     GrowingPage *page = [self prepareCurrentPage];
     NSString *session = GrowingSession.currentSession.sessionId;
-    [self.autotracker switchToDataSourceId:@"A" dataCollectionServerHost:@"https://different.example.com"];
-    [self.autotracker switchToDataSourceId:@"B" dataCollectionServerHost:@""];
+    [self.autotracker switchToAccountId:@"routing-test"
+                           dataSourceId:@"A"
+               dataCollectionServerHost:@"https://different.example.com"];
+    [self.autotracker switchToAccountId:@"routing-test" dataSourceId:@"C" dataCollectionServerHost:@""];
     [self waitForRoutingWork];
     XCTAssertEqualObjects(GrowingSession.currentSession.sessionId, session);
     XCTAssertEqual(page.showTimestamp, 123);
@@ -847,6 +982,16 @@
 }
 
 #pragma mark - Helpers
+
+- (GrowingDataSourceRoute *)routeWithDataSourceId:(NSString *)dataSourceId host:(NSString *)host {
+    return [GrowingDataSourceRoute routeWithAccountId:@"routing-test"
+                                         dataSourceId:dataSourceId
+                             dataCollectionServerHost:host];
+}
+
+- (NSString *)hostForDataSourceId:(NSString *)dataSourceId {
+    return [GrowingConfigurationManager.sharedInstance routeForDataSourceId:dataSourceId].dataCollectionServerHost;
+}
 
 - (NSArray<NSString *> *)validCollectionURLs {
     return @[
