@@ -93,10 +93,11 @@ const int GrowingTrackerVersionCode = 41300;
     return [[self alloc] initWithConfiguration:configuration launchOptions:launchOptions];
 }
 
-- (void)switchToDataSourceId:(NSString *)dataSourceId {
+- (void)switchToAccountId:(NSString *)accountId dataSourceId:(NSString *)dataSourceId {
+    NSString *account = [accountId copy];
     NSString *source = [dataSourceId copy];
     [GrowingDispatchManager dispatchInGrowingThread:^{
-        [self switchToAccountId_unsafe:nil dataSourceId:source dataCollectionServerHost:nil];
+        [self switchToAccountId_unsafe:account dataSourceId:source dataCollectionServerHost:nil];
     }];
 }
 

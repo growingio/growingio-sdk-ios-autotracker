@@ -371,6 +371,47 @@
     XCTAssertEqualObjects(config.dataCollectionServerHost, @"https://s7.example.com");
 }
 
+- (void)testSwitchToRegisteredRouteRequiresMatchingAccount {
+    [GrowingDispatchManager
+        dispatchInGrowingThread:^{
+            GrowingConfigurationManager *manager = GrowingConfigurationManager.sharedInstance;
+            NSError *error = nil;
+            // B 注册在 routing-test 下，用其他项目切换会被拒绝
+            XCTAssertFalse([manager switchToAccountId:@"other-account"
+                                         dataSourceId:@"B"
+                             dataCollectionServerHost:nil
+                                                error:&error]);
+            XCTAssertEqual(error.code, GrowingRoutingErrorConflictingRoute);
+
+            // 未注册且没有提供采集地址
+            error = nil;
+            XCTAssertFalse([manager switchToAccountId:@"routing-test"
+                                         dataSourceId:@"unknown"
+                             dataCollectionServerHost:nil
+                                                error:&error]);
+            XCTAssertEqual(error.code, GrowingRoutingErrorUnregisteredRoute);
+
+            // 项目或数据源为空
+            for (NSArray<NSString *> *pair in @[@[@"", @"B"], @[@"routing-test", @""]]) {
+                error = nil;
+                XCTAssertFalse([manager switchToAccountId:pair[0]
+                                             dataSourceId:pair[1]
+                                 dataCollectionServerHost:nil
+                                                    error:&error]);
+                XCTAssertEqual(error.code, GrowingRoutingErrorInvalidRoute);
+            }
+            XCTAssertEqualObjects(manager.trackConfiguration.accountId, @"routing-test");
+            XCTAssertEqualObjects(manager.trackConfiguration.dataSourceId, @"A");
+
+            XCTAssertTrue([manager switchToAccountId:@"routing-test"
+                                        dataSourceId:@"B"
+                            dataCollectionServerHost:nil
+                                               error:nil]);
+            XCTAssertEqualObjects(manager.trackConfiguration.dataSourceId, @"B");
+        }
+                  waitUntilDone:YES];
+}
+
 - (void)testSwitchingAccountClearsLoginUser {
     [GrowingDispatchManager
         dispatchInGrowingThread:^{
@@ -380,7 +421,7 @@
                   waitUntilDone:YES];
 
     // 同一项目内切换数据源，保留登录用户
-    [GrowingEventManager.sharedInstance switchToDataSourceId:@"B"];
+    [GrowingEventManager.sharedInstance switchToAccountId:@"routing-test" dataSourceId:@"B"];
     [self waitForEventThread];
     XCTAssertEqualObjects(GrowingSession.currentSession.loginUserId, @"user");
     XCTAssertEqualObjects(GrowingSession.currentSession.loginUserKey, @"key");
@@ -407,10 +448,10 @@
     NSString *oldSession = GrowingSession.currentSession.sessionId;
     GrowingBaseBuilder *late =
         GrowingCustomEvent.builder.setEventName(@"delayed").setDataSourceId(@"A").setSessionId(oldSession);
-    [GrowingEventManager.sharedInstance switchToDataSourceId:@"B"];
+    [GrowingEventManager.sharedInstance switchToAccountId:@"routing-test" dataSourceId:@"B"];
     [GrowingEventManager.sharedInstance postEventBuilder:GrowingCustomEvent.builder.setEventName(@"afterB")];
     [GrowingEventManager.sharedInstance postEventBuilder:late];
-    [GrowingEventManager.sharedInstance switchToDataSourceId:@"A"];
+    [GrowingEventManager.sharedInstance switchToAccountId:@"routing-test" dataSourceId:@"A"];
     [GrowingEventManager.sharedInstance postEventBuilder:GrowingCustomEvent.builder.setEventName(@"afterA")];
     [self waitForEventThread];
     NSArray<GrowingBaseEvent *> *visits = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeVisit];
@@ -430,8 +471,8 @@
 - (void)testIdempotenceConflictAndCollectionDisabled {
     NSString *session = GrowingSession.currentSession.sessionId;
     NSString *host = GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionServerHost;
-    [GrowingEventManager.sharedInstance switchToDataSourceId:nil];
-    [GrowingEventManager.sharedInstance switchToDataSourceId:@"A"];
+    [GrowingEventManager.sharedInstance switchToAccountId:@"routing-test" dataSourceId:nil];
+    [GrowingEventManager.sharedInstance switchToAccountId:@"routing-test" dataSourceId:@"A"];
     [GrowingEventManager.sharedInstance switchToAccountId:@"routing-test"
                                              dataSourceId:@"B"
                                  dataCollectionServerHost:@"https://different.example.com"];
@@ -450,7 +491,7 @@
                               [self routeWithDataSourceId:@"B" host:@"https://b.example.com"]);
         GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionEnabled = NO;
     }];
-    [GrowingEventManager.sharedInstance switchToDataSourceId:@"B"];
+    [GrowingEventManager.sharedInstance switchToAccountId:@"routing-test" dataSourceId:@"B"];
     [self waitForEventThread];
     XCTAssertEqual([MockEventQueue.sharedQueue eventsFor:GrowingEventTypeVisit].count, 0);
     XCTAssertFalse(GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionEnabled);
@@ -460,7 +501,7 @@
 
 - (void)testRuntimeRegistrationAndFrozenBatchDestination {
     GrowingTracker *tracker = [[GrowingTracker alloc] initWithTarget:[GrowingRealTracker new]];
-    [tracker switchToDataSourceId:@"C"];
+    [tracker switchToAccountId:@"routing-test" dataSourceId:@"C"];
     [GrowingDispatchManager
         dispatchInGrowingThread:^{
             GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
@@ -471,8 +512,8 @@
     [tracker switchToAccountId:@"routing-test"
                     dataSourceId:@"C"
         dataCollectionServerHost:@"https://c.example.com/api/"];
-    [tracker switchToDataSourceId:@"A"];
-    [tracker switchToDataSourceId:@"C"];
+    [tracker switchToAccountId:@"routing-test" dataSourceId:@"A"];
+    [tracker switchToAccountId:@"routing-test" dataSourceId:@"C"];
     [self waitForEventThread];
     XCTAssertEqualObjects([self hostForDataSourceId:@"C"], @"https://c.example.com/api/");
     XCTAssertEqualObjects(GrowingConfigurationManager.sharedInstance.trackConfiguration.dataSourceId, @"C");
@@ -813,12 +854,12 @@
     XCTAssertEqual(RoutingNetworkStub.sharedInstance.requests.count, 0);
     XCTAssertEqual(db.countOfEvents, 0);
 
-    // 切换到已注册的数据源不会恢复
-    [manager switchToDataSourceId:@"B"];
+    // 切换到已注册的路由不会恢复
+    [manager switchToAccountId:@"routing-test" dataSourceId:@"B"];
     [self waitForEventThread];
     XCTAssertEqual(db.countOfEvents, 0);
 
-    // 注册新数据源后恢复，并发送到新注册的地址
+    // 注册新路由后恢复，并发送到新注册的地址
     [manager switchToAccountId:@"routing-test" dataSourceId:@"D" dataCollectionServerHost:@"https://d.example.com"];
     [self waitForEventThread];
     XCTAssertEqual(db.countOfEvents, 1);
@@ -846,7 +887,7 @@
     circle.webSocket = socket;
     socket.delegate = (id<GrowingWebSocketDelegate>)circle;
     [circle setValue:@YES forKey:@"isReady"];
-    [GrowingEventManager.sharedInstance switchToDataSourceId:@"B"];
+    [GrowingEventManager.sharedInstance switchToAccountId:@"routing-test" dataSourceId:@"B"];
     [self waitForEventThread];
     XCTAssertEqualObjects(GrowingConfigurationManager.sharedInstance.trackConfiguration.dataSourceId, @"B");
     XCTAssertEqual(circle.webSocket, socket);
@@ -866,7 +907,7 @@
 
 - (void)testPageReplayReusesCurrentPageAcrossSwitches {
     GrowingPage *page = [self prepareCurrentPage];
-    [self.autotracker switchToDataSourceId:@"B"];
+    [self.autotracker switchToAccountId:@"routing-test" dataSourceId:@"B"];
     XCTAssertEqual(page.showTimestamp, 123);
     [self.autotracker trackCustomEvent:@"afterB"];
     [self waitForEventThread];
@@ -882,7 +923,7 @@
                dataCollectionServerHost:@"https://b.example.com"];
     [self waitForRoutingWork];
     XCTAssertEqual(page.showTimestamp, firstShowTimestamp);
-    [self.autotracker switchToDataSourceId:@"A"];
+    [self.autotracker switchToAccountId:@"routing-test" dataSourceId:@"A"];
     [self waitForRoutingWork];
     NSArray<GrowingPageEvent *> *events = (id)[MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
     NSArray<GrowingBaseEvent *> *visits = [MockEventQueue.sharedQueue eventsFor:GrowingEventTypeVisit];
@@ -910,7 +951,7 @@
 
     // A page that has left the window must not be replayed.
     self.pageWindow.rootViewController = [UIViewController new];
-    [self.autotracker switchToDataSourceId:@"B"];
+    [self.autotracker switchToAccountId:@"routing-test" dataSourceId:@"B"];
     [self waitForRoutingWork];
     XCTAssertEqual([MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage].count, 3);
 }
@@ -946,7 +987,7 @@
     [GrowingPageManager.sharedInstance viewControllerDidAppear:first];
     [MockEventQueue.sharedQueue cleanQueue];
 
-    [self.autotracker switchToDataSourceId:@"B"];
+    [self.autotracker switchToAccountId:@"routing-test" dataSourceId:@"B"];
     [self waitForRoutingWork];
     NSArray<GrowingPageEvent *> *events = (id)[MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage];
     XCTAssertEqual(events.count, 1);
@@ -957,10 +998,10 @@
 - (void)testTrackerSwitchDoesNotReplayPage {
     [self prepareCurrentPage];
     GrowingRealTracker *tracker = [GrowingRealTracker new];
-    [tracker switchToDataSourceId:@"B"];
+    [tracker switchToAccountId:@"routing-test" dataSourceId:@"B"];
     ((GrowingAutotrackConfiguration *)GrowingConfigurationManager.sharedInstance.trackConfiguration).autotrackEnabled =
         NO;
-    [self.autotracker switchToDataSourceId:@"A"];
+    [self.autotracker switchToAccountId:@"routing-test" dataSourceId:@"A"];
     [self waitForRoutingWork];
     XCTAssertEqual([MockEventQueue.sharedQueue eventsFor:GrowingEventTypePage].count, 0);
     XCTAssertEqual([MockEventQueue.sharedQueue eventsFor:GrowingEventTypeVisit].count, 2);

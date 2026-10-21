@@ -153,23 +153,23 @@ static void GrowingSetRoutingError(NSError **error, GrowingRoutingError code, NS
                 dataSourceId:(NSString *)dataSourceId
     dataCollectionServerHost:(NSString *)serverHost
                        error:(NSError **)error {
-    if (!GrowingIsNonEmptyString(dataSourceId)) {
-        GrowingSetRoutingError(error, GrowingRoutingErrorInvalidDataSource, @"Invalid data source");
+    if (!GrowingIsNonEmptyString(accountId) || !GrowingIsNonEmptyString(dataSourceId)) {
+        GrowingSetRoutingError(error, GrowingRoutingErrorInvalidRoute, @"accountId and dataSourceId are required");
         return NO;
     }
 
     GrowingTrackConfiguration *configuration = self.trackConfiguration;
     GrowingDataSourceRoute *route = [configuration growing_routeForDataSourceId:dataSourceId];
-    BOOL isRegistering = accountId != nil || serverHost != nil;
-    if (isRegistering) {
+    if (serverHost) {
         GrowingDataSourceRoute *candidate = [GrowingDataSourceRoute routeWithAccountId:accountId
                                                                           dataSourceId:dataSourceId
                                                               dataCollectionServerHost:serverHost];
         if (route) {
             if (![route isEqual:candidate]) {
-                GrowingSetRoutingError(error,
-                                       GrowingRoutingErrorConflictingRoute,
-                                       @"The data source is already registered with a different route");
+                GrowingSetRoutingError(
+                    error,
+                    GrowingRoutingErrorConflictingRoute,
+                    [NSString stringWithFormat:@"The data source is already registered as %@", route]);
                 return NO;
             }
         } else if (!GrowingIsValidRoute(candidate)) {
@@ -181,10 +181,18 @@ static void GrowingSetRoutingError(NSError **error, GrowingRoutingError code, NS
             route = candidate;
         }
     } else if (!route) {
-        GrowingSetRoutingError(error, GrowingRoutingErrorInvalidDataSource, @"The data source is not registered");
+        GrowingSetRoutingError(error,
+                               GrowingRoutingErrorUnregisteredRoute,
+                               @"The route is not registered and no collection URL is provided");
+        return NO;
+    } else if (![route.accountId isEqualToString:accountId]) {
+        GrowingSetRoutingError(error,
+                               GrowingRoutingErrorConflictingRoute,
+                               [NSString stringWithFormat:@"The data source is registered as %@", route]);
         return NO;
     }
 
+    // dataSourceId 全局唯一，与当前数据源相同即为当前路由，无需切换
     if ([dataSourceId isEqualToString:configuration.dataSourceId]) {
         return NO;
     }

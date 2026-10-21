@@ -150,10 +150,11 @@ static GrowingEventManager *sharedInstance = nil;
     });
 }
 
-- (void)switchToDataSourceId:(NSString *)dataSourceId {
+- (void)switchToAccountId:(NSString *)accountId dataSourceId:(NSString *)dataSourceId {
+    NSString *account = [accountId copy];
     NSString *source = [dataSourceId copy];
     [GrowingDispatchManager dispatchInGrowingThread:^{
-        [self switchToAccountId_unsafe:nil dataSourceId:source dataCollectionServerHost:nil];
+        [self switchToAccountId_unsafe:account dataSourceId:source dataCollectionServerHost:nil];
     }];
 }
 
@@ -173,7 +174,9 @@ static GrowingEventManager *sharedInstance = nil;
         dataCollectionServerHost:(NSString *)serverHost {
     GrowingConfigurationManager *manager = GrowingConfigurationManager.sharedInstance;
     if (!self.allEventChannels.count || !manager.trackConfiguration) {
-        GIOLogError(@"Routing switch rejected source=%@ reason=SDK is not initialized", dataSourceId);
+        GIOLogError(@"Routing switch rejected account=%@ source=%@ reason=SDK is not initialized",
+                    accountId,
+                    dataSourceId);
         return NO;
     }
     NSString *previousAccountId = manager.trackConfiguration.accountId;
@@ -186,7 +189,10 @@ static GrowingEventManager *sharedInstance = nil;
                                         error:&error];
     if (!changed) {
         if (error) {
-            GIOLogError(@"Routing switch rejected source=%@ reason=%@", dataSourceId, error.localizedDescription);
+            GIOLogError(@"Routing switch rejected account=%@ source=%@ reason=%@",
+                        accountId,
+                        dataSourceId,
+                        error.localizedDescription);
         }
         return NO;
     }
@@ -205,7 +211,7 @@ static GrowingEventManager *sharedInstance = nil;
                dataSourceId,
                GrowingSession.currentSession.sessionId);
     if (!wasRegistered) {
-        // 新注册了数据源：恢复可能已可发送的事件，沿用原有上传触发时机。
+        // 新注册了路由：恢复可能已可发送的事件，沿用原有上传触发时机。
         [self resumeSuspendedEvents_unsafe];
     }
     return YES;
@@ -385,7 +391,7 @@ static GrowingEventManager *sharedInstance = nil;
         [group addObject:event];
     }
     if (unroutableKeys.count) {
-        // 查不到上报地址的事件挂起保留，不再占用发送名额；注册对应数据源或下次启动时恢复，过期后照常清理
+        // 查不到路由的事件挂起保留，不再占用发送名额；注册对应路由或下次启动时恢复，过期后照常清理
         GIOLogWarn(@"Suspend %lu events without collection URL (channel = %@, sources = %@)",
                    (unsigned long)unroutableKeys.count,
                    channel.name,
@@ -471,7 +477,7 @@ static GrowingEventManager *sharedInstance = nil;
         return;
     }
 
-    // 按事件所属的数据源确定项目和采集地址，而不是当前数据源
+    // 按事件所属数据源的路由确定项目和采集地址，而不是当前的项目和数据源
     NSObject<GrowingRequestProtocol> *eventRequest =
         [[GrowingEventRequest alloc] initWithEvents:rawEvents
                                          serverHost:route.dataCollectionServerHost

@@ -49,13 +49,13 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param enabled 打开或者关闭
 - (void)setDataCollectionEnabled:(BOOL)enabled;
 
-/// 切换到已注册的数据源；未注册时记录错误日志并保持原状态。
-/// 切换在事件线程处理。
-- (void)switchToDataSourceId:(NSString *)dataSourceId;
+/// 切换到已注册的项目和数据源；dataSourceId 须已在该项目下注册，否则记录错误日志并保持原状态。
+/// 切换到不同的项目时会清除登录用户 ID 和 userKey。切换在事件线程处理。
+- (void)switchToAccountId:(NSString *)accountId dataSourceId:(NSString *)dataSourceId;
 
-/// 注册数据源路由并切换到该数据源；dataSourceId 已注册时，accountId 和采集地址必须与已注册的一致。
+/// 注册上报路由并切换到该项目和数据源；dataSourceId 已注册时，项目和采集地址必须与已注册的一致。
 /// 采集地址须为带 host 的 http(s) 地址，不能包含用户信息、query 或 fragment。
-/// 切换到不同的 accountId 时会清除登录用户 ID 和 userKey。
+/// 切换到不同的项目时会清除登录用户 ID 和 userKey。
 /// 切换在事件线程处理；校验失败记录日志并保持原状态。
 - (void)switchToAccountId:(NSString *)accountId
                 dataSourceId:(NSString *)dataSourceId

@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-/// 创建时确定上报地址和项目，之后切换数据源不会影响已创建的请求
+/// 创建时确定项目和采集地址，之后切换项目或数据源不会影响已创建的请求
 - (instancetype)initWithEvents:(NSData *)events
                     serverHost:(NSString *)serverHost
                      accountId:(NSString *)accountId NS_DESIGNATED_INITIALIZER;

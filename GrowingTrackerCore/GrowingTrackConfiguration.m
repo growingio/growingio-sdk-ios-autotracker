@@ -28,7 +28,7 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
 
 @interface GrowingTrackConfiguration () {
     // 保护 accountId、dataSourceId、dataCollectionServerHost、dataSourceRoutes：
-    // 运行时切换数据源会在事件线程修改它们，而 Hybrid、ABTesting、广告等模块可能在其他线程同时读取。
+    // 运行时切换项目和数据源会在事件线程修改它们，而 Hybrid、ABTesting、广告等模块可能在其他线程同时读取。
     // 对象创建时实例变量已置零，与 OS_UNFAIR_LOCK_INIT 相同，copy 出的新对象无需单独初始化。
     GROWING_LOCK_DECLARE(_routingLock);
 }
@@ -267,7 +267,7 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
     }
     GrowingDataSourceRoute *found = nil;
     GROWING_LOCK(_routingLock);
-    // 数据源数量很少，线性查找即可，且只维护一份路由数据
+    // 路由数量很少，线性查找即可，且只维护一份路由数据
     for (GrowingDataSourceRoute *route in _dataSourceRoutes) {
         if ([route.dataSourceId isEqualToString:dataSourceId]) {
             found = route;

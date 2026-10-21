@@ -21,8 +21,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// 一个数据源的上报目标：所属项目、数据源和采集地址。
-/// dataSourceId 全局唯一，SDK 按事件的 dataSourceId 查找其所属项目和采集地址
+/// 上报路由：事件上报到的项目（accountId）、数据源和采集地址。
+/// dataSourceId 全局唯一，SDK 按事件的 dataSourceId 查找它所属的项目和采集地址
 NS_SWIFT_NAME(DataSourceRoute)
 @interface GrowingDataSourceRoute : NSObject <NSCopying>
 

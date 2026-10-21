@@ -36,10 +36,11 @@ FOUNDATION_EXPORT NSString *const kGrowingDefaultDataCollectionServerHost;
 @property (nonatomic, assign) BOOL dataCollectionEnabled;
 @property (nonatomic, assign) BOOL uploadExceptionEnable;
 @property (nonatomic, copy) NSString *dataCollectionServerHost;
-/// 初始可用的数据源路由；提供时必须包含与 accountId、dataSourceId 一致的路由，其采集地址优先于
-/// dataCollectionServerHost。 每个 dataSourceId 只能对应一个路由；采集地址须为带 host 的 http(s)
-/// 地址，不能包含用户信息、query 或 fragment； 不满足时初始化抛出异常。为 nil 时，由 accountId、dataSourceId 和
-/// dataCollectionServerHost 生成路由。 同一运行期间已注册的路由不可修改。
+/// 初始可用的上报路由，每个 dataSourceId 只能对应一个路由。
+/// 提供时必须包含与 accountId、dataSourceId 一致的路由，其采集地址优先于 dataCollectionServerHost；
+/// 采集地址须为带 host 的 http(s) 地址，不能包含用户信息、query 或 fragment；不满足时初始化抛出异常。
+/// 为 nil 时，由 accountId、dataSourceId 和 dataCollectionServerHost 生成路由。
+/// 同一运行期间已注册的路由不可修改。
 @property (nonatomic, copy, nullable) NSArray<GrowingDataSourceRoute *> *dataSourceRoutes;
 @property (nonatomic, assign) NSUInteger excludeEvent;
 @property (nonatomic, assign) NSUInteger ignoreField;

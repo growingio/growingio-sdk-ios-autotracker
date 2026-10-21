@@ -68,18 +68,18 @@ FOUNDATION_EXPORT const int GrowingTrackerVersionCode;
 /// @param enabled 打开或者关闭
 - (void)setDataCollectionEnabled:(BOOL)enabled;
 
-/// 切换到已注册的数据源。
-- (void)switchToDataSourceId:(NSString *)dataSourceId;
+/// 切换到已注册的项目和数据源。
+- (void)switchToAccountId:(NSString *)accountId dataSourceId:(NSString *)dataSourceId;
 
-/// 注册数据源路由并切换到该数据源。
+/// 注册上报路由并切换到该项目和数据源。
 /// 切换在事件线程处理；校验失败记录日志并保持原状态。
 - (void)switchToAccountId:(NSString *)accountId
                 dataSourceId:(NSString *)dataSourceId
     dataCollectionServerHost:(NSString *)serverHost;
 
 /// 仅在事件线程调用；子类可根据返回值补充切换成功后的处理。
-/// accountId 和 serverHost 都为 nil 时切换到已注册的数据源。
-- (BOOL)switchToAccountId_unsafe:(NSString *_Nullable)accountId
+/// serverHost 为 nil 时切换到已注册的路由。
+- (BOOL)switchToAccountId_unsafe:(NSString *)accountId
                     dataSourceId:(NSString *)dataSourceId
         dataCollectionServerHost:(NSString *_Nullable)serverHost;
 

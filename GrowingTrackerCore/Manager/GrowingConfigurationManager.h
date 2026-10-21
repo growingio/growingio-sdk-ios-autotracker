@@ -25,13 +25,13 @@ NS_ASSUME_NONNULL_BEGIN
 FOUNDATION_EXPORT NSString *const GrowingRoutingErrorDomain;
 
 typedef NS_ENUM(NSInteger, GrowingRoutingError) {
-    /// 初始路由缺失、类型错误、互相冲突、不包含当前数据源，或其中有不合法的路由
+    /// 初始路由缺失、类型错误、互相冲突、不包含配置的项目和数据源，或其中有不合法的路由
     GrowingRoutingErrorInvalidRoutes = 1,
-    /// 数据源为空，或切换到未注册的数据源
-    GrowingRoutingErrorInvalidDataSource,
-    /// 数据源已注册了不同的项目或采集地址
+    /// 切换到未注册的路由时没有提供采集地址
+    GrowingRoutingErrorUnregisteredRoute,
+    /// 数据源已注册在其他项目下，或已注册了不同的采集地址
     GrowingRoutingErrorConflictingRoute,
-    /// 运行时注册的路由不合法：accountId 为空，或采集地址格式不合法
+    /// 路由不合法：accountId 或 dataSourceId 为空，或采集地址格式不合法
     GrowingRoutingErrorInvalidRoute,
 };
 
@@ -59,9 +59,9 @@ typedef NS_ENUM(NSInteger, GrowingRoutingError) {
 
 - (nullable GrowingDataSourceRoute *)routeForDataSourceId:(NSString *)dataSourceId;
 
-/// 仅在事件线程调用。accountId 和 serverHost 都为 nil 时切换到已注册的数据源，否则注册并切换。
-/// 返回是否更新了当前数据源；校验失败时通过 error 返回原因，原配置保持不变。
-- (BOOL)switchToAccountId:(NSString *_Nullable)accountId
+/// 仅在事件线程调用。serverHost 为 nil 时切换到已注册的路由，否则注册路由并切换。
+/// 返回是否切换了当前的项目和数据源；校验失败时通过 error 返回原因，原配置保持不变。
+- (BOOL)switchToAccountId:(NSString *)accountId
                 dataSourceId:(NSString *)dataSourceId
     dataCollectionServerHost:(NSString *_Nullable)serverHost
                        error:(NSError *_Nullable *_Nullable)error;
