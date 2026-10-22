@@ -34,6 +34,11 @@
 #import "Modules/Hybrid/GrowingWebViewDomChangedDelegate.h"
 #import "Modules/Hybrid/Public/GrowingHybridModule.h"
 
+/// 测试页面加载时间随网络环境变化，等待其就绪的最长时间
+static NSTimeInterval const kHybridPageReadyTimeout = 30;
+/// 单次执行 JS 的最长等待时间
+static NSTimeInterval const kJavaScriptEvaluationTimeout = 5;
+
 @interface HybridTest_HostApp : KIFTestCase <GrowingWebViewDomChangedDelegate>
 
 @end
@@ -48,7 +53,7 @@
 
     [[viewTester usingLabel:@"UI界面"] tap];
     [[viewTester usingLabel:@"Hybrid"] tap];
-    [viewTester waitForTimeInterval:10];
+    XCTAssertTrue([self waitForHybridPageReady], @"Hybrid 测试页面在 %.0f 秒内没有就绪", kHybridPageReadyTimeout);
 }
 
 - (void)afterAll {
@@ -372,12 +377,59 @@ static int XCTest_didDomChanged = 0;
 
 #pragma mark - Private Methods
 
+/// 页面上的测试方法和 SDK 注入的 bridge 都可用时才算就绪
+- (BOOL)waitForHybridPageReady {
+    UIView *view = [viewTester usingLabel:@"HybridWebView"].view;
+    if (![view isKindOfClass:WKWebView.class]) {
+        return NO;
+    }
+    NSString *js = @"typeof sendMockCustomEvent === 'function' && !!window.GrowingWebViewJavascriptBridge";
+    NSDate *deadline = [NSDate dateWithTimeIntervalSinceNow:kHybridPageReadyTimeout];
+    while (deadline.timeIntervalSinceNow > 0) {
+        id ready = [self evaluateJavaScript:js inWebView:(WKWebView *)view error:nil];
+        if ([ready isKindOfClass:NSNumber.class] && [ready boolValue]) {
+            return YES;
+        }
+        [viewTester waitForTimeInterval:0.5];
+    }
+    return NO;
+}
+
+/// 执行 JS 并等待完成；执行出错时让当前用例失败，并输出 JS 的错误信息
 - (void)webView:(UIView *)view evaluateJavaScript:(NSString *)js {
-    if (!view || ![view isKindOfClass:WKWebView.class]) {
+    if (![view isKindOfClass:WKWebView.class]) {
+        XCTFail(@"HybridWebView 不存在，无法执行 %@", js);
         return;
     }
-    WKWebView *webView = (WKWebView *)view;
-    [webView evaluateJavaScript:js completionHandler:nil];
+    NSError *error = nil;
+    [self evaluateJavaScript:js inWebView:(WKWebView *)view error:&error];
+    XCTAssertNil(error, @"执行 %@ 失败：%@", js, error);
+}
+
+- (id)evaluateJavaScript:(NSString *)js inWebView:(WKWebView *)webView error:(NSError **)error {
+    __block BOOL finished = NO;
+    __block id result = nil;
+    __block NSError *evaluationError = nil;
+    [webView evaluateJavaScript:js
+              completionHandler:^(id value, NSError *jsError) {
+                  result = value;
+                  evaluationError = jsError;
+                  finished = YES;
+              }];
+    // 回调在主线程执行，需要驱动 runloop 等待
+    NSDate *deadline = [NSDate dateWithTimeIntervalSinceNow:kJavaScriptEvaluationTimeout];
+    while (!finished && deadline.timeIntervalSinceNow > 0) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+    }
+    if (!finished) {
+        evaluationError = [NSError errorWithDomain:@"HybridTest"
+                                              code:-1
+                                          userInfo:@{NSLocalizedDescriptionKey: @"JavaScript evaluation timed out"}];
+    }
+    if (error) {
+        *error = evaluationError;
+    }
+    return result;
 }
 
 @end

@@ -9,10 +9,17 @@
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover">
     <title>GrowingIO Hybrid In App</title>
 
-    <script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"></script>
     <script>
-      // VConsole 会自动挂载到 `window.VConsole`
-      var vConsole = new window.VConsole();
+      // 调试面板异步加载：同步加载外部脚本时，网络卡住会阻塞后面所有脚本，页面上的测试方法也就无法使用
+      (function () {
+        var script = document.createElement('script');
+        script.src = 'https://unpkg.com/vconsole@3.15.1/dist/vconsole.min.js';
+        script.async = true;
+        script.onload = function () {
+          window.vConsole = new window.VConsole();
+        };
+        document.head.appendChild(script);
+      })();
     </script>
     
     <script type='text/javascript'>
