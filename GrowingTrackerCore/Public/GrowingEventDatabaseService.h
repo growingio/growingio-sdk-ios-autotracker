@@ -109,6 +109,18 @@ extern NSString *const GrowingEventDatabaseErrorDomain;
 ///                 userInfo:@{NSLocalizedDescriptionKey : @"some message"}]
 - (NSError *)lastError;
 
+@optional
+
+/// 挂起事件：被挂起的事件不会被 getEventsByCount 取出，也不计入 countOfEvents；
+/// 恢复前一直保留在数据库中，过期后照常被 cleanExpiredEventIfNeeded 清理
+/// @param keys 事件唯一key数组
+/// @return 写入成功/失败；若返回值为NO，表示写入错误
+- (BOOL)suspendEvents:(NSArray<NSString *> *)keys;
+
+/// 恢复所有已挂起的事件，使其可以再次被 getEventsByCount 取出
+/// @return 写入成功/失败；若返回值为NO，表示写入错误
+- (BOOL)resumeAllSuspendedEvents;
+
 @end
 
 @protocol GrowingPBEventDatabaseService <GrowingEventDatabaseService>

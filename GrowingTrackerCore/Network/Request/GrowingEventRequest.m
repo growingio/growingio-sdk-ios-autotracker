@@ -24,14 +24,21 @@
 #import "GrowingTrackerCore/Network/Request/Adapter/GrowingRequestAdapter.h"
 #import "GrowingULTimeUtil.h"
 
+@interface GrowingEventRequest ()
+@property (nonatomic, copy) NSString *serverHost;
+@property (nonatomic, copy) NSString *accountId;
+@end
+
 @implementation GrowingEventRequest
 
 @synthesize events;
 @synthesize outsize;
 @synthesize stm;
 
-- (instancetype)initWithEvents:(NSData *)events {
+- (instancetype)initWithEvents:(NSData *)events serverHost:(NSString *)serverHost accountId:(NSString *)accountId {
     if (self = [super init]) {
+        _serverHost = [serverHost copy];
+        _accountId = [accountId copy];
         self.events = events;
         self.stm = [GrowingULTimeUtil currentTimeMillis];
     }
@@ -43,7 +50,7 @@
 }
 
 - (NSURL *)absoluteURL {
-    NSString *baseUrl = GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionServerHost;
+    NSString *baseUrl = self.serverHost;
     if (!baseUrl.length) {
         return nil;
     }
@@ -53,7 +60,7 @@
 }
 
 - (NSString *)path {
-    NSString *accountId = [GrowingConfigurationManager sharedInstance].trackConfiguration.accountId;
+    NSString *accountId = self.accountId;
     NSString *path = [NSString stringWithFormat:@"v3/projects/%@/collect", accountId];
     return path;
 }

@@ -38,6 +38,14 @@
                                                          limitSize:(NSUInteger)limitSize
                                                             policy:(NSUInteger)mask;
 
+/// 挂起事件，挂起后不再被 getEventsByCount 取出，也不计入 countOfEvents
+/// @return 底层数据库不支持或写入失败时返回 NO
+- (BOOL)suspendEventsForKeys:(NSArray<NSString *> *)keys;
+
+/// 恢复所有已挂起的事件
+/// @return 底层数据库不支持或写入失败时返回 NO
+- (BOOL)resumeAllSuspendedEvents;
+
 - (NSData *)buildRawEventsFromEvents:(NSArray<id<GrowingEventPersistenceProtocol>> *)events;
 
 - (id<GrowingEventPersistenceProtocol>)persistenceEventWithEvent:(GrowingBaseEvent *)event uuid:(NSString *)uuid;

@@ -24,6 +24,7 @@
 #import "GrowingTrackerCore/Event/GrowingEventManager.h"
 #import "GrowingTrackerCore/Event/GrowingGeneralProps.h"
 #import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
+#import "GrowingTrackerCore/GrowingTrackConfiguration+Private.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/LogFormat/GrowingWSLoggerFormat.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
@@ -57,6 +58,13 @@ const int GrowingTrackerVersionCode = 41300;
     self = [super init];
     if (self) {
         _configuration = [configuration copyWithZone:nil];
+        NSArray<GrowingDataSourceRoute *> *routes =
+            [GrowingConfigurationManager validatedRoutesForConfiguration:configuration error:nil];
+        _configuration.dataSourceRoutes = routes;
+        GrowingDataSourceRoute *route = [_configuration routeForDataSourceId:_configuration.dataSourceId];
+        if (route) {
+            [_configuration activateRoute:route withRoutes:routes];
+        }
         _launchOptions = [launchOptions copy];
         GrowingConfigurationManager.sharedInstance.trackConfiguration = _configuration;
 
@@ -84,6 +92,33 @@ const int GrowingTrackerVersionCode = 41300;
 + (instancetype)trackerWithConfiguration:(GrowingTrackConfiguration *)configuration
                            launchOptions:(NSDictionary *)launchOptions {
     return [[self alloc] initWithConfiguration:configuration launchOptions:launchOptions];
+}
+
+- (void)switchToAccountId:(NSString *)accountId dataSourceId:(NSString *)dataSourceId {
+    NSString *account = [accountId copy];
+    NSString *source = [dataSourceId copy];
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        [self switchToAccountId_unsafe:account dataSourceId:source dataCollectionServerHost:nil];
+    }];
+}
+
+- (void)switchToAccountId:(NSString *)accountId
+                dataSourceId:(NSString *)dataSourceId
+    dataCollectionServerHost:(NSString *)serverHost {
+    NSString *account = [accountId copy];
+    NSString *source = [dataSourceId copy];
+    NSString *host = [serverHost copy];
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        [self switchToAccountId_unsafe:account dataSourceId:source dataCollectionServerHost:host];
+    }];
+}
+
+- (BOOL)switchToAccountId_unsafe:(NSString *)accountId
+                    dataSourceId:(NSString *)dataSourceId
+        dataCollectionServerHost:(NSString *)serverHost {
+    return [[GrowingEventManager sharedInstance] switchToAccountId_unsafe:accountId
+                                                             dataSourceId:dataSourceId
+                                                 dataCollectionServerHost:serverHost];
 }
 
 - (void)loggerSetting {

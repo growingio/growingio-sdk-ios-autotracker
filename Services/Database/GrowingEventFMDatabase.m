@@ -23,6 +23,12 @@
 #import "GrowingULTimeUtil.h"
 #import "Services/Database/FMDB/GrowingFMDB.h"
 
+// 挂起事件时将原 policy 左移 8 位保存：
+// 1. 发送策略只占低位（GrowingEventSendPolicy），左移后与任何发送掩码都不相交，不会被取出；
+// 2. 恢复时右移即可还原原 policy，无需额外字段；
+// 3. 旧版本 SDK 读取到挂起事件时同样会被掩码跳过，不会占用发送名额，过期后被清理。
+static const NSUInteger kGrowingEventSuspendedPolicyMin = 1 << 8;
+
 @interface GrowingEventFMDatabase ()
 
 @property (nonatomic, copy, readonly) NSString *lastPathComponent;
@@ -89,7 +95,10 @@
             count = -1;
             return;
         }
-        GrowingFMResultSet *set = [db executeQuery:@"SELECT COUNT(*) FROM namedcachetable"];
+        // 已挂起的事件不参与发送，不计入数量，避免触发无效的续传
+        GrowingFMResultSet *set =
+            [db executeQuery:@"SELECT COUNT(*) FROM namedcachetable WHERE policy IS NULL OR policy < ?",
+                             @(kGrowingEventSuspendedPolicyMin)];
         if (!set) {
             self.databaseError = [self readErrorInDatabase:db];
             count = -1;
@@ -124,7 +133,8 @@
                                              NSUInteger policy,
                                              NSString *sdkVersion,
                                              BOOL **stop) {
-        if (mask & policy) {
+        // 已挂起的事件不论掩码如何都不取出
+        if (policy < kGrowingEventSuspendedPolicyMin && (mask & policy)) {
             id<GrowingEventPersistenceProtocol> event = [[self.class.persistenceClass alloc] initWithUUID:key
                                                                                                 eventType:type
                                                                                                      data:value
@@ -275,6 +285,50 @@
             return;
         }
         result = [db executeUpdate:@"DELETE FROM namedcachetable WHERE createAt<=?;", sevenDayBefore];
+        if (!result) {
+            self.databaseError = [self writeErrorInDatabase:db];
+        }
+    }];
+
+    return result;
+}
+
+- (BOOL)suspendEvents:(NSArray<NSString *> *)keys {
+    if (!keys || keys.count == 0) {
+        return YES;
+    }
+
+    __block BOOL result = NO;
+    [self performTransactionBlock:^(GrowingFMDatabase *db, BOOL *rollback, NSError *error) {
+        if (error) {
+            self.databaseError = error;
+            return;
+        }
+
+        for (NSString *key in keys) {
+            // policy < 256 保证重复挂起时不会再次左移
+            result = [db executeUpdate:@"UPDATE namedcachetable SET policy = policy << 8 WHERE key=? AND policy < ?;",
+                                       key,
+                                       @(kGrowingEventSuspendedPolicyMin)];
+            if (!result) {
+                self.databaseError = [self writeErrorInDatabase:db];
+                break;
+            }
+        }
+    }];
+
+    return result;
+}
+
+- (BOOL)resumeAllSuspendedEvents {
+    __block BOOL result = NO;
+    [self performDatabaseBlock:^(GrowingFMDatabase *db, NSError *error) {
+        if (error) {
+            self.databaseError = error;
+            return;
+        }
+        result = [db executeUpdate:@"UPDATE namedcachetable SET policy = policy >> 8 WHERE policy >= ?;",
+                                   @(kGrowingEventSuspendedPolicyMin)];
         if (!result) {
             self.databaseError = [self writeErrorInDatabase:db];
         }

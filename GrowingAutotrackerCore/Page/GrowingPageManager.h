@@ -36,6 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
            attributes:(NSDictionary<NSString *, NSString *> *_Nullable)attributes;
 - (GrowingPage *)findPageByView:(UIView *)view;
 - (GrowingPage *_Nullable)findAutotrackPageByPage:(GrowingPage *)page;
+- (GrowingPage *)createdViewControllerPage:(UIViewController *)controller;
 
 @end
 

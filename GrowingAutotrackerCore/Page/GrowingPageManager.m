@@ -28,7 +28,6 @@
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Utils/GrowingArgumentChecker.h"
-#import "GrowingULAppLifecycle.h"
 #import "GrowingULViewControllerLifecycle.h"
 
 @interface GrowingPageManager () <GrowingULViewControllerLifecycleDelegate, GrowingEventInterceptor>
@@ -108,9 +107,13 @@
             self.visiblePages = [NSPointerArray weakObjectsPointerArray];
         }
 
-        if (![self.visiblePages.allObjects containsObject:page]) {
-            [self.visiblePages addPointer:(__bridge void *)page];
+        [self.visiblePages compact];
+        // Reappearing pages become current without retaining a second copy.
+        NSUInteger index = [self.visiblePages.allObjects indexOfObject:page];
+        if (index != NSNotFound) {
+            [self.visiblePages removePointerAtIndex:index];
         }
+        [self.visiblePages addPointer:(__bridge void *)page];
     }
 }
 
@@ -140,7 +143,6 @@
     if (referralPage && referralPage.alias && referralPage.alias.length > 0) {
         ((GrowingPageBuilder *)builder).setReferralPage([NSString stringWithFormat:@"/%@", referralPage.alias]);
     }
-
     [[GrowingEventManager sharedInstance] postEventBuilder:builder];
 }
 

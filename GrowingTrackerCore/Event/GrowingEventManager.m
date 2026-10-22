@@ -39,6 +39,18 @@ static const NSUInteger kGrowingMaxDBCacheSize = 100;  // default: write to DB a
 static const NSUInteger kGrowingMaxBatchSize = 500;    // default: send no more than 500 events in every batch
 static const NSUInteger kGrowingUnit_MB = 1024 * 1024;
 
+/// 读取事件所属的数据源：优先使用持久化对象直接提供的字段，未实现时才转换整条事件
+static NSString *GrowingDataSourceIdOfEvent(id<GrowingEventPersistenceProtocol> event) {
+    id dataSourceId = nil;
+    if ([(id)event respondsToSelector:@selector(dataSourceId)]) {
+        dataSourceId = event.dataSourceId;
+    } else {
+        NSDictionary *jsonObject = [event toJSONObject];
+        dataSourceId = [jsonObject isKindOfClass:NSDictionary.class] ? jsonObject[@"dataSourceId"] : nil;
+    }
+    return [dataSourceId isKindOfClass:NSString.class] && [dataSourceId length] > 0 ? dataSourceId : nil;
+}
+
 @interface GrowingEventManager ()
 
 @property (nonatomic, strong) NSHashTable *allInterceptor;
@@ -117,6 +129,8 @@ static GrowingEventManager *sharedInstance = nil;
                 }
             }
             self->_allEventChannels = eventChannels;
+            // 上次运行中查不到上报地址而被挂起的事件，在本次启动的映射下重新判断
+            [self resumeSuspendedEvents_unsafe];
 
             GrowingTrackConfiguration *trackConfiguration =
                 GrowingConfigurationManager.sharedInstance.trackConfiguration;
@@ -134,6 +148,73 @@ static GrowingEventManager *sharedInstance = nil;
             self->_currentEventChannelMap = dictM;
         }];
     });
+}
+
+- (void)switchToAccountId:(NSString *)accountId dataSourceId:(NSString *)dataSourceId {
+    NSString *account = [accountId copy];
+    NSString *source = [dataSourceId copy];
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        [self switchToAccountId_unsafe:account dataSourceId:source dataCollectionServerHost:nil];
+    }];
+}
+
+- (void)switchToAccountId:(NSString *)accountId
+                dataSourceId:(NSString *)dataSourceId
+    dataCollectionServerHost:(NSString *)serverHost {
+    NSString *account = [accountId copy];
+    NSString *source = [dataSourceId copy];
+    NSString *host = [serverHost copy];
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        [self switchToAccountId_unsafe:account dataSourceId:source dataCollectionServerHost:host];
+    }];
+}
+
+- (BOOL)switchToAccountId_unsafe:(NSString *)accountId
+                    dataSourceId:(NSString *)dataSourceId
+        dataCollectionServerHost:(NSString *)serverHost {
+    GrowingConfigurationManager *manager = GrowingConfigurationManager.sharedInstance;
+    if (!self.allEventChannels.count || !manager.trackConfiguration) {
+        GIOLogError(@"Switch route failed, SDK is not initialized (accountId = %@, dataSourceId = %@).",
+                    accountId,
+                    dataSourceId);
+        return NO;
+    }
+    NSString *previousAccountId = manager.trackConfiguration.accountId;
+    NSString *previousDataSourceId = manager.trackConfiguration.dataSourceId;
+    BOOL wasRegistered = [manager routeForDataSourceId:dataSourceId] != nil;
+    NSError *error = nil;
+    BOOL changed = [manager switchToAccountId:accountId
+                                 dataSourceId:dataSourceId
+                     dataCollectionServerHost:serverHost
+                                        error:&error];
+    if (!changed) {
+        if (error) {
+            GIOLogError(@"Switch route failed, %@ (accountId = %@, dataSourceId = %@).",
+                        error.localizedDescription,
+                        accountId,
+                        dataSourceId);
+        }
+        return NO;
+    }
+
+    NSString *currentAccountId = manager.trackConfiguration.accountId;
+    if (![currentAccountId isEqualToString:previousAccountId]) {
+        // 登录用户属于原项目，切换项目时清除；须在生成 VISIT 之前，避免新会话带上原项目的用户
+        [GrowingSession.currentSession setLoginUserId:nil];
+    }
+    [GrowingSession.currentSession refreshSessionId];
+    [GrowingSession.currentSession generateVisit];
+    GIOLogInfo(@"Switch route succeeded (accountId = %@ -> %@, dataSourceId = %@ -> %@, sessionId = %@).",
+               previousAccountId,
+               currentAccountId,
+               previousDataSourceId,
+               dataSourceId,
+               GrowingSession.currentSession.sessionId);
+    if (!wasRegistered) {
+        // 新注册了路由：恢复可能已可发送的事件，沿用原有上传触发时机。
+        [self resumeSuspendedEvents_unsafe];
+    }
+    return YES;
 }
 
 #pragma mark - Start Timer
@@ -287,10 +368,44 @@ static GrowingEventManager *sharedInstance = nil;
         return;
     }
 
-#ifdef DEBUG
-    [self prettyLogForEvents:events withChannel:channel];
-#endif
+    NSMutableDictionary<NSString *, NSMutableArray<id<GrowingEventPersistenceProtocol>> *> *eventsBySource =
+        [NSMutableDictionary dictionary];
+    NSMutableArray<NSArray<id<GrowingEventPersistenceProtocol>> *> *groups = [NSMutableArray array];
+    NSMutableArray<NSString *> *unroutableKeys = [NSMutableArray array];
+    NSMutableSet<NSString *> *unroutableSources = [NSMutableSet set];
+    for (id<GrowingEventPersistenceProtocol> event in events) {
+        NSString *source = GrowingDataSourceIdOfEvent(event);
+        if (!source || ![GrowingConfigurationManager.sharedInstance routeForDataSourceId:source]) {
+            if (event.eventUUID.length) {
+                [unroutableKeys addObject:event.eventUUID];
+            }
+            [unroutableSources addObject:source ?: @"(none)"];
+            continue;
+        }
+        NSMutableArray *group = eventsBySource[source];
+        if (!group) {
+            group = [NSMutableArray array];
+            eventsBySource[source] = group;
+            [groups addObject:group];
+        }
+        [group addObject:event];
+    }
+    if (unroutableKeys.count) {
+        // 查不到路由的事件挂起保留，不再占用发送名额；注册对应路由或下次启动时恢复，过期后照常清理
+        GIOLogWarn(@"Suspend %lu events without route (channel = %@, dataSourceIds = %@).",
+                   (unsigned long)unroutableKeys.count,
+                   channel.name,
+                   unroutableSources.allObjects);
+        [channel.db suspendEventsForKeys:unroutableKeys];
+    }
+    if (!groups.count) return;
 
+    channel.isUploading = YES;
+    [self sendEventGroups_unsafe:groups channel:channel isViaCellular:isViaCellular allSucceeded:YES];
+}
+
+- (NSData *)buildRawEventsFromEvents:(NSArray<id<GrowingEventPersistenceProtocol>> *)events
+                             channel:(GrowingEventChannel *)channel {
     NSData *rawEvents = nil;
     GrowingTrackConfiguration *trackConfiguration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
     if ((channel.persistenceType == GrowingEventPersistenceTypeJSON && trackConfiguration.useProtobuf) ||
@@ -305,8 +420,8 @@ static GrowingEventManager *sharedInstance = nil;
             dbClass = [[GrowingServiceManager sharedInstance] serviceImplClass:@protocol(GrowingEventDatabaseService)];
         }
         if (!dbClass) {
-            GIOLogError(@"-sendEventsOfChannel_unsafe: error : no event database service support");
-            return;
+            GIOLogError(@"-buildRawEventsFromEvents:channel: error : no event database service support");
+            return nil;
         }
         NSMutableArray *jsonObjects = [NSMutableArray array];
         for (id<GrowingEventPersistenceProtocol> e in events) {
@@ -322,56 +437,86 @@ static GrowingEventManager *sharedInstance = nil;
         rawEvents = [channel.db buildRawEventsFromEvents:events];
     }
 
+    return rawEvents;
+}
+
+- (void)sendEventGroups_unsafe:(NSArray<NSArray<id<GrowingEventPersistenceProtocol>> *> *)groups
+                       channel:(GrowingEventChannel *)channel
+                 isViaCellular:(BOOL)isViaCellular
+                  allSucceeded:(BOOL)allSucceeded {
+    if (!groups.count) {
+        channel.isUploading = NO;
+        // 沿用原来的续传条件；失败批次等待下一次上传触发。
+        if (allSucceeded && channel.db.countOfEvents >= kGrowingMaxBatchSize) {
+            [self sendEventsInstantWithChannel:channel];
+        }
+        return;
+    }
+    NSArray<id<GrowingEventPersistenceProtocol>> *events = groups.firstObject;
+    NSArray *remainingGroups = [groups subarrayWithRange:NSMakeRange(1, groups.count - 1)];
+    NSString *source = GrowingDataSourceIdOfEvent(events.firstObject);
+    // 路由只增不减，分组时能查到的路由在发送时仍然存在
+    GrowingDataSourceRoute *route = [GrowingConfigurationManager.sharedInstance routeForDataSourceId:source];
+
+#ifdef DEBUG
+    [self prettyLogForEvents:events withChannel:channel];
+#endif
+
+    NSData *rawEvents = [self buildRawEventsFromEvents:events channel:channel];
     if (!rawEvents) {
-        GIOLogError(@"-sendEventsOfChannel_unsafe: error : fail to build raw events");
+        GIOLogError(@"-sendEventGroups_unsafe:channel:isViaCellular:allSucceeded: error : fail to build raw events");
+        channel.isUploading = NO;
         return;
     }
 
     id<GrowingEventNetworkService> service =
         [[GrowingServiceManager sharedInstance] createService:@protocol(GrowingEventNetworkService)];
     if (!service) {
-        GIOLogError(@"-sendEventsOfChannel_unsafe: error : no network service support");
+        GIOLogError(@"-sendEventGroups_unsafe:channel:isViaCellular:allSucceeded: error : no network service support");
+        channel.isUploading = NO;
         return;
     }
 
-    channel.isUploading = YES;
-    NSObject<GrowingRequestProtocol> *eventRequest = [[GrowingEventRequest alloc] initWithEvents:rawEvents];
-    [service sendRequest:eventRequest
-              completion:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data, NSError *_Nonnull error) {
-                  if (error) {
-                      [GrowingDispatchManager dispatchInGrowingThread:^{
-                          channel.isUploading = NO;
-                      }];
-                  }
-                  if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
-                      [GrowingDispatchManager dispatchInGrowingThread:^{
-                          if (isViaCellular) {
-                              if ([eventRequest respondsToSelector:@selector(outsize)]) {
-                                  self.uploadEventSize += eventRequest.outsize;
-                              }
-                          }
-
-                          for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
-                              if ([obj respondsToSelector:@selector(growingEventManagerEventsDidSend:
-                                                                                             request:channel:)]) {
-                                  [obj growingEventManagerEventsDidSend:events request:eventRequest channel:channel];
-                              }
-                          }
-
-                          [self removeEvents_unsafe:events forChannel:channel];
-                          channel.isUploading = NO;
-
-                          // 如果剩余数量 大于单包数量  则直接发送
-                          if (channel.db.countOfEvents >= kGrowingMaxBatchSize) {
-                              [self sendEventsInstantWithChannel:channel];
-                          }
-                      }];
-                  } else {
-                      [GrowingDispatchManager dispatchInGrowingThread:^{
-                          channel.isUploading = NO;
-                      }];
-                  }
-              }];
+    // 按事件所属数据源的路由确定项目和采集地址，而不是当前的项目和数据源
+    NSObject<GrowingRequestProtocol> *eventRequest =
+        [[GrowingEventRequest alloc] initWithEvents:rawEvents
+                                         serverHost:route.dataCollectionServerHost
+                                          accountId:route.accountId];
+    GIOLogDebug(@"Upload events (channel = %@, dataSourceId = %@, url = %@).",
+                channel.name,
+                source,
+                eventRequest.absoluteURL);
+    __block BOOL completed = NO;
+    [service
+        sendRequest:eventRequest
+         completion:^(NSHTTPURLResponse *httpResponse, NSData *data, NSError *error) {
+             [GrowingDispatchManager dispatchInGrowingThread:^{
+                 if (completed) return;
+                 completed = YES;
+                 BOOL success = !error && httpResponse.statusCode >= 200 && httpResponse.statusCode < 300;
+                 if (success) {
+                     if (isViaCellular && [eventRequest respondsToSelector:@selector(outsize)]) {
+                         self.uploadEventSize += eventRequest.outsize;
+                     }
+                     for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
+                         if ([obj respondsToSelector:@selector(growingEventManagerEventsDidSend:request:channel:)]) {
+                             [obj growingEventManagerEventsDidSend:events request:eventRequest channel:channel];
+                         }
+                     }
+                     [self removeEvents_unsafe:events forChannel:channel];
+                 } else {
+                     GIOLogDebug(@"Upload events failed (dataSourceId = %@, url = %@, statusCode = %ld, error = %@).",
+                                 source,
+                                 eventRequest.absoluteURL,
+                                 (long)httpResponse.statusCode,
+                                 error);
+                 }
+                 [self sendEventGroups_unsafe:remainingGroups
+                                      channel:channel
+                                isViaCellular:isViaCellular
+                                 allSucceeded:allSucceeded && success];
+             }];
+         }];
 }
 
 #pragma mark Event Persist
@@ -415,6 +560,17 @@ static GrowingEventManager *sharedInstance = nil;
                  forChannel:(GrowingEventChannel *)channel {
     for (NSInteger i = 0; i < events.count; i++) {
         [channel.db setEvent:nil forKey:events[i].eventUUID];
+    }
+}
+
+- (void)resumeSuspendedEvents_unsafe {
+    // 多个通道可能共用同一个数据库，每个数据库只恢复一次
+    NSHashTable<GrowingEventDatabase *> *databases = [NSHashTable weakObjectsHashTable];
+    for (GrowingEventChannel *channel in self.allEventChannels) {
+        if (channel.db && ![databases containsObject:channel.db]) {
+            [databases addObject:channel.db];
+            [channel.db resumeAllSuspendedEvents];
+        }
     }
 }
 

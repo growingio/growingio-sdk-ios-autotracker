@@ -18,7 +18,59 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
-#import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
+#import "GrowingTrackerCore/GrowingTrackConfiguration+Private.h"
+
+NSString *const GrowingRoutingErrorDomain = @"com.growing.routing.error";
+
+static BOOL GrowingIsNonEmptyString(id value) {
+    return [value isKindOfClass:NSString.class] && [(NSString *)value length] > 0;
+}
+
+/// 新系统默认会对非法字符做百分号编码后再解析，这里要求原样合法，非法时返回 nil
+static NSURLComponents *GrowingStrictURLComponents(NSString *string) {
+    if (@available(iOS 17.0, macCatalyst 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)) {
+        return [NSURLComponents componentsWithString:string encodingInvalidCharacters:NO];
+    }
+    return [NSURLComponents componentsWithString:string];
+}
+
+/// 采集地址会与请求路径直接拼接，因此只接受 http(s) 地址，
+/// 必须有 host，端口须合法，且不能带用户信息、query 或 fragment
+static BOOL GrowingIsValidServerHost(id serverHost) {
+    if (!GrowingIsNonEmptyString(serverHost)) {
+        return NO;
+    }
+    NSURLComponents *components = GrowingStrictURLComponents(serverHost);
+    NSString *scheme = components.scheme.lowercaseString;
+    if (![scheme isEqualToString:@"http"] && ![scheme isEqualToString:@"https"]) {
+        return NO;
+    }
+    if (components.host.length == 0) {
+        return NO;
+    }
+    NSNumber *port = components.port;
+    if (port && (port.integerValue < 1 || port.integerValue > 65535)) {
+        return NO;
+    }
+    return !components.user && !components.password && !components.query && !components.fragment;
+}
+
+static BOOL GrowingIsValidRoute(id route) {
+    if (![route isKindOfClass:GrowingDataSourceRoute.class]) {
+        return NO;
+    }
+    GrowingDataSourceRoute *candidate = (GrowingDataSourceRoute *)route;
+    return GrowingIsNonEmptyString(candidate.accountId) && GrowingIsNonEmptyString(candidate.dataSourceId) &&
+           GrowingIsValidServerHost(candidate.dataCollectionServerHost);
+}
+
+static void GrowingSetRoutingError(NSError **error, GrowingRoutingError code, NSString *description) {
+    if (error) {
+        *error = [NSError errorWithDomain:GrowingRoutingErrorDomain
+                                     code:code
+                                 userInfo:@{NSLocalizedDescriptionKey: description}];
+    }
+}
 
 @implementation GrowingConfigurationManager
 
@@ -30,6 +82,127 @@
     });
 
     return _sharedInstance;
+}
+
++ (NSArray<GrowingDataSourceRoute *> *)validatedRoutesForConfiguration:(GrowingTrackConfiguration *)configuration
+                                                                 error:(NSError **)error {
+    NSString *accountId = configuration.accountId;
+    NSString *dataSourceId = configuration.dataSourceId;
+    if (!GrowingIsNonEmptyString(accountId) || !GrowingIsNonEmptyString(dataSourceId)) {
+        GrowingSetRoutingError(error, GrowingRoutingInvalidRoutesError, @"accountId and dataSourceId are required");
+        return nil;
+    }
+
+    NSArray *input = configuration.dataSourceRoutes;
+    if (!input) {
+        // 只配置了 dataCollectionServerHost 时沿用旧行为、不校验地址格式，避免老用户升级后初始化抛异常
+        NSString *serverHost = configuration.dataCollectionServerHost;
+        if (!GrowingIsNonEmptyString(serverHost)) {
+            GrowingSetRoutingError(error, GrowingRoutingInvalidRoutesError, @"dataCollectionServerHost is required");
+            return nil;
+        }
+        return @[[GrowingDataSourceRoute routeWithAccountId:accountId
+                                               dataSourceId:dataSourceId
+                                   dataCollectionServerHost:serverHost]];
+    }
+    if (![input isKindOfClass:NSArray.class]) {
+        GrowingSetRoutingError(error, GrowingRoutingInvalidRoutesError, @"dataSourceRoutes must be an array");
+        return nil;
+    }
+
+    NSMutableArray<GrowingDataSourceRoute *> *routes = [NSMutableArray arrayWithCapacity:input.count];
+    NSMutableDictionary<NSString *, GrowingDataSourceRoute *> *routesByDataSourceId =
+        [NSMutableDictionary dictionaryWithCapacity:input.count];
+    for (id item in input) {
+        if (!GrowingIsValidRoute(item)) {
+            GrowingSetRoutingError(error,
+                                   GrowingRoutingInvalidRoutesError,
+                                   [NSString stringWithFormat:@"Invalid data source route: %@", item]);
+            return nil;
+        }
+        GrowingDataSourceRoute *route = (GrowingDataSourceRoute *)item;
+        GrowingDataSourceRoute *existing = routesByDataSourceId[route.dataSourceId];
+        if (existing) {
+            if (![existing isEqual:route]) {
+                GrowingSetRoutingError(
+                    error,
+                    GrowingRoutingInvalidRoutesError,
+                    [NSString stringWithFormat:@"Conflicting routes for data source %@", route.dataSourceId]);
+                return nil;
+            }
+            continue;
+        }
+        routesByDataSourceId[route.dataSourceId] = route;
+        [routes addObject:route];
+    }
+
+    if (![routesByDataSourceId[dataSourceId].accountId isEqualToString:accountId]) {
+        GrowingSetRoutingError(error,
+                               GrowingRoutingInvalidRoutesError,
+                               @"dataSourceRoutes must contain the configured accountId and dataSourceId");
+        return nil;
+    }
+
+    return routes.copy;
+}
+
+- (GrowingDataSourceRoute *)routeForDataSourceId:(NSString *)dataSourceId {
+    return [self.trackConfiguration routeForDataSourceId:dataSourceId];
+}
+
+- (BOOL)switchToAccountId:(NSString *)accountId
+                dataSourceId:(NSString *)dataSourceId
+    dataCollectionServerHost:(NSString *)serverHost
+                       error:(NSError **)error {
+    if (!GrowingIsNonEmptyString(accountId) || !GrowingIsNonEmptyString(dataSourceId)) {
+        GrowingSetRoutingError(error, GrowingRoutingInvalidRouteError, @"accountId and dataSourceId are required");
+        return NO;
+    }
+
+    GrowingTrackConfiguration *configuration = self.trackConfiguration;
+    GrowingDataSourceRoute *route = [configuration routeForDataSourceId:dataSourceId];
+    if (serverHost) {
+        GrowingDataSourceRoute *candidate = [GrowingDataSourceRoute routeWithAccountId:accountId
+                                                                          dataSourceId:dataSourceId
+                                                              dataCollectionServerHost:serverHost];
+        if (route) {
+            if (![route isEqual:candidate]) {
+                GrowingSetRoutingError(
+                    error,
+                    GrowingRoutingConflictingRouteError,
+                    [NSString stringWithFormat:@"The data source is already registered as %@", route]);
+                return NO;
+            }
+        } else if (!GrowingIsValidRoute(candidate)) {
+            GrowingSetRoutingError(error,
+                                   GrowingRoutingInvalidRouteError,
+                                   [NSString stringWithFormat:@"Invalid data source route: %@", candidate]);
+            return NO;
+        } else {
+            route = candidate;
+        }
+    } else if (!route) {
+        GrowingSetRoutingError(error,
+                               GrowingRoutingUnregisteredRouteError,
+                               @"The route is not registered and no collection URL is provided");
+        return NO;
+    } else if (![route.accountId isEqualToString:accountId]) {
+        GrowingSetRoutingError(error,
+                               GrowingRoutingConflictingRouteError,
+                               [NSString stringWithFormat:@"The data source is registered as %@", route]);
+        return NO;
+    }
+
+    // dataSourceId 全局唯一，与当前数据源相同即为当前路由，无需切换
+    if ([dataSourceId isEqualToString:configuration.dataSourceId]) {
+        return NO;
+    }
+    NSArray<GrowingDataSourceRoute *> *routes = configuration.dataSourceRoutes ?: @[];
+    if (![routes containsObject:route]) {
+        routes = [routes arrayByAddingObject:route];
+    }
+    [configuration activateRoute:route withRoutes:routes];
+    return YES;
 }
 
 @end

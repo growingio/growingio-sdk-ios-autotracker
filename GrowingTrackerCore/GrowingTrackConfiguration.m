@@ -18,13 +18,20 @@
 //  limitations under the License.
 
 #import "GrowingTrackerCore/Public/GrowingTrackConfiguration.h"
+#import "GrowingTrackerCore/GrowingTrackConfiguration+Private.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
+#import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 
 NSString *const kGrowingDefaultDataCollectionServerHost = @"https://napi.growingio.com";
 NSString *const kGrowingDefaultDeepLinkHost = @"https://link.growingio.com";
 NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com";
 
-@interface GrowingTrackConfiguration ()
+@interface GrowingTrackConfiguration () {
+    // 保护 accountId、dataSourceId、dataCollectionServerHost、dataSourceRoutes：
+    // 运行时切换项目和数据源会在事件线程修改它们，而 Hybrid、ABTesting、广告等模块可能在其他线程同时读取。
+    // 对象创建时实例变量已置零，与 OS_UNFAIR_LOCK_INIT 相同，copy 出的新对象无需单独初始化。
+    GROWING_LOCK_DECLARE(_routingLock);
+}
 
 // Ads
 @property (nonatomic, assign) BOOL ASAEnabled;
@@ -49,9 +56,16 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
 
 @implementation GrowingTrackConfiguration
 
+// 下面几个属性自定义了存取方法，需要显式合成实例变量
+@synthesize accountId = _accountId;
+@synthesize dataSourceId = _dataSourceId;
+@synthesize dataCollectionServerHost = _dataCollectionServerHost;
+@synthesize dataSourceRoutes = _dataSourceRoutes;
+
 - (instancetype)initWithAccountId:(NSString *)accountId {
     self = [super init];
     if (self) {
+        GROWING_LOCK_INIT(_routingLock);
         _accountId = [accountId copy];
         _dataSourceId = nil;
 
@@ -107,15 +121,18 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
 
 - (id)copyWithZone:(NSZone *)zone {
     GrowingTrackConfiguration *configuration = [[[self class] allocWithZone:zone] init];
+    GROWING_LOCK(_routingLock);
     configuration->_accountId = [_accountId copy];
     configuration->_dataSourceId = [_dataSourceId copy];
+    configuration->_dataCollectionServerHost = [_dataCollectionServerHost copy];
+    configuration->_dataSourceRoutes = [_dataSourceRoutes copy];
+    GROWING_UNLOCK(_routingLock);
     configuration->_debugEnabled = _debugEnabled;
     configuration->_cellularDataLimit = _cellularDataLimit;
     configuration->_dataUploadInterval = _dataUploadInterval;
     configuration->_sessionInterval = _sessionInterval;
     configuration->_dataCollectionEnabled = _dataCollectionEnabled;
     configuration->_uploadExceptionEnable = _uploadExceptionEnable;
-    configuration->_dataCollectionServerHost = [_dataCollectionServerHost copy];
     configuration->_excludeEvent = _excludeEvent;
     configuration->_ignoreField = _ignoreField;
     configuration->_idMappingEnabled = _idMappingEnabled;
@@ -152,6 +169,63 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
 
 #pragma mark - Setter & Getter
 
+// 旧值先转存到局部变量，ARC 会在作用域结束（已解锁）时才释放它，避免在锁内触发对象析构
+
+- (NSString *)accountId {
+    GROWING_LOCK(_routingLock);
+    NSString *value = _accountId;
+    GROWING_UNLOCK(_routingLock);
+    return value;
+}
+
+- (NSString *)dataSourceId {
+    GROWING_LOCK(_routingLock);
+    NSString *value = _dataSourceId;
+    GROWING_UNLOCK(_routingLock);
+    return value;
+}
+
+- (void)setDataSourceId:(NSString *)dataSourceId {
+    NSString *value = [dataSourceId copy];
+    GROWING_LOCK(_routingLock);
+    NSString *oldValue = _dataSourceId;
+    _dataSourceId = value;
+    GROWING_UNLOCK(_routingLock);
+    (void)oldValue;
+}
+
+- (NSString *)dataCollectionServerHost {
+    GROWING_LOCK(_routingLock);
+    NSString *value = _dataCollectionServerHost;
+    GROWING_UNLOCK(_routingLock);
+    return value;
+}
+
+- (void)setDataCollectionServerHost:(NSString *)dataCollectionServerHost {
+    NSString *value = [dataCollectionServerHost copy];
+    GROWING_LOCK(_routingLock);
+    NSString *oldValue = _dataCollectionServerHost;
+    _dataCollectionServerHost = value;
+    GROWING_UNLOCK(_routingLock);
+    (void)oldValue;
+}
+
+- (NSArray<GrowingDataSourceRoute *> *)dataSourceRoutes {
+    GROWING_LOCK(_routingLock);
+    NSArray<GrowingDataSourceRoute *> *value = _dataSourceRoutes;
+    GROWING_UNLOCK(_routingLock);
+    return value;
+}
+
+- (void)setDataSourceRoutes:(NSArray<GrowingDataSourceRoute *> *)dataSourceRoutes {
+    NSArray<GrowingDataSourceRoute *> *value = [dataSourceRoutes copy];
+    GROWING_LOCK(_routingLock);
+    NSArray<GrowingDataSourceRoute *> *oldValue = _dataSourceRoutes;
+    _dataSourceRoutes = value;
+    GROWING_UNLOCK(_routingLock);
+    (void)oldValue;
+}
+
 - (void)setDataUploadInterval:(NSTimeInterval)dataUploadInterval {
     if (dataUploadInterval <= 0) {
         return;
@@ -181,6 +255,48 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
         dataValidityPeriod = 30;
     }
     _dataValidityPeriod = dataValidityPeriod;
+}
+
+@end
+
+@implementation GrowingTrackConfiguration (Private)
+
+- (GrowingDataSourceRoute *)routeForDataSourceId:(NSString *)dataSourceId {
+    if (dataSourceId.length == 0) {
+        return nil;
+    }
+    GrowingDataSourceRoute *found = nil;
+    GROWING_LOCK(_routingLock);
+    // 路由数量很少，线性查找即可，且只维护一份路由数据
+    for (GrowingDataSourceRoute *route in _dataSourceRoutes) {
+        if ([route.dataSourceId isEqualToString:dataSourceId]) {
+            found = route;
+            break;
+        }
+    }
+    GROWING_UNLOCK(_routingLock);
+    return found;
+}
+
+- (void)activateRoute:(GrowingDataSourceRoute *)route withRoutes:(NSArray<GrowingDataSourceRoute *> *)routes {
+    NSArray<GrowingDataSourceRoute *> *newRoutes = [routes copy];
+    NSString *accountId = [route.accountId copy];
+    NSString *dataSourceId = [route.dataSourceId copy];
+    NSString *serverHost = [route.dataCollectionServerHost copy];
+    GROWING_LOCK(_routingLock);
+    NSArray<GrowingDataSourceRoute *> *oldRoutes = _dataSourceRoutes;
+    NSString *oldAccountId = _accountId;
+    NSString *oldDataSourceId = _dataSourceId;
+    NSString *oldServerHost = _dataCollectionServerHost;
+    _dataSourceRoutes = newRoutes;
+    _accountId = accountId;
+    _dataSourceId = dataSourceId;
+    _dataCollectionServerHost = serverHost;
+    GROWING_UNLOCK(_routingLock);
+    (void)oldRoutes;
+    (void)oldAccountId;
+    (void)oldDataSourceId;
+    (void)oldServerHost;
 }
 
 @end

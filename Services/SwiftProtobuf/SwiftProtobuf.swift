@@ -33,6 +33,11 @@ public class SwiftProtobufWrapper: NSObject {
         data = try? unbox.serializedData()
     }
 
+    /// 直接读取字段，不做 JSON 转换；未设置时为 nil
+    @objc public var dataSourceId: String? {
+        unbox.dataSourceID.isEmpty ? nil : unbox.dataSourceID
+    }
+
     @objc(parseFromData:)
     public static func parse(from data: Data) -> SwiftProtobufWrapper? {
         do {
@@ -167,7 +172,7 @@ public class SwiftProtobufWrapper: NSObject {
 }
 
 public extension SwiftProtobufWrapper {
-    // For GrowingToolsKit NetFlow
+    /// For GrowingToolsKit NetFlow
     @objc(convertProtobufDataToJsonArray:)
     static func convertProtobufDataToJsonArray(from data: Data) -> [[String: AnyObject]]? {
         do {
