@@ -18,6 +18,14 @@
 //  limitations under the License.
 
 #import "Modules/ViewImpression/Public/GrowingImpressionConfig.h"
+#import "Modules/ViewImpression/GrowingImpressionConfig+Private.h"
+
+/// repeatable 暂未公开，声明在类扩展中以自动合成 ivar 与存取方法
+@interface GrowingImpressionConfig ()
+
+@property (nonatomic, assign, getter=isRepeatable) BOOL repeatable;
+
+@end
 
 @implementation GrowingImpressionConfig
 
@@ -28,6 +36,10 @@
         _repeatable = YES;
     }
     return self;
+}
+
++ (instancetype)configWithImpressionScale:(float)impressionScale stayDuration:(NSTimeInterval)stayDuration {
+    return [self configWithImpressionScale:impressionScale stayDuration:stayDuration repeatable:YES];
 }
 
 + (instancetype)configWithImpressionScale:(float)impressionScale

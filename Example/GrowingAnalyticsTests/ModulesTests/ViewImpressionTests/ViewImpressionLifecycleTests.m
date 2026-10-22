@@ -20,6 +20,8 @@
 #import "Modules/ViewImpression/Public/GrowingViewImpression.h"
 #import "Modules/ViewImpression/Public/GrowingImpressionConfig.h"
 #import "Modules/ViewImpression/Public/UIView+GrowingViewImpression.h"
+#import "Modules/ViewImpression/GrowingImpressionConfig+Private.h"
+#import "Modules/ViewImpression/UIView+GrowingViewImpression+Private.h"
 #import "ViewImpressionTestCase.h"
 
 static const CGRect kOnscreen = {{0, 0}, {375, 100}};
