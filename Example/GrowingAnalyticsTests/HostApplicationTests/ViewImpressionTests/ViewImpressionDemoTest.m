@@ -23,6 +23,7 @@
 #import "GrowingTrackerCore/Event/GrowingTrackEventType.h"
 #import "MockEventQueue.h"
 #import "Modules/ViewImpression/Public/GrowingViewImpression.h"
+#import "Modules/ViewImpression/GrowingViewImpression+Private.h"
 
 /// 曝光检测按 viewImpressionCheckInterval（默认 0.5 秒）节流。等元素离开可视区或确认没有曝光时，
 /// 至少要覆盖一个检测周期并留出余量，才能保证期间发生过检测
