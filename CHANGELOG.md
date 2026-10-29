@@ -1,11 +1,6 @@
 # [4.14.0](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/4.13.0...4.14.0) (2026-10-29)
 
 
-### Bug Fixes
-
-* **example:** 适配 iOS 27 并移除 ExampleiOS13 ([#375](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/375)) ([1667cf2](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/1667cf2e3282a81439d13a9e3b81a5b67e077b15))
-
-
 ### Features
 
 * release 4.14.0 ([#378](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/378)) ([793f004](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/793f004f20fda1fd872bda43514c76c326ba2cd6))
