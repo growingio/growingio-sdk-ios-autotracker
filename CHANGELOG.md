@@ -1,3 +1,18 @@
+# [4.14.0](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/4.13.0...4.14.0) (2026-10-29)
+
+
+### Bug Fixes
+
+* **example:** 适配 iOS 27 并移除 ExampleiOS13 ([#375](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/375)) ([1667cf2](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/1667cf2e3282a81439d13a9e3b81a5b67e077b15))
+
+
+### Features
+
+* **viewimp:** 收窄公开接口，未上线能力转入私有头文件 ([#374](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/374)) ([8ea0b9a](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/8ea0b9a17fefc56f74a38ac27b80afa5047cd618))
+* 新增 ViewImpression 元素曝光模块 ([#372](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/372)) ([1592815](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/159281575036d050b6e407985b097d5b3ec70786))
+
+
+
 # [4.13.0](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/4.12.0...4.13.0) (2026-09-29)
 
 
@@ -40,20 +55,6 @@
 
 * ANLSPI-30189 add referralPage for page event ([#354](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/354)) ([b3cac0a](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/b3cac0a822af8205b1fb252cf5cfdd673141906c))
 * release 4.10.0 ([bdbc886](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/bdbc88632947bfbdaeaaef02d008ed3d48732c72))
-
-
-
-## [4.9.1](https://github.com/growingio/growingio-sdk-ios-autotracker/compare/4.9.0...4.9.1) (2025-09-18)
-
-
-### Bug Fixes
-
-* add setPageTitle API to SwiftPM Autotracker exports ([#353](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/353)) ([ae05ad6](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/ae05ad6496a97364660bc91caed6c878c86f14a1))
-
-
-### Features
-
-* release 4.9.1 ([ed6a43f](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/ed6a43fcb2b1234f3019778adf05c7453041dd99))
 
 
 
