@@ -8,7 +8,9 @@
 
 ### Features
 
-* 新增 ViewImpression 元素曝光模块，支持按可见比例和停留时长配置曝光条件 ([#372](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/372)) ([1592815](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/159281575036d050b6e407985b097d5b3ec70786))
+* release 4.14.0 ([#378](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/378)) ([793f004](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/793f004f20fda1fd872bda43514c76c326ba2cd6))
+* **viewimp:** 收窄公开接口，未上线能力转入私有头文件 ([#374](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/374)) ([8ea0b9a](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/8ea0b9a17fefc56f74a38ac27b80afa5047cd618))
+* 新增 ViewImpression 元素曝光模块 ([#372](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/372)) ([1592815](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/159281575036d050b6e407985b097d5b3ec70786))
 
 
 
@@ -18,6 +20,7 @@
 ### Features
 
 * **abtesting:** 按登录用户身份分流并加密上传 userId/userKey ([#366](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/366)) ([ddeb641](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/ddeb641e1544da6976c9952d339b9d0ab78061dd)), closes [#369](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/369)
+* release 4.13.0 ([c01a563](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/c01a563623f84c1c0cb1e13576a48999fb38893e))
 * release 4.13.0 ([#373](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/373)) ([4901888](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/49018880eff450d9e08f58a52cbaf578016d4bfb))
 
 
