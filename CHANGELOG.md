@@ -8,8 +8,7 @@
 
 ### Features
 
-* **viewimp:** 收窄公开接口，未上线能力转入私有头文件 ([#374](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/374)) ([8ea0b9a](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/8ea0b9a17fefc56f74a38ac27b80afa5047cd618))
-* 新增 ViewImpression 元素曝光模块 ([#372](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/372)) ([1592815](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/159281575036d050b6e407985b097d5b3ec70786))
+* 新增 ViewImpression 元素曝光模块，支持按可见比例和停留时长配置曝光条件 ([#372](https://github.com/growingio/growingio-sdk-ios-autotracker/issues/372)) ([1592815](https://github.com/growingio/growingio-sdk-ios-autotracker/commit/159281575036d050b6e407985b097d5b3ec70786))
 
 
 
