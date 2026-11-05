@@ -96,6 +96,7 @@
     // GrowingCustomEvent
     {
         GrowingBaseBuilder *builder = GrowingCustomEvent.builder.setEventName(@"custom")
+            .setReferralPage(@"referralPage")
             .setPath(@"path")
             .setAttributes(@{@"key": @"value"});
         [builder readPropertyInTrackThread];
@@ -105,6 +106,7 @@
         XCTAssertEqualObjects(GrowingEventTypeCustom, event.eventType);
         XCTAssertEqual(GrowingPBEventType_Custom, protobuf.eventType);
         XCTAssertEqualObjects(event.eventName ?: @"", protobuf.eventName);
+        XCTAssertEqualObjects(event.referralPage ?: @"", protobuf.referralPage);
         XCTAssertEqualObjects(event.path ?: @"", protobuf.path);
         XCTAssertEqualObjects(event.attributes ?: @{}, protobuf.attributes);
     }

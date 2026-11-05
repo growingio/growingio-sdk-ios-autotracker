@@ -360,6 +360,10 @@ static CGFloat const kGrowingGetDomTreeDefaultTimeOut = 10.0f;
                           .setAttributes(mergedDic)
                           .setEventName(dict[@KEY_EVENT_NAME])
                           .setDomain([self getDomain:dict]);
+            NSString *referralPage = dict[@KEY_REFERRAL_PAGE];
+            if ([referralPage isKindOfClass:NSString.class] && referralPage.length > 0) {
+                ((GrowingHybridCustomBuilder *)builder).setReferralPage(referralPage);
+            }
         } else if ([type isEqualToString:GrowingEventTypeLoginUserAttributes]) {
             builder = GrowingLoginUserAttributesEvent.builder.setAttributes([self safeAttributesFromDict:dict]);
         }

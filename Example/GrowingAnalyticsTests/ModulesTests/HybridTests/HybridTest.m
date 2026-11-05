@@ -29,8 +29,10 @@
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
+#import "Modules/Hybrid/Events/GrowingHybridCustomEvent.h"
 #import "Modules/Hybrid/Events/GrowingHybridPageEvent.h"
 #import "Modules/Hybrid/GrowingHybridBridgeProvider.h"
+#import "MockEventQueue.h"
 #import "Services/Protobuf/GrowingEventProtobufDatabase.h"
 
 @interface GrowingHybridBridgeProvider (XCTest)
@@ -123,6 +125,64 @@
     NSDictionary *dict = (NSDictionary *)[jsonString growingHelper_jsonObject];
     builder = [self.provider transformViewElementBuilder:dict];
     XCTAssertNotNil(builder);
+}
+
+- (void)testParseHybridCustomEventWithReferralPage {
+    [MockEventQueue.sharedQueue cleanQueue];
+    NSDictionary *eventData = @{
+        @"eventType": GrowingEventTypeCustom,
+        @"eventName": @"hybrid_custom",
+        @"path": @"/current",
+        @"referralPage": @"/previous",
+        @"query": @"from=hybrid",
+        @"domain": @"example.com"
+    };
+
+    [self.provider parseEventJsonString:[eventData growingHelper_jsonString]];
+
+    GrowingHybridCustomEvent *event =
+        (GrowingHybridCustomEvent *)[MockEventQueue.sharedQueue lastEventFor:GrowingEventTypeCustom];
+    XCTAssertEqualObjects(event.path, @"/current");
+    XCTAssertEqualObjects(event.referralPage, @"/previous");
+    XCTAssertEqualObjects(event.toDictionary[@"path"], @"/current");
+    XCTAssertEqualObjects(event.toDictionary[@"referralPage"], @"/previous");
+}
+
+- (void)testParseHybridCustomEventWithoutReferralPage {
+    [MockEventQueue.sharedQueue cleanQueue];
+    NSDictionary *eventData = @{
+        @"eventType": GrowingEventTypeCustom,
+        @"eventName": @"hybrid_custom",
+        @"path": @"/current",
+        @"domain": @"example.com"
+    };
+
+    [self.provider parseEventJsonString:[eventData growingHelper_jsonString]];
+
+    GrowingHybridCustomEvent *event =
+        (GrowingHybridCustomEvent *)[MockEventQueue.sharedQueue lastEventFor:GrowingEventTypeCustom];
+    XCTAssertEqualObjects(event.path, @"/current");
+    XCTAssertNil(event.referralPage);
+    XCTAssertNil(event.toDictionary[@"referralPage"]);
+}
+
+- (void)testParseHybridCustomEventWithEmptyReferralPage {
+    [MockEventQueue.sharedQueue cleanQueue];
+    NSDictionary *eventData = @{
+        @"eventType": GrowingEventTypeCustom,
+        @"eventName": @"hybrid_custom",
+        @"path": @"/current",
+        @"referralPage": @"",
+        @"domain": @"example.com"
+    };
+
+    [self.provider parseEventJsonString:[eventData growingHelper_jsonString]];
+
+    GrowingHybridCustomEvent *event =
+        (GrowingHybridCustomEvent *)[MockEventQueue.sharedQueue lastEventFor:GrowingEventTypeCustom];
+    XCTAssertEqualObjects(event.path, @"/current");
+    XCTAssertNil(event.referralPage);
+    XCTAssertNil(event.toDictionary[@"referralPage"]);
 }
 
 - (void)testGetDomTreeTimeout {

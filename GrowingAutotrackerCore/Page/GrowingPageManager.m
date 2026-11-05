@@ -34,6 +34,7 @@
 @interface GrowingPageManager () <GrowingULViewControllerLifecycleDelegate, GrowingEventInterceptor>
 
 @property (nonatomic, copy) NSString *lastPagePath;
+@property (nonatomic, copy) NSString *lastPageReferralPath;
 @property (nonatomic, assign) long long lastPageTimestamp;
 @property (nonatomic, strong) NSPointerArray *visiblePages;
 @property (nonatomic, strong) NSMutableArray<NSString *> *ignoredPrivateControllers;
@@ -55,10 +56,7 @@
 - (void)start {
     static dispatch_once_t startOnceToken;
     dispatch_once(&startOnceToken, ^{
-        GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
-        if (configuration.customEventWithPath) {
-            [[GrowingEventManager sharedInstance] addInterceptor:self];
-        }
+        [[GrowingEventManager sharedInstance] addInterceptor:self];
         [GrowingULViewControllerLifecycle.sharedInstance addViewControllerLifecycleDelegate:self];
     });
 }
@@ -69,14 +67,20 @@
     if (builder) {
         if ([builder isMemberOfClass:[GrowingCustomBuilder class]]) {
             // Hybrid触发的HybridCustomEvent将在生成时携带path，不走此处的逻辑
-            // Flutter触发的CustomEvent与原生相同，在此处判断后携带path
-            if (self.lastPagePath && self.lastPagePath.length > 0) {
-                ((GrowingCustomBuilder *)builder).setPath(self.lastPagePath.copy);
+            // Flutter触发的CustomEvent与原生相同，在此处判断后携带页面信息
+            GrowingCustomBuilder *customBuilder = (GrowingCustomBuilder *)builder;
+            GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+            if (configuration.customEventWithPath && self.lastPagePath.length > 0) {
+                customBuilder.setPath(self.lastPagePath.copy);
+            }
+            if (configuration.customEventWithReferralPath && self.lastPageReferralPath.length > 0) {
+                customBuilder.setReferralPage(self.lastPageReferralPath.copy);
             }
         } else if ([builder isMemberOfClass:[GrowingPageBuilder class]]) {
             // 原生或Flutter生成PAGE事件
             GrowingPageBuilder *pageBuilder = (GrowingPageBuilder *)builder;
             self.lastPagePath = pageBuilder.path;
+            self.lastPageReferralPath = pageBuilder.referralPage;
             self.lastPageTimestamp = pageBuilder.timestamp;
         }
     }

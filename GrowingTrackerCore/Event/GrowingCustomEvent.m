@@ -27,6 +27,7 @@
     if (self = [super initWithBuilder:builder]) {
         GrowingCustomBuilder *subBuilder = (GrowingCustomBuilder *)builder;
         _eventName = subBuilder.eventName;
+        _referralPage = subBuilder.referralPage;
         _path = subBuilder.path;
     }
     return self;
@@ -39,6 +40,7 @@
 - (NSDictionary *)toDictionary {
     NSMutableDictionary *dataDictM = [NSMutableDictionary dictionaryWithDictionary:[super toDictionary]];
     dataDictM[@"eventName"] = self.eventName;
+    dataDictM[@"referralPage"] = self.referralPage;
     dataDictM[@"path"] = self.path;
     return [dataDictM copy];
 }
@@ -63,6 +65,13 @@
 - (GrowingBaseBuilder * (^)(NSString *value))setEventName {
     return ^(NSString *value) {
         self->_eventName = value;
+        return self;
+    };
+}
+
+- (GrowingBaseBuilder * (^)(NSString *value))setReferralPage {
+    return ^(NSString *value) {
+        self->_referralPage = value;
         return self;
     };
 }

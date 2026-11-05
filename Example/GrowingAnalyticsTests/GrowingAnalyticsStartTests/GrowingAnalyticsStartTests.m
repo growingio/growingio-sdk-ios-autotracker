@@ -130,6 +130,7 @@
     XCTAssertEqualObjects(configuration.dataSourceId, nil);
     XCTAssertEqualObjects(configuration.networkConfig, nil);
     XCTAssertEqual(configuration.dataValidityPeriod, 7);
+    XCTAssertEqual(configuration.customEventWithReferralPath, NO);
 }
 
 - (void)testSetConfiguration_Autotracker {
@@ -159,6 +160,7 @@
     config.dataValidityPeriod = 31;
     XCTAssertEqual(config.dataValidityPeriod, 30);
     config.dataValidityPeriod = 20;
+    config.customEventWithReferralPath = YES;
     
     [GrowingRealAutotracker trackerWithConfiguration:config launchOptions:nil];
 
@@ -182,6 +184,7 @@
     XCTAssertNotNil(configuration.networkConfig);
     XCTAssertEqual(configuration.networkConfig.requestTimeout, 0.3f);
     XCTAssertEqual(configuration.dataValidityPeriod, 20);
+    XCTAssertEqual(configuration.customEventWithReferralPath, YES);
 }
 
 - (void)testDefaultConfiguration_Tracker {
@@ -205,6 +208,7 @@
     XCTAssertEqualObjects(configuration.dataSourceId, nil);
     XCTAssertEqualObjects(configuration.networkConfig, nil);
     XCTAssertEqual(configuration.dataValidityPeriod, 7);
+    XCTAssertEqual(configuration.customEventWithReferralPath, NO);
 }
 
 - (void)testSetConfiguration_Tracker {
@@ -233,6 +237,7 @@
     config.dataValidityPeriod = 31;
     XCTAssertEqual(config.dataValidityPeriod, 30);
     config.dataValidityPeriod = 20;
+    config.customEventWithReferralPath = YES;
     
     [GrowingRealTracker trackerWithConfiguration:config launchOptions:nil];
 
@@ -254,6 +259,7 @@
     XCTAssertNotNil(configuration.networkConfig);
     XCTAssertEqual(configuration.networkConfig.requestTimeout, 0.3f);
     XCTAssertEqual(configuration.dataValidityPeriod, 20);
+    XCTAssertEqual(configuration.customEventWithReferralPath, YES);
 }
 
 - (void)testVersionNameAndVersionCode {
