@@ -26,6 +26,7 @@
 #import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Manager/GrowingForceLogin.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
@@ -192,6 +193,21 @@
     // isNewDevice 恒返回，不因取值为 NO 而缺省
     XCTAssertTrue([identity[@"isNewDevice"] isKindOfClass:NSNumber.class]);
     XCTAssertEqualObjects(identity[@"isNewDevice"], @([GrowingDeviceInfo currentDeviceInfo].isNewDeviceInFirstSession));
+}
+
+- (void)testGetNativeIdentityWithIdentifiedDeviceId {
+    NSString *savedDeviceId = [GrowingPersistenceDataProvider sharedInstance].identifyDeviceId;
+    GrowingConfigurationManager.sharedInstance.trackConfiguration.forceLogin = YES;
+    [GrowingForceLogin setup];
+    XCTAssertTrue([GrowingForceLogin identify:@"  hybrid-visitor  "]);
+    GrowingHybridMockWebView *webView = [self mockWebView];
+
+    [self sendGetNativeIdentityWithCallbackId:@"gio_identify_1" webView:webView];
+
+    NSDictionary *identity = [self identityFromWebView:webView callbackId:@"gio_identify_1"];
+    XCTAssertEqualObjects(identity[@"deviceId"], @"hybrid-visitor");
+    [[GrowingPersistenceDataProvider sharedInstance] setIdentifyDeviceId:savedDeviceId];
+    [GrowingForceLogin setup];
 }
 
 - (void)testGetNativeIdentityWithLoginUser {

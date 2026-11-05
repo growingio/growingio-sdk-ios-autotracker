@@ -28,9 +28,17 @@ typealias EventType = Io_Growing_Tunnel_Protocol_EventType
 public class SwiftProtobufWrapper: NSObject {
     var unbox: EventDto
     @objc public let data: Data?
+    @objc public var deviceId: String { unbox.deviceID }
     init(_ unbox: EventDto) {
         self.unbox = unbox
         data = try? unbox.serializedData()
+    }
+
+    @objc(replacingDeviceId:)
+    public func replacingDeviceId(_ deviceId: String) -> SwiftProtobufWrapper {
+        var dto = unbox
+        dto.deviceID = deviceId
+        return SwiftProtobufWrapper(dto)
     }
 
     @objc(parseFromData:)
