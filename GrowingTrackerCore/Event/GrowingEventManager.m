@@ -347,42 +347,42 @@ static GrowingEventManager *sharedInstance = nil;
 
     channel.isUploading = YES;
     NSObject<GrowingRequestProtocol> *eventRequest = [[GrowingEventRequest alloc] initWithEvents:rawEvents];
-    [service sendRequest:eventRequest
-              completion:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data, NSError *_Nonnull error) {
-                  if (error) {
-                      [GrowingDispatchManager dispatchInGrowingThread:^{
-                          channel.isUploading = NO;
-                      }];
-                  }
-                  if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
-                      [GrowingDispatchManager dispatchInGrowingThread:^{
-                          if (isViaCellular) {
-                              if ([eventRequest respondsToSelector:@selector(outsize)]) {
-                                  self.uploadEventSize += eventRequest.outsize;
-                              }
-                          }
+    [service
+        sendRequest:eventRequest
+         completion:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data, NSError *_Nonnull error) {
+             if (error) {
+                 [GrowingDispatchManager dispatchInGrowingThread:^{
+                     channel.isUploading = NO;
+                 }];
+             }
+             if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
+                 [GrowingDispatchManager dispatchInGrowingThread:^{
+                     if (isViaCellular) {
+                         if ([eventRequest respondsToSelector:@selector(outsize)]) {
+                             self.uploadEventSize += eventRequest.outsize;
+                         }
+                     }
 
-                          for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
-                              if ([obj respondsToSelector:@selector(growingEventManagerEventsDidSend:
-                                                                                             request:channel:)]) {
-                                  [obj growingEventManagerEventsDidSend:events request:eventRequest channel:channel];
-                              }
-                          }
+                     for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
+                         if ([obj respondsToSelector:@selector(growingEventManagerEventsDidSend:request:channel:)]) {
+                             [obj growingEventManagerEventsDidSend:events request:eventRequest channel:channel];
+                         }
+                     }
 
-                          [self removeEvents_unsafe:storedEvents forChannel:channel];
-                          channel.isUploading = NO;
+                     [self removeEvents_unsafe:storedEvents forChannel:channel];
+                     channel.isUploading = NO;
 
-                          // 如果剩余数量 大于单包数量  则直接发送
-                          if (channel.db.countOfEvents >= kGrowingMaxBatchSize) {
-                              [self sendEventsInstantWithChannel:channel];
-                          }
-                      }];
-                  } else {
-                      [GrowingDispatchManager dispatchInGrowingThread:^{
-                          channel.isUploading = NO;
-                      }];
-                  }
-              }];
+                     // 如果剩余数量 大于单包数量  则直接发送
+                     if (channel.db.countOfEvents >= kGrowingMaxBatchSize) {
+                         [self sendEventsInstantWithChannel:channel];
+                     }
+                 }];
+             } else {
+                 [GrowingDispatchManager dispatchInGrowingThread:^{
+                     channel.isUploading = NO;
+                 }];
+             }
+         }];
 }
 
 - (NSArray<id<GrowingEventPersistenceProtocol>> *)eventsForSendingWithEvents:
