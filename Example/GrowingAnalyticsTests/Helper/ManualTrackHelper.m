@@ -26,7 +26,7 @@
         return NO;
     }
     NSArray *protocol = [self.context arrayByAddingObjectsFromArray:@[@"eventName"]];
-    NSArray *optional = @[@"path", @"attributes", @"query"];
+    NSArray *optional = @[@"path", @"referralPage", @"attributes", @"query"];
     return [self protocolCheck:event protocol:protocol] && [self emptyPropertyCheck:event optional:optional];
 }
 

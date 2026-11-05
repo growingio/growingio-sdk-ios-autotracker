@@ -19,6 +19,7 @@
 
 #import <XCTest/XCTest.h>
 
+#import "GrowingAutotrackerCore/Page/GrowingPageManager.h"
 #import "GrowingEventDatabaseService.h"
 #import "GrowingServiceManager.h"
 #import "GrowingTrackerCore/Event/Autotrack/GrowingAutotrackEventType.h"
@@ -128,6 +129,63 @@
     XCTAssertEqualObjects(dic[@"attributes"][@"key"], @"value");
     XCTAssertTrue([ManualTrackHelper customEventCheck:dic]);
     XCTAssertTrue([ManualTrackHelper contextOptionalPropertyCheck:dic]);
+}
+
+- (void)testGrowingCustomEventReferralPage {
+    GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    BOOL customEventWithPath = configuration.customEventWithPath;
+    configuration.customEventWithPath = NO;
+    @try {
+        [GrowingPageManager.sharedInstance start];
+        GrowingBaseBuilder *pageBuilder = GrowingPageEvent.builder.setPath(@"/product/detail");
+        [GrowingEventManager.sharedInstance postEventBuilder:pageBuilder];
+        GrowingBaseBuilder *customBuilder = GrowingCustomEvent.builder.setEventName(@"add_cart");
+        [GrowingEventManager.sharedInstance postEventBuilder:customBuilder];
+
+        GrowingCustomEvent *event =
+            (GrowingCustomEvent *)[MockEventQueue.sharedQueue lastEventFor:GrowingEventTypeCustom];
+        XCTAssertEqualObjects(event.referralPage, @"/product/detail");
+        XCTAssertNil(event.path);
+        XCTAssertEqualObjects(event.toDictionary[@"referralPage"], @"/product/detail");
+        XCTAssertNil(event.toDictionary[@"path"]);
+    } @finally {
+        configuration.customEventWithPath = customEventWithPath;
+    }
+}
+
+- (void)testGrowingCustomEventReferralPageWithoutLastPage {
+    NSObject<GrowingEventInterceptor> *interceptor =
+        (NSObject<GrowingEventInterceptor> *)[[GrowingPageManager alloc] init];
+    GrowingCustomBuilder *builder = GrowingCustomEvent.builder.setEventName(@"add_cart");
+    [builder readPropertyInTrackThread];
+    [interceptor growingEventManagerEventWillBuild:builder];
+
+    GrowingCustomEvent *event = (GrowingCustomEvent *)builder.build;
+    XCTAssertNil(event.referralPage);
+    XCTAssertNil(event.toDictionary[@"referralPage"]);
+}
+
+- (void)testGrowingCustomEventWithPathKeepsLegacyBehavior {
+    GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
+    BOOL customEventWithPath = configuration.customEventWithPath;
+    configuration.customEventWithPath = YES;
+    @try {
+        NSObject<GrowingEventInterceptor> *interceptor =
+            (NSObject<GrowingEventInterceptor> *)[[GrowingPageManager alloc] init];
+        GrowingBaseBuilder *pageBuilder = GrowingPageEvent.builder.setPath(@"/product/detail");
+        [interceptor growingEventManagerEventWillBuild:pageBuilder];
+        GrowingCustomBuilder *customBuilder = GrowingCustomEvent.builder.setEventName(@"add_cart");
+        [customBuilder readPropertyInTrackThread];
+        [interceptor growingEventManagerEventWillBuild:customBuilder];
+
+        GrowingCustomEvent *event = (GrowingCustomEvent *)customBuilder.build;
+        XCTAssertEqualObjects(event.path, @"/product/detail");
+        XCTAssertNil(event.referralPage);
+        XCTAssertEqualObjects(event.toDictionary[@"path"], @"/product/detail");
+        XCTAssertNil(event.toDictionary[@"referralPage"]);
+    } @finally {
+        configuration.customEventWithPath = customEventWithPath;
+    }
 }
 
 - (void)testGrowingLoginUserAttributesEvent {

@@ -55,10 +55,7 @@
 - (void)start {
     static dispatch_once_t startOnceToken;
     dispatch_once(&startOnceToken, ^{
-        GrowingTrackConfiguration *configuration = GrowingConfigurationManager.sharedInstance.trackConfiguration;
-        if (configuration.customEventWithPath) {
-            [[GrowingEventManager sharedInstance] addInterceptor:self];
-        }
+        [[GrowingEventManager sharedInstance] addInterceptor:self];
         [GrowingULViewControllerLifecycle.sharedInstance addViewControllerLifecycleDelegate:self];
     });
 }
@@ -69,9 +66,16 @@
     if (builder) {
         if ([builder isMemberOfClass:[GrowingCustomBuilder class]]) {
             // Hybrid触发的HybridCustomEvent将在生成时携带path，不走此处的逻辑
-            // Flutter触发的CustomEvent与原生相同，在此处判断后携带path
+            // Flutter触发的CustomEvent与原生相同，在此处判断后携带页面信息
             if (self.lastPagePath && self.lastPagePath.length > 0) {
-                ((GrowingCustomBuilder *)builder).setPath(self.lastPagePath.copy);
+                GrowingCustomBuilder *customBuilder = (GrowingCustomBuilder *)builder;
+                GrowingTrackConfiguration *configuration =
+                    GrowingConfigurationManager.sharedInstance.trackConfiguration;
+                if (configuration.customEventWithPath) {
+                    customBuilder.setPath(self.lastPagePath.copy);
+                } else {
+                    customBuilder.setReferralPage(self.lastPagePath.copy);
+                }
             }
         } else if ([builder isMemberOfClass:[GrowingPageBuilder class]]) {
             // 原生或Flutter生成PAGE事件
