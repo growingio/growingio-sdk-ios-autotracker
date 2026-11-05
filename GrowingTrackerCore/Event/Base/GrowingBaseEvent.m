@@ -22,6 +22,7 @@
 #import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
 #import "GrowingTrackerCore/GrowingRealTracker.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Manager/GrowingForceLogin.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
 #import "GrowingTrackerCore/Public/GrowingFieldsIgnore.h"
@@ -125,7 +126,7 @@
     GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
     _domain = _domain.length > 0 ? _domain : deviceInfo.bundleID;
     _appState = deviceInfo.appState;
-    _deviceId = deviceInfo.deviceIDString ?: @"";
+    _deviceId = [GrowingForceLogin deviceIdWithGeneratedDeviceId:deviceInfo.deviceIDString] ?: @"";
     _urlScheme = deviceInfo.urlScheme;
     _platform = deviceInfo.platform;
     _platformVersion = deviceInfo.platformVersion;

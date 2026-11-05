@@ -138,6 +138,39 @@
     return @{};
 }
 
+- (id<GrowingEventPersistenceProtocol>)persistenceByReplacingDeviceId:(NSString *)deviceId {
+    NSDictionary *jsonObject = [self toJSONObject];
+    if (![jsonObject isKindOfClass:NSDictionary.class]) {
+        return nil;
+    }
+    NSString *currentDeviceId = jsonObject[@"deviceId"];
+    if ([currentDeviceId isKindOfClass:NSString.class] && [currentDeviceId isEqualToString:deviceId]) {
+        return self;
+    }
+
+    NSMutableDictionary *jsonObjectCopy = [jsonObject mutableCopy];
+    jsonObjectCopy[@"deviceId"] = deviceId;
+    GrowingEventProtobufPersistence *persistence = [[self.class alloc] init];
+    persistence->_eventUUID = self.eventUUID;
+    persistence->_eventType = self.eventType;
+    persistence->_policy = self.policy;
+    persistence->_sdkVersion = self.sdkVersion;
+#if SWIFT_PACKAGE
+    persistence->_dtoBox = [GrowingSwiftProtobuf parseFromJsonObject:jsonObjectCopy];
+    if (!persistence->_dtoBox) {
+        return nil;
+    }
+    persistence->_data = persistence->_dtoBox.data;
+#else
+    persistence->_dto = [GrowingPBEventV3Dto growingHelper_parseFromJsonObject:jsonObjectCopy];
+    if (!persistence->_dto) {
+        return nil;
+    }
+    persistence->_data = persistence->_dto.data;
+#endif
+    return persistence;
+}
+
 - (void)appendExtraParams:(NSDictionary<NSString *, id> *)extraParams {
     if (!extraParams || extraParams.count == 0) {
         return;

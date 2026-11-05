@@ -23,6 +23,7 @@
 #import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Manager/GrowingForceLogin.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
 #import "GrowingTrackerCore/Network/Request/GrowingEventRequest.h"
@@ -228,6 +229,10 @@ static GrowingEventManager *sharedInstance = nil;
 
 // 非安全 发送日志
 - (void)sendEventsOfChannel_unsafe:(GrowingEventChannel *)channel {
+    if (![GrowingForceLogin canSend]) {
+        GIOLogDebug(@"Force login is enabled, delay upload (channel = %@).", channel.name);
+        return;
+    }
     if (channel.isUploading) {
         return;
     }
@@ -284,6 +289,12 @@ static GrowingEventManager *sharedInstance = nil;
     }
 
     if (events.count == 0) {
+        return;
+    }
+
+    NSArray<id<GrowingEventPersistenceProtocol>> *storedEvents = events;
+    events = [self eventsForSendingWithEvents:storedEvents];
+    if (!events) {
         return;
     }
 
@@ -358,7 +369,7 @@ static GrowingEventManager *sharedInstance = nil;
                               }
                           }
 
-                          [self removeEvents_unsafe:events forChannel:channel];
+                          [self removeEvents_unsafe:storedEvents forChannel:channel];
                           channel.isUploading = NO;
 
                           // 如果剩余数量 大于单包数量  则直接发送
@@ -372,6 +383,29 @@ static GrowingEventManager *sharedInstance = nil;
                       }];
                   }
               }];
+}
+
+- (NSArray<id<GrowingEventPersistenceProtocol>> *)eventsForSendingWithEvents:
+    (NSArray<id<GrowingEventPersistenceProtocol>> *)events {
+    NSString *deviceId = [GrowingForceLogin identifiedDeviceId];
+    if (!deviceId.length) {
+        return events;
+    }
+
+    NSMutableArray<id<GrowingEventPersistenceProtocol>> *sentEvents = [NSMutableArray arrayWithCapacity:events.count];
+    for (id<GrowingEventPersistenceProtocol> event in events) {
+        if (![(NSObject *)event respondsToSelector:@selector(persistenceByReplacingDeviceId:)]) {
+            GIOLogError(@"%s error : event does not support replacing deviceId", __func__);
+            return nil;
+        }
+        id<GrowingEventPersistenceProtocol> sentEvent = [event persistenceByReplacingDeviceId:deviceId];
+        if (!sentEvent) {
+            GIOLogError(@"%s error : fail to replace event deviceId", __func__);
+            return nil;
+        }
+        [sentEvents addObject:sentEvent];
+    }
+    return sentEvents;
 }
 
 #pragma mark Event Persist

@@ -39,6 +39,10 @@ public struct Tracker {
         tracker.setDataCollectionEnabled(enabled)
     }
 
+    public static func identify(_ deviceId: String) {
+        tracker.identify(deviceId)
+    }
+
     public static func setLoginUserId(_ userId: String, userKey: String? = nil) {
         guard let userKey = userKey else {
             tracker.setLoginUserId(userId)
