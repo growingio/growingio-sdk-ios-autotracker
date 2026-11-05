@@ -27,6 +27,7 @@
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/LogFormat/GrowingWSLoggerFormat.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Manager/GrowingForceLogin.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
 #import "GrowingTrackerCore/Public/GrowingAttributesBuilder.h"
@@ -59,6 +60,7 @@ const int GrowingTrackerVersionCode = 41400;
         _configuration = [configuration copyWithZone:nil];
         _launchOptions = [launchOptions copy];
         GrowingConfigurationManager.sharedInstance.trackConfiguration = _configuration;
+        [GrowingForceLogin setup];
 
         [self loggerSetting];
         [GrowingDeviceInfo setup];
@@ -253,8 +255,16 @@ const int GrowingTrackerVersionCode = 41400;
     }];
 }
 
+- (void)identify:(NSString *)deviceId {
+    if (![GrowingForceLogin identify:deviceId]) {
+        return;
+    }
+    [[GrowingEventManager sharedInstance] sendAllChannelEvents];
+}
+
 - (NSString *)getDeviceId {
-    return [GrowingDeviceInfo currentDeviceInfo].deviceIDString;
+    NSString *generatedDeviceId = [GrowingDeviceInfo currentDeviceInfo].deviceIDString;
+    return [GrowingForceLogin deviceIdWithGeneratedDeviceId:generatedDeviceId];
 }
 
 - (void)setLocation:(double)latitude longitude:(double)longitude {

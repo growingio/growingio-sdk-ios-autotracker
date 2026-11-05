@@ -33,6 +33,8 @@ FOUNDATION_EXPORT NSString *const kGrowingDefaultDataCollectionServerHost;
 @property (nonatomic, assign) NSTimeInterval dataUploadInterval;
 @property (nonatomic, assign) NSTimeInterval sessionInterval;
 @property (nonatomic, assign) BOOL dataCollectionEnabled;
+/// 是否开启强制登录模式；开启后，每次启动需调用 identify 后才上传事件。
+@property (nonatomic, assign) BOOL forceLogin;
 @property (nonatomic, assign) BOOL uploadExceptionEnable;
 @property (nonatomic, copy) NSString *dataCollectionServerHost;
 @property (nonatomic, assign) NSUInteger excludeEvent;

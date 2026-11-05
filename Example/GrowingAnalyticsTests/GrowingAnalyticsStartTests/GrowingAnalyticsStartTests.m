@@ -256,6 +256,20 @@
     XCTAssertEqual(configuration.dataValidityPeriod, 20);
 }
 
+- (void)testForceLoginConfiguration {
+    for (GrowingTrackConfiguration *config in @[
+             [GrowingTrackConfiguration configurationWithAccountId:@"test"],
+             [GrowingAutotrackConfiguration configurationWithAccountId:@"test"]
+         ]) {
+        XCTAssertFalse(config.forceLogin);
+        config.forceLogin = YES;
+        GrowingTrackConfiguration *copy = [config copy];
+        XCTAssertTrue(copy.forceLogin);
+        config.forceLogin = NO;
+        XCTAssertTrue(copy.forceLogin);
+    }
+}
+
 - (void)testVersionNameAndVersionCode {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"

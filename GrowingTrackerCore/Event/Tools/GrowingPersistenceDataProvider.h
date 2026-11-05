@@ -31,6 +31,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setLoginUserKey:(NSString *_Nullable)loginUserKey;
 - (nullable NSString *)loginUserKey;
 
+- (void)setIdentifyDeviceId:(NSString *_Nullable)identifyDeviceId;
+- (nullable NSString *)identifyDeviceId;
+
 /// 设置NSString,NSNumber(upgrade)
 - (void)setString:(NSString *)value forKey:(NSString *)key;
 

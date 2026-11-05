@@ -23,6 +23,7 @@
 #import "GrowingTrackerCore/FileStorage/GrowingFileStorage.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Manager/GrowingForceLogin.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
 #import "GrowingTrackerCore/Network/Request/GrowingEventRequest.h"
@@ -228,6 +229,10 @@ static GrowingEventManager *sharedInstance = nil;
 
 // 非安全 发送日志
 - (void)sendEventsOfChannel_unsafe:(GrowingEventChannel *)channel {
+    if (![GrowingForceLogin canSend]) {
+        GIOLogDebug(@"Force login is enabled, delay upload (channel = %@).", channel.name);
+        return;
+    }
     if (channel.isUploading) {
         return;
     }
@@ -287,6 +292,12 @@ static GrowingEventManager *sharedInstance = nil;
         return;
     }
 
+    NSArray<id<GrowingEventPersistenceProtocol>> *storedEvents = events;
+    events = [self eventsForSendingWithEvents:storedEvents];
+    if (!events) {
+        return;
+    }
+
 #ifdef DEBUG
     [self prettyLogForEvents:events withChannel:channel];
 #endif
@@ -336,42 +347,65 @@ static GrowingEventManager *sharedInstance = nil;
 
     channel.isUploading = YES;
     NSObject<GrowingRequestProtocol> *eventRequest = [[GrowingEventRequest alloc] initWithEvents:rawEvents];
-    [service sendRequest:eventRequest
-              completion:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data, NSError *_Nonnull error) {
-                  if (error) {
-                      [GrowingDispatchManager dispatchInGrowingThread:^{
-                          channel.isUploading = NO;
-                      }];
-                  }
-                  if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
-                      [GrowingDispatchManager dispatchInGrowingThread:^{
-                          if (isViaCellular) {
-                              if ([eventRequest respondsToSelector:@selector(outsize)]) {
-                                  self.uploadEventSize += eventRequest.outsize;
-                              }
-                          }
+    [service
+        sendRequest:eventRequest
+         completion:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data, NSError *_Nonnull error) {
+             if (error) {
+                 [GrowingDispatchManager dispatchInGrowingThread:^{
+                     channel.isUploading = NO;
+                 }];
+             }
+             if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
+                 [GrowingDispatchManager dispatchInGrowingThread:^{
+                     if (isViaCellular) {
+                         if ([eventRequest respondsToSelector:@selector(outsize)]) {
+                             self.uploadEventSize += eventRequest.outsize;
+                         }
+                     }
 
-                          for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
-                              if ([obj respondsToSelector:@selector(growingEventManagerEventsDidSend:
-                                                                                             request:channel:)]) {
-                                  [obj growingEventManagerEventsDidSend:events request:eventRequest channel:channel];
-                              }
-                          }
+                     for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
+                         if ([obj respondsToSelector:@selector(growingEventManagerEventsDidSend:request:channel:)]) {
+                             [obj growingEventManagerEventsDidSend:events request:eventRequest channel:channel];
+                         }
+                     }
 
-                          [self removeEvents_unsafe:events forChannel:channel];
-                          channel.isUploading = NO;
+                     [self removeEvents_unsafe:storedEvents forChannel:channel];
+                     channel.isUploading = NO;
 
-                          // 如果剩余数量 大于单包数量  则直接发送
-                          if (channel.db.countOfEvents >= kGrowingMaxBatchSize) {
-                              [self sendEventsInstantWithChannel:channel];
-                          }
-                      }];
-                  } else {
-                      [GrowingDispatchManager dispatchInGrowingThread:^{
-                          channel.isUploading = NO;
-                      }];
-                  }
-              }];
+                     // 如果剩余数量 大于单包数量  则直接发送
+                     if (channel.db.countOfEvents >= kGrowingMaxBatchSize) {
+                         [self sendEventsInstantWithChannel:channel];
+                     }
+                 }];
+             } else {
+                 [GrowingDispatchManager dispatchInGrowingThread:^{
+                     channel.isUploading = NO;
+                 }];
+             }
+         }];
+}
+
+- (NSArray<id<GrowingEventPersistenceProtocol>> *)eventsForSendingWithEvents:
+    (NSArray<id<GrowingEventPersistenceProtocol>> *)events {
+    NSString *deviceId = [GrowingForceLogin identifiedDeviceId];
+    if (!deviceId.length) {
+        return events;
+    }
+
+    NSMutableArray<id<GrowingEventPersistenceProtocol>> *sentEvents = [NSMutableArray arrayWithCapacity:events.count];
+    for (id<GrowingEventPersistenceProtocol> event in events) {
+        if (![(NSObject *)event respondsToSelector:@selector(persistenceByReplacingDeviceId:)]) {
+            GIOLogError(@"%s error : event does not support replacing deviceId", __func__);
+            return nil;
+        }
+        id<GrowingEventPersistenceProtocol> sentEvent = [event persistenceByReplacingDeviceId:deviceId];
+        if (!sentEvent) {
+            GIOLogError(@"%s error : fail to replace event deviceId", __func__);
+            return nil;
+        }
+        [sentEvents addObject:sentEvent];
+    }
+    return sentEvents;
 }
 
 #pragma mark Event Persist

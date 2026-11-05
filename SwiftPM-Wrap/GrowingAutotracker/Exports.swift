@@ -39,6 +39,10 @@ public struct Autotracker {
         autotracker.setDataCollectionEnabled(enabled)
     }
 
+    public static func identify(_ deviceId: String) {
+        autotracker.identify(deviceId)
+    }
+
     public static func setLoginUserId(_ userId: String, userKey: String? = nil) {
         guard let userKey = userKey else {
             autotracker.setLoginUserId(userId)
