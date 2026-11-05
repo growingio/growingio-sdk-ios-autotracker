@@ -28,7 +28,10 @@ typealias EventType = Io_Growing_Tunnel_Protocol_EventType
 public class SwiftProtobufWrapper: NSObject {
     var unbox: EventDto
     @objc public let data: Data?
-    @objc public var deviceId: String { unbox.deviceID }
+    @objc public var deviceId: String {
+        unbox.deviceID
+    }
+
     init(_ unbox: EventDto) {
         self.unbox = unbox
         data = try? unbox.serializedData()
@@ -175,7 +178,7 @@ public class SwiftProtobufWrapper: NSObject {
 }
 
 public extension SwiftProtobufWrapper {
-    // For GrowingToolsKit NetFlow
+    /// For GrowingToolsKit NetFlow
     @objc(convertProtobufDataToJsonArray:)
     static func convertProtobufDataToJsonArray(from data: Data) -> [[String: AnyObject]]? {
         do {
