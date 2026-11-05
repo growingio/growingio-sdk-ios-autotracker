@@ -72,6 +72,7 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
         _useProtobuf = YES;
         _dataValidityPeriod = 7;
         _customEventWithPath = NO;
+        _customEventWithReferralPath = NO;
         _sceneDelegateClass = nil;
 
         // Ads
@@ -126,6 +127,7 @@ NSString *const kGrowingDefaultABTestingServerHost = @"https://ab.growingio.com"
     configuration->_useProtobuf = _useProtobuf;
     configuration->_dataValidityPeriod = _dataValidityPeriod;
     configuration->_customEventWithPath = _customEventWithPath;
+    configuration->_customEventWithReferralPath = _customEventWithReferralPath;
     configuration->_sceneDelegateClass = _sceneDelegateClass;
 
     // Ads
