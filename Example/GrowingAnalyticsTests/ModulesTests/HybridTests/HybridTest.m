@@ -206,6 +206,7 @@
 
     NSDictionary *identity = [self identityFromWebView:webView callbackId:@"gio_identify_1"];
     XCTAssertEqualObjects(identity[@"deviceId"], @"hybrid-visitor");
+    GrowingConfigurationManager.sharedInstance.trackConfiguration.forceLogin = NO;
     [[GrowingPersistenceDataProvider sharedInstance] setIdentifyDeviceId:savedDeviceId];
     [GrowingForceLogin setup];
 }

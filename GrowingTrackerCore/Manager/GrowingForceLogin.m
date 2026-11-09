@@ -25,7 +25,10 @@
 
 GROWING_LOCK_DECLARE_STATIC(growingForceLoginLock);
 static NSString *growingForceLoginDeviceId = nil;
-static BOOL growingForceLoginUnlocked = NO;
+// 本次启动是否已 identify 成功
+static BOOL growingForceLoginIdentified = NO;
+// identify 前暂存的事件是否已替换 deviceId 并入库；入库后才允许上传
+static BOOL growingForceLoginReleased = NO;
 
 @implementation GrowingForceLogin
 
@@ -33,7 +36,8 @@ static BOOL growingForceLoginUnlocked = NO;
     NSString *savedDeviceId = [GrowingPersistenceDataProvider sharedInstance].identifyDeviceId;
     GROWING_LOCK(growingForceLoginLock);
     growingForceLoginDeviceId = [savedDeviceId copy];
-    growingForceLoginUnlocked = NO;
+    growingForceLoginIdentified = NO;
+    growingForceLoginReleased = NO;
     GROWING_UNLOCK(growingForceLoginLock);
 }
 
@@ -56,13 +60,13 @@ static BOOL growingForceLoginUnlocked = NO;
     }
 
     GROWING_LOCK(growingForceLoginLock);
-    if (growingForceLoginUnlocked) {
+    if (growingForceLoginIdentified) {
         GROWING_UNLOCK(growingForceLoginLock);
         GIOLogInfo(@"Failed to identify, deviceId has already been set in this launch");
         return NO;
     }
     growingForceLoginDeviceId = [trimmedDeviceId copy];
-    growingForceLoginUnlocked = YES;
+    growingForceLoginIdentified = YES;
     [[GrowingPersistenceDataProvider sharedInstance] setIdentifyDeviceId:trimmedDeviceId];
     GROWING_UNLOCK(growingForceLoginLock);
     GIOLogInfo(@"Identify deviceId for forced login");
@@ -74,9 +78,15 @@ static BOOL growingForceLoginUnlocked = NO;
         return YES;
     }
     GROWING_LOCK(growingForceLoginLock);
-    BOOL canSend = growingForceLoginUnlocked;
+    BOOL canSend = growingForceLoginReleased;
     GROWING_UNLOCK(growingForceLoginLock);
     return canSend;
+}
+
++ (void)markEventsReleased {
+    GROWING_LOCK(growingForceLoginLock);
+    growingForceLoginReleased = growingForceLoginIdentified;
+    GROWING_UNLOCK(growingForceLoginLock);
 }
 
 + (NSString *)deviceIdWithGeneratedDeviceId:(NSString *)generatedDeviceId {

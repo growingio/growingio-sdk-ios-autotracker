@@ -40,6 +40,18 @@ static const NSUInteger kGrowingMaxDBCacheSize = 100;  // default: write to DB a
 static const NSUInteger kGrowingMaxBatchSize = 500;    // default: send no more than 500 events in every batch
 static const NSUInteger kGrowingUnit_MB = 1024 * 1024;
 
+/// 强制登录模式下，identify 前暂存在内存中的事件
+@interface GrowingForceLoginHeldEvent : NSObject
+
+@property (nonatomic, strong) GrowingEventChannel *channel;
+@property (nonatomic, strong) id<GrowingEventPersistenceProtocol> event;
+
+@end
+
+@implementation GrowingForceLoginHeldEvent
+
+@end
+
 @interface GrowingEventManager ()
 
 @property (nonatomic, strong) NSHashTable *allInterceptor;
@@ -55,6 +67,9 @@ static const NSUInteger kGrowingUnit_MB = 1024 * 1024;
 
 @property (nonatomic, assign) unsigned long long uploadEventSize;
 @property (nonatomic, assign) unsigned long long uploadLimitOfCellular;
+
+// 仅在 Growing 线程访问
+@property (nonatomic, strong) NSMutableArray<GrowingForceLoginHeldEvent *> *forceLoginHeldEvents;
 
 @end
 
@@ -227,6 +242,33 @@ static GrowingEventManager *sharedInstance = nil;
     }];
 }
 
+- (void)releaseForceLoginEvents {
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        // 与 Web SDK 一致：只替换本次启动 identify 前暂存的事件，替换后入库；已入库的历史事件保持原 deviceId
+        NSString *deviceId = [GrowingForceLogin identifiedDeviceId];
+        for (GrowingForceLoginHeldEvent *heldEvent in self.forceLoginHeldEvents) {
+            id<GrowingEventPersistenceProtocol> event = heldEvent.event;
+            if (deviceId.length > 0 &&
+                [(NSObject *)event respondsToSelector:@selector(persistenceByReplacingDeviceId:)]) {
+                id<GrowingEventPersistenceProtocol> replacedEvent = [event persistenceByReplacingDeviceId:deviceId];
+                if (replacedEvent) {
+                    event = replacedEvent;
+                } else {
+                    GIOLogError(@"-releaseForceLoginEvents: error : fail to replace event deviceId");
+                }
+            }
+            [heldEvent.channel.db setEvent:event forKey:event.eventUUID];
+        }
+        [self.forceLoginHeldEvents removeAllObjects];
+        [GrowingForceLogin markEventsReleased];
+
+        [self flushDB];
+        for (GrowingEventChannel *channel in self.allEventChannels) {
+            [self sendEventsOfChannel_unsafe:channel];
+        }
+    }];
+}
+
 // 非安全 发送日志
 - (void)sendEventsOfChannel_unsafe:(GrowingEventChannel *)channel {
     if (![GrowingForceLogin canSend]) {
@@ -292,12 +334,6 @@ static GrowingEventManager *sharedInstance = nil;
         return;
     }
 
-    NSArray<id<GrowingEventPersistenceProtocol>> *storedEvents = events;
-    events = [self eventsForSendingWithEvents:storedEvents];
-    if (!events) {
-        return;
-    }
-
 #ifdef DEBUG
     [self prettyLogForEvents:events withChannel:channel];
 #endif
@@ -347,65 +383,42 @@ static GrowingEventManager *sharedInstance = nil;
 
     channel.isUploading = YES;
     NSObject<GrowingRequestProtocol> *eventRequest = [[GrowingEventRequest alloc] initWithEvents:rawEvents];
-    [service
-        sendRequest:eventRequest
-         completion:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data, NSError *_Nonnull error) {
-             if (error) {
-                 [GrowingDispatchManager dispatchInGrowingThread:^{
-                     channel.isUploading = NO;
-                 }];
-             }
-             if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
-                 [GrowingDispatchManager dispatchInGrowingThread:^{
-                     if (isViaCellular) {
-                         if ([eventRequest respondsToSelector:@selector(outsize)]) {
-                             self.uploadEventSize += eventRequest.outsize;
-                         }
-                     }
+    [service sendRequest:eventRequest
+              completion:^(NSHTTPURLResponse *_Nonnull httpResponse, NSData *_Nonnull data, NSError *_Nonnull error) {
+                  if (error) {
+                      [GrowingDispatchManager dispatchInGrowingThread:^{
+                          channel.isUploading = NO;
+                      }];
+                  }
+                  if (httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
+                      [GrowingDispatchManager dispatchInGrowingThread:^{
+                          if (isViaCellular) {
+                              if ([eventRequest respondsToSelector:@selector(outsize)]) {
+                                  self.uploadEventSize += eventRequest.outsize;
+                              }
+                          }
 
-                     for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
-                         if ([obj respondsToSelector:@selector(growingEventManagerEventsDidSend:request:channel:)]) {
-                             [obj growingEventManagerEventsDidSend:events request:eventRequest channel:channel];
-                         }
-                     }
+                          for (NSObject<GrowingEventInterceptor> *obj in self.allInterceptor) {
+                              if ([obj respondsToSelector:@selector(growingEventManagerEventsDidSend:
+                                                                                             request:channel:)]) {
+                                  [obj growingEventManagerEventsDidSend:events request:eventRequest channel:channel];
+                              }
+                          }
 
-                     [self removeEvents_unsafe:storedEvents forChannel:channel];
-                     channel.isUploading = NO;
+                          [self removeEvents_unsafe:events forChannel:channel];
+                          channel.isUploading = NO;
 
-                     // 如果剩余数量 大于单包数量  则直接发送
-                     if (channel.db.countOfEvents >= kGrowingMaxBatchSize) {
-                         [self sendEventsInstantWithChannel:channel];
-                     }
-                 }];
-             } else {
-                 [GrowingDispatchManager dispatchInGrowingThread:^{
-                     channel.isUploading = NO;
-                 }];
-             }
-         }];
-}
-
-- (NSArray<id<GrowingEventPersistenceProtocol>> *)eventsForSendingWithEvents:
-    (NSArray<id<GrowingEventPersistenceProtocol>> *)events {
-    NSString *deviceId = [GrowingForceLogin identifiedDeviceId];
-    if (!deviceId.length) {
-        return events;
-    }
-
-    NSMutableArray<id<GrowingEventPersistenceProtocol>> *sentEvents = [NSMutableArray arrayWithCapacity:events.count];
-    for (id<GrowingEventPersistenceProtocol> event in events) {
-        if (![(NSObject *)event respondsToSelector:@selector(persistenceByReplacingDeviceId:)]) {
-            GIOLogError(@"%s error : event does not support replacing deviceId", __func__);
-            return nil;
-        }
-        id<GrowingEventPersistenceProtocol> sentEvent = [event persistenceByReplacingDeviceId:deviceId];
-        if (!sentEvent) {
-            GIOLogError(@"%s error : fail to replace event deviceId", __func__);
-            return nil;
-        }
-        [sentEvents addObject:sentEvent];
-    }
-    return sentEvents;
+                          // 如果剩余数量 大于单包数量  则直接发送
+                          if (channel.db.countOfEvents >= kGrowingMaxBatchSize) {
+                              [self sendEventsInstantWithChannel:channel];
+                          }
+                      }];
+                  } else {
+                      [GrowingDispatchManager dispatchInGrowingThread:^{
+                          channel.isUploading = NO;
+                      }];
+                  }
+              }];
 }
 
 #pragma mark Event Persist
@@ -426,6 +439,19 @@ static GrowingEventManager *sharedInstance = nil;
     NSString *uuidString = [NSUUID UUID].UUIDString;
     id<GrowingEventPersistenceProtocol> waitForPersist = [eventChannel.db persistenceEventWithEvent:event
                                                                                                uuid:uuidString];
+    if (![GrowingForceLogin canSend]) {
+        // 强制登录 identify 前，事件仅暂存在内存中，identify 后替换 deviceId 再入库；进程退出前未 identify 则丢弃
+        if (eventChannel && waitForPersist) {
+            if (!self.forceLoginHeldEvents) {
+                self.forceLoginHeldEvents = [NSMutableArray array];
+            }
+            GrowingForceLoginHeldEvent *heldEvent = [[GrowingForceLoginHeldEvent alloc] init];
+            heldEvent.channel = eventChannel;
+            heldEvent.event = waitForPersist;
+            [self.forceLoginHeldEvents addObject:heldEvent];
+        }
+        return;
+    }
     [eventChannel.db setEvent:waitForPersist forKey:uuidString];
 
     if (GrowingEventSendPolicyInstant & event.sendPolicy) {

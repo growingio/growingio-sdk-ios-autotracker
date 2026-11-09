@@ -259,7 +259,7 @@ const int GrowingTrackerVersionCode = 41400;
     if (![GrowingForceLogin identify:deviceId]) {
         return;
     }
-    [[GrowingEventManager sharedInstance] sendAllChannelEvents];
+    [[GrowingEventManager sharedInstance] releaseForceLoginEvents];
 }
 
 - (NSString *)getDeviceId {

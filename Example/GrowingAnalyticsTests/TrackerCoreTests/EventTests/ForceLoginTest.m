@@ -33,6 +33,10 @@
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
 #import "Services/Protobuf/Proto/GrowingEvent.pbobjc.h"
 
+@interface GrowingEventManager (ForceLoginTest)
+- (void)writeToDatabaseWithEvent:(GrowingBaseEvent *)event;
+@end
+
 @interface ForceLoginNetworkStub : NSObject <GrowingEventNetworkService>
 + (instancetype)sharedInstance;
 @property (nonatomic, strong) NSMutableArray<id<GrowingRequestProtocol>> *requests;
@@ -91,18 +95,6 @@
 }
 @end
 
-@interface ForceLoginSentEventInterceptor : NSObject <GrowingEventInterceptor>
-@property (nonatomic, strong) NSArray<id<GrowingEventPersistenceProtocol>> *sentEvents;
-@end
-
-@implementation ForceLoginSentEventInterceptor
-- (void)growingEventManagerEventsDidSend:(NSArray<id<GrowingEventPersistenceProtocol>> *)events
-                                 request:(id<GrowingRequestProtocol>)request
-                                 channel:(GrowingEventChannel *)channel {
-    self.sentEvents = events;
-}
-@end
-
 @interface ForceLoginTest : XCTestCase
 @property (nonatomic, strong) GrowingTrackConfiguration *savedConfiguration;
 @property (nonatomic, copy) NSString *savedIdentifyDeviceId;
@@ -127,6 +119,7 @@
             config.dataCollectionEnabled = YES;
             GrowingConfigurationManager.sharedInstance.trackConfiguration = config;
             [GrowingForceLogin setup];
+            [GrowingEventManager.sharedInstance setValue:nil forKey:@"forceLoginHeldEvents"];
             [GrowingSession startSession];
             [ForceLoginNetworkStub.sharedInstance.requests removeAllObjects];
             [ForceLoginNetworkStub.sharedInstance.pendingResponses removeAllObjects];
@@ -145,6 +138,7 @@
             GrowingConfigurationManager.sharedInstance.trackConfiguration = self.savedConfiguration;
             [[GrowingPersistenceDataProvider sharedInstance] setIdentifyDeviceId:self.savedIdentifyDeviceId];
             [GrowingForceLogin setup];
+            [GrowingEventManager.sharedInstance setValue:nil forKey:@"forceLoginHeldEvents"];
         }
                   waitUntilDone:YES];
     [self restoreNetworkService];
@@ -159,9 +153,13 @@
     XCTAssertFalse([GrowingForceLogin identify:@"  \n  "]);
     NSString *overlongId = [@"" stringByPaddingToLength:1001 withString:@"x" startingAtIndex:0];
     XCTAssertFalse([GrowingForceLogin identify:overlongId]);
+    [GrowingForceLogin markEventsReleased];
     XCTAssertFalse([GrowingForceLogin canSend]);
 
     XCTAssertTrue([GrowingForceLogin identify:@"  visitor-001  "]);
+    // identify 后需等暂存事件替换并入库，才允许上传
+    XCTAssertFalse([GrowingForceLogin canSend]);
+    [GrowingForceLogin markEventsReleased];
     XCTAssertTrue([GrowingForceLogin canSend]);
     XCTAssertEqualObjects([GrowingForceLogin deviceIdWithGeneratedDeviceId:@"generated"], @"visitor-001");
     XCTAssertEqualObjects([[GrowingRealTracker new] getDeviceId], @"visitor-001");
@@ -199,7 +197,7 @@
     XCTAssertFalse(channel.isUploading);
 }
 
-- (void)testIdentifyUploadsAndRetriesWithReplacementForJSONAndProtobuf {
+- (void)testIdentifyReplacesOnlyHeldEventsForJSONAndProtobuf {
     for (NSNumber *useProtobuf in @[@NO, @YES]) {
         BOOL isProtobuf = useProtobuf.boolValue;
         NSString *visitorId = isProtobuf ? @"visitor-protobuf" : @"visitor-json";
@@ -217,18 +215,26 @@
             }
                       waitUntilDone:YES];
 
-        GrowingEventDatabase *db = [self databaseWithEventIsProtobuf:isProtobuf];
+        // 上次启动遗留的事件，已归属 previous-visitor
+        GrowingEventDatabase *db = [self databaseWithCachedEventIsProtobuf:isProtobuf];
+        GrowingBaseEvent *heldEvent = [self eventWithName:@"held" deviceId:@"stale-visitor"];
         GrowingEventChannel *channel = [GrowingEventChannel eventChannelWithName:@"Track"
-                                                                      eventTypes:nil
+                                                                      eventTypes:@[heldEvent.eventType]
                                                                  isRealtimeEvent:YES];
         channel.persistenceType = isProtobuf ? GrowingEventPersistenceTypeProtobuf : GrowingEventPersistenceTypeJSON;
         channel.db = db;
         GrowingEventManager *manager = GrowingEventManager.sharedInstance;
         NSArray *savedChannels = [manager valueForKey:@"allEventChannels"];
+        NSDictionary *savedChannelMap = [manager valueForKey:@"currentEventChannelMap"];
         [manager setValue:@[channel] forKey:@"allEventChannels"];
-        ForceLoginSentEventInterceptor *interceptor = [ForceLoginSentEventInterceptor new];
-        [manager addInterceptor:interceptor];
+        [manager setValue:@{heldEvent.eventType: channel} forKey:@"currentEventChannelMap"];
 
+        // identify 前：新事件只暂存在内存，不入库；数据库中的事件也不上传
+        [GrowingDispatchManager
+            dispatchInGrowingThread:^{
+                [manager writeToDatabaseWithEvent:heldEvent];
+            }
+                      waitUntilDone:YES];
         [manager sendAllChannelEvents];
         [self waitForEventThread];
         XCTAssertEqual(ForceLoginNetworkStub.sharedInstance.requests.count, 0);
@@ -238,29 +244,26 @@
         [tracker identify:[NSString stringWithFormat:@"  %@  ", visitorId]];
         [self waitForEventThread];
         [self completePendingUploads];
+
+        // 暂存事件替换为新 ID 后入库；历史事件保持原 ID
+        NSDictionary *expected = @{@"cached": @"previous-visitor", @"held": visitorId};
         XCTAssertEqual(ForceLoginNetworkStub.sharedInstance.requests.count, 1);
-        XCTAssertEqual(db.countOfEvents, 1);
-        XCTAssertNil(interceptor.sentEvents);
-        [self assertRequest:ForceLoginNetworkStub.sharedInstance.requests.firstObject deviceId:visitorId];
+        XCTAssertEqualObjects([self deviceIdsInRequest:ForceLoginNetworkStub.sharedInstance.requests.firstObject],
+                              expected);
+        XCTAssertEqualObjects([self deviceIdsInDatabase:db], expected);
 
-        NSArray<id<GrowingEventPersistenceProtocol>> *remaining = [db getEventsByCount:10 limitSize:100000 policy:~0UL];
-        XCTAssertEqual(remaining.count, 1);
-        XCTAssertEqualObjects([remaining.firstObject toJSONObject][@"deviceId"], @"generated-device");
-        NSString *eventUUID = remaining.firstObject.eventUUID;
-
+        // 上传失败后重试，数据库中的数据不变
         ForceLoginNetworkStub.sharedInstance.shouldFail = NO;
         [manager sendAllChannelEvents];
         [self waitForEventThread];
         [self completePendingUploads];
         XCTAssertEqual(ForceLoginNetworkStub.sharedInstance.requests.count, 2);
+        XCTAssertEqualObjects([self deviceIdsInRequest:ForceLoginNetworkStub.sharedInstance.requests.lastObject],
+                              expected);
         XCTAssertEqual(db.countOfEvents, 0);
-        [self assertRequest:ForceLoginNetworkStub.sharedInstance.requests.lastObject deviceId:visitorId];
-        XCTAssertEqual(interceptor.sentEvents.count, 1);
-        XCTAssertEqualObjects([interceptor.sentEvents.firstObject toJSONObject][@"deviceId"], visitorId);
-        XCTAssertEqualObjects(interceptor.sentEvents.firstObject.eventUUID, eventUUID);
 
-        [manager removeInterceptor:interceptor];
         [manager setValue:savedChannels forKey:@"allEventChannels"];
+        [manager setValue:savedChannelMap forKey:@"currentEventChannelMap"];
     }
 }
 
@@ -299,7 +302,16 @@
                   waitUntilDone:YES];
 }
 
-- (GrowingEventDatabase *)databaseWithEventIsProtobuf:(BOOL)isProtobuf {
+- (GrowingBaseEvent *)eventWithName:(NSString *)eventName deviceId:(NSString *)deviceId {
+    return GrowingCustomEvent.builder.setEventName(eventName)
+        .setDataSourceId(@"test")
+        .setDeviceId(deviceId)
+        .setSessionId(@"test-session")
+        .setSdkVersion(@"4.14.0")
+        .build;
+}
+
+- (GrowingEventDatabase *)databaseWithCachedEventIsProtobuf:(BOOL)isProtobuf {
     NSString *path = [NSTemporaryDirectory()
         stringByAppendingPathComponent:[NSString stringWithFormat:@"force-login-upload-%@/events.sqlite",
                                                                   NSUUID.UUID.UUIDString]];
@@ -309,35 +321,41 @@
                                                                   error:nil]);
     GrowingEventDatabase *db = [GrowingEventDatabase databaseWithPath:path isProtobuf:isProtobuf];
     db.autoFlushCount = NSUIntegerMax;
-    GrowingBaseEvent *event = GrowingCustomEvent.builder.setEventName(@"cached")
-                                  .setDataSourceId(@"test")
-                                  .setDeviceId(@"generated-device")
-                                  .setSessionId(@"test-session")
-                                  .setSdkVersion(@"4.14.0")
-                                  .build;
+    GrowingBaseEvent *event = [self eventWithName:@"cached" deviceId:@"previous-visitor"];
     NSString *uuid = NSUUID.UUID.UUIDString;
     [db setEvent:[db persistenceEventWithEvent:event uuid:uuid] forKey:uuid];
     XCTAssertTrue([db flush]);
     return db;
 }
 
-- (void)assertRequest:(id<GrowingRequestProtocol>)request deviceId:(NSString *)deviceId {
+/// eventName -> deviceId
+- (NSDictionary<NSString *, NSString *> *)deviceIdsInRequest:(id<GrowingRequestProtocol>)request {
+    NSMutableDictionary *result = [NSMutableDictionary dictionary];
     if (GrowingConfigurationManager.sharedInstance.trackConfiguration.useProtobuf) {
         GrowingPBEventV3List *list = [GrowingPBEventV3List parseFromData:request.events error:nil];
         XCTAssertNotNil(list);
-        XCTAssertEqual(list.valuesArray_Count, 1);
-        GrowingPBEventV3Dto *event = list.valuesArray.firstObject;
-        XCTAssertEqualObjects(event.deviceId, deviceId);
-        XCTAssertEqualObjects(event.eventName, @"cached");
-        XCTAssertEqualObjects(event.sessionId, @"test-session");
+        for (GrowingPBEventV3Dto *event in list.valuesArray) {
+            XCTAssertEqualObjects(event.sessionId, @"test-session");
+            result[event.eventName] = event.deviceId;
+        }
     } else {
         NSArray *events = [NSJSONSerialization JSONObjectWithData:request.events options:0 error:nil];
-        XCTAssertEqual(events.count, 1);
-        NSDictionary *event = events.firstObject;
-        XCTAssertEqualObjects(event[@"deviceId"], deviceId);
-        XCTAssertEqualObjects(event[@"eventName"], @"cached");
-        XCTAssertEqualObjects(event[@"sessionId"], @"test-session");
+        for (NSDictionary *event in events) {
+            XCTAssertEqualObjects(event[@"sessionId"], @"test-session");
+            result[event[@"eventName"]] = event[@"deviceId"];
+        }
     }
+    return result;
+}
+
+/// eventName -> deviceId
+- (NSDictionary<NSString *, NSString *> *)deviceIdsInDatabase:(GrowingEventDatabase *)db {
+    NSMutableDictionary *result = [NSMutableDictionary dictionary];
+    for (id<GrowingEventPersistenceProtocol> event in [db getEventsByCount:10 limitSize:100000 policy:~0UL]) {
+        NSDictionary *jsonObject = event.toJSONObject;
+        result[jsonObject[@"eventName"]] = jsonObject[@"deviceId"];
+    }
+    return result;
 }
 
 - (void)completePendingUploads {

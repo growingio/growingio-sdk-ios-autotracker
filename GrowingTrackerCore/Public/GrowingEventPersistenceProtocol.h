@@ -47,7 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)appendExtraParams:(NSDictionary<NSString *, id> *)extraParams;
 
 @optional
-/// 返回替换 deviceId 的发送副本，不修改当前持久化对象。
+/// 返回替换 deviceId 后的新持久化对象，不修改当前对象。
 - (nullable id<GrowingEventPersistenceProtocol>)persistenceByReplacingDeviceId:(NSString *)deviceId;
 
 @end

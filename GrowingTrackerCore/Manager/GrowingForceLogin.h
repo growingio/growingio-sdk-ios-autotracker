@@ -24,7 +24,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)setup;
 + (BOOL)identify:(NSString *)deviceId;
+/// 未开启 forceLogin 时恒为 YES；开启时需本次启动 identify 成功、且暂存事件已入库后才为 YES。
+/// 为 NO 时新事件只暂存在内存中，数据库中的事件也不上传。
 + (BOOL)canSend;
+/// identify 成功后，暂存事件替换 deviceId 并入库完毕时调用（仅在 Growing 线程调用）
++ (void)markEventsReleased;
 + (NSString *)deviceIdWithGeneratedDeviceId:(NSString *)generatedDeviceId;
 + (nullable NSString *)identifiedDeviceId;
 
