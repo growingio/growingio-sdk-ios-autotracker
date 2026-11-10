@@ -63,9 +63,7 @@
 
 + (NSString *)currentIdentity {
     GrowingSession *session = [GrowingSession currentSession];
-    return [self identityWithDeviceId:[self currentDeviceId]
-                               userId:session.loginUserId
-                              userKey:session.loginUserKey];
+    return [self identityWithDeviceId:[self currentDeviceId] userId:session.loginUserId userKey:session.loginUserKey];
 }
 
 + (NSString *)identityWithDeviceId:(NSString *_Nullable)deviceId
