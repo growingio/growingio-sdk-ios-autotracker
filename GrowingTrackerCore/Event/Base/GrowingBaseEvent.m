@@ -126,7 +126,7 @@
     GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
     _domain = _domain.length > 0 ? _domain : deviceInfo.bundleID;
     _appState = deviceInfo.appState;
-    _deviceId = [GrowingForceLogin deviceIdWithGeneratedDeviceId:deviceInfo.deviceIDString] ?: @"";
+    _deviceId = [GrowingForceLogin eventDeviceIdWithGeneratedDeviceId:deviceInfo.deviceIDString ?: @""] ?: @"";
     _urlScheme = deviceInfo.urlScheme;
     _platform = deviceInfo.platform;
     _platformVersion = deviceInfo.platformVersion;

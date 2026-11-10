@@ -23,12 +23,14 @@
 #import "GrowingTrackerCore/Thirdparty/Logger/GrowingLogger.h"
 #import "GrowingTrackerCore/Utils/GrowingInternalMacros.h"
 
+// 与 Web SDK identify 一致：超出部分截断而非拒绝
+static const NSUInteger kGrowingIdentifyDeviceIdMaxLength = 1000;
+
 GROWING_LOCK_DECLARE_STATIC(growingForceLoginLock);
+// 已持久化的访问用户 ID（跨启动保留）
 static NSString *growingForceLoginDeviceId = nil;
-// 本次启动是否已 identify 成功
+// 本次启动是否已 identify 成功（不跨启动保留）
 static BOOL growingForceLoginIdentified = NO;
-// identify 前暂存的事件是否已替换 deviceId 并入库；入库后才允许上传
-static BOOL growingForceLoginReleased = NO;
 
 @implementation GrowingForceLogin
 
@@ -37,7 +39,6 @@ static BOOL growingForceLoginReleased = NO;
     GROWING_LOCK(growingForceLoginLock);
     growingForceLoginDeviceId = [savedDeviceId copy];
     growingForceLoginIdentified = NO;
-    growingForceLoginReleased = NO;
     GROWING_UNLOCK(growingForceLoginLock);
 }
 
@@ -47,16 +48,16 @@ static BOOL growingForceLoginReleased = NO;
         GIOLogInfo(@"Failed to identify, forceLogin is not enabled");
         return NO;
     }
-    if (![deviceId isKindOfClass:NSString.class]) {
+    if (![deviceId isKindOfClass:NSString.class] || deviceId.length == 0) {
         GIOLogInfo(@"Failed to identify, deviceId is empty");
         return NO;
     }
 
-    NSString *trimmedDeviceId =
-        [deviceId stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-    if (trimmedDeviceId.length == 0 || trimmedDeviceId.length > 1000) {
-        GIOLogInfo(@"Failed to identify, deviceId must contain 1 to 1000 non-whitespace characters");
-        return NO;
+    NSString *identifiedDeviceId = deviceId;
+    if (identifiedDeviceId.length > kGrowingIdentifyDeviceIdMaxLength) {
+        // 按字符边界截断，避免拆开代理对导致 JSON 序列化失败
+        NSRange range = [identifiedDeviceId rangeOfComposedCharacterSequenceAtIndex:kGrowingIdentifyDeviceIdMaxLength];
+        identifiedDeviceId = [identifiedDeviceId substringToIndex:range.location];
     }
 
     GROWING_LOCK(growingForceLoginLock);
@@ -65,10 +66,10 @@ static BOOL growingForceLoginReleased = NO;
         GIOLogInfo(@"Failed to identify, deviceId has already been set in this launch");
         return NO;
     }
-    growingForceLoginDeviceId = [trimmedDeviceId copy];
+    growingForceLoginDeviceId = [identifiedDeviceId copy];
     growingForceLoginIdentified = YES;
-    [[GrowingPersistenceDataProvider sharedInstance] setIdentifyDeviceId:trimmedDeviceId];
     GROWING_UNLOCK(growingForceLoginLock);
+    [[GrowingPersistenceDataProvider sharedInstance] setIdentifyDeviceId:identifiedDeviceId];
     GIOLogInfo(@"Identify deviceId for forced login");
     return YES;
 }
@@ -78,15 +79,13 @@ static BOOL growingForceLoginReleased = NO;
         return YES;
     }
     GROWING_LOCK(growingForceLoginLock);
-    BOOL canSend = growingForceLoginReleased;
+    BOOL identified = growingForceLoginIdentified;
     GROWING_UNLOCK(growingForceLoginLock);
-    return canSend;
+    return identified;
 }
 
-+ (void)markEventsReleased {
-    GROWING_LOCK(growingForceLoginLock);
-    growingForceLoginReleased = growingForceLoginIdentified;
-    GROWING_UNLOCK(growingForceLoginLock);
++ (BOOL)isPending {
+    return ![self canSend];
 }
 
 + (NSString *)deviceIdWithGeneratedDeviceId:(NSString *)generatedDeviceId {
@@ -96,11 +95,11 @@ static BOOL growingForceLoginReleased = NO;
     return deviceId;
 }
 
-+ (nullable NSString *)identifiedDeviceId {
-    GROWING_LOCK(growingForceLoginLock);
-    NSString *deviceId = [growingForceLoginDeviceId copy];
-    GROWING_UNLOCK(growingForceLoginLock);
-    return deviceId;
++ (NSString *)eventDeviceIdWithGeneratedDeviceId:(NSString *)generatedDeviceId {
+    if ([self isPending]) {
+        return generatedDeviceId;
+    }
+    return [self deviceIdWithGeneratedDeviceId:generatedDeviceId];
 }
 
 @end

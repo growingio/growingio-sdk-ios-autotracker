@@ -123,6 +123,7 @@
                                              NSString *type,
                                              NSUInteger policy,
                                              NSString *sdkVersion,
+                                             BOOL forceLoginPending,
                                              BOOL **stop) {
         if (mask & policy) {
             id<GrowingEventPersistenceProtocol> event = [[self.class.persistenceClass alloc] initWithUUID:key
@@ -130,6 +131,9 @@
                                                                                                      data:value
                                                                                                    policy:policy
                                                                                                sdkVersion:sdkVersion];
+            if (forceLoginPending && [(NSObject *)event respondsToSelector:@selector(setForceLoginPending:)]) {
+                event.forceLoginPending = YES;
+            }
             if ([value isKindOfClass:[NSString class]]) {
                 eventsLength += [(NSString *)value dataUsingEncoding:NSUTF8StringEncoding].length;
             } else if ([value isKindOfClass:[NSData class]]) {
@@ -150,6 +154,10 @@
     return events.count != 0 ? events : nil;
 }
 
+static BOOL isForceLoginPending(id<GrowingEventPersistenceProtocol> event) {
+    return [(NSObject *)event respondsToSelector:@selector(forceLoginPending)] && event.forceLoginPending;
+}
+
 - (BOOL)insertEvent:(id<GrowingEventPersistenceProtocol>)event {
     __block BOOL result = NO;
     [self performDatabaseBlock:^(GrowingFMDatabase *db, NSError *error) {
@@ -158,13 +166,15 @@
             return;
         }
         result = [db
-            executeUpdate:@"INSERT INTO namedcachetable(key,value,createAt,type,sdkVersion,policy) values(?,?,?,?,?,?)",
+            executeUpdate:@"INSERT INTO namedcachetable(key,value,createAt,type,sdkVersion,policy,forceLoginPending) "
+                          @"values(?,?,?,?,?,?,?)",
                           event.eventUUID,
                           event.data,
                           @([GrowingULTimeUtil currentTimeMillis]),
                           event.eventType,
                           event.sdkVersion,
-                          @(event.policy)];
+                          @(event.policy),
+                          @(isForceLoginPending(event))];
 
         if (!result) {
             self.databaseError = [self writeErrorInDatabase:db];
@@ -188,14 +198,15 @@
         for (int i = 0; i < events.count; i++) {
             id<GrowingEventPersistenceProtocol> event = events[i];
             result =
-                [db executeUpdate:
-                        @"INSERT INTO namedcachetable(key,value,createAt,type,sdkVersion,policy) values(?,?,?,?,?,?)",
-                        event.eventUUID,
-                        event.data,
-                        @([GrowingULTimeUtil currentTimeMillis]),
-                        event.eventType,
-                        event.sdkVersion,
-                        @(event.policy)];
+                [db executeUpdate:@"INSERT INTO namedcachetable(key,value,createAt,type,sdkVersion,policy,forceLoginPending) "
+                                  @"values(?,?,?,?,?,?,?)",
+                                  event.eventUUID,
+                                  event.data,
+                                  @([GrowingULTimeUtil currentTimeMillis]),
+                                  event.eventType,
+                                  event.sdkVersion,
+                                  @(event.policy),
+                                  @(isForceLoginPending(event))];
 
             if (!result) {
                 self.databaseError = [self writeErrorInDatabase:db];
@@ -331,6 +342,16 @@
             }
         }
 
+        // 强制登录待替换标志：默认 0；老版本 SDK 写入时不带该列按 0 处理，读取时忽略该列（降级后按设备 ID 上传）
+        NSString *sqlCreateForceLoginPending =
+            @"ALTER TABLE namedcachetable ADD forceLoginPending INTEGER DEFAULT 0 NOT NULL";
+        if (![db columnExists:@"forceLoginPending" inTableWithName:@"namedcachetable"]) {
+            if (![db executeUpdate:sqlCreateForceLoginPending]) {
+                self.databaseError = [self createDBErrorInDatabase:db];
+                return;
+            }
+        }
+
         result = YES;
     }];
 
@@ -395,8 +416,13 @@ static BOOL isExecuteVacuum(NSString *name) {
                                                     error:nil];
 }
 
-- (void)enumerateKeysAndValuesUsingBlock:
-    (void (^)(NSString *key, id value, NSString *type, NSUInteger policy, NSString *sdkVersion, BOOL **stop))block {
+- (void)enumerateKeysAndValuesUsingBlock:(void (^)(NSString *key,
+                                                   id value,
+                                                   NSString *type,
+                                                   NSUInteger policy,
+                                                   NSString *sdkVersion,
+                                                   BOOL forceLoginPending,
+                                                   BOOL **stop))block {
     @throw [NSException
         exceptionWithName:NSInternalInconsistencyException
                    reason:[NSString stringWithFormat:@"You must override %@ in a subclass.", NSStringFromSelector(_cmd)]

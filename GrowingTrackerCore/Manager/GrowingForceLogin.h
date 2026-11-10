@@ -20,17 +20,23 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/// 强制登录：开启后每次启动需 identify 才上传事件。
+/// identify 前的事件照常入库，deviceId 为自动生成的设备 ID，并带待替换标志（数据库 forceLoginPending 列）；
+/// 上传时只把带标志事件的副本替换为当前有效设备 ID，数据库原文不变。
+/// 状态切换（setup、identify）需在 Growing 线程调用，与事件构建、入库串行。
 @interface GrowingForceLogin : NSObject
 
 + (void)setup;
+/// 与 Web SDK 校验规则一致：非空即有效，不去除首尾空白，超过 1000 字符截断；每次启动仅首次有效调用生效
 + (BOOL)identify:(NSString *)deviceId;
-/// 未开启 forceLogin 时恒为 YES；开启时需本次启动 identify 成功、且暂存事件已入库后才为 YES。
-/// 为 NO 时新事件只暂存在内存中，数据库中的事件也不上传。
+/// 未开启 forceLogin，或本次启动已 identify 时为 YES
 + (BOOL)canSend;
-/// identify 成功后，暂存事件替换 deviceId 并入库完毕时调用（仅在 Growing 线程调用）
-+ (void)markEventsReleased;
+/// 当前构建的事件是否需要在上传时替换 deviceId（即 !canSend）
++ (BOOL)isPending;
+/// 当前有效设备 ID：已持久化的访问用户 ID，否则为自动生成的设备 ID
 + (NSString *)deviceIdWithGeneratedDeviceId:(NSString *)generatedDeviceId;
-+ (nullable NSString *)identifiedDeviceId;
+/// 构建事件使用的设备 ID：待替换时为自动生成的设备 ID（与老版本 SDK 一致，降级后按设备 ID 上报），否则为当前有效设备 ID
++ (NSString *)eventDeviceIdWithGeneratedDeviceId:(NSString *)generatedDeviceId;
 
 @end
 

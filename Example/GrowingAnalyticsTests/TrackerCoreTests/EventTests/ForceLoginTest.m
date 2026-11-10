@@ -31,6 +31,9 @@
 #import "GrowingTrackerCore/Manager/GrowingForceLogin.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Thread/GrowingDispatchManager.h"
+#import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
+#import "Services/Database/FMDB/GrowingFMDB.h"
+#import "Services/JSON/GrowingEventJSONPersistence.h"
 #import "Services/Protobuf/Proto/GrowingEvent.pbobjc.h"
 
 @interface GrowingEventManager (ForceLoginTest)
@@ -119,7 +122,6 @@
             config.dataCollectionEnabled = YES;
             GrowingConfigurationManager.sharedInstance.trackConfiguration = config;
             [GrowingForceLogin setup];
-            [GrowingEventManager.sharedInstance setValue:nil forKey:@"forceLoginHeldEvents"];
             [GrowingSession startSession];
             [ForceLoginNetworkStub.sharedInstance.requests removeAllObjects];
             [ForceLoginNetworkStub.sharedInstance.pendingResponses removeAllObjects];
@@ -138,7 +140,6 @@
             GrowingConfigurationManager.sharedInstance.trackConfiguration = self.savedConfiguration;
             [[GrowingPersistenceDataProvider sharedInstance] setIdentifyDeviceId:self.savedIdentifyDeviceId];
             [GrowingForceLogin setup];
-            [GrowingEventManager.sharedInstance setValue:nil forKey:@"forceLoginHeldEvents"];
         }
                   waitUntilDone:YES];
     [self restoreNetworkService];
@@ -148,35 +149,52 @@
     GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
     config.forceLogin = YES;
     [GrowingForceLogin setup];
+    NSString *generatedId = [GrowingDeviceInfo currentDeviceInfo].deviceIDString;
     XCTAssertFalse([GrowingForceLogin canSend]);
+    XCTAssertTrue([GrowingForceLogin isPending]);
     XCTAssertFalse([GrowingForceLogin identify:@""]);
-    XCTAssertFalse([GrowingForceLogin identify:@"  \n  "]);
-    NSString *overlongId = [@"" stringByPaddingToLength:1001 withString:@"x" startingAtIndex:0];
-    XCTAssertFalse([GrowingForceLogin identify:overlongId]);
-    [GrowingForceLogin markEventsReleased];
     XCTAssertFalse([GrowingForceLogin canSend]);
+    // 未解锁时事件使用自动生成的设备 ID
+    XCTAssertEqualObjects([self builtDeviceId], generatedId);
 
+    // 与 Web SDK 一致：不去除首尾空白，解锁后立即可上传
     XCTAssertTrue([GrowingForceLogin identify:@"  visitor-001  "]);
-    // identify 后需等暂存事件替换并入库，才允许上传
-    XCTAssertFalse([GrowingForceLogin canSend]);
-    [GrowingForceLogin markEventsReleased];
     XCTAssertTrue([GrowingForceLogin canSend]);
-    XCTAssertEqualObjects([GrowingForceLogin deviceIdWithGeneratedDeviceId:@"generated"], @"visitor-001");
-    XCTAssertEqualObjects([[GrowingRealTracker new] getDeviceId], @"visitor-001");
-    GrowingBaseBuilder *builder = GrowingCustomEvent.builder.setEventName(@"forced");
-    [builder readPropertyInTrackThread];
-    XCTAssertEqualObjects(builder.build.deviceId, @"visitor-001");
+    XCTAssertFalse([GrowingForceLogin isPending]);
+    XCTAssertEqualObjects([[GrowingRealTracker new] getDeviceId], @"  visitor-001  ");
+    XCTAssertEqualObjects([self builtDeviceId], @"  visitor-001  ");
 
     XCTAssertFalse([GrowingForceLogin identify:@"visitor-002"]);
-    XCTAssertEqualObjects([[GrowingRealTracker new] getDeviceId], @"visitor-001");
+    XCTAssertEqualObjects([[GrowingRealTracker new] getDeviceId], @"  visitor-001  ");
+
+    // 下次启动：重新锁定；getDeviceId 返回已持久化的访问用户 ID，但新事件写自动生成的设备 ID
     [GrowingForceLogin setup];
     XCTAssertFalse([GrowingForceLogin canSend]);
-    XCTAssertEqualObjects([[GrowingRealTracker new] getDeviceId], @"visitor-001");
+    XCTAssertEqualObjects([[GrowingRealTracker new] getDeviceId], @"  visitor-001  ");
+    XCTAssertEqualObjects([self builtDeviceId], generatedId);
 
+    // 关闭 forceLogin：不阻塞，事件沿用已持久化的访问用户 ID
     config.forceLogin = NO;
     XCTAssertTrue([GrowingForceLogin canSend]);
     XCTAssertFalse([GrowingForceLogin identify:@"visitor-003"]);
-    XCTAssertEqualObjects([[GrowingRealTracker new] getDeviceId], @"visitor-001");
+    XCTAssertEqualObjects([[GrowingRealTracker new] getDeviceId], @"  visitor-001  ");
+    XCTAssertEqualObjects([self builtDeviceId], @"  visitor-001  ");
+}
+
+- (void)testIdentifyTruncatesOverlongIdOnCharacterBoundary {
+    GrowingConfigurationManager.sharedInstance.trackConfiguration.forceLogin = YES;
+    [GrowingForceLogin setup];
+    NSString *overlongId = [@"" stringByPaddingToLength:1001 withString:@"x" startingAtIndex:0];
+    XCTAssertTrue([GrowingForceLogin identify:overlongId]);
+    XCTAssertEqual([[GrowingRealTracker new] getDeviceId].length, 1000);
+
+    // 第 1000 个 UTF-16 单元落在 emoji 代理对中间时，在 emoji 之前截断
+    [GrowingForceLogin setup];
+    NSString *emojiId =
+        [[@"" stringByPaddingToLength:999 withString:@"x" startingAtIndex:0] stringByAppendingString:@"😀y"];
+    XCTAssertTrue([GrowingForceLogin identify:emojiId]);
+    XCTAssertEqualObjects([[GrowingRealTracker new] getDeviceId],
+                          [@"" stringByPaddingToLength:999 withString:@"x" startingAtIndex:0]);
 }
 
 - (void)testLockedModeBlocksBatchReadAndNetwork {
@@ -197,7 +215,7 @@
     XCTAssertFalse(channel.isUploading);
 }
 
-- (void)testIdentifyReplacesOnlyHeldEventsForJSONAndProtobuf {
+- (void)testPendingEventsArePersistedAndReplacedOnUploadForJSONAndProtobuf {
     for (NSNumber *useProtobuf in @[@NO, @YES]) {
         BOOL isProtobuf = useProtobuf.boolValue;
         NSString *visitorId = isProtobuf ? @"visitor-protobuf" : @"visitor-json";
@@ -215,11 +233,11 @@
             }
                       waitUntilDone:YES];
 
-        // 上次启动遗留的事件，已归属 previous-visitor
+        // 老版本或此前启动已确认身份的事件，不带待替换标志
         GrowingEventDatabase *db = [self databaseWithCachedEventIsProtobuf:isProtobuf];
-        GrowingBaseEvent *heldEvent = [self eventWithName:@"held" deviceId:@"stale-visitor"];
+        GrowingBaseEvent *pendingEvent = [self eventWithName:@"pending" deviceId:@"generated-device"];
         GrowingEventChannel *channel = [GrowingEventChannel eventChannelWithName:@"Track"
-                                                                      eventTypes:@[heldEvent.eventType]
+                                                                      eventTypes:@[pendingEvent.eventType]
                                                                  isRealtimeEvent:YES];
         channel.persistenceType = isProtobuf ? GrowingEventPersistenceTypeProtobuf : GrowingEventPersistenceTypeJSON;
         channel.db = db;
@@ -227,32 +245,35 @@
         NSArray *savedChannels = [manager valueForKey:@"allEventChannels"];
         NSDictionary *savedChannelMap = [manager valueForKey:@"currentEventChannelMap"];
         [manager setValue:@[channel] forKey:@"allEventChannels"];
-        [manager setValue:@{heldEvent.eventType: channel} forKey:@"currentEventChannelMap"];
+        [manager setValue:@{pendingEvent.eventType: channel} forKey:@"currentEventChannelMap"];
 
-        // identify 前：新事件只暂存在内存，不入库；数据库中的事件也不上传
+        // identify 前：事件照常入库并带待替换标志，但不上传
         [GrowingDispatchManager
             dispatchInGrowingThread:^{
-                [manager writeToDatabaseWithEvent:heldEvent];
+                [manager writeToDatabaseWithEvent:pendingEvent];
             }
                       waitUntilDone:YES];
         [manager sendAllChannelEvents];
         [self waitForEventThread];
         XCTAssertEqual(ForceLoginNetworkStub.sharedInstance.requests.count, 0);
-        XCTAssertEqual(db.countOfEvents, 1);
+        XCTAssertEqual(db.countOfEvents, 2);
+        NSDictionary *stored = @{@"cached": @"previous-visitor", @"pending": @"generated-device"};
+        XCTAssertEqualObjects([self deviceIdsInDatabase:db], stored);
+        XCTAssertEqualObjects([self pendingFlagsInDatabase:db], (@{@"cached": @NO, @"pending": @YES}));
 
         GrowingTracker *tracker = [[GrowingTracker alloc] initWithTarget:[GrowingRealTracker new]];
-        [tracker identify:[NSString stringWithFormat:@"  %@  ", visitorId]];
+        [tracker identify:visitorId];
         [self waitForEventThread];
         [self completePendingUploads];
 
-        // 暂存事件替换为新 ID 后入库；历史事件保持原 ID
-        NSDictionary *expected = @{@"cached": @"previous-visitor", @"held": visitorId};
+        // 只替换带待替换标志的事件；数据库原文不变
+        NSDictionary *expected = @{@"cached": @"previous-visitor", @"pending": visitorId};
         XCTAssertEqual(ForceLoginNetworkStub.sharedInstance.requests.count, 1);
         XCTAssertEqualObjects([self deviceIdsInRequest:ForceLoginNetworkStub.sharedInstance.requests.firstObject],
                               expected);
-        XCTAssertEqualObjects([self deviceIdsInDatabase:db], expected);
+        XCTAssertEqualObjects([self deviceIdsInDatabase:db], stored);
 
-        // 上传失败后重试，数据库中的数据不变
+        // 上传失败后重试，再次替换
         ForceLoginNetworkStub.sharedInstance.shouldFail = NO;
         [manager sendAllChannelEvents];
         [self waitForEventThread];
@@ -265,6 +286,42 @@
         [manager setValue:savedChannels forKey:@"allEventChannels"];
         [manager setValue:savedChannelMap forKey:@"currentEventChannelMap"];
     }
+}
+
+- (void)testOldTableGetsForceLoginPendingColumn {
+    NSString *path = [NSTemporaryDirectory()
+        stringByAppendingPathComponent:[NSString stringWithFormat:@"force-login-migration-%@/events.sqlite",
+                                                                  NSUUID.UUID.UUIDString]];
+    XCTAssertTrue([[NSFileManager defaultManager] createDirectoryAtPath:path.stringByDeletingLastPathComponent
+                                            withIntermediateDirectories:YES
+                                                             attributes:nil
+                                                                  error:nil]);
+    // 老版本 SDK 创建的表：没有 forceLoginPending 列
+    GrowingFMDatabase *oldDB = [GrowingFMDatabase databaseWithPath:path];
+    XCTAssertTrue([oldDB open]);
+    XCTAssertTrue([oldDB executeUpdate:@"CREATE TABLE namedcachetable(id INTEGER PRIMARY KEY, name TEXT, key TEXT, "
+                                       @"value TEXT, createAt INTEGER NOT NULL, type TEXT, sdkVersion TEXT, "
+                                       @"policy INTEGER);"]);
+    GrowingBaseEvent *event = [self eventWithName:@"legacy" deviceId:@"legacy-device"];
+    id<GrowingEventPersistenceProtocol> legacy = [GrowingEventJSONPersistence persistenceEventWithEvent:event
+                                                                                                  uuid:@"legacy"];
+    XCTAssertTrue([oldDB executeUpdate:@"INSERT INTO namedcachetable(key,value,createAt,type,sdkVersion,policy) "
+                                       @"values(?,?,?,?,?,?)",
+                                       legacy.eventUUID,
+                                       legacy.data,
+                                       @((long long)([NSDate date].timeIntervalSince1970 * 1000)),
+                                       legacy.eventType,
+                                       legacy.sdkVersion,
+                                       @(legacy.policy)]);
+    XCTAssertFalse([oldDB columnExists:@"forceLoginPending" inTableWithName:@"namedcachetable"]);
+    [oldDB close];
+
+    GrowingEventDatabase *db = [GrowingEventDatabase databaseWithPath:path isProtobuf:NO];
+    XCTAssertEqualObjects([self pendingFlagsInDatabase:db], @{@"legacy": @NO});
+    GrowingFMDatabase *checkDB = [GrowingFMDatabase databaseWithPath:path];
+    XCTAssertTrue([checkDB open]);
+    XCTAssertTrue([checkDB columnExists:@"forceLoginPending" inTableWithName:@"namedcachetable"]);
+    [checkDB close];
 }
 
 - (NSMutableDictionary *)cachedServiceInstances {
@@ -344,6 +401,22 @@
             XCTAssertEqualObjects(event[@"sessionId"], @"test-session");
             result[event[@"eventName"]] = event[@"deviceId"];
         }
+    }
+    return result;
+}
+
+- (NSString *)builtDeviceId {
+    GrowingBaseBuilder *builder = GrowingCustomEvent.builder.setEventName(@"forced");
+    [builder readPropertyInTrackThread];
+    return builder.build.deviceId;
+}
+
+/// eventName -> forceLoginPending
+- (NSDictionary<NSString *, NSNumber *> *)pendingFlagsInDatabase:(GrowingEventDatabase *)db {
+    NSMutableDictionary *result = [NSMutableDictionary dictionary];
+    for (id<GrowingEventPersistenceProtocol> event in [db getEventsByCount:10 limitSize:100000 policy:~0UL]) {
+        NSDictionary *jsonObject = event.toJSONObject;
+        result[jsonObject[@"eventName"]] = @(event.forceLoginPending);
     }
     return result;
 }

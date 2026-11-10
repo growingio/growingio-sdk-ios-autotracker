@@ -199,7 +199,7 @@
     NSString *savedDeviceId = [GrowingPersistenceDataProvider sharedInstance].identifyDeviceId;
     GrowingConfigurationManager.sharedInstance.trackConfiguration.forceLogin = YES;
     [GrowingForceLogin setup];
-    XCTAssertTrue([GrowingForceLogin identify:@"  hybrid-visitor  "]);
+    XCTAssertTrue([GrowingForceLogin identify:@"hybrid-visitor"]);
     GrowingHybridMockWebView *webView = [self mockWebView];
 
     [self sendGetNativeIdentityWithCallbackId:@"gio_identify_1" webView:webView];

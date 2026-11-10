@@ -256,14 +256,16 @@ const int GrowingTrackerVersionCode = 41400;
 }
 
 - (void)identify:(NSString *)deviceId {
-    if (![GrowingForceLogin identify:deviceId]) {
-        return;
-    }
-    [[GrowingEventManager sharedInstance] releaseForceLoginEvents];
+    // 在 Growing 线程切换强制登录状态，与事件构建、入库串行，保证同一事件的 deviceId 与待替换标志一致
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        if ([GrowingForceLogin identify:deviceId]) {
+            [[GrowingEventManager sharedInstance] sendAllChannelEvents];
+        }
+    }];
 }
 
 - (NSString *)getDeviceId {
-    NSString *generatedDeviceId = [GrowingDeviceInfo currentDeviceInfo].deviceIDString;
+    NSString *generatedDeviceId = [GrowingDeviceInfo currentDeviceInfo].deviceIDString ?: @"";
     return [GrowingForceLogin deviceIdWithGeneratedDeviceId:generatedDeviceId];
 }
 

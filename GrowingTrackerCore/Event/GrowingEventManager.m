@@ -40,18 +40,6 @@ static const NSUInteger kGrowingMaxDBCacheSize = 100;  // default: write to DB a
 static const NSUInteger kGrowingMaxBatchSize = 500;    // default: send no more than 500 events in every batch
 static const NSUInteger kGrowingUnit_MB = 1024 * 1024;
 
-/// 强制登录模式下，identify 前暂存在内存中的事件
-@interface GrowingForceLoginHeldEvent : NSObject
-
-@property (nonatomic, strong) GrowingEventChannel *channel;
-@property (nonatomic, strong) id<GrowingEventPersistenceProtocol> event;
-
-@end
-
-@implementation GrowingForceLoginHeldEvent
-
-@end
-
 @interface GrowingEventManager ()
 
 @property (nonatomic, strong) NSHashTable *allInterceptor;
@@ -67,9 +55,6 @@ static const NSUInteger kGrowingUnit_MB = 1024 * 1024;
 
 @property (nonatomic, assign) unsigned long long uploadEventSize;
 @property (nonatomic, assign) unsigned long long uploadLimitOfCellular;
-
-// 仅在 Growing 线程访问
-@property (nonatomic, strong) NSMutableArray<GrowingForceLoginHeldEvent *> *forceLoginHeldEvents;
 
 @end
 
@@ -242,33 +227,6 @@ static GrowingEventManager *sharedInstance = nil;
     }];
 }
 
-- (void)releaseForceLoginEvents {
-    [GrowingDispatchManager dispatchInGrowingThread:^{
-        // 与 Web SDK 一致：只替换本次启动 identify 前暂存的事件，替换后入库；已入库的历史事件保持原 deviceId
-        NSString *deviceId = [GrowingForceLogin identifiedDeviceId];
-        for (GrowingForceLoginHeldEvent *heldEvent in self.forceLoginHeldEvents) {
-            id<GrowingEventPersistenceProtocol> event = heldEvent.event;
-            if (deviceId.length > 0 &&
-                [(NSObject *)event respondsToSelector:@selector(persistenceByReplacingDeviceId:)]) {
-                id<GrowingEventPersistenceProtocol> replacedEvent = [event persistenceByReplacingDeviceId:deviceId];
-                if (replacedEvent) {
-                    event = replacedEvent;
-                } else {
-                    GIOLogError(@"-releaseForceLoginEvents: error : fail to replace event deviceId");
-                }
-            }
-            [heldEvent.channel.db setEvent:event forKey:event.eventUUID];
-        }
-        [self.forceLoginHeldEvents removeAllObjects];
-        [GrowingForceLogin markEventsReleased];
-
-        [self flushDB];
-        for (GrowingEventChannel *channel in self.allEventChannels) {
-            [self sendEventsOfChannel_unsafe:channel];
-        }
-    }];
-}
-
 // 非安全 发送日志
 - (void)sendEventsOfChannel_unsafe:(GrowingEventChannel *)channel {
     if (![GrowingForceLogin canSend]) {
@@ -309,6 +267,7 @@ static GrowingEventManager *sharedInstance = nil;
     }
 
     NSArray<id<GrowingEventPersistenceProtocol>> *events = [self getEventsToBeUploadUnsafe:channel policy:policyMask];
+    events = [self eventsByReplacingForceLoginPendingDeviceId:events];
 
     // 过滤3.x的无埋点事件
     NSMutableArray *removeV3AutotrackEvents = [NSMutableArray arrayWithArray:events];
@@ -439,18 +398,11 @@ static GrowingEventManager *sharedInstance = nil;
     NSString *uuidString = [NSUUID UUID].UUIDString;
     id<GrowingEventPersistenceProtocol> waitForPersist = [eventChannel.db persistenceEventWithEvent:event
                                                                                                uuid:uuidString];
-    if (![GrowingForceLogin canSend]) {
-        // 强制登录 identify 前，事件仅暂存在内存中，identify 后替换 deviceId 再入库；进程退出前未 identify 则丢弃
-        if (eventChannel && waitForPersist) {
-            if (!self.forceLoginHeldEvents) {
-                self.forceLoginHeldEvents = [NSMutableArray array];
-            }
-            GrowingForceLoginHeldEvent *heldEvent = [[GrowingForceLoginHeldEvent alloc] init];
-            heldEvent.channel = eventChannel;
-            heldEvent.event = waitForPersist;
-            [self.forceLoginHeldEvents addObject:heldEvent];
-        }
-        return;
+    // 强制登录 identify 前构建的事件：deviceId 为自动生成的设备 ID，入库时带待替换标志，上传时再替换
+    // （与事件构建在同一 Growing 线程任务中，identify 也在 Growing 线程切换状态，两者一致）
+    if ([GrowingForceLogin isPending] &&
+        [(NSObject *)waitForPersist respondsToSelector:@selector(setForceLoginPending:)]) {
+        waitForPersist.forceLoginPending = YES;
     }
     [eventChannel.db setEvent:waitForPersist forKey:uuidString];
 
@@ -464,6 +416,38 @@ static GrowingEventManager *sharedInstance = nil;
         }
 #endif
     }
+}
+
+/// 强制登录：把带待替换标志事件的副本替换为当前有效设备 ID，其他事件原样返回；数据库原文不变，上传失败重试时再次替换
+- (NSArray<id<GrowingEventPersistenceProtocol>> *)eventsByReplacingForceLoginPendingDeviceId:
+    (NSArray<id<GrowingEventPersistenceProtocol>> *)events {
+    NSMutableArray<id<GrowingEventPersistenceProtocol>> *result = nil;
+    NSString *deviceId = nil;
+    for (NSUInteger i = 0; i < events.count; i++) {
+        NSObject<GrowingEventPersistenceProtocol> *event = (NSObject<GrowingEventPersistenceProtocol> *)events[i];
+        if (![event respondsToSelector:@selector(forceLoginPending)] || !event.forceLoginPending ||
+            ![event respondsToSelector:@selector(persistenceByReplacingDeviceId:)]) {
+            continue;
+        }
+        if (!deviceId) {
+            NSString *generatedDeviceId = [GrowingDeviceInfo currentDeviceInfo].deviceIDString ?: @"";
+            deviceId = [GrowingForceLogin deviceIdWithGeneratedDeviceId:generatedDeviceId];
+        }
+        id<GrowingEventPersistenceProtocol> replaced = [event persistenceByReplacingDeviceId:deviceId];
+        if (!replaced) {
+            // 替换失败时按入库时的自动生成设备 ID 上传
+            GIOLogError(@"-eventsByReplacingForceLoginPendingDeviceId: error : fail to replace event deviceId");
+            continue;
+        }
+        if (replaced == event) {
+            continue;
+        }
+        if (!result) {
+            result = [events mutableCopy];
+        }
+        result[i] = replaced;
+    }
+    return result ?: events;
 }
 
 - (void)flushDB {

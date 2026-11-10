@@ -75,9 +75,6 @@
 /// 发送事件
 - (void)sendAllChannelEvents;
 
-/// 强制登录 identify 成功后调用：替换暂存事件的 deviceId 并入库，然后发送
-- (void)releaseForceLoginEvents;
-
 /// 发送event，必须在主线程调用
 /// @param builder event构造器
 - (void)postEventBuilder:(GrowingBaseBuilder *_Nullable)builder;
