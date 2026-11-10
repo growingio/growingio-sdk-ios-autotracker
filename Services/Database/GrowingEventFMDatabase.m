@@ -165,16 +165,16 @@ static BOOL isForceLoginPending(id<GrowingEventPersistenceProtocol> event) {
             self.databaseError = error;
             return;
         }
-        result = [db
-            executeUpdate:@"INSERT INTO namedcachetable(key,value,createAt,type,sdkVersion,policy,forceLoginPending) "
-                          @"values(?,?,?,?,?,?,?)",
-                          event.eventUUID,
-                          event.data,
-                          @([GrowingULTimeUtil currentTimeMillis]),
-                          event.eventType,
-                          event.sdkVersion,
-                          @(event.policy),
-                          @(isForceLoginPending(event))];
+        result = [db executeUpdate:
+                         @"INSERT INTO namedcachetable(key,value,createAt,type,sdkVersion,policy,forceLoginPending) "
+                         @"values(?,?,?,?,?,?,?)",
+                         event.eventUUID,
+                         event.data,
+                         @([GrowingULTimeUtil currentTimeMillis]),
+                         event.eventType,
+                         event.sdkVersion,
+                         @(event.policy),
+                         @(isForceLoginPending(event))];
 
         if (!result) {
             self.databaseError = [self writeErrorInDatabase:db];
@@ -198,15 +198,16 @@ static BOOL isForceLoginPending(id<GrowingEventPersistenceProtocol> event) {
         for (int i = 0; i < events.count; i++) {
             id<GrowingEventPersistenceProtocol> event = events[i];
             result =
-                [db executeUpdate:@"INSERT INTO namedcachetable(key,value,createAt,type,sdkVersion,policy,forceLoginPending) "
-                                  @"values(?,?,?,?,?,?,?)",
-                                  event.eventUUID,
-                                  event.data,
-                                  @([GrowingULTimeUtil currentTimeMillis]),
-                                  event.eventType,
-                                  event.sdkVersion,
-                                  @(event.policy),
-                                  @(isForceLoginPending(event))];
+                [db executeUpdate:
+                        @"INSERT INTO namedcachetable(key,value,createAt,type,sdkVersion,policy,forceLoginPending) "
+                        @"values(?,?,?,?,?,?,?)",
+                        event.eventUUID,
+                        event.data,
+                        @([GrowingULTimeUtil currentTimeMillis]),
+                        event.eventType,
+                        event.sdkVersion,
+                        @(event.policy),
+                        @(isForceLoginPending(event))];
 
             if (!result) {
                 self.databaseError = [self writeErrorInDatabase:db];
