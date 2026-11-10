@@ -305,14 +305,16 @@
     GrowingBaseEvent *event = [self eventWithName:@"legacy" deviceId:@"legacy-device"];
     id<GrowingEventPersistenceProtocol> legacy = [GrowingEventJSONPersistence persistenceEventWithEvent:event
                                                                                                   uuid:@"legacy"];
-    XCTAssertTrue([oldDB executeUpdate:@"INSERT INTO namedcachetable(key,value,createAt,type,sdkVersion,policy) "
-                                       @"values(?,?,?,?,?,?)",
-                                       legacy.eventUUID,
-                                       legacy.data,
-                                       @((long long)([NSDate date].timeIntervalSince1970 * 1000)),
-                                       legacy.eventType,
-                                       legacy.sdkVersion,
-                                       @(legacy.policy)]);
+    // 变参调用先赋值，避免逗号被 XCTAssert 宏拆成多个参数
+    BOOL inserted = [oldDB executeUpdate:@"INSERT INTO namedcachetable(key,value,createAt,type,sdkVersion,policy) "
+                                         @"values(?,?,?,?,?,?)",
+                                         legacy.eventUUID,
+                                         legacy.data,
+                                         @((long long)([NSDate date].timeIntervalSince1970 * 1000)),
+                                         legacy.eventType,
+                                         legacy.sdkVersion,
+                                         @(legacy.policy)];
+    XCTAssertTrue(inserted);
     XCTAssertFalse([oldDB columnExists:@"forceLoginPending" inTableWithName:@"namedcachetable"]);
     [oldDB close];
 
