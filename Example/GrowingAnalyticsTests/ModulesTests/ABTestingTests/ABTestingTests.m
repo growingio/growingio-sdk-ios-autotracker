@@ -28,7 +28,9 @@
 #import "Modules/ABTesting/GrowingABTExperiment+Private.h"
 #import "Modules/ABTesting/GrowingABTExperimentStorage.h"
 #import "Modules/ABTesting/Request/GrowingABTRequest.h"
+#import "GrowingTrackerCore/Event/Tools/GrowingPersistenceDataProvider.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Manager/GrowingForceLogin.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
 #import "GrowingULTimeUtil.h"
@@ -62,6 +64,8 @@
 
 @interface ABTestingTests : XCTestCase
 
+@property (nonatomic, copy) NSString *savedIdentifyDeviceId;
+
 @end
 
 #pragma clang diagnostic push
@@ -86,11 +90,37 @@
 - (void)setUp {
     [MockEventQueue.sharedQueue cleanQueue];
     [HTTPStubs removeAllStubs];
+    self.savedIdentifyDeviceId = [GrowingPersistenceDataProvider sharedInstance].identifyDeviceId;
 }
 
 - (void)tearDown {
     [[GrowingSession currentSession] setLoginUserId:nil userKey:nil];
     GrowingConfigurationManager.sharedInstance.trackConfiguration.idMappingEnabled = NO;
+    // 恢复强制登录状态，避免影响其他用例
+    GrowingConfigurationManager.sharedInstance.trackConfiguration.forceLogin = NO;
+    [[GrowingPersistenceDataProvider sharedInstance] setIdentifyDeviceId:self.savedIdentifyDeviceId];
+    [GrowingForceLogin setup];
+}
+
+/// 模拟一次开启强制登录的启动：visitorId 为上次启动已持久化的访问用户 ID（可为 nil）
+- (void)relaunchWithForceLoginAndPersistedVisitorId:(NSString *_Nullable)visitorId {
+    GrowingConfigurationManager.sharedInstance.trackConfiguration.forceLogin = YES;
+    [[GrowingPersistenceDataProvider sharedInstance] setIdentifyDeviceId:visitorId];
+    [GrowingForceLogin setup];
+}
+
+- (GrowingABTExperiment *)saveValidExperiment:(NSString *)layerId identity:(NSString *)identity {
+    GrowingABTExperiment *exp = [[GrowingABTExperiment alloc] initWithLayerId:layerId
+                                                                    layerName:@"layer123456"
+                                                                 experimentId:@"123"
+                                                               experimentName:@"exp_123"
+                                                                   strategyId:@"456"
+                                                                 strategyName:@"strategy_456"
+                                                                    variables:@{}
+                                                                    fetchTime:GrowingULTimeUtil.currentTimeMillis];
+    exp.identity = identity;
+    [exp saveToDisk];
+    return exp;
 }
 
 - (void)test00ExperimentStorage {
@@ -1184,6 +1214,120 @@ static NSString *GrowingABTDecodeValue(NSString *value, unsigned long long stm) 
 
     GrowingConfigurationManager.sharedInstance.trackConfiguration.dataCollectionEnabled = YES;
     [cachedExp removeFromDisk];
+}
+
+- (void)test14ForceLoginPendingSkipsCacheAndRequest {
+    __block NSInteger requestCount = 0;
+    [HTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest * _Nonnull request) {
+        return [request.URL.host isEqualToString:@"www.example.com"];
+    } withStubResponse:^HTTPStubsResponse * _Nonnull(NSURLRequest * _Nonnull request) {
+        requestCount++;
+        NSDictionary *obj = @{@"code": @(0), @"experimentId": @(123), @"strategyId": @(456), @"variables": @{}};
+        return [HTTPStubsResponse responseWithJSONObject:obj statusCode:200 headers:nil];
+    }];
+
+    NSString *visitorId = @"abt-force-login-previous-visitor";
+    NSString *generatedId = [GrowingDeviceInfo currentDeviceInfo].deviceIDString;
+    [self relaunchWithForceLoginAndPersistedVisitorId:visitorId];
+    XCTAssertTrue([GrowingForceLogin isPending]);
+
+    // 访问用户 ID 与自动生成 ID 两种身份下都有 TTL 内的有效缓存
+    NSString *cachedLayerId = [NSUUID UUID].UUIDString;
+    NSString *visitorIdentity = [GrowingABTRequest identityWithDeviceId:visitorId userId:nil userKey:nil];
+    NSString *generatedIdentity = [GrowingABTRequest identityWithDeviceId:generatedId userId:nil userKey:nil];
+    GrowingABTExperiment *visitorExp = [self saveValidExperiment:cachedLayerId identity:visitorIdentity];
+    GrowingABTExperiment *generatedExp = [self saveValidExperiment:cachedLayerId identity:generatedIdentity];
+
+    XCTestExpectation *expectation =
+        [self expectationWithDescription:@"test14ForceLoginPendingSkipsCacheAndRequest Test failed : timeout"];
+    expectation.expectedFulfillmentCount = 3;
+
+    // 有缓存：不读缓存，直接回调 nil
+    [GrowingABTesting fetchExperiment:cachedLayerId completedBlock:^(GrowingABTExperiment * _Nullable exp) {
+        XCTAssertNil(exp);
+        [expectation fulfill];
+    }];
+
+    // 无缓存：不发起请求，直接回调 nil
+    NSString *layerId = [NSUUID UUID].UUIDString;
+    [GrowingABTesting fetchExperiment:layerId completedBlock:^(GrowingABTExperiment * _Nullable exp) {
+        XCTAssertNil(exp);
+        [expectation fulfill];
+    }];
+
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        // 不请求、不重试、不上报入组事件，缓存保持不变
+        XCTAssertEqual(requestCount, 0);
+        XCTAssertEqual([self expHitCount], 0);
+        XCTAssertNil([GrowingABTExperiment findExperiment:layerId identity:visitorIdentity]);
+        XCTAssertNil([GrowingABTExperiment findExperiment:layerId identity:generatedIdentity]);
+        XCTAssertEqualObjects([GrowingABTExperiment findExperiment:cachedLayerId identity:visitorIdentity],
+                              visitorExp);
+        XCTAssertEqualObjects([GrowingABTExperiment findExperiment:cachedLayerId identity:generatedIdentity],
+                              generatedExp);
+        [expectation fulfill];
+    });
+    [self waitForExpectationsWithTimeout:5.0f handler:nil];
+
+    [visitorExp removeFromDisk];
+    [generatedExp removeFromDisk];
+}
+
+- (void)test15ForceLoginIdentifyUsesVisitorId {
+    __block NSInteger requestCount = 0;
+    [HTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest * _Nonnull request) {
+        return [request.URL.host isEqualToString:@"www.example.com"];
+    } withStubResponse:^HTTPStubsResponse * _Nonnull(NSURLRequest * _Nonnull request) {
+        requestCount++;
+        NSDictionary *obj = @{@"code": @(0), @"experimentId": @(123), @"strategyId": @(456), @"variables": @{}};
+        return [HTTPStubsResponse responseWithJSONObject:obj statusCode:200 headers:nil];
+    }];
+
+    [[GrowingSession currentSession] setLoginUserId:nil userKey:nil];
+    NSString *generatedId = [GrowingDeviceInfo currentDeviceInfo].deviceIDString;
+    NSString *visitorId = @"abt-force-login-visitor-001";
+    NSString *visitorIdentity = [GrowingABTRequest identityWithDeviceId:visitorId userId:nil userKey:nil];
+    NSString *generatedIdentity = [GrowingABTRequest identityWithDeviceId:generatedId userId:nil userKey:nil];
+    XCTAssertNotEqualObjects(visitorId, generatedId);
+
+    [self relaunchWithForceLoginAndPersistedVisitorId:nil];
+    XCTAssertTrue([GrowingForceLogin identify:visitorId]);
+    XCTAssertFalse([GrowingForceLogin isPending]);
+
+    // identify 后：distinctId 与缓存身份都使用访问用户 ID
+    GrowingABTRequest *request = [[GrowingABTRequest alloc] init];
+    request.layerId = @"123456";
+    XCTAssertEqualObjects(GrowingABTBodyParameters(request)[@"distinctId"], visitorId);
+    XCTAssertEqualObjects(request.userIdentity, visitorIdentity);
+    XCTAssertEqualObjects([GrowingABTRequest currentIdentity], visitorIdentity);
+
+    NSString *layerId = [NSUUID UUID].UUIDString;
+    XCTestExpectation *expectation =
+        [self expectationWithDescription:@"test15ForceLoginIdentifyUsesVisitorId Test failed : timeout"];
+    [GrowingABTesting fetchExperiment:layerId completedBlock:^(GrowingABTExperiment * _Nullable exp) {
+        XCTAssertEqual(requestCount, 1);
+        XCTAssertEqualObjects(exp.experimentId, @"123");
+        XCTAssertEqualObjects(exp.identity, visitorIdentity);
+        XCTAssertNotNil([GrowingABTExperiment findExperiment:layerId identity:visitorIdentity]);
+        XCTAssertNil([GrowingABTExperiment findExperiment:layerId identity:generatedIdentity]);
+
+        // 之后关闭 forceLogin：不拦截，仍沿用已持久化的访问用户 ID，命中同一份缓存
+        GrowingConfigurationManager.sharedInstance.trackConfiguration.forceLogin = NO;
+        XCTAssertFalse([GrowingForceLogin isPending]);
+        GrowingABTRequest *request2 = [[GrowingABTRequest alloc] init];
+        request2.layerId = @"123456";
+        XCTAssertEqualObjects(GrowingABTBodyParameters(request2)[@"distinctId"], visitorId);
+        XCTAssertEqualObjects(request2.userIdentity, visitorIdentity);
+        XCTAssertEqualObjects([GrowingABTRequest currentIdentity], visitorIdentity);
+
+        [GrowingABTesting fetchExperiment:layerId completedBlock:^(GrowingABTExperiment * _Nullable exp2) {
+            XCTAssertEqual(requestCount, 1);
+            XCTAssertEqualObjects(exp2, exp);
+            [exp2 removeFromDisk];
+            [expectation fulfill];
+        }];
+    }];
+    [self waitForExpectationsWithTimeout:10.0f handler:nil];
 }
 
 @end
