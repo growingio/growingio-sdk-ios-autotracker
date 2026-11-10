@@ -138,6 +138,39 @@
     return @{};
 }
 
+- (id<GrowingEventPersistenceProtocol>)persistenceByReplacingDeviceId:(NSString *)deviceId {
+#if SWIFT_PACKAGE
+    if (!self.dtoBox) {
+        return nil;
+    }
+    if ([self.dtoBox.deviceId isEqualToString:deviceId]) {
+        return self;
+    }
+#else
+    if (!self.dto) {
+        return nil;
+    }
+    if ([self.dto.deviceId isEqualToString:deviceId]) {
+        return self;
+    }
+#endif
+
+    GrowingEventProtobufPersistence *persistence = [[self.class alloc] init];
+    persistence->_eventUUID = self.eventUUID;
+    persistence->_eventType = self.eventType;
+    persistence->_policy = self.policy;
+    persistence->_sdkVersion = self.sdkVersion;
+#if SWIFT_PACKAGE
+    persistence->_dtoBox = [self.dtoBox replacingDeviceId:deviceId];
+    persistence->_data = persistence->_dtoBox.data;
+#else
+    persistence->_dto = [self.dto copy];
+    persistence->_dto.deviceId = deviceId;
+    persistence->_data = persistence->_dto.data;
+#endif
+    return persistence;
+}
+
 - (void)appendExtraParams:(NSDictionary<NSString *, id> *)extraParams {
     if (!extraParams || extraParams.count == 0) {
         return;

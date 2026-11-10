@@ -24,6 +24,7 @@
 #import "GrowingTrackerCore/Event/GrowingLoginUserAttributesEvent.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Manager/GrowingForceLogin.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Public/GrowingAnnotationCore.h"
 #import "GrowingTrackerCore/Public/GrowingBaseEvent.h"
@@ -167,7 +168,7 @@ static CGFloat const kGrowingGetDomTreeDefaultTimeOut = 10.0f;
     GrowingDeviceInfo *deviceInfo = [GrowingDeviceInfo currentDeviceInfo];
 
     NSMutableDictionary *identity = [NSMutableDictionary dictionary];
-    identity[@"deviceId"] = deviceInfo.deviceIDString ?: @"";
+    identity[@"deviceId"] = [GrowingForceLogin deviceIdWithGeneratedDeviceId:deviceInfo.deviceIDString] ?: @"";
     if (session.loginUserId.length > 0) {
         identity[@"userId"] = session.loginUserId;
     }

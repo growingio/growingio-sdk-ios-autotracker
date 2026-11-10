@@ -27,6 +27,7 @@
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/LogFormat/GrowingWSLoggerFormat.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Manager/GrowingForceLogin.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Network/GrowingNetworkInterfaceManager.h"
 #import "GrowingTrackerCore/Public/GrowingAttributesBuilder.h"
@@ -59,6 +60,7 @@ const int GrowingTrackerVersionCode = 41400;
         _configuration = [configuration copyWithZone:nil];
         _launchOptions = [launchOptions copy];
         GrowingConfigurationManager.sharedInstance.trackConfiguration = _configuration;
+        [GrowingForceLogin setup];
 
         [self loggerSetting];
         [GrowingDeviceInfo setup];
@@ -253,8 +255,18 @@ const int GrowingTrackerVersionCode = 41400;
     }];
 }
 
+- (void)identify:(NSString *)deviceId {
+    // 在 Growing 线程切换强制登录状态，与事件构建、入库串行，保证同一事件的 deviceId 与待替换标志一致
+    [GrowingDispatchManager dispatchInGrowingThread:^{
+        if ([GrowingForceLogin identify:deviceId]) {
+            [[GrowingEventManager sharedInstance] sendAllChannelEvents];
+        }
+    }];
+}
+
 - (NSString *)getDeviceId {
-    return [GrowingDeviceInfo currentDeviceInfo].deviceIDString;
+    NSString *generatedDeviceId = [GrowingDeviceInfo currentDeviceInfo].deviceIDString ?: @"";
+    return [GrowingForceLogin deviceIdWithGeneratedDeviceId:generatedDeviceId];
 }
 
 - (void)setLocation:(double)latitude longitude:(double)longitude {

@@ -21,6 +21,7 @@
 #import "GrowingTrackerCore/Event/GrowingEventGenerator.h"
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Manager/GrowingForceLogin.h"
 #import "GrowingTrackerCore/Public/GrowingEncryptionService.h"
 #import "GrowingTrackerCore/Public/GrowingEventNetworkService.h"
 #import "GrowingTrackerCore/Public/GrowingServiceManager.h"
@@ -101,6 +102,15 @@ static NSString *const kABTExpStrategyName = @"$exp_strategy_name";
 + (void)fetchExperiment:(NSString *)layerId
          completedBlock:(void (^)(GrowingABTExperiment *_Nullable))completedBlock
              retryCount:(NSInteger)retryCount {
+    if ([GrowingForceLogin isPending]) {
+        GIOLogDebug(@"[GrowingABTesting] -fetchExperiment: forceLogin is enabled and not identified yet");
+        // 强制登录未 identify 期间与关闭采集一致：不读缓存、不发起分流请求、不重试、不上报入组事件
+        if (completedBlock) {
+            completedBlock(nil);
+        }
+        return;
+    }
+
     GrowingABTExperiment *exp = [GrowingABTExperiment findExperiment:layerId
                                                             identity:[GrowingABTRequest currentIdentity]];
     if (exp) {

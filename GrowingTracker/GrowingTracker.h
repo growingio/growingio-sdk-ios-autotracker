@@ -72,7 +72,13 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param attributes 用户属性信息
 - (void)setLoginUserAttributes:(NSDictionary<NSString *, id> *)attributes;
 
-/// 同步获取设备id，又称为匿名用户id，SDK 自动生成用来定义唯一设备。
+/// 设置访问用户 ID，并解除本次启动的强制登录上传阻塞。
+/// 仅在 forceLogin 开启时生效；每次启动仅首次有效调用生效。
+/// 调用前产生的事件照常入库但暂不上传，调用后统一以该 ID 补发。
+/// @param deviceId 访问用户 ID，不能为空字符串；不去除首尾空白，超过 1000 字符截断
+- (void)identify:(NSString *)deviceId;
+
+/// 同步获取设备id；设置访问用户 ID 后返回该 ID。
 - (NSString *)getDeviceId;
 
 ///-------------------------------

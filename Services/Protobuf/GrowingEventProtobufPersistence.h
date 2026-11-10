@@ -31,6 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) id data;
 @property (nonatomic, assign, readonly) GrowingEventSendPolicy policy;
 @property (nonatomic, copy, readonly) NSString *sdkVersion;
+@property (nonatomic, assign) BOOL forceLoginPending;
 
 @end
 

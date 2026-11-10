@@ -46,6 +46,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)appendExtraParams:(NSDictionary<NSString *, id> *)extraParams;
 
+@optional
+/// 强制登录待替换标志：identify 前构建的事件为 YES，对应数据库 forceLoginPending 列；上传时替换 deviceId。
+@property (nonatomic, assign) BOOL forceLoginPending;
+
+/// 返回替换 deviceId 后的新持久化对象（不带待替换标志），不修改当前对象；deviceId 相同时返回自身。
+- (nullable id<GrowingEventPersistenceProtocol>)persistenceByReplacingDeviceId:(NSString *)deviceId;
+
 @end
 
 NS_ASSUME_NONNULL_END

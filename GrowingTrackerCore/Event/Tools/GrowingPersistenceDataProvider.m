@@ -24,6 +24,7 @@
 static NSString *kGrowingUserdefault_file = @"growingio.userdefault";
 static NSString *kGrowingUserdefault_loginUserId = @"growingio.userdefault.loginUserId";
 static NSString *kGrowingUserdefault_loginUserKey = @"growingio.userdefault.loginUserKey";
+static NSString *kGrowingUserdefault_identifyDeviceId = @"growingio.userdefault.identifyDeviceId";
 static NSString *kGrowingUserdefault_sequenceId = @"growingio.userdefault.sequenceId";
 static NSString *kGrowingUserdefault_prefix = @"growingio.userdefault";
 
@@ -84,6 +85,18 @@ static GrowingPersistenceDataProvider *persistence = nil;
 
 - (nullable NSString *)loginUserKey {
     return [_growingUserdefault valueForKey:kGrowingUserdefault_loginUserKey];
+}
+
+- (void)setIdentifyDeviceId:(NSString *_Nullable)identifyDeviceId {
+    if (!identifyDeviceId.length) {
+        identifyDeviceId = @"";
+    }
+    [_growingUserdefault setValue:identifyDeviceId forKey:kGrowingUserdefault_identifyDeviceId];
+    [_growingUserdefault synchronize];
+}
+
+- (nullable NSString *)identifyDeviceId {
+    return [_growingUserdefault valueForKey:kGrowingUserdefault_identifyDeviceId];
 }
 
 /// 设置NSString,NSNumber

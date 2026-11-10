@@ -19,6 +19,7 @@
 
 #import <XCTest/XCTest.h>
 #import "GrowingTrackerCore/Event/GrowingCustomEvent.h"
+#import "GrowingTrackerCore/Event/GrowingVisitEvent.h"
 #import "Services/Protobuf/Catagory/GrowingBaseEvent+Protobuf.h"
 #import "Services/Protobuf/GrowingEventProtobufPersistence.h"
 #import "Services/Protobuf/Proto/GrowingEvent.pbobjc.h"
@@ -92,6 +93,27 @@
     id jsonObject = p.toJSONObject;
     XCTAssertNotNil(jsonObject);
     XCTAssertEqual([NSJSONSerialization isValidJSONObject:jsonObject], YES);
+}
+
+- (void)testPersistenceByReplacingDeviceIdPreservesFields {
+    GrowingBaseBuilder *builder = GrowingVisitEvent.builder.setExtraSdk(@{@"key": @"value"})
+                                      .setDeviceId(@"generated-device")
+                                      .setSessionId(@"test-session");
+    GrowingVisitEvent *event = (GrowingVisitEvent *)builder.build;
+    GrowingEventProtobufPersistence *p =
+        [GrowingEventProtobufPersistence persistenceEventWithEvent:event uuid:[NSUUID UUID].UUIDString];
+    GrowingEventProtobufPersistence *replaced =
+        (GrowingEventProtobufPersistence *)[p persistenceByReplacingDeviceId:@"visitor-id"];
+
+    GrowingPBEventV3Dto *originalDto = [GrowingPBEventV3Dto parseFromData:p.data error:nil];
+    GrowingPBEventV3Dto *replacedDto = [GrowingPBEventV3Dto parseFromData:replaced.data error:nil];
+    XCTAssertEqualObjects(originalDto.deviceId, @"generated-device");
+    XCTAssertEqualObjects(replacedDto.deviceId, @"visitor-id");
+    XCTAssertEqualObjects(originalDto.extraSdk, @{@"key": @"value"});
+    XCTAssertEqualObjects(replacedDto.extraSdk, originalDto.extraSdk);
+    XCTAssertEqualObjects(replacedDto.sessionId, originalDto.sessionId);
+    XCTAssertEqualObjects(replaced.eventUUID, p.eventUUID);
+    XCTAssertEqual(replaced.policy, p.policy);
 }
 
 @end

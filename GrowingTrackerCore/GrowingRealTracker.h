@@ -68,7 +68,11 @@ FOUNDATION_EXPORT const int GrowingTrackerVersionCode;
 /// @param enabled 打开或者关闭
 - (void)setDataCollectionEnabled:(BOOL)enabled;
 
-/// 同步获取设备id，又称为匿名用户id，SDK 自动生成用来定义唯一设备。
+/// 设置访问用户 ID，并解除本次启动的强制登录上传阻塞。
+/// 仅在 forceLogin 开启时生效；每次启动仅首次有效调用生效。
+- (void)identify:(NSString *)deviceId;
+
+/// 同步获取设备id；设置访问用户 ID 后返回该 ID。
 - (NSString *)getDeviceId;
 
 /// 设置经纬度坐标

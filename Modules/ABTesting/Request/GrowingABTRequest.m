@@ -23,6 +23,7 @@
 
 #import "GrowingTrackerCore/Helpers/GrowingHelpers.h"
 #import "GrowingTrackerCore/Manager/GrowingConfigurationManager.h"
+#import "GrowingTrackerCore/Manager/GrowingForceLogin.h"
 #import "GrowingTrackerCore/Manager/GrowingSession.h"
 #import "GrowingTrackerCore/Network/Request/Adapter/GrowingRequestAdapter.h"
 #import "GrowingTrackerCore/Utils/GrowingDeviceInfo.h"
@@ -47,18 +48,22 @@
         GrowingSession *session = [GrowingSession currentSession];
         self.loginUserId = session.loginUserId;
         self.loginUserKey = session.loginUserKey;
-        self.userIdentity = [GrowingABTRequest identityWithDeviceId:[GrowingDeviceInfo currentDeviceInfo].deviceIDString
+        self.userIdentity = [GrowingABTRequest identityWithDeviceId:[GrowingABTRequest currentDeviceId]
                                                              userId:self.loginUserId
                                                             userKey:self.loginUserKey];
     }
     return self;
 }
 
+/// 当前有效设备 ID：强制登录已持久化的访问用户 ID，否则为自动生成的设备 ID；与事件、getDeviceId 保持一致
++ (NSString *)currentDeviceId {
+    NSString *generatedDeviceId = [GrowingDeviceInfo currentDeviceInfo].deviceIDString;
+    return [GrowingForceLogin deviceIdWithGeneratedDeviceId:generatedDeviceId ?: @""];
+}
+
 + (NSString *)currentIdentity {
     GrowingSession *session = [GrowingSession currentSession];
-    return [self identityWithDeviceId:[GrowingDeviceInfo currentDeviceInfo].deviceIDString
-                               userId:session.loginUserId
-                              userKey:session.loginUserKey];
+    return [self identityWithDeviceId:[self currentDeviceId] userId:session.loginUserId userKey:session.loginUserKey];
 }
 
 + (NSString *)identityWithDeviceId:(NSString *_Nullable)deviceId
@@ -98,7 +103,7 @@
     GrowingTrackConfiguration *config = GrowingConfigurationManager.sharedInstance.trackConfiguration;
     NSString *accountId = config.accountId;
     NSString *datasourceId = config.dataSourceId;
-    NSString *distinctId = [GrowingDeviceInfo currentDeviceInfo].deviceIDString;
+    NSString *distinctId = [GrowingABTRequest currentDeviceId];
 
     NSMutableDictionary *parameters = @{
         @"accountId": accountId,

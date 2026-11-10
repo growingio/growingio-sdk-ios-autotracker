@@ -69,6 +69,29 @@
     return ((NSString *)self.data).growingHelper_jsonObject;
 }
 
+- (id<GrowingEventPersistenceProtocol>)persistenceByReplacingDeviceId:(NSString *)deviceId {
+    NSDictionary *jsonObject = [self toJSONObject];
+    if (![jsonObject isKindOfClass:NSDictionary.class]) {
+        return nil;
+    }
+    NSString *currentDeviceId = jsonObject[@"deviceId"];
+    if ([currentDeviceId isKindOfClass:NSString.class] && [currentDeviceId isEqualToString:deviceId]) {
+        return self;
+    }
+
+    NSMutableDictionary *jsonObjectCopy = [jsonObject mutableCopy];
+    jsonObjectCopy[@"deviceId"] = deviceId;
+    NSString *eventJsonString = [[NSString alloc] initWithJsonObject_growingHelper:jsonObjectCopy];
+    if (!eventJsonString.length) {
+        return nil;
+    }
+    return [[self.class alloc] initWithUUID:self.eventUUID
+                                  eventType:self.eventType
+                                       data:eventJsonString
+                                     policy:self.policy
+                                 sdkVersion:self.sdkVersion];
+}
+
 - (void)appendExtraParams:(NSDictionary<NSString *, id> *)extraParams {
     if (!extraParams || extraParams.count == 0) {
         return;
